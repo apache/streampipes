@@ -308,6 +308,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getNatsToken() {
+    return new StringEnvironmentVariable(Envs.SP_NATS_TOKEN);
+  }
+
+  @Override
   public StringEnvironmentVariable getPulsarUrl() {
     return new StringEnvironmentVariable(Envs.SP_PULSAR_URL);
   }

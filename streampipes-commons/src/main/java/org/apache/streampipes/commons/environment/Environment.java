@@ -154,6 +154,8 @@ public interface Environment {
 
   IntEnvironmentVariable getNatsPort();
 
+  StringEnvironmentVariable getNatsToken();
+
   StringEnvironmentVariable getPulsarUrl();
 
   StringEnvironmentVariable getCoreExtensionTransportMode();
