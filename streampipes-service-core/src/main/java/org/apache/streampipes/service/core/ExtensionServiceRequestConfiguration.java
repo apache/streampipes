@@ -46,6 +46,7 @@ public class ExtensionServiceRequestConfiguration {
     return new CoreNatsRequestReplyClient(
         env.getNatsHost().getValueOrDefault(),
         env.getNatsPort().getValueOrDefault(),
+        env.getNatsToken().getValueOrDefault(),
         Duration.ofSeconds(10)
     );
   }

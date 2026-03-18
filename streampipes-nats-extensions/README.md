@@ -27,6 +27,7 @@ This module receives core-to-extension commands over NATS request/reply.
 - `SP_EXTENSION_REQUEST_TOPIC_PREFIX` (both sides): default `sp.extensions.request`
 - `SP_NATS_HOST`: default `nats`
 - `SP_NATS_PORT`: default `4222`
+- `SP_NATS_TOKEN`: optional NATS token for internal core<->extension communication
 
 ## Subject Structure
 

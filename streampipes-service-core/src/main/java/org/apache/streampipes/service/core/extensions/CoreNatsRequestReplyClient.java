@@ -21,22 +21,26 @@ package org.apache.streampipes.service.core.extensions;
 import io.nats.client.Connection;
 import io.nats.client.Message;
 import io.nats.client.Nats;
+import io.nats.client.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Properties;
 
 public class CoreNatsRequestReplyClient {
 
   private static final Logger LOG = LoggerFactory.getLogger(CoreNatsRequestReplyClient.class);
 
   private final String natsUrl;
+  private final String natsToken;
   private final Duration timeout;
   private Connection natsConnection;
 
-  public CoreNatsRequestReplyClient(String host, int port, Duration timeout) {
+  public CoreNatsRequestReplyClient(String host, int port, String natsToken, Duration timeout) {
     this.natsUrl = "nats://" + host + ":" + port;
+    this.natsToken = natsToken;
     this.timeout = timeout;
   }
 
@@ -56,7 +60,13 @@ public class CoreNatsRequestReplyClient {
   private Connection getConnection() throws IOException {
     if (natsConnection == null || natsConnection.getStatus() != Connection.Status.CONNECTED) {
       try {
-        natsConnection = Nats.connect(natsUrl);
+        var optionsBuilder = Options.builder().server(natsUrl);
+        if (natsToken != null && !natsToken.isBlank()) {
+          Properties props = new Properties();
+          props.setProperty(Options.PROP_TOKEN, natsToken);
+          optionsBuilder = new Options.Builder(props).server(natsUrl);
+        }
+        natsConnection = Nats.connect(optionsBuilder.build());
         LOG.info("Connected to NATS at {}", natsUrl);
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();

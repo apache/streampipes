@@ -15,27 +15,14 @@
 
 services:
   backend:
-    image: ${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}
-    depends_on:
-      - couchdb
-    volumes:
-      - backend:/root/.streampipes
     environment:
-      - SP_PRIORITIZED_PROTOCOL=${SP_PRIORITIZED_PROTOCOL:-kafka}
-      - SP_MQTT_HOST=${SP_MQTT_HOST:-activemq}
-      - SP_NATS_TOKEN=${SP_NATS_TOKEN}
-      - SP_SETUP_PROMETHEUS_ENDPOINT=${SP_SETUP_PROMETHEUS_ENDPOINT}
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "1"
-    networks:
-      spnet:
+      SP_NATS_TOKEN: ${SP_NATS_TOKEN}
 
-volumes:
-  backend:
+  extensions-all-iiot:
+    environment:
+      SP_NATS_TOKEN: ${SP_NATS_TOKEN}
 
-networks:
-  spnet:
-    external: true
+  nats:
+    command:
+      - "--auth"
+      - "${SP_NATS_TOKEN:?SP_NATS_TOKEN must be set when using docker-compose.nats-auth.yml}"

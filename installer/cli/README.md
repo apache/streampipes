@@ -97,6 +97,14 @@ streampipes env --inspect pipeline-element
 streampipes env --set pipeline-element
 ```
 
+NATS auth variants are available as dedicated templates, e.g.:
+
+```bash
+streampipes env --set lite-nats-auth
+```
+
+For `*-nats-auth` templates, set `SP_NATS_TOKEN` in `.env` before starting the environment.
+
 **Start** environment ( default: `dev` mode). Here the service definition in the selected environment is used to start the multi-container landscape.
 > **NOTE**: `dev` mode is enabled by default since we rely on open ports to core service such as `couchdb`, `kafka` etc. to reach from the IDE when developing. If you don't want to map ports (except the UI port), then use the `--no-ports` flag.
 

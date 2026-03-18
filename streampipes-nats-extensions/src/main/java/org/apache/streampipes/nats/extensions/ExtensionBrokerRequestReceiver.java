@@ -61,12 +61,14 @@ import io.nats.client.Connection;
 import io.nats.client.Dispatcher;
 import io.nats.client.Message;
 import io.nats.client.Nats;
+import io.nats.client.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -133,7 +135,14 @@ public class ExtensionBrokerRequestReceiver {
       });
       String natsUrl = "nats://" + natsHost
           + ":" + env.getNatsPort().getValueOrDefault();
-      this.natsConnection = Nats.connect(natsUrl);
+      var optionsBuilder = Options.builder().server(natsUrl);
+      var natsToken = env.getNatsToken().getValueOrDefault();
+      if (natsToken != null && !natsToken.isBlank()) {
+        Properties props = new Properties();
+        props.setProperty(Options.PROP_TOKEN, natsToken);
+        optionsBuilder = new Options.Builder(props).server(natsUrl);
+      }
+      this.natsConnection = Nats.connect(optionsBuilder.build());
 
       this.subscriptionBaseTopic = ExtensionServiceBrokerTopics.serviceTopic(
           topicPrefix,
