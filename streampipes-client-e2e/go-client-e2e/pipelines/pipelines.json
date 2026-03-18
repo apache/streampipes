@@ -307,53 +307,6 @@
           "index": 0
         }
       ],
-      "supportedGrounding": {
-        "transportProtocols": [
-          {
-            "@class": "org.apache.streampipes.model.grounding.MqttTransportProtocol",
-            "brokerHostname": null,
-            "elementId": "sp:transportprotocol:IxejrD",
-            "topicDefinition": null,
-            "port": 0
-          },
-          {
-            "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
-            "brokerHostname": null,
-            "elementId": "sp:transportprotocol:hMYAXY",
-            "topicDefinition": null,
-            "port": 0
-          },
-          {
-            "@class": "org.apache.streampipes.model.grounding.JmsTransportProtocol",
-            "brokerHostname": null,
-            "elementId": "sp:transportprotocol:ycSaOT",
-            "topicDefinition": null,
-            "port": 0
-          },
-          {
-            "@class": "org.apache.streampipes.model.grounding.PulsarTransportProtocol",
-            "brokerHostname": "pulsar://localhost:6650",
-            "elementId": "sp:transportprotocol:lvMQWc",
-            "topicDefinition": null
-          },
-          {
-            "@class": "org.apache.streampipes.model.grounding.KafkaTransportProtocol",
-            "brokerHostname": null,
-            "elementId": "sp:transportprotocol:EiyDHT",
-            "topicDefinition": null,
-            "acks": null,
-            "batchSize": null,
-            "groupId": null,
-            "kafkaPort": 0,
-            "lingerMs": null,
-            "maxRequestSize": null,
-            "messageMaxBytes": null,
-            "offset": null,
-            "zookeeperHost": null,
-            "zookeeperPort": 0
-          }
-        ]
-      },
       "uncompleted": false,
       "category": [
         "INTERNAL"
@@ -596,53 +549,6 @@
           "index": 0
         }
       ],
-      "supportedGrounding": {
-        "transportProtocols": [
-          {
-            "@class": "org.apache.streampipes.model.grounding.MqttTransportProtocol",
-            "brokerHostname": null,
-            "elementId": "sp:transportprotocol:IxejrD",
-            "topicDefinition": null,
-            "port": 0
-          },
-          {
-            "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
-            "brokerHostname": null,
-            "elementId": "sp:transportprotocol:hMYAXY",
-            "topicDefinition": null,
-            "port": 0
-          },
-          {
-            "@class": "org.apache.streampipes.model.grounding.JmsTransportProtocol",
-            "brokerHostname": null,
-            "elementId": "sp:transportprotocol:ycSaOT",
-            "topicDefinition": null,
-            "port": 0
-          },
-          {
-            "@class": "org.apache.streampipes.model.grounding.PulsarTransportProtocol",
-            "brokerHostname": "pulsar://localhost:6650",
-            "elementId": "sp:transportprotocol:lvMQWc",
-            "topicDefinition": null
-          },
-          {
-            "@class": "org.apache.streampipes.model.grounding.KafkaTransportProtocol",
-            "brokerHostname": null,
-            "elementId": "sp:transportprotocol:EiyDHT",
-            "topicDefinition": null,
-            "acks": null,
-            "batchSize": null,
-            "groupId": null,
-            "kafkaPort": 0,
-            "lingerMs": null,
-            "maxRequestSize": null,
-            "messageMaxBytes": null,
-            "offset": null,
-            "zookeeperHost": null,
-            "zookeeperPort": 0
-          }
-        ]
-      },
       "uncompleted": false,
       "category": [
         "BOOLEAN_OPERATOR"
