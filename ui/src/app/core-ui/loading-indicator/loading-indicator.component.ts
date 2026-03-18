@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
     FlexDirective,
@@ -37,8 +37,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     ],
 })
 export class LoadingIndicatorComponent {
-    translateService = inject(TranslateService);
+    private readonly translateService = inject(TranslateService);
 
-    @Input()
-    message = this.translateService.instant('Loading');
+    readonly message = input(this.translateService.instant('Loading'));
 }

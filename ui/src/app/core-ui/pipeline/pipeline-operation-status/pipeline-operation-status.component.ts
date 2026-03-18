@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { PipelineOperationStatus } from '@streampipes/platform-services';
 import {
     FlexDirective,
@@ -32,6 +32,7 @@ import { MatIcon } from '@angular/material/icon';
     imports: [FlexDirective, LayoutDirective, LayoutAlignDirective, MatIcon],
 })
 export class PipelineOperationStatusComponent {
-    @Input()
-    pipelineOperationStatus: PipelineOperationStatus;
+    readonly pipelineOperationStatus = input<
+        PipelineOperationStatus | undefined
+    >(undefined);
 }
