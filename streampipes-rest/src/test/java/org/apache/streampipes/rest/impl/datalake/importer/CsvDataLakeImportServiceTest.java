@@ -47,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -123,6 +124,27 @@ class CsvDataLakeImportServiceTest {
     assertEquals(2, result.getImportedRowCount());
     assertEquals("new-measure", result.getMeasurementName());
     verify(dataWriter).writeData(any(DataLakeMeasure.class), anyList(), anyList());
+  }
+
+  @Test
+  void shouldStoreNewMeasurementWithoutTimestampPropertyInEventSchema() {
+    var schemaManagement = mock(IDataExplorerSchemaManagement.class);
+    var dataWriter = mock(DataLakeDataWriter.class);
+    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+
+    when(schemaManagement.getExistingMeasureByName("new-measure"))
+        .thenReturn(Optional.empty());
+    when(schemaManagement.createOrUpdateMeasurement(any(DataLakeMeasure.class), eq("sid")))
+        .thenAnswer(invocation -> invocation.getArgument(0, DataLakeMeasure.class));
+
+    service.importData(makeImportRequest(CsvImportTargetMode.NEW, "new-measure"), "sid");
+
+    verify(schemaManagement).createOrUpdateMeasurement(any(DataLakeMeasure.class), eq("sid"));
+    verify(schemaManagement).createOrUpdateMeasurement(org.mockito.ArgumentMatchers.argThat(measure ->
+        measure.getEventSchema().getEventProperties().stream()
+            .noneMatch(property -> "timestamp".equals(property.getRuntimeName()))
+            && "s0::timestamp".equals(measure.getTimestampField())
+    ), eq("sid"));
   }
 
   @Test
@@ -247,6 +269,27 @@ class CsvDataLakeImportServiceTest {
         .anyMatch(message -> message.getMessage().contains("exactly match")));
   }
 
+  @Test
+  void shouldImportIntoExistingMeasurementWhenOnlyTimestampColumnDiffers() {
+    var schemaManagement = mock(IDataExplorerSchemaManagement.class);
+    var dataWriter = mock(DataLakeDataWriter.class);
+    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+
+    var existingMeasure = new DataLakeMeasure();
+    existingMeasure.setMeasureName("existing-measure");
+    existingMeasure.setTimestampField("s0::timestamp");
+    existingMeasure.setEventSchema(makeStoredExistingSchema());
+
+    when(schemaManagement.getExistingMeasureByName("existing-measure"))
+        .thenReturn(Optional.of(existingMeasure));
+
+    var result = service.importData(makeImportRequest(CsvImportTargetMode.EXISTING, "existing-measure"), "sid");
+
+    assertFalse(result.isCreatedNewMeasurement());
+    assertEquals(2, result.getImportedRowCount());
+    verify(dataWriter).writeData(any(DataLakeMeasure.class), anyList(), anyList());
+  }
+
   private CsvImportPreviewRequest makePreviewRequest(String measurementName) {
     var request = new CsvImportPreviewRequest();
     request.setCsvConfig(makeCsvConfig());
@@ -322,5 +365,14 @@ class CsvDataLakeImportServiceTest {
     temperature.setPropertyScope("MEASUREMENT_PROPERTY");
 
     return new EventSchema(List.of(timestamp, temperature));
+  }
+
+  private EventSchema makeStoredExistingSchema() {
+    var temperature = new EventPropertyPrimitive();
+    temperature.setRuntimeName("temperature");
+    temperature.setRuntimeType(XSD.FLOAT.toString());
+    temperature.setPropertyScope("MEASUREMENT_PROPERTY");
+
+    return new EventSchema(List.of(temperature));
   }
 }

@@ -19,16 +19,28 @@
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
 import { ChartWidgetTableUtils } from '../../support/utils/chart/ChartWidgetTableUtils';
+import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
 
 describe('Test missing properties in data lake', () => {
     const dataViewName = 'TestView';
+    const headers = ['timestamp', 'v1', 'v2', 'v3', 'v4'];
+    const rows = [
+        ['1667904471000', '4.1', 'abc', 'true', '1'],
+        ['1667904472000', '4.2', 'abc', 'false', '2'],
+        ['1667904473000', '4.3', '', '', ''],
+        ['1667904474000', '4.4', 'abc', 'true', '4'],
+        ['1667904475000', '4.5', '', '', '5'],
+    ];
 
     before('Setup Test', () => {
         cy.initStreamPipesTest();
-        PrepareTestDataUtils.loadDataIntoDataLake(
-            'datalake/missingData.json',
-            'json_array',
-        );
+        DataLakeSeedUtils.importCsvData({
+            headers,
+            rows,
+            measurementName: PrepareTestDataUtils.dataName,
+            delimiter: ';',
+            timestampColumn: 'timestamp',
+        });
     });
 
     it('Test table with missing properties', () => {

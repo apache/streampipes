@@ -149,4 +149,21 @@ export class DatasetUtils {
                 expect(text).to.contain(expectedCount);
             });
     }
+
+    public static openDatasetPreview(datasetName: string) {
+        DatasetBtns.datasetRow(datasetName)
+            .find('mat-icon')
+            .contains('preview')
+            .parent('button')
+            .click();
+    }
+
+    public static expectDatasetPreviewDoesNotContainKey(key: string) {
+        cy.dataCy('dataset-preview-table', { timeout: 10000 }).should(
+            'be.visible',
+        );
+        cy.dataCy(`dataset-preview-key-${key.toLowerCase()}`, {
+            timeout: 10000,
+        }).should('not.exist');
+    }
 }

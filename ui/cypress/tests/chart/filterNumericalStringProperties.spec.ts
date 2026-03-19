@@ -32,7 +32,7 @@ describe('Validate that filter works for numerical dimension property', () => {
             timestampColumn: 'timestamp',
             columnOverrides: {
                 dimensionKey: {
-                    runtimeType: 'LONG',
+                    runtimeType: 'FLOAT',
                     propertyScope: 'DIMENSION_PROPERTY',
                 },
             },
@@ -59,7 +59,7 @@ describe('Validate that filter works for numerical dimension property', () => {
 
         // select filter for tag
         ChartUtils.selectDataConfig();
-        var filterConfig = new DataLakeFilterConfig('dimensionKey', '1', '=');
+        var filterConfig = new DataLakeFilterConfig('dimensionKey', '1.0', '=');
         ChartUtils.dataConfigAddFilter(filterConfig);
 
         // validate data in table is filtered

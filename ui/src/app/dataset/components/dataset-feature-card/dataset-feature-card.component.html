@@ -61,17 +61,33 @@
             </div>
             <div class="dataset-preview-inner">
                 @if (dataPreview && dataPreview.total > 0) {
-                    <div class="dataset-preview-table" fxLayout="column">
+                    <div
+                        class="dataset-preview-table"
+                        fxLayout="column"
+                        data-cy="dataset-preview-table"
+                    >
                         @for (
                             header of dataPreview.headers;
                             let i = $index;
                             track $index
                         ) {
-                            <div class="dataset-preview-row">
-                                <span class="dataset-preview-key">
+                            <div
+                                class="dataset-preview-row"
+                                data-cy="dataset-preview-row"
+                            >
+                                <span
+                                    class="dataset-preview-key"
+                                    [attr.data-cy]="
+                                        'dataset-preview-key-' +
+                                        header.toLowerCase()
+                                    "
+                                >
                                     {{ header }}
                                 </span>
-                                <span class="dataset-preview-value">
+                                <span
+                                    class="dataset-preview-value"
+                                    data-cy="dataset-preview-value"
+                                >
                                     {{
                                         formatPreviewValue(
                                             header,
