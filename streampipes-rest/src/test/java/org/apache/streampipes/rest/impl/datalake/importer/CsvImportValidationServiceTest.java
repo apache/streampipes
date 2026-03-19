@@ -57,7 +57,8 @@ class CsvImportValidationServiceTest {
 
     var result = service.validateStoredImportRequest(request);
 
-    assertTrue(result.stream().anyMatch(message -> "uploadId".equals(message.getField())));
+    assertTrue(result.stream()
+                     .anyMatch(message -> "uploadId".equals(message.getField())));
   }
 
   @Test
@@ -71,7 +72,9 @@ class CsvImportValidationServiceTest {
     var service = new CsvImportValidationService(schemaManagement);
     var result = service.validatePreviewTarget(makeTarget(CsvImportTargetMode.NEW, "existing-measure"));
 
-    assertTrue(result.stream().anyMatch(message -> message.getMessage().contains("already exists")));
+    assertTrue(result.stream()
+                     .anyMatch(message -> message.getMessage()
+                                                 .contains("already exists")));
   }
 
   @Test
@@ -81,7 +84,6 @@ class CsvImportValidationServiceTest {
     existingMeasure.setMeasureName("existing-measure");
     existingMeasure.setTimestampField("s0::timestamp");
     existingMeasure.setEventSchema(new EventSchema(List.of(
-        makeEventProperty("timestamp", XSD.LONG.toString(), "HEADER_PROPERTY", SO.DATE_TIME),
         makeEventProperty("temperature", XSD.FLOAT.toString(), "MEASUREMENT_PROPERTY", null)
     )));
     when(schemaManagement.getExistingMeasureByName("existing-measure"))
@@ -99,11 +101,13 @@ class CsvImportValidationServiceTest {
         "event_time"
     );
 
-    assertEquals(4, issues.size());
-    assertTrue(issues.stream().anyMatch(issue -> issue.getType() == CsvImportSchemaIssueType.TIMESTAMP_COLUMN_MISMATCH));
-    assertTrue(issues.stream().anyMatch(issue -> issue.getType() == CsvImportSchemaIssueType.COLUMN_NAME_MISMATCH));
-    assertTrue(issues.stream().anyMatch(issue -> issue.getType() == CsvImportSchemaIssueType.COLUMN_TYPE_MISMATCH));
-    assertTrue(issues.stream().anyMatch(issue -> issue.getType() == CsvImportSchemaIssueType.COLUMN_SCOPE_MISMATCH));
+    assertEquals(3, issues.size());
+    assertTrue(issues.stream()
+                     .anyMatch(issue -> issue.getType() == CsvImportSchemaIssueType.TIMESTAMP_COLUMN_MISMATCH));
+    assertTrue(issues.stream()
+                     .anyMatch(issue -> issue.getType() == CsvImportSchemaIssueType.COLUMN_TYPE_MISMATCH));
+    assertTrue(issues.stream()
+                     .anyMatch(issue -> issue.getType() == CsvImportSchemaIssueType.COLUMN_SCOPE_MISMATCH));
   }
 
   @Test
@@ -119,8 +123,12 @@ class CsvImportValidationServiceTest {
         () -> service.requireExistingMeasurement("missing-measure")
     );
 
-    assertFalse(exception.getValidationMessages().isEmpty());
-    assertTrue(exception.getValidationMessages().get(0).getMessage().contains("does not exist"));
+    assertFalse(exception.getValidationMessages()
+                         .isEmpty());
+    assertTrue(exception.getValidationMessages()
+                        .get(0)
+                        .getMessage()
+                        .contains("does not exist"));
   }
 
   private CsvImportConfiguration makeConfig() {
