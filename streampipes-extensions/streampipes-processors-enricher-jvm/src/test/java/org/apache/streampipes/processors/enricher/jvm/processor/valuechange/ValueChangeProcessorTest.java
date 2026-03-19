@@ -66,4 +66,31 @@ class ValueChangeProcessorTest {
 
     testExecutor.run(inputEvents, expectedEvents);
   }
+  @Test
+  void detectsDifferentTransitionConfiguration() {
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix("change-value-mapping", "numberlist")
+        .config("from-property-value", 2.0f)
+        .config("to-property-value", 5.0f)
+        .build();
+
+    List<Map<String, Object>> inputEvents = List.of(
+        Map.of("timestamp", 1L, "numberlist", 2.0f),
+        Map.of("timestamp", 2L, "numberlist", 5.0f),
+        Map.of("timestamp", 3L, "numberlist", 5.0f),
+        Map.of("timestamp", 4L, "numberlist", 2.0f),
+        Map.of("timestamp", 5L, "numberlist", 5.0f)
+    );
+
+    List<Map<String, Object>> expectedEvents = List.of(
+        Map.of("timestamp", 1L, "numberlist", 2.0f, "isChanged", false),
+        Map.of("timestamp", 2L, "numberlist", 5.0f, "isChanged", true),
+        Map.of("timestamp", 3L, "numberlist", 5.0f, "isChanged", false),
+        Map.of("timestamp", 4L, "numberlist", 2.0f, "isChanged", false),
+        Map.of("timestamp", 5L, "numberlist", 5.0f, "isChanged", true)
+    );
+
+    new ProcessingElementTestExecutor(new ValueChangeProcessor(), configuration)
+        .run(inputEvents, expectedEvents);
+  }
 }

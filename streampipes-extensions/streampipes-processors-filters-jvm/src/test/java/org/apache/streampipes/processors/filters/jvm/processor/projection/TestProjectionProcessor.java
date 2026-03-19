@@ -90,4 +90,25 @@ class TestProjectionProcessor {
     testExecutor.run(events, outputEvents);
   }
 
+  @Test
+  public void projectsSingleField() {
+    var configuration = TestConfiguration
+        .builder()
+        .customOutputStrategy(List.of("remove"))
+        .build();
+
+    List<Map<String, Object>> events = List.of(
+        Map.of("timestamp", 1L, "remove", 62.0d, "a", "x"),
+        Map.of("timestamp", 2L, "remove", 56.0d, "a", "y")
+    );
+
+    List<Map<String, Object>> outputEvents = List.of(
+        Map.of("remove", 62.0d),
+        Map.of("remove", 56.0d)
+    );
+
+    new ProcessingElementTestExecutor(new ProjectionProcessor(), configuration)
+        .run(events, outputEvents);
+  }
+
 }

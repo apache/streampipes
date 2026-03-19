@@ -61,4 +61,31 @@ class RateLimitProcessorTest {
 
     testExecutor.run(inputEvents, expectedEvents);
   }
+  @Test
+  void forwardsFirstEventOfEachLengthWindow() {
+    TestConfiguration configuration = TestConfiguration.builder()
+        .config("grouping-enabled", "False")
+        .configWithDefaultPrefix("grouping-field", "randomnumber")
+        .config("window-type", "length-window")
+        .config("length-window-size", 3)
+        .config("event-selection", "First")
+        .build();
+
+    List<Map<String, Object>> inputEvents = List.of(
+        Map.of("timestamp", 1L, "randomnumber", 10.0d),
+        Map.of("timestamp", 2L, "randomnumber", 11.0d),
+        Map.of("timestamp", 3L, "randomnumber", 12.0d),
+        Map.of("timestamp", 4L, "randomnumber", 13.0d),
+        Map.of("timestamp", 5L, "randomnumber", 14.0d),
+        Map.of("timestamp", 6L, "randomnumber", 15.0d)
+    );
+
+    List<Map<String, Object>> expectedEvents = List.of(
+        Map.of("timestamp", 1L, "randomnumber", 10.0d),
+        Map.of("timestamp", 4L, "randomnumber", 13.0d)
+    );
+
+    new ProcessingElementTestExecutor(new RateLimitProcessor(), configuration)
+        .run(inputEvents, expectedEvents);
+  }
 }
