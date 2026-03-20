@@ -417,10 +417,6 @@ export class SpTableComponent<T>
     }
 
     onRowCheckboxClick(event: MouseEvent): void {
-        if (event.ctrlKey || event.metaKey) {
-            event.preventDefault();
-            this.toggleSelectAllVisibleRows(true);
-        }
         event.stopPropagation();
     }
 

@@ -160,7 +160,6 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         );
         const dialogRef = this.dialogService.open(SavePipelineComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            disableClose: true,
             title: this.translateService.instant('Save pipeline'),
             width: '40vw',
             data: {

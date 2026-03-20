@@ -16,9 +16,9 @@
  *
  */
 
-import { Injectable, NgZone, OnDestroy } from '@angular/core';
+import { Injectable, NgZone, OnDestroy, inject } from '@angular/core';
 import { Subject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { DialogService } from '../dialog/base-dialog/base-dialog.service';
 
 export interface ShortcutAction {
     key: string;
@@ -26,6 +26,7 @@ export interface ShortcutAction {
     shift?: boolean;
     action: (event: KeyboardEvent) => void;
     preventDefault?: boolean;
+    allowInDialog?: boolean;
 }
 
 export type ShortcutRegistration = { unregister: () => void };
@@ -34,15 +35,24 @@ export type ShortcutRegistration = { unregister: () => void };
 export class KeyboardShortcutService implements OnDestroy {
     private keydown$ = new Subject<KeyboardEvent>();
     private registrations: Map<string, ShortcutAction[]> = new Map();
-    private listener = (e: KeyboardEvent) => this.keydown$.next(e);
+    private listener = (e: KeyboardEvent) => {
+        const isInput = this.isInputFocused(e);
+        const ctrl = e.ctrlKey || e.metaKey;
+
+        if (!isInput || ctrl || e.key === 'Escape') {
+            this.keydown$.next(e);
+        }
+    };
+
+    private dialogService = inject(DialogService);
 
     constructor(private ngZone: NgZone) {
         this.ngZone.runOutsideAngular(() =>
             document.addEventListener('keydown', this.listener, true),
         );
-        this.keydown$
-            .pipe(filter(e => !this.isInputFocused(e)))
-            .subscribe(e => this.ngZone.run(() => this.handleEvent(e)));
+        this.keydown$.subscribe(e =>
+            this.ngZone.run(() => this.handleEvent(e)),
+        );
     }
 
     ngOnDestroy(): void {
@@ -64,29 +74,32 @@ export class KeyboardShortcutService implements OnDestroy {
         const ctrl = event.ctrlKey || event.metaKey;
         const shift = event.shiftKey;
 
-        for (const actions of this.registrations.values()) {
-            const match = actions.find(
+        const match = Array.from(this.registrations.values())
+            .flat()
+            .find(
                 a =>
                     a.key.toLowerCase() === key &&
                     !!a.ctrl === ctrl &&
                     !!a.shift === shift,
             );
-            if (match) {
-                if (match.preventDefault !== false) {
-                    event.preventDefault();
-                }
+
+        if (match) {
+            if (match.preventDefault !== false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            if (!this.dialogService.hasOpenDialogs || match.allowInDialog) {
                 match.action(event);
-                return;
             }
         }
     }
 
-    private isInputFocused(event: KeyboardEvent): boolean {
+    private isInputFocused = (event: KeyboardEvent): boolean => {
         const tag = (event.target as HTMLElement)?.tagName;
-        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) {
-            return !['Escape'].includes(event.key);
-        }
-        const editable = (event.target as HTMLElement)?.isContentEditable;
-        return editable ? !['Escape'].includes(event.key) : false;
-    }
+        return (
+            ['INPUT', 'TEXTAREA', 'SELECT'].includes(tag) ||
+            (event.target as HTMLElement)?.isContentEditable
+        );
+    };
 }

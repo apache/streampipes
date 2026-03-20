@@ -150,7 +150,12 @@ export class ChartViewComponent
 
     ngOnInit() {
         this.shortcutReg = this.shortcutService.register('chart-view', [
-            { key: 's', ctrl: true, action: () => this.onShortcutSave() },
+            {
+                key: 's',
+                ctrl: true,
+                action: () => this.onShortcutSave(),
+                allowInDialog: true,
+            },
         ]);
 
         const dataViewId = this.route.snapshot.params.id;

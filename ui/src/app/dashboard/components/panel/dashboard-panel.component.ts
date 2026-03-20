@@ -137,7 +137,12 @@ export class DashboardPanelComponent
     public ngOnInit() {
         this.shortcutReg = this.shortcutService.register('dashboard-panel', [
             { key: 'e', action: () => this.onShortcutEdit() },
-            { key: 's', ctrl: true, action: () => this.onShortcutSave() },
+            {
+                key: 's',
+                ctrl: true,
+                action: () => this.onShortcutSave(),
+                allowInDialog: true,
+            },
         ]);
 
         const params = this.route.snapshot.params;
