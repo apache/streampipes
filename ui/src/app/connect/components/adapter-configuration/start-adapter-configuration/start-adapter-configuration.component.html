@@ -90,6 +90,25 @@
                         />
                     </mat-form-field>
                 </sp-form-field>
+                @if (!isEditMode) {
+                    <sp-form-field
+                        [level]="2"
+                        [label]="'Topic Name (Optional)' | translate"
+                    >
+                        <mat-form-field color="accent">
+                            <input
+                                formControlName="adapterTopicName"
+                                matInput
+                                id="input-AdapterTopicName"
+                                [placeholder]="
+                                    'Leave empty to auto-generate a topic'
+                                        | translate
+                                "
+                                data-cy="sp-adapter-topic-name"
+                            />
+                        </mat-form-field>
+                    </sp-form-field>
+                }
             </div>
         </div>
     </sp-basic-inner-panel>

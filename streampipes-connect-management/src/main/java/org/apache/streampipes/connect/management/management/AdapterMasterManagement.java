@@ -75,8 +75,11 @@ public class AdapterMasterManagement {
     adapterDescription.setCorrespondingDataStreamElementId(dataStreamElementId);
 
     // Add EventGrounding to AdapterDescription
-    var eventGrounding = GroundingUtils.createEventGrounding();
+    var eventGrounding = GroundingUtils.createEventGrounding(adapterDescription.getTopicName());
     adapterDescription.setEventGrounding(eventGrounding);
+    adapterDescription.setTopicName(
+        eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName()
+    );
 
     this.adapterResourceManager.encryptAndCreate(adapterDescription);
 

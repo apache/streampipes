@@ -114,6 +114,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     'rules': TransformationRuleDescriptionUnion[];
     'running': boolean;
     'selectedEndpointUrl': string;
+    'topicName': string;
     'transformationConfig': TransformationConfig;
 
     static 'fromData'(
@@ -145,6 +146,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
         )(data.rules);
         instance.running = data.running;
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
+        instance.topicName = data.topicName;
         instance.transformationConfig = TransformationConfig.fromData(
             data.transformationConfig,
         );

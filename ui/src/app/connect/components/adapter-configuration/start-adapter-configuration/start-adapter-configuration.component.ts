@@ -172,9 +172,14 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 ValidateName(),
             ]),
         );
-        this.startAdapterForm.valueChanges.subscribe(
-            v => (this.adapterDescription.name = v.adapterName),
+        this.startAdapterForm.addControl(
+            'adapterTopicName',
+            new UntypedFormControl(this.adapterDescription.topicName ?? ''),
         );
+        this.startAdapterForm.valueChanges.subscribe(v => {
+            this.adapterDescription.name = v.adapterName;
+            this.adapterDescription.topicName = v.adapterTopicName?.trim();
+        });
         this.startAdapterForm.statusChanges.subscribe(() => {
             this.startAdapterSettingsFormValid = this.startAdapterForm.valid;
         });

@@ -39,3 +39,33 @@
 .icon {
     max-width: 60px;
 }
+
+.overview-mode-toggle {
+    margin-left: 10px;
+    flex: 0 0 auto;
+    width: max-content;
+}
+
+.overview-mode-toggle .mat-button-toggle {
+    min-width: 72px;
+}
+
+.topic-name {
+    font-family: monospace;
+    word-break: break-all;
+}
+
+.uns-view {
+    margin-top: 10px;
+}
+
+.uns-group-title {
+    font-weight: 600;
+    font-family: monospace;
+}
+
+.uns-group-count {
+    margin-left: auto;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 12px;
+}

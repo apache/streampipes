@@ -29,6 +29,8 @@ import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.UUID;
 
 public class GroundingUtils {
@@ -36,13 +38,19 @@ public class GroundingUtils {
   private static final String TOPIC_PREFIX = "org.apache.streampipes.connect.";
 
   public static EventGrounding createEventGrounding() {
+    return createEventGrounding(null);
+  }
+
+  public static EventGrounding createEventGrounding(String requestedTopicName) {
     EventGrounding eventGrounding = new EventGrounding();
     var messagingSettings = Utils
         .getCoreConfigStorage()
         .get()
         .getMessagingSettings();
 
-    String topic = TOPIC_PREFIX + UUID.randomUUID().toString();
+    String topic = StringUtils.isBlank(requestedTopicName)
+        ? TOPIC_PREFIX + UUID.randomUUID()
+        : requestedTopicName.trim();
     TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
 
     SpProtocol prioritizedProtocol =

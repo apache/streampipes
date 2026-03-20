@@ -75,6 +75,31 @@ import { AdapterStatusLightComponent } from './adapter-status-light/adapter-stat
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatMenuItem } from '@angular/material/menu';
 import { DatePipe } from '@angular/common';
+import {
+    MatButtonToggle,
+    MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import {
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+} from '@angular/material/expansion';
+
+type AdapterOverviewMode = 'table' | 'uns';
+
+interface UnsTopicEntry {
+    elementId: string;
+    adapter: AdapterDescription;
+    topicName: string;
+    namespace: string;
+    leafSegment: string;
+}
+
+interface UnsTopicGroup {
+    id: string;
+    namespace: string;
+    entries: UnsTopicEntry[];
+}
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -106,6 +131,11 @@ import { DatePipe } from '@angular/common';
         SpTableActionsDirective,
         MatMenuItem,
         DatePipe,
+        MatButtonToggleGroup,
+        MatButtonToggle,
+        MatAccordion,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
         TranslatePipe,
     ],
 })
@@ -130,6 +160,14 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         'lastMessage',
         'actions',
     ];
+    unsDisplayedColumns: string[] = [
+        'topicName',
+        'leafSegment',
+        'adapterName',
+        'status',
+        'messagesSent',
+        'lastMessage',
+    ];
     readonly assetContextConfig: SpTableAssetContextConfig = {
         resourceLinkType: 'adapter',
         resourceIdKey: 'elementId',
@@ -152,6 +190,8 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     startAdapterErrorText = 'Could not start adapter';
     stopAdapterErrorText = 'Could not stop adapter';
+    overviewMode: AdapterOverviewMode = 'table';
+    unsTopicGroups: UnsTopicGroup[] = [];
 
     private adapterService = inject(AdapterService);
     private dialogService = inject(DialogService);
@@ -379,6 +419,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                 }
             });
         this.dataSource.data = this.filteredAdapters;
+        this.unsTopicGroups = this.buildUnsTopicGroups(this.filteredAdapters);
     }
 
     startAdapterTutorial() {
@@ -400,6 +441,75 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     navigateToDetailsOverviewPage(adapter: AdapterDescription): void {
         this.router.navigate(['connect', 'details', adapter.elementId]);
+    }
+
+    setOverviewMode(mode: AdapterOverviewMode): void {
+        this.overviewMode = mode;
+    }
+
+    getTopicName(adapter: AdapterDescription): string {
+        return (
+            adapter.eventGrounding?.transportProtocols?.[0]?.topicDefinition
+                ?.actualTopicName || ''
+        );
+    }
+
+    private buildUnsTopicGroups(
+        adapters: AdapterDescription[],
+    ): UnsTopicGroup[] {
+        const groupedTopics = new Map<string, UnsTopicEntry[]>();
+
+        adapters.forEach(adapter => {
+            const topicName = this.getTopicName(adapter);
+            const segments = this.getTopicSegments(topicName);
+            const namespace =
+                segments.length > 1
+                    ? segments
+                          .slice(0, -1)
+                          .join(this.getTopicDelimiter(topicName))
+                    : this.translate.instant('Ungrouped topics');
+            const leafSegment =
+                segments.length > 0 ? segments[segments.length - 1] : topicName;
+
+            const entry: UnsTopicEntry = {
+                elementId: adapter.elementId,
+                adapter,
+                topicName,
+                namespace,
+                leafSegment,
+            };
+
+            if (!groupedTopics.has(namespace)) {
+                groupedTopics.set(namespace, []);
+            }
+
+            groupedTopics.get(namespace).push(entry);
+        });
+
+        return Array.from(groupedTopics.entries())
+            .sort(([namespaceA], [namespaceB]) =>
+                namespaceA.localeCompare(namespaceB),
+            )
+            .map(([namespace, entries]) => ({
+                id: namespace,
+                namespace,
+                entries: entries.sort((a, b) =>
+                    a.topicName.localeCompare(b.topicName),
+                ),
+            }));
+    }
+
+    private getTopicSegments(topicName: string): string[] {
+        if (!topicName) {
+            return [];
+        }
+
+        const delimiter = this.getTopicDelimiter(topicName);
+        return topicName.split(delimiter).filter(segment => segment.length > 0);
+    }
+
+    private getTopicDelimiter(topicName: string): string {
+        return topicName.includes('/') ? '/' : '.';
     }
 
     ngOnDestroy() {

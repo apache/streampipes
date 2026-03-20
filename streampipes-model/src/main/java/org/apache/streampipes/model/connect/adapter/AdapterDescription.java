@@ -66,6 +66,8 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   private TransformationConfig transformationConfig;
 
+  private String topicName;
+
   public AdapterDescription() {
     super();
     this.rules = new ArrayList<>();
@@ -105,6 +107,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.running = other.isRunning();
     this.deploymentConfiguration = other.getDeploymentConfiguration();
     this.transformationConfig = other.getTransformationConfig();
+    this.topicName = other.getTopicName();
   }
 
   public String getRev() {
@@ -232,5 +235,13 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   public void setTransformationConfig(TransformationConfig transformationConfig) {
     this.transformationConfig = transformationConfig;
+  }
+
+  public String getTopicName() {
+    return topicName;
+  }
+
+  public void setTopicName(String topicName) {
+    this.topicName = topicName;
   }
 }
