@@ -17,7 +17,7 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import {
     Pipeline,
@@ -52,6 +52,7 @@ import {
 import { PipelineDetailsToolbarComponent } from './components/pipeline-details-toolbar/pipeline-details-toolbar.component';
 import { PipelineDetailsExpansionPanelComponent } from './components/pipeline-details-expansion-panel/pipeline-details-expansion-panel.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { PipelineOperationsService } from '../pipelines/services/pipeline-operations.service';
 
 @Component({
     selector: 'sp-pipeline-details-overview-component',
@@ -99,6 +100,8 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
         private breadcrumbService: SpBreadcrumbService,
         private pipelineMonitoringService: PipelineMonitoringService,
         private dialogService: DialogService,
+        private router: Router,
+        private pipelineOperationsService: PipelineOperationsService,
     ) {}
 
     ngOnInit(): void {
@@ -227,6 +230,18 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
                 pipeline: this.pipeline,
             },
         });
+    }
+
+    editPipeline(): void {
+        this.pipelineOperationsService.showPipelineInEditor(this.pipeline._id);
+    }
+
+    deletePipeline(): void {
+        this.pipelineOperationsService.showDeleteDialog(
+            this.pipeline,
+            null,
+            () => this.router.navigate(['pipelines']),
+        );
     }
 
     ngOnDestroy() {

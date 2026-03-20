@@ -1,6 +1,10 @@
-# Shortcut Implementation Overview
+## Completly new feature
 
-This document summarizes the keyboard shortcuts implemented in the current shortcut work.
+- Added edit and delete button in pipeline view
+  - 3 dots -> edit pipeline -> forwards to edit mode
+  - 3 dots -> delete pipeline -> pops up delete confirmation dialog
+
+- Added forward and back button (+shortcut) in edit window of dashboard/charts/pipeline
 
 ## Implemented Shortcuts
 
