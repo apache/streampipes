@@ -53,6 +53,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
+import org.apache.streampipes.service.core.extensions.ExtensionServiceRequestConfiguration;
 import org.apache.streampipes.service.core.migrations.AvailableMigrations;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;

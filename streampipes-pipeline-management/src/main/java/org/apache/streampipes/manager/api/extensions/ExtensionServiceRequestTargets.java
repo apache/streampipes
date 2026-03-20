@@ -242,11 +242,11 @@ public final class ExtensionServiceRequestTargets {
         .toArray(String[]::new);
   }
 
-  private static List<String> path(String... pathSegments) {
+  public static List<String> path(String... pathSegments) {
     return Arrays.asList(pathSegments);
   }
 
-  private static List<String> topic(ExtensionServiceBrokerOperation operation, String... dynamicTopicSegments) {
+  public static List<String> topic(ExtensionServiceBrokerOperation operation, String... dynamicTopicSegments) {
     return Stream.concat(
             operation.topicPrefixSegments().stream(),
             Arrays.stream(dynamicTopicSegments)

@@ -15,17 +15,13 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.service.core;
+package org.apache.streampipes.service.core.extensions;
 
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
-import org.apache.streampipes.service.core.extensions.CoreExtensionTransportMode;
-import org.apache.streampipes.service.core.extensions.CoreNatsRequestReplyClient;
-import org.apache.streampipes.service.core.extensions.NatsExtensionServiceRequestManager;
-import org.apache.streampipes.service.core.extensions.TransportAwareExtensionServiceRequestManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

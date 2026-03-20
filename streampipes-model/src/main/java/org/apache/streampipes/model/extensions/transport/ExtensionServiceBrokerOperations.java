@@ -19,12 +19,8 @@
 package org.apache.streampipes.model.extensions.transport;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public final class ExtensionServiceBrokerOperations {
+public class ExtensionServiceBrokerOperations {
 
   public static final ExtensionServiceBrokerOperation CONTAINER_PROVIDED_OPTIONS =
       operation("CONTAINER_PROVIDED_OPTIONS", "container-provided-options");
@@ -65,41 +61,10 @@ public final class ExtensionServiceBrokerOperations {
   public static final ExtensionServiceBrokerOperation OUTPUT_SCHEMA =
       operation("OUTPUT_SCHEMA", "output-schema");
 
-  private static final Map<String, ExtensionServiceBrokerOperation> OPERATIONS = Stream.of(
-      CONTAINER_PROVIDED_OPTIONS,
-      MIGRATION,
-      DESCRIPTION_UPDATE,
-      EXTENSION_DESCRIPTION,
-      FUNCTION_STOP,
-      ADAPTER_STATE_CHANGE,
-      RUNTIME_OPTIONS,
-      SAMPLE_DATA,
-      EXTENSION_INSTANCE_HEALTH,
-      SERVICE_HEALTH,
-      SERVICE_LOAD,
-      PIPELINE_ELEMENT_INVOCATION,
-      PIPELINE_ELEMENT_DETACH,
-      PIPELINE_ELEMENT_ASSETS,
-      PIPELINE_ELEMENT_ICON_ASSET,
-      ADAPTER_ASSETS,
-      ADAPTER_ICON_ASSET,
-      ADAPTER_DOCUMENTATION_ASSET,
-      OUTPUT_SCHEMA
-  ).collect(Collectors.toUnmodifiableMap(ExtensionServiceBrokerOperation::operationId, Function.identity()));
-
   private ExtensionServiceBrokerOperations() {
   }
 
-  public static ExtensionServiceBrokerOperation byOperationId(String operationId) {
-    var operation = OPERATIONS.get(operationId);
-    if (operation == null) {
-      throw new IllegalArgumentException("Unknown extension broker operation ID: " + operationId);
-    }
-
-    return operation;
-  }
-
-  private static ExtensionServiceBrokerOperation operation(String operationId, String... topicSegments) {
+  protected static ExtensionServiceBrokerOperation operation(String operationId, String... topicSegments) {
     return new ExtensionServiceBrokerOperation(operationId, List.of(topicSegments));
   }
 }
