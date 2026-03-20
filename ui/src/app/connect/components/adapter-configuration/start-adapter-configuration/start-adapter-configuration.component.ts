@@ -25,9 +25,15 @@ import {
 } from '@angular/core';
 import {
     AdapterDescription,
+    AssetConstants,
+    AssetManagementService,
+    AssetSiteDesc,
     EventSchema,
+    GenericStorageService,
     ReduceEventRateRule,
     RemoveDuplicateRule,
+    SpAsset,
+    SpAssetModel,
     SpAssetTreeNode,
     UserInfo,
 } from '@streampipes/platform-services';
@@ -66,6 +72,8 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { MatTooltip } from '@angular/material/tooltip';
 import { AdapterCodePanelComponent } from '../../adapter-code-panel/adapter-code-panel.component';
 import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'sp-start-adapter-configuration',
@@ -89,6 +97,7 @@ import { MatButton } from '@angular/material/button';
         MatTooltip,
         AdapterCodePanelComponent,
         MatButton,
+        MatIcon,
         TranslatePipe,
         TimestampPipe,
     ],
@@ -100,6 +109,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
     private timestampPipe = inject(TimestampPipe);
     private translateService = inject(TranslateService);
     private currentUserService = inject(CurrentUserService);
+    private assetManagementService = inject(AssetManagementService);
+    private genericStorageService = inject(GenericStorageService);
 
     /**
      * Adapter description the selected format is added to
@@ -134,6 +145,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
     startAdapterForm: UntypedFormGroup;
 
     startAdapterSettingsFormValid = false;
+    readonly defaultTopicTemplate = '{site}/{area}/{asset_path}/{adapterName}';
+    private sitesById: Record<string, AssetSiteDesc> = {};
 
     currentUser: UserInfo;
 
@@ -171,6 +184,10 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 Validators.maxLength(40),
                 ValidateName(),
             ]),
+        );
+        this.startAdapterForm.addControl(
+            'adapterTopicTemplate',
+            new UntypedFormControl(this.defaultTopicTemplate),
         );
         this.startAdapterForm.addControl(
             'adapterTopicName',
@@ -249,6 +266,145 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     onOriginalAssetsEmitted(updatedAssets: SpAssetTreeNode[]): void {
         this.originalAssets = updatedAssets;
+    }
+
+    async applyTopicTemplateFromAsset(): Promise<void> {
+        const selectedAsset = this.selectedAssets[0];
+        const template =
+            this.startAdapterForm.get('adapterTopicTemplate')?.value ??
+            this.defaultTopicTemplate;
+
+        if (!selectedAsset || !template?.trim()) {
+            return;
+        }
+
+        const assetModel = await firstValueFrom(
+            this.assetManagementService.getAsset(selectedAsset.spAssetModelId),
+        );
+        await this.ensureSitesLoaded();
+        const assetPath = this.findAssetPath(assetModel, selectedAsset.assetId);
+
+        if (!assetPath.length) {
+            return;
+        }
+
+        const resolvedTopic = this.resolveTopicTemplate(
+            template,
+            assetModel,
+            assetPath,
+        );
+
+        this.startAdapterForm.get('adapterTopicName')?.setValue(resolvedTopic);
+    }
+
+    get canApplyTopicTemplate(): boolean {
+        return (
+            !this.isEditMode &&
+            this.selectedAssets.length > 0 &&
+            !!this.startAdapterForm?.get('adapterTopicTemplate')?.value?.trim()
+        );
+    }
+
+    private resolveTopicTemplate(
+        template: string,
+        assetModel: SpAssetModel,
+        assetPath: SpAsset[],
+    ): string {
+        const selectedAsset = assetPath[assetPath.length - 1];
+        const delimiter = template.includes('/') ? '/' : '.';
+        const hierarchyNames = assetPath.map(asset =>
+            this.normalizeTopicSegment(asset.assetName),
+        );
+        const assetSite = assetModel.assetSite;
+        const assetType = selectedAsset.assetType;
+        const siteLabel =
+            this.sitesById[assetSite?.siteId]?.label ?? assetSite?.siteId;
+
+        const replacements: Record<string, string> = {
+            site: this.normalizeTopicSegment(siteLabel),
+            area: this.normalizeTopicSegment(assetSite?.area),
+            asset: this.normalizeTopicSegment(selectedAsset.assetName),
+            asset_path: hierarchyNames.join(delimiter),
+            asset_type: this.normalizeTopicSegment(assetType?.assetTypeLabel),
+            isa95_type: this.normalizeTopicSegment(assetType?.isa95AssetType),
+            adapterName: this.normalizeTopicSegment(
+                this.adapterDescription?.name,
+            ),
+        };
+
+        Object.entries(assetModel.additionalData ?? {}).forEach(
+            ([key, value]) => {
+                replacements[`additional.${key}`] = this.normalizeTopicSegment(
+                    String(value),
+                );
+            },
+        );
+
+        Object.entries(selectedAsset.additionalData ?? {}).forEach(
+            ([key, value]) => {
+                replacements[`asset_additional.${key}`] =
+                    this.normalizeTopicSegment(String(value));
+            },
+        );
+
+        return template
+            .replace(/\{([^}]+)\}/g, (_match, placeholder: string) => {
+                return replacements[placeholder] ?? '';
+            })
+            .replaceAll('//', '/')
+            .replaceAll('..', '.')
+            .replace(/^[/.\s]+|[/.\s]+$/g, '');
+    }
+
+    private async ensureSitesLoaded(): Promise<void> {
+        if (Object.keys(this.sitesById).length > 0) {
+            return;
+        }
+
+        const sites = await firstValueFrom(
+            this.genericStorageService.getAllDocuments(
+                AssetConstants.ASSET_SITES_APP_DOC_NAME,
+            ),
+        );
+        this.sitesById = (sites as AssetSiteDesc[]).reduce(
+            (acc, site) => {
+                acc[site._id] = site;
+                return acc;
+            },
+            {} as Record<string, AssetSiteDesc>,
+        );
+    }
+
+    private findAssetPath(
+        assetModel: SpAssetModel,
+        assetId: string,
+    ): SpAsset[] {
+        const walk = (asset: SpAsset, path: SpAsset[]): SpAsset[] | null => {
+            const nextPath = [...path, asset];
+            if (asset.assetId === assetId) {
+                return nextPath;
+            }
+
+            for (const child of asset.assets ?? []) {
+                const result = walk(child, nextPath);
+                if (result) {
+                    return result;
+                }
+            }
+
+            return null;
+        };
+
+        return walk(assetModel, []) ?? [];
+    }
+
+    private normalizeTopicSegment(value: string | null | undefined): string {
+        return (value ?? '')
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9/_-]+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^[-/.]+|[-/.]+$/g, '');
     }
 
     onToggleDuplicates(isChecked: boolean): void {

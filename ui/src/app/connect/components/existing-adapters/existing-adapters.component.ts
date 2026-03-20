@@ -192,6 +192,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     stopAdapterErrorText = 'Could not stop adapter';
     overviewMode: AdapterOverviewMode = 'table';
     unsTopicGroups: UnsTopicGroup[] = [];
+    unsGroupExpanded: Record<string, boolean> = {};
 
     private adapterService = inject(AdapterService);
     private dialogService = inject(DialogService);
@@ -420,6 +421,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             });
         this.dataSource.data = this.filteredAdapters;
         this.unsTopicGroups = this.buildUnsTopicGroups(this.filteredAdapters);
+        this.syncUnsGroupExpansionState();
     }
 
     startAdapterTutorial() {
@@ -445,6 +447,23 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     setOverviewMode(mode: AdapterOverviewMode): void {
         this.overviewMode = mode;
+    }
+
+    setUnsGroupExpanded(groupId: string, expanded: boolean): void {
+        this.unsGroupExpanded[groupId] = expanded;
+    }
+
+    toggleAllUnsGroups(): void {
+        const expand = this.areAllUnsGroupsCollapsed;
+        this.unsTopicGroups.forEach(group => {
+            this.unsGroupExpanded[group.id] = expand;
+        });
+    }
+
+    get areAllUnsGroupsCollapsed(): boolean {
+        return this.unsTopicGroups.every(
+            group => this.unsGroupExpanded[group.id] === false,
+        );
     }
 
     getTopicName(adapter: AdapterDescription): string {
@@ -510,6 +529,16 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     private getTopicDelimiter(topicName: string): string {
         return topicName.includes('/') ? '/' : '.';
+    }
+
+    private syncUnsGroupExpansionState(): void {
+        const nextState: Record<string, boolean> = {};
+
+        this.unsTopicGroups.forEach(group => {
+            nextState[group.id] = this.unsGroupExpanded[group.id] ?? true;
+        });
+
+        this.unsGroupExpanded = nextState;
     }
 
     ngOnDestroy() {

@@ -294,9 +294,32 @@
             </div>
         } @else {
             <div fxFlex="100" fxLayout="column" class="uns-view">
-                <mat-accordion>
+                <div
+                    fxLayout="row"
+                    fxLayoutAlign="end center"
+                    class="uns-actions"
+                >
+                    <button
+                        mat-stroked-button
+                        color="accent"
+                        type="button"
+                        (click)="toggleAllUnsGroups()"
+                    >
+                        {{
+                            (areAllUnsGroupsCollapsed
+                                ? 'Expand all'
+                                : 'Collapse all'
+                            ) | translate
+                        }}
+                    </button>
+                </div>
+                <mat-accordion [multi]="true">
                     @for (group of unsTopicGroups; track group.id) {
-                        <mat-expansion-panel [expanded]="$first">
+                        <mat-expansion-panel
+                            [expanded]="unsGroupExpanded[group.id] ?? true"
+                            (opened)="setUnsGroupExpanded(group.id, true)"
+                            (closed)="setUnsGroupExpanded(group.id, false)"
+                        >
                             <mat-expansion-panel-header>
                                 <span class="uns-group-title">{{
                                     group.namespace

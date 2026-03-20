@@ -93,8 +93,53 @@
                 @if (!isEditMode) {
                     <sp-form-field
                         [level]="2"
+                        [label]="'Topic Template' | translate"
+                    >
+                        <mat-form-field color="accent">
+                            <input
+                                formControlName="adapterTopicTemplate"
+                                matInput
+                                id="input-AdapterTopicTemplate"
+                                [placeholder]="
+                                    '{site}/{area}/{asset_path}/{adapterName}'
+                                        | translate
+                                "
+                                data-cy="sp-adapter-topic-template"
+                            />
+                        </mat-form-field>
+                        <small>
+                            Placeholders: &#123;site&#125;, &#123;area&#125;,
+                            &#123;asset&#125;, &#123;asset_path&#125;,
+                            &#123;adapterName&#125;, &#123;asset_type&#125;,
+                            &#123;isa95_type&#125;,
+                            &#123;additional.&lt;key&gt;&#125;,
+                            &#123;asset_additional.&lt;key&gt;&#125;
+                        </small>
+                    </sp-form-field>
+                    <sp-form-field
+                        [level]="2"
                         [label]="'Topic Name (Optional)' | translate"
                     >
+                        <button
+                            form-field-actions
+                            mat-stroked-button
+                            color="accent"
+                            type="button"
+                            [disabled]="!canApplyTopicTemplate"
+                            [matTooltip]="
+                                canApplyTopicTemplate
+                                    ? ('Generate topic from selected asset'
+                                      | translate)
+                                    : ('Select an asset and provide a template'
+                                      | translate)
+                            "
+                            matTooltipPosition="above"
+                            data-cy="sp-generate-topic-from-asset"
+                            (click)="applyTopicTemplateFromAsset()"
+                        >
+                            <mat-icon>auto_fix_high</mat-icon>
+                            {{ 'Apply Template' | translate }}
+                        </button>
                         <mat-form-field color="accent">
                             <input
                                 formControlName="adapterTopicName"
