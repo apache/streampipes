@@ -58,6 +58,7 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.nats.client.Connection;
+import io.nats.client.ConnectionListener;
 import io.nats.client.Dispatcher;
 import io.nats.client.Message;
 import io.nats.client.Nats;
@@ -84,6 +85,7 @@ public class ExtensionBrokerRequestReceiver {
   private Connection natsConnection;
   private Dispatcher dispatcher;
   private String subscriptionBaseTopic;
+  private Runnable reconnectHandler;
 
   public ExtensionBrokerRequestReceiver(List<ExtensionBrokerOperationHandler> additionalOperationHandlers) {
     this(
@@ -120,9 +122,18 @@ public class ExtensionBrokerRequestReceiver {
   public synchronized boolean start(String serviceId,
                                     ExtensionServiceTransportMode mode,
                                     String topicPrefix) {
+    return start(serviceId, mode, topicPrefix, null);
+  }
+
+  public synchronized boolean start(String serviceId,
+                                    ExtensionServiceTransportMode mode,
+                                    String topicPrefix,
+                                    Runnable reconnectHandler) {
     if (!mode.supportsNats()) {
       return false;
     }
+
+    this.reconnectHandler = reconnectHandler;
 
     try {
       var env = Environments.getEnvironment();
@@ -135,13 +146,14 @@ public class ExtensionBrokerRequestReceiver {
       });
       String natsUrl = "nats://" + natsHost
           + ":" + env.getNatsPort().getValueOrDefault();
-      var optionsBuilder = Options.builder().server(natsUrl);
+      var optionsBuilder = Options.builder().server(natsUrl).maxReconnects(-1);
       var natsToken = env.getNatsToken().getValueOrDefault();
       if (natsToken != null && !natsToken.isBlank()) {
         Properties props = new Properties();
         props.setProperty(Options.PROP_TOKEN, natsToken);
-        optionsBuilder = new Options.Builder(props).server(natsUrl);
+        optionsBuilder = new Options.Builder(props).server(natsUrl).maxReconnects(-1);
       }
+      optionsBuilder = optionsBuilder.connectionListener(this::onConnectionEvent);
       this.natsConnection = Nats.connect(optionsBuilder.build());
 
       this.subscriptionBaseTopic = ExtensionServiceBrokerTopics.serviceTopic(
@@ -159,6 +171,19 @@ public class ExtensionBrokerRequestReceiver {
       LOG.warn("Could not start extension broker receiver", e);
       stop();
       return false;
+    }
+  }
+
+  private void onConnectionEvent(Connection connection, ConnectionListener.Events event) {
+    if (event == ConnectionListener.Events.RECONNECTED) {
+      LOG.info("Extension broker reconnected to NATS");
+      if (reconnectHandler != null) {
+        try {
+          reconnectHandler.run();
+        } catch (Exception e) {
+          LOG.warn("Could not execute extension broker reconnect handler", e);
+        }
+      }
     }
   }
 
@@ -180,6 +205,7 @@ public class ExtensionBrokerRequestReceiver {
     }
 
     subscriptionBaseTopic = null;
+    reconnectHandler = null;
   }
 
   private void onMessage(Message message) {

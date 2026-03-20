@@ -19,6 +19,7 @@
 package org.apache.streampipes.service.core.extensions;
 
 import io.nats.client.Connection;
+import io.nats.client.ConnectionListener;
 import io.nats.client.Message;
 import io.nats.client.Nats;
 import io.nats.client.Options;
@@ -27,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Properties;
 
 public class CoreNatsRequestReplyClient {
 
@@ -51,6 +51,9 @@ public class CoreNatsRequestReplyClient {
         throw new IOException("No NATS response received for subject " + subject);
       }
       return response.getData();
+    } catch (IllegalStateException e) {
+      close();
+      throw new IOException("NATS connection is not available for subject " + subject, e);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new IOException("NATS request was interrupted for subject " + subject, e);
@@ -58,15 +61,9 @@ public class CoreNatsRequestReplyClient {
   }
 
   private Connection getConnection() throws IOException {
-    if (natsConnection == null || natsConnection.getStatus() != Connection.Status.CONNECTED) {
+    if (natsConnection == null || natsConnection.getStatus() == Connection.Status.CLOSED) {
       try {
-        var optionsBuilder = Options.builder().server(natsUrl);
-        if (natsToken != null && !natsToken.isBlank()) {
-          Properties props = new Properties();
-          props.setProperty(Options.PROP_TOKEN, natsToken);
-          optionsBuilder = new Options.Builder(props).server(natsUrl);
-        }
-        natsConnection = Nats.connect(optionsBuilder.build());
+        natsConnection = Nats.connect(buildOptions());
         LOG.info("Connected to NATS at {}", natsUrl);
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
@@ -75,6 +72,28 @@ public class CoreNatsRequestReplyClient {
     }
 
     return natsConnection;
+  }
+
+  private Options buildOptions() {
+    var optionsBuilder = Options.builder()
+        .server(natsUrl)
+        .maxReconnects(-1)
+        .connectionListener(this::onConnectionEvent);
+
+    if (natsToken != null && !natsToken.isBlank()) {
+      optionsBuilder.token(natsToken);
+    }
+
+    return optionsBuilder.build();
+  }
+
+  private void onConnectionEvent(Connection connection, ConnectionListener.Events event) {
+    if (event == ConnectionListener.Events.RECONNECTED || event == ConnectionListener.Events.CONNECTED) {
+      LOG.info("NATS connection event for {}: {}", natsUrl, event);
+    } else if (event == ConnectionListener.Events.DISCONNECTED
+        || event == ConnectionListener.Events.CLOSED) {
+      LOG.warn("NATS connection event for {}: {}", natsUrl, event);
+    }
   }
 
   public synchronized void close() {

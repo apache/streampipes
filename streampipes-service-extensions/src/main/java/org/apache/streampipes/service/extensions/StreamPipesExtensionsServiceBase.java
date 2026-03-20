@@ -82,6 +82,7 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   private ExtensionBrokerRequestReceiver extensionBrokerRequestReceiver;
   private ExtensionServiceTransportMode extensionTransportMode = ExtensionServiceTransportMode.HTTP;
   private boolean natsBrokerReceiverActive = false;
+  private SpServiceRegistration currentServiceRegistration;
 
   public void init() {
     SpServiceDefinition serviceDef = provideServiceDefinition();
@@ -143,7 +144,8 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
           extensionTransportMode,
           Environments.getEnvironment()
               .getExtensionRequestTopicPrefix()
-              .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX)
+              .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX),
+          this::onNatsReconnect
       );
     } else {
       LOG.info("Starting Extension Service on HTTP Mode");
@@ -162,6 +164,8 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         getHealthCheckPath(),
         extensions);
 
+    this.currentServiceRegistration = req;
+
     LOG.info("Registering service {} with id {} at core", req.getSvcGroup(), req.getSvcId());
     registerService(req);
 
@@ -177,6 +181,21 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   private void registerService(SpServiceRegistration serviceRegistration) {
     var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     new CoreRequestSubmitter().submitRegistrationRequest(client, serviceRegistration);
+  }
+
+  private void onNatsReconnect() {
+    var registration = this.currentServiceRegistration;
+    if (registration == null) {
+      LOG.warn("NATS reconnect detected but service registration is not available yet");
+      return;
+    }
+
+    try {
+      LOG.info("NATS reconnect detected - refreshing service registration for {}", registration.getSvcId());
+      registerService(registration);
+    } catch (Exception e) {
+      LOG.warn("Could not refresh service registration after NATS reconnect", e);
+    }
   }
 
   protected Set<SpServiceTag> getServiceTags(Set<ExtensionItemDescription> extensions) {
