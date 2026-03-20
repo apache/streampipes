@@ -32,7 +32,9 @@ import { PipelineElementUnion } from '../editor/model/editor.model';
 import {
     CurrentUserService,
     DialogService,
+    KeyboardShortcutService,
     PanelType,
+    ShortcutRegistration,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../pipelines/pipelines.breadcrumb';
@@ -87,6 +89,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
 
     currentUser$: Subscription;
     autoRefresh$: Subscription;
+    private shortcutReg: ShortcutRegistration;
 
     @ViewChild('pipelinePreviewComponent')
     pipelinePreviewComponent: PipelinePreviewComponent;
@@ -102,9 +105,14 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
         private dialogService: DialogService,
         private router: Router,
         private pipelineOperationsService: PipelineOperationsService,
+        private shortcutService: KeyboardShortcutService,
     ) {}
 
     ngOnInit(): void {
+        this.shortcutReg = this.shortcutService.register('pipeline-details', [
+            { key: 'e', action: () => this.onShortcutEdit() },
+        ]);
+
         this.currentUser$ = this.currentUserService.user$.subscribe(user => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
@@ -244,7 +252,14 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
         );
     }
 
+    private onShortcutEdit(): void {
+        if (this.hasPipelineWritePrivileges) {
+            this.editPipeline();
+        }
+    }
+
     ngOnDestroy() {
+        this.shortcutReg?.unregister();
         this.currentUser$?.unsubscribe();
         this.autoRefresh$?.unsubscribe();
     }
