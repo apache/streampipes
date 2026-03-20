@@ -22,6 +22,7 @@ import org.apache.streampipes.extensions.management.connect.AdapterAssetManageme
 import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataSinkPipelineElementManagement;
 import org.apache.streampipes.extensions.management.pe.DataStreamPipelineElementManagement;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperation;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerRequestEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
@@ -37,9 +38,9 @@ import static org.apache.streampipes.nats.extensions.operation.ExtensionBrokerCo
 
 public class PipelineElementAssetsOperationHandler implements ExtensionBrokerOperationHandler {
 
-  private static final String OPERATION = ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ASSETS.operationId();
-  private static final String TOPIC_OPERATION_SEGMENT =
-      ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ASSETS.firstTopicSegment();
+  private final String operation;
+  private final String topicOperationSegment;
+  private final boolean iconAssetRequest;
 
   private final DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement;
   private final DataSinkPipelineElementManagement dataSinkPipelineElementManagement;
@@ -52,6 +53,43 @@ public class PipelineElementAssetsOperationHandler implements ExtensionBrokerOpe
       DataStreamPipelineElementManagement dataStreamPipelineElementManagement,
       AdapterAssetManagement adapterAssetManagement
   ) {
+    this(
+        dataProcessorPipelineElementManagement,
+        dataSinkPipelineElementManagement,
+        dataStreamPipelineElementManagement,
+        adapterAssetManagement,
+        ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ASSETS,
+        false
+    );
+  }
+
+  public static PipelineElementAssetsOperationHandler iconAssetHandler(
+      DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement,
+      DataSinkPipelineElementManagement dataSinkPipelineElementManagement,
+      DataStreamPipelineElementManagement dataStreamPipelineElementManagement,
+      AdapterAssetManagement adapterAssetManagement
+  ) {
+    return new PipelineElementAssetsOperationHandler(
+        dataProcessorPipelineElementManagement,
+        dataSinkPipelineElementManagement,
+        dataStreamPipelineElementManagement,
+        adapterAssetManagement,
+        ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ICON_ASSET,
+        true
+    );
+  }
+
+  private PipelineElementAssetsOperationHandler(
+      DataProcessorPipelineElementManagement dataProcessorPipelineElementManagement,
+      DataSinkPipelineElementManagement dataSinkPipelineElementManagement,
+      DataStreamPipelineElementManagement dataStreamPipelineElementManagement,
+      AdapterAssetManagement adapterAssetManagement,
+      ExtensionServiceBrokerOperation brokerOperation,
+      boolean iconAssetRequest
+  ) {
+    this.operation = brokerOperation.operationId();
+    this.topicOperationSegment = brokerOperation.firstTopicSegment();
+    this.iconAssetRequest = iconAssetRequest;
     this.dataProcessorPipelineElementManagement = dataProcessorPipelineElementManagement;
     this.dataSinkPipelineElementManagement = dataSinkPipelineElementManagement;
     this.dataStreamPipelineElementManagement = dataStreamPipelineElementManagement;
@@ -60,7 +98,7 @@ public class PipelineElementAssetsOperationHandler implements ExtensionBrokerOpe
 
   @Override
   public String operation() {
-    return OPERATION;
+    return operation;
   }
 
   @Override
@@ -70,7 +108,7 @@ public class PipelineElementAssetsOperationHandler implements ExtensionBrokerOpe
         context.topic(),
         context.subscriptionBaseTopic()
     );
-    if (operationSegments.size() < 3 || !TOPIC_OPERATION_SEGMENT.equals(operationSegments.get(0))) {
+    if (operationSegments.size() < 3 || !topicOperationSegment.equals(operationSegments.get(0))) {
       return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
           "Could not resolve provider and appId from topic " + context.topic()
@@ -88,13 +126,21 @@ public class PipelineElementAssetsOperationHandler implements ExtensionBrokerOpe
 
     byte[] assetBytes;
     if (DATA_PROCESSOR.equals(provider)) {
-      assetBytes = dataProcessorPipelineElementManagement.getAssets(appId);
+      assetBytes = iconAssetRequest
+          ? dataProcessorPipelineElementManagement.getIconAsset(appId)
+          : dataProcessorPipelineElementManagement.getAssets(appId);
     } else if (DATA_SINK.equals(provider)) {
-      assetBytes = dataSinkPipelineElementManagement.getAssets(appId);
+      assetBytes = iconAssetRequest
+          ? dataSinkPipelineElementManagement.getIconAsset(appId)
+          : dataSinkPipelineElementManagement.getAssets(appId);
     } else if (DATA_STREAM.equals(provider)) {
-      assetBytes = dataStreamPipelineElementManagement.getAssets(appId);
+      assetBytes = iconAssetRequest
+          ? dataStreamPipelineElementManagement.getIconAsset(appId)
+          : dataStreamPipelineElementManagement.getAssets(appId);
     } else if (ADAPTER.equals(provider)) {
-      var adapterAssets = adapterAssetManagement.getAssets(appId);
+      var adapterAssets = iconAssetRequest
+          ? adapterAssetManagement.getIconAsset(appId)
+          : adapterAssetManagement.getAssets(appId);
       if (adapterAssets.isEmpty()) {
         return ExtensionBrokerResponseFactory.notFound(
             request.getRequestId(),
@@ -106,10 +152,14 @@ public class PipelineElementAssetsOperationHandler implements ExtensionBrokerOpe
     } else {
       return ExtensionBrokerResponseFactory.badRequestInvalidTopic(
           request.getRequestId(),
-          "Unsupported provider for pipeline asset request: " + provider
+          "Unsupported provider for " + requestLabel() + ": " + provider
       );
     }
 
     return ExtensionBrokerResponseFactory.okBytes(request.getRequestId(), assetBytes);
+  }
+
+  private String requestLabel() {
+    return iconAssetRequest ? "pipeline icon asset request" : "pipeline asset request";
   }
 }

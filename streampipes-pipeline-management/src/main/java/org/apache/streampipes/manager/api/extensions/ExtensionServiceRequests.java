@@ -107,6 +107,10 @@ public final class ExtensionServiceRequests {
     return get(target, null, false);
   }
 
+  public static ExtensionServiceRequest pipelineElementIconAsset(ExtensionServiceRequestTarget target) {
+    return get(target, null, false);
+  }
+
   public static ExtensionServiceRequest adapterAssets(ExtensionServiceRequestTarget target) {
     return get(target, null, false);
   }

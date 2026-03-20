@@ -54,6 +54,8 @@ public final class ExtensionServiceBrokerOperations {
       operation("PIPELINE_ELEMENT_DETACH", "pipeline-detach");
   public static final ExtensionServiceBrokerOperation PIPELINE_ELEMENT_ASSETS =
       operation("PIPELINE_ELEMENT_ASSETS", "pipeline-element-assets");
+  public static final ExtensionServiceBrokerOperation PIPELINE_ELEMENT_ICON_ASSET =
+      operation("PIPELINE_ELEMENT_ICON_ASSET", "pipeline-element-icon-asset");
   public static final ExtensionServiceBrokerOperation ADAPTER_ASSETS =
       operation("ADAPTER_ASSETS", "adapter-assets");
   public static final ExtensionServiceBrokerOperation ADAPTER_ICON_ASSET =
@@ -78,6 +80,7 @@ public final class ExtensionServiceBrokerOperations {
       PIPELINE_ELEMENT_INVOCATION,
       PIPELINE_ELEMENT_DETACH,
       PIPELINE_ELEMENT_ASSETS,
+      PIPELINE_ELEMENT_ICON_ASSET,
       ADAPTER_ASSETS,
       ADAPTER_ICON_ASSET,
       ADAPTER_DOCUMENTATION_ASSET,

@@ -295,6 +295,12 @@ public class ExtensionBrokerRequestReceiver {
                 dataStreamPipelineElementManagement,
                 adapterAssetManagement
             ),
+            PipelineElementAssetsOperationHandler.iconAssetHandler(
+                dataProcessorPipelineElementManagement,
+                dataSinkPipelineElementManagement,
+                dataStreamPipelineElementManagement,
+                adapterAssetManagement
+            ),
             new PipelineElementInvocationOperationHandler(
                 objectMapper,
                 dataProcessorPipelineElementManagement,

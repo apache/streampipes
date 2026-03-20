@@ -176,6 +176,17 @@ public final class ExtensionServiceRequestTargets {
     );
   }
 
+  public static ExtensionServiceRequestTarget pipelineElementIconAsset(SpServiceRegistration service,
+                                                                       SpServiceUrlProvider provider,
+                                                                       String appId) {
+    return forService(
+        service,
+        ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ICON_ASSET,
+        path(provider.getPrefix(), appId, "assets", "icon"),
+        topic(ExtensionServiceBrokerOperations.PIPELINE_ELEMENT_ICON_ASSET, provider.name(), appId)
+    );
+  }
+
   public static ExtensionServiceRequestTarget adapterAssets(SpServiceRegistration service,
                                                             String appId) {
     return forService(service, ExtensionServiceBrokerOperations.ADAPTER_ASSETS,
