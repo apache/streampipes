@@ -416,10 +416,6 @@ export class SpTableComponent<T>
         return this.selection.isSelected(row);
     }
 
-    onRowCheckboxClick(event: MouseEvent): void {
-        event.stopPropagation();
-    }
-
     toggleRowSelection(row: T, checked: boolean) {
         if (checked) {
             this.selection.select(row);

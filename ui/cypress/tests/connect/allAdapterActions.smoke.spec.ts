@@ -49,16 +49,4 @@ describe('Testing Start/Stop All Adapters', () => {
         // Navigating through the start all adapters dialog box
         ConnectUtils.allAdapterActionsDialog();
     });
-
-    it('Ctrl+Click on a row checkbox selects all visible adapters', () => {
-        cy.wait(1000);
-
-        cy.dataCy('sp-table-row-checkbox')
-            .first()
-            .click({ ctrlKey: true, force: true });
-
-        cy.dataCy('sp-table-select-all-checkbox')
-            .find('input[type="checkbox"]')
-            .should('be.checked');
-    });
 });
