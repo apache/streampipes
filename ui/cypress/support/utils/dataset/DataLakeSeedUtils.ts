@@ -69,6 +69,16 @@ interface CsvFixtureImportOptions {
     columnOverrides?: Record<string, ColumnOverride>;
 }
 
+interface CsvInlineImportOptions {
+    headers: string[];
+    rows: string[][];
+    measurementName: string;
+    delimiter?: string;
+    decimalSeparator?: '.' | ',';
+    timestampColumn?: string;
+    columnOverrides?: Record<string, ColumnOverride>;
+}
+
 interface JsonArrayFixtureImportOptions {
     fixture: string;
     measurementName: string;
@@ -117,6 +127,27 @@ export class DataLakeSeedUtils {
         });
     }
 
+    public static importCsvData(
+        options: CsvInlineImportOptions,
+    ): Cypress.Chainable<CsvImportResult> {
+        const delimiter = options.delimiter ?? ';';
+        const decimalSeparator = options.decimalSeparator ?? '.';
+        const timestampColumn = options.timestampColumn ?? options.headers[0];
+
+        return this.previewAndImport({
+            headers: options.headers,
+            rows: options.rows,
+            csvConfig: {
+                delimiter,
+                decimalSeparator,
+                hasHeader: true,
+            },
+            measurementName: options.measurementName,
+            timestampColumn,
+            columnOverrides: options.columnOverrides,
+        });
+    }
+
     public static importJsonArrayFixture(
         options: JsonArrayFixtureImportOptions,
     ): Cypress.Chainable<CsvImportResult> {
@@ -152,63 +183,66 @@ export class DataLakeSeedUtils {
         timestampColumn: string;
         columnOverrides?: Record<string, ColumnOverride>;
     }): Cypress.Chainable<CsvImportResult> {
-        const token = window.localStorage.getItem('auth-token');
         const target = {
             mode: 'NEW' as CsvImportTargetMode,
             measurementName: options.measurementName,
         };
 
-        return cy
-            .request<CsvImportPreviewResult>({
-                method: 'POST',
-                url: '/streampipes-backend/api/v4/datalake/import/preview',
-                body: {
-                    csvConfig: options.csvConfig,
-                    headers: options.headers,
-                    rows: options.rows,
-                    target,
-                },
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            .then(previewResponse => {
-                const columns = this.buildColumns(
-                    previewResponse.body.columns,
-                    options.timestampColumn,
-                    options.columnOverrides ?? {},
-                );
+        return cy.window().then(win => {
+            const token = win.localStorage.getItem('auth-token');
 
-                const request: ImportRequest = {
-                    csvConfig: options.csvConfig,
-                    headers: options.headers,
-                    rows: options.rows,
-                    target,
-                    timestampColumn: options.timestampColumn,
-                    columns,
-                };
+            return cy
+                .request<CsvImportPreviewResult>({
+                    method: 'POST',
+                    url: '/streampipes-backend/api/v4/datalake/import/preview',
+                    body: {
+                        csvConfig: options.csvConfig,
+                        headers: options.headers,
+                        rows: options.rows,
+                        target,
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then(previewResponse => {
+                    const columns = this.buildColumns(
+                        previewResponse.body.columns,
+                        options.timestampColumn,
+                        options.columnOverrides ?? {},
+                    );
 
-                return cy
-                    .request<CsvImportResult>({
-                        method: 'POST',
-                        url: '/streampipes-backend/api/v4/datalake/import',
-                        body: request,
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    })
-                    .then(importResponse => {
-                        expect(
-                            importResponse.body.validationMessages,
-                            'import validation messages',
-                        ).to.have.length(0);
-                        expect(
-                            importResponse.body.importedRowCount,
-                            'imported row count',
-                        ).to.equal(options.rows.length);
-                        return importResponse.body;
-                    });
-            });
+                    const request: ImportRequest = {
+                        csvConfig: options.csvConfig,
+                        headers: options.headers,
+                        rows: options.rows,
+                        target,
+                        timestampColumn: options.timestampColumn,
+                        columns,
+                    };
+
+                    return cy
+                        .request<CsvImportResult>({
+                            method: 'POST',
+                            url: '/streampipes-backend/api/v4/datalake/import',
+                            body: request,
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        })
+                        .then(importResponse => {
+                            expect(
+                                importResponse.body.validationMessages,
+                                'import validation messages',
+                            ).to.have.length(0);
+                            expect(
+                                importResponse.body.importedRowCount,
+                                'imported row count',
+                            ).to.equal(options.rows.length);
+                            return importResponse.body;
+                        });
+                });
+        });
     }
 
     private static buildColumns(

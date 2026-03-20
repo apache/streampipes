@@ -39,6 +39,8 @@ describe('CSV import happy path', () => {
         DatasetUtils.selectCsvImportTimestampColumn(0);
         DatasetUtils.uploadCsvImport();
         DatasetUtils.expectDatasetTotalEventCount(datasetName, '7');
+        DatasetUtils.openDatasetPreview(datasetName);
+        DatasetUtils.expectDatasetPreviewDoesNotContainKey('Timestamp');
     });
 
     it('Uploads a CSV file with string timestamps and transforms them during import', () => {
