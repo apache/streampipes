@@ -50,10 +50,14 @@ export class ConfirmDialogComponent {
     ) {}
 
     onCancel(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(this.data.cancelResult);
+    }
+
+    onNeutral(): void {
+        this.dialogRef.close(this.data.neutralResult);
     }
 
     onOk(): void {
-        this.dialogRef.close(true);
+        this.dialogRef.close(this.data.okResult ?? true);
     }
 }

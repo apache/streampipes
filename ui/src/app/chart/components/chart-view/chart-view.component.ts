@@ -57,7 +57,7 @@ import { ChartDetectChangesService } from '../../services/chart-detect-changes.s
 import { SupportsUnsavedChangeDialog } from '../../../chart-shared/models/dataview-dashboard.model';
 import { Observable, of, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ResizeEchartsService } from '../../../chart-shared/services/resize-echarts.service';
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
@@ -428,27 +428,34 @@ export class ChartViewComponent
                     subtitle: this.translateService.instant(
                         'Update all changes to chart or discard current changes.',
                     ),
+                    neutralTitle: this.translateService.instant('Keep editing'),
+                    neutralResult: 'stay',
                     cancelTitle:
                         this.translateService.instant('Discard changes'),
+                    cancelResult: false,
                     okTitle: this.translateService.instant('Update'),
+                    okResult: true,
                     confirmAndCancel: true,
                 },
             });
             return dialogRef.afterClosed().pipe(
-                map(shouldUpdate => {
-                    if (shouldUpdate) {
+                switchMap(dialogResult => {
+                    if (dialogResult === true) {
                         this.dataView.timeSettings = this.timeSettings;
-                        const observable =
+                        return (
                             this.dataView.elementId !== undefined
                                 ? this.dataViewService.updateChart(
                                       this.dataView,
                                   )
-                                : this.dataViewService.saveChart(this.dataView);
-                        observable.subscribe(() => {
-                            return true;
-                        });
+                                : this.dataViewService.saveChart(this.dataView)
+                        ).pipe(map(() => true));
                     }
-                    return true;
+
+                    if (dialogResult === false) {
+                        return of(true);
+                    }
+
+                    return of(false);
                 }),
             );
         } else {

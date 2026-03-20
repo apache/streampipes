@@ -325,24 +325,31 @@ export class DashboardPanelComponent
                     subtitle: this.translateService.instant(
                         'Update all changes to dashboard charts or discard current changes.',
                     ),
+                    neutralTitle: this.translateService.instant('Keep editing'),
+                    neutralResult: 'stay',
                     cancelTitle:
                         this.translateService.instant('Discard changes'),
+                    cancelResult: false,
                     okTitle: this.translateService.instant('Update'),
+                    okResult: true,
                     confirmAndCancel: true,
                 },
             });
             return dialogRef.afterClosed().pipe(
-                map(shouldUpdate => {
-                    if (shouldUpdate) {
+                switchMap(dialogResult => {
+                    if (dialogResult === true) {
                         this.dashboard.dashboardGeneralSettings.defaultViewMode =
                             this.viewMode;
-                        this.dashboardService
+                        return this.dashboardService
                             .updateDashboard(this.dashboard)
-                            .subscribe(result => {
-                                return true;
-                            });
+                            .pipe(map(() => true));
                     }
-                    return true;
+
+                    if (dialogResult === false) {
+                        return of(true);
+                    }
+
+                    return of(false);
                 }),
             );
         } else {
