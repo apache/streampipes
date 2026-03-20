@@ -106,12 +106,11 @@ export class SecurityUserGroupConfigComponent implements OnInit {
                     'This action cannot be reversed!',
                 ),
                 cancelTitle: this.translateService.instant('Cancel'),
-                okTitle: this.translateService.instant('Delete Group'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Delete Group'),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === 'confirm') {
                 this.userGroupService.deleteGroup(group).subscribe(response => {
                     this.loadAllGroups();
                 });

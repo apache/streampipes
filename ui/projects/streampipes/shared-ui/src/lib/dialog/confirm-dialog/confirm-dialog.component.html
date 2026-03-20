@@ -46,7 +46,7 @@
                 fxLayoutAlign="end center"
                 class="primary-actions"
             >
-                @if (data.confirmAndCancel) {
+                @if (data.cancelTitle) {
                     <button
                         mat-button
                         (click)="onCancel()"
@@ -62,7 +62,7 @@
                     cdkFocusInitial
                     data-cy="confirm-delete"
                 >
-                    {{ data.okTitle }}
+                    {{ data.confirmTitle }}
                 </button>
             </div>
         </div>

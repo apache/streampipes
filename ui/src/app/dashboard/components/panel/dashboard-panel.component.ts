@@ -38,6 +38,7 @@ import {
 } from '@angular/router';
 import { DashboardSlideViewComponent } from '../../../dashboard-shared/components/chart-view/slide-view/dashboard-slide-view.component';
 import {
+    ConfirmDialogAction,
     ConfirmDialogComponent,
     CurrentUserService,
     SpBasicViewComponent,
@@ -326,18 +327,14 @@ export class DashboardPanelComponent
                         'Update all changes to dashboard charts or discard current changes.',
                     ),
                     neutralTitle: this.translateService.instant('Keep editing'),
-                    neutralResult: 'stay',
                     cancelTitle:
                         this.translateService.instant('Discard changes'),
-                    cancelResult: false,
-                    okTitle: this.translateService.instant('Update'),
-                    okResult: true,
-                    confirmAndCancel: true,
+                    confirmTitle: this.translateService.instant('Update'),
                 },
             });
             return dialogRef.afterClosed().pipe(
-                switchMap(dialogResult => {
-                    if (dialogResult === true) {
+                switchMap((dialogResult: ConfirmDialogAction | undefined) => {
+                    if (dialogResult === 'confirm') {
                         this.dashboard.dashboardGeneralSettings.defaultViewMode =
                             this.viewMode;
                         return this.dashboardService
@@ -345,7 +342,7 @@ export class DashboardPanelComponent
                             .pipe(map(() => true));
                     }
 
-                    if (dialogResult === false) {
+                    if (dialogResult === 'cancel') {
                         return of(true);
                     }
 

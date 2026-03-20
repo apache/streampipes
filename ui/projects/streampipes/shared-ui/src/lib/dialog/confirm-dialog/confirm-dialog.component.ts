@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
     MAT_DIALOG_DATA,
     MatDialogActions,
@@ -29,6 +29,7 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
+import { ConfirmDialogAction, ConfirmDialogData } from './confirm-dialog.model';
 
 @Component({
     selector: 'confirmation-dialog',
@@ -44,20 +45,21 @@ import { MatButton } from '@angular/material/button';
     ],
 })
 export class ConfirmDialogComponent {
-    constructor(
-        public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
-    ) {}
+    public dialogRef =
+        inject<MatDialogRef<ConfirmDialogComponent, ConfirmDialogAction>>(
+            MatDialogRef,
+        );
+    public data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
 
     onCancel(): void {
-        this.dialogRef.close(this.data.cancelResult);
+        this.dialogRef.close('cancel');
     }
 
     onNeutral(): void {
-        this.dialogRef.close(this.data.neutralResult);
+        this.dialogRef.close('neutral');
     }
 
     onOk(): void {
-        this.dialogRef.close(this.data.okResult ?? true);
+        this.dialogRef.close('confirm');
     }
 }

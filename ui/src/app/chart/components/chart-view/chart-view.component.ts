@@ -43,6 +43,7 @@ import {
 } from '@angular/router';
 import {
     AssetSaveService,
+    ConfirmDialogAction,
     ConfirmDialogComponent,
     CurrentUserService,
     DialogService,
@@ -397,8 +398,7 @@ export class ChartViewComponent
                     'Update asset links or close.',
                 ),
                 cancelTitle: this.translateService.instant('Close'),
-                okTitle: this.translateService.instant('Update'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Update'),
                 editMode: this.editMode,
                 selectedAssets: this.selectedAssets,
                 deselectedAssets: this.deselectedAssets,
@@ -429,18 +429,14 @@ export class ChartViewComponent
                         'Update all changes to chart or discard current changes.',
                     ),
                     neutralTitle: this.translateService.instant('Keep editing'),
-                    neutralResult: 'stay',
                     cancelTitle:
                         this.translateService.instant('Discard changes'),
-                    cancelResult: false,
-                    okTitle: this.translateService.instant('Update'),
-                    okResult: true,
-                    confirmAndCancel: true,
+                    confirmTitle: this.translateService.instant('Update'),
                 },
             });
             return dialogRef.afterClosed().pipe(
-                switchMap(dialogResult => {
-                    if (dialogResult === true) {
+                switchMap((dialogResult: ConfirmDialogAction | undefined) => {
+                    if (dialogResult === 'confirm') {
                         this.dataView.timeSettings = this.timeSettings;
                         return (
                             this.dataView.elementId !== undefined
@@ -451,7 +447,7 @@ export class ChartViewComponent
                         ).pipe(map(() => true));
                     }
 
-                    if (dialogResult === false) {
+                    if (dialogResult === 'cancel') {
                         return of(true);
                     }
 
