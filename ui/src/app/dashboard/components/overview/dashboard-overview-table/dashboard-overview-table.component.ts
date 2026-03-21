@@ -185,12 +185,11 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
                     'This action cannot be undone!',
                 ),
                 cancelTitle: this.translateService.instant('Cancel'),
-                okTitle: this.translateService.instant('Delete dashboard'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Delete dashboard'),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === 'confirm') {
                 this.dashboardService
                     .deleteDashboard(dashboard)
                     .subscribe(() => {

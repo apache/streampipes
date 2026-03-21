@@ -16,10 +16,12 @@
  *
  */
 
-.footer {
-    margin-top: 20px;
-}
+export type ConfirmDialogAction = 'confirm' | 'cancel' | 'neutral';
 
-.neutral-action-wrapper {
-    margin-right: auto;
+export interface ConfirmDialogData {
+    title: string;
+    subtitle: string;
+    confirmTitle: string;
+    cancelTitle?: string;
+    neutralTitle?: string;
 }

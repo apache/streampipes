@@ -252,14 +252,13 @@ export class ConfigureSchemaComponent implements OnInit {
                         'the most current data. Check your transformation rules after the refresh to ensure everything still aligns.',
                 ),
                 cancelTitle: this.translateService.instant('Nothing changed'),
-                okTitle: this.translateService.instant('Reload Sample'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Reload Sample'),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === 'confirm') {
                 this.getSampleEvent();
-            } else {
+            } else if (result === 'cancel') {
                 this.confirmChangesDoNotEffectSchema();
             }
         });
