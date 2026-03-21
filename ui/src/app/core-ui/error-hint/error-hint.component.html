@@ -16,51 +16,47 @@
 ~
 -->
 <div class="error-hint-position">
-    @if (displayMessages) {
+    @if (displayMessages()) {
         <div
             class="pipeline-validation-summary {{
-                errorMessages.length > 0
-                    ? 'pipeline-validation-summary-error'
-                    : ''
+                hasErrorMessages() ? 'pipeline-validation-summary-error' : ''
             }}"
             (click)="toggleErrorMessagesDisplayed()"
         >
             <div fxLayout="row" fxLayoutAlign="center center">
                 <div fxLayout="row" fxLayoutAlign="start center">
-                    @if (errorMessages.length > 0) {
+                    @if (hasErrorMessages()) {
                         <i class="material-icons">notifications</i>
                     }
-                    @if (errorMessages.length === 0) {
+                    @if (!hasErrorMessages()) {
                         <i class="material-icons">done</i>
                     }
                 </div>
                 <div>
-                    @if (errorMessages.length === 0) {
-                        <span>{{ validationString }} ok</span>
+                    @if (!hasErrorMessages()) {
+                        <span>{{ validationString() }} ok</span>
                     }
-                    @if (errorMessages.length > 0) {
+                    @if (hasErrorMessages()) {
                         <span
-                            >{{ errorMessages.length }}
-                            {{
-                                errorMessages.length > 1 ? 'hints' : 'hint'
-                            }}</span
+                            >{{ errorCount() }}
+                            {{ errorCount() > 1 ? 'hints' : 'hint' }}</span
                         >
                     }
                 </div>
             </div>
         </div>
     }
-    @if (errorMessages.length > 0 && errorMessagesDisplayed) {
+    @if (hasErrorMessages() && errorMessagesDisplayed()) {
         <div class="editor-error-notifications">
             <h5 class="error-hint-color">
                 <b
-                    >{{ errorMessages.length }}
-                    {{ errorMessages.length === 1 ? 'error' : 'errors' }}
+                    >{{ errorCount() }}
+                    {{ errorCount() === 1 ? 'error' : 'errors' }}
                     found.</b
                 >
             </h5>
             <hr />
-            @for (errorMessage of errorMessages; track errorMessage) {
+            @for (errorMessage of errorMessages(); track errorMessage) {
                 <div>
                     <b>{{ errorMessage.title }}</b>
                     <div>{{ errorMessage.content }}</div>

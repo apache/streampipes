@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
 import {
     LayoutAlignDirective,
@@ -29,20 +29,16 @@ import {
     styleUrls: ['./error-hint.component.scss'],
     imports: [LayoutDirective, LayoutAlignDirective],
 })
-export class ErrorHintComponent implements OnInit {
-    @Input() errorMessages: UserErrorMessage[];
-    @Input() displayMessages = true;
-    @Input() validationString: string;
+export class ErrorHintComponent {
+    readonly errorMessages = input<UserErrorMessage[]>([]);
+    readonly displayMessages = input(true);
+    readonly validationString = input('');
 
-    errorMessagesDisplayed: boolean;
-
-    constructor() {}
-
-    ngOnInit(): void {
-        this.errorMessagesDisplayed = false;
-    }
+    readonly errorMessagesDisplayed = signal(false);
+    readonly errorCount = computed(() => this.errorMessages().length);
+    readonly hasErrorMessages = computed(() => this.errorCount() > 0);
 
     public toggleErrorMessagesDisplayed() {
-        this.errorMessagesDisplayed = !this.errorMessagesDisplayed;
+        this.errorMessagesDisplayed.update(displayed => !displayed);
     }
 }
