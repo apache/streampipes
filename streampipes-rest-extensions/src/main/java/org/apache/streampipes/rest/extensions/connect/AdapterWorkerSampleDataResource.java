@@ -20,8 +20,7 @@ package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.exceptions.connect.ParseException;
-import org.apache.streampipes.extensions.management.connect.AdapterWorkerSampleDataManagement;
-import org.apache.streampipes.extensions.management.context.AdapterContextGenerator;
+import org.apache.streampipes.extensions.management.connect.AdapterWorkerSampleDataRequestManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
@@ -45,13 +44,13 @@ public class AdapterWorkerSampleDataResource extends AbstractSharedRestInterface
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerSampleDataResource.class);
 
-  private final AdapterWorkerSampleDataManagement guessManagement;
+  private final AdapterWorkerSampleDataRequestManagement guessManagement;
 
   public AdapterWorkerSampleDataResource() {
-    this.guessManagement = new AdapterWorkerSampleDataManagement(new AdapterContextGenerator().makeGuessSchemaContext());
+    this.guessManagement = new AdapterWorkerSampleDataRequestManagement();
   }
 
-  public AdapterWorkerSampleDataResource(AdapterWorkerSampleDataManagement guessManagement) {
+  public AdapterWorkerSampleDataResource(AdapterWorkerSampleDataRequestManagement guessManagement) {
     this.guessManagement = guessManagement;
   }
 
@@ -84,4 +83,3 @@ public class AdapterWorkerSampleDataResource extends AbstractSharedRestInterface
   }
 
 }
-

@@ -28,6 +28,7 @@ import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.util.Map;
@@ -48,6 +49,8 @@ public class SendToBrokerAdapterSink implements IAdapterPipelineElement {
     if (getEnvironment().getSpDebug().getValueOrDefault()) {
       modifyProtocolForDebugging(this.protocol);
     }
+
+    addNatsTokenIfConfigured(this.protocol);
 
     var producerOpt = SpProtocolManager.INSTANCE.findDefinition(this.protocol);
     if (producerOpt.isPresent()) {
@@ -93,6 +96,16 @@ public class SendToBrokerAdapterSink implements IAdapterPipelineElement {
     return Environments.getEnvironment();
   }
 
-}
+  private void addNatsTokenIfConfigured(TransportProtocol protocol) {
+    if (protocol instanceof NatsTransportProtocol natsProtocol) {
+      var natsToken = getEnvironment().getNatsToken().getValueOrDefault();
+      if ((natsProtocol.getToken() == null || natsProtocol.getToken().isBlank())
+          && natsToken != null
+          && !natsToken.isBlank()) {
+        natsProtocol.setToken(natsToken);
+      }
+    }
+  }
 
+}
 

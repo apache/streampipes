@@ -20,6 +20,8 @@ package org.apache.streampipes.model.grounding;
 
 public class KafkaTransportProtocol extends TransportProtocol {
 
+  public static final String BROKER_ID = "kafka";
+
   private int kafkaPort;
 
   private Integer lingerMs;
@@ -60,6 +62,11 @@ public class KafkaTransportProtocol extends TransportProtocol {
 
   public KafkaTransportProtocol() {
     super();
+  }
+
+  @Override
+  public String protocolId() {
+    return BROKER_ID;
   }
 
   public int getKafkaPort() {

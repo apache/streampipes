@@ -29,7 +29,6 @@ public class SpCoreConfiguration {
   protected @SerializedName("_rev") String rev;
   private @SerializedName("_id") String id = ID;
 
-  private MessagingSettings messagingSettings;
   private LocalAuthConfig localAuthConfig;
   private EmailConfig emailConfig;
   private EmailTemplateConfig emailTemplateConfig;
@@ -62,14 +61,6 @@ public class SpCoreConfiguration {
 
   public void setId(String id) {
     this.id = id;
-  }
-
-  public MessagingSettings getMessagingSettings() {
-    return messagingSettings;
-  }
-
-  public void setMessagingSettings(MessagingSettings messagingSettings) {
-    this.messagingSettings = messagingSettings;
   }
 
   public LocalAuthConfig getLocalAuthConfig() {

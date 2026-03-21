@@ -23,7 +23,6 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
@@ -155,8 +154,6 @@ public class Cloner {
   public TransportProtocol protocol(TransportProtocol protocol) {
     if (protocol instanceof KafkaTransportProtocol) {
       return new KafkaTransportProtocol((KafkaTransportProtocol) protocol);
-    } else if (protocol instanceof JmsTransportProtocol) {
-      return new JmsTransportProtocol((JmsTransportProtocol) protocol);
     } else if (protocol instanceof MqttTransportProtocol) {
       return new MqttTransportProtocol((MqttTransportProtocol) protocol);
     } else if (protocol instanceof NatsTransportProtocol) {

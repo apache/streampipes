@@ -90,7 +90,6 @@
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
         <rdf4j.version>3.7.7</rdf4j.version>
 
-        <rendersnake.version>1.9.0</rendersnake.version>
         <rocketmq.version>5.0.2</rocketmq.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <s3.version>2.25.14</s3.version>
@@ -774,11 +773,6 @@
                 <version>${jts-core.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.rendersnake</groupId>
-                <artifactId>rendersnake</artifactId>
-                <version>${rendersnake.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.simplejavamail</groupId>
                 <artifactId>simple-java-mail</artifactId>
                 <version>${simple-java-mail.version}</version>
@@ -896,7 +890,6 @@
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
         <module>streampipes-messaging</module>
-        <module>streampipes-messaging-jms</module>
         <module>streampipes-messaging-mqtt</module>
         <module>streampipes-messaging-nats</module>
         <module>streampipes-messaging-pulsar</module>
@@ -919,6 +912,7 @@
         <module>streampipes-service-core-minimal</module>
         <module>streampipes-service-discovery</module>
         <module>streampipes-service-discovery-api</module>
+        <module>streampipes-nats-extensions</module>
         <module>streampipes-service-extensions</module>
         <module>streampipes-storage-api</module>
         <module>streampipes-storage-couchdb</module>

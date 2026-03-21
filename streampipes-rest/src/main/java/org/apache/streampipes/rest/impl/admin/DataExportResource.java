@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.export.ExportManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.export.ExportConfiguration;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -39,12 +40,18 @@ import java.util.List;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class DataExportResource extends AbstractAuthGuardedRestResource {
 
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
+
+  public DataExportResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
+  }
+
   @PostMapping(
       path = "/preview",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ExportConfiguration> getExportPreview(@RequestBody List<String> selectedAssetIds) {
-    var exportConfig = ExportManager.getExportPreview(selectedAssetIds);
+    var exportConfig = ExportManager.getExportPreview(selectedAssetIds, extensionServiceRequestManager);
     return ok(exportConfig);
   }
 
@@ -53,7 +60,7 @@ public class DataExportResource extends AbstractAuthGuardedRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   public ResponseEntity<byte[]> download(@RequestBody ExportConfiguration exportConfiguration) throws IOException {
-    var applicationPackage = ExportManager.getExportPackage(exportConfiguration);
+    var applicationPackage = ExportManager.getExportPackage(exportConfiguration, extensionServiceRequestManager);
     return ok(applicationPackage);
   }
 

@@ -25,10 +25,8 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
-import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -80,10 +78,7 @@ public class JmsPublisherSink implements IStreamPipesDataSink {
     Integer jmsPort = extractor.singleValueParameter(PORT_KEY, Integer.class);
     String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
 
-    JmsTransportProtocol jmsTransportProtocol =
-        new JmsTransportProtocol(jmsHost, jmsPort, topic);
-
-    this.publisher = new ActiveMQPublisher(jmsTransportProtocol);
+    this.publisher = new ActiveMQPublisher(jmsHost, jmsPort, topic);
     this.publisher.connect();
 
     if (!this.publisher.isConnected()) {

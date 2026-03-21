@@ -18,19 +18,21 @@
 
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class PipelineValidationSteps {
 
-  public List<IPipelineValidationStep> collect() {
+  public List<IPipelineValidationStep> collect(ExtensionServiceRequestManager requestManager) {
     return Arrays.asList(
         new PrepareStep(),
         new ApplyGroundingStep(),
         new SchemaValidationStep(),
         new UpdateStaticPropertiesStep(),
         new UpdateOutputStrategiesStep(),
-        new ComputeOutputStep(),
+        new ComputeOutputStep(requestManager),
         new CheckCompletedStep()
     );
   }

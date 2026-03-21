@@ -20,7 +20,6 @@ package org.apache.streampipes.model.configuration;
 public enum SpProtocol {
 
   KAFKA("Kafka", "org.apache.streampipes.model.grounding.KafkaTransportProtocol"),
-  JMS("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol"),
   MQTT("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol"),
   NATS("NATS", "org.apache.streampipes.model.grounding.NatsTransportProtocol"),
   PULSAR("PULSAR", "org.apache.streampipes.model.grounding.PulsarTransportProtocol");

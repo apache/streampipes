@@ -19,10 +19,14 @@
 package org.apache.streampipes.manager.migration;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.migration.MigrationResult;
@@ -40,13 +44,16 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.manager.migration.MigrationUtils.getRequestUrl;
+import static org.apache.streampipes.manager.migration.MigrationUtils.getRequestTarget;
 
 public abstract class AbstractMigrationManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractMigrationManager.class);
+  protected final ExtensionServiceRequestManager requestManager;
 
-  protected static final String MIGRATION_ENDPOINT = "api/v1/migrations";
+  protected AbstractMigrationManager(ExtensionServiceRequestManager requestManager) {
+    this.requestManager = requestManager;
+  }
 
   /**
    * Performs the actual migration of a pipeline element.
@@ -54,7 +61,7 @@ public abstract class AbstractMigrationManager {
    *
    * @param pipelineElement pipeline element to be migrated
    * @param migrationConfig config of the migration to be performed
-   * @param url             url of the migration endpoint at the extensions service
+   * @param service         url of the migration endpoint at the extensions service
    *                        where the migration should be performed
    * @param <T>             type of the processing element
    * @return result of the migration
@@ -62,7 +69,18 @@ public abstract class AbstractMigrationManager {
   protected <T extends VersionedNamedStreamPipesEntity> MigrationResult<T> performMigration(
       T pipelineElement,
       ModelMigratorConfig migrationConfig,
-      String url
+      SpServiceRegistration service,
+      String type
+  ) {
+    return performMigration(pipelineElement, migrationConfig,
+        ExtensionServiceRequestTargets.migration(service, type)
+    );
+  }
+
+  protected <T extends VersionedNamedStreamPipesEntity> MigrationResult<T> performMigration(
+      T pipelineElement,
+      ModelMigratorConfig migrationConfig,
+      ExtensionServiceRequestTarget requestTarget
   ) {
 
     try {
@@ -71,15 +89,14 @@ public abstract class AbstractMigrationManager {
 
       String serializedRequest = JacksonSerializer.getObjectMapper().writeValueAsString(migrationRequest);
 
-      var migrationResponse = ExtensionServiceExecutions.extServicePostRequest(
-          url,
-          serializedRequest
-      ).execute();
+      var migrationResponse = requestManager.request(
+          ExtensionServiceRequests.migration(requestTarget, serializedRequest)
+      );
 
       TypeReference<MigrationResult<T>> typeReference = new TypeReference<>() {
       };
 
-      String migrationResponseString = migrationResponse.returnContent().asString();
+      String migrationResponseString = migrationResponse.responseBody();
       return JacksonSerializer
           .getObjectMapper()
           .readValue(migrationResponseString, typeReference);
@@ -101,9 +118,9 @@ public abstract class AbstractMigrationManager {
    * Update all descriptions of entities in the Core that are affected by migrations.
    *
    * @param migrationConfigs List of migrations to take in account
-   * @param serviceUrl       Url of the extension service that provides the migrations.
+   * @param service       The extension service that provides the migrations.
    */
-  protected void updateDescriptions(List<ModelMigratorConfig> migrationConfigs, String serviceUrl) {
+  protected void updateDescriptions(List<ModelMigratorConfig> migrationConfigs, SpServiceRegistration service) {
     migrationConfigs
         .stream()
         .collect(
@@ -122,27 +139,21 @@ public abstract class AbstractMigrationManager {
         .values()
         .forEach(config -> {
           if (isInstalled(config.modelType(), config.targetAppId())) {
-            var requestUrl = getRequestUrl(config.modelType(), config.targetAppId(), serviceUrl);
-            performUpdate(requestUrl);
+            var requestTarget = getRequestTarget(config.modelType(), config.targetAppId(), service);
+            performUpdate(requestTarget);
           }
         });
   }
 
   protected abstract boolean isInstalled(SpServiceTagPrefix modelType, String appId);
 
-  /**
-   * Perform the update of the description based on the given requestUrl
-   *
-   * @param requestUrl URl that references the description to be updated at the extensions service.
-   */
-  protected void performUpdate(String requestUrl) {
+  protected void performUpdate(ExtensionServiceRequestTarget requestTarget) {
 
     try {
-      var entityPayload = ExtensionServiceExecutions.extServiceGetRequest(requestUrl)
-          .execute()
-          .returnContent()
-          .asString();
-      var updateResult = new TypeExtractor(entityPayload).getTypeVerifier().verifyAndUpdate();
+      var entityPayload = requestManager
+          .request(ExtensionServiceRequests.descriptionUpdate(requestTarget))
+          .responseBody();
+      var updateResult = new TypeExtractor(entityPayload, requestManager).getTypeVerifier().verifyAndUpdate();
       if (!updateResult.isSuccess()) {
         LOG.error(
             "Updating the pipeline element description failed: {}",

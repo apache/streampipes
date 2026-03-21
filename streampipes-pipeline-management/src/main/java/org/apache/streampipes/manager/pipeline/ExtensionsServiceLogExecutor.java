@@ -1,0 +1,147 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.streampipes.manager.pipeline;
+
+import org.apache.streampipes.commons.constants.InstanceIdExtractor;
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.commons.prometheus.pipelines.PipelineFlowStats;
+import org.apache.streampipes.loadbalance.LoadManager;
+import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
+public class ExtensionsServiceLogExecutor implements Runnable {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ExtensionsServiceLogExecutor.class);
+
+  private static final String LOG_PATH = "monitoring";
+
+  private static final PipelineFlowStats pipelineFlowStats = new PipelineFlowStats();
+
+  private final ExtensionServiceRequestManager extensionRequestManager;
+
+  public ExtensionsServiceLogExecutor(ExtensionServiceRequestManager extensionRequestManager) {
+    this.extensionRequestManager = Objects.requireNonNull(extensionRequestManager);
+  }
+
+  public void run() {
+    triggerUpdate();
+    updatePipelineFlow();
+  }
+
+  public void triggerUpdate() {
+    List<SpServiceRegistration> serviceEndpoints = getActiveExtensionsEndpoints();
+
+    serviceEndpoints.forEach(serviceEndpoint -> {
+      try {
+        var target = ExtensionServiceRequestTargets.serviceHealth(serviceEndpoint, LOG_PATH);
+        var response = extensionRequestManager.request(ExtensionServiceRequests.serviceHealth(target));
+
+        if (!response.isSuccess()) {
+          LOG.info("Could not fetch log info from endpoint {} (status {})",
+              serviceEndpoint, response.statusCode());
+          return;
+        }
+
+        SpEndpointMonitoringInfo monitoringInfo = parseLogResponse(response.responseBody());
+        ExtensionsLogProvider.INSTANCE.addMonitoringInfos(monitoringInfo);
+      } catch (IOException e) {
+        LOG.info("Could not fetch log info from endpoint {}", serviceEndpoint);
+      }
+    });
+
+    Environment env = Environments.getEnvironment();
+    if (env.getLoadManagerEnable().getValueOrDefault()) {
+      try {
+        LoadManager.doLoadShedding();
+      } catch (Exception e) {
+        LOG.info("Could not doShedding");
+      }
+    }
+  }
+
+  private void updatePipelineFlow() {
+    pipelineFlowStats.clear();
+    ExtensionsLogProvider.INSTANCE.getMetricsGroupedByPipeline().forEach((pipelineId, data) -> {
+      data.forEach((k, v) -> {
+        // Total "in" count
+        long dataCountIn = v.getMessagesIn()
+            .values()
+            .stream()
+            .mapToLong(m -> m.getCounter())
+            .sum();
+
+        long dataCountOut = v.getMessagesOut().getCounter();
+
+        pipelineFlowStats.updateElementFlow(
+            pipelineId,
+            k,
+            InstanceIdExtractor.getSimpleName(k),
+            dataCountIn,
+            dataCountOut
+        );
+      });
+    });
+
+    /** When removing the deprectated gauges this also becomes deprecated */
+    ExtensionsLogProvider.INSTANCE.getAllMetricsInfos().forEach((k, v) -> {
+      String className = InstanceIdExtractor.getSimpleName(k);
+
+      if (AdapterDescription.class.getSimpleName().toLowerCase().equals(className)) {
+        pipelineFlowStats.increaseReceivedTotalData(v.getMessagesOut().getCounter());
+      } else if (DataProcessorInvocation.class.getSimpleName().toLowerCase().equals(className)) {
+        v.getMessagesIn().forEach((k1, v1) -> {
+          pipelineFlowStats.increaseElementInputTotalData(v1.getCounter());
+        });
+        pipelineFlowStats.increaseElementOutputTotalData(v.getMessagesOut().getCounter());
+      } else if (DataSinkInvocation.class.getSimpleName().toLowerCase().equals(className)) {
+        v.getMessagesIn().forEach((k1, v1) -> {
+          pipelineFlowStats.increasePipelineProcessedData(v1.getCounter());
+        });
+      }
+    });
+    pipelineFlowStats.metrics();
+  }
+
+  private List<SpServiceRegistration> getActiveExtensionsEndpoints() {
+    return SpServiceDiscovery.getServiceDiscovery().getService(DefaultSpServiceTypes.EXT, true, List.of());
+  }
+
+  private SpEndpointMonitoringInfo parseLogResponse(String response)
+      throws JsonProcessingException {
+    return JacksonSerializer.getObjectMapper().readValue(response, SpEndpointMonitoringInfo.class);
+  }
+}

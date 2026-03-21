@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
     FlexDirective,
@@ -31,14 +31,11 @@ import {
     imports: [LayoutDirective, FlexDirective, LayoutAlignDirective],
 })
 export class StatusIndicatorComponent {
-    translateService = inject(TranslateService);
+    private readonly translateService = inject(TranslateService);
 
-    @Input()
-    message = this.translateService.instant('Loading');
+    readonly message = input(this.translateService.instant('Loading'));
 
-    @Input()
-    additionalDescription = '';
+    readonly additionalDescription = input('');
 
-    @Input()
-    icon: string;
+    readonly icon = input<string | undefined>(undefined);
 }

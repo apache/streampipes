@@ -16,7 +16,7 @@
 ~
 -->
 
-@for (msg of pipelineOperationStatus.elementStatus; track msg) {
+@for (msg of pipelineOperationStatus()?.elementStatus ?? []; track msg) {
     <div fxFlex="100" fxLayout="column" class="status-outer mt-10">
         <div fxFlex="100" fxLayout="column">
             <div

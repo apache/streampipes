@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.management.compact;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -55,7 +56,8 @@ public class PersistPipelineHandler {
     this.authenticatedUserSid = authenticatedUserSid;
   }
 
-  public PipelineOperationStatus createAndStartPersistPipeline(AdapterDescription adapterDescription) throws Exception {
+  public PipelineOperationStatus createAndStartPersistPipeline(AdapterDescription adapterDescription,
+                                                               ExtensionServiceRequestManager requestManager) throws Exception {
     var template = getTemplate();
     if (template != null) {
       var compactPipeline = new CompactPipeline(
@@ -69,7 +71,7 @@ public class PersistPipelineHandler {
       if (pipelineGenerationResult.allPipelineElementsValid()) {
         String pipelineId = PipelineManager.addPipeline(authenticatedUserSid, pipelineGenerationResult.pipeline());
         if (compactPipeline.createOptions().start()) {
-          return PipelineManager.startPipeline(pipelineId);
+          return PipelineManager.startPipeline(pipelineId, requestManager);
         }
       }
     }
