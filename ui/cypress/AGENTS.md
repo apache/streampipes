@@ -22,8 +22,8 @@ Keep tests readable and maintainable by centralizing selectors and common flows 
 
 ## Selector Placement Rules
 
-- Put `data-cy` element accessors in domain `*Btns` classes (for example `PipelineBtns`, `ConnectBtns`, `DataExplorerBtns`).
-- Put multi-step user flows in domain `*Utils` classes (for example `PipelineUtils`, `ConnectUtils`, `DataExplorerUtils`).
+- Put `data-cy` element accessors in domain `*Btns` classes (for example `PipelineBtns`, `ConnectBtns`, `ChartBtns`).
+- Put multi-step user flows in domain `*Utils` classes (for example `PipelineUtils`, `ConnectUtils`, `ChartUtils`).
 - For dynamic selectors, use typed helper methods with parameters instead of string concatenation in specs.
 - Reuse existing selector constants/patterns when already present (for example `SiteUtils` constants).
 - Keep direct `cy.get(...)` in specs to a minimum; if reused, move it behind a support helper.
@@ -45,7 +45,7 @@ Keep tests readable and maintainable by centralizing selectors and common flows 
 - Follow existing naming style:
   - UI accessors: verb/noun methods in `*Btns` returning Cypress chains.
   - Flows/assertions: descriptive methods in `*Utils`.
-- Place new helpers in the closest domain folder under `support/utils/` (connect, pipeline, dataExplorer, ...).
+- Place new helpers in the closest domain folder under `support/utils/` (connect, pipeline, chart, ...).
 
 ## Validation
 

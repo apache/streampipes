@@ -19,7 +19,7 @@ spAssets:
     link: 'assets'
     title: 'Assets'
     icon: 'precision_manufacturing'
-    privileges: '[UserPrivilege.PRIVILEGE_READ_ASSETS, UserPrivilege.PRIVILEGE_WRITE_ASSETS]'
+    privileges: '[]'
     pageNames: 'PageName.ASSETS'
     showStatusBox: false
     category: 'management'

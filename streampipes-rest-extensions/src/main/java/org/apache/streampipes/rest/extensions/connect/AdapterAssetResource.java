@@ -18,9 +18,8 @@
 
 package org.apache.streampipes.rest.extensions.connect;
 
-import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
-import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
-import org.apache.streampipes.extensions.management.connect.ConnectWorkerDescriptionProvider;
+import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
+import org.apache.streampipes.extensions.management.connect.AdapterAssetManagement;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
@@ -39,50 +38,51 @@ import java.io.IOException;
 @RequestMapping("/api/v1/worker/adapters")
 public class AdapterAssetResource extends AbstractSharedRestInterface {
 
-  private final ConnectWorkerDescriptionProvider connectWorkerDescriptionProvider;
+  private final AdapterAssetManagement adapterAssetManagement;
 
   public AdapterAssetResource() {
-    this.connectWorkerDescriptionProvider = new ConnectWorkerDescriptionProvider();
+    this.adapterAssetManagement = new AdapterAssetManagement();
+  }
+
+  public AdapterAssetResource(AdapterAssetManagement adapterAssetManagement) {
+    this.adapterAssetManagement = adapterAssetManagement;
   }
 
 
-  @GetMapping(path = "/{id}/assets", produces = "application/zip")
-  public ResponseEntity<byte[]> getAssets(@PathVariable("id") String id) {
-    var adapterConfig = this.connectWorkerDescriptionProvider.getAdapterConfiguration(id);
-    if (adapterConfig.isPresent()) {
-      try {
-        return ok(new AssetZipGenerator(
-            adapterConfig.get().getAdapterDescription().getIncludedAssets(),
-            adapterConfig.get().getAssetResolver()).makeZip()
-        );
-      } catch (IOException e) {
-        throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+  @GetMapping(path = "/{appId}/assets", produces = "application/zip")
+  public ResponseEntity<byte[]> getAssets(@PathVariable("appId") String appId) {
+    try {
+      var assetOpt = adapterAssetManagement.getAssets(appId);
+      if (assetOpt.isPresent()) {
+        return ok(assetOpt.get());
+      } else {
+        throw new SpMessageException(
+            HttpStatus.NOT_FOUND,
+            Notifications.error(String.format("Could not find adapter with id %s", appId)));
       }
-    } else {
-      throw new SpMessageException(
-          HttpStatus.NOT_FOUND,
-          Notifications.error(String.format("Could not find adapter with id %s", id)));
+    } catch (IOException e) {
+      throw new SpMessageException(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
-
   }
 
-  @GetMapping(path = "/{id}/assets/icon", produces = MediaType.IMAGE_PNG_VALUE)
-  public ResponseEntity<byte[]> getIconAsset(@PathVariable("id") String elementId) throws IOException {
-    var adapterConfig = this.connectWorkerDescriptionProvider.getAdapterConfiguration(elementId);
-    if (adapterConfig.isPresent()) {
-      return ok(adapterConfig.get().getAssetResolver().getAsset(GlobalStreamPipesConstants.STD_ICON_NAME));
+  @GetMapping(path = "/{appId}/assets/icon")
+  public ResponseEntity<byte[]> getIconAsset(@PathVariable("appId") String appId) throws IOException {
+    var iconOpt = adapterAssetManagement.getIconAsset(appId);
+    if (iconOpt.isPresent()) {
+      byte[] icon = iconOpt.get();
+      return ResponseEntity.ok()
+          .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(icon)))
+          .body(icon);
     } else {
       throw new IOException("Could not find adapter");
     }
   }
 
-  @GetMapping(path = "/{id}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
-  public String getDocumentationAsset(@PathVariable("id") String elementId) throws IOException {
-    var adapterConfig = this.connectWorkerDescriptionProvider.getAdapterConfiguration(elementId);
-    if (adapterConfig.isPresent()) {
-      return new String(adapterConfig.get().getAssetResolver().getAsset(
-          GlobalStreamPipesConstants.STD_DOCUMENTATION_NAME)
-      );
+  @GetMapping(path = "/{appId}/assets/documentation", produces = MediaType.TEXT_PLAIN_VALUE)
+  public String getDocumentationAsset(@PathVariable("appId") String appId) throws IOException {
+    var documentationOpt = adapterAssetManagement.getDocumentationAsset(appId);
+    if (documentationOpt.isPresent()) {
+      return documentationOpt.get();
     } else {
       throw new IOException("Could not find documentation");
     }

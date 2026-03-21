@@ -18,7 +18,7 @@
 
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { AssetBuilder } from '../../support/builder/AssetBuilder';
 import { ConfigurationUtils } from '../../support/utils/configuration/ConfigurationUtils';
 import { SiteUtils } from '../../support/utils/configuration/SiteUtils';
@@ -235,33 +235,33 @@ describe('Test asset filters', () => {
     }
 
     function prepareDashboards() {
-        DataExplorerUtils.createNewDashboardWithAssetLinks('dashboard-1_0', [
+        ChartUtils.createNewDashboardWithAssetLinks('dashboard-1_0', [
             'asset-1_0',
         ]);
-        DataExplorerUtils.createNewDashboardWithAssetLinks('dashboard-1_1', [
+        ChartUtils.createNewDashboardWithAssetLinks('dashboard-1_1', [
             'asset-1_0.asset-1_1',
         ]);
-        DataExplorerUtils.createNewDashboardWithAssetLinks('dashboard-1_2', [
+        ChartUtils.createNewDashboardWithAssetLinks('dashboard-1_2', [
             'asset-1_0.asset-1_2',
         ]);
 
-        DataExplorerUtils.createNewDashboardWithAssetLinks('dashboard-2_0', [
+        ChartUtils.createNewDashboardWithAssetLinks('dashboard-2_0', [
             'asset-2_0',
         ]);
-        DataExplorerUtils.createNewDashboardWithAssetLinks('dashboard-2_1', [
+        ChartUtils.createNewDashboardWithAssetLinks('dashboard-2_1', [
             'asset-2_0.asset-2_1',
         ]);
-        DataExplorerUtils.createNewDashboardWithAssetLinks('dashboard-2_2', [
+        ChartUtils.createNewDashboardWithAssetLinks('dashboard-2_2', [
             'asset-2_0.asset-2_2',
         ]);
 
-        DataExplorerUtils.createNewDashboardWithAssetLinks('dashboard-3_0', [
+        ChartUtils.createNewDashboardWithAssetLinks('dashboard-3_0', [
             'asset-3_0',
         ]);
-        DataExplorerUtils.createNewDashboardWithAssetLinks('dashboard-3_1', [
+        ChartUtils.createNewDashboardWithAssetLinks('dashboard-3_1', [
             'asset-3_0.asset-3_1',
         ]);
-        DataExplorerUtils.createNewDashboardWithAssetLinks('dashboard-3_2', [
+        ChartUtils.createNewDashboardWithAssetLinks('dashboard-3_2', [
             'asset-3_0.asset-3_2',
         ]);
     }

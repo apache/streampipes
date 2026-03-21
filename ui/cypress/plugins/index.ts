@@ -43,17 +43,16 @@ function readProcessingElements(): ProcessorTest[] {
             'cypress/fixtures/pipelineElement/' + dir,
         );
         subfolder.forEach(test => {
+            const fixturePath = dir + '/' + test;
             const testDescription = fs.readFileSync(
                 'cypress/fixtures/pipelineElement/' +
-                    dir +
-                    '/' +
-                    test +
+                    fixturePath +
                     '/description.json',
             );
             // @ts-ignore
             const pt = new ProcessorTest();
             pt.name = test;
-            pt.dir = dir + '/' + test;
+            pt.dir = fixturePath;
 
             const configDir = fs.readdirSync(
                 'cypress/fixtures/pipelineElement/' + pt.dir,

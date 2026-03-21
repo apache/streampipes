@@ -19,7 +19,7 @@
 import { FileManagementUtils } from './FileManagementUtils';
 import { ConnectUtils } from './connect/ConnectUtils';
 import { PipelineUtils } from './pipeline/PipelineUtils';
-import { DataExplorerUtils } from './dataExplorer/DataExplorerUtils';
+import { ChartUtils } from './chart/ChartUtils';
 import { PipelineBuilder } from '../builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../builder/PipelineElementBuilder';
 import { ProcessorTest } from '../model/ProcessorTest';
@@ -96,7 +96,7 @@ export class ProcessingElementTestUtils {
 
         cy.wait(3000);
 
-        DataExplorerUtils.checkResults(
+        ChartUtils.checkResults(
             dataLakeIndex,
             'cypress/fixtures/' + expectedResultFile,
             pipelineElementTest.processor.ignoreTimestamp,

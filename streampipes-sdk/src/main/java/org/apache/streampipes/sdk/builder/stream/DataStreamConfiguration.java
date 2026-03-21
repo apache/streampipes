@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.sdk.builder.stream;
 
+import org.apache.streampipes.extensions.api.assets.AssetResolver;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
 import org.apache.streampipes.extensions.api.pe.config.IDataStreamConfiguration;
 import org.apache.streampipes.model.SpDataStream;
@@ -28,16 +29,25 @@ public class DataStreamConfiguration implements IDataStreamConfiguration {
 
   private final Supplier<IStreamPipesDataStream> supplier;
   private final SpDataStream dataStream;
+  private final AssetResolver assetResolver;
 
   public static DataStreamConfiguration create(Supplier<IStreamPipesDataStream> supplier,
                                                SpDataStream dataStream) {
-    return new DataStreamConfiguration(supplier, dataStream);
+    return new DataStreamConfiguration(supplier, dataStream, null);
+  }
+
+  public static DataStreamConfiguration create(Supplier<IStreamPipesDataStream> supplier,
+                                               SpDataStream dataStream,
+                                               AssetResolver assetResolver) {
+    return new DataStreamConfiguration(supplier, dataStream, assetResolver);
   }
 
   public DataStreamConfiguration(Supplier<IStreamPipesDataStream> supplier,
-                                 SpDataStream dataStream) {
+                                 SpDataStream dataStream,
+                                 AssetResolver assetResolver) {
     this.supplier = supplier;
     this.dataStream = dataStream;
+    this.assetResolver = assetResolver;
   }
 
   @Override
@@ -48,5 +58,10 @@ public class DataStreamConfiguration implements IDataStreamConfiguration {
   @Override
   public Supplier<IStreamPipesDataStream> getSupplier() {
     return supplier;
+  }
+
+  @Override
+  public AssetResolver getAssetResolver() {
+    return assetResolver == null ? IDataStreamConfiguration.super.getAssetResolver() : assetResolver;
   }
 }

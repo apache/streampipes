@@ -93,7 +93,7 @@ public class SpKafkaProducer implements EventProducer, Serializable {
 
   @Override
   public void connect() {
-    LOG.info("Kafka producer: Connecting to " + protocol.getTopicDefinition().getActualTopicName());
+    LOG.debug("Kafka producer: Connecting to " + protocol.getTopicDefinition().getActualTopicName());
     this.brokerUrl = protocol.getBrokerHostname() + ":" + protocol.getKafkaPort();
     this.topic = protocol.getTopicDefinition().getActualTopicName();
 
@@ -106,7 +106,7 @@ public class SpKafkaProducer implements EventProducer, Serializable {
     this.producer = new KafkaProducer<>(makeProperties(protocol, Collections.emptyList()));
     this.connected = true;
 
-    LOG.info("Successfully created Kafka producer for topic " + this.topic);
+    LOG.debug("Successfully created Kafka producer for topic " + this.topic);
   }
 
   /**
@@ -136,7 +136,7 @@ public class SpKafkaProducer implements EventProducer, Serializable {
       LOG.info("Successfully created Kafka topic " + topic);
 
     } else {
-      LOG.info("Topic " + topic + "already exists in the broker, skipping topic creation");
+      LOG.debug("Topic " + topic + "already exists in the broker, skipping topic creation");
     }
   }
 

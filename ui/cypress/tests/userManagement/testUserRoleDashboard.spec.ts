@@ -16,16 +16,17 @@
  *
  */
 
-import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserRole } from '../../../src/app/core/auth/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { User } from '../../support/model/User';
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
-import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
+import { ChartBtns } from '../../support/utils/chart/ChartBtns';
+import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
 
 describe('Test User Roles for Dashboards', () => {
     const dashboardName = 'test-dashboard';
+    const datasetName = 'simulator';
     let dashboardUser1: User;
     let dashboardAdmin1: User;
     let dashboardAdmin2: User;
@@ -54,7 +55,7 @@ describe('Test User Roles for Dashboards', () => {
 
     it('Dashboard is not shared with other users', () => {
         UserUtils.switchUser(dashboardAdmin1);
-        DataExplorerUtils.createNewDashboard(dashboardName);
+        ChartUtils.createNewDashboard(dashboardName);
 
         // check admin
         dashboardIsVisibleAndEditableCanChangePermissions(UserUtils.adminUser);
@@ -65,7 +66,7 @@ describe('Test User Roles for Dashboards', () => {
 
     it('Make dashboard public', () => {
         UserUtils.switchUser(dashboardAdmin1);
-        DataExplorerUtils.createNewDashboard(dashboardName);
+        ChartUtils.createNewDashboard(dashboardName);
         PermissionUtils.markElementAsPublic(dashboardName);
 
         dashboardIsVisibleAndEditableCanChangePermissions(UserUtils.adminUser);
@@ -77,7 +78,7 @@ describe('Test User Roles for Dashboards', () => {
 
     it('Share dashboard with other user and change ownership', () => {
         UserUtils.switchUser(dashboardAdmin1);
-        DataExplorerUtils.createNewDashboard(dashboardName);
+        ChartUtils.createNewDashboard(dashboardName);
 
         PermissionUtils.authorizeUser(dashboardName, dashboardAdmin2.email);
 
@@ -88,7 +89,7 @@ describe('Test User Roles for Dashboards', () => {
         dashboardIsNotVisible(dashboardUser1);
 
         UserUtils.switchUser(dashboardAdmin1);
-        DataExplorerUtils.goToDashboard();
+        ChartUtils.goToDashboard();
         PermissionUtils.changeOwnership(dashboardName, dashboardAdmin2.email);
 
         dashboardIsNotVisible(dashboardAdmin1);
@@ -109,7 +110,7 @@ describe('Test User Roles for Dashboards', () => {
         UserUtils.addGroupToUser(dashboardAdminGroup, dashboardAdmin2.name);
 
         UserUtils.switchUser(dashboardAdmin1);
-        DataExplorerUtils.createNewDashboard(dashboardName);
+        ChartUtils.createNewDashboard(dashboardName);
 
         PermissionUtils.authorizeGroup(dashboardName, dashboardAdminGroup);
 
@@ -120,85 +121,86 @@ describe('Test User Roles for Dashboards', () => {
         dashboardIsVisibleAndEditableCannotChangePermissions(dashboardAdmin2);
     });
 
-    it('Test Dashboard and Data Explorer Permissions', () => {
+    it('Test Dashboard and Charts Permissions', () => {
         UserUtils.switchUser(dashboardAdmin1);
 
-        ConnectUtils.addMachineDataSimulator('simulator', true);
+        DataLakeSeedUtils.importCsvFixture({
+            fixture: 'datalake/machine-data-simulator-import.csv',
+            measurementName: datasetName,
+            delimiter: ',',
+            timestampColumn: 'timestamp',
+        });
         addChart('chart1');
         cy.wait(1000);
         addChart('chart2');
 
-        DataExplorerUtils.createNewDashboard(dashboardName);
+        ChartUtils.createNewDashboard(dashboardName);
 
-        DataExplorerUtils.editDashboard(dashboardName);
-        DataExplorerUtils.addDataViewToDashboard('chart1', true);
-        DataExplorerUtils.addDataViewToDashboard('chart2', true);
-        DataExplorerUtils.saveDashboard();
+        ChartUtils.editDashboard(dashboardName);
+        ChartUtils.addDataViewToDashboard('chart1', true);
+        ChartUtils.addDataViewToDashboard('chart2', true);
+        ChartUtils.saveDashboard();
 
         PermissionUtils.markElementAsPublic(dashboardName);
 
         UserUtils.switchUser(dashboardAdmin2);
-        DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.viewDashboard(dashboardName);
-        DataExplorerBtns.moreOptionsBtn('chart1').should('exist');
-        DataExplorerBtns.moreOptionsBtn('chart2').should('exist');
-        DataExplorerBtns.removeWidgetBtn('chart1').should('not.exist');
-        DataExplorerBtns.removeWidgetBtn('chart2').should('not.exist');
+        ChartUtils.goToDashboard();
+        ChartUtils.viewDashboard(dashboardName);
+        ChartBtns.moreOptionsBtn('chart1').should('exist');
+        ChartBtns.moreOptionsBtn('chart2').should('exist');
+        ChartBtns.removeWidgetBtn('chart1').should('not.exist');
+        ChartBtns.removeWidgetBtn('chart2').should('not.exist');
 
-        DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.editDashboard(dashboardName);
-        DataExplorerBtns.moreOptionsBtn('chart1').should('exist');
-        DataExplorerBtns.moreOptionsBtn('chart2').should('exist');
-        DataExplorerBtns.removeWidgetBtn('chart1').should('exist');
-        DataExplorerBtns.removeWidgetBtn('chart2').should('exist');
+        ChartUtils.goToDashboard();
+        ChartUtils.editDashboard(dashboardName);
+        ChartBtns.moreOptionsBtn('chart1').should('exist');
+        ChartBtns.moreOptionsBtn('chart2').should('exist');
+        ChartBtns.removeWidgetBtn('chart1').should('exist');
+        ChartBtns.removeWidgetBtn('chart2').should('exist');
 
         // Validate to add new widget to dashboard
-        DataExplorerBtns.createChartBtn().should('not.exist');
-        DataExplorerBtns.removeWidgetBtn('chart2').click();
-        DataExplorerUtils.saveDashboard();
+        ChartBtns.createChartBtn().should('not.exist');
+        ChartBtns.removeWidgetBtn('chart2').click();
+        ChartUtils.saveDashboard();
 
         UserUtils.switchUser(dashboardUser1);
-        DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.viewDashboard(dashboardName);
-        DataExplorerBtns.moreOptionsBtn('chart1').should('exist');
-        DataExplorerBtns.moreOptionsBtn('chart2').should('not.exist');
+        ChartUtils.goToDashboard();
+        ChartUtils.viewDashboard(dashboardName);
+        ChartBtns.moreOptionsBtn('chart1').should('exist');
+        ChartBtns.moreOptionsBtn('chart2').should('not.exist');
     });
 
     function dashboardIsVisibleAndEditableCanChangePermissions(user: User) {
         UserUtils.switchUser(user);
-        DataExplorerUtils.checkAmountOfDashboards(1);
-        DataExplorerUtils.checkDashboardCanBeEdited(dashboardName);
+        ChartUtils.checkAmountOfDashboards(1);
+        ChartUtils.checkDashboardCanBeEdited(dashboardName);
 
         PermissionUtils.validateUserCanChangePermissions(dashboardName);
     }
 
     function dashboardIsVisibleAndEditableCannotChangePermissions(user: User) {
         UserUtils.switchUser(user);
-        DataExplorerUtils.checkAmountOfDashboards(1);
-        DataExplorerUtils.checkDashboardCanBeEdited(dashboardName);
+        ChartUtils.checkAmountOfDashboards(1);
+        ChartUtils.checkDashboardCanBeEdited(dashboardName);
 
         PermissionUtils.validateUserCanNotChangePermissions(dashboardName);
     }
 
     function dashboardIsVisibleButNotEditable(user: User) {
         UserUtils.switchUser(user);
-        DataExplorerUtils.checkAmountOfDashboards(1);
-        DataExplorerUtils.checkDashboardCanNotBeEdited(dashboardName);
+        ChartUtils.checkAmountOfDashboards(1);
+        ChartUtils.checkDashboardCanNotBeEdited(dashboardName);
 
         PermissionUtils.validateUserCanNotChangePermissions(dashboardName);
     }
 
     function dashboardIsNotVisible(user: User) {
         UserUtils.switchUser(user);
-        DataExplorerUtils.checkAmountOfDashboards(0);
+        ChartUtils.checkAmountOfDashboards(0);
     }
 
     function addChart(chartName: string) {
-        DataExplorerUtils.addDataViewAndTableWidget(
-            chartName,
-            'simulator',
-            true,
-        );
-        DataExplorerUtils.saveDataViewConfiguration();
+        ChartUtils.addDataViewAndTableWidget(chartName, datasetName, true);
+        ChartUtils.saveDataViewConfiguration();
     }
 });

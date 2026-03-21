@@ -20,7 +20,10 @@ package org.apache.streampipes.model.grounding;
 
 public class NatsTransportProtocol extends TransportProtocol {
 
+  public static final String BROKER_ID = "nats";
+
   private int port;
+  private String token;
 
   public NatsTransportProtocol(String hostname,
                                int port,
@@ -32,10 +35,16 @@ public class NatsTransportProtocol extends TransportProtocol {
   public NatsTransportProtocol(NatsTransportProtocol other) {
     super(other);
     this.port = other.getPort();
+    this.token = other.getToken();
   }
 
   public NatsTransportProtocol() {
     super();
+  }
+
+  @Override
+  public String protocolId() {
+    return BROKER_ID;
   }
 
   public int getPort() {
@@ -44,6 +53,14 @@ public class NatsTransportProtocol extends TransportProtocol {
 
   public void setPort(int port) {
     this.port = port;
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 
   @Override

@@ -21,9 +21,10 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
 import org.apache.streampipes.health.monitoring.model.HealthCheckData;
 import org.apache.streampipes.health.monitoring.utils.HealthCheckUtils;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
-import org.apache.streampipes.manager.execution.http.InvokeHttpRequest;
+import org.apache.streampipes.manager.execution.http.InvokeExtensionRequest;
 import org.apache.streampipes.manager.util.PipelineElementUtils;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -42,6 +43,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
@@ -56,9 +58,12 @@ public class PipelineHealthCheck {
   private static final PipelinesStats pipelinesStats = new PipelinesStats();
 
   private final HealthCheckData healthCheckData;
+  private final ExtensionServiceRequestManager requestManager;
 
-  public PipelineHealthCheck(HealthCheckData healthCheckData) {
+  public PipelineHealthCheck(HealthCheckData healthCheckData,
+                             ExtensionServiceRequestManager requestManager) {
     this.healthCheckData = healthCheckData;
+    this.requestManager = requestManager;
   }
 
   public void runCheck() {
@@ -85,7 +90,9 @@ public class PipelineHealthCheck {
       pipelinesStats.updatePipelineHealthState(
           p.getElementId(),
           p.getName(),
-          p.getHealthStatus().toString());
+          Objects.nonNull(p.getHealthStatus())
+              ? p.getHealthStatus().toString()
+              : PipelineHealthStatus.REQUIRES_ATTENTION.toString());
 
       pipelinesStats.updatePipelineRunningState(
           p.getElementId(),
@@ -109,19 +116,19 @@ public class PipelineHealthCheck {
         String instanceId = HealthCheckUtils.extractInstanceId(pipelineElement);
         if (isNowhereRunning(instanceId)) {
           if (shouldRetry(instanceId)) {
-            var serviceBaseUrl = pipelineElement.getSelectedEndpointUrl();
             shouldUpdatePipeline.set(true);
             boolean success;
             try {
-              serviceBaseUrl = new ExtensionsServiceEndpointGenerator().getEndpointBaseUrl(
+              var service = new ExtensionsServiceEndpointGenerator().selectService(
                   pipelineElement.getAppId(),
                   ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement.getAppId()),
                   Collections.emptySet()
               );
               new SecretService(new SecretDecrypter()).apply(pipelineElement);
-              var invocationUrl = getInvocationUrl(pipelineElement, serviceBaseUrl);
-              success = new InvokeHttpRequest()
-                  .execute(pipelineElement, invocationUrl, pipeline.getPipelineId()).isSuccess();
+              pipelineElement.setSelectedEndpointUrl(service.getServiceUrl());
+              pipelineElement.setSelectedServiceId(service.getSvcId());
+              success = new InvokeExtensionRequest(requestManager)
+                  .execute(pipelineElement, pipeline.getPipelineId()).isSuccess();
               new SecretService(new SecretEncrypter()).apply(pipelineElement);
             } catch (NoServiceEndpointsAvailableException e) {
               success = false;
@@ -137,7 +144,6 @@ public class PipelineHealthCheck {
               recoveredInstances.add(instanceId);
               HealthCheckUtils.addSuccessfulRestoreNotification(pipelineNotifications, pipelineElement);
               resetFailedAttempts(instanceId);
-              pipelineElement.setSelectedEndpointUrl(serviceBaseUrl);
               LOG.info("Successfully restored pipeline element {} of pipeline {}",
                   pipelineElement.getName(), pipeline.getName());
             }

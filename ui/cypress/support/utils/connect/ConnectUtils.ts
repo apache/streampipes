@@ -19,7 +19,7 @@
 import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
 import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
-import { DataExplorerUtils } from '../dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../chart/ChartUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { UserUtils } from '../UserUtils';
@@ -193,6 +193,11 @@ export class ConnectUtils {
                 });
 
             StaticPropertyUtils.input(adapterInput.formatConfiguration);
+        }
+
+        // For file adapters, wait until the file selection state is rendered to reduce test flakiness.
+        if (adapterInput?.adapterType === 'File_Stream') {
+            ConnectBtns.fileInputSelected().should('be.visible');
         }
     }
 
@@ -500,7 +505,7 @@ export class ConnectUtils {
         // Wait till data is stored
         cy.wait(waitTime);
 
-        DataExplorerUtils.checkResults(
+        ChartUtils.checkResults(
             'Adapter to test rules',
             expectedFile,
             ignoreTime,

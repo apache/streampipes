@@ -39,6 +39,7 @@ import {
     DialogService,
     PanelType,
     SpAssetBrowserService,
+    SpTableAssetContextConfig,
     SpBasicHeaderTitleComponent,
     SpTableActionsDirective,
     SpTableComponent,
@@ -98,10 +99,15 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
 
     displayedColumns: string[] = [
         'name',
+        'assetContext',
         'lastModified',
         'createdAt',
         'actions',
     ];
+    readonly assetContextConfig: SpTableAssetContextConfig = {
+        resourceLinkType: 'dashboard',
+        resourceIdKey: 'elementId',
+    };
     dashboards: Dashboard[] = [];
     filteredDashboards: Dashboard[] = [];
 
@@ -210,9 +216,6 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     }
 
     applyDashboardFilters(elementIds: Set<string>): void {
-        if (this.assetFilterService.hasNoAssetFilterPermission()) {
-            elementIds = new Set<string>();
-        }
         if (elementIds == undefined) {
             this.filteredDashboards = [];
         } else if (elementIds.size == 0) {

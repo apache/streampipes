@@ -51,11 +51,24 @@ export class LoginService {
         );
     }
 
-    renewToken(): Observable<any> {
-        return this.http.get(
-            this.platformServicesCommons.apiBasePath + '/auth/token/renew',
+    refreshToken(): Observable<any> {
+        return this.http.post(
+            this.platformServicesCommons.apiBasePath + '/auth/token/refresh',
+            {},
             {
                 context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+                withCredentials: true,
+            },
+        );
+    }
+
+    logout(): Observable<any> {
+        return this.http.post(
+            this.platformServicesCommons.apiBasePath + '/auth/logout',
+            {},
+            {
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+                withCredentials: true,
             },
         );
     }

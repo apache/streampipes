@@ -19,7 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SlideToggleStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
-import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 
@@ -39,7 +39,7 @@ export class StaticSlideToggleComponent
     implements OnInit
 {
     ngOnInit(): void {
-        this.addValidator(this.staticProperty.selected, Validators.required);
+        this.addValidator(this.staticProperty.selected, []);
         this.enableValidators();
         this.emitUpdate();
     }

@@ -48,10 +48,12 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<Void> {
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeResolvableResource.class);
 
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
+  private final WorkerRestClient workerRestClient;
 
-  public RuntimeResolvableResource() {
+  public RuntimeResolvableResource(WorkerRestClient workerRestClient) {
     super();
     this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
+    this.workerRestClient = workerRestClient;
   }
 
   @PostMapping(
@@ -63,20 +65,17 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<Void> {
                                                @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
 
     try {
-      String baseUrl = endpointGenerator.getEndpointBaseUrl(
+      var service = endpointGenerator.selectService(
           appId,
           SpServiceUrlProvider.ADAPTER,
           runtimeOptionsRequest.getDeploymentConfiguration().getDesiredServiceTags()
       );
       SecretProvider.getDecryptionService().applyConfig(runtimeOptionsRequest.getStaticProperties());
-      RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(baseUrl, appId, runtimeOptionsRequest);
+      RuntimeOptionsResponse result = workerRestClient.getConfiguration(service, appId, runtimeOptionsRequest);
 
       return ok(result);
-    } catch (AdapterException e) {
-      LOG.error("Adapter exception occurred", e);
-      return serverError(SpLogMessage.from(e));
-    } catch (NoServiceEndpointsAvailableException e) {
-      LOG.error("Could not find service endpoint for {} while fetching configuration", appId);
+    } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+      LOG.error("Could not fetch runtime configuration for {}", appId, e);
       return serverError(SpLogMessage.from(e));
     } catch (SpConfigurationException e) {
       LOG.error("Tried to fetch a runtime configuration with insufficient settings");

@@ -17,6 +17,26 @@
   -->
 
 <div fxLayout="column">
+    @if (shouldShowGroupingControls && !showSelectionCheckboxes) {
+        <div
+            class="grouping-toolbar grouping-toolbar--standalone"
+            fxLayout="row wrap"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="12px"
+        >
+            <div class="grouping-toolbar__spacer" fxFlex></div>
+            <div
+                class="grouping-toolbar__controls"
+                fxLayout="row wrap"
+                fxLayoutAlign="end center"
+                fxLayoutGap="12px"
+            >
+                <ng-container *ngTemplateOutlet="groupingControls">
+                </ng-container>
+            </div>
+        </div>
+    }
+
     @if (showSelectionCheckboxes) {
         <div
             class="selection-toolbar"
@@ -26,6 +46,7 @@
             fxLayoutGap="8px"
         >
             <div
+                class="selection-toolbar__left"
                 fxLayout="row wrap"
                 fxLayoutAlign="start center"
                 fxLayoutGap="8px"
@@ -56,16 +77,15 @@
                         {{ 'Select none' | translate }}
                     </button>
                 </div>
-            </div>
 
-            @if (hasMultiActionsToolbarControls()) {
-                <div fxLayout="row" fxLayoutGap="5px">
-                    @if (hasBuiltInMultiActionSelect()) {
-                        <sp-form-field
-                            [level]="3"
-                            [label]="multiActionsSelectLabel | translate"
-                            margin="0"
-                        >
+                @if (selectedRows.length && hasMultiActionsToolbarControls()) {
+                    <div
+                        class="selection-toolbar__actions-inline"
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        fxLayoutGap="5px"
+                    >
+                        @if (hasBuiltInMultiActionSelect()) {
                             <mat-form-field class="form-field-small">
                                 <mat-select
                                     data-cy="sp-table-multi-action-select"
@@ -100,21 +120,19 @@
                                     }
                                 </mat-select>
                             </mat-form-field>
-                        </sp-form-field>
-                    }
+                        }
 
-                    @if (multiActionsTemplate) {
-                        <ng-container
-                            *ngTemplateOutlet="
-                                multiActionsTemplate;
-                                context: multiActionsContext
-                            "
-                        >
-                        </ng-container>
-                    }
+                        @if (multiActionsTemplate) {
+                            <ng-container
+                                *ngTemplateOutlet="
+                                    multiActionsTemplate;
+                                    context: multiActionsContext
+                                "
+                            >
+                            </ng-container>
+                        }
 
-                    @if (showMultiActionsExecuteButton) {
-                        <sp-form-field [level]="3" label="&nbsp;" margin="0">
+                        @if (showMultiActionsExecuteButton) {
                             <button
                                 mat-flat-button
                                 data-cy="sp-table-multi-action-execute"
@@ -125,14 +143,65 @@
                             >
                                 {{ multiActionsExecuteLabel | translate }}
                             </button>
-                        </sp-form-field>
-                    }
+                        }
+                    </div>
+                }
+            </div>
+
+            @if (shouldShowGroupingControls) {
+                <div
+                    class="selection-toolbar__right"
+                    fxLayout="row"
+                    fxLayoutAlign="end center"
+                    fxLayoutGap="8px"
+                >
+                    <ng-container *ngTemplateOutlet="groupingControls">
+                    </ng-container>
                 </div>
             }
         </div>
     }
 
-    <table mat-table class="sp-table" [dataSource]="dataSource">
+    <ng-template #groupingControls>
+        @if (viewMode === 'grouped') {
+            <mat-form-field class="form-field-small grouping-toolbar__select">
+                <mat-select
+                    [value]="groupBy"
+                    (valueChange)="setGrouping($event)"
+                >
+                    <mat-option value="label">
+                        {{ 'Label' | translate }}
+                    </mat-option>
+                    <mat-option value="site">
+                        {{ 'Site' | translate }}
+                    </mat-option>
+                    <mat-option value="asset">
+                        {{ 'Asset' | translate }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        }
+
+        <mat-button-toggle-group
+            class="view-mode-toggle"
+            [value]="viewMode"
+            (change)="setViewMode($event.value)"
+        >
+            <mat-button-toggle value="grouped">
+                {{ 'Grouped' | translate }}
+            </mat-button-toggle>
+            <mat-button-toggle value="list">
+                {{ 'List' | translate }}
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+    </ng-template>
+
+    <table
+        mat-table
+        class="sp-table"
+        [dataSource]="renderedDataSource"
+        [multiTemplateDataRows]="viewMode === 'grouped'"
+    >
         <ng-content></ng-content>
 
         @if (showSelectionCheckboxes) {
@@ -167,62 +236,98 @@
             </ng-container>
         }
 
-        @if (showActionsMenu) {
-            <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef></th>
+        @if (assetContextConfig) {
+            <ng-container [matColumnDef]="assetContextColumnId">
+                <th mat-header-cell *matHeaderCellDef>
+                    <span class="font-bold">{{
+                        'Asset Context' | translate
+                    }}</span>
+                </th>
                 <td mat-cell *matCellDef="let element">
-                    <div fxLayoutAlign="end center">
-                        @if (featureCardId) {
-                            <button
-                                [matTooltip]="'Preview' | translate"
-                                mat-icon-button
-                                (click)="
-                                    openFeatureCard(element);
-                                    $event.stopPropagation()
-                                "
-                            >
-                                <mat-icon>preview</mat-icon>
-                            </button>
-                        }
-                        <div
-                            [matMenuTriggerFor]="menu"
-                            #menuTrigger="matMenuTrigger"
-                            (mouseenter)="mouseEnter(menuTrigger)"
-                            (mouseleave)="mouseLeave(menuTrigger)"
-                        >
-                            <button
-                                mat-icon-button
-                                [matMenuTriggerFor]="menu"
-                                #menuTrigger="matMenuTrigger"
-                                (click)="$event.stopPropagation()"
-                                [attr.data-cy]="'more-options'"
-                            >
-                                <mat-icon>more_vert</mat-icon>
-                            </button>
-                        </div>
-                        <mat-menu #menu="matMenu" [hasBackdrop]="false">
-                            <div
-                                (mouseenter)="mouseEnter(menuTrigger)"
-                                (mouseleave)="mouseLeave(menuTrigger)"
-                            >
-                                <ng-container
-                                    *ngTemplateOutlet="
-                                        actionsTemplate;
-                                        context: { $implicit: element }
-                                    "
-                                >
-                                </ng-container>
-                            </div>
-                        </mat-menu>
-                    </div>
+                    <ng-container
+                        *ngTemplateOutlet="
+                            assetContextCell;
+                            context: { $implicit: element }
+                        "
+                    >
+                    </ng-container>
                 </td>
             </ng-container>
         }
 
+        @if (showActionsMenu) {
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                    <ng-container
+                        *ngTemplateOutlet="
+                            actionsCell;
+                            context: { $implicit: element }
+                        "
+                    >
+                    </ng-container>
+                </td>
+            </ng-container>
+        }
+
+        <ng-container [matColumnDef]="groupHeaderColumnId">
+            <td
+                mat-cell
+                *matCellDef="let group"
+                class="grouped-table-cell"
+                [attr.colspan]="renderedColumns.length"
+            >
+                @if (viewMode === 'grouped') {
+                    <div
+                        class="grouped-table-header"
+                        fxLayout="row wrap"
+                        fxLayoutAlign="space-between center"
+                        fxLayoutGap="8px"
+                    >
+                        <div
+                            fxLayout="row wrap"
+                            fxLayoutAlign="start center"
+                            fxLayoutGap="8px"
+                        >
+                            @if (group.color) {
+                                <sp-label
+                                    size="small"
+                                    variant="soft"
+                                    [color]="group.color"
+                                    [labelText]="group.title"
+                                >
+                                </sp-label>
+                            } @else {
+                                <h4 class="grouped-table-title">
+                                    {{ group.title }}
+                                </h4>
+                            }
+                            <sp-label
+                                size="small"
+                                tone="neutral"
+                                variant="soft"
+                                [labelText]="group.count"
+                            >
+                            </sp-label>
+                        </div>
+                    </div>
+                }
+            </td>
+        </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="renderedColumns"></tr>
         <tr
             mat-row
-            *matRowDef="let row; columns: renderedColumns"
+            *matRowDef="
+                let row;
+                columns: groupHeaderColumns;
+                when: isGroupHeaderRow
+            "
+            class="grouped-table-row grouped-table-row--header"
+        ></tr>
+        <tr
+            mat-row
+            *matRowDef="let row; columns: renderedColumns; when: isDataRow"
             (click)="rowClicked.emit(row)"
             [ngClass]="rowsClickable ? 'cursor-pointer' : ''"
         ></tr>
@@ -237,6 +342,7 @@
             </td>
         </tr>
     </table>
+
     <div fxFlex="100" fxLayoutAlign="end end" class="paginator-container">
         <mat-paginator
             #paginator
@@ -249,3 +355,99 @@
         </mat-paginator>
     </div>
 </div>
+
+<ng-template #actionsCell let-element>
+    <div fxLayoutAlign="end center">
+        @if (featureCardId) {
+            <button
+                [matTooltip]="'Preview' | translate"
+                mat-icon-button
+                (click)="openFeatureCard(element); $event.stopPropagation()"
+            >
+                <mat-icon>preview</mat-icon>
+            </button>
+        }
+        <div
+            [matMenuTriggerFor]="menu"
+            #menuTrigger="matMenuTrigger"
+            (mouseenter)="mouseEnter(menuTrigger)"
+            (mouseleave)="mouseLeave(menuTrigger)"
+        >
+            <button
+                mat-icon-button
+                [matMenuTriggerFor]="menu"
+                #menuTrigger="matMenuTrigger"
+                (click)="$event.stopPropagation()"
+                [attr.data-cy]="'more-options'"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </div>
+        <mat-menu #menu="matMenu" [hasBackdrop]="false">
+            <div
+                (mouseenter)="mouseEnter(menuTrigger)"
+                (mouseleave)="mouseLeave(menuTrigger)"
+            >
+                <ng-container
+                    *ngTemplateOutlet="
+                        actionsTemplate;
+                        context: { $implicit: element }
+                    "
+                >
+                </ng-container>
+            </div>
+        </mat-menu>
+    </div>
+</ng-template>
+
+<ng-template #assetContextCell let-element>
+    @if (getAssetContext(element); as assetContext) {
+        <div class="asset-context-cell">
+            @if (
+                showGroupedSitesInAssetContext && assetContext.sites.length > 0
+            ) {
+                @for (site of assetContext.sites; track site.id) {
+                    <sp-label
+                        size="small"
+                        tone="info"
+                        variant="soft"
+                        [labelText]="site.label"
+                    >
+                    </sp-label>
+                }
+            }
+            @if (
+                showGroupedAssetsInAssetContext &&
+                assetContext.assets.length > 0
+            ) {
+                @for (asset of assetContext.assets; track asset.id) {
+                    <sp-label
+                        size="small"
+                        tone="neutral"
+                        variant="soft"
+                        [labelText]="asset.label"
+                        [matTooltip]="asset.tooltip"
+                    >
+                    </sp-label>
+                }
+            }
+            @if (
+                showGroupedLabelsInAssetContext &&
+                assetContext.labels.length > 0
+            ) {
+                @for (
+                    label of assetContext.labels;
+                    track label._id ?? label.label
+                ) {
+                    <sp-label
+                        size="small"
+                        variant="soft"
+                        [color]="label.color"
+                        [labelText]="label.label"
+                    >
+                    </sp-label>
+                }
+            }
+        </div>
+    }
+</ng-template>

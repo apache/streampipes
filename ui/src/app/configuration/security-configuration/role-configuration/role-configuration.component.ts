@@ -71,6 +71,8 @@ import { MatTooltip } from '@angular/material/tooltip';
     ],
 })
 export class SecurityRoleConfigComponent implements OnInit {
+    private static readonly ASSET_USER_ROLE = 'ROLE_ASSET_USER';
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 

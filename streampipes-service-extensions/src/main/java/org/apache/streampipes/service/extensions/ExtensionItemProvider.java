@@ -19,7 +19,6 @@
 package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.extensions.api.assets.AssetResolver;
-import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
@@ -57,9 +56,9 @@ public class ExtensionItemProvider {
     return
         DeclarersSingleton.getInstance().getDeclarers().values()
             .stream()
-            .map(declarer -> declarer.declareConfig().getDescription())
-            .peek(entity -> applyLocales(entity, new DefaultAssetResolver(entity.getAppId())))
-            .map(e -> (NamedStreamPipesEntity) e);
+            .map(declarer -> declarer.declareConfig())
+            .peek(config -> applyLocales(config.getDescription(), config.getAssetResolver()))
+            .map(config -> (NamedStreamPipesEntity) config.getDescription());
   }
 
   private Stream<NamedStreamPipesEntity> getAdapterDescriptions() {

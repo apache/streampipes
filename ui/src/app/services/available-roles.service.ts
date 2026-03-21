@@ -18,10 +18,12 @@
 
 import { Injectable } from '@angular/core';
 import { Role, RoleService } from '@streampipes/platform-services';
-import { BehaviorSubject, Observable, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AvailableRolesService {
+    private static readonly ASSET_USER_ROLE = 'ROLE_ASSET_USER';
+
     private availableRolesSubject: BehaviorSubject<Role[]> =
         new BehaviorSubject<Role[]>([]);
     public availableRoles$: Observable<Role[]> =
@@ -33,7 +35,13 @@ export class AvailableRolesService {
 
     private loadRoles(): void {
         this.roleService.findAll().subscribe(roles => {
-            this.availableRolesSubject.next(roles);
+            this.availableRolesSubject.next(
+                roles.filter(
+                    role =>
+                        role.elementId !==
+                        AvailableRolesService.ASSET_USER_ROLE,
+                ),
+            );
         });
     }
 

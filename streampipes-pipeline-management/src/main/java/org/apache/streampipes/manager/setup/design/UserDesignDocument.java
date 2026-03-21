@@ -37,6 +37,14 @@ public class UserDesignDocument {
   public static final String PRIVILEGE_MAP_FUNCTION =
       "function(doc) { if(doc.$type === 'privilege') { emit(doc._id, doc); } }";
 
+  public static final String REFRESH_TOKEN_BY_HASH_KEY = "refresh-token-by-hash";
+  public static final String REFRESH_TOKEN_BY_HASH_MAP_FUNCTION =
+      "function(doc) { if (doc.$type === 'refresh-token' && doc.hashedToken) { emit(doc.hashedToken, doc); } }";
+
+  public static final String REFRESH_TOKEN_BY_USER_KEY = "refresh-token-by-user";
+  public static final String REFRESH_TOKEN_BY_USER_MAP_FUNCTION =
+      "function(doc) { if (doc.$type === 'refresh-token' && doc.principalId) { emit(doc.principalId, doc); } }";
+
   public DesignDocument make() {
     DesignDocument userDocument = prepareDocument("_design/users");
     Map<String, DesignDocument.MapReduce> views = new HashMap<>();
@@ -81,6 +89,12 @@ public class UserDesignDocument {
     DesignDocument.MapReduce privilegeFunction = new DesignDocument.MapReduce();
     privilegeFunction.setMap(PRIVILEGE_MAP_FUNCTION);
 
+    DesignDocument.MapReduce refreshTokenByHashFunction = new DesignDocument.MapReduce();
+    refreshTokenByHashFunction.setMap(REFRESH_TOKEN_BY_HASH_MAP_FUNCTION);
+
+    DesignDocument.MapReduce refreshTokenByUserFunction = new DesignDocument.MapReduce();
+    refreshTokenByUserFunction.setMap(REFRESH_TOKEN_BY_USER_MAP_FUNCTION);
+
     views.put("password", passwordFunction);
     views.put(USERNAME_KEY, usernameFunction);
     views.put("groups", groupFunction);
@@ -92,6 +106,8 @@ public class UserDesignDocument {
     views.put("password-recovery", passwordRecoveryFunction);
     views.put(ROLE_KEY, roleFunction);
     views.put("privilege", privilegeFunction);
+    views.put(REFRESH_TOKEN_BY_HASH_KEY, refreshTokenByHashFunction);
+    views.put(REFRESH_TOKEN_BY_USER_KEY, refreshTokenByUserFunction);
 
     userDocument.setViews(views);
 

@@ -56,7 +56,7 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../../../services/auth.service';
-import { UserRole } from '../../../../../../_enums/user-role.enum';
+import { UserRole } from '../../../../../../core/auth/user-role.enum';
 import { Subscription } from 'rxjs';
 import {
     FlexDirective,

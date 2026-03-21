@@ -17,7 +17,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { PageName } from '../../_enums/page-name.enum';
+import { PageName } from '../../core/navigation/page-name.enum';
 
 export interface StatusBox {
     link: string[];

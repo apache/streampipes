@@ -19,79 +19,130 @@
 package org.apache.streampipes.manager.verification.extractor;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
-import org.apache.streampipes.manager.verification.AdapterVerifier;
-import org.apache.streampipes.manager.verification.DataProcessorVerifier;
-import org.apache.streampipes.manager.verification.DataSinkVerifier;
-import org.apache.streampipes.manager.verification.DataStreamVerifier;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.verification.ElementVerifier;
+import org.apache.streampipes.manager.verification.TypedElementVerifier;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.logging.Logger;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class TypeExtractor {
 
-  private static final Logger logger = Logger.getAnonymousLogger();
+  private static final Logger LOG = LoggerFactory.getLogger(TypeExtractor.class);
+  private static final String CLASS_FIELD = "@class";
 
   private final String extensionElementDescription;
+  private final IPipelineElementDescriptionStorage storageApi;
+  private final ExtensionServiceRequestManager requestManager;
 
-  public TypeExtractor(String extensionElementDescription) {
+  public TypeExtractor(String extensionElementDescription,
+                       ExtensionServiceRequestManager requestManager) {
+    this(extensionElementDescription, defaultStorageApi(), requestManager);
+  }
+
+  public TypeExtractor(
+      String extensionElementDescription,
+      IPipelineElementDescriptionStorage storageApi,
+      ExtensionServiceRequestManager requestManager
+  ) {
     this.extensionElementDescription = extensionElementDescription;
-
+    this.storageApi = storageApi;
+    this.requestManager = requestManager;
   }
 
   public ElementVerifier<?> getTypeVerifier() throws SepaParseException {
+    var jsonClassName = getClassName();
+    LOG.info("Detected type {}", jsonClassName);
+    return getTypeDef(jsonClassName);
+  }
+
+  private String getClassName() throws SepaParseException {
     try {
       ObjectNode jsonNode =
-          JacksonSerializer.getObjectMapper().readValue(this.extensionElementDescription, ObjectNode.class);
-      String jsonClassName = jsonNode.get("@class").asText();
-      return getTypeDef(jsonClassName);
+          JacksonSerializer.getObjectMapper().readValue(extensionElementDescription, ObjectNode.class);
+      JsonNode classNode = jsonNode.get(CLASS_FIELD);
+      if (classNode == null || classNode.isNull()) {
+        throw new SepaParseException();
+      }
+      return classNode.asText();
     } catch (JsonProcessingException e) {
       throw new SepaParseException();
     }
   }
 
   private ElementVerifier<?> getTypeDef(String jsonClassName) throws SepaParseException {
-    if (jsonClassName == null) {
-      throw new SepaParseException();
-    } else {
-      if (jsonClassName.equals(ep())) {
-        logger.info("Detected type data stream");
-        return new DataStreamVerifier(extensionElementDescription);
-      } else if (jsonClassName.equals(epa())) {
-        logger.info("Detected type data processor");
-        return new DataProcessorVerifier(extensionElementDescription);
-      } else if (jsonClassName.equals(ec())) {
-        logger.info("Detected type data sink");
-        return new DataSinkVerifier(extensionElementDescription);
-      } else if (jsonClassName.equals(adapter())) {
-        return new AdapterVerifier(extensionElementDescription);
-      } else {
-        throw new SepaParseException();
-      }
-    }
+    return switch (jsonClassName) {
+      case "org.apache.streampipes.model.SpDataStream" -> createVerifier(
+          SpDataStream.class,
+          storageApi::exists,
+          storageApi::storeDataStream,
+          storageApi::update,
+          SpServiceUrlProvider.DATA_STREAM
+      );
+      case "org.apache.streampipes.model.graph.DataProcessorDescription" -> createVerifier(
+          DataProcessorDescription.class,
+          storageApi::exists,
+          storageApi::storeDataProcessor,
+          storageApi::update,
+          SpServiceUrlProvider.DATA_PROCESSOR
+      );
+      case "org.apache.streampipes.model.graph.DataSinkDescription" -> createVerifier(
+          DataSinkDescription.class,
+          storageApi::exists,
+          storageApi::storeDataSink,
+          storageApi::update,
+          SpServiceUrlProvider.DATA_SINK
+      );
+      case "org.apache.streampipes.model.connect.adapter.AdapterDescription" -> createVerifier(
+          AdapterDescription.class,
+          storageApi::exists,
+          storageApi::storeAdapterDescription,
+          storageApi::update,
+          SpServiceUrlProvider.ADAPTER
+      );
+      default -> throw new SepaParseException();
+    };
   }
 
-  private static String ep() {
-    return SpDataStream.class.getCanonicalName();
+  private <T extends NamedStreamPipesEntity> ElementVerifier<T> createVerifier(
+      Class<T> elementClass,
+      Predicate<T> existsChecker,
+      Consumer<T> storeOperation,
+      Consumer<T> updateOperation,
+      SpServiceUrlProvider serviceUrlProvider
+  ) {
+    return new TypedElementVerifier<>(
+        extensionElementDescription,
+        elementClass,
+        storageApi,
+        existsChecker,
+        storeOperation,
+        updateOperation,
+        serviceUrlProvider,
+        requestManager
+    );
   }
 
-  private static String epa() {
-    return DataProcessorDescription.class.getCanonicalName();
-  }
-
-  private static String ec() {
-    return DataSinkDescription.class.getCanonicalName();
-  }
-
-  private static String adapter() {
-    return AdapterDescription.class.getCanonicalName();
+  private static IPipelineElementDescriptionStorage defaultStorageApi() {
+    return StorageDispatcher
+        .INSTANCE
+        .getNoSqlStore()
+        .getPipelineElementDescriptionStorage();
   }
 
 }

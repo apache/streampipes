@@ -100,27 +100,32 @@ export class StaticFreeInputComponent
         const validators: ValidatorFn[] = [];
         if (!this.staticProperty.optional) {
             validators.push(Validators.required);
-        }
-        if (
-            DataType.isNumberType(this.staticProperty.requiredDatatype) ||
-            DataType.isNumberType(this.staticProperty.requiredDomainProperty)
-        ) {
-            validators.push(ValidateNumber);
-            this.errorMessage = this.translateService.instant(
-                'The value should be a number',
-            );
-        } else if (
-            this.staticProperty.requiredDomainProperty === SemanticType.SO_URL
-        ) {
-            validators.push(ValidateUrl);
-            this.errorMessage = this.translateService.instant(
-                'Please enter a valid URL',
-            );
-        } else if (this.staticProperty.requiredDatatype === DataType.STRING) {
-            validators.push(ValidateString);
-            this.errorMessage = this.translateService.instant(
-                'Please enter a valid String',
-            );
+            if (
+                DataType.isNumberType(this.staticProperty.requiredDatatype) ||
+                DataType.isNumberType(
+                    this.staticProperty.requiredDomainProperty,
+                )
+            ) {
+                validators.push(ValidateNumber);
+                this.errorMessage = this.translateService.instant(
+                    'The value should be a number',
+                );
+            } else if (
+                this.staticProperty.requiredDomainProperty ===
+                SemanticType.SO_URL
+            ) {
+                validators.push(ValidateUrl);
+                this.errorMessage = this.translateService.instant(
+                    'Please enter a valid URL',
+                );
+            } else if (
+                this.staticProperty.requiredDatatype === DataType.STRING
+            ) {
+                validators.push(ValidateString);
+                this.errorMessage = this.translateService.instant(
+                    'Please enter a valid String',
+                );
+            }
         }
 
         return validators;
@@ -128,9 +133,10 @@ export class StaticFreeInputComponent
 
     emitUpdate() {
         const valid =
-            this.staticProperty.value !== undefined &&
-            this.staticProperty.value !== '' &&
-            this.staticProperty.value !== null;
+            this.staticProperty.optional ||
+            (this.staticProperty.value !== undefined &&
+                this.staticProperty.value !== '' &&
+                this.staticProperty.value !== null);
         this.applyCompletedConfiguration(valid);
     }
 

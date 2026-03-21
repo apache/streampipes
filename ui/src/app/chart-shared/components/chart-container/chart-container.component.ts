@@ -48,7 +48,7 @@ import { ChartRegistry } from '../../registry/chart-registry.service';
 import { ChartDirective } from './chart.directive';
 import { ChartTypeService } from '../../services/chart-type.service';
 import { AuthService } from '../../../services/auth.service';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import {
     CurrentUserService,
     NameChangeService,

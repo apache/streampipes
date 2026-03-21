@@ -18,10 +18,10 @@
 
 import { ExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/model/export-config.model';
 import { DataDownloadDialogUtils } from '../../support/utils/DataDownloadDialogUtils';
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
 
-describe('Test data explorer data download dialog', () => {
+describe('Test chart data download dialog', () => {
     before('Setup Test', () => {
         cy.initStreamPipesTest();
         PrepareTestDataUtils.loadDataIntoDataLake(
@@ -29,11 +29,11 @@ describe('Test data explorer data download dialog', () => {
             'json_array',
         );
 
-        DataExplorerUtils.addDataViewAndTableWidget(
+        ChartUtils.addDataViewAndTableWidget(
             dataViewName,
             PrepareTestDataUtils.dataName,
         );
-        DataExplorerUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration();
     });
 
     beforeEach('Setup Test', () => {

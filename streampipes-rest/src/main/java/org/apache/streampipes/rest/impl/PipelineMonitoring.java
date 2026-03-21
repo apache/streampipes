@@ -18,7 +18,8 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
-import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
@@ -38,6 +39,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v2/pipeline-monitoring")
 public class PipelineMonitoring extends AbstractMonitoringResource {
+
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
+
+  public PipelineMonitoring(ExtensionServiceRequestManager extensionServiceRequestManager) {
+    super(extensionServiceRequestManager);
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
+  }
 
   @GetMapping(
       value = "/pipeline/{pipelineId}/logs",
@@ -60,7 +68,7 @@ public class PipelineMonitoring extends AbstractMonitoringResource {
       @RequestParam(value = "forceUpdate", required = false, defaultValue = "false") boolean forceUpdate
   ) {
     if (forceUpdate) {
-      new ExtensionsServiceLogExecutor().triggerUpdate();
+      new ExtensionsServiceLogExecutor(extensionServiceRequestManager).triggerUpdate();
     }
     return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipelineId));
   }

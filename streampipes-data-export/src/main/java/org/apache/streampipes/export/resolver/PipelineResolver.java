@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.export.resolver;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
@@ -30,6 +31,12 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class PipelineResolver extends AbstractResolver<Pipeline> {
+
+  private final ExtensionServiceRequestManager requestManager;
+
+  public PipelineResolver(ExtensionServiceRequestManager requestManager) {
+    this.requestManager = requestManager;
+  }
 
   @Override
   public Pipeline findDocument(String resourceId) {
@@ -95,7 +102,7 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
     var storedPipeline = PipelineManager.getPipeline(resourceId);
     if (storedPipeline != null) {
       if (storedPipeline.isRunning()) {
-        PipelineManager.stopPipeline(resourceId, true);
+        PipelineManager.stopPipeline(resourceId, true, requestManager);
       }
       getNoSqlStore().getPipelineStorageAPI().deleteElementById(resourceId);
     }

@@ -25,8 +25,11 @@ import org.apache.streampipes.connect.management.compact.PersistPipelineHandler;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.connect.management.management.CompactAdapterManagement;
+import org.apache.streampipes.connect.management.management.GuessManagement;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -52,19 +55,31 @@ import org.springframework.web.bind.annotation.RestController;
 public class CompactAdapterResource extends AbstractAdapterResource<AdapterMasterManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(CompactAdapterResource.class);
-  private final AdapterGenerationSteps adapterGenerationSteps;
+  private final CompactAdapterManagement compactAdapterManagement;
   private final AdapterUpdateManagement adapterUpdateManagement;
+  private final ExtensionServiceRequestManager requestManager;
 
-  public CompactAdapterResource() {
+  public CompactAdapterResource(WorkerRestClient workerRestClient,
+                                ExtensionServiceRequestManager requestManager) {
     super(() -> new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getAdapterInstanceStorage(),
         new SpResourceManager().manageAdapters(),
         new SpResourceManager().manageDataStreams(),
-        AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+        AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+        workerRestClient,
+        StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
+        requestManager
     ));
-    this.adapterGenerationSteps = new AdapterGenerationSteps();
-    this.adapterUpdateManagement = new AdapterUpdateManagement(managementService);
+    var guessManagement = new GuessManagement(
+        new ExtensionsServiceEndpointGenerator(),
+        requestManager
+    );
+    this.requestManager = requestManager;
+    this.compactAdapterManagement = new CompactAdapterManagement(
+        new AdapterGenerationSteps(guessManagement).getGenerators()
+    );
+    this.adapterUpdateManagement = new AdapterUpdateManagement(managementService, requestManager);
   }
 
   @PostMapping(
@@ -79,7 +94,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
       @RequestBody CompactAdapter compactAdapter
   ) throws Exception {
 
-    var adapterDescription = getGeneratedAdapterDescription(compactAdapter);
+    var adapterDescription = compactAdapterManagement.convertToAdapterDescription(compactAdapter);
     var principalSid = getAuthenticatedUserSid();
 
     var adapterId = adapterDescription.getElementId();
@@ -100,13 +115,14 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
         if (compactAdapter.createOptions()
                           .persist()) {
           var storedAdapter = managementService.getAdapter(adapterId);
-          var status = new PersistPipelineHandler(
+          new PersistPipelineHandler(
               getNoSqlStorage().getPipelineTemplateStorage(),
               new CompactPipelineManagement(
-                  getNoSqlStorage().getPipelineElementDescriptionStorage()
+                  getNoSqlStorage().getPipelineElementDescriptionStorage(),
+                  requestManager
               ),
               getAuthenticatedUserSid()
-          ).createAndStartPersistPipeline(storedAdapter);
+          ).createAndStartPersistPipeline(storedAdapter, requestManager);
         }
         if (compactAdapter.createOptions()
                           .start()) {
@@ -136,7 +152,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
 
     var existingAdapter = managementService.getAdapter(elementId);
     if (existingAdapter != null) {
-      var adapterDescription = getGeneratedAdapterDescription(compactAdapter, existingAdapter);
+      var adapterDescription = compactAdapterManagement.convertToAdapterDescription(compactAdapter, existingAdapter);
 
       try {
         adapterUpdateManagement.updateAdapter(adapterDescription);
@@ -150,18 +166,4 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
       throw new BadRequestException(String.format("Adapter with id %s not found", elementId));
     }
   }
-
-  private AdapterDescription getGeneratedAdapterDescription(CompactAdapter compactAdapter) throws Exception {
-    var generators = adapterGenerationSteps.getGenerators();
-    return new CompactAdapterManagement(generators).convertToAdapterDescription(compactAdapter);
-  }
-
-  private AdapterDescription getGeneratedAdapterDescription(
-      CompactAdapter compactAdapter,
-      AdapterDescription existingAdapter
-  ) throws Exception {
-    var generators = adapterGenerationSteps.getGenerators();
-    return new CompactAdapterManagement(generators).convertToAdapterDescription(compactAdapter, existingAdapter);
-  }
-
 }

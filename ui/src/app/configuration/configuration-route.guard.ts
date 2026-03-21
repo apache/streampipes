@@ -20,15 +20,25 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { SpConfigurationTabsService } from './configuration-tabs.service';
 
+export const configurationDefaultRouteGuard: CanActivateFn = () => {
+    const tabService = inject(SpConfigurationTabsService);
+    const router = inject(Router);
+    const defaultTab = tabService.getDefaultTab();
+    return defaultTab ? router.createUrlTree(defaultTab.itemLink) : false;
+};
+
 export const configurationRouteGuard: CanActivateFn = route => {
     const tabService = inject(SpConfigurationTabsService);
     const tabs = tabService.getTabs();
-    const router: Router = inject(Router);
-    const path = route.routeConfig.path;
-    if (tabService.isTabActive(tabs, path)) {
+    const router = inject(Router);
+    const configurationSectionId = route.paramMap.get('configurationSectionId');
+    if (
+        configurationSectionId &&
+        tabService.isTabActive(tabs, configurationSectionId)
+    ) {
         return true;
-    } else {
-        router.navigate(tabs[0].itemLink, { skipLocationChange: true });
-        return false;
     }
+
+    const defaultTab = tabService.getDefaultTab();
+    return defaultTab ? router.createUrlTree(defaultTab.itemLink) : false;
 };

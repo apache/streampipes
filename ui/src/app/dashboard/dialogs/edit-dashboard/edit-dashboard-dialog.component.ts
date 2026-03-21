@@ -38,7 +38,7 @@ import {
     DialogRef,
     FormFieldComponent,
 } from '@streampipes/shared-ui';
-import { UserRole } from '../../../_enums/user-role.enum';
+import { UserRole } from '../../../core/auth/user-role.enum';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';

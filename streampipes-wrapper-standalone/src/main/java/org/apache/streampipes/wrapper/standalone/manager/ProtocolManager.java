@@ -18,7 +18,9 @@
 
 package org.apache.streampipes.wrapper.standalone.manager;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.wrapper.standalone.routing.StandaloneSpInputCollector;
 import org.apache.streampipes.wrapper.standalone.routing.StandaloneSpOutputCollector;
@@ -42,12 +44,13 @@ public class ProtocolManager {
   public static <T extends TransportProtocol> StandaloneSpInputCollector findInputCollector(T protocol,
                                                                                             Boolean singletonEngine)
       throws SpRuntimeException {
+    addNatsTokenIfConfigured(protocol);
 
     if (consumers.containsKey(topicName(protocol))) {
       return consumers.get(topicName(protocol));
     } else {
       consumers.put(topicName(protocol), makeInputCollector(protocol, singletonEngine));
-      LOG.info("Adding new consumer to consumer map (size=" + consumers.size() + "): " + topicName(protocol));
+      LOG.debug("Adding new consumer to consumer map (size=" + consumers.size() + "): " + topicName(protocol));
       return consumers.get(topicName(protocol));
     }
 
@@ -56,6 +59,7 @@ public class ProtocolManager {
   public static <T extends TransportProtocol> StandaloneSpOutputCollector findOutputCollector(T protocol,
                                                                                               String resourceId)
       throws SpRuntimeException {
+    addNatsTokenIfConfigured(protocol);
 
     if (producers.containsKey(topicName(protocol))) {
       return producers.get(topicName(protocol));
@@ -83,6 +87,17 @@ public class ProtocolManager {
 
   private static String topicName(TransportProtocol protocol) {
     return protocol.getTopicDefinition().getActualTopicName();
+  }
+
+  private static void addNatsTokenIfConfigured(TransportProtocol protocol) {
+    if (protocol instanceof NatsTransportProtocol natsProtocol) {
+      var natsToken = Environments.getEnvironment().getNatsToken().getValueOrDefault();
+      if ((natsProtocol.getToken() == null || natsProtocol.getToken().isBlank())
+          && natsToken != null
+          && !natsToken.isBlank()) {
+        natsProtocol.setToken(natsToken);
+      }
+    }
   }
 
   public static <T extends TransportProtocol> void removeInputCollector(T protocol) throws

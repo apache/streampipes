@@ -18,12 +18,16 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.PrincipalType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.ResetManagement;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
@@ -38,10 +42,21 @@ import java.util.ArrayList;
 @RequestMapping("/api/v2/reset")
 public class ResetResource extends AbstractAuthGuardedRestResource {
 
-  @PostMapping(produces =  MediaType.APPLICATION_JSON_VALUE)
+  private final WorkerRestClient workerRestClient;
+  private final IExtensionsServiceStorage extensionsServiceStorage;
+  private final ExtensionServiceRequestManager requestManager;
+
+  public ResetResource(WorkerRestClient workerRestClient,
+                       ExtensionServiceRequestManager requestManager) {
+    this.workerRestClient = workerRestClient;
+    this.extensionsServiceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
+    this.requestManager = requestManager;
+  }
+
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Resets StreamPipes instance")
   public ResponseEntity<SuccessMessage> reset() {
-    ResetManagement.reset(getAuthenticatedUsername());
+    ResetManagement.reset(getAuthenticatedUsername(), workerRestClient, extensionsServiceStorage, requestManager);
     var userStorage = getUserStorage();
 
 
@@ -50,7 +65,7 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
     for (var user : allUsers) {
       if (user.getPrincipalType() == PrincipalType.USER_ACCOUNT
           && !user.getPrincipalId().equals(getAuthenticatedUserSid())) {
-        ResetManagement.reset(user.getUsername());
+        ResetManagement.reset(user.getUsername(), workerRestClient, extensionsServiceStorage, requestManager);
         userStorage.deleteUser(user.getPrincipalId());
       }
     }

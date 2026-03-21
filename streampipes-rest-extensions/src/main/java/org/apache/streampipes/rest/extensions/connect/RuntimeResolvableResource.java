@@ -19,13 +19,8 @@
 package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
-import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
-import org.apache.streampipes.extensions.management.api.RuntimeResolvableRequestHandler;
-import org.apache.streampipes.extensions.management.connect.RuntimeResovable;
+import org.apache.streampipes.extensions.management.connect.RuntimeResolvableManagement;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
-import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
 import org.slf4j.Logger;
@@ -44,6 +39,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class RuntimeResolvableResource extends AbstractSharedRestInterface {
 
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeResolvableResource.class);
+  private final RuntimeResolvableManagement runtimeResolvableManagement;
+
+  public RuntimeResolvableResource() {
+    this.runtimeResolvableManagement = new RuntimeResolvableManagement();
+  }
+
+  public RuntimeResolvableResource(RuntimeResolvableManagement runtimeResolvableManagement) {
+    this.runtimeResolvableManagement = runtimeResolvableManagement;
+  }
 
   @PostMapping(
       path = "{id}/configurations",
@@ -52,21 +56,8 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
   public ResponseEntity<?> fetchConfigurations(@PathVariable("id") String elementId,
                                                @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
 
-    var adapter = RuntimeResovable.getAdapter(elementId);
-    RuntimeOptionsResponse response;
-    RuntimeResolvableRequestHandler handler = new RuntimeResolvableRequestHandler();
-
     try {
-      if (adapter instanceof ResolvesContainerProvidedOptions) {
-        response = handler.handleRuntimeResponse((ResolvesContainerProvidedOptions) adapter, runtimeOptionsRequest);
-        return ok(response);
-      } else if (adapter instanceof SupportsRuntimeConfig) {
-        response = handler.handleRuntimeResponse((SupportsRuntimeConfig) adapter, runtimeOptionsRequest);
-        return ok(response);
-      } else {
-        throw new SpRuntimeException(
-            "This element does not support dynamic options - is the pipeline element description up to date?");
-      }
+      return ok(runtimeResolvableManagement.fetchConfigurations(elementId, runtimeOptionsRequest));
     } catch (SpConfigurationException e) {
       LOG.warn("Error when fetching runtime configurations: {}", e.getMessage());
       return ResponseEntity

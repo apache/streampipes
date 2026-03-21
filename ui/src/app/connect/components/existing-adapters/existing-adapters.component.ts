@@ -45,6 +45,7 @@ import {
     SpBreadcrumbService,
     SpExceptionDetailsDialogComponent,
     SpLabelComponent,
+    SpTableAssetContextConfig,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
     SpTableActionsDirective,
@@ -122,12 +123,17 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         'status',
         'start',
         'name',
+        'assetContext',
         'adapterBase',
         'lastModified',
         'messagesSent',
         'lastMessage',
         'actions',
     ];
+    readonly assetContextConfig: SpTableAssetContextConfig = {
+        resourceLinkType: 'adapter',
+        resourceIdKey: 'elementId',
+    };
 
     dataSource: MatTableDataSource<AdapterDescription> =
         new MatTableDataSource();
@@ -288,7 +294,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     getIconUrl(adapter: AdapterDescription) {
-        if (adapter.includedAssets.length > 0) {
+        if (adapter.includedAssets?.some(asset => asset.startsWith('icon.'))) {
             return (
                 this.pipelineElementAssetService.getAssetUrl(adapter.appId) +
                 '/icon'
@@ -360,9 +366,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     applyAdapterFilters(elementIds: Set<string>): void {
-        if (this.assetFilterService.hasNoAssetFilterPermission()) {
-            elementIds = new Set<string>();
-        }
         this.currentFilterIds = elementIds;
         this.filteredAdapters = this.adapterFilter
             .transform(this.existingAdapters, this.currentFilter)

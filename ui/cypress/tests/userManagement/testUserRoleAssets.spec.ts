@@ -16,7 +16,7 @@
  *
  */
 
-import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserRole } from '../../../src/app/core/auth/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 import { User } from '../../support/model/User';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
@@ -34,7 +34,7 @@ describe('Test User Roles for Dashboards', () => {
 
         assetUser1 = UserUtils.createUser(
             'assetUser1',
-            UserRole.ROLE_ASSET_USER,
+            UserRole.ROLE_PIPELINE_USER,
         );
 
         assetAdmin1 = UserUtils.createUser(

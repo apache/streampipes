@@ -27,17 +27,19 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserRegistrationData;
 import org.apache.streampipes.model.configuration.GeneralConfig;
-import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
+import org.apache.streampipes.user.management.service.RefreshTokenService;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -50,42 +52,104 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/v2/auth")
 public class Authentication extends AbstractRestResource {
 
-  @Autowired
+  private static final String REFRESH_TOKEN_COOKIE = "sp-refresh-token";
+  private static final String ENCODED_REFRESH_TOKEN_PREFIX = "b64.";
+  private static final long MIN_REFRESH_COOKIE_SECONDS = 1;
+
   AuthenticationManager authenticationManager;
+
+  public Authentication(AuthenticationManager authenticationManager) {
+    this.authenticationManager = authenticationManager;
+  }
 
   @PostMapping(
       path = "/login",
       produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
       consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> doLogin(@RequestBody LoginRequest login) {
+  public ResponseEntity<?> doLogin(@RequestBody LoginRequest login,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response) {
     try {
       org.springframework.security.core.Authentication authentication = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(login.username(), login.password()));
       SecurityContextHolder.getContext().setAuthentication(authentication);
-      return processAuth(authentication);
+      return processAuth(authentication, login.rememberMe(), request, response);
     } catch (BadCredentialsException e) {
       return unauthorized();
     }
   }
 
-  @GetMapping(
-      path = "/token/renew",
+  @PostMapping(
+      path = "/token/refresh",
       produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> doLogin() {
-    try {
-      org.springframework.security.core.Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      return processAuth(auth);
-    } catch (BadCredentialsException e) {
-      return ok(new ErrorMessage(NotificationType.LOGIN_FAILED.uiNotification()));
+  public ResponseEntity<?> refreshToken(HttpServletRequest request,
+                                        HttpServletResponse response) {
+    String existingToken = getRefreshTokenFromRequest(request);
+
+    if (existingToken == null) {
+      clearRefreshCookie(request, response);
+      return unauthorized();
     }
+
+    var issuedRefreshToken = new RefreshTokenService().rotateRefreshToken(existingToken);
+
+    if (issuedRefreshToken == null) {
+      clearRefreshCookie(request, response);
+      return unauthorized();
+    }
+
+    var principal = StorageDispatcher.INSTANCE
+        .getNoSqlStore()
+        .getUserStorageAPI()
+        .getUserById(issuedRefreshToken.principalId());
+
+    if (!(principal instanceof UserAccount userAccount)) {
+      clearRefreshCookie(request, response);
+      return unauthorized();
+    }
+
+    setRefreshCookie(request, response, issuedRefreshToken);
+
+    String jwt = new JwtTokenProvider().createToken(userAccount);
+    return ok(new JwtAuthenticationResponse(jwt));
+  }
+
+  @PostMapping(
+      path = "/logout",
+      produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> logout(HttpServletRequest request,
+                                  HttpServletResponse response) {
+    RefreshTokenService refreshTokenService = new RefreshTokenService();
+    String existingToken = getRefreshTokenFromRequest(request);
+
+    if (existingToken != null) {
+      refreshTokenService.deleteAllRefreshTokensByRawToken(existingToken);
+    } else {
+      var authentication = SecurityContextHolder.getContext().getAuthentication();
+      if (authentication != null && authentication.getPrincipal() instanceof PrincipalUserDetails<?> principal) {
+        refreshTokenService.deleteAllRefreshTokens(principal.getDetails().getPrincipalId());
+      }
+    }
+
+    clearRefreshCookie(request, response);
+    SecurityContextHolder.clearContext();
+
+    return ok();
   }
 
   @PostMapping(
@@ -153,10 +217,17 @@ public class Authentication extends AbstractRestResource {
     return ok(response);
   }
 
-  private ResponseEntity<JwtAuthenticationResponse> processAuth(org.springframework.security.core.Authentication auth) {
+  private ResponseEntity<JwtAuthenticationResponse> processAuth(org.springframework.security.core.Authentication auth,
+                                                                boolean rememberMe,
+                                                                HttpServletRequest request,
+                                                                HttpServletResponse response) {
     Principal principal = ((PrincipalUserDetails<?>) auth.getPrincipal()).getDetails();
     if (principal instanceof UserAccount) {
       JwtAuthenticationResponse tokenResp = makeJwtResponse(auth);
+      if (request != null && response != null) {
+        var issuedRefreshToken = new RefreshTokenService().issueRefreshToken(principal.getPrincipalId(), rememberMe);
+        setRefreshCookie(request, response, issuedRefreshToken);
+      }
       ((UserAccount) principal).setLastLoginAtMillis(System.currentTimeMillis());
       getSpResourceManager().manageUsers().updateUser(principal);
       return ok(tokenResp);
@@ -168,6 +239,91 @@ public class Authentication extends AbstractRestResource {
   private JwtAuthenticationResponse makeJwtResponse(org.springframework.security.core.Authentication auth) {
     String jwt = new JwtTokenProvider().createToken(auth);
     return new JwtAuthenticationResponse(jwt);
+  }
+
+  private void setRefreshCookie(HttpServletRequest request,
+                                HttpServletResponse response,
+                                RefreshTokenService.IssuedRefreshToken issuedRefreshToken) {
+    long maxAgeSeconds = TimeUnit.MILLISECONDS.toSeconds(
+        Math.max(
+            MIN_REFRESH_COOKIE_SECONDS,
+            issuedRefreshToken.expiresAtMillis() - System.currentTimeMillis()
+        )
+    );
+
+    ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie
+        .from(REFRESH_TOKEN_COOKIE, encodeCookieTokenValue(issuedRefreshToken.rawToken()))
+        .httpOnly(true)
+        .secure(isSecureRequest(request))
+        .path(refreshCookiePath(request))
+        .sameSite("Lax");
+
+    if (issuedRefreshToken.rememberMe()) {
+      cookieBuilder.maxAge(maxAgeSeconds);
+    }
+
+    response.addHeader(HttpHeaders.SET_COOKIE, cookieBuilder.build().toString());
+  }
+
+  private void clearRefreshCookie(HttpServletRequest request,
+                                  HttpServletResponse response) {
+    ResponseCookie cookie = ResponseCookie
+        .from(REFRESH_TOKEN_COOKIE, "")
+        .httpOnly(true)
+        .secure(isSecureRequest(request))
+        .path(refreshCookiePath(request))
+        .maxAge(0)
+        .sameSite("Lax")
+        .build();
+
+    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+  }
+
+  private String getRefreshTokenFromRequest(HttpServletRequest request) {
+    Cookie[] cookies = request.getCookies();
+
+    if (cookies == null) {
+      return null;
+    }
+
+    for (Cookie cookie : cookies) {
+      if (REFRESH_TOKEN_COOKIE.equals(cookie.getName())) {
+        return decodeCookieTokenValue(cookie.getValue());
+      }
+    }
+
+    return null;
+  }
+
+  private String refreshCookiePath(HttpServletRequest request) {
+    var contextPath = request.getContextPath();
+    return (contextPath == null ? "" : contextPath) + "/api/v2/auth";
+  }
+
+  private boolean isSecureRequest(HttpServletRequest request) {
+    String forwardedProto = request.getHeader("X-Forwarded-Proto");
+    return request.isSecure() || "https".equalsIgnoreCase(forwardedProto);
+  }
+
+  private String encodeCookieTokenValue(String rawToken) {
+    return ENCODED_REFRESH_TOKEN_PREFIX + Base64.getUrlEncoder()
+        .withoutPadding()
+        .encodeToString(rawToken.getBytes(StandardCharsets.UTF_8));
+  }
+
+  private String decodeCookieTokenValue(String cookieValue) {
+    if (!cookieValue.startsWith(ENCODED_REFRESH_TOKEN_PREFIX)) {
+      return cookieValue;
+    }
+
+    try {
+      byte[] decoded = Base64.getUrlDecoder().decode(
+          cookieValue.substring(ENCODED_REFRESH_TOKEN_PREFIX.length())
+      );
+      return new String(decoded, StandardCharsets.UTF_8);
+    } catch (IllegalArgumentException e) {
+      return null;
+    }
   }
 
   private UiOAuthSettings makeOAuthSettings() {

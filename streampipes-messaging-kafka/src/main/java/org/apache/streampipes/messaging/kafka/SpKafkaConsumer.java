@@ -88,7 +88,7 @@ public class SpKafkaConsumer implements EventConsumer, Runnable,
 
   @Override
   public void connect(InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
-    LOG.info("Kafka consumer: Connecting to {}", protocol.getTopicDefinition().getActualTopicName());
+    LOG.debug("Kafka consumer: Connecting to {}", protocol.getTopicDefinition().getActualTopicName());
     var patternTopic = isPatternTopic();
     this.eventProcessor = eventProcessor;
     this.isRunning = true;

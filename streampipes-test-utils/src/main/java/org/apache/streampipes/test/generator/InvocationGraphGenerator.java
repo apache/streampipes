@@ -19,7 +19,6 @@ package org.apache.streampipes.test.generator;
 
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +28,6 @@ public class InvocationGraphGenerator {
   public static DataProcessorInvocation makeEmptyInvocation(DataProcessorDescription description) {
     DataProcessorInvocation invocation = new DataProcessorInvocation(description);
 
-    invocation.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
     invocation.setOutputStream(EventStreamGenerator.makeEmptyStream());
     invocation.setInputStreams(Arrays.asList(EventStreamGenerator.makeEmptyStream()));
 

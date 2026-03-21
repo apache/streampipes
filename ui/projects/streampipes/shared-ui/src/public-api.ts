@@ -43,8 +43,10 @@ export * from './lib/components/sp-exception-message/exception-details-dialog/ex
 export * from './lib/components/sp-exception-message/exception-details/exception-details.component';
 export * from './lib/components/sp-label/sp-label.component';
 export * from './lib/components/sp-table/sp-table.component';
-export * from './lib/components/sp-table/sp-table-actions.directive';
-export * from './lib/components/sp-table/sp-table-multi-actions.directive';
+export * from './lib/components/sp-table/sp-actions/sp-table-actions.directive';
+export * from './lib/components/sp-table/sp-actions/sp-table-multi-actions.directive';
+export * from './lib/components/sp-table/sp-table.model';
+export * from './lib/components/sp-table/sp-asset-context/sp-table-asset-context.service';
 export * from './lib/components/alert-banner/alert-banner.component';
 export * from './lib/components/time-selector/time-selector.model';
 export * from './lib/components/time-selector/time-range-selector.component';
@@ -62,8 +64,11 @@ export * from './lib/components/feature-card-host/feature-card-meta-section/feat
 export * from './lib/components/feature-card-host/feature-card-meta-creation/feature-card-meta-creation.component';
 
 export * from './lib/models/sp-navigation.model';
+export * from './lib/models/sp-configuration-section.model';
 
 export * from './lib/services/breadcrumb.service';
+export * from './lib/services/configuration-sections.service';
+export * from './lib/services/configuration-sections.token';
 export * from './lib/services/jwt-token-storage.service';
 export * from './lib/services/current-user.service';
 export * from './lib/services/echarts-toolbox.service';

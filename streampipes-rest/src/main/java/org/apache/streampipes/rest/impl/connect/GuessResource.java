@@ -22,24 +22,21 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.GuessManagement;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
-import org.apache.streampipes.model.client.user.DefaultPrivilege;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 
 import java.io.IOException;
 
@@ -49,8 +46,8 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(GuessResource.class);
 
-  public GuessResource() {
-    super(GuessManagement::new);
+  public GuessResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
+    super(() -> new GuessManagement(new ExtensionsServiceEndpointGenerator(), extensionServiceRequestManager));
   }
 
 
@@ -103,35 +100,4 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
     return ok(managementService.performAdapterEventPreview(adapterDescription));
 
   }
-
-  /**
-   * required by Spring expression
-   */
-  public boolean hasWriteAuthority() {
-    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE);
-  }
-
-  // TODO move these ExceptionHandlers to another place
-  @ExceptionHandler(value = {WorkerAdapterException.class})
-  private ResponseEntity<Object> handleAdapterException(WorkerAdapterException ex, WebRequest request) {
-    var spLogMessageException = ex.getExceptionMessage();
-    return ResponseEntity
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(spLogMessageException);
-  }
-  @ExceptionHandler(value = {AdapterException.class})
-  private ResponseEntity<Object> handleAdapterException(AdapterException ex, WebRequest request) {
-    var spLogMessageException = new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(ex));
-    return handleSpLogMessageException(spLogMessageException, request);
-  }
-  @ExceptionHandler(value = {SpLogMessageException.class})
-  protected ResponseEntity<Object> handleSpLogMessageException(
-      RuntimeException ex, WebRequest request) {
-    var exception = (SpLogMessageException) ex;
-    return ResponseEntity
-        .status(exception.getStatus())
-        .body(exception.getSpMessage());
-  }
-
 }
-

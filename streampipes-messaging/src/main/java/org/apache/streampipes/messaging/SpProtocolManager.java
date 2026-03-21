@@ -38,10 +38,6 @@ public enum SpProtocolManager {
     availableProtocols.add(protocolDefinition);
   }
 
-  public List<SpProtocolDefinitionFactory<? extends TransportProtocol>> getAvailableProtocols() {
-    return availableProtocols;
-  }
-
   public <T extends TransportProtocol> Optional<SpProtocolDefinition<T>> findDefinition(T transportProtocol) {
     return this.availableProtocols
         .stream()

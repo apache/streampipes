@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.extensions.monitoring;
 
-import org.apache.streampipes.extensions.management.monitoring.ServiceLoadDataReportGenerator;
+import org.apache.streampipes.extensions.management.monitoring.ServiceMonitorManagement;
 import org.apache.streampipes.model.loadbalancer.ServiceLoadDataReport;
 import org.apache.streampipes.rest.extensions.AbstractExtensionsResource;
 
@@ -31,8 +31,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("serviceMonitor")
 public class ServiceMonitorResource extends AbstractExtensionsResource {
+
+  private final ServiceMonitorManagement serviceMonitorManagement;
+
+  public ServiceMonitorResource() {
+    this.serviceMonitorManagement = new ServiceMonitorManagement();
+  }
+
+  public ServiceMonitorResource(ServiceMonitorManagement serviceMonitorManagement) {
+    this.serviceMonitorManagement = serviceMonitorManagement;
+  }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ServiceLoadDataReport> getServiceMonitor() {
-    return ok(ServiceLoadDataReportGenerator.getInstance().getCurrentReport());
+    return ok(serviceMonitorManagement.getCurrentReport());
   }
 }

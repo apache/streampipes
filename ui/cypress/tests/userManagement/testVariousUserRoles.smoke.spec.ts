@@ -17,7 +17,7 @@
  */
 
 import { UserBuilder } from '../../support/builder/UserBuilder';
-import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserRole } from '../../../src/app/core/auth/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils';
 
@@ -72,6 +72,7 @@ for (let i = 0; i < testedRoles.length; i++) {
                 NavigationUtils.validateActiveModules([
                     NavigationUtils.PIPELINES,
                     NavigationUtils.CONFIGURATION,
+                    NavigationUtils.ASSET_MANAGEMENT,
                 ]);
             } else if (
                 testRole == UserRole.ROLE_DASHBOARD_ADMIN ||
@@ -80,13 +81,18 @@ for (let i = 0; i < testedRoles.length; i++) {
                 NavigationUtils.validateActiveModules([
                     NavigationUtils.CHART,
                     NavigationUtils.DASHBOARD,
+                    NavigationUtils.ASSET_MANAGEMENT,
                 ]);
             } else if (testRole == UserRole.ROLE_DATA_EXPLORER_ADMIN) {
-                NavigationUtils.validateActiveModules([NavigationUtils.CHART]);
+                NavigationUtils.validateActiveModules([
+                    NavigationUtils.CHART,
+                    NavigationUtils.ASSET_MANAGEMENT,
+                ]);
             } else if (testRole == UserRole.ROLE_CONNECT_ADMIN) {
                 NavigationUtils.validateActiveModules([
                     NavigationUtils.CONNECT,
                     NavigationUtils.CONFIGURATION,
+                    NavigationUtils.ASSET_MANAGEMENT,
                 ]);
             } else if (testRole == UserRole.ROLE_ASSET_ADMIN) {
                 NavigationUtils.validateActiveModules([

@@ -71,15 +71,6 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   }
 
   @Override
-  public List<String> getServiceEndpoints(String serviceGroup,
-                                          boolean restrictToHealthy,
-                                          List<String> filterByTags) {
-    var services = getService(serviceGroup, restrictToHealthy, filterByTags);
-
-    return services.stream().map(this::makeServiceUrl).toList();
-  }
-
-  @Override
   public List<SpServiceRegistration> getService(boolean restrictToHealthy) {
     List<SpServiceRegistration> activeServices = findServices(0);
 
@@ -93,10 +84,6 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   @Override
   public List<SpServiceRegistration> findAll(){
     return findServices(0);
-  }
-
-  private String makeServiceUrl(SpServiceRegistration service) {
-    return service.getServiceUrl();
   }
 
   /**
@@ -120,7 +107,6 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
       if (retryCount < MAX_RETRIES) {
         try {
           retryCount++;
-          LOG.info("Could not find any extensions services, retrying ({}/{})", retryCount, MAX_RETRIES);
           TimeUnit.MILLISECONDS.sleep(1000);
           return findServices(retryCount);
         } catch (InterruptedException e) {
