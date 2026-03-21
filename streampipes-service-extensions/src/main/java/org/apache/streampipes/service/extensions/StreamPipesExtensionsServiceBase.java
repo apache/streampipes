@@ -36,7 +36,10 @@ import org.apache.streampipes.model.extensions.configuration.SpServiceConfigurat
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
-import org.apache.streampipes.rest.extensions.WelcomePage;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceTransportMode;
+import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
+import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestReceiver;
 import org.apache.streampipes.rest.shared.exception.SpRestExceptionHandler;
 import org.apache.streampipes.rest.shared.serializer.JacksonConfiguration;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
@@ -67,7 +70,6 @@ import java.util.stream.Collectors;
 @EnableAutoConfiguration
 @Import({
     WebSecurityConfig.class,
-    WelcomePage.class,
     ServiceHealthResource.class,
     SpRestExceptionHandler.class,
     StreamPipesPrometheusConfig.class,
@@ -77,6 +79,10 @@ import java.util.stream.Collectors;
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesExtensionsServiceBase.class);
+  private ExtensionBrokerRequestReceiver extensionBrokerRequestReceiver;
+  private ExtensionServiceTransportMode extensionTransportMode = ExtensionServiceTransportMode.HTTP;
+  private boolean natsBrokerReceiverActive = false;
+  private SpServiceRegistration currentServiceRegistration;
 
   public void init() {
     SpServiceDefinition serviceDef = provideServiceDefinition();
@@ -125,6 +131,27 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   public void startExtensionsService(Class<?> serviceClass,
                                      SpServiceDefinition serviceDef,
                                      BaseNetworkingConfig networkingConfig) throws UnknownHostException {
+    this.extensionTransportMode = ExtensionServiceTransportMode.from(
+        Environments.getEnvironment().getExtensionTransportMode().getValueOrDefault()
+    );
+    if (extensionTransportMode.supportsNats()) {
+      LOG.info("Starting Extension Service on Nats Mode");
+      this.extensionBrokerRequestReceiver = new ExtensionBrokerRequestReceiver(
+          getAdditionalBrokerOperationHandlers()
+      );
+      this.natsBrokerReceiverActive = extensionBrokerRequestReceiver.start(
+          serviceId(),
+          extensionTransportMode,
+          Environments.getEnvironment()
+              .getExtensionRequestTopicPrefix()
+              .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX),
+          this::onNatsReconnect
+      );
+    } else {
+      LOG.info("Starting Extension Service on HTTP Mode");
+      this.natsBrokerReceiverActive = false;
+    }
+
     var extensions = new ExtensionItemProvider().getAllItemDescriptions();
     var req = SpServiceRegistration.from(
         DefaultSpServiceTypes.EXT,
@@ -136,6 +163,8 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         TransformationEngines.INSTANCE.getAvailableEngineMetadata(),
         getHealthCheckPath(),
         extensions);
+
+    this.currentServiceRegistration = req;
 
     LOG.info("Registering service {} with id {} at core", req.getSvcGroup(), req.getSvcId());
     registerService(req);
@@ -154,6 +183,21 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     new CoreRequestSubmitter().submitRegistrationRequest(client, serviceRegistration);
   }
 
+  private void onNatsReconnect() {
+    var registration = this.currentServiceRegistration;
+    if (registration == null) {
+      LOG.warn("NATS reconnect detected but service registration is not available yet");
+      return;
+    }
+
+    try {
+      LOG.info("NATS reconnect detected - refreshing service registration for {}", registration.getSvcId());
+      registerService(registration);
+    } catch (Exception e) {
+      LOG.warn("Could not refresh service registration after NATS reconnect", e);
+    }
+  }
+
   protected Set<SpServiceTag> getServiceTags(Set<ExtensionItemDescription> extensions) {
     Set<SpServiceTag> tags = new HashSet<>();
     if (DeclarersSingleton.getInstance().getServiceDefinition() != null) {
@@ -161,7 +205,22 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
           DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup()));
     }
     tags.addAll(getExtensionsServiceTags(extensions));
+    tags.addAll(getTransportServiceTags());
     tags.addAll(new CustomServiceTagResolver(Environments.getEnvironment()).getCustomServiceTags());
+    return tags;
+  }
+
+  private Set<SpServiceTag> getTransportServiceTags() {
+    Set<SpServiceTag> tags = new HashSet<>();
+
+    if (extensionTransportMode.supportsHttp()) {
+      tags.add(SpServiceTag.create(SpServiceTagPrefix.CUSTOM, ExtensionServiceBrokerTopics.TRANSPORT_TAG_HTTP));
+    }
+
+    if (extensionTransportMode.supportsNats() && natsBrokerReceiverActive) {
+      tags.add(SpServiceTag.create(SpServiceTagPrefix.CUSTOM, ExtensionServiceBrokerTopics.TRANSPORT_TAG_NATS));
+    }
+
     return tags;
   }
 
@@ -189,12 +248,19 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
 
   @PreDestroy
   public void onExit() {
+    if (extensionBrokerRequestReceiver != null) {
+      extensionBrokerRequestReceiver.stop();
+    }
     new ExtensionsServiceShutdownHandler().onShutdown();
     deregisterService(DeclarersSingleton.getInstance().getServiceId());
   }
 
   public String serviceId() {
     return DeclarersSingleton.getInstance().getServiceId();
+  }
+
+  protected List<ExtensionBrokerOperationHandler> getAdditionalBrokerOperationHandlers() {
+    return List.of();
   }
 
   public abstract SpServiceDefinition provideServiceDefinition();

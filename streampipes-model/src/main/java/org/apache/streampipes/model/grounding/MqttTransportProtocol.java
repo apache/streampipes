@@ -20,6 +20,8 @@ package org.apache.streampipes.model.grounding;
 
 public class MqttTransportProtocol extends TransportProtocol {
 
+  public static final String BROKER_ID = "mqtt";
+
   private int port;
 
   public MqttTransportProtocol(String hostname, int port, String topicName) {
@@ -34,6 +36,11 @@ public class MqttTransportProtocol extends TransportProtocol {
 
   public MqttTransportProtocol() {
     super();
+  }
+
+  @Override
+  public String protocolId() {
+    return BROKER_ID;
   }
 
   public int getPort() {

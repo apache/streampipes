@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.template.compact;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.pipeline.compact.generation.PipelineElementConfigurationStep;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -40,11 +41,14 @@ public class CompactPipelineTemplateManagement {
 
   private final IPipelineElementDescriptionStorage storage;
   private final ICompactPipelineTemplateStorage templateStorage;
+  private final ExtensionServiceRequestManager requestManager;
 
   public CompactPipelineTemplateManagement(ICompactPipelineTemplateStorage templateStorage,
-                                           IPipelineElementDescriptionStorage descriptionStorage) {
+                                           IPipelineElementDescriptionStorage descriptionStorage,
+                                           ExtensionServiceRequestManager requestManager) {
     this.templateStorage = templateStorage;
     this.storage = descriptionStorage;
+    this.requestManager = requestManager;
   }
 
   public PipelineModificationResult makePipeline(PipelineTemplateGenerationRequest request) throws Exception {
@@ -64,7 +68,7 @@ public class CompactPipelineTemplateManagement {
     }
     var pipeline = makePipeline(template);
 
-    return new PipelineVerificationHandlerV2(pipeline).makeModifiedPipeline();
+    return new PipelineVerificationHandlerV2(pipeline, requestManager).makeModifiedPipeline();
   }
 
   private Pipeline makePipeline(CompactPipelineTemplate template) throws Exception {

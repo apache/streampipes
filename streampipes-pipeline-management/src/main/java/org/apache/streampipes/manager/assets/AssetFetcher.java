@@ -18,34 +18,42 @@
 package org.apache.streampipes.manager.assets;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import org.apache.http.client.fluent.Request;
-
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
 public class AssetFetcher {
 
-  private static final String ASSET_ENDPOINT_APPENDIX = "/assets";
-
-  private SpServiceUrlProvider spServiceUrlProvider;
-  private String appId;
+  private final SpServiceUrlProvider spServiceUrlProvider;
+  private final String appId;
+  private final ExtensionServiceRequestManager requestManager;
 
   public AssetFetcher(SpServiceUrlProvider spServiceUrlProvider,
-                      String appId) {
+                      String appId,
+                      ExtensionServiceRequestManager requestManager) {
     this.spServiceUrlProvider = spServiceUrlProvider;
     this.appId = appId;
+    this.requestManager = requestManager;
   }
 
   public InputStream fetchPipelineElementAssets() throws IOException, NoServiceEndpointsAvailableException {
-    String endpointUrl = new ExtensionsServiceEndpointGenerator().getEndpointResourceUrl(appId, spServiceUrlProvider);
-    return Request
-        .Get(endpointUrl + ASSET_ENDPOINT_APPENDIX)
-        .execute()
-        .returnContent()
-        .asStream();
+    var service = new ExtensionsServiceEndpointGenerator().selectService(appId, spServiceUrlProvider, Set.of());
+    var requestTarget = ExtensionServiceRequestTargets.pipelineElementAssets(service, spServiceUrlProvider, appId);
+    var response = requestManager.request(ExtensionServiceRequests.pipelineElementAssets(requestTarget));
+
+    if (!response.isSuccess()) {
+      throw new IOException("Could not fetch pipeline element assets from " + service.getSvcGroup());
+    }
+
+    var responseBytes = response.responseBytes();
+    return new ByteArrayInputStream(responseBytes == null ? new byte[0] : responseBytes);
 
   }
 }

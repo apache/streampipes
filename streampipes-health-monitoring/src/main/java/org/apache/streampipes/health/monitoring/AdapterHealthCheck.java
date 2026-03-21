@@ -152,7 +152,6 @@ public class AdapterHealthCheck {
           LOG.debug("Start recovering adapter {} ", adapterDescription.getElementId());
           this.healthCheckData.resourceProvider().adapterMasterManagement().startStreamAdapter(adapterDescription.getElementId());
           LOG.info("Adapter {} is recovered", adapterDescription.getElementId());
-
         }
       } catch (AdapterException e) {
         LOG.warn("Could not start adapter {} ({})", adapterDescription.getName(), e.getMessage());

@@ -19,7 +19,6 @@
 package org.apache.streampipes.model.base;
 
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 
@@ -34,8 +33,6 @@ public abstract class ConsumableStreamPipesEntity extends VersionedNamedStreamPi
 
   protected List<StaticProperty> staticProperties;
 
-  private EventGrounding supportedGrounding;
-
   public ConsumableStreamPipesEntity() {
     super();
     this.spDataStreams = new ArrayList<>();
@@ -48,9 +45,6 @@ public abstract class ConsumableStreamPipesEntity extends VersionedNamedStreamPi
       this.spDataStreams = new Cloner().streams(other.getSpDataStreams());
     }
     this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
-    if (other.getSupportedGrounding() != null) {
-      this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
-    }
   }
 
   public List<SpDataStream> getSpDataStreams() {
@@ -68,13 +62,4 @@ public abstract class ConsumableStreamPipesEntity extends VersionedNamedStreamPi
   public void setStaticProperties(List<StaticProperty> staticProperties) {
     this.staticProperties = staticProperties;
   }
-
-  public EventGrounding getSupportedGrounding() {
-    return supportedGrounding;
-  }
-
-  public void setSupportedGrounding(EventGrounding supportedGrounding) {
-    this.supportedGrounding = supportedGrounding;
-  }
-
 }

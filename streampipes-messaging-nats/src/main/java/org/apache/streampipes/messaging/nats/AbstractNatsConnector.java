@@ -27,6 +27,7 @@ import io.nats.client.Options;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
 public abstract class AbstractNatsConnector {
@@ -41,7 +42,17 @@ public abstract class AbstractNatsConnector {
   }
 
   protected void makeBrokerConnection(NatsTransportProtocol protocol) throws IOException, InterruptedException {
-    this.natsConnection = Nats.connect(makeBrokerUrl(protocol));
+    var natsUrl = makeBrokerUrl(protocol);
+    var optionsBuilder = Options.builder().server(natsUrl);
+    var token = protocol.getToken();
+
+    if (token != null && !token.isBlank()) {
+      Properties props = new Properties();
+      props.setProperty(Options.PROP_TOKEN, token);
+      optionsBuilder = new Options.Builder(props).server(natsUrl);
+    }
+
+    this.natsConnection = Nats.connect(optionsBuilder.build());
     this.subject = protocol.getTopicDefinition().getActualTopicName();
   }
 
@@ -49,6 +60,10 @@ public abstract class AbstractNatsConnector {
     var natsConfig = new NatsConfig();
     natsConfig.setNatsUrls(makeBrokerUrl(protocol));
     natsConfig.setSubject(protocol.getTopicDefinition().getActualTopicName());
+    var token = protocol.getToken();
+    if (token != null && !token.isBlank()) {
+      natsConfig.setProperties(Options.PROP_TOKEN + ":" + token);
+    }
 
     return natsConfig;
   }

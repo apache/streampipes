@@ -36,11 +36,10 @@ public class DiscoverEndpointsTask implements PipelineExecutionTask {
   public void executeTask(Pipeline pipeline,
                           PipelineExecutionInfo executionInfo) {
     for (PipelineElementPartitioner.ResourceUnitWithServices unit : PipelineElementPartitioner.partitionPipeline(pipeline).getResourceUnits()){
-      SpServiceRegistration registration = LoadManager.allocation(unit.getCompatibleServices(), pipeline.getLabels());
-      if (Objects.nonNull(registration)) {
-        String endpointBaseUrl = registration.getServiceUrl();
+      SpServiceRegistration service = LoadManager.allocation(unit.getCompatibleServices(), pipeline.getLabels());
+      if (Objects.nonNull(service)) {
         unit.getResourceUnit().getElements().forEach(el -> {
-          applyEndpointAndPipeline(pipeline.getPipelineId(), el, endpointBaseUrl);
+          applyEndpointAndPipeline(pipeline.getPipelineId(), el, service);
         });
       } else {
         unit.getResourceUnit().getElements().forEach(executionInfo::addFailedPipelineElement);
@@ -64,8 +63,9 @@ public class DiscoverEndpointsTask implements PipelineExecutionTask {
 
   private void applyEndpointAndPipeline(String pipelineId,
                                         EndpointSelectable pipelineElement,
-                                        String endpointUrl) {
-    pipelineElement.setSelectedEndpointUrl(endpointUrl);
+                                        SpServiceRegistration service) {
+    pipelineElement.setSelectedEndpointUrl(service.getServiceUrl());
+    pipelineElement.setSelectedServiceId(service.getSvcId());
     pipelineElement.setCorrespondingPipeline(pipelineId);
   }
 }

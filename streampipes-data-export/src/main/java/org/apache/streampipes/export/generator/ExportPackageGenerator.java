@@ -28,6 +28,7 @@ import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.GenericStorageDocumentResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportConfiguration;
@@ -55,10 +56,13 @@ public class ExportPackageGenerator {
   private static final Logger LOG = LoggerFactory.getLogger(ExportPackageGenerator.class);
 
   private final ExportConfiguration exportConfiguration;
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private ObjectMapper defaultMapper;
 
-  public ExportPackageGenerator(ExportConfiguration exportConfiguration) {
+  public ExportPackageGenerator(ExportConfiguration exportConfiguration,
+                                ExtensionServiceRequestManager extensionServiceRequestManager) {
     this.exportConfiguration = exportConfiguration;
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.defaultMapper = JacksonSerializer.getObjectMapper(Map.of(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
       SerializationFeature.INDENT_OUTPUT, false 
@@ -78,7 +82,7 @@ public class ExportPackageGenerator {
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {
       config.getAdapters().forEach(item -> addDoc(builder,
           item,
-          new AdapterResolver(),
+          new AdapterResolver(extensionServiceRequestManager),
           manifest::addAdapter));
 
       config.getDataSources().forEach(item -> addDoc(builder,
@@ -93,7 +97,7 @@ public class ExportPackageGenerator {
 
       config.getPipelines().forEach(item -> addDoc(builder,
           item,
-          new PipelineResolver(),
+          new PipelineResolver(extensionServiceRequestManager),
           manifest::addPipeline));
 
       config.getDashboards().forEach(item -> {

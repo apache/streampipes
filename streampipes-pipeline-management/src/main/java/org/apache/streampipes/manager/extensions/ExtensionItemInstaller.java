@@ -18,40 +18,51 @@
 package org.apache.streampipes.manager.extensions;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
-import org.apache.streampipes.manager.api.extensions.IExtensionsResourceUrlProvider;
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.io.IOException;
 
 public class ExtensionItemInstaller {
 
-  private final IExtensionsResourceUrlProvider urlProvider;
+  private final ExtensionServiceRequestManager requestManager;
+  private final SpServiceRegistration service;
 
-  public ExtensionItemInstaller(IExtensionsResourceUrlProvider urlProvider) {
-    this.urlProvider = urlProvider;
+  public ExtensionItemInstaller(SpServiceRegistration service,
+                                ExtensionServiceRequestManager requestManager) {
+    this.requestManager = requestManager;
+    this.service = service;
   }
 
   public Message installExtension(ExtensionItemInstallationRequest req,
                                   String principalSid) throws IOException, SepaParseException {
-    var descriptionUrl = getDescriptionUrl(req);
-    var description = fetchDescription(descriptionUrl);
-    return new TypeExtractor(description).getTypeVerifier().verifyAndAdd(principalSid, req.publicElement());
+    var requestTarget = getDescriptionRequestTarget(req);
+    var description = fetchDescription(requestTarget);
+    return new TypeExtractor(description, requestManager).getTypeVerifier().verifyAndAdd(principalSid, req.publicElement());
   }
 
   public Message updateExtension(ExtensionItemInstallationRequest req) throws IOException, SepaParseException {
-    var descriptionUrl = getDescriptionUrl(req);
-    var description = fetchDescription(descriptionUrl);
-    return new TypeExtractor(description).getTypeVerifier().verifyAndUpdate();
+    var requestTarget = getDescriptionRequestTarget(req);
+    var description = fetchDescription(requestTarget);
+    return new TypeExtractor(description, requestManager).getTypeVerifier().verifyAndUpdate();
   }
 
-  private String getDescriptionUrl(ExtensionItemInstallationRequest req) {
-    return urlProvider.getDescriptionUrl(req);
+  private ExtensionServiceRequestTarget getDescriptionRequestTarget(ExtensionItemInstallationRequest req) {
+    return ExtensionServiceRequestTargets.extensionDescription(
+        service,
+        SpServiceUrlProvider.valueOf(req.serviceTagPrefix().name()),
+        req.appId()
+    );
   }
 
-  private String fetchDescription(String descriptionUrl) throws IOException {
-    return ExtensionServiceExecutions.extServiceGetRequest(descriptionUrl).execute().returnContent().asString();
+  private String fetchDescription(ExtensionServiceRequestTarget requestTarget) throws IOException {
+    return requestManager.request(ExtensionServiceRequests.extensionDescription(requestTarget)).responseBody();
   }
 }

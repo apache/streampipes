@@ -20,9 +20,16 @@ package org.apache.streampipes.model.grounding;
 
 public class PulsarTransportProtocol extends TransportProtocol {
 
+  public static final String BROKER_ID = "pulsar";
+
   public PulsarTransportProtocol(String brokerUrl,
                                  TopicDefinition topicDefinition) {
     super(brokerUrl, topicDefinition);
+  }
+
+  @Override
+  public String protocolId() {
+    return BROKER_ID;
   }
 
   public PulsarTransportProtocol(PulsarTransportProtocol other) {

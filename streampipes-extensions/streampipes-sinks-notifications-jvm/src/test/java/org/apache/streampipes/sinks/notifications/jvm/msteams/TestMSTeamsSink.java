@@ -33,7 +33,7 @@ import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -57,7 +57,7 @@ public class TestMSTeamsSink {
     var messageContent = "{\"text\": \"Hi this is a message from Apache StreamPipes\"}";
 
     var sink = new MSTeamsSink();
-    Assertions.assertEquals(messageContent, sink.createMessageFromAdvancedContent(messageContent));
+    assertEquals(messageContent, sink.createMessageFromAdvancedContent(messageContent));
   }
 
   @Test
@@ -92,12 +92,12 @@ public class TestMSTeamsSink {
     var capturedPost = argumentCaptor.getValue();
 
     Assertions.assertNotNull(capturedPost);
-    Assertions.assertEquals(webhook,
+    assertEquals(webhook,
                             capturedPost.getURI().toString()
     );
-    Assertions.assertEquals(ContentType.APPLICATION_JSON.toString(),
+    assertEquals(ContentType.APPLICATION_JSON.toString(),
                             capturedPost.getEntity().getContentType().getValue());
-    Assertions.assertEquals(payload, EntityUtils.toString(capturedPost.getEntity()));
+    assertEquals(payload, EntityUtils.toString(capturedPost.getEntity()));
   }
 
   @Test

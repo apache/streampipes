@@ -27,8 +27,6 @@ import java.util.List;
 
 public class DataSinkInvocation extends InvocableStreamPipesEntity {
 
-  private static final long serialVersionUID = -2345635798917416757L;
-
   private List<String> category;
 
   public DataSinkInvocation(DataSinkInvocation sec) {
@@ -42,7 +40,6 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
     this.setName(other.getName());
     this.setDescription(other.getDescription());
     this.setInputStreams(other.getSpDataStreams());
-    this.setSupportedGrounding(other.getSupportedGrounding());
     this.setStaticProperties(other.getStaticProperties());
     this.setBelongsTo(other.getElementId());
     this.category = other.getCategory();

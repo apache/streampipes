@@ -31,7 +31,6 @@ import org.apache.streampipes.extensions.connectors.rocketmq.RocketMqConnectorsM
 import org.apache.streampipes.extensions.connectors.tubemq.TubeMQConnectorsModuleExport;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
@@ -91,7 +90,6 @@ public class AllExtensionsIIoTInit extends StreamPipesExtensionsServiceBase {
         .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
-            new SpJmsProtocolFactory(),
             new SpMqttProtocolFactory(),
             new SpNatsProtocolFactory(),
             new SpPulsarProtocolFactory())

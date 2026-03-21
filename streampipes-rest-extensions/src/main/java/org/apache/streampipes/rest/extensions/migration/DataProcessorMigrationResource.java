@@ -18,12 +18,11 @@
 
 package org.apache.streampipes.rest.extensions.migration;
 
-import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
-import org.apache.streampipes.extensions.api.migration.IDataProcessorMigrator;
+import org.apache.streampipes.extensions.management.migration.DataProcessorMigrationHandler;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.rest.extensions.AbstractExtensionsResource;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,11 +39,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/migrations/processor")
-public class DataProcessorMigrationResource extends MigrateExtensionsResource<
-        DataProcessorInvocation,
-        IDataProcessorParameterExtractor,
-        IDataProcessorMigrator
-        > {
+public class DataProcessorMigrationResource extends AbstractExtensionsResource {
+
+  private final DataProcessorMigrationHandler migrationHandler;
+
+  public DataProcessorMigrationResource() {
+    this.migrationHandler = new DataProcessorMigrationHandler();
+  }
+
+  public DataProcessorMigrationResource(DataProcessorMigrationHandler migrationHandler) {
+    this.migrationHandler = migrationHandler;
+  }
 
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -75,11 +80,6 @@ public class DataProcessorMigrationResource extends MigrateExtensionsResource<
                   required = true
           )
           @RequestBody MigrationRequest<DataProcessorInvocation> processorMigrationRequest) {
-    return ok(handleMigration(processorMigrationRequest));
-  }
-
-  @Override
-  protected IDataProcessorParameterExtractor getPropertyExtractor(DataProcessorInvocation pipelineElementDescription) {
-    return ProcessingElementParameterExtractor.from(pipelineElementDescription);
+    return ok(migrationHandler.handleMigration(processorMigrationRequest));
   }
 }

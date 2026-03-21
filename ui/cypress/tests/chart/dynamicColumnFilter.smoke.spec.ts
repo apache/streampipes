@@ -47,9 +47,6 @@ describe('Dynamic Column Filters in Table Widget', () => {
         ChartBtns.columnAdvancedFilterApplyBtn().click();
 
         // Top 10 filter should return 10 or fewer rows
-        ChartWidgetTableUtils.chartTableRowTimestamp().should(
-            'have.length.at.most',
-            10,
-        );
+        ChartWidgetTableUtils.checkAmountOfRows(10);
     });
 });

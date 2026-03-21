@@ -18,14 +18,16 @@
 package org.apache.streampipes.manager.preview;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
-import org.apache.streampipes.manager.execution.http.DetachHttpRequest;
-import org.apache.streampipes.manager.execution.http.InvokeHttpRequest;
+import org.apache.streampipes.manager.execution.http.DetachExtensionRequest;
+import org.apache.streampipes.manager.execution.http.InvokeExtensionRequest;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.preview.PipelinePreviewModel;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -46,18 +49,19 @@ public class PipelinePreview {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelinePreview.class);
 
-  public PipelinePreviewModel initiatePreview(Pipeline pipeline) {
+  public PipelinePreviewModel initiatePreview(Pipeline pipeline,
+                                              ExtensionServiceRequestManager requestManager) {
     String previewId = generatePreviewId();
     var elementIdMappings = new HashMap<String, String>();
     pipeline.setActions(new ArrayList<>());
     List<NamedStreamPipesEntity> pipelineElements = new ArrayList<>(
-        new PipelineVerificationHandlerV2(pipeline)
+        new PipelineVerificationHandlerV2(pipeline, requestManager)
             .verifyAndBuildGraphs(true)
             .modifiedPipelineElements()
     );
 
     rewriteElementIds(pipelineElements, elementIdMappings);
-    invokeGraphs(filter(pipelineElements));
+    invokeGraphs(filter(pipelineElements), requestManager);
     storeGraphs(previewId, pipelineElements);
 
     LOG.info("Preview pipeline {} started", previewId);
@@ -65,9 +69,10 @@ public class PipelinePreview {
     return makePreviewModel(previewId, elementIdMappings);
   }
 
-  public void deletePreview(String previewId) {
+  public void deletePreview(String previewId,
+                            ExtensionServiceRequestManager requestManager) {
     List<NamedStreamPipesEntity> graphs = ActivePipelinePreviews.INSTANCE.getInvocationGraphs(previewId);
-    detachGraphs(filter(graphs));
+    detachGraphs(filter(graphs), requestManager);
     deleteGraphs(previewId);
     LOG.info("Preview pipeline {} stopped", previewId);
   }
@@ -125,29 +130,33 @@ public class PipelinePreview {
         });
   }
 
-  private String findSelectedEndpoint(InvocableStreamPipesEntity g) throws NoServiceEndpointsAvailableException {
+  private SpServiceRegistration findSelectedService(InvocableStreamPipesEntity g) throws NoServiceEndpointsAvailableException {
     return new ExtensionsServiceEndpointGenerator()
-        .getEndpointResourceUrl(
+        .selectService(
             g.getAppId(),
-            ExtensionsServiceEndpointUtils.getPipelineElementType(g)
+            ExtensionsServiceEndpointUtils.getPipelineElementType(g),
+            Set.of()
         );
   }
 
-  private void invokeGraphs(List<InvocableStreamPipesEntity> graphs) {
+  private void invokeGraphs(List<InvocableStreamPipesEntity> graphs,
+                            ExtensionServiceRequestManager requestManager) {
     graphs.forEach(g -> {
       try {
-        g.setSelectedEndpointUrl(findSelectedEndpoint(g));
-        new InvokeHttpRequest().execute(g, g.getSelectedEndpointUrl(), null);
+        var service = findSelectedService(g);
+        g.setSelectedEndpointUrl(service.getServiceUrl());
+        g.setSelectedServiceId(service.getSvcId());
+        new InvokeExtensionRequest(requestManager).execute(g, null);
       } catch (NoServiceEndpointsAvailableException e) {
         LOG.warn("No endpoint found for pipeline element {}", g.getAppId());
       }
     });
   }
 
-  private void detachGraphs(List<InvocableStreamPipesEntity> graphs) {
+  private void detachGraphs(List<InvocableStreamPipesEntity> graphs,
+                            ExtensionServiceRequestManager requestManager) {
     graphs.forEach(g -> {
-      String endpointUrl = g.getSelectedEndpointUrl() + g.getDetachPath();
-      new DetachHttpRequest().execute(g, endpointUrl, null);
+      new DetachExtensionRequest(requestManager).execute(g, null);
     });
   }
 
