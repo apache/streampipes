@@ -150,6 +150,38 @@ export class ChartBtns {
         return cy.dataCy('chart-data-preview-empty');
     }
 
+    public static indicatorChart() {
+        return cy.dataCy('indicator-chart');
+    }
+
+    public static indicatorChartValue() {
+        return cy.dataCy('indicator-chart-value');
+    }
+
+    public static indicatorChartDelta() {
+        return cy.dataCy('indicator-chart-delta');
+    }
+
+    public static indicatorChartTitle() {
+        return cy.dataCy('indicator-chart-title');
+    }
+
+    public static indicatorChartDescription() {
+        return cy.dataCy('indicator-chart-description');
+    }
+
+    public static indicatorChartTitleInput() {
+        return cy.dataCy('data-explorer-indicator-title-input');
+    }
+
+    public static indicatorChartDescriptionInput() {
+        return cy.dataCy('data-explorer-indicator-description-input');
+    }
+
+    public static indicatorChartDeltaCheckbox() {
+        return cy.dataCy('data-explorer-select-delta-checkbox');
+    }
+
     public static addNewWidgetBtn() {
         return cy.dataCy('add-new-widget');
     }

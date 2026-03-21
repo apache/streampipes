@@ -48,7 +48,6 @@ import {
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { PipelineOverviewComponent } from './components/pipeline-overview/pipeline-overview.component';
 import { FunctionsOverviewComponent } from './components/functions-overview/functions-overview.component';
@@ -65,7 +64,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutDirective,
         LayoutGapDirective,
         MatButton,
-        MatIcon,
         MatIconButton,
         MatTooltip,
         SpBasicHeaderTitleComponent,

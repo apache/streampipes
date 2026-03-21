@@ -1,0 +1,93 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div
+    class="indicator-widget"
+    fxLayout="column"
+    fxFlex="100"
+    [ngStyle]="widgetStyles"
+    data-cy="indicator-chart"
+>
+    @if (showNoDataInDateRange) {
+        <sp-no-data-in-date-range [viewDateRange]="timeSettings" class="h-100">
+        </sp-no-data-in-date-range>
+    }
+
+    @if (showTooMuchData) {
+        <sp-too-much-data
+            [amountOfEvents]="amountOfTooMuchEvents"
+            (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
+            class="h-100"
+        >
+        </sp-too-much-data>
+    }
+
+    @if (showInvalidConfiguration) {
+        <sp-invalid-configuration
+            [widgetTypeLabel]="widgetTypeLabel"
+            class="h-100"
+        >
+        </sp-invalid-configuration>
+    }
+
+    @if (showData) {
+        <div class="indicator-shell" fxLayout="column" fxFlex="100">
+            @if (titleText || descriptionText) {
+                <div class="indicator-copy" fxLayout="column">
+                    @if (titleText) {
+                        <div
+                            class="indicator-title"
+                            data-cy="indicator-chart-title"
+                        >
+                            {{ titleText }}
+                        </div>
+                    }
+
+                    @if (descriptionText) {
+                        <div
+                            class="indicator-description"
+                            data-cy="indicator-chart-description"
+                        >
+                            {{ descriptionText }}
+                        </div>
+                    }
+                </div>
+            }
+
+            <div
+                class="indicator-grid"
+                fxFlex
+                [class.grouped]="hasMultipleCards"
+                [ngStyle]="gridStyles"
+            >
+                @for (card of indicatorCards; track trackCard($index, card)) {
+                    <sp-indicator-group-card
+                        [card]="card"
+                        [cardWidth]="cardWidth"
+                        [cardHeight]="cardHeight"
+                        [grouped]="hasMultipleCards"
+                        [manualValueFontSize]="appearanceConfig.valueFontSize"
+                        [manualDeltaFontSize]="appearanceConfig.deltaFontSize"
+                        [scaleManualFonts]="!dataViewMode"
+                    >
+                    </sp-indicator-group-card>
+                }
+            </div>
+        </div>
+    }
+</div>

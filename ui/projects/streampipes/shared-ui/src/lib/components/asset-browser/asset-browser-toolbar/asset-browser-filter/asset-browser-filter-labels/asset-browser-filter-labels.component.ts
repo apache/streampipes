@@ -24,7 +24,6 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { SpLabelComponent } from '../../../../sp-label/sp-label.component';
-import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-browser-filter-labels',
@@ -37,7 +36,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         FormsModule,
         MatOption,
         SpLabelComponent,
-        TranslatePipe,
     ],
 })
 export class AssetBrowserFilterLabelsComponent {
