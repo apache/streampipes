@@ -165,7 +165,7 @@ export class DashboardPanelComponent
         dashboardItem.w = 3;
         dashboardItem.h = 4;
         dashboardItem.x = 0;
-        dashboardItem.y = 0;
+        dashboardItem.y = this.getNextWidgetY();
         dashboardItem.dataViewElementId = dataViewElementId;
         this.dashboard.widgets.push(dashboardItem);
         setTimeout(() => {
@@ -175,6 +175,18 @@ export class DashboardPanelComponent
                 this.dashboardSlide.loadWidgetConfig(dashboardItem);
             }
         });
+    }
+
+    private getNextWidgetY(): number {
+        if (!this.dashboard?.widgets?.length) {
+            return 0;
+        }
+
+        return this.dashboard.widgets.reduce((maxY, widget) => {
+            const currentY = widget.y ?? 0;
+            const currentHeight = widget.h ?? widget.rows ?? 1;
+            return Math.max(maxY, currentY + currentHeight);
+        }, 0);
     }
 
     setShouldShowConfirm(): boolean {

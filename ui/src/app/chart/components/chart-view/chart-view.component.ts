@@ -61,6 +61,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ResizeEchartsService } from '../../../chart-shared/services/resize-echarts.service';
+import { ResizeService } from '../../../chart-shared/services/resize.service';
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../core/auth/user-role.enum';
@@ -118,6 +119,7 @@ export class ChartViewComponent
     originalAssets = [];
 
     resizeEchartsService = inject(ResizeEchartsService);
+    resizeService = inject(ResizeService);
 
     private dataExplorerSharedService = inject(ChartSharedService);
     private detectChangesService = inject(ChartDetectChangesService);
@@ -490,11 +492,41 @@ export class ChartViewComponent
 
     onWidthChanged(newWidth: number) {
         this.drawerWidth = newWidth;
-        setTimeout(() => {
-            this.resizeEchartsService.notify(
-                this.outerPanel.nativeElement.offsetWidth,
-            );
-        }, 100);
+        this.scheduleChartPanelResize(100);
+    }
+
+    onDataPreviewSizeChanged(): void {
+        // Preview height animates; send resize updates during and after transition.
+        [0, 100, 220, 350].forEach(delay =>
+            this.scheduleChartPanelResize(delay),
+        );
+    }
+
+    private scheduleChartPanelResize(delayMs = 0): void {
+        setTimeout(
+            () => requestAnimationFrame(() => this.notifyChartPanelResize()),
+            delayMs,
+        );
+    }
+
+    private notifyChartPanelResize(): void {
+        const panel = this.outerPanel?.nativeElement;
+        if (!panel) {
+            return;
+        }
+
+        const widgetContent = panel.querySelector(
+            '.widget-content',
+        ) as HTMLDivElement | null;
+        const width = widgetContent?.clientWidth ?? panel.offsetWidth;
+        const height = widgetContent?.clientHeight ?? panel.offsetHeight;
+
+        this.resizeService.notify({
+            width,
+            height,
+            widgetId: undefined,
+        });
+        this.resizeEchartsService.notify(width);
     }
 
     private async saveAssets(linkageData: LinkageData[]): Promise<void> {

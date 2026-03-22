@@ -91,6 +91,25 @@
                         }}</mat-error>
                     </mat-form-field>
                 </sp-form-field>
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Grid row height (px)' | translate"
+                >
+                    <mat-form-field floatLabel="auto" color="accent">
+                        <input
+                            matInput
+                            type="number"
+                            min="40"
+                            max="200"
+                            step="5"
+                            data-cy="grid-row-height"
+                            [(ngModel)]="
+                                dashboard.dashboardGeneralSettings
+                                    .gridRowHeightPx
+                            "
+                        />
+                    </mat-form-field>
+                </sp-form-field>
                 <div class="mt-10" fxLayout="column">
                     <mat-checkbox
                         [(ngModel)]="
@@ -99,6 +118,16 @@
                         >{{
                             'Use global time settings instead of chart time settings'
                                 | translate
+                        }}
+                    </mat-checkbox>
+                    <mat-checkbox
+                        [(ngModel)]="
+                            dashboard.dashboardGeneralSettings.chartOverrides
+                                .hideToolbox
+                        "
+                    >
+                        {{
+                            'Hide chart toolboxes in this dashboard' | translate
                         }}
                     </mat-checkbox>
                 </div>

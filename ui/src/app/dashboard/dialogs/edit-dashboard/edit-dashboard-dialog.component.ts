@@ -109,6 +109,19 @@ export class EditDashboardDialogComponent implements OnInit {
         ) {
             this.dashboard.dashboardGeneralSettings.globalTimeEnabled = true;
         }
+        this.dashboard.dashboardGeneralSettings.chartOverrides ??= {};
+        if (
+            this.dashboard.dashboardGeneralSettings.chartOverrides
+                .hideToolbox === undefined
+        ) {
+            this.dashboard.dashboardGeneralSettings.chartOverrides.hideToolbox = false;
+        }
+        if (
+            this.dashboard.dashboardGeneralSettings.gridRowHeightPx ===
+            undefined
+        ) {
+            this.dashboard.dashboardGeneralSettings.gridRowHeightPx = 90;
+        }
         if (!this.createMode) {
             this.addToAssets = true;
         }
