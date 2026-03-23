@@ -226,6 +226,22 @@ export class ChartBtns {
         return cy.dataCy('design-panel-data-settings-filter-value', {}, true);
     }
 
+    public static aggregatedQueryTypeButton() {
+        return cy.dataCy('data-explorer-query-type-aggregated');
+    }
+
+    public static autoAggregateCheckbox() {
+        return cy.dataCy('data-explorer-auto-aggregate-checkbox');
+    }
+
+    public static ignoreTooMuchDataWarningCheckbox() {
+        return cy.dataCy('data-explorer-ignore-too-much-data-warning-checkbox');
+    }
+
+    public static dataExplorerTablePaginator() {
+        return cy.dataCy('data-explorer-table-paginator');
+    }
+
     public static matOptionByText(text: string | RegExp) {
         return cy.get('mat-option').contains(text);
     }
