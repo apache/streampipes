@@ -95,6 +95,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.icon = other.getIcon();
     this.createdAt = other.getCreatedAt();
     this.selectedEndpointUrl = other.getSelectedEndpointUrl();
+    this.selectedServiceId = other.getSelectedServiceId();
     this.correspondingServiceGroup = other.getCorrespondingServiceGroup();
     this.correspondingDataStreamElementId = other.getCorrespondingDataStreamElementId();
     if (other.getEventGrounding() != null) {
