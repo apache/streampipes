@@ -86,7 +86,7 @@ describe('CSV import happy path', () => {
         DatasetUtils.selectCsvImportDelimiterComma();
         DatasetUtils.selectCsvImportTimestampColumn(0);
         DatasetUtils.uploadCsvImport();
-        DatasetUtils.expectDatasetSevenDayEventCount(existingDatasetName, '7');
+        DatasetUtils.expectDatasetTotalEventCount(existingDatasetName, '7');
 
         DatasetUtils.openCsvImportDialog();
         DatasetUtils.uploadCsvImportFile(
@@ -97,7 +97,7 @@ describe('CSV import happy path', () => {
         DatasetUtils.selectCsvImportDelimiterComma();
         DatasetUtils.selectCsvImportTimestampColumn(0);
         DatasetUtils.uploadCsvImport();
-        DatasetUtils.expectDatasetSevenDayEventCount(existingDatasetName, '14');
+        DatasetUtils.expectDatasetTotalEventCount(existingDatasetName, '14');
 
         DatasetUtils.openCsvImportDialog();
         DatasetUtils.uploadCsvImportFile(

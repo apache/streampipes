@@ -532,6 +532,24 @@ export class ChartUtils {
         }
     }
 
+    public static selectAggregatedQueryType() {
+        ChartBtns.aggregatedQueryTypeButton()
+            .find('input[type="radio"]')
+            .first()
+            .check({ force: true });
+    }
+
+    public static enableAutoAggregate() {
+        ChartBtns.autoAggregateCheckbox()
+            .find('input[type="checkbox"]')
+            .first()
+            .then($checkbox => {
+                if (!$checkbox.prop('checked')) {
+                    cy.wrap($checkbox).check({ force: true });
+                }
+            });
+    }
+
     /**
      * Select visualization type
      */

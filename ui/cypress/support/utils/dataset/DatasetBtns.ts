@@ -49,13 +49,6 @@ export class DatasetBtns {
         return cy.dataCy('csv-import-existing-measurement', { timeout: 10000 });
     }
 
-    public static csvImportExistingMeasurementOption(measurementName: string) {
-        return cy.dataCy(
-            `csv-import-existing-measurement-option-${measurementName}`,
-            { timeout: 10000 },
-        );
-    }
-
     public static csvImportDelimiter() {
         return cy.dataCy('csv-import-delimiter', { timeout: 10000 });
     }
@@ -116,5 +109,17 @@ export class DatasetBtns {
         return cy.contains('[data-cy="datalake-settings"] tbody tr', name, {
             timeout: 10000,
         });
+    }
+
+    public static datasetTotalCountCell(name: string) {
+        return this.datasetRow(name).find(
+            '[data-cy="datalake-number-of-events"]',
+        );
+    }
+
+    public static datasetTotalCountButton(name: string) {
+        return this.datasetTotalCountCell(name).find(
+            '[data-cy="datalake-total-count-button"]',
+        );
     }
 }
