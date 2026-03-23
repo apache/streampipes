@@ -113,16 +113,22 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
                 true
         ) {
             this.showInvalidConfiguration = false;
+            const effectiveWidgetConfig =
+                this.getWidgetConfigWithDashboardOverrides();
             this.option = {
-                ...this.renderer.render(
-                    spQueryResult,
-                    this.dataExplorerWidget,
-                    {
-                        width: this.currentWidth,
-                        height: this.currentHeight,
-                    },
-                ),
+                ...this.renderer.render(spQueryResult, effectiveWidgetConfig, {
+                    width: this.currentWidth,
+                    height: this.currentHeight,
+                }),
             };
+            if (this.dashboardChartOverrides?.hideToolbox) {
+                const toolbox = this.option['toolbox'];
+                if (toolbox) {
+                    (Array.isArray(toolbox) ? toolbox : [toolbox]).forEach(
+                        tb => (tb.show = false),
+                    );
+                }
+            }
             if (this.kioskMode) {
                 ['toolbox', 'visualMap'].forEach(key => {
                     const item = this.option[key];
@@ -144,6 +150,24 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
         } else {
             this.showInvalidConfiguration = true;
         }
+    }
+
+    private getWidgetConfigWithDashboardOverrides(): T {
+        if (!this.dashboardChartOverrides?.hideToolbox) {
+            return this.dataExplorerWidget;
+        }
+
+        return {
+            ...this.dataExplorerWidget,
+            baseAppearanceConfig: {
+                ...this.dataExplorerWidget.baseAppearanceConfig,
+                chartAppearance: {
+                    ...this.dataExplorerWidget.baseAppearanceConfig
+                        ?.chartAppearance,
+                    showToolbox: false,
+                },
+            },
+        };
     }
 
     refreshView() {

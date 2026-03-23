@@ -20,9 +20,11 @@ import { DatePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    EventEmitter,
     HostBinding,
     Input,
     OnChanges,
+    Output,
     SimpleChanges,
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
@@ -57,6 +59,7 @@ export class ChartDataPreviewComponent implements OnChanges {
 
     @Input() queryResults: SpQueryResult[] = [];
     @Input() defaultExpanded = false;
+    @Output() sizeChanged = new EventEmitter<void>();
 
     columns: string[] = [];
     rows: PreviewRow[] = [];
@@ -200,5 +203,6 @@ export class ChartDataPreviewComponent implements OnChanges {
 
     toggleExpanded(): void {
         this.expanded = !this.expanded;
+        this.sizeChanged.emit();
     }
 }

@@ -81,7 +81,11 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
 
     openNewDashboardDialog() {
         const dataViewDashboard: Dashboard = {
-            dashboardGeneralSettings: {},
+            dashboardGeneralSettings: {
+                chartOverrides: {
+                    hideToolbox: false,
+                },
+            },
             widgets: [],
             name: '',
             dashboardLiveSettings: {
@@ -95,6 +99,7 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
             },
             gridColumns: 12,
         };
+        dataViewDashboard.dashboardGeneralSettings.gridRowHeightPx = 90;
 
         this.openDashboardModificationDialog(true, dataViewDashboard);
     }
