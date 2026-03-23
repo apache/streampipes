@@ -50,7 +50,7 @@ public abstract class EnvironmentVariable<T> {
   }
 
   public T getValueOrResolve(EnvResolver<T> resolver) {
-    return resolver.resolve();
+    return exists() ? getValue() : resolver.resolve();
   }
 
   public T getDefault() {
