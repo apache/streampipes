@@ -354,8 +354,10 @@ export class ChartViewComponent
             this.translateService.instant('New chart');
         this.dataView.dataConfig = {};
         this.dataView.dataConfig.ignoreMissingValues = false;
-        this.dataView.baseAppearanceConfig.backgroundColor = '#FFFFFF';
-        this.dataView.baseAppearanceConfig.textColor = '#3e3e3e';
+        this.dataView.baseAppearanceConfig.backgroundColor =
+            'var(--color-bg-0)';
+        this.dataView.baseAppearanceConfig.textColor =
+            'var(--color-default-text)';
         this.dataView.metadata = {
             createdAtEpochMs: Date.now(),
             lastModifiedEpochMs: Date.now(),

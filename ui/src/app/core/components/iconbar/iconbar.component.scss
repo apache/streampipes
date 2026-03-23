@@ -281,3 +281,8 @@
         --mb-width: 248px;
     }
 }
+
+:host-context(.dark-mode) .menu-group-title,
+:host-context(.dark-mode) .chevron {
+    color: #120c47 !important;
+}

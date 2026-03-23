@@ -145,13 +145,18 @@ export class ToolbarComponent
     }
 
     modifyAppearance(darkMode: boolean) {
-        if (darkMode) {
-            this.overlay.getContainerElement().classList.remove('light-mode');
-            this.overlay.getContainerElement().classList.add('dark-mode');
-        } else {
-            this.overlay.getContainerElement().classList.remove('dark-mode');
-            this.overlay.getContainerElement().classList.add('light-mode');
-        }
+        const targets = [
+            document.documentElement,
+            document.body,
+            this.overlay.getContainerElement(),
+        ];
+        const [addClass, removeClass] = darkMode
+            ? ['dark-mode', 'light-mode']
+            : ['light-mode', 'dark-mode'];
+        targets.forEach(el => {
+            el.classList.remove(removeClass);
+            el.classList.add(addClass);
+        });
     }
 
     openDocumentation() {
