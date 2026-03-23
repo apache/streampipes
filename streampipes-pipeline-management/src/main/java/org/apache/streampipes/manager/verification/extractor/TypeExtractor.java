@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.verification.extractor;
 
 import org.apache.streampipes.commons.exceptions.SepaParseException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.verification.ElementVerifier;
 import org.apache.streampipes.manager.verification.TypedElementVerifier;
 import org.apache.streampipes.model.SpDataStream;
@@ -47,17 +48,21 @@ public class TypeExtractor {
 
   private final String extensionElementDescription;
   private final IPipelineElementDescriptionStorage storageApi;
+  private final ExtensionServiceRequestManager requestManager;
 
-  public TypeExtractor(String extensionElementDescription) {
-    this(extensionElementDescription, defaultStorageApi());
+  public TypeExtractor(String extensionElementDescription,
+                       ExtensionServiceRequestManager requestManager) {
+    this(extensionElementDescription, defaultStorageApi(), requestManager);
   }
 
   public TypeExtractor(
       String extensionElementDescription,
-      IPipelineElementDescriptionStorage storageApi
+      IPipelineElementDescriptionStorage storageApi,
+      ExtensionServiceRequestManager requestManager
   ) {
     this.extensionElementDescription = extensionElementDescription;
     this.storageApi = storageApi;
+    this.requestManager = requestManager;
   }
 
   public ElementVerifier<?> getTypeVerifier() throws SepaParseException {
@@ -128,7 +133,8 @@ public class TypeExtractor {
         existsChecker,
         storeOperation,
         updateOperation,
-        serviceUrlProvider
+        serviceUrlProvider,
+        requestManager
     );
   }
 

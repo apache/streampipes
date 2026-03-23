@@ -18,6 +18,7 @@
 
 import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
 import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
+import { ChartBtns } from '../../../support/utils/chart/ChartBtns';
 
 describe('Test Indicator View in Charts', () => {
     beforeEach('Setup Test', () => {
@@ -31,10 +32,23 @@ describe('Test Indicator View in Charts', () => {
             'indicator-chart',
         );
 
-        // Check checkbox
         ChartUtils.openVisualizationConfig();
-        cy.dataCy('data-explorer-select-delta-checkbox').click();
+        ChartBtns.indicatorChartDeltaCheckbox().click();
+        ChartBtns.indicatorChartTitleInput().type('Current Metric');
+        ChartBtns.indicatorChartDescriptionInput().type(
+            'Live value compared to the previous event.',
+        );
 
-        cy.dataCy('indicator-chart').should('be.visible');
+        ChartBtns.indicatorChart().should('be.visible');
+        ChartBtns.indicatorChartTitle().should(
+            'contain.text',
+            'Current Metric',
+        );
+        ChartBtns.indicatorChartDescription().should(
+            'contain.text',
+            'Live value compared to the previous event.',
+        );
+        ChartBtns.indicatorChartValue().should('not.be.empty');
+        ChartBtns.indicatorChartDelta().should('be.visible');
     });
 });

@@ -17,42 +17,58 @@
  */
 package org.apache.streampipes.health.monitoring;
 
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.health.ExtensionInstanceHealth;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 public class ExtensionInstanceAvailabilityCheck {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExtensionInstanceAvailabilityCheck.class);
-  private static final String InstancePath = "/health";
 
-  private final String serviceBaseUrl;
+  private final IExtensionsServiceStorage extensionsServiceStorage;
+  private final String serviceId;
+  private final ExtensionServiceRequestManager extensionRequestManager;
 
-  public ExtensionInstanceAvailabilityCheck(String serviceBaseUrl) {
-    this.serviceBaseUrl = serviceBaseUrl;
+  public ExtensionInstanceAvailabilityCheck(IExtensionsServiceStorage extensionsServiceStorage,
+                                            String serviceId,
+                                            ExtensionServiceRequestManager extensionRequestManager) {
+    this.extensionsServiceStorage = extensionsServiceStorage;
+    this.serviceId = serviceId;
+    this.extensionRequestManager = extensionRequestManager;
   }
 
   public ExtensionInstanceHealth checkRunningInstances() {
     try {
-      var request = ExtensionServiceExecutions.extServiceGetRequest(makeRequestUrl());
-      var response = request.execute().returnResponse();
-      if (response.getStatusLine().getStatusCode() != 200) {
+      var service = extensionsServiceStorage.findAll().stream()
+          .filter(svc -> svc.getSvcId().equals(serviceId))
+          .findFirst();
+
+      if (service.isEmpty()) {
         return new ExtensionInstanceHealth(Set.of(), Set.of());
+      } else {
+        var response = extensionRequestManager.request(
+            ExtensionServiceRequests.extensionInstanceHealth(makeRequestTarget(service.get()))
+        );
+        if (response.statusCode() != 200) {
+          return new ExtensionInstanceHealth(Set.of(), Set.of());
+        }
+        return deserialize(response.responseBody());
       }
-      String body = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-      return deserialize(body);
 
     } catch (IOException e) {
-      LOG.error("Extension service {} is unavailable", serviceBaseUrl);
+      LOG.error("Extension service {} is unavailable", serviceId);
       return new ExtensionInstanceHealth(Set.of(), Set.of());
     }
   }
@@ -61,7 +77,7 @@ public class ExtensionInstanceAvailabilityCheck {
     return JacksonSerializer.getObjectMapper().readValue(json, ExtensionInstanceHealth.class);
   }
 
-  private String makeRequestUrl() {
-    return serviceBaseUrl + InstancePath;
+  private ExtensionServiceRequestTarget makeRequestTarget(SpServiceRegistration service) {
+    return ExtensionServiceRequestTargets.extensionInstanceHealth(service);
   }
 }

@@ -19,11 +19,8 @@
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.manager.matching.GroundingBuilder;
-import org.apache.streampipes.manager.matching.v2.GroundingMatch;
-import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
@@ -43,49 +40,30 @@ public class ApplyGroundingStep extends AbstractPipelineValidationStep {
                     Set<InvocableStreamPipesEntity> allTargets,
                     List<PipelineElementValidationInfo> validationInfos) throws SpValidationException {
 
-    List<MatchingResultMessage> errorLog = getNewErrorLog();
-    boolean match = new GroundingMatch().match(
-        getSourceGrounding(source),
-        target.getSupportedGrounding(),
-        errorLog
-    );
-
-    if (!match) {
-      throw new SpValidationException(errorLog);
+    EventGrounding selectedGrounding;
+    if (!sourceGroundingVisitorMap.containsKey(source.getDom())) {
+      selectedGrounding = new GroundingBuilder(source, allTargets).getEventGrounding();
+      sourceGroundingVisitorMap.put(source.getDom(), selectedGrounding);
     } else {
-      EventGrounding selectedGrounding;
-      if (!sourceGroundingVisitorMap.containsKey(source.getDom())) {
-        selectedGrounding = new GroundingBuilder(source, allTargets).getEventGrounding();
-        sourceGroundingVisitorMap.put(source.getDom(), selectedGrounding);
-      } else {
-        selectedGrounding = new EventGrounding(sourceGroundingVisitorMap.get(source.getDom()));
-      }
-
-      if (source instanceof DataProcessorInvocation) {
-        ((DataProcessorInvocation) source)
-            .getOutputStream()
-            .setEventGrounding(selectedGrounding);
-      }
-
-      if (!target.getInputStreams().isEmpty()) {
-
-        target
-            .getInputStreams()
-            .get(getIndex(target))
-            .setEventGrounding(selectedGrounding);
-
-        if (target.getInputStreams().size() > 1) {
-          this.visitorHistory.put(target.getDom(), 1);
-        }
-      }
+      selectedGrounding = new EventGrounding(sourceGroundingVisitorMap.get(source.getDom()));
     }
-  }
 
-  private EventGrounding getSourceGrounding(NamedStreamPipesEntity source) {
-    if (source instanceof SpDataStream) {
-      return ((SpDataStream) source).getEventGrounding();
-    } else {
-      return ((DataProcessorInvocation) source).getOutputStream().getEventGrounding();
+    if (source instanceof DataProcessorInvocation) {
+      ((DataProcessorInvocation) source)
+          .getOutputStream()
+          .setEventGrounding(selectedGrounding);
+    }
+
+    if (!target.getInputStreams().isEmpty()) {
+
+      target
+          .getInputStreams()
+          .get(getIndex(target))
+          .setEventGrounding(selectedGrounding);
+
+      if (target.getInputStreams().size() > 1) {
+        this.visitorHistory.put(target.getDom(), 1);
+      }
     }
   }
 }

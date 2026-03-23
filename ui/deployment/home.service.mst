@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { PageName } from '../_enums/page-name.enum';
+import { PageName } from '../core/navigation/page-name.enum';
 import { AuthService } from '../services/auth.service';
 import { ServiceLink } from './models/home.model';
 import {
@@ -27,8 +27,8 @@ import {
     PipelineElementService,
     PipelineService
 } from '@streampipes/platform-services';
-import { UserPrivilege } from '../_enums/user-privilege.enum';
-import { UserRole } from '../_enums/user-role.enum';
+import { UserPrivilege } from '../core/auth/user-privilege.enum';
+import { UserRole } from '../core/auth/user-role.enum';
 
 @Injectable({providedIn: 'root'})
 export class HomeService {

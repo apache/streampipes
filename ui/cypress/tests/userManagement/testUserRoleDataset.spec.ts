@@ -16,18 +16,18 @@
  *
  */
 
-import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserRole } from '../../../src/app/core/auth/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { User } from '../../support/model/User';
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
+import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
 
 describe('Test Dataset Permissions', () => {
-    const datasetName = 'Persist simulator';
+    const datasetName = 'simulator';
     let datasetUser1: User;
     let datasetAdmin1: User;
     let datasetAdmin2: User;
@@ -171,15 +171,20 @@ describe('Test Dataset Permissions', () => {
         if (!available) {
             cy.get('sp-alert-banner').should('be.visible');
         } else {
-            ChartUtils.assertSelectDataSet('simulator');
-            ChartUtils.addDataViewAndTableWidget('test', 'simulator', true);
+            ChartUtils.assertSelectDataSet(datasetName);
+            ChartUtils.addDataViewAndTableWidget('test', datasetName, true);
             ChartUtils.saveDataViewConfiguration();
         }
     }
 
     function generateDataset() {
         UserUtils.switchUser(datasetAdmin1);
-        ConnectUtils.addMachineDataSimulator('simulator', true);
+        DataLakeSeedUtils.importCsvFixture({
+            fixture: 'datalake/machine-data-simulator-import.csv',
+            measurementName: datasetName,
+            delimiter: ',',
+            timestampColumn: 'timestamp',
+        });
     }
 
     function generateDashboard(name: string) {
@@ -212,6 +217,6 @@ describe('Test Dataset Permissions', () => {
     function authUserOnDataset(email: string) {
         UserUtils.switchUser(datasetAdmin1);
 
-        DatasetUtils.authorizeUserOnDataset('simulator', email);
+        DatasetUtils.authorizeUserOnDataset(datasetName, email);
     }
 });

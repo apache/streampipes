@@ -19,8 +19,7 @@
 package org.apache.streampipes.rest.extensions.pe;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
-import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
-import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.pe.DataStreamPipelineElementManagement;
 import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
@@ -32,23 +31,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.Map;
 
 @RestController
 @RequestMapping(SpServicePathPrefix.DATA_STREAM)
 public class DataStreamPipelineElementResource extends AbstractPipelineElementResource<IStreamPipesDataStream> {
 
-  @Override
-  protected Map<String, IStreamPipesDataStream> getElementDeclarers() {
-    return DeclarersSingleton.getInstance().getDataStreams();
+  private final DataStreamPipelineElementManagement pipelineElementManagement;
+
+  public DataStreamPipelineElementResource() {
+    this(new DataStreamPipelineElementManagement());
+  }
+
+  public DataStreamPipelineElementResource(DataStreamPipelineElementManagement pipelineElementManagement) {
+    super(pipelineElementManagement);
+    this.pipelineElementManagement = pipelineElementManagement;
   }
 
   @GetMapping(path = "{streamId}/assets", produces = "application/zip")
   public ResponseEntity<byte[]> getAssets(@PathVariable("streamId") String streamId) {
     try {
-      return ok(new AssetZipGenerator(streamId,
-          getById(streamId)
-              .getIncludedAssets()).makeZip());
+      return ok(pipelineElementManagement.getAssets(streamId));
     } catch (IOException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();

@@ -116,12 +116,11 @@ export class SecurityRoleConfigComponent implements OnInit {
                     'This action cannot be reversed!',
                 ),
                 cancelTitle: this.translateService.instant('Cancel'),
-                okTitle: this.translateService.instant('Delete Role'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Delete Role'),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === 'confirm') {
                 this.roleService.delete(role).subscribe(response => {
                     this.loadRoles();
                 });

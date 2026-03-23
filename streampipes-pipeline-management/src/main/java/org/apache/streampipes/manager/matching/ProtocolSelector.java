@@ -18,116 +18,43 @@
 
 package org.apache.streampipes.manager.matching;
 
+import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.manager.util.GroundingUtils;
 import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.configuration.MessagingSettings;
-import org.apache.streampipes.model.configuration.SpProtocol;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.apache.streampipes.model.grounding.NatsTransportProtocol;
-import org.apache.streampipes.model.grounding.PulsarTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import java.util.List;
 import java.util.Set;
 
-public class ProtocolSelector extends GroundingSelector {
+public class ProtocolSelector {
 
+  private final Environment env;
   private final String outputTopic;
-  private final List<SpProtocol> prioritizedProtocols;
-
-  private final MessagingSettings messagingSettings;
+  private final String prioritizedProtocol;
+  protected NamedStreamPipesEntity source;
+  protected Set<InvocableStreamPipesEntity> targets;
 
   public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
-    super(source, targets);
+    this.env = Environments.getEnvironment();
+    this.source = source;
+    this.targets = targets;
     this.outputTopic = TopicGenerator.generateRandomTopic();
-    this.messagingSettings = StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getSpCoreConfigurationStorage()
-        .get()
-        .getMessagingSettings();
 
-    this.prioritizedProtocols =
-        messagingSettings.getPrioritizedProtocols();
+
+    this.prioritizedProtocol = env.getPrioritizedProtocol().getValueOrDefault();
   }
 
   public TransportProtocol getPreferredProtocol() {
+    var env = Environments.getEnvironment();
     if (source instanceof SpDataStream) {
       return ((SpDataStream) source)
           .getEventGrounding()
           .getTransportProtocol();
     } else {
-      for (SpProtocol prioritizedProtocol : prioritizedProtocols) {
-        if (prioritizedProtocol.getProtocolClass().equals(KafkaTransportProtocol.class.getCanonicalName())
-            && supportsProtocol(KafkaTransportProtocol.class)) {
-          return kafkaTopic();
-        } else if (prioritizedProtocol.getProtocolClass().equals(JmsTransportProtocol.class.getCanonicalName())
-            && supportsProtocol(JmsTransportProtocol.class)) {
-          return jmsTopic();
-        } else if (prioritizedProtocol.getProtocolClass().equals(MqttTransportProtocol.class.getCanonicalName())
-            && supportsProtocol(MqttTransportProtocol.class)) {
-          return mqttTopic();
-        } else if (prioritizedProtocol.getProtocolClass().equals(NatsTransportProtocol.class.getCanonicalName())
-            && supportsProtocol(NatsTransportProtocol.class)) {
-          return natsTopic();
-        } else if (prioritizedProtocol.getProtocolClass().equals(PulsarTransportProtocol.class.getCanonicalName())
-            && supportsProtocol(PulsarTransportProtocol.class)) {
-          return new PulsarTransportProtocol(messagingSettings.getPulsarUrl(),
-              new SimpleTopicDefinition(outputTopic));
-        }
-      }
+      return GroundingUtils.makeProtocol(env, prioritizedProtocol, outputTopic);
     }
-    return kafkaTopic();
-  }
-
-  private TransportProtocol mqttTopic() {
-    return new MqttTransportProtocol(
-        messagingSettings.getMqttHost(),
-        messagingSettings.getMqttPort(),
-        outputTopic
-    );
-  }
-
-  private TransportProtocol jmsTopic() {
-    return new JmsTransportProtocol(
-        messagingSettings.getJmsHost(),
-        messagingSettings.getJmsPort(),
-        outputTopic
-    );
-  }
-
-  private TransportProtocol natsTopic() {
-    return new NatsTransportProtocol(
-        messagingSettings.getNatsHost(),
-        messagingSettings.getNatsPort(),
-        outputTopic
-    );
-  }
-
-  private TransportProtocol kafkaTopic() {
-    return new KafkaTransportProtocol(
-        messagingSettings.getKafkaHost(),
-        messagingSettings.getKafkaPort(),
-        outputTopic
-    );
-  }
-
-
-  public <T extends TransportProtocol> boolean supportsProtocol(Class<T> protocol) {
-    List<InvocableStreamPipesEntity> elements = buildInvocables();
-
-    return elements
-        .stream()
-        .allMatch(e -> e
-            .getSupportedGrounding()
-            .getTransportProtocols()
-            .stream()
-            .anyMatch(protocol::isInstance));
   }
 }

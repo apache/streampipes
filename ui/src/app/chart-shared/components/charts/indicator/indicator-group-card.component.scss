@@ -1,0 +1,138 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+:host {
+    display: block;
+    height: 100%;
+    min-height: 0;
+}
+
+.indicator-card {
+    background: color-mix(
+        in srgb,
+        var(--indicator-selected-background) 88%,
+        white
+    );
+    border: 1px solid
+        color-mix(in srgb, var(--indicator-selected-background) 78%, white);
+    border-radius: calc(var(--space-md) * 1.2);
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    padding: var(--indicator-card-padding);
+}
+
+.indicator-card.grouped {
+    background: color-mix(
+        in srgb,
+        var(--indicator-selected-background) 86%,
+        white
+    );
+}
+
+.indicator-card-copy {
+    margin-bottom: var(--indicator-card-copy-gap);
+    min-height: 0;
+    min-width: 0;
+}
+
+.indicator-card-label {
+    color: color-mix(in srgb, currentColor 82%, transparent);
+    font-size: var(--indicator-card-label-size);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+}
+
+.indicator-card-value-panel {
+    margin-bottom: var(--indicator-card-value-gap);
+    min-height: 0;
+    text-align: center;
+}
+
+.indicator-card-value {
+    font-size: var(--indicator-card-value-size);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.indicator-card-delta {
+    border-radius: calc(var(--space-md) * 1.1);
+    box-sizing: border-box;
+    gap: calc(var(--space-sm) * 0.8);
+    margin-inline: auto;
+    max-width: 100%;
+    min-height: var(--indicator-card-delta-height);
+    padding: var(--space-2xs) var(--space-sm) var(--space-2xs) var(--space-2xs);
+}
+
+.indicator-card-delta-marker {
+    background: color-mix(in srgb, currentColor 12%, transparent);
+    border-radius: 999px;
+    color: inherit;
+    flex: 0 0 auto;
+    height: calc(var(--indicator-card-delta-size) * 1.55);
+    width: calc(var(--indicator-card-delta-size) * 1.55);
+}
+
+.indicator-card-delta-icon {
+    color: inherit;
+    font-size: calc(var(--indicator-card-delta-size) * 0.82);
+    height: calc(var(--indicator-card-delta-size) * 0.82);
+    width: calc(var(--indicator-card-delta-size) * 0.82);
+}
+
+.indicator-card-delta-copy {
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+}
+
+.indicator-card-delta-label {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: var(--indicator-card-delta-size);
+    font-weight: 600;
+    gap: calc(var(--space-xs) * 0.8);
+    line-height: 0.95;
+    overflow: hidden;
+}
+
+.indicator-card-delta-value {
+    font-weight: 700;
+}
+
+.indicator-card-delta-detail {
+    font-size: calc(var(--indicator-card-delta-size) * 0.84);
+    font-weight: 600;
+}
+
+.indicator-card-delta-meta {
+    font-size: var(--indicator-card-delta-meta-size);
+    line-height: 1.1;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+}

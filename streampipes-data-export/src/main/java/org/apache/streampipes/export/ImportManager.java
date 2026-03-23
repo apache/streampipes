@@ -20,6 +20,7 @@ package org.apache.streampipes.export;
 
 import org.apache.streampipes.export.dataimport.PerformImportGenerator;
 import org.apache.streampipes.export.dataimport.PreviewImportGenerator;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 
 import java.io.IOException;
@@ -27,13 +28,16 @@ import java.io.InputStream;
 
 public class ImportManager {
 
-  public static AssetExportConfiguration getImportPreview(InputStream packageZipStream) throws IOException {
-    return new PreviewImportGenerator().generate(packageZipStream);
+  public static AssetExportConfiguration getImportPreview(InputStream packageZipStream,
+                                                          ExtensionServiceRequestManager extensionServiceRequestManager)
+      throws IOException {
+    return new PreviewImportGenerator(extensionServiceRequestManager).generate(packageZipStream);
   }
 
   public static void performImport(InputStream packageZipStream,
                                    AssetExportConfiguration exportConfiguration,
-                                   String ownerSid) throws IOException {
-    new PerformImportGenerator(exportConfiguration, ownerSid).generate(packageZipStream);
+                                   String ownerSid,
+                                   ExtensionServiceRequestManager extensionServiceRequestManager) throws IOException {
+    new PerformImportGenerator(exportConfiguration, ownerSid, extensionServiceRequestManager).generate(packageZipStream);
   }
 }

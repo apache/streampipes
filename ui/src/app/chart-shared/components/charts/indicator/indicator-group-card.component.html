@@ -1,0 +1,78 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div
+    class="indicator-card"
+    fxLayout="column"
+    [ngStyle]="cardStyles"
+    [class.grouped]="grouped"
+    data-cy="indicator-chart-card"
+>
+    @if (card.label) {
+        <div class="indicator-card-copy" fxLayout="column">
+            <div class="indicator-card-label">{{ card.label }}</div>
+        </div>
+    }
+
+    <div
+        class="indicator-card-value-panel"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxFlex
+    >
+        <div class="indicator-card-value" data-cy="indicator-chart-value">
+            {{ card.displayValue }}
+        </div>
+    </div>
+
+    @if (card.deltaView) {
+        <div
+            class="indicator-card-delta"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            data-cy="indicator-chart-delta"
+        >
+            <div
+                class="indicator-card-delta-marker"
+                fxLayout="row"
+                fxLayoutAlign="center center"
+            >
+                <mat-icon class="indicator-card-delta-icon">
+                    {{ card.deltaView.icon }}
+                </mat-icon>
+            </div>
+            <div class="indicator-card-delta-copy" fxLayout="column">
+                <div class="indicator-card-delta-label">
+                    <span class="indicator-card-delta-value">
+                        {{ card.deltaView.label }}
+                    </span>
+                    @if (card.deltaView.detail) {
+                        <span class="indicator-card-delta-detail">
+                            {{ card.deltaView.detail }}
+                        </span>
+                    }
+                </div>
+                @if (card.deltaView.meta) {
+                    <div class="indicator-card-delta-meta">
+                        {{ card.deltaView.meta }}
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

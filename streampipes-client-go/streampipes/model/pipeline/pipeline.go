@@ -67,7 +67,6 @@ type DataProcessorInvocation struct {
 	StaticProperties      []model.StaticProperty    `json:"staticProperties"`
 	BelongsTo             string                    `json:"belongsTo"`
 	StatusInfoSettings    ElementStatusInfoSettings `json:"statusInfoSettings"`
-	SupportedGrounding    model.EventGrounding      `json:"supportedGrounding"`
 	CorrespondingPipeline string                    `json:"correspondingPipeline"`
 	CorresponddingUser    string                    `json:"correspondingUser"`
 	StreamRequirements    []model.SpDataStream      `json:"streamRequirements"`
@@ -118,7 +117,6 @@ type DataSinkInvocation struct {
 	StaticProperties      []model.StaticProperty    `json:"staticProperties"`
 	BelongsTo             string                    `json:"belongsTo"`
 	StatusInfoSettings    ElementStatusInfoSettings `json:"statusInfoSettings"`
-	SupportedGrounding    model.EventGrounding      `json:"supportedGrounding"`
 	CorrespondingPipeline string                    `json:"correspondingPipeline"`
 	CorrespondingUser     string                    `json:"correspondingUser"`
 	StreamRequirements    []model.SpDataStream      `json:"streamRequirements"`

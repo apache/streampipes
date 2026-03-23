@@ -23,6 +23,7 @@ export * from './lib/dialog/data-download-dialog/data-download-dialog.component'
 export * from './lib/dialog/card-dialog/card-dialog.component';
 
 export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
+export * from './lib/dialog/confirm-dialog/confirm-dialog.model';
 export * from './lib/dialog/panel-dialog/panel-dialog.component';
 export * from './lib/dialog/standard-dialog/standard-dialog.component';
 export * from './lib/dialog/pipeline-element-help/pipeline-element-help.component';
@@ -43,8 +44,10 @@ export * from './lib/components/sp-exception-message/exception-details-dialog/ex
 export * from './lib/components/sp-exception-message/exception-details/exception-details.component';
 export * from './lib/components/sp-label/sp-label.component';
 export * from './lib/components/sp-table/sp-table.component';
-export * from './lib/components/sp-table/sp-table-actions.directive';
-export * from './lib/components/sp-table/sp-table-multi-actions.directive';
+export * from './lib/components/sp-table/sp-actions/sp-table-actions.directive';
+export * from './lib/components/sp-table/sp-actions/sp-table-multi-actions.directive';
+export * from './lib/components/sp-table/sp-table.model';
+export * from './lib/components/sp-table/sp-asset-context/sp-table-asset-context.service';
 export * from './lib/components/alert-banner/alert-banner.component';
 export * from './lib/components/time-selector/time-selector.model';
 export * from './lib/components/time-selector/time-range-selector.component';

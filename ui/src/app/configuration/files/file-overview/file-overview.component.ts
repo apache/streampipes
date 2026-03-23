@@ -100,13 +100,12 @@ export class FileOverviewComponent implements OnInit {
                     'This cannot be undone.',
                 ),
                 cancelTitle: this.translateService.instant('No'),
-                okTitle: this.translateService.instant('Yes'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Yes'),
             },
         });
 
         dialogRef.afterClosed().subscribe(ev => {
-            if (ev) {
+            if (ev === 'confirm') {
                 this.filesService
                     .deleteFile(fileMetadata.fileId)
                     .subscribe(response => {

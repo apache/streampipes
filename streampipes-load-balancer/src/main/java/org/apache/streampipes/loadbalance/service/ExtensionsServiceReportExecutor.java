@@ -22,21 +22,31 @@ import org.apache.streampipes.model.loadbalancer.ServiceLoadDataReport;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ExtensionsServiceReportExecutor {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExtensionsServiceReportExecutor.class);
 
-  private static final String LOG_PATH = "/serviceMonitor";
-
   private static final Map<String, ServiceLoadDataReport> map = new ConcurrentHashMap<>();
+  private static volatile ServiceReportFetcher serviceReportFetcher = serviceRegistration ->
+      null;
+
+  @FunctionalInterface
+  public interface ServiceReportFetcher {
+
+    String fetch(SpServiceRegistration serviceRegistration) throws IOException;
+  }
+
+  public static void setServiceReportFetcher(ServiceReportFetcher serviceReportFetcher) {
+    ExtensionsServiceReportExecutor.serviceReportFetcher = Objects.requireNonNull(serviceReportFetcher);
+  }
 
   /**
    * Get service load data report for a service registration.
@@ -46,33 +56,12 @@ public class ExtensionsServiceReportExecutor {
    */
   public static ServiceLoadDataReport getServiceLoadDataReport(SpServiceRegistration serviceRegistration) {
     try {
-      String response =
-          makeRequest(serviceRegistration.getServiceUrl()).execute().returnContent().asString();
+      String response = serviceReportFetcher.fetch(serviceRegistration);
       return parseLogResponse(response);
     } catch (IOException e) {
       LOG.info("Could not fetch info from endpoint {}", serviceRegistration.getServiceUrl());
     }
     return new ServiceLoadDataReport();
-  }
-
-  /**
-   * Create HTTP request for service endpoint.
-   *
-   * @param serviceEndpointUrl Service endpoint URL
-   * @return HTTP request
-   */
-  private static Request makeRequest(String serviceEndpointUrl) {
-    return ExtensionServiceExecutions.extServiceGetRequest(makeLogUrl(serviceEndpointUrl));
-  }
-
-  /**
-   * Create log URL by appending log path to base URL.
-   *
-   * @param baseUrl Base service URL
-   * @return Complete log URL
-   */
-  private static String makeLogUrl(String baseUrl) {
-    return baseUrl + LOG_PATH;
   }
 
   /**

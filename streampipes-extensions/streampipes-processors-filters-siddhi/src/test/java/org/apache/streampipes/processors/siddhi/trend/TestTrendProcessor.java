@@ -28,7 +28,6 @@ import org.apache.streampipes.model.runtime.SourceInfo;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.test.generator.EventStreamGenerator;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
-import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
 import org.apache.streampipes.wrapper.params.generator.DataProcessorParameterGenerator;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
 
@@ -93,7 +92,6 @@ public class TestTrendProcessor {
                         int expectedMatchCount) {
     final Integer[] actualMatchCount = {0};
     DataProcessorDescription originalGraph = new TrendProcessor().declareModel();
-    originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
 
     DataProcessorInvocation graph =
         InvocationGraphGenerator.makeEmptyInvocation(originalGraph);

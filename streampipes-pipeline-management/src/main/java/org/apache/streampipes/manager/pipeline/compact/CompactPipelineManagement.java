@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.pipeline.compact;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.pipeline.compact.generation.CompactPipelineConverter;
 import org.apache.streampipes.manager.pipeline.compact.generation.PipelineElementConfigurationStep;
@@ -32,9 +33,12 @@ import java.util.UUID;
 public class CompactPipelineManagement {
 
   private final IPipelineElementDescriptionStorage storage;
+  private final ExtensionServiceRequestManager requestManager;
 
-  public CompactPipelineManagement(IPipelineElementDescriptionStorage storage) {
+  public CompactPipelineManagement(IPipelineElementDescriptionStorage storage,
+                                   ExtensionServiceRequestManager requestManager) {
     this.storage = storage;
+    this.requestManager = requestManager;
   }
 
   public PipelineModificationResult makePipeline(CompactPipeline compactPipeline) throws Exception {
@@ -43,7 +47,7 @@ public class CompactPipelineManagement {
 
     new PipelineElementConfigurationStep(storage).apply(pipeline, compactPipeline);
 
-    return new PipelineVerificationHandlerV2(pipeline).makeModifiedPipeline();
+    return new PipelineVerificationHandlerV2(pipeline, requestManager).makeModifiedPipeline();
   }
 
   public CompactPipeline convertPipeline(Pipeline pipeline) {

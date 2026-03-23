@@ -24,7 +24,7 @@ import {
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { SpDashboardRoutes } from '../../dashboard.breadcrumb';
 import { Dashboard } from '@streampipes/platform-services';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';

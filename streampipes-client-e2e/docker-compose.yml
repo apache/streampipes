@@ -27,6 +27,8 @@ services:
     image: streampipes_backend:release-validation
     ports:
       - "8030:8030"
+    environment:
+      - SP_PRIORITIZED_PROTOCOL=kafka
     depends_on:
       - couchdb
     volumes:

@@ -22,7 +22,9 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;
@@ -33,6 +35,7 @@ import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.UserResourceManager;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -56,16 +59,19 @@ public class ResetManagement {
    *
    * @param username of the user to delte the resources
    */
-  public static void reset(String username) {
+  public static void reset(String username,
+                           WorkerRestClient workerRestClient,
+                           IExtensionsServiceStorage extensionsServiceStorage,
+                           ExtensionServiceRequestManager requestManager) {
     logger.info("Start resetting the system");
 
     setHideTutorialToFalse(username);
 
     clearPipelineAssemblyCache(username);
 
-    stopAndDeleteAllPipelines();
+    stopAndDeleteAllPipelines(requestManager);
 
-    stopAndDeleteAllAdapters();
+    stopAndDeleteAllAdapters(workerRestClient, extensionsServiceStorage, requestManager);
 
     deleteAllFiles();
 
@@ -93,21 +99,26 @@ public class ResetManagement {
     PipelineCanvasMetadataCacheManager.removeCanvasMetadataFromCache(username);
   }
 
-  private static void stopAndDeleteAllPipelines() {
+  private static void stopAndDeleteAllPipelines(ExtensionServiceRequestManager requestManager) {
     List<Pipeline> allPipelines = PipelineManager.getAllPipelines();
     allPipelines.forEach(pipeline -> {
-      PipelineManager.stopPipeline(pipeline.getPipelineId(), true);
+      PipelineManager.stopPipeline(pipeline.getPipelineId(), true, requestManager);
       PipelineManager.deletePipeline(pipeline.getPipelineId());
     });
   }
 
-  private static void stopAndDeleteAllAdapters() {
+  private static void stopAndDeleteAllAdapters(WorkerRestClient workerRestClient,
+                                               IExtensionsServiceStorage extensionsServiceStorage,
+                                               ExtensionServiceRequestManager requestManager) {
     AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getAdapterInstanceStorage(),
         new SpResourceManager().manageAdapters(),
         new SpResourceManager().manageDataStreams(),
-        AdapterMetricsManager.INSTANCE.getAdapterMetrics()
+        AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
+        workerRestClient,
+        extensionsServiceStorage,
+        requestManager
     );
 
     List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapterInstances();

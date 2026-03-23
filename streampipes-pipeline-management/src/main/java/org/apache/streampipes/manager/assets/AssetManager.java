@@ -19,6 +19,7 @@ package org.apache.streampipes.manager.assets;
 
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.apache.commons.io.FileUtils;
@@ -50,8 +51,9 @@ public class AssetManager {
   }
 
   public static void storeAsset(SpServiceUrlProvider spServiceUrlProvider,
-                                String appId) throws IOException, NoServiceEndpointsAvailableException {
-    InputStream assetStream = new AssetFetcher(spServiceUrlProvider, appId)
+                                String appId,
+                                ExtensionServiceRequestManager requestManager) throws IOException, NoServiceEndpointsAvailableException {
+    InputStream assetStream = new AssetFetcher(spServiceUrlProvider, appId, requestManager)
         .fetchPipelineElementAssets();
     new AssetExtractor(assetStream, appId).extractAssetContents();
   }

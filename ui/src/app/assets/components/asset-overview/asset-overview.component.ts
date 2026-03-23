@@ -46,7 +46,7 @@ import { SpAssetRoutes } from '../../assets.breadcrumb';
 import { Router } from '@angular/router';
 import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-asset-dialog.component';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -229,12 +229,11 @@ export class SpAssetOverviewComponent implements OnInit {
                     'This action cannot be reversed!',
                 ),
                 cancelTitle: this.translateService.instant('Cancel'),
-                okTitle: this.translateService.instant('Delete Asset'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Delete Asset'),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === 'confirm') {
                 this.assetService.deleteAsset(asset.elementId).subscribe(() => {
                     this.loadAssets();
                     this.assetBrowserService.loadAssetData();

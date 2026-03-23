@@ -62,6 +62,7 @@ export * from './lib/apis/export-provider.service';
 
 export * from './lib/model/datalake/DateRange';
 export * from './lib/model/datalake/DatalakeQueryParameters';
+export * from './lib/model/datalake/csv-import.model';
 export * from './lib/model/dashboard/dashboard.model';
 export * from './lib/model/config/email-config.model';
 export * from './lib/model/config/general-config.model';

@@ -16,16 +16,17 @@
  *
  */
 
-import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserRole } from '../../../src/app/core/auth/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { User } from '../../support/model/User';
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { ChartBtns } from '../../support/utils/chart/ChartBtns';
+import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
 
 describe('Test User Roles for Dashboards', () => {
     const dashboardName = 'test-dashboard';
+    const datasetName = 'simulator';
     let dashboardUser1: User;
     let dashboardAdmin1: User;
     let dashboardAdmin2: User;
@@ -123,7 +124,12 @@ describe('Test User Roles for Dashboards', () => {
     it('Test Dashboard and Charts Permissions', () => {
         UserUtils.switchUser(dashboardAdmin1);
 
-        ConnectUtils.addMachineDataSimulator('simulator', true);
+        DataLakeSeedUtils.importCsvFixture({
+            fixture: 'datalake/machine-data-simulator-import.csv',
+            measurementName: datasetName,
+            delimiter: ',',
+            timestampColumn: 'timestamp',
+        });
         addChart('chart1');
         cy.wait(1000);
         addChart('chart2');
@@ -194,7 +200,7 @@ describe('Test User Roles for Dashboards', () => {
     }
 
     function addChart(chartName: string) {
-        ChartUtils.addDataViewAndTableWidget(chartName, 'simulator', true);
+        ChartUtils.addDataViewAndTableWidget(chartName, datasetName, true);
         ChartUtils.saveDataViewConfiguration();
     }
 });

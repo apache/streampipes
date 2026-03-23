@@ -22,6 +22,7 @@ import org.apache.streampipes.test.executors.ProcessingElementTestExecutor;
 import org.apache.streampipes.test.executors.TestConfiguration;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -93,5 +94,74 @@ public class TestBooleanFilterProcessor {
             Collections.emptyList(),
             Collections.emptyList())
     );
+  }
+
+  @Test
+  public void booleanFilter1() {
+    executeFixtureTest(
+        "randomboolean",
+        "True",
+        List.of(
+            Map.of("timestamp", 1623871499055L, "randomboolean", false),
+            Map.of("timestamp", 1623871500059L, "randomboolean", false),
+            Map.of("timestamp", 1623871501064L, "randomboolean", true),
+            Map.of("timestamp", 1623871502070L, "randomboolean", false),
+            Map.of("timestamp", 1623871503078L, "randomboolean", true),
+            Map.of("timestamp", 1623871504082L, "randomboolean", false),
+            Map.of("timestamp", 1623871505084L, "randomboolean", true),
+            Map.of("timestamp", 1623871506086L, "randomboolean", false),
+            Map.of("timestamp", 1623871507091L, "randomboolean", true),
+            Map.of("timestamp", 1623871508093L, "randomboolean", true)
+        ),
+        List.of(
+            Map.of("timestamp", 1623871501064L, "randomboolean", true),
+            Map.of("timestamp", 1623871503078L, "randomboolean", true),
+            Map.of("timestamp", 1623871505084L, "randomboolean", true),
+            Map.of("timestamp", 1623871507091L, "randomboolean", true),
+            Map.of("timestamp", 1623871508093L, "randomboolean", true)
+        )
+    );
+  }
+
+  @Test
+  public void booleanFilter2() {
+    executeFixtureTest(
+        "randomboolean",
+        "False",
+        List.of(
+            Map.of("timestamp", 1623871499055L, "randomboolean", false),
+            Map.of("timestamp", 1623871500059L, "randomboolean", false),
+            Map.of("timestamp", 1623871501064L, "randomboolean", true),
+            Map.of("timestamp", 1623871502070L, "randomboolean", false),
+            Map.of("timestamp", 1623871503078L, "randomboolean", true),
+            Map.of("timestamp", 1623871504082L, "randomboolean", false),
+            Map.of("timestamp", 1623871505084L, "randomboolean", true),
+            Map.of("timestamp", 1623871506086L, "randomboolean", false),
+            Map.of("timestamp", 1623871507091L, "randomboolean", true),
+            Map.of("timestamp", 1623871508093L, "randomboolean", true)
+        ),
+        List.of(
+            Map.of("timestamp", 1623871499055L, "randomboolean", false),
+            Map.of("timestamp", 1623871500059L, "randomboolean", false),
+            Map.of("timestamp", 1623871502070L, "randomboolean", false),
+            Map.of("timestamp", 1623871504082L, "randomboolean", false),
+            Map.of("timestamp", 1623871506086L, "randomboolean", false)
+        )
+    );
+  }
+
+  private void executeFixtureTest(
+      String fieldName,
+      String valueToKeep,
+      List<Map<String, Object>> events,
+      List<Map<String, Object>> outputEvents
+  ) {
+    TestConfiguration configuration = TestConfiguration.builder()
+        .configWithDefaultPrefix(BooleanFilterProcessor.BOOLEAN_MAPPING, fieldName)
+        .config(BooleanFilterProcessor.VALUE, valueToKeep)
+        .build();
+
+    ProcessingElementTestExecutor testExecutor = new ProcessingElementTestExecutor(processor, configuration);
+    testExecutor.run(events, outputEvents);
   }
 }

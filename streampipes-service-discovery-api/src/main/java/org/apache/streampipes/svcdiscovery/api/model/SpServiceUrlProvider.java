@@ -20,8 +20,6 @@ package org.apache.streampipes.svcdiscovery.api.model;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 
-import java.util.StringJoiner;
-
 public enum SpServiceUrlProvider {
 
   DATA_PROCESSOR(SpServicePathPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_PROCESSOR),
@@ -50,16 +48,6 @@ public enum SpServiceUrlProvider {
         + this.prefix
         + slash
         + appId;
-  }
-
-  public String getIconUrl(String baseUrl, String appId) {
-    return new StringJoiner(slash)
-        .add(baseUrl)
-        .add(this.prefix)
-        .add(appId)
-        .add("assets")
-        .add("icon")
-        .toString();
   }
 
   public SpServiceTag getServiceTag(String appId) {

@@ -18,7 +18,7 @@
 
 import { User } from '../model/User';
 import { UserBuilder } from '../builder/UserBuilder';
-import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserRole } from '../../../src/app/core/auth/user-role.enum';
 import { UserBtns } from './user/UserBtns';
 import { ConfigurationBtns } from './configuration/ConfigurationBtns';
 import { SharedBtns } from './shared/SharedBtns';

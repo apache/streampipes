@@ -48,10 +48,12 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<Void> {
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeResolvableResource.class);
 
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
+  private final WorkerRestClient workerRestClient;
 
-  public RuntimeResolvableResource() {
+  public RuntimeResolvableResource(WorkerRestClient workerRestClient) {
     super();
     this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
+    this.workerRestClient = workerRestClient;
   }
 
   @PostMapping(
@@ -63,13 +65,13 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<Void> {
                                                @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
 
     try {
-      String baseUrl = endpointGenerator.getEndpointBaseUrl(
+      var service = endpointGenerator.selectService(
           appId,
           SpServiceUrlProvider.ADAPTER,
           runtimeOptionsRequest.getDeploymentConfiguration().getDesiredServiceTags()
       );
       SecretProvider.getDecryptionService().applyConfig(runtimeOptionsRequest.getStaticProperties());
-      RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(baseUrl, appId, runtimeOptionsRequest);
+      RuntimeOptionsResponse result = workerRestClient.getConfiguration(service, appId, runtimeOptionsRequest);
 
       return ok(result);
     } catch (AdapterException | NoServiceEndpointsAvailableException e) {

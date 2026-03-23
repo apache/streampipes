@@ -58,6 +58,12 @@ The NATS-based setup is the recommended default. If you previously relied on Kaf
 docker-compose up -d
 # go to `http://localhost` after all services are started
 ```
+
+Optional: enable token-based NATS auth by setting `SP_NATS_TOKEN` in `.env` and use the auth override:
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.nats-auth.yml up -d
+```
 After all containers are successfully started just got to your browser and visit http://localhost to finish the installation. Once finished, switch to the pipeline editor and start the interactive tour or check the [documentation](https://streampipes.apache.org/docs/user-guide-introduction/) to learn more about StreamPipes!
 
 **Stopping** the **default** option is similarly easy:
@@ -80,10 +86,16 @@ Stopping the **kafka** option:
 docker-compose -f docker-compose.kafka.yml down
 ```
 
-Starting the **minimal** option is almost the same, just specify the `docker-compose.full.yml` file:
+Starting the **minimal** option is almost the same, just specify the `docker-compose.minimal.yml` file:
 ```bash
 docker-compose -f docker-compose.minimal.yml up -d
 # go to `http://localhost` after all services are started
+```
+
+Optional: enable token-based NATS auth in minimal mode:
+
+```bash
+docker-compose -f docker-compose.minimal.yml -f docker-compose.minimal.nats-auth.yml up -d
 ```
 Stopping the **minimal** option:
 ```bash

@@ -30,7 +30,6 @@ public class DefaultSpCoreConfiguration {
     var coreCfg = new SpCoreConfiguration();
 
     coreCfg.setGeneralConfig(new DefaultGeneralConfig().make());
-    coreCfg.setMessagingSettings(new DefaultMessagingSettings().make());
     coreCfg.setEmailConfig(EmailConfig.fromDefaults());
     coreCfg.setEmailTemplateConfig(new DefaultEmailTemplateConfiguration().getDefaultTemplates());
     coreCfg.setFilesDir(makeFileLocation());

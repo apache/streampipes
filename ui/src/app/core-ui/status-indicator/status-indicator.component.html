@@ -17,7 +17,7 @@
   -->
 
 <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">
-    <i class="material-icons status-icon">{{ icon }}</i>
-    <div class="status-text">{{ message }}</div>
-    <div class="status-subtext">{{ additionalDescription }}</div>
+    <i class="material-icons status-icon">{{ icon() }}</i>
+    <div class="status-text">{{ message() }}</div>
+    <div class="status-subtext">{{ additionalDescription() }}</div>
 </div>

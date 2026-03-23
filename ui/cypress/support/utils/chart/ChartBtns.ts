@@ -150,6 +150,38 @@ export class ChartBtns {
         return cy.dataCy('chart-data-preview-empty');
     }
 
+    public static indicatorChart() {
+        return cy.dataCy('indicator-chart');
+    }
+
+    public static indicatorChartValue() {
+        return cy.dataCy('indicator-chart-value');
+    }
+
+    public static indicatorChartDelta() {
+        return cy.dataCy('indicator-chart-delta');
+    }
+
+    public static indicatorChartTitle() {
+        return cy.dataCy('indicator-chart-title');
+    }
+
+    public static indicatorChartDescription() {
+        return cy.dataCy('indicator-chart-description');
+    }
+
+    public static indicatorChartTitleInput() {
+        return cy.dataCy('data-explorer-indicator-title-input');
+    }
+
+    public static indicatorChartDescriptionInput() {
+        return cy.dataCy('data-explorer-indicator-description-input');
+    }
+
+    public static indicatorChartDeltaCheckbox() {
+        return cy.dataCy('data-explorer-select-delta-checkbox');
+    }
+
     public static addNewWidgetBtn() {
         return cy.dataCy('add-new-widget');
     }
@@ -228,5 +260,21 @@ export class ChartBtns {
 
     public static matOptionByText(text: string | RegExp) {
         return cy.get('mat-option').contains(text);
+    }
+
+    public static columnFilterTrigger(column: string) {
+        return cy.get(`[data-cy="column-filter-trigger-${column}"]`);
+    }
+
+    public static columnAdvancedFilterExpandBtn() {
+        return cy.get('[data-cy="column-advanced-filter-expand-btn"]');
+    }
+
+    public static columnAdvancedFilterOptionByText(text: string) {
+        return cy.get('.advanced-filter-options').contains(text);
+    }
+
+    public static columnAdvancedFilterApplyBtn() {
+        return cy.dataCy('column-advanced-filter-apply-btn');
     }
 }

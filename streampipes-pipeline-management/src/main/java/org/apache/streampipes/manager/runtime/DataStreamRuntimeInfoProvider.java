@@ -25,6 +25,7 @@ import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,15 @@ public class DataStreamRuntimeInfoProvider {
         protocol.setBrokerHostname("localhost");
         if (protocol instanceof KafkaTransportProtocol) {
           ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
+        }
+      }
+
+      if (protocol instanceof NatsTransportProtocol natsProtocol) {
+        var natsToken = env.getNatsToken().getValueOrDefault();
+        if ((natsProtocol.getToken() == null || natsProtocol.getToken().isBlank())
+            && natsToken != null
+            && !natsToken.isBlank()) {
+          natsProtocol.setToken(natsToken);
         }
       }
 

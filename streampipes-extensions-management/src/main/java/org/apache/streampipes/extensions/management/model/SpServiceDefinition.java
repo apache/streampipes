@@ -141,10 +141,6 @@ public class SpServiceDefinition {
     return protocolDefinitionFactories;
   }
 
-  public void setProtocolDefinitionFactories(List<SpProtocolDefinitionFactory<?>> protocolDefinitionFactories) {
-    this.protocolDefinitionFactories = protocolDefinitionFactories;
-  }
-
   public List<ConfigItem> getKvConfigs() {
     return kvConfigs;
   }

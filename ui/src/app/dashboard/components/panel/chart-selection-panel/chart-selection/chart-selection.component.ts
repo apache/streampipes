@@ -23,7 +23,7 @@ import {
 } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../../services/auth.service';
-import { UserPrivilege } from '../../../../../_enums/user-privilege.enum';
+import { UserPrivilege } from '../../../../../core/auth/user-privilege.enum';
 import {
     FlexDirective,
     LayoutAlignDirective,
