@@ -86,6 +86,13 @@ interface JsonArrayFixtureImportOptions {
     columnOverrides?: Record<string, ColumnOverride>;
 }
 
+interface JsonArrayImportOptions {
+    records: Array<any>;
+    measurementName: string;
+    timestampColumn?: string;
+    columnOverrides?: Record<string, ColumnOverride>;
+}
+
 interface ImportRequest {
     csvConfig: CsvImportConfiguration;
     headers: string[];
@@ -152,26 +159,37 @@ export class DataLakeSeedUtils {
         options: JsonArrayFixtureImportOptions,
     ): Cypress.Chainable<CsvImportResult> {
         return cy.fixture(options.fixture).then((records: Array<any>) => {
-            const headers = this.extractHeaders(records);
-            const rows = records.map(record =>
-                headers.map(header =>
-                    this.serializeCell(record ? record[header] : undefined),
-                ),
-            );
-            const timestampColumn = options.timestampColumn ?? headers[0];
-
-            return this.previewAndImport({
-                headers,
-                rows,
-                csvConfig: {
-                    delimiter: ';',
-                    decimalSeparator: '.',
-                    hasHeader: true,
-                },
+            return this.importJsonArrayRecords({
+                records,
                 measurementName: options.measurementName,
-                timestampColumn,
+                timestampColumn: options.timestampColumn,
                 columnOverrides: options.columnOverrides,
             });
+        });
+    }
+
+    public static importJsonArrayRecords(
+        options: JsonArrayImportOptions,
+    ): Cypress.Chainable<CsvImportResult> {
+        const headers = this.extractHeaders(options.records);
+        const rows = options.records.map(record =>
+            headers.map(header =>
+                this.serializeCell(record ? record[header] : undefined),
+            ),
+        );
+        const timestampColumn = options.timestampColumn ?? headers[0];
+
+        return this.previewAndImport({
+            headers,
+            rows,
+            csvConfig: {
+                delimiter: ';',
+                decimalSeparator: '.',
+                hasHeader: true,
+            },
+            measurementName: options.measurementName,
+            timestampColumn,
+            columnOverrides: options.columnOverrides,
         });
     }
 
