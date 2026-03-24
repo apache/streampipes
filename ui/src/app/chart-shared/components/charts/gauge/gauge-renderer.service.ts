@@ -43,6 +43,7 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
         seriesName: string,
         fieldName: string,
         value: number,
+        decimals: number,
         widgetConfig: GaugeWidgetModel,
         widgetSize: WidgetSize,
         gaugeLayout: GaugeLayout,
@@ -64,7 +65,8 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
             detail: {
                 show: true,
                 valueAnimation: false,
-                formatter: '{value}',
+                formatter: (currentValue: number) =>
+                    currentValue.toFixed(decimals),
                 fontSize: 14 * clamp,
                 offsetCenter: [0, gaugeLayout.detailOffsetY],
             },
@@ -102,13 +104,17 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
             widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig,
             {},
         );
+        const appearanceConfig =
+            widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig;
+        const decimals = appearanceConfig.numberFormat?.decimals ?? 2;
         const selectedField = this.getSelectedField(widgetConfig);
         const sourceIndex = selectedField.sourceIndex;
         const dataSeries = queryResult[sourceIndex].allDataSeries[0];
         const columnIndex = dataSeries.headers.indexOf(
             selectedField.fullDbName,
         );
-        const data = parseFloat(dataSeries.rows[0][columnIndex].toFixed(2));
+        const value = Number(dataSeries.rows[0][columnIndex]);
+        const data = Number.isFinite(value) ? value : 0;
         const legend =
             !Array.isArray(option.legend) && option.legend ? option.legend : {};
         const toolbox =
@@ -139,6 +145,7 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
                 '',
                 selectedField.fullDbName,
                 data,
+                decimals,
                 widgetConfig,
                 widgetSize,
                 gaugeLayout,

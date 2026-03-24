@@ -86,11 +86,12 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
     addSeriesItem(
         name: string,
         datasetIndex: number,
-        _widgetConfig: PieChartWidgetModel,
+        widgetConfig: PieChartWidgetModel,
     ): PieSeriesOption {
-        const innerRadius = _widgetConfig.visualizationConfig.selectedRadius;
+        const innerRadius = widgetConfig.visualizationConfig.selectedRadius;
         const colorMapping =
-            _widgetConfig.visualizationConfig.colorMappingsPieChart;
+            widgetConfig.visualizationConfig.colorMappingsPieChart;
+        const decimals = this.getDecimals(widgetConfig);
 
         return {
             name,
@@ -103,7 +104,15 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
                         colorMapping.find(
                             c => c.value === params.value[0]?.toString(),
                         )?.label || params.value[0];
-                    return `${params.marker} ${mappedLabel} <b>${params.value[1]}</b> (${params.percent}%)`;
+                    const formattedValue = this.formatNumber(
+                        params.value[1],
+                        decimals,
+                    );
+                    const formattedPercent =
+                        typeof params.percent === 'number'
+                            ? this.formatNumber(params.percent, decimals)
+                            : params.percent;
+                    return `${params.marker} ${mappedLabel} <b>${formattedValue}</b> (${formattedPercent}%)`;
                 },
             },
             label: {
@@ -112,7 +121,11 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
                         colorMapping.find(
                             c => c.value === params.value[0]?.toString(),
                         )?.label || params.value[0];
-                    return `${mappedLabel} (${params.percent}%)`;
+                    const formattedPercent =
+                        typeof params.percent === 'number'
+                            ? this.formatNumber(params.percent, decimals)
+                            : params.percent;
+                    return `${mappedLabel} (${formattedPercent}%)`;
                 },
             },
             encode: { itemName: 'name', value: 'value' },

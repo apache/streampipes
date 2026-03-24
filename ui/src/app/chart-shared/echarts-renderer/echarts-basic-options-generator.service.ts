@@ -35,6 +35,12 @@ export class EchartsBasicOptionsGeneratorService {
             showLegend: true,
             showTooltip: true,
         };
+        appearanceConfig.numberFormat ??= {
+            decimals: 2,
+        };
+        appearanceConfig.numberFormat.decimals = this.normalizeDecimals(
+            appearanceConfig.numberFormat.decimals,
+        );
 
         return {
             legend: {
@@ -55,5 +61,12 @@ export class EchartsBasicOptionsGeneratorService {
                 },
             },
         };
+    }
+
+    private normalizeDecimals(decimals: number): number {
+        if (!Number.isFinite(decimals)) {
+            return 2;
+        }
+        return Math.min(10, Math.max(0, Math.round(decimals)));
     }
 }

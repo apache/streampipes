@@ -19,15 +19,28 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { WidgetEchartsAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
-import { SplitSectionComponent } from '@streampipes/shared-ui';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 @Component({
     selector: 'sp-echarts-widget-appearance-config',
     templateUrl: './echarts-widget-appearance-config.component.html',
-    imports: [SplitSectionComponent, MatCheckbox, FormsModule, TranslatePipe],
+    imports: [
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatCheckbox,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        TranslatePipe,
+    ],
 })
 export class SpEchartsWidgetAppearanceConfigComponent implements OnInit {
     private widgetConfigurationService = inject(ChartConfigurationService);
@@ -41,6 +54,12 @@ export class SpEchartsWidgetAppearanceConfigComponent implements OnInit {
             showToolbox: true,
             showTooltip: true,
         };
+        this.appearanceConfig.numberFormat ??= {
+            decimals: 2,
+        };
+        this.appearanceConfig.numberFormat.decimals = this.normalizeDecimals(
+            this.appearanceConfig.numberFormat.decimals,
+        );
     }
 
     triggerViewUpdate() {
@@ -48,5 +67,19 @@ export class SpEchartsWidgetAppearanceConfigComponent implements OnInit {
             refreshView: true,
             refreshData: false,
         });
+    }
+
+    updateDecimals(decimals: number | string): void {
+        this.appearanceConfig.numberFormat.decimals =
+            this.normalizeDecimals(decimals);
+        this.triggerViewUpdate();
+    }
+
+    private normalizeDecimals(decimals: number | string): number {
+        const parsedDecimals = Number(decimals);
+        if (!Number.isFinite(parsedDecimals)) {
+            return 2;
+        }
+        return Math.min(10, Math.max(0, Math.round(parsedDecimals)));
     }
 }

@@ -32,4 +32,22 @@
         (change)="triggerViewUpdate()"
         >{{ 'Show tooltip' | translate }}
     </mat-checkbox>
+
+    <sp-form-field
+        [level]="3"
+        [label]="'Decimals' | translate"
+        [description]="'Number of decimals to show' | translate"
+    >
+        <mat-form-field>
+            <input
+                matInput
+                type="number"
+                [ngModel]="appearanceConfig.numberFormat?.decimals ?? 2"
+                min="0"
+                max="10"
+                step="1"
+                (ngModelChange)="updateDecimals($event)"
+            />
+        </mat-form-field>
+    </sp-form-field>
 </sp-split-section>
