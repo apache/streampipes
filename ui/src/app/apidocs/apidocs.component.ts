@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, inject } from '@angular/core';
 import { SwaggerUIBundle } from 'swagger-ui-dist';
 
 @Component({
@@ -25,7 +25,7 @@ import { SwaggerUIBundle } from 'swagger-ui-dist';
     styleUrls: ['./apidocs.component.scss'],
 })
 export class ApidocsComponent implements OnInit {
-    constructor(private el: ElementRef) {}
+    private el = inject(ElementRef);
 
     ngOnInit(): void {
         SwaggerUIBundle({
