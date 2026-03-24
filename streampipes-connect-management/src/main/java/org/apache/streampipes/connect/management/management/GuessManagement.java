@@ -22,14 +22,15 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.AdapterEventPreviewPipeline;
 import org.apache.streampipes.connect.management.util.EventSchemaUtils;
-import org.apache.streampipes.connect.management.util.WorkerPaths;
 import org.apache.streampipes.connect.transformer.api.TransformationEngines;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
-import org.apache.streampipes.manager.execution.ExtensionServiceExecutions;
-import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
@@ -40,7 +41,6 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,11 +52,14 @@ import java.util.Map;
 public class GuessManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(GuessManagement.class);
+  private final ExtensionServiceRequestManager extensionRequestManager;
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
   private final ObjectMapper objectMapper;
 
-  public GuessManagement() {
-    this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
+  public GuessManagement(IExtensionsServiceEndpointGenerator endpointGenerator,
+                         ExtensionServiceRequestManager extensionRequestManager) {
+    this.endpointGenerator = endpointGenerator;
+    this.extensionRequestManager = extensionRequestManager;
     this.objectMapper = JacksonSerializer.getObjectMapper();
   }
 
@@ -77,21 +80,18 @@ public class GuessManagement {
     SecretProvider.getDecryptionService()
                   .apply(adapterDescription);
 
-    var workerUrl = getWorkerUrl(adapterDescription, WorkerPaths.getSamplePath());
+    var requestTarget = getWorkerRequestTarget(adapterDescription);
 
     var adapterDescriptionString = objectMapper.writeValueAsString(adapterDescription);
 
-    LOG.debug("Calling get get sample data at: {}", workerUrl);
+    LOG.debug("Calling get sample data at service: {}", requestTarget.serviceId());
 
-    var httpResponse = ExtensionServiceExecutions
-        .extServicePostRequest(workerUrl, adapterDescriptionString)
-        .execute()
-        .returnResponse();
+    var response = extensionRequestManager.request(
+        ExtensionServiceRequests.sampleData(requestTarget, adapterDescriptionString)
+    );
+    var responseString = response.responseBody();
 
-    var responseString = EntityUtils.toString(httpResponse.getEntity());
-
-    if (httpResponse.getStatusLine()
-                    .getStatusCode() == HttpStatus.SC_OK) {
+    if (response.statusCode() == HttpStatus.SC_OK) {
       return objectMapper.readValue(responseString, SampleData.class);
     } else {
       var exception = objectMapper.readValue(responseString, SpLogMessage.class);
@@ -133,18 +133,17 @@ public class GuessManagement {
     return adapterDescription;
   }
 
-  private String getWorkerUrl(
-      AdapterDescription adapterDescription,
-      String suffix
+  private ExtensionServiceRequestTarget getWorkerRequestTarget(
+      AdapterDescription adapterDescription
   ) throws NoServiceEndpointsAvailableException {
-    var baseUrl = endpointGenerator.getEndpointBaseUrl(
+    var selectedService = endpointGenerator.selectService(
         adapterDescription.getAppId(),
         SpServiceUrlProvider.ADAPTER,
         adapterDescription.getDeploymentConfiguration()
                           .getDesiredServiceTags()
     );
 
-    return baseUrl + suffix;
+    return ExtensionServiceRequestTargets.adapterSampleData(selectedService);
   }
 
 }

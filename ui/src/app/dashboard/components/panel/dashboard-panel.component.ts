@@ -38,6 +38,7 @@ import {
 } from '@angular/router';
 import { DashboardSlideViewComponent } from '../../../dashboard-shared/components/chart-view/slide-view/dashboard-slide-view.component';
 import {
+    ConfirmDialogAction,
     ConfirmDialogComponent,
     CurrentUserService,
     KeyboardShortcutService,
@@ -191,7 +192,7 @@ export class DashboardPanelComponent
         dashboardItem.w = 3;
         dashboardItem.h = 4;
         dashboardItem.x = 0;
-        dashboardItem.y = 0;
+        dashboardItem.y = this.getNextWidgetY();
         dashboardItem.dataViewElementId = dataViewElementId;
         this.dashboard.widgets.push(dashboardItem);
         setTimeout(() => {
@@ -201,6 +202,18 @@ export class DashboardPanelComponent
                 this.dashboardSlide.loadWidgetConfig(dashboardItem);
             }
         });
+    }
+
+    private getNextWidgetY(): number {
+        if (!this.dashboard?.widgets?.length) {
+            return 0;
+        }
+
+        return this.dashboard.widgets.reduce((maxY, widget) => {
+            const currentY = widget.y ?? 0;
+            const currentHeight = widget.h ?? widget.rows ?? 1;
+            return Math.max(maxY, currentY + currentHeight);
+        }, 0);
     }
 
     setShouldShowConfirm(): boolean {
@@ -352,24 +365,27 @@ export class DashboardPanelComponent
                     subtitle: this.translateService.instant(
                         'Update all changes to dashboard charts or discard current changes.',
                     ),
+                    neutralTitle: this.translateService.instant('Keep editing'),
                     cancelTitle:
                         this.translateService.instant('Discard changes'),
-                    okTitle: this.translateService.instant('Update'),
-                    confirmAndCancel: true,
+                    confirmTitle: this.translateService.instant('Update'),
                 },
             });
             return dialogRef.afterClosed().pipe(
-                map(shouldUpdate => {
-                    if (shouldUpdate) {
+                switchMap((dialogResult: ConfirmDialogAction | undefined) => {
+                    if (dialogResult === 'confirm') {
                         this.dashboard.dashboardGeneralSettings.defaultViewMode =
                             this.viewMode;
-                        this.dashboardService
+                        return this.dashboardService
                             .updateDashboard(this.dashboard)
-                            .subscribe(result => {
-                                return true;
-                            });
+                            .pipe(map(() => true));
                     }
-                    return true;
+
+                    if (dialogResult === 'cancel') {
+                        return of(true);
+                    }
+
+                    return of(false);
                 }),
             );
         } else {

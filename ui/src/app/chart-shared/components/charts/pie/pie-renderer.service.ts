@@ -80,6 +80,7 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
                 },
             };
         }
+        this.applySinglePieResponsiveLayout(option);
     }
 
     addSeriesItem(
@@ -166,5 +167,64 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
 
     getDefaultSeriesName(widgetConfig: PieChartWidgetModel): string {
         return widgetConfig.visualizationConfig.selectedProperty.fullDbName;
+    }
+
+    private applySinglePieResponsiveLayout(option: EChartsOption): void {
+        const pieSeries = Array.isArray(option.series)
+            ? option.series
+            : option.series
+              ? [option.series]
+              : [];
+
+        // Keep grouped/tagged pie layout unchanged.
+        if (pieSeries.length !== 1) {
+            return;
+        }
+
+        const legend =
+            !Array.isArray(option.legend) && option.legend ? option.legend : {};
+        const toolbox =
+            !Array.isArray(option.toolbox) && option.toolbox
+                ? option.toolbox
+                : {};
+
+        const showLegend = legend.show ?? true;
+        const showToolbox = toolbox.show ?? true;
+        const toolboxTop = 4;
+        const toolboxHeight = showToolbox ? 28 : 0;
+        const legendTop = showToolbox ? 36 : 6;
+        const legendHeight = showLegend ? 24 : 0;
+        const topControlsBottom = Math.max(
+            showToolbox ? toolboxTop + toolboxHeight : 0,
+            showLegend ? legendTop + legendHeight : 0,
+        );
+        const pieTop = topControlsBottom > 0 ? topControlsBottom + 8 : 8;
+        const pieBottom = 8;
+
+        option.toolbox = {
+            ...toolbox,
+            show: showToolbox,
+            left: 10,
+            right: 'auto',
+            top: toolboxTop,
+        };
+        option.legend = {
+            ...legend,
+            show: showLegend,
+            type: 'scroll',
+            left: showToolbox ? 120 : 10,
+            right: 10,
+            top: legendTop,
+            bottom: 'auto',
+        };
+
+        const singlePieSeries = pieSeries[0] as PieSeriesOption;
+        delete singlePieSeries.width;
+        delete singlePieSeries.height;
+        singlePieSeries.left = 10;
+        singlePieSeries.right = 10;
+        singlePieSeries.top = pieTop;
+        singlePieSeries.bottom = pieBottom;
+        singlePieSeries.center = ['50%', '50%'];
     }
 }

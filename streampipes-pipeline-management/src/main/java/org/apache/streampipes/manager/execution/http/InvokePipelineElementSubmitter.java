@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.execution.http;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
@@ -33,14 +34,14 @@ public class InvokePipelineElementSubmitter extends BasePipelineElementSubmitter
 
   private static final Logger LOG = LoggerFactory.getLogger(InvokePipelineElementSubmitter.class);
 
-  public InvokePipelineElementSubmitter(Pipeline pipeline) {
-    super(pipeline);
+  public InvokePipelineElementSubmitter(Pipeline pipeline,
+                                        ExtensionServiceRequestManager requestManager) {
+    super(pipeline, requestManager);
   }
 
   @Override
   protected PipelineElementStatus submitElement(InvocableStreamPipesEntity pipelineElement) {
-    var invocationUrl = getInvocationUrl(pipelineElement);
-    return new InvokeHttpRequest().execute(pipelineElement, invocationUrl, this.pipelineId);
+    return new InvokeExtensionRequest(requestManager).execute(pipelineElement, this.pipelineId);
   }
 
   @Override

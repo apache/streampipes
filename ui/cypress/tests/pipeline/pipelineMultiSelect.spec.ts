@@ -58,8 +58,8 @@ describe('Pipeline Overview Multi Select', () => {
         PipelineBtns.selectionToolbar().should('be.visible');
         PipelineBtns.rowCheckbox().should('have.length', 2);
 
-        PipelineBtns.multiActionExecute().should('be.disabled');
         PipelineBtns.selectNone().should('be.disabled');
+        PipelineBtns.multiActionExecute().should('not.exist');
 
         PipelineBtns.rowCheckboxInput(0).check({ force: true });
         PipelineBtns.selectNone().should('not.be.disabled');
@@ -80,7 +80,7 @@ describe('Pipeline Overview Multi Select', () => {
         PipelineBtns.selectNone().click();
         PipelineBtns.rowCheckboxInput(0).should('not.be.checked');
         PipelineBtns.rowCheckboxInput(1).should('not.be.checked');
-        PipelineBtns.multiActionExecute().should('be.disabled');
+        PipelineBtns.multiActionExecute().should('not.exist');
 
         PipelineBtns.selectAllCheckboxInput().check({ force: true });
         PipelineBtns.rowCheckboxInput(0).should('be.checked');
@@ -90,6 +90,6 @@ describe('Pipeline Overview Multi Select', () => {
         PipelineBtns.selectAllCheckboxInput().uncheck({ force: true });
         PipelineBtns.rowCheckboxInput(0).should('not.be.checked');
         PipelineBtns.rowCheckboxInput(1).should('not.be.checked');
-        PipelineBtns.multiActionExecute().should('be.disabled');
+        PipelineBtns.multiActionExecute().should('not.exist');
     });
 });

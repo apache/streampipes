@@ -564,8 +564,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
             data: {
                 title: title,
                 subtitle: description,
-                okTitle: 'Ok',
-                confirmAndCancel: false,
+                confirmTitle: 'Ok',
             },
         });
     }

@@ -30,7 +30,6 @@ import org.apache.streampipes.messaging.kafka.config.ConsumerConfigFactory;
 import org.apache.streampipes.messaging.kafka.config.ProducerConfigFactory;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
@@ -70,20 +69,12 @@ public abstract class DistributedRuntime<
         .getActualTopicName();
   }
 
-  protected JmsTransportProtocol getJmsProtocol(SpDataStream stream) {
-    return new JmsTransportProtocol((JmsTransportProtocol) protocol(stream));
-  }
-
   protected MqttTransportProtocol getMqttProtocol(SpDataStream stream) {
     return new MqttTransportProtocol((MqttTransportProtocol) protocol(stream));
   }
 
   protected boolean isKafkaProtocol(SpDataStream stream) {
     return protocol(stream) instanceof KafkaTransportProtocol;
-  }
-
-  protected boolean isJmsProtocol(SpDataStream stream) {
-    return protocol(stream) instanceof JmsTransportProtocol;
   }
 
   protected boolean isMqttProtocol(SpDataStream stream) {

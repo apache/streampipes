@@ -19,7 +19,6 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.model.configuration.MessagingSettings;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionDefinition;
@@ -90,11 +89,6 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
     post(getMigrationPath().addToPath(serviceId), migrationConfigs);
   }
 
-  @Override
-  public MessagingSettings getMessagingSettings() {
-    return getSingle(getMessagingSettingsPath(), MessagingSettings.class);
-  }
-
   private StreamPipesApiPath getExtensionsServiceRegistrationPath() {
     return StreamPipesApiPath
         .fromBaseApiPath()
@@ -105,12 +99,6 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
     return StreamPipesApiPath
         .fromBaseApiPath()
         .addToPath("extensions-services-configurations");
-  }
-
-  private StreamPipesApiPath getMessagingSettingsPath() {
-    return StreamPipesApiPath
-        .fromBaseApiPath()
-        .addToPath("messaging");
   }
 
   private StreamPipesApiPath getFunctionsPath() {

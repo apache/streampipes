@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.export.ImportManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -42,6 +43,11 @@ import java.io.IOException;
 public class DataImportResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataImportResource.class);
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
+
+  public DataImportResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
+  }
 
   @PostMapping(
       path = "/preview",
@@ -49,7 +55,7 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AssetExportConfiguration> getImportPreview(@RequestPart("file_upload") MultipartFile fileDetail)
       throws IOException {
-    var importConfig = ImportManager.getImportPreview(fileDetail.getInputStream());
+    var importConfig = ImportManager.getImportPreview(fileDetail.getInputStream(), extensionServiceRequestManager);
     return ok(importConfig);
   }
 
@@ -59,7 +65,12 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<Void> importData(@RequestPart("file_upload") MultipartFile fileDetail,
                                          @RequestPart("configuration") AssetExportConfiguration exportConfiguration) {
     try {
-      ImportManager.performImport(fileDetail.getInputStream(), exportConfiguration, getAuthenticatedUserSid());
+      ImportManager.performImport(
+          fileDetail.getInputStream(),
+          exportConfiguration,
+          getAuthenticatedUserSid(),
+          extensionServiceRequestManager
+      );
       return ok();
     } catch (IOException e) {
       LOG.error("An error occurred while importing resources", e);

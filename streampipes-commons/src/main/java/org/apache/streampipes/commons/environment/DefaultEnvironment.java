@@ -308,8 +308,28 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getNatsToken() {
+    return new StringEnvironmentVariable(Envs.SP_NATS_TOKEN);
+  }
+
+  @Override
   public StringEnvironmentVariable getPulsarUrl() {
     return new StringEnvironmentVariable(Envs.SP_PULSAR_URL);
+  }
+
+  @Override
+  public StringEnvironmentVariable getCoreExtensionTransportMode() {
+    return new StringEnvironmentVariable(Envs.SP_CORE_EXTENSION_TRANSPORT_MODE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getExtensionTransportMode() {
+    return new StringEnvironmentVariable(Envs.SP_EXTENSION_TRANSPORT_MODE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getExtensionRequestTopicPrefix() {
+    return new StringEnvironmentVariable(Envs.SP_EXTENSION_REQUEST_TOPIC_PREFIX);
   }
 
   @Override

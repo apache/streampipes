@@ -25,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonSubTypes({
-    @JsonSubTypes.Type(JmsTransportProtocol.class),
     @JsonSubTypes.Type(KafkaTransportProtocol.class),
     @JsonSubTypes.Type(MqttTransportProtocol.class),
     @JsonSubTypes.Type(NatsTransportProtocol.class),
@@ -84,4 +83,6 @@ public abstract class TransportProtocol {
   public void setElementId(String elementId) {
     this.elementId = elementId;
   }
+
+  public abstract String protocolId();
 }

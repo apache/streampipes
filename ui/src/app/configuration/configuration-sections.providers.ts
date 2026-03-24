@@ -92,16 +92,6 @@ const CORE_CONFIGURATION_SECTIONS: SpConfigurationSection[] = [
         order: 700,
     },
     {
-        itemId: 'messaging',
-        itemTitle: 'Messaging',
-        roles: ['ROLE_ADMIN'],
-        loadComponent: () =>
-            import('./messaging-configuration/messaging-configuration.component').then(
-                m => m.MessagingConfigurationComponent,
-            ),
-        order: 800,
-    },
-    {
         itemId: 'security',
         itemTitle: 'Security',
         roles: ['ROLE_ADMIN'],

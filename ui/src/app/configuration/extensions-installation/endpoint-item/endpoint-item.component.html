@@ -21,14 +21,13 @@
     fxLayout="column"
     fxLayoutAlign="start start"
     class="pipeline-element-box"
-    style="padding:5px;margin-bottom:10px;background:{{
-        getSelectedBackground()
-    }}"
-    [ngStyle]="item.editable ? { opacity: 1 } : { opacity: 0.5 }"
+    [style.--endpoint-type-color]="itemTypeColor"
+    [class.is-selected]="itemSelected"
+    [class.is-disabled]="!item.editable"
 >
-    <div fxLayout="row" class="w-100">
+    <div fxLayout="row" class="w-100 endpoint-header">
         <i
-            class="material-icons"
+            class="material-icons endpoint-status-icon"
             [ngClass]="
                 item.available
                     ? 'endpoint-icon-available'
@@ -38,7 +37,7 @@
         >
         <span fxFlex></span>
         <span
-            class="{{ itemTypeStyle }}"
+            class="{{ itemTypeStyle }} endpoint-type-badge"
             [matTooltip]="
                 'Endpoint {{status}}'
                     | translate
@@ -51,8 +50,8 @@
             >{{ itemTypeTitle }}</span
         >
     </div>
-    <div fxFlex fxLayout="row" style="width: 100%">
-        <div style="margin-right: 10px; margin-left: 10px; margin-top: 10px">
+    <div fxFlex fxLayout="row" class="endpoint-main">
+        <div class="endpoint-icon-wrapper">
             @if (!item.includesIcon || iconError) {
                 <div
                     class="draggable-icon {{
@@ -72,7 +71,7 @@
                 </div>
             }
         </div>
-        <div fxFlex fxLayout="column">
+        <div fxFlex fxLayout="column" class="endpoint-content">
             <div class="ml-5">
                 @if (!item.editable) {
                     <small
@@ -106,7 +105,7 @@
                     </button>
                 }
                 @if (item.installed) {
-                    <div style="margin-left: 5px">
+                    <div class="endpoint-menu-wrapper">
                         <button
                             class="small-button-add mat-basic no-min-width"
                             [disabled]="!item.editable"
@@ -114,7 +113,7 @@
                             mat-button
                             [matMenuTriggerFor]="menu"
                         >
-                            <span style="font-size: 12px">...</span>
+                            <span class="endpoint-menu-dots">...</span>
                         </button>
                         <mat-menu #menu="matMenu">
                             <button
@@ -148,11 +147,7 @@
             </div>
         </div>
     </div>
-    <div
-        fxFlex="100"
-        fxLayout="column"
-        style="padding-left: 10px; margin-top: 10px"
-    >
+    <div fxFlex="100" fxLayout="column" class="endpoint-description">
         <div fxLayout="column">
             <div fxFlex fxLayout="column">
                 <h3>

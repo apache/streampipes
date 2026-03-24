@@ -18,12 +18,11 @@
 
 package org.apache.streampipes.rest.extensions.migration;
 
-import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
-import org.apache.streampipes.extensions.api.migration.IDataSinkMigrator;
+import org.apache.streampipes.extensions.management.migration.DataSinkMigrationHandler;
 import org.apache.streampipes.model.extensions.migration.MigrationRequest;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
-import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
+import org.apache.streampipes.rest.extensions.AbstractExtensionsResource;
 
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,11 +40,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/migrations/sink")
-public class DataSinkMigrationResource extends MigrateExtensionsResource<
-    DataSinkInvocation,
-    IDataSinkParameterExtractor,
-    IDataSinkMigrator
-    > {
+public class DataSinkMigrationResource extends AbstractExtensionsResource {
+
+  private final DataSinkMigrationHandler migrationHandler;
+
+  public DataSinkMigrationResource() {
+    this.migrationHandler = new DataSinkMigrationHandler();
+  }
+
+  public DataSinkMigrationResource(DataSinkMigrationHandler migrationHandler) {
+    this.migrationHandler = migrationHandler;
+  }
+
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
@@ -76,11 +82,6 @@ public class DataSinkMigrationResource extends MigrateExtensionsResource<
           required = true
       )
       @RequestBody MigrationRequest<DataSinkInvocation> sinkMigrationRequest) {
-    return ok(handleMigration(sinkMigrationRequest));
-  }
-
-  @Override
-  protected IDataSinkParameterExtractor getPropertyExtractor(DataSinkInvocation pipelineElementDescription) {
-    return DataSinkParameterExtractor.from(pipelineElementDescription);
+    return ok(migrationHandler.handleMigration(sinkMigrationRequest));
   }
 }

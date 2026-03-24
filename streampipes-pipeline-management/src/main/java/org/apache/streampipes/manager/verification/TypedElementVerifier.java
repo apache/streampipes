@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.verification;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
@@ -34,6 +35,7 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
   private final Consumer<T> storeOperation;
   private final Consumer<T> updateOperation;
   private final SpServiceUrlProvider serviceUrlProvider;
+  private final ExtensionServiceRequestManager requestManager;
 
   public TypedElementVerifier(
       String graphData,
@@ -42,13 +44,15 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
       Predicate<T> existsChecker,
       Consumer<T> storeOperation,
       Consumer<T> updateOperation,
-      SpServiceUrlProvider serviceUrlProvider
+      SpServiceUrlProvider serviceUrlProvider,
+      ExtensionServiceRequestManager requestManager
   ) {
     super(graphData, elementClass, storageApi);
     this.existsChecker = existsChecker;
     this.storeOperation = storeOperation;
     this.updateOperation = updateOperation;
     this.serviceUrlProvider = serviceUrlProvider;
+    this.requestManager = requestManager;
   }
 
   public TypedElementVerifier(
@@ -57,13 +61,15 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
       Predicate<T> existsChecker,
       Consumer<T> storeOperation,
       Consumer<T> updateOperation,
-      SpServiceUrlProvider serviceUrlProvider
+      SpServiceUrlProvider serviceUrlProvider,
+      ExtensionServiceRequestManager requestManager
   ) {
     super(elementDescription, storageApi);
     this.existsChecker = existsChecker;
     this.storeOperation = storeOperation;
     this.updateOperation = updateOperation;
     this.serviceUrlProvider = serviceUrlProvider;
+    this.requestManager = requestManager;
   }
 
   @Override
@@ -83,7 +89,7 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
   @Override
   protected void storeAssets() throws IOException, NoServiceEndpointsAvailableException {
     if (elementDescription.isIncludesAssets()) {
-      AssetManager.storeAsset(serviceUrlProvider, elementDescription.getAppId());
+      AssetManager.storeAsset(serviceUrlProvider, elementDescription.getAppId(), requestManager);
     }
   }
 }

@@ -43,6 +43,7 @@ import {
 } from '@angular/router';
 import {
     AssetSaveService,
+    ConfirmDialogAction,
     ConfirmDialogComponent,
     CurrentUserService,
     DialogService,
@@ -59,9 +60,10 @@ import { ChartDetectChangesService } from '../../services/chart-detect-changes.s
 import { SupportsUnsavedChangeDialog } from '../../../chart-shared/models/dataview-dashboard.model';
 import { Observable, of, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ResizeEchartsService } from '../../../chart-shared/services/resize-echarts.service';
+import { ResizeService } from '../../../chart-shared/services/resize.service';
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../core/auth/user-role.enum';
@@ -120,6 +122,7 @@ export class ChartViewComponent
 
     resizeEchartsService = inject(ResizeEchartsService);
     private shortcutReg: ShortcutRegistration;
+    resizeService = inject(ResizeService);
 
     private shortcutService = inject(KeyboardShortcutService);
     private dataExplorerSharedService = inject(ChartSharedService);
@@ -410,8 +413,7 @@ export class ChartViewComponent
                     'Update asset links or close.',
                 ),
                 cancelTitle: this.translateService.instant('Close'),
-                okTitle: this.translateService.instant('Update'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Update'),
                 editMode: this.editMode,
                 selectedAssets: this.selectedAssets,
                 deselectedAssets: this.deselectedAssets,
@@ -441,27 +443,30 @@ export class ChartViewComponent
                     subtitle: this.translateService.instant(
                         'Update all changes to chart or discard current changes.',
                     ),
+                    neutralTitle: this.translateService.instant('Keep editing'),
                     cancelTitle:
                         this.translateService.instant('Discard changes'),
-                    okTitle: this.translateService.instant('Update'),
-                    confirmAndCancel: true,
+                    confirmTitle: this.translateService.instant('Update'),
                 },
             });
             return dialogRef.afterClosed().pipe(
-                map(shouldUpdate => {
-                    if (shouldUpdate) {
+                switchMap((dialogResult: ConfirmDialogAction | undefined) => {
+                    if (dialogResult === 'confirm') {
                         this.dataView.timeSettings = this.timeSettings;
-                        const observable =
+                        return (
                             this.dataView.elementId !== undefined
                                 ? this.dataViewService.updateChart(
                                       this.dataView,
                                   )
-                                : this.dataViewService.saveChart(this.dataView);
-                        observable.subscribe(() => {
-                            return true;
-                        });
+                                : this.dataViewService.saveChart(this.dataView)
+                        ).pipe(map(() => true));
                     }
-                    return true;
+
+                    if (dialogResult === 'cancel') {
+                        return of(true);
+                    }
+
+                    return of(false);
                 }),
             );
         } else {
@@ -500,11 +505,41 @@ export class ChartViewComponent
 
     onWidthChanged(newWidth: number) {
         this.drawerWidth = newWidth;
-        setTimeout(() => {
-            this.resizeEchartsService.notify(
-                this.outerPanel.nativeElement.offsetWidth,
-            );
-        }, 100);
+        this.scheduleChartPanelResize(100);
+    }
+
+    onDataPreviewSizeChanged(): void {
+        // Preview height animates; send resize updates during and after transition.
+        [0, 100, 220, 350].forEach(delay =>
+            this.scheduleChartPanelResize(delay),
+        );
+    }
+
+    private scheduleChartPanelResize(delayMs = 0): void {
+        setTimeout(
+            () => requestAnimationFrame(() => this.notifyChartPanelResize()),
+            delayMs,
+        );
+    }
+
+    private notifyChartPanelResize(): void {
+        const panel = this.outerPanel?.nativeElement;
+        if (!panel) {
+            return;
+        }
+
+        const widgetContent = panel.querySelector(
+            '.widget-content',
+        ) as HTMLDivElement | null;
+        const width = widgetContent?.clientWidth ?? panel.offsetWidth;
+        const height = widgetContent?.clientHeight ?? panel.offsetHeight;
+
+        this.resizeService.notify({
+            width,
+            height,
+            widgetId: undefined,
+        });
+        this.resizeEchartsService.notify(width);
     }
 
     private async saveAssets(linkageData: LinkageData[]): Promise<void> {

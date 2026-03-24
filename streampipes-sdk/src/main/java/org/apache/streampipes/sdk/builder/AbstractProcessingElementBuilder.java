@@ -21,8 +21,6 @@ package org.apache.streampipes.sdk.builder;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
-import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -33,7 +31,6 @@ import org.apache.streampipes.sdk.helpers.CollectedStreamRequirements;
 import org.apache.streampipes.sdk.helpers.Label;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractProcessingElementBuilder<K extends
@@ -45,8 +42,6 @@ public abstract class AbstractProcessingElementBuilder<K extends
   protected List<EventProperty> stream1Properties;
   protected List<EventProperty> stream2Properties;
 
-  protected EventGrounding supportedGrounding;
-
   protected boolean stream1 = false;
   protected boolean stream2 = false;
 
@@ -56,7 +51,6 @@ public abstract class AbstractProcessingElementBuilder<K extends
     this.streamRequirements = new ArrayList<>();
     this.stream1Properties = new ArrayList<>();
     this.stream2Properties = new ArrayList<>();
-    this.supportedGrounding = new EventGrounding();
   }
 
   protected AbstractProcessingElementBuilder(String id, T element) {
@@ -64,7 +58,6 @@ public abstract class AbstractProcessingElementBuilder<K extends
     this.streamRequirements = new ArrayList<>();
     this.stream1Properties = new ArrayList<>();
     this.stream2Properties = new ArrayList<>();
-    this.supportedGrounding = new EventGrounding();
   }
 
   /**
@@ -140,34 +133,6 @@ public abstract class AbstractProcessingElementBuilder<K extends
     return me();
   }
 
-  /**
-   * Assigns supported communication/transport protocols to the pipeline elements that can be handled at runtime (e.g.,
-   * Kafka or JMS).
-   *
-   * @param protocol An arbitrary number of supported
-   *                 {@link org.apache.streampipes.model.grounding.TransportProtocol}s.
-   *                 Use {@link org.apache.streampipes.sdk.helpers.SupportedProtocols} to assign protocols
-   *                 from some pre-defined ones or create your own by following the developer guide.
-   * @return this
-   */
-  public K supportedProtocols(TransportProtocol... protocol) {
-    return supportedProtocols(Arrays.asList(protocol));
-  }
-
-  /**
-   * Assigns supported communication/transport protocols to the pipeline elements that can be handled at runtime (e.g.,
-   * Kafka or JMS).
-   *
-   * @param protocols A list of supported {@link org.apache.streampipes.model.grounding.TransportProtocol}s.
-   *                  Use {@link org.apache.streampipes.sdk.helpers.SupportedProtocols} to assign protocols
-   *                  from some pre-defined ones or create your own by following the developer guide.
-   * @return this
-   */
-  public K supportedProtocols(List<TransportProtocol> protocols) {
-    this.supportedGrounding.setTransportProtocols(protocols);
-    return me();
-  }
-
   public K withVersion(int version) {
     this.elementDescription.setVersion(version);
     return me();
@@ -184,8 +149,6 @@ public abstract class AbstractProcessingElementBuilder<K extends
     if (stream2Properties.size() > 0 || stream2) {
       this.streamRequirements.add(buildStream(stream2Properties));
     }
-
-    this.elementDescription.setSupportedGrounding(supportedGrounding);
 
     for (int i = 0; i < streamRequirements.size(); i++) {
       streamRequirements.get(i).setIndex(i);

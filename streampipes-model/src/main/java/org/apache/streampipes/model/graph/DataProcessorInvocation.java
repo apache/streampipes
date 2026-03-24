@@ -31,8 +31,6 @@ import java.util.List;
 
 public class DataProcessorInvocation extends InvocableStreamPipesEntity implements Serializable {
 
-  private static final long serialVersionUID = 865870355944824186L;
-
   private SpDataStream outputStream;
 
   private List<OutputStrategy> outputStrategies;
@@ -44,7 +42,6 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     this.setName(other.getName());
     this.setDescription(other.getDescription());
     this.setInputStreams(other.getSpDataStreams());
-    this.setSupportedGrounding(other.getSupportedGrounding());
     this.setStaticProperties(other.getStaticProperties());
     this.setOutputStrategies(other.getOutputStrategies());
     this.setBelongsTo(other.getElementId());

@@ -345,14 +345,13 @@ export class AdapterConfigurationStateService {
                         'Please only change nothing if you are certain that your changes do not affect the event schema.',
                 ),
                 cancelTitle: this.translateService.instant('Nothing changed'),
-                okTitle: this.translateService.instant('Refresh Fields'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Refresh Fields'),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === 'confirm') {
                 this.getEventSchema(this.state().adapterDescription);
-            } else {
+            } else if (result === 'cancel') {
                 this.acknowledgeNoSchemaRefresh();
             }
         });

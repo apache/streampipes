@@ -17,7 +17,6 @@
  */
 
 import { Directive, inject, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import {
@@ -106,12 +105,11 @@ export abstract class AbstractSecurityPrincipalConfig<
                     'This action cannot be reversed!',
                 ),
                 cancelTitle: this.translateService.instant('Cancel'),
-                okTitle: this.translateService.instant('Delete User'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Delete User'),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === 'confirm') {
                 this.userService
                     .deleteUser(account.principalId)
                     .subscribe(() => {

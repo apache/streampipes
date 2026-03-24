@@ -29,6 +29,7 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
+import { ConfirmDialogAction, ConfirmDialogData } from './confirm-dialog.model';
 
 @Component({
     selector: 'confirmation-dialog',
@@ -44,10 +45,11 @@ import { MatButton } from '@angular/material/button';
     ],
 })
 export class ConfirmDialogComponent {
-    constructor(
-        public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
-    ) {}
+    public dialogRef =
+        inject<MatDialogRef<ConfirmDialogComponent, ConfirmDialogAction>>(
+            MatDialogRef,
+        );
+    public data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
 
     @HostListener('keydown.enter')
     onEnter(): void {
@@ -55,10 +57,14 @@ export class ConfirmDialogComponent {
     }
 
     onCancel(): void {
-        this.dialogRef.close();
+        this.dialogRef.close('cancel');
+    }
+
+    onNeutral(): void {
+        this.dialogRef.close('neutral');
     }
 
     onOk(): void {
-        this.dialogRef.close(true);
+        this.dialogRef.close('confirm');
     }
 }

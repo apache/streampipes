@@ -19,6 +19,7 @@ package org.apache.streampipes.rest.extensions.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
 import org.apache.streampipes.extensions.api.migration.IDataProcessorMigrator;
+import org.apache.streampipes.extensions.management.migration.DataProcessorMigrationHandler;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
@@ -36,7 +37,7 @@ public class MigrateExtensionsResourceTest {
 
   @Test
   public void executeMigration() {
-    var migrationsResource = new DataProcessorMigrationResource();
+    var migrationsHandler = new DataProcessorMigrationHandler();
 
     var migrator = new IDataProcessorMigrator() {
       @Override
@@ -61,7 +62,7 @@ public class MigrateExtensionsResourceTest {
     var dataProcessor = new DataProcessorInvocation();
     dataProcessor.setStaticProperties(new ArrayList<>());
 
-    var result = migrationsResource.executeMigration(migrator, dataProcessor);
+    var result = migrationsHandler.executeMigration(migrator, dataProcessor);
 
     Assertions.assertTrue(result.success());
     Assertions.assertEquals("SUCCESS", result.message());
@@ -74,7 +75,7 @@ public class MigrateExtensionsResourceTest {
 
   @Test
   public void executeMigrationWithFailure() {
-    var migrationsResource = new DataProcessorMigrationResource();
+    var migrationsHandler = new DataProcessorMigrationHandler();
 
     var migrator = new IDataProcessorMigrator() {
       @Override
@@ -93,7 +94,7 @@ public class MigrateExtensionsResourceTest {
 
     var dataProcessor = new DataProcessorInvocation();
 
-    var result = migrationsResource.executeMigration(migrator, dataProcessor);
+    var result = migrationsHandler.executeMigration(migrator, dataProcessor);
 
     Assertions.assertFalse(result.success());
     Assertions.assertEquals("This should fail", result.message());
@@ -103,7 +104,7 @@ public class MigrateExtensionsResourceTest {
 
   @Test
   public void executeMigrationWithUnknownFailure() {
-    var migrationsResource = new DataProcessorMigrationResource();
+    var migrationsHandler = new DataProcessorMigrationHandler();
 
     var migrator = new IDataProcessorMigrator() {
       @Override
@@ -122,7 +123,7 @@ public class MigrateExtensionsResourceTest {
 
     var dataProcessor = new DataProcessorInvocation();
 
-    var result = migrationsResource.executeMigration(migrator, dataProcessor);
+    var result = migrationsHandler.executeMigration(migrator, dataProcessor);
 
     Assertions.assertFalse(result.success());
     Assertions.assertTrue(result.message().startsWith("Migration failed due to an unexpected exception:"));

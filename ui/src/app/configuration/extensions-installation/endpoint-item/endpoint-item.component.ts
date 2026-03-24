@@ -37,7 +37,7 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { NgClass, NgStyle } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ClassDirective, StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
@@ -52,7 +52,6 @@ import { MatIcon } from '@angular/material/icon';
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
-        NgStyle,
         StyleDirective,
         NgClass,
         ClassDirective,
@@ -71,6 +70,7 @@ export class EndpointItemComponent implements OnInit {
 
     itemTypeTitle: string;
     itemTypeStyle: string;
+    itemTypeColor: string;
 
     @Input()
     itemSelected: boolean;
@@ -102,6 +102,7 @@ export class EndpointItemComponent implements OnInit {
     ngOnInit(): void {
         this.findItemTypeTitle();
         this.findItemStyle();
+        this.findItemColor();
         if (this.item.includesIcon) {
             this.addService.getExtensionItemIcon(this.item).subscribe(
                 blob => {
@@ -130,14 +131,6 @@ export class EndpointItemComponent implements OnInit {
         return result.toUpperCase();
     }
 
-    getSelectedBackground() {
-        if (this.itemSelected) {
-            return 'var(--color-bg-2)';
-        } else {
-            return 'var(--color-bg-1)';
-        }
-    }
-
     findItemTypeTitle() {
         if (this.item.serviceTagPrefix === 'ADAPTER') {
             this.itemTypeTitle = this.translateService.instant('Adapter');
@@ -161,6 +154,20 @@ export class EndpointItemComponent implements OnInit {
             this.itemTypeStyle = baseType + 'processor-label';
         } else {
             this.itemTypeStyle = baseType + 'sink-label';
+        }
+    }
+
+    findItemColor() {
+        if (this.item.serviceTagPrefix === 'ADAPTER') {
+            this.itemTypeColor = 'var(--color-adapter)';
+        } else if (this.item.serviceTagPrefix === 'DATA_STREAM') {
+            this.itemTypeColor = 'var(--color-data-source)';
+        } else if (this.item.serviceTagPrefix === 'DATA_PROCESSOR') {
+            this.itemTypeColor = 'var(--color-processor)';
+        } else if (this.item.serviceTagPrefix === 'DATA_SINK') {
+            this.itemTypeColor = 'var(--color-sink)';
+        } else {
+            this.itemTypeColor = 'var(--color-sink)';
         }
     }
 

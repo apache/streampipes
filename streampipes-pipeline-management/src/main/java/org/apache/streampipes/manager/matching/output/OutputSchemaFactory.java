@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.matching.output;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.AppendOutputStrategy;
 import org.apache.streampipes.model.output.CustomOutputStrategy;
@@ -31,12 +32,15 @@ import org.apache.streampipes.model.output.UserDefinedOutputStrategy;
 
 public class OutputSchemaFactory {
 
-  private OutputStrategy outputStrategy;
-  private DataProcessorInvocation dataProcessorInvocation;
+  private final OutputStrategy outputStrategy;
+  private final DataProcessorInvocation dataProcessorInvocation;
+  private final ExtensionServiceRequestManager requestManager;
 
-  public OutputSchemaFactory(DataProcessorInvocation dataProcessorInvocation) {
+  public OutputSchemaFactory(DataProcessorInvocation dataProcessorInvocation,
+                             ExtensionServiceRequestManager requestManager) {
     this.dataProcessorInvocation = dataProcessorInvocation;
     this.outputStrategy = dataProcessorInvocation.getOutputStrategies().get(0);
+    this.requestManager = requestManager;
   }
 
   public OutputSchemaGenerator<?> getOuputSchemaGenerator() {
@@ -53,7 +57,7 @@ public class OutputSchemaFactory {
     } else if (outputStrategy instanceof TransformOutputStrategy) {
       return TransformOutputSchemaGenerator.from(outputStrategy, dataProcessorInvocation);
     } else if (outputStrategy instanceof CustomTransformOutputStrategy) {
-      return CustomTransformOutputSchemaGenerator.from(outputStrategy, dataProcessorInvocation);
+      return CustomTransformOutputSchemaGenerator.from(outputStrategy, dataProcessorInvocation, requestManager);
     } else if (outputStrategy instanceof UserDefinedOutputStrategy) {
       return UserDefinedOutputSchemaGenerator.from(outputStrategy);
     } else {

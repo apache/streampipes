@@ -26,7 +26,6 @@ import { AssetBrowserFilterOuterComponent } from '../asset-browser-filter-outer/
 import { MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-browser-filter-type',
@@ -38,7 +37,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatSelect,
         FormsModule,
         MatOption,
-        TranslatePipe,
     ],
 })
 export class AssetBrowserFilterTypeComponent implements OnInit {

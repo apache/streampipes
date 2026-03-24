@@ -48,6 +48,12 @@ export class DashboardGridViewComponent
     extends AbstractChartViewDirective
     implements OnInit, AfterViewInit, OnChanges
 {
+    private readonly defaultGridCellHeightPx = 90;
+    private readonly minGridCellHeightPx = 40;
+    private readonly maxGridCellHeightPx = 200;
+
+    readonly maxGridWidthPx = 1440;
+
     @Input()
     kioskMode = false;
 
@@ -70,7 +76,7 @@ export class DashboardGridViewComponent
             minRow: 5,
             column: this.dashboard.gridColumns,
             margin: 2,
-            cellHeight: 'initial',
+            cellHeight: this.getGridCellHeight(),
             disableResize: !this.editMode,
             disableDrag: !this.editMode,
             float: true,
@@ -103,6 +109,21 @@ export class DashboardGridViewComponent
     }
 
     onWidgetsAvailable(): void {}
+
+    private getGridCellHeight(): number {
+        const configuredValue = Number(
+            this.dashboard?.dashboardGeneralSettings?.gridRowHeightPx,
+        );
+
+        if (Number.isNaN(configuredValue)) {
+            return this.defaultGridCellHeightPx;
+        }
+
+        return Math.min(
+            this.maxGridCellHeightPx,
+            Math.max(this.minGridCellHeightPx, configuredValue),
+        );
+    }
 
     isGridView(): boolean {
         return true;

@@ -23,6 +23,7 @@ export * from './lib/dialog/data-download-dialog/data-download-dialog.component'
 export * from './lib/dialog/card-dialog/card-dialog.component';
 
 export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
+export * from './lib/dialog/confirm-dialog/confirm-dialog.model';
 export * from './lib/dialog/panel-dialog/panel-dialog.component';
 export * from './lib/dialog/standard-dialog/standard-dialog.component';
 export * from './lib/dialog/pipeline-element-help/pipeline-element-help.component';

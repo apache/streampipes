@@ -18,22 +18,16 @@
 
 package org.apache.streampipes.rest.extensions.pe;
 
-import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.config.IDataProcessorConfiguration;
 import org.apache.streampipes.extensions.api.pe.runtime.IDataProcessorRuntime;
-import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
-import org.apache.streampipes.extensions.management.init.RunningInstances;
-import org.apache.streampipes.extensions.management.util.GroundingDebugUtils;
-import org.apache.streampipes.model.Response;
+import org.apache.streampipes.extensions.management.pe.DataProcessorPipelineElementManagement;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping(SpServicePathPrefix.DATA_PROCESSOR)
@@ -45,48 +39,10 @@ public class DataProcessorPipelineElementResource extends InvocablePipelineEleme
     ProcessingElementParameterExtractor> {
 
   public DataProcessorPipelineElementResource() {
-
-    super(DataProcessorInvocation.class);
+    this(new DataProcessorPipelineElementManagement());
   }
 
-  @Override
-  protected Map<String, IStreamPipesDataProcessor> getElementDeclarers() {
-    return DeclarersSingleton.getInstance().getDataProcessors();
+  public DataProcessorPipelineElementResource(DataProcessorPipelineElementManagement pipelineElementManagement) {
+    super(pipelineElementManagement);
   }
-
-  @Override
-  protected String getInstanceId(String uri, String elementId) {
-    return InstanceIdExtractor.extractId(uri);
-  }
-
-  @Override
-  protected ProcessingElementParameterExtractor getExtractor(DataProcessorInvocation graph) {
-    return new ProcessingElementParameterExtractor(graph);
-  }
-
-  @Override
-  protected DataProcessorInvocation createGroundingDebugInformation(DataProcessorInvocation graph) {
-    graph.getInputStreams().forEach(is -> {
-      GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
-    });
-
-    GroundingDebugUtils.modifyGrounding(graph.getOutputStream().getEventGrounding());
-    return graph;
-  }
-
-  @Override
-  protected IDataProcessorRuntime getRuntime() {
-    return DeclarersSingleton.getInstance().getRuntimeProviders().get(0).getDataProcessorRuntime().get();
-  }
-
-  @Override
-  protected Response invokeRuntime(String runningInstanceId,
-                                   IStreamPipesDataProcessor pipelineElement,
-                                   DataProcessorInvocation graph) {
-    var runtime = getRuntime();
-    var response = runtime.onRuntimeInvoked(runningInstanceId, pipelineElement, graph);
-    RunningInstances.INSTANCE.add(runningInstanceId, graph, runtime);
-    return response;
-  }
-
 }

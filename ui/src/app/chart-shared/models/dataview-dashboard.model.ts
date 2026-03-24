@@ -50,8 +50,13 @@ export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
     previewMode: boolean;
     gridMode: boolean;
     widgetIndex?: number;
+    dashboardChartOverrides?: DashboardChartOverrides;
 
     cleanupSubscriptions(): void;
+}
+
+export interface DashboardChartOverrides {
+    hideToolbox?: boolean;
 }
 
 export interface ObservableGenerator {

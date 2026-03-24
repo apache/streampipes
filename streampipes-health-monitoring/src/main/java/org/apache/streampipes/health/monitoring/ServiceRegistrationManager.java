@@ -57,7 +57,13 @@ public class ServiceRegistrationManager {
 
   public void addService(SpServiceRegistration serviceRegistration, SpServiceStatus status) {
     serviceRegistration.setStatus(status);
-    storage.persist(serviceRegistration);
+    var existing = storage.getElementById(serviceRegistration.getSvcId());
+    if (existing != null) {
+      serviceRegistration.setRev(existing.getRev());
+      storage.updateElement(serviceRegistration);
+    } else {
+      storage.persist(serviceRegistration);
+    }
     logService(serviceRegistration);
   }
 

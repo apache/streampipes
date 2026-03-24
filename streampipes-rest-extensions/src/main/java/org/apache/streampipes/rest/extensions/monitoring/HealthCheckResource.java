@@ -18,12 +18,7 @@
 
 package org.apache.streampipes.rest.extensions.monitoring;
 
-import org.apache.streampipes.commons.constants.InstanceIdExtractor;
-import org.apache.streampipes.extensions.management.connect.AdapterWorkerManagement;
-import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
-import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
-import org.apache.streampipes.extensions.management.init.RunningInstances;
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.extensions.management.monitoring.HealthCheckManagement;
 import org.apache.streampipes.model.health.ExtensionInstanceHealth;
 import org.apache.streampipes.rest.extensions.AbstractExtensionsResource;
 
@@ -33,35 +28,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("health")
 public class HealthCheckResource extends AbstractExtensionsResource {
 
-  private final AdapterWorkerManagement adapterManagement = new AdapterWorkerManagement(
-      RunningAdapterInstances.INSTANCE,
-      DeclarersSingleton.getInstance()
-  );
+  private final HealthCheckManagement healthCheckManagement;
+
+  public HealthCheckResource() {
+    this.healthCheckManagement = new HealthCheckManagement();
+  }
+
+  public HealthCheckResource(HealthCheckManagement healthCheckManagement) {
+    this.healthCheckManagement = healthCheckManagement;
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ExtensionInstanceHealth> getRunningInstances() {
-
-    var runningAdapterInstances = adapterManagement.getAllRunningAdapterInstances()
-        .stream()
-        .map(NamedStreamPipesEntity::getElementId)
-        .collect(Collectors.toSet());
-
-    var runningPipelineElementInstances = RunningInstances.INSTANCE.getRunningInstanceIds()
-        .stream()
-        .map(InstanceIdExtractor::extractId)
-        .collect(Collectors.toSet());
-
-    var instanceHealth = new ExtensionInstanceHealth(
-        runningAdapterInstances,
-        runningPipelineElementInstances
-    );
-
-    return ok(instanceHealth);
+    return ok(healthCheckManagement.getExtensionInstanceHealth());
   }
 }
