@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { StaticPropertyUtilService } from '../static-property-util.service';
 import {
     FormsModule,
@@ -47,9 +47,7 @@ export class StaticColorPickerComponent
     extends AbstractValidatedStaticPropertyRenderer<ColorPickerStaticProperty>
     implements OnInit
 {
-    constructor(public staticPropertyUtil: StaticPropertyUtilService) {
-        super();
-    }
+    staticPropertyUtil = inject(StaticPropertyUtilService);
 
     presetColors: any[] = [
         '#39B54A',

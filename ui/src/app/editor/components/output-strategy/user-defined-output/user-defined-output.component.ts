@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { BaseOutputStrategy } from '../base/BaseOutputStrategy';
 import {
     DataType,
@@ -63,9 +63,11 @@ export class UserDefinedOutputStrategyComponent
     extends BaseOutputStrategy<UserDefinedOutputStrategy>
     implements OnInit
 {
+    private idGeneratorService = inject(IdGeneratorService);
+
     primitiveClasses = [];
 
-    constructor(private idGeneratorService: IdGeneratorService) {
+    constructor() {
         super();
         this.primitiveClasses = [
             { label: 'String', id: DataType.STRING },

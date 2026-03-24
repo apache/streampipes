@@ -19,7 +19,7 @@
 import * as dagre from 'dagre';
 import { JsplumbBridge } from './jsplumb-bridge.service';
 import { JsplumbService } from './jsplumb.service';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { PipelineElementConfig } from '../model/editor.model';
 import {
     DataProcessorInvocation,
@@ -34,11 +34,9 @@ import { Connection } from '@jsplumb/browser-ui';
 
 @Injectable({ providedIn: 'root' })
 export class PipelinePositioningService {
-    constructor(
-        private jsplumbService: JsplumbService,
-        private jsplumbFactoryService: JsplumbFactoryService,
-        private objectProvider: ObjectProvider,
-    ) {}
+    private jsplumbService = inject(JsplumbService);
+    private jsplumbFactoryService = inject(JsplumbFactoryService);
+    private objectProvider = inject(ObjectProvider);
 
     collectPipelineElementPositions(
         pipelineCanvasMetadata: PipelineCanvasMetadata,

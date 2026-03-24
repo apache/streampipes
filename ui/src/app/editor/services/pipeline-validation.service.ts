@@ -18,7 +18,7 @@
 
 import * as dagre from 'dagre';
 import { JsplumbBridge } from './jsplumb-bridge.service';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
     PipelineElementConfig,
     PipelineElementConfigurationStatus,
@@ -34,6 +34,8 @@ import { Connection } from '@jsplumb/browser-ui';
 
 @Injectable({ providedIn: 'root' })
 export class PipelineValidationService {
+    private jsplumbFactoryService = inject(JsplumbFactoryService);
+
     errorMessages: any = [];
     pipelineValid = false;
 
@@ -63,8 +65,6 @@ export class PipelineValidationService {
             'Check the current pipeline structure for invalid connections and configurations',
         ),
     ];
-
-    constructor(private jsplumbFactoryService: JsplumbFactoryService) {}
 
     isValidPipeline(
         rawPipelineModel: PipelineElementConfig[],

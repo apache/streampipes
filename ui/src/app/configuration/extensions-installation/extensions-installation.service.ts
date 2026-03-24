@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
     ExtensionItemDescription,
@@ -27,10 +27,8 @@ import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ExtensionsInstallationService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     getExtensionItems(): Observable<ExtensionItemDescription[]> {
         return this.http

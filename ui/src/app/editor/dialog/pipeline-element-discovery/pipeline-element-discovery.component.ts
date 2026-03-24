@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     DialogRef,
     FormLabelComponent,
@@ -55,6 +55,10 @@ import { MatButton } from '@angular/material/button';
     ],
 })
 export class PipelineElementDiscoveryComponent implements OnInit {
+    private dialogRef =
+        inject<DialogRef<PipelineElementDiscoveryComponent>>(DialogRef);
+    private JsPlumbService = inject(JsplumbService);
+
     @Input()
     rawPipelineModel: PipelineElementConfig[];
 
@@ -62,11 +66,6 @@ export class PipelineElementDiscoveryComponent implements OnInit {
     currentElements: PipelineElementUnion[];
 
     styles: any[] = [];
-
-    constructor(
-        private dialogRef: DialogRef<PipelineElementDiscoveryComponent>,
-        private JsPlumbService: JsplumbService,
-    ) {}
 
     ngOnInit() {
         this.currentElements.sort((a, b) => a.name.localeCompare(b.name));

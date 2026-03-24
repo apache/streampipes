@@ -19,15 +19,13 @@
 import { Dashboard } from '@streampipes/platform-services';
 import { EditDashboardDialogComponent } from '../../dashboard/dialogs/edit-dashboard/edit-dashboard-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class DataExplorerDashboardService {
-    constructor(
-        private dialogService: DialogService,
-        private translateService: TranslateService,
-    ) {}
+    private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
 
     openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
         return this.dialogService.open(EditDashboardDialogComponent, {

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
     SpBasicNavTabsComponent,
@@ -51,12 +51,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class ExtensionsServiceManagementComponent implements OnInit {
-    tabs: SpNavigationItem[] = [];
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private tabService = inject(SpConfigurationTabsService);
 
-    constructor(
-        private breadcrumbService: SpBreadcrumbService,
-        private tabService: SpConfigurationTabsService,
-    ) {}
+    tabs: SpNavigationItem[] = [];
 
     ngOnInit() {
         this.tabs = this.tabService.getTabs();

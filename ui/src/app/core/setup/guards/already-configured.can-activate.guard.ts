@@ -17,16 +17,11 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { UrlTree } from '@angular/router';
 import { BaseConfiguredCanActivateGuard } from './base-configured.can-activate.guard';
 
 @Injectable({ providedIn: 'root' })
 export class AlreadyConfiguredCanActivateGuard extends BaseConfiguredCanActivateGuard {
-    constructor(router: Router, authService: AuthService) {
-        super(router, authService);
-    }
-
     onIsConfigured(): boolean | UrlTree {
         return this.router.parseUrl('login');
     }

@@ -22,6 +22,7 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
+    inject,
 } from '@angular/core';
 import {
     ExistingNotification,
@@ -72,6 +73,13 @@ import { NotificationItemComponent } from './components/notification-item.compon
     ],
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
+    private authService = inject(AuthService);
+    private pipelineService = inject(PipelineService);
+    elementIconText = inject(PipelineElementIconTextService);
+    private notificationService = inject(NotificationsService);
+    private notificationCountService = inject(NotificationCountService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+
     static readonly NOTIFICATIONS_APP_ID =
         'org.apache.streampipes.sinks.internal.jvm.notification';
     static readonly NOTIFICATION_TITLE_KEY = 'title';
@@ -99,14 +107,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     newEventArriving = false;
     lastFetchTime = new Date().getTime();
 
-    constructor(
-        private authService: AuthService,
-        private pipelineService: PipelineService,
-        public elementIconText: PipelineElementIconTextService,
-        private notificationService: NotificationsService,
-        private notificationCountService: NotificationCountService,
-        private breadcrumbService: SpBreadcrumbService,
-    ) {
+    constructor() {
         this.unreadNotifications = [];
     }
 

@@ -16,20 +16,9 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { DialogRef, FormFieldComponent } from '@streampipes/shared-ui';
-import {
-    AdapterService,
-    AssetLink,
-    AssetLinkType,
-    ChartService,
-    DashboardService,
-    DatalakeRestService,
-    FilesService,
-    GenericStorageService,
-    PipelineElementService,
-    PipelineService,
-} from '@streampipes/platform-services';
+import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { FormsModule, UntypedFormGroup } from '@angular/forms';
 import {
     MatOption,
@@ -65,6 +54,9 @@ export class EditAssetLinkDialogComponent
     extends BaseAssetLinksDirective
     implements OnInit
 {
+    private dialogRef =
+        inject<DialogRef<EditAssetLinkDialogComponent>>(DialogRef);
+
     @Input()
     assetLink: AssetLink;
 
@@ -81,29 +73,6 @@ export class EditAssetLinkDialogComponent
     currentResource: any;
 
     selectedLinkType: AssetLinkType;
-
-    constructor(
-        private dialogRef: DialogRef<EditAssetLinkDialogComponent>,
-        protected genericStorageService: GenericStorageService,
-        protected pipelineService: PipelineService,
-        protected chartService: ChartService,
-        protected dashboardService: DashboardService,
-        protected dataLakeService: DatalakeRestService,
-        protected pipelineElementService: PipelineElementService,
-        protected adapterService: AdapterService,
-        protected filesService: FilesService,
-    ) {
-        super(
-            genericStorageService,
-            pipelineService,
-            chartService,
-            dashboardService,
-            dataLakeService,
-            pipelineElementService,
-            adapterService,
-            filesService,
-        );
-    }
 
     ngOnInit(): void {
         super.onInit();

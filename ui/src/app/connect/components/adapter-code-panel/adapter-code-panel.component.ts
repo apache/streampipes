@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
@@ -32,6 +32,8 @@ import { ConfigurationCodePanelComponent } from '../../../core-ui/configuration-
     imports: [FlexDirective, ConfigurationCodePanelComponent],
 })
 export class AdapterCodePanelComponent implements OnInit {
+    private adapterService = inject(AdapterService);
+
     @Input()
     adapterDescription: AdapterDescription;
 
@@ -39,8 +41,6 @@ export class AdapterCodePanelComponent implements OnInit {
     maxHeight = '300px';
 
     compactAdapter: CompactAdapter;
-
-    constructor(private adapterService: AdapterService) {}
 
     ngOnInit(): void {
         this.adapterService

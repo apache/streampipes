@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { ChartRegistry } from '../../../../../../chart-shared/registry/chart-registry.service';
 import {
@@ -40,6 +47,8 @@ import { MatIcon } from '@angular/material/icon';
     ],
 })
 export class ChartPreviewComponent implements OnInit {
+    private widgetRegistryService = inject(ChartRegistry);
+
     @Input()
     chart: DataExplorerWidgetModel;
 
@@ -47,8 +56,6 @@ export class ChartPreviewComponent implements OnInit {
 
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter<string>();
-
-    constructor(private widgetRegistryService: ChartRegistry) {}
 
     ngOnInit() {
         this.widgetTypeLabel = this.widgetRegistryService.getChartTemplate(

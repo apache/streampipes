@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AdapterDescription,
@@ -33,6 +33,11 @@ import { MatButton } from '@angular/material/button';
     imports: [FlexDirective, MatDivider, MatButton, TranslatePipe],
 })
 export class AllAdapterActionsComponent implements OnInit {
+    private dialogRef =
+        inject<DialogRef<AllAdapterActionsComponent>>(DialogRef);
+    private adapterService = inject(AdapterService);
+    private translate = inject(TranslateService);
+
     @Input()
     adapters: AdapterDescription[];
 
@@ -46,11 +51,7 @@ export class AllAdapterActionsComponent implements OnInit {
     @Input()
     action: boolean;
 
-    constructor(
-        private dialogRef: DialogRef<AllAdapterActionsComponent>,
-        private adapterService: AdapterService,
-        private translate: TranslateService,
-    ) {
+    constructor() {
         this.adaptersToModify = [];
         this.actionStatus = [];
         this.actionFinished = false;

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { ChartConfigurationService } from '../../../../../chart-shared/services/chart-configuration.service';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
@@ -51,6 +51,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class ChartAppearanceSettingsComponent implements OnInit, OnDestroy {
+    private widgetTypeService = inject(ChartTypeService);
+    private widgetRegistryService = inject(ChartRegistry);
+    private widgetConfigurationService = inject(ChartConfigurationService);
+
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
     backgroundOption: 'default' | 'custom' = 'default';
@@ -71,12 +75,6 @@ export class ChartAppearanceSettingsComponent implements OnInit, OnDestroy {
 
     widgetTypeSubscription: Subscription;
     extendedAppearanceConfigComponent: any;
-
-    constructor(
-        private widgetTypeService: ChartTypeService,
-        private widgetRegistryService: ChartRegistry,
-        private widgetConfigurationService: ChartConfigurationService,
-    ) {}
 
     ngOnInit(): void {
         this.findWidget(this.currentlyConfiguredWidget.widgetType);

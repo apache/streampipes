@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { WidgetEchartsAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
@@ -30,12 +30,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [SplitSectionComponent, MatCheckbox, FormsModule, TranslatePipe],
 })
 export class SpEchartsWidgetAppearanceConfigComponent implements OnInit {
+    private widgetConfigurationService = inject(ChartConfigurationService);
+
     @Input()
     appearanceConfig: WidgetEchartsAppearanceConfig;
-
-    constructor(
-        private widgetConfigurationService: ChartConfigurationService,
-    ) {}
 
     ngOnInit() {
         this.appearanceConfig.chartAppearance ??= {

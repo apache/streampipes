@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { LabelsService, SpLabel } from '@streampipes/platform-services';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
@@ -76,6 +76,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class SpLabelConfigurationComponent implements OnInit {
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private labelsService = inject(LabelsService);
+    private tabService = inject(SpConfigurationTabsService);
+
     tabs: SpNavigationItem[] = [];
 
     allLabels: SpLabel[] = [];
@@ -90,12 +94,6 @@ export class SpLabelConfigurationComponent implements OnInit {
     labelsinUse = [];
 
     editedLabels: string[] = [];
-
-    constructor(
-        private breadcrumbService: SpBreadcrumbService,
-        private labelsService: LabelsService,
-        private tabService: SpConfigurationTabsService,
-    ) {}
 
     ngOnInit(): void {
         this.tabs = this.tabService.getTabs();

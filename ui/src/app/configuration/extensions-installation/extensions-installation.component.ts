@@ -16,7 +16,7 @@
  *
  */
 
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import {
     DialogRef,
     DialogService,
@@ -85,6 +85,13 @@ import { PipelineElementTypeFilter } from './filter/pipeline-element-type.pipe';
     ],
 })
 export class SpExtensionsInstallationComponent implements OnInit {
+    private addService = inject(ExtensionsInstallationService);
+    private dialogService = inject(DialogService);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private tabService = inject(SpConfigurationTabsService);
+    private translateService = inject(TranslateService);
+
     tabs: SpNavigationItem[] = [];
 
     activeLink: string;
@@ -101,14 +108,7 @@ export class SpExtensionsInstallationComponent implements OnInit {
     _filterTerm = '';
     _selectedInstallationStatus = 'all';
 
-    constructor(
-        private addService: ExtensionsInstallationService,
-        private dialogService: DialogService,
-        private changeDetectorRef: ChangeDetectorRef,
-        private breadcrumbService: SpBreadcrumbService,
-        private tabService: SpConfigurationTabsService,
-        private translateService: TranslateService,
-    ) {
+    constructor() {
         this.results = [];
         this.loading = false;
         this.endpointItems = [];

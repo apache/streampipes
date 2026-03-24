@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TimeSeriesChartWidgetModel } from '../../charts/time-series-chart/model/time-series-chart-widget.model';
@@ -39,16 +46,14 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class SelectColorPropertiesConfigComponent implements OnInit {
+    protected widgetConfigurationService = inject(ChartConfigurationService);
+
     @Output() changeSelectedProperties: EventEmitter<DataExplorerField[]> =
         new EventEmitter();
 
     @Input() availableProperties: DataExplorerField[];
     @Input() selectedProperties: DataExplorerField[];
     @Input() currentlyConfiguredWidget: TimeSeriesChartWidgetModel;
-
-    constructor(
-        protected widgetConfigurationService: ChartConfigurationService,
-    ) {}
 
     ngOnInit(): void {
         if (!this.selectedProperties) {

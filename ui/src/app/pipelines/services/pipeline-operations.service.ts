@@ -16,7 +16,7 @@
  *
  */
 
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, inject } from '@angular/core';
 import { Pipeline } from '@streampipes/platform-services';
 import {
     PanelType,
@@ -32,13 +32,11 @@ import { PipelineNotificationsComponent } from '../dialog/pipeline-notifications
 
 @Injectable({ providedIn: 'root' })
 export class PipelineOperationsService {
+    private dialogService = inject(DialogService);
+    private router = inject(Router);
+
     starting: any;
     stopping: any;
-
-    constructor(
-        private dialogService: DialogService,
-        private router: Router,
-    ) {}
 
     startPipeline(
         pipelineId: string,

@@ -23,6 +23,7 @@ import {
     Input,
     OnDestroy,
     OnInit,
+    inject,
 } from '@angular/core';
 import { JsplumbBridge } from '../../../../services/jsplumb-bridge.service';
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
@@ -39,6 +40,10 @@ import { MatDivider } from '@angular/material/divider';
 export class PipelineAssemblyDrawingAreaPanZoomComponent
     implements OnInit, AfterViewInit, OnDestroy
 {
+    private pipelineElementDraggedService = inject(
+        PipelineElementDraggedService,
+    );
+
     @Input()
     jsplumbBridge: JsplumbBridge;
 
@@ -48,10 +53,6 @@ export class PipelineAssemblyDrawingAreaPanZoomComponent
     panzoom: PanzoomObject;
     moveSub: Subscription;
     currentZoomLevel = 1;
-
-    constructor(
-        private pipelineElementDraggedService: PipelineElementDraggedService,
-    ) {}
 
     ngOnInit() {
         this.moveSub =

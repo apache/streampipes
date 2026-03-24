@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     ViewChild,
+    inject,
 } from '@angular/core';
 import {
     ExtendedTimeSettings,
@@ -56,6 +57,8 @@ import { MatDivider } from '@angular/material/divider';
     ],
 })
 export class TimeRangeSelectorMenuComponent implements OnInit {
+    private timeSelectionService = inject(TimeSelectionService);
+
     @Input()
     timeSettings: TimeSettings;
 
@@ -77,8 +80,6 @@ export class TimeRangeSelectorMenuComponent implements OnInit {
 
     @ViewChild('timeRangeSelection')
     timeRangeSelection: CustomTimeRangeSelectionComponent;
-
-    constructor(private timeSelectionService: TimeSelectionService) {}
 
     ngOnInit(): void {}
 

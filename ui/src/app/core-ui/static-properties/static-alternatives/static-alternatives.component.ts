@@ -22,6 +22,7 @@ import {
     Input,
     OnInit,
     TemplateRef,
+    inject,
 } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import {
@@ -63,6 +64,8 @@ export class StaticAlternativesComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives>
     implements OnInit
 {
+    private changeDetectorRef = inject(ChangeDetectorRef);
+
     @Input()
     deploymentConfiguration: ExtensionDeploymentConfiguration;
 
@@ -75,10 +78,6 @@ export class StaticAlternativesComponent
     // >();
 
     completedAlternativeConfigurations: ConfigurationInfo[] = [];
-
-    constructor(private changeDetectorRef: ChangeDetectorRef) {
-        super();
-    }
 
     ngOnInit() {
         this.staticProperty.alternatives.forEach(al => {

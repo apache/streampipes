@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     ViewChild,
+    inject,
 } from '@angular/core';
 import {
     AssetConstants,
@@ -63,6 +64,11 @@ import { MatButton } from '@angular/material/button';
     ],
 })
 export class AssetDetailsLinksComponent implements OnInit {
+    private genericStorageService = inject(GenericStorageService);
+    private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
+    private assetBrowserService = inject(SpAssetBrowserService);
+
     @Input()
     asset: SpAsset;
 
@@ -80,13 +86,6 @@ export class AssetDetailsLinksComponent implements OnInit {
 
     @ViewChild('assetLinkTable', { static: false })
     assetLinkTable: AssetLinkTableComponent;
-
-    constructor(
-        private genericStorageService: GenericStorageService,
-        private dialogService: DialogService,
-        private translateService: TranslateService,
-        private assetBrowserService: SpAssetBrowserService,
-    ) {}
 
     ngOnInit(): void {
         this.genericStorageService

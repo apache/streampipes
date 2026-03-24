@@ -80,6 +80,9 @@ export class StaticFileInputComponent
     extends AbstractValidatedStaticPropertyRenderer<FileStaticProperty>
     implements OnInit
 {
+    private filesService = inject(FilesService);
+    dialog = inject(MatDialog);
+
     public chooseExistingFileControl = new UntypedFormControl();
 
     translateService = inject(TranslateService);
@@ -99,13 +102,6 @@ export class StaticFileInputComponent
     selectedFile: FileMetadata;
 
     filesLoaded = false;
-
-    constructor(
-        private filesService: FilesService,
-        public dialog: MatDialog,
-    ) {
-        super();
-    }
 
     ngOnInit() {
         this.fetchFileMetadata(this.staticProperty.locationPath);

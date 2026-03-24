@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
     Message,
     PlatformServicesCommons,
@@ -29,10 +29,8 @@ import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     getUserProfile(username: string): Observable<UserAccount> {
         return this.http.get(this.profilePath + '/username/' + username).pipe(

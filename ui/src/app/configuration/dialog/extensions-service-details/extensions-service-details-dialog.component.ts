@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { SpServiceRegistration } from '@streampipes/platform-services';
 import {
@@ -42,12 +42,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class SpExtensionsServiceDetailsDialogComponent {
+    private dialogRef =
+        inject<DialogRef<SpExtensionsServiceDetailsDialogComponent>>(DialogRef);
+
     @Input()
     serviceReg: SpServiceRegistration;
-
-    constructor(
-        private dialogRef: DialogRef<SpExtensionsServiceDetailsDialogComponent>,
-    ) {}
 
     close() {
         this.dialogRef.close();

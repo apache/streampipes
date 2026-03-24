@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ViewEncapsulation,
+    inject,
+} from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AbstractControl,
@@ -55,6 +61,11 @@ import { MatDivider } from '@angular/material/divider';
     ],
 })
 export class ChangeEmailDialogComponent implements OnInit {
+    private dialogRef =
+        inject<DialogRef<ChangeEmailDialogComponent>>(DialogRef);
+    private fb = inject(UntypedFormBuilder);
+    private userService = inject(UserService);
+
     parentForm: UntypedFormGroup;
 
     @Input()
@@ -69,12 +80,6 @@ export class ChangeEmailDialogComponent implements OnInit {
     operationApplied = false;
     error = false;
     errorMessage = '';
-
-    constructor(
-        private dialogRef: DialogRef<ChangeEmailDialogComponent>,
-        private fb: UntypedFormBuilder,
-        private userService: UserService,
-    ) {}
 
     ngOnInit(): void {
         this.clonedUser = UserAccount.fromData(this.user);

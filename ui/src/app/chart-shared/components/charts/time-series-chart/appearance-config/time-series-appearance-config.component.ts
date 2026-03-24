@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { TimeSeriesAppearanceConfig } from '../../../../models/dataview-dashboard.model';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -33,12 +33,10 @@ import { SpDataZoomConfigComponent } from '../../../chart-config/data-zoom-confi
     ],
 })
 export class SpTimeSeriesAppearanceConfigComponent {
+    private widgetConfigurationService = inject(ChartConfigurationService);
+
     @Input()
     appearanceConfig: TimeSeriesAppearanceConfig;
-
-    constructor(
-        private widgetConfigurationService: ChartConfigurationService,
-    ) {}
 
     triggerViewUpdate() {
         this.widgetConfigurationService.notify({

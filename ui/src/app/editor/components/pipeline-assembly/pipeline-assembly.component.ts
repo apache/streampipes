@@ -16,7 +16,13 @@
  *
  */
 
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    Input,
+    ViewChild,
+    inject,
+} from '@angular/core';
 import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../services/pipeline-positioning.service';
 import { PipelineValidationService } from '../../services/pipeline-validation.service';
@@ -57,6 +63,16 @@ import { FlexDirective } from '@ngbracket/ngx-layout/flex';
     ],
 })
 export class PipelineAssemblyComponent implements AfterViewInit {
+    private jsPlumbFactoryService = inject(JsplumbFactoryService);
+    private pipelinePositioningService = inject(PipelinePositioningService);
+    private objectProvider = inject(ObjectProvider);
+    editorService = inject(EditorService);
+    pipelineValidationService = inject(PipelineValidationService);
+    private dialogService = inject(DialogService);
+    private router = inject(Router);
+    private jsplumbService = inject(JsplumbService);
+    private translateService = inject(TranslateService);
+
     @Input()
     rawPipelineModel: PipelineElementConfig[];
 
@@ -81,18 +97,6 @@ export class PipelineAssemblyComponent implements AfterViewInit {
     assemblyOptionsComponent: PipelineAssemblyOptionsComponent;
     @ViewChild('drawingAreaComponent')
     drawingAreaComponent: PipelineAssemblyDrawingAreaComponent;
-
-    constructor(
-        private jsPlumbFactoryService: JsplumbFactoryService,
-        private pipelinePositioningService: PipelinePositioningService,
-        private objectProvider: ObjectProvider,
-        public editorService: EditorService,
-        public pipelineValidationService: PipelineValidationService,
-        private dialogService: DialogService,
-        private router: Router,
-        private jsplumbService: JsplumbService,
-        private translateService: TranslateService,
-    ) {}
 
     ngAfterViewInit() {
         this.jsplumbBridge = this.jsPlumbFactoryService.getJsplumbBridge(

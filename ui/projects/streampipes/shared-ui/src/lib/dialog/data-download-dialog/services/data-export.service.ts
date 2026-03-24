@@ -16,7 +16,7 @@
  *
  */
 
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, inject } from '@angular/core';
 import { ExportConfig } from '../model/export-config.model';
 import {
     DatalakeQueryParameters,
@@ -32,14 +32,12 @@ import { FileNameService } from './file-name.service';
     providedIn: 'root',
 })
 export class DataExportService {
+    dataLakeRestService = inject(DatalakeRestService);
+    dataViewQueryGeneratorService = inject(DataViewQueryGeneratorService);
+    fileNameService = inject(FileNameService);
+
     public updateDownloadProgress: EventEmitter<DownloadProgress> =
         new EventEmitter();
-
-    constructor(
-        public dataLakeRestService: DatalakeRestService,
-        public dataViewQueryGeneratorService: DataViewQueryGeneratorService,
-        public fileNameService: FileNameService,
-    ) {}
 
     public downloadData(
         exportConfig: ExportConfig,

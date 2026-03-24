@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
     SpBasicViewComponent,
     SpBreadcrumbService,
@@ -48,9 +48,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class ProfileComponent implements OnInit {
-    selectedIndex = 0;
+    private breadcrumbService = inject(SpBreadcrumbService);
 
-    constructor(private breadcrumbService: SpBreadcrumbService) {}
+    selectedIndex = 0;
 
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb([{ label: 'Profile' }]);

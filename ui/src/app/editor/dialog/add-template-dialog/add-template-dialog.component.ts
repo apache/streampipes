@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
     CompactPipelineTemplate,
     PipelineTemplateGenerationRequest,
@@ -47,12 +47,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class AddTemplateDialogComponent implements OnInit {
-    pipelineTemplates: CompactPipelineTemplate[] = [];
+    private pipelineTemplateService = inject(PipelineTemplateService);
+    private dialogRef =
+        inject<DialogRef<AddTemplateDialogComponent>>(DialogRef);
 
-    constructor(
-        private pipelineTemplateService: PipelineTemplateService,
-        private dialogRef: DialogRef<AddTemplateDialogComponent>,
-    ) {}
+    pipelineTemplates: CompactPipelineTemplate[] = [];
 
     ngOnInit() {
         this.pipelineTemplateService

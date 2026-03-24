@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import {
     InvocablePipelineElementUnion,
@@ -94,6 +95,17 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class CustomizeComponent implements OnInit, AfterViewInit {
+    private dialogRef = inject<DialogRef<CustomizeComponent>>(DialogRef);
+    private jsPlumbService = inject(JsplumbService);
+    private shepherdService = inject(ShepherdService);
+    private fb = inject(UntypedFormBuilder);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private pipelineElementTemplateService = inject(
+        PipelineElementTemplateService,
+    );
+    private pipelineStyleService = inject(PipelineStyleService);
+    private staticPropertyUtils = inject(StaticPropertyUtilService);
+
     @Input()
     pipelineElement: PipelineElementConfig;
 
@@ -121,17 +133,6 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
     template: PipelineElementTemplate;
     templateConfigs: Map<string, any>[] = [];
     completedConfigurations: ConfigurationInfo[] = [];
-
-    constructor(
-        private dialogRef: DialogRef<CustomizeComponent>,
-        private jsPlumbService: JsplumbService,
-        private shepherdService: ShepherdService,
-        private fb: UntypedFormBuilder,
-        private changeDetectorRef: ChangeDetectorRef,
-        private pipelineElementTemplateService: PipelineElementTemplateService,
-        private pipelineStyleService: PipelineStyleService,
-        private staticPropertyUtils: StaticPropertyUtilService,
-    ) {}
 
     ngOnInit(): void {
         this.originalDialogWidth = this.dialogRef.currentConfig().width;

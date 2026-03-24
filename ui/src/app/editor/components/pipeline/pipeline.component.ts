@@ -30,6 +30,7 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    inject,
 } from '@angular/core';
 import {
     InvocablePipelineElementUnion,
@@ -94,6 +95,19 @@ import { EnabledPipelineElementFilter } from '../../filter/enabled-pipeline-elem
     ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
+    private jsplumbService = inject(JsplumbService);
+    private pipelineEditorService = inject(PipelineEditorService);
+    private jsplumbFactoryService = inject(JsplumbFactoryService);
+    private objectProvider = inject(ObjectProvider);
+    private editorService = inject(EditorService);
+    private idGeneratorService = inject(IdGeneratorService);
+    private shepherdService = inject(ShepherdService);
+    private pipelineStyleService = inject(PipelineStyleService);
+    private pipelineValidationService = inject(PipelineValidationService);
+    private dialogService = inject(DialogService);
+    private dialog = inject(MatDialog);
+    private ngZone = inject(NgZone);
+
     @Input()
     pipelineValid: boolean;
 
@@ -133,20 +147,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
     shouldOpenCustomizeSettings = false;
 
-    constructor(
-        private jsplumbService: JsplumbService,
-        private pipelineEditorService: PipelineEditorService,
-        private jsplumbFactoryService: JsplumbFactoryService,
-        private objectProvider: ObjectProvider,
-        private editorService: EditorService,
-        private idGeneratorService: IdGeneratorService,
-        private shepherdService: ShepherdService,
-        private pipelineStyleService: PipelineStyleService,
-        private pipelineValidationService: PipelineValidationService,
-        private dialogService: DialogService,
-        private dialog: MatDialog,
-        private ngZone: NgZone,
-    ) {
+    constructor() {
         this.currentPipelineModel = new Pipeline();
         this.idCounter = 0;
 

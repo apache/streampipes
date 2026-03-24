@@ -24,14 +24,12 @@ import {
 } from '@streampipes/platform-services';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class RuntimeResolvableService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     fetchRemoteOptionsForAdapter(
         resolvableOptionsParameterRequest: RuntimeOptionsRequest,

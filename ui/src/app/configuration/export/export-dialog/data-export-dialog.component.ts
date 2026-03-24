@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
 import { ExportConfiguration } from '@streampipes/platform-services';
@@ -48,16 +48,15 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class SpDataExportDialogComponent implements OnInit {
+    private dialogRef =
+        inject<DialogRef<SpDataExportDialogComponent>>(DialogRef);
+    private dataExportService = inject(DataExportService);
+
     @Input()
     selectedAssets: string[];
 
     preview: ExportConfiguration;
     exportInProgress = false;
-
-    constructor(
-        private dialogRef: DialogRef<SpDataExportDialogComponent>,
-        private dataExportService: DataExportService,
-    ) {}
 
     ngOnInit(): void {
         this.dataExportService

@@ -57,6 +57,8 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     ],
 })
 export class AddToCollectionComponent {
+    private staticPropertyUtil = inject(StaticPropertyUtilService);
+
     translateService = inject(TranslateService);
 
     @Input()
@@ -74,8 +76,6 @@ export class AddToCollectionComponent {
 
     public hasError = false;
     public errorMessage = this.translateService.instant('This is a test');
-
-    constructor(private staticPropertyUtil: StaticPropertyUtilService) {}
 
     add() {
         const clone = this.staticPropertyUtil.clone(

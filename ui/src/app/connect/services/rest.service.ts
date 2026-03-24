@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 
@@ -34,10 +34,8 @@ import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({ providedIn: 'root' })
 export class RestService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     get connectPath() {
         return this.platformServicesCommons.apiBasePath + '/connect';

@@ -16,14 +16,13 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { BaseRuntimeResolvableInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-input';
 import {
     RuntimeResolvableTreeInputStaticProperty,
     StaticPropertyUnion,
     TreeInputNode,
 } from '@streampipes/platform-services';
-import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -64,6 +63,10 @@ export class StaticRuntimeResolvableTreeInputComponent
     extends BaseRuntimeResolvableInput<RuntimeResolvableTreeInputStaticProperty>
     implements OnInit
 {
+    private staticTreeInputServiceService = inject(
+        StaticTreeInputServiceService,
+    );
+
     nodeDetails: TreeInputNode;
 
     editorMode: 'tree' | 'text' = 'tree';
@@ -76,13 +79,6 @@ export class StaticRuntimeResolvableTreeInputComponent
 
     @ViewChild('staticTreeInputBrowseNodesComponent')
     private staticTreeInputBrowseNodesComponent: StaticTreeInputBrowseNodesComponent;
-
-    constructor(
-        runtimeResolvableService: RuntimeResolvableService,
-        private staticTreeInputServiceService: StaticTreeInputServiceService,
-    ) {
-        super(runtimeResolvableService);
-    }
 
     ngOnInit(): void {
         // if a node is selected it is assumed the adapter was opened in edit mode
