@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import {
     AssetManagementService,
     SpAssetModel,
@@ -52,12 +52,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class SpCreateAssetDialogComponent {
-    @Input() assetModel: SpAssetModel;
+    private dialogRef =
+        inject<DialogRef<SpCreateAssetDialogComponent>>(DialogRef);
+    private assetManagementService = inject(AssetManagementService);
 
-    constructor(
-        private dialogRef: DialogRef<SpCreateAssetDialogComponent>,
-        private assetManagementService: AssetManagementService,
-    ) {}
+    @Input() assetModel: SpAssetModel;
 
     onCancel(): void {
         this.dialogRef.close();

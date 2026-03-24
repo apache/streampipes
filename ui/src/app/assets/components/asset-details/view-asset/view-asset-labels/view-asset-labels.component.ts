@@ -22,6 +22,7 @@ import {
     OnChanges,
     OnInit,
     SimpleChanges,
+    inject,
 } from '@angular/core';
 import {
     LabelsService,
@@ -48,6 +49,8 @@ import { SpLabelComponent } from '@streampipes/shared-ui';
     ],
 })
 export class ViewAssetLabelsComponent implements OnInit, OnChanges {
+    private labelsService = inject(LabelsService);
+
     @Input()
     asset: SpAsset;
 
@@ -56,8 +59,6 @@ export class ViewAssetLabelsComponent implements OnInit, OnChanges {
 
     allLabels: SpLabel[] = [];
     assignedLabels: SpLabel[] = [];
-
-    constructor(private labelsService: LabelsService) {}
 
     ngOnInit() {
         this.labelsService.getAllLabels().subscribe(res => {

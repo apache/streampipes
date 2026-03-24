@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     LocationConfig,
     LocationConfigService,
@@ -40,6 +40,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class AssetLocationComponent implements OnInit {
+    private locationConfigService = inject(LocationConfigService);
+
     @Input()
     asset: SpAsset;
 
@@ -47,8 +49,6 @@ export class AssetLocationComponent implements OnInit {
     editMode: boolean;
 
     locationConfig: LocationConfig;
-
-    constructor(private locationConfigService: LocationConfigService) {}
 
     ngOnInit() {
         this.asset.assetSite.location ??= {

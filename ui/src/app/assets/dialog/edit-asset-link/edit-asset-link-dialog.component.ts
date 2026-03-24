@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { DialogRef, FormFieldComponent } from '@streampipes/shared-ui';
 import {
     AdapterService,
@@ -65,6 +65,17 @@ export class EditAssetLinkDialogComponent
     extends BaseAssetLinksDirective
     implements OnInit
 {
+    private dialogRef =
+        inject<DialogRef<EditAssetLinkDialogComponent>>(DialogRef);
+    protected genericStorageService: GenericStorageService;
+    protected pipelineService: PipelineService;
+    protected chartService: ChartService;
+    protected dashboardService: DashboardService;
+    protected dataLakeService: DatalakeRestService;
+    protected pipelineElementService: PipelineElementService;
+    protected adapterService: AdapterService;
+    protected filesService: FilesService;
+
     @Input()
     assetLink: AssetLink;
 
@@ -82,17 +93,16 @@ export class EditAssetLinkDialogComponent
 
     selectedLinkType: AssetLinkType;
 
-    constructor(
-        private dialogRef: DialogRef<EditAssetLinkDialogComponent>,
-        protected genericStorageService: GenericStorageService,
-        protected pipelineService: PipelineService,
-        protected chartService: ChartService,
-        protected dashboardService: DashboardService,
-        protected dataLakeService: DatalakeRestService,
-        protected pipelineElementService: PipelineElementService,
-        protected adapterService: AdapterService,
-        protected filesService: FilesService,
-    ) {
+    constructor() {
+        const genericStorageService = inject(GenericStorageService);
+        const pipelineService = inject(PipelineService);
+        const chartService = inject(ChartService);
+        const dashboardService = inject(DashboardService);
+        const dataLakeService = inject(DatalakeRestService);
+        const pipelineElementService = inject(PipelineElementService);
+        const adapterService = inject(AdapterService);
+        const filesService = inject(FilesService);
+
         super(
             genericStorageService,
             pipelineService,
@@ -103,6 +113,15 @@ export class EditAssetLinkDialogComponent
             adapterService,
             filesService,
         );
+
+        this.genericStorageService = genericStorageService;
+        this.pipelineService = pipelineService;
+        this.chartService = chartService;
+        this.dashboardService = dashboardService;
+        this.dataLakeService = dataLakeService;
+        this.pipelineElementService = pipelineElementService;
+        this.adapterService = adapterService;
+        this.filesService = filesService;
     }
 
     ngOnInit(): void {
