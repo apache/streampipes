@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -61,13 +61,13 @@ export class SpAdapterDetailsLogsComponent
 {
     adapterLogs: SpLogEntry[];
 
-    constructor(
-        currentUserService: CurrentUserService,
-        activatedRoute: ActivatedRoute,
-        adapterService: AdapterService,
-        adapterMonitoringService: AdapterMonitoringService,
-        breadcrumbService: SpBreadcrumbService,
-    ) {
+    constructor() {
+        const currentUserService = inject(CurrentUserService);
+        const activatedRoute = inject(ActivatedRoute);
+        const adapterService = inject(AdapterService);
+        const adapterMonitoringService = inject(AdapterMonitoringService);
+        const breadcrumbService = inject(SpBreadcrumbService);
+
         super(
             currentUserService,
             activatedRoute,

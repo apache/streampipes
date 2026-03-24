@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
@@ -33,15 +33,13 @@ import { AdapterConfigurationComponent } from '../adapter-configuration/adapter-
     imports: [AdapterConfigurationComponent],
 })
 export class CreateAdapterComponent implements OnInit {
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private adapterService = inject(AdapterService);
+    private route = inject(ActivatedRoute);
+
     initialized = false;
     adapterTypeName = '';
     adapter: AdapterDescription = undefined;
-
-    constructor(
-        private breadcrumbService: SpBreadcrumbService,
-        private adapterService: AdapterService,
-        private route: ActivatedRoute,
-    ) {}
 
     ngOnInit(): void {
         this.adapterService.getAdapterDescriptions().subscribe(adapters => {

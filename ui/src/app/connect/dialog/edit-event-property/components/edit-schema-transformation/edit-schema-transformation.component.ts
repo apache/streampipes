@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import {
     debounceTime,
     distinctUntilChanged,
@@ -78,6 +85,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class EditSchemaTransformationComponent implements OnInit {
+    private semanticTypesRestService = inject(SemanticTypesRestService);
+    private shepherdService = inject(ShepherdService);
+    private router = inject(Router);
+
     @Input()
     cachedProperty: EventProperty;
 
@@ -92,12 +103,6 @@ export class EditSchemaTransformationComponent implements OnInit {
     semanticTypes: Observable<string[]>;
 
     adapterIsInEditMode: boolean;
-
-    constructor(
-        private semanticTypesRestService: SemanticTypesRestService,
-        private shepherdService: ShepherdService,
-        private router: Router,
-    ) {}
 
     ngOnInit(): void {
         this.semanticTypes = this.domainPropertyControl.valueChanges.pipe(

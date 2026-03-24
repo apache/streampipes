@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -43,6 +43,8 @@ import { StaticPropertyComponent } from '../../../../../core-ui/static-propertie
     ],
 })
 export class ConfigurationGroupComponent implements OnInit {
+    private staticPropertyUtils = inject(StaticPropertyUtilService);
+
     @Input() configurationGroup: UntypedFormGroup;
 
     @Input() adapterId: string;
@@ -52,8 +54,6 @@ export class ConfigurationGroupComponent implements OnInit {
     @Input() deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     completedConfigurations: ConfigurationInfo[] = [];
-
-    constructor(private staticPropertyUtils: StaticPropertyUtilService) {}
 
     ngOnInit() {
         this.completedConfigurations =

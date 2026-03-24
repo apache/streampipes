@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import {
     DialogRef,
     PipelineElementDocumentationComponent,
@@ -30,10 +30,9 @@ import { MatButton } from '@angular/material/button';
     imports: [PipelineElementDocumentationComponent, MatDivider, MatButton],
 })
 export class SpAdapterDocumentationDialogComponent {
+    dialogRef =
+        inject<DialogRef<SpAdapterDocumentationDialogComponent>>(DialogRef);
+
     @Input()
     appId: string;
-
-    constructor(
-        public dialogRef: DialogRef<SpAdapterDocumentationDialogComponent>,
-    ) {}
 }
