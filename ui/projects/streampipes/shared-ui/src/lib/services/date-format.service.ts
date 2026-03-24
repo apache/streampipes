@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DateFormatService {
-    constructor(private translateService: TranslateService) {}
+    private translateService = inject(TranslateService);
 
     formatDate(timestamp?: number): string {
         if (!timestamp) {
