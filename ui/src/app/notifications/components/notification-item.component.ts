@@ -15,7 +15,7 @@
  *   limitations under the License.
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { NotificationItem } from '../model/notifications.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
@@ -27,10 +27,10 @@ import { DatePipe } from '@angular/common';
     imports: [DatePipe],
 })
 export class NotificationItemComponent implements OnInit {
+    private domSanitizer = inject(DomSanitizer);
+
     @Input() notification: NotificationItem;
     sanitizedMessage;
-
-    constructor(private domSanitizer: DomSanitizer) {}
 
     ngOnInit(): void {
         this.sanitizedMessage = this.domSanitizer.bypassSecurityTrustHtml(

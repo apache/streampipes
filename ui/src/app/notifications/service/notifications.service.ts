@@ -21,7 +21,7 @@ import {
     ExistingNotification,
     NotificationItem,
 } from '../model/notifications.model';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { NotificationUtils } from '../utils/notifications.utils';
 import { map } from 'rxjs/operators';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
@@ -29,10 +29,8 @@ import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationsService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     getNotificationsFromTime(
         startTime: number,
