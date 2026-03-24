@@ -28,6 +28,16 @@ export interface GaugeVisConfig extends DataExplorerVisConfig {
     min: number;
     max: number;
     displayName: string;
+    startAngle: number;
+    endAngle: number;
+    splitNumber: number;
+    showPointer: boolean;
+    enableThresholdColors: boolean;
+    thresholdLow?: number;
+    thresholdHigh?: number;
+    thresholdColorLow?: string;
+    thresholdColorMedium?: string;
+    thresholdColorHigh?: string;
 }
 
 export interface GaugeWidgetModel extends DataExplorerWidgetModel {

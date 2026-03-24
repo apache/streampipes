@@ -20,7 +20,10 @@ import { EChartsOption, PieSeriesOption } from 'echarts';
 import type { DataTransformOption } from 'echarts/types/src/data/helper/transform.d.ts';
 import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base-single-field-echarts-renderer';
 import { inject, Injectable } from '@angular/core';
-import { PieChartWidgetModel } from './model/pie-chart-widget.model';
+import {
+    PieChartVisConfig,
+    PieChartWidgetModel,
+} from './model/pie-chart-widget.model';
 import { FieldUpdateInfo } from '../../../models/field-update.model';
 import { ZRColor } from 'echarts/types/dist/shared';
 import { ColorMappingService } from '../../../services/color-mapping.service';
@@ -35,16 +38,29 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
     addDatasetTransform(
         widgetConfig: PieChartWidgetModel,
     ): DataTransformOption {
-        const field =
-            widgetConfig.visualizationConfig.selectedProperty.fullDbName;
+        const config = this.getSafeConfig(widgetConfig);
+        const field = config.selectedProperty.fullDbName;
+        const topNEnabled = config.topNEnabled;
+        if (!topNEnabled) {
+            return {
+                type: 'ecSimpleTransform:aggregate',
+                config: {
+                    resultDimensions: [
+                        { name: 'name', from: field },
+                        { name: 'value', from: 'time', method: 'count' },
+                    ],
+                    groupBy: field,
+                },
+            };
+        }
+
         return {
-            type: 'ecSimpleTransform:aggregate',
+            type: 'sp:pie-aggregate',
             config: {
-                resultDimensions: [
-                    { name: 'name', from: field },
-                    { name: 'value', from: 'time', method: 'count' },
-                ],
-                groupBy: field,
+                field,
+                topNEnabled,
+                topN: config.topN,
+                othersLabel: config.othersLabel,
             },
         };
     }
@@ -63,17 +79,15 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
         option: EChartsOption,
         widgetConfig: PieChartWidgetModel,
     ): void {
-        if (
-            widgetConfig.visualizationConfig.selectedProperty
-                .fieldCharacteristics.binary
-        ) {
+        const config = this.getSafeConfig(widgetConfig);
+        if (config.selectedProperty.fieldCharacteristics.binary) {
             option.legend = { show: false };
         } else {
             option.legend = {
                 type: 'scroll',
                 formatter: name => {
                     return (
-                        widgetConfig.visualizationConfig.colorMappingsPieChart.find(
+                        config.colorMappingsPieChart.find(
                             c => String(c.value) === name,
                         )?.label || name
                     );
@@ -88,48 +102,69 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
         datasetIndex: number,
         widgetConfig: PieChartWidgetModel,
     ): PieSeriesOption {
-        const innerRadius = widgetConfig.visualizationConfig.selectedRadius;
-        const colorMapping =
-            widgetConfig.visualizationConfig.colorMappingsPieChart;
+        const config = this.getSafeConfig(widgetConfig);
+        const innerRadius = config.selectedRadius;
+        const colorMapping = config.colorMappingsPieChart;
         const decimals = this.getDecimals(widgetConfig);
+        const labelMode = config.labelMode;
+        const labelPosition = config.labelPosition;
+        const labelAlignTo = config.labelAlignTo;
+        const isOutsideLabel = labelPosition === 'outside';
+        const outerRadius = isOutsideLabel ? '78%' : '90%';
 
         return {
             name,
             type: 'pie',
             universalTransition: true,
             datasetIndex: datasetIndex,
+            startAngle: config.startAngle,
+            clockwise: config.clockwise,
+            minAngle: config.minAngle,
+            avoidLabelOverlap: config.avoidLabelOverlap,
             tooltip: {
                 formatter: params => {
                     const mappedLabel =
                         colorMapping.find(
                             c => c.value === params.value[0]?.toString(),
                         )?.label || params.value[0];
-                    const formattedValue = this.formatNumber(
+                    return `${params.marker} ${this.formatPieText(
+                        mappedLabel,
                         params.value[1],
+                        params.percent,
+                        labelMode,
                         decimals,
-                    );
-                    const formattedPercent =
-                        typeof params.percent === 'number'
-                            ? this.formatNumber(params.percent, decimals)
-                            : params.percent;
-                    return `${params.marker} ${mappedLabel} <b>${formattedValue}</b> (${formattedPercent}%)`;
+                        true,
+                    )}`;
                 },
             },
             label: {
+                position: labelPosition,
+                alignTo: isOutsideLabel ? labelAlignTo : undefined,
+                edgeDistance:
+                    isOutsideLabel && labelAlignTo === 'edge' ? 8 : undefined,
+                bleedMargin: isOutsideLabel ? 4 : undefined,
+                overflow: 'truncate',
                 formatter: params => {
                     const mappedLabel =
                         colorMapping.find(
                             c => c.value === params.value[0]?.toString(),
                         )?.label || params.value[0];
-                    const formattedPercent =
-                        typeof params.percent === 'number'
-                            ? this.formatNumber(params.percent, decimals)
-                            : params.percent;
-                    return `${mappedLabel} (${formattedPercent}%)`;
+                    return this.formatPieText(
+                        mappedLabel,
+                        params.value[1],
+                        params.percent,
+                        labelMode,
+                        decimals,
+                    );
                 },
             },
+            labelLine: {
+                show: config.showLabelLine && labelPosition === 'outside',
+                length: 8,
+                length2: 8,
+            },
             encode: { itemName: 'name', value: 'value' },
-            radius: [innerRadius + '%', '90%'],
+            radius: [innerRadius + '%', outerRadius],
             itemStyle: {
                 color: params => {
                     const category = params.data[0];
@@ -142,6 +177,37 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
                 },
             },
         };
+    }
+
+    private formatPieText(
+        mappedLabel: string,
+        rawValue: unknown,
+        rawPercent: unknown,
+        labelMode: PieChartWidgetModel['visualizationConfig']['labelMode'],
+        decimals: number,
+        boldValue = false,
+    ): string {
+        const value = this.formatNumber(rawValue, decimals);
+        const valueText = boldValue ? `<b>${value}</b>` : value;
+        const percent =
+            typeof rawPercent === 'number'
+                ? this.formatNumber(rawPercent, decimals)
+                : String(rawPercent ?? '');
+        const percentText = `${percent}%`;
+
+        if (labelMode === 'name') {
+            return mappedLabel;
+        } else if (labelMode === 'value') {
+            return valueText;
+        } else if (labelMode === 'percent') {
+            return percentText;
+        } else if (labelMode === 'name_value') {
+            return `${mappedLabel}: ${valueText}`;
+        } else if (labelMode === 'name_value_percent') {
+            return `${mappedLabel}: ${valueText} (${percentText})`;
+        } else {
+            return `${mappedLabel} (${percentText})`;
+        }
     }
 
     initialTransforms(
@@ -179,7 +245,43 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
     }
 
     getDefaultSeriesName(widgetConfig: PieChartWidgetModel): string {
-        return widgetConfig.visualizationConfig.selectedProperty.fullDbName;
+        return this.getSafeConfig(widgetConfig).selectedProperty.fullDbName;
+    }
+
+    private getSafeConfig(
+        widgetConfig: PieChartWidgetModel,
+    ): PieChartVisConfig {
+        const config = widgetConfig.visualizationConfig;
+        return {
+            ...config,
+            startAngle: Number.isFinite(config.startAngle)
+                ? config.startAngle
+                : 90,
+            clockwise:
+                typeof config.clockwise === 'boolean' ? config.clockwise : true,
+            minAngle: Number.isFinite(config.minAngle) ? config.minAngle : 0,
+            labelMode: config.labelMode || 'name_percent',
+            labelPosition: config.labelPosition || 'outside',
+            labelAlignTo: config.labelAlignTo || 'edge',
+            avoidLabelOverlap:
+                typeof config.avoidLabelOverlap === 'boolean'
+                    ? config.avoidLabelOverlap
+                    : true,
+            showLabelLine:
+                typeof config.showLabelLine === 'boolean'
+                    ? config.showLabelLine
+                    : true,
+            topNEnabled: !!config.topNEnabled,
+            topN:
+                Number.isFinite(config.topN) && config.topN > 0
+                    ? Math.round(config.topN)
+                    : 10,
+            othersLabel: config.othersLabel || 'Others',
+            colorMappingsPieChart: config.colorMappingsPieChart || [],
+            selectedRadius: Number.isFinite(config.selectedRadius)
+                ? config.selectedRadius
+                : 0,
+        };
     }
 
     private applySinglePieResponsiveLayout(option: EChartsOption): void {
