@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { TableVisConfig, TableWidgetModel } from '../model/table-widget.model';
@@ -80,10 +80,10 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         '#9333EA',
     ];
 
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
+    constructor() {
+        const widgetConfigurationService = inject(ChartConfigurationService);
+        const fieldService = inject(ChartFieldProviderService);
+
         super(widgetConfigurationService, fieldService);
     }
 

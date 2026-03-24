@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
@@ -53,10 +53,10 @@ export class GaugeWidgetConfigComponent extends BaseWidgetConfig<
     GaugeWidgetModel,
     GaugeVisConfig
 > {
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
+    constructor() {
+        const widgetConfigurationService = inject(ChartConfigurationService);
+        const fieldService = inject(ChartFieldProviderService);
+
         super(widgetConfigurationService, fieldService);
     }
 

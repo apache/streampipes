@@ -24,6 +24,7 @@ import {
     OnInit,
     Output,
     SimpleChanges,
+    inject,
 } from '@angular/core';
 import { ColorMappingService } from '../../../services/color-mapping.service';
 import { DataExplorerField } from '@streampipes/platform-services';
@@ -67,6 +68,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
+    private colorMappingService = inject(ColorMappingService);
+
     @Input() colorMapping: { value: string; label: string; color: string }[];
 
     @Input() selectedProperty: DataExplorerField;
@@ -85,8 +88,6 @@ export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
 
     protected isSelectedPropertyBoolean: boolean;
     private wasPreviousFieldBoolean: boolean;
-
-    constructor(private colorMappingService: ColorMappingService) {}
 
     ngOnInit(): void {
         this.isSelectedPropertyBoolean = this.isBooleanPropertySelected();

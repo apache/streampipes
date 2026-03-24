@@ -61,10 +61,10 @@ export class TrafficLightWidgetConfigComponent extends BaseWidgetConfig<
     TrafficLightVisConfig
 > {
     translateService: TranslateService = inject(TranslateService);
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
+    constructor() {
+        const widgetConfigurationService = inject(ChartConfigurationService);
+        const fieldService = inject(ChartFieldProviderService);
+
         super(widgetConfigurationService, fieldService);
     }
     warningRangeInterval: string;

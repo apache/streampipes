@@ -17,7 +17,13 @@
  */
 
 import { DatePipe, NgClass, NgStyle } from '@angular/common';
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    HostListener,
+    ViewChild,
+    inject,
+} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -102,6 +108,8 @@ const TIMESTAMP_MASK = 'yyyy-mm-dd HH:mm:ss.SSS';
     ],
 })
 export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableWidgetModel> {
+    private elRef = inject(ElementRef);
+
     private static readonly DEFAULT_PAGE_SIZE = 20;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -128,10 +136,6 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     selectedAdvancedType = '';
     dropdownStyle: Record<string, string> = {};
     filterListScrollEnd = true;
-
-    constructor(private elRef: ElementRef) {
-        super();
-    }
 
     @HostListener('document:click', ['$event'])
     onDocumentClick(event: MouseEvent): void {

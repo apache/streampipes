@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     TimeSeriesChartVisConfig,
@@ -50,10 +50,10 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
     TimeSeriesChartWidgetModel,
     TimeSeriesChartVisConfig
 > {
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
+    constructor() {
+        const widgetConfigurationService = inject(ChartConfigurationService);
+        const fieldService = inject(ChartFieldProviderService);
+
         super(widgetConfigurationService, fieldService);
     }
 
