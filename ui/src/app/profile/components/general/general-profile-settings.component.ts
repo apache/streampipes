@@ -17,12 +17,8 @@
  */
 
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { ProfileService } from '../../profile.service';
 import { BasicProfileSettings } from '../basic-profile-settings';
-import { AppConstants } from '../../../services/app.constants';
-import { AuthService } from '../../../services/auth.service';
 import {
-    CurrentUserService,
     DialogRef,
     DialogService,
     FormFieldComponent,
@@ -86,15 +82,6 @@ export class GeneralProfileSettingsComponent
         { label: 'Deutsch', id: 'de' },
         { label: 'Polski', id: 'pl' },
     ];
-
-    constructor() {
-        const authService = inject(AuthService);
-        const profileService = inject(ProfileService);
-        const appConstants = inject(AppConstants);
-        const currentUserService = inject(CurrentUserService);
-
-        super(profileService, appConstants, currentUserService, authService);
-    }
 
     ngOnInit(): void {
         this.currentUserService.darkMode$.subscribe(

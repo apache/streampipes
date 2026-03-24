@@ -16,20 +16,12 @@
  *
  */
 
-import { Injectable, inject } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { Injectable } from '@angular/core';
+import { UrlTree } from '@angular/router';
 import { BaseConfiguredCanActivateGuard } from './base-configured.can-activate.guard';
 
 @Injectable({ providedIn: 'root' })
 export class ConfiguredCanActivateGuard extends BaseConfiguredCanActivateGuard {
-    constructor() {
-        const router = inject(Router);
-        const authService = inject(AuthService);
-
-        super(router, authService);
-    }
-
     onIsConfigured(): boolean | UrlTree {
         return true;
     }

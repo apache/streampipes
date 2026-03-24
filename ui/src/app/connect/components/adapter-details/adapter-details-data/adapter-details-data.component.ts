@@ -19,16 +19,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import {
-    CurrentUserService,
     PipelineElementRuntimeInfoComponent,
     SpBasicHeaderTitleComponent,
     SpBasicNavTabsComponent,
-    SpBreadcrumbService,
 } from '@streampipes/shared-ui';
-import { ActivatedRoute } from '@angular/router';
 import {
-    AdapterMonitoringService,
-    AdapterService,
     PipelineElementService,
     SpDataStream,
 } from '@streampipes/platform-services';
@@ -60,22 +55,6 @@ export class AdapterDetailsDataComponent
     private pipelineElementService = inject(PipelineElementService);
 
     stream: SpDataStream;
-
-    constructor() {
-        const currentUserService = inject(CurrentUserService);
-        const activatedRoute = inject(ActivatedRoute);
-        const adapterService = inject(AdapterService);
-        const adapterMonitoringService = inject(AdapterMonitoringService);
-        const breadcrumbService = inject(SpBreadcrumbService);
-
-        super(
-            currentUserService,
-            activatedRoute,
-            adapterService,
-            adapterMonitoringService,
-            breadcrumbService,
-        );
-    }
 
     ngOnInit(): void {
         super.onInit();

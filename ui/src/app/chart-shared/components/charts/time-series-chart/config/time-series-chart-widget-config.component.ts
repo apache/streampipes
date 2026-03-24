@@ -16,15 +16,13 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     TimeSeriesChartVisConfig,
     TimeSeriesChartWidgetModel,
 } from '../model/time-series-chart-widget.model';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
 import { SelectColorPropertiesConfigComponent } from '../../../chart-config/select-color-properties-config/select-color-properties-config.component';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
@@ -50,13 +48,6 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
     TimeSeriesChartWidgetModel,
     TimeSeriesChartVisConfig
 > {
-    constructor() {
-        const widgetConfigurationService = inject(ChartConfigurationService);
-        const fieldService = inject(ChartFieldProviderService);
-
-        super(widgetConfigurationService, fieldService);
-    }
-
     presetColors: string[] = [
         '#39B54A',
         '#1B1464',

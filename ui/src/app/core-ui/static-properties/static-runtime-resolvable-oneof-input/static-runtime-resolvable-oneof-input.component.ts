@@ -16,13 +16,12 @@
  *
  */
 
-import { Component, OnChanges, OnInit, inject } from '@angular/core';
+import { Component, OnChanges, OnInit } from '@angular/core';
 import {
     Option,
     RuntimeResolvableOneOfStaticProperty,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
-import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
 import {
     FormsModule,
@@ -56,12 +55,6 @@ export class StaticRuntimeResolvableOneOfInputComponent
     extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableOneOfStaticProperty>
     implements OnInit, OnChanges
 {
-    constructor() {
-        const runtimeResolvableService = inject(RuntimeResolvableService);
-
-        super(runtimeResolvableService);
-    }
-
     ngOnInit() {
         super.onInit();
         this.parentForm.addControl(

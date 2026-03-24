@@ -18,12 +18,10 @@
 
 import { Component, inject } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import {
     TrafficLightVisConfig,
     TrafficLightWidgetModel,
 } from '../model/traffic-light-widget.model';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
@@ -61,12 +59,6 @@ export class TrafficLightWidgetConfigComponent extends BaseWidgetConfig<
     TrafficLightVisConfig
 > {
     translateService: TranslateService = inject(TranslateService);
-    constructor() {
-        const widgetConfigurationService = inject(ChartConfigurationService);
-        const fieldService = inject(ChartFieldProviderService);
-
-        super(widgetConfigurationService, fieldService);
-    }
     warningRangeInterval: string;
 
     selectWarningRange(selectedWarningRange: string): void {

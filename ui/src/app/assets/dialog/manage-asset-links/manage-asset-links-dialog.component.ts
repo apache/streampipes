@@ -18,18 +18,7 @@
 
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { DialogRef, SplitSectionComponent } from '@streampipes/shared-ui';
-import {
-    AdapterService,
-    AssetLink,
-    AssetLinkType,
-    ChartService,
-    DashboardService,
-    DatalakeRestService,
-    FilesService,
-    GenericStorageService,
-    PipelineElementService,
-    PipelineService,
-} from '@streampipes/platform-services';
+import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
 import {
     FlexDirective,
@@ -76,28 +65,6 @@ export class SpManageAssetLinksDialogComponent
     filenameFunction = el => el.filename;
     measureNameFunction = el => el.measureName;
     widgetNameFunction = el => el.baseAppearanceConfig.widgetTitle;
-
-    constructor() {
-        const genericStorageService = inject(GenericStorageService);
-        const pipelineService = inject(PipelineService);
-        const chartService = inject(ChartService);
-        const dashboardService = inject(DashboardService);
-        const dataLakeService = inject(DatalakeRestService);
-        const pipelineElementService = inject(PipelineElementService);
-        const adapterService = inject(AdapterService);
-        const filesService = inject(FilesService);
-
-        super(
-            genericStorageService,
-            pipelineService,
-            chartService,
-            dashboardService,
-            dataLakeService,
-            pipelineElementService,
-            adapterService,
-            filesService,
-        );
-    }
 
     ngOnInit(): void {
         super.onInit();

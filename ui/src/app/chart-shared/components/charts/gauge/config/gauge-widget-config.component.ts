@@ -16,10 +16,8 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { GaugeVisConfig, GaugeWidgetModel } from '../model/gauge-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
@@ -53,13 +51,6 @@ export class GaugeWidgetConfigComponent extends BaseWidgetConfig<
     GaugeWidgetModel,
     GaugeVisConfig
 > {
-    constructor() {
-        const widgetConfigurationService = inject(ChartConfigurationService);
-        const fieldService = inject(ChartFieldProviderService);
-
-        super(widgetConfigurationService, fieldService);
-    }
-
     setSelectedProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
             field;

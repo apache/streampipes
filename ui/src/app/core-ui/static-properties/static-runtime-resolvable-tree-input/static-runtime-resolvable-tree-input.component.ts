@@ -23,7 +23,6 @@ import {
     StaticPropertyUnion,
     TreeInputNode,
 } from '@streampipes/platform-services';
-import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -80,12 +79,6 @@ export class StaticRuntimeResolvableTreeInputComponent
 
     @ViewChild('staticTreeInputBrowseNodesComponent')
     private staticTreeInputBrowseNodesComponent: StaticTreeInputBrowseNodesComponent;
-
-    constructor() {
-        const runtimeResolvableService = inject(RuntimeResolvableService);
-
-        super(runtimeResolvableService);
-    }
 
     ngOnInit(): void {
         // if a node is selected it is assumed the adapter was opened in edit mode
