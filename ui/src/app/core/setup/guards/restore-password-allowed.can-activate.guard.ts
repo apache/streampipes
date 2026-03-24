@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
     Router,
@@ -29,10 +29,8 @@ import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class RestorePasswordAllowedCanActivateGuard {
-    constructor(
-        private router: Router,
-        private loginService: LoginService,
-    ) {}
+    private router = inject(Router);
+    private loginService = inject(LoginService);
 
     canActivate(
         route: ActivatedRouteSnapshot,

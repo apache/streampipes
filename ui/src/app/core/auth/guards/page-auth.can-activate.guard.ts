@@ -25,11 +25,11 @@ import {
     RouterStateSnapshot,
 } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class PageAuthGuard implements CanActivate, CanActivateChild {
-    constructor(private authService: AuthService) {}
+    private authService = inject(AuthService);
 
     canActivate(
         route: ActivatedRouteSnapshot,
