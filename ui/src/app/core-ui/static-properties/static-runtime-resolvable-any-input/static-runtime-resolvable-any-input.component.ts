@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
     Option,
     RuntimeResolvableAnyStaticProperty,
@@ -60,7 +60,9 @@ export class StaticRuntimeResolvableAnyInputComponent
 {
     selectedOptions: Option[] = [];
 
-    constructor(runtimeResolvableService: RuntimeResolvableService) {
+    constructor() {
+        const runtimeResolvableService = inject(RuntimeResolvableService);
+
         super(runtimeResolvableService);
     }
 

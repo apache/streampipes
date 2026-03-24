@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, inject } from '@angular/core';
 import {
     Option,
     RuntimeResolvableOneOfStaticProperty,
@@ -56,7 +56,9 @@ export class StaticRuntimeResolvableOneOfInputComponent
     extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableOneOfStaticProperty>
     implements OnInit, OnChanges
 {
-    constructor(runtimeResolvableService: RuntimeResolvableService) {
+    constructor() {
+        const runtimeResolvableService = inject(RuntimeResolvableService);
+
         super(runtimeResolvableService);
     }
 
