@@ -53,6 +53,9 @@ import { MatButton } from '@angular/material/button';
     ],
 })
 export class PipelineElementHelpComponent implements OnInit {
+    private dialogRef =
+        inject<DialogRef<PipelineElementHelpComponent>>(DialogRef);
+
     selectedTabIndex = 0;
 
     translateService = inject(TranslateService);
@@ -71,8 +74,6 @@ export class PipelineElementHelpComponent implements OnInit {
         | DataSinkInvocation;
 
     isDataStream: boolean;
-
-    constructor(private dialogRef: DialogRef<PipelineElementHelpComponent>) {}
 
     ngOnInit() {
         if (this.pipelineElement instanceof SpDataStream) {

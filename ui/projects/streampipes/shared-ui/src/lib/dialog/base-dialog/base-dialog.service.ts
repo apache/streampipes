@@ -17,7 +17,7 @@
  */
 
 import { ComponentType, Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentRef, Injectable, Injector } from '@angular/core';
+import { ComponentRef, Injectable, Injector, inject } from '@angular/core';
 import { DialogRef } from './dialog-ref';
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
@@ -37,10 +37,8 @@ import { CardDialogConfig } from '../card-dialog/card-dialog-config';
     providedIn: 'root',
 })
 export class DialogService {
-    constructor(
-        private overlay: Overlay,
-        private injector: Injector,
-    ) {}
+    private overlay = inject(Overlay);
+    private injector = inject(Injector);
 
     public open<T>(
         component: ComponentType<T>,

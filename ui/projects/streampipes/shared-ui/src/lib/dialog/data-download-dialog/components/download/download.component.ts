@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { DataExportService } from '../../services/data-export.service';
 import { DownloadProgress } from '../../model/download-progress.model';
 import { Subscription } from 'rxjs';
@@ -49,10 +49,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class DownloadComponent implements OnInit, OnDestroy {
+    dataExportService = inject(DataExportService);
+
     downloadProgress: DownloadProgress;
     downloadProgressSubscription: Subscription;
-
-    constructor(public dataExportService: DataExportService) {}
 
     ngOnInit(): void {
         this.downloadProgress = {
