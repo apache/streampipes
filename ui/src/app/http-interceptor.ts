@@ -23,12 +23,12 @@ import {
     HttpRequest,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { CurrentUserService } from '@streampipes/shared-ui';
 
 @Injectable()
 export class HttpInterceptorProvider implements HttpInterceptor {
-    constructor(private currentUserService: CurrentUserService) {}
+    private currentUserService = inject(CurrentUserService);
 
     intercept(
         req: HttpRequest<any>,
