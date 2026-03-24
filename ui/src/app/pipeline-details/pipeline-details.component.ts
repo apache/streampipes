@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import {
@@ -69,6 +69,15 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
+    private activatedRoute = inject(ActivatedRoute);
+    private pipelineService = inject(PipelineService);
+    private pipelineCanvasService = inject(PipelineCanvasMetadataService);
+    private authService = inject(AuthService);
+    private currentUserService = inject(CurrentUserService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private pipelineMonitoringService = inject(PipelineMonitoringService);
+    private dialogService = inject(DialogService);
+
     hasPipelineWritePrivileges = false;
 
     currentPipelineId: string;
@@ -89,17 +98,6 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
 
     @ViewChild('pipelinePreviewComponent')
     pipelinePreviewComponent: PipelinePreviewComponent;
-
-    constructor(
-        private activatedRoute: ActivatedRoute,
-        private pipelineService: PipelineService,
-        private pipelineCanvasService: PipelineCanvasMetadataService,
-        private authService: AuthService,
-        private currentUserService: CurrentUserService,
-        private breadcrumbService: SpBreadcrumbService,
-        private pipelineMonitoringService: PipelineMonitoringService,
-        private dialogService: DialogService,
-    ) {}
 
     ngOnInit(): void {
         this.currentUser$ = this.currentUserService.user$.subscribe(user => {

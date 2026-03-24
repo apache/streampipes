@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import { PipelineOperationsService } from '../../../../pipelines/services/pipeline-operations.service';
 import { Pipeline } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
@@ -44,6 +51,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class PipelineActionsComponent implements OnInit {
+    pipelineOperationsService = inject(PipelineOperationsService);
+    private router = inject(Router);
+
     starting = false;
     stopping = false;
 
@@ -55,11 +65,6 @@ export class PipelineActionsComponent implements OnInit {
 
     @Output()
     reloadPipelineEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-    constructor(
-        public pipelineOperationsService: PipelineOperationsService,
-        private router: Router,
-    ) {}
 
     ngOnInit() {
         this.toggleRunningOperation = this.toggleRunningOperation.bind(this);

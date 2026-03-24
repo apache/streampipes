@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     Pipeline,
     PipelineService,
@@ -45,12 +45,14 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class PipelineStatusComponent implements OnInit {
+    private pipelineService = inject(PipelineService);
+
     pipelineStatus: PipelineStatusMessage[];
 
     @Input()
     pipeline: Pipeline;
 
-    constructor(private pipelineService: PipelineService) {
+    constructor() {
         this.pipelineStatus = [];
     }
 
