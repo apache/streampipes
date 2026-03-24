@@ -213,6 +213,11 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         );
         if (displayType === 'lines') {
             series.showSymbol = false;
+        } else if (displayType === 'area') {
+            series.showSymbol = false;
+            series.areaStyle = {
+                opacity: 0.35,
+            };
         } else if (displayType === 'normal_markers') {
             series.lineStyle = {
                 width: 0,
