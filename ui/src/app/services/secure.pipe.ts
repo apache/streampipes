@@ -16,7 +16,7 @@
  *
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
@@ -25,11 +25,9 @@ import { CurrentUserService } from '@streampipes/shared-ui';
 
 @Pipe({ name: 'secure' })
 export class SecurePipe implements PipeTransform {
-    constructor(
-        private http: HttpClient,
-        private sanitizer: DomSanitizer,
-        private currentUserService: CurrentUserService,
-    ) {}
+    private http = inject(HttpClient);
+    private sanitizer = inject(DomSanitizer);
+    private currentUserService = inject(CurrentUserService);
 
     transform(url): Observable<SafeUrl> {
         return this.http

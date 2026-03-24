@@ -16,12 +16,14 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Role, RoleService } from '@streampipes/platform-services';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AvailableRolesService {
+    private roleService = inject(RoleService);
+
     private static readonly ASSET_USER_ROLE = 'ROLE_ASSET_USER';
 
     private availableRolesSubject: BehaviorSubject<Role[]> =
@@ -29,7 +31,7 @@ export class AvailableRolesService {
     public availableRoles$: Observable<Role[]> =
         this.availableRolesSubject.asObservable();
 
-    constructor(private roleService: RoleService) {
+    constructor() {
         this.loadRoles();
     }
 

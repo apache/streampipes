@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -24,10 +24,8 @@ import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({ providedIn: 'root' })
 export class RestApi {
-    constructor(
-        private platformServicesCommons: PlatformServicesCommons,
-        private $http: HttpClient,
-    ) {}
+    private platformServicesCommons = inject(PlatformServicesCommons);
+    private $http = inject(HttpClient);
 
     getServerUrl() {
         return this.platformServicesCommons.apiBasePath;
