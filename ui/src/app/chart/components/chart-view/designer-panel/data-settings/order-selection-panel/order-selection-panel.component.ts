@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { SourceConfig } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
@@ -37,9 +37,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class OrderSelectionPanelComponent implements OnInit {
-    @Input() sourceConfig: SourceConfig;
+    private widgetConfigService = inject(ChartConfigurationService);
 
-    constructor(private widgetConfigService: ChartConfigurationService) {}
+    @Input() sourceConfig: SourceConfig;
 
     ngOnInit(): void {
         this.sourceConfig.queryConfig.order ??= 'DESC';

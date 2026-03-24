@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     ViewChild,
+    inject,
 } from '@angular/core';
 import {
     DataExplorerDataConfig,
@@ -110,6 +111,12 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class ChartDataSettingsComponent implements OnInit {
+    private datalakeRestService = inject(DatalakeRestService);
+    private widgetConfigService = inject(ChartConfigurationService);
+    private fieldProviderService = inject(ChartFieldProviderService);
+    private widgetTypeService = inject(ChartTypeService);
+    private router = inject(Router);
+
     @Input() dataConfig: DataExplorerDataConfig;
     @Input() dataLakeMeasure: DataLakeMeasure;
     @Input() newWidgetMode: boolean;
@@ -136,14 +143,6 @@ export class ChartDataSettingsComponent implements OnInit {
 
     expandFieldsDataSource = true;
     expandFieldsQuery = true;
-
-    constructor(
-        private datalakeRestService: DatalakeRestService,
-        private widgetConfigService: ChartConfigurationService,
-        private fieldProviderService: ChartFieldProviderService,
-        private widgetTypeService: ChartTypeService,
-        private router: Router,
-    ) {}
 
     ngOnInit(): void {
         this.loadPipelinesAndMeasurements();

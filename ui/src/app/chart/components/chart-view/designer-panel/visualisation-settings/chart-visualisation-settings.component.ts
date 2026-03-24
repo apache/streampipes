@@ -22,6 +22,7 @@ import {
     OnChanges,
     OnInit,
     SimpleChanges,
+    inject,
 } from '@angular/core';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
@@ -58,12 +59,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class ChartVisualisationSettingsComponent implements OnInit, OnChanges {
-    @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
+    private widgetTypeService = inject(ChartTypeService);
+    private widgetRegistryService = inject(ChartRegistry);
 
-    constructor(
-        private widgetTypeService: ChartTypeService,
-        private widgetRegistryService: ChartRegistry,
-    ) {}
+    @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
     availableWidgets: IWidget<any>[];
     activeWidgetType: IWidget<any>;

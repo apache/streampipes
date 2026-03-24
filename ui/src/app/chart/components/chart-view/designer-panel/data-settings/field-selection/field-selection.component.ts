@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import {
     EventPropertyUnion,
     FieldConfig,
@@ -51,13 +58,13 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class FieldSelectionComponent implements OnInit {
+    private widgetConfigService = inject(ChartConfigurationService);
+
     @Input() field: FieldConfig;
     @Input() sourceConfig: SourceConfig;
 
     @Output() addFieldEmitter: EventEmitter<EventPropertyUnion> =
         new EventEmitter<EventPropertyUnion>();
-
-    constructor(private widgetConfigService: ChartConfigurationService) {}
 
     ngOnInit() {
         if (!this.field.aggregations) {
