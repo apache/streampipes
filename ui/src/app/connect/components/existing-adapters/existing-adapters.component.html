@@ -97,6 +97,7 @@
                     <td mat-cell *matCellDef="let adapter">
                         <sp-adapter-status-light
                             [adapterRunning]="adapter.running"
+                            [healthStatus]="getHealthStatus(adapter.elementId)"
                         ></sp-adapter-status-light>
                     </td>
                 </ng-container>

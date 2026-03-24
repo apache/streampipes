@@ -21,7 +21,9 @@ package org.apache.streampipes.extensions.connectors.opcua.adapter;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.DataSourceHealthCheckResult;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IDataSourceHealthCheck;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
@@ -49,11 +51,13 @@ import org.apache.streampipes.sdk.helpers.Locales;
 
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,11 +69,13 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_MODE;
 
-public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsRuntimeConfig {
+public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsRuntimeConfig, IDataSourceHealthCheck {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.adapters.opcua";
   public static final String PULL_GROUP = "pull-mode-group";
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaAdapter.class);
+  private static final NodeId SERVER_STATE_NODE = new NodeId(0, 2259);
+  private static final int HEALTH_CHECK_TIMEOUT_SECONDS = 5;
 
   private int pullingIntervalMilliSeconds;
   private final OpcUaClientProvider clientProvider;
@@ -265,5 +271,36 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     return new OpcUaSchemaProvider().getSampleData(clientProvider, extractor, adapterGuessSchemaContext.getStreamPipesClient());
+  }
+
+  @Override
+  public DataSourceHealthCheckResult checkDataSourceHealth() {
+    if (connectedClient == null) {
+      return DataSourceHealthCheckResult.unhealthy("OPC-UA client not connected");
+    }
+    try {
+      var client = connectedClient.getClient();
+      if (client.getSession().isEmpty()) {
+        return DataSourceHealthCheckResult.unhealthy("OPC-UA session is not established");
+      }
+      var response = client.readValues(0, TimestampsToReturn.Neither, Collections.singletonList(SERVER_STATE_NODE))
+          .get(HEALTH_CHECK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+      if (response == null || response.isEmpty()) {
+        return DataSourceHealthCheckResult.unhealthy("OPC-UA server did not respond");
+      }
+      var statusCode = response.get(0).getStatusCode();
+      if (!statusCode.isGood()) {
+        return DataSourceHealthCheckResult.unhealthy("OPC-UA server returned bad status: " + statusCode);
+      }
+      if (!opcUaAdapterConfig.inPullMode()) {
+        var subscriptions = client.getSubscriptionManager().getSubscriptions();
+        if (subscriptions.isEmpty()) {
+          return DataSourceHealthCheckResult.unhealthy("OPC-UA subscriptions are not active");
+        }
+      }
+      return DataSourceHealthCheckResult.healthy("OPC-UA server is reachable and session is active");
+    } catch (Exception e) {
+      return DataSourceHealthCheckResult.unhealthyWithException("OPC-UA health check failed: " + e.getMessage(), e);
+    }
   }
 }

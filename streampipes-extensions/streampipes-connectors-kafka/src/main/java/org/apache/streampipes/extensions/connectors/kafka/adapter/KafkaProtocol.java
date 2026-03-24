@@ -23,7 +23,9 @@ import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.DataSourceHealthCheckResult;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.IDataSourceHealthCheck;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
@@ -49,6 +51,8 @@ import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -65,11 +69,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig {
+public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig, IDataSourceHealthCheck {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaProtocol.class);
+  private static final int HEALTH_CHECK_TIMEOUT_SECONDS = 5;
   private KafkaBaseConfig config;
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.kafka";
@@ -247,6 +253,38 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
       throw new AdapterException("Error while guessing schema: " + e.getMessage(), e);
     } finally {
       LOG.debug("Closed consumer for topic {}", config.getTopic());
+    }
+  }
+
+  @Override
+  public DataSourceHealthCheckResult checkDataSourceHealth() {
+    if (config == null) {
+      return DataSourceHealthCheckResult.unhealthy("Kafka config not initialized");
+    }
+    var props = new Properties();
+    config.getConfigAppenders().forEach(c -> c.appendConfig(props));
+    props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, config.getKafkaHost() + ":" + config.getKafkaPort());
+    props.put(AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG, HEALTH_CHECK_TIMEOUT_SECONDS * 1000);
+    props.put(AdminClientConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, HEALTH_CHECK_TIMEOUT_SECONDS * 1000);
+
+    try (var adminClient = AdminClient.create(props)) {
+      var clusterId = adminClient.describeCluster().clusterId()
+          .get(HEALTH_CHECK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+      if (clusterId == null) {
+        return DataSourceHealthCheckResult.unhealthy("Unable to retrieve Kafka cluster info");
+      }
+      var topics = adminClient.listTopics().names().get(HEALTH_CHECK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+      if (!topics.contains(config.getTopic())) {
+        return DataSourceHealthCheckResult.unhealthy(
+            "Topic '" + config.getTopic() + "' does not exist",
+            "Available topics: " + String.join(", ", topics)
+        );
+      }
+      return DataSourceHealthCheckResult.healthy(
+          "Kafka broker and topic '" + config.getTopic() + "' are accessible"
+      );
+    } catch (Exception e) {
+      return DataSourceHealthCheckResult.unhealthyWithException("Kafka connection failed: " + e.getMessage(), e);
     }
   }
 }
