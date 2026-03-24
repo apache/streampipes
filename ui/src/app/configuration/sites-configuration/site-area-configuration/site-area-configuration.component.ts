@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import {
     AssetConstants,
     AssetSiteDesc,
@@ -71,6 +71,10 @@ import { MatTooltip } from '@angular/material/tooltip';
     ],
 })
 export class SiteAreaConfigurationComponent implements OnInit {
+    private genericStorageService = inject(GenericStorageService);
+    private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
+
     @Input()
     locationConfig: LocationConfig;
 
@@ -83,12 +87,6 @@ export class SiteAreaConfigurationComponent implements OnInit {
     @ViewChild(MatSort)
     sort: MatSort;
     displayedColumns = ['name', 'areas', 'actions'];
-
-    constructor(
-        private genericStorageService: GenericStorageService,
-        private dialogService: DialogService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit() {
         this.loadSites();

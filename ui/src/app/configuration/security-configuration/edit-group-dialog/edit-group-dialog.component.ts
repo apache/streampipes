@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ViewEncapsulation,
+    inject,
+} from '@angular/core';
 import { Group, Role, UserGroupService } from '@streampipes/platform-services';
 import {
     FormsModule,
@@ -67,6 +73,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class EditGroupDialogComponent implements OnInit {
+    private fb = inject(UntypedFormBuilder);
+    private availableRolesService = inject(AvailableRolesService);
+    private dialogRef = inject<DialogRef<EditGroupDialogComponent>>(DialogRef);
+    private userGroupService = inject(UserGroupService);
+
     @Input()
     group: Group;
 
@@ -76,13 +87,6 @@ export class EditGroupDialogComponent implements OnInit {
     parentForm: UntypedFormGroup;
     availableRoles$: Observable<Role[]>;
     clonedGroup: Group;
-
-    constructor(
-        private fb: UntypedFormBuilder,
-        private availableRolesService: AvailableRolesService,
-        private dialogRef: DialogRef<EditGroupDialogComponent>,
-        private userGroupService: UserGroupService,
-    ) {}
 
     ngOnInit(): void {
         this.availableRoles$ = this.availableRolesService

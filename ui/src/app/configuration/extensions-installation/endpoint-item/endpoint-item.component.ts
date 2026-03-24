@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
@@ -65,6 +72,14 @@ import { MatIcon } from '@angular/material/icon';
     ],
 })
 export class EndpointItemComponent implements OnInit {
+    private snackBar = inject(MatSnackBar);
+    private extensionInstallationService = inject(ExtensionInstallationService);
+    private addService = inject(ExtensionsInstallationService);
+    private sanitizer = inject(DomSanitizer);
+    appConstants = inject(AppConstants);
+    private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
+
     @Input()
     item: ExtensionItemDescription;
 
@@ -88,16 +103,6 @@ export class EndpointItemComponent implements OnInit {
 
     @Output()
     triggerInstallation: EventEmitter<any> = new EventEmitter<any>();
-
-    constructor(
-        private snackBar: MatSnackBar,
-        private extensionInstallationService: ExtensionInstallationService,
-        private addService: ExtensionsInstallationService,
-        private sanitizer: DomSanitizer,
-        public appConstants: AppConstants,
-        private dialogService: DialogService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.findItemTypeTitle();

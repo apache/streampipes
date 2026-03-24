@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
 import {
@@ -51,6 +51,8 @@ const hiddenPasswordString = '*****';
     ],
 })
 export class ServiceConfigsPasswordComponent {
+    configService = inject(ConfigurationService);
+
     @Input() configuration: ConfigItem;
 
     password: string;
@@ -58,7 +60,7 @@ export class ServiceConfigsPasswordComponent {
     className: string;
     private hide: boolean;
 
-    constructor(public configService: ConfigurationService) {
+    constructor() {
         this.password = hiddenPasswordString;
         this.show = false;
         this.className = 'hideText';

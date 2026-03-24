@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import {
     MatCell,
@@ -70,15 +70,15 @@ import { MatTooltip } from '@angular/material/tooltip';
     ],
 })
 export class SpRegisteredExtensionsServiceComponent {
+    private configurationService = inject(ConfigurationService);
+    private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
+
     displayedColumns: string[] = ['status', 'name', 'group', 'action'];
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     dataSource = new MatTableDataSource<SpServiceRegistration>();
 
-    constructor(
-        private configurationService: ConfigurationService,
-        private dialogService: DialogService,
-        private translateService: TranslateService,
-    ) {
+    constructor() {
         this.getRegisteredServices();
     }
 

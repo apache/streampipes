@@ -79,6 +79,10 @@ import { MatDivider } from '@angular/material/divider';
     ],
 })
 export class SpDataImportDialogComponent {
+    private dialogRef =
+        inject<DialogRef<SpDataImportDialogComponent>>(DialogRef);
+    private dataExportService = inject(DataExportService);
+
     private translateService = inject(TranslateService);
     currentImportStep = 0;
 
@@ -93,11 +97,6 @@ export class SpDataImportDialogComponent {
 
     uploadStatus = 0;
     uploadError = false;
-
-    constructor(
-        private dialogRef: DialogRef<SpDataImportDialogComponent>,
-        private dataExportService: DataExportService,
-    ) {}
 
     handleFileInput(files: any) {
         this.hasInput = true;
