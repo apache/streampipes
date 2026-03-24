@@ -61,14 +61,6 @@ export class SpManageAssetLinksDialogComponent
 {
     private dialogRef =
         inject<DialogRef<SpManageAssetLinksDialogComponent>>(DialogRef);
-    protected genericStorageService: GenericStorageService;
-    protected pipelineService: PipelineService;
-    protected chartService: ChartService;
-    protected dashboardService: DashboardService;
-    protected dataLakeService: DatalakeRestService;
-    protected pipelineElementService: PipelineElementService;
-    protected adapterService: AdapterService;
-    protected filesService: FilesService;
 
     @Input()
     assetLinks: AssetLink[];
@@ -105,15 +97,6 @@ export class SpManageAssetLinksDialogComponent
             adapterService,
             filesService,
         );
-
-        this.genericStorageService = genericStorageService;
-        this.pipelineService = pipelineService;
-        this.chartService = chartService;
-        this.dashboardService = dashboardService;
-        this.dataLakeService = dataLakeService;
-        this.pipelineElementService = pipelineElementService;
-        this.adapterService = adapterService;
-        this.filesService = filesService;
     }
 
     ngOnInit(): void {

@@ -45,7 +45,7 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { NgClass } from '@angular/common';
-import { ClassDirective, StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -59,7 +59,6 @@ import { MatIcon } from '@angular/material/icon';
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
-        StyleDirective,
         NgClass,
         ClassDirective,
         MatTooltip,
