@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { DialogRef, SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { Notification } from '@streampipes/platform-services';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -36,13 +36,13 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class MatchingErrorComponent {
+    private dialogRef = inject<DialogRef<MatchingErrorComponent>>(DialogRef);
+
     @Input()
     notifications: Notification[];
 
     msg: any;
     statusDetailsVisible: any;
-
-    constructor(private dialogRef: DialogRef<MatchingErrorComponent>) {}
 
     close() {
         this.dialogRef.close();

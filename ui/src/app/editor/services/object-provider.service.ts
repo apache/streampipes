@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { PipelineElementConfig } from '../model/editor.model';
 import {
     DataProcessorInvocation,
@@ -29,10 +29,8 @@ import { JsplumbFactoryService } from './jsplumb-factory.service';
 
 @Injectable({ providedIn: 'root' })
 export class ObjectProvider {
-    constructor(
-        private editorService: EditorService,
-        private jsplumbFactoryService: JsplumbFactoryService,
-    ) {}
+    private editorService = inject(EditorService);
+    private jsplumbFactoryService = inject(JsplumbFactoryService);
 
     preparePipeline(): Pipeline {
         const pipeline = new Pipeline();

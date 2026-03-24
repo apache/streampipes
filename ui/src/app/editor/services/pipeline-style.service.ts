@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { JsplumbConfigService } from './jsplumb-config.service';
 import {
     EdgeValidationStatus,
@@ -31,10 +31,8 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class PipelineStyleService {
-    constructor(
-        private jsPlumbConfigService: JsplumbConfigService,
-        private jsplumbFactoryService: JsplumbFactoryService,
-    ) {}
+    private jsPlumbConfigService = inject(JsplumbConfigService);
+    private jsplumbFactoryService = inject(JsplumbFactoryService);
 
     updateAllConnectorStyles(edgeValidations: PipelineEdgeValidation[]) {
         edgeValidations.forEach(edgeValidation =>

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
@@ -35,12 +35,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class MissingElementsForTutorialComponent {
+    private dialogRef =
+        inject<DialogRef<MissingElementsForTutorialComponent>>(DialogRef);
+
     @Input()
     missingElementsForTutorial: any[];
-
-    constructor(
-        private dialogRef: DialogRef<MissingElementsForTutorialComponent>,
-    ) {}
 
     close() {
         this.dialogRef.close();

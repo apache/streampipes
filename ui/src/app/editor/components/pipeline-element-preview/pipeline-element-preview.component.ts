@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { KeyValue, KeyValuePipe } from '@angular/common';
 import {
@@ -45,6 +45,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
+    private livePreviewService = inject(LivePreviewService);
+
     @Input()
     pipelinePreview: PipelinePreviewModel;
 
@@ -54,8 +56,6 @@ export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
     runtimeData: Record<string, any>;
     runtimeDataError = false;
     previewSub: Subscription;
-
-    constructor(private livePreviewService: LivePreviewService) {}
 
     ngOnInit(): void {
         this.getLatestRuntimeInfo();
