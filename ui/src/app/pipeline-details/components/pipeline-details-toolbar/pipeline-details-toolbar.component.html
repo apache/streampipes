@@ -66,37 +66,5 @@
             color="accent"
             >{{ 'Auto refresh' | translate }}
         </mat-slide-toggle>
-        @if (hasPipelineWritePrivileges) {
-            <button
-                mat-icon-button
-                [matMenuTriggerFor]="optMenu"
-                [attr.aria-label]="'Options' | translate"
-                data-cy="pipeline-details-options"
-            >
-                <mat-icon>more_vert</mat-icon>
-            </button>
-        }
-        <mat-menu #optMenu="matMenu">
-            @if (hasPipelineWritePrivileges) {
-                <button
-                    mat-menu-item
-                    (click)="editPipelineEmitter.emit()"
-                    data-cy="options-edit-pipeline"
-                >
-                    <mat-icon>edit</mat-icon>
-                    <span>{{ 'Edit pipeline' | translate }}</span>
-                </button>
-            }
-            @if (hasPipelineWritePrivileges) {
-                <button
-                    mat-menu-item
-                    (click)="deletePipelineEmitter.emit()"
-                    data-cy="options-delete-pipeline"
-                >
-                    <mat-icon>clear</mat-icon>
-                    <span>{{ 'Delete pipeline' | translate }}</span>
-                </button>
-            }
-        </mat-menu>
     </div>
 </div>
