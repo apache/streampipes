@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     Isa95TypeDesc,
     Isa95TypeService,
@@ -40,12 +40,12 @@ import { FormsModule } from '@angular/forms';
     ],
 })
 export class AssetBrowserFilterTypeComponent implements OnInit {
+    private typeService = inject(Isa95TypeService);
+
     allAssetTypes: Isa95TypeDesc[] = [];
 
     @Input()
     activeFilters: AssetFilter;
-
-    constructor(private typeService: Isa95TypeService) {}
 
     ngOnInit() {
         this.allAssetTypes = this.typeService

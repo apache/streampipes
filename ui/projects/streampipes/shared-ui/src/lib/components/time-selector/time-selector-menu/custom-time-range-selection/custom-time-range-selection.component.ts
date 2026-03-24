@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import {
     TimeSelectionConstants,
     TimeSettings,
@@ -59,6 +66,13 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class CustomTimeRangeSelectionComponent implements OnInit {
+    private readonly selectionModel = inject<MatRangeDateSelectionModel<Date>>(
+        MatRangeDateSelectionModel,
+    );
+    private readonly selectionStrategy = inject<
+        DefaultMatCalendarRangeStrategy<Date>
+    >(DefaultMatCalendarRangeStrategy);
+
     @Input() timeSettings: TimeSettings;
 
     @Input() labels: TimeSelectorLabel;
@@ -80,11 +94,6 @@ export class CustomTimeRangeSelectionComponent implements OnInit {
     dateRangeString: string;
 
     maxDateRangeError = false;
-
-    constructor(
-        private readonly selectionModel: MatRangeDateSelectionModel<Date>,
-        private readonly selectionStrategy: DefaultMatCalendarRangeStrategy<Date>,
-    ) {}
 
     ngOnInit(): void {
         this.initializeDateRange();

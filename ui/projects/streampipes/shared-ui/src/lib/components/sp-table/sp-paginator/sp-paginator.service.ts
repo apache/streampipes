@@ -15,13 +15,15 @@
  * limitations under the License.
  *
  */
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class PaginatorService extends MatPaginatorIntl {
-    constructor(private translateService: TranslateService) {
+    private translateService = inject(TranslateService);
+
+    constructor() {
         super();
         this.itemsPerPageLabel =
             this.translateService.instant('Items per page');
