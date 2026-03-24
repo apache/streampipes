@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { AppConstants } from '../../../services/app.constants';
 import { LinkSettings } from '@streampipes/platform-services';
 import {
@@ -41,8 +41,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class AuthBoxComponent {
+    appConstants = inject(AppConstants);
+
     @Input()
     linkSettings: LinkSettings;
-
-    constructor(public appConstants: AppConstants) {}
 }
