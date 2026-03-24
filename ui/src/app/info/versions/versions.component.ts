@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { VersionInfo } from './service/version-info.model';
 import { SystemInfo } from './service/system-info.model';
 import { RestApi } from '../../services/rest-api.service';
@@ -43,10 +43,12 @@ import { SpBasicInnerPanelComponent } from '@streampipes/shared-ui';
     ],
 })
 export class VersionsComponent {
+    private restApi = inject(RestApi);
+
     versionInfo: VersionInfo;
     systemInfo: SystemInfo;
 
-    constructor(private restApi: RestApi) {
+    constructor() {
         this.getVersionInfo();
         this.getSystemInfo();
     }

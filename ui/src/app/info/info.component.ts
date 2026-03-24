@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
     SpBasicViewComponent,
     SpBreadcrumbService,
@@ -28,7 +28,7 @@ import { VersionsComponent } from './versions/versions.component';
     imports: [SpBasicViewComponent, VersionsComponent],
 })
 export class InfoComponent implements OnInit {
-    constructor(private breadcrumbService: SpBreadcrumbService) {}
+    private breadcrumbService = inject(SpBreadcrumbService);
 
     ngOnInit() {
         this.breadcrumbService.updateBreadcrumb([{ label: 'Info' }]);
