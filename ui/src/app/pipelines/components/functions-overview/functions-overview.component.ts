@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { FunctionId } from '@streampipes/platform-services';
 import {
     MatCell,
@@ -56,14 +56,14 @@ import { MatTooltip } from '@angular/material/tooltip';
     ],
 })
 export class FunctionsOverviewComponent implements OnInit {
+    private router = inject(Router);
+
     @Input()
     functions: FunctionId[] = [];
 
     dataSource: MatTableDataSource<FunctionId>;
 
     displayedColumns: string[] = ['name', 'action'];
-
-    constructor(private router: Router) {}
 
     ngOnInit(): void {
         this.dataSource = new MatTableDataSource<FunctionId>();
