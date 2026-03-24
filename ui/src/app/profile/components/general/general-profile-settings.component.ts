@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ProfileService } from '../../profile.service';
 import { BasicProfileSettings } from '../basic-profile-settings';
 import { AppConstants } from '../../../services/app.constants';
@@ -72,6 +72,9 @@ export class GeneralProfileSettingsComponent
     extends BasicProfileSettings
     implements OnInit, OnDestroy
 {
+    private dialogService = inject(DialogService);
+    private router = inject(Router);
+
     darkMode = false;
     originalDarkMode = false;
     darkModeChanged = false;
@@ -84,14 +87,12 @@ export class GeneralProfileSettingsComponent
         { label: 'Polski', id: 'pl' },
     ];
 
-    constructor(
-        authService: AuthService,
-        profileService: ProfileService,
-        appConstants: AppConstants,
-        currentUserService: CurrentUserService,
-        private dialogService: DialogService,
-        private router: Router,
-    ) {
+    constructor() {
+        const authService = inject(AuthService);
+        const profileService = inject(ProfileService);
+        const appConstants = inject(AppConstants);
+        const currentUserService = inject(CurrentUserService);
+
         super(profileService, appConstants, currentUserService, authService);
     }
 

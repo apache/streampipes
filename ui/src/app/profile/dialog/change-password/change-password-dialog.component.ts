@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ViewEncapsulation,
+    inject,
+} from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AbstractControl,
@@ -59,6 +65,11 @@ import { MatDivider } from '@angular/material/divider';
     ],
 })
 export class ChangePasswordDialogComponent implements OnInit {
+    private dialogRef =
+        inject<DialogRef<ChangePasswordDialogComponent>>(DialogRef);
+    private fb = inject(UntypedFormBuilder);
+    private userService = inject(UserService);
+
     @Input()
     user: UserAccount;
 
@@ -71,12 +82,6 @@ export class ChangePasswordDialogComponent implements OnInit {
     operationApplied = false;
     error = false;
     errorMessage = '';
-
-    constructor(
-        private dialogRef: DialogRef<ChangePasswordDialogComponent>,
-        private fb: UntypedFormBuilder,
-        private userService: UserService,
-    ) {}
 
     ngOnInit(): void {
         this.parentForm = this.fb.group({});
