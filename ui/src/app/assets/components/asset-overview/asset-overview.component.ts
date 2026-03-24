@@ -229,12 +229,11 @@ export class SpAssetOverviewComponent implements OnInit {
                     'This action cannot be reversed!',
                 ),
                 cancelTitle: this.translateService.instant('Cancel'),
-                okTitle: this.translateService.instant('Delete Asset'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Delete Asset'),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === 'confirm') {
                 this.assetService.deleteAsset(asset.elementId).subscribe(() => {
                     this.loadAssets();
                     this.assetBrowserService.loadAssetData();

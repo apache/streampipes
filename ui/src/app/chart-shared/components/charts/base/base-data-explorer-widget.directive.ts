@@ -38,6 +38,7 @@ import {
 import { ResizeService } from '../../../services/resize.service';
 import {
     BaseWidgetData,
+    DashboardChartOverrides,
     FieldProvider,
     ObservableGenerator,
 } from '../../../models/dataview-dashboard.model';
@@ -90,6 +91,7 @@ export abstract class BaseDataExplorerWidgetDirective<
 
     @Input() dataViewDashboardItem: ClientDashboardItem;
     @Input() dataExplorerWidget: T;
+    @Input() dashboardChartOverrides: DashboardChartOverrides = {};
 
     @Input()
     widgetIndex: number;

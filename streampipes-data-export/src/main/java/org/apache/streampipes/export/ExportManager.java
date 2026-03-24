@@ -19,6 +19,7 @@
 package org.apache.streampipes.export;
 
 import org.apache.streampipes.export.generator.ExportPackageGenerator;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.export.ExportConfiguration;
 
 import java.io.IOException;
@@ -27,11 +28,12 @@ import java.util.stream.Collectors;
 
 public class ExportManager {
 
-  public static ExportConfiguration getExportPreview(List<String> selectedAssetIds) {
+  public static ExportConfiguration getExportPreview(List<String> selectedAssetIds,
+                                                     ExtensionServiceRequestManager extensionServiceRequestManager) {
     var exportConfig = new ExportConfiguration();
     var assetExportConfigurations = selectedAssetIds
         .stream()
-        .map(assetId -> new AssetLinkResolver(assetId).resolveResources())
+        .map(assetId -> new AssetLinkResolver(assetId, extensionServiceRequestManager).resolveResources())
         .collect(Collectors.toList());
 
     exportConfig.setAssetExportConfiguration(assetExportConfigurations);
@@ -39,8 +41,10 @@ public class ExportManager {
     return exportConfig;
   }
 
-  public static byte[] getExportPackage(ExportConfiguration exportConfiguration) throws IOException {
-    return new ExportPackageGenerator(exportConfiguration).generateExportPackage();
+  public static byte[] getExportPackage(ExportConfiguration exportConfiguration,
+                                        ExtensionServiceRequestManager extensionServiceRequestManager)
+      throws IOException {
+    return new ExportPackageGenerator(exportConfiguration, extensionServiceRequestManager).generateExportPackage();
   }
 
 }

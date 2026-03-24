@@ -60,8 +60,8 @@ public record ResourceProvider(IPipelineStorage pipelineStorage,
     Map<String, List<AdapterDescription>> adaptersByUrl =
         activeResources.runningAdapters()
             .stream()
-            .filter(a -> a.getSelectedEndpointUrl() != null)
-            .collect(Collectors.groupingBy(AdapterDescription::getSelectedEndpointUrl));
+            .filter(a -> a.getSelectedServiceId() != null)
+            .collect(Collectors.groupingBy(AdapterDescription::getSelectedServiceId));
 
     Map<String, Map<String, InvocableStreamPipesEntity>> elementsByUrl =
         activeResources.runningPipelines()
@@ -79,9 +79,9 @@ public record ResourceProvider(IPipelineStorage pipelineStorage,
                   .filter(Objects::nonNull)
                   .map(e -> new AbstractMap.SimpleEntry<>(pipelineId, e));
             })
-            .filter(entry -> entry.getValue().getSelectedEndpointUrl() != null)
+            .filter(entry -> entry.getValue().getSelectedServiceId() != null)
             .collect(Collectors.groupingBy(
-                entry -> entry.getValue().getSelectedEndpointUrl(),
+                entry -> entry.getValue().getSelectedServiceId(),
                 Collectors.toMap(
                     Map.Entry::getKey,
                     AbstractMap.SimpleEntry::getValue,

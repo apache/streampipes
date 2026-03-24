@@ -35,4 +35,14 @@ export class ChartWidgetTableUtils {
     public static checkAmountOfRows(amount: number) {
         this.chartTableRows().should('have.length', amount);
     }
+
+    public static paginatorRangeLabel() {
+        return cy
+            .dataCy('data-explorer-table-paginator')
+            .find('.mat-mdc-paginator-range-label');
+    }
+
+    public static checkTotalAmountOfRows(amount: number) {
+        this.paginatorRangeLabel().should('contain.text', amount.toString());
+    }
 }

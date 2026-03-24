@@ -150,6 +150,38 @@ export class ChartBtns {
         return cy.dataCy('chart-data-preview-empty');
     }
 
+    public static indicatorChart() {
+        return cy.dataCy('indicator-chart');
+    }
+
+    public static indicatorChartValue() {
+        return cy.dataCy('indicator-chart-value');
+    }
+
+    public static indicatorChartDelta() {
+        return cy.dataCy('indicator-chart-delta');
+    }
+
+    public static indicatorChartTitle() {
+        return cy.dataCy('indicator-chart-title');
+    }
+
+    public static indicatorChartDescription() {
+        return cy.dataCy('indicator-chart-description');
+    }
+
+    public static indicatorChartTitleInput() {
+        return cy.dataCy('data-explorer-indicator-title-input');
+    }
+
+    public static indicatorChartDescriptionInput() {
+        return cy.dataCy('data-explorer-indicator-description-input');
+    }
+
+    public static indicatorChartDeltaCheckbox() {
+        return cy.dataCy('data-explorer-select-delta-checkbox');
+    }
+
     public static addNewWidgetBtn() {
         return cy.dataCy('add-new-widget');
     }
@@ -224,6 +256,22 @@ export class ChartBtns {
 
     public static filterValueInput() {
         return cy.dataCy('design-panel-data-settings-filter-value', {}, true);
+    }
+
+    public static aggregatedQueryTypeButton() {
+        return cy.dataCy('data-explorer-query-type-aggregated');
+    }
+
+    public static autoAggregateCheckbox() {
+        return cy.dataCy('data-explorer-auto-aggregate-checkbox');
+    }
+
+    public static ignoreTooMuchDataWarningCheckbox() {
+        return cy.dataCy('data-explorer-ignore-too-much-data-warning-checkbox');
+    }
+
+    public static dataExplorerTablePaginator() {
+        return cy.dataCy('data-explorer-table-paginator');
     }
 
     public static matOptionByText(text: string | RegExp) {

@@ -61,6 +61,7 @@ import {
 import { ChartSharedService } from '../../services/chart-shared.service';
 import {
     BaseWidgetData,
+    DashboardChartOverrides,
     ObservableGenerator,
 } from '../../models/dataview-dashboard.model';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -149,6 +150,9 @@ export class ChartContainerComponent
 
     @Input()
     observableGenerator: ObservableGenerator;
+
+    @Input()
+    dashboardChartOverrides: DashboardChartOverrides = {};
 
     @Output() deleteCallback: EventEmitter<number> = new EventEmitter<number>();
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
@@ -347,6 +351,8 @@ export class ChartContainerComponent
         this.componentRef.instance.widgetIndex = this.widgetIndex;
         this.componentRef.instance.observableGenerator =
             this.observableGenerator;
+        this.componentRef.instance.dashboardChartOverrides =
+            this.dashboardChartOverrides;
         const remove$ =
             this.componentRef.instance.removeWidgetCallback.subscribe(ev =>
                 this.removeWidget(),

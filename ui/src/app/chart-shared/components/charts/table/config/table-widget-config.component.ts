@@ -29,7 +29,7 @@ import {
     SpAlertBannerComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatFormField } from '@angular/material/form-field';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -52,7 +52,6 @@ import { MatCheckbox } from '@angular/material/checkbox';
         SplitSectionComponent,
         MatFormField,
         FlexDirective,
-        MatLabel,
         MatInput,
         FormsModule,
         MatSelect,

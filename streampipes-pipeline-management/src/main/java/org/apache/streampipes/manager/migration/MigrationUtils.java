@@ -18,7 +18,10 @@
 
 package org.apache.streampipes.manager.migration;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
@@ -56,10 +59,12 @@ public class MigrationUtils {
    *
    * @param entityType Type of the entity to be updated.
    * @param appId      AppId of the entity to be updated
-   * @param serviceUrl URL of the extensions service to which the entity belongs
+   * @param service    The extensions service to which the entity belongs
    * @return URL of the endpoint that provides the description for the given entity
    */
-  public static String getRequestUrl(SpServiceTagPrefix entityType, String appId, String serviceUrl) {
+  public static ExtensionServiceRequestTarget getRequestTarget(SpServiceTagPrefix entityType,
+                                                               String appId,
+                                                               SpServiceRegistration service) {
 
     SpServiceUrlProvider urlProvider;
     switch (entityType) {
@@ -68,6 +73,6 @@ public class MigrationUtils {
       case DATA_SINK -> urlProvider = SpServiceUrlProvider.DATA_SINK;
       default -> throw new RuntimeException("Unexpected instance type.");
     }
-    return urlProvider.getInvocationUrl(serviceUrl, appId);
+    return ExtensionServiceRequestTargets.descriptionUpdate(service, urlProvider, appId);
   }
 }

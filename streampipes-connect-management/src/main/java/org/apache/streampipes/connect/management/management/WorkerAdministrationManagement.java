@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
@@ -42,16 +43,19 @@ public class WorkerAdministrationManagement {
   private final IPermissionStorage permissionStorage;
   private final PermissionResourceManager permissionResourceManager;
   private final UserResourceManager userResourceManager;
+  private final ExtensionServiceRequestManager requestManager;
 
   public WorkerAdministrationManagement(
       IAdapterStorage adapterDescriptionStorage,
       IPermissionStorage permissionStorage,
       UserResourceManager userResourceManager,
-      PermissionResourceManager permissionResourceManager) {
+      PermissionResourceManager permissionResourceManager,
+      ExtensionServiceRequestManager requestManager) {
     this.adapterDescriptionStorage = adapterDescriptionStorage;
     this.userResourceManager = userResourceManager;
     this.permissionStorage = permissionStorage;
     this.permissionResourceManager = permissionResourceManager;
+    this.requestManager = requestManager;
   }
 
   public void performAdapterMigrations(List<SpServiceTag> tags) {
@@ -63,7 +67,7 @@ public class WorkerAdministrationManagement {
           if (!AssetManager.existsAssetDir(adapter.getAppId())) {
             try {
               LOG.info("Updating assets for adapter {}", adapter.getAppId());
-              AssetManager.storeAsset(SpServiceUrlProvider.ADAPTER, adapter.getAppId());
+              AssetManager.storeAsset(SpServiceUrlProvider.ADAPTER, adapter.getAppId(), requestManager);
             } catch (IOException | NoServiceEndpointsAvailableException e) {
               LOG.error(
                   "Could not fetch asset for adapter {}, please try to manually update this adapter.",

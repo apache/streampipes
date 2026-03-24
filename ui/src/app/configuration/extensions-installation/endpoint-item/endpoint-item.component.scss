@@ -16,12 +16,107 @@
  *
  */
 
+:host {
+    display: block;
+    --endpoint-type-color: var(--color-data-source);
+    --endpoint-item-bg-selected: color-mix(
+        in srgb,
+        var(--endpoint-type-color) 22%,
+        var(--color-bg-0)
+    );
+}
+
 .pipeline-element-box {
     height: 100%;
-    box-shadow: 1px 1px 2px #555;
-    border: 1px solid gray;
+    width: 100%;
     cursor: pointer;
-    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid
+        color-mix(in srgb, var(--endpoint-type-color) 28%, transparent);
+    box-shadow: 0 1px 2px color-mix(in srgb, #000 16%, transparent);
+    padding: 12px;
+    margin-bottom: 10px;
+    background: var(--color-bg-0);
+    transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        border-color 160ms ease,
+        background 160ms ease,
+        opacity 160ms ease;
+}
+
+.pipeline-element-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px
+        color-mix(in srgb, var(--endpoint-type-color) 18%, transparent);
+}
+
+.pipeline-element-box:active {
+    transform: translateY(-1px);
+}
+
+.pipeline-element-box.is-selected {
+    background: var(--endpoint-item-bg-selected);
+    border-color: color-mix(
+        in srgb,
+        var(--endpoint-type-color) 45%,
+        transparent
+    );
+}
+
+.pipeline-element-box.is-disabled {
+    opacity: 0.5;
+}
+
+.endpoint-header,
+.endpoint-main,
+.endpoint-description {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+.endpoint-status-icon {
+    font-size: 16px;
+}
+
+.endpoint-type-badge {
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-weight: 600;
+    box-shadow: inset 0 0 0 1px
+        color-mix(in srgb, var(--endpoint-type-color) 35%, transparent);
+}
+
+.endpoint-main {
+    gap: 10px;
+}
+
+.endpoint-icon-wrapper {
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.endpoint-content {
+    min-width: 0;
+}
+
+.endpoint-menu-wrapper {
+    margin-left: 5px;
+}
+
+.endpoint-menu-dots {
+    font-size: 12px;
+}
+
+.endpoint-description {
+    padding-left: 10px;
+    margin-top: 10px;
+}
+
+.endpoint-description h3 {
+    margin: 0 0 4px;
 }
 
 .small-icon {
@@ -38,14 +133,31 @@
 
 .icon {
     width: 50px;
+    height: 50px;
+    object-fit: contain;
 }
 
 .endpoint-icon-available {
     cursor: default;
-    color: #4caf50;
+    color: var(--color-success);
 }
 
 .endpoint-icon-critical {
     cursor: default;
-    color: #f44336;
+    color: var(--color-error);
+}
+
+.pipeline-label {
+    background: var(--color-pipeline);
+    color: #fff;
+}
+
+.measurement-label {
+    background: var(--color-measurement);
+    color: #fff;
+}
+
+.file-label {
+    background: var(--color-file);
+    color: #fff;
 }

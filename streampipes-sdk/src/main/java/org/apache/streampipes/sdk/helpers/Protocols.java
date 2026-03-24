@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.sdk.helpers;
 
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
@@ -53,19 +52,6 @@ public class Protocols {
       wildcardTopicDefinition) {
     return new KafkaTransportProtocol(kafkaHost, kafkaPort, wildcardTopicDefinition);
 
-  }
-
-  /**
-   * Defines the transport protocol JMS used by a data stream at runtime.
-   *
-   * @param jmsHost The hostname of any JMS broker
-   * @param jmsPort The port of any JMS broker
-   * @param topic   The topic identifier
-   * @return The {@link org.apache.streampipes.model.grounding.JmsTransportProtocol} containing URL and topic where data
-   * arrives.
-   */
-  public static JmsTransportProtocol jms(String jmsHost, Integer jmsPort, String topic) {
-    return new JmsTransportProtocol(jmsHost, jmsPort, topic);
   }
 
   /**

@@ -34,7 +34,7 @@ import {
 } from '../../../models/dataview-dashboard.model';
 import type { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager.d.ts';
 import type { ToolboxDataZoomFeatureOption } from 'echarts/types/src/component/toolbox/feature/DataZoom.d.ts';
-import { YAXisOption } from 'echarts/types/dist/shared';
+import { XAXisOption, YAXisOption } from 'echarts/types/dist/shared';
 import type { CartesianAxisPosition } from 'echarts/types/src/coord/cartesian/AxisModel.d.ts';
 import type { FieldUpdateInfo } from '../../../models/field-update.model';
 
@@ -44,9 +44,9 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         generatedDataset: GeneratedDataset,
         options: EChartsOption,
         widgetConfig: TimeSeriesChartWidgetModel,
-        _widgetSize: WidgetSize,
+        widgetSize: WidgetSize,
     ): void {
-        this.addAxisOptions(widgetConfig, options);
+        this.addAxisOptions(widgetConfig, options, widgetSize);
         const finalSeries: SeriesOption[] = [];
 
         widgetConfig.visualizationConfig.selectedTimeSeriesChartProperties.forEach(
@@ -95,6 +95,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         );
 
         this.addDataZoomOptions(widgetConfig, options);
+        this.applyResponsiveLayoutOptions(options, widgetConfig, widgetSize);
 
         const showTooltip =
             widgetConfig.baseAppearanceConfig.chartAppearance?.showTooltip;
@@ -260,12 +261,22 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
     private addAxisOptions(
         config: TimeSeriesChartWidgetModel,
         options: EChartsOption,
+        widgetSize: WidgetSize,
     ): void {
         const xAxisOption = this.axisGeneratorService.makeAxis(
             'time',
             0,
             config.baseAppearanceConfig as WidgetBaseAppearanceConfig,
-        );
+        ) as XAXisOption;
+        if (xAxisOption.type === 'time') {
+            xAxisOption.splitNumber = this.makeResponsiveSplitNumber(
+                widgetSize.width,
+            );
+        }
+        xAxisOption.axisLabel = {
+            ...xAxisOption.axisLabel,
+            hideOverlap: true,
+        };
 
         const yAxisOptions: YAXisOption[] = [];
 
@@ -297,5 +308,81 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             xAxis: xAxisOption,
             yAxis: yAxisOptions,
         });
+    }
+
+    private applyResponsiveLayoutOptions(
+        options: EChartsOption,
+        config: TimeSeriesChartWidgetModel,
+        widgetSize: WidgetSize,
+    ): void {
+        const width = widgetSize.width ?? 0;
+        const isSmallWidget = width > 0 && width < 700;
+        const hasSliderDataZoom =
+            config.baseAppearanceConfig.dataZoom?.show &&
+            config.baseAppearanceConfig.dataZoom?.type === 'slider';
+
+        const legend =
+            !Array.isArray(options.legend) && options.legend
+                ? options.legend
+                : {};
+        const toolbox =
+            !Array.isArray(options.toolbox) && options.toolbox
+                ? options.toolbox
+                : {};
+
+        const showLegend = legend.show ?? true;
+        const showToolbox = toolbox.show ?? true;
+        const horizontalPadding = isSmallWidget ? 14 : 18;
+        const topToolboxTop = 4;
+        const toolboxHeight = showToolbox ? 28 : 0;
+        const topLegendTop = showToolbox
+            ? topToolboxTop + toolboxHeight + 4
+            : 6;
+        const topLegendHeight = showLegend ? 24 : 0;
+        const topControlsBottom = Math.max(
+            showToolbox ? topToolboxTop + toolboxHeight : 0,
+            showLegend ? topLegendTop + topLegendHeight : 0,
+        );
+        const gridTop = topControlsBottom > 0 ? topControlsBottom + 8 : 16;
+
+        options.toolbox = {
+            ...toolbox,
+            show: showToolbox,
+            left: 10,
+            right: 'auto',
+            top: topToolboxTop,
+        };
+
+        options.legend = {
+            ...legend,
+            show: showLegend,
+            orient: 'horizontal',
+            type: 'scroll',
+            left: 'center',
+            right: 'auto',
+            top: topLegendTop,
+            bottom: 'auto',
+        };
+
+        options.grid = {
+            left: horizontalPadding,
+            right: horizontalPadding,
+            top: gridTop,
+            bottom: hasSliderDataZoom ? 72 : 34,
+            containLabel: true,
+        };
+    }
+
+    private makeResponsiveSplitNumber(width: number): number {
+        if (!width || Number.isNaN(width)) {
+            return 5;
+        }
+
+        const targetPixelPerLabel = 120;
+        const minTicks = 2;
+        const maxTicks = 12;
+        const estimatedTicks = Math.floor(width / targetPixelPerLabel);
+
+        return Math.min(maxTicks, Math.max(minTicks, estimatedTicks));
     }
 }

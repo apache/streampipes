@@ -51,6 +51,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   //  Is used to store where the adapter is running to stop it
   private String selectedEndpointUrl;
+  private String selectedServiceId;
 
   private ExtensionDeploymentConfiguration deploymentConfiguration;
 
@@ -96,6 +97,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.icon = other.getIcon();
     this.createdAt = other.getCreatedAt();
     this.selectedEndpointUrl = other.getSelectedEndpointUrl();
+    this.selectedServiceId = other.getSelectedServiceId();
     this.correspondingServiceGroup = other.getCorrespondingServiceGroup();
     this.correspondingDataStreamElementId = other.getCorrespondingDataStreamElementId();
     if (other.getEventGrounding() != null) {
@@ -173,6 +175,14 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   public void setSelectedEndpointUrl(String selectedEndpointUrl) {
     this.selectedEndpointUrl = selectedEndpointUrl;
+  }
+
+  public String getSelectedServiceId() {
+    return selectedServiceId;
+  }
+
+  public void setSelectedServiceId(String selectedServiceId) {
+    this.selectedServiceId = selectedServiceId;
   }
 
   /**

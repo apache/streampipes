@@ -26,10 +26,7 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesDataStream;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
-import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.messaging.SpProtocolManager;
-import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.apache.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class DeclarersSingleton implements IDeclarersSingleton {
 
@@ -51,8 +47,6 @@ public class DeclarersSingleton implements IDeclarersSingleton {
   private final Map<String, IStreamPipesDataSink> dataSinks;
   private final Map<String, IStreamPipesDataStream> dataStreams;
   private final Map<String, IStreamPipesFunctionDeclarer> functions;
-
-  private final Map<String, TransportProtocol> supportedProtocols;
   private final Map<String, StreamPipesAdapter> adapters;
 
   private List<IStreamPipesRuntimeProvider> runtimeProviders;
@@ -69,7 +63,6 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     this.dataProcessors = new HashMap<>();
     this.dataSinks = new HashMap<>();
     this.dataStreams = new HashMap<>();
-    this.supportedProtocols = new HashMap<>();
     this.adapters = new HashMap<>();
     this.functions = new HashMap<>();
     this.runtimeProviders = new ArrayList<>();
@@ -91,10 +84,10 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     this.addDeclarers(serviceDef.getDeclarers());
     this.serviceId = serviceDef.getServiceId();
     this.serviceGroup = serviceDef.getServiceGroup();
-    this.registerProtocols(serviceDef.getProtocolDefinitionFactories());
     this.runtimeProviders = serviceDef.getRuntimeProviders();
     serviceDef.getAdapters().forEach(a -> this.adapters.put(a.declareConfig().getAdapterDescription().getAppId(), a));
     serviceDef.getFunctions().forEach(f -> this.functions.put(f.getFunctionConfig().getFunctionId().getId(), f));
+    serviceDef.getProtocolDefinitionFactories().forEach(SpProtocolManager.INSTANCE::register);
   }
 
   public void addDeclarers(List<IStreamPipesPipelineElement<?>> allPipelineElements) {
@@ -125,16 +118,6 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     return result;
   }
 
-  public void registerProtocol(SpProtocolDefinitionFactory<?> protocol) {
-    SpProtocolManager.INSTANCE.register(protocol);
-    this.supportedProtocols.put(protocol.getTransportProtocolClass(),
-        protocol.getTransportProtocol());
-  }
-
-  public void registerProtocols(List<SpProtocolDefinitionFactory<?>> protocols) {
-    protocols.forEach(this::registerProtocol);
-  }
-
   private void addDataProcessor(IStreamPipesDataProcessor dataProcessor) {
     dataProcessors.put(dataProcessor.declareConfig().getDescription().getAppId(), dataProcessor);
   }
@@ -158,14 +141,6 @@ public class DeclarersSingleton implements IDeclarersSingleton {
 
   public Map<String, IStreamPipesDataSink> getDataSinks() {
     return dataSinks;
-  }
-
-  public Collection<TransportProtocol> getSupportedProtocols() {
-    return this.supportedProtocols
-        .values()
-        .stream()
-        .map(p -> new Cloner().protocol(p))
-        .collect(Collectors.toList());
   }
 
   public int getPort() {
@@ -212,11 +187,11 @@ public class DeclarersSingleton implements IDeclarersSingleton {
     adapters.forEach(a -> this.adapters.put(a.declareConfig().getAdapterDescription().getAppId(), a));
   }
 
-  public Optional<StreamPipesAdapter> getAdapter(String id) {
+  public Optional<StreamPipesAdapter> getAdapter(String appId) {
     return getAdapters().stream()
         .filter(adapter -> adapter.declareConfig()
             .getAdapterDescription()
-            .getAppId().equals(id))
+            .getAppId().equals(appId))
         .findFirst();
   }
 

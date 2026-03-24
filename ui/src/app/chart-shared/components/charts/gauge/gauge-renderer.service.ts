@@ -45,12 +45,16 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
         value: number,
         widgetConfig: GaugeWidgetModel,
         widgetSize: WidgetSize,
+        gaugeLayout: GaugeLayout,
     ): GaugeSeriesOption {
         const visConfig = widgetConfig.visualizationConfig;
-        const clamp = Math.min(Math.max(widgetSize.width / 400, 0.7), 1.4);
+        const minDimension = Math.min(widgetSize.width, widgetSize.height);
+        const clamp = Math.min(Math.max(minDimension / 320, 0.7), 1.4);
         return {
             name: seriesName,
             type: 'gauge',
+            center: ['50%', gaugeLayout.centerY],
+            radius: gaugeLayout.radius,
             progress: {
                 show: true,
             },
@@ -62,7 +66,7 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
                 valueAnimation: false,
                 formatter: '{value}',
                 fontSize: 14 * clamp,
-                offsetCenter: [0, '70%'],
+                offsetCenter: [0, gaugeLayout.detailOffsetY],
             },
             min: visConfig.min,
             max: visConfig.max,
@@ -105,10 +109,31 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
             selectedField.fullDbName,
         );
         const data = parseFloat(dataSeries.rows[0][columnIndex].toFixed(2));
+        const legend =
+            !Array.isArray(option.legend) && option.legend ? option.legend : {};
+        const toolbox =
+            !Array.isArray(option.toolbox) && option.toolbox
+                ? option.toolbox
+                : {};
+        const showLegend = false;
+        const showToolbox = toolbox.show ?? true;
+        const gaugeLayout = this.makeGaugeLayout(
+            widgetSize,
+            showToolbox,
+            showLegend,
+        );
+
         Object.assign(option, {
-            grid: {
-                width: '100%',
-                height: '100%',
+            toolbox: {
+                ...toolbox,
+                left: 10,
+                right: 'auto',
+                top: 4,
+                show: showToolbox,
+            },
+            legend: {
+                ...legend,
+                show: showLegend,
             },
             series: this.makeSeriesItem(
                 '',
@@ -116,9 +141,48 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
                 data,
                 widgetConfig,
                 widgetSize,
+                gaugeLayout,
             ),
         });
 
         return option;
     }
+
+    private makeGaugeLayout(
+        widgetSize: WidgetSize,
+        showToolbox: boolean,
+        showLegend: boolean,
+    ): GaugeLayout {
+        const topPadding = 8;
+        const bottomPadding = 14;
+        const toolboxHeight = showToolbox ? 30 : 0;
+        const legendHeight = showLegend ? 30 : 0;
+        const gap = showToolbox && showLegend ? 6 : 0;
+        const topReserved = topPadding + toolboxHeight + gap + legendHeight;
+
+        const availableHeight = Math.max(
+            100,
+            widgetSize.height - topReserved - bottomPadding,
+        );
+        const availableWidth = Math.max(100, widgetSize.width - 20);
+        const diameter = Math.max(
+            90,
+            Math.min(availableHeight, availableWidth),
+        );
+        const radius = Math.round(diameter * 0.46);
+        const centerY = topReserved + Math.round(availableHeight / 2);
+        const detailOffsetY = Math.round(radius * 0.62);
+
+        return {
+            centerY,
+            radius,
+            detailOffsetY,
+        };
+    }
+}
+
+interface GaugeLayout {
+    centerY: number;
+    radius: number;
+    detailOffsetY: number;
 }

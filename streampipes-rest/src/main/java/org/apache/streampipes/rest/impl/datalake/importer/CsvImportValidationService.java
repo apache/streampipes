@@ -243,9 +243,11 @@ class CsvImportValidationService {
     var existingProperties = existingMeasure.getEventSchema()
         .getEventProperties()
         .stream()
+        .filter(property -> !Objects.equals(property.getRuntimeName(), timestampColumn))
         .collect(Collectors.toMap(EventProperty::getRuntimeName, property -> property));
     var importedProperties = importSchema.getEventProperties()
         .stream()
+        .filter(property -> !Objects.equals(property.getRuntimeName(), timestampColumn))
         .collect(Collectors.toMap(EventProperty::getRuntimeName, property -> property));
 
     importedProperties.keySet().stream()

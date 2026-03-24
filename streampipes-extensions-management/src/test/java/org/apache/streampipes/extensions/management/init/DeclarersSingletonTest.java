@@ -33,11 +33,11 @@ public class DeclarersSingletonTest {
 
   @Test
   public void getAdapterTest() {
-    var id = "id";
+    var appId = "id";
     var testAdapter = mock(StreamPipesAdapter.class);
     doAnswer(invocation ->
                  AdapterConfigurationBuilder
-                     .create(id, 0, null)
+                     .create(appId, 0, null)
                      .buildConfiguration())
         .when(testAdapter)
         .declareConfig();
@@ -47,7 +47,7 @@ public class DeclarersSingletonTest {
                       .setAdapters(List.of(testAdapter));
 
     var result = DeclarersSingleton.getInstance()
-                                   .getAdapter(id);
+                                   .getAdapter(appId);
 
     Assertions.assertTrue(result.isPresent());
     Assertions.assertEquals(testAdapter, result.get());

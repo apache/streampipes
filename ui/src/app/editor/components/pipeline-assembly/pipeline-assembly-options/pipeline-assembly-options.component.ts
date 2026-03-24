@@ -151,12 +151,11 @@ export class PipelineAssemblyOptionsComponent {
                 title: 'Do you really want to delete the current pipeline?',
                 subtitle: 'This cannot be undone.',
                 cancelTitle: 'No',
-                okTitle: 'Yes',
-                confirmAndCancel: true,
+                confirmTitle: 'Yes',
             },
         });
         dialogRef.afterClosed().subscribe(ev => {
-            if (ev) {
+            if (ev === 'confirm') {
                 this.clearAssemblyEmitter.emit();
             }
         });

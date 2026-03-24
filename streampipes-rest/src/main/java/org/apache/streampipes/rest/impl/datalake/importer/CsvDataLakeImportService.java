@@ -300,7 +300,7 @@ public class CsvDataLakeImportService {
       var measure = new DataLakeMeasure();
       measure.setMeasureName(request.getTarget().getMeasurementName().trim());
       measure.setTimestampField(STREAM_PREFIX + request.getTimestampColumn());
-      measure.setEventSchema(eventSchema);
+      measure.setEventSchema(removeTimestampProperty(eventSchema, request.getTimestampColumn()));
       return new StoredMeasure(schemaManagement.createOrUpdateMeasurement(measure, principalSid), true);
     }
 
@@ -318,6 +318,15 @@ public class CsvDataLakeImportService {
     result.setImportedRowCount(importedRowCount);
     result.setValidationMessages(List.of());
     return result;
+  }
+
+  private EventSchema removeTimestampProperty(EventSchema eventSchema, String timestampColumn) {
+    var sanitizedSchema = new EventSchema();
+    sanitizedSchema.setEventProperties(eventSchema.getEventProperties()
+        .stream()
+        .filter(property -> !Objects.equals(property.getRuntimeName(), timestampColumn))
+        .collect(Collectors.toList()));
+    return sanitizedSchema;
   }
 
   private record StoredMeasure(DataLakeMeasure measure, boolean createdNewMeasurement) {

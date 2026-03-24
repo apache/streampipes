@@ -28,6 +28,7 @@ import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.GenericStorageDocumentResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.assets.SpAssetModel;
@@ -55,12 +56,15 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   private final INoSqlStorage storage;
   private final Set<PermissionInfo> permissionsToStore = new HashSet<>();
   private final String ownerSid;
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
 
   public PerformImportGenerator(AssetExportConfiguration config,
-                                String ownerSid) {
+                                String ownerSid,
+                                ExtensionServiceRequestManager extensionServiceRequestManager) {
     this.config = config;
     this.storage = StorageDispatcher.INSTANCE.getNoSqlStore();
     this.ownerSid = ownerSid;
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
   }
 
   @Override
@@ -81,7 +85,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleAdapter(String document, String adapterId) throws JsonProcessingException {
     if (shouldStore(adapterId, config.getAdapters())) {
-      writeDocument(document, new AdapterResolver());
+      writeDocument(document, new AdapterResolver(extensionServiceRequestManager));
       // adapters do not have permissions associated
     }
   }
@@ -116,7 +120,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handlePipeline(String document, String pipelineId) throws JsonProcessingException {
     if (shouldStore(pipelineId, config.getPipelines())) {
-      writeDocument(document, new PipelineResolver());
+      writeDocument(document, new PipelineResolver(extensionServiceRequestManager));
       permissionsToStore.add(new PermissionInfo(pipelineId, Pipeline.class));
     }
   }

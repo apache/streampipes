@@ -54,7 +54,8 @@ public class QueryResultProvider {
   public SpQueryResult getData() {
     if (queryParams.has(SupportedRestQueryParams.QP_AUTO_AGGREGATE)) {
       queryParams = new AutoAggregationHandler(queryParams,
-                                               dataExplorerQueryManagement).makeAutoAggregationQueryParams();
+                                               dataExplorerQueryManagement,
+                                               ignoreMissingData).makeAutoAggregationQueryParams();
     }
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(queryParams);
 

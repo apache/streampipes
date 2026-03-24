@@ -40,10 +40,6 @@
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.streampipes</groupId>
-                    <artifactId>streampipes-messaging-jms</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.streampipes</groupId>
                     <artifactId>streampipes-messaging-kafka</artifactId>
                 </exclusion>
                 <exclusion>

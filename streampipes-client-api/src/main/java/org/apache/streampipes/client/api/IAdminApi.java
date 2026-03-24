@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.model.configuration.MessagingSettings;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionDefinition;
@@ -47,6 +46,4 @@ public interface IAdminApi {
   void persistFunctionState(String functionId, Map<String, Object> state);
 
   void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId);
-
-  MessagingSettings getMessagingSettings();
 }

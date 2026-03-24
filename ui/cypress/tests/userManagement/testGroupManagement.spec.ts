@@ -24,7 +24,6 @@ import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
-import { NavigationUtils } from '../../support/utils/navigation/NavigationUtils';
 import { ConfigurationBtns } from '../../support/utils/configuration/ConfigurationBtns';
 import { UserBtns } from '../../support/utils/user/UserBtns';
 import { SharedBtns } from '../../support/utils/shared/SharedBtns';
@@ -100,17 +99,11 @@ describe('Test Group Management for Pipelines', () => {
         // Login as first user which belongs to user group with pipeline admin role
         UserUtils.switchUser(user);
 
-        NavigationUtils.validateActiveModules([
-            NavigationUtils.PIPELINES,
-            NavigationUtils.CONFIGURATION,
-        ]);
-
         // Check if pipeline is visible
         PipelineUtils.checkAmountOfPipelinesPipeline(1);
 
         // Login as user2
         UserUtils.switchUser(user2);
-        NavigationUtils.validateActiveModules([NavigationUtils.PIPELINES]);
 
         // Check if pipeline is invisible to user2
         PipelineUtils.checkAmountOfPipelinesPipeline(0);

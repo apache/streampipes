@@ -32,18 +32,6 @@ public interface ISpServiceDiscovery {
    */
   Set<SpServiceTag> getCustomServiceTags(boolean restrictToHealthy);
 
-  /**
-   * Get service endpoints
-   *
-   * @param svcGroup          service group for registered service
-   * @param restrictToHealthy retrieve healthy or all registered services for a service group
-   * @param filterByTags      filter param to filter list of registered services
-   * @return list of services
-   */
-  List<String> getServiceEndpoints(String svcGroup,
-                                   boolean restrictToHealthy,
-                                   List<String> filterByTags);
-
   List<SpServiceRegistration> getService(boolean restrictToHealthy);
 
   List<SpServiceRegistration> getService(String serviceGroup,
