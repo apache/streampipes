@@ -16,59 +16,18 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatTooltip } from '@angular/material/tooltip';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
-import {
-    AdapterHealthStatus,
-    HealthCheckStatus,
-} from '../../../model/adapter-health-status.model';
-import { AdapterHealthDetailsDialogComponent } from '../adapter-health-details-dialog/adapter-health-details-dialog.component';
 
 @Component({
     selector: 'sp-adapter-status-light',
     templateUrl: './adapter-status-light.component.html',
-    styleUrls: ['./adapter-status-light.component.scss'],
-    imports: [LayoutDirective, LayoutAlignDirective, MatTooltip, NgClass],
+    imports: [LayoutDirective, LayoutAlignDirective],
 })
 export class AdapterStatusLightComponent {
-    @Input() adapterRunning: boolean;
-    @Input() healthStatus: AdapterHealthStatus | null = null;
-
-    private dialogService = inject(DialogService);
-
-    get statusClass(): string {
-        if (!this.adapterRunning) {
-            return 'light-neutral';
-        }
-        if (!this.healthStatus) {
-            return 'light-green';
-        }
-        switch (this.healthStatus.overallStatus) {
-            case HealthCheckStatus.HEALTHY:
-                return 'light-green';
-            case HealthCheckStatus.UNHEALTHY:
-                return 'light-red';
-            default:
-                return 'light-neutral';
-        }
-    }
-
-    openHealthDetails(event: MouseEvent): void {
-        event.stopPropagation();
-        if (!this.adapterRunning) {
-            return;
-        }
-        this.dialogService.open(AdapterHealthDetailsDialogComponent, {
-            panelType: PanelType.STANDARD_PANEL,
-            title: 'Adapter Health Status',
-            width: '600px',
-            data: { healthStatus: this.healthStatus },
-        });
-    }
+    @Input()
+    adapterRunning: boolean;
 }

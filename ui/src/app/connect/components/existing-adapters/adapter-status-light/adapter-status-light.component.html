@@ -15,14 +15,11 @@
 ~ limitations under the License.
 ~
 -->
-<div
-    fxLayout="row"
-    fxLayoutAlign="start center"
-    class="status-light-container"
-    (click)="openHealthDetails($event)"
-    [matTooltip]="
-        adapterRunning ? 'Click for health details' : 'Adapter not running'
-    "
->
-    <div class="light" [ngClass]="statusClass"></div>
+<div fxLayout="row" fxLayoutAlign="start center">
+    @if (adapterRunning) {
+        <div class="light light-green"></div>
+    }
+    @if (!adapterRunning) {
+        <div class="light light-neutral"></div>
+    }
 </div>

@@ -19,7 +19,6 @@
 package org.apache.streampipes.extensions.management.init;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
-import org.apache.streampipes.extensions.management.monitoring.AdapterHealthCheckManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.Collection;
@@ -35,14 +34,12 @@ public enum RunningAdapterInstances {
   public void addAdapter(String elementId, StreamPipesAdapter adapter, AdapterDescription adapterDescription) {
     runningAdapterInstances.put(elementId, adapter);
     runningAdapterDescriptionInstances.put(elementId, adapterDescription);
-    AdapterHealthCheckManager.INSTANCE.registerAdapter(elementId, adapter, adapterDescription);
   }
 
   public StreamPipesAdapter removeAdapter(String elementId) {
     StreamPipesAdapter result = runningAdapterInstances.get(elementId);
     runningAdapterInstances.remove(elementId);
     runningAdapterDescriptionInstances.remove(elementId);
-    AdapterHealthCheckManager.INSTANCE.unregisterAdapter(elementId);
     return result;
   }
 

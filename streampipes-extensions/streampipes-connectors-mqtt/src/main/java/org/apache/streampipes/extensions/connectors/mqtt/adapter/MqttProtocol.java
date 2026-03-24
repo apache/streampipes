@@ -18,9 +18,7 @@
 package org.apache.streampipes.extensions.connectors.mqtt.adapter;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.api.connect.DataSourceHealthCheckResult;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
-import org.apache.streampipes.extensions.api.connect.IDataSourceHealthCheck;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchemaContext;
@@ -30,7 +28,6 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConfig;
 import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConnectUtils;
 import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttConsumer;
-import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttHealthChecker;
 import org.apache.streampipes.extensions.connectors.mqtt.shared.MqttSingleMessageReceiver;
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
@@ -41,7 +38,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 
 import java.io.ByteArrayInputStream;
 
-public class MqttProtocol implements StreamPipesAdapter, IDataSourceHealthCheck {
+public class MqttProtocol implements StreamPipesAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.mqtt";
 
@@ -116,14 +113,6 @@ public class MqttProtocol implements StreamPipesAdapter, IDataSourceHealthCheck 
 
   public void initializeMqttConfig(IStaticPropertyExtractor extractor) {
     this.mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
-  }
-
-  @Override
-  public DataSourceHealthCheckResult checkDataSourceHealth() {
-    if (mqttConfig == null) {
-      return DataSourceHealthCheckResult.unhealthy("MQTT config not initialized");
-    }
-    return new MqttHealthChecker(mqttConfig).check();
   }
 
 }
