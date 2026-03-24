@@ -66,14 +66,16 @@
             color="accent"
             >{{ 'Auto refresh' | translate }}
         </mat-slide-toggle>
-        <button
-            mat-icon-button
-            [matMenuTriggerFor]="optMenu"
-            [attr.aria-label]="'Options' | translate"
-            data-cy="pipeline-details-options"
-        >
-            <mat-icon>more_vert</mat-icon>
-        </button>
+        @if (hasPipelineWritePrivileges) {
+            <button
+                mat-icon-button
+                [matMenuTriggerFor]="optMenu"
+                [attr.aria-label]="'Options' | translate"
+                data-cy="pipeline-details-options"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        }
         <mat-menu #optMenu="matMenu">
             @if (hasPipelineWritePrivileges) {
                 <button
