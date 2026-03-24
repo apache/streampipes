@@ -179,7 +179,9 @@ export class ChartBtns {
     }
 
     public static indicatorChartDeltaCheckbox() {
-        return cy.dataCy('data-explorer-select-delta-checkbox');
+        return cy
+            .dataCy('data-explorer-select-delta-checkbox')
+            .find('input[type="checkbox"]');
     }
 
     public static addNewWidgetBtn() {
