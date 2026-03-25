@@ -1,0 +1,83 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div
+    class="split-button"
+    cdkOverlayOrigin
+    #overlayOrigin="cdkOverlayOrigin"
+    [class.split-button--basic]="appearance === 'mat-basic'"
+    [class.split-button--open]="menuOpen"
+>
+    <button
+        mat-flat-button
+        [type]="buttonType"
+        class="split-button__main"
+        [class.mat-basic]="appearance === 'mat-basic'"
+        [disabled]="disabled"
+        (click)="onPrimaryActionClicked()"
+    >
+        @if (icon) {
+            <mat-icon>{{ icon }}</mat-icon>
+        }
+        <span>{{ label }}</span>
+    </button>
+
+    <button
+        mat-flat-button
+        type="button"
+        class="split-button__toggle"
+        [class.mat-basic]="appearance === 'mat-basic'"
+        [attr.aria-label]="menuAriaLabel | translate"
+        [disabled]="isDropdownDisabled()"
+        (click)="toggleMenu($event)"
+    >
+        <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+</div>
+
+<ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="overlayOrigin"
+    [cdkConnectedOverlayOpen]="menuOpen"
+    [cdkConnectedOverlayPositions]="overlayPositions"
+    [cdkConnectedOverlayHasBackdrop]="true"
+    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+    (backdropClick)="closeMenu()"
+    (detach)="closeMenu()"
+>
+    <div
+        class="split-button__menu-panel"
+        [style.width.px]="menuWidth"
+        role="menu"
+    >
+        @for (action of actions; track action.action) {
+            <button
+                type="button"
+                class="split-button__menu-item"
+                [disabled]="action.disabled"
+                (click)="onSplitActionClicked(action)"
+                role="menuitem"
+            >
+                @if (action.icon) {
+                    <mat-icon>{{ action.icon }}</mat-icon>
+                }
+                <span>{{ action.label }}</span>
+            </button>
+        }
+    </div>
+</ng-template>
