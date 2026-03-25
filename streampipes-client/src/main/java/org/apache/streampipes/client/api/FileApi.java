@@ -21,6 +21,7 @@ package org.apache.streampipes.client.api;
 import org.apache.streampipes.client.http.BinaryGetRequest;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 
 public class FileApi extends AbstractClientApi implements IFileApi {
@@ -30,6 +31,7 @@ public class FileApi extends AbstractClientApi implements IFileApi {
   }
 
   @Override
+  @ExposedToScripts
   public byte[] getFileContent(String filename) {
     return new BinaryGetRequest(
         clientConfig,
@@ -40,6 +42,7 @@ public class FileApi extends AbstractClientApi implements IFileApi {
   }
 
   @Override
+  @ExposedToScripts
   public String getFileContentAsString(String filename) {
     return new String(getFileContent(filename));
   }
@@ -51,6 +54,7 @@ public class FileApi extends AbstractClientApi implements IFileApi {
   }
 
   @Override
+  @ExposedToScripts
   public boolean checkFileContentChanged(String filename, String hash) {
     return getSingle(
         getBaseResourcePath(filename)

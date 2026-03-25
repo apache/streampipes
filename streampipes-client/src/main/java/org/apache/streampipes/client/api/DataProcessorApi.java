@@ -26,6 +26,7 @@ import org.apache.streampipes.client.live.SubscriptionManager;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,28 +44,33 @@ public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvoca
   }
 
   @Override
+  @ExposedToScripts
   public Optional<DataProcessorInvocation> get(String s) {
     return getSingle(getBaseResourcePath().addToPath(s));
   }
 
   @Override
+  @ExposedToScripts
   public List<DataProcessorInvocation> all() {
     return getAll(getBaseResourcePath());
   }
 
   @Override
+  @ExposedToScripts
   @NotYetImplemented
   public void create(DataProcessorInvocation element) {
 
   }
 
   @Override
+  @ExposedToScripts
   @NotYetImplemented
   public void delete(String s) {
 
   }
 
   @Override
+  @ExposedToScripts
   @NotYetImplemented
   public void update(DataProcessorInvocation element) {
 

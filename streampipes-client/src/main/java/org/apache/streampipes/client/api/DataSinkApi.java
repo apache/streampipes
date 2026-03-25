@@ -25,6 +25,7 @@ import org.apache.streampipes.client.live.SubscriptionManager;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,28 +38,33 @@ public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
   }
 
   @Override
+  @ExposedToScripts
   public Optional<DataSinkInvocation> get(String s) {
     return getSingle(getBaseResourcePath().addToPath(s));
   }
 
   @Override
+  @ExposedToScripts
   public List<DataSinkInvocation> all() {
     return getAll(getBaseResourcePath());
   }
 
   @Override
+  @ExposedToScripts
   @NotYetImplemented
   public void create(DataSinkInvocation element) {
 
   }
 
   @Override
+  @ExposedToScripts
   @NotYetImplemented
   public void delete(String s) {
 
   }
 
   @Override
+  @ExposedToScripts
   public void update(DataSinkInvocation element) {
 
   }
@@ -91,6 +97,7 @@ public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
   }
 
   @Override
+  @ExposedToScripts
   public DataSinkInvocation getDataSinkForPipelineElement(String templateId, DataSinkInvocation pipelineElement) {
     StreamPipesApiPath path = StreamPipesApiPath.fromBaseApiPath()
         .addToPath("pipeline-element-templates")

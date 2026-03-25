@@ -21,6 +21,7 @@ package org.apache.streampipes.client.api;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.Notification;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 public class NotificationsApi extends AbstractTypedClientApi<Notification> implements INotificationsApi {
 
@@ -35,6 +36,7 @@ public class NotificationsApi extends AbstractTypedClientApi<Notification> imple
   }
 
   @Override
+  @ExposedToScripts
   public void add(Notification notification) {
     post(getBaseResourcePath(), notification);
   }

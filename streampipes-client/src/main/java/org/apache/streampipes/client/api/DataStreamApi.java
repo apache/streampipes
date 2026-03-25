@@ -27,6 +27,7 @@ import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -42,6 +43,7 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
   }
 
   @Override
+  @ExposedToScripts
   public Optional<SpDataStream> get(String streamId) {
     return getSingle(StreamPipesApiPath.fromBaseApiPath()
         .addToPath(STREAMS_PATH).addToPath(streamId));
@@ -53,6 +55,7 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
    * @return {@link org.apache.streampipes.model.SpDataStream} A list of all data streams owned by the user.
    */
   @Override
+  @ExposedToScripts
   public List<SpDataStream> all() {
     return getAll(getBaseResourcePath());
   }
@@ -63,6 +66,7 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
    * @param stream The data stream to add
    */
   @Override
+  @ExposedToScripts
   public void create(SpDataStream stream) {
     post(StreamPipesApiPath.fromBaseApiPath().addToPath(STREAMS_PATH), stream);
   }
@@ -73,11 +77,13 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
    * @param streamId The elementId of the stream
    */
   @Override
+  @ExposedToScripts
   public void delete(String streamId) {
     delete(getBaseResourcePath().addToPath(URLEncoder.encode(streamId, StandardCharsets.UTF_8)), Message.class);
   }
 
   @Override
+  @ExposedToScripts
   public void update(SpDataStream element) {
     put(getBaseResourcePath().addToPath(URLEncoder.encode(element.getElementId(), StandardCharsets.UTF_8)), element);
   }
