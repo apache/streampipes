@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.config.identity;
 
-import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
-import org.eclipse.milo.opcua.sdk.client.api.identity.AnonymousProvider;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClientConfigBuilder;
+import org.eclipse.milo.opcua.sdk.client.identity.AnonymousProvider;
 
 public class AnonymousIdentityConfig implements IdentityConfig {
 

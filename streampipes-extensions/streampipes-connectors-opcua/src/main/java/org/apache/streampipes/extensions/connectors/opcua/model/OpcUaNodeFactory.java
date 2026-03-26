@@ -23,7 +23,7 @@ import org.apache.streampipes.extensions.connectors.opcua.model.node.ExtensionOb
 import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
 import org.apache.streampipes.extensions.connectors.opcua.model.node.PrimitiveOpcUaNode;
 
-import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
+import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ExtensionObject;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
@@ -96,7 +96,7 @@ public class OpcUaNodeFactory {
 
   /**
    * Conservative fallback based on declared DataType only.
-   * Treat only ExtensionObject itself as "extension" here.
+   * Treat only Structure/ExtensionObject data type itself as "extension" here.
    *
    * Why so conservative? Because abstract standard types like Integer/Number
    * are NOT builtins but are still "primitive-ish" and should not be treated
@@ -104,7 +104,6 @@ public class OpcUaNodeFactory {
    */
   private static boolean isExtensionByDataType(BasicVariableNodeInfo nodeInfo) {
     NodeId dt = nodeInfo.getNode().getDataType();
-    return Objects.equals(dt, BuiltinDataType.ExtensionObject.getNodeId());
+    return Objects.equals(dt, Identifiers.Structure);
   }
 }
-

@@ -68,7 +68,7 @@
         <jgrapht.version>1.5.1</jgrapht.version>
         <jjwt.version>0.11.2</jjwt.version>
         <lightcouch.version>0.2.0</lightcouch.version>
-        <eclipse.milo.version>0.6.16</eclipse.milo.version>
+        <eclipse.milo.version>1.1.1</eclipse.milo.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
@@ -703,18 +703,18 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.milo</groupId>
-                <artifactId>sdk-client</artifactId>
+                <artifactId>milo-sdk-client</artifactId>
+                <version>${eclipse.milo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.milo</groupId>
+                <artifactId>milo-dtd-reader</artifactId>
                 <version>${eclipse.milo.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.ditto</groupId>
                 <artifactId>ditto-client</artifactId>
                 <version>${ditto-client.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.milo</groupId>
-                <artifactId>dictionary-reader</artifactId>
-                <version>${eclipse.milo.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.rdf4j</groupId>

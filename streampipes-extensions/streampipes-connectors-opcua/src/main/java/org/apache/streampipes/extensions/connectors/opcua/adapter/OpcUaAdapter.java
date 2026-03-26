@@ -47,7 +47,7 @@ import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
-import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
+import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaMonitoredItem;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
@@ -141,7 +141,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   @Override
   public void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException {
     var response =
-        this.connectedClient.getClient().readValues(
+        this.connectedClient.getClient().readValuesAsync(
             0,
             TimestampsToReturn.Both,
             this.allNodes.stream().map(o -> o.nodeInfo().getNodeId()).toList());
@@ -177,7 +177,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
         .equalsIgnoreCase(SharedUserConfiguration.INCOMPLETE_OPTION_IGNORE);
   }
 
-  public void onSubscriptionValue(UaMonitoredItem item,
+  public void onSubscriptionValue(OpcUaMonitoredItem item,
                                   DataValue value) {
 
     String key = this.nodeIdToLabelMapping.get(item.getReadValueId().getNodeId().toString());

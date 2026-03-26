@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.adapter;
 
-import org.eclipse.milo.opcua.sdk.client.api.UaClient;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.stack.core.StatusCodes;
@@ -30,15 +30,14 @@ import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class OpcUaNodeMetadataExtractor {
-  private final UaClient client;
+  private final OpcUaClient client;
   private final UaNode node;
 
   private final Map<String, Object> metadata;
 
-  public OpcUaNodeMetadataExtractor(UaClient client, UaNode node) {
+  public OpcUaNodeMetadataExtractor(OpcUaClient client, UaNode node) {
     this.client = client;
     this.node = node;
     this.metadata = new HashMap<>();
@@ -56,7 +55,7 @@ public class OpcUaNodeMetadataExtractor {
       try {
         var dataTypeNodeId = ((UaVariableNode) node).getDataType();
         var dataTypeNode = client.getAddressSpace().getNode(dataTypeNodeId);
-        var value = client.readValue(0, TimestampsToReturn.Both, node.getNodeId()).get();
+        var value = client.readValue(0, TimestampsToReturn.Both, node.getNodeId());
 
         extractNodeId((UaVariableNode) node);
         extractSourceTime(value);
@@ -64,7 +63,7 @@ public class OpcUaNodeMetadataExtractor {
         extractStatusCode(value);
         extractDataType(dataTypeNode);
         extractDataTypeNodeId(dataTypeNodeId);
-      } catch (UaException | ExecutionException | InterruptedException e) {
+      } catch (UaException e) {
         throw new RuntimeException(e);
       }
     }

@@ -25,8 +25,8 @@ import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaCertificateUtils;
 import org.apache.streampipes.model.opcua.Certificate;
 
-import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
-import org.eclipse.milo.opcua.stack.core.security.DefaultTrustListManager;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClientConfigBuilder;
+import org.eclipse.milo.opcua.stack.core.security.FileBasedTrustListManager;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.MessageSecurityMode;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
@@ -83,7 +83,7 @@ public class SecurityConfig {
       try {
         var env = Environments.getEnvironment();
         var securityDir = Paths.get(env.getOpcUaSecurityDir().getValueOrDefault());
-        var trustListManager = new DefaultTrustListManager(securityDir.resolve("pki").toFile());
+        var trustListManager = FileBasedTrustListManager.createAndInitialize(securityDir.resolve("pki"));
 
         var loadedCerts = new AtomicReference<>(fetchTrustedCertsFromRest());
 

@@ -69,7 +69,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.milo</groupId>
-            <artifactId>sdk-client</artifactId>
+            <artifactId>milo-sdk-client</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>org.graalvm.nativeimage</groupId>
