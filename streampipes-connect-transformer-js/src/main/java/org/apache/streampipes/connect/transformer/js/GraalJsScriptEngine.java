@@ -112,7 +112,7 @@ public class GraalJsScriptEngine implements TransformationEngine {
     try {
       transformFunction.execute(
           input,
-          new ScriptOutputCollector(out),
+          ScriptOutputCollector.wrap(out),
           ctx
       );
     } catch (PolyglotException e) {

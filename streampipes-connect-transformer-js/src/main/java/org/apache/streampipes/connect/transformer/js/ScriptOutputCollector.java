@@ -22,6 +22,9 @@ import org.apache.streampipes.connect.transformer.api.OutputCollector;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
+import org.graalvm.polyglot.proxy.ProxyExecutable;
+import org.graalvm.polyglot.proxy.ProxyObject;
+
 import java.util.Map;
 
 public class ScriptOutputCollector {
@@ -30,6 +33,24 @@ public class ScriptOutputCollector {
 
   public ScriptOutputCollector(OutputCollector<Map<String, Object>> delegate) {
     this.delegate = delegate;
+  }
+
+  public static ProxyObject wrap(OutputCollector<Map<String, Object>> delegate) {
+    ScriptOutputCollector collector = new ScriptOutputCollector(delegate);
+    return ProxyObject.fromMap(Map.of(
+        "collect",
+        (ProxyExecutable) args -> {
+          if (args.length != 1) {
+            throw new IllegalArgumentException("collect expects exactly one event argument");
+          }
+          try {
+            collector.collect(args[0]);
+            return null;
+          } catch (ScriptExecutionException e) {
+            throw new IllegalStateException("Failed to collect script output event", e);
+          }
+        }
+    ));
   }
 
   @ExposedToScripts

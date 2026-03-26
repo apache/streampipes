@@ -28,11 +28,29 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Normalizes GraalVM polyglot values into plain Java types used by the StreamPipes transformation runtime.
+ *
+ * <p>The JavaScript transformer boundary accepts values that may originate from GraalJS {@link Value} instances,
+ * proxy objects, Java collections, or regular Java primitives. This utility unwraps that mixed input into stable
+ * Java representations such as {@link Map}, {@link List}, {@link String}, {@link Number}, and {@link Boolean} so the
+ * rest of the transformation pipeline can work with predictable types.
+ *
+ * <p>A common use case is script output handling. When a script calls {@code out.collect(...)} with a JavaScript
+ * object, the collector uses this converter to turn that object into a {@code Map<String, Object>} event structure
+ * before handing it back to the StreamPipes engine. Nested arrays, objects, and host values are converted
+ * recursively, which keeps the event payload compatible with the existing transformation APIs.
+ */
 public final class PolyglotTypeConverter {
 
   private PolyglotTypeConverter() {
   }
 
+  /**
+   * Converts a script-produced event into the Java event representation expected by the output collector.
+   *
+   * @throws ScriptExecutionException if the provided value cannot be represented as a map-like event
+   */
   public static Map<String, Object> toEventMap(Object input) throws ScriptExecutionException {
     Object javaObject = toJavaValue(input);
     if (javaObject == null) {
@@ -45,6 +63,9 @@ public final class PolyglotTypeConverter {
         "Expected a map-compatible event but got " + javaObject.getClass().getName());
   }
 
+  /**
+   * Recursively unwraps a polyglot input value into plain Java objects.
+   */
   public static Object toJavaValue(Object input) {
     if (input == null) {
       return null;
