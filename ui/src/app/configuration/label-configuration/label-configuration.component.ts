@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { LabelsService, SpLabel } from '@streampipes/platform-services';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
@@ -83,7 +83,7 @@ export class SpLabelConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];
 
     allLabels: SpLabel[] = [];
-    createLabelMode = false;
+    readonly createLabelMode = signal(false);
 
     dataSource: MatTableDataSource<SpLabel> = new MatTableDataSource<SpLabel>();
 
@@ -91,9 +91,9 @@ export class SpLabelConfigurationComponent implements OnInit {
     sort: MatSort;
 
     displayedColumns = ['name', 'description', 'actions'];
-    labelsinUse = [];
+    labelsinUse: string[] = [];
 
-    editedLabels: string[] = [];
+    readonly editedLabels = signal<string[]>([]);
 
     ngOnInit(): void {
         this.tabs = this.tabService.getTabs();
@@ -118,7 +118,10 @@ export class SpLabelConfigurationComponent implements OnInit {
     }
 
     saveLabel(label: SpLabel): void {
-        this.labelsService.addLabel(label).subscribe(() => this.reloadLabels());
+        this.labelsService.addLabel(label).subscribe(() => {
+            this.createLabelMode.set(false);
+            this.reloadLabels();
+        });
     }
 
     updateLabel(label: SpLabel): void {
@@ -135,10 +138,16 @@ export class SpLabelConfigurationComponent implements OnInit {
     }
 
     removeEditedLabel(labelId: string): void {
-        this.editedLabels.splice(this.editedLabels.indexOf(labelId), 1);
+        this.editedLabels.update(labels => labels.filter(id => id !== labelId));
     }
 
     isEditMode(labelId: string): boolean {
-        return this.editedLabels.find(l => l === labelId) !== undefined;
+        return this.editedLabels().includes(labelId);
+    }
+
+    addEditedLabel(labelId: string): void {
+        this.editedLabels.update(labels =>
+            labels.includes(labelId) ? labels : [...labels, labelId],
+        );
     }
 }
