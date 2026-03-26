@@ -16,17 +16,18 @@
  *
  */
 
-export class SystemInfo {
-    javaVmVendor: string;
+export interface SystemInfo {
     javaVmName: string;
+    javaVmVendor: string;
     javaVmVersion: string;
     javaRuntimeName: string;
     javaRuntimeVersion: string;
-    cpu: string;
     osName: string;
     osVersion: string;
-    totalMemory: string;
-    totalMemoryKB: string;
-    freeMemory: string;
-    freeMemoryKB: string;
+    cpu: string;
+
+    totalMemory: number;
+    freeMemory: number;
+    totalMemoryKB: number;
+    freeMemoryKB: number;
 }
