@@ -16,13 +16,27 @@
  *
  */
 
-export interface VersionInfo {
-    backendVersion: string;
-    itemVersions: [
-        {
-            itemType: string;
-            itemName: string;
-            itemVersion: string;
-        },
-    ];
+import { Component, Input } from '@angular/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { MatButton } from '@angular/material/button';
+
+@Component({
+    selector: 'sp-documentation-tab',
+    templateUrl: './documentation.component.html',
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        SplitSectionComponent,
+        MatButton,
+    ],
+})
+export class DocumentationTabComponent {
+    @Input()
+    documentationLink = '';
 }

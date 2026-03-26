@@ -26,7 +26,6 @@ import { ProfileService } from '../../../profile/profile.service';
 import { Subscription, timer } from 'rxjs';
 import { exhaustMap } from 'rxjs/operators';
 import { NotificationCountService } from '../../../services/notification-count-service';
-import { LoginService } from '../../../login/services/login.service';
 import {
     AssetBrowserToolbarComponent,
     SpAssetBrowserService,
@@ -88,10 +87,6 @@ export class ToolbarComponent
     unreadNotificationCount = 0;
     unreadNotificationsSubscription: Subscription;
 
-    documentationLinkActive = false;
-    documentationLink = '';
-
-    private loginService = inject(LoginService);
     private profileService = inject(ProfileService);
     private restApi = inject(RestApi);
     private overlay = inject(OverlayContainer);
@@ -128,12 +123,6 @@ export class ToolbarComponent
                     this.modifyAppearance(userInfo.darkMode);
                 });
         });
-        this.loginService.fetchLoginSettings().subscribe(res => {
-            this.documentationLinkActive =
-                res.linkSettings?.showDocumentationLinkInProfileMenu;
-            this.documentationLink = res.linkSettings?.documentationUrl || '';
-        });
-
         this.appearanceControl = new UntypedFormControl(
             this.currentUserService.darkMode$.getValue(),
         );
@@ -154,13 +143,9 @@ export class ToolbarComponent
         }
     }
 
-    openDocumentation() {
-        window.open(this.documentationLink, '_blank');
-    }
-
-    openInfo() {
-        this.router.navigate(['info']);
-        this.activePage = 'Info';
+    openHelp() {
+        this.router.navigate(['help']);
+        this.activePage = 'Help';
     }
 
     openProfile() {

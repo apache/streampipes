@@ -123,24 +123,12 @@
                         </button>
                         <button
                             mat-menu-item
-                            (click)="openInfo()"
+                            (click)="openHelp()"
                             style="min-width: 0px"
                         >
                             <mat-icon aria-label="Info">help</mat-icon>
-                            Info
+                            Help
                         </button>
-                        @if (documentationLinkActive) {
-                            <button
-                                mat-menu-item
-                                (click)="openDocumentation()"
-                                style="min-width: 0px"
-                            >
-                                <mat-icon aria-label="Documentation"
-                                    >description</mat-icon
-                                >
-                                Documentation
-                            </button>
-                        }
                         <mat-divider></mat-divider>
                         <button
                             mat-menu-item
