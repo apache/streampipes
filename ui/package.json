@@ -92,6 +92,8 @@
     "@angular/build": "^20.3.16",
     "@angular/cli": "^20.3.16",
     "@angular/compiler-cli": "^20.3.16",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.32.0",
     "@types/angular": "^1.8.4",
     "@types/jasmine": "~5.1.0",
     "@types/jqueryui": "^1.12.16",
