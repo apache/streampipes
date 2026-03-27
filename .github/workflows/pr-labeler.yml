@@ -17,7 +17,7 @@ name: "Pull Request Labeler"
 run-name: Pull request labeler for ${{ github.ref_name }}
 
 on:
-  pull_request:
+  pull_request_target:
 
 jobs:
   label-pr:
