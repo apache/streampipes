@@ -16,12 +16,12 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { JsplumbConfigService } from './jsplumb-config.service';
 
 @Injectable({ providedIn: 'root' })
 export class JsplumbEndpointService {
-    constructor(private jsplumbConfigService: JsplumbConfigService) {}
+    private jsplumbConfigService = inject(JsplumbConfigService);
 
     getJsplumbConfig(): any {
         return this.jsplumbConfigService.getEditorConfig();

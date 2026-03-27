@@ -26,6 +26,7 @@ import {
     OnInit,
     Output,
     ViewChild,
+    inject,
 } from '@angular/core';
 import { JsplumbBridge } from '../../../services/jsplumb-bridge.service';
 import { PipelineComponent } from '../../pipeline/pipeline.component';
@@ -59,6 +60,13 @@ import { ErrorHintComponent } from '../../../../core-ui/error-hint/error-hint.co
     ],
 })
 export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
+    pipelineValidationService = inject(PipelineValidationService);
+    private ngZone = inject(NgZone);
+    private editorService = inject(EditorService);
+    private pipelinePositioningService = inject(PipelinePositioningService);
+    private livePreviewService = inject(LivePreviewService);
+    private objectProvider = inject(ObjectProvider);
+
     @Input()
     jsplumbBridge: JsplumbBridge;
 
@@ -96,15 +104,6 @@ export class PipelineAssemblyDrawingAreaComponent implements OnInit, OnDestroy {
     @ViewChild('zoomComponent')
     zoomComponent: PipelineAssemblyDrawingAreaPanZoomComponent;
     @ViewChild('outerCanvas') pipelineCanvas: ElementRef;
-
-    constructor(
-        public pipelineValidationService: PipelineValidationService,
-        private ngZone: NgZone,
-        private editorService: EditorService,
-        private pipelinePositioningService: PipelinePositioningService,
-        private livePreviewService: LivePreviewService,
-        private objectProvider: ObjectProvider,
-    ) {}
 
     ngOnInit(): void {
         if (this.rawPipelineModel.length > 0) {

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     ExtensionInstallationService,
@@ -43,6 +43,11 @@ import { MatButton } from '@angular/material/button';
     ],
 })
 export class SpExtensionsInstallationDialogComponent {
+    private dialogRef =
+        inject<DialogRef<SpExtensionsInstallationDialogComponent>>(DialogRef);
+    private extensionInstallationService = inject(ExtensionInstallationService);
+    private translateService = inject(TranslateService);
+
     endpointItems: ExtensionItemDescription[];
 
     @Input()
@@ -61,11 +66,7 @@ export class SpExtensionsInstallationDialogComponent {
 
     installAsPublicElement = true;
 
-    constructor(
-        private dialogRef: DialogRef<SpExtensionsInstallationDialogComponent>,
-        private extensionInstallationService: ExtensionInstallationService,
-        private translateService: TranslateService,
-    ) {
+    constructor() {
         this.installationStatus = [];
         this.installationFinished = false;
         this.page = 'preview';

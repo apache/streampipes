@@ -79,6 +79,15 @@ services:
     networks:
       spnet:
 
+  nats:
+    image: nats:2.10-alpine
+    hostname: nats
+    ports:
+      - "4222:4222"
+    logging: *default-logging
+    networks:
+      spnet:
+
 
   influxdb:
     image: influxdb:2.6

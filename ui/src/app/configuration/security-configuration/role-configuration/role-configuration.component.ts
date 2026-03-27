@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { Role, RoleService } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -71,6 +71,11 @@ import { MatTooltip } from '@angular/material/tooltip';
     ],
 })
 export class SecurityRoleConfigComponent implements OnInit {
+    private roleService = inject(RoleService);
+    private dialogService = inject(DialogService);
+    private dialog = inject(MatDialog);
+    private translateService = inject(TranslateService);
+
     private static readonly ASSET_USER_ROLE = 'ROLE_ASSET_USER';
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -80,13 +85,6 @@ export class SecurityRoleConfigComponent implements OnInit {
     dataSource: MatTableDataSource<Role>;
 
     displayedColumns: string[] = ['roleName', 'roleType', 'edit'];
-
-    constructor(
-        private roleService: RoleService,
-        private dialogService: DialogService,
-        private dialog: MatDialog,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.loadRoles();

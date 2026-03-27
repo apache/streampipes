@@ -18,8 +18,6 @@
 
 import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { MapVisConfig, MapWidgetModel } from '../model/map-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
@@ -66,13 +64,6 @@ export class MapWidgetConfigComponent extends BaseWidgetConfig<
 > {
     markerOrTrace: string[];
     markerType: string[];
-
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
-        super(widgetConfigurationService, fieldService);
-    }
 
     setSelectedLongitudeProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedLongitudeProperty =

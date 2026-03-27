@@ -22,20 +22,20 @@ import {
     JsPlumbInstance,
     newInstance,
 } from '@jsplumb/browser-ui';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { JsplumbBridge } from './jsplumb-bridge.service';
 import { PipelineElementDraggedService } from './pipeline-element-dragged.service';
 import { JsplumbConfigService } from './jsplumb-config.service';
 
 @Injectable({ providedIn: 'root' })
 export class JsplumbFactoryService {
+    private pipelineElementDraggedService = inject(
+        PipelineElementDraggedService,
+    );
+    private jsplumbConfigService = inject(JsplumbConfigService);
+
     pipelineEditorInstance: BrowserJsPlumbInstance;
     pipelineEditorBridge: JsplumbBridge;
-
-    constructor(
-        private pipelineElementDraggedService: PipelineElementDraggedService,
-        private jsplumbConfigService: JsplumbConfigService,
-    ) {}
 
     getJsplumbBridge(previewConfig: boolean): JsplumbBridge {
         if (!this.pipelineEditorBridge) {

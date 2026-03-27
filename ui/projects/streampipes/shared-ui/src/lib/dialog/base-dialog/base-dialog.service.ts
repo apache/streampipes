@@ -41,10 +41,8 @@ export class DialogService {
     private openDialogs: DialogRef<any>[] = [];
     private matDialog = inject(MatDialog);
 
-    constructor(
-        private overlay: Overlay,
-        private injector: Injector,
-    ) {}
+    private overlay = inject(Overlay);
+    private injector = inject(Injector);
 
     public open<T>(
         component: ComponentType<T>,

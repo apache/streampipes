@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import {
@@ -72,6 +72,18 @@ import { PipelineOperationsService } from '../pipelines/services/pipeline-operat
     ],
 })
 export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
+    private activatedRoute = inject(ActivatedRoute);
+    private pipelineService = inject(PipelineService);
+    private pipelineCanvasService = inject(PipelineCanvasMetadataService);
+    private authService = inject(AuthService);
+    private currentUserService = inject(CurrentUserService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private pipelineMonitoringService = inject(PipelineMonitoringService);
+    private dialogService = inject(DialogService);
+    private router = inject(Router);
+    private pipelineOperationsService = inject(PipelineOperationsService);
+    private shortcutService = inject(KeyboardShortcutService);
+
     hasPipelineWritePrivileges = false;
 
     currentPipelineId: string;
@@ -93,20 +105,6 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
 
     @ViewChild('pipelinePreviewComponent')
     pipelinePreviewComponent: PipelinePreviewComponent;
-
-    constructor(
-        private activatedRoute: ActivatedRoute,
-        private pipelineService: PipelineService,
-        private pipelineCanvasService: PipelineCanvasMetadataService,
-        private authService: AuthService,
-        private currentUserService: CurrentUserService,
-        private breadcrumbService: SpBreadcrumbService,
-        private pipelineMonitoringService: PipelineMonitoringService,
-        private dialogService: DialogService,
-        private router: Router,
-        private pipelineOperationsService: PipelineOperationsService,
-        private shortcutService: KeyboardShortcutService,
-    ) {}
 
     ngOnInit(): void {
         this.shortcutReg = this.shortcutService.register('pipeline-details', [

@@ -51,6 +51,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class ChartSelectionComponent implements OnInit {
+    private dataViewService = inject(ChartService);
+    private router = inject(Router);
+
     private authService = inject(AuthService);
 
     @Output()
@@ -59,11 +62,6 @@ export class ChartSelectionComponent implements OnInit {
     charts: DataExplorerWidgetModel[] = [];
 
     hasChartWritePrivileges: boolean = false;
-
-    constructor(
-        private dataViewService: ChartService,
-        private router: Router,
-    ) {}
 
     ngOnInit() {
         this.dataViewService.getAllCharts().subscribe(charts => {

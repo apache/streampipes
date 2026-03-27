@@ -89,6 +89,16 @@ import { MatIcon } from '@angular/material/icon';
     ],
 })
 export class SpAssetOverviewComponent implements OnInit {
+    private assetService = inject(AssetManagementService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private dialogService = inject(DialogService);
+    private router = inject(Router);
+    private idGeneratorService = inject(IdGeneratorService);
+    private assetBrowserService = inject(SpAssetBrowserService);
+    private currentUserService = inject(CurrentUserService);
+    private dialog = inject(MatDialog);
+    private translateService = inject(TranslateService);
+
     existingAssets: SpAssetModel[] = [];
     filteredAssets: SpAssetModel[] = [];
 
@@ -106,18 +116,6 @@ export class SpAssetOverviewComponent implements OnInit {
     currentFilterIds = new Set<string>();
 
     private assetFilterService = inject(SpAssetBrowserService);
-
-    constructor(
-        private assetService: AssetManagementService,
-        private breadcrumbService: SpBreadcrumbService,
-        private dialogService: DialogService,
-        private router: Router,
-        private idGeneratorService: IdGeneratorService,
-        private assetBrowserService: SpAssetBrowserService,
-        private currentUserService: CurrentUserService,
-        private dialog: MatDialog,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.hasWritePrivilege = this.currentUserService.hasRole(

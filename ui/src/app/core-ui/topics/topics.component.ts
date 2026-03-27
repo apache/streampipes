@@ -79,6 +79,8 @@ import { MatDivider } from '@angular/material/divider';
     ],
 })
 export class TopicsComponent implements OnInit {
+    private dialogRef = inject<DialogRef<TopicsComponent>>(DialogRef);
+
     translateService = inject(TranslateService);
     selectedTabIndex = 0;
 
@@ -92,8 +94,6 @@ export class TopicsComponent implements OnInit {
     @Input()
     pipelineElement: PipelineElementUnion;
     isDataStream: boolean;
-
-    constructor(private dialogRef: DialogRef<TopicsComponent>) {}
 
     ngOnInit() {
         if (

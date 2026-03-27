@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     Privilege,
     PrivilegeService,
@@ -75,6 +75,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class EditRoleDialogComponent implements OnInit {
+    private fb = inject(FormBuilder);
+    private privilegeService = inject(PrivilegeService);
+    private dialogRef = inject<DialogRef<EditRoleDialogComponent>>(DialogRef);
+    private roleService = inject(RoleService);
+
     @Input()
     role: Role;
 
@@ -85,13 +90,6 @@ export class EditRoleDialogComponent implements OnInit {
     allPrivileges: Privilege[] = [];
     selectedPrivileges: Privilege[] = [];
     clonedRole: Role;
-
-    constructor(
-        private fb: FormBuilder,
-        private privilegeService: PrivilegeService,
-        private dialogRef: DialogRef<EditRoleDialogComponent>,
-        private roleService: RoleService,
-    ) {}
 
     ngOnInit() {
         this.privilegeService.findAll().subscribe(privileges => {

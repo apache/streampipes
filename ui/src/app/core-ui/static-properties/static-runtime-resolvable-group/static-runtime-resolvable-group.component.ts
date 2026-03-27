@@ -25,7 +25,6 @@ import {
     Output,
     TemplateRef,
 } from '@angular/core';
-import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-input';
 import {
     RuntimeResolvableGroupStaticProperty,
@@ -58,10 +57,6 @@ export class StaticRuntimeResolvableGroupComponent
 {
     @Input({ required: true })
     renderStaticProperty!: TemplateRef<GroupRenderCtx>;
-
-    constructor(runtimeResolvableService: RuntimeResolvableService) {
-        super(runtimeResolvableService);
-    }
 
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 

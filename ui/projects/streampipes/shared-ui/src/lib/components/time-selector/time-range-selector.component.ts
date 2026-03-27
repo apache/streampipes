@@ -27,6 +27,7 @@ import {
     SimpleChanges,
     ViewChild,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import {
     DashboardLiveSettings,
@@ -75,6 +76,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class TimeRangeSelectorComponent
     implements OnInit, OnChanges, AfterViewInit
 {
+    private timeSelectionService = inject(TimeSelectionService);
+
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
     @ViewChild('timeSelectorMenu')
     timeSelectorMenu: TimeRangeSelectorMenuComponent;
@@ -122,8 +125,6 @@ export class TimeRangeSelectorComponent
         month: 'numeric',
         day: 'numeric',
     };
-
-    constructor(private timeSelectionService: TimeSelectionService) {}
 
     ngOnInit() {
         this.quickSelections ??=

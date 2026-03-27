@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -67,19 +67,17 @@ import { MatIcon } from '@angular/material/icon';
 export class LocationFeaturesConfigurationComponent
     implements OnInit, OnDestroy
 {
+    private fb = inject(UntypedFormBuilder);
+    private snackBar = inject(MatSnackBar);
+    private locationConfigService = inject(LocationConfigService);
+    private translateService = inject(TranslateService);
+
     @Input()
     locationConfig: LocationConfig;
 
     locationForm: UntypedFormGroup;
     formSubscription: Subscription;
     showLocationDetails = false;
-
-    constructor(
-        private fb: UntypedFormBuilder,
-        private snackBar: MatSnackBar,
-        private locationConfigService: LocationConfigService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.locationForm = this.fb.group({});

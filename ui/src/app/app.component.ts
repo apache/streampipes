@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { slideInAnimation } from './animation';
 import { Title } from '@angular/platform-browser';
@@ -31,11 +31,13 @@ import { LoadingBarModule } from '@ngx-loading-bar/core';
     imports: [LoadingBarModule, RouterOutlet],
 })
 export class AppComponent implements OnInit {
-    constructor(
-        private titleService: Title,
-        private appConstants: AppConstants,
-        private translate: TranslateService,
-    ) {
+    private titleService = inject(Title);
+    private appConstants = inject(AppConstants);
+    private translate = inject(TranslateService);
+
+    constructor() {
+        const translate = this.translate;
+
         const supportedLanguages = ['de', 'en', 'pl'];
         const defaultLanguage = 'en';
         this.translate.addLangs(supportedLanguages);

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     PipelineElementType,
     PipelineElementUnion,
@@ -50,6 +50,8 @@ import { MatButton } from '@angular/material/button';
     ],
 })
 export class PipelineElementIconStandRowComponent implements OnInit {
+    private editorService = inject(EditorService);
+
     @Input()
     element: PipelineElementUnion;
 
@@ -57,8 +59,6 @@ export class PipelineElementIconStandRowComponent implements OnInit {
     cypressName: string;
 
     currentMouseOver = false;
-
-    constructor(private editorService: EditorService) {}
 
     ngOnInit(): void {
         const activeType = PipelineElementTypeUtils.fromClassName(

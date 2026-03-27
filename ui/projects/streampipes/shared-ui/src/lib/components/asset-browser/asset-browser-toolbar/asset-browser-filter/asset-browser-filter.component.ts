@@ -23,6 +23,7 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    inject,
 } from '@angular/core';
 import { AssetBrowserData, AssetFilter } from '../../asset-browser.model';
 import { Subscription } from 'rxjs';
@@ -58,6 +59,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class AssetBrowserFilterComponent implements OnInit, OnDestroy {
+    private assetBrowserService = inject(SpAssetBrowserService);
+
     @Input()
     assetBrowserData: AssetBrowserData;
 
@@ -67,8 +70,6 @@ export class AssetBrowserFilterComponent implements OnInit, OnDestroy {
 
     @Output()
     closeMenu: EventEmitter<void> = new EventEmitter();
-
-    constructor(private assetBrowserService: SpAssetBrowserService) {}
 
     ngOnInit() {
         this.filter$ = this.assetBrowserService.filter$.subscribe(

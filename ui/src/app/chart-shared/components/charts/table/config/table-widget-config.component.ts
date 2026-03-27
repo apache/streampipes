@@ -18,9 +18,7 @@
 
 import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { TableVisConfig, TableWidgetModel } from '../model/table-widget.model';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
 import { SelectMultiplePropertiesConfigComponent } from '../../../chart-config/select-multiple-properties-config/select-multiple-properties-config.component';
@@ -79,13 +77,6 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         '#14B8A6',
         '#9333EA',
     ];
-
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
-        super(widgetConfigurationService, fieldService);
-    }
 
     onFilterChange(searchValue: string): void {
         this.currentlyConfiguredWidget.visualizationConfig.searchValue =

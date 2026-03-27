@@ -22,6 +22,7 @@ import {
     OnInit,
     Output,
     ViewChild,
+    inject,
 } from '@angular/core';
 import {
     RuntimeResolvableTreeInputStaticProperty,
@@ -75,6 +76,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class StaticTreeInputBrowseNodesComponent implements OnInit {
+    private staticTreeInputServiceService = inject(
+        StaticTreeInputServiceService,
+    );
+
     @Input()
     staticProperty: RuntimeResolvableTreeInputStaticProperty;
 
@@ -99,10 +104,6 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
     selectedNodeId: string;
 
     hasChild = (_: number, node: TreeInputNode) => !node.dataNode;
-
-    constructor(
-        private staticTreeInputServiceService: StaticTreeInputServiceService,
-    ) {}
 
     ngOnInit(): void {
         this.dataSource = new MatTreeNestedDataSource<TreeInputNode>();

@@ -18,12 +18,12 @@
 
 import { BehaviorSubject } from 'rxjs';
 import { UserInfo } from '@streampipes/platform-services';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { JwtTokenStorageService } from './jwt-token-storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class CurrentUserService {
-    constructor(private jwtTokenStorageService: JwtTokenStorageService) {}
+    private jwtTokenStorageService = inject(JwtTokenStorageService);
 
     public authToken$: BehaviorSubject<string> = new BehaviorSubject<string>(
         undefined,

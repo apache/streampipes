@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnChanges,
+    SimpleChanges,
+    inject,
+} from '@angular/core';
 import {
     AssetSiteDesc,
     Isa95TypeService,
@@ -43,6 +49,8 @@ import { ViewAssetLabelsComponent } from '../view-asset-labels/view-asset-labels
     ],
 })
 export class ViewAssetBasicsComponent implements OnChanges {
+    private isa95TypeService = inject(Isa95TypeService);
+
     @Input()
     selectedAsset: SpAsset;
 
@@ -50,8 +58,6 @@ export class ViewAssetBasicsComponent implements OnChanges {
     sites: AssetSiteDesc[] = [];
 
     selectedAssetType: string;
-
-    constructor(private isa95TypeService: Isa95TypeService) {}
 
     ngOnChanges(changes: SimpleChanges) {
         this.selectedAssetType =

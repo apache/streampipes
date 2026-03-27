@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     DialogRef,
     FormLabelComponent,
@@ -53,6 +53,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class CompatibleElementsComponent implements OnInit {
+    private dialogRef =
+        inject<DialogRef<CompatibleElementsComponent>>(DialogRef);
+    private JsPlumbService = inject(JsplumbService);
+
     @Input()
     rawPipelineModel: PipelineElementConfig[];
 
@@ -63,11 +67,6 @@ export class CompatibleElementsComponent implements OnInit {
     possibleElements: PipelineElementUnion[];
 
     styles: any[] = [];
-
-    constructor(
-        private dialogRef: DialogRef<CompatibleElementsComponent>,
-        private JsPlumbService: JsplumbService,
-    ) {}
 
     ngOnInit() {
         this.possibleElements.sort((a, b) => a.name.localeCompare(b.name));

@@ -52,10 +52,9 @@ while true; do
     esac
 done
 
-
 ######################Adapters######################
 
-#machine
+# machine
 installRequestBody='{
   "appId":"org.apache.streampipes.connect.iiot.adapters.simulator.machine",
   "publicElement":true,
@@ -72,11 +71,9 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+######################processors######################
 
-
-######################processor######################
-
-#bool_inverter
+# bool_inverter
 installRequestBody='{
   "appId":"org.apache.streampipes.processors.transformation.jvm.booloperator.inverter",
   "publicElement":true,
@@ -93,9 +90,26 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# booleanfilter
+installRequestBody='{
+  "appId":"org.apache.streampipes.processors.filters.jvm.processor.booleanfilter",
+  "publicElement":true,
+  "serviceTagPrefix":"DATA_PROCESSOR"
+  }'
 
-######################sink######################
-#datalake
+response=$(curl -s -X POST "http://$HOST:$PORT$INSTALL_ELEMENT_URL" \
+   -H "Content-Type: application/json" \
+   -H "authorization: Bearer $TOKEN" \
+   -d "$installRequestBody")
+if [ $? -ne 0 ]; then
+    echo "$response"
+    echo "Error install boolean filter processor"
+    exit 1
+fi
+
+######################sinks######################
+
+# datalake
 installRequestBody='{
   "appId":"org.apache.streampipes.sinks.internal.jvm.datalake",
   "publicElement":true,
@@ -109,5 +123,22 @@ response=$(curl -s -X POST "http://$HOST:$PORT$INSTALL_ELEMENT_URL" \
 if [ $? -ne 0 ]; then
     echo "$response"
     echo "Error install datalake"
+    exit 1
+fi
+
+# nats sink
+installRequestBody='{
+  "appId":"org.apache.streampipes.sinks.brokers.jvm.nats",
+  "publicElement":true,
+  "serviceTagPrefix":"DATA_SINK"
+  }'
+
+response=$(curl -s -X POST "http://$HOST:$PORT$INSTALL_ELEMENT_URL" \
+   -H "Content-Type: application/json" \
+   -H "authorization: Bearer $TOKEN" \
+   -d "$installRequestBody")
+if [ $? -ne 0 ]; then
+    echo "$response"
+    echo "Error install nats sink"
     exit 1
 fi

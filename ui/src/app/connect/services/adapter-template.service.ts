@@ -16,14 +16,14 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { SpAdapterTemplateDialogComponent } from '../dialog/adapter-template/adapter-template-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { StaticPropertyUnion } from '@streampipes/platform-services';
 
 @Injectable({ providedIn: 'root' })
 export class AdapterTemplateService {
-    constructor(private dialogService: DialogService) {}
+    private dialogService = inject(DialogService);
 
     getDialog(configs: StaticPropertyUnion[], appId: string) {
         return this.dialogService.open(SpAdapterTemplateDialogComponent, {

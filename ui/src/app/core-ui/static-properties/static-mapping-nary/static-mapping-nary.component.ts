@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { StaticMappingComponent } from '../static-mapping/static-mapping';
 import { MappingPropertyNary } from '@streampipes/platform-services';
 import { DisplayRecommendedPipe } from '../filter/display-recommended.pipe';
@@ -49,9 +49,7 @@ export class StaticMappingNaryComponent
     extends StaticMappingComponent<MappingPropertyNary>
     implements OnInit
 {
-    constructor(private displayRecommendedPipe: DisplayRecommendedPipe) {
-        super();
-    }
+    private displayRecommendedPipe = inject(DisplayRecommendedPipe);
 
     ngOnInit() {
         this.extractPossibleSelections();

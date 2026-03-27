@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -78,6 +78,12 @@ import { MatDivider } from '@angular/material/divider';
     ],
 })
 export class EmailConfigurationComponent implements OnInit {
+    private fb = inject(UntypedFormBuilder);
+    private mailConfigService = inject(MailConfigService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private tabService = inject(SpConfigurationTabsService);
+    private translateService = inject(TranslateService);
+
     tabs: SpNavigationItem[] = [];
 
     parentForm: UntypedFormGroup;
@@ -90,14 +96,6 @@ export class EmailConfigurationComponent implements OnInit {
     sendingTestMailInProgress = false;
     sendingTestMailSuccess = false;
     sendingEmailErrorMessage = '';
-
-    constructor(
-        private fb: UntypedFormBuilder,
-        private mailConfigService: MailConfigService,
-        private breadcrumbService: SpBreadcrumbService,
-        private tabService: SpConfigurationTabsService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.tabs = this.tabService.getTabs();

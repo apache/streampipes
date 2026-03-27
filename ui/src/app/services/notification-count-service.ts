@@ -15,17 +15,17 @@
  *   limitations under the License.
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { RestApi } from './rest-api.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationCountService {
+    private restApi = inject(RestApi);
+
     public unreadNotificationCount$ = new BehaviorSubject(0);
     lockNotificationId: string;
     lockActive = false;
-
-    constructor(private restApi: RestApi) {}
 
     loadUnreadNotifications() {
         this.restApi.getUnreadNotificationsCount().subscribe(response => {

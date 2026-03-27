@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
@@ -47,6 +47,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class DeleteAdapterDialogComponent {
+    private dialogRef =
+        inject<DialogRef<DeleteAdapterDialogComponent>>(DialogRef);
+    private dataMarketplaceService = inject(AdapterService);
+
     @Input()
     adapter: AdapterDescription;
 
@@ -56,11 +60,6 @@ export class DeleteAdapterDialogComponent {
     deleteAssociatedPipelines = false;
     namesOfPipelinesUsingAdapter = '';
     namesOfPipelinesNotOwnedByUser = '';
-
-    constructor(
-        private dialogRef: DialogRef<DeleteAdapterDialogComponent>,
-        private dataMarketplaceService: AdapterService,
-    ) {}
 
     close(refreshAdapters: boolean) {
         this.dialogRef.close(refreshAdapters);

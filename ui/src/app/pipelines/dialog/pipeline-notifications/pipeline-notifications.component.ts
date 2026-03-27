@@ -18,7 +18,7 @@
 
 import { DialogRef } from '@streampipes/shared-ui';
 import { Pipeline, PipelineService } from '@streampipes/platform-services';
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
@@ -37,13 +37,12 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class PipelineNotificationsComponent {
+    private dialogRef =
+        inject<DialogRef<PipelineNotificationsComponent>>(DialogRef);
+    private pipelineService = inject(PipelineService);
+
     @Input()
     pipeline: Pipeline;
-
-    constructor(
-        private dialogRef: DialogRef<PipelineNotificationsComponent>,
-        private pipelineService: PipelineService,
-    ) {}
 
     acknowledgeAndClose() {
         this.pipeline.pipelineNotifications = [];

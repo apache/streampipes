@@ -56,6 +56,9 @@ import type { editor as MonacoEditor } from 'monaco-editor';
     ],
 })
 export class SpEmailTemplateConfigurationComponent implements OnInit {
+    private fb = inject(UntypedFormBuilder);
+    private mailConfigService = inject(MailConfigService);
+
     template: EmailTemplate;
     originalTemplate: string;
     templateLoaded = false;
@@ -96,11 +99,6 @@ export class SpEmailTemplateConfigurationComponent implements OnInit {
             ),
         },
     ];
-
-    constructor(
-        private fb: UntypedFormBuilder,
-        private mailConfigService: MailConfigService,
-    ) {}
 
     ngOnInit(): void {
         this.loadTemplate();

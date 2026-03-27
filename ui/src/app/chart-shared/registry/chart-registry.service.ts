@@ -17,7 +17,7 @@
  */
 
 import { IWidget } from '../models/dataview-dashboard.model';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { TableWidgetConfigComponent } from '../components/charts/table/config/table-widget-config.component';
 import { TableWidgetComponent } from '../components/charts/table/table-widget.component';
 import { MapWidgetConfigComponent } from '../components/charts/map/config/map-widget-config.component';
@@ -63,20 +63,20 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class ChartRegistry {
+    private gaugeRenderer = inject(SpGaugeRendererService);
+    private heatmapRenderer = inject(SpHeatmapRendererService);
+    private statusHeatmapRenderer = inject(SpStatusHeatmapRendererService);
+    private histogramRenderer = inject(SpHistogramRendererService);
+    private pieRenderer = inject(SpPieRendererService);
+    private valueHeatmapRenderer = inject(SpValueHeatmapRendererService);
+    private scatterRenderer = inject(SpScatterRendererService);
+    private densityRenderer = inject(SpDensityRendererService);
+    private timeseriesRenderer = inject(SpTimeseriesRendererService);
+    private translateService = inject(TranslateService);
+
     chartTypes: IWidget<any>[] = [];
 
-    constructor(
-        private gaugeRenderer: SpGaugeRendererService,
-        private heatmapRenderer: SpHeatmapRendererService,
-        private statusHeatmapRenderer: SpStatusHeatmapRendererService,
-        private histogramRenderer: SpHistogramRendererService,
-        private pieRenderer: SpPieRendererService,
-        private valueHeatmapRenderer: SpValueHeatmapRendererService,
-        private scatterRenderer: SpScatterRendererService,
-        private densityRenderer: SpDensityRendererService,
-        private timeseriesRenderer: SpTimeseriesRendererService,
-        private translateService: TranslateService,
-    ) {
+    constructor() {
         this.chartTypes = [
             {
                 id: 'gauge',

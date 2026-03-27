@@ -24,6 +24,7 @@ import {
     OnInit,
     SimpleChanges,
     ViewChild,
+    inject,
 } from '@angular/core';
 import {
     LabelsService,
@@ -97,6 +98,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
+    private labelsService = inject(LabelsService);
+    private colorizationService = inject(SpColorizationService);
+
     @Input()
     asset: SpAsset;
 
@@ -113,11 +117,6 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     labelsAvailable = false;
 
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
-
-    constructor(
-        private labelsService: LabelsService,
-        private colorizationService: SpColorizationService,
-    ) {}
 
     ngOnInit(): void {
         this.loadLabels();

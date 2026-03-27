@@ -24,12 +24,15 @@ import org.apache.streampipes.connect.transformer.api.TransformationEngine;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 import org.apache.streampipes.model.connect.ScriptMetadata;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.PolyglotException;
+import org.graalvm.polyglot.SandboxPolicy;
 import org.graalvm.polyglot.Value;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import java.util.Optional;
 
@@ -66,9 +69,20 @@ public class GraalJsScriptEngine implements TransformationEngine {
   }
 
   private Context createContext() {
+    HostAccess hostAccess = HostAccess.newBuilder(HostAccess.CONSTRAINED)
+        .allowMapAccess(true)
+        .allowListAccess(true)
+        .allowIterableAccess(true)
+        .allowIteratorAccess(true)
+        .allowAccessAnnotatedBy(ExposedToScripts.class)
+        .build();
+
     return Context.newBuilder("js")
-        .allowHostAccess(HostAccess.ALL)
+        .sandbox(SandboxPolicy.CONSTRAINED)
+        .allowHostAccess(hostAccess)
         .allowHostClassLookup(s -> false)
+        .out(new ByteArrayOutputStream())
+        .err(new ByteArrayOutputStream())
         .build();
   }
 
@@ -96,7 +110,11 @@ public class GraalJsScriptEngine implements TransformationEngine {
                        org.apache.streampipes.connect.transformer.api.Context ctx)
       throws ScriptExecutionException {
     try {
-      transformFunction.execute(input, PolyglotResultConverter.convertingCollector(out, metadata().language()), ctx);
+      transformFunction.execute(
+          input,
+          ScriptOutputCollector.wrap(out),
+          ctx
+      );
     } catch (PolyglotException e) {
       throw new ScriptExecutionException("Graal JS script execution failed", e);
     }

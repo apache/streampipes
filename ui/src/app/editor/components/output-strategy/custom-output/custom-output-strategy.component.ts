@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CustomOutputStrategy } from '@streampipes/platform-services';
 import { BaseOutputStrategy } from '../base/BaseOutputStrategy';
 import { PropertySelectorService } from '../../../../services/property-selector.service';
@@ -47,12 +47,10 @@ export class CustomOutputStrategyComponent
     extends BaseOutputStrategy<CustomOutputStrategy>
     implements OnInit
 {
+    private propertySelectorService = inject(PropertySelectorService);
+
     collectedPropertiesFirstStream: any;
     collectedPropertiesSecondStream: any;
-
-    constructor(private propertySelectorService: PropertySelectorService) {
-        super();
-    }
 
     ngOnInit() {
         this.parentForm.addControl('output-strategy', new UntypedFormControl());

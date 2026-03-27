@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import {
     DialogService,
     PanelType,
@@ -54,16 +54,14 @@ import { FileOverviewComponent } from './file-overview/file-overview.component';
     ],
 })
 export class FilesComponent implements OnInit {
+    private dialogService = inject(DialogService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private tabService = inject(SpConfigurationTabsService);
+    private translateService = inject(TranslateService);
+
     tabs: SpNavigationItem[] = [];
 
     @ViewChild('fileOverviewComponent') fileOverviewComponent;
-
-    constructor(
-        private dialogService: DialogService,
-        private breadcrumbService: SpBreadcrumbService,
-        private tabService: SpConfigurationTabsService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit() {
         this.tabs = this.tabService.getTabs();

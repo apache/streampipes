@@ -23,8 +23,6 @@ import {
     PieChartWidgetModel,
 } from '../model/pie-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
 import {
     FormFieldComponent,
@@ -60,13 +58,6 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
     PieChartWidgetModel,
     PieChartVisConfig
 > {
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
-        super(widgetConfigurationService, fieldService);
-    }
-
     setSelectedProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
             field;

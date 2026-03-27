@@ -30,6 +30,7 @@ import {
     Output,
     SimpleChanges,
     ViewChild,
+    inject,
 } from '@angular/core';
 import {
     ClientDashboardItem,
@@ -109,6 +110,17 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class ChartContainerComponent
     implements OnInit, OnDestroy, OnChanges, AfterViewInit
 {
+    private chartRegistryService = inject(ChartRegistry);
+    private dashboardService = inject(ChartSharedService);
+    private componentFactoryResolver = inject(ComponentFactoryResolver);
+    private widgetTypeService = inject(ChartTypeService);
+    private authService = inject(AuthService);
+    private currentUserService = inject(CurrentUserService);
+    private timeSelectionService = inject(TimeSelectionService);
+    private nameChangeService = inject(NameChangeService);
+    private el = inject<ElementRef<HTMLDivElement>>(ElementRef);
+    private resizeService = inject(ResizeService);
+
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
     @ViewChild('timeSelectorMenu')
     timeSelectorMenu: TimeRangeSelectorMenuComponent;
@@ -193,19 +205,6 @@ export class ChartContainerComponent
     componentRef: ComponentRef<BaseWidgetData<any>>;
 
     @ViewChild(ChartDirective, { static: true }) widgetHost!: ChartDirective;
-
-    constructor(
-        private chartRegistryService: ChartRegistry,
-        private dashboardService: ChartSharedService,
-        private componentFactoryResolver: ComponentFactoryResolver,
-        private widgetTypeService: ChartTypeService,
-        private authService: AuthService,
-        private currentUserService: CurrentUserService,
-        private timeSelectionService: TimeSelectionService,
-        private nameChangeService: NameChangeService,
-        private el: ElementRef<HTMLDivElement>,
-        private resizeService: ResizeService,
-    ) {}
 
     resizeObserver: ResizeObserver;
     resizeTimeout: any;

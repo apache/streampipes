@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
@@ -38,7 +45,7 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { NgClass } from '@angular/common';
-import { ClassDirective, StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatButton } from '@angular/material/button';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -52,7 +59,6 @@ import { MatIcon } from '@angular/material/icon';
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
-        StyleDirective,
         NgClass,
         ClassDirective,
         MatTooltip,
@@ -65,6 +71,14 @@ import { MatIcon } from '@angular/material/icon';
     ],
 })
 export class EndpointItemComponent implements OnInit {
+    private snackBar = inject(MatSnackBar);
+    private extensionInstallationService = inject(ExtensionInstallationService);
+    private addService = inject(ExtensionsInstallationService);
+    private sanitizer = inject(DomSanitizer);
+    appConstants = inject(AppConstants);
+    private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
+
     @Input()
     item: ExtensionItemDescription;
 
@@ -88,16 +102,6 @@ export class EndpointItemComponent implements OnInit {
 
     @Output()
     triggerInstallation: EventEmitter<any> = new EventEmitter<any>();
-
-    constructor(
-        private snackBar: MatSnackBar,
-        private extensionInstallationService: ExtensionInstallationService,
-        private addService: ExtensionsInstallationService,
-        private sanitizer: DomSanitizer,
-        public appConstants: AppConstants,
-        private dialogService: DialogService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.findItemTypeTitle();

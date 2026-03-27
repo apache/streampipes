@@ -17,7 +17,7 @@
  */
 
 import { DialogRef } from '@streampipes/shared-ui';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { AppConstants } from '../../../services/app.constants';
 import { AuthService } from '../../../services/auth.service';
 import { UserAccount, UserInfo } from '@streampipes/platform-services';
@@ -43,17 +43,15 @@ import { MatDivider } from '@angular/material/divider';
     ],
 })
 export class WelcomeTourComponent implements OnInit {
+    private authService = inject(AuthService);
+    private dialogRef = inject<DialogRef<WelcomeTourComponent>>(DialogRef);
+    private profileService = inject(ProfileService);
+    appConstants = inject(AppConstants);
+
     @Input()
     userInfo: UserInfo;
 
     currentUser: UserAccount;
-
-    constructor(
-        private authService: AuthService,
-        private dialogRef: DialogRef<WelcomeTourComponent>,
-        private profileService: ProfileService,
-        public appConstants: AppConstants,
-    ) {}
 
     ngOnInit(): void {
         this.profileService

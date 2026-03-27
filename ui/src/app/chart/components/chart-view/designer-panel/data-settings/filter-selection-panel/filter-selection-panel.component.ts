@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     DatalakeRestService,
     FilterExpressionGroup,
@@ -60,17 +60,17 @@ import { FilterExpressionPreviewService } from './filter-expression-preview.serv
     ],
 })
 export class FilterSelectionPanelComponent implements OnInit {
+    private widgetConfigService = inject(ChartConfigurationService);
+    private fieldProviderService = inject(ChartFieldProviderService);
+    private dataLakeRestService = inject(DatalakeRestService);
+    private dialogService = inject(DialogService);
+    private filterExpressionPreviewService = inject(
+        FilterExpressionPreviewService,
+    );
+
     @Input() sourceConfig: SourceConfig;
 
     tagValues: Map<string, string[]> = new Map<string, string[]>();
-
-    constructor(
-        private widgetConfigService: ChartConfigurationService,
-        private fieldProviderService: ChartFieldProviderService,
-        private dataLakeRestService: DatalakeRestService,
-        private dialogService: DialogService,
-        private filterExpressionPreviewService: FilterExpressionPreviewService,
-    ) {}
 
     ngOnInit(): void {
         this.sourceConfig.queryConfig.selectedFilters.forEach(filter => {

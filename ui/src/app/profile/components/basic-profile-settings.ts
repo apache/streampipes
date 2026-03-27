@@ -26,6 +26,11 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Directive()
 export abstract class BasicProfileSettings {
+    protected profileService = inject(ProfileService);
+    public appConstants = inject(AppConstants);
+    protected currentUserService = inject(CurrentUserService);
+    protected authService = inject(AuthService);
+
     userData: UserAccount;
     profileLoaded = false;
     profileUpdating = false;
@@ -34,13 +39,6 @@ export abstract class BasicProfileSettings {
     selectedLanguage = 'browser';
 
     private translate = inject(TranslateService);
-
-    constructor(
-        protected profileService: ProfileService,
-        public appConstants: AppConstants,
-        protected currentUserService: CurrentUserService,
-        protected authService: AuthService,
-    ) {}
 
     receiveUserData() {
         this.profileService

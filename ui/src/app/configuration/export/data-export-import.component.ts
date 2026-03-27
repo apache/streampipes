@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
     DialogService,
     PanelType,
@@ -58,18 +58,16 @@ import { MatButton } from '@angular/material/button';
     ],
 })
 export class SpDataExportImportComponent implements OnInit {
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private assetManagementService = inject(AssetManagementService);
+    private dialogService = inject(DialogService);
+    private tabService = inject(SpConfigurationTabsService);
+    private translateService = inject(TranslateService);
+
     tabs: SpNavigationItem[] = [];
 
     assets: SpAsset[];
     selectedAssets: string[] = [];
-
-    constructor(
-        private breadcrumbService: SpBreadcrumbService,
-        private assetManagementService: AssetManagementService,
-        private dialogService: DialogService,
-        private tabService: SpConfigurationTabsService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.tabs = this.tabService.getTabs();

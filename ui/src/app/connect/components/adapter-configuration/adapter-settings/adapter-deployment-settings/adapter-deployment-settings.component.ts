@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    Input,
+    OnInit,
+    ViewChild,
+    inject,
+} from '@angular/core';
 import {
     ExtensionDeploymentConfiguration,
     ServiceTagService,
@@ -75,6 +82,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class SpAdapterDeploymentSettingsComponent implements OnInit {
+    private serviceTagService = inject(ServiceTagService);
+
     @Input()
     deploymentConfiguration: ExtensionDeploymentConfiguration;
 
@@ -89,7 +98,7 @@ export class SpAdapterDeploymentSettingsComponent implements OnInit {
 
     @ViewChild('serviceTagInput') serviceTagInput: ElementRef<HTMLInputElement>;
 
-    constructor(private serviceTagService: ServiceTagService) {
+    constructor() {
         this.filteredServiceTags = this.serviceTagCtrl.valueChanges.pipe(
             startWith(null),
             map((serviceTagValue: string | null) => {

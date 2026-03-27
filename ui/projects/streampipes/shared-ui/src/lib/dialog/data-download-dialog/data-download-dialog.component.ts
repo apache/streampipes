@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
 import { DialogRef } from '../base-dialog/dialog-ref';
 import { ExportConfig } from './model/export-config.model';
@@ -48,6 +48,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class DataDownloadDialogComponent implements OnInit {
+    dialogRef = inject<DialogRef<DataDownloadDialogComponent>>(DialogRef);
+    dataExportService = inject(DataExportService);
+
     @Input() dataDownloadDialogModel: DataDownloadDialogModel;
 
     @ViewChild('downloadDialogStepper', { static: true })
@@ -55,11 +58,6 @@ export class DataDownloadDialogComponent implements OnInit {
 
     @Input()
     exportConfig: ExportConfig;
-
-    constructor(
-        public dialogRef: DialogRef<DataDownloadDialogComponent>,
-        public dataExportService: DataExportService,
-    ) {}
 
     ngOnInit() {
         const measurementName =

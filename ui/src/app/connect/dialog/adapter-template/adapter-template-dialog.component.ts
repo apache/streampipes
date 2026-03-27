@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     PipelineElementTemplate,
     PipelineElementTemplateService,
@@ -40,6 +40,11 @@ import { MatButton } from '@angular/material/button';
     ],
 })
 export class SpAdapterTemplateDialogComponent implements OnInit {
+    dialogRef = inject<DialogRef<SpAdapterTemplateDialogComponent>>(DialogRef);
+    private pipelineElementTemplateService = inject(
+        PipelineElementTemplateService,
+    );
+
     @Input()
     configs: StaticPropertyUnion[];
 
@@ -48,11 +53,6 @@ export class SpAdapterTemplateDialogComponent implements OnInit {
 
     template: PipelineElementTemplate;
     templateConfigs: Map<string, any>[] = [];
-
-    constructor(
-        public dialogRef: DialogRef<SpAdapterTemplateDialogComponent>,
-        private pipelineElementTemplateService: PipelineElementTemplateService,
-    ) {}
 
     ngOnInit(): void {
         this.template = new PipelineElementTemplate();

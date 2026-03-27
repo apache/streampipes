@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
     Pipeline,
     PipelineCanvasMetadata,
@@ -64,6 +64,16 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class EditorComponent implements OnInit {
+    private pipelineElementService = inject(PipelineElementService);
+    private activatedRoute = inject(ActivatedRoute);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private editorService = inject(EditorService);
+    private pipelineService = inject(PipelineService);
+    private jsplumbService = inject(JsplumbService);
+    private pipelineCanvasMetadataService = inject(
+        PipelineCanvasMetadataService,
+    );
+
     allElements: PipelineElementUnion[] = [];
 
     rawPipelineModel: PipelineElementConfig[] = [];
@@ -73,16 +83,6 @@ export class EditorComponent implements OnInit {
     allMetadataLoaded = false;
     pipelineCanvasMetadata: PipelineCanvasMetadata;
     pipelineCanvasMetadataAvailable: boolean;
-
-    constructor(
-        private pipelineElementService: PipelineElementService,
-        private activatedRoute: ActivatedRoute,
-        private breadcrumbService: SpBreadcrumbService,
-        private editorService: EditorService,
-        private pipelineService: PipelineService,
-        private jsplumbService: JsplumbService,
-        private pipelineCanvasMetadataService: PipelineCanvasMetadataService,
-    ) {}
 
     ngOnInit() {
         const pipelineId = this.activatedRoute.snapshot.params.pipelineId;

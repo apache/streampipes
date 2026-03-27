@@ -22,6 +22,7 @@ import {
     Input,
     OnDestroy,
     ViewChild,
+    inject,
 } from '@angular/core';
 import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../services/pipeline-positioning.service';
@@ -65,6 +66,17 @@ import { FlexDirective } from '@ngbracket/ngx-layout/flex';
     ],
 })
 export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
+    private jsPlumbFactoryService = inject(JsplumbFactoryService);
+    private pipelinePositioningService = inject(PipelinePositioningService);
+    private objectProvider = inject(ObjectProvider);
+    editorService = inject(EditorService);
+    pipelineValidationService = inject(PipelineValidationService);
+    private dialogService = inject(DialogService);
+    private router = inject(Router);
+    private jsplumbService = inject(JsplumbService);
+    private translateService = inject(TranslateService);
+    private shortcutService = inject(KeyboardShortcutService);
+  
     @Input()
     rawPipelineModel: PipelineElementConfig[];
 
@@ -90,19 +102,6 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     assemblyOptionsComponent: PipelineAssemblyOptionsComponent;
     @ViewChild('drawingAreaComponent')
     drawingAreaComponent: PipelineAssemblyDrawingAreaComponent;
-
-    constructor(
-        private jsPlumbFactoryService: JsplumbFactoryService,
-        private pipelinePositioningService: PipelinePositioningService,
-        private objectProvider: ObjectProvider,
-        public editorService: EditorService,
-        public pipelineValidationService: PipelineValidationService,
-        private dialogService: DialogService,
-        private router: Router,
-        private jsplumbService: JsplumbService,
-        private translateService: TranslateService,
-        private shortcutService: KeyboardShortcutService,
-    ) {}
 
     ngAfterViewInit() {
         this.shortcutReg = this.shortcutService.register('pipeline-assembly', [

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { IndicatorAppearanceConfig } from '../model/indicator-chart-widget.model';
 import {
@@ -43,12 +43,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class IndicatorAppearanceConfigComponent implements OnInit {
+    private widgetConfigurationService = inject(ChartConfigurationService);
+
     @Input()
     appearanceConfig: IndicatorAppearanceConfig;
-
-    constructor(
-        private widgetConfigurationService: ChartConfigurationService,
-    ) {}
 
     ngOnInit(): void {
         this.ensureAppearanceConfig();

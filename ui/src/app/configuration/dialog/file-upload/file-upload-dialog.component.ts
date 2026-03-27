@@ -60,6 +60,9 @@ import { MatDivider } from '@angular/material/divider';
     ],
 })
 export class FileUploadDialogComponent {
+    private dialogRef = inject<DialogRef<FileUploadDialogComponent>>(DialogRef);
+    private filesService = inject(FilesService);
+
     private translateService = inject(TranslateService);
     inputValue: string;
     fileNames: string[] = [];
@@ -75,11 +78,6 @@ export class FileUploadDialogComponent {
 
     uploadError = false;
     uploadErrorMessage = '';
-
-    constructor(
-        private dialogRef: DialogRef<FileUploadDialogComponent>,
-        private filesService: FilesService,
-    ) {}
 
     handleFileInput(files: FileList) {
         this.selectedUploadFiles = files;

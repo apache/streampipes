@@ -22,6 +22,7 @@ import {
     Input,
     OnDestroy,
     OnInit,
+    inject,
 } from '@angular/core';
 import {
     LivePreviewService,
@@ -41,6 +42,10 @@ import { LivePreviewErrorComponent } from './live-preview-error/live-preview-err
     imports: [LivePreviewTableComponent, LivePreviewErrorComponent],
 })
 export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
+    private restService = inject(PipelineElementRuntimeInfoService);
+    private livePreviewService = inject(LivePreviewService);
+    private pipelineELementSchemaService = inject(PipelineElementSchemaService);
+
     @Input()
     streamDescription: SpDataStream;
 
@@ -55,12 +60,6 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     timer: any;
     runtimeDataError = false;
     runtimeSub: Subscription;
-
-    constructor(
-        private restService: PipelineElementRuntimeInfoService,
-        private livePreviewService: LivePreviewService,
-        private pipelineELementSchemaService: PipelineElementSchemaService,
-    ) {}
 
     ngOnInit(): void {
         this.runtimeInfo = this.makeRuntimeInfo();

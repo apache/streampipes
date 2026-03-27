@@ -16,17 +16,15 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AccountActivationService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     activateAccount(activationToken: string): Observable<any> {
         return this.http.get(

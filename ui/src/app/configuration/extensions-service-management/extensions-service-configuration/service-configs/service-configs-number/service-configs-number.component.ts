@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
 import { MatFormField } from '@angular/material/form-field';
@@ -30,6 +30,7 @@ import { FormsModule } from '@angular/forms';
     imports: [MatFormField, FlexDirective, MatInput, FormsModule],
 })
 export class ServiceConfigsNumberComponent {
+    configService = inject(ConfigurationService);
+
     @Input() configuration: ConfigItem;
-    constructor(public configService: ConfigurationService) {}
 }

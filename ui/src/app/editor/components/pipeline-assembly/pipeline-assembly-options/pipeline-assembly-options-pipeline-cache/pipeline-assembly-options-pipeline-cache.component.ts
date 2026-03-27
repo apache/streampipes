@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { PipelineElementConfig } from '../../../../model/editor.model';
 import { forkJoin } from 'rxjs';
 import { PipelinePositioningService } from '../../../../services/pipeline-positioning.service';
@@ -43,6 +43,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class PipelineAssemblyOptionsPipelineCacheComponent {
+    private pipelinePositioningService = inject(PipelinePositioningService);
+    private editorService = inject(EditorService);
+
     pipelineCached = false;
     pipelineCacheRunning = false;
 
@@ -51,11 +54,6 @@ export class PipelineAssemblyOptionsPipelineCacheComponent {
 
     @Input()
     pipelineCanvasMetadata: PipelineCanvasMetadata;
-
-    constructor(
-        private pipelinePositioningService: PipelinePositioningService,
-        private editorService: EditorService,
-    ) {}
 
     triggerPipelineCacheUpdate() {
         setTimeout(() => {

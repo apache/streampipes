@@ -65,8 +65,10 @@ export class DatasetUtils {
     public static useExistingDatasetForCsvImport(datasetName: string) {
         DatasetBtns.csvImportTargetMode().click();
         DatasetBtns.csvImportTargetModeExisting().click();
-        DatasetBtns.csvImportExistingMeasurement().click();
-        DatasetBtns.csvImportExistingMeasurementOption(datasetName).click();
+        DatasetBtns.csvImportExistingMeasurement().click({ force: true });
+        cy.get('mat-option', { timeout: 10000 })
+            .contains(datasetName)
+            .click({ force: true });
     }
 
     public static selectCsvImportDelimiterComma() {
@@ -119,35 +121,25 @@ export class DatasetUtils {
         datasetName: string,
         expectedCount: string,
     ) {
-        DatasetBtns.datasetRow(datasetName)
-            .should('be.visible')
-            .find('[data-cy="datalake-total-count-button"]')
-            .then($button => {
-                if ($button.length > 0) {
-                    cy.wrap($button).click({ force: true });
-                }
-            });
-
-        DatasetBtns.datasetRow(datasetName)
-            .find('[data-cy="datalake-number-of-events"]', {
-                timeout: 10000,
-            })
-            .should($element => {
-                const text = $element.text().trim();
-                expect(text).to.equal(expectedCount);
-            });
+        this.loadDatasetTotalEventCount(datasetName);
+        DatasetBtns.datasetTotalCountCell(datasetName).should($element => {
+            const text = $element.text().trim();
+            expect(text).to.equal(expectedCount);
+        });
     }
 
-    public static expectDatasetSevenDayEventCount(
-        datasetName: string,
-        expectedCount: string,
-    ) {
-        DatasetBtns.datasetRow(datasetName)
-            .should('be.visible')
-            .should($row => {
-                const text = $row.children().eq(2).text().trim();
-                expect(text).to.contain(expectedCount);
-            });
+    public static loadDatasetTotalEventCount(datasetName: string) {
+        DatasetBtns.datasetRow(datasetName).should('be.visible');
+        DatasetBtns.datasetTotalCountButton(datasetName).then($button => {
+            if ($button.length > 0) {
+                cy.wrap($button[0]).click({ force: true });
+            }
+        });
+
+        DatasetBtns.datasetTotalCountCell(datasetName).should($element => {
+            const text = $element.text().trim();
+            expect(text).not.to.equal('Click to load');
+        });
     }
 
     public static openDatasetPreview(datasetName: string) {
