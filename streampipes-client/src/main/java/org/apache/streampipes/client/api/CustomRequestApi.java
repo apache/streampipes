@@ -19,6 +19,7 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import java.util.List;
 import java.util.Map;
@@ -30,16 +31,19 @@ public class CustomRequestApi extends AbstractClientApi implements ICustomReques
   }
 
   @Override
+  @ExposedToScripts
   public <T> void sendPost(String apiPath, T payload) {
     post(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload);
   }
 
   @Override
+  @ExposedToScripts
   public <T> T sendGet(String apiPath, Class<T> responseClass) {
     return getSingle(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), responseClass);
   }
 
   @Override
+  @ExposedToScripts
   public <T> T sendGet(String apiPath, Map<String, String> queryParameters, Class<T> responseClass) {
     return getSingle(
         StreamPipesApiPath.fromStreamPipesBasePath(apiPath)
@@ -48,6 +52,7 @@ public class CustomRequestApi extends AbstractClientApi implements ICustomReques
   }
 
   @Override
+  @ExposedToScripts
   public <T> List<T> getList(String apiPath, Class<T> responseClass) {
     return getList(
         StreamPipesApiPath.fromStreamPipesBasePath(apiPath), responseClass

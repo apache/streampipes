@@ -24,6 +24,7 @@ import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
   }
 
   @Override
+  @ExposedToScripts
   public Optional<Pipeline> get(String pipelineId) {
     return getSingle(getBaseResourcePath().addToPath(pipelineId));
   }
@@ -45,12 +47,14 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
    * @return (list) {@link org.apache.streampipes.model.pipeline.Pipeline} a list of all pipelines
    */
   @Override
+  @ExposedToScripts
   public List<Pipeline> all() {
     return getAll(getBaseResourcePath());
   }
 
 
   @Override
+  @ExposedToScripts
   public void create(Pipeline element) {
     post(getBaseResourcePath(), element, SuccessMessage.class);
   }
@@ -61,11 +65,13 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
    * @param pipelineId The id of the pipeline
    */
   @Override
+  @ExposedToScripts
   public void delete(String pipelineId) {
     delete(getBaseResourcePath().addToPath(pipelineId), Message.class);
   }
 
   @Override
+  @ExposedToScripts
   public void update(Pipeline element) {
 
   }
@@ -77,6 +83,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after invocation
    */
   @Override
+  @ExposedToScripts
   public PipelineOperationStatus start(String pipelineId) {
     return getSingle(getBaseResourcePath().addToPath(pipelineId).addToPath("start"), PipelineOperationStatus.class);
   }
@@ -88,6 +95,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after invocation
    */
   @Override
+  @ExposedToScripts
   public PipelineOperationStatus start(Pipeline pipeline) {
     return start(pipeline.getPipelineId());
   }
@@ -99,6 +107,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after detach
    */
   @Override
+  @ExposedToScripts
   public PipelineOperationStatus stop(Pipeline pipeline) {
     return stop(pipeline.getPipelineId());
   }
@@ -110,6 +119,7 @@ public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements IPi
    * @return {@link org.apache.streampipes.model.pipeline.PipelineOperationStatus} the status message after detach
    */
   @Override
+  @ExposedToScripts
   public PipelineOperationStatus stop(String pipelineId) {
     return getSingle(getBaseResourcePath().addToPath(pipelineId).addToPath("stop"), PipelineOperationStatus.class);
   }

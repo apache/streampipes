@@ -22,6 +22,7 @@ import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.SuccessMessage;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,46 +43,55 @@ public class AdapterApi extends AbstractTypedClientApi<AdapterDescription>
   }
 
   @Override
+  @ExposedToScripts
   public Optional<AdapterDescription> get(String elementId) {
     return getSingle(getBaseResourcePath().addToPath(elementId));
   }
 
   @Override
+  @ExposedToScripts
   public List<AdapterDescription> all() {
     return getAll(getBaseResourcePath());
   }
 
   @Override
+  @ExposedToScripts
   public void create(AdapterDescription element) {
     post(getBaseResourcePath(), element);
   }
 
   @Override
+  @ExposedToScripts
   public void delete(String id) {
     delete(getBaseResourcePath().addToPath(id), SuccessMessage.class);
   }
 
   @Override
+  @ExposedToScripts
   public void update(AdapterDescription element) {
     put(getBaseResourcePath().addToPath(element.getElementId()), element);
   }
 
   @Override
+  @ExposedToScripts
   public SuccessMessage start(String elementId) {
     return post(getBaseResourcePath().addToPath(elementId).addToPath("start"), SuccessMessage.class);
   }
 
   @Override
+  @ExposedToScripts
   public SuccessMessage start(AdapterDescription adapter) {
     return start(adapter.getElementId());
   }
 
   @Override
+  @ExposedToScripts
   public SuccessMessage stop(AdapterDescription adapter) {
     return stop(adapter.getElementId());
   }
 
   @Override
+  @ExposedToScripts
   public SuccessMessage stop(String elementId) {
     return post(getBaseResourcePath().addToPath(elementId).addToPath("stop"), SuccessMessage.class);
   }
