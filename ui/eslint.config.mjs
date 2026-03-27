@@ -19,6 +19,7 @@ export default defineConfig([
         '**/dist',
         '**/.angular',
         'cypress/fixtures/**/*.csv',
+        'projects/streampipes/platform-services/src/lib/model/gen/**/*.ts',
     ]),
     {
         files: ['**/*.ts'],
@@ -35,17 +36,7 @@ export default defineConfig([
             sourceType: 'script',
 
             parserOptions: {
-                project: [
-                    'src/tsconfig.app.json',
-                    'tsconfig.spec.json',
-                    'cypress/tsconfig.json',
-                    'projects/streampipes/platform-services/tsconfig.lib.json',
-                    'projects/streampipes/platform-services/tsconfig.spec.json',
-                    'projects/streampipes/shared-ui/tsconfig.lib.json',
-                    'projects/streampipes/shared-ui/tsconfig.spec.json',
-                ],
-
-                createDefaultProgram: true,
+                project: ['tsconfig.eslint.json'],
             },
         },
 
@@ -84,6 +75,24 @@ export default defineConfig([
             ],
 
             '@angular-eslint/prefer-standalone': 'off',
+        },
+    },
+    {
+        files: ['**/*.cy.ts'],
+
+        languageOptions: {
+            globals: {
+                Cypress: 'readonly',
+                cy: 'readonly',
+                expect: 'readonly',
+            },
+        },
+    },
+    {
+        files: ['cypress/support/**/*.ts'],
+        rules: {
+            '@typescript-eslint/no-namespace': 'off',
+            '@typescript-eslint/no-empty-object-type': 'off',
         },
     },
     {

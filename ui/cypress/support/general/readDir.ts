@@ -19,6 +19,8 @@
 import * as fs from 'fs';
 
 declare global {
+    interface Window {}
+
     namespace Cypress {
         interface Chainable {
             /**

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { SpLogMessage } from '@streampipes/platform-services';
 import { DialogRef } from '../../../dialog/base-dialog/dialog-ref';
 import { SpExceptionDetailsComponent } from '../exception-details/exception-details.component';
@@ -40,7 +40,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         TranslatePipe,
     ],
 })
-export class SpExceptionDetailsDialogComponent implements OnInit {
+export class SpExceptionDetailsDialogComponent {
     private dialogRef =
         inject<DialogRef<SpExceptionDetailsDialogComponent>>(DialogRef);
 
@@ -59,6 +59,4 @@ export class SpExceptionDetailsDialogComponent implements OnInit {
     close(additionalButtonClicked = false) {
         this.dialogRef.close(additionalButtonClicked);
     }
-
-    ngOnInit(): void {}
 }

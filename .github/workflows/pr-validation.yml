@@ -57,7 +57,7 @@ jobs:
       - name: Install dependencies
         working-directory: ./ui
         run: |
-          npm install
+          npm ci
         env:
           DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
           NODE_OPTIONS: '-r @gradle-tech/develocity-agent/preload'
@@ -99,8 +99,8 @@ jobs:
       - name: Install NPM dependencies
         working-directory: ./ui
         run: |
-          rm -rf node_modules package-lock.json
-          npm install
+          rm -rf node_modules
+          npm ci
         env:
           DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
           NODE_OPTIONS: '-r @gradle-tech/develocity-agent/preload'

@@ -1,6 +1,8 @@
 {
   "**/*.{md,json,scss,css,js}": "prettier --write",
   "**/*.conf.js": "prettier --write",
+  "*.ts": ["prettier --write", "eslint --fix --cache"],
+  "cypress/**/*.ts": ["prettier --write", "eslint --fix --cache"],
   "src/**/*.{ts,html}": ["prettier --write", "eslint --fix --cache"],
   "projects/**/*.{ts,html}": ["prettier --write", "eslint --fix --cache"]
 }
