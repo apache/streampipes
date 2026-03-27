@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.shared.preprocessing.elements;
 
+import org.apache.streampipes.connect.transformer.api.Context;
 import org.apache.streampipes.connect.transformer.api.ScriptTransformer;
 import org.apache.streampipes.connect.transformer.api.TransformationEngines;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
@@ -29,9 +30,17 @@ import java.util.Map;
 
 public class ScriptTransformationPipelineElement {
   ScriptTransformer scriptTransformer;
+  private final Context scriptContext;
 
   public ScriptTransformationPipelineElement(String language, String transformationScript) {
+    this(language, transformationScript, null);
+  }
+
+  public ScriptTransformationPipelineElement(String language,
+                                             String transformationScript,
+                                             Context scriptContext) {
     var engine = TransformationEngines.INSTANCE.getTransformationEngine(language);
+    this.scriptContext = scriptContext;
     try {
       scriptTransformer = engine.compile(transformationScript);
     } catch (ScriptCompilationException e) {
@@ -42,7 +51,7 @@ public class ScriptTransformationPipelineElement {
   public List<Map<String, Object>> process(Map<String, Object> event) {
     try {
       List<Map<String, Object>> out = new ArrayList<>();
-      scriptTransformer.transform(event, out::add, null);
+      scriptTransformer.transform(event, out::add, scriptContext);
       return out;
     } catch (ScriptExecutionException e) {
       throw new RuntimeException(e);
