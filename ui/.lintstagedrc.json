@@ -1,4 +1,12 @@
 {
-  "*.*": "prettier --check",
-  "src/**/*.ts": ["ng-lint-staged lint --"]
+  "**/*.{md,json,scss,css,js}": "prettier --write",
+  "**/*.conf.js": "prettier --write",
+  "src/**/*.{ts,html}": [
+    "prettier --write",
+    "ESLINT_USE_FLAT_CONFIG=false eslint --fix --cache"
+  ],
+  "projects/**/*.{ts,html}": [
+    "prettier --write",
+    "ESLINT_USE_FLAT_CONFIG=false eslint --fix --cache"
+  ]
 }

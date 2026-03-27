@@ -136,6 +136,15 @@
             "tsConfig": "projects/streampipes/platform-services/tsconfig.spec.json",
             "karmaConfig": "projects/streampipes/platform-services/karma.conf.js"
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/streampipes/platform-services/**/*.ts",
+              "projects/streampipes/platform-services/**/*.html"
+            ]
+          }
         }
       }
     },
@@ -166,6 +175,15 @@
             "main": "projects/streampipes/shared-ui/src/test.ts",
             "tsConfig": "projects/streampipes/shared-ui/tsconfig.spec.json",
             "karmaConfig": "projects/streampipes/shared-ui/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/streampipes/shared-ui/**/*.ts",
+              "projects/streampipes/shared-ui/**/*.html"
+            ]
           }
         }
       }

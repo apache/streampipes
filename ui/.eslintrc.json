@@ -1,11 +1,19 @@
 {
   "root": true,
-  "ignorePatterns": ["projects/**/*"],
+  "ignorePatterns": ["dist/**/*", ".angular/**/*"],
   "overrides": [
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": ["tsconfig.json", "e2e/tsconfig.json"],
+        "project": [
+          "src/tsconfig.app.json",
+          "tsconfig.spec.json",
+          "cypress/tsconfig.json",
+          "projects/streampipes/platform-services/tsconfig.lib.json",
+          "projects/streampipes/platform-services/tsconfig.spec.json",
+          "projects/streampipes/shared-ui/tsconfig.lib.json",
+          "projects/streampipes/shared-ui/tsconfig.spec.json"
+        ],
         "createDefaultProgram": true
       },
       "extends": [
