@@ -66,7 +66,7 @@
         <hadoop.version>3.4.1</hadoop.version>
         <hadoop-mapreduce-client-core.version>3.4.1</hadoop-mapreduce-client-core.version>
         <jgrapht.version>1.5.1</jgrapht.version>
-        <jjwt.version>0.11.2</jjwt.version>
+        <jjwt.version>0.13.0</jjwt.version>
         <lightcouch.version>0.2.0</lightcouch.version>
         <eclipse.milo.version>0.6.16</eclipse.milo.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
