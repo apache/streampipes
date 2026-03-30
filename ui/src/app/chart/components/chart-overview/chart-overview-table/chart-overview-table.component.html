@@ -46,6 +46,13 @@
                         fxLayoutAlign="start center"
                         fxLayoutGap="5px"
                     >
+                        @if (isLegacyMultiSourceChart(element)) {
+                            <mat-icon
+                                [matTooltip]="outdatedChartTooltip | translate"
+                                style="color: var(--color-warn)"
+                                >warning</mat-icon
+                            >
+                        }
                         <div fxLayout="column" fxLayoutAlign="start start">
                             <span class="text-sm">{{
                                 element.baseAppearanceConfig.widgetTitle
