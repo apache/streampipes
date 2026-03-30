@@ -100,6 +100,8 @@ export class ChartOverviewTableComponent implements OnInit {
     };
     charts: DataExplorerWidgetModel[] = [];
     filteredCharts: DataExplorerWidgetModel[] = [];
+    readonly outdatedChartTooltip =
+        'This chart is outdated and must be migrated.';
 
     private dataViewService = inject(ChartService);
     private dataExplorerDashboardService = inject(ChartSharedService);
@@ -214,5 +216,9 @@ export class ChartOverviewTableComponent implements OnInit {
 
     formatDate(timestamp?: number): string {
         return this.dateFormatService.formatDate(timestamp);
+    }
+
+    isLegacyMultiSourceChart(chart: DataExplorerWidgetModel): boolean {
+        return (chart?.dataConfig?.sourceConfigs?.length ?? 0) > 1;
     }
 }
