@@ -87,7 +87,6 @@
                     <disableTaggedUnions>false</disableTaggedUnions>
                     <mapClasses>asClasses</mapClasses>
                     <sortDeclarations>true</sortDeclarations>
-                    <tsNoCheck>true</tsNoCheck>
                     <importDeclarations>
                         <import>import { Storable } from '@streampipes/platform-services'</import>
                     </importDeclarations>

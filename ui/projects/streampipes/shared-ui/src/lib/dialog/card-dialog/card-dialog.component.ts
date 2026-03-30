@@ -21,7 +21,6 @@ import {
     EventEmitter,
     HostBinding,
     HostListener,
-    OnInit,
     Output,
     ViewEncapsulation,
 } from '@angular/core';
@@ -36,7 +35,7 @@ import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 
 @Component({
-    selector: 'card-dialog',
+    selector: 'sp-card-dialog',
     templateUrl: './card-dialog.component.html',
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./card-dialog.component.scss'],
@@ -68,10 +67,7 @@ import { CdkPortalOutlet } from '@angular/cdk/portal';
     ],
     imports: [CdkPortalOutlet],
 })
-export class CardDialogComponent<T>
-    extends BaseDialogComponent<T>
-    implements OnInit
-{
+export class CardDialogComponent<T> extends BaseDialogComponent<T> {
     constructor() {
         super();
     }
@@ -88,8 +84,6 @@ export class CardDialogComponent<T>
             this.containerEvent.emit({ key: 'CLOSE' });
         }
     }
-
-    ngOnInit() {}
 
     closeDialog() {
         this.unfold = 'out';

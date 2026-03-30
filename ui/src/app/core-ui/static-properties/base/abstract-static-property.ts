@@ -28,7 +28,6 @@ import { InvocablePipelineElementUnion } from '../../../editor/model/editor.mode
 import { StaticPropertyUtilService } from '../static-property-util.service';
 
 @Directive()
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
     @Input()
     staticProperty: T;
