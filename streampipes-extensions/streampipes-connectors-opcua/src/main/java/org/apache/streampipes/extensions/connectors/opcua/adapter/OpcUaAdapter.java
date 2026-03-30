@@ -275,32 +275,54 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
   @Override
   public DataSourceHealthCheckResult checkDataSourceHealth() {
+    if (opcUaAdapterConfig == null) {
+      return DataSourceHealthCheckResult.unhealthy("OPC-UA adapter config not initialized");
+    }
     if (connectedClient == null) {
-      return DataSourceHealthCheckResult.unhealthy("OPC-UA client not connected");
+      return attemptReconnectAndReport("OPC-UA client not connected");
     }
     try {
       var client = connectedClient.getClient();
-      if (client.getSession().isEmpty()) {
-        return DataSourceHealthCheckResult.unhealthy("OPC-UA session is not established");
-      }
       var response = client.readValues(0, TimestampsToReturn.Neither, Collections.singletonList(SERVER_STATE_NODE))
           .get(HEALTH_CHECK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
       if (response == null || response.isEmpty()) {
-        return DataSourceHealthCheckResult.unhealthy("OPC-UA server did not respond");
+        return attemptReconnectAndReport("OPC-UA server did not respond - empty response from server state node");
       }
       var statusCode = response.get(0).getStatusCode();
       if (!statusCode.isGood()) {
-        return DataSourceHealthCheckResult.unhealthy("OPC-UA server returned bad status: " + statusCode);
+        return attemptReconnectAndReport("OPC-UA server returned bad status: " + statusCode);
       }
       if (!opcUaAdapterConfig.inPullMode()) {
         var subscriptions = client.getSubscriptionManager().getSubscriptions();
         if (subscriptions.isEmpty()) {
-          return DataSourceHealthCheckResult.unhealthy("OPC-UA subscriptions are not active");
+          return attemptReconnectAndReport("OPC-UA subscriptions are not active");
         }
       }
       return DataSourceHealthCheckResult.healthy("OPC-UA server is reachable and session is active");
     } catch (Exception e) {
-      return DataSourceHealthCheckResult.unhealthyWithException("OPC-UA health check failed: " + e.getMessage(), e);
+      return attemptReconnectAndReport("OPC-UA health check failed: " + e.getMessage());
+    }
+  }
+
+  private DataSourceHealthCheckResult attemptReconnectAndReport(String originalIssue) {
+    LOG.warn("OPC-UA health check detected issue: {}. Attempting reconnection...", originalIssue);
+    try {
+      if (connectedClient != null) {
+        clientProvider.releaseClient(opcUaAdapterConfig);
+        connectedClient = null;
+      }
+      event.clear();
+      nodeIdToLabelMapping.clear();
+      Thread.sleep(1000);
+      prepareAdapter();
+      LOG.info("OPC-UA reconnection successful after detecting: {}", originalIssue);
+      return DataSourceHealthCheckResult.healthy("OPC-UA connection was restored. Previous issue: " + originalIssue);
+    } catch (Exception reconnectEx) {
+      LOG.error("OPC-UA reconnection failed after detecting: {}", originalIssue, reconnectEx);
+      return DataSourceHealthCheckResult.unhealthyWithException(
+          originalIssue + " (reconnection attempt also failed: " + reconnectEx.getMessage() + ")",
+          reconnectEx
+      );
     }
   }
 }

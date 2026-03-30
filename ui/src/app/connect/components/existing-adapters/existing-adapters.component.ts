@@ -59,8 +59,7 @@ import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.
 import { AdapterHealthStatus } from '../../model/adapter-health-status.model';
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.breadcrumb';
-import { Subscription, interval } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { interval, Subscription } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -197,6 +196,10 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             }
             return adapter[column];
         };
+
+        this.healthPoll$ = interval(5000).subscribe(() => {
+            this.loadHealthStatuses();
+        });
     }
 
     startAdapter(adapter: AdapterDescription) {
@@ -365,29 +368,23 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             this.applyAdapterFilters(this.currentFilterIds);
             this.operationInProgressAdapterId = undefined;
             this.getMonitoringInfos(adapters);
-            this.loadHealthStatuses(adapters);
+            this.loadHealthStatuses();
             setTimeout(() => {
                 this.dataSource.sort = this.sort;
             });
         });
     }
 
-    loadHealthStatuses(adapters: AdapterDescription[]): void {
-        const runningAdapters = adapters
-            .filter(a => a.running && a.selectedEndpointUrl)
-            .map(a => ({
-                elementId: a.elementId,
-                selectedEndpointUrl: a.selectedEndpointUrl,
-            }));
-        this.adapterHealthService
-            .getAllHealthStatuses(runningAdapters)
-            .subscribe(statuses => {
-                this.adapterHealthStatuses = statuses;
-            });
+    loadHealthStatuses(): void {
+        this.adapterHealthService.getAllHealthStatuses().subscribe(statuses => {
+            this.adapterHealthStatuses = statuses;
+        });
     }
 
-    getHealthStatus(adapterId: string): AdapterHealthStatus | null {
-        return this.adapterHealthStatuses.get(adapterId) || null;
+    getHealthStatus(adapter: AdapterDescription): AdapterHealthStatus | null {
+        return adapter.running
+            ? this.adapterHealthStatuses.get(adapter.elementId) || null
+            : null;
     }
 
     applyAdapterFilters(elementIds: Set<string>): void {

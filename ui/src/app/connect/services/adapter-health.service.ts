@@ -18,64 +18,32 @@
 
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, forkJoin } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { AdapterHealthStatus } from '../model/adapter-health-status.model';
-import { AdapterService } from '@streampipes/platform-services';
 
 @Injectable({ providedIn: 'root' })
 export class AdapterHealthService {
     private http = inject(HttpClient);
-    private adapterService = inject(AdapterService);
+    private readonly basePath = '/streampipes-backend/api/v2/adapter-health';
 
-    getHealthStatus(
-        endpointUrl: string,
-        adapterId: string,
-    ): Observable<AdapterHealthStatus | null> {
-        return this.http
-            .get<AdapterHealthStatus>(
-                `${endpointUrl}/api/v1/adapter-health/${encodeURIComponent(adapterId)}`,
-            )
-            .pipe(catchError(() => of(null)));
+    getAllHealthStatuses(): Observable<Map<string, AdapterHealthStatus>> {
+        return this.http.get<AdapterHealthStatus[]>(this.basePath).pipe(
+            map(statuses =>
+                statuses.reduce(
+                    (mapByAdapterId, status) =>
+                        mapByAdapterId.set(status.adapterId, status),
+                    new Map<string, AdapterHealthStatus>(),
+                ),
+            ),
+            catchError(() => of(new Map<string, AdapterHealthStatus>())),
+        );
     }
 
-    getAllHealthStatuses(
-        adapters: Array<{ elementId: string; selectedEndpointUrl: string }>,
-    ): Observable<Map<string, AdapterHealthStatus>> {
-        if (!adapters.length) {
-            return of(new Map());
-        }
-        const grouped = adapters.reduce(
-            (acc, a) => {
-                const url = a.selectedEndpointUrl;
-                if (url) {
-                    (acc[url] = acc[url] || []).push(a.elementId);
-                }
-                return acc;
-            },
-            {} as Record<string, string[]>,
-        );
-
-        const requests = Object.entries(grouped).map(([url, ids]) =>
-            this.http
-                .get<AdapterHealthStatus[]>(`${url}/api/v1/adapter-health`)
-                .pipe(
-                    map(statuses =>
-                        statuses.filter(s => ids.includes(s.adapterId)),
-                    ),
-                    catchError(() => of([] as AdapterHealthStatus[])),
-                ),
-        );
-
-        return forkJoin(requests).pipe(
-            map(results =>
-                results
-                    .flat()
-                    .reduce(
-                        (m, s) => m.set(s.adapterId, s),
-                        new Map<string, AdapterHealthStatus>(),
-                    ),
-            ),
+    triggerHealthCheck(adapterId: string): Observable<void> {
+        return this.http.post<void>(
+            `${this.basePath}/${adapterId}/trigger`,
+            {},
         );
     }
 }

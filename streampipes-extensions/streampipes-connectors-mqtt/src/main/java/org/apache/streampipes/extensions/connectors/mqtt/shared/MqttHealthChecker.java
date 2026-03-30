@@ -28,10 +28,15 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class MqttHealthChecker extends MqttBase {
 
-  private static final int TIMEOUT_SECONDS = 5;
+  private static final int TIMEOUT_SECONDS = 15;
 
   public MqttHealthChecker(MqttConfig mqttConfig) {
     super(mqttConfig);
+  }
+
+  @Override
+  protected com.hivemq.client.mqtt.mqtt3.Mqtt3AsyncClient setupMqttClient() throws Exception {
+    return setupMqttClientBuilder().buildAsync();
   }
 
   public DataSourceHealthCheckResult check() {
@@ -49,7 +54,10 @@ public class MqttHealthChecker extends MqttBase {
           });
 
       if (!connectLatch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
-        return DataSourceHealthCheckResult.unhealthy("MQTT connection timed out");
+        return DataSourceHealthCheckResult.unhealthyWithException(
+            "MQTT connection timed out", 
+            new java.util.concurrent.TimeoutException("Timed out waiting for broker response after " + TIMEOUT_SECONDS + "s")
+        );
       }
       if (connectError.get() != null) {
         return DataSourceHealthCheckResult.unhealthyWithException("MQTT connection failed", connectError.get());
@@ -69,7 +77,10 @@ public class MqttHealthChecker extends MqttBase {
 
       if (!subscribeLatch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
         client.disconnect();
-        return DataSourceHealthCheckResult.unhealthy("MQTT subscription timed out");
+        return DataSourceHealthCheckResult.unhealthyWithException(
+            "MQTT subscription timed out",
+            new java.util.concurrent.TimeoutException("Timed out waiting for subscription ACK after " + TIMEOUT_SECONDS + "s")
+        );
       }
       if (subscribeError.get() != null) {
         client.disconnect();

@@ -40,7 +40,7 @@ public enum AdapterHealthCheckManager {
   INSTANCE;
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterHealthCheckManager.class);
-  private static final long INITIAL_INTERVAL_MS = 30_000;
+  private static final long INITIAL_INTERVAL_MS = 60_000;
   private static final long MAX_INTERVAL_MS = 86_400_000;
   private static final double BACKOFF_MULTIPLIER = 2.0;
 
@@ -65,7 +65,11 @@ public enum AdapterHealthCheckManager {
     status.setLastCheckTimestamp(System.currentTimeMillis());
     status.updateOverallStatus();
     healthStatuses.put(adapterId, status);
-    scheduleHealthCheck(adapterId, INITIAL_INTERVAL_MS);
+    scheduleHealthCheck(adapterId, 15_000);
+  }
+
+  public void triggerHealthCheck(String adapterId) {
+    scheduleHealthCheck(adapterId, 0);
   }
 
   public void unregisterAdapter(String adapterId) {
@@ -90,6 +94,12 @@ public enum AdapterHealthCheckManager {
     if (future != null) {
       future.cancel(false);
     }
+    
+    var status = healthStatuses.get(adapterId);
+    if (status != null) {
+      status.setNextCheckTimestamp(System.currentTimeMillis() + delayMs);
+    }
+    
     var newFuture = scheduler.schedule(() -> performHealthCheck(adapterId), delayMs, TimeUnit.MILLISECONDS);
     scheduledChecks.put(adapterId, newFuture);
   }

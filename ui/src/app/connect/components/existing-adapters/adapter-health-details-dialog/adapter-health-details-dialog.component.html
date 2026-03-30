@@ -19,15 +19,33 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-20">
         @if (healthStatus) {
-            <div class="adapter-info">
-                <h3>{{ healthStatus.adapterName || 'Adapter' }}</h3>
-                <p class="last-check">
-                    Last checked:
-                    {{
-                        healthStatus.lastCheckTimestamp
-                            | date: 'dd.MM.yyyy HH:mm:ss'
-                    }}
-                </p>
+            <div
+                class="adapter-info"
+                fxLayout="row"
+                fxLayoutAlign="space-between start"
+            >
+                <div>
+                    <h3>{{ healthStatus.adapterName || 'Adapter' }}</h3>
+                    <p class="last-check">
+                        Last checked:
+                        {{
+                            healthStatus.lastCheckTimestamp
+                                | date: 'dd.MM.yyyy HH:mm:ss'
+                        }}
+                    </p>
+                </div>
+                <button
+                    mat-icon-button
+                    type="button"
+                    matTooltip="Run check now"
+                    (click)="triggerCheck()"
+                    [disabled]="isTriggering"
+                    color="primary"
+                >
+                    <mat-icon [ngClass]="{ spin: isTriggering }"
+                        >refresh</mat-icon
+                    >
+                </button>
             </div>
 
             <div class="health-section">
@@ -38,14 +56,12 @@
                         fxLayoutAlign="start center"
                         fxLayoutGap="12px"
                     >
-                        <mat-icon
+                        <div
+                            class="light"
                             [ngClass]="
-                                getStatusClass(healthStatus.backendHealth)
+                                getLightClass(healthStatus.backendHealth)
                             "
-                            >{{
-                                getStatusIcon(healthStatus.backendHealth)
-                            }}</mat-icon
-                        >
+                        ></div>
                         <span class="health-label">Backend Health</span>
                         <span
                             class="health-status"
@@ -72,14 +88,12 @@
                         fxLayoutAlign="start center"
                         fxLayoutGap="12px"
                     >
-                        <mat-icon
+                        <div
+                            class="light"
                             [ngClass]="
-                                getStatusClass(healthStatus.dataSourceHealth)
+                                getLightClass(healthStatus.dataSourceHealth)
                             "
-                            >{{
-                                getStatusIcon(healthStatus.dataSourceHealth)
-                            }}</mat-icon
-                        >
+                        ></div>
                         <span class="health-label">Data Source Health</span>
                         @if (healthStatus.dataSourceHealthSupported) {
                             <span
@@ -102,9 +116,17 @@
                             >
                         }
                     </div>
-                    @if (healthStatus.dataSourceHealthMessage) {
+                    @if (
+                        healthStatus.dataSourceHealthSupported &&
+                        healthStatus.dataSourceHealthMessage
+                    ) {
                         <div class="health-message">
                             {{ healthStatus.dataSourceHealthMessage }}
+                        </div>
+                    } @else if (!healthStatus.dataSourceHealthSupported) {
+                        <div class="health-message">
+                            Data source health checks are not supported for this
+                            adapter type yet.
                         </div>
                     }
                 </div>
@@ -148,8 +170,11 @@
                     <span
                         >Consecutive failures:
                         {{ healthStatus.consecutiveFailures }}. Next check will
-                        be delayed due to exponential backoff.</span
-                    >
+                        be delayed due to exponential backoff.
+                        @if (healthStatus.nextCheckTimestamp) {
+                            (Next check {{ timeUntilNextCheck }})
+                        }
+                    </span>
                 </div>
             }
         } @else {

@@ -26,12 +26,13 @@ export interface AdapterHealthStatus {
     adapterId: string;
     adapterName: string;
     backendHealth: HealthCheckStatus;
-    backendHealthMessage: string;
+    backendHealthMessage: string | null;
     dataSourceHealth: HealthCheckStatus;
-    dataSourceHealthMessage: string;
-    dataSourceHealthDetails: string;
+    dataSourceHealthMessage: string | null;
+    dataSourceHealthDetails: string | null;
     overallStatus: HealthCheckStatus;
     lastCheckTimestamp: number;
     dataSourceHealthSupported: boolean;
     consecutiveFailures: number;
+    nextCheckTimestamp: number;
 }

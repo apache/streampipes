@@ -44,4 +44,10 @@ public class AdapterHealthResource extends AbstractExtensionsResource {
   public ResponseEntity<AdapterHealthStatus> getAdapterHealth(@PathVariable String adapterId) {
     return ok(AdapterHealthCheckManager.INSTANCE.getHealthStatus(adapterId));
   }
+
+  @org.springframework.web.bind.annotation.PostMapping(value = "/{adapterId}/trigger", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> triggerAdapterHealthCheck(@PathVariable String adapterId) {
+    AdapterHealthCheckManager.INSTANCE.triggerHealthCheck(adapterId);
+    return ResponseEntity.ok().build();
+  }
 }

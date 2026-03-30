@@ -46,17 +46,15 @@ export class AdapterStatusLightComponent {
         if (!this.adapterRunning) {
             return 'light-neutral';
         }
-        if (!this.healthStatus) {
-            return 'light-green';
+        if (
+            !this.healthStatus ||
+            this.healthStatus.overallStatus === HealthCheckStatus.UNKNOWN
+        ) {
+            return 'light-neutral';
         }
-        switch (this.healthStatus.overallStatus) {
-            case HealthCheckStatus.HEALTHY:
-                return 'light-green';
-            case HealthCheckStatus.UNHEALTHY:
-                return 'light-red';
-            default:
-                return 'light-neutral';
-        }
+        return this.healthStatus.overallStatus === HealthCheckStatus.UNHEALTHY
+            ? 'light-red'
+            : 'light-green';
     }
 
     openHealthDetails(event: MouseEvent): void {

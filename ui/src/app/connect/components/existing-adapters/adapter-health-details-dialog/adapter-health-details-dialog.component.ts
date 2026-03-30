@@ -16,10 +16,11 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 import {
     LayoutDirective,
     LayoutAlignDirective,
@@ -31,6 +32,7 @@ import {
     AdapterHealthStatus,
     HealthCheckStatus,
 } from '../../../model/adapter-health-status.model';
+import { AdapterHealthService } from '../../../services/adapter-health.service';
 
 @Component({
     selector: 'sp-adapter-health-details-dialog',
@@ -45,38 +47,115 @@ import {
         LayoutGapDirective,
         DatePipe,
         NgClass,
+        MatIconButton,
+        MatTooltip,
     ],
 })
-export class AdapterHealthDetailsDialogComponent {
+export class AdapterHealthDetailsDialogComponent implements OnInit, OnDestroy {
     @Input() healthStatus: AdapterHealthStatus | null;
 
-    showDetails = false;
+    showDetails = true;
+    isTriggering = false;
     HealthCheckStatus = HealthCheckStatus;
+    timeUntilNextCheck = '';
+
+    private countdownInterval: ReturnType<typeof setInterval>;
+    private statusPollingInterval: ReturnType<typeof setInterval>;
 
     constructor(
         private dialogRef: DialogRef<AdapterHealthDetailsDialogComponent>,
+        private adapterHealthService: AdapterHealthService,
     ) {}
 
-    getStatusIcon = (status: HealthCheckStatus) =>
-        status === HealthCheckStatus.HEALTHY
-            ? 'check_circle'
-            : status === HealthCheckStatus.UNHEALTHY
-              ? 'error'
-              : 'help_outline';
+    get isCheckInProgress(): boolean {
+        if (!this.healthStatus?.nextCheckTimestamp) {
+            return this.isTriggering;
+        }
+        return (
+            this.isTriggering ||
+            Date.now() >= this.healthStatus.nextCheckTimestamp - 500
+        );
+    }
+
+    ngOnInit(): void {
+        this.updateCountdown();
+        this.countdownInterval = setInterval(
+            () => this.updateCountdown(),
+            1000,
+        );
+        this.statusPollingInterval = setInterval(() => this.pollStatus(), 5000);
+    }
+
+    ngOnDestroy(): void {
+        clearInterval(this.countdownInterval);
+        clearInterval(this.statusPollingInterval);
+    }
+
+    private pollStatus(): void {
+        if (!this.healthStatus?.adapterId) return;
+        this.adapterHealthService.getAllHealthStatuses().subscribe(statuses => {
+            const updated = statuses.get(this.healthStatus.adapterId);
+            if (updated) {
+                this.healthStatus = updated;
+                this.updateCountdown();
+            }
+        });
+    }
+
+    private updateCountdown(): void {
+        if (!this.healthStatus?.nextCheckTimestamp) return;
+        const diff = this.healthStatus.nextCheckTimestamp - Date.now();
+        if (diff <= 0) {
+            this.timeUntilNextCheck = 'Check in progress...';
+            return;
+        }
+        const seconds = Math.floor((diff / 1000) % 60);
+        const minutes = Math.floor(diff / 60000);
+        this.timeUntilNextCheck =
+            minutes > 0 ? `in ${minutes}m ${seconds}s` : `in ${seconds}s`;
+    }
+
+    triggerCheck(): void {
+        if (!this.healthStatus) return;
+        this.isTriggering = true;
+        this.adapterHealthService
+            .triggerHealthCheck(this.healthStatus.adapterId)
+            .subscribe({
+                next: () =>
+                    setTimeout(() => {
+                        this.isTriggering = false;
+                        this.pollStatus();
+                    }, 3000),
+                error: () => (this.isTriggering = false),
+            });
+    }
+
+    getLightClass = (status: HealthCheckStatus) =>
+        this.isCheckInProgress
+            ? 'light-neutral'
+            : status === HealthCheckStatus.HEALTHY
+              ? 'light-green'
+              : status === HealthCheckStatus.UNHEALTHY
+                ? 'light-red'
+                : 'light-neutral';
 
     getStatusClass = (status: HealthCheckStatus) =>
-        status === HealthCheckStatus.HEALTHY
-            ? 'status-healthy'
-            : status === HealthCheckStatus.UNHEALTHY
-              ? 'status-unhealthy'
-              : 'status-unknown';
+        this.isCheckInProgress
+            ? 'status-unknown'
+            : status === HealthCheckStatus.HEALTHY
+              ? 'status-healthy'
+              : status === HealthCheckStatus.UNHEALTHY
+                ? 'status-unhealthy'
+                : 'status-unknown';
 
     getStatusLabel = (status: HealthCheckStatus) =>
-        status === HealthCheckStatus.HEALTHY
-            ? 'Healthy'
-            : status === HealthCheckStatus.UNHEALTHY
-              ? 'Unhealthy'
-              : 'Unknown';
+        this.isCheckInProgress
+            ? 'Checking...'
+            : status === HealthCheckStatus.HEALTHY
+              ? 'Healthy'
+              : status === HealthCheckStatus.UNHEALTHY
+                ? 'Unhealthy'
+                : 'Unknown';
 
     close = () => this.dialogRef.close();
 }

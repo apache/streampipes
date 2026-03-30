@@ -97,7 +97,7 @@
                     <td mat-cell *matCellDef="let adapter">
                         <sp-adapter-status-light
                             [adapterRunning]="adapter.running"
-                            [healthStatus]="getHealthStatus(adapter.elementId)"
+                            [healthStatus]="getHealthStatus(adapter)"
                         ></sp-adapter-status-light>
                     </td>
                 </ng-container>
@@ -178,6 +178,7 @@
                                 class="adapter-icon"
                                 [src]="getIconUrl(adapter)"
                                 [alt]="adapter.name"
+                                title="Adapter icon"
                             />
                         }
                         @if (adapter.icon) {
@@ -185,6 +186,7 @@
                                 class="adapter-icon"
                                 [alt]="adapter.name"
                                 [src]="adapter.icon"
+                                title="Adapter icon"
                             />
                         }
                     </td>

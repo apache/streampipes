@@ -34,6 +34,7 @@ public class AdapterHealthStatus {
   private long lastCheckTimestamp;
   private boolean dataSourceHealthSupported;
   private int consecutiveFailures;
+  private long nextCheckTimestamp;
 
   public AdapterHealthStatus() {
     this.backendHealth = HealthCheckStatus.UNKNOWN;
@@ -137,5 +138,13 @@ public class AdapterHealthStatus {
     } else {
       overallStatus = dataSourceHealth;
     }
+  }
+
+  public long getNextCheckTimestamp() {
+    return nextCheckTimestamp;
+  }
+
+  public void setNextCheckTimestamp(long nextCheckTimestamp) {
+    this.nextCheckTimestamp = nextCheckTimestamp;
   }
 }

@@ -50,6 +50,12 @@ public class MqttBase {
     }
 
     protected Mqtt3AsyncClient setupMqttClient() throws Exception {
+        return setupMqttClientBuilder()
+                .automaticReconnectWithDefaultConfig()
+                .buildAsync();
+    }
+
+    protected com.hivemq.client.mqtt.mqtt3.Mqtt3ClientBuilder setupMqttClientBuilder() throws Exception {
         URI brokerUri = new URI(mqttConfig.getUrl());
         boolean tls = tlsEnabled(brokerUri);
 
@@ -57,7 +63,6 @@ public class MqttBase {
                 .identifier(UUID.randomUUID().toString())
                 .serverHost(brokerUri.getHost())
                 .serverPort(resolvePort(brokerUri))
-                .automaticReconnectWithDefaultConfig()
                 .addConnectedListener(context -> logConnected())
                 .addDisconnectedListener(context -> logDisconnected(context.getCause()))
                 .useMqttVersion3();
@@ -74,7 +79,7 @@ public class MqttBase {
             builder.sslConfig(sslContext);
         }
 
-        return builder.buildAsync();
+        return builder;
     }
 
     private void logConnected() {
