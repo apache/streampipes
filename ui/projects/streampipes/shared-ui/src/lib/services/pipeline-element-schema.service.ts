@@ -61,4 +61,8 @@ export class PipelineElementSchemaService {
     hasNoDomainProperty(ep: EventPropertyUnion) {
         return !(this.isTimestamp(ep) || this.isImage(ep));
     }
+
+    shouldShowPropertyScopeBadge(propertyScope?: string): boolean {
+        return propertyScope === 'DIMENSION_PROPERTY';
+    }
 }

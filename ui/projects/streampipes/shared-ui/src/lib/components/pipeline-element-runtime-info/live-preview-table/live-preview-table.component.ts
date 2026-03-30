@@ -33,6 +33,7 @@ import {
 } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-live-preview-table',
@@ -51,6 +52,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatRow,
         DatePipe,
         TranslatePipe,
+        MatTooltip,
     ],
 })
 export class LivePreviewTableComponent implements OnInit {
@@ -71,6 +73,6 @@ export class LivePreviewTableComponent implements OnInit {
     ngOnInit() {
         this.displayedColumns = this.compact
             ? ['runtimeName', 'value']
-            : ['runtimeName', 'label', 'description', 'runtimeType', 'value'];
+            : ['runtimeName', 'label', 'description', 'value'];
     }
 }
