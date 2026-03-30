@@ -34,6 +34,5 @@ jobs:
     - uses: actions/labeler@v6
       with:
         configuration-path: .github/pr-labeler-config.yml
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
         # Remove labels when matching files are reverted
         sync-labels: true
