@@ -66,34 +66,32 @@
                         fxLayout="column"
                         data-cy="dataset-preview-table"
                     >
-                        @for (
-                            header of dataPreview.headers;
-                            let i = $index;
-                            track $index
-                        ) {
+                        @for (row of previewRows; track row.header) {
                             <div
                                 class="dataset-preview-row"
                                 data-cy="dataset-preview-row"
                             >
-                                <span
-                                    class="dataset-preview-key"
-                                    [attr.data-cy]="
-                                        'dataset-preview-key-' +
-                                        header.toLowerCase()
-                                    "
-                                >
-                                    {{ header }}
-                                </span>
+                                <div class="dataset-preview-property">
+                                    <div class="dataset-preview-key-row">
+                                        <span
+                                            class="dataset-preview-key"
+                                            [attr.data-cy]="
+                                                'dataset-preview-key-' +
+                                                row.header.toLowerCase()
+                                            "
+                                        >
+                                            {{ row.header }}
+                                        </span>
+                                        <sp-property-scope-badge
+                                            [propertyScope]="row.propertyScope"
+                                        />
+                                    </div>
+                                </div>
                                 <span
                                     class="dataset-preview-value"
                                     data-cy="dataset-preview-value"
                                 >
-                                    {{
-                                        formatPreviewValue(
-                                            header,
-                                            previewRow[i]
-                                        )
-                                    }}
+                                    {{ row.value }}
                                 </span>
                             </div>
                         }

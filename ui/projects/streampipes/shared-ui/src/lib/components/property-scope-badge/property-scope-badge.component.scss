@@ -16,14 +16,22 @@
  *
  */
 
-export interface RuntimeInfo {
-    label: string;
-    description: string;
-    runtimeName: string;
-    propertyScope?: string;
-    value: any;
-    isImage: boolean;
-    isTimestamp: boolean;
-    hasNoDomainProperty: boolean;
-    valueChanged: boolean;
+:host {
+    display: inline-flex;
+}
+
+.property-scope-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--space-lg);
+    height: var(--space-lg);
+    padding: 0 var(--space-xs);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-info) 18%, var(--color-bg-0));
+    color: var(--color-info);
+    font-size: var(--font-size-2xs);
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+    cursor: help;
 }
