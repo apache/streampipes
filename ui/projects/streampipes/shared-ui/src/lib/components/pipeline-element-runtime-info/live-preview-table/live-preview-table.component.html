@@ -28,15 +28,9 @@
             <td mat-cell *matCellDef="let element">
                 <div class="runtime-name-row">
                     <div class="runtime-name">{{ element.runtimeName }}</div>
-                    @if (element.showPropertyScopeBadge) {
-                        <span
-                            class="dimension-indicator"
-                            [matTooltip]="'Dimension' | translate"
-                            matTooltipPosition="above"
-                        >
-                            D
-                        </span>
-                    }
+                    <sp-property-scope-badge
+                        [propertyScope]="element.propertyScope"
+                    />
                 </div>
             </td>
         </ng-container>

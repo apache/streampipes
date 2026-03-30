@@ -82,17 +82,9 @@
                                         >
                                             {{ row.header }}
                                         </span>
-                                        @if (row.showPropertyScopeBadge) {
-                                            <span
-                                                class="dimension-indicator"
-                                                [matTooltip]="
-                                                    'Dimension' | translate
-                                                "
-                                                matTooltipPosition="above"
-                                            >
-                                                D
-                                            </span>
-                                        }
+                                        <sp-property-scope-badge
+                                            [propertyScope]="row.propertyScope"
+                                        />
                                     </div>
                                 </div>
                                 <span

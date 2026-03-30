@@ -33,7 +33,7 @@ import {
 } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MatTooltip } from '@angular/material/tooltip';
+import { PropertyScopeBadgeComponent } from '../../property-scope-badge/property-scope-badge.component';
 
 @Component({
     selector: 'sp-live-preview-table',
@@ -52,7 +52,7 @@ import { MatTooltip } from '@angular/material/tooltip';
         MatRow,
         DatePipe,
         TranslatePipe,
-        MatTooltip,
+        PropertyScopeBadgeComponent,
     ],
 })
 export class LivePreviewTableComponent implements OnInit {

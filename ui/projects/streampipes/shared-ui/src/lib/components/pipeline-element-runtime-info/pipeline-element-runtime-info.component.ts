@@ -73,6 +73,7 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                     label: ep.label || 'n/a',
                     description: ep.description || 'n/a',
                     runtimeName: ep.runtimeName,
+                    propertyScope: ep.propertyScope,
                     value: undefined,
                     isTimestamp:
                         this.pipelineELementSchemaService.isTimestamp(ep),
@@ -80,10 +81,6 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                     hasNoDomainProperty:
                         this.pipelineELementSchemaService.hasNoDomainProperty(
                             ep,
-                        ),
-                    showPropertyScopeBadge:
-                        this.pipelineELementSchemaService.shouldShowPropertyScopeBadge(
-                            ep.propertyScope,
                         ),
                     valueChanged: false,
                 };

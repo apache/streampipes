@@ -22,6 +22,7 @@ import {
     DateFormatService,
     FeatureCardHeaderComponent,
     FeatureCardMetaSectionComponent,
+    PropertyScopeBadgeComponent,
     SpLabelComponent,
 } from '@streampipes/shared-ui';
 import {
@@ -36,7 +37,6 @@ import {
 import { forkJoin } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
-import { MatTooltip } from '@angular/material/tooltip';
 import {
     LayoutAlignDirective,
     LayoutDirective,
@@ -54,9 +54,9 @@ import {
         LayoutAlignDirective,
         LayoutGapDirective,
         MatIcon,
-        MatTooltip,
         FeatureCardHeaderComponent,
         FeatureCardMetaSectionComponent,
+        PropertyScopeBadgeComponent,
         SpLabelComponent,
     ],
 })
@@ -150,8 +150,7 @@ export class DatasetFeatureCardComponent implements OnInit {
 
         return {
             header,
-            showPropertyScopeBadge:
-                eventProperty?.propertyScope === 'DIMENSION_PROPERTY',
+            propertyScope: eventProperty?.propertyScope,
             value: this.formatPreviewValue(header, value),
         };
     }
@@ -168,6 +167,6 @@ export class DatasetFeatureCardComponent implements OnInit {
 
 interface PreviewRow {
     header: string;
-    showPropertyScopeBadge: boolean;
+    propertyScope?: string;
     value: string;
 }

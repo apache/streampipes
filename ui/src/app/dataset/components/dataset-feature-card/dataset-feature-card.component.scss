@@ -58,7 +58,7 @@
 .dataset-preview-key-row {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: var(--space-xs);
     min-width: 0;
 }
 
@@ -70,22 +70,6 @@
     word-break: break-word;
     text-transform: capitalize;
     letter-spacing: 0.03em;
-}
-
-.dimension-indicator {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 1.1rem;
-    height: 1.1rem;
-    padding: 0 0.25rem;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--color-info) 18%, white);
-    color: var(--color-info);
-    font-size: 0.7rem;
-    font-weight: 700;
-    line-height: 1;
-    cursor: help;
 }
 
 .dataset-preview-value {
