@@ -99,7 +99,7 @@
         <springdoc.version>3.0.1</springdoc.version>
         <swagger.version>2.2.42</swagger.version>
         <tsfile.version>1.1.0</tsfile.version>
-        <type-parser.version>0.8.1</type-parser.version>
+        <type-parser.version>0.9.0</type-parser.version>
         <xz.version>1.12</xz.version>
 
         <!-- streampipes-maven-plugin -->
