@@ -31,6 +31,7 @@ import { LoginService } from '../login/services/login.service';
 import { InfoTabComponent } from './components/info/info.component';
 import { DocumentationTabComponent } from './components/documentation/documentation.component';
 import { ShortcutsTabComponent } from './components/shortcuts/shortcuts.component';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-help',
@@ -43,6 +44,7 @@ import { ShortcutsTabComponent } from './components/shortcuts/shortcuts.componen
         LayoutAlignDirective,
         MatTabGroup,
         MatTab,
+        TranslatePipe,
         InfoTabComponent,
         DocumentationTabComponent,
         ShortcutsTabComponent,
@@ -51,12 +53,15 @@ import { ShortcutsTabComponent } from './components/shortcuts/shortcuts.componen
 export class HelpComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private loginService = inject(LoginService);
+    private translateService = inject(TranslateService);
 
     selectedIndex = 0;
     documentationLink = '';
 
     ngOnInit(): void {
-        this.breadcrumbService.updateBreadcrumb([{ label: 'Help' }]);
+        this.breadcrumbService.updateBreadcrumb([
+            { label: this.translateService.instant('Help') },
+        ]);
         this.loginService.fetchLoginSettings().subscribe(res => {
             this.documentationLink = res.linkSettings?.documentationUrl || '';
         });

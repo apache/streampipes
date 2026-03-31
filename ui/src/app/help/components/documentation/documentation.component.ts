@@ -24,6 +24,7 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-documentation-tab',
@@ -34,6 +35,7 @@ import { MatButton } from '@angular/material/button';
         LayoutAlignDirective,
         SplitSectionComponent,
         MatButton,
+        TranslatePipe,
     ],
 })
 export class DocumentationTabComponent {

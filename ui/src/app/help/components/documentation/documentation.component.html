@@ -23,8 +23,8 @@
     fxFlex="100"
 >
     <sp-split-section
-        title="Documentation"
-        subtitle="View the documentation for a full user guide."
+        [title]="'Documentation' | translate"
+        [subtitle]="'View the documentation for a full user guide.' | translate"
     >
         <div fxLayout="column" class="subsection mt-8">
             <div>
@@ -36,7 +36,7 @@
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    View Documentation
+                    {{ 'View Documentation' | translate }}
                 </a>
             </div>
         </div>

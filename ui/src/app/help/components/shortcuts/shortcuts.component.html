@@ -19,42 +19,48 @@
 <div class="fixed-height" fxLayout="column" fxFlex="100">
     <div fxLayout="column" fxLayoutGap="10px">
         <sp-basic-header-title-component
-            title="Shortcuts"
+            [title]="'Shortcuts' | translate"
         ></sp-basic-header-title-component>
 
         <sp-basic-inner-panel
-            panelTitle="'Ctrl/Cmd + S' in chart/dashboard/pipeline edit view"
+            [panelTitle]="
+                '\'Ctrl/Cmd + S\' in chart/dashboard/pipeline edit view'
+                    | translate
+            "
             fxFlex="100"
         >
-            Saves the current state
+            {{ 'Saves the current state' | translate }}
         </sp-basic-inner-panel>
 
         <sp-basic-inner-panel
-            panelTitle="'E' in dashboard/pipeline panel"
+            [panelTitle]="'\'E\' in dashboard/pipeline panel' | translate"
             fxFlex="100"
         >
-            Enters edit mode.
+            {{ 'Enters edit mode.' | translate }}
         </sp-basic-inner-panel>
 
         <sp-basic-inner-panel
-            panelTitle="'Delete/Backspace' in pipeline editor"
+            [panelTitle]="'\'Delete/Backspace\' in pipeline editor' | translate"
             fxFlex="100"
         >
-            Deletes the currently hovered pipeline element.
+            {{ 'Deletes the currently hovered pipeline element.' | translate }}
         </sp-basic-inner-panel>
 
         <sp-basic-inner-panel
-            panelTitle="'Ctrl/Cmd + F' in table widget filter dropdown (charts type -&gt; table)"
+            [panelTitle]="
+                '\'Ctrl/Cmd + F\' in table widget filter dropdown (charts type -> table)'
+                    | translate
+            "
             fxFlex="100"
         >
-            Focuses/selects the filter search input.
+            {{ 'Focuses/selects the filter search input.' | translate }}
         </sp-basic-inner-panel>
 
         <sp-basic-inner-panel
-            panelTitle="'Esc' Dialog keyboard behavior"
+            [panelTitle]="'\'Esc\' Dialog keyboard behavior' | translate"
             fxFlex="100"
         >
-            Closes shared overlay dialogs/popups.
+            {{ 'Closes shared overlay dialogs/popups.' | translate }}
         </sp-basic-inner-panel>
     </div>
 </div>

@@ -18,14 +18,16 @@
 
 <div fxLayout="column" fxLayoutGap="10px">
     <sp-basic-header-title-component
-        title="Info"
+        [title]="'Info' | translate"
     ></sp-basic-header-title-component>
-    <sp-basic-inner-panel panelTitle="Versions" fxFlex="90">
+    <sp-basic-inner-panel [panelTitle]="'Versions' | translate" fxFlex="90">
         @if (versionInfo) {
             <div>
                 <ul>
                     <li>
-                        <div fxFlex="30">Backend Version</div>
+                        <div fxFlex="30">
+                            {{ 'Backend Version' | translate }}
+                        </div>
                         <div fxFlex="70">{{ versionInfo.backendVersion }}</div>
                     </li>
                 </ul>
@@ -33,7 +35,7 @@
         }
     </sp-basic-inner-panel>
     <sp-basic-inner-panel
-        panelTitle="System Info"
+        [panelTitle]="'System Info' | translate"
         innerPadding="0"
         outerMargin="0"
         fxFlex="90"
@@ -42,55 +44,63 @@
             <div>
                 <ul>
                     <li>
-                        <div fxFlex="30">Java VM Vendor</div>
+                        <div fxFlex="30">
+                            {{ 'Java VM Vendor' | translate }}
+                        </div>
                         <div fxFlex="70">{{ systemInfo.javaVmVendor }}</div>
                     </li>
                     <li>
-                        <div fxFlex="30">Java VM Name</div>
+                        <div fxFlex="30">{{ 'Java VM Name' | translate }}</div>
                         <div fxFlex="70">{{ systemInfo.javaVmName }}</div>
                     </li>
                     <li>
-                        <div fxFlex="30">Java VM Version</div>
+                        <div fxFlex="30">
+                            {{ 'Java VM Version' | translate }}
+                        </div>
                         <div fxFlex="70">{{ systemInfo.javaVmVersion }}</div>
                     </li>
                     <li>
-                        <div fxFlex="30">Java Runtime Name</div>
+                        <div fxFlex="30">
+                            {{ 'Java Runtime Name' | translate }}
+                        </div>
                         <div fxFlex="70">{{ systemInfo.javaRuntimeName }}</div>
                     </li>
                     <li>
-                        <div fxFlex="30">Java Runtime Version</div>
+                        <div fxFlex="30">
+                            {{ 'Java Runtime Version' | translate }}
+                        </div>
                         <div fxFlex="70">
                             {{ systemInfo.javaRuntimeVersion }}
                         </div>
                     </li>
                     <li>
-                        <div fxFlex="30">CPU</div>
+                        <div fxFlex="30">{{ 'CPU' | translate }}</div>
                         <div fxFlex="70">{{ systemInfo.cpu }}</div>
                     </li>
                     <li>
-                        <div fxFlex="30">OS Name</div>
+                        <div fxFlex="30">{{ 'OS Name' | translate }}</div>
                         <div fxFlex="70">{{ systemInfo.osName }}</div>
                     </li>
                     <li>
-                        <div fxFlex="30">OS Version</div>
+                        <div fxFlex="30">{{ 'OS Version' | translate }}</div>
                         <div fxFlex="70">{{ systemInfo.osVersion }}</div>
                     </li>
                     <li>
-                        <div fxFlex="30">Total Memory</div>
+                        <div fxFlex="30">{{ 'Total Memory' | translate }}</div>
                         <div fxFlex="70">
                             {{ systemInfo.totalMemory }} ({{
                                 systemInfo.totalMemoryKB
                             }}
-                            KB)
+                            {{ 'KB' | translate }})
                         </div>
                     </li>
                     <li>
-                        <div fxFlex="30">Free Memory</div>
+                        <div fxFlex="30">{{ 'Free Memory' | translate }}</div>
                         <div fxFlex="70">
                             {{ systemInfo.freeMemory }} ({{
                                 systemInfo.freeMemoryKB
                             }}
-                            KB)
+                            {{ 'KB' | translate }})
                         </div>
                     </li>
                 </ul>

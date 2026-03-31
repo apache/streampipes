@@ -26,9 +26,11 @@
                         (selectedIndexChange)="selectedIndexChange($event)"
                         color="accent"
                     >
-                        <mat-tab label="Info"></mat-tab>
-                        <mat-tab label="Documentation"></mat-tab>
-                        <mat-tab label="Shortcuts"></mat-tab>
+                        <mat-tab [label]="'Info' | translate"></mat-tab>
+                        <mat-tab
+                            [label]="'Documentation' | translate"
+                        ></mat-tab>
+                        <mat-tab [label]="'Shortcuts' | translate"></mat-tab>
                     </mat-tab-group>
                 </div>
             </div>

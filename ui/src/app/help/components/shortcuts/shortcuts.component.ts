@@ -26,6 +26,7 @@ import {
     SpBasicHeaderTitleComponent,
     SpBasicInnerPanelComponent,
 } from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-shortcuts-tab',
@@ -36,6 +37,7 @@ import {
         FlexDirective,
         SpBasicHeaderTitleComponent,
         SpBasicInnerPanelComponent,
+        TranslatePipe,
     ],
 })
 export class ShortcutsTabComponent {}

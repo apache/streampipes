@@ -29,6 +29,7 @@ import {
     SpBasicHeaderTitleComponent,
     SpBasicInnerPanelComponent,
 } from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-versions',
@@ -39,6 +40,7 @@ import {
         SpBasicHeaderTitleComponent,
         SpBasicInnerPanelComponent,
         FlexDirective,
+        TranslatePipe,
     ],
 })
 export class VersionsComponent {
