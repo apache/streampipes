@@ -21,12 +21,12 @@
 }
 
 .log-message {
-    background-color: black;
+    background-color: var(--color-code-bg);
     font:
         9pt Inconsolata,
         monospace;
-    text-shadow: 0 0 5px #c8c8c8;
-    color: white;
+    text-shadow: 0 0 5px var(--color-code-shadow);
+    color: var(--color-code-text);
     padding: 10px;
     max-width: 100%;
     min-height: 50px;
