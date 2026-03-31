@@ -65,7 +65,7 @@ export class AdapterStatusLightComponent {
         this.dialogService.open(AdapterHealthDetailsDialogComponent, {
             panelType: PanelType.STANDARD_PANEL,
             title: 'Adapter Health Status',
-            width: '600px',
+            width: '90vw',
             data: { healthStatus: this.healthStatus },
         });
     }
