@@ -120,9 +120,15 @@
                         healthStatus.dataSourceHealthSupported &&
                         healthStatus.dataSourceHealthMessage
                     ) {
-                        <div class="health-message">
-                            {{ healthStatus.dataSourceHealthMessage }}
-                        </div>
+                        @if (
+                            healthStatus.dataSourceHealth !==
+                                HealthCheckStatus.UNHEALTHY ||
+                            !healthStatus.dataSourceHealthDetails
+                        ) {
+                            <div class="health-message">
+                                {{ healthStatus.dataSourceHealthMessage }}
+                            </div>
+                        }
                     } @else if (!healthStatus.dataSourceHealthSupported) {
                         <div class="health-message">
                             Data source health checks are not supported for this
@@ -136,24 +142,39 @@
                 healthStatus.dataSourceHealthDetails &&
                 healthStatus.dataSourceHealth === HealthCheckStatus.UNHEALTHY
             ) {
-                <div class="error-details-section">
-                    <div
-                        class="error-details-header"
-                        (click)="showDetails = !showDetails"
-                    >
-                        <mat-icon>{{
-                            showDetails ? 'expand_less' : 'expand_more'
-                        }}</mat-icon>
-                        <span
-                            >{{ showDetails ? 'Hide' : 'Show' }} Full
-                            Details</span
-                        >
+                <div class="error-details-section mt-10">
+                    <div class="error-details-title">
+                        {{ 'Probable cause' | translate }}
                     </div>
+                    <div
+                        class="log-message"
+                        [innerText]="
+                            dataSourceProbableCause ||
+                            ('No more information' | translate)
+                        "
+                    ></div>
+
+                    <div class="mt-10">
+                        <button
+                            mat-button
+                            color="accent"
+                            (click)="showDetails = !showDetails"
+                        >
+                            {{ 'Full details' | translate }}
+                        </button>
+                    </div>
+
                     @if (showDetails) {
-                        <div class="terminal-output">
-                            <pre>{{
-                                healthStatus.dataSourceHealthDetails
-                            }}</pre>
+                        <div class="mt-10">
+                            <div class="error-details-title">
+                                {{ 'Full stack trace' | translate }}
+                            </div>
+                            <div
+                                class="log-message"
+                                [innerText]="
+                                    healthStatus.dataSourceHealthDetails
+                                "
+                            ></div>
                         </div>
                     }
                 </div>

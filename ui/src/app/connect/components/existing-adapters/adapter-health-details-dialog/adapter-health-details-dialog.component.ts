@@ -28,6 +28,7 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { DatePipe, NgClass } from '@angular/common';
 import { DialogRef } from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
     AdapterHealthStatus,
     HealthCheckStatus,
@@ -49,6 +50,7 @@ import { AdapterHealthService } from '../../../services/adapter-health.service';
         NgClass,
         MatIconButton,
         MatTooltip,
+        TranslatePipe,
     ],
 })
 export class AdapterHealthDetailsDialogComponent implements OnInit, OnDestroy {
@@ -156,6 +158,65 @@ export class AdapterHealthDetailsDialogComponent implements OnInit, OnDestroy {
               : status === HealthCheckStatus.UNHEALTHY
                 ? 'Unhealthy'
                 : 'Unknown';
+
+    get dataSourceProbableCause(): string {
+        if (!this.healthStatus) {
+            return '';
+        }
+
+        const message = this.healthStatus.dataSourceHealthMessage?.trim();
+        const details = this.healthStatus.dataSourceHealthDetails;
+
+        // Match SpLogMessage.from(exception): prefer the wrapped cause message.
+        const causeFromDetails = this.extractCauseFromDetails(details);
+        if (causeFromDetails) {
+            return causeFromDetails;
+        }
+
+        if (message && !message.startsWith('Health check exception:')) {
+            return message;
+        }
+
+        if (message) {
+            return message.replace('Health check exception:', '').trim();
+        }
+
+        return '';
+    }
+
+    private extractCauseFromDetails(details?: string | null): string {
+        if (!details) {
+            return '';
+        }
+
+        const lines = details
+            .split('\n')
+            .map(line => line.trim())
+            .filter(Boolean);
+
+        const causedByLine = lines.find(line => line.startsWith('Caused by:'));
+        if (causedByLine) {
+            return this.extractExceptionMessage(
+                causedByLine.replace('Caused by:', '').trim(),
+            );
+        }
+
+        const firstRelevantLine = lines.find(line => !line.startsWith('at '));
+        if (!firstRelevantLine) {
+            return '';
+        }
+
+        return this.extractExceptionMessage(firstRelevantLine);
+    }
+
+    private extractExceptionMessage(line: string): string {
+        const separatorIndex = line.indexOf(':');
+        if (separatorIndex < 0 || separatorIndex === line.length - 1) {
+            return line;
+        }
+
+        return line.substring(separatorIndex + 1).trim();
+    }
 
     close = () => this.dialogRef.close();
 }
