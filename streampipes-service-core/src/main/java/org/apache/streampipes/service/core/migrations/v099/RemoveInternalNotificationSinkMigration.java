@@ -104,6 +104,7 @@ public class RemoveInternalNotificationSinkMigration implements Migration {
         pipeline.setActions(remainingActions);
         pipeline.setRunning(false);
         pipeline.setValid(false);
+        pipeline.setRestartOnSystemReboot(false);
         pipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
         pipeline.setPipelineNotifications(appendMigrationWarning(pipeline.getPipelineNotifications()));
         pipelineStorage.updateElement(pipeline);
