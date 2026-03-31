@@ -16,16 +16,12 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
-import { RestApi } from '../../../services/rest-api.service';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { UntypedFormControl } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ProfileService } from '../../../profile/profile.service';
-import { Subscription, timer } from 'rxjs';
-import { exhaustMap } from 'rxjs/operators';
-import { NotificationCountService } from '../../../services/notification-count-service';
 import { LoginService } from '../../../login/services/login.service';
 import {
     AssetBrowserToolbarComponent,
@@ -44,7 +40,6 @@ import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { MatBadge } from '@angular/material/badge';
 import { MatDivider } from '@angular/material/divider';
 import { ShortenPipe } from '../../pipes/shorten.pipe';
 
@@ -65,7 +60,6 @@ import { ShortenPipe } from '../../pipes/shorten.pipe';
         MatIconButton,
         MatTooltip,
         MatIcon,
-        MatBadge,
         MatMenuTrigger,
         MatMenu,
         MatDivider,
@@ -75,7 +69,7 @@ import { ShortenPipe } from '../../pipes/shorten.pipe';
 })
 export class ToolbarComponent
     extends BaseNavigationComponent
-    implements OnInit, OnDestroy
+    implements OnInit
 {
     @ViewChild('feedbackOpen') feedbackOpen: MatMenuTrigger;
     @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
@@ -85,34 +79,16 @@ export class ToolbarComponent
 
     appearanceControl: UntypedFormControl;
 
-    unreadNotificationCount = 0;
-    unreadNotificationsSubscription: Subscription;
-
     documentationLinkActive = false;
     documentationLink = '';
 
     private loginService = inject(LoginService);
     private profileService = inject(ProfileService);
-    private restApi = inject(RestApi);
     private overlay = inject(OverlayContainer);
-    public notificationCountService = inject(NotificationCountService);
     private assetFilterService = inject(SpAssetBrowserService);
 
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('');
-        this.unreadNotificationsSubscription = timer(0, 10000)
-            .pipe(exhaustMap(() => this.restApi.getUnreadNotificationsCount()))
-            .subscribe(response => {
-                this.notificationCountService.unreadNotificationCount$.next(
-                    response.count,
-                );
-            });
-
-        this.notificationCountService.unreadNotificationCount$.subscribe(
-            count => {
-                this.unreadNotificationCount = count;
-            },
-        );
         this.currentUserService.user$.subscribe(user => {
             const displayName = user.displayName;
             this.userEmail =
@@ -176,9 +152,5 @@ export class ToolbarComponent
     logout() {
         this.authService.logout();
         this.router.navigate(['login']);
-    }
-
-    ngOnDestroy() {
-        this.unreadNotificationsSubscription.unsubscribe();
     }
 }

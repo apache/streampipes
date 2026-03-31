@@ -35,6 +35,7 @@ import org.apache.streampipes.service.core.migrations.v099.ModifyAssetLinkIconMi
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveAssetUserRoleMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveDuplicatedAssetPermissions;
+import org.apache.streampipes.service.core.migrations.v099.RemoveInternalNotificationSinkMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
@@ -64,7 +65,8 @@ public class AvailableMigrations {
         new RemoveDuplicatedAssetPermissions(),
         new AddFunctionStateViewMigration(),
         new AddRefreshTokenViewsMigration(),
-        new RemoveAssetUserRoleMigration()
+        new RemoveAssetUserRoleMigration(),
+        new RemoveInternalNotificationSinkMigration()
     );
   }
 }
