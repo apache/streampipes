@@ -28,17 +28,18 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { DatePipe, NgClass } from '@angular/common';
 import { DialogRef } from '@streampipes/shared-ui';
-import { TranslatePipe } from '@ngx-translate/core';
 import {
     AdapterHealthStatus,
     HealthCheckStatus,
-} from '../../../model/adapter-health-status.model';
-import { AdapterHealthService } from '../../../services/adapter-health.service';
+} from '../../../../model/adapter-health-status.model';
+import { AdapterHealthService } from '../../../../services/adapter-health.service';
+import { AdapterHealthStatusSectionComponent } from '../status-section/status-section.component';
+import { AdapterHealthErrorOutputComponent } from '../error-output/error-output.component';
 
 @Component({
     selector: 'sp-adapter-health-details-dialog',
-    templateUrl: './adapter-health-details-dialog.component.html',
-    styleUrls: ['./adapter-health-details-dialog.component.scss'],
+    templateUrl: './details-dialog.component.html',
+    styleUrls: ['./details-dialog.component.scss'],
     imports: [
         MatDivider,
         MatIcon,
@@ -50,13 +51,13 @@ import { AdapterHealthService } from '../../../services/adapter-health.service';
         NgClass,
         MatIconButton,
         MatTooltip,
-        TranslatePipe,
+        AdapterHealthStatusSectionComponent,
+        AdapterHealthErrorOutputComponent,
     ],
 })
 export class AdapterHealthDetailsDialogComponent implements OnInit, OnDestroy {
     @Input() healthStatus: AdapterHealthStatus | null;
 
-    showDetails = true;
     isTriggering = false;
     HealthCheckStatus = HealthCheckStatus;
     timeUntilNextCheck = '';
@@ -131,33 +132,6 @@ export class AdapterHealthDetailsDialogComponent implements OnInit, OnDestroy {
                 error: () => (this.isTriggering = false),
             });
     }
-
-    getLightClass = (status: HealthCheckStatus) =>
-        this.isCheckInProgress
-            ? 'light-neutral'
-            : status === HealthCheckStatus.HEALTHY
-              ? 'light-green'
-              : status === HealthCheckStatus.UNHEALTHY
-                ? 'light-red'
-                : 'light-neutral';
-
-    getStatusClass = (status: HealthCheckStatus) =>
-        this.isCheckInProgress
-            ? 'status-unknown'
-            : status === HealthCheckStatus.HEALTHY
-              ? 'status-healthy'
-              : status === HealthCheckStatus.UNHEALTHY
-                ? 'status-unhealthy'
-                : 'status-unknown';
-
-    getStatusLabel = (status: HealthCheckStatus) =>
-        this.isCheckInProgress
-            ? 'Checking...'
-            : status === HealthCheckStatus.HEALTHY
-              ? 'Healthy'
-              : status === HealthCheckStatus.UNHEALTHY
-                ? 'Unhealthy'
-                : 'Unknown';
 
     get dataSourceProbableCause(): string {
         if (!this.healthStatus) {

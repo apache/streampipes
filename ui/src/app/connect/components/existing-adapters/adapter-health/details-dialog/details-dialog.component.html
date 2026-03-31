@@ -1,0 +1,122 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-20">
+        @if (healthStatus) {
+            <div
+                class="adapter-info"
+                fxLayout="row"
+                fxLayoutAlign="space-between start"
+            >
+                <div>
+                    <h3>{{ healthStatus.adapterName || 'Adapter' }}</h3>
+                    <p class="last-check">
+                        Last checked:
+                        {{
+                            healthStatus.lastCheckTimestamp
+                                | date: 'dd.MM.yyyy HH:mm:ss'
+                        }}
+                    </p>
+                </div>
+                <button
+                    mat-icon-button
+                    type="button"
+                    matTooltip="Run check now"
+                    (click)="triggerCheck()"
+                    [disabled]="isTriggering"
+                    color="primary"
+                >
+                    <mat-icon [ngClass]="{ spin: isTriggering }"
+                        >refresh</mat-icon
+                    >
+                </button>
+            </div>
+
+            <div class="health-section">
+                <sp-adapter-health-status-section
+                    label="Backend Health"
+                    [status]="healthStatus.backendHealth"
+                    [message]="healthStatus.backendHealthMessage || ''"
+                    [checking]="isCheckInProgress"
+                ></sp-adapter-health-status-section>
+
+                <mat-divider></mat-divider>
+
+                <sp-adapter-health-status-section
+                    label="Data Source Health"
+                    [status]="healthStatus.dataSourceHealth"
+                    [supported]="healthStatus.dataSourceHealthSupported"
+                    [message]="
+                        healthStatus.dataSourceHealthSupported &&
+                        (healthStatus.dataSourceHealth !==
+                            HealthCheckStatus.UNHEALTHY ||
+                            !healthStatus.dataSourceHealthDetails)
+                            ? healthStatus.dataSourceHealthMessage || ''
+                            : ''
+                    "
+                    unsupportedMessage="Data source health checks are not supported for this adapter type yet."
+                    [checking]="isCheckInProgress"
+                ></sp-adapter-health-status-section>
+            </div>
+
+            @if (
+                healthStatus.dataSourceHealthDetails &&
+                healthStatus.dataSourceHealth === HealthCheckStatus.UNHEALTHY
+            ) {
+                <sp-adapter-health-error-output
+                    [probableCause]="dataSourceProbableCause"
+                    [details]="healthStatus.dataSourceHealthDetails"
+                ></sp-adapter-health-error-output>
+            }
+
+            @if (healthStatus.consecutiveFailures > 0) {
+                <div
+                    class="retry-info"
+                    fxLayout="row"
+                    fxLayoutAlign="start start"
+                    fxLayoutGap="12px"
+                >
+                    <mat-icon class="warning-icon">warning</mat-icon>
+                    <span
+                        >Consecutive failures:
+                        {{ healthStatus.consecutiveFailures }}. Next check will
+                        be delayed due to exponential backoff.
+                        @if (healthStatus.nextCheckTimestamp) {
+                            (Next check {{ timeUntilNextCheck }})
+                        }
+                    </span>
+                </div>
+            }
+        } @else {
+            <div class="no-data">
+                <mat-icon>info_outline</mat-icon>
+                <p>
+                    Health status data is not available yet. The adapter may
+                    have just started.
+                </p>
+            </div>
+        }
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions actions-align-right" fxLayoutGap="10px">
+        <button mat-flat-button class="mat-basic" (click)="close()">
+            Close
+        </button>
+    </div>
+</div>

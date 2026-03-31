@@ -28,7 +28,7 @@ import {
     AdapterHealthStatus,
     HealthCheckStatus,
 } from '../../../model/adapter-health-status.model';
-import { AdapterHealthDetailsDialogComponent } from '../adapter-health-details-dialog/adapter-health-details-dialog.component';
+import { AdapterHealthDetailsDialogComponent } from '../adapter-health/details-dialog/details-dialog.component';
 
 @Component({
     selector: 'sp-adapter-status-light',
