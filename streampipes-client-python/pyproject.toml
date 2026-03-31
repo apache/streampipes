@@ -72,7 +72,7 @@ flake8 = "7.3.0"
 interrogate = { version = "1.7.0", extras = ["png"] }
 isort = "7.0.0"
 mypy = "1.19.1"
-ruff = "0.14.8"
+ruff = "0.15.8"
 pre-commit = "4.3.0"
 pytest = "9.0.1"
 pytest-cov = "7.0.0"
