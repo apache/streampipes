@@ -61,7 +61,7 @@ public class SecurityConfig {
                                       List<EndpointDescription> endpoints,
                                       OpcUaClientConfigBuilder builder)
       throws SpConfigurationException, URISyntaxException {
-    String host = config.getOpcServerURL().split("://")[1].split(":")[0];
+    URI configuredServerUri = new URI(config.getOpcServerURL()).parseServerAuthority();
 
     EndpointDescription tmpEndpoint = endpoints
         .stream()
@@ -77,7 +77,7 @@ public class SecurityConfig {
             )
         );
 
-    tmpEndpoint = updateEndpointUrl(tmpEndpoint, host);
+    tmpEndpoint = updateEndpointUrl(tmpEndpoint, configuredServerUri);
 
     if (securityMode != MessageSecurityMode.None) {
       try {
@@ -112,12 +112,14 @@ public class SecurityConfig {
     builder.setEndpoint(tmpEndpoint);
   }
 
-  private EndpointDescription updateEndpointUrl(EndpointDescription original,
-                                                String hostname) throws URISyntaxException {
+  EndpointDescription updateEndpointUrl(EndpointDescription original,
+                                        URI configuredServerUri) throws URISyntaxException {
 
     URI uri = new URI(original.getEndpointUrl()).parseServerAuthority();
 
-    String endpointUrl = String.format("%s://%s:%s%s", uri.getScheme(), hostname, uri.getPort(), uri.getPath());
+    String hostname = configuredServerUri.getHost() != null ? configuredServerUri.getHost() : uri.getHost();
+    int port = configuredServerUri.getPort() != -1 ? configuredServerUri.getPort() : uri.getPort();
+    String endpointUrl = String.format("%s://%s:%s%s", uri.getScheme(), hostname, port, uri.getPath());
 
     return new EndpointDescription(
         endpointUrl,
