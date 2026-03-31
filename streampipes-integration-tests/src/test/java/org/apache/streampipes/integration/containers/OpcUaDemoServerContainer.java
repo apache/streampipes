@@ -35,7 +35,7 @@ public class OpcUaDemoServerContainer extends GenericContainer<OpcUaDemoServerCo
   @Override
   public void start() {
     this.withExposedPorts(OPC_UA_PORT);
-    this.waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(30)));
+    this.waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(60)));
     super.start();
   }
 
