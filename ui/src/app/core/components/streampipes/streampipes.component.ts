@@ -62,9 +62,16 @@ export class StreampipesComponent implements OnInit, OnDestroy {
     collapsed = this.collapseService.isCollapsed;
 
     ngOnInit(): void {
-        this.darkMode$ = this.currentUserService.darkMode$.subscribe(
-            dm => (this.darkMode = dm),
-        );
+        this.darkMode$ = this.currentUserService.darkMode$.subscribe(dm => {
+            this.darkMode = dm;
+            if (dm) {
+                document.documentElement.classList.add('dark-mode');
+                document.documentElement.classList.remove('light-mode');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+                document.documentElement.classList.add('light-mode');
+            }
+        });
         this.user$ = this.currentUserService.user$.subscribe(user => {
             if (user.language !== null && user.language !== 'browser') {
                 this.translate.use(user.language);

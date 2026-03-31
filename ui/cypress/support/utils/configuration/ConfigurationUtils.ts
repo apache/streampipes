@@ -35,11 +35,16 @@ export class ConfigurationUtils {
 
     public static addNewLabel(name: string, description: string = '') {
         cy.dataCy('new-label-button').click();
-        cy.dataCy('label-name').clear().type(name);
+        cy.dataCy('label-name')
+            .should('be.visible')
+            .and('not.be.disabled')
+            .clear()
+            .type(name);
         if (description !== '') {
             cy.dataCy('label-description').type(description);
         }
         cy.dataCy('save-label-button').click();
+        cy.dataCy('label-name').should('not.exist');
     }
 
     public static checkLabel(labelName: string) {

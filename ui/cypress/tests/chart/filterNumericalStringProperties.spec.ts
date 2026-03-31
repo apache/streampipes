@@ -59,7 +59,7 @@ describe('Validate that filter works for numerical dimension property', () => {
 
         // select filter for tag
         ChartUtils.selectDataConfig();
-        var filterConfig = new DataLakeFilterConfig('dimensionKey', '1.0', '=');
+        let filterConfig = new DataLakeFilterConfig('dimensionKey', '1.0', '=');
         ChartUtils.dataConfigAddFilter(filterConfig);
 
         // validate data in table is filtered

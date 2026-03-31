@@ -15,25 +15,14 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.model.shared.annotation;
 
-package org.apache.streampipes.model;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class NotificationCount {
-
-  private Integer count;
-
-  public NotificationCount(Integer count) {
-    this.count = count;
-  }
-
-  public NotificationCount() {
-  }
-
-  public Integer getCount() {
-    return count;
-  }
-
-  public void setCount(Integer count) {
-    this.count = count;
-  }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.FIELD})
+public @interface ExposedToScripts {
 }

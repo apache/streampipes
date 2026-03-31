@@ -19,6 +19,7 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
 import java.util.List;
@@ -32,26 +33,31 @@ public class PipelineElementTemplateApi extends AbstractTypedClientApi<PipelineE
   }
 
   @Override
+  @ExposedToScripts
   public Optional<PipelineElementTemplate> get(String id) {
     return getSingle(getBaseResourcePath().addToPath(id));
   }
 
   @Override
+  @ExposedToScripts
   public List<PipelineElementTemplate> all() {
     return getAll(getBaseResourcePath());
   }
 
   @Override
+  @ExposedToScripts
   public void create(PipelineElementTemplate element) {
     post(getBaseResourcePath(), element);
   }
 
   @Override
+  @ExposedToScripts
   public void delete(String s) {
 
   }
 
   @Override
+  @ExposedToScripts
   public void update(PipelineElementTemplate element) {
 
   }

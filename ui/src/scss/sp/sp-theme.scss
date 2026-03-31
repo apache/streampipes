@@ -34,7 +34,6 @@
 }
 
 html {
-    color-scheme: light;
     @include mat.theme(
         (
             color: mat3theme.$primary-palette,
@@ -43,39 +42,54 @@ html {
             density: -2,
         ),
         $overrides: (
-            primary: light-dark(var(--color-primary), var(--color-primary-dark)),
-            secondary: light-dark(
-                    var(--color-secondary),
-                    var(--color-secondary-dark)
-                ),
-            on-primary: light-dark(#ccc, #fff),
+            primary: var(--color-primary),
+            secondary: var(--color-secondary),
+            on-primary: #ccc,
             primary-container: mat.get-theme-color(
                     mat3theme.$palettes,
                     primary,
                     95
                 ),
-            surface: light-dark(#ffffff, #000000),
-            surface-variant: light-dark(#eaeaea, #2a2a2a),
-            surface-container: light-dark(#f5f5f5, #161616),
-            surface-container-low: light-dark(#fafafa, #121212),
-            surface-container-high: light-dark(#eeeeee, #1c1c1c),
-            surface-container-highest: light-dark(#e0e0e0, #2a2a2a),
-            on-surface: light-dark(#1a1a1a, #dddddd),
-            on-surface-variant: light-dark(#5e5e5e, #b5b5b5),
+            surface: #ffffff,
+            surface-dim: #e0e0e0,
+            surface-bright: #ffffff,
+            surface-variant: #eaeaea,
+            surface-container-lowest: #ffffff,
+            surface-container-low: #fafafa,
+            surface-container: #f5f5f5,
+            surface-container-high: #eeeeee,
+            surface-container-highest: #e0e0e0,
+            on-surface: #1a1a1a,
+            on-surface-variant: #5e5e5e,
             surface-tint: transparent,
-            background: light-dark(#fafafa, #121212)
+            background: #fafafa
         )
     );
 
-    .dark-mode {
-        color-scheme: dark;
+    &.dark-mode {
         @include mat.theme-overrides(
-            $overrides: (
+            (
+                primary: var(--color-primary),
+                secondary: var(--color-secondary),
+                on-primary: #fff,
                 primary-container: mat.get-theme-color(
                         mat3theme.$palettes,
                         primary,
                         20
                     ),
+                surface: #1e1e1e,
+                surface-dim: #121212,
+                surface-bright: #3a3a3a,
+                surface-variant: #2a2a2a,
+                surface-container-lowest: #0f0f0f,
+                surface-container-low: #1a1a1a,
+                surface-container: #1e1e1e,
+                surface-container-high: #282828,
+                surface-container-highest: #333333,
+                on-surface: #e0e0e0,
+                on-surface-variant: #b5b5b5,
+                surface-tint: transparent,
+                background: #121212,
             )
         );
     }

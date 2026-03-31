@@ -16,9 +16,6 @@
 services:
   connect-adapters:
     image: ${SP_DOCKER_REGISTRY}/connect-adapters:${SP_VERSION}
-    environment:
-      - SP_BACKEND_HOST=backend
-      - SP_CONNECT_CONTAINER_WORKER_HOST=connect-adapters
     volumes:
       - connect:/data/
     logging:

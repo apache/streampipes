@@ -44,6 +44,19 @@
                     {{ 'The desired chart was not found!' | translate }}
                 </div>
             } @else {
+                @if (legacyMultiSourceChart) {
+                    <div class="p-10">
+                        <sp-alert-banner
+                            type="warning"
+                            icon="warning"
+                            [title]="legacyMultiSourceWarningTitle | translate"
+                            [description]="
+                                legacyMultiSourceWarningDescription | translate
+                            "
+                        >
+                        </sp-alert-banner>
+                    </div>
+                }
                 <mat-drawer-container
                     fxFlex="100"
                     fxLayout="column"

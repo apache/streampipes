@@ -25,7 +25,6 @@ export enum PageName {
     DASHBOARD,
     DATA_EXPLORER,
     APPS,
-    NOTIFICATIONS,
     INSTALL_PIPELINE_ELEMENTS,
     FILE_UPLOAD,
     PROFILE,
