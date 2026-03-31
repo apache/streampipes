@@ -62,6 +62,10 @@
                     <groupId>jakarta.activation</groupId>
                     <artifactId>jakarta.activation-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.jaxb</groupId>
+                    <artifactId>jaxb-runtime</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -71,6 +75,7 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
+            <version>${jakarta-jaxb-runtime.version}</version>
         </dependency>
 
         <!-- Test dependencies -->

@@ -105,6 +105,11 @@
             <version>0.99.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>${jakarta-jaxb-runtime.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connectors-plc</artifactId>
             <version>0.99.0-SNAPSHOT</version>
