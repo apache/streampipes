@@ -31,7 +31,6 @@ import org.apache.streampipes.client.api.IAdminApi;
 import org.apache.streampipes.client.api.ICustomRequestApi;
 import org.apache.streampipes.client.api.IPipelineElementTemplateApi;
 import org.apache.streampipes.client.api.IStreamPipesClient;
-import org.apache.streampipes.client.api.NotificationsApi;
 import org.apache.streampipes.client.api.PipelineApi;
 import org.apache.streampipes.client.api.PipelineElementTemplateApi;
 import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
@@ -214,12 +213,6 @@ public class StreamPipesClient implements
   @ExposedToScripts
   public IAdminApi adminApi() {
     return new AdminApi(config);
-  }
-
-  @Override
-  @ExposedToScripts
-  public NotificationsApi notificationsApi() {
-    return new NotificationsApi(config);
   }
 
   @Override
