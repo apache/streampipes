@@ -111,6 +111,127 @@ function createJavaScriptContextCompletions(
     ];
 }
 
+function createJavaScriptClientCompletions(
+    monaco: typeof monacoType,
+): JavaScriptCompletionTemplate[] {
+    return [
+        {
+            label: 'pipelines',
+            insertText: 'pipelines()',
+            detail: 'ctx.client().pipelines()',
+            documentation: 'Returns the API for working with pipelines.',
+            filterText: 'client.pipelines pipelines',
+            sortText: '0000_pipelines',
+        },
+        {
+            label: 'pipelineElementTemplates',
+            insertText: 'pipelineElementTemplates()',
+            detail: 'ctx.client().pipelineElementTemplates()',
+            documentation:
+                'Returns the API for working with pipeline element templates.',
+            filterText:
+                'client.pipelineElementTemplates pipelineElementTemplates templates',
+            sortText: '0001_pipelineElementTemplates',
+        },
+        {
+            label: 'adapters',
+            insertText: 'adapters()',
+            detail: 'ctx.client().adapters()',
+            documentation: 'Returns the API for working with adapters.',
+            filterText: 'client.adapters adapters',
+            sortText: '0002_adapters',
+        },
+        {
+            label: 'sinks',
+            insertText: 'sinks()',
+            detail: 'ctx.client().sinks()',
+            documentation: 'Returns the API for working with data sinks.',
+            filterText: 'client.sinks sinks',
+            sortText: '0003_sinks',
+        },
+        {
+            label: 'streams',
+            insertText: 'streams()',
+            detail: 'ctx.client().streams()',
+            documentation: 'Returns the API for working with data streams.',
+            filterText: 'client.streams streams',
+            sortText: '0004_streams',
+        },
+        {
+            label: 'processors',
+            insertText: 'processors()',
+            detail: 'ctx.client().processors()',
+            documentation: 'Returns the API for working with data processors.',
+            filterText: 'client.processors processors',
+            sortText: '0005_processors',
+        },
+        {
+            label: 'customRequest',
+            insertText: 'customRequest()',
+            detail: 'ctx.client().customRequest()',
+            documentation:
+                'Returns the API for sending custom requests to StreamPipes.',
+            filterText: 'client.customRequest customRequest request',
+            sortText: '0006_customRequest',
+        },
+        {
+            label: 'adminApi',
+            insertText: 'adminApi()',
+            detail: 'ctx.client().adminApi()',
+            documentation: 'Returns the administration API.',
+            filterText: 'client.adminApi adminApi admin',
+            sortText: '0007_adminApi',
+        },
+        {
+            label: 'dataLakeMeasureApi',
+            insertText: 'dataLakeMeasureApi()',
+            detail: 'ctx.client().dataLakeMeasureApi()',
+            documentation: 'Returns the API for datalake measures.',
+            filterText: 'client.dataLakeMeasureApi dataLakeMeasureApi datalake',
+            sortText: '0008_dataLakeMeasureApi',
+        },
+        {
+            label: 'deliverEmail',
+            insertText: 'deliverEmail(${1:email})',
+            insertTextRules:
+                monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            detail: 'ctx.client().deliverEmail(email)',
+            documentation:
+                'Sends an email using the configured StreamPipes backend.',
+            filterText: 'client.deliverEmail deliverEmail email',
+            sortText: '0009_deliverEmail',
+        },
+        {
+            label: 'fileApi',
+            insertText: 'fileApi()',
+            detail: 'ctx.client().fileApi()',
+            documentation: 'Returns the API for file operations.',
+            filterText: 'client.fileApi fileApi file',
+            sortText: '0010_fileApi',
+        },
+        {
+            label: 'dataLakeResourceApi',
+            insertText: 'dataLakeResourceApi()',
+            detail: 'ctx.client().dataLakeResourceApi()',
+            documentation: 'Returns the API for datalake resources.',
+            filterText:
+                'client.dataLakeResourceApi dataLakeResourceApi datalake',
+            sortText: '0011_dataLakeResourceApi',
+        },
+        {
+            label: 'onBehalfOf',
+            insertText: 'onBehalfOf("${1:userSid}")',
+            insertTextRules:
+                monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            detail: 'ctx.client().onBehalfOf(userSid)',
+            documentation:
+                'Returns a scoped client that executes requests on behalf of another user.',
+            filterText: 'client.onBehalfOf onBehalfOf userSid',
+            sortText: '0012_onBehalfOf',
+        },
+    ];
+}
+
 function isTimestampField(field: JavaScriptEventField): boolean {
     return field.semanticType?.toLowerCase().includes('timestamp') ?? false;
 }
@@ -134,6 +255,7 @@ export function registerJavaScriptCompletionProvider(
     const utilsCompletions = createJavaScriptUtilsCompletions(monaco);
     const outCompletions = createJavaScriptOutCompletions(monaco);
     const contextCompletions = createJavaScriptContextCompletions(monaco);
+    const clientCompletions = createJavaScriptClientCompletions(monaco);
 
     return monaco.languages.registerCompletionItemProvider('javascript', {
         triggerCharacters: ['.'],
@@ -190,6 +312,16 @@ export function registerJavaScriptCompletionProvider(
             if (/(?:^|[^\w$])ctx\.(\w*)$/.test(linePrefix)) {
                 return {
                     suggestions: contextCompletions.map(item => ({
+                        ...item,
+                        kind: monaco.languages.CompletionItemKind.Method,
+                        range,
+                    })),
+                };
+            }
+
+            if (/(?:^|[^\w$])ctx\.client\(\)\.(\w*)$/.test(linePrefix)) {
+                return {
+                    suggestions: clientCompletions.map(item => ({
                         ...item,
                         kind: monaco.languages.CompletionItemKind.Method,
                         range,
