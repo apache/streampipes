@@ -29,7 +29,6 @@ import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionE
 import org.apache.streampipes.connect.transformer.js.StreamPipesScriptContext;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
-import org.apache.streampipes.extensions.management.connect.adapter.ScriptContextResolver;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
@@ -101,11 +100,6 @@ public class GuessManagement {
       var exception = objectMapper.readValue(responseString, SpLogMessage.class);
       throw new WorkerAdapterException(exception);
     }
-  }
-
-  public AdapterDescription transformSampleData(AdapterDescription adapterDescription) throws AdapterException {
-    var userId = new ScriptContextResolver().getUserId(adapterDescription);
-    return transformSampleData(adapterDescription, userId);
   }
 
   public AdapterDescription transformSampleData(AdapterDescription adapterDescription, String userId) throws AdapterException {
