@@ -16,14 +16,26 @@
  *
  */
 
-package org.apache.streampipes.connect.management.compact.generator;
+package org.apache.streampipes.connect.transformer.js;
 
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
+import org.apache.streampipes.client.api.IStreamPipesClient;
+import org.apache.streampipes.connect.transformer.api.Context;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
-public interface AdapterModelGenerator {
+public class StreamPipesScriptContext implements Context {
 
-  void apply(AdapterDescription adapterDescription,
-             CompactAdapter compactAdapter,
-             String userId) throws Exception;
+  private final Object scriptClient;
+
+  public StreamPipesScriptContext(IStreamPipesClient rawClient) {
+    this.scriptClient = ScriptHostObjectAdapter.wrap(rawClient);
+  }
+
+  public StreamPipesScriptContext(Object scriptClient) {
+    this.scriptClient = scriptClient;
+  }
+
+  @ExposedToScripts
+  public Object client() {
+    return scriptClient;
+  }
 }

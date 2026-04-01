@@ -35,12 +35,13 @@ public class CompactAdapterManagement {
     this.generators = generators;
   }
 
-  public AdapterDescription convertToAdapterDescription(CompactAdapter compactAdapter) throws Exception {
+  public AdapterDescription convertToAdapterDescription(CompactAdapter compactAdapter,
+                                                        String userId) throws Exception {
 
     var adapterDescription = findAdapterDescription(compactAdapter.appId());
 
     for (AdapterModelGenerator m : generators) {
-      m.apply(adapterDescription, compactAdapter);
+      m.apply(adapterDescription, compactAdapter, userId);
     }
 
     return adapterDescription;
@@ -62,8 +63,9 @@ public class CompactAdapterManagement {
   }
 
   public AdapterDescription convertToAdapterDescription(CompactAdapter compactAdapter,
-                                                        AdapterDescription existingAdapter) throws Exception {
-    var adapterDescription = convertToAdapterDescription(compactAdapter);
+                                                        AdapterDescription existingAdapter,
+                                                        String userId) throws Exception {
+    var adapterDescription = convertToAdapterDescription(compactAdapter, userId);
 
     existingAdapter.getDataStream().setEventSchema(adapterDescription.getDataStream().getEventSchema());
     existingAdapter.setRules(adapterDescription.getRules());
