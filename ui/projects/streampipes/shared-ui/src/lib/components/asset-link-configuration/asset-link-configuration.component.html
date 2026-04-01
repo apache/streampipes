@@ -82,7 +82,14 @@
     <!-- If no assets available -->
     @if (!assetsData?.length) {
         <div>
-            <p>No assets available</p>
+            <sp-alert-banner
+                type="info"
+                [title]="'No assets available' | translate"
+                [description]="
+                    'Create a new asset in the asset view before adding it to a resource.'
+                        | translate
+                "
+            ></sp-alert-banner>
         </div>
     }
 }

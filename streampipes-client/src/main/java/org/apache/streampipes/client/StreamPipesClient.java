@@ -31,7 +31,6 @@ import org.apache.streampipes.client.api.IAdminApi;
 import org.apache.streampipes.client.api.ICustomRequestApi;
 import org.apache.streampipes.client.api.IPipelineElementTemplateApi;
 import org.apache.streampipes.client.api.IStreamPipesClient;
-import org.apache.streampipes.client.api.NotificationsApi;
 import org.apache.streampipes.client.api.PipelineApi;
 import org.apache.streampipes.client.api.PipelineElementTemplateApi;
 import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
@@ -42,6 +41,7 @@ import org.apache.streampipes.client.paths.ApiPath;
 import org.apache.streampipes.commons.constants.HttpConstants;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.model.mail.SpEmail;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 public class StreamPipesClient implements
     IStreamPipesClient {
@@ -148,6 +148,7 @@ public class StreamPipesClient implements
    * @return {@link org.apache.streampipes.client.api.PipelineApi}
    */
   @Override
+  @ExposedToScripts
   public PipelineApi pipelines() {
     return new PipelineApi(config);
   }
@@ -158,11 +159,13 @@ public class StreamPipesClient implements
    * @return {@link org.apache.streampipes.client.api.PipelineElementTemplateApi}
    */
   @Override
+  @ExposedToScripts
   public IPipelineElementTemplateApi pipelineElementTemplates() {
     return new PipelineElementTemplateApi(config);
   }
 
   @Override
+  @ExposedToScripts
   public IAdapterApi adapters() {
     return new AdapterApi(config);
   }
@@ -173,6 +176,7 @@ public class StreamPipesClient implements
    * @return {@link org.apache.streampipes.client.api.DataSinkApi}
    */
   @Override
+  @ExposedToScripts
   public DataSinkApi sinks() {
     return new DataSinkApi(config);
   }
@@ -183,6 +187,7 @@ public class StreamPipesClient implements
    * @return {@link org.apache.streampipes.client.api.DataStreamApi}
    */
   @Override
+  @ExposedToScripts
   public DataStreamApi streams() {
     return new DataStreamApi(config);
   }
@@ -193,47 +198,50 @@ public class StreamPipesClient implements
    * @return {@link DataProcessorApi}
    */
   @Override
+  @ExposedToScripts
   public DataProcessorApi processors() {
     return new DataProcessorApi(config);
   }
 
   @Override
+  @ExposedToScripts
   public ICustomRequestApi customRequest() {
     return new CustomRequestApi(config);
   }
 
   @Override
+  @ExposedToScripts
   public IAdminApi adminApi() {
     return new AdminApi(config);
   }
 
   @Override
-  public NotificationsApi notificationsApi() {
-    return new NotificationsApi(config);
-  }
-
-  @Override
+  @ExposedToScripts
   public DataLakeMeasureApi dataLakeMeasureApi() {
     return new DataLakeMeasureApi(config);
   }
 
   @Override
+  @ExposedToScripts
   public void deliverEmail(SpEmail email) {
     ICustomRequestApi api = customRequest();
     api.sendPost(ApiPath.EMAIL_RESOURCE, email);
   }
 
   @Override
+  @ExposedToScripts
   public FileApi fileApi() {
     return new FileApi(config);
   }
 
-    @Override
+  @Override
+  @ExposedToScripts
   public DataLakeResourceApi dataLakeResourceApi () {
     return new DataLakeResourceApi (config);
   }
 
   @Override
+  @ExposedToScripts
   public IStreamPipesClient onBehalfOf(String userSid) {
     var scoped = new StreamPipesClient(config.getConnectionConfig());
     scoped.config.addCustomHeader(HttpConstants.X_ON_BEHALF_OF, userSid);

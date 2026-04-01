@@ -45,6 +45,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { LayoutAlignDirective } from '@ngbracket/ngx-layout/flex';
+import { SpAlertBannerComponent } from '../alert-banner/alert-banner.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-link-configuration',
@@ -60,6 +62,8 @@ import { LayoutAlignDirective } from '@ngbracket/ngx-layout/flex';
         LayoutAlignDirective,
         MatTreeNodeOutlet,
         MatTreeNode,
+        SpAlertBannerComponent,
+        TranslatePipe,
     ],
 })
 export class AssetLinkConfigurationComponent implements OnInit {

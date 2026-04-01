@@ -98,6 +98,7 @@ export class GeneralProfileSettingsComponent
 
     changeModePreview(value: boolean) {
         this.currentUserService.darkMode$.next(value);
+        this.updateAppearanceMode();
     }
 
     onUserDataReceived() {

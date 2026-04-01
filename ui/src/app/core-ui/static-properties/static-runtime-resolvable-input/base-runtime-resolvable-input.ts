@@ -42,7 +42,6 @@ import {
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 
 @Directive()
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class BaseRuntimeResolvableInput<
     T extends
         | RuntimeResolvableAnyStaticProperty
