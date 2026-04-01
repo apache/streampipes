@@ -46,7 +46,8 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         widgetConfig: TimeSeriesChartWidgetModel,
         widgetSize: WidgetSize,
     ): void {
-        this.addAxisOptions(widgetConfig, options, widgetSize);
+        const decimals = this.getDecimals(widgetConfig);
+        this.addAxisOptions(widgetConfig, options, widgetSize, decimals);
         const finalSeries: SeriesOption[] = [];
 
         widgetConfig.visualizationConfig.selectedTimeSeriesChartProperties.forEach(
@@ -110,6 +111,8 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
             tooltip: {
                 show: showTooltip,
                 trigger: 'axis',
+                valueFormatter: (value: unknown) =>
+                    this.formatNumber(value, decimals),
                 axisPointer: {
                     type: 'cross',
                 },
@@ -213,6 +216,11 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         );
         if (displayType === 'lines') {
             series.showSymbol = false;
+        } else if (displayType === 'area') {
+            series.showSymbol = false;
+            series.areaStyle = {
+                opacity: 0.35,
+            };
         } else if (displayType === 'normal_markers') {
             series.lineStyle = {
                 width: 0,
@@ -262,6 +270,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         config: TimeSeriesChartWidgetModel,
         options: EChartsOption,
         widgetSize: WidgetSize,
+        decimals: number | undefined,
     ): void {
         const xAxisOption = this.axisGeneratorService.makeAxis(
             'time',
@@ -300,6 +309,10 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                 position: axis as CartesianAxisPosition,
                 min: settings.autoScaleActive ? undefined : settings.axisMin,
                 max: settings.autoScaleActive ? undefined : settings.axisMax,
+                axisLabel: {
+                    formatter: (value: number | string) =>
+                        this.formatNumber(value, decimals),
+                },
             });
             axisIndex++;
         });

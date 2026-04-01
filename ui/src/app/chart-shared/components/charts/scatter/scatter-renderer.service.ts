@@ -31,12 +31,17 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
         widgetConfig: CorrelationChartWidgetModel,
         _widgetSize: WidgetSize,
     ): void {
+        const decimals = this.getDecimals(widgetConfig);
         const xField = this.getXField(widgetConfig);
         const yField = this.getYField(widgetConfig);
         const dataset = this.datasetUtilsService.findPreparedDataset(
             generatedDataset,
             xField.sourceIndex,
         );
+        const tooltip =
+            !Array.isArray(options.tooltip) && options.tooltip
+                ? options.tooltip
+                : {};
         const series = [];
         for (
             let i = 0;
@@ -66,6 +71,10 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
                 type: 'value',
                 min: 'dataMin',
                 max: 'dataMax',
+                axisLabel: {
+                    formatter: (value: number | string) =>
+                        this.formatNumber(value, decimals),
+                },
                 name:
                     widgetConfig.visualizationConfig.labelX ||
                     `${xField.fullDbName}${xField.measurementUnitResourceId ? ` (${xField.measurementUnitResourceId.split('#').pop()})` : ''}`,
@@ -79,6 +88,10 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
                 type: 'value',
                 min: 'dataMin',
                 max: 'dataMax',
+                axisLabel: {
+                    formatter: (value: number | string) =>
+                        this.formatNumber(value, decimals),
+                },
                 name:
                     widgetConfig.visualizationConfig.labelY ||
                     `${yField.fullDbName}${yField.measurementUnitResourceId ? ` (${yField.measurementUnitResourceId.split('#').pop()})` : ''}`,
@@ -89,6 +102,11 @@ export class SpScatterRendererService extends SpBaseEchartsRenderer<CorrelationC
                 nameGap: 40,
             },
             series,
+            tooltip: {
+                ...tooltip,
+                valueFormatter: (value: unknown) =>
+                    this.formatNumber(value, decimals),
+            },
         });
     }
 
