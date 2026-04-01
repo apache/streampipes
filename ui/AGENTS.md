@@ -8,7 +8,7 @@ Applies to everything under `ui/` unless overridden by deeper `AGENTS.md` files.
 
 - Follow:
   - `ui/STYLEGUIDE.md`
-  - `ui/.eslintrc.json`
+  - `ui/eslint.config.mjs`
   - `ui/.prettierrc.json`
   - `ui/angular.json`
 

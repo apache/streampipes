@@ -21,6 +21,8 @@ import { UserUtils } from '../utils/UserUtils';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 declare global {
+    interface Window {}
+
     namespace Cypress {
         interface Chainable {
             /**

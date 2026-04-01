@@ -20,7 +20,6 @@ import {
     Component,
     EventEmitter,
     Input,
-    OnInit,
     Output,
     ViewChild,
     inject,
@@ -56,7 +55,7 @@ import { MatDivider } from '@angular/material/divider';
         CustomTimeRangeSelectionComponent,
     ],
 })
-export class TimeRangeSelectorMenuComponent implements OnInit {
+export class TimeRangeSelectorMenuComponent {
     private timeSelectionService = inject(TimeSelectionService);
 
     @Input()
@@ -80,9 +79,6 @@ export class TimeRangeSelectorMenuComponent implements OnInit {
 
     @ViewChild('timeRangeSelection')
     timeRangeSelection: CustomTimeRangeSelectionComponent;
-
-    ngOnInit(): void {}
-
     applyQuickSelection(quickSelection: QuickTimeSelection): void {
         const selectedDateRange =
             this.timeSelectionService.getDateRange(quickSelection);

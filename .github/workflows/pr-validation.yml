@@ -99,7 +99,7 @@ jobs:
       - name: Install NPM dependencies
         working-directory: ./ui
         run: |
-          rm -rf node_modules package-lock.json
+          rm -rf node_modules
           npm install
         env:
           DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}

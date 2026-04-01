@@ -39,7 +39,7 @@ export class PipelineUtils {
 
     public static addPipelineWithAssetLinks(
         pipelineInput: PipelineInput,
-        assetNameList: String[],
+        assetNameList: string[],
     ) {
         PipelineUtils.goToPipelineEditor();
 

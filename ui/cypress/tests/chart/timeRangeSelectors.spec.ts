@@ -85,7 +85,7 @@ describe('Test Time Range Selectors in Charts', () => {
                             expectedDate,
                             10,
                         ),
-                    ).to.be.true;
+                    ).to.equal(true);
                 });
             cy.dataCy(timeRangeTo)
                 .invoke('val')
@@ -98,7 +98,7 @@ describe('Test Time Range Selectors in Charts', () => {
                             expectedDate,
                             10,
                         ),
-                    ).to.be.true;
+                    ).to.equal(true);
                 });
 
             ChartUtils.applyCustomTimeSelection();

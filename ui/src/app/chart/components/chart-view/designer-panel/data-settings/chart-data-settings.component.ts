@@ -144,6 +144,10 @@ export class ChartDataSettingsComponent implements OnInit {
     expandFieldsDataSource = true;
     expandFieldsQuery = true;
 
+    get sourceConfig(): SourceConfig | undefined {
+        return this.dataConfig?.sourceConfigs?.[0];
+    }
+
     ngOnInit(): void {
         this.loadPipelinesAndMeasurements();
     }
@@ -157,12 +161,12 @@ export class ChartDataSettingsComponent implements OnInit {
                     a.measureName.localeCompare(b.measureName),
                 );
 
-                if (!this.dataConfig.sourceConfigs) {
+                if (!this.sourceConfig) {
                     const defaultConfigs = this.findDefaultConfig();
-                    this.addDataSource(defaultConfigs.measureName);
+                    this.initializeSourceConfig(defaultConfigs.measureName);
                     if (defaultConfigs.measureName !== undefined) {
                         this.updateMeasure(
-                            this.dataConfig.sourceConfigs[0],
+                            this.sourceConfig,
                             defaultConfigs.measureName,
                         );
                     }
@@ -202,20 +206,13 @@ export class ChartDataSettingsComponent implements OnInit {
         );
     }
 
-    setStep(index: number) {
-        this.step = index;
-    }
-
     changeDataAggregation() {
         this.fieldSelectionPanel.applyDefaultFields();
         this.triggerDataRefresh();
     }
 
-    addDataSource(measureName = '') {
-        if (!this.dataConfig.sourceConfigs) {
-            this.dataConfig.sourceConfigs = [];
-        }
-        this.dataConfig.sourceConfigs.push(this.makeSourceConfig(measureName));
+    initializeSourceConfig(measureName = '') {
+        this.dataConfig.sourceConfigs = [this.makeSourceConfig(measureName)];
     }
 
     makeSourceConfig(measureName = ''): SourceConfig {
@@ -268,20 +265,8 @@ export class ChartDataSettingsComponent implements OnInit {
      */
     checkIfDefaultTableShouldBeShown(): boolean {
         return (
-            this.dataConfig.sourceConfigs.length === 1 &&
-            !this.currentlyConfiguredWidget.widgetType
+            !!this.sourceConfig && !this.currentlyConfiguredWidget.widgetType
         );
-    }
-
-    removeSourceConfig(index: number) {
-        this.dataConfig.sourceConfigs.splice(index, 1);
-    }
-
-    cloneSourceConfig(index: number) {
-        const clonedConfig = this.deepCopy(
-            this.dataConfig.sourceConfigs[index],
-        );
-        this.dataConfig.sourceConfigs.push(clonedConfig);
     }
 
     triggerDataRefresh() {
@@ -305,39 +290,5 @@ export class ChartDataSettingsComponent implements OnInit {
 
     navigateToPipelines(): void {
         this.router.navigate(['pipelines']);
-    }
-
-    deepCopy(obj) {
-        let copy;
-
-        if (null == obj || 'object' !== typeof obj) {
-            return obj;
-        }
-
-        if (obj instanceof Date) {
-            copy = new Date();
-            copy.setTime(obj.getTime());
-            return copy;
-        }
-
-        if (obj instanceof Array) {
-            copy = [];
-            for (let i = 0, len = obj.length; i < len; i++) {
-                copy[i] = this.deepCopy(obj[i]);
-            }
-            return copy;
-        }
-
-        if (obj instanceof Object) {
-            copy = {};
-            for (const attr in obj) {
-                if (obj.hasOwnProperty(attr)) {
-                    copy[attr] = this.deepCopy(obj[attr]);
-                }
-            }
-            return copy;
-        }
-
-        throw new Error('Unable to copy.');
     }
 }

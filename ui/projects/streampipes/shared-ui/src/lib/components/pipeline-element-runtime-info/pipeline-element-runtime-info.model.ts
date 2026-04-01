@@ -19,8 +19,8 @@
 export interface RuntimeInfo {
     label: string;
     description: string;
-    runtimeType: string;
     runtimeName: string;
+    propertyScope?: string;
     value: any;
     isImage: boolean;
     isTimestamp: boolean;
