@@ -17,22 +17,6 @@
   -->
 
 <sp-split-section [level]="3" [title]="'Chart settings' | translate">
-    <mat-checkbox
-        [(ngModel)]="appearanceConfig.chartAppearance.showLegend"
-        (change)="triggerViewUpdate()"
-        >{{ 'Show legend' | translate }}
-    </mat-checkbox>
-    <mat-checkbox
-        [(ngModel)]="appearanceConfig.chartAppearance.showToolbox"
-        (change)="triggerViewUpdate()"
-        >{{ 'Show toolbox' | translate }}
-    </mat-checkbox>
-    <mat-checkbox
-        [(ngModel)]="appearanceConfig.chartAppearance.showTooltip"
-        (change)="triggerViewUpdate()"
-        >{{ 'Show tooltip' | translate }}
-    </mat-checkbox>
-
     <sp-number-format-config [appearanceConfig]="appearanceConfig">
     </sp-number-format-config>
 </sp-split-section>

@@ -113,7 +113,7 @@ export class SpHistogramRendererService extends SpBaseSingleFieldEchartsRenderer
 
     private applyAxisLabelFormatting(
         axis: EChartsOption['xAxis'] | EChartsOption['yAxis'] | undefined,
-        decimals: number,
+        decimals: number | undefined,
     ): void {
         if (!axis) {
             return;

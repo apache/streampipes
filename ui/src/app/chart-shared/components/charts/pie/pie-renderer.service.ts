@@ -184,7 +184,7 @@ export class SpPieRendererService extends SpBaseSingleFieldEchartsRenderer<
         rawValue: unknown,
         rawPercent: unknown,
         labelMode: PieChartWidgetModel['visualizationConfig']['labelMode'],
-        decimals: number,
+        decimals: number | undefined,
         boldValue = false,
     ): string {
         const value = this.formatNumber(rawValue, decimals);

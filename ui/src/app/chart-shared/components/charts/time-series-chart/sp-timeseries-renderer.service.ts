@@ -270,7 +270,7 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
         config: TimeSeriesChartWidgetModel,
         options: EChartsOption,
         widgetSize: WidgetSize,
-        decimals: number,
+        decimals: number | undefined,
     ): void {
         const xAxisOption = this.axisGeneratorService.makeAxis(
             'time',

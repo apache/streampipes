@@ -101,7 +101,11 @@ export interface WidgetChartAppearanceConfig {
 }
 
 export interface WidgetNumberFormatConfig {
-    decimals: number;
+    decimals?: number;
+}
+
+export interface WidgetNumberAppearanceConfig extends WidgetBaseAppearanceConfig {
+    numberFormat?: WidgetNumberFormatConfig;
 }
 
 export interface DataZoomConfig {
@@ -113,9 +117,8 @@ export interface TimeSeriesAppearanceConfig extends WidgetEchartsAppearanceConfi
     dataZoom: DataZoomConfig;
 }
 
-export interface WidgetEchartsAppearanceConfig {
+export interface WidgetEchartsAppearanceConfig extends WidgetNumberAppearanceConfig {
     chartAppearance: WidgetChartAppearanceConfig;
-    numberFormat?: WidgetNumberFormatConfig;
 }
 
 export interface WidgetBaseAppearanceConfig {

@@ -20,6 +20,7 @@ import { IWidget } from '../models/dataview-dashboard.model';
 import { Injectable, inject } from '@angular/core';
 import { TableWidgetConfigComponent } from '../components/charts/table/config/table-widget-config.component';
 import { TableWidgetComponent } from '../components/charts/table/table-widget.component';
+import { TableWidgetAppearanceConfigComponent } from '../components/charts/table/appearance-config/table-widget-appearance-config.component';
 import { MapWidgetConfigComponent } from '../components/charts/map/config/map-widget-config.component';
 import { MapWidgetComponent } from '../components/charts/map/map-widget.component';
 import { HeatmapWidgetConfigComponent } from '../components/charts/heatmap/config/heatmap-widget-config.component';
@@ -94,6 +95,8 @@ export class ChartRegistry {
             {
                 id: 'table',
                 label: this.translateService.instant('Table'),
+                widgetAppearanceConfigurationComponent:
+                    TableWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: TableWidgetConfigComponent,
                 widgetComponent: TableWidgetComponent,
                 icon: 'table_chart',

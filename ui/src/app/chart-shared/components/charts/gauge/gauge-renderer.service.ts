@@ -43,7 +43,7 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
         seriesName: string,
         fieldName: string,
         value: number,
-        decimals: number,
+        decimals: number | undefined,
         widgetConfig: GaugeWidgetModel,
         widgetSize: WidgetSize,
         gaugeLayout: GaugeLayout,
@@ -78,7 +78,7 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
                 show: true,
                 valueAnimation: false,
                 formatter: (currentValue: number) =>
-                    currentValue.toFixed(decimals),
+                    this.formatNumber(currentValue, decimals),
                 fontSize: 14 * clamp,
                 offsetCenter: [0, gaugeLayout.detailOffsetY],
             },
@@ -136,7 +136,9 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
         );
         const appearanceConfig =
             widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig;
-        const decimals = appearanceConfig.numberFormat?.decimals ?? 2;
+        const decimals = this.normalizeDecimals(
+            appearanceConfig.numberFormat?.decimals,
+        );
         const selectedField = this.getSelectedField(widgetConfig);
         const sourceIndex = selectedField.sourceIndex;
         const dataSeries = queryResult[sourceIndex].allDataSeries[0];
@@ -183,6 +185,27 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
         });
 
         return option;
+    }
+
+    private formatNumber(value: number, decimals?: number): string {
+        if (decimals === undefined) {
+            return String(value);
+        }
+
+        return value.toFixed(decimals);
+    }
+
+    private normalizeDecimals(decimals: unknown): number | undefined {
+        if (decimals === null || decimals === undefined || decimals === '') {
+            return undefined;
+        }
+
+        const parsedValue = Number(decimals);
+        if (!Number.isFinite(parsedValue)) {
+            return undefined;
+        }
+
+        return Math.min(10, Math.max(0, Math.round(parsedValue)));
     }
 
     private makeGaugeLayout(
