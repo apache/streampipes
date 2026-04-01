@@ -34,8 +34,10 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GraalJsScriptEngineTest {
 
@@ -135,6 +137,55 @@ public class GraalJsScriptEngineTest {
     var exception = assertThrows(
         ScriptExecutionException.class,
         () -> transformer.transform(Map.of("value", 1), event -> {
+        }, null)
+    );
+
+    assertEquals("Graal JS script execution failed", exception.getMessage());
+    assertInstanceOf(Exception.class, exception.getCause());
+  }
+
+  @Test
+  void executeProvidesUtilityFunctions() throws ScriptCompilationException, ScriptExecutionException {
+    var transformer = engine.compile("""
+        function transform(event, out, ctx) {
+          utils.rename(event, "temperature", "temp");
+          utils.remove(event, "obsolete");
+          utils.parseTimestamp(event, "createdAt");
+          out.collect(utils.addTimestamp(event, "processedAt"));
+        }
+        """);
+
+    var output = new ArrayList<Map<String, Object>>();
+    transformer.transform(
+        new LinkedHashMap<>(Map.of(
+            "temperature", 23,
+            "obsolete", "remove-me",
+            "createdAt", "2024-01-02T03:04:05Z"
+        )),
+        output::add,
+        null
+    );
+
+    assertEquals(1, output.size());
+    assertEquals(23, output.get(0).get("temp"));
+    assertEquals(1704164645000L, output.get(0).get("timestamp"));
+    assertTrue(output.get(0).containsKey("processedAt"));
+    assertFalse(output.get(0).containsKey("temperature"));
+    assertFalse(output.get(0).containsKey("obsolete"));
+  }
+
+  @Test
+  void executeFailsWhenUtilityTimestampParsingFails() throws ScriptCompilationException {
+    var transformer = engine.compile("""
+        function transform(event, out, ctx) {
+          utils.parseTimestamp(event, "createdAt");
+          out.collect(event);
+        }
+        """);
+
+    var exception = assertThrows(
+        ScriptExecutionException.class,
+        () -> transformer.transform(Map.of("createdAt", "not-a-date"), event -> {
         }, null)
     );
 
