@@ -26,7 +26,12 @@
                 <strong>{{ 'Runtime Name' | translate }}</strong>
             </th>
             <td mat-cell *matCellDef="let element">
-                <div class="runtime-name">{{ element.runtimeName }}</div>
+                <div class="runtime-name-row">
+                    <div class="runtime-name">{{ element.runtimeName }}</div>
+                    <sp-property-scope-badge
+                        [propertyScope]="element.propertyScope"
+                    />
+                </div>
             </td>
         </ng-container>
 
@@ -46,15 +51,6 @@
                 </th>
                 <td mat-cell *matCellDef="let element">
                     {{ element.description }}
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="runtimeType">
-                <th mat-header-cell *matHeaderCellDef>
-                    <strong>{{ 'Type' | translate }}</strong>
-                </th>
-                <td mat-cell *matCellDef="let element">
-                    {{ element.runtimeType }}
                 </td>
             </ng-container>
         }

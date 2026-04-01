@@ -56,7 +56,6 @@ export abstract class BaseNavigationComponent {
   authenticated = true;
   topItems: MenuItem[] = [];
   menuGroups: MenuGroup[] = [];
-  notificationsVisible = false;
 
   public categories: MenuCategory[] = [
     {{#categoriesActive}}
@@ -103,10 +102,6 @@ export abstract class BaseNavigationComponent {
 
         this.topItems = menuGroups.find(m => m.title === 'top')?.items || [];
         this.menuGroups = menuGroups.filter(m => m.title !== 'top');
-        this.notificationsVisible = this.isNavItemVisible([
-        UserPrivilege.PRIVILEGE_READ_PIPELINE,
-        UserPrivilege.PRIVILEGE_WRITE_PIPELINE
-        ]);
       });
       this.activePage = this.router.url.replace('/', '');
       this.activePageName = this.getPageTitle(this.activePage);
