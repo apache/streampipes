@@ -741,7 +741,7 @@ export class ChartUtils {
     }
 
     public static checkIfConfirmationDialogIsShowing(): void {
-        cy.get('confirmation-dialog').should('be.visible');
+        cy.dataCy('confirm-dialog').should('be.visible');
     }
     public static createDataViewWithAssets(assetNames) {
         ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
