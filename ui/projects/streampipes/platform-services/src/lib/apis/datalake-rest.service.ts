@@ -91,7 +91,7 @@ export class DatalakeRestService {
             .pipe(map(res => res as DataLakeMeasure));
     }
 
-    getMeasurementByName(name: String): Observable<DataLakeMeasure> {
+    getMeasurementByName(name: string): Observable<DataLakeMeasure> {
         return this.http
             .get(`${this.dataLakeMeasureUrl}/byName/${name}`)
             .pipe(map(res => res as DataLakeMeasure));

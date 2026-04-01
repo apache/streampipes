@@ -41,12 +41,6 @@ export class RestApi {
         });
     }
 
-    getUnreadNotificationsCount(): Observable<any> {
-        return this.$http.get(this.urlApiBase() + '/notifications/count', {
-            context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
-        });
-    }
-
     updateCachedPipeline(rawPipelineModel: any) {
         return this.$http.post(
             this.urlApiBase() + '/pipeline-cache',

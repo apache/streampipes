@@ -42,7 +42,7 @@
         <spring-boot.version>4.0.2</spring-boot.version>
         <plc4x.version>0.13.1</plc4x.version>
 
-        <apache-sis-referencing.version>1.2</apache-sis-referencing.version>
+        <apache-sis-referencing.version>1.6</apache-sis-referencing.version>
         <antlr4.version>4.11.1</antlr4.version>
         <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
         <boofcv.version>1.1.0</boofcv.version>
@@ -53,7 +53,7 @@
         <commons-compress.version>1.27.1</commons-compress.version>
         <commons-configuration2.version>2.12.0</commons-configuration2.version>
         <commons-csv.version>1.14.1</commons-csv.version>
-        <commons-io.version>2.17.0</commons-io.version>
+        <commons-io.version>2.21.0</commons-io.version>
         <commons-jexl.version>3.4.0</commons-jexl.version>
         <commons-text.version>1.12.0</commons-text.version>
         <ditto-client.version>1.0.0</ditto-client.version>
@@ -61,7 +61,7 @@
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>25.0.2</graalvm.js.version>
         <groovy.version>5.0.3</groovy.version>
-        <grpc.version>1.76.0</grpc.version>
+        <grpc.version>1.80.0</grpc.version>
         <guava.version>33.5.0-jre</guava.version>
         <hadoop.version>3.4.1</hadoop.version>
         <hadoop-mapreduce-client-core.version>3.4.1</hadoop-mapreduce-client-core.version>
@@ -100,7 +100,7 @@
         <swagger.version>2.2.42</swagger.version>
         <tsfile.version>1.1.0</tsfile.version>
         <type-parser.version>0.8.1</type-parser.version>
-        <xz.version>1.10</xz.version>
+        <xz.version>1.12</xz.version>
 
         <!-- streampipes-maven-plugin -->
         <file-management.version>3.1.0</file-management.version>
@@ -108,7 +108,7 @@
         <maven-plugin-annotations.version>3.13.0</maven-plugin-annotations.version>
         <plexus-component-annotations.version>2.2.0</plexus-component-annotations.version>
         <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
-        <plexus-utils.version>4.0.0</plexus-utils.version>
+        <plexus-utils.version>4.0.3</plexus-utils.version>
 
 
         <!-- dependency convergence -->

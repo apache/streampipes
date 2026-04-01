@@ -39,8 +39,6 @@ import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.pr
 
 public class CouchDbInstallationStep extends InstallationStep {
 
-  private static final String PREPARING_NOTIFICATIONS_TEXT = "Preparing database "
-      + "'notifications'...";
   private static final String PREPARING_USERS_TEXT = "Preparing database 'users'...";
 
   public CouchDbInstallationStep() {
@@ -67,7 +65,6 @@ public class CouchDbInstallationStep extends InstallationStep {
       // Set up streampipes internal databases
       Utils.getCouchDbUserClient();
       Utils.getCouchDbPipelineClient();
-      Utils.getCouchDbNotificationClient();
 
       logSuccess(getTitle());
     } catch (Exception e) {
@@ -77,57 +74,11 @@ public class CouchDbInstallationStep extends InstallationStep {
 
   private void createViews() {
     addUserView();
-    addNotificationView();
     addPipelineView();
     new AddDataLakeMeasureViewTask().execute();
     new AddAssetManagementViewTask().execute();
     new AddScriptTemplateViewTask().execute();
     new AddFunctionStateViewTask().execute();
-  }
-
-  private void addNotificationView() {
-    try {
-      DesignDocument userDocument = prepareDocument("_design/notificationtypes");
-      DesignDocument notificationCountDocument = prepareDocument("_design/unread");
-
-      Map<String, MapReduce> notificationTypeViews = new HashMap<>();
-      MapReduce notificationTypeFunction = new MapReduce();
-      notificationTypeFunction.setMap(
-          "function (doc) { var vizName = doc.title.replace(/\\s/g, '-'); "
-              + "var indexName = doc.correspondingPipelineId + '-' + vizName; "
-              + "emit([indexName, doc.createdAtTimestamp], doc);}");
-      notificationTypeViews.put("notificationtypes", notificationTypeFunction);
-      userDocument.setViews(notificationTypeViews);
-      Response resp = Utils.getCouchDbNotificationClient().design().synchronizeWithDb(userDocument);
-
-      Map<String, MapReduce> notificationCountTypeViews = new HashMap<>();
-      MapReduce countFunction = new MapReduce();
-      countFunction.setMap("function (doc) {\n"
-          + "  var user = doc.targetedAt; \n"
-          + "  if (!doc.read) {\n"
-          + "    emit(user, 1);\n"
-          + "  }\n"
-          + "}");
-      countFunction.setReduce("function (keys, values, rereduce) {\n"
-          + "  if (rereduce) {\n"
-          + "    return sum(values);\n"
-          + "  } else {\n"
-          + "    return values.length;\n"
-          + "  }\n"
-          + "}");
-      notificationCountTypeViews.put("unread", countFunction);
-      notificationCountDocument.setViews(notificationCountTypeViews);
-      Response countResp =
-          Utils.getCouchDbNotificationClient().design().synchronizeWithDb(notificationCountDocument);
-
-      if (resp.getError() != null && countResp != null) {
-        logFailure(PREPARING_NOTIFICATIONS_TEXT);
-      } else {
-        logSuccess(PREPARING_NOTIFICATIONS_TEXT);
-      }
-    } catch (Exception e) {
-      logFailure(PREPARING_NOTIFICATIONS_TEXT, e);
-    }
   }
 
   private void addPipelineView() {

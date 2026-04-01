@@ -167,7 +167,8 @@ public class PropertyHandler {
       String sanitizedRuntimeName,
       PrimitiveField eventPropertyPrimitiveField
   ) {
-    p.addField(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
+    // Influx stores floating point values as float64. Parsing as float32 first truncates precision.
+    p.addField(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsDouble());
   }
 
   private void handleLongProperty(

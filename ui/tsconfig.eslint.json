@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["jasmine", "node", "cypress"]
+  },
+  "include": ["src/**/*.ts", "projects/**/*.ts", "cypress/**/*.ts", "*.ts"],
+  "exclude": ["dist", ".angular", "cypress/fixtures/**/*.csv"]
+}

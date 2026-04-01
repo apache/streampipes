@@ -28,7 +28,6 @@ import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
-import org.apache.streampipes.storage.api.system.INotificationStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -55,10 +54,6 @@ public class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected IUserStorage getUserStorage() {
     return getNoSqlStorage().getUserStorageAPI();
-  }
-
-  protected INotificationStorage getNotificationStorage() {
-    return getNoSqlStorage().getNotificationStorageApi();
   }
 
   protected IPipelineElementTemplateStorage getPipelineElementTemplateStorage() {

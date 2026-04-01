@@ -92,7 +92,7 @@ public class TimeSeriesStorageInfluxTest {
   @Test
   public void onEventWithIntegerFloatValue() {
     var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, 1.0f)
+        .addField(FIELD_NAME, 1.0)
         .build();
 
     var actualPoint = testEventWithOneField(XSD.INTEGER, 1.0f);
@@ -114,7 +114,7 @@ public class TimeSeriesStorageInfluxTest {
   @Test
   public void onEventWithLongFloatValue() {
     var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, 1.0f)
+        .addField(FIELD_NAME, 1.0)
         .build();
 
     var actualPoint = testEventWithOneField(XSD.LONG, 1.0f);
@@ -125,10 +125,21 @@ public class TimeSeriesStorageInfluxTest {
   @Test
   public void onEventWithFloat() {
     var expected = getPointBuilderWithTimestamp()
-        .addField(FIELD_NAME, 1.0f)
+        .addField(FIELD_NAME, 1.0)
         .build();
 
     var actualPoint = testEventWithOneField(XSD.FLOAT, 1.0f);
+
+    assertEquals(expected, actualPoint);
+  }
+
+  @Test
+  public void onEventWithFloatKeepsDecimalPrecision() {
+    var expected = getPointBuilderWithTimestamp()
+        .addField(FIELD_NAME, 1.03)
+        .build();
+
+    var actualPoint = testEventWithOneField(XSD.FLOAT, 1.03);
 
     assertEquals(expected, actualPoint);
   }

@@ -100,6 +100,8 @@ export class ChartOverviewTableComponent implements OnInit {
     };
     charts: DataExplorerWidgetModel[] = [];
     filteredCharts: DataExplorerWidgetModel[] = [];
+    readonly outdatedChartTooltip =
+        'This chart is outdated and must be migrated.';
 
     private dataViewService = inject(ChartService);
     private dataExplorerDashboardService = inject(ChartSharedService);
@@ -172,7 +174,11 @@ export class ChartOverviewTableComponent implements OnInit {
             width: '600px',
             data: {
                 title: this.translateService.instant(
-                    'Are you sure you want to delete this chart?',
+                    'Are you sure you want to delete chart "{{chartTitle}}"?',
+                    {
+                        chartTitle:
+                            dataView.baseAppearanceConfig.widgetTitle ?? '',
+                    },
                 ),
                 subtitle: this.translateService.instant(
                     'The chart will be removed from all dashboards as well. This action cannot be undone!',
@@ -214,5 +220,9 @@ export class ChartOverviewTableComponent implements OnInit {
 
     formatDate(timestamp?: number): string {
         return this.dateFormatService.formatDate(timestamp);
+    }
+
+    isLegacyMultiSourceChart(chart: DataExplorerWidgetModel): boolean {
+        return (chart?.dataConfig?.sourceConfigs?.length ?? 0) > 1;
     }
 }

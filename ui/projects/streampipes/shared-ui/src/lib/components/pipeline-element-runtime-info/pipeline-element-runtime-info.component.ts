@@ -72,11 +72,8 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                 return {
                     label: ep.label || 'n/a',
                     description: ep.description || 'n/a',
-                    runtimeType:
-                        this.pipelineELementSchemaService.getFriendlyRuntimeType(
-                            ep,
-                        ),
                     runtimeName: ep.runtimeName,
+                    propertyScope: ep.propertyScope,
                     value: undefined,
                     isTimestamp:
                         this.pipelineELementSchemaService.isTimestamp(ep),
