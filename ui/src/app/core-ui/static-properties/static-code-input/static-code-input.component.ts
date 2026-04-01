@@ -30,6 +30,10 @@ import { MatButton } from '@angular/material/button';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import {
+    JavaScriptEventField,
+    registerJavaScriptCompletionProvider,
+} from '../../../services/javascript-editor-completion';
 
 declare const monaco: typeof monacoType;
 
@@ -109,41 +113,29 @@ export class StaticCodeInputComponent
             return;
         }
         this.completionProvider?.dispose();
-        this.completionProvider =
-            monaco.languages.registerCompletionItemProvider('javascript', {
-                triggerCharacters: ['.'],
-                provideCompletionItems: (model, position) => {
-                    const linePrefix = model.getValueInRange({
-                        startLineNumber: position.lineNumber,
-                        startColumn: 1,
-                        endLineNumber: position.lineNumber,
-                        endColumn: position.column,
-                    });
-                    const match = linePrefix.match(/(?:^|[^\w$])event\.(\w*)$/);
-                    if (!match) {
-                        return { suggestions: [] };
-                    }
-
-                    const word = model.getWordUntilPosition(position);
-                    const range = {
-                        startLineNumber: position.lineNumber,
-                        endLineNumber: position.lineNumber,
-                        startColumn: word.startColumn,
-                        endColumn: word.endColumn,
-                    };
-
-                    const eventProperties =
-                        this.eventSchemas?.[0]?.eventProperties ?? [];
-                    const suggestions: monacoType.languages.CompletionItem[] =
-                        eventProperties.map(ep => ({
-                            label: ep.runtimeName,
-                            kind: monaco.languages.CompletionItemKind.Property,
-                            insertText: ep.runtimeName,
-                            range,
-                        }));
-
-                    return { suggestions };
-                },
-            });
+        this.completionProvider = registerJavaScriptCompletionProvider(
+            monaco,
+            () =>
+                (
+                    (this.eventSchemas?.[0]?.eventProperties ?? []) as {
+                        runtimeName?: string;
+                        propertyScope?: string;
+                        semanticType?: string;
+                    }[]
+                )
+                    .filter(
+                        (
+                            ep,
+                        ): ep is Required<
+                            Pick<JavaScriptEventField, 'runtimeName'>
+                        > &
+                            JavaScriptEventField => !!ep.runtimeName,
+                    )
+                    .map(ep => ({
+                        runtimeName: ep.runtimeName,
+                        propertyScope: ep.propertyScope,
+                        semanticType: ep.semanticType,
+                    })),
+        );
     }
 }

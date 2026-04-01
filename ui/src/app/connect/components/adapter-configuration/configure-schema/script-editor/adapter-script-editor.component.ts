@@ -37,6 +37,10 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { TitleCasePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import type * as monacoType from 'monaco-editor';
+import {
+    JavaScriptEventField,
+    registerJavaScriptCompletionProvider,
+} from '../../../../../services/javascript-editor-completion';
 
 declare const monaco: typeof monacoType;
 
@@ -70,6 +74,7 @@ export class AdapterScriptEditorComponent implements OnDestroy {
     loadingAvailableScriptsError = input<any>();
     script = input('');
     eventPropertyNames = input<string[]>([]);
+    eventFields = input<JavaScriptEventField[]>([]);
     editorOptions = input<any>();
     private completionProvider?: monacoType.IDisposable;
 
@@ -91,39 +96,18 @@ export class AdapterScriptEditorComponent implements OnDestroy {
 
     private registerEventPropertyCompletionProvider() {
         this.completionProvider?.dispose();
-        this.completionProvider =
-            monaco.languages.registerCompletionItemProvider('javascript', {
-                triggerCharacters: ['.'],
-                provideCompletionItems: (model, position) => {
-                    const linePrefix = model.getValueInRange({
-                        startLineNumber: position.lineNumber,
-                        startColumn: 1,
-                        endLineNumber: position.lineNumber,
-                        endColumn: position.column,
-                    });
-                    const match = linePrefix.match(/(?:^|[^\w$])event\.(\w*)$/);
-                    if (!match) {
-                        return { suggestions: [] };
-                    }
+        this.completionProvider = registerJavaScriptCompletionProvider(
+            monaco,
+            () => {
+                const eventFields = this.eventFields();
+                if (eventFields.length > 0) {
+                    return eventFields;
+                }
 
-                    const word = model.getWordUntilPosition(position);
-                    const range = {
-                        startLineNumber: position.lineNumber,
-                        endLineNumber: position.lineNumber,
-                        startColumn: word.startColumn,
-                        endColumn: word.endColumn,
-                    };
-
-                    const suggestions: monacoType.languages.CompletionItem[] =
-                        this.eventPropertyNames().map(runtimeName => ({
-                            label: runtimeName,
-                            kind: monaco.languages.CompletionItemKind.Property,
-                            insertText: runtimeName,
-                            range,
-                        }));
-
-                    return { suggestions };
-                },
-            });
+                return this.eventPropertyNames().map(runtimeName => ({
+                    runtimeName,
+                }));
+            },
+        );
     }
 }
