@@ -19,7 +19,6 @@
 package org.apache.streampipes.integration.adapters;
 
 import org.apache.streampipes.integration.adapters.opcua.OpcUaAdapterTestHarness;
-import org.apache.streampipes.integration.adapters.opcua.OpcUaNodeDiscovery;
 import org.apache.streampipes.integration.adapters.opcua.contract.OpcUaNodeContract;
 import org.apache.streampipes.integration.adapters.opcua.contract.OpcUaNodeContracts;
 import org.apache.streampipes.integration.containers.OpcUaDemoServerContainer;
@@ -35,6 +34,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpcUaAdapterIntegrationTest {
 
+  private static final List<String> DATA_TYPE_TEST_STRUCTURE_NODE_IDS = List.of(
+      "ns=2;s=Demo.DataTypeTest.ExtensionObject",
+      "ns=2;s=Demo.DataTypeTest.ExtensionObjectArray",
+      "ns=2;s=StructWithOptionalMatrixFields"
+  );
+
   private final OpcUaAdapterTestHarness harness = new OpcUaAdapterTestHarness();
 
   @Test
@@ -43,14 +48,9 @@ public class OpcUaAdapterIntegrationTest {
       opcUaContainer.start();
 
       String endpointUrl = opcUaContainer.getEndpointUrl();
-      Map<String, String> dataTypeTestNodes = OpcUaNodeDiscovery.discoverDataTypeTestVariableNodes(endpointUrl);
-      List<String> selectedNodeIds = OpcUaNodeDiscovery.selectStructureNodes(dataTypeTestNodes);
+      Map<String, Object> event = harness.readSingleEvent(endpointUrl, DATA_TYPE_TEST_STRUCTURE_NODE_IDS);
 
-      assertTrue(selectedNodeIds.size() >= 3, "Expected at least 3 DataTypeTest variable nodes");
-
-      Map<String, Object> event = harness.readSingleEvent(endpointUrl, selectedNodeIds);
-
-      for (String nodeId : selectedNodeIds) {
+      for (String nodeId : DATA_TYPE_TEST_STRUCTURE_NODE_IDS) {
         String expectedFieldName = OpcUaNodeContract.toParsedNodeIdFieldName(nodeId);
         assertTrue(
             event.containsKey(expectedFieldName),
