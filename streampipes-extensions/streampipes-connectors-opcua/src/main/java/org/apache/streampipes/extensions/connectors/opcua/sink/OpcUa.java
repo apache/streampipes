@@ -36,8 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.List;
 
 public class OpcUa {
 
@@ -120,10 +119,9 @@ public class OpcUa {
     } else {
 
       DataValue value = new DataValue(v);
-      CompletableFuture<StatusCode> f = this.connectedClient.getClient().writeValue(node, value);
-
       try {
-        StatusCode status = f.get();
+        List<StatusCode> statuses = this.connectedClient.getClient().writeValues(List.of(node), List.of(value));
+        StatusCode status = statuses.get(0);
         if (status.isBad()) {
           if (status.getValue() == 0x80740000L) {
             LOG.error("Type missmatch! Tried to write value of type {} ", this.params.mappingPropertyType()
@@ -137,7 +135,7 @@ public class OpcUa {
               node.getIdentifier(),
               params.config().getOpcServerURL());
         }
-      } catch (InterruptedException | ExecutionException e) {
+      } catch (UaException e) {
         LOG.error(
             "Exception: Value {} could not be written to node Id {} on OPC_UA server {}",
             value.getValue().toString(),

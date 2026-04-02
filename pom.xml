@@ -68,7 +68,7 @@
         <jgrapht.version>1.5.1</jgrapht.version>
         <jjwt.version>0.11.2</jjwt.version>
         <lightcouch.version>0.2.0</lightcouch.version>
-        <eclipse.milo.version>0.6.16</eclipse.milo.version>
+        <eclipse.milo.version>1.1.1</eclipse.milo.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
@@ -117,8 +117,10 @@
         <hdrhistogram.version>2.2.2</hdrhistogram.version>
         <istack-runtime.version>4.1.2</istack-runtime.version>
         <javax.xml.bind.version>2.3.1</javax.xml.bind.version>
+        <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
         <jaxb-runtime.version>2.3.9</jaxb-runtime.version>
-        <jakarta-xml-bind-api.version>4.0.0</jakarta-xml-bind-api.version>
+        <jakarta-jaxb-runtime.version>4.0.6</jakarta-jaxb-runtime.version>
+        <jakarta-activation.version>2.1.3</jakarta-activation.version>
         <java-websocket.version>1.6.0</java-websocket.version>
         <javax-websocket-api.version>1.1</javax-websocket-api.version>
         <jetbrains.version>16.0.3</jetbrains.version>
@@ -173,14 +175,19 @@
                 <version>${javax.xml.bind.version}</version>
             </dependency>
             <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>${jakarta.xml.bind-api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>javax.websocket</groupId>
                 <artifactId>javax.websocket-api</artifactId>
                 <version>${javax-websocket-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.jaxb</groupId>
-                <artifactId>jaxb-runtime</artifactId>
-                <version>${jaxb-runtime.version}</version>
+                <groupId>jakarta.activation</groupId>
+                <artifactId>jakarta.activation-api</artifactId>
+                <version>${jakarta-activation.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-collections</groupId>
@@ -703,18 +710,18 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.milo</groupId>
-                <artifactId>sdk-client</artifactId>
+                <artifactId>milo-sdk-client</artifactId>
+                <version>${eclipse.milo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.milo</groupId>
+                <artifactId>milo-dtd-reader</artifactId>
                 <version>${eclipse.milo.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.ditto</groupId>
                 <artifactId>ditto-client</artifactId>
                 <version>${ditto-client.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.milo</groupId>
-                <artifactId>dictionary-reader</artifactId>
-                <version>${eclipse.milo.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.rdf4j</groupId>

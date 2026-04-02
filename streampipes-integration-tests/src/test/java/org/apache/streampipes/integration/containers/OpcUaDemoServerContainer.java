@@ -16,29 +16,30 @@
  *
  */
 
-package org.apache.streampipes.extensions.connectors.opcua.config.identity;
+package org.apache.streampipes.integration.containers;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.eclipse.milo.opcua.sdk.client.OpcUaClientConfigBuilder;
-import org.eclipse.milo.opcua.sdk.client.identity.UsernameProvider;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.utility.DockerImageName;
 
-public class UsernamePasswordIdentityConfig implements IdentityConfig {
+import java.time.Duration;
 
-  private final String username;
-  private final String password;
+public class OpcUaDemoServerContainer extends GenericContainer<OpcUaDemoServerContainer> {
 
-  public UsernamePasswordIdentityConfig(String username, String password) {
-    this.username = username;
-    this.password = password;
+  public static final int OPC_UA_PORT = 4840;
+
+  public OpcUaDemoServerContainer() {
+    super(DockerImageName.parse("digitalpetri/opc-ua-demo-server:latest"));
   }
 
   @Override
-  public void configureIdentity(OpcUaClientConfigBuilder builder) {
-    builder.setIdentityProvider(new UsernameProvider(username, password));
+  public void start() {
+    this.withExposedPorts(OPC_UA_PORT);
+    this.waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(60)));
+    super.start();
   }
 
-  @Override
-  public String toString() {
-    return String.format("%s-%S", username, DigestUtils.sha256Hex(password));
+  public String getEndpointUrl() {
+    return String.format("opc.tcp://%s:%d/milo", getHost(), getMappedPort(OPC_UA_PORT));
   }
 }

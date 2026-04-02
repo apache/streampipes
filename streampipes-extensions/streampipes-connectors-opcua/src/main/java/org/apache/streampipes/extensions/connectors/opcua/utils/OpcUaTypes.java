@@ -21,7 +21,7 @@ package org.apache.streampipes.extensions.connectors.opcua.utils;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.eclipse.milo.opcua.sdk.core.nodes.VariableNode;
-import org.eclipse.milo.opcua.stack.core.BuiltinDataType;
+import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 
 import java.util.Objects;
@@ -83,9 +83,9 @@ public class OpcUaTypes {
    * @return true if the node is an ExtensionObject or custom data type
    */
   public static boolean isExtensionOrCustom(VariableNode node) {
-    return !BuiltinDataType.isBuiltin(node.getDataType())
-        || Objects.equals(node.getDataType(), BuiltinDataType.ExtensionObject.getNodeId());
+    var dataType = node.getDataType();
+    return Objects.equals(dataType, Identifiers.Structure)
+        || (dataType != null && dataType.getNamespaceIndex().intValue() != 0);
   }
 
 }
-
