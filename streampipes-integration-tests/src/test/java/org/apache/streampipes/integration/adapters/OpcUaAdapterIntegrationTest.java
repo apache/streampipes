@@ -26,7 +26,6 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ExpandedNodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ExtensionObject;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
-import org.eclipse.milo.opcua.stack.core.types.builtin.Matrix;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
@@ -40,8 +39,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -605,13 +604,16 @@ public class OpcUaAdapterIntegrationTest {
         "DataValueMatrix"
     );
 
-    assertEquals(25, Array.getLength(matrix.getElements()));
-    for (var value : (Object[]) matrix.getElements()) {
-      var dataValue = assertInstanceOf(DataValue.class, value);
-      assertEquals(new Variant(42), dataValue.getValue());
-      assertEquals(StatusCode.GOOD, dataValue.getStatusCode());
-      assertNotNull(dataValue.getSourceTime());
-      assertNotNull(dataValue.getServerTime());
+    assertEquals(List.of(5, 5), matrix.get("dimensions"));
+
+    var elements = assertInstanceOf(List.class, matrix.get("elements"));
+    assertEquals(25, elements.size());
+    for (var value : elements) {
+      var dataValue = assertInstanceOf(Map.class, value);
+      assertEquals(42, dataValue.get("value"));
+      assertEquals("Good (0)", dataValue.get("statusCode"));
+      assertNotNull(Instant.parse(assertInstanceOf(String.class, dataValue.get("sourceTimestamp"))));
+      assertNotNull(Instant.parse(assertInstanceOf(String.class, dataValue.get("serverTimestamp"))));
     }
   }
 
@@ -622,9 +624,12 @@ public class OpcUaAdapterIntegrationTest {
         "DateTimeMatrix"
     );
 
-    assertEquals(25, Array.getLength(matrix.getElements()));
-    for (var value : (Object[]) matrix.getElements()) {
-      assertTrue(assertInstanceOf(DateTime.class, value).getJavaTime() > 0L);
+    assertEquals(List.of(5, 5), matrix.get("dimensions"));
+
+    var elements = assertInstanceOf(List.class, matrix.get("elements"));
+    assertEquals(25, elements.size());
+    for (var value : elements) {
+      assertTrue(assertInstanceOf(Long.class, value) > 0L);
     }
   }
 
@@ -642,7 +647,7 @@ public class OpcUaAdapterIntegrationTest {
     assertSingleNodeMatrixEvent(
         "ns=2;s=CTT.Static.AllProfiles.Matrix.ExpandedNodeIdMatrix",
         "ExpandedNodeIdMatrix",
-        repeatedMatrix(ExpandedNodeId.parse("nsu=urn:opc:eclipse:milo:opc-ua-demo-server:namespace:demo;s=DoesNotExist"))
+        repeatedMatrix(expandedNodeIdValue())
     );
   }
 
@@ -653,8 +658,11 @@ public class OpcUaAdapterIntegrationTest {
         "ExtensionObjectMatrix"
     );
 
-    assertEquals(25, Array.getLength(matrix.getElements()));
-    for (var value : (Object[]) matrix.getElements()) {
+    assertEquals(List.of(5, 5), matrix.get("dimensions"));
+
+    var elements = assertInstanceOf(List.class, matrix.get("elements"));
+    assertEquals(25, elements.size());
+    for (var value : elements) {
       assertInstanceOf(ExtensionObject.class, value);
     }
   }
@@ -675,8 +683,11 @@ public class OpcUaAdapterIntegrationTest {
         "GuidMatrix"
     );
 
-    assertEquals(25, Array.getLength(matrix.getElements()));
-    for (var value : (Object[]) matrix.getElements()) {
+    assertEquals(List.of(5, 5), matrix.get("dimensions"));
+
+    var elements = assertInstanceOf(List.class, matrix.get("elements"));
+    assertEquals(25, elements.size());
+    for (var value : elements) {
       assertTrue(
           assertInstanceOf(UUID.class, value).toString()
               .matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
@@ -806,7 +817,7 @@ public class OpcUaAdapterIntegrationTest {
     assertSingleNodeMatrixEvent(
         "ns=2;s=CTT.Static.AllProfiles.Matrix.XmlElementMatrix",
         "XmlElementMatrix",
-        repeatedMatrix(new XmlElement("<xml></xml>"))
+        repeatedMatrix("<xml></xml>")
     );
   }
 
@@ -873,37 +884,23 @@ public class OpcUaAdapterIntegrationTest {
         Map.of(
             "StructWithOptionalMatrixFields",
             Map.of(
-                "Int32", List.of(
-                    List.of(0, 0),
-                    List.of(0, 0)
+                "Int32", matrixValue(0, 0, 0, 0),
+                "OptionalInt32", matrixValue(0, 0, 0, 0),
+                "String", matrixValue("", "", "", ""),
+                "OptionalString", matrixValue("", "", "", ""),
+                "Duration", matrixValue(0.0d, 0.0d, 0.0d, 0.0d),
+                "OptionalDuration", matrixValue(0.0d, 0.0d, 0.0d, 0.0d),
+                "ConcreteTestType", matrixValue(
+                    EMPTY_EXTENSION_OBJECT,
+                    EMPTY_EXTENSION_OBJECT,
+                    EMPTY_EXTENSION_OBJECT,
+                    EMPTY_EXTENSION_OBJECT
                 ),
-                "OptionalInt32", List.of(
-                    List.of(0, 0),
-                    List.of(0, 0)
-                ),
-                "String", List.of(
-                    List.of("", ""),
-                    List.of("", "")
-                ),
-                "OptionalString", List.of(
-                    List.of("", ""),
-                    List.of("", "")
-                ),
-                "Duration", List.of(
-                    List.of(0.0d, 0.0d),
-                    List.of(0.0d, 0.0d)
-                ),
-                "OptionalDuration", List.of(
-                    List.of(0.0d, 0.0d),
-                    List.of(0.0d, 0.0d)
-                ),
-                "ConcreteTestType", List.of(
-                    List.of(EMPTY_EXTENSION_OBJECT, EMPTY_EXTENSION_OBJECT),
-                    List.of(EMPTY_EXTENSION_OBJECT, EMPTY_EXTENSION_OBJECT)
-                ),
-                "OptionalConcreteTestType", List.of(
-                    List.of(EMPTY_EXTENSION_OBJECT, EMPTY_EXTENSION_OBJECT),
-                    List.of(EMPTY_EXTENSION_OBJECT, EMPTY_EXTENSION_OBJECT)
+                "OptionalConcreteTestType", matrixValue(
+                    EMPTY_EXTENSION_OBJECT,
+                    EMPTY_EXTENSION_OBJECT,
+                    EMPTY_EXTENSION_OBJECT,
+                    EMPTY_EXTENSION_OBJECT
                 )
             )
         ),
@@ -938,19 +935,19 @@ public class OpcUaAdapterIntegrationTest {
     return new Object[] {value, value, value, value, value};
   }
 
-  private Matrix assertSingleNodeMatrixValue(String nodeId,
-                                             String fieldName) throws Exception {
+  private Map<String, Object> assertSingleNodeMatrixValue(String nodeId,
+                                                          String fieldName) throws Exception {
     var event = readSingleEvent(List.of(nodeId));
     assertEquals(1, event.size());
-    return assertInstanceOf(Matrix.class, event.get(fieldName));
+    return assertInstanceOf(Map.class, event.get(fieldName));
   }
 
   private void assertSingleNodeMatrixEvent(String nodeId,
                                            String fieldName,
                                            Object[] expectedFlatArray) throws Exception {
     var matrix = assertSingleNodeMatrixValue(nodeId, fieldName);
-    assertEquals(25, Array.getLength(matrix.getElements()));
-    assertArrayEquals(expectedFlatArray, (Object[]) matrix.getElements());
+    assertEquals(List.of(5, 5), matrix.get("dimensions"));
+    assertEquals(Arrays.asList(expectedFlatArray), matrix.get("elements"));
   }
 
   private Object[] repeatedMatrix(Object value) {
@@ -959,6 +956,23 @@ public class OpcUaAdapterIntegrationTest {
       values[i] = value;
     }
     return values;
+  }
+
+  private Map<String, Object> expandedNodeIdValue() {
+    var expandedNodeId = new LinkedHashMap<String, Object>();
+    expandedNodeId.put("identifier", "DoesNotExist");
+    expandedNodeId.put("namespaceIndex", null);
+    expandedNodeId.put("type", "String");
+    expandedNodeId.put("namespaceUri", "urn:opc:eclipse:milo:opc-ua-demo-server:namespace:demo");
+    expandedNodeId.put("serverIndex", 0L);
+    return expandedNodeId;
+  }
+
+  private Map<String, Object> matrixValue(Object... elements) {
+    return Map.of(
+        "elements", List.of(elements),
+        "dimensions", List.of(2, 2)
+    );
   }
 
   private static final Map<String, Object> EMPTY_EXTENSION_OBJECT = Map.of(

@@ -19,9 +19,9 @@
 package org.apache.streampipes.extensions.connectors.opcua.model;
 
 import org.apache.streampipes.extensions.connectors.opcua.model.node.BasicVariableNodeInfo;
-import org.apache.streampipes.extensions.connectors.opcua.model.node.ExtensionObjectOpcUaNode;
 import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
-import org.apache.streampipes.extensions.connectors.opcua.model.node.PrimitiveOpcUaNode;
+import org.apache.streampipes.extensions.connectors.opcua.model.node.ScalarOpcUaNode;
+import org.apache.streampipes.extensions.connectors.opcua.model.node.StructuredOpcUaNode;
 
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
@@ -42,13 +42,13 @@ public class OpcUaNodeFactory {
     if (hasVariant) {
       var byValue = isExtensionByValue(dataValue);
         return byValue
-            ? new ExtensionObjectOpcUaNode(nodeInfo)
-            : new PrimitiveOpcUaNode(nodeInfo);
+            ? new StructuredOpcUaNode(nodeInfo)
+            : new ScalarOpcUaNode(nodeInfo);
     }
 
     return isExtensionByDataType(nodeInfo)
-        ? new ExtensionObjectOpcUaNode(nodeInfo)
-        : new PrimitiveOpcUaNode(nodeInfo);
+        ? new StructuredOpcUaNode(nodeInfo)
+        : new ScalarOpcUaNode(nodeInfo);
   }
 
   private static boolean hasVariant(DataValue dataValue) {

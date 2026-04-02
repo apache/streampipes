@@ -35,13 +35,14 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.XmlElement;
 import java.lang.reflect.Array;
 import java.util.Base64;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-public class PrimitiveOpcUaNode implements OpcUaNode {
+public class ScalarOpcUaNode implements OpcUaNode {
 
   private final BasicVariableNodeInfo nodeInfo;
 
-  public PrimitiveOpcUaNode(BasicVariableNodeInfo nodeInfo) {
+  public ScalarOpcUaNode(BasicVariableNodeInfo nodeInfo) {
     this.nodeInfo = nodeInfo;
   }
 
@@ -76,14 +77,17 @@ public class PrimitiveOpcUaNode implements OpcUaNode {
   }
 
   private Object extractValue(Variant variant) {
-    var rawValue = variant.getValue();
+    return extractRawValue(variant.getValue());
+  }
+
+  private Object extractRawValue(Object rawValue) {
     if (rawValue instanceof ByteString) {
       // encode ByteString to base64 string
       return Base64.getEncoder().encodeToString(((ByteString) rawValue).bytes());
     } else if (isByteStringArray(rawValue)) {
       return extractByteStringArray(rawValue);
-    } else if (rawValue instanceof Matrix && isByteStringMatrix((Matrix) rawValue)) {
-      return ((Matrix) rawValue).transform(this::extractByteStringValue);
+    } else if (rawValue instanceof Matrix) {
+      return extractMatrix((Matrix) rawValue);
     } else if (rawValue instanceof DataValue) {
       return extractDataValue((DataValue) rawValue);
     } else if (rawValue instanceof ExpandedNodeId) {
@@ -116,14 +120,34 @@ public class PrimitiveOpcUaNode implements OpcUaNode {
     return extractedValues;
   }
 
-  private boolean isByteStringMatrix(Matrix matrix) {
-    return matrix.getElementType()
-        .filter(ByteString.class::equals)
-        .isPresent();
-  }
-
   private String extractByteStringValue(Object value) {
     return Base64.getEncoder().encodeToString(((ByteString) value).bytes());
+  }
+
+  private Map<String, Object> extractMatrix(Matrix matrix) {
+    var extractedMatrix = new LinkedHashMap<String, Object>();
+    extractedMatrix.put("elements", arrayToList(matrix.getElements()));
+    extractedMatrix.put("dimensions", intArrayToList(matrix.getDimensions()));
+    return extractedMatrix;
+  }
+
+  private List<Object> arrayToList(Object array) {
+    var length = Array.getLength(array);
+    var values = new Object[length];
+
+    for (int i = 0; i < length; i++) {
+      values[i] = extractRawValue(Array.get(array, i));
+    }
+
+    return List.of(values);
+  }
+
+  private List<Integer> intArrayToList(int[] values) {
+    var dimensions = new Integer[values.length];
+    for (int i = 0; i < values.length; i++) {
+      dimensions[i] = values[i];
+    }
+    return List.of(dimensions);
   }
 
   private Map<String, Object> extractDataValue(DataValue dataValue) {

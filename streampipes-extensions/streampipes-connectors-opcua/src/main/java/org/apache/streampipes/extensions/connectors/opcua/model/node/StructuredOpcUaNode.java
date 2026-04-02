@@ -51,14 +51,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ExtensionObjectOpcUaNode implements OpcUaNode {
+public class StructuredOpcUaNode implements OpcUaNode {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ExtensionObjectOpcUaNode.class);
+  private static final Logger LOG = LoggerFactory.getLogger(StructuredOpcUaNode.class);
   private static final int MAX_DEPTH = 20;
 
   private final BasicVariableNodeInfo nodeInfo;
 
-  public ExtensionObjectOpcUaNode(BasicVariableNodeInfo nodeInfo) {
+  public StructuredOpcUaNode(BasicVariableNodeInfo nodeInfo) {
     this.nodeInfo = nodeInfo;
   }
 
@@ -145,7 +145,7 @@ public class ExtensionObjectOpcUaNode implements OpcUaNode {
     }
 
     if (value instanceof Matrix matrix) {
-      return normalizeValue(client, matrix.nestedArrayValue(), depth + 1);
+      return matrixToMap(client, matrix, depth + 1);
     }
 
     if (value instanceof DateTime dateTime) {
@@ -260,6 +260,34 @@ public class ExtensionObjectOpcUaNode implements OpcUaNode {
   private Object dynamicEnumToValue(DynamicEnumType dynamicEnumType) {
     var enumName = dynamicEnumType.getName();
     return enumName != null ? enumName : dynamicEnumType.getValue();
+  }
+
+  private Map<String, Object> matrixToMap(OpcUaClient client,
+                                          Matrix matrix,
+                                          int depth) {
+    var result = new LinkedHashMap<String, Object>();
+    result.put("elements", arrayToList(client, matrix.getElements(), depth + 1));
+    result.put("dimensions", intArrayToList(matrix.getDimensions()));
+    return result;
+  }
+
+  private List<Object> arrayToList(OpcUaClient client,
+                                   Object arrayValue,
+                                   int depth) {
+    int length = Array.getLength(arrayValue);
+    var values = new ArrayList<>(length);
+    for (int i = 0; i < length; i++) {
+      values.add(normalizeValue(client, Array.get(arrayValue, i), depth + 1));
+    }
+    return values;
+  }
+
+  private List<Integer> intArrayToList(int[] values) {
+    var dimensions = new ArrayList<Integer>(values.length);
+    for (var value : values) {
+      dimensions.add(value);
+    }
+    return dimensions;
   }
 
   private Object decodeExtensionObject(OpcUaClient client,
