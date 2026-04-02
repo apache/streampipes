@@ -20,6 +20,7 @@ import {
     AfterViewInit,
     Component,
     Input,
+    OnDestroy,
     ViewChild,
     inject,
 } from '@angular/core';
@@ -33,7 +34,9 @@ import {
 import { ObjectProvider } from '../../services/object-provider.service';
 import {
     DialogService,
+    KeyboardShortcutService,
     PanelType,
+    ShortcutRegistration,
     SpBasicViewComponent,
 } from '@streampipes/shared-ui';
 import { SavePipelineComponent } from '../../dialog/save-pipeline/save-pipeline.component';
@@ -62,7 +65,7 @@ import { FlexDirective } from '@ngbracket/ngx-layout/flex';
         PipelineAssemblyDrawingAreaComponent,
     ],
 })
-export class PipelineAssemblyComponent implements AfterViewInit {
+export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private jsPlumbFactoryService = inject(JsplumbFactoryService);
     private pipelinePositioningService = inject(PipelinePositioningService);
     private objectProvider = inject(ObjectProvider);
@@ -72,7 +75,8 @@ export class PipelineAssemblyComponent implements AfterViewInit {
     private router = inject(Router);
     private jsplumbService = inject(JsplumbService);
     private translateService = inject(TranslateService);
-
+    private shortcutService = inject(KeyboardShortcutService);
+  
     @Input()
     rawPipelineModel: PipelineElementConfig[];
 
@@ -92,6 +96,7 @@ export class PipelineAssemblyComponent implements AfterViewInit {
     readonly: boolean;
 
     jsplumbBridge: JsplumbBridge;
+    private shortcutReg: ShortcutRegistration;
 
     @ViewChild('assemblyOptionsComponent')
     assemblyOptionsComponent: PipelineAssemblyOptionsComponent;
@@ -99,9 +104,22 @@ export class PipelineAssemblyComponent implements AfterViewInit {
     drawingAreaComponent: PipelineAssemblyDrawingAreaComponent;
 
     ngAfterViewInit() {
+        this.shortcutReg = this.shortcutService.register('pipeline-assembly', [
+            { key: 's', ctrl: true, action: () => this.onShortcutSave() },
+        ]);
         this.jsplumbBridge = this.jsPlumbFactoryService.getJsplumbBridge(
             this.readonly,
         );
+    }
+
+    ngOnDestroy(): void {
+        this.shortcutReg?.unregister();
+    }
+
+    private onShortcutSave(): void {
+        if (!this.readonly && this.rawPipelineModel?.length) {
+            this.submit();
+        }
     }
 
     /**
@@ -141,7 +159,6 @@ export class PipelineAssemblyComponent implements AfterViewInit {
         );
         const dialogRef = this.dialogService.open(SavePipelineComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            disableClose: true,
             title: this.translateService.instant('Save pipeline'),
             width: '40vw',
             data: {

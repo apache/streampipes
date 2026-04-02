@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, Inject } from '@angular/core';
 import {
     MAT_DIALOG_DATA,
     MatDialogActions,
@@ -50,6 +50,11 @@ export class ConfirmDialogComponent {
             MatDialogRef,
         );
     public data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
+
+    @HostListener('keydown.enter')
+    onEnter(): void {
+        this.onOk();
+    }
 
     onCancel(): void {
         this.dialogRef.close('cancel');
