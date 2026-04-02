@@ -16,39 +16,6 @@
  *
  */
 
-.csv-import-shell {
-    min-height: 0;
-}
-
-.csv-import-content {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    max-height: 78vh;
-    overflow: auto;
-}
-
-:host {
-    display: block;
-    width: 100%;
-    min-width: 0;
-}
-
-:host ::ng-deep sp-split-section {
-    display: block;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-}
-
-:host ::ng-deep sp-split-section .section-outer,
-:host ::ng-deep sp-split-section .section-body,
-:host ::ng-deep sp-split-section .section-body-compact {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-}
-
 .upload-row {
     display: flex;
     align-items: center;
