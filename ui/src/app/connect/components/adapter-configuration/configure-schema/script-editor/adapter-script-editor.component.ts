@@ -19,6 +19,8 @@
 import { Component, inject, input, OnDestroy, output } from '@angular/core';
 import { ScriptMetadata } from '@streampipes/platform-services';
 import {
+    DialogService,
+    PanelType,
     SpAlertBannerComponent,
     SpBasicInnerPanelComponent,
 } from '@streampipes/shared-ui';
@@ -41,6 +43,7 @@ import {
     JavaScriptEventField,
     EditorAutocompletionService,
 } from '../../../../../services/editor-autocompletion.service';
+import { TransformationScriptDocumentationDialogComponent } from '../../../../dialog/transformation-script-documentation/transformation-script-documentation-dialog.component';
 
 declare const monaco: typeof monacoType;
 
@@ -68,6 +71,7 @@ declare const monaco: typeof monacoType;
     ],
 })
 export class AdapterScriptEditorComponent implements OnDestroy {
+    private dialogService = inject(DialogService);
     scriptActive = input(false);
     selectedScriptMetadata = input<ScriptMetadata>();
     availableScripts = input<ScriptMetadata[]>([]);
@@ -108,6 +112,17 @@ export class AdapterScriptEditorComponent implements OnDestroy {
                 return this.eventPropertyNames().map(runtimeName => ({
                     runtimeName,
                 }));
+            },
+        );
+    }
+
+    openDocumentation(): void {
+        this.dialogService.open(
+            TransformationScriptDocumentationDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: 'Documentation',
+                width: '50vw',
             },
         );
     }

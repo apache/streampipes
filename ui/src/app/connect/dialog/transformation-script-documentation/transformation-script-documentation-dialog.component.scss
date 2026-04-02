@@ -1,0 +1,54 @@
+.section-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.section-text {
+    margin: 0;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.72);
+}
+
+.parameter-list {
+    margin: 0;
+    padding-left: 20px;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.72);
+}
+
+.snippet-card {
+    padding: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.snippet-header {
+    gap: 12px;
+}
+
+.snippet-title {
+    font-weight: 600;
+}
+
+.snippet-description {
+    margin: 0;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.72);
+}
+
+.snippet-code {
+    margin: 0;
+    padding: 12px;
+    overflow-x: auto;
+    border-radius: 6px;
+    background: #f1f3f4;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+code {
+    font-family:
+        'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
