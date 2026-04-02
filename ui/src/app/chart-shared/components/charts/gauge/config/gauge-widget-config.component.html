@@ -36,8 +36,14 @@
             ?.fieldCharacteristics.numeric
     ) {
         <sp-split-section [level]="3" [title]="'Settings' | translate">
-            <sp-form-field [level]="3" [label]="'Min' | translate">
-                <mat-form-field appearance="outline" color="accent" fxFlex="30">
+            <sp-form-field
+                [level]="3"
+                [label]="'Min' | translate"
+                [description]="
+                    'Lower bound of the gauge value range.' | translate
+                "
+            >
+                <mat-form-field fxFlex="30">
                     <input
                         matInput
                         type="number"
@@ -48,8 +54,14 @@
                     />
                 </mat-form-field>
             </sp-form-field>
-            <sp-form-field [level]="3" [label]="'Max' | translate">
-                <mat-form-field appearance="outline" color="accent" fxFlex="30">
+            <sp-form-field
+                [level]="3"
+                [label]="'Max' | translate"
+                [description]="
+                    'Upper bound of the gauge value range.' | translate
+                "
+            >
+                <mat-form-field fxFlex="30">
                     <input
                         matInput
                         type="number"
@@ -60,8 +72,14 @@
                     />
                 </mat-form-field>
             </sp-form-field>
-            <sp-form-field [level]="3" [label]="'Display Name' | translate">
-                <mat-form-field appearance="outline" color="accent" fxFlex="60">
+            <sp-form-field
+                [level]="3"
+                [label]="'Display Name' | translate"
+                [description]="
+                    'Label shown below the current gauge value.' | translate
+                "
+            >
+                <mat-form-field fxFlex="60">
                     <input
                         matInput
                         type="text"
@@ -73,6 +91,195 @@
                     />
                 </mat-form-field>
             </sp-form-field>
+
+            <sp-form-field
+                [level]="3"
+                [label]="'Start Angle' | translate"
+                [description]="
+                    'Angle where the gauge arc begins (in degrees).' | translate
+                "
+            >
+                <mat-form-field fxFlex="30">
+                    <input
+                        matInput
+                        type="number"
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .startAngle
+                        "
+                        (ngModelChange)="triggerViewRefresh()"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+
+            <sp-form-field
+                [level]="3"
+                [label]="'End Angle' | translate"
+                [description]="
+                    'Angle where the gauge arc ends (in degrees).' | translate
+                "
+            >
+                <mat-form-field fxFlex="30">
+                    <input
+                        matInput
+                        type="number"
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .endAngle
+                        "
+                        (ngModelChange)="triggerViewRefresh()"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+
+            <sp-form-field
+                [level]="3"
+                [label]="'Split Number' | translate"
+                [description]="
+                    'Number of major segments/ticks on the gauge arc.'
+                        | translate
+                "
+            >
+                <mat-form-field fxFlex="30">
+                    <input
+                        matInput
+                        type="number"
+                        min="1"
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .splitNumber
+                        "
+                        (ngModelChange)="triggerViewRefresh()"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+
+            <mat-checkbox
+                [(ngModel)]="
+                    currentlyConfiguredWidget.visualizationConfig.showPointer
+                "
+                (change)="triggerViewRefresh()"
+                >{{ 'Show Pointer' | translate }}
+            </mat-checkbox>
+        </sp-split-section>
+
+        <sp-split-section [level]="3" [title]="'Threshold Colors' | translate">
+            <mat-checkbox
+                [(ngModel)]="
+                    currentlyConfiguredWidget.visualizationConfig
+                        .enableThresholdColors
+                "
+                (change)="triggerViewRefresh()"
+                >{{ 'Enable threshold colors' | translate }}
+            </mat-checkbox>
+
+            @if (
+                currentlyConfiguredWidget.visualizationConfig
+                    .enableThresholdColors
+            ) {
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Low Threshold' | translate"
+                    [description]="
+                        'Value where the low color range ends.' | translate
+                    "
+                >
+                    <mat-form-field fxFlex="30">
+                        <input
+                            matInput
+                            type="number"
+                            [(ngModel)]="
+                                currentlyConfiguredWidget.visualizationConfig
+                                    .thresholdLow
+                            "
+                            (ngModelChange)="triggerViewRefresh()"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+
+                <sp-form-field
+                    [level]="3"
+                    [label]="'High Threshold' | translate"
+                    [description]="
+                        'Value where the medium color range ends and high begins.'
+                            | translate
+                    "
+                >
+                    <mat-form-field fxFlex="30">
+                        <input
+                            matInput
+                            type="number"
+                            [(ngModel)]="
+                                currentlyConfiguredWidget.visualizationConfig
+                                    .thresholdHigh
+                            "
+                            (ngModelChange)="triggerViewRefresh()"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Low Color' | translate"
+                    [description]="
+                        'Color used from min up to the low threshold.'
+                            | translate
+                    "
+                >
+                    <mat-form-field fxFlex="30">
+                        <input
+                            matInput
+                            type="color"
+                            [(ngModel)]="
+                                currentlyConfiguredWidget.visualizationConfig
+                                    .thresholdColorLow
+                            "
+                            (ngModelChange)="triggerViewRefresh()"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+
+                <sp-form-field
+                    [level]="3"
+                    [label]="'Medium Color' | translate"
+                    [description]="
+                        'Color used between low and high thresholds.'
+                            | translate
+                    "
+                >
+                    <mat-form-field fxFlex="30">
+                        <input
+                            matInput
+                            type="color"
+                            [(ngModel)]="
+                                currentlyConfiguredWidget.visualizationConfig
+                                    .thresholdColorMedium
+                            "
+                            (ngModelChange)="triggerViewRefresh()"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+
+                <sp-form-field
+                    [level]="3"
+                    [label]="'High Color' | translate"
+                    [description]="
+                        'Color used above the high threshold.' | translate
+                    "
+                >
+                    <mat-form-field fxFlex="30">
+                        <input
+                            matInput
+                            type="color"
+                            [(ngModel)]="
+                                currentlyConfiguredWidget.visualizationConfig
+                                    .thresholdColorHigh
+                            "
+                            (ngModelChange)="triggerViewRefresh()"
+                        />
+                    </mat-form-field>
+                </sp-form-field>
+            }
         </sp-split-section>
     }
 </sp-visualization-config-outer>

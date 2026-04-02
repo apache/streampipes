@@ -39,12 +39,17 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
         widgetConfig: CorrelationChartWidgetModel,
         widgetSize: WidgetSize,
     ): void {
+        const decimals = this.getDecimals(widgetConfig);
         const xField = this.getXField(widgetConfig);
         const yField = this.getYField(widgetConfig);
         const dataset = this.datasetUtilsService.findPreparedDataset(
             datasets,
             xField.sourceIndex,
         );
+        const tooltip =
+            !Array.isArray(options.tooltip) && options.tooltip
+                ? options.tooltip
+                : {};
 
         const data = this.prepareDataset(dataset, xField, yField);
         const stats = this.calculateStats(data);
@@ -65,6 +70,10 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
                 scale: true,
                 min: Math.floor(stats.minX - 1),
                 max: Math.ceil(stats.maxX + 1),
+                axisLabel: {
+                    formatter: (value: number | string) =>
+                        this.formatNumber(value, decimals),
+                },
                 name:
                     widgetConfig.visualizationConfig.labelX ||
                     `${xField.fullDbName}${xField.measurementUnitResourceId ? ` (${xField.measurementUnitResourceId.split('#').pop()})` : ''}`,
@@ -78,6 +87,10 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
                 scale: true,
                 min: Math.floor(stats.minY - 1),
                 max: Math.ceil(stats.maxY + 1),
+                axisLabel: {
+                    formatter: (value: number | string) =>
+                        this.formatNumber(value, decimals),
+                },
                 name:
                     widgetConfig.visualizationConfig.labelY ||
                     `${yField.fullDbName}${yField.measurementUnitResourceId ? ` (${yField.measurementUnitResourceId.split('#').pop()})` : ''}`,
@@ -99,6 +112,11 @@ export class SpDensityRendererService extends SpBaseEchartsRenderer<CorrelationC
                 inRange: {
                     color: ['white', 'yellow', 'red'],
                 },
+            },
+            tooltip: {
+                ...tooltip,
+                valueFormatter: (value: unknown) =>
+                    this.formatNumber(value, decimals),
             },
             series: [
                 {
