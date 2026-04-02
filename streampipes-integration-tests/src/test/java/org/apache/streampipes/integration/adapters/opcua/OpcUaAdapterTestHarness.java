@@ -96,7 +96,7 @@ public class OpcUaAdapterTestHarness {
         String.class
     )).thenReturn(SharedUserConfiguration.INCOMPLETE_OPTION_SEND);
     when(staticExtractor.selectedSingleValueInternalName(OpcUaLabels.NAMING_STRATEGY.name(), String.class))
-        .thenReturn(OpcUaNamingStrategy.PARSED_NODE_ID.name());
+        .thenReturn(OpcUaNamingStrategy.DISPLAY_NAME.name());
 
     AdapterDescription adapterDescription = new AdapterDescription();
     adapterDescription.setElementId("opcua-adapter-it");

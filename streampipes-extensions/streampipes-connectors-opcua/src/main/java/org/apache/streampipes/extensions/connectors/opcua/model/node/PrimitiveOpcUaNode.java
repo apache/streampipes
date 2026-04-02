@@ -18,18 +18,23 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.model.node;
 
-import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaTypes;
 import org.apache.streampipes.model.connect.guess.FieldStatus;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
-import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
+import org.eclipse.milo.opcua.stack.core.StatusCodes;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ByteString;
+import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
+import org.eclipse.milo.opcua.stack.core.types.builtin.ExpandedNodeId;
+import org.eclipse.milo.opcua.stack.core.types.builtin.Matrix;
+import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
+import org.eclipse.milo.opcua.stack.core.types.builtin.XmlElement;
 
+import java.lang.reflect.Array;
 import java.util.Base64;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class PrimitiveOpcUaNode implements OpcUaNode {
@@ -70,21 +75,101 @@ public class PrimitiveOpcUaNode implements OpcUaNode {
     fieldStatusInfos.put(nodeInfo().getBaseNodeName(), fieldStatusInfo);
   }
 
-  private Datatypes getType() {
-    UInteger value = (UInteger) nodeInfo.getNode().getDataType()
-        .getIdentifier();
-    return OpcUaTypes.getType(value);
-  }
-
   private Object extractValue(Variant variant) {
     var rawValue = variant.getValue();
     if (rawValue instanceof ByteString) {
       // encode ByteString to base64 string
       return Base64.getEncoder().encodeToString(((ByteString) rawValue).bytes());
+    } else if (isByteStringArray(rawValue)) {
+      return extractByteStringArray(rawValue);
+    } else if (rawValue instanceof Matrix && isByteStringMatrix((Matrix) rawValue)) {
+      return ((Matrix) rawValue).transform(this::extractByteStringValue);
+    } else if (rawValue instanceof DataValue) {
+      return extractDataValue((DataValue) rawValue);
+    } else if (rawValue instanceof ExpandedNodeId) {
+      return extractExpandedNodeId((ExpandedNodeId) rawValue);
     } else if (rawValue instanceof DateTime) {
       // convert DateTime to UTC timestamp in ms
       return ((DateTime) rawValue).getJavaTime();
+    } else if (rawValue instanceof XmlElement) {
+      return ((XmlElement) rawValue).getFragment();
     }
+
     return rawValue;
+  }
+
+  private boolean isByteStringArray(Object value) {
+    return value != null
+        && value.getClass().isArray()
+        && ByteString.class.equals(value.getClass().getComponentType());
+  }
+
+  private Object[] extractByteStringArray(Object byteStringArray) {
+    var length = Array.getLength(byteStringArray);
+    var extractedValues = new Object[length];
+
+    for (int i = 0; i < length; i++) {
+      var value = (ByteString) Array.get(byteStringArray, i);
+      extractedValues[i] = extractByteStringValue(value);
+    }
+
+    return extractedValues;
+  }
+
+  private boolean isByteStringMatrix(Matrix matrix) {
+    return matrix.getElementType()
+        .filter(ByteString.class::equals)
+        .isPresent();
+  }
+
+  private String extractByteStringValue(Object value) {
+    return Base64.getEncoder().encodeToString(((ByteString) value).bytes());
+  }
+
+  private Map<String, Object> extractDataValue(DataValue dataValue) {
+    var extractedDataValue = new LinkedHashMap<String, Object>();
+    extractedDataValue.put("value", dataValue.getValue() != null ? extractValue(dataValue.getValue()) : null);
+    extractedDataValue.put("statusCode", formatStatusCode(dataValue.getStatusCode()));
+    extractedDataValue.put("sourceTimestamp", formatDateTime(dataValue.getSourceTime()));
+    extractedDataValue.put("serverTimestamp", formatDateTime(dataValue.getServerTime()));
+    return extractedDataValue;
+  }
+
+  private String formatStatusCode(StatusCode statusCode) {
+    if (statusCode == null) {
+      return null;
+    }
+
+    var value = statusCode.getValue();
+    var statusName = StatusCodes.lookup(value)
+        .filter(names -> names.length > 0)
+        .map(names -> names[0])
+        .orElse("Unknown");
+
+    return statusName + " (" + Long.toUnsignedString(value) + ")";
+  }
+
+  private Map<String, Object> extractExpandedNodeId(ExpandedNodeId expandedNodeId) {
+    var extractedNodeId = new LinkedHashMap<String, Object>();
+    extractedNodeId.put("identifier", expandedNodeId.getIdentifier());
+    extractedNodeId.put(
+        "namespaceIndex",
+        expandedNodeId.getNamespaceIndex() != null ? expandedNodeId.getNamespaceIndex().intValue() : null
+    );
+    extractedNodeId.put("type", expandedNodeId.getType() != null ? expandedNodeId.getType().name() : null);
+    extractedNodeId.put("namespaceUri", expandedNodeId.getNamespaceUri());
+    extractedNodeId.put(
+        "serverIndex",
+        expandedNodeId.getServerIndex() != null ? expandedNodeId.getServerIndex().longValue() : null
+    );
+    return extractedNodeId;
+  }
+
+  private String formatDateTime(DateTime dateTime) {
+    if (dateTime == null) {
+      return null;
+    }
+
+    return dateTime.toIso8601String();
   }
 }
