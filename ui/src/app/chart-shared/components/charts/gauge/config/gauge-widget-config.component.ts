@@ -31,6 +31,7 @@ import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
     selector: 'sp-data-explorer-gauge-widget-config',
@@ -43,6 +44,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatFormField,
         FlexDirective,
         MatInput,
+        MatCheckbox,
         FormsModule,
         TranslatePipe,
     ],
@@ -63,8 +65,30 @@ export class GaugeWidgetConfigComponent extends BaseWidgetConfig<
             this.fieldProvider.numericFields,
             () => this.fieldProvider.numericFields[0],
         );
+        const defaultDisplayName =
+            config.selectedProperty?.runtimeName ||
+            config.selectedProperty?.fullDbName ||
+            '';
+        if (typeof config.displayName !== 'string') {
+            config.displayName = defaultDisplayName;
+        }
+        if (!config.displayName?.trim()) {
+            config.displayName = defaultDisplayName;
+        }
         config.min ??= 0;
         config.max ??= 100;
+        config.startAngle ??= 225;
+        config.endAngle ??= -45;
+        config.splitNumber ??= 10;
+        config.showPointer ??= true;
+        config.enableThresholdColors ??= false;
+        config.thresholdColorLow ??= '#91cc75';
+        config.thresholdColorMedium ??= '#fac858';
+        config.thresholdColorHigh ??= '#ee6666';
+
+        const range = Math.max(1, config.max - config.min);
+        config.thresholdLow ??= config.min + range * 0.6;
+        config.thresholdHigh ??= config.min + range * 0.8;
     }
 
     protected requiredFieldsForChartPresent(): boolean {

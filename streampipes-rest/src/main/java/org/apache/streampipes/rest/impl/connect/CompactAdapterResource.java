@@ -94,8 +94,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
       @RequestBody CompactAdapter compactAdapter
   ) throws Exception {
 
-    var adapterDescription = compactAdapterManagement.convertToAdapterDescription(compactAdapter);
     var principalSid = getAuthenticatedUserSid();
+    var adapterDescription = compactAdapterManagement.convertToAdapterDescription(compactAdapter, principalSid);
 
     var adapterId = adapterDescription.getElementId();
 
@@ -152,7 +152,12 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
 
     var existingAdapter = managementService.getAdapter(elementId);
     if (existingAdapter != null) {
-      var adapterDescription = compactAdapterManagement.convertToAdapterDescription(compactAdapter, existingAdapter);
+      var principalSid = getAuthenticatedUserSid();
+      var adapterDescription = compactAdapterManagement.convertToAdapterDescription(
+          compactAdapter,
+          existingAdapter,
+          principalSid
+      );
 
       try {
         adapterUpdateManagement.updateAdapter(adapterDescription);

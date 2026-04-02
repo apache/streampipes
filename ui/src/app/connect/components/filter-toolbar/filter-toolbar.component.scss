@@ -17,7 +17,7 @@
  */
 
 ::ng-deep .mat-select-panel {
-    background: #fff;
+    background: var(--color-bg-0);
 }
 
 ::ng-deep .mat-select-panel:not([class*='mat-elevation-z']) {

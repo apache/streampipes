@@ -37,12 +37,14 @@
             currentlyConfiguredWidget.visualizationConfig.selectedProperty
                 ?.fieldCharacteristics.numeric
         ) {
-            <sp-form-field [level]="3" [label]="'Rounding' | translate">
-                <mat-form-field
-                    appearance="outline"
-                    class="marginColorField"
-                    color="accent"
-                >
+            <sp-form-field
+                [level]="3"
+                [label]="'Rounding' | translate"
+                [description]="
+                    'Rounds values before grouping chart segments.' | translate
+                "
+            >
+                <mat-form-field class="marginColorField">
                     <mat-select
                         [(value)]="
                             currentlyConfiguredWidget.visualizationConfig
@@ -60,7 +62,14 @@
             </sp-form-field>
         }
 
-        <sp-form-field [level]="3" [label]="'Inner Radius' | translate">
+        <sp-form-field
+            [level]="3"
+            [label]="'Inner Radius' | translate"
+            [description]="
+                'Controls donut thickness by setting the inner empty space.'
+                    | translate
+            "
+        >
             <mat-slider min="0" max="80" step="1">
                 <input
                     matSliderThumb
@@ -74,6 +83,217 @@
             </mat-slider>
             <small>{{ slider.value }}% </small>
         </sp-form-field>
+
+        <sp-form-field
+            [level]="3"
+            [label]="'Start Angle' | translate"
+            [description]="
+                'Angle where the first slice starts (in degrees).' | translate
+            "
+        >
+            <mat-form-field class="marginColorField">
+                <input
+                    matInput
+                    type="number"
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig.startAngle
+                    "
+                    (ngModelChange)="triggerViewUpdate()"
+                />
+            </mat-form-field>
+        </sp-form-field>
+
+        <mat-checkbox
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig.clockwise
+            "
+            (change)="triggerViewUpdate()"
+            >{{ 'Clockwise' | translate }}
+        </mat-checkbox>
+
+        <sp-form-field
+            [level]="3"
+            [label]="'Min Slice Angle' | translate"
+            [description]="
+                'Minimum angle reserved for each slice (in degrees).'
+                    | translate
+            "
+        >
+            <mat-form-field class="marginColorField">
+                <input
+                    matInput
+                    type="number"
+                    min="0"
+                    max="360"
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig.minAngle
+                    "
+                    (ngModelChange)="triggerViewUpdate()"
+                />
+            </mat-form-field>
+        </sp-form-field>
+
+        <sp-form-field
+            [level]="3"
+            [label]="'Label Content' | translate"
+            [description]="
+                'Selects which values are shown in each label.' | translate
+            "
+        >
+            <mat-form-field class="marginColorField">
+                <mat-select
+                    [(value)]="
+                        currentlyConfiguredWidget.visualizationConfig.labelMode
+                    "
+                    (selectionChange)="triggerViewUpdate()"
+                >
+                    <mat-option [value]="'name'">{{
+                        'Name' | translate
+                    }}</mat-option>
+                    <mat-option [value]="'value'">{{
+                        'Value' | translate
+                    }}</mat-option>
+                    <mat-option [value]="'percent'">{{
+                        'Percent' | translate
+                    }}</mat-option>
+                    <mat-option [value]="'name_percent'">{{
+                        'Name + Percent' | translate
+                    }}</mat-option>
+                    <mat-option [value]="'name_value'">{{
+                        'Name + Value' | translate
+                    }}</mat-option>
+                    <mat-option [value]="'name_value_percent'">{{
+                        'Name + Value + Percent' | translate
+                    }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </sp-form-field>
+
+        <sp-form-field
+            [level]="3"
+            [label]="'Label Position' | translate"
+            [description]="
+                'Places labels inside slices or outside the chart.' | translate
+            "
+        >
+            <mat-form-field class="marginColorField">
+                <mat-select
+                    [(value)]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .labelPosition
+                    "
+                    (selectionChange)="triggerViewUpdate()"
+                >
+                    <mat-option [value]="'outside'">{{
+                        'Outside' | translate
+                    }}</mat-option>
+                    <mat-option [value]="'inside'">{{
+                        'Inside' | translate
+                    }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </sp-form-field>
+
+        @if (
+            currentlyConfiguredWidget.visualizationConfig.labelPosition ===
+            'outside'
+        ) {
+            <sp-form-field
+                [level]="3"
+                [label]="'Label Align' | translate"
+                [description]="
+                    'Defines how outside labels align near the chart edge.'
+                        | translate
+                "
+            >
+                <mat-form-field class="marginColorField">
+                    <mat-select
+                        [(value)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .labelAlignTo
+                        "
+                        (selectionChange)="triggerViewUpdate()"
+                    >
+                        <mat-option [value]="'edge'">{{
+                            'Edge' | translate
+                        }}</mat-option>
+                        <mat-option [value]="'labelLine'">{{
+                            'Label Line' | translate
+                        }}</mat-option>
+                        <mat-option [value]="'none'">{{
+                            'None' | translate
+                        }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </sp-form-field>
+        }
+
+        <mat-checkbox
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig.avoidLabelOverlap
+            "
+            (change)="triggerViewUpdate()"
+            >{{ 'Avoid Label Overlap' | translate }}
+        </mat-checkbox>
+
+        <mat-checkbox
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig.showLabelLine
+            "
+            (change)="triggerViewUpdate()"
+            >{{ 'Show Label Line' | translate }}
+        </mat-checkbox>
+
+        <mat-checkbox
+            [(ngModel)]="
+                currentlyConfiguredWidget.visualizationConfig.topNEnabled
+            "
+            (change)="triggerViewUpdate()"
+            >{{ 'Enable Top-N' | translate }}
+        </mat-checkbox>
+
+        @if (currentlyConfiguredWidget.visualizationConfig.topNEnabled) {
+            <sp-form-field
+                [level]="3"
+                [label]="'Top N' | translate"
+                [description]="
+                    'Keeps the largest N slices and groups the rest.'
+                        | translate
+                "
+            >
+                <mat-form-field class="marginColorField">
+                    <input
+                        matInput
+                        type="number"
+                        min="1"
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig.topN
+                        "
+                        (ngModelChange)="triggerViewUpdate()"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+
+            <sp-form-field
+                [level]="3"
+                [label]="'Others Label' | translate"
+                [description]="
+                    'Name used for the grouped remaining slices.' | translate
+                "
+            >
+                <mat-form-field class="marginColorField">
+                    <input
+                        matInput
+                        type="text"
+                        [(ngModel)]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .othersLabel
+                        "
+                        (ngModelChange)="triggerViewUpdate()"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+        }
 
         <sp-color-mapping-options-config
             [(colorMapping)]="

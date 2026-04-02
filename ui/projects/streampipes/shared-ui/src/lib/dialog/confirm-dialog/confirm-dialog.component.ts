@@ -32,7 +32,7 @@ import { MatButton } from '@angular/material/button';
 import { ConfirmDialogAction, ConfirmDialogData } from './confirm-dialog.model';
 
 @Component({
-    selector: 'confirmation-dialog',
+    selector: 'sp-confirm-dialog',
     templateUrl: './confirm-dialog.component.html',
     styleUrls: ['./confirm-dialog.component.scss'],
     imports: [

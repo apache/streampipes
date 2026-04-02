@@ -59,7 +59,7 @@ describe('Test auto aggregate table result size', () => {
         cy.wait('@autoAggregateQuery').then(({ request, response }) => {
             const query = request.query as Record<string, string>;
             expect(query.autoAggregate).to.equal('true');
-            expect(query.maximumAmountOfEvents).to.be.undefined;
+            expect(query).not.to.have.property('maximumAmountOfEvents');
             expect(response?.body.total).to.equal(expectedAutoAggregatedRows);
         });
 

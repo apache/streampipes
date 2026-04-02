@@ -23,11 +23,18 @@ import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpNumberFormatConfigComponent } from '../number-format-config/number-format-config.component';
 
 @Component({
     selector: 'sp-echarts-widget-appearance-config',
     templateUrl: './echarts-widget-appearance-config.component.html',
-    imports: [SplitSectionComponent, MatCheckbox, FormsModule, TranslatePipe],
+    imports: [
+        SplitSectionComponent,
+        MatCheckbox,
+        FormsModule,
+        TranslatePipe,
+        SpNumberFormatConfigComponent,
+    ],
 })
 export class SpEchartsWidgetAppearanceConfigComponent implements OnInit {
     private widgetConfigurationService = inject(ChartConfigurationService);

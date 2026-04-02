@@ -16,28 +16,22 @@
  *
  */
 
-package org.apache.streampipes.client.api;
+import { Component, Input } from '@angular/core';
+import { WidgetNumberAppearanceConfig } from '../../../../models/dataview-dashboard.model';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
+import { SpNumberFormatConfigComponent } from '../../../chart-config/number-format-config/number-format-config.component';
 
-import org.apache.streampipes.client.model.StreamPipesClientConfig;
-import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.model.Notification;
-import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
-
-public class NotificationsApi extends AbstractTypedClientApi<Notification> implements INotificationsApi {
-
-  public NotificationsApi(StreamPipesClientConfig clientConfig) {
-    super(clientConfig, Notification.class);
-  }
-
-  @Override
-  protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromBaseApiPath()
-        .addToPath("notifications");
-  }
-
-  @Override
-  @ExposedToScripts
-  public void add(Notification notification) {
-    post(getBaseResourcePath(), notification);
-  }
+@Component({
+    selector: 'sp-table-widget-appearance-config',
+    templateUrl: './table-widget-appearance-config.component.html',
+    imports: [
+        SplitSectionComponent,
+        TranslatePipe,
+        SpNumberFormatConfigComponent,
+    ],
+})
+export class TableWidgetAppearanceConfigComponent {
+    @Input()
+    appearanceConfig: WidgetNumberAppearanceConfig;
 }

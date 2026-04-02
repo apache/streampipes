@@ -74,7 +74,7 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
   public ResponseEntity<AdapterDescription> transformSample(@RequestBody AdapterDescription adapterDescription) throws
                                                                                                                 AdapterException {
 
-    var sampleData = managementService.transformSampleData(adapterDescription);
+    var sampleData = managementService.transformSampleData(adapterDescription, getAuthenticatedUserSid());
 
     return ok(sampleData);
   }

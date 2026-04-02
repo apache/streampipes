@@ -183,7 +183,6 @@ export class DashboardPanelComponent
     }
 
     addChartToDashboard(dataViewElementId: string) {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const dashboardItem = {} as ClientDashboardItem;
         dashboardItem.id =
             this.dataExplorerDashboardService.makeUniqueWidgetId();

@@ -16,31 +16,26 @@
  *
  */
 
-package org.apache.streampipes.storage.api.system;
+package org.apache.streampipes.connect.transformer.js;
 
-import org.apache.streampipes.model.Notification;
-import org.apache.streampipes.model.NotificationCount;
+import org.apache.streampipes.client.api.IStreamPipesClient;
+import org.apache.streampipes.connect.transformer.api.Context;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
-import java.util.List;
+public class StreamPipesScriptContext implements Context {
 
-public interface INotificationStorage {
+  private final Object scriptClient;
 
-  Notification getNotification(String notificationId);
+  public StreamPipesScriptContext(IStreamPipesClient rawClient) {
+    this.scriptClient = ScriptHostObjectAdapter.wrap(rawClient);
+  }
 
-  List<Notification> getAllNotifications(String notificationTypeId, Integer offset, Integer count);
+  public StreamPipesScriptContext(Object scriptClient) {
+    this.scriptClient = scriptClient;
+  }
 
-  List<Notification> getAllNotifications(String notificationTypeId);
-
-  List<Notification> getAllNotificationsFromTimestamp(long startTime);
-
-  List<Notification> getUnreadNotifications();
-
-  NotificationCount getUnreadNotificationsCount(String username);
-
-  boolean addNotification(Notification notification);
-
-  boolean changeNotificationStatus(String notificationId);
-
-  boolean deleteNotification(String notificationId);
-
+  @ExposedToScripts
+  public Object client() {
+    return scriptClient;
+  }
 }

@@ -18,9 +18,14 @@
 
 package org.apache.streampipes.connect.transformer.js;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.client.api.credentials.CredentialsProvider;
+import org.apache.streampipes.connect.transformer.api.Context;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 
+import org.graalvm.polyglot.proxy.ProxyExecutable;
+import org.graalvm.polyglot.proxy.ProxyObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -135,5 +140,151 @@ public class GraalJsScriptEngineTest {
 
     assertEquals("Graal JS script execution failed", exception.getMessage());
     assertInstanceOf(Exception.class, exception.getCause());
+  }
+
+  @Test
+  void executeClientThroughContext() throws ScriptCompilationException, ScriptExecutionException {
+    var transformer = engine.compile("""
+        function transform(event, out, ctx) {
+          out.collect({
+            hasClient: ctx.client() !== null
+          });
+        }
+        """);
+
+    var output = new ArrayList<Map<String, Object>>();
+    transformer.transform(
+        Map.of("value", 1),
+        output::add,
+        new StreamPipesScriptContext(offlineClient())
+    );
+
+    assertEquals(1, output.size());
+    assertEquals(true, output.get(0).get("hasClient"));
+  }
+
+  @Test
+  void executeCanReadClientResultsInsideVm() throws Exception {
+    var transformer = engine.compile("""
+        function transform(event, out, ctx) {
+          const adapters = ctx.client().adapters().all();
+          out.collect({
+            adapterId: adapters[0].elementId,
+            adapterName: adapters[0].name
+          });
+        }
+        """);
+
+    var output = executeSingleEvent(
+        transformer,
+        Map.of("input", "value"),
+        scriptContext(scriptClientWithAdapters("adapter-js", "JavaScript Adapter"))
+    );
+
+    assertEquals("adapter-js", output.get("adapterId"));
+    assertEquals("JavaScript Adapter", output.get("adapterName"));
+  }
+
+  @Test
+  void executeCanSendGuestObjectToClient() throws Exception {
+    var createdAdapters = new ArrayList<Map<String, Object>>();
+    var transformer = engine.compile("""
+        function transform(event, out, ctx) {
+          ctx.client().adapters().create({
+            elementId: "created-js",
+            name: "Created From JS",
+            running: false
+          });
+          out.collect({created: "created-js"});
+        }
+        """);
+
+    var output = executeSingleEvent(
+        transformer,
+        Map.of("input", "value"),
+        scriptContext(scriptClientWithCreateRecorder(createdAdapters))
+    );
+
+    assertEquals("created-js", output.get("created"));
+    assertEquals(1, createdAdapters.size());
+    assertEquals("created-js", createdAdapters.get(0).get("elementId"));
+    assertEquals("Created From JS", createdAdapters.get(0).get("name"));
+    assertEquals(false, createdAdapters.get(0).get("running"));
+  }
+
+  @Test
+  void executeExposesProxyClientMethodsThroughContext() throws ScriptCompilationException, ScriptExecutionException {
+    var transformer = engine.compile("""
+        function transform(event, out, ctx) {
+          out.collect({
+            ping: ctx.client().ping()
+          });
+        }
+        """);
+
+    var output = new ArrayList<Map<String, Object>>();
+    transformer.transform(
+        Map.of("value", 1),
+        output::add,
+        scriptContext(scriptClientWithPing())
+    );
+
+    assertEquals(1, output.size());
+    assertEquals("pong", output.get(0).get("ping"));
+  }
+
+  private static Map<String, Object> executeSingleEvent(org.apache.streampipes.connect.transformer.api.ScriptTransformer transformer,
+                                                        Map<String, Object> input,
+                                                        Context context)
+      throws ScriptExecutionException {
+    var output = new ArrayList<Map<String, Object>>();
+    transformer.transform(new LinkedHashMap<>(input), output::add, context);
+    return output.get(0);
+  }
+
+  private static StreamPipesScriptContext scriptContext(Object scriptClient) {
+    return new StreamPipesScriptContext(scriptClient);
+  }
+
+  private static Object scriptClientWithPing() {
+    return ProxyObject.fromMap(Map.of(
+        "ping", (ProxyExecutable) args -> "pong"
+    ));
+  }
+
+  private static Object scriptClientWithAdapters(String elementId, String name) {
+    Object adaptersApi = ProxyObject.fromMap(Map.of(
+        "all", (ProxyExecutable) args -> List.of(Map.of(
+            "elementId", elementId,
+            "name", name
+        ))
+    ));
+    return ProxyObject.fromMap(Map.of(
+        "adapters", (ProxyExecutable) args -> adaptersApi
+    ));
+  }
+
+  private static Object scriptClientWithCreateRecorder(List<Map<String, Object>> createdAdapters) {
+    Object adaptersApi = ProxyObject.fromMap(Map.of(
+        "create", (ProxyExecutable) args -> {
+          try {
+            createdAdapters.add(new LinkedHashMap<>(PolyglotTypeConverter.toEventMap(args[0])));
+          } catch (ScriptExecutionException e) {
+            throw new IllegalStateException("Failed to capture adapter payload", e);
+          }
+          return null;
+        }
+    ));
+    return ProxyObject.fromMap(Map.of(
+        "adapters", (ProxyExecutable) args -> adaptersApi
+    ));
+  }
+
+  private static CredentialsProvider emptyCredentials() {
+    return List::of;
+  }
+
+  private static StreamPipesClient offlineClient() {
+    return StreamPipesClient.create("localhost", 1, emptyCredentials(), true);
   }
 }

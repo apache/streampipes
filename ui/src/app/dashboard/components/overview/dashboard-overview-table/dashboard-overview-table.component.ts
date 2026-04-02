@@ -179,7 +179,10 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
             width: '600px',
             data: {
                 title: this.translateService.instant(
-                    'Are you sure you want to delete this dashboard?',
+                    'Are you sure you want to delete dashboard "{{dashboardTitle}}"?',
+                    {
+                        dashboardTitle: dashboard.name ?? '',
+                    },
                 ),
                 subtitle: this.translateService.instant(
                     'This action cannot be undone!',

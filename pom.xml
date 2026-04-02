@@ -42,7 +42,7 @@
         <spring-boot.version>4.0.2</spring-boot.version>
         <plc4x.version>0.13.1</plc4x.version>
 
-        <apache-sis-referencing.version>1.2</apache-sis-referencing.version>
+        <apache-sis-referencing.version>1.6</apache-sis-referencing.version>
         <antlr4.version>4.11.1</antlr4.version>
         <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
         <boofcv.version>1.1.0</boofcv.version>
@@ -61,7 +61,7 @@
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>25.0.2</graalvm.js.version>
         <groovy.version>5.0.3</groovy.version>
-        <grpc.version>1.76.0</grpc.version>
+        <grpc.version>1.80.0</grpc.version>
         <guava.version>33.5.0-jre</guava.version>
         <hadoop.version>3.4.1</hadoop.version>
         <hadoop-mapreduce-client-core.version>3.4.1</hadoop-mapreduce-client-core.version>
@@ -113,7 +113,7 @@
 
         <!-- dependency convergence -->
         <javassist.version>3.30.1-GA</javassist.version>
-        <woodstox.version>7.0.0</woodstox.version>
+        <woodstox.version>7.1.1</woodstox.version>
         <hdrhistogram.version>2.2.2</hdrhistogram.version>
         <istack-runtime.version>4.1.2</istack-runtime.version>
         <javax.xml.bind.version>2.3.1</javax.xml.bind.version>

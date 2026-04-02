@@ -24,5 +24,6 @@ import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 public interface AdapterModelGenerator {
 
   void apply(AdapterDescription adapterDescription,
-             CompactAdapter compactAdapter) throws Exception;
+             CompactAdapter compactAdapter,
+             String userId) throws Exception;
 }

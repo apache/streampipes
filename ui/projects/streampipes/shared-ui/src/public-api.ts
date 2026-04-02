@@ -38,6 +38,7 @@ export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
 export * from './lib/components/date-input/date-input.component';
 export * from './lib/components/form-field/form-field.component';
 export * from './lib/components/form-label/form-label.component';
+export * from './lib/components/property-scope-badge/property-scope-badge.component';
 export * from './lib/components/split-section/split-section.component';
 export * from './lib/components/split-button/split-button.component';
 export * from './lib/components/sp-exception-message/sp-exception-message.component';

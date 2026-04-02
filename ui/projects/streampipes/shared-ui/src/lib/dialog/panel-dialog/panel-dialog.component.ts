@@ -21,7 +21,6 @@ import {
     EventEmitter,
     HostBinding,
     HostListener,
-    OnInit,
     Output,
     ViewEncapsulation,
 } from '@angular/core';
@@ -37,7 +36,7 @@ import { MatIconButton } from '@angular/material/button';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 
 @Component({
-    selector: 'app-dialog-container',
+    selector: 'sp-panel-dialog-container',
     templateUrl: './panel-dialog.component.html',
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./panel-dialog.component.scss'],
@@ -66,10 +65,7 @@ import { CdkPortalOutlet } from '@angular/cdk/portal';
     ],
     imports: [MatIconButton, CdkPortalOutlet],
 })
-export class PanelDialogComponent<T>
-    extends BaseDialogComponent<T>
-    implements OnInit
-{
+export class PanelDialogComponent<T> extends BaseDialogComponent<T> {
     constructor() {
         super();
     }
@@ -86,8 +82,6 @@ export class PanelDialogComponent<T>
             this.containerEvent.emit({ key: 'CLOSE' });
         }
     }
-
-    ngOnInit() {}
 
     closeDialog() {
         this.slideDown = 'out';

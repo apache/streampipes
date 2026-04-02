@@ -100,6 +100,14 @@ export interface WidgetChartAppearanceConfig {
     showTooltip: boolean;
 }
 
+export interface WidgetNumberFormatConfig {
+    decimals?: number;
+}
+
+export interface WidgetNumberAppearanceConfig extends WidgetBaseAppearanceConfig {
+    numberFormat?: WidgetNumberFormatConfig;
+}
+
 export interface DataZoomConfig {
     show: boolean;
     type: 'slider' | 'inside';
@@ -109,7 +117,7 @@ export interface TimeSeriesAppearanceConfig extends WidgetEchartsAppearanceConfi
     dataZoom: DataZoomConfig;
 }
 
-export interface WidgetEchartsAppearanceConfig {
+export interface WidgetEchartsAppearanceConfig extends WidgetNumberAppearanceConfig {
     chartAppearance: WidgetChartAppearanceConfig;
 }
 
