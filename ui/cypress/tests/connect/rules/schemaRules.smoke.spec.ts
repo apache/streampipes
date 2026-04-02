@@ -33,10 +33,9 @@ describe('Connect schema rule transformations', () => {
             ConnectUtils.setUpPreprocessingRuleTest(true);
 
         ConnectUtils.replaceAdapterScript(
-            "  event['dot'] = event ['contains.dot'];\n" +
-                "  delete event['contains.dot'];\n" +
+            'utils.rename(event, "contains.dot", "dot");\n  ' +
                 '  out.collect(event);\n' +
-                '}',
+                '',
         );
 
         ConnectBtns.configureSchemaRunScriptBtn().click();

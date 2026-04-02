@@ -140,7 +140,7 @@ export class EditorAutocompletionService {
         return [
             {
                 label: 'addTimestamp',
-                insertText: 'addTimestamp(event)',
+                insertText: 'addTimestamp(event);',
                 detail: 'utils.addTimestamp(event, fieldName = "timestamp")',
                 documentation:
                     'Adds the current time in milliseconds to the event and returns the updated event.',
@@ -149,7 +149,7 @@ export class EditorAutocompletionService {
             },
             {
                 label: 'rename',
-                insertText: 'rename(event, "${1:oldName}", "${2:newName}")',
+                insertText: 'rename(event, "${1:oldName}", "${2:newName}");',
                 insertTextRules:
                     monaco.languages.CompletionItemInsertTextRule
                         .InsertAsSnippet,
@@ -161,7 +161,7 @@ export class EditorAutocompletionService {
             },
             {
                 label: 'remove',
-                insertText: 'remove(event, "${1:fieldName}")',
+                insertText: 'remove(event, "${1:fieldName}");',
                 insertTextRules:
                     monaco.languages.CompletionItemInsertTextRule
                         .InsertAsSnippet,
@@ -173,7 +173,7 @@ export class EditorAutocompletionService {
             },
             {
                 label: 'parseTimestamp',
-                insertText: 'parseTimestamp(event, "${1:dateField}")',
+                insertText: 'parseTimestamp(event, "${1:dateField}");',
                 insertTextRules:
                     monaco.languages.CompletionItemInsertTextRule
                         .InsertAsSnippet,

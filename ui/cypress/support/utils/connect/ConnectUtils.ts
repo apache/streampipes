@@ -27,6 +27,9 @@ import { PipelineUtils } from '../pipeline/PipelineUtils';
 import { GeneralUtils } from '../GeneralUtils';
 
 export class ConnectUtils {
+    private static readonly TRANSFORMATION_SCRIPT_PREFIX =
+        'function transform(event, out, ctx) {\n';
+
     public static goToConnect() {
         cy.visit('#/connect');
         cy.dataCy('connect-create-new-adapter-button').should('be.visible');
@@ -409,9 +412,18 @@ export class ConnectUtils {
             'out.collect(event);',
         );
 
-        ConnectBtns.configureSchemaScriptEditor()
-            .type('{backspace}'.repeat(22)) // 2. Delete the "  out.collect(event);\n}" part
-            .type(script);
+        const fullScript = script.startsWith(
+            ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX,
+        )
+            ? script
+            : `${ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX}${script}`;
+
+        ConnectBtns.setConfigureSchemaScriptEditorValue(fullScript);
+
+        ConnectBtns.configureSchemaScriptEditor().should(
+            'contain.text',
+            'out.collect(event)',
+        );
     }
 
     public static uploadSampleEvent(samplePayload: string) {

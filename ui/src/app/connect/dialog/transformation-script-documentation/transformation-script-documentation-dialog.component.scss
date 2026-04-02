@@ -50,6 +50,10 @@
     font-weight: 600;
 }
 
+.snippet-example {
+    position: relative;
+}
+
 .snippet-description {
     margin: 0;
     line-height: 1.5;
@@ -58,12 +62,18 @@
 
 .snippet-code {
     margin: 0;
-    padding: 12px;
+    padding: 12px 52px 12px 12px;
     overflow-x: auto;
     border-radius: 6px;
     background: #f1f3f4;
     font-size: 13px;
     line-height: 1.5;
+}
+
+.snippet-copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
 }
 
 code {

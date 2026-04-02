@@ -55,21 +55,26 @@
                     <div
                         class="snippet-header"
                         fxLayout="row"
-                        fxLayoutAlign="space-between center"
+                        fxLayoutAlign="start center"
                     >
                         <span class="snippet-title">{{ snippet.label }}</span>
-                        <button
-                            mat-icon-button
-                            [cdkCopyToClipboard]="snippet.code"
-                            [matTooltip]="'Copy' | translate"
-                        >
-                            <mat-icon>content_copy</mat-icon>
-                        </button>
                     </div>
                     <p class="snippet-description">{{ snippet.description }}</p>
-                    <pre
-                        class="snippet-code"
-                    ><code>{{ snippet.code }}</code></pre>
+                    @for (example of snippet.examples; track $index) {
+                        <div class="snippet-example">
+                            <button
+                                class="snippet-copy-button"
+                                mat-icon-button
+                                [cdkCopyToClipboard]="example"
+                                [matTooltip]="'Copy' | translate"
+                            >
+                                <mat-icon>content_copy</mat-icon>
+                            </button>
+                            <pre
+                                class="snippet-code"
+                            ><code>{{ example }}</code></pre>
+                        </div>
+                    }
                 </div>
             }
         </section>
@@ -81,21 +86,26 @@
                     <div
                         class="snippet-header"
                         fxLayout="row"
-                        fxLayoutAlign="space-between center"
+                        fxLayoutAlign="start center"
                     >
                         <span class="snippet-title">{{ snippet.label }}</span>
-                        <button
-                            mat-icon-button
-                            [cdkCopyToClipboard]="snippet.code"
-                            [matTooltip]="'Copy' | translate"
-                        >
-                            <mat-icon>content_copy</mat-icon>
-                        </button>
                     </div>
                     <p class="snippet-description">{{ snippet.description }}</p>
-                    <pre
-                        class="snippet-code"
-                    ><code>{{ snippet.code }}</code></pre>
+                    @for (example of snippet.examples; track $index) {
+                        <div class="snippet-example">
+                            <button
+                                class="snippet-copy-button"
+                                mat-icon-button
+                                [cdkCopyToClipboard]="example"
+                                [matTooltip]="'Copy' | translate"
+                            >
+                                <mat-icon>content_copy</mat-icon>
+                            </button>
+                            <pre
+                                class="snippet-code"
+                            ><code>{{ example }}</code></pre>
+                        </div>
+                    }
                 </div>
             }
         </section>

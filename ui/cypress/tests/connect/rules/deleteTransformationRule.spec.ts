@@ -51,7 +51,7 @@ describe('Connect delete rule transformation', () => {
             '  delete event.toRemove;\n' +
                 '  delete event.parent.child_two;\n' +
                 '  out.collect(event);\n' +
-                '}',
+                '',
         );
 
         ConnectBtns.configureSchemaRunScriptBtn().click();

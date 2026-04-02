@@ -34,7 +34,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 interface CodeSnippet {
     label: string;
-    code: string;
+    examples: string[];
     description: string;
 }
 
@@ -64,32 +64,38 @@ export class TransformationScriptDocumentationDialogComponent {
     readonly apiSnippets: CodeSnippet[] = [
         {
             label: 'Read event fields',
-            code: 'const temperature = event.temperature;\nconst sensorId = event.sensorId;',
+            examples: [
+                'const temperature = event.temperature;\nconst sensorId = event.sensorId;',
+            ],
             description:
                 'Use event fields from the current sample event. ' +
                 'The editor autocompletes available runtime names after event.',
         },
         {
             label: 'Emit a transformed event',
-            code: 'out.collect({\n  sensor: event.sensor,\n  temperatureF: (event.temperatureC * 9 / 5) + 32,\n});',
+            examples: [
+                'out.collect({\n  sensor: event.sensor,\n  temperatureF: (event.temperatureC * 9 / 5) + 32,\n});',
+            ],
             description:
                 'Send the transformed payload to the output collector. ' +
                 'Call out.collect with the object you want to emit.',
         },
         {
             label: 'Use the StreamPipes client',
-            code:
+            examples: [
                 'const adapters = ctx.client().adapters().all();\n' +
-                'out.collect({\n  adapterId: adapters[0].elementId,\n  adapterName: adapters[0].name,\n});',
+                    'out.collect({\n  adapterId: adapters[0].elementId,\n  adapterName: adapters[0].name,\n});',
+            ],
             description:
                 'ctx.client() exposes the StreamPipes client inside the script. ' +
                 'You can read from APIs and use their results in your output.',
         },
         {
             label: 'Client entry points',
-            code:
+            examples: [
                 'ctx.client().pipelines();\nctx.client().pipelineElementTemplates();\n' +
-                'ctx.client().adapters();\nctx.client().sinks();',
+                    'ctx.client().adapters();\nctx.client().sinks();',
+            ],
             description:
                 'These client APIs are available through editor autocomplete after ctx.client().',
         },
@@ -98,25 +104,31 @@ export class TransformationScriptDocumentationDialogComponent {
     readonly utilitySnippets: CodeSnippet[] = [
         {
             label: 'Add timestamp',
-            code: 'utils.addTimestamp(event)\nutils.addTimestamp(event, "processedAt")',
+            examples: [
+                'utils.addTimestamp(event);',
+                'utils.addTimestamp(event, "processedAt");',
+            ],
             description:
                 'Adds the current time in epoch milliseconds to the given field and returns the updated event.',
         },
         {
             label: 'Rename field',
-            code: 'utils.rename(event, "oldName", "newName")',
+            examples: ['utils.rename(event, "oldName", "newName");'],
             description:
                 'Copies a field to a new name, removes the old field, and returns the updated event.',
         },
         {
             label: 'Remove field',
-            code: 'utils.remove(event, "fieldName")',
+            examples: ['utils.remove(event, "fieldName");'],
             description:
                 'Deletes a field from the event and returns the updated event.',
         },
         {
             label: 'Parse timestamp',
-            code: 'utils.parseTimestamp(event, "createdAt")\nutils.parseTimestamp(event, "createdAt", "eventTime")',
+            examples: [
+                'utils.parseTimestamp(event, "createdAt");',
+                'utils.parseTimestamp(event, "createdAt", "eventTime");',
+            ],
             description:
                 'Parses a date field into epoch milliseconds and returns the updated event. ' +
                 'By default the value is stored in timestamp. Invalid dates throw an error.',
