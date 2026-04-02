@@ -485,6 +485,23 @@ export class ConnectUtils {
         );
     }
 
+    public static restartAdapter(adapterName: string, waitTime = 2000) {
+        cy.wait(waitTime);
+
+        ConnectUtils.goToConnect();
+        ConnectBtns.openActionsMenu(adapterName);
+        ConnectBtns.stopAdapter().click();
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
+
+        cy.wait(waitTime);
+
+        ConnectBtns.openActionsMenu(adapterName);
+        ConnectBtns.startAdapter().click();
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
+
+        cy.wait(waitTime);
+    }
+
     /**
      * Validates the event schema for an adapter by checking the amount of properties
      * and the runtime names of the event properties
@@ -513,6 +530,7 @@ export class ConnectUtils {
         waitTime = 1000,
     ) {
         ConnectUtils.startAdapter(adapterConfiguration, true);
+        ConnectUtils.restartAdapter(adapterConfiguration.adapterName, waitTime);
 
         // Wait till data is stored
         cy.wait(waitTime);

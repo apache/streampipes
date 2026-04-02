@@ -55,6 +55,7 @@ describe('Connect schema rule transformations', () => {
         ConnectUtils.finishConfigureFieldsConfiguration();
 
         ConnectUtils.startAdapter(adapterConfiguration, true);
+        ConnectUtils.restartAdapter(adapterConfiguration.adapterName);
 
         ChartUtils.checkResults(
             'Adapter to test rules',
