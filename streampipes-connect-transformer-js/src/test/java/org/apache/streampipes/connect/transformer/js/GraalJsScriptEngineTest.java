@@ -94,10 +94,10 @@ public class GraalJsScriptEngineTest {
     var output = new ArrayList<Map<String, Object>>();
 
     transformer.transform(
-        new LinkedHashMap<>(Map.of(
+        Map.of(
             "value", 41,
             "unit", "kPa"
-        )),
+        ),
         output::add,
         null
     );

@@ -18,7 +18,7 @@
 
 import { CodeInputStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import type * as monacoType from 'monaco-editor';
 import type { editor as MonacoEditor } from 'monaco-editor';
 import {
@@ -32,8 +32,8 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
     JavaScriptEventField,
-    registerJavaScriptCompletionProvider,
-} from '../../../services/javascript-editor-completion';
+    EditorAutocompletionService,
+} from '../../../services/editor-autocompletion.service';
 
 declare const monaco: typeof monacoType;
 
@@ -66,6 +66,7 @@ export class StaticCodeInputComponent
         quickSuggestions: true,
         suggestOnTriggerCharacters: true,
     };
+    autocompleteService = inject(EditorAutocompletionService);
     private completionProvider?: monacoType.IDisposable;
 
     constructor() {
@@ -113,7 +114,7 @@ export class StaticCodeInputComponent
             return;
         }
         this.completionProvider?.dispose();
-        this.completionProvider = registerJavaScriptCompletionProvider(
+        this.completionProvider = this.autocompleteService.register(
             monaco,
             () =>
                 (

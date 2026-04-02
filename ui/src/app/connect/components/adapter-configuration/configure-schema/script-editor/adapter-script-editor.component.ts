@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, input, OnDestroy, output } from '@angular/core';
+import { Component, inject, input, OnDestroy, output } from '@angular/core';
 import { ScriptMetadata } from '@streampipes/platform-services';
 import {
     SpAlertBannerComponent,
@@ -39,8 +39,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import type * as monacoType from 'monaco-editor';
 import {
     JavaScriptEventField,
-    registerJavaScriptCompletionProvider,
-} from '../../../../../services/javascript-editor-completion';
+    EditorAutocompletionService,
+} from '../../../../../services/editor-autocompletion.service';
 
 declare const monaco: typeof monacoType;
 
@@ -76,6 +76,7 @@ export class AdapterScriptEditorComponent implements OnDestroy {
     eventPropertyNames = input<string[]>([]);
     eventFields = input<JavaScriptEventField[]>([]);
     editorOptions = input<any>();
+    autocompleteService = inject(EditorAutocompletionService);
     private completionProvider?: monacoType.IDisposable;
 
     codeChange = output<string>();
@@ -96,7 +97,7 @@ export class AdapterScriptEditorComponent implements OnDestroy {
 
     private registerEventPropertyCompletionProvider() {
         this.completionProvider?.dispose();
-        this.completionProvider = registerJavaScriptCompletionProvider(
+        this.completionProvider = this.autocompleteService.register(
             monaco,
             () => {
                 const eventFields = this.eventFields();

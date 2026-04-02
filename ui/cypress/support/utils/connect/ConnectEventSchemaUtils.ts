@@ -56,7 +56,7 @@ export class ConnectEventSchemaUtils {
         ConnectBtns.configureSchemaScriptEditor()
             .type('{backspace}'.repeat(22)) // 2. Delete the "  out.collect(event);\n}" part
             .type(
-                '  event.timestamp = new Date().getTime();{enter}return out.collect(event);{enter}}',
+                '  utils.addTimestamp(event);{enter}return out.collect(event);{enter}}',
             );
     }
 
