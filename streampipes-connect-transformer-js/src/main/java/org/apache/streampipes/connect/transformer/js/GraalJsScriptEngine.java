@@ -46,6 +46,8 @@ public class GraalJsScriptEngine implements TransformationEngine {
         """
             // returns the same event
             function transform(event, out, ctx) {
+              // You can use utils like utils.addTimestamp(event) for basic transformations
+              // To access the StreamPipesClient use ctx.client()
               out.collect(event);
             }
             """
@@ -77,13 +79,15 @@ public class GraalJsScriptEngine implements TransformationEngine {
         .allowAccessAnnotatedBy(ExposedToScripts.class)
         .build();
 
-    return Context.newBuilder("js")
+    Context context = Context.newBuilder("js")
         .sandbox(SandboxPolicy.CONSTRAINED)
         .allowHostAccess(hostAccess)
         .allowHostClassLookup(s -> false)
         .out(new ByteArrayOutputStream())
         .err(new ByteArrayOutputStream())
         .build();
+    context.eval("js", GraalJsUtilities.source());
+    return context;
   }
 
   private Value resolveFunction(Context context, Value compiled) throws ScriptCompilationException {

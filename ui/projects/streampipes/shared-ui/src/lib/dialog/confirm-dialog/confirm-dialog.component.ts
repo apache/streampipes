@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, HostListener, Inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import {
     MAT_DIALOG_DATA,
     MatDialogActions,

@@ -22,7 +22,7 @@ import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 const TEMPLATE_NAME = 'TestTemplate';
 const SCRIPT = `  event.b = 'b';
 out.collect(event);
-}`;
+`;
 
 describe('Validate Warning Pops For Configuration Changes ', () => {
     beforeEach('Setup Test', () => {

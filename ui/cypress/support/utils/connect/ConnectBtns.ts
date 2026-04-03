@@ -216,6 +216,28 @@ export class ConnectBtns {
             .find('.view-lines');
     }
 
+    public static configureSchemaScriptEditorTextarea() {
+        return cy
+            .dataCy('configure-schema-script-editor', {
+                timeout: 10000,
+            })
+            .find('.monaco-editor textarea:first');
+    }
+
+    public static setConfigureSchemaScriptEditorValue(script: string) {
+        const selectAll = Cypress.platform === 'darwin' ? '{cmd}a' : '{ctrl}a';
+
+        return this.configureSchemaScriptEditorTextarea()
+            .click({ force: true })
+            .type(selectAll, { delay: 10, force: true })
+            .type('{backspace}', { delay: 10, force: true })
+            .type(script, {
+                delay: 0,
+                force: true,
+                parseSpecialCharSequences: false,
+            });
+    }
+
     public static configureSchemaRunScriptBtn() {
         return cy.dataCy('configure-schema-run-script-button', {
             timeout: 10000,
