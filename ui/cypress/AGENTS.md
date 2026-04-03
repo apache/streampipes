@@ -27,6 +27,8 @@ Keep tests readable and maintainable by centralizing selectors and common flows 
 - For dynamic selectors, use typed helper methods with parameters instead of string concatenation in specs.
 - Reuse existing selector constants/patterns when already present (for example `SiteUtils` constants).
 - Keep direct `cy.get(...)` in specs to a minimum; if reused, move it behind a support helper.
+- Do not probe UI state via `cy.get('body')`/`$body.find(...)` conditional patterns.
+- If a reliable element is hard to target, add a dedicated `data-cy` in the Angular template and expose it through the matching `*Btns` helper.
 
 ## Spec Structure
 
@@ -34,6 +36,13 @@ Keep tests readable and maintainable by centralizing selectors and common flows 
 - Reuse builders for test objects (`AdapterBuilder`, `PipelineBuilder`, `PipelineElementBuilder`, ...).
 - Avoid fixed `cy.wait(...)` where possible; prefer state-based waits/assertions via helpers.
 - Keep each test independent: no inter-test dependencies.
+
+## Interaction Style For E2E Steps
+
+- Prefer simple, deterministic Cypress steps that mirror user flows.
+- Prefer explicit navigation/toolbar actions to leave pages in a clean state instead of conditional dialog handling.
+- Avoid `force: true` clicks unless there is no feasible deterministic interaction path.
+- When overlays/dialogs block interaction repeatedly, fix selectors/flow with stable `data-cy` hooks in UI code rather than adding DOM-probing workarounds in specs.
 
 ## Refactoring Expectations
 

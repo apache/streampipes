@@ -26,8 +26,6 @@ import org.eclipse.milo.opcua.stack.core.UaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ExecutionException;
-
 public class OpcUaCertificateUtils {
 
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaCertificateUtils.class);
@@ -44,7 +42,7 @@ public class OpcUaCertificateUtils {
     return getCoreCertificatePath() + "/trusted";
   }
 
-  public static boolean isCertificateException(ExecutionException e) {
+  public static boolean isCertificateException(UaException e) {
     Throwable cause = e.getCause();
 
     if (cause instanceof UaException uaException) {
@@ -70,7 +68,7 @@ public class OpcUaCertificateUtils {
     return containsRejectedStatusCode;
   }
 
-  public static String makeExceptionMessage(ExecutionException e) {
+  public static String makeExceptionMessage(UaException e) {
     StringBuilder message = new StringBuilder(
         "The provided certificate could not be trusted. Administrators can accept this certificate in the settings. "
     );

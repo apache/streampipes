@@ -515,6 +515,32 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     onFilterDropdownClick = (event: MouseEvent): void =>
         event.stopPropagation();
 
+    @HostListener('document:keydown', ['$event'])
+    handleGlobalKeydown(event: KeyboardEvent): void {
+        if (!this.openFilterColumn) {
+            return;
+        }
+
+        const key = event.key.toLowerCase();
+        const ctrl = event.ctrlKey || event.metaKey;
+
+        if (key === 'escape') {
+            this.closeFilter();
+            event.preventDefault();
+            event.stopPropagation();
+        } else if (ctrl && key === 'f') {
+            const input = this.elRef.nativeElement.querySelector(
+                '.column-filter-search',
+            );
+            if (input) {
+                input.focus();
+                input.select();
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }
+    }
+
     onTimestampInput(field: 'value' | 'value2', event: Event): void {
         const input = event.target as HTMLInputElement;
         const digits = input.value.replace(/\D/g, '').slice(0, 17);

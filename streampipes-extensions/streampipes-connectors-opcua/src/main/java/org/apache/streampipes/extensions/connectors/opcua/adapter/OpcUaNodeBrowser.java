@@ -26,7 +26,6 @@ import org.apache.streampipes.model.staticproperty.TreeInputNode;
 
 import org.eclipse.milo.opcua.sdk.client.AddressSpace;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
-import org.eclipse.milo.opcua.sdk.client.api.UaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.sdk.core.nodes.VariableNode;
@@ -122,7 +121,7 @@ public class OpcUaNodeBrowser {
   }
 
   private List<TreeInputNode> findChildren(
-      UaClient client,
+      OpcUaClient client,
       NodeId nodeId
   ) throws UaException {
     return client
