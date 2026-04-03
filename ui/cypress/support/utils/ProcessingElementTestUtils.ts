@@ -92,8 +92,7 @@ export class ProcessingElementTestUtils {
 
         ConnectUtils.goToConnect();
         ConnectBtns.startAdapter().click();
-
-        cy.wait(3000);
+        ConnectUtils.restartAdapter(adapterName);
 
         ChartUtils.checkResults(
             dataLakeIndex,

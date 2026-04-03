@@ -53,11 +53,13 @@ export class ConnectEventSchemaUtils {
     }
 
     private static addTimestampFieldToScript() {
-        ConnectBtns.configureSchemaScriptEditor()
-            .type('{backspace}'.repeat(22)) // 2. Delete the "  out.collect(event);\n}" part
-            .type(
-                '  event.timestamp = new Date().getTime();{enter}return out.collect(event);{enter}}',
-            );
+        const fullScript =
+            'function transform(event, out, ctx) {\n' +
+            '  utils.addTimestamp(event);\n' +
+            '  return out.collect(event);\n' +
+            '';
+
+        ConnectBtns.setConfigureSchemaScriptEditorValue(fullScript);
     }
 
     public static unitTransformation(
