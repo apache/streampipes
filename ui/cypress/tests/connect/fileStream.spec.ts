@@ -105,7 +105,6 @@ describe('Test File Replay Adapter', () => {
             .build();
 
         ConnectUtils.testAdapter(adapterInput);
-
         // click on edit adapter
         GeneralUtils.openMenuForRow(adapterInput.adapterName);
         ConnectBtns.editAdapter().click();
