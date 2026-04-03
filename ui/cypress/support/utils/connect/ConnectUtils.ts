@@ -412,13 +412,17 @@ export class ConnectUtils {
             'out.collect(event);',
         );
 
-        const fullScript = script.startsWith(
+        const scriptWithPrefix = script.startsWith(
             ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX,
         )
             ? script
             : `${ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX}${script}`;
 
-        ConnectBtns.setConfigureSchemaScriptEditorValue(fullScript);
+        const normalizedScript = scriptWithPrefix.trimEnd().endsWith('}')
+            ? scriptWithPrefix
+            : `${scriptWithPrefix.trimEnd()}\n}`;
+
+        ConnectBtns.setConfigureSchemaScriptEditorValue(normalizedScript);
 
         ConnectBtns.configureSchemaScriptEditor().should(
             'contain.text',

@@ -20,6 +20,7 @@ import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
 
 describe('Connect value rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -48,11 +49,13 @@ describe('Connect value rule transformations', () => {
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
         ConnectUtils.finishConfigureFieldsConfiguration();
 
-        ConnectUtils.tearDownPreprocessingRuleTest(
-            adapterConfiguration,
-            'cypress/fixtures/connect/valueRules/expected.csv',
-            true,
-            2000,
-        );
+        ChartUtils.clearMeasurementData('Adapter to test rules').then(() => {
+            ConnectUtils.tearDownPreprocessingRuleTest(
+                adapterConfiguration,
+                'cypress/fixtures/connect/valueRules/expected.csv',
+                true,
+                2000,
+            );
+        });
     });
 });

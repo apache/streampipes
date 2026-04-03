@@ -54,13 +54,15 @@ describe('Connect schema rule transformations', () => {
 
         ConnectUtils.finishConfigureFieldsConfiguration();
 
-        ConnectUtils.startAdapter(adapterConfiguration, true);
-        ConnectUtils.restartAdapter(adapterConfiguration.adapterName);
+        ChartUtils.clearMeasurementData('Adapter to test rules').then(() => {
+            ConnectUtils.startAdapter(adapterConfiguration, true);
+            ConnectUtils.restartAdapter(adapterConfiguration.adapterName);
 
-        ChartUtils.checkResults(
-            'Adapter to test rules',
-            'cypress/fixtures/connect/schemaRules/expected.csv',
-            true,
-        );
+            ChartUtils.checkResults(
+                'Adapter to test rules',
+                'cypress/fixtures/connect/schemaRules/expected.csv',
+                true,
+            );
+        });
     });
 });
