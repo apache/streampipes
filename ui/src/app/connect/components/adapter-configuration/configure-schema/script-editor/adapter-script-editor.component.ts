@@ -16,9 +16,11 @@
  *
  */
 
-import { Component, input, OnDestroy, output } from '@angular/core';
+import { Component, inject, input, OnDestroy, output } from '@angular/core';
 import { ScriptMetadata } from '@streampipes/platform-services';
 import {
+    DialogService,
+    PanelType,
     SpAlertBannerComponent,
     SpBasicInnerPanelComponent,
 } from '@streampipes/shared-ui';
@@ -37,6 +39,11 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { TitleCasePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import type * as monacoType from 'monaco-editor';
+import {
+    JavaScriptEventField,
+    EditorAutocompletionService,
+} from '../../../../../services/editor-autocompletion.service';
+import { TransformationScriptDocumentationDialogComponent } from '../../../../dialog/transformation-script-documentation/transformation-script-documentation-dialog.component';
 
 declare const monaco: typeof monacoType;
 
@@ -64,13 +71,16 @@ declare const monaco: typeof monacoType;
     ],
 })
 export class AdapterScriptEditorComponent implements OnDestroy {
+    private dialogService = inject(DialogService);
     scriptActive = input(false);
     selectedScriptMetadata = input<ScriptMetadata>();
     availableScripts = input<ScriptMetadata[]>([]);
     loadingAvailableScriptsError = input<any>();
     script = input('');
     eventPropertyNames = input<string[]>([]);
+    eventFields = input<JavaScriptEventField[]>([]);
     editorOptions = input<any>();
+    autocompleteService = inject(EditorAutocompletionService);
     private completionProvider?: monacoType.IDisposable;
 
     codeChange = output<string>();
@@ -91,39 +101,29 @@ export class AdapterScriptEditorComponent implements OnDestroy {
 
     private registerEventPropertyCompletionProvider() {
         this.completionProvider?.dispose();
-        this.completionProvider =
-            monaco.languages.registerCompletionItemProvider('javascript', {
-                triggerCharacters: ['.'],
-                provideCompletionItems: (model, position) => {
-                    const linePrefix = model.getValueInRange({
-                        startLineNumber: position.lineNumber,
-                        startColumn: 1,
-                        endLineNumber: position.lineNumber,
-                        endColumn: position.column,
-                    });
-                    const match = linePrefix.match(/(?:^|[^\w$])event\.(\w*)$/);
-                    if (!match) {
-                        return { suggestions: [] };
-                    }
+        this.completionProvider = this.autocompleteService.register(
+            monaco,
+            () => {
+                const eventFields = this.eventFields();
+                if (eventFields.length > 0) {
+                    return eventFields;
+                }
 
-                    const word = model.getWordUntilPosition(position);
-                    const range = {
-                        startLineNumber: position.lineNumber,
-                        endLineNumber: position.lineNumber,
-                        startColumn: word.startColumn,
-                        endColumn: word.endColumn,
-                    };
+                return this.eventPropertyNames().map(runtimeName => ({
+                    runtimeName,
+                }));
+            },
+        );
+    }
 
-                    const suggestions: monacoType.languages.CompletionItem[] =
-                        this.eventPropertyNames().map(runtimeName => ({
-                            label: runtimeName,
-                            kind: monaco.languages.CompletionItemKind.Property,
-                            insertText: runtimeName,
-                            range,
-                        }));
-
-                    return { suggestions };
-                },
-            });
+    openDocumentation(): void {
+        this.dialogService.open(
+            TransformationScriptDocumentationDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: 'Documentation',
+                width: '50vw',
+            },
+        );
     }
 }

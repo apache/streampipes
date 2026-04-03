@@ -18,7 +18,7 @@
 
 import { CodeInputStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import type * as monacoType from 'monaco-editor';
 import type { editor as MonacoEditor } from 'monaco-editor';
 import {
@@ -30,6 +30,10 @@ import { MatButton } from '@angular/material/button';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import {
+    JavaScriptEventField,
+    EditorAutocompletionService,
+} from '../../../services/editor-autocompletion.service';
 
 declare const monaco: typeof monacoType;
 
@@ -62,6 +66,7 @@ export class StaticCodeInputComponent
         quickSuggestions: true,
         suggestOnTriggerCharacters: true,
     };
+    autocompleteService = inject(EditorAutocompletionService);
     private completionProvider?: monacoType.IDisposable;
 
     constructor() {
@@ -109,41 +114,29 @@ export class StaticCodeInputComponent
             return;
         }
         this.completionProvider?.dispose();
-        this.completionProvider =
-            monaco.languages.registerCompletionItemProvider('javascript', {
-                triggerCharacters: ['.'],
-                provideCompletionItems: (model, position) => {
-                    const linePrefix = model.getValueInRange({
-                        startLineNumber: position.lineNumber,
-                        startColumn: 1,
-                        endLineNumber: position.lineNumber,
-                        endColumn: position.column,
-                    });
-                    const match = linePrefix.match(/(?:^|[^\w$])event\.(\w*)$/);
-                    if (!match) {
-                        return { suggestions: [] };
-                    }
-
-                    const word = model.getWordUntilPosition(position);
-                    const range = {
-                        startLineNumber: position.lineNumber,
-                        endLineNumber: position.lineNumber,
-                        startColumn: word.startColumn,
-                        endColumn: word.endColumn,
-                    };
-
-                    const eventProperties =
-                        this.eventSchemas?.[0]?.eventProperties ?? [];
-                    const suggestions: monacoType.languages.CompletionItem[] =
-                        eventProperties.map(ep => ({
-                            label: ep.runtimeName,
-                            kind: monaco.languages.CompletionItemKind.Property,
-                            insertText: ep.runtimeName,
-                            range,
-                        }));
-
-                    return { suggestions };
-                },
-            });
+        this.completionProvider = this.autocompleteService.register(
+            monaco,
+            () =>
+                (
+                    (this.eventSchemas?.[0]?.eventProperties ?? []) as {
+                        runtimeName?: string;
+                        propertyScope?: string;
+                        semanticType?: string;
+                    }[]
+                )
+                    .filter(
+                        (
+                            ep,
+                        ): ep is Required<
+                            Pick<JavaScriptEventField, 'runtimeName'>
+                        > &
+                            JavaScriptEventField => !!ep.runtimeName,
+                    )
+                    .map(ep => ({
+                        runtimeName: ep.runtimeName,
+                        propertyScope: ep.propertyScope,
+                        semanticType: ep.semanticType,
+                    })),
+        );
     }
 }

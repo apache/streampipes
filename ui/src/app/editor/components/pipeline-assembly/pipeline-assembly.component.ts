@@ -76,7 +76,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private jsplumbService = inject(JsplumbService);
     private translateService = inject(TranslateService);
     private shortcutService = inject(KeyboardShortcutService);
-  
+
     @Input()
     rawPipelineModel: PipelineElementConfig[];
 
