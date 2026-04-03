@@ -73,6 +73,14 @@
                 <mat-icon>settings_backup_restore</mat-icon>
                 <span>{{ 'Reset script' | translate }}</span>
             </button>
+            <button
+                mat-button
+                data-cy="open-documentation"
+                (click)="openDocumentation()"
+            >
+                <mat-icon>menu_book</mat-icon>
+                <span>{{ 'Documentation' | translate }}</span>
+            </button>
         }
 
         <mat-slide-toggle
