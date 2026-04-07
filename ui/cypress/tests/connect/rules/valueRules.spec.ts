@@ -30,7 +30,7 @@ describe('Connect value rule transformations', () => {
 
     it('Perform Test', () => {
         const adapterConfiguration =
-            ConnectUtils.setUpPreprocessingRuleTest(true);
+            ConnectUtils.setUpPreprocessingRuleTest(false);
 
         ConnectUtils.replaceAdapterScript(
             'utils.addTimestamp(event);\n out.collect(event);\n',

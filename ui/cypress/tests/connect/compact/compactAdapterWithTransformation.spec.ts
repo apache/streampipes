@@ -34,7 +34,7 @@ describe('Add Compact Adapters', () => {
                     '  event.temperature_renamed = event.temperature \n' +
                     '  delete event.temperature \n' +
                     '  out.collect(event);\n' +
-                    '',
+                    '}',
             )
             .setStart()
             .build();

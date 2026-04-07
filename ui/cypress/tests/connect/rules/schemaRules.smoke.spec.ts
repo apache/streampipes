@@ -30,7 +30,7 @@ describe('Connect schema rule transformations', () => {
     it('Test several schema rules', () => {
         FileManagementUtils.addFile('connect/schemaRules/input.csv');
         const adapterConfiguration =
-            ConnectUtils.setUpPreprocessingRuleTest(true);
+            ConnectUtils.setUpPreprocessingRuleTest(false);
 
         ConnectUtils.replaceAdapterScript(
             'utils.rename(event, "contains.dot", "dot");\n  ' +
