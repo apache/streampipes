@@ -99,7 +99,7 @@ public class ScalarOpcUaNode implements OpcUaNode {
       return ((XmlElement) rawValue).getFragment();
     }
 
-    return rawValue;
+    return OpcUaNumberNormalizer.normalize(rawValue);
   }
 
   private boolean isByteStringArray(Object value) {
