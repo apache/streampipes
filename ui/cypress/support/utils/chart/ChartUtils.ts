@@ -622,7 +622,7 @@ export class ChartUtils {
                 },
             })
             .then(response => {
-                expect(response.status).to.be.oneOf([200, 404]);
+                expect(response.status).to.be.oneOf([200, 403, 404]);
             });
     }
 

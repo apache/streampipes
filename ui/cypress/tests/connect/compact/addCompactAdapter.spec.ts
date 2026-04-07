@@ -26,79 +26,79 @@ describe('Add Compact Adapters', () => {
         cy.initStreamPipesTest();
     });
 
-    // it('Add an adapter via the compact API. Do not start', () => {
-    //     const compactAdapter =
-    //         CompactAdapterUtils.getMachineDataSimulator().build();
-    //
-    //     CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(() => {
-    //         ConnectUtils.validateAdapterIsStopped();
-    //
-    //         PipelineUtils.checkAmountOfPipelinesPipeline(0);
-    //     });
-    // });
-    //
-    // it('Add an adapter via the compact API. Start Adapter', () => {
-    //     const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
-    //         .setStart()
-    //         .build();
-    //
-    //     CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(() => {
-    //         ConnectUtils.validateAdapterIsRunning();
-    //
-    //         PipelineUtils.checkAmountOfPipelinesPipeline(0);
-    //     });
-    // });
-    //
-    // it('Add an adapter via the compact API. Start Adapter and start persist pipeline', () => {
-    //     const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
-    //         .withTimestampProperty('timestamp')
-    //         .setStart()
-    //         .setPersist()
-    //         .build();
-    //
-    //     CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(() => {
-    //         ConnectUtils.validateAdapterIsRunning();
-    //
-    //         PipelineUtils.checkAmountOfPipelinesPipeline(1);
-    //     });
-    // });
-    //
-    // it('Add an adapter via the compact API via yml API.', () => {
-    //     cy.readFile(
-    //         'cypress/fixtures/connect/compact/machineDataSimulator.yml',
-    //     ).then(ymlDescription => {
-    //         CompactAdapterUtils.storeCompactYmlAdapter(ymlDescription).then(
-    //             () => {
-    //                 ConnectUtils.validateAdapterIsStopped();
-    //             },
-    //         );
-    //     });
-    // });
-    //
-    // it('Ensure correct error code when adapter with the same id already exists', () => {
-    //     const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
-    //         .withTimestampProperty('timestamp')
-    //         .setStart()
-    //         .setPersist()
-    //         .build();
-    //
-    //     CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(
-    //         response => {
-    //             expect(response.status).to.equal(200);
-    //             ConnectUtils.checkAmountOfAdapters(1);
-    //
-    //             // Store the same adapter a second time and validate that resource returns status of conflict
-    //             CompactAdapterUtils.storeCompactAdapter(
-    //                 compactAdapter,
-    //                 false,
-    //             ).then(response => {
-    //                 expect(response.status).to.equal(409);
-    //
-    //                 ConnectUtils.checkAmountOfAdapters(1);
-    //             });
-    //         },
-    //     );
-    // });
+    it('Add an adapter via the compact API. Do not start', () => {
+        const compactAdapter =
+            CompactAdapterUtils.getMachineDataSimulator().build();
+
+        CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(() => {
+            ConnectUtils.validateAdapterIsStopped();
+
+            PipelineUtils.checkAmountOfPipelinesPipeline(0);
+        });
+    });
+
+    it('Add an adapter via the compact API. Start Adapter', () => {
+        const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
+            .setStart()
+            .build();
+
+        CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(() => {
+            ConnectUtils.validateAdapterIsRunning();
+
+            PipelineUtils.checkAmountOfPipelinesPipeline(0);
+        });
+    });
+
+    it('Add an adapter via the compact API. Start Adapter and start persist pipeline', () => {
+        const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
+            .withTimestampProperty('timestamp')
+            .setStart()
+            .setPersist()
+            .build();
+
+        CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(() => {
+            ConnectUtils.validateAdapterIsRunning();
+
+            PipelineUtils.checkAmountOfPipelinesPipeline(1);
+        });
+    });
+
+    it('Add an adapter via the compact API via yml API.', () => {
+        cy.readFile(
+            'cypress/fixtures/connect/compact/machineDataSimulator.yml',
+        ).then(ymlDescription => {
+            CompactAdapterUtils.storeCompactYmlAdapter(ymlDescription).then(
+                () => {
+                    ConnectUtils.validateAdapterIsStopped();
+                },
+            );
+        });
+    });
+
+    it('Ensure correct error code when adapter with the same id already exists', () => {
+        const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
+            .withTimestampProperty('timestamp')
+            .setStart()
+            .setPersist()
+            .build();
+
+        CompactAdapterUtils.storeCompactAdapter(compactAdapter).then(
+            response => {
+                expect(response.status).to.equal(200);
+                ConnectUtils.checkAmountOfAdapters(1);
+
+                // Store the same adapter a second time and validate that resource returns status of conflict
+                CompactAdapterUtils.storeCompactAdapter(
+                    compactAdapter,
+                    false,
+                ).then(response => {
+                    expect(response.status).to.equal(409);
+
+                    ConnectUtils.checkAmountOfAdapters(1);
+                });
+            },
+        );
+    });
 
     it('Ensure broken transformation script returns a clear client error', () => {
         const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
@@ -123,18 +123,18 @@ describe('Add Compact Adapters', () => {
         );
     });
 
-    // it('Add file stream adapter via the compact API. Start Adapter with Pipeline', () => {
-    //     FileManagementUtils.addFile('connect/compact/compactTest.csv');
-    //
-    //     cy.readFile('cypress/fixtures/connect/compact/fileReplay.yml').then(
-    //         ymlDescription => {
-    //             CompactAdapterUtils.storeCompactYmlAdapter(ymlDescription).then(
-    //                 () => {
-    //                     ConnectUtils.validateAdapterIsRunning();
-    //                     PipelineUtils.checkAmountOfPipelinesPipeline(1);
-    //                 },
-    //             );
-    //         },
-    //     );
-    // });
+    it('Add file stream adapter via the compact API. Start Adapter with Pipeline', () => {
+        FileManagementUtils.addFile('connect/compact/compactTest.csv');
+
+        cy.readFile('cypress/fixtures/connect/compact/fileReplay.yml').then(
+            ymlDescription => {
+                CompactAdapterUtils.storeCompactYmlAdapter(ymlDescription).then(
+                    () => {
+                        ConnectUtils.validateAdapterIsRunning();
+                        PipelineUtils.checkAmountOfPipelinesPipeline(1);
+                    },
+                );
+            },
+        );
+    });
 });

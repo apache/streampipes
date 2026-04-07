@@ -418,11 +418,7 @@ export class ConnectUtils {
             ? script
             : `${ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX}${script}`;
 
-        const normalizedScript = scriptWithPrefix.trimEnd().endsWith('}')
-            ? scriptWithPrefix
-            : `${scriptWithPrefix.trimEnd()}\n}`;
-
-        ConnectBtns.setConfigureSchemaScriptEditorValue(normalizedScript);
+        ConnectBtns.setConfigureSchemaScriptEditorValue(scriptWithPrefix);
 
         ConnectBtns.configureSchemaScriptEditor().should(
             'contain.text',
