@@ -25,12 +25,12 @@ import org.apache.streampipes.connect.transformer.api.TransformationEngine;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 import org.apache.streampipes.connect.transformer.api.utils.TransformationEngineConversionUtils;
+import org.apache.streampipes.connect.transformer.groovy.sandbox.ScriptSandbox;
 import org.apache.streampipes.model.connect.ScriptMetadata;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
-import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
 import java.util.Map;
@@ -41,19 +41,19 @@ public class GroovyScriptEngine implements TransformationEngine {
   public ScriptMetadata metadata() {
     return new ScriptMetadata(
         "groovy",
-    "Groovy",
-    "out.collect(input)"
+        "Groovy",
+        "out.collect(input)"
     );
   }
 
   @Override
   public ScriptTransformer compile(String code) throws ScriptCompilationException {
-    GroovyShell shell = new GroovyShell();
+    GroovyShell shell = ScriptSandbox.createShell(GroovyScriptEngine.class.getClassLoader());
     Script script;
     try {
       script = shell.parse(code);
-    } catch (CompilationFailedException e) {
-      throw new ScriptCompilationException("Failed to compile Groovy template", e);
+    } catch (Exception e) {
+      throw new ScriptCompilationException(ScriptSandbox.resolveCompilationErrorMessage(e), e);
     }
 
     Class<? extends Script> scriptClass = script.getClass();
