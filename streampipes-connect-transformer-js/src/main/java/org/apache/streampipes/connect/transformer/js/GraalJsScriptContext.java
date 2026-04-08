@@ -22,15 +22,15 @@ import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.connect.transformer.api.Context;
 import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
-public class StreamPipesScriptContext implements Context {
+public class GraalJsScriptContext implements Context {
 
   private final Object scriptClient;
 
-  public StreamPipesScriptContext(IStreamPipesClient rawClient) {
+  public GraalJsScriptContext(IStreamPipesClient rawClient) {
     this.scriptClient = ScriptHostObjectAdapter.wrap(rawClient);
   }
 
-  public StreamPipesScriptContext(Object scriptClient) {
+  public GraalJsScriptContext(Object scriptClient) {
     this.scriptClient = scriptClient;
   }
 

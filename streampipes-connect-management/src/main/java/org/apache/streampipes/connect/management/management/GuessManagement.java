@@ -22,13 +22,11 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.AdapterEventPreviewPipeline;
 import org.apache.streampipes.connect.management.util.EventSchemaUtils;
-import org.apache.streampipes.connect.transformer.api.Context;
 import org.apache.streampipes.connect.transformer.api.TransformationEngines;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
-import org.apache.streampipes.connect.transformer.js.StreamPipesScriptContext;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
-import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
+import org.apache.streampipes.extensions.management.connect.adapter.ScriptContextResolver;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
@@ -115,7 +113,7 @@ public class GuessManagement {
         var transformationScript = adapterDescription.getTransformationConfig();
         var engine = TransformationEngines.INSTANCE.getTransformationEngine(transformationScript.getLanguage());
         var compiledScript = engine.compile(transformationScript.getScript());
-        var scriptContext = makeScriptContext(userId);
+        var scriptContext = new ScriptContextResolver().resolve(userId, transformationScript.getLanguage());
 
         var samples = adapterDescription.getTransformationConfig()
                                         .getInputs();
@@ -135,16 +133,6 @@ public class GuessManagement {
     }
 
     return adapterDescription;
-  }
-
-  private Context makeScriptContext(String userId) {
-    if (userId == null || userId.isBlank()) {
-      return null;
-    }
-
-    return new StreamPipesScriptContext(
-        new StreamPipesClientResolver().makeStreamPipesClientInstance().onBehalfOf(userId)
-    );
   }
 
   private ExtensionServiceRequestTarget getWorkerRequestTarget(

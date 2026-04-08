@@ -18,8 +18,10 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter;
 
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.connect.transformer.api.Context;
-import org.apache.streampipes.connect.transformer.js.StreamPipesScriptContext;
+import org.apache.streampipes.connect.transformer.groovy.GroovyScriptContext;
+import org.apache.streampipes.connect.transformer.js.GraalJsScriptContext;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
@@ -28,16 +30,32 @@ public class ScriptContextResolver {
 
   public Context resolve(AdapterDescription adapterDescription) {
     var userId = getUserId(adapterDescription);
+    var language = adapterDescription.getTransformationConfig().getLanguage();
+    return resolve(userId, language);
+  }
+
+  public Context resolve(String userId, String language) {
     if (userId == null || userId.isBlank()) {
       return null;
     }
+    var client = new StreamPipesClientResolver().makeStreamPipesClientInstance().onBehalfOf(userId);
 
-    return new StreamPipesScriptContext(
-            new StreamPipesClientResolver().makeStreamPipesClientInstance().onBehalfOf(userId)
-    );
+    return createContext(client, language);
   }
 
-  public String getUserId(AdapterDescription adapterDescription) {
+  private Context createContext(IStreamPipesClient client, String language) {
+    switch (language) {
+      case "javascript" -> {
+        return new GraalJsScriptContext(client);
+      }
+      case "groovy" -> {
+        return new GroovyScriptContext(client);
+      }
+      default -> throw new UnsupportedOperationException("Unsupported language: " + language);
+    }
+  }
+
+  private String getUserId(AdapterDescription adapterDescription) {
     if (!adapterDescription.getTransformationConfig().isScriptActive()) {
       return null;
     }

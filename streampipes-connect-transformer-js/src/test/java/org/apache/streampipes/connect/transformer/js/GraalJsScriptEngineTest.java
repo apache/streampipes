@@ -207,7 +207,7 @@ public class GraalJsScriptEngineTest {
     transformer.transform(
         Map.of("value", 1),
         output::add,
-        new StreamPipesScriptContext(offlineClient())
+        new GraalJsScriptContext(offlineClient())
     );
 
     assertEquals(1, output.size());
@@ -293,8 +293,8 @@ public class GraalJsScriptEngineTest {
     return output.get(0);
   }
 
-  private static StreamPipesScriptContext scriptContext(Object scriptClient) {
-    return new StreamPipesScriptContext(scriptClient);
+  private static GraalJsScriptContext scriptContext(Object scriptClient) {
+    return new GraalJsScriptContext(scriptClient);
   }
 
   private static Object scriptClientWithPing() {
