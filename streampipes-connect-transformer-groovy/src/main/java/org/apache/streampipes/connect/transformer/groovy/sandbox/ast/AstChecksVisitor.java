@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.connect.transformer.groovy.sandbox.ast;
 
-import org.apache.streampipes.connect.transformer.groovy.sandbox.error.SandboxViolationException;
 import org.apache.streampipes.connect.transformer.groovy.sandbox.SandboxPolicy;
+import org.apache.streampipes.connect.transformer.groovy.sandbox.error.SandboxViolationException;
 
 import org.codehaus.groovy.ast.ClassCodeVisitorSupport;
 import org.codehaus.groovy.ast.ClassNode;
