@@ -41,6 +41,11 @@
             <version>0.99.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-client-api</artifactId>
+            <version>0.99.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.groovy</groupId>
             <artifactId>groovy</artifactId>
         </dependency>
@@ -48,12 +53,6 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-client-api</artifactId>
-            <version>0.99.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
