@@ -128,6 +128,7 @@
   "Show asset": "Pokaż zasób",
   "Preparing pipeline editor...": "Przygotowywanie edytora strumieni...",
   "Apply": "Zastosuj",
+  "Refresh assets": "Odswiez zasoby",
   "Pipeline Name": "Nazwa strumienia",
   "Pipeline name is required.": "Nazwa strumienia jest wymagana.",
   "Pipeline name cannot start or end with a space.": "Nazwa strumienia nie może zaczynać się ani kończyć spacją.",

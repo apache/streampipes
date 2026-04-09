@@ -205,7 +205,7 @@ export class SpAssetOverviewComponent implements OnInit {
         dialogRef.afterClosed().subscribe(ev => {
             if (ev) {
                 this.loadAssets();
-                this.assetBrowserService.loadAssetData();
+                this.assetBrowserService.refreshBrowserAssetData();
                 this.goToDetailsView(assetModel, true);
             }
         });
@@ -234,7 +234,7 @@ export class SpAssetOverviewComponent implements OnInit {
             if (result === 'confirm') {
                 this.assetService.deleteAsset(asset.elementId).subscribe(() => {
                     this.loadAssets();
-                    this.assetBrowserService.loadAssetData();
+                    this.assetBrowserService.refreshBrowserAssetData();
                 });
             }
         });
