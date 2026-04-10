@@ -100,7 +100,7 @@ optional = true
 
 [tool.poetry.group.stubs.dependencies]
 types-Jinja2 = "2.11.9"
-types-requests = "2.32.0.20240521"
+types-requests = "2.33.0.20260402"
 
 [tool.poetry.group.deployment]
 optional = true
