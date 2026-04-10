@@ -19,12 +19,31 @@
 package org.apache.streampipes.manager.pipeline.update;
 
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.schema.EventSchema;
 
 public interface PipelineUpdateStrategy<T> {
 
   String affectedElementId(T updateElement);
 
-  Pipeline apply(Pipeline pipeline, T updateElement);
+  String updatedStreamName(T updateElement);
+
+  EventSchema updatedEventSchema(T updateElement);
+
+  default Pipeline apply(Pipeline pipeline, T updateElement) {
+    var updatedStreams = pipeline
+        .getStreams()
+        .stream()
+        .peek(stream -> {
+          if (stream.getElementId().equals(affectedElementId(updateElement))) {
+            stream.setEventSchema(updatedEventSchema(updateElement));
+            stream.setName(updatedStreamName(updateElement));
+          }
+        })
+        .toList();
+
+    pipeline.setStreams(updatedStreams);
+    return pipeline;
+  }
 
   String notificationType();
 }

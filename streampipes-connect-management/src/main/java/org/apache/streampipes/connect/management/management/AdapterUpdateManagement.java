@@ -25,7 +25,7 @@ import org.apache.streampipes.manager.pipeline.update.PipelineUpdateStrategy;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
-import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -42,21 +42,13 @@ public class AdapterUpdateManagement {
         }
 
         @Override
-        public Pipeline apply(Pipeline pipeline,
-                              AdapterDescription updateElement) {
-          var updatedStreams = pipeline
-              .getStreams()
-              .stream()
-              .peek(stream -> {
-                if (stream.getElementId().equals(updateElement.getCorrespondingDataStreamElementId())) {
-                  stream.setEventSchema(updateElement.getEventSchema());
-                  stream.setName(updateElement.getName());
-                }
-              })
-              .toList();
+        public String updatedStreamName(AdapterDescription updateElement) {
+          return updateElement.getName();
+        }
 
-          pipeline.setStreams(updatedStreams);
-          return pipeline;
+        @Override
+        public EventSchema updatedEventSchema(AdapterDescription updateElement) {
+          return updateElement.getEventSchema();
         }
 
         @Override

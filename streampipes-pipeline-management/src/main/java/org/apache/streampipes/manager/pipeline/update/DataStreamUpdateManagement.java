@@ -21,7 +21,7 @@ package org.apache.streampipes.manager.pipeline.update;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
-import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 
@@ -37,18 +37,13 @@ public class DataStreamUpdateManagement {
         }
 
         @Override
-        public Pipeline apply(Pipeline pipeline,
-                              SpDataStream updateElement) {
-          var updatedStreams = pipeline
-              .getStreams()
-              .stream()
-              .map(stream -> stream.getElementId().equals(updateElement.getElementId())
-                  ? new SpDataStream(updateElement)
-                  : stream)
-              .toList();
+        public String updatedStreamName(SpDataStream updateElement) {
+          return updateElement.getName();
+        }
 
-          pipeline.setStreams(updatedStreams);
-          return pipeline;
+        @Override
+        public EventSchema updatedEventSchema(SpDataStream updateElement) {
+          return updateElement.getEventSchema();
         }
 
         @Override
