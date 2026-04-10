@@ -33,7 +33,7 @@ describe('Connect value rule transformations', () => {
             ConnectUtils.setUpPreprocessingRuleTest(false);
 
         ConnectUtils.replaceAdapterScript(
-            'utils.addTimestamp(event);\n out.collect(event);\n',
+            'utils.parseTimestamp(event, "input_timestamp", "event_time");\n out.collect(event);\n',
         );
         ConnectBtns.configureSchemaRunScriptBtn().click();
         cy.wait(1000);
