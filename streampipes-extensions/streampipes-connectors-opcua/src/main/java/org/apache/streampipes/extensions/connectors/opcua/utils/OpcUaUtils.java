@@ -102,7 +102,7 @@ public class OpcUaUtils {
     } catch (UaException e) {
       if (OpcUaCertificateUtils.isCertificateException(e)) {
         throw new SpConfigurationException(
-            OpcUaCertificateUtils.makeExceptionMessage(e)
+            OpcUaCertificateUtils.makeExceptionMessage(e, opcUaConfig)
         );
       }
         throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e), e);
