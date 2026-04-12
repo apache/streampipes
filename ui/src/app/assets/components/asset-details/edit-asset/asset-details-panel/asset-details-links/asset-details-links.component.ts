@@ -116,7 +116,7 @@ export class AssetDetailsLinksComponent implements OnInit {
             if (assetLinks) {
                 this.asset.assetLinks = assetLinks;
                 this.assetLinkTable?.refreshData();
-                this.assetBrowserService.loadAssetData();
+                this.assetBrowserService.refreshBrowserAssetData();
             }
         });
     }
@@ -149,7 +149,7 @@ export class AssetDetailsLinksComponent implements OnInit {
                 this.asset.assetLinks.push(storedLink);
                 this.asset.assetLinks = [...this.asset.assetLinks];
                 this.assetLinkTable?.refreshData();
-                this.assetBrowserService.loadAssetData();
+                this.assetBrowserService.refreshBrowserAssetData();
             }
         });
     }

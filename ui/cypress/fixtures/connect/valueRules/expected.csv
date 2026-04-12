@@ -1,2 +1,2 @@
-temperature;value
-50.00333333333327;10.0
+event_time;input_timestamp;temperature;value
+1640346912123;2021-12-24T12:55:12.123+01:00;50.00333333333327;10.0

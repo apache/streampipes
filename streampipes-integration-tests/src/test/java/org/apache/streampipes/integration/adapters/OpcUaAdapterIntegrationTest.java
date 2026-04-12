@@ -89,7 +89,7 @@ public class OpcUaAdapterIntegrationTest {
   public void testScalarByteNode() throws Exception {
     assertSingleNodeEvent(
         "ns=2;s=CTT.Static.AllProfiles.Scalar.Byte",
-        Map.of("Byte", UByte.valueOf(0))
+        Map.of("Byte", 0)
     );
   }
 
@@ -283,7 +283,7 @@ public class OpcUaAdapterIntegrationTest {
   public void testScalarUInt16Node() throws Exception {
     assertSingleNodeEvent(
         "ns=2;s=CTT.Static.AllProfiles.Scalar.UInt16",
-        Map.of("UInt16", UShort.valueOf(0))
+        Map.of("UInt16", 0)
     );
   }
 
@@ -291,7 +291,7 @@ public class OpcUaAdapterIntegrationTest {
   public void testScalarUInt32Node() throws Exception {
     assertSingleNodeEvent(
         "ns=2;s=CTT.Static.AllProfiles.Scalar.UInt32",
-        Map.of("UInt32", UInteger.valueOf(0L))
+        Map.of("UInt32", 0L)
     );
   }
 
@@ -299,7 +299,7 @@ public class OpcUaAdapterIntegrationTest {
   public void testScalarUInt64Node() throws Exception {
     assertSingleNodeEvent(
         "ns=2;s=CTT.Static.AllProfiles.Scalar.UInt64",
-        Map.of("UInt64", ULong.valueOf(0L))
+        Map.of("UInt64", 0L)
     );
   }
 
@@ -584,7 +584,7 @@ public class OpcUaAdapterIntegrationTest {
     assertSingleNodeMatrixEvent(
         "ns=2;s=CTT.Static.AllProfiles.Matrix.ByteMatrix",
         "ByteMatrix",
-        repeatedMatrix(UByte.valueOf(0))
+        repeatedMatrix(0)
     );
   }
 
@@ -781,7 +781,7 @@ public class OpcUaAdapterIntegrationTest {
     assertSingleNodeMatrixEvent(
         "ns=2;s=CTT.Static.AllProfiles.Matrix.UInt16Matrix",
         "UInt16Matrix",
-        repeatedMatrix(UShort.valueOf(0))
+        repeatedMatrix(0)
     );
   }
 
@@ -790,7 +790,7 @@ public class OpcUaAdapterIntegrationTest {
     assertSingleNodeMatrixEvent(
         "ns=2;s=CTT.Static.AllProfiles.Matrix.UInt32Matrix",
         "UInt32Matrix",
-        repeatedMatrix(UInteger.valueOf(0L))
+        repeatedMatrix(0L)
     );
   }
 
@@ -799,7 +799,7 @@ public class OpcUaAdapterIntegrationTest {
     assertSingleNodeMatrixEvent(
         "ns=2;s=CTT.Static.AllProfiles.Matrix.UInt64Matrix",
         "UInt64Matrix",
-        repeatedMatrix(ULong.valueOf(0L))
+        repeatedMatrix(0L)
     );
   }
 
@@ -854,7 +854,7 @@ public class OpcUaAdapterIntegrationTest {
                     "DoubleField", 1.0d,
                     "StringField", "two",
                     "BooleanField", true,
-                    "UInt32Field", UInteger.valueOf(42L)
+                    "UInt32Field",42L
                 )
             )
         ),

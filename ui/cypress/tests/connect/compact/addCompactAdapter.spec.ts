@@ -100,6 +100,29 @@ describe('Add Compact Adapters', () => {
         );
     });
 
+    it('Ensure broken transformation script returns a clear client error', () => {
+        const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
+            .withScript(
+                'function transform(event, out, ctx) {\n' +
+                    '  out.collect(event);\n' +
+                    '\n',
+            )
+            .build();
+
+        CompactAdapterUtils.storeCompactAdapter(compactAdapter, false).then(
+            response => {
+                expect(response.status).to.equal(400);
+                expect(response.body.success).to.equal(false);
+                expect(response.body.notifications).to.have.length.greaterThan(
+                    0,
+                );
+                expect(response.body.notifications[0].title).to.contain(
+                    'Could not execute script',
+                );
+            },
+        );
+    });
+
     it('Add file stream adapter via the compact API. Start Adapter with Pipeline', () => {
         FileManagementUtils.addFile('connect/compact/compactTest.csv');
 

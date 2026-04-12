@@ -176,6 +176,8 @@ public class StructuredOpcUaNode implements OpcUaNode {
       return uaEnumeratedType.getName() != null ? uaEnumeratedType.getName() : uaEnumeratedType.getValue();
     }
 
+    value = OpcUaNumberNormalizer.normalize(value);
+
     if (isScalar(value)) {
       return value;
     }
