@@ -37,7 +37,11 @@ export function buildClusterPoints(
         }
 
         const site = sites[siteId];
-        const coordinates = site?.location?.coordinates;
+        const coordinates =
+            asset.assetSite?.hasExactLocation &&
+            hasValidCoordinates(asset.assetSite.location?.coordinates)
+                ? asset.assetSite.location.coordinates
+                : site?.location?.coordinates;
 
         if (!hasValidCoordinates(coordinates)) {
             return;
