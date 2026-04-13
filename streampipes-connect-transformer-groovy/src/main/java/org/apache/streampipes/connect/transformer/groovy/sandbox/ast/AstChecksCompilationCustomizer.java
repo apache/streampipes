@@ -16,26 +16,24 @@
  *
  */
 
-package org.apache.streampipes.connect.transformer.js;
+package org.apache.streampipes.connect.transformer.groovy.sandbox.ast;
 
-import org.apache.streampipes.client.api.IStreamPipesClient;
-import org.apache.streampipes.connect.transformer.api.Context;
-import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.classgen.GeneratorContext;
+import org.codehaus.groovy.control.CompilationFailedException;
+import org.codehaus.groovy.control.CompilePhase;
+import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.control.customizers.CompilationCustomizer;
 
-public class StreamPipesScriptContext implements Context {
+public final class AstChecksCompilationCustomizer extends CompilationCustomizer {
 
-  private final Object scriptClient;
-
-  public StreamPipesScriptContext(IStreamPipesClient rawClient) {
-    this.scriptClient = ScriptHostObjectAdapter.wrap(rawClient);
+  public AstChecksCompilationCustomizer() {
+    super(CompilePhase.SEMANTIC_ANALYSIS);
   }
 
-  public StreamPipesScriptContext(Object scriptClient) {
-    this.scriptClient = scriptClient;
-  }
-
-  @ExposedToScripts
-  public Object client() {
-    return scriptClient;
+  @Override
+  public void call(SourceUnit source, GeneratorContext context, ClassNode classNode)
+      throws CompilationFailedException {
+    new AstChecksVisitor(source).visitClass(classNode);
   }
 }
