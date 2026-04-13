@@ -26,15 +26,17 @@ StreamPipes Python client :snake:.
 1) **Set up your Python environment**
 
 Create a virtual Python environment with a tool of your choice.
-As a next step, install all required dependencies for the development, e.g., with `pip`:
+As a next step, install all required dependencies for development with `poetry`:
 
 ```
-pip install .[dev]  # or alternatively: pip install .[all] to include dependencies for building the docs as well
+python -m pip install poetry
+poetry install --with dev
 ```
 
-In case you are on macOS and using `zsh` the following should work for you:
+To include the all dependencies run:
+
 ```
-pip install ."[dev]"
+poetry install --with dev,docs,stubs,deployment
 ```
 <br>
 
@@ -45,7 +47,7 @@ linting, type hints, import sorting, etc. It will stop your commit in case the c
 Always check to have the recent version of the pre-commit installed otherwise the CI build might fail:
 
 ```
-pre-commit install
+poetry run pre-commit install
 ```
 The definition of the pre-commit hook can be found in [.pre-commit-config.yaml](.pre-commit-config.yaml).
 
