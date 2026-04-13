@@ -21,11 +21,9 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.update.PipelineUpdateCoordinator;
-import org.apache.streampipes.manager.pipeline.update.PipelineUpdateStrategy;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -33,29 +31,6 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import java.util.List;
 
 public class AdapterUpdateManagement {
-
-  private static final PipelineUpdateStrategy<AdapterDescription> PIPELINE_UPDATE_STRATEGY =
-      new PipelineUpdateStrategy<>() {
-        @Override
-        public String affectedElementId(AdapterDescription updateElement) {
-          return updateElement.getCorrespondingDataStreamElementId();
-        }
-
-        @Override
-        public String updatedStreamName(AdapterDescription updateElement) {
-          return updateElement.getName();
-        }
-
-        @Override
-        public EventSchema updatedEventSchema(AdapterDescription updateElement) {
-          return updateElement.getEventSchema();
-        }
-
-        @Override
-        public String notificationType() {
-          return "Adapter";
-        }
-      };
 
   private final AdapterMasterManagement adapterMasterManagement;
   private final AdapterResourceManager adapterResourceManager;
@@ -83,7 +58,7 @@ public class AdapterUpdateManagement {
     // update data source in database
     this.updateDataSource(ad);
 
-    pipelineUpdateCoordinator.updatePipelines(ad, PIPELINE_UPDATE_STRATEGY);
+    pipelineUpdateCoordinator.updatePipelines(ad);
 
     if (shouldRestart) {
       this.adapterMasterManagement.startStreamAdapter(ad.getElementId());
@@ -91,7 +66,7 @@ public class AdapterUpdateManagement {
   }
 
   public List<PipelineUpdateInfo> checkPipelineMigrations(AdapterDescription adapterDescription) {
-    return pipelineUpdateCoordinator.checkPipelineMigrations(adapterDescription, PIPELINE_UPDATE_STRATEGY);
+    return pipelineUpdateCoordinator.checkPipelineMigrations(adapterDescription);
   }
 
   private void updateDataSource(AdapterDescription ad) {

@@ -23,12 +23,15 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
@@ -51,12 +54,45 @@ public class PipelineUpdateCoordinator {
     this.requestManager = requestManager;
   }
 
-  public <T> void updatePipelines(
-      T updateElement,
-      PipelineUpdateStrategy<T> pipelineUpdateStrategy
-  ) {
-    var elementId = pipelineUpdateStrategy.affectedElementId(updateElement);
-    var affectedPipelines = PipelineManager.getPipelinesContainingElements(elementId);
+  public void updatePipelines(SpDataStream dataStream) {
+    updatePipelines(
+        dataStream.getElementId(),
+        dataStream.getName(),
+        dataStream.getEventSchema(),
+        "Data stream"
+    );
+  }
+
+  public void updatePipelines(AdapterDescription adapterDescription) {
+    updatePipelines(
+        adapterDescription.getCorrespondingDataStreamElementId(),
+        adapterDescription.getName(),
+        adapterDescription.getEventSchema(),
+        "Adapter"
+    );
+  }
+
+  public List<PipelineUpdateInfo> checkPipelineMigrations(SpDataStream dataStream) {
+    return checkPipelineMigrations(
+        dataStream.getElementId(),
+        dataStream.getName(),
+        dataStream.getEventSchema()
+    );
+  }
+
+  public List<PipelineUpdateInfo> checkPipelineMigrations(AdapterDescription adapterDescription) {
+    return checkPipelineMigrations(
+        adapterDescription.getCorrespondingDataStreamElementId(),
+        adapterDescription.getName(),
+        adapterDescription.getEventSchema()
+    );
+  }
+
+  private void updatePipelines(String affectedElementId,
+                               String updatedStreamName,
+                               EventSchema updatedEventSchema,
+                               String notificationType) {
+    var affectedPipelines = PipelineManager.getPipelinesContainingElements(affectedElementId);
 
     affectedPipelines.forEach(pipeline -> {
       var shouldRestartPipeline = pipeline.isRunning();
@@ -65,7 +101,7 @@ public class PipelineUpdateCoordinator {
       }
 
       var storedPipeline = PipelineManager.getPipeline(pipeline.getPipelineId());
-      var updatedPipeline = pipelineUpdateStrategy.apply(storedPipeline, updateElement);
+      var updatedPipeline = updatePipeline(storedPipeline, affectedElementId, updatedStreamName, updatedEventSchema);
 
       try {
         var verificationHandler = new PipelineVerificationHandlerV2(updatedPipeline, requestManager);
@@ -81,7 +117,7 @@ public class PipelineUpdateCoordinator {
               modifiedPipeline.getName(),
               modifiedPipeline.getHealthStatus().toString()
           );
-          modifiedPipeline.setPipelineNotifications(toNotification(updateInfo, pipelineUpdateStrategy.notificationType()));
+          modifiedPipeline.setPipelineNotifications(toNotification(updateInfo, notificationType));
           modifiedPipeline.setValid(false);
         }
 
@@ -96,16 +132,14 @@ public class PipelineUpdateCoordinator {
     });
   }
 
-  public <T> List<PipelineUpdateInfo> checkPipelineMigrations(
-      T updateElement,
-      PipelineUpdateStrategy<T> pipelineUpdateStrategy
-  ) {
-    var elementId = pipelineUpdateStrategy.affectedElementId(updateElement);
-    var affectedPipelines = PipelineManager.getPipelinesContainingElements(elementId);
+  private List<PipelineUpdateInfo> checkPipelineMigrations(String affectedElementId,
+                                                           String updatedStreamName,
+                                                           EventSchema updatedEventSchema) {
+    var affectedPipelines = PipelineManager.getPipelinesContainingElements(affectedElementId);
     var updateInfos = new ArrayList<PipelineUpdateInfo>();
 
     affectedPipelines.forEach(pipeline -> {
-      var updatedPipeline = pipelineUpdateStrategy.apply(pipeline, updateElement);
+      var updatedPipeline = updatePipeline(pipeline, affectedElementId, updatedStreamName, updatedEventSchema);
       try {
         var modificationMessage = new PipelineVerificationHandlerV2(updatedPipeline, requestManager).verifyPipeline();
         updateInfos.add(makeUpdateInfo(modificationMessage, updatedPipeline));
@@ -115,6 +149,25 @@ public class PipelineUpdateCoordinator {
     });
 
     return updateInfos;
+  }
+
+  private Pipeline updatePipeline(Pipeline pipeline,
+                                  String affectedElementId,
+                                  String updatedStreamName,
+                                  EventSchema updatedEventSchema) {
+    var updatedStreams = pipeline
+        .getStreams()
+        .stream()
+        .peek(stream -> {
+          if (stream.getElementId().equals(affectedElementId)) {
+            stream.setEventSchema(updatedEventSchema);
+            stream.setName(updatedStreamName);
+          }
+        })
+        .toList();
+
+    pipeline.setStreams(updatedStreams);
+    return pipeline;
   }
 
   private PipelineUpdateInfo makeUpdateInfo(PipelineModificationMessage modificationMessage,

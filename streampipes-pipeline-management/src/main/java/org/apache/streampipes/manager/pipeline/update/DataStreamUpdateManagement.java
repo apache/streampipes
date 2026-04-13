@@ -21,36 +21,12 @@ package org.apache.streampipes.manager.pipeline.update;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 
 import java.util.List;
 
 public class DataStreamUpdateManagement {
-
-  private static final PipelineUpdateStrategy<SpDataStream> PIPELINE_UPDATE_STRATEGY =
-      new PipelineUpdateStrategy<>() {
-        @Override
-        public String affectedElementId(SpDataStream updateElement) {
-          return updateElement.getElementId();
-        }
-
-        @Override
-        public String updatedStreamName(SpDataStream updateElement) {
-          return updateElement.getName();
-        }
-
-        @Override
-        public EventSchema updatedEventSchema(SpDataStream updateElement) {
-          return updateElement.getEventSchema();
-        }
-
-        @Override
-        public String notificationType() {
-          return "Data stream";
-        }
-      };
 
   private final DataStreamResourceManager dataStreamResourceManager;
   private final PipelineUpdateCoordinator pipelineUpdateCoordinator;
@@ -62,10 +38,10 @@ public class DataStreamUpdateManagement {
 
   public void updateDataStream(SpDataStream dataStream) {
     dataStreamResourceManager.update(dataStream);
-    pipelineUpdateCoordinator.updatePipelines(dataStream, PIPELINE_UPDATE_STRATEGY);
+    pipelineUpdateCoordinator.updatePipelines(dataStream);
   }
 
   public List<PipelineUpdateInfo> checkPipelineMigrations(SpDataStream dataStream) {
-    return pipelineUpdateCoordinator.checkPipelineMigrations(dataStream, PIPELINE_UPDATE_STRATEGY);
+    return pipelineUpdateCoordinator.checkPipelineMigrations(dataStream);
   }
 }
