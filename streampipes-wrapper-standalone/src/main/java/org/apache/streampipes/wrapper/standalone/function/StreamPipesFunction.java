@@ -163,6 +163,9 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   private Map<String, SpOutputCollector> getOutputCollectors(FunctionId functionId) {
     this.getFunctionConfig().getOutputDataStreams().forEach((key, value) -> {
       var uniqueStreamId = getUniqueStreamId(functionId, value);
+      if (getEnvironment().getSpDebug().getValueOrDefault()) {
+        GroundingDebugUtils.modifyGrounding(value.getEventGrounding());
+      }
       this.outputCollectors.put(
           uniqueStreamId,
           ProtocolManager.makeOutputCollector(
