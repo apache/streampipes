@@ -86,7 +86,7 @@ mike = { git = "https://github.com/jimporter/mike.git", rev = "872f72def32f58890
 mkdocs = "1.5.3"
 mkdocs-awesome-pages-plugin = "2.10.1"
 mkdocs-gen-files = "0.6.1"
-mkdocs-git-revision-date-localized-plugin = "1.4.5"
+mkdocs-git-revision-date-localized-plugin = "1.5.1"
 mkdocs-jupyter = "0.26.1"
 mkdocs-literate-nav = "0.6.0"
 mkdocs-material = "9.4.2"
