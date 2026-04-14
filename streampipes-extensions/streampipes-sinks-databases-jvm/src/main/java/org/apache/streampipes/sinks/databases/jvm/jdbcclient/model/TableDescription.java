@@ -71,7 +71,7 @@ public class TableDescription {
           this.dataTypesHashMap.put(columnName, dataType);
         } while (resultSet.next());
       } else {
-        throw new SpRuntimeException("Database or Table does nit exist.");
+        throw new SpRuntimeException("Database or Table does not exist.");
       }
     } catch (SQLException e) {
       throw new SpRuntimeException("SqlException: " + e.getMessage() + ", Error code: " + e.getErrorCode()

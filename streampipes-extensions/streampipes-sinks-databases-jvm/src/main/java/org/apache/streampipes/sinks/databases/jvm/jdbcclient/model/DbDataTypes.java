@@ -56,7 +56,8 @@ public enum DbDataTypes {
     switch (sqlType.toLowerCase().trim()) {
       case "double precision": return DOUBLE_PRECISION;
       case "character varying": return VAR_CHAR;
-      case "timestamp without time zone": return TIMESTAMP;
+      case "timestamp without time zone":
+      case "timestamp with time zone": return TIMESTAMP;
       case "time without time zone": return TIME;
       default:
         try {
