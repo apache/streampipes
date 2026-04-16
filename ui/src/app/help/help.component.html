@@ -27,9 +27,11 @@
                         color="accent"
                     >
                         <mat-tab [label]="'Info' | translate"></mat-tab>
-                        <mat-tab
-                            [label]="'Documentation' | translate"
-                        ></mat-tab>
+                        @if (showDocumentationTab) {
+                            <mat-tab
+                                [label]="'Documentation' | translate"
+                            ></mat-tab>
+                        }
                         <mat-tab [label]="'Shortcuts' | translate"></mat-tab>
                     </mat-tab-group>
                 </div>
@@ -47,14 +49,14 @@
                 <sp-info-tab></sp-info-tab>
             </div>
         }
-        @if (selectedIndex === 1) {
+        @if (showDocumentationTab && selectedIndex === 1) {
             <div class="fixed-height" fxLayout="column" fxFlex="100">
                 <sp-documentation-tab
                     [documentationLink]="documentationLink"
                 ></sp-documentation-tab>
             </div>
         }
-        @if (selectedIndex === 2) {
+        @if (selectedIndex === shortcutsTabIndex) {
             <div class="fixed-height" fxLayout="column" fxFlex="100">
                 <sp-shortcuts-tab></sp-shortcuts-tab>
             </div>

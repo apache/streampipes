@@ -57,6 +57,11 @@ export class HelpComponent implements OnInit {
 
     selectedIndex = 0;
     documentationLink = '';
+    showDocumentationTab = false;
+
+    get shortcutsTabIndex(): number {
+        return this.showDocumentationTab ? 2 : 1;
+    }
 
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb([
@@ -64,6 +69,13 @@ export class HelpComponent implements OnInit {
         ]);
         this.loginService.fetchLoginSettings().subscribe(res => {
             this.documentationLink = res.linkSettings?.documentationUrl || '';
+            this.showDocumentationTab =
+                !!res.linkSettings?.showDocumentationLinkInProfileMenu &&
+                !!this.documentationLink;
+
+            if (this.selectedIndex > this.shortcutsTabIndex) {
+                this.selectedIndex = this.shortcutsTabIndex;
+            }
         });
     }
 
