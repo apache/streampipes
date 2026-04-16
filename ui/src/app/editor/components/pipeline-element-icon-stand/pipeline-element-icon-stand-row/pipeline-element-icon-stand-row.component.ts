@@ -32,15 +32,16 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { NgClass } from '@angular/common';
 import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import {
-    DataStreamAssetContextService,
     PipelineElementComponent,
     SpLabelComponent,
+    SpAssetBrowserService,
+    SpTableAssetContextService,
 } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
-import { TranslatePipe } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SpDataStream } from '@streampipes/platform-services';
 import { SpTableResolvedAssetContext } from '@streampipes/shared-ui';
+import { map } from 'rxjs';
 
 @Component({
     selector: 'sp-pe-icon-stand-row',
@@ -56,12 +57,12 @@ import { SpTableResolvedAssetContext } from '@streampipes/shared-ui';
         SpLabelComponent,
         LayoutAlignDirective,
         MatButton,
-        TranslatePipe,
     ],
 })
 export class PipelineElementIconStandRowComponent implements OnInit {
     private editorService = inject(EditorService);
-    private dataStreamAssetContextService = inject(DataStreamAssetContextService);
+    private assetBrowserService = inject(SpAssetBrowserService);
+    private assetContextService = inject(SpTableAssetContextService);
     private destroyRef = inject(DestroyRef);
 
     @Input()
@@ -81,9 +82,16 @@ export class PipelineElementIconStandRowComponent implements OnInit {
         this.cypressName = this.element.name.toLowerCase().replace(' ', '_');
 
         if (this.element instanceof SpDataStream) {
-            this.dataStreamAssetContextService
-                .watchDataStreamAssetContext(this.element)
-                .pipe(takeUntilDestroyed(this.destroyRef))
+            this.assetBrowserService.assetData$
+                .pipe(
+                    map(assetData =>
+                        this.assetContextService.resolveDataStreamAssetContext(
+                            assetData,
+                            this.element as SpDataStream,
+                        ),
+                    ),
+                    takeUntilDestroyed(this.destroyRef),
+                )
                 .subscribe(assetContext => this.assetContext = assetContext);
         }
     }

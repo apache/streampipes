@@ -34,11 +34,13 @@ import { PipelineElementRuntimeInfoComponent } from '../../components/pipeline-e
 import { PipelineElementDocumentationComponent } from '../../components/pipeline-element-documentation/pipeline-element-documentation.component';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
-import { DataStreamAssetContextService } from '../../services/data-stream-asset-context.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SpLabelComponent } from '../../components/sp-label/sp-label.component';
+import { SpAssetBrowserService } from '../../components/asset-browser/asset-browser.service';
+import { SpTableAssetContextService } from '../../components/sp-table/sp-asset-context/sp-table-asset-context.service';
 import { SpTableResolvedAssetContext } from '../../components/sp-table/sp-table.model';
 import { MatTooltip } from '@angular/material/tooltip';
+import { map } from 'rxjs';
 
 @Component({
     selector: 'sp-pipeline-element-help',
@@ -62,7 +64,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 export class PipelineElementHelpComponent implements OnInit {
     private dialogRef =
         inject<DialogRef<PipelineElementHelpComponent>>(DialogRef);
-    private dataStreamAssetContextService = inject(DataStreamAssetContextService);
+    private assetBrowserService = inject(SpAssetBrowserService);
+    private assetContextService = inject(SpTableAssetContextService);
     private destroyRef = inject(DestroyRef);
 
     selectedTabIndex = 0;
@@ -89,9 +92,16 @@ export class PipelineElementHelpComponent implements OnInit {
         if (this.pipelineElement instanceof SpDataStream) {
             this.tabs = this.availableTabs;
             this.isDataStream = true;
-            this.dataStreamAssetContextService
-                .watchDataStreamAssetContext(this.pipelineElement)
-                .pipe(takeUntilDestroyed(this.destroyRef))
+            this.assetBrowserService.assetData$
+                .pipe(
+                    map(assetData =>
+                        this.assetContextService.resolveDataStreamAssetContext(
+                            assetData,
+                            this.pipelineElement as SpDataStream,
+                        ),
+                    ),
+                    takeUntilDestroyed(this.destroyRef),
+                )
                 .subscribe(assetContext => this.assetContext = assetContext);
         } else {
             this.tabs.push(this.availableTabs[1]);
