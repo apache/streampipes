@@ -16,8 +16,66 @@
  *
  */
 
-.leaflet-host {
+:host {
+    display: flex;
     flex: 1 1 auto;
     min-height: 0;
     width: 100%;
+}
+
+.asset-map-container {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    height: 100%;
+    gap: 8px;
+    min-height: 0;
+    width: 100%;
+}
+
+.leaflet-host {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    width: 100%;
+}
+
+.map-status {
+    color: var(--color-default-text);
+    font-size: 0.85rem;
+}
+
+:host ::ng-deep .sp-map-cluster-marker {
+    align-items: center;
+    background: var(--color-primary);
+    border: 3px solid var(--color-bg-0);
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: var(--color-bg-0);
+    display: flex;
+    font-size: 0.9rem;
+    font-weight: 700;
+    height: 36px;
+    justify-content: center;
+    width: 36px;
+}
+
+:host ::ng-deep .sp-map-spiderfy-marker {
+    align-items: center;
+    background: var(--color-bg-0);
+    border: 2px solid var(--color-primary);
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    color: var(--color-primary);
+    display: flex;
+    font-size: 0.8rem;
+    font-weight: 700;
+    height: 30px;
+    justify-content: center;
+    width: 30px;
+}
+
+:host ::ng-deep .sp-map-spiderfy-leg {
+    stroke: color-mix(in srgb, var(--fg-muted) 75%, transparent);
+    stroke-width: 2;
 }

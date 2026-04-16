@@ -59,6 +59,29 @@
     }
 }
 
+.asset-title-block {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.asset-counter {
+    color: var(--fg-muted);
+    font-size: 0.75rem;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.asset-switcher {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
 .card-body {
     display: grid;
     grid-template-columns: 1fr 1fr;
