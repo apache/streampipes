@@ -26,18 +26,19 @@ StreamPipes Python client :snake:.
 1) **Set up your Python environment**
 
 Create a virtual Python environment with a tool of your choice.
+To manage dependencies, we use [Poetry](https://python-poetry.org/), so please ensure `poetry` is installed. If it is not, you can refer to the [official Poetry installation documentation](https://python-poetry.org/docs/#installation).
 As a next step, install all required dependencies for development with `poetry`:
 
-```
-python -m pip install poetry
+```bash
 poetry install --with dev
 ```
 
 To include the all dependencies run:
 
-```
+```bash
 poetry install --with dev,docs,stubs,deployment
 ```
+
 <br>
 
 2) **Install pre-commit hook**
@@ -46,7 +47,7 @@ The pre-commit hook is run before every commit and takes care about code style,
 linting, type hints, import sorting, etc. It will stop your commit in case the changes do not apply the expected format.
 Always check to have the recent version of the pre-commit installed otherwise the CI build might fail:
 
-```
+```bash
 poetry run pre-commit install
 ```
 The definition of the pre-commit hook can be found in [.pre-commit-config.yaml](.pre-commit-config.yaml).
@@ -65,7 +66,7 @@ Please stick to the `numpy` style when writing docstrings, as we require this fo
 2) **Provide tests** :white_check_mark: <br>
 We are aiming for broad test coverage for the Python client and
 have therefore set a requirement of at least 90% unit test coverage.
-Therefore, please remember to write (unit) tests already during development. 
+Therefore, please remember to write (unit) tests already during development.
 If you have problems with writing tests, don't hesitate to ask us for help directly in the PR or
 even before that via our mailing list (see above).
 

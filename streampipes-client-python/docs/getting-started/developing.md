@@ -25,10 +25,7 @@ This document describes how to easily set up your local dev environment to work 
 1) **Set up your Python environment**
 
 Create a virtual Python environment using a tool of your choice.
-To manage dependencies, we use [Poetry](https://python-poetry.org/), so please install poetry in your local environment, e.g. via
-```bash
-pip install poetry
-```
+To manage dependencies, we use [Poetry](https://python-poetry.org/), so please ensure `poetry` is installed. If it is not, you can refer to the [official Poetry installation documentation](https://python-poetry.org/docs/#installation).
 
 Once poetry is installed you can simply finalize your Python environment by running:
 
@@ -48,7 +45,7 @@ Always check to have the recent version of the pre-commit hook installed otherwi
 If you are interested, you can have a deeper look on the underlying library: [pre-commit](https://pre-commit.com/).
 
 ```bash
-pre-commit install
+poetry run pre-commit install
 ```
 The definition of the pre-commit hook can be found in [.pre-commit-config.yaml](https://github.com/apache/streampipes/blob/dev/streampipes-client-python/.pre-commit-config.yaml).
 
