@@ -29,12 +29,14 @@
 This data sink can be used to write values to an OPC-UA server.
 The sink supports both signed/encrypted and unencrypted communication.
 
-Certificates must be provided directly to the service and cannot be added from the UI or REST APIs.
 To establish connections using a `Sign` or `Sign & Encrypt` security mode,
-the following environment variables must be provided to the extension service:
+the extension service needs a writable OPC-UA security directory.
+If the configured keystore file does not exist yet, StreamPipes creates a client certificate
+and PKCS#12 keystore automatically on first use.
+The following environment variables control that location and certificate identity:
 
 * SP_OPCUA_SECURITY_DIR the directory where the keystore and trusted certificates are located
-* SP_OPCUA_KEYSTORE_FILE the keystore file (e.g., keystore.pfx, must be of type PKCS12)
+* SP_OPCUA_KEYSTORE_FILE the keystore file to create or reuse (e.g., keystore.pfx, must be of type PKCS12)
 * SP_OPCUA_KEYSTORE_PASSWORD the password to the keystore
 * SP_OPCUA_APPLICATION_URI the application URI used by the client to identify itself
 
@@ -58,7 +60,7 @@ SP_OPC_SECURITY_DIR/
 │  │  ├─ crl/
 ```
 
-Trusted certs need to be present in the `pki/trusted/certs` folder.
+Trusted server certificates are managed in the `pki` directory.
 Rejected certificates are stored in the `rejected` folder.
 
 ***

@@ -102,8 +102,8 @@ public class SecurityConfig {
         builder.setCertificateValidator(compositeValidator);
       } catch (Exception e) {
         throw new SpConfigurationException(
-            "Failed to load keystore - check that all required environment variables "
-                + "are defined and the keystore exists",
+            "Failed to initialize OPC UA client security material - check that all required environment variables "
+                + "are defined and the security directory is writable",
             e
         );
       }

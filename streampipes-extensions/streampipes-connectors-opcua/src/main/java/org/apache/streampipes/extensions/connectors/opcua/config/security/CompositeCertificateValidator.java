@@ -105,6 +105,9 @@ public class CompositeCertificateValidator implements CertificateValidator {
         false
     );
 
+    opcUaConfig.setServerCertificateRejectedByClient(false);
+    opcUaConfig.setServerCertificateValidated(true);
+
     if (opcUaConfig.getAssociatedResourceId() != null) {
       try {
         var thumbprint = CertificateUtils.getThumbprint(peer);
@@ -190,6 +193,8 @@ public class CompositeCertificateValidator implements CertificateValidator {
 
   private void sendToCore(X509Certificate cert) {
     try {
+      opcUaConfig.setServerCertificateValidated(false);
+      opcUaConfig.setServerCertificateRejectedByClient(true);
       var certificate = CertificateBuilder.fromX509(cert, CertificateState.REJECTED);
       opcUaConfig.setCertificateThumbprint(certificate.getThumbprint());
       streamPipesClient.customRequest().sendPost(OpcUaCertificateUtils.getCoreCertificatePath(), certificate);
