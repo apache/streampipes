@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,15 +16,29 @@
  *
  */
 
-.status-running {
-    background: #80ff95;
-}
+import { Component, Input } from '@angular/core';
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 
-.status-stopped {
-    background: var(--color-bg-3);
-}
+@Component({
+    selector: 'sp-element-id',
+    templateUrl: './element-id.component.html',
+    styleUrls: ['./element-id.component.scss'],
+    imports: [
+        CdkCopyToClipboard,
+        MatIcon,
+        MatIconButton,
+        MatTooltip,
+        TranslatePipe,
+    ],
+})
+export class SpElementIdComponent {
+    @Input()
+    value: string;
 
-.adapter-status {
-    padding: 5px 10px;
-    border-radius: 3px;
+    @Input()
+    label = 'ID';
 }

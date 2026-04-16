@@ -1,0 +1,11 @@
+<div class="element-id">
+    <span class="element-id-text">{{ label }}&nbsp;<b>{{ value }}</b></span>
+    <button
+        class="element-id-copy-button"
+        mat-icon-button
+        [cdkCopyToClipboard]="value"
+        [matTooltip]="'Copy' | translate"
+    >
+        <mat-icon class="element-id-copy-icon">content_copy</mat-icon>
+    </button>
+</div>

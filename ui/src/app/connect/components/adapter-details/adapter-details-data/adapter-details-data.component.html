@@ -34,19 +34,11 @@
                         [title]="adapter.name + ' - Data'"
                     ></sp-basic-header-title-component>
                     <div fxFlex fxLayoutAlign="end center">
-                        <div class="element-id" fxLayoutAlign="end start">
-                            <span class="element-id-text"
-                            >ID&nbsp;<b>{{stream.elementId}}</b></span
-                            >
-                            <button
-                                class="element-id-copy-button"
-                                mat-icon-button
-                                [cdkCopyToClipboard]="stream.elementId"
-                                [matTooltip]="'Copy' | translate"
-                            >
-                                <mat-icon class="element-id-copy-icon">content_copy</mat-icon>
-                            </button>
-                        </div>
+                        <sp-element-id
+                            fxLayoutAlign="end start"
+                            [value]="stream.elementId"
+                        >
+                        </sp-element-id>
                         @if (adapter.running) {
                             <div class="adapter-status status-running">
                                 {{ 'Adapter running' | translate }}

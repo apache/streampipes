@@ -1,0 +1,35 @@
+.element-id {
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: small;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 5px;
+}
+
+.element-id-text {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    line-height: 24px;
+}
+
+.element-id-copy-button {
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.element-id-copy-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+}

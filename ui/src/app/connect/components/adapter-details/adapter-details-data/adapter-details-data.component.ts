@@ -22,6 +22,7 @@ import {
     PipelineElementRuntimeInfoComponent,
     SpBasicHeaderTitleComponent,
     SpBasicNavTabsComponent,
+    SpElementIdComponent,
 } from '@streampipes/shared-ui';
 import {
     PipelineElementService,
@@ -33,10 +34,6 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { TranslatePipe } from '@ngx-translate/core';
-import {MatIcon} from "@angular/material/icon";
-import {MatIconButton} from "@angular/material/button";
-import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
-import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
     selector: 'sp-adapter-details-data',
@@ -49,11 +46,8 @@ import {MatTooltip} from "@angular/material/tooltip";
         LayoutAlignDirective,
         SpBasicHeaderTitleComponent,
         PipelineElementRuntimeInfoComponent,
+        SpElementIdComponent,
         TranslatePipe,
-        MatIcon,
-        MatIconButton,
-        CdkCopyToClipboard,
-        MatTooltip,
     ],
 })
 export class AdapterDetailsDataComponent
