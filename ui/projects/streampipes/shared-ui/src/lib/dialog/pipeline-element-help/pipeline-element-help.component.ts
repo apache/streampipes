@@ -17,6 +17,7 @@
  */
 
 import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
@@ -33,7 +34,7 @@ import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { PipelineElementRuntimeInfoComponent } from '../../components/pipeline-element-runtime-info/pipeline-element-runtime-info.component';
 import { PipelineElementDocumentationComponent } from '../../components/pipeline-element-documentation/pipeline-element-documentation.component';
 import { MatDivider } from '@angular/material/divider';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SpLabelComponent } from '../../components/sp-label/sp-label.component';
 import { SpAssetBrowserService } from '../../components/asset-browser/asset-browser.service';
@@ -41,6 +42,7 @@ import { SpTableAssetContextService } from '../../components/sp-table/sp-asset-c
 import { SpTableResolvedAssetContext } from '../../components/sp-table/sp-table.model';
 import { MatTooltip } from '@angular/material/tooltip';
 import { map } from 'rxjs';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-pipeline-element-help',
@@ -56,7 +58,10 @@ import { map } from 'rxjs';
         PipelineElementDocumentationComponent,
         MatDivider,
         MatButton,
+        MatIconButton,
         MatTooltip,
+        MatIcon,
+        CdkCopyToClipboard,
         SpLabelComponent,
         TranslatePipe,
     ],

@@ -53,11 +53,6 @@
         >
             {{ element.name }}
         </div>
-        @if (currentMouseOver) {
-            <div class="element-description" fxLayoutAlign="start start">
-                <span class="text-xs">{{ element.description }}</span>
-            </div>
-        }
         @if (currentMouseOver && assetContext) {
             <div class="element-description" fxLayoutAlign="start start">
                 <div fxLayout="row wrap" fxLayoutGap="4px">
@@ -72,6 +67,11 @@
                         </sp-label>
                     }
                 </div>
+            </div>
+        }
+        @if (currentMouseOver) {
+            <div class="element-description" fxLayoutAlign="start start">
+                <span class="text-xs">{{ element.description }}</span>
             </div>
         }
     </div>
