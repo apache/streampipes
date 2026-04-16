@@ -78,6 +78,19 @@ describe('Advanced Filter Expressions in Charts', () => {
                 cy.contains('randomtext = a');
             });
     });
+
+    it('Closes table filter dropdown with ESC', () => {
+        ChartUtils.addDataViewAndTableWidget(
+            'EscFilterWidget',
+            ChartUtils.ADAPTER_NAME,
+        );
+
+        cy.dataCy('column-filter-trigger-randomtext').click({ force: true });
+        cy.get('.column-filter-dropdown').should('be.visible');
+
+        cy.get('body').type('{esc}');
+        cy.get('.column-filter-dropdown').should('not.exist');
+    });
 });
 
 function setAdvancedCondition(

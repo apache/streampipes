@@ -59,7 +59,7 @@ export class UserUtils {
         cy.dataCy('new-user-password-repeat').type(user.password);
 
         // Set role
-        for (var i = 0; i < user.role.length; i++) {
+        for (let i = 0; i < user.role.length; i++) {
             cy.dataCy('role-' + user.role[i])
                 .children()
                 .click();

@@ -126,6 +126,10 @@ export class ChartBtns {
         return cy.dataCy('save-data-explorer-go-back-to-overview');
     }
 
+    public static discardDataExplorerWidgetBtn() {
+        return cy.dataCy('discard-data-explorer-widget-btn');
+    }
+
     public static chartDataPreview() {
         return cy.dataCy('chart-data-preview');
     }

@@ -47,8 +47,11 @@ import {
     ConfirmDialogComponent,
     CurrentUserService,
     DialogService,
+    KeyboardShortcutService,
     PanelType,
+    ShortcutRegistration,
     SidebarResizeComponent,
+    SpAlertBannerComponent,
     SpBasicViewComponent,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
@@ -88,6 +91,7 @@ import { ChartDataPreviewComponent } from './query-result-preview/chart-data-pre
     styleUrls: ['./chart-view.component.scss'],
     imports: [
         SpBasicViewComponent,
+        SpAlertBannerComponent,
         FlexDirective,
         LayoutAlignDirective,
         LayoutDirective,
@@ -107,6 +111,9 @@ export class ChartViewComponent
 {
     dataViewLoaded = false;
     timeSettings: TimeSettings;
+    readonly legacyMultiSourceWarningTitle = 'Legacy multi-source chart';
+    readonly legacyMultiSourceWarningDescription =
+        'This chart uses multiple data sources and cannot be edited in this release. Please migrate it manually before making changes.';
 
     editMode = true;
     dataView: DataExplorerWidgetModel;
@@ -119,8 +126,10 @@ export class ChartViewComponent
     originalAssets = [];
 
     resizeEchartsService = inject(ResizeEchartsService);
+    private shortcutReg: ShortcutRegistration;
     resizeService = inject(ResizeService);
 
+    private shortcutService = inject(KeyboardShortcutService);
     private dataExplorerSharedService = inject(ChartSharedService);
     private detectChangesService = inject(ChartDetectChangesService);
     private route = inject(ActivatedRoute);
@@ -140,6 +149,7 @@ export class ChartViewComponent
     queryParams$: Subscription;
 
     chartNotFound = false;
+    legacyMultiSourceChart = false;
     latestQueryResults: SpQueryResult[] = [];
 
     observableGenerator =
@@ -148,14 +158,19 @@ export class ChartViewComponent
     @ViewChild('panel', { static: false }) outerPanel: ElementRef;
 
     ngOnInit() {
+        this.shortcutReg = this.shortcutService.register('chart-view', [
+            {
+                key: 's',
+                ctrl: true,
+                action: () => this.onShortcutSave(),
+                allowInDialog: true,
+            },
+        ]);
+
         const dataViewId = this.route.snapshot.params.id;
 
-        this.currentUser$ = this.currentUserService.user$.subscribe(user => {
-            if (!this.authService.hasRole(UserRole.ROLE_DATA_EXPLORER_ADMIN)) {
-                this.editMode = false;
-            } else {
-                this.editMode = this.route.snapshot.queryParams.editMode;
-            }
+        this.currentUser$ = this.currentUserService.user$.subscribe(() => {
+            this.editMode = this.shouldEnableEditMode();
         });
 
         if (dataViewId) {
@@ -237,6 +252,10 @@ export class ChartViewComponent
                     this.originalDataView = JSON.parse(
                         JSON.stringify(this.dataView),
                     );
+                    this.legacyMultiSourceChart = this.hasMultipleSourceConfigs(
+                        this.dataView,
+                    );
+                    this.editMode = this.shouldEnableEditMode();
                     this.timeSettings =
                         this.dataExplorerSharedService.makeChartTimeSettings(
                             this.dataView,
@@ -354,8 +373,10 @@ export class ChartViewComponent
             this.translateService.instant('New chart');
         this.dataView.dataConfig = {};
         this.dataView.dataConfig.ignoreMissingValues = false;
-        this.dataView.baseAppearanceConfig.backgroundColor = '#FFFFFF';
-        this.dataView.baseAppearanceConfig.textColor = '#3e3e3e';
+        this.dataView.baseAppearanceConfig.backgroundColor =
+            'var(--color-bg-0)';
+        this.dataView.baseAppearanceConfig.textColor =
+            'var(--color-default-text)';
         this.dataView.metadata = {
             createdAtEpochMs: Date.now(),
             lastModifiedEpochMs: Date.now(),
@@ -365,6 +386,9 @@ export class ChartViewComponent
     }
 
     saveDataView(): void {
+        if (this.legacyMultiSourceChart) {
+            return;
+        }
         this.dataView.timeSettings = this.timeSettings;
         this.dataView.metadata ??= {
             lastModifiedEpochMs: undefined,
@@ -439,6 +463,9 @@ export class ChartViewComponent
             return dialogRef.afterClosed().pipe(
                 switchMap((dialogResult: ConfirmDialogAction | undefined) => {
                     if (dialogResult === 'confirm') {
+                        if (this.legacyMultiSourceChart) {
+                            return of(true);
+                        }
                         this.dataView.timeSettings = this.timeSettings;
                         return (
                             this.dataView.elementId !== undefined
@@ -558,8 +585,27 @@ export class ChartViewComponent
         ];
     }
 
+    private onShortcutSave(): void {
+        if (this.editMode) {
+            this.saveDataView();
+        }
+    }
+
     ngOnDestroy() {
+        this.shortcutReg?.unregister();
         this.currentUser$?.unsubscribe();
         this.queryParams$?.unsubscribe();
+    }
+
+    private hasMultipleSourceConfigs(widget: DataExplorerWidgetModel): boolean {
+        return (widget?.dataConfig?.sourceConfigs?.length ?? 0) > 1;
+    }
+
+    private shouldEnableEditMode(): boolean {
+        return (
+            this.authService.hasRole(UserRole.ROLE_DATA_EXPLORER_ADMIN) &&
+            !!this.route.snapshot.queryParams.editMode &&
+            !this.legacyMultiSourceChart
+        );
     }
 }

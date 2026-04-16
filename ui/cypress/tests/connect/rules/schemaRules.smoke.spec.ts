@@ -30,13 +30,12 @@ describe('Connect schema rule transformations', () => {
     it('Test several schema rules', () => {
         FileManagementUtils.addFile('connect/schemaRules/input.csv');
         const adapterConfiguration =
-            ConnectUtils.setUpPreprocessingRuleTest(true);
+            ConnectUtils.setUpPreprocessingRuleTest(false);
 
         ConnectUtils.replaceAdapterScript(
-            "  event['dot'] = event ['contains.dot'];\n" +
-                "  delete event['contains.dot'];\n" +
+            'utils.rename(event, "contains.dot", "dot");\n  ' +
                 '  out.collect(event);\n' +
-                '}',
+                '',
         );
 
         ConnectBtns.configureSchemaRunScriptBtn().click();
@@ -55,12 +54,15 @@ describe('Connect schema rule transformations', () => {
 
         ConnectUtils.finishConfigureFieldsConfiguration();
 
-        ConnectUtils.startAdapter(adapterConfiguration, true);
+        ChartUtils.clearMeasurementData('Adapter to test rules').then(() => {
+            ConnectUtils.startAdapter(adapterConfiguration, true);
+            ConnectUtils.restartAdapter(adapterConfiguration.adapterName);
 
-        ChartUtils.checkResults(
-            'Adapter to test rules',
-            'cypress/fixtures/connect/schemaRules/expected.csv',
-            true,
-        );
+            ChartUtils.checkResults(
+                'Adapter to test rules',
+                'cypress/fixtures/connect/schemaRules/expected.csv',
+                true,
+            );
+        });
     });
 });

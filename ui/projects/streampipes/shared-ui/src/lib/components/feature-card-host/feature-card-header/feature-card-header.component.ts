@@ -49,6 +49,6 @@ export class FeatureCardHeaderComponent {
     @Input() icon: string;
     @Input() iconColor: string;
     @Input() detailsLink: string[];
-    @Output() close: EventEmitter<void> = new EventEmitter();
-    @Output() onDetailsClick: EventEmitter<void> = new EventEmitter();
+    @Output() closeClick: EventEmitter<void> = new EventEmitter();
+    @Output() detailsClick: EventEmitter<void> = new EventEmitter();
 }

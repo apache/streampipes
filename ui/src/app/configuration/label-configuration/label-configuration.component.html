@@ -36,16 +36,16 @@
                     mat-flat-button
                     color="accent"
                     data-cy="new-label-button"
-                    (click)="createLabelMode = true"
+                    (click)="createLabelMode.set(true)"
                 >
                     <i class="material-icons">add</i
                     ><span>&nbsp;{{ 'New' | translate }}</span>
                 </button>
             </div>
-            @if (createLabelMode) {
+            @if (createLabelMode()) {
                 <div class="mb-10">
                     <sp-edit-label
-                        (cancelEmitter)="createLabelMode = false"
+                        (cancelEmitter)="createLabelMode.set(false)"
                         (saveEmitter)="saveLabel($event)"
                     ></sp-edit-label>
                 </div>
@@ -89,7 +89,7 @@
                                 [showPreview]="false"
                                 [label]="label"
                                 (cancelEmitter)="removeEditedLabel(label._id)"
-                                (saveEmitter)="updateLabel(label)"
+                                (saveEmitter)="updateLabel($event)"
                             ></sp-edit-label>
                         }
                     </td>
@@ -103,7 +103,7 @@
                                     mat-icon-button
                                     color="accent"
                                     [matTooltip]="'Edit label' | translate"
-                                    (click)="editedLabels.push(label._id)"
+                                    (click)="addEditedLabel(label._id)"
                                 >
                                     <mat-icon>edit</mat-icon>
                                 </button>

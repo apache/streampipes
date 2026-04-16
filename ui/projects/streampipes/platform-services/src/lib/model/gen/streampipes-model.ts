@@ -17,8 +17,6 @@
  * under the License.
  */
 
-/* tslint:disable */
-/* eslint-disable */
 // @ts-nocheck
 // Generated using typescript-generator version 3.2.1263 on 2026-01-15 16:03:01.
 

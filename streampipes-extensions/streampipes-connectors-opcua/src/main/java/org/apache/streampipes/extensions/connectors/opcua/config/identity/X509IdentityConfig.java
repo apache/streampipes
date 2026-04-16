@@ -19,8 +19,8 @@
 package org.apache.streampipes.extensions.connectors.opcua.config.identity;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
-import org.eclipse.milo.opcua.sdk.client.api.identity.X509IdentityProvider;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClientConfigBuilder;
+import org.eclipse.milo.opcua.sdk.client.identity.X509IdentityProvider;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;

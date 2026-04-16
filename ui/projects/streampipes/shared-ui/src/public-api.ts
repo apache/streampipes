@@ -38,6 +38,7 @@ export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
 export * from './lib/components/date-input/date-input.component';
 export * from './lib/components/form-field/form-field.component';
 export * from './lib/components/form-label/form-label.component';
+export * from './lib/components/property-scope-badge/property-scope-badge.component';
 export * from './lib/components/split-section/split-section.component';
 export * from './lib/components/split-button/split-button.component';
 export * from './lib/components/sp-exception-message/sp-exception-message.component';
@@ -82,6 +83,7 @@ export * from './lib/services/date-format.service';
 export * from './lib/services/pipeline-element-schema.service';
 export * from './lib/services/asset-configuration.service';
 export * from './lib/services/local-storage-settings.service';
+export * from './lib/services/keyboard-shortcut.service';
 export * from './lib/components/sp-table/sp-paginator/sp-paginator.service';
 export * from './lib/components/feature-card-host/feature-card.service';
 

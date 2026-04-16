@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import {
     MAT_DIALOG_DATA,
     MatDialogActions,
@@ -32,7 +32,7 @@ import { MatButton } from '@angular/material/button';
 import { ConfirmDialogAction, ConfirmDialogData } from './confirm-dialog.model';
 
 @Component({
-    selector: 'confirmation-dialog',
+    selector: 'sp-confirm-dialog',
     templateUrl: './confirm-dialog.component.html',
     styleUrls: ['./confirm-dialog.component.scss'],
     imports: [
@@ -50,6 +50,11 @@ export class ConfirmDialogComponent {
             MatDialogRef,
         );
     public data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
+
+    @HostListener('keydown.enter')
+    onEnter(): void {
+        this.onOk();
+    }
 
     onCancel(): void {
         this.dialogRef.close('cancel');

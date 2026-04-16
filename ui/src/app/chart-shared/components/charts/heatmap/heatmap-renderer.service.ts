@@ -36,6 +36,7 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
         widgetConfig: HeatmapWidgetModel,
     ): void {
         this.basicOptions(options, widgetConfig);
+        const decimals = this.getDecimals(widgetConfig);
 
         const field = widgetConfig.visualizationConfig.selectedHeatProperty;
         const sourceIndex = field.sourceIndex;
@@ -62,7 +63,7 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
             return [
                 index,
                 this.makeTag(rawDataset.rawDataset.dimensions, tags, row),
-                (row[heatIndex] as number).toFixed(2),
+                this.formatNumber(row[heatIndex], decimals),
             ];
         });
 

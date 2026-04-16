@@ -22,38 +22,23 @@ updates:
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
   - package-ecosystem: "docker"
-    directory: "/installer/compose"
+    directories:
+    - "/installer/compose"
+    - "/installer/cli/deploy/standalone/grafana"
+    - "/installer/cli/deploy/standalone/prometheus"
+    - "/installer/cli/deploy/standalone/prometheus-alertmanager"
     labels:
       - "dependencies"
       - "installer"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
-  - package-ecosystem: "docker"
-    directory: "/installer/cli/deploy/standalone/grafana"
-    labels:
-      - "dependencies"
-      - "installer"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 1
-  - package-ecosystem: "docker"
-    directory: "/installer/cli/deploy/standalone/prometheus"
-    labels:
-      - "dependencies"
-      - "installer"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 1
-  - package-ecosystem: "docker"
-    directory: "/installer/cli/deploy/standalone/prometheus-alertmanager"
-    labels:
-      - "dependencies"
-      - "installer"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
+
   - package-ecosystem: "github-actions"
     directory: "/"
     labels:
@@ -61,6 +46,9 @@ updates:
       - "dependencies"
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 7
+
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
@@ -69,6 +57,9 @@ updates:
       - dependency-name: "*"
         update-types: [ "version-update:semver-patch" ]
     open-pull-requests-limit: 2
+    cooldown:
+      default-days: 7
+
   - package-ecosystem: "npm"
     directory: "/ui"
     schedule:
@@ -77,22 +68,20 @@ updates:
       - dependency-name: "*"
         update-types: [ "version-update:semver-patch" ]
     open-pull-requests-limit: 1
+
   - package-ecosystem: "npm"
-    directory: "/ui/projects/streampipes/platform-services"
+    directories:
+      - "/ui/projects/streampipes/platform-services"
+      - "/ui/projects/streampipes/shared-ui"
     schedule:
       interval: "daily"
     ignore:
       - dependency-name: "*"
         update-types: [ "version-update:semver-patch" ]
     open-pull-requests-limit: 1
-  - package-ecosystem: "npm"
-    directory: "/ui/projects/streampipes/shared-ui"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "*"
-        update-types: [ "version-update:semver-patch" ]
-    open-pull-requests-limit: 1
+    cooldown:
+      default-days: 7
+
   - package-ecosystem: "pip"
     directory: "/streampipes-client-python"
     schedule:
@@ -101,3 +90,5 @@ updates:
       - dependency-name: "*"
         update-types: [ "version-update:semver-patch" ]
     open-pull-requests-limit: 2
+    cooldown:
+      default-days: 7

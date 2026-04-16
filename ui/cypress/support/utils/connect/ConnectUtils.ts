@@ -27,6 +27,9 @@ import { PipelineUtils } from '../pipeline/PipelineUtils';
 import { GeneralUtils } from '../GeneralUtils';
 
 export class ConnectUtils {
+    private static readonly TRANSFORMATION_SCRIPT_PREFIX =
+        'function transform(event, out, ctx) {\n';
+
     public static goToConnect() {
         cy.visit('#/connect');
         cy.dataCy('connect-create-new-adapter-button').should('be.visible');
@@ -409,9 +412,18 @@ export class ConnectUtils {
             'out.collect(event);',
         );
 
-        ConnectBtns.configureSchemaScriptEditor()
-            .type('{backspace}'.repeat(22)) // 2. Delete the "  out.collect(event);\n}" part
-            .type(script);
+        const scriptWithPrefix = script.startsWith(
+            ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX,
+        )
+            ? script
+            : `${ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX}${script}`;
+
+        ConnectBtns.setConfigureSchemaScriptEditorValue(scriptWithPrefix);
+
+        ConnectBtns.configureSchemaScriptEditor().should(
+            'contain.text',
+            'out.collect(event)',
+        );
     }
 
     public static uploadSampleEvent(samplePayload: string) {
@@ -473,6 +485,23 @@ export class ConnectUtils {
         );
     }
 
+    public static restartAdapter(adapterName: string, waitTime = 2000) {
+        cy.wait(waitTime);
+
+        ConnectUtils.goToConnect();
+        ConnectBtns.openActionsMenu(adapterName);
+        ConnectBtns.stopAdapter().click();
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
+
+        cy.wait(waitTime);
+
+        ConnectBtns.openActionsMenu(adapterName);
+        ConnectBtns.startAdapter().click();
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
+
+        cy.wait(waitTime);
+    }
+
     /**
      * Validates the event schema for an adapter by checking the amount of properties
      * and the runtime names of the event properties
@@ -501,6 +530,7 @@ export class ConnectUtils {
         waitTime = 1000,
     ) {
         ConnectUtils.startAdapter(adapterConfiguration, true);
+        ConnectUtils.restartAdapter(adapterConfiguration.adapterName, waitTime);
 
         // Wait till data is stored
         cy.wait(waitTime);

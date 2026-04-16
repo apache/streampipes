@@ -27,15 +27,22 @@ public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
 
   public AdapterPipeline generatePipeline(AdapterDescription adapterDescription) {
     var pipelineElements = makeAdapterPipelineElements(true, adapterDescription);
+    var scriptContext = new ScriptContextResolver().resolve(adapterDescription);
 
     if (hasValidGrounding(adapterDescription)) {
       return new AdapterPipeline(
           pipelineElements,
           adapterDescription.getTransformationConfig(),
           getAdapterSink(adapterDescription),
+          scriptContext,
           adapterDescription.getEventSchema());
     } else {
-      return new AdapterPipeline(pipelineElements, adapterDescription.getTransformationConfig(), adapterDescription.getEventSchema());
+      return new AdapterPipeline(
+          pipelineElements,
+          adapterDescription.getTransformationConfig(),
+          scriptContext,
+          adapterDescription.getEventSchema()
+      );
     }
   }
 

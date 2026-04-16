@@ -102,4 +102,39 @@ export abstract class SpBaseEchartsRenderer<
     > {
         return {};
     }
+
+    protected getDecimals(widgetConfig: T): number | undefined {
+        const appearanceConfig =
+            widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig;
+        return this.normalizeDecimals(appearanceConfig?.numberFormat?.decimals);
+    }
+
+    protected formatNumber(value: unknown, decimals?: number): string {
+        const numericValue = typeof value === 'number' ? value : Number(value);
+        if (Number.isFinite(numericValue) && decimals !== undefined) {
+            const normalizedDecimals = this.normalizeDecimals(decimals);
+            if (normalizedDecimals !== undefined) {
+                return numericValue.toFixed(normalizedDecimals);
+            }
+        }
+
+        if (value === null || value === undefined) {
+            return '';
+        }
+
+        return String(value);
+    }
+
+    private normalizeDecimals(decimals: unknown): number | undefined {
+        if (decimals === null || decimals === undefined || decimals === '') {
+            return undefined;
+        }
+
+        const parsedValue = Number(decimals);
+        if (!Number.isFinite(parsedValue)) {
+            return undefined;
+        }
+
+        return Math.min(10, Math.max(0, Math.round(parsedValue)));
+    }
 }

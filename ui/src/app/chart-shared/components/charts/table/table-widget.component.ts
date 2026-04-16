@@ -38,6 +38,7 @@ import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { NoDataInDateRangeComponent } from '../base/no-data/no-data-in-date-range.component';
 import { TooMuchDataComponent } from '../base/too-much-data/too-much-data.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { WidgetNumberAppearanceConfig } from '../../../models/dataview-dashboard.model';
 
 type SortDirection = 'asc' | 'desc' | '';
 
@@ -514,6 +515,32 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     onFilterDropdownClick = (event: MouseEvent): void =>
         event.stopPropagation();
 
+    @HostListener('document:keydown', ['$event'])
+    handleGlobalKeydown(event: KeyboardEvent): void {
+        if (!this.openFilterColumn) {
+            return;
+        }
+
+        const key = event.key.toLowerCase();
+        const ctrl = event.ctrlKey || event.metaKey;
+
+        if (key === 'escape') {
+            this.closeFilter();
+            event.preventDefault();
+            event.stopPropagation();
+        } else if (ctrl && key === 'f') {
+            const input = this.elRef.nativeElement.querySelector(
+                '.column-filter-search',
+            );
+            if (input) {
+                input.focus();
+                input.select();
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }
+    }
+
     onTimestampInput(field: 'value' | 'value2', event: Event): void {
         const input = event.target as HTMLInputElement;
         const digits = input.value.replace(/\D/g, '').slice(0, 17);
@@ -786,6 +813,14 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         return value ?? '';
     }
 
+    formatDisplayCellValue(column: string, value: unknown): unknown {
+        if (this.isNumericColumn(column)) {
+            return this.formatNumericValue(value);
+        }
+
+        return this.formatCellValue(column, value);
+    }
+
     getCellStyle(row: TableRow, column: string): Record<string, string> {
         if (!this.isHighlightedColumn(column)) return {};
         const highlightValue = this.getHighlightStrength(row[column], column);
@@ -818,6 +853,37 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         )
             ? this.dataExplorerWidget.visualizationConfig.pageSize
             : TableWidgetComponent.DEFAULT_PAGE_SIZE;
+    }
+
+    private formatNumericValue(value: unknown): unknown {
+        const numericValue = this.toNumber(value);
+        if (numericValue === undefined) {
+            return this.formatCellValue('', value);
+        }
+
+        const decimals = this.getDecimals();
+        return decimals === undefined
+            ? String(numericValue)
+            : numericValue.toFixed(decimals);
+    }
+
+    private getDecimals(): number | undefined {
+        const appearanceConfig = this.dataExplorerWidget
+            .baseAppearanceConfig as WidgetNumberAppearanceConfig;
+        return this.normalizeDecimals(appearanceConfig?.numberFormat?.decimals);
+    }
+
+    private normalizeDecimals(decimals: unknown): number | undefined {
+        if (decimals === null || decimals === undefined || decimals === '') {
+            return undefined;
+        }
+
+        const parsedValue = Number(decimals);
+        if (!Number.isFinite(parsedValue)) {
+            return undefined;
+        }
+
+        return Math.min(10, Math.max(0, Math.round(parsedValue)));
     }
 
     private applyTableState(resetPageIndex: boolean): void {

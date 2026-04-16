@@ -610,6 +610,22 @@ export class ChartUtils {
         );
     }
 
+    public static clearMeasurementData(measurementName: string) {
+        const token = window.localStorage.getItem('auth-token');
+        return cy
+            .request({
+                method: 'DELETE',
+                url: `/streampipes-backend/api/v4/datalake/measurements/${measurementName}`,
+                failOnStatusCode: false,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then(response => {
+                expect(response.status).to.be.oneOf([200, 403, 404]);
+            });
+    }
+
     private static getFileType(fileRoute: string): 'csv' | 'json' {
         return fileRoute.endsWith('.csv') ? 'csv' : 'json';
     }
@@ -741,7 +757,7 @@ export class ChartUtils {
     }
 
     public static checkIfConfirmationDialogIsShowing(): void {
-        cy.get('confirmation-dialog').should('be.visible');
+        cy.dataCy('confirm-dialog').should('be.visible');
     }
     public static createDataViewWithAssets(assetNames) {
         ChartUtils.loadDataIntoDataLake('datalake/sample.csv');

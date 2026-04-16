@@ -32,6 +32,8 @@ public class OpcUaConfig {
   private SecurityConfig securityPolicyConfig;
   private String associatedResourceId;
   private String certificateThumbprint;
+  private boolean serverCertificateValidated;
+  private boolean serverCertificateRejectedByClient;
   private IStreamPipesClient streamPipesClient;
 
   public OpcUaConfig() {
@@ -88,6 +90,22 @@ public class OpcUaConfig {
 
   public void setCertificateThumbprint(String certificateThumbprint) {
     this.certificateThumbprint = certificateThumbprint;
+  }
+
+  public boolean isServerCertificateValidated() {
+    return serverCertificateValidated;
+  }
+
+  public void setServerCertificateValidated(boolean serverCertificateValidated) {
+    this.serverCertificateValidated = serverCertificateValidated;
+  }
+
+  public boolean isServerCertificateRejectedByClient() {
+    return serverCertificateRejectedByClient;
+  }
+
+  public void setServerCertificateRejectedByClient(boolean serverCertificateRejectedByClient) {
+    this.serverCertificateRejectedByClient = serverCertificateRejectedByClient;
   }
 
   public IStreamPipesClient getStreamPipesClient() {

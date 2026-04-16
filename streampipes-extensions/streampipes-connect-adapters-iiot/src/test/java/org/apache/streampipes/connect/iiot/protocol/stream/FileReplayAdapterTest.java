@@ -22,11 +22,13 @@ import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.sdk.helpers.EpProperties;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,10 +53,11 @@ class FileReplayAdapterTest {
   void setUp() {
     collector = mock(IEventCollector.class);
     extractor = mock(IAdapterParameterExtractor.class);
-    adapterDescription = mock(AdapterDescription.class);
+    adapterDescription = new AdapterDescription();
+    adapterDescription.getEventSchema().addEventProperty(EpProperties.timestampProperty(TIMESTAMP));
     when(extractor.getAdapterDescription()).thenReturn(adapterDescription);
     fileReplayAdapter = new FileReplayAdapter();
-    fileReplayAdapter.setTimestampSourceFieldName(TIMESTAMP);
+    fileReplayAdapter.setTimestampRuntimeName(TIMESTAMP);
     event = new HashMap<>();
   }
 
@@ -100,6 +103,31 @@ class FileReplayAdapterTest {
     long actualEventTimestamp = fileReplayAdapter.getTimestampFromEvent(event);
 
     assertEquals(TIMESTAMP_VALUE, actualEventTimestamp);
+  }
+
+  @Test
+  void validateTimestampFieldInInputEvent_shouldAcceptLongTimestampInOriginalInput() throws AdapterException {
+    adapterDescription.getTransformationConfig().setInputs(List.of(Map.of(TIMESTAMP, TIMESTAMP_VALUE)));
+
+    fileReplayAdapter.validateTimestampFieldInInputEvent(extractor);
+  }
+
+  @Test
+  void validateTimestampFieldInInputEvent_shouldThrowForStringTimestampInOriginalInput() {
+    adapterDescription.getTransformationConfig().setInputs(List.of(Map.of(TIMESTAMP, "2021-12-24T12:55:12.123+01:00")));
+
+    assertThrows(AdapterException.class, () -> fileReplayAdapter.validateTimestampFieldInInputEvent(extractor));
+  }
+
+  @Test
+  void processEvent_shouldReplaceTimestampWhenConfigured() throws AdapterException, InterruptedException {
+    event.put(TIMESTAMP, TIMESTAMP_VALUE);
+    fileReplayAdapter.setReplaceTimestamp(true);
+
+    fileReplayAdapter.processEvent(collector, event);
+
+    verify(collector, times(1)).collect(event);
+    assertEquals(Long.class, event.get(TIMESTAMP).getClass());
   }
 
 }

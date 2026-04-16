@@ -27,7 +27,8 @@ public class AdapterConfigGenerator implements AdapterModelGenerator {
 
   @Override
   public void apply(AdapterDescription adapterDescription,
-                    CompactAdapter compactAdapter) {
+                    CompactAdapter compactAdapter,
+                    String userId) {
     var adapterTemplate = new PipelineElementTemplate();
     adapterTemplate.setTemplateConfigs(compactAdapter.configuration());
 

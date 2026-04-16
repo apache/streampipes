@@ -22,11 +22,13 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
     selector: 'sp-pipeline-details-toolbar',
@@ -36,10 +38,15 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutDirective,
         LayoutAlignDirective,
         MatButton,
+        MatIconButton,
         MatTooltip,
         MatSlideToggle,
         FormsModule,
         TranslatePipe,
+        MatIcon,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
     ],
 })
 export class PipelineDetailsToolbarComponent {
@@ -63,4 +70,10 @@ export class PipelineDetailsToolbarComponent {
 
     @Output()
     openCodeDialogEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
+    editPipelineEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
+    deletePipelineEmitter: EventEmitter<void> = new EventEmitter();
 }

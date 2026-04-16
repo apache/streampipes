@@ -24,7 +24,6 @@ import {
 } from '@streampipes/platform-services';
 
 @Directive()
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class BaseOutputStrategy<T extends OutputStrategy> {
     @Input()
     parentForm: UntypedFormGroup;

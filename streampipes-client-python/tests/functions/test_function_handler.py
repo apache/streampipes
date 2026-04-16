@@ -349,7 +349,7 @@ class TestFunctionHandler(TestCase):
         pulish_event: MagicMock,
         get_message: MagicMock,
         time: MagicMock,
-        *args: Tuple[AsyncMock]
+        *args: Tuple[AsyncMock],
     ):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.json.return_value = self.data_stream_nats
@@ -392,6 +392,75 @@ class TestFunctionHandler(TestCase):
         self.assertEqual(test_function.context.function_id, test_function.getFunctionId().id)
         self.assertTrue(test_function.stopped)
 
+        self.assertListEqual(output_events, [{"number": i, "timestamp": 0} for i in range(len(self.test_stream_data1))])
+
+    @patch("streampipes.endpoint.api.data_stream.DataStreamEndpoint.put", autospec=True)
+    @patch("streampipes.endpoint.api.data_stream.DataStreamEndpoint.get", autospec=True)
+    @patch("streampipes.functions.broker.nats.nats_publisher.connect", autospec=True)
+    @patch("streampipes.functions.broker.nats.nats_consumer.connect", autospec=True)
+    @patch("streampipes.functions.streampipes_function.time", autospec=True)
+    @patch("streampipes.functions.broker.NatsConsumer.get_message", autospec=True)
+    @patch("streampipes.functions.broker.NatsPublisher.publish_event", autospec=True)
+    @patch("streampipes.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_function_output_stream_updates_existing_stream_nats(
+        self,
+        server_version: MagicMock,
+        http_session: MagicMock,
+        pulish_event: MagicMock,
+        get_message: MagicMock,
+        time: MagicMock,
+        _consumer_connect: AsyncMock,
+        _publisher_connect: AsyncMock,
+        get_data_stream: MagicMock,
+        put_data_stream: MagicMock,
+    ):
+        http_session_mock = MagicMock()
+        http_session_mock.headers = {}
+        http_session.return_value = http_session_mock
+
+        server_version.return_value = {"backendVersion": "0.x.y"}
+
+        output_events = []
+
+        def save_event(self, event: Dict[str, Any]):
+            output_events.append(event)
+
+        def get_stream(endpoint, stream_id):
+            if stream_id == "a1d":
+                existing_output_stream = create_data_stream(
+                    "test", attributes={"number": RuntimeType.INTEGER.value}, stream_id="a1d"
+                )
+                return existing_output_stream
+            if stream_id == self.data_stream_nats["elementId"]:
+                return DataStream(**self.data_stream_nats)
+            raise AssertionError(f"Unexpected stream id requested: {stream_id}")
+
+        get_data_stream.side_effect = get_stream
+        pulish_event.side_effect = save_event
+        get_message.return_value = TestMessageIterator(self.test_stream_data1)
+        time.side_effect = lambda: 0
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        output_stream = create_data_stream("test", attributes={"number": RuntimeType.INTEGER.value}, stream_id="a1d")
+        test_function = TestFunctionOutput(
+            function_definition=FunctionDefinition(
+                consumed_streams=["urn:streampipes.apache.org:eventstream:uPDKLI"]
+            ).add_output_data_stream(output_stream)
+        )
+        registration = Registration()
+        registration.register(test_function)
+        function_handler = FunctionHandler(registration, client)
+        function_handler.initializeFunctions()
+
+        get_data_stream.assert_any_call(client.dataStreamApi, output_stream.element_id)
+        put_data_stream.assert_called_once_with(client.dataStreamApi, output_stream)
         self.assertListEqual(output_events, [{"number": i, "timestamp": 0} for i in range(len(self.test_stream_data1))])
 
     @patch("streampipes.functions.broker.kafka.kafka_publisher.Producer", autospec=True)

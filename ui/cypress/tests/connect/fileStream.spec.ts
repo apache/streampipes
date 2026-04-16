@@ -51,7 +51,7 @@ describe('Test File Replay Adapter', () => {
             ConnectUtils.setUpPreprocessingRuleTest(false);
 
         ConnectUtils.replaceAdapterScript(
-            'event.timestamp = event.timestamp * 1000;\n out.collect(event);\n}',
+            'event.timestamp = event.timestamp * 1000;\n out.collect(event);\n',
         );
 
         ConnectBtns.configureSchemaRunScriptBtn().click();
@@ -105,7 +105,6 @@ describe('Test File Replay Adapter', () => {
             .build();
 
         ConnectUtils.testAdapter(adapterInput);
-
         // click on edit adapter
         GeneralUtils.openMenuForRow(adapterInput.adapterName);
         ConnectBtns.editAdapter().click();

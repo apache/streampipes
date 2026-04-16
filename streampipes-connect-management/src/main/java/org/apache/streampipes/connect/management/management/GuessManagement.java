@@ -26,6 +26,7 @@ import org.apache.streampipes.connect.transformer.api.TransformationEngines;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
+import org.apache.streampipes.extensions.management.connect.adapter.ScriptContextResolver;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
@@ -99,7 +100,7 @@ public class GuessManagement {
     }
   }
 
-  public AdapterDescription transformSampleData(AdapterDescription adapterDescription) throws AdapterException {
+  public AdapterDescription transformSampleData(AdapterDescription adapterDescription, String userId) throws AdapterException {
     if (adapterDescription.getTransformationConfig()
                           .getScript() == null || adapterDescription.getTransformationConfig()
                                                                     .getLanguage() == null) {
@@ -112,12 +113,13 @@ public class GuessManagement {
         var transformationScript = adapterDescription.getTransformationConfig();
         var engine = TransformationEngines.INSTANCE.getTransformationEngine(transformationScript.getLanguage());
         var compiledScript = engine.compile(transformationScript.getScript());
+        var scriptContext = new ScriptContextResolver().resolve(userId, transformationScript.getLanguage());
 
         var samples = adapterDescription.getTransformationConfig()
                                         .getInputs();
         if (!samples.isEmpty()) {
           List<Map<String, Object>> results = new ArrayList<>();
-          compiledScript.transform(samples.get(0), results::add, null);
+          compiledScript.transform(samples.get(0), results::add, scriptContext);
 
           adapterDescription.getTransformationConfig()
                             .setOutputs(results);
