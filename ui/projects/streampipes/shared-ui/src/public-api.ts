@@ -82,6 +82,7 @@ export * from './lib/components/asset-browser/asset-browser.service';
 export * from './lib/services/date-format.service';
 export * from './lib/services/pipeline-element-schema.service';
 export * from './lib/services/asset-configuration.service';
+export * from './lib/services/data-stream-asset-context.service';
 export * from './lib/services/local-storage-settings.service';
 export * from './lib/services/keyboard-shortcut.service';
 export * from './lib/components/sp-table/sp-paginator/sp-paginator.service';

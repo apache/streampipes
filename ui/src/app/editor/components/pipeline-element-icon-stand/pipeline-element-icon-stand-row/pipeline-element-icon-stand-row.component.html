@@ -58,6 +58,22 @@
                 <span class="text-xs">{{ element.description }}</span>
             </div>
         }
+        @if (currentMouseOver && assetContext) {
+            <div class="element-description" fxLayoutAlign="start start">
+                <div fxLayout="row wrap" fxLayoutGap="4px">
+                    @for (asset of assetContext.assets; track asset.id) {
+                        <sp-label
+                            size="small"
+                            tone="neutral"
+                            variant="soft"
+                            [labelText]="asset.label"
+                            [matTooltip]="asset.tooltip"
+                        >
+                        </sp-label>
+                    }
+                </div>
+            </div>
+        }
     </div>
     @if (currentMouseOver) {
         <div fxLayoutAlign="end start">

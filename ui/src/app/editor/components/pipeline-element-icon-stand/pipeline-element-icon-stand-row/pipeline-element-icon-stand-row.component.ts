@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
 import {
     PipelineElementType,
     PipelineElementUnion,
@@ -31,8 +31,16 @@ import {
 import { MatTooltip } from '@angular/material/tooltip';
 import { NgClass } from '@angular/common';
 import { ClassDirective } from '@ngbracket/ngx-layout/extended';
-import { PipelineElementComponent } from '@streampipes/shared-ui';
+import {
+    DataStreamAssetContextService,
+    PipelineElementComponent,
+    SpLabelComponent,
+} from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SpDataStream } from '@streampipes/platform-services';
+import { SpTableResolvedAssetContext } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-pe-icon-stand-row',
@@ -45,12 +53,16 @@ import { MatButton } from '@angular/material/button';
         NgClass,
         ClassDirective,
         PipelineElementComponent,
+        SpLabelComponent,
         LayoutAlignDirective,
         MatButton,
+        TranslatePipe,
     ],
 })
 export class PipelineElementIconStandRowComponent implements OnInit {
     private editorService = inject(EditorService);
+    private dataStreamAssetContextService = inject(DataStreamAssetContextService);
+    private destroyRef = inject(DestroyRef);
 
     @Input()
     element: PipelineElementUnion;
@@ -59,6 +71,7 @@ export class PipelineElementIconStandRowComponent implements OnInit {
     cypressName: string;
 
     currentMouseOver = false;
+    assetContext?: SpTableResolvedAssetContext;
 
     ngOnInit(): void {
         const activeType = PipelineElementTypeUtils.fromClassName(
@@ -66,6 +79,13 @@ export class PipelineElementIconStandRowComponent implements OnInit {
         );
         this.activeCssClass = this.makeActiveCssClass(activeType);
         this.cypressName = this.element.name.toLowerCase().replace(' ', '_');
+
+        if (this.element instanceof SpDataStream) {
+            this.dataStreamAssetContextService
+                .watchDataStreamAssetContext(this.element)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(assetContext => this.assetContext = assetContext);
+        }
     }
 
     makeActiveCssClass(elementType: PipelineElementType): string {

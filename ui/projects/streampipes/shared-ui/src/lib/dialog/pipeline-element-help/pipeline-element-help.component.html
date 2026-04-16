@@ -24,6 +24,22 @@
                 <small>
                     {{ pipelineElement.description }}
                 </small>
+                @if (assetContext) {
+                    <div class="asset-context" fxLayout="column" fxLayoutGap="4px">
+                        <div class="asset-context-boxes" fxLayout="row wrap" fxLayoutGap="8px">
+                            @for (asset of assetContext.assets; track asset.id) {
+                                <sp-label
+                                    size="small"
+                                    tone="neutral"
+                                    variant="soft"
+                                    [labelText]="asset.label"
+                                    [matTooltip]="asset.tooltip"
+                                >
+                                </sp-label>
+                            }
+                        </div>
+                    </div>
+                }
             </div>
             <div class="element-id" fxLayoutAlign="end start">
                 <span>ID</span>&nbsp;<b>{{
