@@ -16,6 +16,11 @@
  *
  */
 
+.element-title {
+    margin: 0;
+    line-height: 1.2;
+}
+
 .element-id {
     border-radius: 5px;
     margin-right: 10px;
@@ -27,9 +32,15 @@
 }
 
 .asset-context {
-    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    min-height: 28px;
+    margin-left: 8px;
 }
 
 .asset-context-boxes {
-    margin-top: 2px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
 }
