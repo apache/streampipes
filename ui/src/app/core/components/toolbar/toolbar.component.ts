@@ -22,7 +22,6 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { UntypedFormControl } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ProfileService } from '../../../profile/profile.service';
-import { LoginService } from '../../../login/services/login.service';
 import {
     AssetBrowserToolbarComponent,
     SpAssetBrowserService,
@@ -79,10 +78,6 @@ export class ToolbarComponent
 
     appearanceControl: UntypedFormControl;
 
-    documentationLinkActive = false;
-    documentationLink = '';
-
-    private loginService = inject(LoginService);
     private profileService = inject(ProfileService);
     private overlay = inject(OverlayContainer);
     private assetFilterService = inject(SpAssetBrowserService);
@@ -104,12 +99,6 @@ export class ToolbarComponent
                     this.modifyAppearance(userInfo.darkMode);
                 });
         });
-        this.loginService.fetchLoginSettings().subscribe(res => {
-            this.documentationLinkActive =
-                res.linkSettings?.showDocumentationLinkInProfileMenu;
-            this.documentationLink = res.linkSettings?.documentationUrl || '';
-        });
-
         this.appearanceControl = new UntypedFormControl(
             this.currentUserService.darkMode$.getValue(),
         );
@@ -135,13 +124,9 @@ export class ToolbarComponent
         });
     }
 
-    openDocumentation() {
-        window.open(this.documentationLink, '_blank');
-    }
-
-    openInfo() {
-        this.router.navigate(['info']);
-        this.activePage = 'Info';
+    openHelp() {
+        this.router.navigate(['help']);
+        this.activePage = 'Help';
     }
 
     openProfile() {

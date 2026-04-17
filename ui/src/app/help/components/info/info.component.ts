@@ -16,21 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
-import {
-    SpBasicViewComponent,
-    SpBreadcrumbService,
-} from '@streampipes/shared-ui';
+import { Component } from '@angular/core';
 import { VersionsComponent } from './versions/versions.component';
 
 @Component({
+    selector: 'sp-info-tab',
     templateUrl: './info.component.html',
-    imports: [SpBasicViewComponent, VersionsComponent],
+    imports: [VersionsComponent],
 })
-export class InfoComponent implements OnInit {
-    private breadcrumbService = inject(SpBreadcrumbService);
-
-    ngOnInit() {
-        this.breadcrumbService.updateBreadcrumb([{ label: 'Info' }]);
-    }
-}
+export class InfoTabComponent {}
