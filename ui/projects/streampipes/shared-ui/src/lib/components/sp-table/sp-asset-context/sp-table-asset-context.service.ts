@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { SpAsset, SpLabel } from '@streampipes/platform-services';
+import { SpAsset, SpDataStream, SpLabel } from '@streampipes/platform-services';
 import { AssetBrowserData } from '../../asset-browser/asset-browser.model';
 import {
     SpTableAssetContextValue,
@@ -63,6 +63,24 @@ export class SpTableAssetContextService {
         );
 
         return index;
+    }
+
+    resolveDataStreamAssetContext(
+        assetData?: AssetBrowserData,
+        dataStream?: SpDataStream,
+    ): SpTableResolvedAssetContext | undefined {
+        if (!assetData || !dataStream) {
+            return undefined;
+        }
+
+        const assetContextIndex = this.buildAssetContextIndex(assetData);
+
+        return (
+            assetContextIndex
+                .get('adapter')
+                ?.get(dataStream.correspondingAdapterId) ??
+            assetContextIndex.get('stream')?.get(dataStream.elementId)
+        );
     }
 
     private collectAssetContexts(
