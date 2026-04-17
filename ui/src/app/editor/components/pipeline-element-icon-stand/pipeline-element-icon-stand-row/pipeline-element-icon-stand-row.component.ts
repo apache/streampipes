@@ -92,7 +92,7 @@ export class PipelineElementIconStandRowComponent implements OnInit {
                     ),
                     takeUntilDestroyed(this.destroyRef),
                 )
-                .subscribe(assetContext => this.assetContext = assetContext);
+                .subscribe(assetContext => (this.assetContext = assetContext));
         }
     }
 

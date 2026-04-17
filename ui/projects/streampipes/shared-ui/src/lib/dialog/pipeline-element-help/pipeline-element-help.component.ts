@@ -104,7 +104,7 @@ export class PipelineElementHelpComponent implements OnInit {
                     ),
                     takeUntilDestroyed(this.destroyRef),
                 )
-                .subscribe(assetContext => this.assetContext = assetContext);
+                .subscribe(assetContext => (this.assetContext = assetContext));
         } else {
             this.tabs.push(this.availableTabs[1]);
             this.selectedTabIndex = 1;

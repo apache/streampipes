@@ -20,10 +20,7 @@
     <div class="sp-dialog-content p-15" fxLayout="column">
         <div fxLayout="row" fxFlex="100">
             <div fxLayout="column" fxFlex>
-                <div
-                    fxLayout="row wrap"
-                    fxLayoutAlign="start center"
-                >
+                <div fxLayout="row wrap" fxLayoutAlign="start center">
                     <h4 class="element-title">{{ pipelineElement.name }}</h4>
                     @if (assetContext) {
                         <div class="asset-context">
@@ -32,7 +29,10 @@
                                 fxLayout="row wrap"
                                 fxLayoutAlign="start center"
                             >
-                                @for (asset of assetContext.assets; track asset.id) {
+                                @for (
+                                    asset of assetContext.assets;
+                                    track asset.id
+                                ) {
                                     <sp-label
                                         size="small"
                                         tone="neutral"
