@@ -28,6 +28,7 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { PipelineElementRuntimeInfoComponent } from '../../components/pipeline-element-runtime-info/pipeline-element-runtime-info.component';
@@ -51,6 +52,7 @@ import { map } from 'rxjs';
         LayoutDirective,
         FlexDirective,
         LayoutAlignDirective,
+        LayoutGapDirective,
         MatTabGroup,
         MatTab,
         PipelineElementRuntimeInfoComponent,

@@ -23,11 +23,16 @@
                 <div fxLayout="row wrap" fxLayoutAlign="start center">
                     <h4 class="element-title">{{ pipelineElement.name }}</h4>
                     @if (assetContext) {
-                        <div class="asset-context">
+                        <div
+                            class="asset-context ml-sm"
+                            fxLayout="row"
+                            fxLayoutAlign="start center"
+                        >
                             <div
                                 class="asset-context-boxes"
                                 fxLayout="row wrap"
                                 fxLayoutAlign="start center"
+                                fxLayoutGap="var(--space-md)"
                             >
                                 @for (
                                     asset of assetContext.assets;

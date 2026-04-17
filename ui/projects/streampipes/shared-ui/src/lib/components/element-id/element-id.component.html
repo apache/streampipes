@@ -16,12 +16,19 @@
   ~
   -->
 
-<div class="element-id">
-    <span class="element-id-text"
+<div
+    class="element-id mt-xs mb-xs p-xs"
+    fxLayout="row"
+    fxLayoutAlign="center center"
+    fxLayoutGap="var(--space-2xs)"
+>
+    <span class="element-id-text" fxLayout="row" fxLayoutAlign="start center"
         >{{ label }}&nbsp;<b>{{ value }}</b></span
     >
     <button
         class="element-id-copy-button"
+        fxLayout="row"
+        fxLayoutAlign="center center"
         mat-icon-button
         [cdkCopyToClipboard]="value"
         [matTooltip]="'Copy' | translate"

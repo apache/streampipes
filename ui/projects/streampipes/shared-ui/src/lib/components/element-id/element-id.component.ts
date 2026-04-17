@@ -22,12 +22,20 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-element-id',
     templateUrl: './element-id.component.html',
     styleUrls: ['./element-id.component.scss'],
     imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        LayoutGapDirective,
         CdkCopyToClipboard,
         MatIcon,
         MatIconButton,
