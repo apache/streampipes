@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.datalake.importer;
 
+import org.apache.iotdb.service.rpc.thrift.IClientRPCService.AsyncProcessor.closeSession;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
@@ -225,10 +226,27 @@ public class CsvDataLakeImportService {
       String uploadId
   ) {
     var messages = new ArrayList<>(validationMessages);
+    EventSchema existingSchema = null;
+    List<CsvImportColumn>  existingColumns = null;
     var columns = parser.inferColumns(headers, rows, request.getCsvConfig());
+    
 
     var eventSchema = parser.buildEventSchema(columns, rows, request.getCsvConfig(), null);
     messages.addAll(validationService.validatePreviewTarget(request.getTarget()));
+
+    if (request.getTarget().getMode().equals(CsvImportTargetMode.EXISTING)){
+    existingSchema = schemaManagement.getExistingMeasureByName(request.getTarget().getMeasurementName().trim()).get().getEventSchema();
+    existingColumns = CsvImportColumnMapper.fromEventSchema(existingSchema);
+    //TODO make this more efficient
+    for (CsvImportColumn csvImportColumn : columns) {
+       for (CsvImportColumn existingImportColumn : existingColumns) {
+      if (csvImportColumn.getRuntimeName().equals(existingImportColumn.getRuntimeName())){
+        csvImportColumn.setPropertyScope(existingImportColumn.getPropertyScope());
+         }
+          }
+      
+    }
+  }
 
     var result = new CsvImportPreviewResult();
     result.setUploadId(uploadId);
