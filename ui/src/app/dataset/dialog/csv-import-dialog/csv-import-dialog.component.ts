@@ -580,7 +580,12 @@ export class CsvImportDialogComponent {
             'org.apache.streampipes.model.schema.EventPropertyPrimitive';
         property.runtimeName = column.runtimeName;
         property.runtimeType = this.toRuntimeType(initialType);
-        property.propertyScope = 'MEASUREMENT_PROPERTY';
+
+        if (column.propertyScope) {
+            property.propertyScope = column.propertyScope;
+        } else {
+            property.propertyScope = 'MEASUREMENT_PROPERTY';
+        }
         property.semanticType = undefined;
         property.label = column.label || '';
         property.description = column.description || '';
@@ -589,8 +594,8 @@ export class CsvImportDialogComponent {
         return {
             column: {
                 ...column,
+                propertyScope: column.propertyScope ?? 'MEASUREMENT_PROPERTY',
                 runtimeType: initialType,
-                propertyScope: 'MEASUREMENT_PROPERTY',
                 semanticType: undefined,
             },
             eventProperty: property,
