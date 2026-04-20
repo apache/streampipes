@@ -225,28 +225,18 @@ public class CsvDataLakeImportService {
       String uploadId
   ) {
     var messages = new ArrayList<>(validationMessages);
-    EventSchema existingSchema = null;
-    List<CsvImportColumn>  existingColumns = null;
-
     var columns = parser.inferColumns(headers, rows, request.getCsvConfig());
 
     var eventSchema = parser.buildEventSchema(columns, rows, request.getCsvConfig(), null);
     messages.addAll(validationService.validatePreviewTarget(request.getTarget()));
-    if (request.getTarget().getMode().equals(CsvImportTargetMode.EXISTING)){
-    existingSchema = schemaManagement.getExistingMeasureByName(request.getTarget().getMeasurementName().trim()).get().getEventSchema();
-    existingColumns = CsvImportColumnMapper.fromEventSchema(existingSchema);
-  }
-
-  List<CsvImportColumn> effectiveColumns =
-    existingColumns != null ? existingColumns : columns;
 
     var result = new CsvImportPreviewResult();
     result.setUploadId(uploadId);
     result.setHeaders(headers);
     result.setPreviewRows(rows.stream().limit(MAX_PREVIEW_ROWS).collect(Collectors.toList()));
-    result.setColumns(effectiveColumns);
+    result.setColumns(columns);
     result.setGuessedEventSchema(eventSchema);
-    result.setTimestampCandidates(effectiveColumns.stream()
+    result.setTimestampCandidates(columns.stream()
         .filter(CsvImportColumn::isTimestampCandidate)
         .map(CsvImportColumn::getRuntimeName)
         .collect(Collectors.toList()));

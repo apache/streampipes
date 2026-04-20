@@ -586,7 +586,7 @@ export class CsvImportDialogComponent {
         } else {
             property.propertyScope = 'MEASUREMENT_PROPERTY';
         }
-        property.semanticType = undefined;
+        property.semanticType = column.semanticType || undefined;
         property.label = column.label || '';
         property.description = column.description || '';
         property.additionalMetadata = {};
@@ -596,7 +596,7 @@ export class CsvImportDialogComponent {
                 ...column,
                 propertyScope: column.propertyScope ?? 'MEASUREMENT_PROPERTY',
                 runtimeType: initialType,
-                semanticType: undefined,
+                semanticType: column.semanticType || undefined,
             },
             eventProperty: property,
         };
