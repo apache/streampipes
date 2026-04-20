@@ -26,6 +26,16 @@ import java.util.List;
 public class CsvImportPreviewResult {
 
   private String uploadId;
+  private Boolean isExistingTarget;
+
+  public Boolean getIsExistingTarget() {
+    return isExistingTarget;
+  }
+
+  public void setIsExistingTarget(Boolean isExistingTarget) {
+    this.isExistingTarget = isExistingTarget;
+  }
+
   private List<String> headers = new ArrayList<>();
   private List<List<String>> previewRows = new ArrayList<>();
   private List<CsvImportColumn> columns = new ArrayList<>();
@@ -33,6 +43,7 @@ public class CsvImportPreviewResult {
   private List<String> timestampCandidates = new ArrayList<>();
   private boolean valid;
   private List<CsvImportValidationMessage> validationMessages = new ArrayList<>();
+  private List<CsvImportSchemaIssue> validationSchemaMessages = new ArrayList<>();
 
   public String getUploadId() {
     return uploadId;
@@ -96,5 +107,13 @@ public class CsvImportPreviewResult {
 
   public void setValidationMessages(List<CsvImportValidationMessage> validationMessages) {
     this.validationMessages = validationMessages;
+  }
+
+  public List<CsvImportSchemaIssue> getSchemaValidationMessages() {
+    return validationSchemaMessages;
+  }
+
+  public void setSchemaValidationMessages(List<CsvImportSchemaIssue> validationSchemaMessages) {
+    this.validationSchemaMessages = validationSchemaMessages;
   }
 }

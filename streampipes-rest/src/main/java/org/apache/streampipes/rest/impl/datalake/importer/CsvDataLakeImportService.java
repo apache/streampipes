@@ -25,10 +25,12 @@ import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportResult;
+import org.apache.streampipes.model.datalake.importer.CsvImportSchemaIssue;
 import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
 import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.rest.impl.datalake.DataLakeDataWriter;
 
@@ -60,22 +62,19 @@ public class CsvDataLakeImportService {
         schemaManagement,
         new DataLakeDataWriter(false, true),
         new CsvImportUploadStorage(),
-        new CsvImportParser()
-    );
+        new CsvImportParser());
   }
 
   CsvDataLakeImportService(
       IDataExplorerSchemaManagement schemaManagement,
-      DataLakeDataWriter dataWriter
-  ) {
+      DataLakeDataWriter dataWriter) {
     this(schemaManagement, dataWriter, new CsvImportUploadStorage(), new CsvImportParser());
   }
 
   CsvDataLakeImportService(
       IDataExplorerSchemaManagement schemaManagement,
       DataLakeDataWriter dataWriter,
-      CsvImportUploadStorage uploadStorage
-  ) {
+      CsvImportUploadStorage uploadStorage) {
     this(schemaManagement, dataWriter, uploadStorage, new CsvImportParser());
   }
 
@@ -83,8 +82,7 @@ public class CsvDataLakeImportService {
       IDataExplorerSchemaManagement schemaManagement,
       DataLakeDataWriter dataWriter,
       CsvImportUploadStorage uploadStorage,
-      CsvImportParser parser
-  ) {
+      CsvImportParser parser) {
     this.schemaManagement = schemaManagement;
     this.dataWriter = dataWriter;
     this.uploadStorage = uploadStorage;
@@ -118,8 +116,7 @@ public class CsvDataLakeImportService {
     } catch (IOException | UncheckedIOException e) {
       return buildInvalidPreviewResult(
           List.of(message("file", "The CSV file could not be parsed with the current settings.")),
-          request.getUploadId()
-      );
+          request.getUploadId());
     }
   }
 
@@ -146,13 +143,11 @@ public class CsvDataLakeImportService {
     if (validationMessages.isEmpty()) {
       var eventSchema = parser.buildConfiguredEventSchema(
           parser.sanitizeImportColumns(request.getColumns()),
-          request.getTimestampColumn()
-      );
+          request.getTimestampColumn());
       issues.addAll(validationService.validateSchemaTarget(
           request.getTarget(),
           eventSchema,
-          request.getTimestampColumn()
-      ));
+          request.getTimestampColumn()));
     }
 
     var result = new CsvImportSchemaValidationResult();
@@ -176,12 +171,10 @@ public class CsvDataLakeImportService {
         parser.sanitizeImportColumns(request.getColumns()),
         request.getRows(),
         request.getCsvConfig(),
-        request.getTimestampColumn()
-    );
+        request.getTimestampColumn());
 
     validationMessages.addAll(
-        validationService.validateImportTarget(request.getTarget(), eventSchema, request.getTimestampColumn())
-    );
+        validationService.validateImportTarget(request.getTarget(), eventSchema, request.getTimestampColumn()));
     if (!validationMessages.isEmpty()) {
       throw new CsvImportValidationException(validationMessages);
     }
@@ -191,8 +184,7 @@ public class CsvDataLakeImportService {
     dataWriter.writeData(
         measure.measure(),
         request.getColumns().stream().map(CsvImportColumn::getRuntimeName).collect(Collectors.toList()),
-        rows
-    );
+        rows);
 
     return buildImportResult(measure, rows.size());
   }
@@ -208,8 +200,7 @@ public class CsvDataLakeImportService {
     var eventSchema = parser.buildConfiguredEventSchema(sanitizedColumns, request.getTimestampColumn());
 
     validationMessages.addAll(
-        validationService.validateImportTarget(request.getTarget(), eventSchema, request.getTimestampColumn())
-    );
+        validationService.validateImportTarget(request.getTarget(), eventSchema, request.getTimestampColumn()));
     if (!validationMessages.isEmpty()) {
       throw new CsvImportValidationException(validationMessages);
     }
@@ -222,8 +213,7 @@ public class CsvDataLakeImportService {
       return buildImportResult(measure, importedRowCount);
     } catch (IOException | UncheckedIOException e) {
       throw new CsvImportValidationException(List.of(
-          message("file", "The CSV file could not be parsed with the current settings.")
-      ));
+          message("file", "The CSV file could not be parsed with the current settings.")));
     }
   }
 
@@ -235,29 +225,43 @@ public class CsvDataLakeImportService {
       String uploadId
   ) {
     var messages = new ArrayList<>(validationMessages);
+    var validationSchemaMessages = new ArrayList<CsvImportSchemaIssue>();
+    EventSchema existingSchema = null;
+    List<CsvImportColumn>  existingColumns = null;
+
     var columns = parser.inferColumns(headers, rows, request.getCsvConfig());
+
     var eventSchema = parser.buildEventSchema(columns, rows, request.getCsvConfig(), null);
     messages.addAll(validationService.validatePreviewTarget(request.getTarget()));
+    if (request.getTarget().getMode().equals(CsvImportTargetMode.EXISTING)){
+    existingSchema = schemaManagement.getExistingMeasureByName(request.getTarget().getMeasurementName().trim()).get().getEventSchema();
+    existingColumns = CsvImportColumnMapper.fromEventSchema(existingSchema);
+    validationSchemaMessages.addAll(validationService.validateSchemaTarget(request.getTarget(),eventSchema,null));
+  }
+
+  List<CsvImportColumn> effectiveColumns =
+    existingColumns != null ? existingColumns : columns;
 
     var result = new CsvImportPreviewResult();
     result.setUploadId(uploadId);
+    result.setIsExistingTarget(request.getTarget().getMode().equals(CsvImportTargetMode.EXISTING));
     result.setHeaders(headers);
     result.setPreviewRows(rows.stream().limit(MAX_PREVIEW_ROWS).collect(Collectors.toList()));
-    result.setColumns(columns);
+    result.setColumns(effectiveColumns);
     result.setGuessedEventSchema(eventSchema);
-    result.setTimestampCandidates(columns.stream()
+    result.setTimestampCandidates(effectiveColumns.stream()
         .filter(CsvImportColumn::isTimestampCandidate)
         .map(CsvImportColumn::getRuntimeName)
         .collect(Collectors.toList()));
     result.setValidationMessages(messages);
-    result.setValid(messages.isEmpty());
+    result.setValid(messages.isEmpty() &&  validationSchemaMessages.isEmpty() );
+    result.setSchemaValidationMessages(validationSchemaMessages);
     return result;
   }
 
   private CsvImportPreviewResult buildInvalidPreviewResult(
       List<CsvImportValidationMessage> validationMessages,
-      String uploadId
-  ) {
+      String uploadId) {
     var result = new CsvImportPreviewResult();
     result.setUploadId(uploadId);
     result.setValidationMessages(validationMessages);
@@ -267,13 +271,11 @@ public class CsvDataLakeImportService {
 
   private CsvImportUploadStorage.StoredUpload resolveUpload(String uploadId, String principalSid) {
     var upload = uploadStorage.get(uploadId).orElseThrow(() -> new CsvImportValidationException(List.of(
-        message("uploadId", "The uploaded CSV file was not found. Please upload the file again.")
-    )));
+        message("uploadId", "The uploaded CSV file was not found. Please upload the file again."))));
 
     if (!Objects.equals(upload.ownerSid(), principalSid)) {
       throw new CsvImportValidationException(List.of(
-          message("uploadId", "The uploaded CSV file is no longer available for this user.")
-      ));
+          message("uploadId", "The uploaded CSV file is no longer available for this user.")));
     }
 
     return upload;
@@ -294,8 +296,7 @@ public class CsvDataLakeImportService {
   private StoredMeasure resolveTargetMeasurement(
       CsvImportRequest request,
       String principalSid,
-      EventSchema eventSchema
-  ) {
+      EventSchema eventSchema) {
     if (request.getTarget().getMode() == CsvImportTargetMode.NEW) {
       var measure = new DataLakeMeasure();
       measure.setMeasureName(request.getTarget().getMeasurementName().trim());
@@ -306,8 +307,7 @@ public class CsvDataLakeImportService {
 
     return new StoredMeasure(
         validationService.requireExistingMeasurement(request.getTarget().getMeasurementName()),
-        false
-    );
+        false);
   }
 
   private CsvImportResult buildImportResult(StoredMeasure measure, int importedRowCount) {
