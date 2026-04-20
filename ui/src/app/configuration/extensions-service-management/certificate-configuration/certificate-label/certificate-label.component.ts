@@ -18,11 +18,13 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Certificate } from '@streampipes/platform-services';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { SpLabelComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-certificate-label',
-    standalone: false,
     templateUrl: './certificate-label.component.html',
+    imports: [LayoutDirective, SpLabelComponent],
 })
 export class CertificateLabelComponent implements OnInit {
     @Input()

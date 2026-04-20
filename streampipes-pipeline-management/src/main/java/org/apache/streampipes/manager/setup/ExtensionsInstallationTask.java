@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.manager.setup;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
-import org.apache.streampipes.storage.api.INoSqlStorage;
+import org.apache.streampipes.storage.api.core.INoSqlStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,13 +42,16 @@ public class ExtensionsInstallationTask implements Runnable {
   private final InitialSettings settings;
   private final BackgroundTaskNotifier callback;
   private final INoSqlStorage storage;
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
 
   public ExtensionsInstallationTask(InitialSettings settings,
                                     INoSqlStorage storage,
-                                    BackgroundTaskNotifier callback) {
+                                    BackgroundTaskNotifier callback,
+                                    ExtensionServiceRequestManager extensionServiceRequestManager) {
     this.settings = settings;
     this.storage = storage;
     this.callback = callback;
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
   }
 
   @Override
@@ -76,7 +80,8 @@ public class ExtensionsInstallationTask implements Runnable {
       for (ExtensionItemDescription extensionItem : availableExtensions) {
         steps.add(new PipelineElementInstallationStep(
             extensionItem,
-            settings.getInitialAdminUserSid())
+            settings.getInitialAdminUserSid(),
+            extensionServiceRequestManager)
         );
       }
 

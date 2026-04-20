@@ -24,6 +24,7 @@ import {
     OnInit,
     Output,
     ViewChild,
+    inject,
 } from '@angular/core';
 import {
     Pipeline,
@@ -37,14 +38,17 @@ import {
 import { JsplumbService } from '../../../editor/services/jsplumb.service';
 import { JsplumbBridge } from '../../../editor/services/jsplumb-bridge.service';
 import { PipelineAssemblyDrawingAreaComponent } from '../../../editor/components/pipeline-assembly/pipeline-assembly-drawing-area/pipeline-assembly-drawing-area.component';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-pipeline-preview',
     templateUrl: './pipeline-preview.component.html',
     styleUrls: ['./pipeline-preview.component.scss'],
-    standalone: false,
+    imports: [FlexDirective, PipelineAssemblyDrawingAreaComponent],
 })
 export class PipelinePreviewComponent implements OnInit, AfterViewInit {
+    private jsplumbService = inject(JsplumbService);
+
     @Input()
     metricsInfo: Record<string, SpMetricsEntry>;
 
@@ -64,8 +68,6 @@ export class PipelinePreviewComponent implements OnInit, AfterViewInit {
     pipelineDrawingAreaComponent: PipelineAssemblyDrawingAreaComponent;
 
     jsPlumbBridge: JsplumbBridge;
-
-    constructor(private jsplumbService: JsplumbService) {}
 
     ngAfterViewInit() {
         this.jsPlumbBridge = this.jsplumbService.getBridge(true);

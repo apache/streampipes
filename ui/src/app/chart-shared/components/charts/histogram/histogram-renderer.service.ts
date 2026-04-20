@@ -18,7 +18,7 @@
 
 import { BarSeriesOption, EChartsOption } from 'echarts';
 import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base-single-field-echarts-renderer';
-import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
+import type { DataTransformOption } from 'echarts/types/src/data/helper/transform.d.ts';
 import { Injectable } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { HistogramChartWidgetModel } from './model/histogram-chart-widget.model';
@@ -29,8 +29,27 @@ export class SpHistogramRendererService extends SpBaseSingleFieldEchartsRenderer
     HistogramChartWidgetModel,
     BarSeriesOption
 > {
-    addAdditionalConfigs(option: EChartsOption) {
-        //do nothing
+    addAdditionalConfigs(
+        option: EChartsOption,
+        widgetConfig?: HistogramChartWidgetModel,
+    ) {
+        if (!widgetConfig) {
+            return;
+        }
+
+        const decimals = this.getDecimals(widgetConfig);
+        const tooltip =
+            !Array.isArray(option.tooltip) && option.tooltip
+                ? option.tooltip
+                : {};
+        option.tooltip = {
+            ...tooltip,
+            valueFormatter: (value: unknown) =>
+                this.formatNumber(value, decimals),
+        };
+
+        this.applyAxisLabelFormatting(option.xAxis, decimals);
+        this.applyAxisLabelFormatting(option.yAxis, decimals);
     }
 
     public handleUpdatedFields(
@@ -90,5 +109,31 @@ export class SpHistogramRendererService extends SpBaseSingleFieldEchartsRenderer
 
     getDefaultSeriesName(widgetConfig: HistogramChartWidgetModel): string {
         return widgetConfig.visualizationConfig.selectedProperty.fullDbName;
+    }
+
+    private applyAxisLabelFormatting(
+        axis: EChartsOption['xAxis'] | EChartsOption['yAxis'] | undefined,
+        decimals: number | undefined,
+    ): void {
+        if (!axis) {
+            return;
+        }
+
+        if (Array.isArray(axis)) {
+            axis.forEach(a => {
+                (a as any).axisLabel = {
+                    ...(a as any).axisLabel,
+                    formatter: (value: number | string) =>
+                        this.formatNumber(value, decimals),
+                };
+            });
+            return;
+        }
+
+        (axis as any).axisLabel = {
+            ...(axis as any).axisLabel,
+            formatter: (value: number | string) =>
+                this.formatNumber(value, decimals),
+        };
     }
 }

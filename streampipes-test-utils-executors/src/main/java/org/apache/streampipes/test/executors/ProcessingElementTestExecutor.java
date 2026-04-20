@@ -20,8 +20,10 @@ package org.apache.streampipes.test.executors;
 
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
+import org.apache.streampipes.extensions.api.pe.param.InputStreamParams;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.manager.template.DataProcessorTemplateHandler;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.CustomOutputStrategy;
 import org.apache.streampipes.model.runtime.Event;
@@ -36,6 +38,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +47,6 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 public class ProcessingElementTestExecutor {
@@ -83,7 +85,7 @@ public class ProcessingElementTestExecutor {
       List<Map<String, Object>> inputEvents,
       List<Map<String, Object>> expectedOutputEvents
   ) {
-
+    var mockCollector = mock(SpOutputCollector.class);
 
     // initialize the extractor with the provided configuration of the user input
     var dataProcessorInvocation = getProcessorInvocation();
@@ -97,14 +99,23 @@ public class ProcessingElementTestExecutor {
 
     var mockParams = mock(IDataProcessorParameters.class);
 
-    when(mockParams.getModel()).thenReturn(dataProcessorInvocation);
-    when(mockParams.extractor()).thenReturn(extractor);
+    Mockito.doReturn(dataProcessorInvocation)
+        .when(mockParams)
+        .getModel();
+    Mockito.doReturn(extractor)
+        .when(mockParams)
+        .extractor();
+
+    if (canProvideInputStreamParams(dataProcessorInvocation)) {
+      Mockito.doReturn(getInputStreamParams(dataProcessorInvocation))
+          .when(mockParams)
+          .getInputStreamParams();
+    }
 
     // calls the onPipelineStarted method of the processor to initialize it
-    processor.onPipelineStarted(mockParams, null, null);
+    processor.onPipelineStarted(mockParams, mockCollector, null);
 
     // mock the output collector to capture the output events and validate the results later
-    var mockCollector = mock(SpOutputCollector.class);
     var spOutputCollectorCaptor = ArgumentCaptor.forClass(Event.class);
 
 
@@ -190,24 +201,8 @@ public class ProcessingElementTestExecutor {
   }
 
   private PipelineElementTemplate getPipelineElementTemplate() {
-    var staticProperties = processor
-        .declareConfig()
-        .getDescription()
-        .getStaticProperties();
-
-
     var configs = new ArrayList<Map<String, Object>>();
-
-    staticProperties.forEach(staticProperty -> {
-      var value = testConfiguration.getFieldConfiguration()
-                                   .get(staticProperty.getInternalName());
-      configs.add(
-          Map.of(
-              staticProperty.getInternalName(),
-              value
-          )
-      );
-    });
+    configs.add(new HashMap<>(testConfiguration.getFieldConfiguration()));
 
     return new PipelineElementTemplate("name", "description", configs);
   }
@@ -239,6 +234,29 @@ public class ProcessingElementTestExecutor {
           .setSelectedPropertyKeys(testConfiguration.getCustomOutputProperties());
     }
 
+  }
+
+  private List<InputStreamParams> getInputStreamParams(DataProcessorInvocation dataProcessorInvocation) {
+    return IntStream.range(0, dataProcessorInvocation.getInputStreams().size())
+        .mapToObj(index -> makeInputStreamParams(index, dataProcessorInvocation.getInputStreams().get(index)))
+        .toList();
+  }
+
+  private boolean canProvideInputStreamParams(DataProcessorInvocation dataProcessorInvocation) {
+    return !dataProcessorInvocation.getInputStreams()
+                                   .isEmpty()
+           && dataProcessorInvocation.getInputStreams()
+                                     .stream()
+                                     .noneMatch(this::isMissingGrounding);
+  }
+
+  private boolean isMissingGrounding(SpDataStream inputStream) {
+    return inputStream.getEventGrounding() == null || inputStream.getEventGrounding()
+                                                             .getTransportProtocol() == null;
+  }
+
+  private InputStreamParams makeInputStreamParams(Integer streamIndex, SpDataStream inputStream) {
+    return new InputStreamParams(streamIndex, inputStream, List.of());
   }
 
 }

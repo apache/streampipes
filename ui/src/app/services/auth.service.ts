@@ -17,10 +17,18 @@
  */
 
 import { RestApi } from './rest-api.service';
-import { Injectable } from '@angular/core';
-import { Observable, timer } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { Observable, of, timer } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { filter, map, switchMap } from 'rxjs/operators';
+import {
+    catchError,
+    filter,
+    finalize,
+    map,
+    shareReplay,
+    switchMap,
+    tap,
+} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../login/services/login.service';
 import {
@@ -30,19 +38,23 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    constructor(
-        private restApi: RestApi,
-        private tokenStorage: JwtTokenStorageService,
-        private currentUserService: CurrentUserService,
-        private router: Router,
-        private loginService: LoginService,
-    ) {
-        if (this.authenticated()) {
+    private restApi = inject(RestApi);
+    private tokenStorage = inject(JwtTokenStorageService);
+    private currentUserService = inject(CurrentUserService);
+    private router = inject(Router);
+    private loginService = inject(LoginService);
+
+    private refreshInFlight$?: Observable<boolean>;
+
+    constructor() {
+        const tokenStorage = this.tokenStorage;
+
+        if (this.authenticated() && tokenStorage.getUser()) {
             this.currentUserService.authToken$.next(tokenStorage.getToken());
             this.currentUserService.user$.next(tokenStorage.getUser());
             this.currentUserService.isLoggedIn$.next(true);
         } else {
-            this.logout();
+            this.clearLocalAuthState();
         }
         this.scheduleTokenRenew();
         this.watchTokenExpiration();
@@ -55,6 +67,7 @@ export class AuthService {
         this.tokenStorage.saveUser(decodedToken.user);
         this.currentUserService.authToken$.next(data.accessToken);
         this.currentUserService.user$.next(decodedToken.user);
+        this.currentUserService.isLoggedIn$.next(true);
     }
 
     public oauthLogin(token: string) {
@@ -64,11 +77,30 @@ export class AuthService {
         this.tokenStorage.saveUser(decodedToken.user);
         this.currentUserService.authToken$.next(token);
         this.currentUserService.user$.next(decodedToken.user);
+        this.currentUserService.isLoggedIn$.next(true);
     }
 
     public logout() {
-        this.tokenStorage.clearTokens();
-        this.currentUserService.authToken$.next(undefined);
+        this.loginService.logout().subscribe({
+            next: () => this.clearLocalAuthState(),
+            error: () => this.clearLocalAuthState(),
+        });
+    }
+
+    public ensureAuthenticated(returnUrl: string): Observable<boolean> {
+        if (this.authenticated()) {
+            return of(true);
+        }
+
+        return this.refreshAccessToken().pipe(
+            tap(authenticated => {
+                if (!authenticated) {
+                    this.router.navigate(['/login'], {
+                        queryParams: { returnUrl },
+                    });
+                }
+            }),
+        );
     }
 
     public authenticated(): boolean {
@@ -82,11 +114,6 @@ export class AuthService {
             token !== undefined &&
             !jwtHelper.isTokenExpired(token)
         );
-    }
-
-    public decodeJwtToken(token: string): any {
-        const jwtHelper: JwtHelperService = new JwtHelperService({});
-        return jwtHelper.decodeToken(token);
     }
 
     checkConfiguration(): Observable<boolean> {
@@ -113,21 +140,22 @@ export class AuthService {
                 map((token: any) =>
                     new JwtHelperService({}).getTokenExpirationDate(token),
                 ),
+                filter(
+                    (expiresIn: Date | null): expiresIn is Date => !!expiresIn,
+                ),
                 switchMap((expiresIn: Date) =>
                     timer(expiresIn.getTime() - Date.now() - 60000),
                 ),
             )
             .subscribe(() => {
-                if (this.authenticated()) {
+                if (this.currentUserService.authToken$.getValue()) {
                     this.updateTokenAndUserInfo();
                 }
             });
     }
 
     updateTokenAndUserInfo() {
-        this.loginService.renewToken().subscribe(data => {
-            this.login(data);
-        });
+        this.refreshAccessToken().subscribe();
     }
 
     watchTokenExpiration() {
@@ -137,14 +165,48 @@ export class AuthService {
                 map((token: any) =>
                     new JwtHelperService({}).getTokenExpirationDate(token),
                 ),
+                filter(
+                    (expiresIn: Date | null): expiresIn is Date => !!expiresIn,
+                ),
                 switchMap((expiresIn: Date) =>
                     timer(expiresIn.getTime() - Date.now() + 1),
                 ),
             )
             .subscribe(() => {
-                this.logout();
-                this.router.navigate(['login']);
+                this.refreshAccessToken().subscribe(authenticated => {
+                    if (!authenticated) {
+                        this.router.navigate(['login']);
+                    }
+                });
             });
+    }
+
+    private refreshAccessToken(): Observable<boolean> {
+        if (this.refreshInFlight$) {
+            return this.refreshInFlight$;
+        }
+
+        this.refreshInFlight$ = this.loginService.refreshToken().pipe(
+            tap(data => this.login(data)),
+            map(() => true),
+            catchError(() => {
+                this.clearLocalAuthState();
+                return of(false);
+            }),
+            finalize(() => {
+                this.refreshInFlight$ = undefined;
+            }),
+            shareReplay({ bufferSize: 1, refCount: true }),
+        );
+
+        return this.refreshInFlight$;
+    }
+
+    private clearLocalAuthState() {
+        this.tokenStorage.clearTokens();
+        this.currentUserService.authToken$.next(undefined);
+        this.currentUserService.user$.next(undefined);
+        this.currentUserService.isLoggedIn$.next(false);
     }
 
     public hasRole(role: string): boolean {

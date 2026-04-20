@@ -16,40 +16,64 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { Component, OnInit, inject } from '@angular/core';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    ValidatorFn,
+    Validators,
+} from '@angular/forms';
 import { StaticPropertyUtilService } from '../static-property-util.service';
-import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { SecretStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 @Component({
     selector: 'sp-app-static-secret-input',
     templateUrl: './static-secret-input.component.html',
     styleUrls: ['./static-secret-input.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormField,
+        MatInput,
+        MatError,
+    ],
 })
 export class StaticSecretInputComponent
     extends AbstractValidatedStaticPropertyRenderer<SecretStaticProperty>
     implements OnInit
 {
-    constructor(public staticPropertyUtil: StaticPropertyUtilService) {
-        super();
-    }
+    staticPropertyUtil = inject(StaticPropertyUtilService);
 
     ngOnInit() {
-        this.addValidator(this.staticProperty.value, Validators.required);
+        this.addValidator(this.staticProperty.value, this.collectValidators());
         this.enableValidators();
+        this.emitUpdate();
+    }
+
+    private collectValidators(): ValidatorFn[] {
+        const validators: ValidatorFn[] = [];
+        if (!this.staticProperty.optional) {
+            validators.push(Validators.required);
+        }
+
+        return validators;
     }
 
     emitUpdate() {
         this.applyCompletedConfiguration(
-            this.staticPropertyUtil.asFreeTextStaticProperty(
-                this.staticProperty,
-            ).value &&
-                this.staticPropertyUtil.asFreeTextStaticProperty(
+            this.staticProperty.optional ||
+                (this.staticPropertyUtil.asFreeTextStaticProperty(
                     this.staticProperty,
-                ).value !== '',
+                ).value &&
+                    this.staticPropertyUtil.asFreeTextStaticProperty(
+                        this.staticProperty,
+                    ).value !== ''),
         );
     }
 
@@ -58,5 +82,6 @@ export class StaticSecretInputComponent
     onValueChange(value: any) {
         this.staticProperty.value = value;
         this.staticProperty.encrypted = false;
+        this.emitUpdate();
     }
 }

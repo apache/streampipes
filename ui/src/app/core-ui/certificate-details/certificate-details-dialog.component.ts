@@ -17,13 +17,29 @@
  */
 
 import { Component, inject, Input } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { DialogRef, SpLabelComponent } from '@streampipes/shared-ui';
 import { Certificate } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-certificate-details-dialog',
     templateUrl: './certificate-details-dialog.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutGapDirective,
+        FlexDirective,
+        SpLabelComponent,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class CertificateDetailsDialogComponent {
     dialogRef = inject(DialogRef<CertificateDetailsDialogComponent>);

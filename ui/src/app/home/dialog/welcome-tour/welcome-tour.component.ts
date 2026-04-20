@@ -17,30 +17,41 @@
  */
 
 import { DialogRef } from '@streampipes/shared-ui';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { AppConstants } from '../../../services/app.constants';
 import { AuthService } from '../../../services/auth.service';
 import { UserAccount, UserInfo } from '@streampipes/platform-services';
 import { ProfileService } from '../../../profile/profile.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-welcome-tour',
     templateUrl: './welcome-tour.component.html',
     styleUrls: ['./welcome-tour.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatDivider,
+    ],
 })
 export class WelcomeTourComponent implements OnInit {
+    private authService = inject(AuthService);
+    private dialogRef = inject<DialogRef<WelcomeTourComponent>>(DialogRef);
+    private profileService = inject(ProfileService);
+    appConstants = inject(AppConstants);
+
     @Input()
     userInfo: UserInfo;
 
     currentUser: UserAccount;
-
-    constructor(
-        private authService: AuthService,
-        private dialogRef: DialogRef<WelcomeTourComponent>,
-        private profileService: ProfileService,
-        public appConstants: AppConstants,
-    ) {}
 
     ngOnInit(): void {
         this.profileService

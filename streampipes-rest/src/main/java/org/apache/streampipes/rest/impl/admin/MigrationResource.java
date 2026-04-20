@@ -19,22 +19,23 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.connect.management.management.AdapterMigrationManager;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
+import org.apache.streampipes.health.monitoring.ServiceRegistrationManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.health.CoreInitialInstallationProgress;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
-import org.apache.streampipes.manager.health.ServiceRegistrationManager;
 import org.apache.streampipes.manager.migration.PipelineElementMigrationManager;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.api.IDataProcessorStorage;
-import org.apache.streampipes.storage.api.IDataSinkStorage;
-import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -61,7 +62,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrationResource.class);
 
-  private final CRUDStorage<SpServiceRegistration> extensionsServiceStorage =
+  private final IExtensionsServiceStorage extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
   private final IAdapterStorage adapterDescriptionStorage = getNoSqlStorage().getAdapterDescriptionStorage();
   private final IAdapterStorage adapterStorage = getNoSqlStorage().getAdapterInstanceStorage();
@@ -74,6 +75,14 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
   private final CoreServiceStatusManager coreServiceStatusManager = new CoreServiceStatusManager(
       getNoSqlStorage().getSpCoreConfigurationStorage()
   );
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  private final WorkerRestClient workerRestClient;
+
+  public MigrationResource(ExtensionServiceRequestManager extensionServiceRequestManager,
+                           WorkerRestClient workerRestClient) {
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.workerRestClient = workerRestClient;
+  }
 
   @PostMapping(path = "{serviceId}", consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(
@@ -120,12 +129,17 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
                 List.of(SpServiceTagPrefix.DATA_PROCESSOR, SpServiceTagPrefix.DATA_SINK)
             );
 
-            new AdapterMigrationManager(adapterStorage, adapterDescriptionStorage)
+            new AdapterMigrationManager(
+                adapterStorage,
+                adapterDescriptionStorage,
+                workerRestClient,
+                extensionServiceRequestManager)
               .handleMigrations(extensionsServiceConfig, adapterMigrations);
             new PipelineElementMigrationManager(
                 pipelineStorage,
                 dataProcessorStorage,
-                dataSinkStorage)
+                dataSinkStorage,
+                extensionServiceRequestManager)
                 .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
           }
         }

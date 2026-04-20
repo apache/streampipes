@@ -16,19 +16,33 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { AppConstants } from '../../../services/app.constants';
 import { LinkSettings } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-auth-box',
     templateUrl: './auth-box.component.html',
     styleUrls: ['./auth-box.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        RouterLink,
+        RouterLinkActive,
+        TranslatePipe,
+    ],
 })
 export class AuthBoxComponent {
+    appConstants = inject(AppConstants);
+
     @Input()
     linkSettings: LinkSettings;
-
-    constructor(public appConstants: AppConstants) {}
 }

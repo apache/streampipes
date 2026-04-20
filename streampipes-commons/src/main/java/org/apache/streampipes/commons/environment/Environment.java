@@ -154,7 +154,15 @@ public interface Environment {
 
   IntEnvironmentVariable getNatsPort();
 
+  StringEnvironmentVariable getNatsToken();
+
   StringEnvironmentVariable getPulsarUrl();
+
+  StringEnvironmentVariable getCoreExtensionTransportMode();
+
+  StringEnvironmentVariable getExtensionTransportMode();
+
+  StringEnvironmentVariable getExtensionRequestTopicPrefix();
 
   StringEnvironmentVariable getCustomServiceTags();
 
@@ -171,6 +179,8 @@ public interface Environment {
   StringEnvironmentVariable getOpcUaKeystoreType();
 
   StringEnvironmentVariable getOpcUaKeystoreAlias();
+
+  IntEnvironmentVariable getOpcUaMinPullIntervalMs();
 
   StringEnvironmentVariable getKeystoreFilename();
 
@@ -231,6 +241,10 @@ public interface Environment {
   StringEnvironmentVariable getRetentionLocalDir();
 
   BooleanEnvironmentVariable getLoadManagerEnable();
+
+  // Certificate expiration email reminder
+  StringEnvironmentVariable getCertificateExpiryCron();
+  StringEnvironmentVariable getCertificateExpiryEmailDays();
 
   //SpRateLimiter
   LongEnvironmentVariable getRateLimiterDefaultWarmupPeriod();

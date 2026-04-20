@@ -49,20 +49,27 @@ public class ConfigurationParser {
       // Remove leading and trailing whitespace
       line = line.trim();
 
-      // Skip comments
-      if (line.startsWith("//")) {
+      // Skip empty lines and full-line comments
+      if (line.isEmpty() || line.startsWith("//")) {
         continue;
       }
 
-      // Check if macher matches and add to results list
+      // Strip inline comments
+      int commentIndex = line.indexOf("//");
+      if (commentIndex >= 0) {
+        line = line.substring(0, commentIndex).trim();
+      }
+
+      // Check if matcher matches and add to results list
       var matcher = pattern.matcher(line);
       if (matcher.find()) {
         result.put(matcher.group(1), matcher.group(2));
       }
     }
-
     return result;
   }
+
+  
 
 
   /**

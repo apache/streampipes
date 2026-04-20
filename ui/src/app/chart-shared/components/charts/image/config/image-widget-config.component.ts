@@ -23,12 +23,21 @@ import {
     ImageWidgetVisConfig,
 } from '../model/image-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-image-widget-config',
     templateUrl: './image-widget-config.component.html',
     styleUrls: ['./image-widget-config.component.scss'],
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        SplitSectionComponent,
+        SelectSinglePropertyConfigComponent,
+        TranslatePipe,
+    ],
 })
 export class ImageWidgetConfigComponent extends BaseWidgetConfig<
     ImageWidgetModel,

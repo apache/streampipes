@@ -30,11 +30,11 @@ public class DatatypeTransformationRule implements TransformationRule {
   private String targetDatatypeXsd;
 
   public DatatypeTransformationRule(String eventKey,
-                                    String originalDatatypeXsd,
                                     String targetDatatypeXsd) {
     this.eventKey = eventKey;
     this.targetDatatypeXsd = targetDatatypeXsd;
   }
+
 
   @Override
   public Map<String, Object> apply(Map<String, Object> event) {

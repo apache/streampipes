@@ -16,15 +16,15 @@
  *
  */
 
-import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserRole } from '../../../src/app/core/auth/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
+import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AssetBuilder } from '../../support/builder/AssetBuilder';
 
@@ -107,35 +107,35 @@ describe('Test that resources can be added to assets on creation', () => {
     it('Check Role Asset Admin in Charts', () => {
         UserUtils.switchUser(newUser);
 
-        DataExplorerUtils.goToDatalake();
-        DataExplorerUtils.createAndEditDataView();
+        ChartUtils.goToDatalake();
+        ChartUtils.createAndEditDataView();
 
-        DataExplorerBtns.chartAssetCheckboxBtn().should('exist');
+        ChartBtns.chartAssetCheckboxBtn().should('exist');
 
         UserUtils.toggleUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
 
         UserUtils.switchUser(newUser);
 
-        DataExplorerUtils.goToDatalake();
-        DataExplorerUtils.createAndEditDataView();
+        ChartUtils.goToDatalake();
+        ChartUtils.createAndEditDataView();
 
-        DataExplorerBtns.chartAssetCheckboxBtn().should('not.exist');
+        ChartBtns.chartAssetCheckboxBtn().should('not.exist');
     });
 
     it('Check Role Asset Admin in Dashboard', () => {
         UserUtils.switchUser(newUser);
-        DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.addNewDashboard('Test');
+        ChartUtils.goToDashboard();
+        ChartUtils.addNewDashboard('Test');
 
-        DataExplorerBtns.dashboardAssetCheckboxBtn().should('exist');
-        DataExplorerBtns.closeDashboardCreate().click();
+        ChartBtns.dashboardAssetCheckboxBtn().should('exist');
+        ChartBtns.closeDashboardCreate().click();
 
         UserUtils.toggleUserRole(newUser, UserRole.ROLE_ASSET_ADMIN);
 
         UserUtils.switchUser(newUser);
 
-        DataExplorerUtils.goToDashboard();
-        DataExplorerUtils.addNewDashboard('Test');
-        DataExplorerBtns.dashboardAssetCheckboxBtn().should('not.exist');
+        ChartUtils.goToDashboard();
+        ChartUtils.addNewDashboard('Test');
+        ChartBtns.dashboardAssetCheckboxBtn().should('not.exist');
     });
 });

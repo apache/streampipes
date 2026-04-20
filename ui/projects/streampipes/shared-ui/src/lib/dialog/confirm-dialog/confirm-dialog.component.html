@@ -18,27 +18,54 @@
 
 <div fxFlex="100" fxLayout="column">
     <mat-dialog-content>
-        <div>
+        <div data-cy="confirm-dialog">
             <h4>{{ data.title }}</h4>
             <h5>{{ data.subtitle }}</h5>
         </div>
     </mat-dialog-content>
     <mat-dialog-actions>
-        <div fxFlex="100" fxLayoutAlign="end center" class="footer">
-            @if (data.confirmAndCancel) {
-                <button mat-button (click)="onCancel()" data-cy="cancel-delete">
-                    {{ data.cancelTitle }}
-                </button>
+        <div
+            fxFlex="100"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            class="footer"
+        >
+            @if (data.neutralTitle) {
+                <div class="neutral-action-wrapper">
+                    <button
+                        mat-flat-button
+                        class="mat-basic"
+                        (click)="onNeutral()"
+                        data-cy="neutral-action"
+                    >
+                        {{ data.neutralTitle }}
+                    </button>
+                </div>
             }
-            <button
-                mat-flat-button
-                color="accent"
-                (click)="onOk()"
-                cdkFocusInitial
-                data-cy="confirm-delete"
+            <div
+                fxLayout="row"
+                fxLayoutAlign="end center"
+                class="primary-actions"
             >
-                {{ data.okTitle }}
-            </button>
+                @if (data.cancelTitle) {
+                    <button
+                        mat-flat-button
+                        class="mat-basic"
+                        (click)="onCancel()"
+                        data-cy="cancel-delete"
+                    >
+                        {{ data.cancelTitle }}
+                    </button>
+                }
+                <button
+                    mat-flat-button
+                    (click)="onOk()"
+                    cdkFocusInitial
+                    data-cy="confirm-delete"
+                >
+                    {{ data.confirmTitle }}
+                </button>
+            </div>
         </div>
     </mat-dialog-actions>
 </div>

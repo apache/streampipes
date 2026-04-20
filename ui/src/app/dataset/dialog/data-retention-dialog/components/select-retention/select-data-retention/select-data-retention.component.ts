@@ -16,13 +16,19 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {
     DataExplorerDataConfig,
-    DateRange,
     RetentionTimeConfig,
 } from '@streampipes/platform-services';
-import { DataRetentionConfig } from '../../../model/data-retention-config.model';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-select-data-retention',
@@ -31,7 +37,15 @@ import { DataRetentionConfig } from '../../../model/data-retention-config.model'
         './select-data-retention.component.scss',
         // '../select-data.component.scss',
     ],
-    standalone: false,
+    imports: [
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatSuffix,
+        TranslatePipe,
+        SplitSectionComponent,
+        FormFieldComponent,
+    ],
 })
 export class SelectDataRetentionComponent {
     @Input() dataExplorerDataConfig: DataExplorerDataConfig;

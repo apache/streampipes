@@ -20,6 +20,8 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
+import { SharedUtils } from '../../support/utils/shared/SharedUtils';
+import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 
 describe('Test Edit Adapter', () => {
     const adapterName = 'Test Adapter';
@@ -40,72 +42,62 @@ describe('Test Edit Adapter', () => {
         const adapterInput = AdapterBuilder.create('Machine_Data_Simulator')
             .setName(adapterName)
             .addInput('input', 'wait-time-ms', '1000')
+            .setTimestampProperty('timestamp')
             .build();
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(adapterInput);
+        ConnectUtils.goToConnect();
 
-        // Add new property and edit field
-        ConnectEventSchemaUtils.addStaticProperty(
-            'test-property-1',
-            'static-value-1',
-        );
+        ConnectUtils.goToNewAdapterPage();
+
+        ConnectUtils.selectAdapter(adapterInput.adapterType);
+
+        ConnectUtils.configureAdapter(adapterInput);
+
+        cy.wait(1000);
+        ConnectBtns.configureSchemaNextBtn().click();
 
         // Edit property density
         const propertyName = 'density';
         ConnectEventSchemaUtils.changePropertyDataType(propertyName, 'Double');
-        ConnectEventSchemaUtils.numberTransformation(propertyName, '2');
         ConnectEventSchemaUtils.changeSemanticType(
             propertyName,
             'http://schema.org/Numbers',
         );
-        ConnectEventSchemaUtils.renameProperty(propertyName, 'test-density');
 
-        ConnectUtils.finishEventSchemaConfiguration();
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+
+        ConnectBtns.configureFieldsNextBtn().click();
 
         ConnectUtils.startAdapter(adapterInput);
     }
 
     function validateSavedAdapterEdits() {
-        // Edit adapter and check if given values and added property still provided
+        // Edit the adapter and check if given values and added property still provided
         ConnectBtns.openActionsMenu(adapterName);
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
         ConnectBtns.adapterSettingsNextBtn().click();
-        ConnectEventSchemaUtils.clickEditProperty('density', false);
-        // cy.dataCy('edit-density').click();
-        ConnectEventSchemaUtils.validateRuntimeName('test-density');
+        ConnectBtns.configureSchemaNextBtn().click();
+        ConnectEventSchemaUtils.clickEditProperty('density');
 
         ConnectBtns.semanticTypeInput().should(
             'have.value',
             'http://schema.org/Numbers',
         );
         ConnectBtns.changeRuntimeType().should('include.text', 'Double');
-        ConnectBtns.connectSchemaCorrectionValueInput().should(
-            'have.value',
-            '2',
-        );
-        ConnectBtns.connectSchemaCorrectionOperatorInput().should(
-            'include.text',
-            'Multiply',
-        );
 
         ConnectBtns.changeRuntimeType()
             .click()
             .get('mat-option')
             .contains('Float')
             .click();
-        ConnectBtns.connectSchemaCorrectionValueInput().clear();
         ConnectBtns.saveEditProperty().click();
-        ConnectEventSchemaUtils.schemaPreviewResultEvent().should(
-            'include.text',
-            'test-property-1',
-        );
 
         storeAndCloseAdapterPreview();
     }
 
     function reconfigureAdapterToUsePressureSensorInsteadOfFlowRate() {
-        // Configure adapter with pressure instead of flowrate
+        // Configure the adapter with pressure instead of flowrate
         ConnectBtns.openActionsMenu(adapterName);
         ConnectBtns.editAdapter().click();
 
@@ -114,17 +106,17 @@ describe('Test Edit Adapter', () => {
             .addInput('radio', 'selected', 'simulator-option-pressure')
             .build();
         ConnectUtils.configureAdapter(adapterInput);
-
-        ConnectEventSchemaUtils.schemaPreviewResultEvent().should(
-            'include.text',
-            'test-property-1',
-        );
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
+        ConnectBtns.configureSchemaNextBtn().click();
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
 
         storeAndCloseAdapterPreview();
     }
 
     function storeAndCloseAdapterPreview() {
-        ConnectBtns.schemaNextBtn().click();
+        ConnectBtns.configureFieldsNextBtn().click();
         ConnectBtns.storeEditAdapter().click();
         ConnectUtils.closeAdapterPreview();
     }

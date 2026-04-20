@@ -21,10 +21,13 @@ package org.apache.streampipes.rest.impl.connect;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
 import org.apache.streampipes.connect.management.management.DescriptionManagement;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
@@ -40,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v2/connect/master/description")
@@ -48,17 +52,15 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   private static final Logger LOG = LoggerFactory.getLogger(DescriptionResource.class);
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
 
-  public DescriptionResource() {
-    super(DescriptionManagement::new);
+  public DescriptionResource(WorkerRestClient workerRestClient) {
+    super(() -> new DescriptionManagement(workerRestClient));
     endpointGenerator = new ExtensionsServiceEndpointGenerator();
   }
 
   @GetMapping(path = "/adapters", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<List<AdapterDescription>> getAdapters() {
-    List<AdapterDescription> result = managementService.getAdapters();
-
-    return ok(result);
+    return ok(managementService.getAdapters());
   }
 
   @GetMapping(path = "/{id}/assets", produces = "application/zip")
@@ -70,26 +72,23 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
       if (adapterDescriptionOptional.isPresent()) {
         AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-        String workerUrl = getServiceResourceUrl(adapterDescription.getAppId());
+        var service = getService(adapterDescription.getAppId());
 
-        result = managementService.getAssets(workerUrl);
+        result = managementService.getAssets(service, adapterDescription.getAppId());
       }
 
       if (result == null) {
-        LOG.error("Not found adapter with id " + id);
+        LOG.error("Not found adapter with id {}", id);
         return fail();
-      } else {
-        return ok(result);
       }
-    } catch (AdapterException e) {
-      LOG.error("Not found adapter with id " + id, e);
-      return fail();
-    } catch (NoServiceEndpointsAvailableException e) {
+      return ok(result);
+    } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+      LOG.error("Not found adapter with id {}", id, e);
       return fail();
     }
   }
 
-  @GetMapping(path = "/{id}/assets/icon", produces = "image/png")
+  @GetMapping(path = "/{id}/assets/icon")
   @PreAuthorize("this.hasReadAuthority()")
   public ResponseEntity<?> getAdapterIconAsset(@PathVariable("id") String id) {
     try {
@@ -99,21 +98,21 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
       if (adapterDescriptionOptional.isPresent()) {
         AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-        String workerUrl = getServiceResourceUrl(adapterDescription.getAppId());
+        var service = getService(adapterDescription.getAppId());
 
-        result = managementService.getIconAsset(workerUrl);
+        result = managementService.getIconAsset(service, adapterDescription.getAppId());
       }
 
       if (result == null) {
-        LOG.error("Not found adapter with id " + id);
+        LOG.error("Not found adapter with id {}", id);
         return fail();
       } else {
-        return ok(result);
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(result)))
+            .body(result);
       }
-    } catch (AdapterException e) {
-      LOG.error("Not found adapter with id " + id);
-      return fail();
-    } catch (NoServiceEndpointsAvailableException e) {
+    } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+      LOG.error("Not found adapter with id {}", id, e);
       return fail();
     }
   }
@@ -127,21 +126,18 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
       Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
       if (adapterDescriptionOptional.isPresent()) {
         AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-        String workerUrl = getServiceResourceUrl(adapterDescription.getAppId());
+        var service = getService(adapterDescription.getAppId());
 
-        result = managementService.getDocumentationAsset(workerUrl);
+        result = managementService.getDocumentationAsset(service, adapterDescription.getAppId());
       }
 
       if (result == null) {
-        LOG.error("Not found adapter with id " + id);
+        LOG.error("Not found adapter with id {}", id);
         return fail();
-      } else {
-        return ok(result);
       }
-    } catch (AdapterException e) {
-      LOG.error("Not found adapter with id " + id, e);
-      return fail();
-    } catch (NoServiceEndpointsAvailableException e) {
+      return ok(result);
+    } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+      LOG.error("Not found adapter with id {}", id, e);
       return fail();
     }
   }
@@ -157,7 +153,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
     }
   }
 
-  private String getServiceResourceUrl(String appId) throws NoServiceEndpointsAvailableException {
-    return endpointGenerator.getEndpointResourceUrl(appId, SpServiceUrlProvider.ADAPTER);
+  private SpServiceRegistration getService(String appId) throws NoServiceEndpointsAvailableException {
+    return endpointGenerator.selectService(appId, SpServiceUrlProvider.ADAPTER, Set.of());
   }
 }

@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     ViewChild,
+    inject,
 } from '@angular/core';
 import {
     AssetConstants,
@@ -39,15 +40,35 @@ import {
     SpAssetBrowserService,
 } from '@streampipes/shared-ui';
 import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AssetLinkTableComponent } from '../../../view-asset/view-asset-links/asset-link-table/asset-link-table.component';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-asset-details-links',
     templateUrl: './asset-details-links.component.html',
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        LayoutGapDirective,
+        MatButton,
+        LayoutDirective,
+        FlexDirective,
+        AssetLinkTableComponent,
+        TranslatePipe,
+    ],
 })
 export class AssetDetailsLinksComponent implements OnInit {
+    private genericStorageService = inject(GenericStorageService);
+    private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
+    private assetBrowserService = inject(SpAssetBrowserService);
+
     @Input()
     asset: SpAsset;
 
@@ -65,13 +86,6 @@ export class AssetDetailsLinksComponent implements OnInit {
 
     @ViewChild('assetLinkTable', { static: false })
     assetLinkTable: AssetLinkTableComponent;
-
-    constructor(
-        private genericStorageService: GenericStorageService,
-        private dialogService: DialogService,
-        private translateService: TranslateService,
-        private assetBrowserService: SpAssetBrowserService,
-    ) {}
 
     ngOnInit(): void {
         this.genericStorageService
@@ -102,7 +116,7 @@ export class AssetDetailsLinksComponent implements OnInit {
             if (assetLinks) {
                 this.asset.assetLinks = assetLinks;
                 this.assetLinkTable?.refreshData();
-                this.assetBrowserService.loadAssetData();
+                this.assetBrowserService.refreshBrowserAssetData();
             }
         });
     }
@@ -135,7 +149,7 @@ export class AssetDetailsLinksComponent implements OnInit {
                 this.asset.assetLinks.push(storedLink);
                 this.asset.assetLinks = [...this.asset.assetLinks];
                 this.assetLinkTable?.refreshData();
-                this.assetBrowserService.loadAssetData();
+                this.assetBrowserService.refreshBrowserAssetData();
             }
         });
     }

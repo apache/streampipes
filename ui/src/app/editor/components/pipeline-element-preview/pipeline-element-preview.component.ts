@@ -16,21 +16,37 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { KeyValue } from '@angular/common';
+import { KeyValue, KeyValuePipe } from '@angular/common';
 import {
     LivePreviewService,
     PipelinePreviewModel,
 } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-element-preview',
     templateUrl: './pipeline-element-preview.component.html',
     styleUrls: ['./pipeline-element-preview.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatProgressSpinner,
+        KeyValuePipe,
+        TranslatePipe,
+    ],
 })
 export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
+    private livePreviewService = inject(LivePreviewService);
+
     @Input()
     pipelinePreview: PipelinePreviewModel;
 
@@ -40,8 +56,6 @@ export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
     runtimeData: Record<string, any>;
     runtimeDataError = false;
     previewSub: Subscription;
-
-    constructor(private livePreviewService: LivePreviewService) {}
 
     ngOnInit(): void {
         this.getLatestRuntimeInfo();

@@ -26,7 +26,6 @@ import org.apache.streampipes.model.staticproperty.TreeInputNode;
 
 import org.eclipse.milo.opcua.sdk.client.AddressSpace;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
-import org.eclipse.milo.opcua.sdk.client.api.UaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.sdk.core.nodes.VariableNode;
@@ -60,10 +59,10 @@ public class OpcUaNodeBrowser {
     this.spOpcConfig = spOpcUaClientConfig;
   }
 
-  public OpcUaNodeProvider makeNodeProvider(List<String> runtimeNameFilters) throws UaException {
+  public OpcUaNodeProvider makeNodeProvider() throws UaException {
     var opcNodes = new ArrayList<OpcUaNode>();
     for (String selectedNodeName : this.spOpcConfig.getSelectedNodeNames()) {
-      opcNodes.add(toOpcNode(selectedNodeName, runtimeNameFilters));
+      opcNodes.add(toOpcNode(selectedNodeName));
     }
 
     return new OpcUaNodeProvider(opcNodes);
@@ -79,8 +78,7 @@ public class OpcUaNodeBrowser {
     return findChildren(client, currentNodeId);
   }
 
-  private OpcUaNode toOpcNode(String nodeName,
-                              List<String> runtimeNamesToDelete) throws UaException {
+  private OpcUaNode toOpcNode(String nodeName) throws UaException {
     AddressSpace addressSpace = getAddressSpace();
 
     NodeId nodeId;
@@ -109,8 +107,9 @@ public class OpcUaNodeBrowser {
     );
 
     if (node instanceof VariableNode) {
+      var dataValue = ((VariableNode) node).getValue();
       var nodeInfo = new BasicVariableNodeInfo((VariableNode) node, spOpcConfig.getNamingStrategy());
-      return OpcUaNodeFactory.createOpcUaNode(nodeInfo, runtimeNamesToDelete);
+      return OpcUaNodeFactory.createOpcUaNode(nodeInfo, dataValue);
     }
 
     LOG.warn("Node {} not of type VariableNode", node.getDisplayName());
@@ -122,7 +121,7 @@ public class OpcUaNodeBrowser {
   }
 
   private List<TreeInputNode> findChildren(
-      UaClient client,
+      OpcUaClient client,
       NodeId nodeId
   ) throws UaException {
     return client

@@ -16,22 +16,27 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { TimeSeriesAppearanceConfig } from '../../../../models/dataview-dashboard.model';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { SpEchartsWidgetAppearanceConfigComponent } from '../../../chart-config/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
+import { SpDataZoomConfigComponent } from '../../../chart-config/data-zoom-config/data-zoom-config.component';
 
 @Component({
     selector: 'sp-time-series-appearance-config',
     templateUrl: './time-series-appearance-config.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        SpEchartsWidgetAppearanceConfigComponent,
+        SpDataZoomConfigComponent,
+    ],
 })
 export class SpTimeSeriesAppearanceConfigComponent {
+    private widgetConfigurationService = inject(ChartConfigurationService);
+
     @Input()
     appearanceConfig: TimeSeriesAppearanceConfig;
-
-    constructor(
-        private widgetConfigurationService: ChartConfigurationService,
-    ) {}
 
     triggerViewUpdate() {
         this.widgetConfigurationService.notify({

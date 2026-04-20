@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
     AssetExportConfiguration,
     ExportConfiguration,
@@ -33,10 +33,8 @@ import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class DataExportService {
-    constructor(
-        private platformServicesCommons: PlatformServicesCommons,
-        private http: HttpClient,
-    ) {}
+    private platformServicesCommons = inject(PlatformServicesCommons);
+    private http = inject(HttpClient);
 
     getExportPreview(assetIds: string[]): Observable<ExportConfiguration> {
         return this.http

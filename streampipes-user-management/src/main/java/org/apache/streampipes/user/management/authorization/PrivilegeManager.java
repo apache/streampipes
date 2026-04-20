@@ -37,6 +37,7 @@ public class PrivilegeManager {
         Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_NOTIFICATIONS_VALUE),
         Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_VALUE),
         Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_READ_DATASET_VALUE),
 
         Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE),
         Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ASSETS_VALUE),
@@ -45,7 +46,8 @@ public class PrivilegeManager {
         Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_FILES_VALUE),
         Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_GENERIC_STORAGE_VALUE),
         Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE),
-        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_ELEMENT_VALUE)
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_ELEMENT_VALUE),
+        Privilege.create(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATASET_VALUE)
 
 
 

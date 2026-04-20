@@ -29,6 +29,15 @@
             ></sp-basic-header-title-component>
             <span fxFlex></span>
             <button
+                *ngIf="writeAccess"
+                color="accent"
+                mat-flat-button
+                data-cy="open-csv-import-dialog"
+                (click)="openCsvImportDialog()"
+            >
+                {{ 'Import CSV' | translate }}
+            </button>
+            <button
                 color="accent"
                 mat-icon-button
                 [matTooltip]="'Refresh' | translate"
@@ -163,75 +172,114 @@
                         {{ 'Retention' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let configurationEntry">
-                        <button
-                            color="accent"
-                            mat-icon-button
-                            [matTooltip]="'Set retention rate' | translate"
-                            data-cy="datalake-retention-btn"
-                            matTooltipPosition="above"
-                            (click)="
-                                openRetentionDialog(
-                                    configurationEntry.elementId
-                                )
-                            "
-                        >
-                            <i
-                                class="material-icons"
-                                [ngStyle]="{
-                                    color: configurationEntry?.retention
-                                        ? 'var(--color-success)'
-                                        : 'var(--color-neutral',
-                                }"
-                                >history</i
+                        <div fxLayout="row">
+                            <span
+                                fxFlex
+                                fxFlexOrder="3"
+                                fxLayout="row"
+                                fxLayoutAlign="start center"
                             >
-                        </button>
-                        @if (
-                            configurationEntry?.retention?.retentionExportConfig
-                                ?.retentionLog?.length > 0
-                        ) {
-                            <button
-                                color="accent"
-                                mat-icon-button
-                                [matTooltip]="
-                                    ('Open Retention Log' | translate) +
-                                    (configurationEntry?.retention
-                                        ?.retentionExportConfig?.lastExport
-                                        ? ' • ' +
-                                          (configurationEntry.retention
-                                              .retentionExportConfig.lastExport
-                                              | date: 'yyyy-MM-dd HH:mm:ss')
-                                        : '')
-                                "
-                                data-cy="datalake-retention-log-btn"
-                                matTooltipPosition="above"
-                                (click)="
-                                    openRetentionLog(
-                                        configurationEntry?.retention
-                                            .retentionExportConfig.retentionLog
-                                    )
-                                "
+                                @if (isAdmin) {
+                                    <button
+                                        color="accent"
+                                        mat-icon-button
+                                        [matTooltip]="
+                                            'Set retention rate' | translate
+                                        "
+                                        data-cy="datalake-retention-btn"
+                                        matTooltipPosition="above"
+                                        (click)="
+                                            openRetentionDialog(
+                                                configurationEntry.elementId
+                                            )
+                                        "
+                                    >
+                                        <i
+                                            class="material-icons"
+                                            [ngStyle]="{
+                                                color: configurationEntry?.retention
+                                                    ? 'var(--color-success)'
+                                                    : 'var(--color-neutral',
+                                            }"
+                                            >history</i
+                                        >
+                                    </button>
+                                } @else {
+                                    <p>-</p>
+                                }
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="retentionlog">
+                    <th mat-header-cell *matHeaderCellDef>
+                        {{ 'Retention Log' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let configurationEntry">
+                        <div fxLayout="row">
+                            <span
+                                fxFlex
+                                fxFlexOrder="3"
+                                fxLayout="row"
+                                fxLayoutAlign="start center"
                             >
-                                <i
-                                    class="material-icons"
-                                    [ngStyle]="{
-                                        color:
-                                            configurationEntry?.retention
+                                @if (configurationEntry?.retention) {
+                                    <button
+                                        color="accent"
+                                        mat-icon-button
+                                        [matTooltip]="
+                                            ('Open Retention Log' | translate) +
+                                            (configurationEntry?.retention
                                                 ?.retentionExportConfig
-                                                ?.retentionLog?.length &&
-                                            configurationEntry.retention
-                                                .retentionExportConfig
-                                                .retentionLog[
-                                                configurationEntry.retention
+                                                ?.lastExport
+                                                ? ' • ' +
+                                                  (configurationEntry.retention
+                                                      .retentionExportConfig
+                                                      .lastExport
+                                                      | date
+                                                          : 'yyyy-MM-dd HH:mm:ss')
+                                                : '')
+                                        "
+                                        data-cy="datalake-retention-log-btn"
+                                        matTooltipPosition="above"
+                                        (click)="
+                                            openRetentionLog(
+                                                configurationEntry?.retention
                                                     .retentionExportConfig
-                                                    .retentionLog.length - 1
-                                            ].status
-                                                ? 'var(--color-success)'
-                                                : 'var(--color-error)',
-                                    }"
-                                    >list_alt</i
-                                >
-                            </button>
-                        }
+                                                    .retentionLog
+                                            )
+                                        "
+                                    >
+                                        <i
+                                            class="material-icons"
+                                            [ngStyle]="{
+                                                color:
+                                                    configurationEntry
+                                                        ?.retention
+                                                        ?.retentionExportConfig
+                                                        ?.retentionLog
+                                                        ?.length &&
+                                                    configurationEntry.retention
+                                                        .retentionExportConfig
+                                                        .retentionLog[
+                                                        configurationEntry
+                                                            .retention
+                                                            .retentionExportConfig
+                                                            .retentionLog
+                                                            .length - 1
+                                                    ].status
+                                                        ? 'green'
+                                                        : 'red',
+                                            }"
+                                            >list_alt</i
+                                        >
+                                    </button>
+                                } @else {
+                                    <p>-</p>
+                                }
+                            </span>
+                        </div>
                     </td>
                 </ng-container>
 
@@ -242,227 +290,239 @@
                         (click)="openDownloadDialog(element.name)"
                     >
                         <mat-icon>download</mat-icon>
-                        <span>{{
-                            'Download data from index' | translate
-                        }}</span>
+                        <span>{{ 'Download' | translate }}</span>
                     </button>
-                    <button
-                        mat-menu-item
-                        data-cy="datalake-truncate-btn"
-                        (click)="cleanDatalakeIndex(element.name)"
-                    >
-                        <mat-icon>local_fire_department</mat-icon>
-                        <span>{{
-                            'Truncate all data from index' | translate
-                        }}</span>
-                    </button>
-                    <button
-                        mat-menu-item
-                        data-cy="datalake-delete-btn"
-                        [disabled]="!element.remove"
-                        (click)="deleteDatalakeIndex(element.name)"
-                    >
-                        <mat-icon>delete</mat-icon>
-                        <span>{{
-                            'Remove index from database' | translate
-                        }}</span>
-                    </button>
+                    @if (writeAccess) {
+                        <button
+                            mat-menu-item
+                            data-cy="datalake-truncate-btn"
+                            (click)="cleanDatalakeIndex(element.name)"
+                        >
+                            <mat-icon>local_fire_department</mat-icon>
+                            <span>{{ 'Truncate data' | translate }}</span>
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-cy="datalake-delete-btn"
+                            [disabled]="!element.remove"
+                            (click)="deleteDatalakeIndex(element.name)"
+                        >
+                            <mat-icon>delete</mat-icon>
+                            <span>{{ 'Delete dataset' | translate }}</span>
+                        </button>
+                        <button
+                            mat-menu-item
+                            data-cy="open-manage-permissions"
+                            (click)="showPermissionsDialog(element)"
+                        >
+                            <mat-icon>share</mat-icon>
+                            <span>{{ 'Manage permissions' | translate }}</span>
+                        </button>
+                    }
                 </ng-template>
             </sp-table>
         </div>
-
-        <div
-            fxLayout="row"
-            fxFlex="100"
-            class="mt-10 w-100"
-            fxLayoutAlign="start center"
-        >
-            <sp-basic-header-title-component
-                [title]="'Export Providers' | translate"
-                [description]="
-                    'Add, Edit, and Delete export providers used for backing up data lakes.'
-                        | translate
-                "
-            ></sp-basic-header-title-component>
-            <span fxFlex></span>
+        @if (isAdmin) {
             <div
-                fxFlex
                 fxLayout="row"
-                fxLayoutAlign="end center"
-                fxLayoutGap="5px"
+                fxFlex="100"
+                class="mt-10 w-100"
+                fxLayoutAlign="start center"
             >
-                <button
-                    mat-flat-button
-                    matTooltip="{{ 'New' | translate }}"
-                    data-cy="new-export-providers"
-                    (click)="createExportProvider(null)"
+                <sp-basic-header-title-component
+                    [title]="'Export Providers' | translate"
+                    [description]="
+                        'Add, Edit, and Delete export providers used for backing up data lakes.'
+                            | translate
+                    "
+                ></sp-basic-header-title-component>
+                <span fxFlex></span>
+                <div
+                    fxFlex
+                    fxLayout="row"
+                    fxLayoutAlign="end center"
+                    fxLayoutGap="5px"
                 >
-                    <mat-icon>add</mat-icon>
-                    <span>{{ 'New' | translate }}</span>
-                </button>
-                <button
-                    mat-icon-button
-                    matTooltip="{{ 'Refresh' | translate }}"
-                    data-cy="refresh-export-providers-measures"
-                    (click)="loadAvailableExportProvider()"
-                >
-                    <mat-icon>refresh</mat-icon>
-                </button>
+                    <button
+                        mat-flat-button
+                        matTooltip="{{ 'New' | translate }}"
+                        data-cy="new-export-providers"
+                        (click)="createExportProvider(null)"
+                    >
+                        <mat-icon>add</mat-icon>
+                        <span>{{ 'New' | translate }}</span>
+                    </button>
+                    <button
+                        mat-icon-button
+                        matTooltip="{{ 'Refresh' | translate }}"
+                        data-cy="refresh-export-providers-measures"
+                        (click)="loadAvailableExportProvider()"
+                    >
+                        <mat-icon>refresh</mat-icon>
+                    </button>
+                </div>
             </div>
-        </div>
-        <table
-            fxFlex="100"
-            mat-table
-            data-cy="exportproviders-settings"
-            [dataSource]="dataSourceExport"
-            style="width: 100%"
-            matSort
-        >
-            <ng-container matColumnDef="providertype">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                    {{ 'Provider Type' | translate }}
-                </th>
-                <td mat-cell *matCellDef="let configurationEntry">
-                    {{ configurationEntry.providerType }}
-                </td>
-            </ng-container>
 
-            <ng-container matColumnDef="endpoint">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                    {{ 'Endpoint' | translate }}
-                </th>
-                <td mat-cell *matCellDef="let configurationEntry">
-                    {{ configurationEntry.endPoint }}
-                </td>
-            </ng-container>
+            <table
+                fxFlex="100"
+                mat-table
+                data-cy="exportproviders-settings"
+                [dataSource]="dataSourceExport"
+                style="width: 100%"
+                matSort
+            >
+                <ng-container matColumnDef="providertype">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ 'Provider Type' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let configurationEntry">
+                        {{ configurationEntry.providerType }}
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="bucket">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                    {{ 'Bucket' | translate }}
-                </th>
-                <td mat-cell *matCellDef="let configurationEntry">
-                    {{ configurationEntry.bucketName }}
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="endpoint">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ 'Endpoint' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let configurationEntry">
+                        {{ configurationEntry.endPoint }}
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="editExportProvider">
-                <th mat-header-cell *matHeaderCellDef>
-                    {{ 'Edit' | translate }}
-                </th>
-                <td mat-cell *matCellDef="let configurationEntry">
-                    <div *ngIf="configurationEntry.providerId !== 'FOLDER'">
-                        <div fxLayout="row">
-                            <span
-                                fxFlex
-                                fxFlexOrder="3"
-                                fxLayout="row"
-                                fxLayoutAlign="start center"
-                            >
-                                <button
-                                    color="accent"
-                                    mat-icon-button
-                                    matTooltip="{{
-                                        'Edit Export Provider' | translate
-                                    }}"
-                                    matTooltipPosition="above"
-                                    data-cy="exportProvider-edit-btn"
-                                    (click)="
-                                        createExportProvider(configurationEntry)
-                                    "
+                <ng-container matColumnDef="bucket">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        {{ 'Bucket' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let configurationEntry">
+                        {{ configurationEntry.bucketName }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="editExportProvider">
+                    <th mat-header-cell *matHeaderCellDef>
+                        {{ 'Edit' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let configurationEntry">
+                        <div *ngIf="configurationEntry.providerId !== 'FOLDER'">
+                            <div fxLayout="row">
+                                <span
+                                    fxFlex
+                                    fxFlexOrder="3"
+                                    fxLayout="row"
+                                    fxLayoutAlign="start center"
                                 >
-                                    <i class="material-icons">edit</i>
-                                </button>
-                            </span>
+                                    <button
+                                        color="accent"
+                                        mat-icon-button
+                                        matTooltip="{{
+                                            'Edit Export Provider' | translate
+                                        }}"
+                                        matTooltipPosition="above"
+                                        data-cy="exportProvider-edit-btn"
+                                        (click)="
+                                            createExportProvider(
+                                                configurationEntry
+                                            )
+                                        "
+                                    >
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </ng-container>
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="delete">
-                <th mat-header-cell *matHeaderCellDef>
-                    {{ 'Remove' | translate }}
-                </th>
-                <td mat-cell *matCellDef="let configurationEntry">
-                    <div *ngIf="configurationEntry.providerId !== 'FOLDER'">
-                        <div fxLayout="row">
-                            <span
-                                fxFlex
-                                fxFlexOrder="3"
-                                fxLayout="row"
-                                fxLayoutAlign="start center"
-                            >
-                                <button
-                                    color="accent"
-                                    mat-icon-button
-                                    matTooltip="{{
-                                        'Remove export provider configuration'
-                                            | translate
-                                    }}"
-                                    data-cy="exportProvider-delete-btn"
-                                    matTooltipPosition="above"
-                                    (click)="
-                                        deleteExportProvider(
-                                            configurationEntry.providerId
-                                        )
-                                    "
+                <ng-container matColumnDef="delete">
+                    <th mat-header-cell *matHeaderCellDef>
+                        {{ 'Remove' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let configurationEntry">
+                        <div *ngIf="configurationEntry.providerId !== 'FOLDER'">
+                            <div fxLayout="row">
+                                <span
+                                    fxFlex
+                                    fxFlexOrder="3"
+                                    fxLayout="row"
+                                    fxLayoutAlign="start center"
                                 >
-                                    <i class="material-icons">delete</i>
-                                </button>
-                            </span>
+                                    <button
+                                        color="accent"
+                                        mat-icon-button
+                                        matTooltip="{{
+                                            'Remove export provider configuration'
+                                                | translate
+                                        }}"
+                                        data-cy="exportProvider-delete-btn"
+                                        matTooltipPosition="above"
+                                        (click)="
+                                            deleteExportProvider(
+                                                configurationEntry.providerId
+                                            )
+                                        "
+                                    >
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </ng-container>
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="test">
-                <th mat-header-cell *matHeaderCellDef>
-                    {{ 'Test' | translate }}
-                </th>
-                <td mat-cell *matCellDef="let configurationEntry">
-                    <div>
-                        <div fxLayout="row">
-                            <span
-                                fxFlex
-                                fxFlexOrder="3"
-                                fxLayout="row"
-                                fxLayoutAlign="start center"
-                            >
-                                <button
-                                    color="accent"
-                                    mat-icon-button
-                                    matTooltip="{{
-                                        'Test export provider configuration'
-                                            | translate
-                                    }}"
-                                    data-cy="exportProvider-test-btn"
-                                    matTooltipPosition="above"
-                                    (click)="
-                                        testExportProvider(
-                                            configurationEntry.providerId
-                                        )
-                                    "
+                <ng-container matColumnDef="test">
+                    <th mat-header-cell *matHeaderCellDef>
+                        {{ 'Test' | translate }}
+                    </th>
+                    <td mat-cell *matCellDef="let configurationEntry">
+                        <div>
+                            <div fxLayout="row">
+                                <span
+                                    fxFlex
+                                    fxFlexOrder="3"
+                                    fxLayout="row"
+                                    fxLayoutAlign="start center"
                                 >
-                                    <i class="material-icons">bug_report</i>
-                                </button>
-                            </span>
+                                    <button
+                                        color="accent"
+                                        mat-icon-button
+                                        matTooltip="{{
+                                            'Test export provider configuration'
+                                                | translate
+                                        }}"
+                                        data-cy="exportProvider-test-btn"
+                                        matTooltipPosition="above"
+                                        (click)="
+                                            testExportProvider(
+                                                configurationEntry.providerId
+                                            )
+                                        "
+                                    >
+                                        <i class="material-icons">bug_report</i>
+                                    </button>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </ng-container>
+                    </td>
+                </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumnsExport"></tr>
-            <tr
-                mat-row
-                *matRowDef="let row; columns: displayedColumnsExport"
-            ></tr>
-        </table>
+                <tr
+                    mat-header-row
+                    *matHeaderRowDef="displayedColumnsExport"
+                ></tr>
+                <tr
+                    mat-row
+                    *matRowDef="let row; columns: displayedColumnsExport"
+                ></tr>
+            </table>
 
-        <div
-            *ngIf="
-                !availableExportProvider || availableExportProvider.length === 0
-            "
-        >
-            <h5>{{ 'no stored export providers' | translate }}</h5>
-        </div>
+            <div
+                *ngIf="
+                    !availableExportProvider ||
+                    availableExportProvider.length === 0
+                "
+            >
+                <h5>{{ 'no stored export providers' | translate }}</h5>
+            </div>
+        }
     </div>
 </sp-basic-view>

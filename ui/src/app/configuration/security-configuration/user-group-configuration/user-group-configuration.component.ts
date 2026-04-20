@@ -16,35 +16,66 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Group, UserGroupService } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import {
     ConfirmDialogComponent,
     DialogService,
     PanelType,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
 import { EditGroupDialogComponent } from '../edit-group-dialog/edit-group-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    FlexOrderDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-security-user-group-config',
     templateUrl: './user-group-configuration.component.html',
     styleUrls: ['./user-group-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        FlexOrderDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatTooltip,
+        TranslatePipe,
+    ],
 })
 export class SecurityUserGroupConfigComponent implements OnInit {
+    private userGroupService = inject(UserGroupService);
+    private dialogService = inject(DialogService);
+    private dialog = inject(MatDialog);
+    private translateService = inject(TranslateService);
+
     dataSource: MatTableDataSource<Group>;
 
     displayedColumns: string[] = ['groupName', 'groupId', 'edit'];
-
-    constructor(
-        private userGroupService: UserGroupService,
-        private dialogService: DialogService,
-        private dialog: MatDialog,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.loadAllGroups();
@@ -73,12 +104,11 @@ export class SecurityUserGroupConfigComponent implements OnInit {
                     'This action cannot be reversed!',
                 ),
                 cancelTitle: this.translateService.instant('Cancel'),
-                okTitle: this.translateService.instant('Delete Group'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Delete Group'),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === 'confirm') {
                 this.userGroupService.deleteGroup(group).subscribe(response => {
                     this.loadAllGroups();
                 });

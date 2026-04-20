@@ -113,7 +113,6 @@
                     <disableTaggedUnions>false</disableTaggedUnions>
                     <mapClasses>asClasses</mapClasses>
                     <sortDeclarations>true</sortDeclarations>
-                    <tsNoCheck>true</tsNoCheck>
                     <extensions>
                         <extension>cz.habarta.typescript.generator.ext.JsonDeserializationExtension</extension>
                     </extensions>

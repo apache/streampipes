@@ -22,6 +22,7 @@ import {
     Input,
     OnChanges,
     SimpleChanges,
+    inject,
 } from '@angular/core';
 import { SpColorizationService } from '../../services/colorization.service';
 
@@ -29,9 +30,10 @@ import { SpColorizationService } from '../../services/colorization.service';
     selector: 'sp-label',
     templateUrl: './sp-label.component.html',
     styleUrls: ['./sp-label.component.scss'],
-    standalone: false,
 })
 export class SpLabelComponent implements OnChanges {
+    private colorizationService = inject(SpColorizationService);
+
     @Input()
     labelText: string | number;
 
@@ -86,8 +88,6 @@ export class SpLabelComponent implements OnChanges {
         info: 'var(--color-info)',
         neutral: 'var(--color-neutral)',
     };
-
-    constructor(private colorizationService: SpColorizationService) {}
 
     ngOnChanges(changes: SimpleChanges) {
         this.hostVariant = this.variant;

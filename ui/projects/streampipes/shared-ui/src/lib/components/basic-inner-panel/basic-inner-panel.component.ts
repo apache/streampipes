@@ -24,12 +24,20 @@ import {
     transition,
     trigger,
 } from '@angular/animations';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NgClass, NgStyle } from '@angular/common';
+import { ClassDirective, StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { SpBasicHeaderTitleComponent } from '../basic-header-title/header-title.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-basic-inner-panel',
     templateUrl: './basic-inner-panel.component.html',
     styleUrls: ['./basic-inner-panel.component.scss'],
-    standalone: false,
     animations: [
         trigger('collapseExpand', [
             state(
@@ -50,6 +58,17 @@ import {
             ),
             transition('expanded <=> collapsed', animate('200ms ease-in-out')),
         ]),
+    ],
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        NgStyle,
+        StyleDirective,
+        LayoutAlignDirective,
+        NgClass,
+        ClassDirective,
+        SpBasicHeaderTitleComponent,
+        MatIcon,
     ],
 })
 export class SpBasicInnerPanelComponent {

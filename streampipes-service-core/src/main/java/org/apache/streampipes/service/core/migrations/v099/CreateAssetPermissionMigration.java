@@ -21,16 +21,15 @@ package org.apache.streampipes.service.core.migrations.v099;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.api.IPermissionStorage;
+import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
-import java.util.List;
 
 public class CreateAssetPermissionMigration implements Migration {
 
-  private final CRUDStorage<SpAssetModel> assetStorage;
+  private final IAssetStorage assetStorage;
   private final IPermissionStorage permissionStorage;
   private final PermissionResourceManager permissionResourceManager;
 
@@ -49,7 +48,7 @@ public class CreateAssetPermissionMigration implements Migration {
   @Override
   public void executeMigration() throws IOException {
     assetStorage.findAll().forEach(assetModel -> {
-      var existingPermission = permissionStorage.getObjectPermissions(List.of(assetModel.getElementId()));
+      var existingPermission = permissionStorage.getUserPermissionsForObject(assetModel.getElementId());
       if (existingPermission.isEmpty()) {
         permissionResourceManager.createDefault(
             assetModel.getElementId(),

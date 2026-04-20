@@ -18,30 +18,32 @@
 
 import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import {
     StatusHeatmapVisConfig,
     StatusHeatmapWidgetModel,
 } from '../model/status-heatmap-widget.model';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
+import { ColorMappingOptionsConfigComponent } from '../../../chart-config/color-mapping-options-config/color-mapping-options-config.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-status-heatmap-widget-config',
     templateUrl: './status-heatmap-widget-config.component.html',
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        SplitSectionComponent,
+        SelectSinglePropertyConfigComponent,
+        ColorMappingOptionsConfigComponent,
+        TranslatePipe,
+    ],
 })
 export class StatusHeatmapWidgetConfigComponent extends BaseWidgetConfig<
     StatusHeatmapWidgetModel,
     StatusHeatmapVisConfig
 > {
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
-        super(widgetConfigurationService, fieldService);
-    }
-
     setSelectedProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
             field;

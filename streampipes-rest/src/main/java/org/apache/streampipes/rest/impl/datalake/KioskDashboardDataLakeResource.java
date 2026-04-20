@@ -22,14 +22,14 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
-import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.api.IPermissionStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
@@ -50,9 +50,9 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
 
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
-  private final CRUDStorage<DashboardModel> dashboardStorage =
+  private final IDataExplorerDashboardStorage dashboardStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage();
-  private final CRUDStorage<DataExplorerWidgetModel> dataExplorerWidgetStorage;
+  private final IDataExplorerWidgetStorage dataExplorerWidgetStorage;
   private final IPermissionStorage permissionStorage;
 
   public KioskDashboardDataLakeResource() {
@@ -127,4 +127,3 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
     return !perms.isEmpty() && perms.get(0).isReadAnonymous();
   }
 }
-

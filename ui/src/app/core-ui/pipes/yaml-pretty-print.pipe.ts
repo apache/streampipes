@@ -19,10 +19,7 @@
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import { stringify } from 'yaml';
 
-@Pipe({
-    name: 'yamlpretty',
-    standalone: false,
-})
+@Pipe({ name: 'yamlpretty' })
 @Injectable({ providedIn: 'root' })
 export class YamlPrettyPrintPipe implements PipeTransform {
     transform(obj: any) {

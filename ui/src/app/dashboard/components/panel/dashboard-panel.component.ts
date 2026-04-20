@@ -30,7 +30,7 @@ import {
     TimeSettings,
 } from '@streampipes/platform-services';
 import { AuthService } from '../../../services/auth.service';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import {
     ActivatedRoute,
     ActivatedRouteSnapshot,
@@ -38,26 +38,55 @@ import {
 } from '@angular/router';
 import { DashboardSlideViewComponent } from '../../../dashboard-shared/components/chart-view/slide-view/dashboard-slide-view.component';
 import {
+    ConfirmDialogAction,
     ConfirmDialogComponent,
     CurrentUserService,
+    KeyboardShortcutService,
+    ShortcutRegistration,
+    SpBasicViewComponent,
     SpBreadcrumbService,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { SpDashboardRoutes } from '../../dashboard.routes';
+import { SpDashboardRoutes } from '../../dashboard.breadcrumb';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
 import { ChartDetectChangesService } from '../../../chart/services/chart-detect-changes.service';
 import { SupportsUnsavedChangeDialog } from '../../../chart-shared/models/dataview-dashboard.model';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
+import { DashboardToolbarComponent } from './dashboard-toolbar/dashboard-toolbar.component';
+import {
+    MatDrawer,
+    MatDrawerContainer,
+    MatDrawerContent,
+} from '@angular/material/sidenav';
+import { ChartSelectionPanelComponent } from './chart-selection-panel/chart-selection-panel.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-dashboard-panel',
     templateUrl: './dashboard-panel.component.html',
     styleUrls: ['./dashboard-panel.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        DashboardToolbarComponent,
+        MatDrawerContainer,
+        MatDrawer,
+        ChartSelectionPanelComponent,
+        MatDrawerContent,
+        DashboardGridViewComponent,
+        DashboardSlideViewComponent,
+        TranslatePipe,
+    ],
 })
 export class DashboardPanelComponent
     implements OnInit, OnDestroy, SupportsUnsavedChangeDialog
@@ -87,7 +116,9 @@ export class DashboardPanelComponent
     dataLakeMeasure: DataLakeMeasure;
     auth$: Subscription;
     refresh$: Subscription;
+    private shortcutReg: ShortcutRegistration;
 
+    private shortcutService = inject(KeyboardShortcutService);
     private detectChangesService = inject(ChartDetectChangesService);
     private dialog = inject(MatDialog);
     private timeSelectionService = inject(TimeSelectionService);
@@ -105,6 +136,16 @@ export class DashboardPanelComponent
         this.dataExplorerSharedService.defaultObservableGenerator();
 
     public ngOnInit() {
+        this.shortcutReg = this.shortcutService.register('dashboard-panel', [
+            { key: 'e', action: () => this.onShortcutEdit() },
+            {
+                key: 's',
+                ctrl: true,
+                action: () => this.onShortcutSave(),
+                allowInDialog: true,
+            },
+        ]);
+
         const params = this.route.snapshot.params;
         const queryParams = this.route.snapshot.queryParams;
 
@@ -124,12 +165,24 @@ export class DashboardPanelComponent
     }
 
     ngOnDestroy() {
+        this.shortcutReg?.unregister();
         this.auth$?.unsubscribe();
         this.refresh$?.unsubscribe();
     }
 
+    private onShortcutEdit(): void {
+        if (!this.editMode && this.hasDashboardWritePrivileges) {
+            this.triggerEditMode();
+        }
+    }
+
+    private onShortcutSave(): void {
+        if (this.editMode) {
+            this.persistDashboardChanges();
+        }
+    }
+
     addChartToDashboard(dataViewElementId: string) {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const dashboardItem = {} as ClientDashboardItem;
         dashboardItem.id =
             this.dataExplorerDashboardService.makeUniqueWidgetId();
@@ -138,7 +191,7 @@ export class DashboardPanelComponent
         dashboardItem.w = 3;
         dashboardItem.h = 4;
         dashboardItem.x = 0;
-        dashboardItem.y = 0;
+        dashboardItem.y = this.getNextWidgetY();
         dashboardItem.dataViewElementId = dataViewElementId;
         this.dashboard.widgets.push(dashboardItem);
         setTimeout(() => {
@@ -148,6 +201,18 @@ export class DashboardPanelComponent
                 this.dashboardSlide.loadWidgetConfig(dashboardItem);
             }
         });
+    }
+
+    private getNextWidgetY(): number {
+        if (!this.dashboard?.widgets?.length) {
+            return 0;
+        }
+
+        return this.dashboard.widgets.reduce((maxY, widget) => {
+            const currentY = widget.y ?? 0;
+            const currentHeight = widget.h ?? widget.rows ?? 1;
+            return Math.max(maxY, currentY + currentHeight);
+        }, 0);
     }
 
     setShouldShowConfirm(): boolean {
@@ -299,24 +364,27 @@ export class DashboardPanelComponent
                     subtitle: this.translateService.instant(
                         'Update all changes to dashboard charts or discard current changes.',
                     ),
+                    neutralTitle: this.translateService.instant('Keep editing'),
                     cancelTitle:
                         this.translateService.instant('Discard changes'),
-                    okTitle: this.translateService.instant('Update'),
-                    confirmAndCancel: true,
+                    confirmTitle: this.translateService.instant('Update'),
                 },
             });
             return dialogRef.afterClosed().pipe(
-                map(shouldUpdate => {
-                    if (shouldUpdate) {
+                switchMap((dialogResult: ConfirmDialogAction | undefined) => {
+                    if (dialogResult === 'confirm') {
                         this.dashboard.dashboardGeneralSettings.defaultViewMode =
                             this.viewMode;
-                        this.dashboardService
+                        return this.dashboardService
                             .updateDashboard(this.dashboard)
-                            .subscribe(result => {
-                                return true;
-                            });
+                            .pipe(map(() => true));
                     }
-                    return true;
+
+                    if (dialogResult === 'cancel') {
+                        return of(true);
+                    }
+
+                    return of(false);
                 }),
             );
         } else {

@@ -23,13 +23,18 @@ import {
     Input,
     OnInit,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import {
     InvocablePipelineElementUnion,
     PipelineElementConfig,
     PipelineElementConfigurationStatus,
 } from '../../model/editor.model';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    InputSchemaPanelComponent,
+    PipelineElementDocumentationComponent,
+} from '@streampipes/shared-ui';
 import { JsplumbService } from '../../services/jsplumb.service';
 import {
     DataProcessorInvocation,
@@ -38,20 +43,69 @@ import {
     PipelineElementTemplate,
     PipelineElementTemplateService,
 } from '@streampipes/platform-services';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormBuilder,
+    UntypedFormGroup,
+} from '@angular/forms';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
 import { StaticPropertyUtilService } from '../../../core-ui/static-properties/static-property-util.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { StaticPropertyComponent } from '../../../core-ui/static-properties/static-property.component';
+import { OutputStrategyComponent } from '../../components/output-strategy/output-strategy.component';
+import { PipelineElementTemplateConfigComponent } from '../../../core-ui/pipeline-element-template-config/pipeline-element-template-config.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-customize-pipeline-element',
     templateUrl: './customize.component.html',
     styleUrls: ['./customize.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatFormField,
+        MatLabel,
+        MatSelect,
+        MatOption,
+        MatSlideToggle,
+        FormsModule,
+        InputSchemaPanelComponent,
+        ReactiveFormsModule,
+        StaticPropertyComponent,
+        OutputStrategyComponent,
+        PipelineElementTemplateConfigComponent,
+        PipelineElementDocumentationComponent,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class CustomizeComponent implements OnInit, AfterViewInit {
+    private dialogRef = inject<DialogRef<CustomizeComponent>>(DialogRef);
+    private jsPlumbService = inject(JsplumbService);
+    private shepherdService = inject(ShepherdService);
+    private fb = inject(UntypedFormBuilder);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private pipelineElementTemplateService = inject(
+        PipelineElementTemplateService,
+    );
+    private pipelineStyleService = inject(PipelineStyleService);
+    private staticPropertyUtils = inject(StaticPropertyUtilService);
+
     @Input()
     pipelineElement: PipelineElementConfig;
 
@@ -79,17 +133,6 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
     template: PipelineElementTemplate;
     templateConfigs: Map<string, any>[] = [];
     completedConfigurations: ConfigurationInfo[] = [];
-
-    constructor(
-        private dialogRef: DialogRef<CustomizeComponent>,
-        private jsPlumbService: JsplumbService,
-        private shepherdService: ShepherdService,
-        private fb: UntypedFormBuilder,
-        private changeDetectorRef: ChangeDetectorRef,
-        private pipelineElementTemplateService: PipelineElementTemplateService,
-        private pipelineStyleService: PipelineStyleService,
-        private staticPropertyUtils: StaticPropertyUtilService,
-    ) {}
 
     ngOnInit(): void {
         this.originalDialogWidth = this.dialogRef.currentConfig().width;

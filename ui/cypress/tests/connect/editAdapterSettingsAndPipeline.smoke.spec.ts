@@ -22,10 +22,11 @@ import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
-import { DashboardUtils } from '../../support/utils/DashboardUtils';
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
+import { SharedUtils } from '../../support/utils/shared/SharedUtils';
+import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 
 describe('Test Edit Adapter and Pipeline', () => {
     beforeEach('Setup Test', () => {
@@ -65,9 +66,17 @@ describe('Test Edit Adapter and Pipeline', () => {
             .build();
 
         ConnectUtils.configureAdapter(newUserConfiguration);
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
 
-        // Update event schema
+        ConnectBtns.getNewSampleBtn().click();
         ConnectUtils.finishEventSchemaConfiguration();
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
+        cy.wait(1000);
+        ConnectBtns.refreshSchemaBtn().click();
+        ConnectUtils.finishConfigureFieldsConfiguration();
+        // Update event schema
         ConnectBtns.storeEditAdapter().click();
 
         // Check for warning message
@@ -103,8 +112,8 @@ describe('Test Edit Adapter and Pipeline', () => {
 
         // Visit dashboard
         cy.wait(5000);
-        DataExplorerUtils.goToDatalake();
-        DataExplorerUtils.createAndEditDataView();
+        ChartUtils.goToDatalake();
+        ChartUtils.createAndEditDataView();
 
         cy.dataCy('data-explorer-field-selection-panel').should(
             'include.text',

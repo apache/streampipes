@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
+import org.apache.streampipes.dataexplorer.influx.utils.ProvidedQueryParameterBuilder;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
-import org.apache.streampipes.dataexplorer.influx.utils.ProvidedQueryParameterBuilder;
 
 import org.junit.jupiter.api.Test;
 
@@ -204,6 +204,89 @@ public class SelectQueryParamsTest {
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
         + " time > 1000000) GROUP BY sensorId,sensorId2;", query);
+  }
+
+  @Test
+  public void testFilterExpressionOr() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withStartDate(1)
+        .withEndDate(2)
+        .withSimpleColumns(Arrays.asList("p1", "p2"))
+        .withFilterExpression(
+            "{\"type\":\"group\",\"operator\":\"OR\",\"children\":["
+                + "{\"type\":\"condition\",\"field\":\"p1\",\"operator\":\"=\",\"condition\":1},"
+                + "{\"type\":\"condition\",\"field\":\"p2\",\"operator\":\"=\",\"condition\":2}"
+                + "]}")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) "
+        + "AND (p1 = 1 OR p2 = 2);", query);
+  }
+
+  @Test
+  public void testFilterExpressionTakesPrecedenceOverLegacyFilter() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withStartDate(1)
+        .withEndDate(2)
+        .withSimpleColumns(Arrays.asList("p1", "p2"))
+        .withFilter("[p1;=;1]")
+        .withFilterExpression(
+            "{\"type\":\"group\",\"operator\":\"OR\",\"children\":["
+                + "{\"type\":\"condition\",\"field\":\"p1\",\"operator\":\"=\",\"condition\":1},"
+                + "{\"type\":\"condition\",\"field\":\"p2\",\"operator\":\"=\",\"condition\":2}"
+                + "]}")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) "
+        + "AND (p1 = 1 OR p2 = 2);", query);
+  }
+
+  @Test
+  public void testFilterExpressionStringBooleanIsParsedAsBoolean() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withStartDate(1)
+        .withEndDate(2)
+        .withSimpleColumns(Arrays.asList("p1", "p2"))
+        .withFilterExpression(
+            "{\"type\":\"group\",\"operator\":\"AND\",\"children\":["
+                + "{\"type\":\"condition\",\"field\":\"p1\",\"operator\":\"=\",\"condition\":\"true\"}"
+                + "]}")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) "
+        + "AND (p1 = true);", query);
+  }
+
+  @Test
+  public void testFilterExpressionStringNumberIsParsedAsNumber() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withStartDate(1)
+        .withEndDate(2)
+        .withSimpleColumns(Arrays.asList("p1", "p2"))
+        .withFilterExpression(
+            "{\"type\":\"group\",\"operator\":\"AND\",\"children\":["
+                + "{\"type\":\"condition\",\"field\":\"p1\",\"operator\":\"=\",\"condition\":\"1\"}"
+                + "]}")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) "
+        + "AND (p1 = 1.0);", query);
   }
 
 }

@@ -19,29 +19,26 @@
 
 package org.apache.streampipes.service.core.migrations;
 
-import org.apache.streampipes.service.core.migrations.v070.CreateAssetLinkTypeMigration;
-import org.apache.streampipes.service.core.migrations.v070.CreateFileAssetTypeMigration;
-import org.apache.streampipes.service.core.migrations.v090.UpdateUsernameViewMigration;
-import org.apache.streampipes.service.core.migrations.v093.AdapterMigration;
-import org.apache.streampipes.service.core.migrations.v093.StoreEmailTemplatesMigration;
-import org.apache.streampipes.service.core.migrations.v095.MergeFilenamesAndRenameDuplicatesMigration;
 import org.apache.streampipes.service.core.migrations.v0980.AddDataLakeMeasureViewMigration;
 import org.apache.streampipes.service.core.migrations.v0980.AddDefaultExportProviderMigration;
 import org.apache.streampipes.service.core.migrations.v0980.FixImportedPermissionsMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinkTypesMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinksMigration;
 import org.apache.streampipes.service.core.migrations.v099.AddAssetManagementViewMigration;
+import org.apache.streampipes.service.core.migrations.v099.AddFunctionStateViewMigration;
+import org.apache.streampipes.service.core.migrations.v099.AddRefreshTokenViewsMigration;
+import org.apache.streampipes.service.core.migrations.v099.AddScriptTemplateViewMigration;
 import org.apache.streampipes.service.core.migrations.v099.ComputeCertificateThumbprintMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
+import org.apache.streampipes.service.core.migrations.v099.CreateDatasetPermissionMigration;
+import org.apache.streampipes.service.core.migrations.v099.ModifyAssetLinkIconMigration;
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
+import org.apache.streampipes.service.core.migrations.v099.RemoveAssetUserRoleMigration;
+import org.apache.streampipes.service.core.migrations.v099.RemoveDuplicatedAssetPermissions;
+import org.apache.streampipes.service.core.migrations.v099.RemoveInternalNotificationSinkMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
-import org.apache.streampipes.service.core.migrations.v970.AddDataLakePipelineTemplateMigration;
-import org.apache.streampipes.service.core.migrations.v970.AddLinkSettingsMigration;
-import org.apache.streampipes.service.core.migrations.v970.AddRolesToUserDbMigration;
-import org.apache.streampipes.service.core.migrations.v970.DataExplorerDataViewMigration;
-import org.apache.streampipes.service.core.migrations.v970.ModifyAssetLinkTypeMigration;
-import org.apache.streampipes.service.core.migrations.v970.RemoveNodesFromOpcUaAdaptersMigration;
+import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,18 +47,6 @@ public class AvailableMigrations {
 
   public List<Migration> getAvailableMigrations() {
     return Arrays.asList(
-        new CreateAssetLinkTypeMigration(),
-        new CreateFileAssetTypeMigration(),
-        new UpdateUsernameViewMigration(),
-        new AdapterMigration(),
-        new StoreEmailTemplatesMigration(),
-        new MergeFilenamesAndRenameDuplicatesMigration(),
-        new AddLinkSettingsMigration(),
-        new DataExplorerDataViewMigration(),
-        new ModifyAssetLinkTypeMigration(),
-        new RemoveNodesFromOpcUaAdaptersMigration(),
-        new AddRolesToUserDbMigration(),
-        new AddDataLakePipelineTemplateMigration(),
         new ModifyAssetLinksMigration(),
         new ModifyAssetLinkTypesMigration(),
         new AddDataLakeMeasureViewMigration(),
@@ -70,9 +55,18 @@ public class AvailableMigrations {
         new AddAssetManagementViewMigration(),
         new MoveAssetContentMigration(),
         new CreateAssetPermissionMigration(),
+        new CreateDatasetPermissionMigration(),
         new RemoveObsoletePrivilegesMigration(),
         new UniqueDashboardIdMigration(),
-        new ComputeCertificateThumbprintMigration()
+        new AddScriptTemplateViewMigration(),
+        new ComputeCertificateThumbprintMigration(),
+        new MigrateAdaptersToUseScript(),
+        new ModifyAssetLinkIconMigration(),
+        new RemoveDuplicatedAssetPermissions(),
+        new AddFunctionStateViewMigration(),
+        new AddRefreshTokenViewsMigration(),
+        new RemoveAssetUserRoleMigration(),
+        new RemoveInternalNotificationSinkMigration()
     );
   }
 }

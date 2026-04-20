@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
 import { Observable, shareReplay } from 'rxjs';
@@ -26,10 +26,8 @@ import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({ providedIn: 'root' })
 export class LoginService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     private settings$?: Observable<LoginModel>;
 
@@ -51,11 +49,24 @@ export class LoginService {
         );
     }
 
-    renewToken(): Observable<any> {
-        return this.http.get(
-            this.platformServicesCommons.apiBasePath + '/auth/token/renew',
+    refreshToken(): Observable<any> {
+        return this.http.post(
+            this.platformServicesCommons.apiBasePath + '/auth/token/refresh',
+            {},
             {
                 context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+                withCredentials: true,
+            },
+        );
+    }
+
+    logout(): Observable<any> {
+        return this.http.post(
+            this.platformServicesCommons.apiBasePath + '/auth/logout',
+            {},
+            {
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+                withCredentials: true,
             },
         );
     }

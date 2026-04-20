@@ -26,13 +26,46 @@ import {
 } from '@angular/core';
 import { SpAsset, SpAssetModel } from '@streampipes/platform-services';
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
+import {
+    MatNestedTreeNode,
+    MatTree,
+    MatTreeNestedDataSource,
+    MatTreeNode,
+    MatTreeNodeDef,
+    MatTreeNodeOutlet,
+    MatTreeNodeToggle,
+} from '@angular/material/tree';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpBasicViewComponent } from '@streampipes/shared-ui';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-selection-panel',
     templateUrl: './asset-selection-panel.component.html',
     styleUrls: ['./asset-selection-panel.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        SpBasicViewComponent,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        MatTree,
+        MatTreeNodeDef,
+        MatTreeNode,
+        MatTreeNodeToggle,
+        MatIcon,
+        MatIconButton,
+        MatNestedTreeNode,
+        MatTreeNodeOutlet,
+        TranslatePipe,
+    ],
 })
 export class SpAssetSelectionPanelComponent implements OnInit {
     @Input()

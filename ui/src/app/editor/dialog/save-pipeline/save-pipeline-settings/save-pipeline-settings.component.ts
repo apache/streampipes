@@ -26,6 +26,8 @@ import {
 } from '@angular/core';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import {
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormControl,
     UntypedFormGroup,
     Validators,
@@ -39,14 +41,48 @@ import {
 } from '@streampipes/platform-services';
 import { PipelineStorageOptions } from '../../../model/editor.model';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
-import { CurrentUserService } from '@streampipes/shared-ui';
-import { UserRole } from '../../../../_enums/user-role.enum';
+import {
+    AssetLinkConfigurationComponent,
+    CurrentUserService,
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { UserRole } from '../../../../core/auth/user-role.enum';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatCheckbox } from '@angular/material/checkbox';
+import {
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+} from '@angular/material/expansion';
+import { ConfigurationCodePanelComponent } from '../../../../core-ui/configuration-code-panel/configuration-code-panel.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-save-pipeline-settings',
     templateUrl: './save-pipeline-settings.component.html',
     styleUrls: ['./save-pipeline-settings.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        FlexDirective,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        MatError,
+        MatRadioGroup,
+        MatRadioButton,
+        SplitSectionComponent,
+        MatCheckbox,
+        AssetLinkConfigurationComponent,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        ConfigurationCodePanelComponent,
+        TranslatePipe,
+    ],
 })
 export class SavePipelineSettingsComponent implements OnInit {
     private readonly currentUserService = inject(CurrentUserService);

@@ -19,6 +19,8 @@
 package org.apache.streampipes.extensions.api.declarer;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public interface IStreamPipesFunctionDeclarer {
 
@@ -29,5 +31,9 @@ public interface IStreamPipesFunctionDeclarer {
   void invokeRuntime(String serviceGroup);
 
   void discardRuntime();
+
+  default Optional<Map<String, Object>> getRegisteredStatePayload() {
+    return Optional.empty();
+  }
 
 }

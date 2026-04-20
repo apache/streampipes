@@ -18,14 +18,43 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { AssetSiteDesc } from '@streampipes/platform-services';
-import { FormControl, FormGroup } from '@angular/forms';
+import {
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+} from '@angular/forms';
 import { checkForDuplicatesValidator } from '../../../../../core-ui/static-properties/input.validator';
+import {
+    DefaultFlexDirective,
+    DefaultLayoutAlignDirective,
+    DefaultLayoutDirective,
+    DefaultLayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-asset-location-area-component',
     templateUrl: './edit-location-area.component.html',
     styleUrls: ['./edit-location-area.component.scss'],
-    standalone: false,
+    imports: [
+        DefaultLayoutDirective,
+        DefaultLayoutGapDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        DefaultFlexDirective,
+        DefaultLayoutAlignDirective,
+        MatIconButton,
+        MatIcon,
+        MatFormField,
+        MatInput,
+        MatError,
+        TranslatePipe,
+    ],
 })
 export class EditAssetLocationAreaComponent implements OnInit {
     @Input()

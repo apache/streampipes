@@ -28,7 +28,7 @@ import {
 } from '@streampipes/platform-services';
 import { ActivatedRoute } from '@angular/router';
 import { zip } from 'rxjs';
-import { SpAssetRoutes } from '../../assets.routes';
+import { SpAssetRoutes } from '../../assets.breadcrumb';
 
 @Directive()
 export abstract class BaseAssetDetailsDirective implements OnInit {
@@ -50,6 +50,15 @@ export abstract class BaseAssetDetailsDirective implements OnInit {
         this.loadResources();
     }
 
+    reloadSites(): void {
+        this.genericStorageService
+            .getAllDocuments(AssetConstants.ASSET_SITES_APP_DOC_NAME)
+            .subscribe(res => {
+                this.sites = res;
+                this.applySites();
+            });
+    }
+
     loadResources(): void {
         const assetReq = this.assetService.getAsset(this.assetModelId);
         const locationsReq = this.genericStorageService.getAllDocuments(
@@ -66,17 +75,21 @@ export abstract class BaseAssetDetailsDirective implements OnInit {
                 { label: this.asset.assetName },
             ]);
 
-            if (!this.asset.assetSite.hasExactLocation) {
-                const matchingSite = this.sites.find(
-                    site => site._id === this.asset.assetSite.siteId,
-                );
-                if (matchingSite) {
-                    this.asset.assetSite.location = matchingSite.location;
-                }
-            }
+            this.applySites();
 
             this.onAssetAvailable();
         });
+    }
+
+    applySites(): void {
+        if (!this.asset.assetSite.hasExactLocation) {
+            const matchingSite = this.sites.find(
+                site => site._id === this.asset.assetSite.siteId,
+            );
+            if (matchingSite) {
+                this.asset.assetSite.location = matchingSite.location;
+            }
+        }
     }
 
     applySelectedAsset(event: { asset: SpAsset; rootNode: boolean }): void {

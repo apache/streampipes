@@ -308,8 +308,28 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public StringEnvironmentVariable getNatsToken() {
+    return new StringEnvironmentVariable(Envs.SP_NATS_TOKEN);
+  }
+
+  @Override
   public StringEnvironmentVariable getPulsarUrl() {
     return new StringEnvironmentVariable(Envs.SP_PULSAR_URL);
+  }
+
+  @Override
+  public StringEnvironmentVariable getCoreExtensionTransportMode() {
+    return new StringEnvironmentVariable(Envs.SP_CORE_EXTENSION_TRANSPORT_MODE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getExtensionTransportMode() {
+    return new StringEnvironmentVariable(Envs.SP_EXTENSION_TRANSPORT_MODE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getExtensionRequestTopicPrefix() {
+    return new StringEnvironmentVariable(Envs.SP_EXTENSION_REQUEST_TOPIC_PREFIX);
   }
 
   @Override
@@ -350,6 +370,11 @@ public class DefaultEnvironment implements Environment {
   @Override
   public StringEnvironmentVariable getOpcUaKeystoreAlias() {
     return new StringEnvironmentVariable(Envs.SP_OPCUA_KEYSTORE_ALIAS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getOpcUaMinPullIntervalMs() {
+    return new IntEnvironmentVariable(Envs.SP_OPCUA_MIN_PULL_INTERVAL_MS);
   }
 
   @Override
@@ -444,62 +469,62 @@ public class DefaultEnvironment implements Environment {
 
   @Override
   public DoubleEnvironmentVariable getDirMemoryResourceWeight() {
-    return new DoubleEnvironmentVariable(Envs.DIR_MEMORY_RESOURCE_WEIGHT);
+    return new DoubleEnvironmentVariable(Envs.SP_DIR_MEMORY_RESOURCE_WEIGHT);
   }
 
   @Override
   public DoubleEnvironmentVariable getBandwidthInResourceWeight() {
-    return new DoubleEnvironmentVariable(Envs.BANDWIDTH_IN_RESOURCE_WEIGHT);
+    return new DoubleEnvironmentVariable(Envs.SP_BANDWIDTH_IN_RESOURCE_WEIGHT);
   }
 
   @Override
   public DoubleEnvironmentVariable getBandwidthOutResourceWeight() {
-    return new DoubleEnvironmentVariable(Envs.BANDWIDTH_OUT_RESOURCE_WEIGHT);
+    return new DoubleEnvironmentVariable(Envs.SP_BANDWIDTH_OUT_RESOURCE_WEIGHT);
   }
 
   @Override
   public FloatEnvironmentVariable getThresholdMigratorPercentage() {
-    return new FloatEnvironmentVariable(Envs.THRESHOLD_MIGRATOR_PERCENTAGE);
+    return new FloatEnvironmentVariable(Envs.SP_THRESHOLD_MIGRATOR_PERCENTAGE);
   }
 
   @Override
   public FloatEnvironmentVariable getMinMigratorPercentage() {
-    return new FloatEnvironmentVariable(Envs.MIN_MIGRATOR_PERCENTAGE);
+    return new FloatEnvironmentVariable(Envs.SP_MIN_MIGRATOR_PERCENTAGE);
   }
 
   @Override
   public FloatEnvironmentVariable getOverloadedThresholdPercentage() {
-    return new FloatEnvironmentVariable(Envs.OVERLOADED_THRESHOLD_PERCENTAGE);
+    return new FloatEnvironmentVariable(Envs.SP_OVERLOADED_THRESHOLD_PERCENTAGE);
   }
 
   @Override
   public FloatEnvironmentVariable getHistoryResourcePercentage() {
-    return new FloatEnvironmentVariable(Envs.HISTORY_RESOURCE_PERCENTAGE);
+    return new FloatEnvironmentVariable(Envs.SP_HISTORY_RESOURCE_PERCENTAGE);
   }
 
   @Override
   public IntEnvironmentVariable getMsgRateDifferenceMigratorThreshold() {
-    return new IntEnvironmentVariable(Envs.MSG_RATE_DIFFERENCE_MIGRATOR_THRESHOLD);
+    return new IntEnvironmentVariable(Envs.SP_MSG_RATE_DIFFERENCE_MIGRATOR_THRESHOLD);
   }
 
   @Override
   public FloatEnvironmentVariable getLoadTargetStd() {
-    return new FloatEnvironmentVariable(Envs.LOAD_TARGET_STD);
+    return new FloatEnvironmentVariable(Envs.SP_LOAD_TARGET_STD);
   }
 
   @Override
   public StringEnvironmentVariable getSelector() {
-    return new StringEnvironmentVariable(Envs.SELECTOR);
+    return new StringEnvironmentVariable(Envs.SP_SELECTOR);
   }
 
   @Override
   public StringEnvironmentVariable getMigrator() {
-    return new StringEnvironmentVariable(Envs.MIGRATOR);
+    return new StringEnvironmentVariable(Envs.SP_MIGRATOR);
   }
 
   @Override
   public BooleanEnvironmentVariable getLoadManagerEnable() {
-    return new BooleanEnvironmentVariable(Envs.LOAD_MANAGER_ENABLE);
+    return new BooleanEnvironmentVariable(Envs.SP_LOAD_MANAGER_ENABLE);
   }
 
   @Override
@@ -596,4 +621,15 @@ public class DefaultEnvironment implements Environment {
   public IntEnvironmentVariable getDatalakeRetentionLogLength() {
     return new IntEnvironmentVariable(Envs.SP_RETENTION_LOG_LENGTH);
   }
+
+  @Override
+  public StringEnvironmentVariable getCertificateExpiryCron() {
+    return new StringEnvironmentVariable(Envs.SP_CERTIFICATE_EXPIRY_CRON);
+  }
+
+  @Override
+  public StringEnvironmentVariable getCertificateExpiryEmailDays() {
+    return new StringEnvironmentVariable(Envs.SP_CERTIFICATE_EXPIRY_EMAIL_DAYS);
+  }
+
 }

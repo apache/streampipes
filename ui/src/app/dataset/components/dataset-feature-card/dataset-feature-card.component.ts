@@ -17,43 +17,47 @@
  */
 
 import { Component, inject, Input, OnInit } from '@angular/core';
+import { FlexFillDirective } from '@ngbracket/ngx-layout';
 import {
-    DefaultFlexDirective,
-    DefaultLayoutAlignDirective,
-    DefaultLayoutDirective,
-    DefaultLayoutGapDirective,
-    FlexFillDirective,
-} from '@ngbracket/ngx-layout';
-import { SharedUiModule } from '@streampipes/shared-ui';
-import { DashboardSharedModule } from '../../../dashboard-shared/dashboard-shared.module';
+    DateFormatService,
+    FeatureCardHeaderComponent,
+    FeatureCardMetaSectionComponent,
+    PropertyScopeBadgeComponent,
+    SpLabelComponent,
+} from '@streampipes/shared-ui';
 import {
     AssetConstants,
     AssetLinkType,
     DataLakeMeasure,
     DatalakeRestService,
+    EventPropertyUnion,
     GenericStorageService,
     SpQueryResult,
 } from '@streampipes/platform-services';
 import { forkJoin } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
-import { DatePipe } from '@angular/common';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-dataset-feature-card',
     templateUrl: './dataset-feature-card.component.html',
     styleUrls: ['./dataset-feature-card.component.scss'],
     imports: [
-        SharedUiModule,
         FlexFillDirective,
-        DashboardSharedModule,
-        DefaultFlexDirective,
-        DefaultLayoutDirective,
+        LayoutDirective,
         TranslatePipe,
-        DefaultLayoutAlignDirective,
-        DefaultLayoutGapDirective,
+        LayoutAlignDirective,
+        LayoutGapDirective,
         MatIcon,
-        DatePipe,
+        FeatureCardHeaderComponent,
+        FeatureCardMetaSectionComponent,
+        PropertyScopeBadgeComponent,
+        SpLabelComponent,
     ],
 })
 export class DatasetFeatureCardComponent implements OnInit {
@@ -66,10 +70,12 @@ export class DatasetFeatureCardComponent implements OnInit {
     dataset: DataLakeMeasure;
     assetLinkType: AssetLinkType;
     dataPreview: SpQueryResult;
-    lastEventTs: number;
+    lastEventTs: number | undefined;
+    previewRows: PreviewRow[] = [];
 
     private datalakeRestService = inject(DatalakeRestService);
     private genericStorageService = inject(GenericStorageService);
+    private dateFormatService = inject(DateFormatService);
 
     ngOnInit() {
         forkJoin([
@@ -99,10 +105,68 @@ export class DatasetFeatureCardComponent implements OnInit {
             .subscribe(res => {
                 this.dataPreview = res;
                 if (res.total > 0) {
-                    this.lastEventTs = res.allDataSeries[0].rows[0][0];
+                    const previewRow = res.allDataSeries?.[0]?.rows?.[0] ?? [];
+                    this.lastEventTs = Number(previewRow[0]);
+                    this.previewRows = res.headers.map((header, index) =>
+                        this.toPreviewRow(header, previewRow[index]),
+                    );
+                } else {
+                    this.previewRows = [];
+                    this.lastEventTs = undefined;
                 }
             });
     }
 
+    formatDate(timestamp?: number): string {
+        return this.dateFormatService.formatDate(timestamp);
+    }
+
+    formatPreviewValue(header: string, value: unknown): string {
+        if (value === null || value === undefined || value === '') {
+            return '–';
+        }
+
+        if (this.isTimestampField(header)) {
+            return this.dateFormatService.formatDate(Number(value));
+        }
+
+        if (typeof value === 'object') {
+            try {
+                return JSON.stringify(value);
+            } catch {
+                return String(value);
+            }
+        }
+
+        return String(value);
+    }
+
+    private isTimestampField(header: string): boolean {
+        return 'time' === header;
+    }
+
+    private toPreviewRow(header: string, value: unknown): PreviewRow {
+        const eventProperty = this.findEventProperty(header);
+
+        return {
+            header,
+            propertyScope: eventProperty?.propertyScope,
+            value: this.formatPreviewValue(header, value),
+        };
+    }
+
+    private findEventProperty(header: string): EventPropertyUnion | undefined {
+        return this.dataset.eventSchema.eventProperties.find(
+            property =>
+                property.runtimeName.toLowerCase() === header.toLowerCase(),
+        );
+    }
+
     navigateToChartView(): void {}
+}
+
+interface PreviewRow {
+    header: string;
+    propertyScope?: string;
+    value: string;
 }

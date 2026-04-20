@@ -17,12 +17,33 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { QuillEditorComponent } from 'ngx-quill';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-user-acknowledgment',
     templateUrl: './user-acknowledgment.component.html',
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        MatCheckbox,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        FlexDirective,
+        QuillEditorComponent,
+        TranslatePipe,
+    ],
 })
 export class UserAcknowledgmentComponent {
     @Input()

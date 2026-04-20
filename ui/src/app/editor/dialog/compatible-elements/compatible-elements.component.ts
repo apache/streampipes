@@ -16,22 +16,47 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    DialogRef,
+    FormLabelComponent,
+    PipelineElementComponent,
+} from '@streampipes/shared-ui';
 import { JsplumbService } from '../../services/jsplumb.service';
 import { DataProcessorInvocation } from '@streampipes/platform-services';
 import {
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../../model/editor.model';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-compatible-elements',
     templateUrl: './compatible-elements.component.html',
     styleUrls: ['./compatible-elements.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        PipelineElementComponent,
+        FormLabelComponent,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class CompatibleElementsComponent implements OnInit {
+    private dialogRef =
+        inject<DialogRef<CompatibleElementsComponent>>(DialogRef);
+    private JsPlumbService = inject(JsplumbService);
+
     @Input()
     rawPipelineModel: PipelineElementConfig[];
 
@@ -42,11 +67,6 @@ export class CompatibleElementsComponent implements OnInit {
     possibleElements: PipelineElementUnion[];
 
     styles: any[] = [];
-
-    constructor(
-        private dialogRef: DialogRef<CompatibleElementsComponent>,
-        private JsPlumbService: JsplumbService,
-    ) {}
 
     ngOnInit() {
         this.possibleElements.sort((a, b) => a.name.localeCompare(b.name));

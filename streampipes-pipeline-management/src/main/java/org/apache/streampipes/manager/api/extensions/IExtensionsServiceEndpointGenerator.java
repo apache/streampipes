@@ -19,27 +19,16 @@
 package org.apache.streampipes.manager.api.extensions;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import java.util.Collections;
 import java.util.Set;
 
 public interface IExtensionsServiceEndpointGenerator {
 
-  String getEndpointResourceUrl(String appId,
-                                SpServiceUrlProvider spServiceUrlProvider,
-                                Set<SpServiceTag> customServiceTags)
-      throws NoServiceEndpointsAvailableException;
-
-  default String getEndpointResourceUrl(String appId,
-                                        SpServiceUrlProvider spServiceUrlProvider)
-      throws NoServiceEndpointsAvailableException {
-    return getEndpointResourceUrl(appId, spServiceUrlProvider, Collections.emptySet());
-  }
-
-  String getEndpointBaseUrl(String appId,
-                            SpServiceUrlProvider spServiceUrlProvider,
-                            Set<SpServiceTag> customServiceTags)
+  SpServiceRegistration selectService(String appId,
+                                      SpServiceUrlProvider spServiceUrlProvider,
+                                      Set<SpServiceTag> customServiceTags)
       throws NoServiceEndpointsAvailableException;
 }

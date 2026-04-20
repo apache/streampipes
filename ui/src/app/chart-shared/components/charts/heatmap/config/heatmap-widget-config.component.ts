@@ -18,30 +18,42 @@
 
 import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import {
     HeatmapVisConfig,
     HeatmapWidgetModel,
 } from '../model/heatmap-widget.model';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-heatmap-widget-config',
     templateUrl: './heatmap-widget-config.component.html',
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        SplitSectionComponent,
+        SelectSinglePropertyConfigComponent,
+        MatCheckbox,
+        FormsModule,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        TranslatePipe,
+    ],
 })
 export class HeatmapWidgetConfigComponent extends BaseWidgetConfig<
     HeatmapWidgetModel,
     HeatmapVisConfig
 > {
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
-        super(widgetConfigurationService, fieldService);
-    }
-
     setShowLabelsProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.showLabelsProperty =
             field['checked'];

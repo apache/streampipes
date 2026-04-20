@@ -73,8 +73,7 @@ public class ExtensionsFinder {
         .stream()
         .map(IStreamPipesPipelineElement::declareConfig)
         .filter(configType::isInstance)
-        .map(config -> new AssetModel(config.getDescription()
-            .getAppId(), peType))
+        .map(config -> new AssetModel(config.getDescription().getAppId(), peType, config.getAssetResolver()))
         .toList();
   }
 

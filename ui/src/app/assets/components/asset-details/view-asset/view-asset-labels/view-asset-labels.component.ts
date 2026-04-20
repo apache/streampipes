@@ -22,19 +22,35 @@ import {
     OnChanges,
     OnInit,
     SimpleChanges,
+    inject,
 } from '@angular/core';
 import {
     LabelsService,
     SpAsset,
     SpLabel,
 } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpLabelComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-view-asset-labels',
     templateUrl: './view-asset-labels.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        FlexDirective,
+        SpLabelComponent,
+    ],
 })
 export class ViewAssetLabelsComponent implements OnInit, OnChanges {
+    private labelsService = inject(LabelsService);
+
     @Input()
     asset: SpAsset;
 
@@ -43,8 +59,6 @@ export class ViewAssetLabelsComponent implements OnInit, OnChanges {
 
     allLabels: SpLabel[] = [];
     assignedLabels: SpLabel[] = [];
-
-    constructor(private labelsService: LabelsService) {}
 
     ngOnInit() {
         this.labelsService.getAllLabels().subscribe(res => {

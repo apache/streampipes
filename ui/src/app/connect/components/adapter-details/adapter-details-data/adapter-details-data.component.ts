@@ -16,48 +16,47 @@
  *
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import {
-    CurrentUserService,
-    SpBreadcrumbService,
+    PipelineElementRuntimeInfoComponent,
+    SpBasicHeaderTitleComponent,
+    SpBasicNavTabsComponent,
+    SpElementIdComponent,
 } from '@streampipes/shared-ui';
-import { ActivatedRoute } from '@angular/router';
 import {
-    AdapterMonitoringService,
-    AdapterService,
     PipelineElementService,
     SpDataStream,
 } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-details-data',
     templateUrl: './adapter-details-data.component.html',
     styleUrl: './adapter-details-data.component.scss',
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        SpBasicHeaderTitleComponent,
+        PipelineElementRuntimeInfoComponent,
+        SpElementIdComponent,
+        TranslatePipe,
+    ],
 })
 export class AdapterDetailsDataComponent
     extends SpAbstractAdapterDetailsDirective
     implements OnInit
 {
-    stream: SpDataStream;
+    private pipelineElementService = inject(PipelineElementService);
 
-    constructor(
-        currentUserService: CurrentUserService,
-        activatedRoute: ActivatedRoute,
-        adapterService: AdapterService,
-        adapterMonitoringService: AdapterMonitoringService,
-        breadcrumbService: SpBreadcrumbService,
-        private pipelineElementService: PipelineElementService,
-    ) {
-        super(
-            currentUserService,
-            activatedRoute,
-            adapterService,
-            adapterMonitoringService,
-            breadcrumbService,
-        );
-    }
+    stream: SpDataStream;
 
     ngOnInit(): void {
         super.onInit();

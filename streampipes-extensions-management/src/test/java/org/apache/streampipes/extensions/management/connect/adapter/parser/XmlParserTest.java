@@ -28,12 +28,9 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,42 +55,6 @@ public class XmlParserTest extends ParserTest {
       + "</list>";
 
   private final String tag = "enclosing";
-
-  @Test
-  public void getGuessSchema() {
-    var expected = getExpectedSchema();
-
-    var parser = new XmlParser(tag);
-
-    InputStream event = toStream(sampleEvent);
-
-    var result = parser.getGuessSchema(event);
-
-    assertEquals(expected.getEventSchema(), result.getEventSchema());
-
-    var previewJson = result.getEventPreview().get(0).toString();
-    previewJson = previewJson.replaceAll("[\\s\\n\\r]+", "");
-    assertTrue(previewJson.contains("\"k1\":\"v1\""));
-    assertTrue(previewJson.contains("\"k2\":1.0"));
-  }
-
-  @Test
-  public void getGuessSchemaWithSingleObjectInArray() {
-    var expected = getExpectedSchema();
-
-    var parser = new XmlParser(tag);
-
-    InputStream event = toStream(sampleEventWithSingleObject);
-
-    var result = parser.getGuessSchema(event);
-
-    assertEquals(expected.getEventSchema(), result.getEventSchema());
-
-    var previewJson = result.getEventPreview().get(0).toString();
-    previewJson = previewJson.replaceAll("[\\s\\n\\r]+", "");
-    assertTrue(previewJson.contains("\"k1\":\"v1\""));
-    assertTrue(previewJson.contains("\"k2\":1.0"));
-  }
 
   @Test
   public void parse() {

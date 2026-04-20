@@ -16,34 +16,52 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import {
     DialogService,
     PanelType,
+    SpBasicNavTabsComponent,
     SpBreadcrumbService,
+    SplitSectionComponent,
     SpNavigationItem,
 } from '@streampipes/shared-ui';
 import { FileUploadDialogComponent } from '../dialog/file-upload/file-upload-dialog.component';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
-import { SpConfigurationRoutes } from '../configuration.routes';
-import { TranslateService } from '@ngx-translate/core';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { FileOverviewComponent } from './file-overview/file-overview.component';
 
 @Component({
     templateUrl: './files.component.html',
     styleUrls: ['./files.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        SplitSectionComponent,
+        LayoutDirective,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        MatButton,
+        FlexDirective,
+        FileOverviewComponent,
+        TranslatePipe,
+    ],
 })
 export class FilesComponent implements OnInit {
+    private dialogService = inject(DialogService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private tabService = inject(SpConfigurationTabsService);
+    private translateService = inject(TranslateService);
+
     tabs: SpNavigationItem[] = [];
 
     @ViewChild('fileOverviewComponent') fileOverviewComponent;
-
-    constructor(
-        private dialogService: DialogService,
-        private breadcrumbService: SpBreadcrumbService,
-        private tabService: SpConfigurationTabsService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit() {
         this.tabs = this.tabService.getTabs();

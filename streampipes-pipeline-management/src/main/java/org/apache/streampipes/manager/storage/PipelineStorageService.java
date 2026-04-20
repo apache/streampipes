@@ -34,6 +34,7 @@ public class PipelineStorageService {
 
   private final Pipeline pipeline;
 
+
   public PipelineStorageService(Pipeline pipeline) {
     this.pipeline = pipeline;
   }
@@ -59,17 +60,12 @@ public class PipelineStorageService {
 
     List<DataSinkInvocation> secs = filter(graphs, DataSinkInvocation.class);
     List<DataProcessorInvocation> sepas = filter(graphs, DataProcessorInvocation.class);
-
     pipeline.setSepas(sepas);
     pipeline.setActions(secs);
   }
 
   private void encryptSecrets(List<InvocableStreamPipesEntity> graphs) {
     SecretProvider.getEncryptionService().apply(graphs);
-  }
-
-  private void encryptSecrets(Pipeline pipeline) {
-    SecretProvider.getEncryptionService().apply(pipeline);
   }
 
   private <T> List<T> filter(List<InvocableStreamPipesEntity> graphs, Class<T> clazz) {

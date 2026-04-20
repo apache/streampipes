@@ -48,6 +48,9 @@
             <artifactId>pulsar-client</artifactId>
         </dependency>
 
+        <!-- dependency convergence -->
+
+
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

@@ -20,10 +20,11 @@ import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { TreeNodeUserInputBuilder } from '../../../support/builder/TreeNodeUserInputBuilder';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
 import { TreeStaticPropertyUtils } from '../../../support/utils/userInput/TreeStaticPropertyUtils';
-import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
 import { AdapterInput } from '../../../support/model/AdapterInput';
 import { OpcUaUtils } from '../../../support/utils/connect/OpcUaUtils';
 import { GeneralUtils } from '../../../support/utils/GeneralUtils';
+import { SharedUtils } from '../../../support/utils/shared/SharedUtils';
+import { SharedBtns } from '../../../support/utils/shared/SharedBtns';
 
 describe('Test starting and editing OPC-UA Adapters in different configurations', () => {
     beforeEach('Setup Test', () => {
@@ -86,7 +87,19 @@ const editAdapterTest = (adapterInput: AdapterInput) => {
     // Remove a node and validate that resulting events do not contain the property
     TreeStaticPropertyUtils.removeSelectedNode('ns=3;s=RandomUnsignedInt32');
     ConnectUtils.finishAdapterSettings();
-    ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+    SharedUtils.confirmDialogVisible();
+    SharedBtns.confirmDialogConfirmBtn().click();
+
+    // Currently the user must trigger get sample manually, this should be automated in the future
+    ConnectBtns.getNewSampleBtn().click();
+    ConnectUtils.finishEventSchemaConfiguration();
+    SharedUtils.confirmDialogVisible();
+    SharedBtns.confirmDialogConfirmBtn().click();
+    // Same as for new sample, once automated, this can be removed
+    cy.wait(1000);
+    ConnectBtns.refreshSchemaBtn().click();
+    ConnectUtils.finishConfigureFieldsConfiguration();
+
     ConnectBtns.storeEditAdapter().click();
     ConnectUtils.closeAdapterPreview();
     ConnectUtils.validateEventsInPreview(adapterInput.adapterName, 4);
@@ -96,20 +109,12 @@ const getAdapterBuilderWithTextNodes = (pullMode: boolean) => {
     const builder = OpcUaUtils.getBaseAdapterConfigBuilder(pullMode);
     builder.addTreeNode(
         TreeNodeUserInputBuilder.create(
-            'ns=3;s=AlternatingBoolean',
-        ).isTextConfig(),
-    );
-    builder.addTreeNode(
-        TreeNodeUserInputBuilder.create('ns=3;s=StepUp').isTextConfig(),
-    );
-    builder.addTreeNode(
-        TreeNodeUserInputBuilder.create(
-            'ns=3;s=RandomSignedInt32',
-        ).isTextConfig(),
-    );
-    builder.addTreeNode(
-        TreeNodeUserInputBuilder.create(
-            'ns=3;s=RandomUnsignedInt32',
+            [
+                'ns=3;s=AlternatingBoolean\n',
+                'ns=3;s=StepUp\n',
+                'ns=3;s=RandomSignedInt32\n',
+                'ns=3;s=RandomUnsignedInt32\n',
+            ].join('\n'),
         ).isTextConfig(),
     );
 

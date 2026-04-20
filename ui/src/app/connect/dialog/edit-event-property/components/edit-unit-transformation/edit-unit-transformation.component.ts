@@ -16,21 +16,67 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormControl,
+} from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { UnitDescription } from '../../../../model/UnitDescription';
 import { RestService } from '../../../../services/rest.service';
 import { EventPropertyPrimitive } from '@streampipes/platform-services';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import {
+    FlexAlignDirective,
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import {
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+} from '@angular/material/autocomplete';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { AsyncPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-unit-transformation',
     templateUrl: './edit-unit-transformation.component.html',
     styleUrls: ['./edit-unit-transformation.component.scss'],
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        FormFieldComponent,
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatFormField,
+        MatInput,
+        MatAutocompleteTrigger,
+        FormsModule,
+        ReactiveFormsModule,
+        MatAutocomplete,
+        MatOption,
+        MatIconButton,
+        FlexAlignDirective,
+        MatIcon,
+        MatSelect,
+        AsyncPipe,
+        TranslatePipe,
+    ],
 })
-export class EditUnitTransformationComponent {
+export class EditUnitTransformationComponent implements OnInit {
+    private restService = inject(RestService);
+
     @Input() cachedProperty: EventPropertyPrimitive;
     @Input() originalProperty: EventPropertyPrimitive;
 
@@ -50,7 +96,7 @@ export class EditUnitTransformationComponent {
     newUnitStateCtrl = new UntypedFormControl();
     filteredUnits: Observable<UnitDescription[]>;
 
-    constructor(private restService: RestService) {
+    ngOnInit() {
         this.restService
             .getAllUnitDescriptions()
             .subscribe((unitDescriptions: UnitDescription[]) => {

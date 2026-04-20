@@ -1,0 +1,131 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<div fxLayout="column" fxFlex="100">
+    <div fxLayout="row" fxFlex="100" fxLayoutGap="10px">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <div>
+                <b style="white-space: nowrap">
+                    {{ label }}
+                </b>
+            </div>
+            @if (originalRuntimeName) {
+                <div fxLayoutAlign="start center" class="ml-5">
+                    <span class="runtime-info">{{ originalRuntimeName }}</span>
+                    @if (originalRuntimeName !== eventProperty.runtimeName) {
+                        <span fxLayoutAlign="center center">
+                            <i class="material-icons">arrow_right</i>
+                        </span>
+                    }
+                    @if (originalRuntimeName !== eventProperty.runtimeName) {
+                        <span class="runtime-info"
+                            >{{ eventProperty.runtimeName }}
+                        </span>
+                    }
+                </div>
+            }
+            @if (isList) {
+                <p style="margin: 0px 10px 10px">[List]</p>
+            }
+        </div>
+
+        <div
+            fxLayout="row"
+            fxLayoutAlign="end center"
+            fxFlex="100"
+            fxLayoutGap="20px"
+        >
+            @if (isPrimitive && isNumber && isTimestampProperty()) {
+                <mat-icon
+                    [matTooltip]="'marked as timestamp' | translate"
+                    [style.color]="'var(--color-success)'"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                >
+                    access_time
+                </mat-icon>
+            }
+            <div fxLayoutAlign="end center" class="runtime-type-info-outer">
+                @if (runtimeType) {
+                    <div
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        fxFlex="100"
+                    >
+                        @if (originalRuntimeType) {
+                            <span class="runtime-info runtime-type-info">{{
+                                originalRuntimeType
+                            }}</span>
+                        }
+
+                        @if (
+                            originalRuntimeType &&
+                            originalRuntimeType !== runtimeType
+                        ) {
+                            <span fxLayoutAlign="center center"
+                                ><i class="material-icons">arrow_right</i></span
+                            >
+                        }
+                        @if (originalRuntimeType !== runtimeType) {
+                            <span class="runtime-info runtime-type-info">{{
+                                runtimeType
+                            }}</span>
+                        }
+                    </div>
+                }
+            </div>
+            @if (isPrimitive) {
+                <div fxLayoutAlign="center center">
+                    <sp-event-property-scope
+                        [eventProperty]="eventProperty"
+                        [isNumber]="isNumber"
+                        [label]="label"
+                        [runtimeType]="runtimeType"
+                        (scopeChanged)="handleScopeChange()"
+                    >
+                    </sp-event-property-scope>
+                </div>
+            }
+
+            @if (isNested || isPrimitive || isList) {
+                <div fxLayoutAlign="end center" class="ml-5 mr-5">
+                    <button
+                        mat-flat-button
+                        class="mat-basic"
+                        (click)="openEditDialog(eventProperty)"
+                        [attr.data-cy]="'edit-' + label.toLowerCase()"
+                    >
+                        <mat-icon>edit</mat-icon>&nbsp;{{ 'Edit' | translate }}
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+    @if (isNested) {
+        <div fxLayout="column" fxFlex="100" class="nested-properties">
+            @for (
+                property of asNestedProperty(eventProperty).eventProperties;
+                track property.elementId
+            ) {
+                <sp-event-property-row
+                    [eventProperty]="property"
+                ></sp-event-property-row>
+            }
+        </div>
+    }
+</div>

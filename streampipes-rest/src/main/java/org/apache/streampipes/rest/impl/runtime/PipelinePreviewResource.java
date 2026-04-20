@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.rest.impl.runtime;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.preview.PipelinePreview;
 import org.apache.streampipes.manager.runtime.DataStreamRuntimeInfoProvider;
 import org.apache.streampipes.manager.runtime.RateLimitedRuntimeInfoProvider;
@@ -41,13 +42,18 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/api/v2/pipeline-preview")
 public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
 
+  private final ExtensionServiceRequestManager requestManager;
+
+  public PipelinePreviewResource(ExtensionServiceRequestManager requestManager) {
+    this.requestManager = requestManager;
+  }
 
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<PipelinePreviewModel> requestPipelinePreview(@RequestBody Pipeline pipeline) {
-    PipelinePreviewModel previewModel = new PipelinePreview().initiatePreview(pipeline);
+    PipelinePreviewModel previewModel = new PipelinePreview().initiatePreview(pipeline, requestManager);
 
     return ok(previewModel);
   }
@@ -65,7 +71,7 @@ public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
       var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(spDataStreams);
       var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(
           runtimeInfoFetcher,
-          () -> new PipelinePreview().deletePreview(previewId)
+          () -> new PipelinePreview().deletePreview(previewId, requestManager)
       );
       return runtimeInfoProvider::streamOutput;
     } catch (IllegalArgumentException e) {

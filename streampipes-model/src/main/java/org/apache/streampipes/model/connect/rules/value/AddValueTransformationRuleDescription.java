@@ -18,11 +18,12 @@
 
 package org.apache.streampipes.model.connect.rules.value;
 
-import org.apache.streampipes.model.connect.rules.ITransformationRuleVisitor;
 import org.apache.streampipes.model.connect.rules.TransformationRulePriority;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.XSD;
 
+
+@Deprecated(since = "0.99.0", forRemoval = true)
 public class AddValueTransformationRuleDescription extends ValueTransformationRuleDescription {
 
   private String runtimeKey;
@@ -38,6 +39,12 @@ public class AddValueTransformationRuleDescription extends ValueTransformationRu
   public AddValueTransformationRuleDescription() {
     super();
   }
+
+  public AddValueTransformationRuleDescription(String runtimeKey, String staticValue) {
+    this.runtimeKey = runtimeKey;
+    this.staticValue = staticValue;
+  }
+
 
   public AddValueTransformationRuleDescription(AddValueTransformationRuleDescription other) {
     super(other);
@@ -107,11 +114,6 @@ public class AddValueTransformationRuleDescription extends ValueTransformationRu
 
   public void setPropertyScope(PropertyScope propertyScope) {
     this.propertyScope = propertyScope;
-  }
-
-  @Override
-  public void accept(ITransformationRuleVisitor visitor) {
-    visitor.visit(this);
   }
 
   @Override

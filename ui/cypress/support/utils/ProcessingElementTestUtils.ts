@@ -19,7 +19,7 @@
 import { FileManagementUtils } from './FileManagementUtils';
 import { ConnectUtils } from './connect/ConnectUtils';
 import { PipelineUtils } from './pipeline/PipelineUtils';
-import { DataExplorerUtils } from './dataExplorer/DataExplorerUtils';
+import { ChartUtils } from './chart/ChartUtils';
 import { PipelineBuilder } from '../builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../builder/PipelineElementBuilder';
 import { ProcessorTest } from '../model/ProcessorTest';
@@ -36,10 +36,9 @@ export class ProcessingElementTestUtils {
         const expectedResultFile =
             'pipelineElement/' + pipelineElementTest.dir + '/expected.csv';
 
-        let formatType;
-        pipelineElementTest.inputFile.endsWith('.csv')
-            ? (formatType = 'csv')
-            : (formatType = 'json');
+        const formatType = pipelineElementTest.inputFile.endsWith('.csv')
+            ? 'csv'
+            : 'json';
 
         FileManagementUtils.addFile(inputFile);
 
@@ -93,10 +92,9 @@ export class ProcessingElementTestUtils {
 
         ConnectUtils.goToConnect();
         ConnectBtns.startAdapter().click();
+        ConnectUtils.restartAdapter(adapterName);
 
-        cy.wait(3000);
-
-        DataExplorerUtils.checkResults(
+        ChartUtils.checkResults(
             dataLakeIndex,
             'cypress/fixtures/' + expectedResultFile,
             pipelineElementTest.processor.ignoreTimestamp,

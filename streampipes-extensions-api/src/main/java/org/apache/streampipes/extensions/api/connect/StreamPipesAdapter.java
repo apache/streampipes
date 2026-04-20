@@ -24,6 +24,7 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeCont
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 
 public interface StreamPipesAdapter {
   IAdapterConfiguration declareConfig();
@@ -40,15 +41,30 @@ public interface StreamPipesAdapter {
    *
    * @param adapterDescription The adapter description to be preprocessed.
    */
-  default void preprocessAdapterDescription(AdapterDescription adapterDescription) {};
+  default void preprocessAdapterDescription(AdapterDescription adapterDescription) {}
 
-  void onAdapterStarted(IAdapterParameterExtractor extractor,
-                        IEventCollector collector,
-                        IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException;
+  ;
 
-  void onAdapterStopped(IAdapterParameterExtractor extractor,
-                        IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException;
+  void onAdapterStarted(
+      IAdapterParameterExtractor extractor,
+      IEventCollector collector,
+      IAdapterRuntimeContext adapterRuntimeContext
+  ) throws AdapterException;
 
-  GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException;
+  void onAdapterStopped(
+      IAdapterParameterExtractor extractor,
+      IAdapterRuntimeContext adapterRuntimeContext
+  ) throws AdapterException;
+
+    @Deprecated(forRemoval = true, since = "0.98.0")
+    default GuessSchema onSchemaRequested(
+      IAdapterParameterExtractor extractor,
+      IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    throw new UnsupportedOperationException("Event preview is not supported by this adapter.");
+  }
+
+  SampleData onSampleDataRequested(
+      IAdapterParameterExtractor extractor,
+      IAdapterGuessSchemaContext adapterGuessSchemaContext
+  ) throws AdapterException;
 }

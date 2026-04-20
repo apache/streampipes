@@ -36,6 +36,7 @@ export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
     removeWidgetCallback: EventEmitter<boolean>;
     timerCallback: EventEmitter<boolean>;
     errorCallback: EventEmitter<SpLogMessage>;
+    dataReceivedCallback: EventEmitter<SpQueryResult[]>;
 
     editMode: boolean;
     kioskMode: boolean;
@@ -49,8 +50,13 @@ export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
     previewMode: boolean;
     gridMode: boolean;
     widgetIndex?: number;
+    dashboardChartOverrides?: DashboardChartOverrides;
 
     cleanupSubscriptions(): void;
+}
+
+export interface DashboardChartOverrides {
+    hideToolbox?: boolean;
 }
 
 export interface ObservableGenerator {
@@ -94,6 +100,14 @@ export interface WidgetChartAppearanceConfig {
     showTooltip: boolean;
 }
 
+export interface WidgetNumberFormatConfig {
+    decimals?: number;
+}
+
+export interface WidgetNumberAppearanceConfig extends WidgetBaseAppearanceConfig {
+    numberFormat?: WidgetNumberFormatConfig;
+}
+
 export interface DataZoomConfig {
     show: boolean;
     type: 'slider' | 'inside';
@@ -103,7 +117,7 @@ export interface TimeSeriesAppearanceConfig extends WidgetEchartsAppearanceConfi
     dataZoom: DataZoomConfig;
 }
 
-export interface WidgetEchartsAppearanceConfig {
+export interface WidgetEchartsAppearanceConfig extends WidgetNumberAppearanceConfig {
     chartAppearance: WidgetChartAppearanceConfig;
 }
 

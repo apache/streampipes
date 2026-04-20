@@ -32,11 +32,16 @@ import {
 } from '@streampipes/platform-services';
 import { RuntimeResolvableService } from './runtime-resolvable.service';
 import { Observable } from 'rxjs';
-import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+    Directive,
+    Input,
+    OnChanges,
+    SimpleChanges,
+    inject,
+} from '@angular/core';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 
 @Directive()
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class BaseRuntimeResolvableInput<
     T extends
         | RuntimeResolvableAnyStaticProperty
@@ -47,16 +52,14 @@ export abstract class BaseRuntimeResolvableInput<
     extends AbstractStaticPropertyRenderer<T>
     implements OnChanges
 {
+    protected runtimeResolvableService = inject(RuntimeResolvableService);
+
     @Input() deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     showOptions = false;
     loading = false;
     error = false;
     errorMessage: SpLogMessage;
-
-    constructor(private runtimeResolvableService: RuntimeResolvableService) {
-        super();
-    }
 
     onInit() {}
 

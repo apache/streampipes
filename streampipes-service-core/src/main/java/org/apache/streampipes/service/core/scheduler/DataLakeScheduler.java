@@ -35,7 +35,7 @@ import java.util.List;
 @Configuration
 public class DataLakeScheduler implements SchedulingConfigurer {
 
-    private static DataLakeExportManager dataLakeExportManager = new DataLakeExportManager();
+    private static final DataLakeExportManager dataLakeExportManager = new DataLakeExportManager();
     private static final Logger LOG = LoggerFactory.getLogger(DataLakeExportManager.class);
 
     private final IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher()
@@ -43,8 +43,9 @@ public class DataLakeScheduler implements SchedulingConfigurer {
             .getSchemaManagement();
 
     public void cleanupMeasurements() {
+        LOG.info("Retention CRON Job triggered.");
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
-        LOG.info("GET ALL Measurements");
+        LOG.debug("GET ALL Measurements");
         for (DataLakeMeasure dataLakeMeasure : allMeasurements) {
             try {
                 dataLakeExportManager.cleanupSingleMeasurement(dataLakeMeasure);
@@ -54,12 +55,12 @@ public class DataLakeScheduler implements SchedulingConfigurer {
             }
 
         }
+        LOG.info("Retention CRON Job finished.");
     }
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         var env = Environments.getEnvironment();
-        LOG.info("Retention CRON Job triggered.");
         taskRegistrar.addTriggerTask(
 
                 this::cleanupMeasurements,
@@ -69,7 +70,6 @@ public class DataLakeScheduler implements SchedulingConfigurer {
 
         );
 
-        LOG.info("Retention CRON Job finished.");
 
     }
 }

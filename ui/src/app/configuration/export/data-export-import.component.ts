@@ -16,43 +16,58 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
     DialogService,
     PanelType,
+    SpBasicNavTabsComponent,
     SpBreadcrumbService,
+    SplitSectionComponent,
     SpNavigationItem,
 } from '@streampipes/shared-ui';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
     AssetManagementService,
     SpAsset,
 } from '@streampipes/platform-services';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { SpDataExportDialogComponent } from './export-dialog/data-export-dialog.component';
 import { SpDataImportDialogComponent } from './import-dialog/data-import-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-data-export-import',
     templateUrl: './data-export-import.component.html',
     styleUrls: ['./data-export-import.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        SplitSectionComponent,
+        MatCheckbox,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class SpDataExportImportComponent implements OnInit {
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private assetManagementService = inject(AssetManagementService);
+    private dialogService = inject(DialogService);
+    private tabService = inject(SpConfigurationTabsService);
+    private translateService = inject(TranslateService);
+
     tabs: SpNavigationItem[] = [];
 
     assets: SpAsset[];
     selectedAssets: string[] = [];
-
-    constructor(
-        private breadcrumbService: SpBreadcrumbService,
-        private assetManagementService: AssetManagementService,
-        private dialogService: DialogService,
-        private tabService: SpConfigurationTabsService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.tabs = this.tabService.getTabs();

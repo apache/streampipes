@@ -16,26 +16,74 @@
  *
  */
 
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    Input,
+    OnInit,
+    ViewChild,
+    inject,
+} from '@angular/core';
 import {
     ExtensionDeploymentConfiguration,
     ServiceTagService,
     SpServiceTag,
 } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
+import {
+    MatChipGrid,
+    MatChipInput,
+    MatChipInputEvent,
+    MatChipRemove,
+    MatChipRow,
+} from '@angular/material/chips';
 import { map, startWith } from 'rxjs/operators';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatRadioChange } from '@angular/material/radio';
+import {
+    MatAutocomplete,
+    MatAutocompleteSelectedEvent,
+    MatAutocompleteTrigger,
+} from '@angular/material/autocomplete';
+import {
+    MatRadioButton,
+    MatRadioChange,
+    MatRadioGroup,
+} from '@angular/material/radio';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatOption } from '@angular/material/select';
+import { AsyncPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-deployment-settings',
     templateUrl: './adapter-deployment-settings.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        MatRadioGroup,
+        FormsModule,
+        MatRadioButton,
+        MatFormField,
+        MatLabel,
+        MatChipGrid,
+        MatChipRow,
+        MatChipRemove,
+        MatIcon,
+        MatChipInput,
+        MatAutocompleteTrigger,
+        ReactiveFormsModule,
+        MatAutocomplete,
+        MatOption,
+        AsyncPipe,
+        TranslatePipe,
+    ],
 })
 export class SpAdapterDeploymentSettingsComponent implements OnInit {
+    private serviceTagService = inject(ServiceTagService);
+
     @Input()
     deploymentConfiguration: ExtensionDeploymentConfiguration;
 
@@ -50,7 +98,7 @@ export class SpAdapterDeploymentSettingsComponent implements OnInit {
 
     @ViewChild('serviceTagInput') serviceTagInput: ElementRef<HTMLInputElement>;
 
-    constructor(private serviceTagService: ServiceTagService) {
+    constructor() {
         this.filteredServiceTags = this.serviceTagCtrl.valueChanges.pipe(
             startWith(null),
             map((serviceTagValue: string | null) => {

@@ -99,6 +99,7 @@
     @if (rootNode) {
         <sp-split-section [level]="2" [title]="'Sites' | translate">
             <sp-asset-details-site
+                (reloadSites)="reloadSites.emit()"
                 [asset]="asset"
                 [sites]="sites"
                 [editMode]="editMode"

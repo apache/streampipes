@@ -18,12 +18,16 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.model.pipeline;
 
+import org.apache.streampipes.connect.shared.preprocessing.elements.ScriptTransformationPipelineElement;
+import org.apache.streampipes.connect.transformer.api.Context;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
+import org.apache.streampipes.model.connect.TransformationConfig;
 import org.apache.streampipes.model.schema.EventSchema;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class AdapterPipeline implements IAdapterPipeline {
 
@@ -31,31 +35,46 @@ public class AdapterPipeline implements IAdapterPipeline {
   private IAdapterPipelineElement pipelineSink;
 
   private final EventSchema resultingEventSchema;
+  private final Function<Map<String, Object>, List<Map<String, Object>>> processingFn;
 
   public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements,
+                         TransformationConfig transformationConfig,
+                         Context scriptContext,
                          EventSchema resultingEventSchema) {
     this.pipelineElements = pipelineElements;
     this.resultingEventSchema = resultingEventSchema;
+    if (transformationConfig.isScriptActive()) {
+      var transformation = new ScriptTransformationPipelineElement(
+          transformationConfig.getLanguage(),
+          transformationConfig.getScript(),
+          scriptContext
+      );
+      processingFn = transformation::process;
+    } else {
+      processingFn = List::of;
+    }
   }
 
   public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements,
+                         TransformationConfig transformationConfig,
                          IAdapterPipelineElement pipelineSink,
+                         Context scriptContext,
                          EventSchema resultingEventSchema) {
-    this.pipelineElements = pipelineElements;
+    this(pipelineElements, transformationConfig, scriptContext, resultingEventSchema);
     this.pipelineSink = pipelineSink;
-    this.resultingEventSchema = resultingEventSchema;
   }
 
   @Override
   public void process(Map<String, Object> event) {
-
-    for (IAdapterPipelineElement pipelineElement : pipelineElements) {
-      event = pipelineElement.process(event);
-    }
-    if (pipelineSink != null) {
-      pipelineSink.process(event);
-    }
-
+    var scriptResult = this.processingFn.apply(event);
+    scriptResult.forEach(result -> {
+      for (IAdapterPipelineElement pipelineElement : pipelineElements) {
+        result = pipelineElement.process(result);
+      }
+      if (pipelineSink != null) {
+        pipelineSink.process(result);
+      }
+    });
   }
 
   @Override

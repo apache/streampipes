@@ -44,8 +44,8 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
   private static final String MeasureFieldInternalName = "db_measurement";
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_READ_DATA_EXPLORER_PRIVILEGE)
-  @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
+  @PreAuthorize(AuthConstants.HAS_READ_DATASET_PRIVILEGE)
+  @PostFilter("hasPermission(filterObject.pipelineId, 'READ') and hasPermission(filterObject.measureName, 'READ')")
   public List<DataLakeMeasure> getPersistedDataStreams() {
     return extract(new ArrayList<>(), DataLakeAppId);
   }

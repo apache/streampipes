@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.pipeline;
 
 import org.apache.streampipes.commons.random.UUIDGenerator;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.permission.PermissionManager;
 import org.apache.streampipes.manager.storage.PipelineStorageService;
@@ -27,9 +28,8 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.CrudResourceManager;
-import org.apache.streampipes.resource.management.NotificationsResourceManager;
-import org.apache.streampipes.storage.api.IPermissionStorage;
-import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
@@ -92,9 +92,10 @@ public class PipelineManager {
    * @param pipelineId of pipeline to be started
    * @return pipeline status of the start operation
    */
-  public static PipelineOperationStatus startPipeline(String pipelineId) {
+  public static PipelineOperationStatus startPipeline(String pipelineId,
+                                                      ExtensionServiceRequestManager requestManager) {
     Pipeline pipeline = getPipeline(pipelineId);
-    return new PipelineExecutor(pipeline).startPipeline();
+    return new PipelineExecutor(pipeline, requestManager).startPipeline();
   }
 
   /**
@@ -108,11 +109,12 @@ public class PipelineManager {
    */
   public static PipelineOperationStatus stopPipeline(
       String pipelineId,
-      boolean forceStop
+      boolean forceStop,
+      ExtensionServiceRequestManager requestManager
   ) {
     Pipeline pipeline = getPipeline(pipelineId);
 
-    return new PipelineExecutor(pipeline).stopPipeline(forceStop);
+    return new PipelineExecutor(pipeline, requestManager).stopPipeline(forceStop);
   }
 
   /**
@@ -126,11 +128,11 @@ public class PipelineManager {
     var pipeline = getPipeline(pipelineId);
     if (Objects.nonNull(pipeline)) {
       pipelineCrudResourceManager.delete(pipelineId);
-      new NotificationsResourceManager().deleteNotificationsForPipeline(pipeline);
     }
   }
 
-  public static List<PipelineOperationStatus> stopAllPipelines(boolean forceStop) {
+  public static List<PipelineOperationStatus> stopAllPipelines(boolean forceStop,
+                                                               ExtensionServiceRequestManager requestManager) {
     List<PipelineOperationStatus> status = new ArrayList<>();
     List<Pipeline> pipelines = StorageDispatcher.INSTANCE.getNoSqlStore()
                                                          .getPipelineStorageAPI()
@@ -138,7 +140,7 @@ public class PipelineManager {
 
     pipelines.forEach(p -> {
       if (p.isRunning()) {
-        status.add(new PipelineExecutor(p).stopPipeline(forceStop));
+        status.add(new PipelineExecutor(p, requestManager).stopPipeline(forceStop));
       }
     });
     return status;

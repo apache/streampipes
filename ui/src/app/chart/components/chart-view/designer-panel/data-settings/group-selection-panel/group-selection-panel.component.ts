@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { ChartFieldProviderService } from '../../../../../../chart-shared/services/chart-field-provider.service';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import {
@@ -24,19 +24,30 @@ import {
     FieldConfig,
     SourceConfig,
 } from '@streampipes/platform-services';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { MatButton } from '@angular/material/button';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-group-selection-panel',
     templateUrl: './group-selection-panel.component.html',
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        MatButton,
+        LayoutDirective,
+        MatCheckbox,
+        FormsModule,
+        TranslatePipe,
+    ],
 })
 export class GroupSelectionPanelComponent implements OnInit {
-    @Input() sourceConfig: SourceConfig;
+    private fieldProvider = inject(ChartFieldProviderService);
+    private widgetConfigService = inject(ChartConfigurationService);
 
-    constructor(
-        private fieldProvider: ChartFieldProviderService,
-        private widgetConfigService: ChartConfigurationService,
-    ) {}
+    @Input() sourceConfig: SourceConfig;
 
     ngOnInit() {
         const groupByFields = this.sourceConfig.queryConfig.groupBy;

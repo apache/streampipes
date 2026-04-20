@@ -81,6 +81,10 @@ public class SelectColumn implements IQueryStatement {
     return originalField;
   }
 
+  public boolean isAggregated() {
+    return !simpleField;
+  }
+
   public void setAggregationFunction(AggregationFunction aggregationFunction) {
     this.aggregationFunction = aggregationFunction;
   }

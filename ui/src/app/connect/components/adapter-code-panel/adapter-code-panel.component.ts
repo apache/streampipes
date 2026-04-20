@@ -16,20 +16,24 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
     CompactAdapter,
 } from '@streampipes/platform-services';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { ConfigurationCodePanelComponent } from '../../../core-ui/configuration-code-panel/configuration-code-panel.component';
 
 @Component({
     selector: 'sp-adapter-code-panel',
     templateUrl: './adapter-code-panel.component.html',
     styleUrls: ['./adapter-code-panel.component.scss'],
-    standalone: false,
+    imports: [FlexDirective, ConfigurationCodePanelComponent],
 })
 export class AdapterCodePanelComponent implements OnInit {
+    private adapterService = inject(AdapterService);
+
     @Input()
     adapterDescription: AdapterDescription;
 
@@ -37,8 +41,6 @@ export class AdapterCodePanelComponent implements OnInit {
     maxHeight = '300px';
 
     compactAdapter: CompactAdapter;
-
-    constructor(private adapterService: AdapterService) {}
 
     ngOnInit(): void {
         this.adapterService

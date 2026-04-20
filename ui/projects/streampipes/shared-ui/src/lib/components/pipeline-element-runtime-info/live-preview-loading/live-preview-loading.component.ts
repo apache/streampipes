@@ -17,11 +17,22 @@
  */
 
 import { Component } from '@angular/core';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-live-preview-loading',
     templateUrl: './live-preview-loading.component.html',
     styleUrls: ['./live-preview-loading.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatProgressSpinner,
+        TranslatePipe,
+    ],
 })
 export class LivePreviewLoadingComponent {}

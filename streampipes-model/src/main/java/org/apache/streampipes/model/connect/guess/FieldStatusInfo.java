@@ -24,7 +24,6 @@ public class FieldStatusInfo {
 
   private FieldStatus fieldStatus;
   private String additionalInfo;
-  private boolean changesRequired;
 
   public FieldStatusInfo() {
   }
@@ -35,12 +34,12 @@ public class FieldStatusInfo {
     return info;
   }
 
-  public static FieldStatusInfo bad(String additionalInfo,
-                                    boolean changesRequired) {
+  public static FieldStatusInfo bad(
+      String additionalInfo
+  ) {
     var info = new FieldStatusInfo();
     info.setFieldStatus(FieldStatus.BAD);
     info.setAdditionalInfo(additionalInfo);
-    info.setChangesRequired(changesRequired);
 
     return info;
   }
@@ -61,29 +60,18 @@ public class FieldStatusInfo {
     this.additionalInfo = additionalInfo;
   }
 
-  public boolean isChangesRequired() {
-    return changesRequired;
-  }
-
-  public void setChangesRequired(boolean changesRequired) {
-    this.changesRequired = changesRequired;
-  }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
     FieldStatusInfo that = (FieldStatusInfo) o;
-    return changesRequired == that.changesRequired && fieldStatus == that.fieldStatus && Objects.equals(
-        additionalInfo, that.additionalInfo);
+    return fieldStatus == that.fieldStatus && Objects.equals(additionalInfo, that.additionalInfo);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(fieldStatus, additionalInfo, changesRequired);
+    return Objects.hash(fieldStatus, additionalInfo);
   }
 }

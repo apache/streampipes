@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import {
     EventPropertyUnion,
     FieldConfig,
@@ -24,14 +31,39 @@ import {
 } from '@streampipes/platform-services';
 import { ChartFieldProviderService } from '../../../../../../chart-shared/services/chart-field-provider.service';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { FieldSelectionComponent } from '../field-selection/field-selection.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-field-selection-panel',
     templateUrl: './field-selection-panel.component.html',
     styleUrls: ['./field-selection-panel.component.scss'],
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatButton,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        LayoutDirective,
+        FieldSelectionComponent,
+        TranslatePipe,
+    ],
 })
 export class FieldSelectionPanelComponent implements OnInit {
+    private fieldProvider = inject(ChartFieldProviderService);
+    private widgetConfigService = inject(ChartConfigurationService);
+
     MAX_INITIAL_FIELDS = 3;
 
     @Input() sourceConfig: SourceConfig;
@@ -40,11 +72,6 @@ export class FieldSelectionPanelComponent implements OnInit {
     initialFieldSelectionEvent: EventEmitter<void> = new EventEmitter();
 
     expandFields = false;
-
-    constructor(
-        private fieldProvider: ChartFieldProviderService,
-        private widgetConfigService: ChartConfigurationService,
-    ) {}
 
     ngOnInit() {
         this.applyDefaultFields();

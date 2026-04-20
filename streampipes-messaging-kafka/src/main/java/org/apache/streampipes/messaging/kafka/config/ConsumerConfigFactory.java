@@ -29,7 +29,6 @@ public class ConsumerConfigFactory extends AbstractConfigFactory {
 
   private static final String ENABLE_AUTO_COMMIT_CONFIG_DEFAULT = "true";
   private static final String AUTO_COMMIT_INTERVAL_MS_CONFIG_DEFAULT = "5000";
-  private static final String SESSION_TIMEOUT_MS_CONFIG_DEFAULT = "30000";
   private static final Integer FETCH_MAX_BYTES_CONFIG_DEFAULT = 52428800;
   private static final String KEY_DESERIALIZER_CLASS_CONFIG_DEFAULT = ByteArrayDeserializer.class.getName();
   private static final String VALUE_DESERIALIZER_CLASS_CONFIG_DEFAULT = ByteArrayDeserializer.class.getName();
@@ -48,7 +47,6 @@ public class ConsumerConfigFactory extends AbstractConfigFactory {
     props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, ENABLE_AUTO_COMMIT_CONFIG_DEFAULT);
     props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG,
         AUTO_COMMIT_INTERVAL_MS_CONFIG_DEFAULT);
-    props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, SESSION_TIMEOUT_MS_CONFIG_DEFAULT);
     props.put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG,
         getConfigOrDefault(protocol::getMessageMaxBytes, FETCH_MAX_BYTES_CONFIG_DEFAULT));
 

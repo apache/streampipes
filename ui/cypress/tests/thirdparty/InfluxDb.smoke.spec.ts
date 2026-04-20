@@ -39,7 +39,7 @@ describe('Test InfluxDB Integration', () => {
             .addInput('input', 'db_name', 'sp')
             .addInput('input', 'db_measurement', dbName)
             .addInput('radio', 'db_authentication-token', '')
-            .addInput('input', 'undefined-db_token-0', 'sp-admin')
+            .addInput('input', 'db_authentication-db_token-0', 'sp-admin')
             .addInput('input', 'batch_interval_actions', '2')
             .addInput(
                 'input',
@@ -56,8 +56,9 @@ describe('Test InfluxDB Integration', () => {
             .addInput('input', 'db_name', 'sp')
             .addInput('input', 'db_measurement', dbName)
             .addInput('radio', 'db_authentication-token', '')
-            .addInput('input', 'undefined-db_token-0', 'sp-admin')
+            .addInput('input', 'db_authentication-db_token-0', 'sp-admin')
             .addInput('input', 'pollingInterval', '200')
+            .setTimestampProperty('timestamp')
             .build();
 
         ThirdPartyIntegrationUtils.runTest(sink, adapter);

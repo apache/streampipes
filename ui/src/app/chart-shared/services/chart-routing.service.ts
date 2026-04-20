@@ -16,15 +16,15 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class ChartRoutingService {
+    private router = inject(Router);
+
     private chartPath = ['chart'];
     private dashboardPath = ['dashboard'];
-
-    constructor(private router: Router) {}
 
     navigateToDataViewOverview(omitConfirm: boolean = false): void {
         this.navigateToOverview(this.chartPath, omitConfirm);

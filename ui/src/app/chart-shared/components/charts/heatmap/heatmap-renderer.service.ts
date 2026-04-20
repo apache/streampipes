@@ -20,13 +20,13 @@ import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-re
 import { HeatmapWidgetModel } from './model/heatmap-widget.model';
 import { GeneratedDataset, TagValue } from '../../../models/dataset.model';
 import { EChartsOption } from 'echarts';
-import {
+import { Injectable } from '@angular/core';
+import { FieldUpdateInfo } from '../../../models/field-update.model';
+import type {
     DimensionDefinitionLoose,
     OptionDataValue,
     OptionSourceDataArrayRows,
-} from 'echarts/types/src/util/types';
-import { Injectable } from '@angular/core';
-import { FieldUpdateInfo } from '../../../models/field-update.model';
+} from 'echarts/types/src/util/types.d.ts';
 
 @Injectable({ providedIn: 'root' })
 export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidgetModel> {
@@ -36,6 +36,7 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
         widgetConfig: HeatmapWidgetModel,
     ): void {
         this.basicOptions(options, widgetConfig);
+        const decimals = this.getDecimals(widgetConfig);
 
         const field = widgetConfig.visualizationConfig.selectedHeatProperty;
         const sourceIndex = field.sourceIndex;
@@ -62,7 +63,7 @@ export class SpHeatmapRendererService extends SpBaseEchartsRenderer<HeatmapWidge
             return [
                 index,
                 this.makeTag(rawDataset.rawDataset.dimensions, tags, row),
-                (row[heatIndex] as number).toFixed(2),
+                this.formatNumber(row[heatIndex], decimals),
             ];
         });
 

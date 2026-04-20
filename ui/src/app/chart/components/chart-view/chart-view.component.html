@@ -44,8 +44,24 @@
                     {{ 'The desired chart was not found!' | translate }}
                 </div>
             } @else {
+                @if (legacyMultiSourceChart) {
+                    <div class="p-10">
+                        <sp-alert-banner
+                            type="warning"
+                            icon="warning"
+                            [title]="legacyMultiSourceWarningTitle | translate"
+                            [description]="
+                                legacyMultiSourceWarningDescription | translate
+                            "
+                        >
+                        </sp-alert-banner>
+                    </div>
+                }
                 <mat-drawer-container
-                    class="designer-panel-container h-100 dashboard-grid"
+                    fxFlex="100"
+                    fxLayout="column"
+                    class="h-100"
+                    style="width: 100%; min-height: 0"
                 >
                     <mat-drawer
                         [opened]="editMode"
@@ -70,27 +86,56 @@
                             </div>
                         </sp-sidebar-resize>
                     </mat-drawer>
-                    <mat-drawer-content class="h-100 dashboard-grid">
-                        <div #panel fxFlex="100" fxLayout="column">
-                            @if (
-                                dataView &&
-                                dataView.dataConfig?.sourceConfigs?.length > 0
-                            ) {
-                                <sp-chart-container
-                                    fxFlex
-                                    [dataViewMode]="true"
-                                    [editMode]="editMode"
-                                    [configuredWidget]="dataView"
-                                    [timeSettings]="timeSettings"
-                                    [observableGenerator]="observableGenerator"
-                                    [dataLakeMeasure]="
-                                        dataView.dataConfig.sourceConfigs[0]
-                                            .measure
-                                    "
-                                    (startEditModeEmitter)="editDataView()"
-                                >
-                                </sp-chart-container>
-                            }
+                    <mat-drawer-content
+                        class="h-100"
+                        fxFlex
+                        fxLayout="column"
+                        style="min-height: 0"
+                    >
+                        <div
+                            fxFlex
+                            fxLayout="column"
+                            style="min-height: 0; overflow: hidden"
+                        >
+                            <div
+                                #panel
+                                fxLayout="column"
+                                fxFlex
+                                style="min-height: 0; overflow: hidden"
+                            >
+                                @if (
+                                    dataView &&
+                                    dataView.dataConfig?.sourceConfigs?.length >
+                                        0
+                                ) {
+                                    <sp-chart-container
+                                        fxFlex
+                                        style="display: block; min-height: 0"
+                                        [dataViewMode]="true"
+                                        [editMode]="editMode"
+                                        [configuredWidget]="dataView"
+                                        [timeSettings]="timeSettings"
+                                        [observableGenerator]="
+                                            observableGenerator
+                                        "
+                                        [dataLakeMeasure]="
+                                            dataView.dataConfig.sourceConfigs[0]
+                                                .measure
+                                        "
+                                        (startEditModeEmitter)="editDataView()"
+                                        (queryResultsEmitter)="
+                                            onQueryResultsChanged($event)
+                                        "
+                                    >
+                                    </sp-chart-container>
+                                }
+                            </div>
+
+                            <sp-chart-data-preview
+                                [queryResults]="latestQueryResults"
+                                (sizeChanged)="onDataPreviewSizeChanged()"
+                            >
+                            </sp-chart-data-preview>
                         </div>
                     </mat-drawer-content>
                 </mat-drawer-container>

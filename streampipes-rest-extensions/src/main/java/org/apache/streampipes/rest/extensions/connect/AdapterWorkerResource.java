@@ -19,11 +19,8 @@
 package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.extensions.management.connect.AdapterWorkerManagement;
-import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
-import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
+import org.apache.streampipes.extensions.management.connect.AdapterWorkerRequestManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.shared.exception.SpLogMessageException;
@@ -48,22 +45,19 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
 
   private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerResource.class);
 
-  private AdapterWorkerManagement adapterManagement;
+  private final AdapterWorkerRequestManagement adapterRequestManagement;
 
   public AdapterWorkerResource() {
-    adapterManagement = new AdapterWorkerManagement(
-        RunningAdapterInstances.INSTANCE,
-        DeclarersSingleton.getInstance()
-    );
+    this.adapterRequestManagement = new AdapterWorkerRequestManagement();
   }
 
-  public AdapterWorkerResource(AdapterWorkerManagement adapterManagement) {
-    this.adapterManagement = adapterManagement;
+  public AdapterWorkerResource(AdapterWorkerRequestManagement adapterRequestManagement) {
+    this.adapterRequestManagement = adapterRequestManagement;
   }
 
   @GetMapping(path = "/running", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Collection<AdapterDescription>> getRunningAdapterInstances() {
-    return ok(adapterManagement.getAllRunningAdapterInstances());
+    return ok(adapterRequestManagement.getRunningAdapterInstances());
   }
 
 
@@ -74,12 +68,7 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
   public ResponseEntity<SuccessMessage> invokeAdapter(@RequestBody AdapterDescription adapterStreamDescription) {
 
     try {
-      adapterManagement.invokeAdapter(adapterStreamDescription);
-      String responseMessage = "Stream adapter with id "
-              + adapterStreamDescription.getElementId()
-              + " successfully started";
-      logger.info(responseMessage);
-      return ok(Notifications.success(responseMessage));
+      return ok(adapterRequestManagement.invokeAdapter(adapterStreamDescription));
     } catch (AdapterException e) {
       logger.error("Error while starting adapter with id " + adapterStreamDescription.getElementId(), e);
       throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));
@@ -92,17 +81,8 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SuccessMessage> stopAdapter(@RequestBody AdapterDescription adapterStreamDescription) {
 
-    String responseMessage;
     try {
-      if (adapterStreamDescription.isRunning()) {
-        adapterManagement.stopAdapter(adapterStreamDescription);
-        responseMessage = "Stream adapter with id " + adapterStreamDescription.getElementId() + " successfully stopped";
-      } else {
-        responseMessage =
-            "Stream adapter with id " + adapterStreamDescription.getElementId() + " seems not to be running";
-      }
-      logger.info(responseMessage);
-      return ok(Notifications.success(responseMessage));
+      return ok(adapterRequestManagement.stopAdapter(adapterStreamDescription));
     } catch (AdapterException e) {
       logger.error("Error while stopping adapter with id " + adapterStreamDescription.getElementId(), e);
       throw new SpLogMessageException(HttpStatus.INTERNAL_SERVER_ERROR, SpLogMessage.from(e));

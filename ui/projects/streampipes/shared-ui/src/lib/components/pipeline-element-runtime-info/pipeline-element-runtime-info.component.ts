@@ -22,6 +22,7 @@ import {
     Input,
     OnDestroy,
     OnInit,
+    inject,
 } from '@angular/core';
 import {
     LivePreviewService,
@@ -32,31 +33,33 @@ import { Subscription } from 'rxjs';
 import { HttpDownloadProgressEvent, HttpEventType } from '@angular/common/http';
 import { RuntimeInfo } from './pipeline-element-runtime-info.model';
 import { PipelineElementSchemaService } from '../../services/pipeline-element-schema.service';
+import { LivePreviewTableComponent } from './live-preview-table/live-preview-table.component';
+import { LivePreviewErrorComponent } from './live-preview-error/live-preview-error.component';
 
 @Component({
     selector: 'sp-pipeline-element-runtime-info',
     templateUrl: './pipeline-element-runtime-info.component.html',
-    styleUrls: ['./pipeline-element-runtime-info.component.scss'],
-    standalone: false,
+    imports: [LivePreviewTableComponent, LivePreviewErrorComponent],
 })
 export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
+    private restService = inject(PipelineElementRuntimeInfoService);
+    private livePreviewService = inject(LivePreviewService);
+    private pipelineELementSchemaService = inject(PipelineElementSchemaService);
+
     @Input()
     streamDescription: SpDataStream;
 
     @Input()
     showTitle = true;
 
+    @Input()
+    compact = false;
+
     runtimeData: { runtimeName: string; value: any }[];
     runtimeInfo: RuntimeInfo[];
     timer: any;
     runtimeDataError = false;
     runtimeSub: Subscription;
-
-    constructor(
-        private restService: PipelineElementRuntimeInfoService,
-        private livePreviewService: LivePreviewService,
-        private pipelineELementSchemaService: PipelineElementSchemaService,
-    ) {}
 
     ngOnInit(): void {
         this.runtimeInfo = this.makeRuntimeInfo();
@@ -69,11 +72,8 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                 return {
                     label: ep.label || 'n/a',
                     description: ep.description || 'n/a',
-                    runtimeType:
-                        this.pipelineELementSchemaService.getFriendlyRuntimeType(
-                            ep,
-                        ),
                     runtimeName: ep.runtimeName,
+                    propertyScope: ep.propertyScope,
                     value: undefined,
                     isTimestamp:
                         this.pipelineELementSchemaService.isTimestamp(ep),

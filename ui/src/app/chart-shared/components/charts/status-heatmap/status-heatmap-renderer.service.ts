@@ -20,11 +20,11 @@ import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-re
 import { StatusHeatmapWidgetModel } from './model/status-heatmap-widget.model';
 import { GeneratedDataset, TagValue } from '../../../models/dataset.model';
 import { EChartsOption } from 'echarts';
-import {
+import type {
     DimensionDefinitionLoose,
     OptionDataValue,
     OptionSourceDataArrayRows,
-} from 'echarts/types/src/util/types';
+} from 'echarts/types/src/util/types.d.ts';
 import { Injectable, inject } from '@angular/core';
 import { FieldUpdateInfo } from '../../../models/field-update.model';
 import { ColorMappingService } from '../../../services/color-mapping.service';

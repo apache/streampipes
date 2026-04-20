@@ -18,6 +18,10 @@
 
 import { Component, Input } from '@angular/core';
 import { DataExportConfig } from '../../../model/data-export-config.model';
+import { SplitSectionComponent } from '../../../../../components/split-section/split-section.component';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-select-data-missing-values',
@@ -26,7 +30,13 @@ import { DataExportConfig } from '../../../model/data-export-config.model';
         './select-data-missing-values.component.scss',
         '../select-data.component.scss',
     ],
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        MatRadioGroup,
+        FormsModule,
+        MatRadioButton,
+        TranslatePipe,
+    ],
 })
 export class SelectDataMissingValuesComponent {
     @Input() dataExportConfig: DataExportConfig;

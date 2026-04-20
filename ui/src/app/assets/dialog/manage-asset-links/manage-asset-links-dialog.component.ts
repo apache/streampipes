@@ -16,31 +16,41 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
-import {
-    AdapterService,
-    AssetLink,
-    AssetLinkType,
-    ChartService,
-    DashboardService,
-    DatalakeRestService,
-    FilesService,
-    GenericStorageService,
-    PipelineElementService,
-    PipelineService,
-} from '@streampipes/platform-services';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { DialogRef, SplitSectionComponent } from '@streampipes/shared-ui';
+import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatDivider } from '@angular/material/divider';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-manage-asset-links-dialog-component',
     templateUrl: './manage-asset-links-dialog.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SplitSectionComponent,
+        LayoutAlignDirective,
+        MatButton,
+        MatCheckbox,
+        MatDivider,
+        TranslatePipe,
+    ],
 })
 export class SpManageAssetLinksDialogComponent
     extends BaseAssetLinksDirective
     implements OnInit
 {
+    private dialogRef =
+        inject<DialogRef<SpManageAssetLinksDialogComponent>>(DialogRef);
+
     @Input()
     assetLinks: AssetLink[];
 
@@ -55,29 +65,6 @@ export class SpManageAssetLinksDialogComponent
     filenameFunction = el => el.filename;
     measureNameFunction = el => el.measureName;
     widgetNameFunction = el => el.baseAppearanceConfig.widgetTitle;
-
-    constructor(
-        private dialogRef: DialogRef<SpManageAssetLinksDialogComponent>,
-        protected genericStorageService: GenericStorageService,
-        protected pipelineService: PipelineService,
-        protected chartService: ChartService,
-        protected dashboardService: DashboardService,
-        protected dataLakeService: DatalakeRestService,
-        protected pipelineElementService: PipelineElementService,
-        protected adapterService: AdapterService,
-        protected filesService: FilesService,
-    ) {
-        super(
-            genericStorageService,
-            pipelineService,
-            chartService,
-            dashboardService,
-            dataLakeService,
-            pipelineElementService,
-            adapterService,
-            filesService,
-        );
-    }
 
     ngOnInit(): void {
         super.onInit();

@@ -16,20 +16,36 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { PipelineElementConfig } from '../../../../model/editor.model';
 import { forkJoin } from 'rxjs';
 import { PipelinePositioningService } from '../../../../services/pipeline-positioning.service';
 import { EditorService } from '../../../../services/editor.service';
 import { PipelineCanvasMetadata } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-assembly-options-pipeline-cache',
     templateUrl: './pipeline-assembly-options-pipeline-cache.component.html',
     styleUrls: ['./pipeline-assembly-options-pipeline-cache.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatProgressSpinner,
+        TranslatePipe,
+    ],
 })
 export class PipelineAssemblyOptionsPipelineCacheComponent {
+    private pipelinePositioningService = inject(PipelinePositioningService);
+    private editorService = inject(EditorService);
+
     pipelineCached = false;
     pipelineCacheRunning = false;
 
@@ -38,11 +54,6 @@ export class PipelineAssemblyOptionsPipelineCacheComponent {
 
     @Input()
     pipelineCanvasMetadata: PipelineCanvasMetadata;
-
-    constructor(
-        private pipelinePositioningService: PipelinePositioningService,
-        private editorService: EditorService,
-    ) {}
 
     triggerPipelineCacheUpdate() {
         setTimeout(() => {

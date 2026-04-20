@@ -62,7 +62,7 @@ describe('Test OPC-UA Adapter Configuration', () => {
         TreeStaticPropertyUtils.validateAmountOfShownNodeDetailsMetaDataRows(0);
         TreeStaticPropertyUtils.showNodeDetails('StepUp');
         TreeStaticPropertyUtils.validateAmountOfShownNodeDetailsMetaDataRows(
-            10,
+            12,
         );
         TreeStaticPropertyUtils.hideNodeDetails('StepUp');
         TreeStaticPropertyUtils.validateAmountOfShownNodeDetailsMetaDataRows(0);
@@ -110,10 +110,13 @@ describe('Test OPC-UA Adapter Configuration', () => {
         // Go back tree view and validate that the node is still selected
         TreeStaticPropertyUtils.switchToTextEditor();
         TreeStaticPropertyUtils.getTextInTextEditor().should(
-            'equal',
-            '# Provide OPC UA Node IDs below, one per line.# Format: ' +
-                'ns=<namespace>;s=<node_id> (e.g., ns=3;s=SampleNodeId)' +
-                'ns=3;s=StepUpns=3;s=AlternatingBoolean',
+            'contain',
+            's=AlternatingBoolean',
+        );
+
+        TreeStaticPropertyUtils.getTextInTextEditor().should(
+            'contain',
+            'ns=3;s=StepUpns=3;',
         );
 
         TreeStaticPropertyUtils.switchToTreeEditor();
@@ -157,7 +160,7 @@ const getAdapterBuilder = () => {
         .addInput('radio', 'adapter_type-pull_mode', '')
         .addInput(
             'input',
-            'undefined-pull-mode-group-0-PULLING_INTERVAL-0',
+            'ADAPTER_TYPE-pull-mode-group-0-PULLING_INTERVAL-0',
             '1000',
         )
         .addInput('radio', 'securitymode-none', '')
@@ -165,7 +168,7 @@ const getAdapterBuilder = () => {
         .addInput('radio', 'opc_host_or_url-url', '')
         .addInput(
             'input',
-            'undefined-OPC_SERVER_URL-0',
+            'OPC_HOST_OR_URL-OPC_SERVER_URL-0',
             'opc.tcp://' + host + ':50000',
         )
         .setAutoAddTimestampPropery();

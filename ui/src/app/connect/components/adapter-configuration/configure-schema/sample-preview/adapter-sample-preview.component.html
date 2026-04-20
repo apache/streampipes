@@ -1,0 +1,84 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+<sp-basic-inner-panel
+    innerPadding="0"
+    [showTitle]="true"
+    [panelTitle]="'Source' | translate"
+>
+    <div header fxLayoutAlign="end center" fxFlex="100">
+        <button
+            data-cy="connect-get-new-sample-button"
+            mat-button
+            (click)="getSample.emit()"
+            [disabled]="isSampleLoading()"
+        >
+            <mat-icon>refresh</mat-icon>
+            <span>{{ 'Get new sample' | translate }}</span>
+        </button>
+        <button
+            data-cy="connect-upload-sample-button"
+            mat-button
+            (click)="uploadSample.emit()"
+        >
+            <mat-icon>file_upload</mat-icon>
+            <span>{{ 'Upload sample' | translate }}</span>
+        </button>
+        <mat-button-toggle-group
+            [value]="sourceViewMode()"
+            [hideSingleSelectionIndicator]="true"
+            (valueChange)="sourceViewModeChange.emit($event)"
+        >
+            <mat-button-toggle value="tree"
+                >{{ 'Tree' | translate }}
+            </mat-button-toggle>
+            <mat-button-toggle value="raw"
+                >{{ 'Raw' | translate }}
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+
+    @if (isSampleLoading()) {
+        <div
+            fxFlex="100"
+            fxLayoutAlign="center center"
+            fxLayout="column"
+            class="m-lg"
+        >
+            <mat-spinner [diameter]="25"></mat-spinner>
+            <h5>{{ 'Loading' | translate }}</h5>
+        </div>
+    } @else {
+        @if (sampleErrorMessage()) {
+            <sp-exception-message
+                [message]="sampleErrorMessage()"
+                [showDetails]="true"
+            ></sp-exception-message>
+        } @else {
+            <div fxLayout="column" class="w-100 p-sm">
+                <sp-show-field-status-infos
+                    [fieldStatusInfos]="fieldStatusInfos()"
+                ></sp-show-field-status-infos>
+                <sp-adapter-event-preview
+                    dataCy="configure-schema-event-preview-original"
+                    [mode]="sourceViewMode()"
+                    [value]="input()"
+                ></sp-adapter-event-preview>
+            </div>
+        }
+    }
+</sp-basic-inner-panel>

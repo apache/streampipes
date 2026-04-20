@@ -46,13 +46,33 @@ import {
     StatusIndicator,
 } from '../../../core-ui/multi-step-status-indicator/multi-step-status-indicator.model';
 import { PipelineAction } from '../../../pipelines/model/pipeline-model';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SavePipelineSettingsComponent } from './save-pipeline-settings/save-pipeline-settings.component';
+import { MultiStepStatusIndicatorComponent } from '../../../core-ui/multi-step-status-indicator/multi-step-status-indicator.component';
+import { MatDivider } from '@angular/material/divider';
+import { PipelineStartedStatusComponent } from '../../../core-ui/pipeline/pipeline-started-status/pipeline-started-status.component';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-save-pipeline',
     templateUrl: './save-pipeline.component.html',
     styleUrls: ['./save-pipeline.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SavePipelineSettingsComponent,
+        MultiStepStatusIndicatorComponent,
+        MatDivider,
+        PipelineStartedStatusComponent,
+        LayoutGapDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class SavePipelineComponent implements OnInit {
     private editorService = inject(EditorService);

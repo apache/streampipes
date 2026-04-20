@@ -27,33 +27,39 @@ import {
 } from '@streampipes/platform-services';
 import { forkJoin } from 'rxjs';
 import {
-    DefaultFlexDirective,
-    DefaultLayoutAlignDirective,
-    DefaultLayoutDirective,
-    DefaultLayoutGapDirective,
+    FlexDirective,
     FlexFillDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout';
-import { SharedUiModule } from '@streampipes/shared-ui';
-import { ChartSharedModule } from '../../../chart-shared/chart-shared.module';
+import {
+    FeatureCardHeaderComponent,
+    FeatureCardMetaCreationComponent,
+    FeatureCardMetaSectionComponent,
+} from '@streampipes/shared-ui';
 import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ChartRegistry } from '../../../chart-shared/registry/chart-registry.service';
 import { Router } from '@angular/router';
+import { ChartContainerComponent } from '../../../chart-shared/components/chart-container/chart-container.component';
 
 @Component({
     selector: 'sp-chart-feature-card',
     templateUrl: './chart-feature-card.component.html',
     imports: [
         FlexFillDirective,
-        DefaultLayoutDirective,
-        SharedUiModule,
-        ChartSharedModule,
-        DefaultFlexDirective,
-        DefaultLayoutAlignDirective,
-        DefaultLayoutGapDirective,
         MatIcon,
         TranslatePipe,
+        FeatureCardHeaderComponent,
+        LayoutDirective,
+        FeatureCardMetaCreationComponent,
+        FeatureCardMetaSectionComponent,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        FlexDirective,
+        ChartContainerComponent,
     ],
     styleUrls: ['./chart-feature-card.component.scss'],
 })

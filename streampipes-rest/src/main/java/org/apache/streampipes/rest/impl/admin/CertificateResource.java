@@ -23,7 +23,7 @@ import org.apache.streampipes.model.opcua.CertificateState;
 import org.apache.streampipes.model.opcua.CertificateUsage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ public class CertificateResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(CertificateResource.class);
 
-  private final CRUDStorage<Certificate> certificateStorage = StorageDispatcher
+  private final ICertificateStorage certificateStorage = StorageDispatcher
       .INSTANCE.getNoSqlStore().getCertificateStorage();
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

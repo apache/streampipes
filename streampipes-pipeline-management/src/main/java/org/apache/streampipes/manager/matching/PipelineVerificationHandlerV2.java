@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.matching;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphBuilder;
 import org.apache.streampipes.manager.matching.v2.pipeline.PipelineValidationSteps;
@@ -41,14 +42,17 @@ import java.util.Optional;
 public class PipelineVerificationHandlerV2 {
 
   private final Pipeline pipeline;
+  private final ExtensionServiceRequestManager requestManager;
 
-  public PipelineVerificationHandlerV2(Pipeline pipeline) {
+  public PipelineVerificationHandlerV2(Pipeline pipeline,
+                                       ExtensionServiceRequestManager requestManager) {
     this.pipeline = pipeline;
+    this.requestManager = requestManager;
   }
 
   public PipelineModificationMessage verifyPipeline() {
     PipelineGraph graph = new PipelineGraphBuilder(pipeline).buildGraph();
-    var steps = new PipelineValidationSteps().collect();
+    var steps = new PipelineValidationSteps().collect(requestManager);
     return new PipelineModificationGenerator(graph, steps).buildPipelineModificationMessage();
   }
 

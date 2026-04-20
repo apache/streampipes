@@ -24,7 +24,14 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
@@ -32,16 +39,28 @@ import {
     DialogService,
     PanelType,
     SpAssetBrowserService,
+    SpTableAssetContextConfig,
+    SpBasicHeaderTitleComponent,
+    SpTableActionsDirective,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
 import { ChartSharedService } from '../../../../chart-shared/services/chart-shared.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { CloneDashboardDialogComponent } from '../../../dialogs/clone-dashboard/clone-dashboard-dialog.component';
 import { Subscription } from 'rxjs';
 import { ChartRoutingService } from '../../../../chart-shared/services/chart-routing.service';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-dashboard-overview-table',
@@ -49,7 +68,25 @@ import { MatSort } from '@angular/material/sort';
     styleUrls: [
         '../../../../chart/components/chart-overview/chart-overview.component.scss',
     ],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SpBasicHeaderTitleComponent,
+        LayoutAlignDirective,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        LayoutGapDirective,
+        SpTableActionsDirective,
+        MatMenuItem,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     @Input()
@@ -62,10 +99,15 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
 
     displayedColumns: string[] = [
         'name',
+        'assetContext',
         'lastModified',
         'createdAt',
         'actions',
     ];
+    readonly assetContextConfig: SpTableAssetContextConfig = {
+        resourceLinkType: 'dashboard',
+        resourceIdKey: 'elementId',
+    };
     dashboards: Dashboard[] = [];
     filteredDashboards: Dashboard[] = [];
 
@@ -137,18 +179,20 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
             width: '600px',
             data: {
                 title: this.translateService.instant(
-                    'Are you sure you want to delete this dashboard?',
+                    'Are you sure you want to delete dashboard "{{dashboardTitle}}"?',
+                    {
+                        dashboardTitle: dashboard.name ?? '',
+                    },
                 ),
                 subtitle: this.translateService.instant(
                     'This action cannot be undone!',
                 ),
                 cancelTitle: this.translateService.instant('Cancel'),
-                okTitle: this.translateService.instant('Delete dashboard'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Delete dashboard'),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === 'confirm') {
                 this.dashboardService
                     .deleteDashboard(dashboard)
                     .subscribe(() => {
@@ -174,9 +218,6 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     }
 
     applyDashboardFilters(elementIds: Set<string>): void {
-        if (this.assetFilterService.hasNoAssetFilterPermission()) {
-            elementIds = new Set<string>();
-        }
         if (elementIds == undefined) {
             this.filteredDashboards = [];
         } else if (elementIds.size == 0) {

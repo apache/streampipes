@@ -16,52 +16,85 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
-import { HttpClient, HttpContext, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnitDescription } from '../model/UnitDescription';
 import {
     AdapterDescription,
-    AdapterEventPreview,
-    GuessSchema,
+    EventSchema,
     PlatformServicesCommons,
+    SampleData,
     SpDataStream,
 } from '@streampipes/platform-services';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({ providedIn: 'root' })
 export class RestService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     get connectPath() {
         return this.platformServicesCommons.apiBasePath + '/connect';
     }
 
-    getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
+    getEventSchema(adapter: AdapterDescription): Observable<EventSchema> {
         return this.http
             .post(`${this.connectPath}/master/guess/schema`, adapter, {
                 context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
             })
             .pipe(
                 map(response => {
-                    return GuessSchema.fromData(response as GuessSchema);
+                    return EventSchema.fromData(response as EventSchema);
+                }),
+            );
+    }
+
+    getSampleEvents(adapter: AdapterDescription): Observable<SampleData> {
+        return this.http
+            .post(`${this.connectPath}/master/guess/sample`, adapter, {
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+            })
+            .pipe(
+                map(response => {
+                    return SampleData.fromData(response as SampleData);
+                }),
+            );
+    }
+
+    sampleTransform(
+        adapter: AdapterDescription,
+    ): Observable<AdapterDescription> {
+        return this.http
+            .post(
+                `${this.connectPath}/master/guess/sample/transform`,
+                adapter,
+                {
+                    context: new HttpContext().set(
+                        NGX_LOADING_BAR_IGNORED,
+                        true,
+                    ),
+                },
+            )
+            .pipe(
+                map(response => {
+                    return AdapterDescription.fromData(
+                        response as AdapterDescription,
+                    );
                 }),
             );
     }
 
     getAdapterEventPreview(
-        adapterEventPreview: AdapterEventPreview,
+        adapterDescription: AdapterDescription,
     ): Observable<Record<string, any>> {
         return this.http
             .post(
                 `${this.connectPath}/master/guess/schema/preview`,
-                adapterEventPreview,
+                adapterDescription,
             )
             .pipe(map(response => response as Record<string, any>));
     }

@@ -17,7 +17,14 @@
  */
 
 import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import {
     ChartService,
     DataExplorerWidgetModel,
@@ -26,19 +33,51 @@ import {
     ConfirmDialogComponent,
     DateFormatService,
     SpAssetBrowserService,
+    SpTableAssetContextConfig,
+    SpBasicHeaderTitleComponent,
+    SpTableActionsDirective,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
 import { ChartSharedService } from '../../../../chart-shared/services/chart-shared.service';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartRoutingService } from '../../../../chart-shared/services/chart-routing.service';
 import { Subscription } from 'rxjs';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-data-explorer-overview-table',
     templateUrl: './chart-overview-table.component.html',
     styleUrls: ['../chart-overview.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SpBasicHeaderTitleComponent,
+        LayoutAlignDirective,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        LayoutGapDirective,
+        SpTableActionsDirective,
+        MatMenuItem,
+        MatIcon,
+        MatTooltip,
+        TranslatePipe,
+    ],
 })
 export class ChartOverviewTableComponent implements OnInit {
     @Input()
@@ -50,12 +89,19 @@ export class ChartOverviewTableComponent implements OnInit {
     dataSource = new MatTableDataSource<DataExplorerWidgetModel>();
     displayedColumns: string[] = [
         'name',
+        'assetContext',
         'lastModified',
         'createdAt',
         'actions',
     ];
+    readonly assetContextConfig: SpTableAssetContextConfig = {
+        resourceLinkType: 'chart',
+        resourceIdKey: 'elementId',
+    };
     charts: DataExplorerWidgetModel[] = [];
     filteredCharts: DataExplorerWidgetModel[] = [];
+    readonly outdatedChartTooltip =
+        'This chart is outdated and must be migrated.';
 
     private dataViewService = inject(ChartService);
     private dataExplorerDashboardService = inject(ChartSharedService);
@@ -128,18 +174,21 @@ export class ChartOverviewTableComponent implements OnInit {
             width: '600px',
             data: {
                 title: this.translateService.instant(
-                    'Are you sure you want to delete this chart?',
+                    'Are you sure you want to delete chart "{{chartTitle}}"?',
+                    {
+                        chartTitle:
+                            dataView.baseAppearanceConfig.widgetTitle ?? '',
+                    },
                 ),
                 subtitle: this.translateService.instant(
                     'The chart will be removed from all dashboards as well. This action cannot be undone!',
                 ),
                 cancelTitle: this.translateService.instant('Cancel'),
-                okTitle: this.translateService.instant('Delete chart'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Delete chart'),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === 'confirm') {
                 this.dataViewService
                     .deleteChart(dataView.elementId)
                     .subscribe(() => {
@@ -156,9 +205,6 @@ export class ChartOverviewTableComponent implements OnInit {
     }
 
     applyChartFilters(elementIds: Set<string>): void {
-        if (this.assetFilterService.hasNoAssetFilterPermission()) {
-            elementIds = new Set<string>();
-        }
         if (elementIds === undefined) {
             this.filteredCharts = [];
         } else if (elementIds.size === 0) {
@@ -174,5 +220,9 @@ export class ChartOverviewTableComponent implements OnInit {
 
     formatDate(timestamp?: number): string {
         return this.dateFormatService.formatDate(timestamp);
+    }
+
+    isLegacyMultiSourceChart(chart: DataExplorerWidgetModel): boolean {
+        return (chart?.dataConfig?.sourceConfigs?.length ?? 0) > 1;
     }
 }

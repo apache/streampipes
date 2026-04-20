@@ -18,13 +18,14 @@
 
 package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.model.configuration.MessagingSettings;
 import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionDefinition;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public interface IAdminApi {
 
@@ -40,7 +41,9 @@ public interface IAdminApi {
 
   void deregisterFunction(String functionId);
 
-  void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId);
+  Optional<Map<String, Object>> getFunctionState(String functionId);
 
-  MessagingSettings getMessagingSettings();
+  void persistFunctionState(String functionId, Map<String, Object> state);
+
+  void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId);
 }

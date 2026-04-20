@@ -22,8 +22,8 @@ import org.apache.streampipes.connect.management.compact.generator.AdapterModelG
 import org.apache.streampipes.connect.management.compact.generator.CompactAdapterGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
-import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 
@@ -35,12 +35,13 @@ public class CompactAdapterManagement {
     this.generators = generators;
   }
 
-  public AdapterDescription convertToAdapterDescription(CompactAdapter compactAdapter) throws Exception {
+  public AdapterDescription convertToAdapterDescription(CompactAdapter compactAdapter,
+                                                        String userId) throws Exception {
 
     var adapterDescription = findAdapterDescription(compactAdapter.appId());
 
     for (AdapterModelGenerator m : generators) {
-      m.apply(adapterDescription, compactAdapter);
+      m.apply(adapterDescription, compactAdapter, userId);
     }
 
     return adapterDescription;
@@ -55,16 +56,16 @@ public class CompactAdapterManagement {
         adapterDescription.getDescription(),
         adapterDescription.getAppId(),
         generator.getConfig(),
+        adapterDescription.getTransformationConfig(),
         generator.getSchema(),
-        generator.getEnrichmentConfig(),
-        generator.getTransformationConfig(),
         generator.getCreateOptions()
     );
   }
 
   public AdapterDescription convertToAdapterDescription(CompactAdapter compactAdapter,
-                                                        AdapterDescription existingAdapter) throws Exception {
-    var adapterDescription = convertToAdapterDescription(compactAdapter);
+                                                        AdapterDescription existingAdapter,
+                                                        String userId) throws Exception {
+    var adapterDescription = convertToAdapterDescription(compactAdapter, userId);
 
     existingAdapter.getDataStream().setEventSchema(adapterDescription.getDataStream().getEventSchema());
     existingAdapter.setRules(adapterDescription.getRules());
@@ -76,7 +77,7 @@ public class CompactAdapterManagement {
   }
 
   private AdapterDescription findAdapterDescription(String appId) {
-    IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
+    IAdapterStorage adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
     return adapterStorage.findAll()
         .stream()
         .filter(desc -> desc.getAppId()

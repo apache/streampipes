@@ -20,6 +20,7 @@ E2E_TEST=""
 HOST="127.0.0.1"
 PORT="8030"
 LOGIN_URL="/streampipes-backend/api/v2/auth/login"
+SCENARIO="${E2E_SCENARIO:-single}"
 
 SP_USERNAME="admin@streampipes.apache.org"
 SP_PASSWORD="admin"
@@ -46,8 +47,12 @@ while true; do
             E2E_TEST="$2"
             shift 2
         ;;
+        -s)
+            SCENARIO="$2"
+            shift 2
+        ;;
         --help)
-            echo "Usage: $0 [-h <ip>] [-p <port>] [-u <username>] [-pw <password>] [-t <E2E_TEST>]"
+            echo "Usage: $0 [-h <ip>] [-p <port>] [-u <username>] [-pw <password>] [-t <E2E_TEST>] [-s <single|lb>]"
             exit 0
         ;;
         "")
@@ -61,7 +66,7 @@ while true; do
     esac
 done
 
-if [ E2E_TEST == "" ]; then
+if [ -z "$E2E_TEST" ]; then
     echo "-t is empty"
     exit 1
 fi
@@ -139,7 +144,7 @@ fi
 
 echo "start e2e test"
 chmod +x ./"$E2E_TEST"
-./"$E2E_TEST" -h "$HOST" -p "$PORT" -u "$API_KEY_USER_NAME" -k "$APIKEY"
+./"$E2E_TEST" -h "$HOST" -p "$PORT" -u "$API_KEY_USER_NAME" -k "$APIKEY" -s "$SCENARIO"
 if [ $? -ne 0 ]; then
     echo "start $E2E_TEST failed"
     exit 1

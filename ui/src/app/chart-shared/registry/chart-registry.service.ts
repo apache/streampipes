@@ -17,9 +17,10 @@
  */
 
 import { IWidget } from '../models/dataview-dashboard.model';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { TableWidgetConfigComponent } from '../components/charts/table/config/table-widget-config.component';
 import { TableWidgetComponent } from '../components/charts/table/table-widget.component';
+import { TableWidgetAppearanceConfigComponent } from '../components/charts/table/appearance-config/table-widget-appearance-config.component';
 import { MapWidgetConfigComponent } from '../components/charts/map/config/map-widget-config.component';
 import { MapWidgetComponent } from '../components/charts/map/map-widget.component';
 import { HeatmapWidgetConfigComponent } from '../components/charts/heatmap/config/heatmap-widget-config.component';
@@ -28,6 +29,7 @@ import { TimeSeriesChartWidgetConfigComponent } from '../components/charts/time-
 import { ImageWidgetConfigComponent } from '../components/charts/image/config/image-widget-config.component';
 import { ImageWidgetComponent } from '../components/charts/image/image-widget.component';
 import { IndicatorWidgetConfigComponent } from '../components/charts/indicator/config/indicator-chart-widget-config.component';
+import { IndicatorAppearanceConfigComponent } from '../components/charts/indicator/appearance-config/indicator-appearance-config.component';
 import { CorrelationWidgetConfigComponent } from '../components/charts/correlation-chart/config/correlation-chart-widget-config.component';
 import { SpEchartsWidgetComponent } from '../components/charts/base/echarts-widget.component';
 import { HeatmapWidgetModel } from '../components/charts/heatmap/model/heatmap-widget.model';
@@ -46,8 +48,6 @@ import { SpValueHeatmapRendererService } from '../components/charts/value-heatma
 import { CorrelationChartWidgetModel } from '../components/charts/correlation-chart/model/correlation-chart-widget.model';
 import { SpScatterRendererService } from '../components/charts/scatter/scatter-renderer.service';
 import { SpDensityRendererService } from '../components/charts/density/density-renderer.service';
-import { IndicatorChartWidgetModel } from '../components/charts/indicator/model/indicator-chart-widget.model';
-import { SpIndicatorRendererService } from '../components/charts/indicator/indicator-renderer.service';
 import { TimeSeriesChartWidgetModel } from '../components/charts/time-series-chart/model/time-series-chart-widget.model';
 import { SpTimeseriesRendererService } from '../components/charts/time-series-chart/sp-timeseries-renderer.service';
 import { SpEchartsWidgetAppearanceConfigComponent } from '../components/chart-config/echarts-widget-appearance-config/echarts-widget-appearance-config.component';
@@ -59,25 +59,25 @@ import { TrafficLightWidgetConfigComponent } from '../components/charts/traffic-
 import { TrafficLightWidgetComponent } from '../components/charts/traffic-light/traffic-light-widget.component';
 import { StatusWidgetConfigComponent } from '../components/charts/status/config/status-widget-config.component';
 import { StatusWidgetComponent } from '../components/charts/status/status-widget.component';
+import { IndicatorWidgetComponent } from '../components/charts/indicator/indicator-widget.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class ChartRegistry {
+    private gaugeRenderer = inject(SpGaugeRendererService);
+    private heatmapRenderer = inject(SpHeatmapRendererService);
+    private statusHeatmapRenderer = inject(SpStatusHeatmapRendererService);
+    private histogramRenderer = inject(SpHistogramRendererService);
+    private pieRenderer = inject(SpPieRendererService);
+    private valueHeatmapRenderer = inject(SpValueHeatmapRendererService);
+    private scatterRenderer = inject(SpScatterRendererService);
+    private densityRenderer = inject(SpDensityRendererService);
+    private timeseriesRenderer = inject(SpTimeseriesRendererService);
+    private translateService = inject(TranslateService);
+
     chartTypes: IWidget<any>[] = [];
 
-    constructor(
-        private gaugeRenderer: SpGaugeRendererService,
-        private heatmapRenderer: SpHeatmapRendererService,
-        private statusHeatmapRenderer: SpStatusHeatmapRendererService,
-        private histogramRenderer: SpHistogramRendererService,
-        private pieRenderer: SpPieRendererService,
-        private valueHeatmapRenderer: SpValueHeatmapRendererService,
-        private scatterRenderer: SpScatterRendererService,
-        private densityRenderer: SpDensityRendererService,
-        private indicatorRenderer: SpIndicatorRendererService,
-        private timeseriesRenderer: SpTimeseriesRendererService,
-        private translateService: TranslateService,
-    ) {
+    constructor() {
         this.chartTypes = [
             {
                 id: 'gauge',
@@ -95,6 +95,8 @@ export class ChartRegistry {
             {
                 id: 'table',
                 label: this.translateService.instant('Table'),
+                widgetAppearanceConfigurationComponent:
+                    TableWidgetAppearanceConfigComponent,
                 widgetConfigurationComponent: TableWidgetConfigComponent,
                 widgetComponent: TableWidgetComponent,
                 icon: 'table_chart',
@@ -187,11 +189,9 @@ export class ChartRegistry {
                 id: 'indicator-chart',
                 label: this.translateService.instant('Indicator'),
                 widgetAppearanceConfigurationComponent:
-                    SpEchartsWidgetAppearanceConfigComponent,
+                    IndicatorAppearanceConfigComponent,
                 widgetConfigurationComponent: IndicatorWidgetConfigComponent,
-                widgetComponent:
-                    SpEchartsWidgetComponent<IndicatorChartWidgetModel>,
-                chartRenderer: this.indicatorRenderer,
+                widgetComponent: IndicatorWidgetComponent,
                 icon: '123',
                 description: this.translateService.instant(
                     'The current value displayed as a number',
@@ -273,6 +273,10 @@ export class ChartRegistry {
                 ),
             },
         ];
+    }
+
+    registerChart(chart: IWidget<any>): void {
+        this.chartTypes.push(chart);
     }
 
     getAvailableChartTemplates(): IWidget<any>[] {

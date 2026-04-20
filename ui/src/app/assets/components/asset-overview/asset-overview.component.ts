@@ -17,7 +17,14 @@
  */
 
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import {
     AssetManagementService,
     SpAssetModel,
@@ -29,25 +36,69 @@ import {
     ObjectPermissionDialogComponent,
     PanelType,
     SpAssetBrowserService,
+    SpBasicHeaderTitleComponent,
+    SpBasicViewComponent,
     SpBreadcrumbService,
+    SpTableActionsDirective,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
-import { SpAssetRoutes } from '../../assets.routes';
+import { SpAssetRoutes } from '../../assets.breadcrumb';
 import { Router } from '@angular/router';
 import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-asset-dialog.component';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
-import { MatSort } from '@angular/material/sort';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-asset-overview',
     templateUrl: './asset-overview.component.html',
     styleUrls: ['./asset-overview.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        MatButton,
+        MatIconButton,
+        MatTooltip,
+        SpBasicHeaderTitleComponent,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        SpTableActionsDirective,
+        MatMenuItem,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class SpAssetOverviewComponent implements OnInit {
+    private assetService = inject(AssetManagementService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private dialogService = inject(DialogService);
+    private router = inject(Router);
+    private idGeneratorService = inject(IdGeneratorService);
+    private assetBrowserService = inject(SpAssetBrowserService);
+    private currentUserService = inject(CurrentUserService);
+    private dialog = inject(MatDialog);
+    private translateService = inject(TranslateService);
+
     existingAssets: SpAssetModel[] = [];
     filteredAssets: SpAssetModel[] = [];
 
@@ -65,18 +116,6 @@ export class SpAssetOverviewComponent implements OnInit {
     currentFilterIds = new Set<string>();
 
     private assetFilterService = inject(SpAssetBrowserService);
-
-    constructor(
-        private assetService: AssetManagementService,
-        private breadcrumbService: SpBreadcrumbService,
-        private dialogService: DialogService,
-        private router: Router,
-        private idGeneratorService: IdGeneratorService,
-        private assetBrowserService: SpAssetBrowserService,
-        private currentUserService: CurrentUserService,
-        private dialog: MatDialog,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.hasWritePrivilege = this.currentUserService.hasRole(
@@ -113,7 +152,9 @@ export class SpAssetOverviewComponent implements OnInit {
 
     loadAssets(): void {
         this.assetService.getAllAssets().subscribe(result => {
-            this.existingAssets = result as SpAssetModel[];
+            this.existingAssets = (result as SpAssetModel[]).sort((a, b) =>
+                a.assetName.localeCompare(b.assetName),
+            );
             this.dataSource.sort = this.sort;
             this.dataSource.data = this.existingAssets;
         });
@@ -164,7 +205,7 @@ export class SpAssetOverviewComponent implements OnInit {
         dialogRef.afterClosed().subscribe(ev => {
             if (ev) {
                 this.loadAssets();
-                this.assetBrowserService.loadAssetData();
+                this.assetBrowserService.refreshBrowserAssetData();
                 this.goToDetailsView(assetModel, true);
             }
         });
@@ -186,15 +227,14 @@ export class SpAssetOverviewComponent implements OnInit {
                     'This action cannot be reversed!',
                 ),
                 cancelTitle: this.translateService.instant('Cancel'),
-                okTitle: this.translateService.instant('Delete Asset'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Delete Asset'),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === 'confirm') {
                 this.assetService.deleteAsset(asset.elementId).subscribe(() => {
                     this.loadAssets();
-                    this.assetBrowserService.loadAssetData();
+                    this.assetBrowserService.refreshBrowserAssetData();
                 });
             }
         });

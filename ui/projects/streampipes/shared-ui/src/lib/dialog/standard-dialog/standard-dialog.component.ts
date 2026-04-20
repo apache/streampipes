@@ -16,25 +16,22 @@
  *
  */
 
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
+import { MatIconButton } from '@angular/material/button';
+import { CdkPortalOutlet } from '@angular/cdk/portal';
 
 @Component({
-    selector: 'standard-dialog-container',
+    selector: 'sp-standard-dialog-container',
     templateUrl: './standard-dialog.component.html',
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./standard-dialog.component.scss'],
-    standalone: false,
+    imports: [MatIconButton, CdkPortalOutlet],
 })
-export class StandardDialogComponent<T>
-    extends BaseDialogComponent<T>
-    implements OnInit
-{
+export class StandardDialogComponent<T> extends BaseDialogComponent<T> {
     constructor() {
         super();
     }
-
-    ngOnInit() {}
 
     closeDialog() {
         this.containerEvent.emit({ key: 'CLOSE' });

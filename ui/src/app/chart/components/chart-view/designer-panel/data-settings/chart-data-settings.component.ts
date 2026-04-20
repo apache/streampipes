@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     ViewChild,
+    inject,
 } from '@angular/core';
 import {
     DataExplorerDataConfig,
@@ -40,14 +41,82 @@ import { TableVisConfig } from '../../../../../chart-shared/components/charts/ta
 import { ChartFieldProviderService } from '../../../../../chart-shared/services/chart-field-provider.service';
 import { FieldProvider } from '../../../../../chart-shared/models/dataview-dashboard.model';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+} from '@angular/material/expansion';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatIcon } from '@angular/material/icon';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { MatInput } from '@angular/material/input';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { AggregateConfigurationComponent } from './aggregate-configuration/aggregate-configuration.component';
+import { FilterSelectionPanelComponent } from './filter-selection-panel/filter-selection-panel.component';
+import { OrderSelectionPanelComponent } from './order-selection-panel/order-selection-panel.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-data-settings',
     templateUrl: './chart-data-settings.component.html',
     styleUrls: ['./chart-data-settings.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        MatAccordion,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        SplitSectionComponent,
+        SpAlertBannerComponent,
+        LayoutGapDirective,
+        MatButton,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        MatIcon,
+        MatRadioGroup,
+        FormsModule,
+        NgClass,
+        ClassDirective,
+        MatRadioButton,
+        FormFieldComponent,
+        MatInput,
+        MatCheckbox,
+        AggregateConfigurationComponent,
+        FieldSelectionPanelComponent,
+        FilterSelectionPanelComponent,
+        GroupSelectionPanelComponent,
+        OrderSelectionPanelComponent,
+        TranslatePipe,
+    ],
 })
 export class ChartDataSettingsComponent implements OnInit {
+    private datalakeRestService = inject(DatalakeRestService);
+    private widgetConfigService = inject(ChartConfigurationService);
+    private fieldProviderService = inject(ChartFieldProviderService);
+    private widgetTypeService = inject(ChartTypeService);
+    private router = inject(Router);
+
     @Input() dataConfig: DataExplorerDataConfig;
     @Input() dataLakeMeasure: DataLakeMeasure;
     @Input() newWidgetMode: boolean;
@@ -75,13 +144,9 @@ export class ChartDataSettingsComponent implements OnInit {
     expandFieldsDataSource = true;
     expandFieldsQuery = true;
 
-    constructor(
-        private datalakeRestService: DatalakeRestService,
-        private widgetConfigService: ChartConfigurationService,
-        private fieldProviderService: ChartFieldProviderService,
-        private widgetTypeService: ChartTypeService,
-        private router: Router,
-    ) {}
+    get sourceConfig(): SourceConfig | undefined {
+        return this.dataConfig?.sourceConfigs?.[0];
+    }
 
     ngOnInit(): void {
         this.loadPipelinesAndMeasurements();
@@ -96,12 +161,12 @@ export class ChartDataSettingsComponent implements OnInit {
                     a.measureName.localeCompare(b.measureName),
                 );
 
-                if (!this.dataConfig.sourceConfigs) {
+                if (!this.sourceConfig) {
                     const defaultConfigs = this.findDefaultConfig();
-                    this.addDataSource(defaultConfigs.measureName);
+                    this.initializeSourceConfig(defaultConfigs.measureName);
                     if (defaultConfigs.measureName !== undefined) {
                         this.updateMeasure(
-                            this.dataConfig.sourceConfigs[0],
+                            this.sourceConfig,
                             defaultConfigs.measureName,
                         );
                     }
@@ -141,20 +206,13 @@ export class ChartDataSettingsComponent implements OnInit {
         );
     }
 
-    setStep(index: number) {
-        this.step = index;
-    }
-
     changeDataAggregation() {
         this.fieldSelectionPanel.applyDefaultFields();
         this.triggerDataRefresh();
     }
 
-    addDataSource(measureName = '') {
-        if (!this.dataConfig.sourceConfigs) {
-            this.dataConfig.sourceConfigs = [];
-        }
-        this.dataConfig.sourceConfigs.push(this.makeSourceConfig(measureName));
+    initializeSourceConfig(measureName = '') {
+        this.dataConfig.sourceConfigs = [this.makeSourceConfig(measureName)];
     }
 
     makeSourceConfig(measureName = ''): SourceConfig {
@@ -174,6 +232,9 @@ export class ChartDataSettingsComponent implements OnInit {
     makeVisualizationConfig(fields: FieldProvider): TableVisConfig {
         return {
             configurationValid: true,
+            highlightedColumns: [],
+            highlightedColumnColors: {},
+            pageSize: 20,
             searchValue: '',
             selectedColumns: fields.allFields,
         };
@@ -204,20 +265,8 @@ export class ChartDataSettingsComponent implements OnInit {
      */
     checkIfDefaultTableShouldBeShown(): boolean {
         return (
-            this.dataConfig.sourceConfigs.length === 1 &&
-            !this.currentlyConfiguredWidget.widgetType
+            !!this.sourceConfig && !this.currentlyConfiguredWidget.widgetType
         );
-    }
-
-    removeSourceConfig(index: number) {
-        this.dataConfig.sourceConfigs.splice(index, 1);
-    }
-
-    cloneSourceConfig(index: number) {
-        const clonedConfig = this.deepCopy(
-            this.dataConfig.sourceConfigs[index],
-        );
-        this.dataConfig.sourceConfigs.push(clonedConfig);
     }
 
     triggerDataRefresh() {
@@ -241,39 +290,5 @@ export class ChartDataSettingsComponent implements OnInit {
 
     navigateToPipelines(): void {
         this.router.navigate(['pipelines']);
-    }
-
-    deepCopy(obj) {
-        let copy;
-
-        if (null == obj || 'object' !== typeof obj) {
-            return obj;
-        }
-
-        if (obj instanceof Date) {
-            copy = new Date();
-            copy.setTime(obj.getTime());
-            return copy;
-        }
-
-        if (obj instanceof Array) {
-            copy = [];
-            for (let i = 0, len = obj.length; i < len; i++) {
-                copy[i] = this.deepCopy(obj[i]);
-            }
-            return copy;
-        }
-
-        if (obj instanceof Object) {
-            copy = {};
-            for (const attr in obj) {
-                if (obj.hasOwnProperty(attr)) {
-                    copy[attr] = this.deepCopy(obj[attr]);
-                }
-            }
-            return copy;
-        }
-
-        throw new Error('Unable to copy.');
     }
 }

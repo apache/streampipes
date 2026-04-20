@@ -18,6 +18,7 @@ services:
     image: ${SP_DOCKER_REGISTRY}/extensions-all-jvm:${SP_VERSION}
     environment:
       - SP_HTTP_SERVER_ADAPTER_ENDPOINT=extensions-all-jvm:8090
+      - SP_NATS_TOKEN=${SP_NATS_TOKEN}
       - SP_SETUP_PROMETHEUS_ENDPOINT=${SP_SETUP_PROMETHEUS_ENDPOINT}
     depends_on:
       - couchdb     

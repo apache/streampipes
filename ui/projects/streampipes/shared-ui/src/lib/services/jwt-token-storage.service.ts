@@ -27,7 +27,8 @@ export class JwtTokenStorageService {
     constructor() {}
 
     clearTokens(): void {
-        window.localStorage.clear();
+        window.localStorage.removeItem(TOKEN_KEY);
+        window.localStorage.removeItem(USER_KEY);
     }
 
     public saveToken(token: string): void {

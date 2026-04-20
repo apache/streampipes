@@ -18,11 +18,30 @@
 
 import { Component, OnInit } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
+import {
+    SpBasicHeaderTitleComponent,
+    SpBasicNavTabsComponent,
+} from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { AdapterCodePanelComponent } from '../../adapter-code-panel/adapter-code-panel.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-details-code',
     templateUrl: './adapter-details-code.component.html',
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        SpBasicHeaderTitleComponent,
+        AdapterCodePanelComponent,
+        TranslatePipe,
+    ],
 })
 export class AdapterDetailsCodeComponent
     extends SpAbstractAdapterDetailsDirective

@@ -29,9 +29,7 @@
 // the project's config changing)
 import * as fs from 'fs';
 import { ProcessorTest } from '../support/model/ProcessorTest';
-
-// tslint:disable-next-line:no-var-requires
-const { rmdir } = require('fs');
+import { rm } from 'fs';
 
 function readProcessingElements(): ProcessorTest[] {
     const result: ProcessorTest[] = [];
@@ -43,17 +41,16 @@ function readProcessingElements(): ProcessorTest[] {
             'cypress/fixtures/pipelineElement/' + dir,
         );
         subfolder.forEach(test => {
+            const fixturePath = dir + '/' + test;
             const testDescription = fs.readFileSync(
                 'cypress/fixtures/pipelineElement/' +
-                    dir +
-                    '/' +
-                    test +
+                    fixturePath +
                     '/description.json',
             );
             // @ts-ignore
             const pt = new ProcessorTest();
             pt.name = test;
-            pt.dir = dir + '/' + test;
+            pt.dir = fixturePath;
 
             const configDir = fs.readdirSync(
                 'cypress/fixtures/pipelineElement/' + pt.dir,
@@ -82,17 +79,13 @@ module.exports = (on, config) => {
             console.log('deleting folder %s', folderName);
             return new Promise((resolve, reject) => {
                 if (fs.existsSync(folderName)) {
-                    rmdir(
-                        folderName,
-                        { maxRetries: 10, recursive: true },
-                        err => {
-                            if (err) {
-                                console.error(err);
-                                return reject(err);
-                            }
-                            resolve(null);
-                        },
-                    );
+                    rm(folderName, { maxRetries: 10, recursive: true }, err => {
+                        if (err) {
+                            console.error(err);
+                            return reject(err);
+                        }
+                        resolve(null);
+                    });
                 } else {
                     console.log(
                         'download folder %s does not exist',

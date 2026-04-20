@@ -28,20 +28,14 @@
                     @if (deleteDialog) {
                         <b
                             ><h4>
-                                {{
-                                    confirmDeleteMessage
-                                        | translate: { index: measurementIndex }
-                                }}
+                                {{ confirmDeleteMessage }}
                             </h4></b
                         >
                     }
                     @if (!deleteDialog) {
                         <b
                             ><h4>
-                                {{
-                                    confirmTruncateMessage
-                                        | translate: { index: measurementIndex }
-                                }}
+                                {{ confirmTruncateMessage }}
                             </h4></b
                         >
                     }

@@ -17,37 +17,62 @@
  */
 
 import { Component, inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { FormsModule, UntypedFormBuilder } from '@angular/forms';
 import {
     EmailTemplate,
     MailConfigService,
 } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import 'codemirror/mode/htmlembedded/htmlembedded';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatButton } from '@angular/material/button';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import type { editor as MonacoEditor } from 'monaco-editor';
 
 @Component({
     selector: 'sp-email-template-configuration',
     templateUrl: './email-template-configuration.component.html',
     styleUrls: ['./email-template-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        SplitSectionComponent,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatButton,
+        SpAlertBannerComponent,
+        LayoutGapDirective,
+        MonacoEditorModule,
+        FormsModule,
+        TranslatePipe,
+    ],
 })
 export class SpEmailTemplateConfigurationComponent implements OnInit {
+    private fb = inject(UntypedFormBuilder);
+    private mailConfigService = inject(MailConfigService);
+
     template: EmailTemplate;
     originalTemplate: string;
     templateLoaded = false;
     templateStored = false;
     private translateService = inject(TranslateService);
 
-    editorOptions = {
-        mode: 'htmlembedded',
-        autoRefresh: true,
-        theme: 'dracula',
-        autoCloseBrackets: true,
-        lineNumbers: true,
-        lineWrapping: true,
-        gutters: ['CodeMirror-lint-markers'],
-        lint: true,
+    editorOptions: MonacoEditor.IStandaloneEditorConstructionOptions = {
+        language: 'html',
+        theme: 'vs-dark',
+        lineNumbers: 'on',
+        wordWrap: 'on',
+        automaticLayout: true,
+        scrollBeyondLastLine: false,
+        minimap: { enabled: false },
     };
 
     allowedPlaceholders: { placeholder: string; description: string }[] = [
@@ -74,11 +99,6 @@ export class SpEmailTemplateConfigurationComponent implements OnInit {
             ),
         },
     ];
-
-    constructor(
-        private fb: UntypedFormBuilder,
-        private mailConfigService: MailConfigService,
-    ) {}
 
     ngOnInit(): void {
         this.loadTemplate();

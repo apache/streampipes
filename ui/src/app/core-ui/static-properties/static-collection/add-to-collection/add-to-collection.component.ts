@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { StaticPropertyUtilService } from '../../static-property-util.service';
 import {
     FreeTextStaticProperty,
@@ -24,15 +24,41 @@ import {
     StaticProperty,
 } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    DefaultFlexDirective,
+    DefaultLayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import {
+    MatError,
+    MatFormField,
+    MatSuffix,
+} from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Component({
     selector: 'sp-add-to-collection',
     templateUrl: './add-to-collection.component.html',
     styleUrls: ['./add-to-collection.component.scss'],
-    standalone: false,
+    imports: [
+        DefaultLayoutGapDirective,
+        MatButton,
+        MatIcon,
+        DefaultFlexDirective,
+        MatFormField,
+        MatInput,
+        MatProgressBar,
+        MatSuffix,
+        MatError,
+        TranslatePipe,
+    ],
 })
 export class AddToCollectionComponent {
+    private staticPropertyUtil = inject(StaticPropertyUtilService);
+
     translateService = inject(TranslateService);
 
     @Input()
@@ -50,8 +76,6 @@ export class AddToCollectionComponent {
 
     public hasError = false;
     public errorMessage = this.translateService.instant('This is a test');
-
-    constructor(private staticPropertyUtil: StaticPropertyUtilService) {}
 
     add() {
         const clone = this.staticPropertyUtil.clone(

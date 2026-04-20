@@ -16,11 +16,41 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+import { Routes } from '@angular/router';
+import { PipelinesComponent } from './pipelines.component';
+import { SpFunctionsMetricsComponent } from './components/functions-overview/functions-metrics/functions-metrics.component';
+import { SpFunctionsLogsComponent } from './components/functions-overview/functions-logs/functions-logs.component';
+import { SpPipelineDetailsComponent } from '../pipeline-details/pipeline-details.component';
+import { EditorComponent } from '../editor/editor.component';
 
-export class SpPipelineRoutes {
-    static BASE: SpBreadcrumbItem = {
-        label: 'Pipelines & Functions',
-        link: ['pipelines'],
-    };
-}
+export const PIPELINES_ROUTES: Routes = [
+    {
+        path: '',
+        children: [
+            {
+                path: '',
+                component: PipelinesComponent,
+            },
+            {
+                path: 'functions/:functionId/metrics',
+                component: SpFunctionsMetricsComponent,
+            },
+            {
+                path: 'functions/:functionId/logs',
+                component: SpFunctionsLogsComponent,
+            },
+            {
+                path: 'details/:pipelineId',
+                component: SpPipelineDetailsComponent,
+            },
+            {
+                path: 'create',
+                component: EditorComponent,
+            },
+            {
+                path: 'modify/:pipelineId',
+                component: EditorComponent,
+            },
+        ],
+    },
+];

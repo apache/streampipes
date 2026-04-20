@@ -18,45 +18,39 @@
 
 import { Component, OnInit } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
-import { ActivatedRoute } from '@angular/router';
+import { SpLogEntry } from '@streampipes/platform-services';
+import { SpBasicNavTabsComponent } from '@streampipes/shared-ui';
+import { SpConnectRoutes } from '../../../connect.breadcrumb';
 import {
-    AdapterService,
-    AdapterMonitoringService,
-    SpLogEntry,
-} from '@streampipes/platform-services';
-import {
-    CurrentUserService,
-    SpBreadcrumbService,
-} from '@streampipes/shared-ui';
-import { SpConnectRoutes } from '../../../connect.routes';
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SpSimpleLogsComponent } from '../../../../core-ui/monitoring/simple-logs/simple-logs.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-details-logs',
     templateUrl: './adapter-details-logs.component.html',
     styleUrls: ['./adapter-details-logs.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        FlexDirective,
+        SpSimpleLogsComponent,
+        TranslatePipe,
+    ],
 })
 export class SpAdapterDetailsLogsComponent
     extends SpAbstractAdapterDetailsDirective
     implements OnInit
 {
     adapterLogs: SpLogEntry[];
-
-    constructor(
-        currentUserService: CurrentUserService,
-        activatedRoute: ActivatedRoute,
-        adapterService: AdapterService,
-        adapterMonitoringService: AdapterMonitoringService,
-        breadcrumbService: SpBreadcrumbService,
-    ) {
-        super(
-            currentUserService,
-            activatedRoute,
-            adapterService,
-            adapterMonitoringService,
-            breadcrumbService,
-        );
-    }
 
     ngOnInit(): void {
         super.onInit();

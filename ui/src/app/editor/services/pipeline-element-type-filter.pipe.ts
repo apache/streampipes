@@ -23,10 +23,7 @@ import {
 } from '../model/editor.model';
 import { PipelineElementTypeUtils } from '../utils/editor.utils';
 
-@Pipe({
-    name: 'pipelineElementType',
-    standalone: false,
-})
+@Pipe({ name: 'pipelineElementType' })
 export class PipelineElementTypeFilterPipe implements PipeTransform {
     transform(
         pipelineElements: PipelineElementUnion[],

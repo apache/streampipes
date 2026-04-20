@@ -16,7 +16,7 @@
  *
  */
 
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
@@ -38,6 +38,15 @@ import { zip } from 'rxjs';
 
 @Directive()
 export abstract class BaseAssetLinksDirective {
+    protected genericStorageService = inject(GenericStorageService);
+    protected pipelineService = inject(PipelineService);
+    protected chartService = inject(ChartService);
+    protected dashboardService = inject(DashboardService);
+    protected dataLakeService = inject(DatalakeRestService);
+    protected pipelineElementService = inject(PipelineElementService);
+    protected adapterService = inject(AdapterService);
+    protected filesService = inject(FilesService);
+
     // Resources
     pipelines: Pipeline[];
     charts: DataExplorerWidgetModel[];
@@ -48,17 +57,6 @@ export abstract class BaseAssetLinksDirective {
     files: FileMetadata[];
 
     allResources: any[] = [];
-
-    constructor(
-        protected genericStorageService: GenericStorageService,
-        protected pipelineService: PipelineService,
-        protected chartService: ChartService,
-        protected dashboardService: DashboardService,
-        protected dataLakeService: DatalakeRestService,
-        protected pipelineElementService: PipelineElementService,
-        protected adapterService: AdapterService,
-        protected filesService: FilesService,
-    ) {}
 
     onInit() {
         this.getAllResources();

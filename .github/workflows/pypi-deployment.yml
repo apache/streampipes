@@ -35,7 +35,7 @@ jobs:
       - name: Install and configure Poetry
         uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a
         with:
-          version: 1.5.1
+          version: 2.2.1
           in-project: true
           prefer-active-python: true
 
@@ -65,7 +65,7 @@ jobs:
           git reset --hard  # undo local changes that delete generated doc files
 
       - name: Publish Python docs as artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: streampipes-python-docs
           path: streampipes-client-python/docs-tmp/**/*

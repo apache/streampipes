@@ -38,6 +38,7 @@ import {
 import { ResizeService } from '../../../services/resize.service';
 import {
     BaseWidgetData,
+    DashboardChartOverrides,
     FieldProvider,
     ObservableGenerator,
 } from '../../../models/dataview-dashboard.model';
@@ -70,6 +71,11 @@ export abstract class BaseDataExplorerWidgetDirective<
     errorCallback: EventEmitter<SpLogMessage> =
         new EventEmitter<SpLogMessage>();
 
+    @Output()
+    dataReceivedCallback: EventEmitter<SpQueryResult[]> = new EventEmitter<
+        SpQueryResult[]
+    >();
+
     @Input() editMode: boolean;
     @Input() kioskMode: boolean;
     @Input() dataViewMode: boolean;
@@ -85,6 +91,7 @@ export abstract class BaseDataExplorerWidgetDirective<
 
     @Input() dataViewDashboardItem: ClientDashboardItem;
     @Input() dataExplorerWidget: T;
+    @Input() dashboardChartOverrides: DashboardChartOverrides = {};
 
     @Input()
     widgetIndex: number;
@@ -141,6 +148,7 @@ export abstract class BaseDataExplorerWidgetDirective<
                         catchError(err => {
                             this.timerCallback.emit(false);
                             this.errorCallback.emit(err.error);
+                            this.dataReceivedCallback.emit([]);
                             return [];
                         }),
                     );
@@ -271,11 +279,14 @@ export abstract class BaseDataExplorerWidgetDirective<
         const spQueryResult = spQueryResults[0];
 
         if (spQueryResult.total === 0) {
+            this.dataReceivedCallback.emit([]);
             this.setShownComponents(true, false, false, false);
         } else if (spQueryResult['spQueryStatus'] === 'TOO_MUCH_DATA') {
             this.amountOfTooMuchEvents = spQueryResult.total;
+            this.dataReceivedCallback.emit([]);
             this.setShownComponents(false, false, false, true);
         } else {
+            this.dataReceivedCallback.emit(spQueryResults);
             this.onDataReceived(spQueryResults);
         }
     }

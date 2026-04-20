@@ -19,7 +19,7 @@
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class AdapterDescriptionResourceManager

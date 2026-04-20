@@ -18,27 +18,65 @@
 
 import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { TableVisConfig, TableWidgetModel } from '../model/table-widget.model';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import { SelectMultiplePropertiesConfigComponent } from '../../../chart-config/select-multiple-properties-config/select-multiple-properties-config.component';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatFormField } from '@angular/material/form-field';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { ColorPickerDirective } from 'ngx-color-picker';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
     selector: 'sp-data-explorer-table-widget-config',
     templateUrl: './table-widget-config.component.html',
     styleUrls: ['./table-widget-config.component.scss'],
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        SelectMultiplePropertiesConfigComponent,
+        SplitSectionComponent,
+        MatFormField,
+        FlexDirective,
+        MatInput,
+        FormsModule,
+        MatSelect,
+        MatOption,
+        ColorPickerDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatCheckbox,
+        TranslatePipe,
+        FormFieldComponent,
+        SpAlertBannerComponent,
+    ],
 })
 export class TableWidgetConfigComponent extends BaseWidgetConfig<
     TableWidgetModel,
     TableVisConfig
 > {
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
-        super(widgetConfigurationService, fieldService);
-    }
+    readonly pageSizeOptions = [10, 20, 50, 100, 250, 500];
+    readonly presetColors = [
+        '#39B54A',
+        '#1B1464',
+        '#2563EB',
+        '#F59E0B',
+        '#DC2626',
+        '#14B8A6',
+        '#9333EA',
+    ];
 
     onFilterChange(searchValue: string): void {
         this.currentlyConfiguredWidget.visualizationConfig.searchValue =
@@ -52,6 +90,79 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         this.triggerViewRefresh();
     }
 
+    setHighlightedColumns(highlightedColumns: DataExplorerField[]) {
+        this.currentlyConfiguredWidget.visualizationConfig.highlightedColumns =
+            highlightedColumns;
+        this.syncHighlightColorMap();
+        this.triggerViewRefresh();
+    }
+
+    setPageSize(pageSize: number): void {
+        this.currentlyConfiguredWidget.visualizationConfig.pageSize = pageSize;
+        this.triggerViewRefresh();
+    }
+
+    colorKey(field: DataExplorerField): string {
+        return `${field.fullDbName}:${field.sourceIndex}`;
+    }
+
+    getHighlightColor(field: DataExplorerField): string {
+        return (
+            this.currentlyConfiguredWidget.visualizationConfig
+                .highlightedColumnColors?.[this.colorKey(field)] ??
+            this.defaultHighlightColor(field)
+        );
+    }
+
+    setHighlightColor(field: DataExplorerField, color: string): void {
+        this.currentlyConfiguredWidget.visualizationConfig.highlightedColumnColors[
+            this.colorKey(field)
+        ] = color;
+        this.triggerViewRefresh();
+    }
+
+    get highlightableFields(): DataExplorerField[] {
+        return this.fieldProvider.allFields.filter(
+            field =>
+                field.fieldCharacteristics.numeric ||
+                field.fieldCharacteristics.binary,
+        );
+    }
+
+    isHighlighted(field: DataExplorerField): boolean {
+        return !!(
+            this.currentlyConfiguredWidget.visualizationConfig
+                .highlightedColumns ?? []
+        ).find(
+            highlightedField =>
+                highlightedField.fullDbName === field.fullDbName &&
+                highlightedField.sourceIndex === field.sourceIndex,
+        );
+    }
+
+    toggleHighlightedField(field: DataExplorerField): void {
+        const highlightedColumns =
+            this.currentlyConfiguredWidget.visualizationConfig
+                .highlightedColumns ?? [];
+
+        if (this.isHighlighted(field)) {
+            this.currentlyConfiguredWidget.visualizationConfig.highlightedColumns =
+                highlightedColumns.filter(
+                    highlightedField =>
+                        !(
+                            highlightedField.fullDbName === field.fullDbName &&
+                            highlightedField.sourceIndex === field.sourceIndex
+                        ),
+                );
+        } else {
+            this.currentlyConfiguredWidget.visualizationConfig.highlightedColumns =
+                [...highlightedColumns, field];
+        }
+
+        this.syncHighlightColorMap();
+        this.triggerViewRefresh();
+    }
+
     protected applyWidgetConfig(config: TableVisConfig): void {
         config.selectedColumns = this.fieldService.getSelectedFields(
             config.selectedColumns,
@@ -62,10 +173,55 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
                     : this.fieldProvider.allFields;
             },
         );
+        config.highlightedColumns = this.fieldService.getSelectedFields(
+            config.highlightedColumns ?? [],
+            this.highlightableFields,
+            () => [],
+        );
+        config.highlightedColumnColors ??= {};
+        this.syncHighlightColorMap();
+        config.pageSize ??= 20;
         config.searchValue ??= '';
     }
 
     protected requiredFieldsForChartPresent(): boolean {
         return true;
+    }
+
+    private syncHighlightColorMap(): void {
+        const activeColorKeys = new Set(
+            (
+                this.currentlyConfiguredWidget.visualizationConfig
+                    .highlightedColumns ?? []
+            ).map(field => this.colorKey(field)),
+        );
+        const currentColorMap =
+            this.currentlyConfiguredWidget.visualizationConfig
+                .highlightedColumnColors ?? {};
+
+        const nextColorMap = Object.fromEntries(
+            Object.entries(currentColorMap).filter(([key]) =>
+                activeColorKeys.has(key),
+            ),
+        );
+
+        (
+            this.currentlyConfiguredWidget.visualizationConfig
+                .highlightedColumns ?? []
+        ).forEach(field => {
+            const key = this.colorKey(field);
+            nextColorMap[key] ??= this.defaultHighlightColor(field);
+        });
+
+        this.currentlyConfiguredWidget.visualizationConfig.highlightedColumnColors =
+            nextColorMap;
+    }
+
+    private defaultHighlightColor(field: DataExplorerField): string {
+        return this.presetColors[field.sourceIndex % this.presetColors.length];
+    }
+
+    fieldTypeLabel(field: DataExplorerField): string {
+        return field.fieldCharacteristics.binary ? 'Boolean' : 'Numeric';
     }
 }

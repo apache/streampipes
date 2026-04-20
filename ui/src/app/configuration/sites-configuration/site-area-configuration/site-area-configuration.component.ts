@@ -16,25 +16,65 @@
  *
  */
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import {
     AssetConstants,
     AssetSiteDesc,
     GenericStorageService,
     LocationConfig,
 } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import { ManageSiteDialogComponent } from '../../dialog/manage-site/manage-site-dialog.component';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { TranslateService } from '@ngx-translate/core';
-import { MatSort } from '@angular/material/sort';
+import {
+    DialogService,
+    PanelType,
+    SplitSectionComponent,
+    SpTableComponent,
+} from '@streampipes/shared-ui';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-site-area-configuration',
     templateUrl: './site-area-configuration.component.html',
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        MatButton,
+        MatIcon,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        TranslatePipe,
+    ],
 })
 export class SiteAreaConfigurationComponent implements OnInit {
+    private genericStorageService = inject(GenericStorageService);
+    private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
+
     @Input()
     locationConfig: LocationConfig;
 
@@ -47,12 +87,6 @@ export class SiteAreaConfigurationComponent implements OnInit {
     @ViewChild(MatSort)
     sort: MatSort;
     displayedColumns = ['name', 'areas', 'actions'];
-
-    constructor(
-        private genericStorageService: GenericStorageService,
-        private dialogService: DialogService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit() {
         this.loadSites();

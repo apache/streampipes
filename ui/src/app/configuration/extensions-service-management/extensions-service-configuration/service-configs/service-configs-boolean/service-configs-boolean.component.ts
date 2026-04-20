@@ -16,17 +16,35 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-service-configs-boolean',
     templateUrl: './service-configs-boolean.component.html',
     providers: [ConfigurationService],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatCheckbox,
+        FormsModule,
+        MatIcon,
+        MatTooltip,
+    ],
 })
 export class ServiceConfigsBooleanComponent {
+    configService = inject(ConfigurationService);
+
     @Input() configuration: ConfigItem;
-    constructor(public configService: ConfigurationService) {}
 }

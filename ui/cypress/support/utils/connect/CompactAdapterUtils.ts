@@ -75,6 +75,11 @@ export class CompactAdapterUtils {
             'org.apache.streampipes.connect.iiot.adapters.simulator.machine',
         )
             .setName('Test')
+            .withScript(
+                'function transform(event, out, ctx) {\n' +
+                    '  out.collect(event);\n' +
+                    '}\n',
+            )
             .addConfiguration('wait-time-ms', '1000')
             .addConfiguration('selected-simulator-option', 'flowrate');
     }

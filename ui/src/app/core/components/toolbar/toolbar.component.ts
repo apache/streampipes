@@ -16,28 +16,59 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
-import { RestApi } from '../../../services/rest-api.service';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { UntypedFormControl } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ProfileService } from '../../../profile/profile.service';
-import { Subscription, timer } from 'rxjs';
-import { exhaustMap } from 'rxjs/operators';
-import { NotificationCountService } from '../../../services/notification-count-service';
-import { LoginService } from '../../../login/services/login.service';
-import { SpAssetBrowserService } from '@streampipes/shared-ui';
+import {
+    AssetBrowserToolbarComponent,
+    SpAssetBrowserService,
+} from '@streampipes/shared-ui';
+import { MatToolbar } from '@angular/material/toolbar';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpBreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/divider';
+import { ShortenPipe } from '../../pipes/shorten.pipe';
 
 @Component({
     selector: 'sp-toolbar',
     templateUrl: './toolbar.component.html',
     styleUrls: ['./toolbar.component.scss'],
-    standalone: false,
+    imports: [
+        MatToolbar,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        SpBreadcrumbComponent,
+        LayoutGapDirective,
+        AssetBrowserToolbarComponent,
+        NgClass,
+        ClassDirective,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        MatMenuTrigger,
+        MatMenu,
+        MatDivider,
+        MatMenuItem,
+        ShortenPipe,
+    ],
 })
 export class ToolbarComponent
     extends BaseNavigationComponent
-    implements OnInit, OnDestroy
+    implements OnInit
 {
     @ViewChild('feedbackOpen') feedbackOpen: MatMenuTrigger;
     @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
@@ -47,34 +78,12 @@ export class ToolbarComponent
 
     appearanceControl: UntypedFormControl;
 
-    unreadNotificationCount = 0;
-    unreadNotificationsSubscription: Subscription;
-
-    documentationLinkActive = false;
-    documentationLink = '';
-
-    private loginService = inject(LoginService);
     private profileService = inject(ProfileService);
-    private restApi = inject(RestApi);
     private overlay = inject(OverlayContainer);
-    public notificationCountService = inject(NotificationCountService);
     private assetFilterService = inject(SpAssetBrowserService);
 
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('');
-        this.unreadNotificationsSubscription = timer(0, 10000)
-            .pipe(exhaustMap(() => this.restApi.getUnreadNotificationsCount()))
-            .subscribe(response => {
-                this.notificationCountService.unreadNotificationCount$.next(
-                    response.count,
-                );
-            });
-
-        this.notificationCountService.unreadNotificationCount$.subscribe(
-            count => {
-                this.unreadNotificationCount = count;
-            },
-        );
         this.currentUserService.user$.subscribe(user => {
             const displayName = user.displayName;
             this.userEmail =
@@ -90,12 +99,6 @@ export class ToolbarComponent
                     this.modifyAppearance(userInfo.darkMode);
                 });
         });
-        this.loginService.fetchLoginSettings().subscribe(res => {
-            this.documentationLinkActive =
-                res.linkSettings?.showDocumentationLinkInProfileMenu;
-            this.documentationLink = res.linkSettings?.documentationUrl || '';
-        });
-
         this.appearanceControl = new UntypedFormControl(
             this.currentUserService.darkMode$.getValue(),
         );
@@ -107,22 +110,23 @@ export class ToolbarComponent
     }
 
     modifyAppearance(darkMode: boolean) {
-        if (darkMode) {
-            this.overlay.getContainerElement().classList.remove('light-mode');
-            this.overlay.getContainerElement().classList.add('dark-mode');
-        } else {
-            this.overlay.getContainerElement().classList.remove('dark-mode');
-            this.overlay.getContainerElement().classList.add('light-mode');
-        }
+        const targets = [
+            document.documentElement,
+            document.body,
+            this.overlay.getContainerElement(),
+        ];
+        const [addClass, removeClass] = darkMode
+            ? ['dark-mode', 'light-mode']
+            : ['light-mode', 'dark-mode'];
+        targets.forEach(el => {
+            el.classList.remove(removeClass);
+            el.classList.add(addClass);
+        });
     }
 
-    openDocumentation() {
-        window.open(this.documentationLink, '_blank');
-    }
-
-    openInfo() {
-        this.router.navigate(['info']);
-        this.activePage = 'Info';
+    openHelp() {
+        this.router.navigate(['help']);
+        this.activePage = 'Help';
     }
 
     openProfile() {
@@ -133,9 +137,5 @@ export class ToolbarComponent
     logout() {
         this.authService.logout();
         this.router.navigate(['login']);
-    }
-
-    ngOnDestroy() {
-        this.unreadNotificationsSubscription.unsubscribe();
     }
 }

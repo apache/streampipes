@@ -16,8 +16,6 @@
  *
  */
 
-export * from './lib/shared-ui.module';
-
 export * from './lib/dialog/base-dialog/base-dialog.model';
 export * from './lib/dialog/base-dialog/base-dialog.service';
 export * from './lib/dialog/base-dialog/dialog-ref';
@@ -25,6 +23,7 @@ export * from './lib/dialog/data-download-dialog/data-download-dialog.component'
 export * from './lib/dialog/card-dialog/card-dialog.component';
 
 export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
+export * from './lib/dialog/confirm-dialog/confirm-dialog.model';
 export * from './lib/dialog/panel-dialog/panel-dialog.component';
 export * from './lib/dialog/standard-dialog/standard-dialog.component';
 export * from './lib/dialog/pipeline-element-help/pipeline-element-help.component';
@@ -37,15 +36,21 @@ export * from './lib/components/basic-field-description/basic-field-description.
 export * from './lib/components/basic-view/basic-view.component';
 export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
 export * from './lib/components/date-input/date-input.component';
+export * from './lib/components/element-id/element-id.component';
 export * from './lib/components/form-field/form-field.component';
 export * from './lib/components/form-label/form-label.component';
+export * from './lib/components/property-scope-badge/property-scope-badge.component';
 export * from './lib/components/split-section/split-section.component';
+export * from './lib/components/split-button/split-button.component';
 export * from './lib/components/sp-exception-message/sp-exception-message.component';
 export * from './lib/components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
 export * from './lib/components/sp-exception-message/exception-details/exception-details.component';
 export * from './lib/components/sp-label/sp-label.component';
 export * from './lib/components/sp-table/sp-table.component';
-export * from './lib/components/sp-table/sp-table-actions.directive';
+export * from './lib/components/sp-table/sp-actions/sp-table-actions.directive';
+export * from './lib/components/sp-table/sp-actions/sp-table-multi-actions.directive';
+export * from './lib/components/sp-table/sp-table.model';
+export * from './lib/components/sp-table/sp-asset-context/sp-table-asset-context.service';
 export * from './lib/components/alert-banner/alert-banner.component';
 export * from './lib/components/time-selector/time-selector.model';
 export * from './lib/components/time-selector/time-range-selector.component';
@@ -63,8 +68,11 @@ export * from './lib/components/feature-card-host/feature-card-meta-section/feat
 export * from './lib/components/feature-card-host/feature-card-meta-creation/feature-card-meta-creation.component';
 
 export * from './lib/models/sp-navigation.model';
+export * from './lib/models/sp-configuration-section.model';
 
 export * from './lib/services/breadcrumb.service';
+export * from './lib/services/configuration-sections.service';
+export * from './lib/services/configuration-sections.token';
 export * from './lib/services/jwt-token-storage.service';
 export * from './lib/services/current-user.service';
 export * from './lib/services/echarts-toolbox.service';
@@ -75,4 +83,9 @@ export * from './lib/components/asset-browser/asset-browser.service';
 export * from './lib/services/date-format.service';
 export * from './lib/services/pipeline-element-schema.service';
 export * from './lib/services/asset-configuration.service';
+export * from './lib/services/local-storage-settings.service';
+export * from './lib/services/keyboard-shortcut.service';
+export * from './lib/components/sp-table/sp-paginator/sp-paginator.service';
 export * from './lib/components/feature-card-host/feature-card.service';
+
+export * from './lib/pipes/sort-by-runtime-name.pipe';

@@ -16,7 +16,7 @@
  *
  */
 
-import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
+import { Directive, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import {
     DataExplorerWidgetModel,
     SourceConfig,
@@ -36,16 +36,14 @@ export abstract class BaseWidgetConfig<
 >
     implements OnInit, OnDestroy
 {
+    protected widgetConfigurationService = inject(ChartConfigurationService);
+    protected fieldService = inject(ChartFieldProviderService);
+
     @Input() currentlyConfiguredWidget: T;
 
     fieldProvider: FieldProvider;
 
     configChangedSubject: Subscription;
-
-    constructor(
-        protected widgetConfigurationService: ChartConfigurationService,
-        protected fieldService: ChartFieldProviderService,
-    ) {}
 
     ngOnInit(): void {
         this.makeFields();

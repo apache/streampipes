@@ -32,6 +32,7 @@ export interface DatalakeQueryParameters {
     countOnly?: boolean;
     autoAggregate?: boolean;
     filter?: string;
+    filterExpression?: string;
     missingValueBehaviour?: MissingValueBehaviour;
     maximumAmountOfEvents?: number;
 

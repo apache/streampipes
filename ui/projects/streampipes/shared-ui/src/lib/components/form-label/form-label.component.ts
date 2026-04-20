@@ -17,12 +17,25 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-form-label',
     templateUrl: './form-label.component.html',
     styleUrls: ['./form-label.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        NgStyle,
+        StyleDirective,
+        MatTooltip,
+    ],
 })
 export class FormLabelComponent implements OnInit {
     @Input()

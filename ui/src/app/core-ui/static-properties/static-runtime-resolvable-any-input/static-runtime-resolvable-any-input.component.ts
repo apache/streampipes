@@ -22,24 +22,42 @@ import {
     RuntimeResolvableAnyStaticProperty,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
-import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
-import { MatSelectChange } from '@angular/material/select';
+import { MatOption, MatSelect } from '@angular/material/select';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-app-static-runtime-resolvable-any-input',
     templateUrl: './static-runtime-resolvable-any-input.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutGapDirective,
+        MatButton,
+        MatProgressSpinner,
+        MatCheckbox,
+        FormsModule,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        TranslatePipe,
+    ],
 })
 export class StaticRuntimeResolvableAnyInputComponent
     extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableAnyStaticProperty>
     implements OnInit
 {
     selectedOptions: Option[] = [];
-
-    constructor(runtimeResolvableService: RuntimeResolvableService) {
-        super(runtimeResolvableService);
-    }
 
     ngOnInit() {
         super.onInit();

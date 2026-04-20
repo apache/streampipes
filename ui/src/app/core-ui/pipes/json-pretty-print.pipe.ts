@@ -18,10 +18,7 @@
 
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-    name: 'jsonpretty',
-    standalone: false,
-})
+@Pipe({ name: 'jsonpretty' })
 @Injectable({ providedIn: 'root' })
 export class JsonPrettyPrintPipe implements PipeTransform {
     transform(json) {

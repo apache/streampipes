@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEndpointGenerator {
 
@@ -44,34 +43,22 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
 
   public ExtensionsServiceEndpointGenerator() {}
 
-  public String getEndpointResourceUrl(String appId, SpServiceUrlProvider spServiceUrlProvider,
-                                       Set<SpServiceTag> customServiceTags)
-      throws NoServiceEndpointsAvailableException {
-    return spServiceUrlProvider
-        .getInvocationUrl(selectService(appId, spServiceUrlProvider, customServiceTags), appId);
-  }
-
-  public String getEndpointBaseUrl(String appId, SpServiceUrlProvider spServiceUrlProvider,
-                                   Set<SpServiceTag> customServiceTags)
-      throws NoServiceEndpointsAvailableException {
-    return selectService(appId, spServiceUrlProvider, customServiceTags);
-  }
-
-  private String selectService(String appId, SpServiceUrlProvider spServiceUrlProvider,
+  public SpServiceRegistration selectService(String appId,
+                               SpServiceUrlProvider spServiceUrlProvider,
                                Set<SpServiceTag> customServiceTags)
       throws NoServiceEndpointsAvailableException {
     Environment env = Environments.getEnvironment();
 
     // No load balancing
     if (!env.getLoadManagerEnable().getValueOrDefault()) {
-      List<String> serviceEndpoints =
+      List<SpServiceRegistration> serviceEndpoints =
           getServiceEndpoints(appId, spServiceUrlProvider, customServiceTags);
       if (!serviceEndpoints.isEmpty()) {
         return serviceEndpoints.get(0);
       }
     } else {
       // Use load balancer to select service
-      String url = getServiceURL(appId, spServiceUrlProvider, customServiceTags);
+      var url = getServiceURL(appId, spServiceUrlProvider, customServiceTags);
       if (url != null) {
         return url;
       }
@@ -84,14 +71,15 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
         "Could not find any matching service endpoints - are all software components running?");
   }
 
-  private List<String> getServiceEndpoints(String appId, SpServiceUrlProvider spServiceUrlProvider,
+  private List<SpServiceRegistration> getServiceEndpoints(String appId,
+                                           SpServiceUrlProvider spServiceUrlProvider,
                                            Set<SpServiceTag> customServiceTags) {
     return SpServiceDiscovery.getServiceDiscovery()
-        .getServiceEndpoints(DefaultSpServiceTypes.EXT, true,
-                             getDesiredServiceTags(appId, spServiceUrlProvider, customServiceTags));
+        .getService(DefaultSpServiceTypes.EXT, true,
+                             ExtensionsServiceEndpointUtils.getDesiredServiceTags(appId, spServiceUrlProvider, customServiceTags));
   }
 
-  private String getServiceURL(String appId, SpServiceUrlProvider spServiceUrlProvider,
+  private SpServiceRegistration getServiceURL(String appId, SpServiceUrlProvider spServiceUrlProvider,
                                Set<SpServiceTag> customServiceTags) {
     List<SpServiceRegistration> services =
         SpServiceDiscovery.getServiceDiscovery().getService(true).stream()
@@ -100,17 +88,10 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
     if (services.isEmpty()) {
       return null;
     }
-    return LoadManager.allocation(services, Collections.EMPTY_LIST).getServiceUrl();
+    return LoadManager.allocation(services, Collections.EMPTY_LIST);
   }
 
   public static boolean filtersSupported(SpServiceRegistration service, String tag) {
     return new HashSet<>(service.getTags()).stream().anyMatch(t -> t.asString().equals(tag));
-  }
-
-  private List<String> getDesiredServiceTags(String appId, SpServiceUrlProvider serviceUrlProvider,
-                                             Set<SpServiceTag> customServiceTags) {
-    return Stream
-        .concat(Stream.of(serviceUrlProvider.getServiceTag(appId)), customServiceTags.stream())
-        .map(SpServiceTag::asString).toList();
   }
 }

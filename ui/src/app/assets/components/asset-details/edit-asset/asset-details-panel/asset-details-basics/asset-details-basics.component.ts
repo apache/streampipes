@@ -18,10 +18,13 @@
 
 import {
     Component,
+    EventEmitter,
     Input,
     OnChanges,
     OnInit,
+    Output,
     SimpleChanges,
+    inject,
 } from '@angular/core';
 import {
     AssetSiteDesc,
@@ -30,13 +33,44 @@ import {
     SpAsset,
     SpAssetModel,
 } from '@streampipes/platform-services';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { AssetDetailsLabelsComponent } from './asset-details-labels/asset-details-labels.component';
+import { AssetDetailsCustomFieldsComponent } from './asset-details-custom-fields/asset-details-custom-fields.component';
+import { AssetDetailsSiteComponent } from './asset-details-site/asset-details-site.component';
+import { AssetDetailsLinksComponent } from '../asset-details-links/asset-details-links.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-details-basics',
     templateUrl: './asset-details-basics.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        FlexDirective,
+        MatSelect,
+        MatOption,
+        AssetDetailsLabelsComponent,
+        AssetDetailsCustomFieldsComponent,
+        AssetDetailsSiteComponent,
+        AssetDetailsLinksComponent,
+        TranslatePipe,
+    ],
 })
 export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
+    private isa95TypeService = inject(Isa95TypeService);
+
     @Input()
     asset: SpAsset;
 
@@ -52,9 +86,10 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
     @Input()
     sites: AssetSiteDesc[];
 
-    isa95Types: Isa95TypeDesc[] = [];
+    @Output()
+    reloadSites: EventEmitter<void> = new EventEmitter();
 
-    constructor(private isa95TypeService: Isa95TypeService) {}
+    isa95Types: Isa95TypeDesc[] = [];
 
     ngOnInit() {
         this.isa95Types = this.isa95TypeService.getTypeDescriptions();

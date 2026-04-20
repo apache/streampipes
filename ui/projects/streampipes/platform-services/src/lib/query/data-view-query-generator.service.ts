@@ -113,7 +113,9 @@ export class DataViewQueryGeneratorService {
             }
         }
 
-        if (queryConfig.selectedFilters.length > 0) {
+        if (queryConfig.filterExpression) {
+            queryBuilder.withFilterExpression(queryConfig.filterExpression);
+        } else if (queryConfig.selectedFilters.length > 0) {
             queryBuilder.withFilters(queryConfig.selectedFilters);
         }
 
@@ -144,11 +146,11 @@ export class DataViewQueryGeneratorService {
             queryBuilder.withMissingValueBehaviour('empty');
         }
 
-        const dataLakeQueryParameter = queryBuilder.build();
-
-        if (maximumResultingEvents !== -1) {
+        if (maximumResultingEvents !== -1 && !queryConfig.autoAggregate) {
             queryBuilder.withMaximumAmountOfEvents(maximumResultingEvents);
         }
+
+        const dataLakeQueryParameter = queryBuilder.build();
 
         if (includeMeasureName) {
             dataLakeQueryParameter.measureName = sourceConfig.measureName;

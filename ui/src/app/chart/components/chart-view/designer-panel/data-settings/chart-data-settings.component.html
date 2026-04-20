@@ -18,11 +18,7 @@
 
 <div fxFlex="100" fxLayout="column" class="form-field-small">
     <mat-accordion fxFlex="100" class="data-source-selection-panel">
-        @for (
-            sourceConfig of dataConfig.sourceConfigs;
-            track sourceConfig;
-            let i = $index
-        ) {
+        @if (sourceConfig) {
             <mat-expansion-panel
                 [expanded]="step === 0"
                 hideToggle
@@ -36,31 +32,10 @@
                             class="text-sm"
                         >
                             {{
-                                sourceConfig?.measureName ||
-                                    ('New Data Source' | translate)
+                                sourceConfig.measureName ||
+                                    ('Dataset' | translate)
                             }}
                         </span>
-                        <div fxLayoutAlign="end center">
-                            <button
-                                mat-icon-button
-                                color="accent"
-                                [matTooltip]="'Clone Data Source' | translate"
-                            >
-                                <i
-                                    class="material-icons plus-icon align-btn"
-                                    (click)="cloneSourceConfig(i)"
-                                    >flip_to_front</i
-                                >
-                            </button>
-                            <button
-                                mat-icon-button
-                                color="accent"
-                                [matTooltip]="'Delete Data Source' | translate"
-                                (click)="removeSourceConfig(i)"
-                            >
-                                <i class="material-icons align-btn">delete</i>
-                            </button>
-                        </div>
                     </div>
                 </mat-expansion-panel-header>
                 <div fxFlex="100" fxLayout="column" class="mt-10 p-sm">
@@ -272,6 +247,7 @@
                                         sourceConfig.queryType === 'aggregated'
                                     ) {
                                         <div
+                                            data-cy="data-explorer-query-type-aggregated"
                                             class="radio-option-box"
                                             fxLayout="column"
                                             [ngClass]="{
@@ -301,7 +277,9 @@
                                                     class="selection-form-field"
                                                     fxFlex="100"
                                                 >
-                                                    <div>
+                                                    <div
+                                                        data-cy="data-explorer-auto-aggregate-checkbox"
+                                                    >
                                                         <mat-checkbox
                                                             color="accent"
                                                             [(ngModel)]="
@@ -397,21 +375,11 @@
         }
     </mat-accordion>
     <div class="p-10">
-        <button
-            mat-button
-            mat-flat-button
-            color="accent"
-            class="small-button"
-            (click)="addDataSource()"
-            style="margin-right: 10px; margin-bottom: 15px"
-        >
-            {{ 'Add Data Source' | translate }}
-        </button>
-    </div>
-    <div class="p-10">
-        <mat-checkbox [(ngModel)]="dataConfig.ignoreTooMuchDataWarning">
-            {{ 'Deactivate browser overload warning' | translate }}
-        </mat-checkbox>
+        <div data-cy="data-explorer-ignore-too-much-data-warning-checkbox">
+            <mat-checkbox [(ngModel)]="dataConfig.ignoreTooMuchDataWarning">
+                {{ 'Deactivate browser overload warning' | translate }}
+            </mat-checkbox>
+        </div>
         <mat-checkbox
             [(ngModel)]="dataConfig.ignoreMissingValues"
             (change)="triggerDataRefresh()"

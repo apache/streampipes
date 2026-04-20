@@ -27,9 +27,8 @@
                     mat-button
                     mat-flat-button
                     color="accent"
-                    class="small-button"
+                    class="small-button action-button"
                     (click)="restoreTemplate()"
-                    style="margin-right: 10px; margin-bottom: 10px"
                 >
                     {{ 'Reset changes' | translate }}
                 </button>
@@ -61,20 +60,22 @@
                 </sp-alert-banner>
             </div>
             <div fxFlex="100" fxLayout="row">
-                <ngx-codemirror
-                    [(ngModel)]="template.template"
-                    style="width: 100%"
-                    [options]="editorOptions"
-                >
-                </ngx-codemirror>
+                <div class="code-editor-resizable">
+                    <ngx-monaco-editor
+                        class="code-editor"
+                        [(ngModel)]="template.template"
+                        [options]="editorOptions"
+                    >
+                    </ngx-monaco-editor>
+                </div>
             </div>
             <div fxLayout="row" class="mt-10">
                 <button
                     mat-button
                     mat-flat-button
                     color="accent"
+                    class="save-button"
                     (click)="saveTemplate()"
-                    style="margin-right: 10px"
                     [disabled]="template.template === ''"
                 >
                     <i class="material-icons">save</i

@@ -51,6 +51,7 @@ describe('Add Compact Adapters', () => {
 
     it('Add an adapter via the compact API. Start Adapter and start persist pipeline', () => {
         const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
+            .withTimestampProperty('timestamp')
             .setStart()
             .setPersist()
             .build();
@@ -76,6 +77,7 @@ describe('Add Compact Adapters', () => {
 
     it('Ensure correct error code when adapter with the same id already exists', () => {
         const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
+            .withTimestampProperty('timestamp')
             .setStart()
             .setPersist()
             .build();
@@ -94,6 +96,29 @@ describe('Add Compact Adapters', () => {
 
                     ConnectUtils.checkAmountOfAdapters(1);
                 });
+            },
+        );
+    });
+
+    it('Ensure broken transformation script returns a clear client error', () => {
+        const compactAdapter = CompactAdapterUtils.getMachineDataSimulator()
+            .withScript(
+                'function transform(event, out, ctx) {\n' +
+                    '  out.collect(event);\n' +
+                    '\n',
+            )
+            .build();
+
+        CompactAdapterUtils.storeCompactAdapter(compactAdapter, false).then(
+            response => {
+                expect(response.status).to.equal(400);
+                expect(response.body.success).to.equal(false);
+                expect(response.body.notifications).to.have.length.greaterThan(
+                    0,
+                );
+                expect(response.body.notifications[0].title).to.contain(
+                    'Could not execute script',
+                );
             },
         );
     });

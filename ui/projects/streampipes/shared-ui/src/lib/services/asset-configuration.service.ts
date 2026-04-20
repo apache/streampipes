@@ -28,6 +28,7 @@ import {
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
 import { firstValueFrom } from 'rxjs';
+import { SpAssetBrowserService } from '../components/asset-browser/asset-browser.service';
 
 @Injectable({
     providedIn: 'root',
@@ -38,6 +39,7 @@ export class AssetSaveService {
 
     private assetService = inject(AssetManagementService);
     private storageService = inject(GenericStorageService);
+    private assetBrowserService = inject(SpAssetBrowserService);
 
     constructor() {
         this.loadAssetLinkTypes();
@@ -50,11 +52,15 @@ export class AssetSaveService {
         originalAssets: SpAssetTreeNode[] = [],
     ): Promise<void> {
         const links = this.buildLinks(linkageData);
+        let assetLinksChanged = false;
+
         if (deselectedAssets.length > 0) {
             await this.deleteLinkOnDeselectAssets(deselectedAssets, links);
+            assetLinksChanged = true;
         }
         if (selectedAssets.length > 0) {
             await this.setLinkOnSelectAssets(selectedAssets, links);
+            assetLinksChanged = true;
         }
 
         if (originalAssets.length > 0) {
@@ -66,8 +72,13 @@ export class AssetSaveService {
             );
 
             if (filteredOriginal.length > 0) {
-                this.renameLinkage(filteredOriginal, links);
+                await this.renameLinkage(filteredOriginal, links);
+                assetLinksChanged = true;
             }
+        }
+
+        if (assetLinksChanged) {
+            this.assetBrowserService.refreshBrowserAssetData();
         }
     }
 
@@ -90,48 +101,44 @@ export class AssetSaveService {
         );
     }
 
-    renameLinkage(originalAssets, links) {
+    async renameLinkage(originalAssets, links): Promise<void> {
         const uniqueAssetIDsDict = this.getAssetPaths(originalAssets);
         const uniqueAssetIDs = Object.keys(uniqueAssetIDsDict);
 
-        uniqueAssetIDs.forEach(spAssetModelId => {
-            this.assetService.getAsset(spAssetModelId).subscribe({
-                next: current => {
-                    this.currentAsset = current;
+        for (const spAssetModelId of uniqueAssetIDs) {
+            const current = await firstValueFrom(
+                this.assetService.getAsset(spAssetModelId),
+            );
+            this.currentAsset = current;
 
-                    uniqueAssetIDsDict[spAssetModelId].forEach(path => {
-                        if (path.length === 2) {
-                            current.assetLinks = (current.assetLinks ?? []).map(
-                                (link: any) => {
-                                    const matchedLink = links.find(
-                                        l => l.resourceId === link.resourceId,
-                                    );
-                                    if (matchedLink) {
-                                        link.linkLabel = matchedLink.linkLabel;
-                                    }
-                                    return link;
-                                },
+            uniqueAssetIDsDict[spAssetModelId].forEach(path => {
+                if (path.length === 2) {
+                    current.assetLinks = (current.assetLinks ?? []).map(
+                        (link: any) => {
+                            const matchedLink = links.find(
+                                l => l.resourceId === link.resourceId,
                             );
-                        }
+                            if (matchedLink) {
+                                link.linkLabel = matchedLink.linkLabel;
+                            }
+                            return link;
+                        },
+                    );
+                }
 
-                        if (path.length > 2) {
-                            links.forEach(linkToUpdate => {
-                                this.updateLinkLabelInDict(
-                                    current as unknown as SpAssetTreeNode,
-                                    path,
-                                    linkToUpdate,
-                                );
-                            });
-                        }
+                if (path.length > 2) {
+                    links.forEach(linkToUpdate => {
+                        this.updateLinkLabelInDict(
+                            current as unknown as SpAssetTreeNode,
+                            path,
+                            linkToUpdate,
+                        );
                     });
-
-                    const updateObservable =
-                        this.assetService.updateAsset(current);
-
-                    updateObservable?.subscribe();
-                },
+                }
             });
-        });
+
+            await firstValueFrom(this.assetService.updateAsset(current));
+        }
     }
 
     private updateLinkLabelInDict(

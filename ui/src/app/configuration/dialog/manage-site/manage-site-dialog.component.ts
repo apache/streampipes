@@ -25,12 +25,15 @@ import {
     LocationConfig,
 } from '@streampipes/platform-services';
 import { EditAssetLocationComponent } from './edit-location/edit-location.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-manage-site-dialog-component',
     templateUrl: './manage-site-dialog.component.html',
     styleUrls: ['./manage-site-dialog.component.scss'],
-    standalone: false,
+    imports: [EditAssetLocationComponent, MatDivider, MatButton, TranslatePipe],
 })
 export class ManageSiteDialogComponent implements OnInit {
     @Input()
@@ -79,6 +82,7 @@ export class ManageSiteDialogComponent implements OnInit {
         const { label, location } = formData.value;
         this.clonedSite.label = label;
         this.clonedSite.location = location;
+        this.clonedSite.areas.sort((a, b) => a.localeCompare(b));
 
         const observable = this.createMode
             ? this.genericStorageService.createDocument(

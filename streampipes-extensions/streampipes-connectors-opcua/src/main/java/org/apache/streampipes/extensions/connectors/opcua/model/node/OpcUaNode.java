@@ -19,12 +19,10 @@
 package org.apache.streampipes.extensions.connectors.opcua.model.node;
 
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
-import org.apache.streampipes.model.schema.EventProperty;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 
-import java.util.List;
 import java.util.Map;
 
 public interface OpcUaNode {
@@ -32,9 +30,6 @@ public interface OpcUaNode {
   BasicVariableNodeInfo nodeInfo();
 
   int getNumberOfEventProperties(OpcUaClient client);
-
-  void addToSchema(OpcUaClient client,
-                   List<EventProperty> eventProperties);
 
   void addToEvent(OpcUaClient client,
                   Map<String, Object> event,

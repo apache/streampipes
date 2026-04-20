@@ -25,6 +25,7 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    inject,
 } from '@angular/core';
 import { PipelineElementRecommendationService } from '../../services/pipeline-element-recommendation.service';
 import { ObjectProvider } from '../../services/object-provider.service';
@@ -45,14 +46,36 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { CompatibleElementsComponent } from '../../dialog/compatible-elements/compatible-elements.component';
 import { Subscription } from 'rxjs';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-element-options',
     templateUrl: './pipeline-element-options.component.html',
     styleUrls: ['./pipeline-element-options.component.scss'],
-    standalone: false,
+    imports: [
+        NgStyle,
+        StyleDirective,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
+    private objectProvider = inject(ObjectProvider);
+    private pipelineElementRecommendationService = inject(
+        PipelineElementRecommendationService,
+    );
+    private dialogService = inject(DialogService);
+    private editorService = inject(EditorService);
+    private jsplumbFactoryService = inject(JsplumbFactoryService);
+    private restApi = inject(RestApi);
+
     recommendationsAvailable: any = false;
     possibleElements: PipelineElementUnion[];
     isDataSource: boolean;
@@ -90,14 +113,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
 
     jsplumbBridge: JsplumbBridge;
 
-    constructor(
-        private objectProvider: ObjectProvider,
-        private pipelineElementRecommendationService: PipelineElementRecommendationService,
-        private dialogService: DialogService,
-        private editorService: EditorService,
-        private jsplumbFactoryService: JsplumbFactoryService,
-        private restApi: RestApi,
-    ) {
+    constructor() {
         this.recommendationsAvailable = false;
         this.possibleElements = [];
         this.jsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);

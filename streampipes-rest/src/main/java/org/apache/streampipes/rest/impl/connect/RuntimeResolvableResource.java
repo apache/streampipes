@@ -21,17 +21,13 @@ package org.apache.streampipes.rest.impl.connect;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
-import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
@@ -47,21 +43,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v2/connect/master/resolvable")
-public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdministrationManagement> {
+public class RuntimeResolvableResource extends AbstractAdapterResource<Void> {
 
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeResolvableResource.class);
 
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
+  private final WorkerRestClient workerRestClient;
 
-  public RuntimeResolvableResource() {
-    super(() -> new WorkerAdministrationManagement(
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-            .getAdapterInstanceStorage(),
-        AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
-        new SpResourceManager().manageAdapters(),
-        new SpResourceManager().manageDataStreams()
-    ));
+  public RuntimeResolvableResource(WorkerRestClient workerRestClient) {
+    super();
     this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
+    this.workerRestClient = workerRestClient;
   }
 
   @PostMapping(
@@ -73,20 +65,17 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdm
                                                @RequestBody RuntimeOptionsRequest runtimeOptionsRequest) {
 
     try {
-      String baseUrl = endpointGenerator.getEndpointBaseUrl(
+      var service = endpointGenerator.selectService(
           appId,
           SpServiceUrlProvider.ADAPTER,
           runtimeOptionsRequest.getDeploymentConfiguration().getDesiredServiceTags()
       );
       SecretProvider.getDecryptionService().applyConfig(runtimeOptionsRequest.getStaticProperties());
-      RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(baseUrl, appId, runtimeOptionsRequest);
+      RuntimeOptionsResponse result = workerRestClient.getConfiguration(service, appId, runtimeOptionsRequest);
 
       return ok(result);
-    } catch (AdapterException e) {
-      LOG.error("Adapter exception occurred", e);
-      return serverError(SpLogMessage.from(e));
-    } catch (NoServiceEndpointsAvailableException e) {
-      LOG.error("Could not find service endpoint for {} while fetching configuration", appId);
+    } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+      LOG.error("Could not fetch runtime configuration for {}", appId, e);
       return serverError(SpLogMessage.from(e));
     } catch (SpConfigurationException e) {
       LOG.error("Tried to fetch a runtime configuration with insufficient settings");

@@ -16,9 +16,6 @@
 services:
   connect-adapters-iiot:
     image: ${SP_DOCKER_REGISTRY}/connect-adapters-iiot:${SP_VERSION}
-    environment:
-      - SP_BACKEND_HOST=backend
-      - SP_CONNECT_CONTAINER_WORKER_HOST=connect-adapters-iiot
     volumes:
       - connect:/data/
     logging:

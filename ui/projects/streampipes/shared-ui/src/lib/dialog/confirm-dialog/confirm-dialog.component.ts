@@ -16,26 +16,55 @@
  *
  */
 
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, HostListener, inject } from '@angular/core';
+import {
+    MAT_DIALOG_DATA,
+    MatDialogActions,
+    MatDialogContent,
+    MatDialogRef,
+} from '@angular/material/dialog';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { ConfirmDialogAction, ConfirmDialogData } from './confirm-dialog.model';
 
 @Component({
-    selector: 'confirmation-dialog',
+    selector: 'sp-confirm-dialog',
     templateUrl: './confirm-dialog.component.html',
     styleUrls: ['./confirm-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        MatDialogContent,
+        MatDialogActions,
+        LayoutAlignDirective,
+        MatButton,
+    ],
 })
 export class ConfirmDialogComponent {
-    constructor(
-        public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
-    ) {}
+    public dialogRef =
+        inject<MatDialogRef<ConfirmDialogComponent, ConfirmDialogAction>>(
+            MatDialogRef,
+        );
+    public data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
+
+    @HostListener('keydown.enter')
+    onEnter(): void {
+        this.onOk();
+    }
 
     onCancel(): void {
-        this.dialogRef.close();
+        this.dialogRef.close('cancel');
+    }
+
+    onNeutral(): void {
+        this.dialogRef.close('neutral');
     }
 
     onOk(): void {
-        this.dialogRef.close(true);
+        this.dialogRef.close('confirm');
     }
 }

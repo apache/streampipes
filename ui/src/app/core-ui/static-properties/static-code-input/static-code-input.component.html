@@ -22,9 +22,8 @@
             mat-button
             mat-flat-button
             color="accent"
-            class="small-button"
+            class="small-button action-button"
             (click)="resetCode()"
-            style="margin-right: 10px; margin-bottom: 10px"
         >
             {{ 'Reset code template' | translate }}
         </button>
@@ -32,21 +31,23 @@
             mat-button
             mat-flat-button
             color="accent"
-            class="small-button"
+            class="small-button action-button"
             (click)="cleanCode()"
             [attr.data-cy]="'reset-code-' + fieldName"
-            style="margin-right: 10px; margin-bottom: 10px"
         >
             {{ 'Clean code' | translate }}
         </button>
     </div>
     <div fxFlex="100" fxLayout="row">
-        <ngx-codemirror
-            style="width: 100%"
-            [(ngModel)]="staticProperty.value"
-            [options]="editorOptions"
-            [attr.data-cy]="'code-editor-' + fieldName"
-        >
-        </ngx-codemirror>
+        <div class="code-editor-resizable">
+            <ngx-monaco-editor
+                class="code-editor"
+                [(ngModel)]="staticProperty.value"
+                [options]="editorOptions"
+                (onInit)="onEditorInit()"
+                [attr.data-cy]="'code-editor-' + fieldName"
+            >
+            </ngx-monaco-editor>
+        </div>
     </div>
 </div>

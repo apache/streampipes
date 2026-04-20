@@ -53,6 +53,7 @@
     --color-bg-2: var(--mat-sys-surface-container-high);
     --color-bg-3: var(--mat-sys-surface-container-highest);
     --color-bg-4: var(--mat-sys-surface-container-highest);
+    --color-code-bg: #282a36;
 
     // for alert banners and labels
     --color-info: #2563eb;
@@ -65,8 +66,8 @@
     --color-warning-bg: light-dark(#fffae6, #78350f);
     --color-error-bg: light-dark(#fef2f2, #670b0b);
 
-    --mat-filled-button-horizontal-padding: 1.3rem;
-    --mdc-icon-button-icon-color: var(--mat-sys-primary);
+    --mat-button-filled-horizontal-padding: 1.3rem;
+    --mat-icon-button-icon-color: var(--mat-sys-primary);
     --mat-option-selected-state-layer-color: var(--mat-sys-surface-container);
 
     --mat-divider-color: var(--mat-sys-surface-container-high);
@@ -75,32 +76,63 @@
         --mat-sys-surface-container-lowest
     );
 
-    --mat-standard-button-toggle-selected-state-background-color: var(
+    --mat-button-toggle-selected-state-background-color: var(
         --mat-sys-primary-container
     );
-    --mat-standard-button-toggle-selected-state-text-color: var(
-        --mat-sys-primary
-    );
+    --mat-button-toggle-selected-state-text-color: var(--mat-sys-primary);
 
     --mat-tree-node-text-size: var(--mat-sys-body-medium-size);
     --mat-expansion-container-text-size: var(--mat-sys-body-medium-size);
 
-    --mdc-secondary-navigation-tab-container-height: 42px;
-    --mdc-switch-track-height: 20px;
-    --mdc-switch-track-width: 44px;
-    --mat-switch-with-icon-handle-size: 20px;
-    --mdc-switch-state-layer-size: 20px;
-    --mat-switch-unselected-with-icon-handle-horizontal-margin: 0;
-    --mdc-switch-handle-surface-color: var(--color-primary);
-    --mdc-switch-unselected-icon-size: 12px;
-    --mdc-switch-selected-icon-size: 12px;
+    --mat-tab-container-height: 42px;
+    --mat-slide-toggle-track-height: 20px;
+    --mat-slide-toggle-track-width: 44px;
+    --mat-slide-toggle-with-icon-handle-size: 20px;
+    --mat-slide-toggle-state-layer-size: 20px;
+    --mat-slide-toggle-unselected-with-icon-handle-horizontal-margin: 0;
+    --mat-slide-toggle-handle-surface-color: var(--color-primary);
+    --mat-slide-toggle-unselected-icon-size: 12px;
+    --mat-slide-toggle-selected-icon-size: 12px;
 
     --mat-menu-container-color: var(--color-bg-0);
     --mat-select-panel-background-color: var(--color-bg-0);
     --mat-sidenav-container-shape: 0;
     --mat-sidenav-container-divider-color: var(--color-bg-3);
-    --mat-standard-button-toggle-height: 30px;
+    --mat-button-toggle-height: 30px;
     --mat-table-header-headline-color: var(--mat-sys-on-surface);
+
+    --size-panel-header-compact: calc(var(--space-md) * 3.4);
+    --size-icon-button-compact: calc(var(--space-md) * 2.2);
+    --size-icon-compact: calc(var(--space-md) * 1.4);
+    --size-table-index-column: calc(var(--space-md) * 4);
+    --size-data-preview-collapsed: calc(var(--size-panel-header-compact) + 2px);
+    --size-data-preview-expanded: 16.25rem;
+
+    --padding-table-cell-compact-y: var(--space-xs);
+    --padding-table-cell-compact-x: var(--space-sm);
+    --padding-panel-header-y: var(--space-sm);
+    --padding-panel-header-x: var(--space-md);
+
+    --color-surface-subtle: color-mix(
+        in srgb,
+        var(--color-bg-2) 55%,
+        var(--color-bg-0)
+    );
+    --color-surface-selected-subtle: color-mix(
+        in srgb,
+        var(--color-primary) 10%,
+        var(--color-bg-0)
+    );
+    --color-border-subtle: color-mix(
+        in srgb,
+        var(--color-bg-3) 72%,
+        transparent
+    );
+    --color-panel-header-accent: color-mix(
+        in srgb,
+        var(--color-primary) 5%,
+        var(--color-bg-0)
+    );
 }
 
 .dark-mode {

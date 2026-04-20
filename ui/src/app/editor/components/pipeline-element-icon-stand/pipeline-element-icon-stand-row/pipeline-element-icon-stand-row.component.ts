@@ -16,21 +16,55 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
 import {
     PipelineElementType,
     PipelineElementUnion,
 } from '../../../model/editor.model';
 import { PipelineElementTypeUtils } from '../../../utils/editor.utils';
 import { EditorService } from '../../../services/editor.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import {
+    PipelineElementComponent,
+    SpLabelComponent,
+    SpAssetBrowserService,
+    SpTableAssetContextService,
+} from '@streampipes/shared-ui';
+import { MatButton } from '@angular/material/button';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SpDataStream } from '@streampipes/platform-services';
+import { SpTableResolvedAssetContext } from '@streampipes/shared-ui';
+import { map } from 'rxjs';
 
 @Component({
     selector: 'sp-pe-icon-stand-row',
     templateUrl: './pipeline-element-icon-stand-row.component.html',
     styleUrls: ['./pipeline-element-icon-stand-row.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        MatTooltip,
+        NgClass,
+        ClassDirective,
+        PipelineElementComponent,
+        SpLabelComponent,
+        LayoutAlignDirective,
+        MatButton,
+    ],
 })
 export class PipelineElementIconStandRowComponent implements OnInit {
+    private editorService = inject(EditorService);
+    private assetBrowserService = inject(SpAssetBrowserService);
+    private assetContextService = inject(SpTableAssetContextService);
+    private destroyRef = inject(DestroyRef);
+
     @Input()
     element: PipelineElementUnion;
 
@@ -38,8 +72,7 @@ export class PipelineElementIconStandRowComponent implements OnInit {
     cypressName: string;
 
     currentMouseOver = false;
-
-    constructor(private editorService: EditorService) {}
+    assetContext?: SpTableResolvedAssetContext;
 
     ngOnInit(): void {
         const activeType = PipelineElementTypeUtils.fromClassName(
@@ -47,6 +80,20 @@ export class PipelineElementIconStandRowComponent implements OnInit {
         );
         this.activeCssClass = this.makeActiveCssClass(activeType);
         this.cypressName = this.element.name.toLowerCase().replace(' ', '_');
+
+        if (this.element instanceof SpDataStream) {
+            this.assetBrowserService.assetData$
+                .pipe(
+                    map(assetData =>
+                        this.assetContextService.resolveDataStreamAssetContext(
+                            assetData,
+                            this.element as SpDataStream,
+                        ),
+                    ),
+                    takeUntilDestroyed(this.destroyRef),
+                )
+                .subscribe(assetContext => (this.assetContext = assetContext));
+        }
     }
 
     makeActiveCssClass(elementType: PipelineElementType): string {

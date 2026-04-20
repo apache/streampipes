@@ -21,6 +21,9 @@ import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 import org.apache.streampipes.model.datalake.FilterCondition;
+import org.apache.streampipes.model.datalake.FilterExpressionCondition;
+import org.apache.streampipes.model.datalake.FilterExpressionGroup;
+import org.apache.streampipes.model.datalake.FilterExpressionNode;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -33,13 +36,17 @@ public class WhereClauseParams implements IQueryStatement {
   private static final String LT = "<";
 
   private final List<FilterCondition> filterConditions;
+  private final FilterExpressionGroup filterExpression;
 
   private WhereClauseParams(
       Long startTime,
       Long endTime,
-      String whereConditions
+      String whereConditions,
+      FilterExpressionGroup filterExpression
   ) {
-    this(startTime, endTime);
+    this.filterConditions = new ArrayList<>();
+    this.filterExpression = normalizeFilterExpression(filterExpression);
+    this.buildTimeConditions(startTime, endTime);
     if (whereConditions != null) {
       buildConditions(whereConditions);
     }
@@ -50,11 +57,13 @@ public class WhereClauseParams implements IQueryStatement {
       Long endTime
   ) {
     this.filterConditions = new ArrayList<>();
+    this.filterExpression = null;
     this.buildTimeConditions(startTime, endTime);
   }
 
-  private WhereClauseParams(String whereConditions) {
+  private WhereClauseParams(String whereConditions, FilterExpressionGroup filterExpression) {
     this.filterConditions = new ArrayList<>();
+    this.filterExpression = normalizeFilterExpression(filterExpression);
     if (whereConditions != null) {
       buildConditions(whereConditions);
     }
@@ -68,7 +77,14 @@ public class WhereClauseParams implements IQueryStatement {
   }
 
   public static WhereClauseParams from(String whereConditions) {
-    return new WhereClauseParams(whereConditions);
+    return new WhereClauseParams(whereConditions, null);
+  }
+
+  public static WhereClauseParams from(
+      String whereConditions,
+      FilterExpressionGroup filterExpression
+  ) {
+    return new WhereClauseParams(whereConditions, filterExpression);
   }
 
   public static WhereClauseParams from(
@@ -76,7 +92,16 @@ public class WhereClauseParams implements IQueryStatement {
       Long endTime,
       String whereConditions
   ) {
-    return new WhereClauseParams(startTime, endTime, whereConditions);
+    return new WhereClauseParams(startTime, endTime, whereConditions, null);
+  }
+
+  public static WhereClauseParams from(
+      Long startTime,
+      Long endTime,
+      String whereConditions,
+      FilterExpressionGroup filterExpression
+  ) {
+    return new WhereClauseParams(startTime, endTime, whereConditions, filterExpression);
   }
 
   private void buildTimeConditions(
@@ -119,6 +144,35 @@ public class WhereClauseParams implements IQueryStatement {
     }
   }
 
+  private FilterExpressionGroup normalizeFilterExpression(FilterExpressionGroup input) {
+    if (input == null) {
+      return null;
+    }
+
+    var children = input.children().stream()
+        .map(this::normalizeFilterExpressionNode)
+        .toList();
+
+    return new FilterExpressionGroup(input.operator(), children);
+  }
+
+  private FilterExpressionNode normalizeFilterExpressionNode(FilterExpressionNode node) {
+    if (node instanceof FilterExpressionGroup group) {
+      return normalizeFilterExpression(group);
+    }
+
+    if (node instanceof FilterExpressionCondition condition) {
+      Object normalizedCondition = condition.condition();
+      if (normalizedCondition instanceof String conditionAsString) {
+        normalizedCondition = returnCondition(conditionAsString);
+      }
+
+      return new FilterExpressionCondition(condition.field(), condition.operator(), normalizedCondition);
+    }
+
+    return node;
+  }
+
   private boolean isQuotedString(String input) {
     if (input.startsWith("\"") && input.endsWith("\"")) {
       String content = removeQuotes(input);
@@ -141,6 +195,12 @@ public class WhereClauseParams implements IQueryStatement {
 
   @Override
   public void buildStatement(IDataLakeQueryBuilder<?> builder) {
-    builder.withInclusiveFilter(filterConditions);
+    if (!filterConditions.isEmpty()) {
+      builder.withInclusiveFilter(filterConditions);
+    }
+
+    if (filterExpression != null) {
+      builder.withFilterExpression(filterExpression);
+    }
   }
 }

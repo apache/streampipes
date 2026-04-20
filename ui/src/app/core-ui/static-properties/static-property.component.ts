@@ -43,12 +43,54 @@ import {
 } from '@streampipes/platform-services';
 import { UntypedFormGroup } from '@angular/forms';
 import { InvocablePipelineElementUnion } from '../../editor/model/editor.model';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { FormLabelComponent } from '@streampipes/shared-ui';
+import { StaticCodeInputComponent } from './static-code-input/static-code-input.component';
+import { StaticSecretInputComponent } from './static-secret-input/static-secret-input.component';
+import { StaticFreeInputComponent } from './static-free-input/static-free-input.component';
+import { StaticFileInputComponent } from './static-file-input/static-file-input.component';
+import { StaticColorPickerComponent } from './static-color-picker/static-color-picker.component';
+import { StaticRuntimeResolvableAnyInputComponent } from './static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component';
+import { StaticRuntimeResolvableOneOfInputComponent } from './static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component';
+import { StaticAnyInputComponent } from './static-any-input/static-any-input.component';
+import { StaticOneOfInputComponent } from './static-one-of-input/static-one-of-input.component';
+import { StaticMappingUnaryComponent } from './static-mapping-unary/static-mapping-unary.component';
+import { StaticMappingNaryComponent } from './static-mapping-nary/static-mapping-nary.component';
+import { StaticAlternativesComponent } from './static-alternatives/static-alternatives.component';
+import { StaticGroupComponent } from './static-group/static-group.component';
+import { StaticRuntimeResolvableGroupComponent } from './static-runtime-resolvable-group/static-runtime-resolvable-group.component';
+import { StaticCollectionComponent } from './static-collection/static-collection.component';
+import { StaticSlideToggleComponent } from './static-slide-toggle/static-slide-toggle.component';
+import { StaticRuntimeResolvableTreeInputComponent } from './static-runtime-resolvable-tree-input/static-runtime-resolvable-tree-input.component';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-app-static-property',
     templateUrl: './static-property.component.html',
     styleUrls: ['./static-property.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormLabelComponent,
+        StaticCodeInputComponent,
+        StaticSecretInputComponent,
+        StaticFreeInputComponent,
+        StaticFileInputComponent,
+        StaticColorPickerComponent,
+        StaticRuntimeResolvableAnyInputComponent,
+        StaticRuntimeResolvableOneOfInputComponent,
+        StaticAnyInputComponent,
+        StaticOneOfInputComponent,
+        StaticMappingUnaryComponent,
+        StaticMappingNaryComponent,
+        StaticAlternativesComponent,
+        StaticGroupComponent,
+        StaticRuntimeResolvableGroupComponent,
+        StaticCollectionComponent,
+        StaticSlideToggleComponent,
+        StaticRuntimeResolvableTreeInputComponent,
+        MatDivider,
+    ],
 })
 export class StaticPropertyComponent implements OnInit {
     @Input()

@@ -16,53 +16,93 @@
   ~
   -->
 
-<div class="sp-map-card">
-    <div class="card-header">
-        <div class="asset-identity">
-            <i class="material-icons">precision_manufacturing</i>
-            <h4 [title]="asset.assetName">{{ asset.assetName }}</h4>
-        </div>
-        <div>
-            <sp-label
-                tone="neutral"
-                variant="soft"
-                [labelText]="isa95Type"
-                size="small"
-            ></sp-label>
-        </div>
-    </div>
-
-    <div class="card-body">
-        <div class="meta-item">
-            <label>{{ 'Location' | translate }}</label>
-            <span>{{ site.label || 'Unknown' }}</span>
-        </div>
-        <div class="meta-item">
-            <label>{{ 'Area' | translate }}</label>
-            <span>{{ asset.assetSite.area || '-' }}</span>
-        </div>
-    </div>
-
-    <div class="card-actions">
-        @if (asset.assetLinks && asset.assetLinks.length > 0) {
-            <div class="link-grid">
-                @for (link of asset.assetLinks; track $index) {
-                    <sp-asset-map-link-chip
-                        [assetLink]="link"
-                        [assetLinkTypes]="assetLinkTypes"
-                    >
-                    </sp-asset-map-link-chip>
+@if (activeEntry) {
+    <div class="sp-map-card">
+        <div class="card-header">
+            <div class="asset-identity">
+                <i class="material-icons">precision_manufacturing</i>
+                <div class="asset-title-block">
+                    <h4 [title]="activeEntry.asset.assetName">
+                        {{ activeEntry.asset.assetName }}
+                    </h4>
+                    @if (entries.length > 1) {
+                        <small class="asset-counter">
+                            {{ activeAssetIndex() + 1 }}/{{ entries.length }}
+                        </small>
+                    }
+                </div>
+            </div>
+            <div class="header-actions">
+                <sp-label
+                    tone="neutral"
+                    variant="soft"
+                    [labelText]="isa95Type"
+                    size="small"
+                ></sp-label>
+                @if (entries.length > 1) {
+                    <div class="asset-switcher">
+                        <button
+                            mat-icon-button
+                            type="button"
+                            [disabled]="!hasPreviousAsset()"
+                            (click)="previousAsset()"
+                        >
+                            <mat-icon>chevron_left</mat-icon>
+                        </button>
+                        <button
+                            mat-icon-button
+                            type="button"
+                            [disabled]="!hasNextAsset()"
+                            (click)="nextAsset()"
+                        >
+                            <mat-icon>chevron_right</mat-icon>
+                        </button>
+                    </div>
                 }
             </div>
-        } @else {
-            <div class="no-links">
-                <small>{{ 'No linked resources' | translate }}</small>
-            </div>
-        }
+        </div>
 
-        <button mat-flat-button (click)="navigateToAsset()">
-            <mat-icon>arrow_forward</mat-icon>
-            <span>{{ 'Show asset' | translate }}</span>
-        </button>
+        <div class="card-body">
+            <div class="meta-item">
+                <label>{{ 'Location' | translate }}</label>
+                <span>{{ activeEntry.site.label || 'Unknown' }}</span>
+            </div>
+            <div class="meta-item">
+                <label>{{ 'Area' | translate }}</label>
+                <span>{{ activeEntry.asset.assetSite.area || '-' }}</span>
+            </div>
+        </div>
+
+        <div class="card-actions">
+            @if (
+                activeEntry.asset.assetLinks &&
+                activeEntry.asset.assetLinks.length > 0
+            ) {
+                <div class="link-grid">
+                    @for (link of activeEntry.asset.assetLinks; track $index) {
+                        <sp-asset-map-link-chip
+                            [assetLink]="link"
+                            [assetLinkTypes]="assetLinkTypes"
+                        >
+                        </sp-asset-map-link-chip>
+                    }
+                </div>
+            } @else {
+                <div class="no-links">
+                    <small>{{ 'No linked resources' | translate }}</small>
+                </div>
+            }
+
+            <button mat-flat-button (click)="navigateToAsset()">
+                <mat-icon>arrow_forward</mat-icon>
+                <span>{{ 'Show asset' | translate }}</span>
+            </button>
+        </div>
     </div>
-</div>
+} @else {
+    <div class="sp-map-card">
+        <div class="no-links">
+            <small>{{ 'No asset data available' | translate }}</small>
+        </div>
+    </div>
+}

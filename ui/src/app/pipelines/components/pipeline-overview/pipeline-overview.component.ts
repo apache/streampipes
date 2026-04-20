@@ -27,19 +27,69 @@ import {
     Output,
     ViewChild,
 } from '@angular/core';
+import { StartAllPipelinesDialogComponent } from '../../dialog/start-all-pipelines/start-all-pipelines-dialog.component';
 import { PipelineOperationsService } from '../../services/pipeline-operations.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { AuthService } from '../../../services/auth.service';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import { CurrentUserService } from '@streampipes/shared-ui';
+import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
+import {
+    CurrentUserService,
+    DialogRef,
+    DialogService,
+    PanelType,
+    SpTableAssetContextConfig,
+    SpTableMultiActionExecuteEvent,
+    SpTableMultiActionOption,
+    SpTableActionsDirective,
+    SpTableComponent,
+} from '@streampipes/shared-ui';
 import { Subscription } from 'rxjs';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuItem } from '@angular/material/menu';
+import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-overview',
     templateUrl: './pipeline-overview.component.html',
     styleUrls: ['./pipeline-overview.component.scss'],
-    standalone: false,
+    imports: [
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatTooltip,
+        MatIconButton,
+        MatIcon,
+        LayoutGapDirective,
+        SpTableActionsDirective,
+        MatMenuItem,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class PipelineOverviewComponent implements OnInit, OnDestroy {
     _pipelines: Pipeline[];
@@ -52,6 +102,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
         'status',
         'start',
         'name',
+        'assetContext',
         'lastModified',
         'actions',
     ];
@@ -62,15 +113,25 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     starting = false;
     stopping = false;
     hasPipelineWritePrivileges = false;
+    readonly assetContextConfig: SpTableAssetContextConfig = {
+        resourceLinkType: 'pipeline',
+        resourceIdKey: 'elementId',
+    };
+    readonly bulkPipelineActionOptions: SpTableMultiActionOption[] = [
+        { value: 'start', label: 'Start selected', icon: 'play_arrow' },
+        { value: 'stop', label: 'Stop selected', icon: 'stop' },
+        { value: 'forceStop', label: 'Force stop selected', icon: 'stop' },
+    ];
 
     userSub: Subscription;
 
     public pipelineOperationsService = inject(PipelineOperationsService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
+    private dialogService = inject(DialogService);
 
     ngOnInit() {
-        this.userSub = this.currentUserService.user$.subscribe(user => {
+        this.userSub = this.currentUserService.user$.subscribe(() => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
             );
@@ -104,7 +165,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     }
 
     addPipelinesToTable() {
-        this.dataSource.data = this._pipelines;
+        this.dataSource.data = this._pipelines ?? [];
         this.dataSource.sortingDataAccessor = (pipeline, column) => {
             if (column === 'status') {
                 return pipeline.running;
@@ -116,6 +177,64 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
         setTimeout(() => {
             this.dataSource.sort = this.sort;
         });
+    }
+
+    startStopSelectedPipelines(
+        selectedPipelines: Pipeline[],
+        action: boolean,
+        forceStop = false,
+    ) {
+        const pipelines = selectedPipelines.filter(pipeline =>
+            action ? !pipeline.running && pipeline.valid : pipeline.running,
+        );
+
+        if (!pipelines.length) {
+            return;
+        }
+
+        const dialogRef: DialogRef<StartAllPipelinesDialogComponent> =
+            this.dialogService.open(StartAllPipelinesDialogComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: (action ? 'Start' : 'Stop') + ' selected pipelines',
+                width: '70vw',
+                data: {
+                    pipelines,
+                    action,
+                    forceStop,
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.refreshPipelinesEmitter.emit(true);
+            }
+        });
+    }
+
+    executeSelectedPipelineAction(
+        event: SpTableMultiActionExecuteEvent<Pipeline>,
+    ) {
+        if (
+            !this.hasPipelineWritePrivileges ||
+            this.starting ||
+            this.stopping
+        ) {
+            return;
+        }
+
+        if (
+            event.action !== 'start' &&
+            event.action !== 'stop' &&
+            event.action !== 'forceStop'
+        ) {
+            return;
+        }
+
+        this.startStopSelectedPipelines(
+            event.selectedRows,
+            event.action === 'start',
+            event.action === 'forceStop',
+        );
     }
 
     ngOnDestroy() {

@@ -19,118 +19,118 @@
 import {
     Component,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
-    ViewChild,
 } from '@angular/core';
 import {
+    FormsModule,
     UntypedFormBuilder,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
 import {
     DataType,
+    EventProperty,
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
-    EventPropertyUnion,
     SemanticType,
 } from '@streampipes/platform-services';
-import { DialogRef } from '@streampipes/shared-ui';
-import { EditSchemaTransformationComponent } from './components/edit-schema-transformation/edit-schema-transformation.component';
-import { EditValueTransformationComponent } from './components/edit-value-transformation/edit-value-transformation.component';
-import { EditUnitTransformationComponent } from './components/edit-unit-transformation/edit-unit-transformation.component';
+import {
+    DialogRef,
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { EditSchemaTransformationComponent } from './components/edit-schema-transformation/edit-schema-transformation.component';
+import { EditUnitTransformationComponent } from './components/edit-unit-transformation/edit-unit-transformation.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-event-property',
     templateUrl: './edit-event-property.component.html',
     styleUrls: ['./edit-event-property.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormsModule,
+        LayoutAlignDirective,
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        EditSchemaTransformationComponent,
+        EditUnitTransformationComponent,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class EditEventPropertyComponent implements OnInit {
-    @Input() property: EventPropertyUnion;
-    @Input() originalProperty: EventPropertyUnion;
-    @Input() isEditable: boolean;
+    public dialogRef = inject(DialogRef<EditEventPropertyComponent>);
+    private formBuilder = inject(UntypedFormBuilder);
+    private shepherdService = inject(ShepherdService);
 
-    @Output() propertyChange = new EventEmitter<EventPropertyUnion>();
+    @Input() eventProperty: EventProperty;
 
-    schemaTransformationComponent: EditSchemaTransformationComponent;
-    valueTransformationComponent: EditValueTransformationComponent;
-    unitTransformationComponent: EditUnitTransformationComponent;
+    @Output() propertyChange = new EventEmitter<EventProperty>();
 
-    cachedProperty: EventPropertyUnion;
+    cachedProperty: EventProperty;
 
     isTimestampProperty = false;
+    isNumericProperty: boolean;
+
     isEventPropertyPrimitive: boolean;
     isEventPropertyNested: boolean;
     isEventPropertyList: boolean;
-    isNumericProperty: boolean;
-    isStringProperty: boolean;
     isSaveBtnEnabled: boolean;
 
     private propertyForm: UntypedFormGroup;
 
-    constructor(
-        public dialogRef: DialogRef<EditEventPropertyComponent>,
-        private formBuilder: UntypedFormBuilder,
-        private shepherdService: ShepherdService,
-    ) {}
-
     ngOnInit(): void {
-        this.cachedProperty = this.copyEp(this.property);
+        this.cachedProperty = this.copyEp(this.eventProperty);
         this.isTimestampProperty = SemanticType.isTimestamp(
             this.cachedProperty,
         );
-        this.isEventPropertyList = this.property instanceof EventPropertyList;
+        this.isEventPropertyList =
+            this.eventProperty instanceof EventPropertyList;
         this.isEventPropertyPrimitive =
-            this.property instanceof EventPropertyPrimitive;
+            this.eventProperty instanceof EventPropertyPrimitive;
         this.isEventPropertyNested =
-            this.property instanceof EventPropertyNested;
+            this.eventProperty instanceof EventPropertyNested;
         this.isNumericProperty =
             SemanticType.isNumber(this.cachedProperty) ||
             DataType.isNumberType((this.cachedProperty as any).runtimeType);
-        this.isStringProperty = DataType.isStringType(
-            (this.cachedProperty as any).runtimeType,
-        );
         this.createForm();
     }
 
-    copyEp(ep: EventPropertyUnion) {
+    copyEp(ep: EventProperty): EventProperty {
         if (ep instanceof EventPropertyPrimitive) {
-            const result = EventPropertyPrimitive.fromData(
-                ep as EventPropertyPrimitive,
-                new EventPropertyPrimitive(),
-            );
+            const result: EventPropertyPrimitive =
+                EventPropertyPrimitive.fromData(
+                    ep as EventPropertyPrimitive,
+                    new EventPropertyPrimitive(),
+                );
 
             result.measurementUnit = ep.measurementUnit;
             if (ep.additionalMetadata) {
-                result.additionalMetadata.fromMeasurementUnit =
-                    ep.additionalMetadata.fromMeasurementUnit || undefined;
-                result.additionalMetadata.toMeasurementUnit =
-                    ep.additionalMetadata.toMeasurementUnit || undefined;
+                result.additionalMetadata.originType =
+                    ep.additionalMetadata.originType || undefined;
 
-                result.additionalMetadata.correctionValue =
-                    ep.additionalMetadata.correctionValue || undefined;
-                result.additionalMetadata.operator =
-                    ep.additionalMetadata.operator || undefined;
-
-                result.additionalMetadata.mode = ep.additionalMetadata.mode;
-                result.additionalMetadata.formatString =
-                    ep.additionalMetadata.formatString;
-                result.additionalMetadata.multiplier =
-                    ep.additionalMetadata.multiplier;
-
-                result.additionalMetadata.regex =
-                    ep.additionalMetadata.regex || undefined;
-                result.additionalMetadata.replaceWith =
-                    ep.additionalMetadata.replaceWith || undefined;
-                result.additionalMetadata.replaceAll =
-                    ep.additionalMetadata.replaceAll || undefined;
+                result.additionalMetadata.originType =
+                    ep.additionalMetadata.originType || undefined;
             }
-
-            (result as any).staticValue = (ep as any).staticValue;
 
             return result;
         } else if (ep instanceof EventPropertyNested) {
@@ -148,84 +148,46 @@ export class EditEventPropertyComponent implements OnInit {
 
     private createForm() {
         this.propertyForm = this.formBuilder.group({
-            label: [this.property.label, Validators.required],
-            runtimeName: [this.property.runtimeName, Validators.required],
-            description: [this.property.description, Validators.required],
+            label: [this.eventProperty.label, Validators.required],
+            runtimeName: [this.eventProperty.runtimeName, Validators.required],
+            description: [this.eventProperty.description, Validators.required],
             domainProperty: ['', Validators.required],
             dataType: ['', Validators.required],
         });
     }
 
     save(): void {
-        this.property.label = this.cachedProperty.label;
-        this.property.description = this.cachedProperty.description;
-        this.property.elementId = this.cachedProperty.elementId;
+        this.eventProperty.label = this.cachedProperty.label;
+        this.eventProperty.description = this.cachedProperty.description;
+        this.eventProperty.elementId = this.cachedProperty.elementId;
 
-        this.property.semanticType = this.cachedProperty.semanticType;
-        this.property.runtimeName = this.cachedProperty.runtimeName;
-        this.property.propertyScope = this.cachedProperty.propertyScope;
+        this.eventProperty.semanticType = this.cachedProperty.semanticType;
+        this.eventProperty.runtimeName = this.cachedProperty.runtimeName;
+        this.eventProperty.propertyScope = this.cachedProperty.propertyScope;
 
-        if (this.property instanceof EventPropertyPrimitive) {
-            this.property.runtimeType = (
+        if (this.eventProperty instanceof EventPropertyPrimitive) {
+            this.eventProperty.runtimeType = (
                 this.cachedProperty as EventPropertyPrimitive
             ).runtimeType;
-            this.property.measurementUnit = (
+            this.eventProperty.measurementUnit = (
                 this.cachedProperty as EventPropertyPrimitive
             ).measurementUnit;
 
-            this.property.additionalMetadata.fromMeasurementUnit =
+            this.eventProperty.additionalMetadata.fromMeasurementUnit =
                 this.cachedProperty.additionalMetadata.fromMeasurementUnit;
-            this.property.additionalMetadata.toMeasurementUnit =
+            this.eventProperty.additionalMetadata.toMeasurementUnit =
                 this.cachedProperty.additionalMetadata.toMeasurementUnit;
 
-            this.property.additionalMetadata.mode =
-                this.cachedProperty.additionalMetadata.mode;
-            this.property.additionalMetadata.formatString =
-                this.cachedProperty.additionalMetadata.formatString;
-            this.property.additionalMetadata.multiplier =
-                this.cachedProperty.additionalMetadata.multiplier;
-
-            this.property.additionalMetadata.correctionValue =
-                this.cachedProperty.additionalMetadata.correctionValue;
-            this.property.additionalMetadata.operator =
-                this.cachedProperty.additionalMetadata.operator;
-
-            this.property.additionalMetadata.regex =
-                this.cachedProperty.additionalMetadata.regex;
-            this.property.additionalMetadata.replaceWith =
-                this.cachedProperty.additionalMetadata.replaceWith;
-            this.property.additionalMetadata.replaceAll =
-                this.cachedProperty.additionalMetadata.replaceAll;
+            this.eventProperty.additionalMetadata.originType =
+                this.cachedProperty.additionalMetadata.originType;
         }
-        this.dialogRef.close({ data: this.property });
+        this.dialogRef.close({ data: this.eventProperty });
         this.shepherdService.trigger('adapter-field-changed');
     }
 
-    handleDataTypeChange(changed: boolean) {
+    handleDataTypeChange() {
         this.isNumericProperty = DataType.isNumberType(
-            (this.cachedProperty as any).runtimeType,
+            (this.cachedProperty as EventPropertyPrimitive).runtimeType,
         );
-    }
-
-    handleTimestampChange(isTimestamp: boolean) {
-        this.isTimestampProperty = isTimestamp;
-    }
-
-    @ViewChild('schemaTransformationComponent') set schemaTransformation(
-        comp: EditSchemaTransformationComponent,
-    ) {
-        this.schemaTransformationComponent = comp;
-    }
-
-    @ViewChild('unitTransformationComponent') set unitTransformation(
-        comp: EditUnitTransformationComponent,
-    ) {
-        this.unitTransformationComponent = comp;
-    }
-
-    @ViewChild('valueTransformationComponent') set valueTransformation(
-        comp: EditValueTransformationComponent,
-    ) {
-        this.valueTransformationComponent = comp;
     }
 }

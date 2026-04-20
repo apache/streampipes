@@ -126,8 +126,11 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
       measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
     }
 
+    var userSid = parameters.getModel().getCorrespondingUser();
+    var client = runtimeContext.getStreamPipesClient().onBehalfOf(userSid);
+
     measure = new DataExplorerDispatcher().getDataExplorerManager()
-                                          .getMeasurementSanitizer(runtimeContext.getStreamPipesClient(), measure)
+                                          .getMeasurementSanitizer(client, measure)
                                           .sanitizeAndRegister();
 
     this.timeSeriesStore = new TimeSeriesStore(
@@ -191,7 +194,7 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
         .peek(ep -> {
           // Set all properties to DIMENSION_PROPERTY when seleted in dimensions
           if (dimensions.contains(ep.getRuntimeName())) {
-            LOG.info("Using {} as dimension", ep.getRuntimeName());
+            LOG.debug("Using {} as dimension", ep.getRuntimeName());
             ep.setPropertyScope(PropertyScope.DIMENSION_PROPERTY.name());
           }
         })

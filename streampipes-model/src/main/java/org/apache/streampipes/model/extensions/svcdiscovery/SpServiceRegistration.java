@@ -17,13 +17,16 @@
  */
 package org.apache.streampipes.model.extensions.svcdiscovery;
 
+import org.apache.streampipes.model.connect.ScriptMetadata;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @TsModel
@@ -43,6 +46,7 @@ public class SpServiceRegistration implements Storable {
   private String healthCheckPath;
   private long firstTimeSeenUnhealthy = 0;
   private SpServiceStatus status = SpServiceStatus.REGISTERED;
+  private List<ScriptMetadata> supportedScriptLanguages;
 
   private Set<ExtensionItemDescription> providedExtensions;
 
@@ -55,6 +59,7 @@ public class SpServiceRegistration implements Storable {
                                String host,
                                int port,
                                Set<SpServiceTag> tags,
+                               List<ScriptMetadata> supportedScriptLanguages,
                                String healthCheckPath,
                                Set<ExtensionItemDescription> providedExtensions) {
     this.svcType = svcType;
@@ -63,6 +68,7 @@ public class SpServiceRegistration implements Storable {
     this.host = host;
     this.port = port;
     this.tags = tags;
+    this.supportedScriptLanguages = supportedScriptLanguages;
     this.healthCheckPath = healthCheckPath;
     this.labels = new HashSet<>();
     this.providedExtensions = providedExtensions;
@@ -74,9 +80,20 @@ public class SpServiceRegistration implements Storable {
                                            String host,
                                            Integer port,
                                            Set<SpServiceTag> tags,
+                                           List<ScriptMetadata> supportedScriptLanguages,
                                            String healthCheckPath,
                                            Set<ExtensionItemDescription> providedExtensions) {
-    return new SpServiceRegistration(svcType, svcGroup, svcId, host, port, tags, healthCheckPath, providedExtensions);
+    return new SpServiceRegistration(
+        svcType,
+        svcGroup,
+        svcId,
+        host,
+        port,
+        tags,
+        supportedScriptLanguages,
+        healthCheckPath,
+        providedExtensions
+    );
   }
 
   public int getWeight() {
@@ -162,6 +179,7 @@ public class SpServiceRegistration implements Storable {
     return scheme;
   }
 
+  @JsonIgnore
   public String getServiceUrl() {
     return getScheme() + "://" + getHost() + ":" + getPort();
   }
@@ -201,4 +219,9 @@ public class SpServiceRegistration implements Storable {
   public void setProvidedExtensions(Set<ExtensionItemDescription> providedExtensions) {
     this.providedExtensions = providedExtensions;
   }
+
+  public List<ScriptMetadata> getSupportedScriptLanguages() {
+    return supportedScriptLanguages;
+  }
+
 }

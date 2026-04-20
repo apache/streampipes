@@ -16,21 +16,57 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     PipelineElementTemplate,
     PipelineElementTemplateService,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { PipelineElementTemplateGenerator } from './pipeline-element-template-generator';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatFormField, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { PipelineElementTemplateConfigItemComponent } from './pipeline-element-template-config-item/pipeline-element-template-config-item.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
+import { PipelineElementTemplatePipe } from './pipeline-element-template.pipe';
 
 @Component({
     selector: 'sp-pipeline-element-template-config',
     templateUrl: './pipeline-element-template-config.component.html',
     styleUrls: ['./pipeline-element-template-config.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatHint,
+        PipelineElementTemplateConfigItemComponent,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatIcon,
+        TranslatePipe,
+        PipelineElementTemplatePipe,
+    ],
 })
 export class PipelineElementTemplateConfigComponent implements OnInit {
+    private pipelineElementTemplateService = inject(
+        PipelineElementTemplateService,
+    );
+
     @Input()
     template: PipelineElementTemplate;
 
@@ -44,10 +80,6 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
     staticProperties: StaticPropertyUnion[];
 
     existingTemplates: PipelineElementTemplate[] = [];
-
-    constructor(
-        private pipelineElementTemplateService: PipelineElementTemplateService,
-    ) {}
 
     ngOnInit(): void {
         this.loadTemplates();

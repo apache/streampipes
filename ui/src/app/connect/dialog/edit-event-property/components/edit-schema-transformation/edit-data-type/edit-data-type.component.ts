@@ -16,18 +16,32 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DataType } from '@streampipes/platform-services';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    DataType,
+    EventPropertyPrimitive,
+} from '@streampipes/platform-services';
+import { MatFormField } from '@angular/material/form-field';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'sp-edit-data-type',
     templateUrl: './edit-data-type.component.html',
-    styleUrls: ['./edit-data-type.component.scss'],
-    standalone: false,
+    imports: [MatFormField, FlexDirective, MatSelect, FormsModule, MatOption],
 })
-export class EditDataTypeComponent {
-    @Input() cachedProperty: any;
-    @Output() dataTypeChanged = new EventEmitter<boolean>();
+export class EditDataTypeComponent implements OnInit {
+    @Input() eventProperty: EventPropertyPrimitive;
+    @Output() dataTypeChanged = new EventEmitter<void>();
+
+    originalType: string;
+
+    ngOnInit(): void {
+        this.originalType =
+            this.eventProperty.additionalMetadata['originType'] ||
+            this.eventProperty.runtimeType;
+    }
 
     runtimeDataTypes: { label: string; url: string }[] = [
         {
@@ -57,6 +71,12 @@ export class EditDataTypeComponent {
     ];
 
     valueChanged() {
-        this.dataTypeChanged.emit(true);
+        if (this.originalType === this.eventProperty.runtimeType) {
+            delete this.eventProperty.additionalMetadata['originType'];
+        } else {
+            this.eventProperty.additionalMetadata['originType'] =
+                this.originalType;
+        }
+        this.dataTypeChanged.emit();
     }
 }

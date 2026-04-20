@@ -17,14 +17,35 @@
  */
 
 import { Component, inject } from '@angular/core';
-import { SpAssetBrowserService } from '@streampipes/shared-ui';
+import {
+    SpAssetBrowserService,
+    SpBasicViewComponent,
+} from '@streampipes/shared-ui';
 import { Router } from '@angular/router';
 import { BaseAssetDetailsDirective } from '../base-asset-details.directive';
+import { SpAssetSelectionPanelComponent } from './asset-selection-panel/asset-selection-panel.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { AssetDetailsBasicsComponent } from './asset-details-panel/asset-details-basics/asset-details-basics.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-details',
     templateUrl: './asset-details.component.html',
-    standalone: false,
+    imports: [
+        SpAssetSelectionPanelComponent,
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        MatButton,
+        AssetDetailsBasicsComponent,
+        TranslatePipe,
+    ],
 })
 export class SpAssetDetailsComponent extends BaseAssetDetailsDirective {
     private router = inject(Router);
@@ -33,7 +54,7 @@ export class SpAssetDetailsComponent extends BaseAssetDetailsDirective {
     saveAsset() {
         this.cleanupEmpty();
         this.assetService.updateAsset(this.asset).subscribe(res => {
-            this.assetBrowserService.loadAssetData();
+            this.assetBrowserService.refreshBrowserAssetData();
             this.router.navigate(['assets']);
         });
     }

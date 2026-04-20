@@ -16,22 +16,35 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormGroup,
+} from '@angular/forms';
 import {
     ExtensionDeploymentConfiguration,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../../model/ConfigurationInfo';
 import { StaticPropertyUtilService } from '../../../../../core-ui/static-properties/static-property-util.service';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { StaticPropertyComponent } from '../../../../../core-ui/static-properties/static-property.component';
 
 @Component({
     selector: 'sp-configuration-group',
     templateUrl: './configuration-group.component.html',
     styleUrls: ['./configuration-group.component.scss'],
-    standalone: false,
+    imports: [
+        FormsModule,
+        FlexDirective,
+        ReactiveFormsModule,
+        StaticPropertyComponent,
+    ],
 })
 export class ConfigurationGroupComponent implements OnInit {
+    private staticPropertyUtils = inject(StaticPropertyUtilService);
+
     @Input() configurationGroup: UntypedFormGroup;
 
     @Input() adapterId: string;
@@ -41,8 +54,6 @@ export class ConfigurationGroupComponent implements OnInit {
     @Input() deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     completedConfigurations: ConfigurationInfo[] = [];
-
-    constructor(private staticPropertyUtils: StaticPropertyUtilService) {}
 
     ngOnInit() {
         this.completedConfigurations =

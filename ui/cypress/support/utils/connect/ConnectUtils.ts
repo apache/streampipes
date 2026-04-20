@@ -19,7 +19,7 @@
 import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
 import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
-import { DataExplorerUtils } from '../dataExplorer/DataExplorerUtils';
+import { ChartUtils } from '../chart/ChartUtils';
 import { ConnectBtns } from './ConnectBtns';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { UserUtils } from '../UserUtils';
@@ -27,6 +27,14 @@ import { PipelineUtils } from '../pipeline/PipelineUtils';
 import { GeneralUtils } from '../GeneralUtils';
 
 export class ConnectUtils {
+    private static readonly TRANSFORMATION_SCRIPT_PREFIX =
+        'function transform(event, out, ctx) {\n';
+
+    public static goToConnect() {
+        cy.visit('#/connect');
+        cy.dataCy('connect-create-new-adapter-button').should('be.visible');
+    }
+
     public static testAdapter(
         adapterConfiguration: AdapterInput,
         adapterStartFails = false,
@@ -39,14 +47,14 @@ export class ConnectUtils {
 
         ConnectUtils.configureAdapter(adapterConfiguration);
 
+        ConnectUtils.configureSchema(adapterConfiguration);
+
+        ConnectUtils.eventSchemaWithFieldsShouldBeVisible();
+
         if (adapterConfiguration.timestampProperty) {
             ConnectEventSchemaUtils.markPropertyAsTimestamp(
                 adapterConfiguration.timestampProperty,
             );
-        }
-
-        if (adapterConfiguration.autoAddTimestamp) {
-            ConnectEventSchemaUtils.addTimestampProperty();
         }
 
         ConnectEventSchemaUtils.changePropertyDataTypes(
@@ -55,7 +63,8 @@ export class ConnectUtils {
 
         ConnectUtils.configureDimensionProperties(adapterConfiguration);
 
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        ConnectEventSchemaUtils.configureFieldsNextBtnEnabled();
+        ConnectBtns.configureFieldsNextBtn().click();
 
         ConnectUtils.startAdapter(
             adapterConfiguration,
@@ -73,6 +82,12 @@ export class ConnectUtils {
 
         ConnectUtils.configureAdapter(adapterConfiguration);
 
+        cy.wait(1000);
+
+        ConnectUtils.finishEventSchemaConfiguration();
+
+        ConnectUtils.eventSchemaWithFieldsShouldBeVisible();
+
         ConnectUtils.configureDimensionProperties(adapterConfiguration);
 
         if (adapterConfiguration.timestampProperty) {
@@ -81,7 +96,7 @@ export class ConnectUtils {
             );
         }
 
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        ConnectUtils.finishConfigureFieldsConfiguration();
     }
 
     public static addAdapterWithLinkedAssets(
@@ -99,19 +114,21 @@ export class ConnectUtils {
         );
     }
 
-    public static createAdapterUntilEventSchemaConfiguration(
-        adapterInput: AdapterInput,
-    ) {
-        ConnectUtils.goToConnect();
+    public static configureSchema(adapterConfiguration: AdapterInput) {
+        ConnectBtns.configureSchemaEventPreviewOriginal().should('be.visible');
+        ConnectBtns.scriptActiveToggle().click();
 
-        ConnectUtils.goToNewAdapterPage();
+        ConnectBtns.configureSchemaEventPreviewOriginal().should('be.visible');
+        ConnectBtns.configureSchemaEventPreviewResult().should('be.visible');
 
-        ConnectUtils.selectAdapter(adapterInput.adapterType);
+        if (adapterConfiguration.autoAddTimestamp) {
+            ConnectEventSchemaUtils.addTimestampProperty();
+        }
 
-        ConnectUtils.configureAdapter(adapterInput);
+        ConnectBtns.configureSchemaNextBtn().click();
     }
 
-    private static configureDimensionProperties(
+    public static configureDimensionProperties(
         adapterConfiguration: AdapterInput,
     ) {
         if (adapterConfiguration.dimensionProperties.length > 0) {
@@ -126,8 +143,8 @@ export class ConnectUtils {
     }
 
     public static renameAdapter(newName: string) {
-        cy.dataCy('sp-adapter-name').clear().type(newName);
-        cy.dataCy('sp-adapter-name').should('have.value', newName);
+        ConnectBtns.adapterNameInput().clear().type(newName);
+        ConnectBtns.adapterNameInput().should('have.value', newName);
     }
 
     public static addMachineDataSimulator(
@@ -137,30 +154,14 @@ export class ConnectUtils {
     ) {
         const builder = AdapterBuilder.create('Machine_Data_Simulator')
             .setName(name)
+            .setTimestampProperty('timestamp')
             .addInput('input', 'wait-time-ms', waitingTime);
 
         if (persist) {
             builder.setTimestampProperty('timestamp').setStoreInDataLake();
         }
 
-        const configuration = builder.build();
-
-        ConnectUtils.goToConnect();
-
-        ConnectUtils.goToNewAdapterPage();
-
-        ConnectUtils.selectAdapter(configuration.adapterType);
-
-        ConnectUtils.configureAdapter(configuration);
-
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
-
-        ConnectUtils.startAdapter(configuration);
-    }
-
-    public static goToConnect() {
-        cy.visit('#/connect');
-        cy.dataCy('connect-create-new-adapter-button').should('be.visible');
+        ConnectUtils.testAdapter(builder.build());
     }
 
     public static goToNewAdapterPage() {
@@ -168,7 +169,6 @@ export class ConnectUtils {
     }
 
     public static selectAdapter(name: string) {
-        // Select adapter
         cy.get('#' + name).click();
     }
 
@@ -184,11 +184,8 @@ export class ConnectUtils {
      * Clicks next on the adapter settings page
      */
     public static finishAdapterSettings() {
-        // Next Button should not be disabled
-        cy.get('button').contains('Next').parent().should('not.be.disabled');
-
-        // Click next
-        cy.get('button').contains('Next').parent().click();
+        ConnectBtns.adapterSettingsNextBtn().should('not.be.disabled');
+        ConnectBtns.adapterSettingsNextBtn().click();
     }
 
     public static configureFormat(adapterInput: AdapterInput) {
@@ -200,14 +197,24 @@ export class ConnectUtils {
 
             StaticPropertyUtils.input(adapterInput.formatConfiguration);
         }
+
+        // For file adapters, wait until the file selection state is rendered to reduce test flakiness.
+        if (adapterInput?.adapterType === 'File_Stream') {
+            ConnectBtns.fileInputSelected().should('be.visible');
+        }
     }
 
     public static finishEventSchemaConfiguration() {
-        // Click next
-        cy.dataCy('sp-connect-schema-editor', { timeout: 10000 }).should(
-            'be.visible',
-        );
-        cy.get('#event-schema-next-button').click();
+        ConnectBtns.configureSchemaNextBtn().click();
+    }
+
+    public static finishConfigureFieldsConfiguration() {
+        ConnectUtils.eventSchemaWithFieldsShouldBeVisible();
+        ConnectBtns.configureFieldsNextBtn().click();
+    }
+
+    public static eventSchemaWithFieldsShouldBeVisible() {
+        ConnectBtns.eventPropertyRow().should('have.length.at.least', 1);
     }
 
     public static startAdapter(
@@ -218,7 +225,7 @@ export class ConnectUtils {
         assetNameList = [],
     ) {
         // Set adapter name
-        cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
+        ConnectBtns.adapterNameInput().type(adapterInput.adapterName);
 
         if (adapterInput.storeInDataLake) {
             cy.dataCy('sp-store-in-datalake', {
@@ -291,7 +298,7 @@ export class ConnectUtils {
     }
 
     public static closeAdapterPreview() {
-        cy.get('button').contains('Close').parent().click();
+        cy.dataCy('close-adapter-started-dialog-button').click();
     }
 
     public static deleteAdapter(adapterName: string) {
@@ -305,14 +312,6 @@ export class ConnectUtils {
             'be.visible',
         );
         ConnectBtns.deleteAdapter().should('have.length', 0);
-    }
-
-    public static storeAndStartEditedAdapter() {
-        ConnectUtils.finishEventSchemaConfiguration();
-        ConnectBtns.storeEditAdapter().click();
-        ConnectBtns.updateAndMigratePipelines().click();
-        ConnectUtils.closeAdapterPreview();
-        ConnectBtns.startAdapter().click();
     }
 
     public static deleteAdapterAndAssociatedPipelines(switchUserCheck = false) {
@@ -336,33 +335,9 @@ export class ConnectUtils {
         this.checkAdapterAndAssociatedPipelinesDeleted();
     }
 
-    // NOTE: this function will leave the adapter and associated pipelines running,
-    // please make sure to clean up after calling this function
-    public static deleteAdapterAndAssociatedPipelinesPermissionDenied() {
-        // Associated pipelines not owned by the user (unless admin) should not be deleted during adapter deletion
-        this.goToConnect();
-        ConnectBtns.openActionsMenu('simulator');
-        ConnectBtns.deleteAdapter().should('have.length', 1);
-        this.clickDelete();
-        ConnectBtns.deleteAdapterAndAssociatedPipelineConfirmation().should(
-            'be.visible',
-        );
-        ConnectBtns.deleteAdapterAndAssociatedPipelineConfirmation().click();
-        cy.dataCy('adapter-deletion-permission-denied', {
-            timeout: 10000,
-        }).should('be.visible');
-        cy.get('.sp-dialog-actions').click();
-        this.checkAdapterNotDeleted();
-    }
-
     public static clickDelete() {
         ConnectBtns.deleteAdapter().click();
         ConnectBtns.deleteAdapterConfirmationButton().click();
-    }
-
-    public static checkAdapterNotDeleted() {
-        this.goToConnect();
-        ConnectBtns.deleteAdapter().should('have.length', 1);
     }
 
     public static checkAdapterAndAssociatedPipelinesDeleted() {
@@ -407,10 +382,8 @@ export class ConnectUtils {
         ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
         ConnectUtils.configureAdapter(adapterConfiguration);
 
-        // wait till schema is shown
-        cy.dataCy('sp-connect-schema-editor', { timeout: 60000 }).should(
-            'be.visible',
-        );
+        ConnectBtns.configureSchemaEventPreviewOriginal().should('be.visible');
+        ConnectBtns.scriptActiveToggle().click();
 
         return adapterConfiguration;
     }
@@ -430,6 +403,63 @@ export class ConnectUtils {
         return cy.dataCy(`live-preview-value-${runtimeName}`, {
             timeout: 10000,
         });
+    }
+
+    public static replaceAdapterScript(script: string) {
+        // Ensure that the script is loaded
+        ConnectBtns.configureSchemaScriptEditor().should(
+            'contain.text',
+            'out.collect(event);',
+        );
+
+        const scriptWithPrefix = script.startsWith(
+            ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX,
+        )
+            ? script
+            : `${ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX}${script}`;
+
+        ConnectBtns.setConfigureSchemaScriptEditorValue(scriptWithPrefix);
+
+        ConnectBtns.configureSchemaScriptEditor().should(
+            'contain.text',
+            'out.collect(event)',
+        );
+    }
+
+    public static uploadSampleEvent(samplePayload: string) {
+        ConnectBtns.uploadSampleBtn().click();
+        ConnectBtns.uploadSampleDialogTextarea()
+            .should('be.visible')
+            .clear()
+            .type(samplePayload, { parseSpecialCharSequences: false });
+        ConnectBtns.uploadSampleDialogSubmitBtn()
+            .should('not.be.disabled')
+            .click();
+    }
+
+    public static addScriptAsScriptTemplate(
+        templateName: string,
+        script: string,
+    ) {
+        ConnectUtils.replaceAdapterScript(script);
+        ConnectBtns.addScriptTemplateBtn().click();
+
+        ConnectBtns.scriptTemplateName().type(templateName);
+        ConnectBtns.saveScriptTemplateBtn().click();
+    }
+
+    public static useScriptTemplate(templateName: string) {
+        ConnectBtns.useScriptTemplateBtn().click();
+        ConnectBtns.selectScriptTemplateDropDown().click();
+        cy.get('mat-option').contains('span', templateName).click();
+        ConnectBtns.saveSelectScriptTemplateBtn().click();
+    }
+
+    public static deleteScriptTemplate(templateName: string) {
+        ConnectBtns.useScriptTemplateBtn().click();
+        ConnectBtns.selectScriptTemplateDropDown().click();
+        cy.get('mat-option').contains('span', templateName).click();
+        ConnectBtns.deleteScriptTemplateBtn().click();
     }
 
     public static validateEventsInPreview(
@@ -453,6 +483,23 @@ export class ConnectUtils {
         cy.dataCy('live-preview-table-no-data', { timeout: 30000 }).should(
             'not.exist',
         );
+    }
+
+    public static restartAdapter(adapterName: string, waitTime = 2000) {
+        cy.wait(waitTime);
+
+        ConnectUtils.goToConnect();
+        ConnectBtns.openActionsMenu(adapterName);
+        ConnectBtns.stopAdapter().click();
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
+
+        cy.wait(waitTime);
+
+        ConnectBtns.openActionsMenu(adapterName);
+        ConnectBtns.startAdapter().click();
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
+
+        cy.wait(waitTime);
     }
 
     /**
@@ -483,11 +530,12 @@ export class ConnectUtils {
         waitTime = 1000,
     ) {
         ConnectUtils.startAdapter(adapterConfiguration, true);
+        ConnectUtils.restartAdapter(adapterConfiguration.adapterName, waitTime);
 
         // Wait till data is stored
         cy.wait(waitTime);
 
-        DataExplorerUtils.checkResults(
+        ChartUtils.checkResults(
             'Adapter to test rules',
             expectedFile,
             ignoreTime,
@@ -496,11 +544,11 @@ export class ConnectUtils {
 
     public static allAdapterActionsDialog() {
         // Click next
-        cy.get('button').contains('Next').parent().click();
+        cy.dataCy('all-adapters-action-next-button').click();
         // Wait for the adapters to start/stop
         cy.wait(2000);
         // Close dialog
-        cy.get('button').contains('Close').parent().click();
+        cy.dataCy('all-adapters-action-next-button').click();
     }
 
     public static validateAdapterIsRunning() {

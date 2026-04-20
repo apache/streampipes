@@ -16,26 +16,43 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     Pipeline,
     PipelineService,
     PipelineStatusMessage,
 } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-status',
     templateUrl: './pipeline-status.component.html',
     styleUrls: ['./pipeline-status.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutGapDirective,
+        LayoutAlignDirective,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class PipelineStatusComponent implements OnInit {
+    private pipelineService = inject(PipelineService);
+
     pipelineStatus: PipelineStatusMessage[];
 
     @Input()
     pipeline: Pipeline;
 
-    constructor(private pipelineService: PipelineService) {
+    constructor() {
         this.pipelineStatus = [];
     }
 

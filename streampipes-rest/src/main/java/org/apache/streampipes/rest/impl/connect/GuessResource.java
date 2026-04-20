@@ -19,16 +19,15 @@
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.commons.exceptions.connect.ParseException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.management.GuessManagement;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
-import org.apache.streampipes.model.client.user.DefaultPrivilege;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.model.schema.EventSchema;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -47,26 +46,20 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(GuessResource.class);
 
-  public GuessResource() {
-    super(GuessManagement::new);
+  public GuessResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
+    super(() -> new GuessManagement(new ExtensionsServiceEndpointGenerator(), extensionServiceRequestManager));
   }
 
+
   @PostMapping(
-      path = "/schema",
+      path = "/sample",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<?> guessSchema(@RequestBody AdapterDescription adapterDescription) {
-
+  public ResponseEntity<?> getSampleData(@RequestBody AdapterDescription adapterDescription)
+      throws WorkerAdapterException {
     try {
-      GuessSchema result = managementService.guessSchema(adapterDescription);
-
-      return ok(result);
-    } catch (ParseException e) {
-      LOG.error("Error while parsing events: ", e);
-      return badRequest(SpLogMessage.from(e));
-    } catch (WorkerAdapterException e) {
-      return serverError(e.getExceptionMessage());
+      return ok(managementService.getSampleData(adapterDescription));
     } catch (NoServiceEndpointsAvailableException | IOException e) {
       LOG.error(e.getMessage());
       return serverError(SpLogMessage.from(e));
@@ -74,24 +67,37 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
   }
 
   @PostMapping(
+      path = "/sample/transform",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority()")
+  public ResponseEntity<AdapterDescription> transformSample(@RequestBody AdapterDescription adapterDescription) throws
+                                                                                                                AdapterException {
+
+    var sampleData = managementService.transformSampleData(adapterDescription, getAuthenticatedUserSid());
+
+    return ok(sampleData);
+  }
+
+  @PostMapping(
+      path = "/schema",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority()")
+  public ResponseEntity<EventSchema> guessSchema(@RequestBody AdapterDescription adapterDescription) {
+
+    var eventSchema = managementService.guessSchema(adapterDescription);
+
+    return ok(eventSchema);
+  }
+
+  @PostMapping(
       path = "/schema/preview",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<?> getAdapterEventPreview(@RequestBody AdapterEventPreview previewRequest) {
-    try {
-      return ok(managementService.performAdapterEventPreview(previewRequest));
-    } catch (JsonProcessingException e) {
-      return badRequest();
-    }
-  }
+  public ResponseEntity<?> getAdapterEventPreview(@RequestBody AdapterDescription adapterDescription) {
+    return ok(managementService.performAdapterEventPreview(adapterDescription));
 
-  /**
-   * required by Spring expression
-   */
-  public boolean hasWriteAuthority() {
-    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE);
   }
-
 }
-

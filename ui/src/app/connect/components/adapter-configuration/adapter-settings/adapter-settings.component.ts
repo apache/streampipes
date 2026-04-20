@@ -32,12 +32,46 @@ import {
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { AdapterTemplateService } from '../../../services/adapter-template.service';
 import { MatStepper } from '@angular/material/stepper';
+import {
+    DialogService,
+    PanelType,
+    SpBasicInnerPanelComponent,
+} from '@streampipes/shared-ui';
+import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-documentation/adapter-documentation-dialog.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpAdapterDeploymentSettingsComponent } from './adapter-deployment-settings/adapter-deployment-settings.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { ConfigurationGroupComponent } from './configuration-group/configuration-group.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-settings',
     templateUrl: './adapter-settings.component.html',
     styleUrls: ['./adapter-settings.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SpBasicInnerPanelComponent,
+        SpAdapterDeploymentSettingsComponent,
+        LayoutAlignDirective,
+        MatFormField,
+        MatLabel,
+        MatSelect,
+        MatOption,
+        MatButton,
+        MatTooltip,
+        MatIcon,
+        ConfigurationGroupComponent,
+        TranslatePipe,
+    ],
 })
 export class AdapterSettingsComponent implements OnInit {
     private _formBuilder = inject(UntypedFormBuilder);
@@ -45,6 +79,7 @@ export class AdapterSettingsComponent implements OnInit {
         PipelineElementTemplateService,
     );
     private adapterTemplateService = inject(AdapterTemplateService);
+    private dialogService = inject(DialogService);
 
     /**
      * Adapter description the selected format is added to
@@ -59,13 +94,12 @@ export class AdapterSettingsComponent implements OnInit {
     /**
      * Cancels the adapter configuration process
      */
-    @Output() removeSelectionEmitter: EventEmitter<boolean> =
-        new EventEmitter();
+    @Output() cancelEmitter: EventEmitter<boolean> = new EventEmitter();
 
     /**
      * Go to next configuration step when this is complete
      */
-    @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+    @Output() nextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
     cachedAdapterDescription: AdapterDescription;
     availableTemplates: PipelineElementTemplate[];
@@ -111,12 +145,12 @@ export class AdapterSettingsComponent implements OnInit {
             });
     }
 
-    public removeSelection() {
-        this.removeSelectionEmitter.emit();
+    public cancel() {
+        this.cancelEmitter.emit();
     }
 
-    public clickNext() {
-        this.clickNextEmitter.emit();
+    public next() {
+        this.nextEmitter.emit();
     }
 
     loadTemplate(event: any) {
@@ -139,5 +173,16 @@ export class AdapterSettingsComponent implements OnInit {
     afterTemplateReceived(adapterDescription: any) {
         this.adapterDescription = adapterDescription;
         this.updateAdapterDescriptionEmitter.emit(this.adapterDescription);
+    }
+
+    openDocumentation() {
+        this.dialogService.open(SpAdapterDocumentationDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Documentation',
+            width: '50vw',
+            data: {
+                appId: this.adapterDescription.appId,
+            },
+        });
     }
 }

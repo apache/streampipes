@@ -18,54 +18,112 @@
 
 import {
     Component,
-    EventEmitter,
+    effect,
     inject,
-    Input,
-    OnInit,
-    Output,
+    input,
+    output,
+    signal,
 } from '@angular/core';
 import { SpLabel } from '@streampipes/platform-services';
-import { SpColorizationService } from '@streampipes/shared-ui';
+import {
+    FormFieldComponent,
+    SpColorizationService,
+    SpLabelComponent,
+} from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { ColorPickerDirective } from 'ngx-color-picker';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-label',
     templateUrl: './edit-label.component.html',
     styleUrls: ['./edit-label.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        NgClass,
+        ClassDirective,
+        FlexDirective,
+        LayoutGapDirective,
+        LayoutAlignDirective,
+        FormFieldComponent,
+        SpLabelComponent,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        ColorPickerDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
-export class SpEditLabelComponent implements OnInit {
+export class SpEditLabelComponent {
     private colorizationService = inject(SpColorizationService);
 
-    @Input()
-    editMode = false;
+    readonly editMode = input(false);
 
-    @Input()
-    label: SpLabel;
+    readonly label = input<SpLabel | undefined>(undefined);
 
-    @Input()
-    showPreview = true;
+    readonly showPreview = input(true);
 
-    @Output()
-    cancelEmitter: EventEmitter<void> = new EventEmitter<void>();
+    readonly cancelEmitter = output<void>();
 
-    @Output()
-    saveEmitter: EventEmitter<SpLabel> = new EventEmitter<SpLabel>();
+    readonly saveEmitter = output<SpLabel>();
 
-    ngOnInit(): void {
-        if (!this.label) {
-            this.label = {
-                color: this.colorizationService.generateRandomColor(),
-                label: 'New label',
-                description: '',
-            };
-        }
+    readonly draftLabel = signal<SpLabel>(this.createDefaultLabel());
+
+    constructor() {
+        effect(() => {
+            const label = this.label();
+            this.draftLabel.set(
+                label ? { ...label } : this.createDefaultLabel(),
+            );
+        });
     }
 
     saveLabel(): void {
-        this.saveEmitter.emit(this.label);
-        if (this.showPreview) {
-            this.label.color = this.colorizationService.generateRandomColor();
-            console.log(this.label.color);
+        this.saveEmitter.emit({ ...this.draftLabel() });
+        if (this.showPreview()) {
+            this.draftLabel.update(label => ({
+                ...label,
+                color: this.colorizationService.generateRandomColor(),
+            }));
         }
+    }
+
+    updateLabelName(label: string): void {
+        this.updateDraftLabel({ label });
+    }
+
+    updateDescription(description: string): void {
+        this.updateDraftLabel({ description });
+    }
+
+    updateColor(color: string): void {
+        this.updateDraftLabel({ color });
+    }
+
+    private updateDraftLabel(partial: Partial<SpLabel>): void {
+        this.draftLabel.update(label => ({
+            ...label,
+            ...partial,
+        }));
+    }
+
+    private createDefaultLabel(): SpLabel {
+        return {
+            color: this.colorizationService.generateRandomColor(),
+            label: 'New label',
+            description: '',
+        };
     }
 }

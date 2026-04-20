@@ -16,11 +16,29 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+import { Routes } from '@angular/router';
+import { ChartOverviewComponent } from './components/chart-overview/chart-overview.component';
+import { ChartViewComponent } from './components/chart-view/chart-view.component';
+import { ChartPanelCanDeactivateGuard } from '../chart-shared/services/chart-panel-can-deactivate-guard.service';
 
-export class SpChartRoutes {
-    static BASE: SpBreadcrumbItem = {
-        label: 'Charts',
-        link: ['chart'],
-    };
-}
+export const CHART_ROUTES: Routes = [
+    {
+        path: '',
+        children: [
+            {
+                path: '',
+                component: ChartOverviewComponent,
+            },
+            {
+                path: 'create',
+                component: ChartViewComponent,
+                canDeactivate: [ChartPanelCanDeactivateGuard],
+            },
+            {
+                path: ':id',
+                component: ChartViewComponent,
+                canDeactivate: [ChartPanelCanDeactivateGuard],
+            },
+        ],
+    },
+];

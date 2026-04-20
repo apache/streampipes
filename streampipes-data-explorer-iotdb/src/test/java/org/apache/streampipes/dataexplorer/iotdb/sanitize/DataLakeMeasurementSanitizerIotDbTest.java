@@ -22,6 +22,7 @@ import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
 import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

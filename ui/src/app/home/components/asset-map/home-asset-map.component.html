@@ -16,15 +16,23 @@
   ~
   -->
 
-<div
-    class="w-100 leaflet-host"
-    [ngStyle]="{ height: '100%' }"
-    leaflet
-    (leafletClick)="onMarkerClicked($event)"
-    [leafletOptions]="mapOptions"
-    (leafletMapReady)="onMapReady($event)"
->
-    @for (layer of layers; track layer) {
-        <div [leafletLayer]="layer"></div>
+<div class="asset-map-container">
+    @if (assetsWithoutLocationCount > 0) {
+        <div class="map-status">
+            {{ assetsWithoutLocationCount }}
+            {{
+                'assets are hidden because no valid location is configured.'
+                    | translate
+            }}
+        </div>
     }
+
+    <div
+        class="w-100 leaflet-host"
+        [ngStyle]="{ height: '100%' }"
+        leaflet
+        (leafletClick)="onMarkerClicked($event)"
+        [leafletOptions]="mapOptions"
+        (leafletMapReady)="onMapReady($event)"
+    ></div>
 </div>

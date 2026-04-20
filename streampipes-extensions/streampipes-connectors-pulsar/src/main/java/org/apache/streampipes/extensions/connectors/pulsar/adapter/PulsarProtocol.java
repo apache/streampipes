@@ -30,7 +30,7 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.extensions.management.connect.adapter.BrokerEventProcessor;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -144,8 +144,8 @@ public class PulsarProtocol implements StreamPipesAdapter, SupportsRuntimeConfig
   }
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
+                                      IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     List<byte[]> elements = new ArrayList<>();
     applyConfiguration(extractor.getStaticPropertyExtractor());
     try (PulsarClient pulsarClient = PulsarUtils.makePulsarClient(config.getBrokerUrl());
@@ -165,6 +165,6 @@ public class PulsarProtocol implements StreamPipesAdapter, SupportsRuntimeConfig
     } catch (IOException e) {
       throw new ParseException("Failed to fetch messages.", e);
     }
-    return extractor.selectedParser().getGuessSchema(new ByteArrayInputStream(elements.get(0)));
+    return extractor.selectedParser().getSampleData(new ByteArrayInputStream(elements.get(0)));
   }
 }

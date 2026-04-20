@@ -18,6 +18,28 @@
 
 <div fxFlex="100" fxLayout="column" class="form-field-small">
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+        @if (index > 0) {
+            <mat-form-field
+                color="accent"
+                class="w-80-px mr-5"
+                appearance="outline"
+            >
+                <mat-select
+                    [(value)]="filter.chainingOperator"
+                    panelClass="form-field-small min-w-100"
+                    (selectionChange)="updateParentComponent()"
+                    data-cy="design-panel-data-settings-filter-connector"
+                >
+                    <mat-option [value]="'AND'">
+                        <span class="pipeline-name">AND</span>
+                    </mat-option>
+                    <mat-option [value]="'OR'">
+                        <span class="pipeline-name">OR</span>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        }
+
         <sp-filter-selection-panel-row-property-selection
             [filter]="filter"
             [possibleFields]="possibleFields"

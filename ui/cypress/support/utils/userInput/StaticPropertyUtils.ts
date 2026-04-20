@@ -45,7 +45,14 @@ export class StaticPropertyUtils {
                 }).click();
                 cy.dataCy('code-editor-' + config.selector, {
                     timeout: 2000,
-                }).type(config.value);
+                })
+                    .find('textarea.inputarea')
+                    .click({ force: true })
+                    .type('{selectall}{backspace}', { force: true })
+                    .type(config.value, {
+                        force: true,
+                        parseSpecialCharSequences: false,
+                    });
             } else if (config.type === 'input') {
                 cy.dataCy(config.selector, { timeout: 2000 })
                     .clear()

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.adapter;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
@@ -38,8 +39,7 @@ import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -47,7 +47,7 @@ import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
-import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
+import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaMonitoredItem;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
@@ -60,7 +60,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ADAPTER_TYPE;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
@@ -95,24 +94,35 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
     this.nodeIdToLabelMapping = new HashMap<>();
   }
 
-  private void prepareAdapter(IAdapterParameterExtractor extractor) throws AdapterException {
-    List<String> deleteKeys = extractor
-        .getAdapterDescription()
-        .getSchemaRules()
-        .stream()
-        .filter(rule -> rule instanceof DeleteRuleDescription)
-        .map(rule -> ((DeleteRuleDescription) rule).getRuntimeKey())
-        .collect(Collectors.toList());
-
+  private void prepareAdapter() throws AdapterException {
     try {
       this.connectedClient = clientProvider.getClient(this.opcUaAdapterConfig);
       OpcUaNodeBrowser browserClient =
           new OpcUaNodeBrowser(this.connectedClient.getClient(), this.opcUaAdapterConfig);
-      this.nodeProvider = browserClient.makeNodeProvider(deleteKeys);
+      this.nodeProvider = browserClient.makeNodeProvider();
       this.allNodes = nodeProvider.getNodes();
 
       if (opcUaAdapterConfig.inPullMode()) {
-        this.pullingIntervalMilliSeconds = opcUaAdapterConfig.getPullIntervalMilliSeconds();
+        var configuredIntervalMs = opcUaAdapterConfig.getPullIntervalMilliSeconds();
+        var effectiveIntervalMs = configuredIntervalMs;
+
+        var minPullInterval = Environments.getEnvironment().getOpcUaMinPullIntervalMs();
+        if (minPullInterval.exists()) {
+          effectiveIntervalMs = Math.max(
+              minPullInterval.getValue(),
+              configuredIntervalMs
+          );
+
+          if (!effectiveIntervalMs.equals(configuredIntervalMs)) {
+            LOG.warn(
+                "OPC-UA pull interval increased from {} ms to {} ms due to environment variable OPCUA_MIN_PULL_INTERVAL_MS",
+                configuredIntervalMs,
+                effectiveIntervalMs
+            );
+          }
+        }
+
+        this.pullingIntervalMilliSeconds = effectiveIntervalMs;
       } else {
         var allNodeIds = this.allNodes.stream()
             .map(node -> node.nodeInfo().getNodeId()).toList();
@@ -131,7 +141,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   @Override
   public void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException {
     var response =
-        this.connectedClient.getClient().readValues(
+        this.connectedClient.getClient().readValuesAsync(
             0,
             TimestampsToReturn.Both,
             this.allNodes.stream().map(o -> o.nodeInfo().getNodeId()).toList());
@@ -167,7 +177,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
         .equalsIgnoreCase(SharedUserConfiguration.INCOMPLETE_OPTION_IGNORE);
   }
 
-  public void onSubscriptionValue(UaMonitoredItem item,
+  public void onSubscriptionValue(OpcUaMonitoredItem item,
                                   DataValue value) {
 
     String key = this.nodeIdToLabelMapping.get(item.getReadValueId().getNodeId().toString());
@@ -209,7 +219,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
             extractor.getAdapterDescription().getElementId()
         );
     this.collector = collector;
-    this.prepareAdapter(extractor);
+    this.prepareAdapter();
     this.numberOfEventProperties =
         nodeProvider.getNumberOfEventProperties(this.connectedClient.getClient());
 
@@ -252,8 +262,8 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    return new OpcUaSchemaProvider().getSchema(clientProvider, extractor, adapterGuessSchemaContext.getStreamPipesClient());
+  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
+                                      IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+    return new OpcUaSchemaProvider().getSampleData(clientProvider, extractor, adapterGuessSchemaContext.getStreamPipesClient());
   }
 }

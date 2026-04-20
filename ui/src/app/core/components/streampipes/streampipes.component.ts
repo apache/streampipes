@@ -22,6 +22,11 @@ import { CurrentUserService } from '@streampipes/shared-ui';
 import { TranslateService } from '@ngx-translate/core';
 import { CollapseService } from '../../collapse.service';
 import { Subscription } from 'rxjs';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { IconbarComponent } from '../iconbar/iconbar.component';
+import { ToolbarComponent } from '../toolbar/toolbar.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'sp-streampipes',
@@ -36,7 +41,13 @@ import { Subscription } from 'rxjs';
             transition(':leave', [animate('1000ms', style({ opacity: 0 }))]),
         ]),
     ],
-    standalone: false,
+    imports: [
+        NgClass,
+        ClassDirective,
+        IconbarComponent,
+        ToolbarComponent,
+        RouterOutlet,
+    ],
 })
 export class StreampipesComponent implements OnInit, OnDestroy {
     darkMode: boolean;
@@ -51,9 +62,16 @@ export class StreampipesComponent implements OnInit, OnDestroy {
     collapsed = this.collapseService.isCollapsed;
 
     ngOnInit(): void {
-        this.darkMode$ = this.currentUserService.darkMode$.subscribe(
-            dm => (this.darkMode = dm),
-        );
+        this.darkMode$ = this.currentUserService.darkMode$.subscribe(dm => {
+            this.darkMode = dm;
+            if (dm) {
+                document.documentElement.classList.add('dark-mode');
+                document.documentElement.classList.remove('light-mode');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+                document.documentElement.classList.add('light-mode');
+            }
+        });
         this.user$ = this.currentUserService.user$.subscribe(user => {
             if (user.language !== null && user.language !== 'browser') {
                 this.translate.use(user.language);

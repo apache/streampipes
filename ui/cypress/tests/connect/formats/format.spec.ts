@@ -20,6 +20,7 @@ import { FileManagementUtils } from '../../../support/utils/FileManagementUtils'
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
+import { AdapterInput } from '../../../support/model/AdapterInput';
 
 describe('Test adapter formats', () => {
     beforeEach('Setup Test', () => {
@@ -43,11 +44,9 @@ describe('Test adapter formats', () => {
 
         template
             .setFormat('json')
-            .addFormatInput('radio', 'json_options-single_object', '');
+            .addFormatInput('radio', 'json_options-object', '');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
@@ -62,9 +61,7 @@ describe('Test adapter formats', () => {
             .setFormat('json')
             .addFormatInput('radio', 'json_options-array', '');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
@@ -80,35 +77,10 @@ describe('Test adapter formats', () => {
             .addFormatInput('radio', 'json_options-array_field', '')
             .addFormatInput('input', ConnectBtns.jsonArrayFieldKey(), 'field');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
-    });
-
-    it('Test geo json format', () => {
-        // Set up test
-        const geoJsonResultEvent = {
-            latitude: 10.1,
-            longitude: 125.6,
-            timestamp: 1667904471000,
-            v1: 4.1,
-        };
-        FileManagementUtils.addFile(baseDir + 'geoJson.json');
-        const template = makeAdapterInputTemplate();
-
-        template
-            .setFormat('json')
-            .addFormatInput('radio', 'json_options-geojson', '');
-
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
-
-        // Validate result
-        validateResult(geoJsonResultEvent);
     });
 
     it('Test xml format', () => {
@@ -119,9 +91,7 @@ describe('Test adapter formats', () => {
             .setFormat('xml')
             .addFormatInput('input', ConnectBtns.xmlTag(), 'event');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
@@ -136,9 +106,7 @@ describe('Test adapter formats', () => {
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
             .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
@@ -152,9 +120,7 @@ describe('Test adapter formats', () => {
             .setFormat('csv')
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ';');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         const expectedNoHeader = {
             key_0: 1667904471000,
@@ -177,9 +143,7 @@ describe('Test adapter formats', () => {
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ',')
             .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
 
-        ConnectUtils.createAdapterUntilEventSchemaConfiguration(
-            template.build(),
-        );
+        createAdapterUntilEventSchemaConfiguration(template.build());
 
         // Validate result
         validateResult(expected);
@@ -195,12 +159,10 @@ const makeAdapterInputTemplate = (): AdapterBuilder => {
 
 const validateResult = expected => {
     //ConnectBtns.formatSelectionNextBtn().click();
-    cy.dataCy('schema-preview-original-event', { timeout: 10000 }).then(
-        value => {
-            const jsonResult = removeWhitespaceExceptInQuotes(value.text());
-            expect(jsonResult).to.deep.equal(expected);
-        },
-    );
+    ConnectBtns.configureSchemaEventPreviewOriginal().then(value => {
+        const jsonResult = removeWhitespaceExceptInQuotes(value.text());
+        expect(jsonResult).to.deep.equal(expected);
+    });
 };
 
 const removeWhitespaceExceptInQuotes = (input: string): string => {
@@ -220,4 +182,16 @@ const removeWhitespaceExceptInQuotes = (input: string): string => {
     }
 
     return JSON.parse(result);
+};
+
+const createAdapterUntilEventSchemaConfiguration = (
+    adapterInput: AdapterInput,
+) => {
+    ConnectUtils.goToConnect();
+
+    ConnectUtils.goToNewAdapterPage();
+
+    ConnectUtils.selectAdapter(adapterInput.adapterType);
+
+    ConnectUtils.configureAdapter(adapterInput);
 };

@@ -29,7 +29,7 @@ import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigEx
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 
-import org.eclipse.milo.opcua.sdk.client.api.UaClient;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
@@ -100,21 +100,20 @@ public class OpcUaUtils {
 
       return config;
     } catch (UaException e) {
+      if (OpcUaCertificateUtils.isCertificateException(e)) {
+        throw new SpConfigurationException(
+            OpcUaCertificateUtils.makeExceptionMessage(e, opcUaConfig)
+        );
+      }
         throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e), e);
     } catch (ExecutionException | InterruptedException | URISyntaxException e) {
-      if (e instanceof ExecutionException && OpcUaCertificateUtils.isCertificateException((ExecutionException) e)) {
-        throw new SpConfigurationException(
-            OpcUaCertificateUtils.makeExceptionMessage((ExecutionException) e)
-        );
-      } else {
         throw new SpConfigurationException("Could not connect to the OPC UA server with the provided settings", e);
-      }
     } finally {
       clientProvider.releaseClient(opcUaConfig);
     }
   }
 
-  public static List<String> filterMissingNodes(UaClient opcUaClient,
+  public static List<String> filterMissingNodes(OpcUaClient opcUaClient,
                                                 List<String> selectedNodes) {
     return selectedNodes.stream().filter(selectedNode -> {
       try {

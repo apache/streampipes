@@ -22,6 +22,7 @@ import {
     Input,
     Output,
     ViewChild,
+    inject,
 } from '@angular/core';
 import { JsplumbBridge } from '../../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../../services/pipeline-positioning.service';
@@ -44,14 +45,37 @@ import {
     PipelineCanvasMetadata,
 } from '@streampipes/platform-services';
 import { AddTemplateDialogComponent } from '../../../dialog/add-template-dialog/add-template-dialog.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-assembly-options',
     templateUrl: './pipeline-assembly-options.component.html',
     styleUrls: ['./pipeline-assembly-options.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatTooltip,
+        MatIconButton,
+        PipelineAssemblyOptionsPipelineCacheComponent,
+        TranslatePipe,
+    ],
 })
 export class PipelineAssemblyOptionsComponent {
+    editorService = inject(EditorService);
+    pipelineValidationService = inject(PipelineValidationService);
+    private pipelinePositioningService = inject(PipelinePositioningService);
+    private dialog = inject(MatDialog);
+    private dialogService = inject(DialogService);
+
     @Input()
     jsplumbBridge: JsplumbBridge;
 
@@ -82,14 +106,6 @@ export class PipelineAssemblyOptionsComponent {
 
     @ViewChild('assemblyOptionsPipelineCacheComponent')
     assemblyOptionsCacheComponent: PipelineAssemblyOptionsPipelineCacheComponent;
-
-    constructor(
-        public editorService: EditorService,
-        public pipelineValidationService: PipelineValidationService,
-        private pipelinePositioningService: PipelinePositioningService,
-        private dialog: MatDialog,
-        private dialogService: DialogService,
-    ) {}
 
     autoLayout() {
         this.pipelinePositioningService.layoutGraph(
@@ -134,12 +150,11 @@ export class PipelineAssemblyOptionsComponent {
                 title: 'Do you really want to delete the current pipeline?',
                 subtitle: 'This cannot be undone.',
                 cancelTitle: 'No',
-                okTitle: 'Yes',
-                confirmAndCancel: true,
+                confirmTitle: 'Yes',
             },
         });
         dialogRef.afterClosed().subscribe(ev => {
-            if (ev) {
+            if (ev === 'confirm') {
                 this.clearAssemblyEmitter.emit();
             }
         });

@@ -25,7 +25,14 @@ import {
     SpLogMessage,
     SpMetricsEntry,
 } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import {
     CurrentUserService,
     DialogRef,
@@ -33,25 +40,74 @@ import {
     ObjectPermissionDialogComponent,
     PanelType,
     SpAssetBrowserService,
+    SpBasicHeaderTitleComponent,
+    SpBasicViewComponent,
     SpBreadcrumbService,
     SpExceptionDetailsDialogComponent,
+    SpLabelComponent,
+    SpTableAssetContextConfig,
+    SpTableMultiActionExecuteEvent,
+    SpTableMultiActionOption,
+    SpTableActionsDirective,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
-import { SpConnectRoutes } from '../../connect.routes';
+import { SpConnectRoutes } from '../../connect.breadcrumb';
 import { Subscription } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { SpConnectFilterToolbarComponent } from '../filter-toolbar/filter-toolbar.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { AdapterStatusLightComponent } from './adapter-status-light/adapter-status-light.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatMenuItem } from '@angular/material/menu';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-existing-adapters',
     templateUrl: './existing-adapters.component.html',
     styleUrls: ['./existing-adapters.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        LayoutGapDirective,
+        MatButton,
+        MatIcon,
+        SpConnectFilterToolbarComponent,
+        MatIconButton,
+        MatTooltip,
+        SpBasicHeaderTitleComponent,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        AdapterStatusLightComponent,
+        MatProgressSpinner,
+        SpLabelComponent,
+        SpTableActionsDirective,
+        MatMenuItem,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     existingAdapters: AdapterDescription[] = [];
@@ -67,18 +123,27 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         'status',
         'start',
         'name',
+        'assetContext',
         'adapterBase',
         'lastModified',
         'messagesSent',
         'lastMessage',
         'actions',
     ];
+    readonly assetContextConfig: SpTableAssetContextConfig = {
+        resourceLinkType: 'adapter',
+        resourceIdKey: 'elementId',
+    };
 
     dataSource: MatTableDataSource<AdapterDescription> =
         new MatTableDataSource();
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
     tutorialActive = false;
+    readonly bulkAdapterActionOptions: SpTableMultiActionOption[] = [
+        { value: 'start', label: 'Start selected', icon: 'play_arrow' },
+        { value: 'stop', label: 'Stop selected', icon: 'stop' },
+    ];
 
     assetFilter$: Subscription;
     user$: Subscription;
@@ -154,26 +219,28 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         );
     }
 
-    checkCurrentSelectionStatus(status) {
-        let active = true;
-        this.existingAdapters.forEach(adapter => {
-            if (adapter.running == status) {
-                active = false;
-            }
-        });
-        return active;
-    }
+    startStopSelectedAdapters(
+        event: SpTableMultiActionExecuteEvent<AdapterDescription>,
+    ) {
+        if (event.action !== 'start' && event.action !== 'stop') {
+            return;
+        }
 
-    startAllAdapters(action: boolean) {
+        const selectedAdapters = event.selectedRows ?? [];
+        if (!selectedAdapters.length) {
+            return;
+        }
+
+        const action = event.action === 'start';
         const dialogRef: DialogRef<AllAdapterActionsComponent> =
             this.dialogService.open(AllAdapterActionsComponent, {
                 panelType: PanelType.STANDARD_PANEL,
                 title: action
-                    ? this.translate.instant('Start all adapters')
-                    : this.translate.instant('Stop all adapters'),
+                    ? this.translate.instant('Start selected adapters')
+                    : this.translate.instant('Stop selected adapters'),
                 width: '70vw',
                 data: {
-                    adapters: this.existingAdapters,
+                    adapters: selectedAdapters,
                     action: action,
                 },
             });
@@ -227,7 +294,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     getIconUrl(adapter: AdapterDescription) {
-        if (adapter.includedAssets.length > 0) {
+        if (adapter.includedAssets?.some(asset => asset.startsWith('icon.'))) {
             return (
                 this.pipelineElementAssetService.getAssetUrl(adapter.appId) +
                 '/icon'
@@ -299,9 +366,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     applyAdapterFilters(elementIds: Set<string>): void {
-        if (this.assetFilterService.hasNoAssetFilterPermission()) {
-            elementIds = new Set<string>();
-        }
         this.currentFilterIds = elementIds;
         this.filteredAdapters = this.adapterFilter
             .transform(this.existingAdapters, this.currentFilter)

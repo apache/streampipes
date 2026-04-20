@@ -16,33 +16,65 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FileMetadata, FilesService } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
-import { ConfirmDialogComponent } from '@streampipes/shared-ui';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
+import {
+    ConfirmDialogComponent,
+    SpLabelComponent,
+    SpTableComponent,
+} from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { saveAs } from 'file-saver';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-file-overview',
     templateUrl: './file-overview.component.html',
     styleUrls: ['./file-overview.component.scss'],
-    standalone: false,
+    imports: [
+        SpTableComponent,
+        FlexDirective,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatCellDef,
+        MatCell,
+        SpLabelComponent,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class FileOverviewComponent implements OnInit {
+    private filesService = inject(FilesService);
+    private dialog = inject(MatDialog);
+    private translateService = inject(TranslateService);
+
     displayedColumns: string[] = ['filename', 'filetype', 'uploaded', 'action'];
 
     dataSource: MatTableDataSource<FileMetadata> = new MatTableDataSource();
     filesAvailable = false;
 
     private fileTypeColors: { [key: string]: string } = {};
-
-    constructor(
-        private filesService: FilesService,
-        private dialog: MatDialog,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit() {
         this.refreshFiles();
@@ -66,13 +98,12 @@ export class FileOverviewComponent implements OnInit {
                     'This cannot be undone.',
                 ),
                 cancelTitle: this.translateService.instant('No'),
-                okTitle: this.translateService.instant('Yes'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Yes'),
             },
         });
 
         dialogRef.afterClosed().subscribe(ev => {
-            if (ev) {
+            if (ev === 'confirm') {
                 this.filesService
                     .deleteFile(fileMetadata.fileId)
                     .subscribe(response => {

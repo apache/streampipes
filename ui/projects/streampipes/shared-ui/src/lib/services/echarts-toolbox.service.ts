@@ -17,7 +17,11 @@
  */
 
 import { Injectable } from '@angular/core';
-import { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager';
+import type { ToolboxComponentOption } from 'echarts/types/dist/shared';
+
+type ToolboxFeatureOption = NonNullable<
+    ToolboxComponentOption['feature']
+>[string];
 
 /**
  * This service provides default echarts toolbox features used in the data explorer.

@@ -18,18 +18,44 @@
 
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
-import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
-import { SpConfigurationRoutes } from '../configuration.routes';
+import {
+    SpBasicNavTabsComponent,
+    SpBreadcrumbService,
+    SplitSectionComponent,
+    SpNavigationItem,
+} from '@streampipes/shared-ui';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { SecurityUserConfigComponent } from './security-user-configuration/security-user-config.component';
 import { SecurityServiceConfigComponent } from './security-service-configuration/security-service-config.component';
 import { SecurityRoleConfigComponent } from './role-configuration/role-configuration.component';
 import { SecurityUserGroupConfigComponent } from './user-group-configuration/user-group-configuration.component';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { SecurityAuthenticationConfigurationComponent } from './authentication-configuration/authentication-configuration.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-security-configuration',
     templateUrl: './security-configuration.component.html',
     styleUrls: ['./security-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        SplitSectionComponent,
+        MatButton,
+        SecurityUserConfigComponent,
+        SecurityServiceConfigComponent,
+        SecurityUserGroupConfigComponent,
+        SecurityRoleConfigComponent,
+        SecurityAuthenticationConfigurationComponent,
+        TranslatePipe,
+    ],
 })
 export class SecurityConfigurationComponent implements OnInit {
     tabs: SpNavigationItem[] = [];

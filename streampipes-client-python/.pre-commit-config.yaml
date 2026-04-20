@@ -17,7 +17,7 @@
 files: ^streampipes-client-python/(streampipes|tests)/
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v6.0.0
     hooks:
       - id: check-json
       - id: check-yaml
@@ -25,8 +25,11 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: mixed-line-ending
-      - id: check-docstring-first
+      - id: check-symlinks
+      - id: check-case-conflict
+      - id: check-illegal-windows-names
       - id: check-merge-conflict
+      - id: detect-private-key
 
   - repo: local
     hooks:

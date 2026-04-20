@@ -16,9 +16,20 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
+import {
+    MatFormField,
+    MatLabel,
+    MatSuffix,
+} from '@angular/material/form-field';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { MatIcon } from '@angular/material/icon';
 
 const hiddenPasswordString = '*****';
 
@@ -27,9 +38,21 @@ const hiddenPasswordString = '*****';
     templateUrl: './service-configs-password.component.html',
     styleUrls: ['./service-configs-password.component.scss'],
     providers: [ConfigurationService],
-    standalone: false,
+    imports: [
+        MatFormField,
+        FlexDirective,
+        MatLabel,
+        MatInput,
+        FormsModule,
+        NgClass,
+        ClassDirective,
+        MatIcon,
+        MatSuffix,
+    ],
 })
 export class ServiceConfigsPasswordComponent {
+    configService = inject(ConfigurationService);
+
     @Input() configuration: ConfigItem;
 
     password: string;
@@ -37,7 +60,7 @@ export class ServiceConfigsPasswordComponent {
     className: string;
     private hide: boolean;
 
-    constructor(public configService: ConfigurationService) {
+    constructor() {
         this.password = hiddenPasswordString;
         this.show = false;
         this.className = 'hideText';

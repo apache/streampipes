@@ -16,28 +16,68 @@
  *
  */
 
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ViewEncapsulation,
+    inject,
+} from '@angular/core';
 import { Group, Role, UserGroupService } from '@streampipes/platform-services';
 import {
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
-import { DialogRef } from '@streampipes/shared-ui';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import {
+    DialogRef,
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { AvailableRolesService } from '../../../services/available-roles.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { AlternateIdConfigurationComponent } from '../alternate-id-configuration/alternate-id-configuration.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { AsyncPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-group-dialog',
     templateUrl: './edit-group-dialog.component.html',
     styleUrls: ['./edit-group-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        MatCheckbox,
+        AlternateIdConfigurationComponent,
+        MatDivider,
+        MatButton,
+        AsyncPipe,
+        TranslatePipe,
+    ],
 })
 export class EditGroupDialogComponent implements OnInit {
+    private fb = inject(UntypedFormBuilder);
+    private availableRolesService = inject(AvailableRolesService);
+    private dialogRef = inject<DialogRef<EditGroupDialogComponent>>(DialogRef);
+    private userGroupService = inject(UserGroupService);
+
     @Input()
     group: Group;
 
@@ -47,13 +87,6 @@ export class EditGroupDialogComponent implements OnInit {
     parentForm: UntypedFormGroup;
     availableRoles$: Observable<Role[]>;
     clonedGroup: Group;
-
-    constructor(
-        private fb: UntypedFormBuilder,
-        private availableRolesService: AvailableRolesService,
-        private dialogRef: DialogRef<EditGroupDialogComponent>,
-        private userGroupService: UserGroupService,
-    ) {}
 
     ngOnInit(): void {
         this.availableRoles$ = this.availableRolesService

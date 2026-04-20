@@ -22,8 +22,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
-import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.slf4j.Logger;
@@ -40,10 +39,10 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   private static final Logger LOG = LoggerFactory.getLogger(SpServiceDiscoveryCore.class);
   private static final int MAX_RETRIES = 3;
 
-  private final CRUDStorage<SpServiceRegistration> serviceStorage;
+  private final IExtensionsServiceStorage serviceStorage;
 
-  public SpServiceDiscoveryCore() {
-    this.serviceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
+  public SpServiceDiscoveryCore(IExtensionsServiceStorage serviceStorage) {
+    this.serviceStorage = serviceStorage;
   }
 
   @Override
@@ -58,7 +57,7 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   }
 
   @Override
-  public List<String> getServiceEndpoints(String serviceGroup,
+  public List<SpServiceRegistration> getService(String serviceGroup,
                                           boolean restrictToHealthy,
                                           List<String> filterByTags) {
     List<SpServiceRegistration> activeServices = findServices(0);
@@ -68,7 +67,6 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
         .filter(service -> allFiltersSupported(service, filterByTags))
         .filter(service -> !restrictToHealthy
             || service.getStatus() != SpServiceStatus.UNHEALTHY)
-        .map(this::makeServiceUrl)
         .collect(Collectors.toList());
   }
 
@@ -86,10 +84,6 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
   @Override
   public List<SpServiceRegistration> findAll(){
     return findServices(0);
-  }
-
-  private String makeServiceUrl(SpServiceRegistration service) {
-    return service.getServiceUrl();
   }
 
   /**
@@ -113,7 +107,6 @@ public class SpServiceDiscoveryCore implements ISpServiceDiscovery {
       if (retryCount < MAX_RETRIES) {
         try {
           retryCount++;
-          LOG.info("Could not find any extensions services, retrying ({}/{})", retryCount, MAX_RETRIES);
           TimeUnit.MILLISECONDS.sleep(1000);
           return findServices(retryCount);
         } catch (InterruptedException e) {

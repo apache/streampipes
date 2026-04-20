@@ -19,12 +19,22 @@
 import { Component, Input } from '@angular/core';
 import { AssetSiteDesc } from '@streampipes/platform-services';
 import { AssetFilter } from '../../../asset-browser.model';
+import { AssetBrowserFilterOuterComponent } from '../asset-browser-filter-outer/asset-browser-filter-outer.component';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'sp-asset-browser-filter-sites',
     templateUrl: 'asset-browser-filter-sites.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
-    standalone: false,
+    imports: [
+        AssetBrowserFilterOuterComponent,
+        MatFormField,
+        MatSelect,
+        FormsModule,
+        MatOption,
+    ],
 })
 export class AssetBrowserFilterSitesComponent {
     @Input()

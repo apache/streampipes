@@ -16,26 +16,30 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { AdapterService, SpDataStream } from '@streampipes/platform-services';
 import { RestService } from '../../../services/rest.service';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { PipelineElementRuntimeInfoComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-adapter-started-preview',
     templateUrl: './adapter-started-preview.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        PipelineElementRuntimeInfoComponent,
+    ],
 })
 export class SpAdapterStartedPreviewComponent implements OnInit {
+    private adapterService = inject(AdapterService);
+    private restService = inject(RestService);
+
     @Input()
     streamDescription: SpDataStream;
 
     @Input()
     adapterElementId: string;
-
-    constructor(
-        private adapterService: AdapterService,
-        private restService: RestService,
-    ) {}
 
     ngOnInit() {
         this.getLiveViewPreview();

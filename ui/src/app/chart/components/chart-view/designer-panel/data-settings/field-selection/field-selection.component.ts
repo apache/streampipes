@@ -16,28 +16,55 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import {
     EventPropertyUnion,
     FieldConfig,
     SourceConfig,
 } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-field-selection',
     templateUrl: './field-selection.component.html',
     styleUrls: ['./field-selection.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatCheckbox,
+        FormsModule,
+        FlexDirective,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        TranslatePipe,
+    ],
 })
 export class FieldSelectionComponent implements OnInit {
+    private widgetConfigService = inject(ChartConfigurationService);
+
     @Input() field: FieldConfig;
     @Input() sourceConfig: SourceConfig;
 
     @Output() addFieldEmitter: EventEmitter<EventPropertyUnion> =
         new EventEmitter<EventPropertyUnion>();
-
-    constructor(private widgetConfigService: ChartConfigurationService) {}
 
     ngOnInit() {
         if (!this.field.aggregations) {

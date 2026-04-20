@@ -25,6 +25,7 @@
             fxFlex="100"
             [columns]="displayedColumns"
             [dataSource]="dataSource"
+            [assetContextConfig]="assetContextConfig"
             featureCardId="chart"
             [showActionsMenu]="true"
             [rowsClickable]="true"
@@ -45,6 +46,13 @@
                         fxLayoutAlign="start center"
                         fxLayoutGap="5px"
                     >
+                        @if (isLegacyMultiSourceChart(element)) {
+                            <mat-icon
+                                [matTooltip]="outdatedChartTooltip | translate"
+                                style="color: var(--color-warn)"
+                                >warning</mat-icon
+                            >
+                        }
                         <div fxLayout="column" fxLayoutAlign="start start">
                             <span class="text-sm">{{
                                 element.baseAppearanceConfig.widgetTitle
@@ -95,7 +103,17 @@
             </ng-container>
 
             <ng-template spTableActions let-element>
-                <button mat-menu-item (click)="openDataView(element, false)">
+                <button
+                    mat-menu-item
+                    [attr.data-cy]="
+                        'show-data-view-' +
+                        element.baseAppearanceConfig.widgetTitle.replaceAll(
+                            ' ',
+                            ''
+                        )
+                    "
+                    (click)="openDataView(element, false)"
+                >
                     <mat-icon>visibility</mat-icon>
                     <span>{{ 'Show' | translate }}</span>
                 </button>

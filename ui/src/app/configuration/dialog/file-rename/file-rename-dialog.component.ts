@@ -16,21 +16,41 @@
  *
  */
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DialogRef } from '@angular/cdk/dialog';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogClose } from '@angular/material/dialog';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-file-rename-dialog-component',
     templateUrl: './file-rename-dialog.component.html',
     styleUrls: ['./file-rename-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatDivider,
+        MatButton,
+        MatDialogClose,
+        TranslatePipe,
+    ],
 })
 export class FileRenameDialogComponent {
-    constructor(
-        private dialogRef: DialogRef<FileRenameDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public fileName: string,
-    ) {}
+    private dialogRef = inject<DialogRef<FileRenameDialogComponent>>(DialogRef);
+    fileName = inject(MAT_DIALOG_DATA);
 
     cancel() {
         this.dialogRef.close();

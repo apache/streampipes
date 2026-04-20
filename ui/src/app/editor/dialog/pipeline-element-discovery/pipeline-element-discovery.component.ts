@@ -16,8 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    DialogRef,
+    FormLabelComponent,
+    PipelineElementComponent,
+} from '@streampipes/shared-ui';
 import { JsplumbService } from '../../services/jsplumb.service';
 import {
     DataProcessorInvocation,
@@ -28,14 +32,33 @@ import {
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../../model/editor.model';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-pipeline-element-discovery',
     templateUrl: './pipeline-element-discovery.component.html',
     styleUrls: ['./pipeline-element-discovery.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        PipelineElementComponent,
+        FormLabelComponent,
+        MatDivider,
+        MatButton,
+    ],
 })
 export class PipelineElementDiscoveryComponent implements OnInit {
+    private dialogRef =
+        inject<DialogRef<PipelineElementDiscoveryComponent>>(DialogRef);
+    private JsPlumbService = inject(JsplumbService);
+
     @Input()
     rawPipelineModel: PipelineElementConfig[];
 
@@ -43,11 +66,6 @@ export class PipelineElementDiscoveryComponent implements OnInit {
     currentElements: PipelineElementUnion[];
 
     styles: any[] = [];
-
-    constructor(
-        private dialogRef: DialogRef<PipelineElementDiscoveryComponent>,
-        private JsPlumbService: JsplumbService,
-    ) {}
 
     ngOnInit() {
         this.currentElements.sort((a, b) => a.name.localeCompare(b.name));

@@ -38,3 +38,25 @@
 
 .placeholder-description {
 }
+
+.code-editor-resizable {
+    width: 100%;
+    height: 320px;
+    resize: vertical;
+    overflow: hidden;
+}
+
+.code-editor {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.action-button {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.save-button {
+    margin-right: 10px;
+}

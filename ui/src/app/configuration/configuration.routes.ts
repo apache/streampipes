@@ -16,8 +16,38 @@
  *
  */
 
-import { SpBreadcrumbItem } from '@streampipes/shared-ui';
+import { Routes } from '@angular/router';
+import {
+    configurationDefaultRouteGuard,
+    configurationRouteGuard,
+} from './configuration-route.guard';
+import { OrderByPipe } from './extensions-installation/filter/order-by.pipe';
+import { PipelineElementInstallationStatusFilter } from './extensions-installation/filter/pipeline-element-installation-status.pipe';
+import { PipelineElementNameFilter } from './extensions-installation/filter/pipeline-element-name.pipe';
+import { PipelineElementTypeFilter } from './extensions-installation/filter/pipeline-element-type.pipe';
+import { ConfigurationSectionHostComponent } from './configuration-section-host.component';
 
-export class SpConfigurationRoutes {
-    static BASE: SpBreadcrumbItem = { label: 'Settings' };
-}
+export const CONFIGURATION_ROUTES: Routes = [
+    {
+        path: '',
+        children: [
+            {
+                path: '',
+                pathMatch: 'full',
+                component: ConfigurationSectionHostComponent,
+                canActivate: [configurationDefaultRouteGuard],
+            },
+            {
+                path: ':configurationSectionId',
+                component: ConfigurationSectionHostComponent,
+                canActivate: [configurationRouteGuard],
+            },
+        ],
+        providers: [
+            OrderByPipe,
+            PipelineElementInstallationStatusFilter,
+            PipelineElementNameFilter,
+            PipelineElementTypeFilter,
+        ],
+    },
+];

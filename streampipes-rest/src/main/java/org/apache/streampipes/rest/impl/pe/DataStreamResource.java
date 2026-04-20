@@ -18,7 +18,10 @@
 
 package org.apache.streampipes.rest.impl.pe;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.pipeline.update.DataStreamUpdateManagement;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
@@ -45,6 +48,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/streams")
 public class DataStreamResource extends AbstractAuthGuardedRestResource {
+
+  private final DataStreamUpdateManagement dataStreamUpdateManagement;
+
+  public DataStreamResource(ExtensionServiceRequestManager requestManager) {
+    this.dataStreamUpdateManagement = new DataStreamUpdateManagement(requestManager);
+  }
 
   @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
@@ -85,9 +94,20 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
       throw new HttpResponseException(400,
           "Element ID in path variable does not match element ID in request body");
     } else {
-      getDataStreamResourceManager().update(updatedElement);
+      dataStreamUpdateManagement.updateDataStream(updatedElement);
       return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
     }
+  }
+
+  @PutMapping(
+      path = "/pipeline-migration-preflight",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
+  public ResponseEntity<List<PipelineUpdateInfo>> performPipelineMigrationPreflight(
+      @RequestBody SpDataStream updatedElement) {
+    return ok(dataStreamUpdateManagement.checkPipelineMigrations(updatedElement));
   }
 
   @PostMapping(

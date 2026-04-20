@@ -69,6 +69,10 @@
                         [editMode]="editMode"
                         [gridMode]="false"
                         [widgetIndex]="i"
+                        [dashboardChartOverrides]="
+                            dashboard.dashboardGeneralSettings
+                                ?.chartOverrides || {}
+                        "
                     ></sp-chart-container>
                 }
             </div>

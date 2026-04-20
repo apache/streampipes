@@ -16,17 +16,33 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DatalakeRestService } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
     selector: 'sp-delete-datalake-index-dialog',
     templateUrl: './delete-datalake-index-dialog.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatProgressSpinner,
+        MatDivider,
+        TranslatePipe,
+    ],
 })
-export class DeleteDatalakeIndexComponent {
+export class DeleteDatalakeIndexComponent implements OnInit {
     @Input()
     measurementIndex: string;
 
@@ -36,16 +52,23 @@ export class DeleteDatalakeIndexComponent {
     isInProgress = false;
     currentStatus: any;
 
-    confirmDeleteMessage =
-        'Do you really want to delete the data index {{index}}?';
-    confirmTruncateMessage =
-        'Do you really want to truncate the data in {{index}}?';
+    private dialogRef = inject(DialogRef<DeleteDatalakeIndexComponent>);
+    private datalakeRestService = inject(DatalakeRestService);
+    private translateService = inject(TranslateService);
 
-    constructor(
-        private dialogRef: DialogRef<DeleteDatalakeIndexComponent>,
-        private datalakeRestService: DatalakeRestService,
-        private translateService: TranslateService,
-    ) {}
+    confirmDeleteMessage = '';
+    confirmTruncateMessage = '';
+
+    ngOnInit() {
+        this.confirmDeleteMessage = this.translateService.instant(
+            'Do you really want to delete the dataset {{index}}?',
+            { index: this.measurementIndex },
+        );
+        this.confirmTruncateMessage = this.translateService.instant(
+            'Do you really want to truncate the data in {{index}}?',
+            { index: this.measurementIndex },
+        );
+    }
 
     close(refreshDataLakeIndex: boolean) {
         this.dialogRef.close(refreshDataLakeIndex);

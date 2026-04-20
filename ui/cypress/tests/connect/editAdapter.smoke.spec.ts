@@ -19,9 +19,11 @@
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
+import { ChartBtns } from '../../support/utils/chart/ChartBtns';
+import { SharedUtils } from '../../support/utils/shared/SharedUtils';
+import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
-import { DataExplorerUtils } from '../../support/utils/dataExplorer/DataExplorerUtils';
-import { DataExplorerBtns } from '../../support/utils/dataExplorer/DataExplorerBtns';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -54,18 +56,25 @@ describe('Test Edit Adapter', () => {
             .build();
 
         ConnectUtils.configureAdapter(newUserConfiguration);
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
 
         // Update event schema
+        ConnectBtns.getNewSampleBtn().click();
         ConnectUtils.finishEventSchemaConfiguration();
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
 
-        cy.dataCy('sp-adapter-name').clear().type(newAdapterName);
+        cy.wait(1000);
+        ConnectBtns.refreshSchemaBtn().click();
+        ConnectUtils.finishConfigureFieldsConfiguration();
+
+        ConnectBtns.adapterNameInput().clear().type(newAdapterName);
 
         // This wait is required to ensure that there is no couch db update conflict
         ConnectBtns.storeEditAdapter().click();
 
-        cy.dataCy('sp-connect-adapter-success-added', {
-            timeout: 60000,
-        }).should('be.visible');
+        ConnectBtns.connectAdapterAddedSuccessfully().should('be.visible');
 
         ConnectUtils.closeAdapterPreview();
 
@@ -77,7 +86,7 @@ describe('Test Edit Adapter', () => {
     });
 
     it('Successfully edit adapter with persistence pipeline', () => {
-        ConnectUtils.addMachineDataSimulator('simulator', true, '1000');
+        ConnectUtils.addMachineDataSimulator('simulator', true, '200');
 
         ConnectUtils.goToConnect();
 
@@ -87,35 +96,50 @@ describe('Test Edit Adapter', () => {
         ConnectBtns.editAdapter().click();
 
         // change data type of density to integer
-        ConnectBtns.nextBtn().click();
-        ConnectEventSchemaUtils.changePropertyDataType(
-            'density',
-            'Integer',
-            true,
-        );
-        ConnectEventSchemaUtils.renameProperty('density', 'density2');
+        ConnectBtns.adapterSettingsNextBtn().click();
 
-        ConnectUtils.storeAndStartEditedAdapter();
+        ConnectUtils.replaceAdapterScript(
+            '  event.density = event.density * 2;\n' +
+                '  out.collect(event);\n' +
+                '',
+        );
+        ConnectBtns.configureSchemaRunScriptBtn().click();
+        cy.wait(1000);
+
+        ConnectBtns.configureSchemaNextBtn().click();
+        SharedUtils.confirmDialogVisible();
+        SharedBtns.confirmDialogConfirmBtn().click();
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+
+        storeAndStartEditedAdapter();
 
         // Validate that the data is further persisted in the database by checking if the amount of events in the data lake changes
-        DataExplorerUtils.goToDatalakeConfiguration();
+        ChartUtils.goToDatalakeConfiguration();
 
-        DataExplorerUtils.waitForCountingResults();
+        ChartUtils.waitForCountingResults();
 
         let initialValue;
 
-        DataExplorerUtils.getDatalakeNumberOfEvents().then(value => {
+        ChartUtils.getDatalakeNumberOfEvents().then(value => {
             initialValue = value;
         });
 
         cy.wait(3000);
 
-        DataExplorerBtns.refreshDataLakeMeasures().click();
+        ChartBtns.refreshDataLakeMeasures().click();
 
-        DataExplorerUtils.waitForCountingResults();
+        ChartUtils.waitForCountingResults();
 
-        DataExplorerUtils.getDatalakeNumberOfEvents().then(newValue => {
+        ChartUtils.getDatalakeNumberOfEvents().then(newValue => {
             expect(newValue).not.equal(initialValue);
         });
     });
+
+    const storeAndStartEditedAdapter = () => {
+        ConnectUtils.finishConfigureFieldsConfiguration();
+        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.updateAndMigratePipelines().click();
+        ConnectUtils.closeAdapterPreview();
+        ConnectBtns.startAdapter().click();
+    };
 });

@@ -16,26 +16,54 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { FunctionId } from '@streampipes/platform-services';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import { Router } from '@angular/router';
+import { SpTableComponent } from '@streampipes/shared-ui';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-functions-overview',
     templateUrl: './functions-overview.component.html',
     styleUrls: ['./functions-overview.component.scss'],
-    standalone: false,
+    imports: [
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        LayoutAlignDirective,
+        LayoutDirective,
+        MatIconButton,
+        MatTooltip,
+    ],
 })
 export class FunctionsOverviewComponent implements OnInit {
+    private router = inject(Router);
+
     @Input()
     functions: FunctionId[] = [];
 
     dataSource: MatTableDataSource<FunctionId>;
 
     displayedColumns: string[] = ['name', 'action'];
-
-    constructor(private router: Router) {}
 
     ngOnInit(): void {
         this.dataSource = new MatTableDataSource<FunctionId>();

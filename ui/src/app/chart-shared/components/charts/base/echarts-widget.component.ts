@@ -29,12 +29,25 @@ import { EChartsOption } from 'echarts';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ResizeEchartsService } from '../../../services/resize-echarts.service';
+import { NoDataInDateRangeComponent } from './no-data/no-data-in-date-range.component';
+import { TooMuchDataComponent } from './too-much-data/too-much-data.component';
+import { SpInvalidConfigurationComponent } from './invalid-configuration/invalid-configuration.component';
+import { NgxEchartsDirective } from 'ngx-echarts';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 
 @Component({
     selector: 'sp-data-explorer-echarts-widget',
     templateUrl: './echarts-widget.component.html',
     styleUrls: ['./echarts-widget.component.scss'],
-    standalone: false,
+    imports: [
+        NoDataInDateRangeComponent,
+        TooMuchDataComponent,
+        SpInvalidConfigurationComponent,
+        NgxEchartsDirective,
+        NgStyle,
+        StyleDirective,
+    ],
 })
 export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
     extends BaseDataExplorerWidgetDirective<T>
@@ -100,16 +113,22 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
                 true
         ) {
             this.showInvalidConfiguration = false;
+            const effectiveWidgetConfig =
+                this.getWidgetConfigWithDashboardOverrides();
             this.option = {
-                ...this.renderer.render(
-                    spQueryResult,
-                    this.dataExplorerWidget,
-                    {
-                        width: this.currentWidth,
-                        height: this.currentHeight,
-                    },
-                ),
+                ...this.renderer.render(spQueryResult, effectiveWidgetConfig, {
+                    width: this.currentWidth,
+                    height: this.currentHeight,
+                }),
             };
+            if (this.dashboardChartOverrides?.hideToolbox) {
+                const toolbox = this.option['toolbox'];
+                if (toolbox) {
+                    (Array.isArray(toolbox) ? toolbox : [toolbox]).forEach(
+                        tb => (tb.show = false),
+                    );
+                }
+            }
             if (this.kioskMode) {
                 ['toolbox', 'visualMap'].forEach(key => {
                     const item = this.option[key];
@@ -131,6 +150,24 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
         } else {
             this.showInvalidConfiguration = true;
         }
+    }
+
+    private getWidgetConfigWithDashboardOverrides(): T {
+        if (!this.dashboardChartOverrides?.hideToolbox) {
+            return this.dataExplorerWidget;
+        }
+
+        return {
+            ...this.dataExplorerWidget,
+            baseAppearanceConfig: {
+                ...this.dataExplorerWidget.baseAppearanceConfig,
+                chartAppearance: {
+                    ...this.dataExplorerWidget.baseAppearanceConfig
+                        ?.chartAppearance,
+                    showToolbox: false,
+                },
+            },
+        };
     }
 
     refreshView() {

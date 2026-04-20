@@ -19,8 +19,8 @@
 package org.apache.streampipes.extensions.connectors.opcua.config.identity;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
-import org.eclipse.milo.opcua.sdk.client.api.identity.X509IdentityProvider;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClientConfigBuilder;
+import org.eclipse.milo.opcua.sdk.client.identity.X509IdentityProvider;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -91,8 +91,8 @@ public class X509IdentityConfig implements IdentityConfig {
       }
     }
     throw new IllegalArgumentException(
-        "Unsupported or invalid PKCS#8 private key. " +
-            "Make sure it is an unencrypted PKCS#8 key (BEGIN PRIVATE KEY).");
+        "Unsupported or invalid PKCS#8 private key. "
+            + "Make sure it is an unencrypted PKCS#8 key (BEGIN PRIVATE KEY).");
   }
 
   private static byte[] extractPemBlock(String pem, String type) {

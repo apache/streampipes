@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.management.compact;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -29,7 +30,7 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.vocabulary.SO;
 
 import java.util.List;
@@ -43,11 +44,11 @@ import static org.apache.streampipes.manager.template.instances.PersistDataLakeP
 
 public class PersistPipelineHandler {
 
-  private final CRUDStorage<CompactPipelineTemplate> templateStorage;
+  private final ICompactPipelineTemplateStorage templateStorage;
   private final CompactPipelineManagement pipelineManagement;
   private final String authenticatedUserSid;
 
-  public PersistPipelineHandler(CRUDStorage<CompactPipelineTemplate> templateStorage,
+  public PersistPipelineHandler(ICompactPipelineTemplateStorage templateStorage,
                                 CompactPipelineManagement pipelineManagement,
                                 String authenticatedUserSid) {
     this.templateStorage = templateStorage;
@@ -55,7 +56,8 @@ public class PersistPipelineHandler {
     this.authenticatedUserSid = authenticatedUserSid;
   }
 
-  public PipelineOperationStatus createAndStartPersistPipeline(AdapterDescription adapterDescription) throws Exception {
+  public PipelineOperationStatus createAndStartPersistPipeline(AdapterDescription adapterDescription,
+                                                               ExtensionServiceRequestManager requestManager) throws Exception {
     var template = getTemplate();
     if (template != null) {
       var compactPipeline = new CompactPipeline(
@@ -69,7 +71,7 @@ public class PersistPipelineHandler {
       if (pipelineGenerationResult.allPipelineElementsValid()) {
         String pipelineId = PipelineManager.addPipeline(authenticatedUserSid, pipelineGenerationResult.pipeline());
         if (compactPipeline.createOptions().start()) {
-          return PipelineManager.startPipeline(pipelineId);
+          return PipelineManager.startPipeline(pipelineId, requestManager);
         }
       }
     }

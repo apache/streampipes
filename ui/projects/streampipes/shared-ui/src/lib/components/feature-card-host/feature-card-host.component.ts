@@ -19,12 +19,13 @@
 import { FeatureCardRouteData } from './feature-card.model';
 import { Component, inject, Input, OnInit, Type } from '@angular/core';
 import { DialogRef } from '../../dialog/base-dialog/dialog-ref';
+import { NgComponentOutlet } from '@angular/common';
 
 @Component({
     selector: 'sp-feature-card-host',
     templateUrl: './feature-card-host.component.html',
     styleUrls: ['./feature-card-host.component.scss'],
-    standalone: false,
+    imports: [NgComponentOutlet],
 })
 export class FeatureCardHostComponent implements OnInit {
     activeComponent: Type<any> | null = null;

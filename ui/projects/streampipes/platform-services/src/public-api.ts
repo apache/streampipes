@@ -20,8 +20,6 @@
  * Public API Surface of platform-services
  */
 
-export * from './lib/platform-services.module';
-
 export * from './lib/apis/commons.service';
 export * from './lib/apis/adapter.service';
 export * from './lib/apis/adapter-monitoring.service';
@@ -29,6 +27,8 @@ export * from './lib/apis/asset-management.service';
 export * from './lib/apis/compact-pipeline.service';
 export * from './lib/apis/certificate.service';
 export * from './lib/apis/chart.service';
+export * from './lib/apis/connect-script-languages.service';
+export * from './lib/apis/connect-script-templates.service';
 export * from './lib/apis/dashboard.service';
 export * from './lib/apis/dashboard-kiosk.service';
 export * from './lib/apis/datalake-rest.service';
@@ -62,6 +62,7 @@ export * from './lib/apis/export-provider.service';
 
 export * from './lib/model/datalake/DateRange';
 export * from './lib/model/datalake/DatalakeQueryParameters';
+export * from './lib/model/datalake/csv-import.model';
 export * from './lib/model/dashboard/dashboard.model';
 export * from './lib/model/config/email-config.model';
 export * from './lib/model/config/general-config.model';

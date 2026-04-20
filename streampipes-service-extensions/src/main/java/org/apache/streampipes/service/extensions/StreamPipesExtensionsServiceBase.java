@@ -20,6 +20,10 @@ package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.connect.transformer.api.TransformationEngine;
+import org.apache.streampipes.connect.transformer.api.TransformationEngines;
+import org.apache.streampipes.connect.transformer.groovy.GroovyScriptEngine;
+import org.apache.streampipes.connect.transformer.js.GraalJsScriptEngine;
 import org.apache.streampipes.extensions.api.limiter.SpRateLimiter;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
@@ -32,8 +36,12 @@ import org.apache.streampipes.model.extensions.configuration.SpServiceConfigurat
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
-import org.apache.streampipes.rest.extensions.WelcomePage;
-import org.apache.streampipes.rest.shared.exception.RestResponseLogMessageExceptionHandler;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
+import org.apache.streampipes.model.extensions.transport.ExtensionServiceTransportMode;
+import org.apache.streampipes.nats.extensions.ExtensionBrokerOperationHandler;
+import org.apache.streampipes.nats.extensions.ExtensionBrokerRequestReceiver;
+import org.apache.streampipes.rest.shared.exception.SpRestExceptionHandler;
+import org.apache.streampipes.rest.shared.serializer.JacksonConfiguration;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
@@ -55,21 +63,26 @@ import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Configuration
 @EnableAutoConfiguration
 @Import({
     WebSecurityConfig.class,
-    WelcomePage.class,
     ServiceHealthResource.class,
-    RestResponseLogMessageExceptionHandler.class,
-    StreamPipesPrometheusConfig.class
+    SpRestExceptionHandler.class,
+    StreamPipesPrometheusConfig.class,
+    JacksonConfiguration.class
 })
 @ComponentScan({"org.apache.streampipes.rest.extensions.*", "org.apache.streampipes.service.base.rest.*"})
 public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesExtensionsServiceBase.class);
+  private ExtensionBrokerRequestReceiver extensionBrokerRequestReceiver;
+  private ExtensionServiceTransportMode extensionTransportMode = ExtensionServiceTransportMode.HTTP;
+  private boolean natsBrokerReceiverActive = false;
+  private SpServiceRegistration currentServiceRegistration;
 
   public void init() {
     SpServiceDefinition serviceDef = provideServiceDefinition();
@@ -83,13 +96,24 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
       serviceDef.setServiceId(serviceId);
       DeclarersSingleton.getInstance().populate(networkingConfig.getHost(), networkingConfig.getPort(), serviceDef);
       SpRateLimiter.INSTANCE.createRateLimiter();
+
+      registerTransformationEngines(List.of(
+          GroovyScriptEngine::new,
+          GraalJsScriptEngine::new
+      ));
+
       startExtensionsService(this.getClass(), serviceDef, networkingConfig);
       ServiceLoadDataReportGenerator.getInstance().initialize();
+
     } catch (UnknownHostException e) {
       LOG.error(
           "Could not auto-resolve host address - "
               + "please manually provide the hostname using the SP_HOST environment variable");
     }
+  }
+
+  protected void registerTransformationEngines(List<Supplier<TransformationEngine>> transformationEngines) {
+    transformationEngines.forEach(TransformationEngines.INSTANCE::registerEngine);
   }
 
   public void afterServiceRegistered(SpServiceDefinition serviceDef,
@@ -107,6 +131,27 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
   public void startExtensionsService(Class<?> serviceClass,
                                      SpServiceDefinition serviceDef,
                                      BaseNetworkingConfig networkingConfig) throws UnknownHostException {
+    this.extensionTransportMode = ExtensionServiceTransportMode.from(
+        Environments.getEnvironment().getExtensionTransportMode().getValueOrDefault()
+    );
+    if (extensionTransportMode.supportsNats()) {
+      LOG.info("Starting Extension Service on Nats Mode");
+      this.extensionBrokerRequestReceiver = new ExtensionBrokerRequestReceiver(
+          getAdditionalBrokerOperationHandlers()
+      );
+      this.natsBrokerReceiverActive = extensionBrokerRequestReceiver.start(
+          serviceId(),
+          extensionTransportMode,
+          Environments.getEnvironment()
+              .getExtensionRequestTopicPrefix()
+              .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX),
+          this::onNatsReconnect
+      );
+    } else {
+      LOG.info("Starting Extension Service on HTTP Mode");
+      this.natsBrokerReceiverActive = false;
+    }
+
     var extensions = new ExtensionItemProvider().getAllItemDescriptions();
     var req = SpServiceRegistration.from(
         DefaultSpServiceTypes.EXT,
@@ -115,8 +160,11 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
         networkingConfig.getHost(),
         networkingConfig.getPort(),
         getServiceTags(extensions),
+        TransformationEngines.INSTANCE.getAvailableEngineMetadata(),
         getHealthCheckPath(),
         extensions);
+
+    this.currentServiceRegistration = req;
 
     LOG.info("Registering service {} with id {} at core", req.getSvcGroup(), req.getSvcId());
     registerService(req);
@@ -135,6 +183,21 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
     new CoreRequestSubmitter().submitRegistrationRequest(client, serviceRegistration);
   }
 
+  private void onNatsReconnect() {
+    var registration = this.currentServiceRegistration;
+    if (registration == null) {
+      LOG.warn("NATS reconnect detected but service registration is not available yet");
+      return;
+    }
+
+    try {
+      LOG.info("NATS reconnect detected - refreshing service registration for {}", registration.getSvcId());
+      registerService(registration);
+    } catch (Exception e) {
+      LOG.warn("Could not refresh service registration after NATS reconnect", e);
+    }
+  }
+
   protected Set<SpServiceTag> getServiceTags(Set<ExtensionItemDescription> extensions) {
     Set<SpServiceTag> tags = new HashSet<>();
     if (DeclarersSingleton.getInstance().getServiceDefinition() != null) {
@@ -142,7 +205,22 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
           DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup()));
     }
     tags.addAll(getExtensionsServiceTags(extensions));
+    tags.addAll(getTransportServiceTags());
     tags.addAll(new CustomServiceTagResolver(Environments.getEnvironment()).getCustomServiceTags());
+    return tags;
+  }
+
+  private Set<SpServiceTag> getTransportServiceTags() {
+    Set<SpServiceTag> tags = new HashSet<>();
+
+    if (extensionTransportMode.supportsHttp()) {
+      tags.add(SpServiceTag.create(SpServiceTagPrefix.CUSTOM, ExtensionServiceBrokerTopics.TRANSPORT_TAG_HTTP));
+    }
+
+    if (extensionTransportMode.supportsNats() && natsBrokerReceiverActive) {
+      tags.add(SpServiceTag.create(SpServiceTagPrefix.CUSTOM, ExtensionServiceBrokerTopics.TRANSPORT_TAG_NATS));
+    }
+
     return tags;
   }
 
@@ -170,13 +248,19 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
 
   @PreDestroy
   public void onExit() {
+    if (extensionBrokerRequestReceiver != null) {
+      extensionBrokerRequestReceiver.stop();
+    }
     new ExtensionsServiceShutdownHandler().onShutdown();
-    StreamPipesFunctionHandler.INSTANCE.cleanupFunctions();
     deregisterService(DeclarersSingleton.getInstance().getServiceId());
   }
 
   public String serviceId() {
     return DeclarersSingleton.getInstance().getServiceId();
+  }
+
+  protected List<ExtensionBrokerOperationHandler> getAdditionalBrokerOperationHandlers() {
+    return List.of();
   }
 
   public abstract SpServiceDefinition provideServiceDefinition();

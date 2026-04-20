@@ -16,20 +16,38 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     ExtensionInstallationService,
     ExtensionItemDescription,
 } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatDivider } from '@angular/material/divider';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-extensions-installation-dialog',
     templateUrl: './extensions-installation.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        MatDivider,
+        MatCheckbox,
+        FormsModule,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class SpExtensionsInstallationDialogComponent {
+    private dialogRef =
+        inject<DialogRef<SpExtensionsInstallationDialogComponent>>(DialogRef);
+    private extensionInstallationService = inject(ExtensionInstallationService);
+    private translateService = inject(TranslateService);
+
     endpointItems: ExtensionItemDescription[];
 
     @Input()
@@ -48,11 +66,7 @@ export class SpExtensionsInstallationDialogComponent {
 
     installAsPublicElement = true;
 
-    constructor(
-        private dialogRef: DialogRef<SpExtensionsInstallationDialogComponent>,
-        private extensionInstallationService: ExtensionInstallationService,
-        private translateService: TranslateService,
-    ) {
+    constructor() {
         this.installationStatus = [];
         this.installationFinished = false;
         this.page = 'preview';

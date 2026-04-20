@@ -18,46 +18,118 @@
 
 import {
     AfterViewInit,
-    ChangeDetectorRef,
     Component,
     inject,
     OnInit,
     ViewChild,
 } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatRow,
+    MatRowDef,
+    MatTable,
+    MatTableDataSource,
+} from '@angular/material/table';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
     ChartService,
+    DataLakeMeasure,
     DatalakeRestService,
-    ExportProviderSettings,
     ExportProviderService,
+    ExportProviderSettings,
     RetentionLog,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
+    CurrentUserService,
     DataDownloadDialogComponent,
     DialogRef,
     DialogService,
+    LocalStorageService,
+    ObjectPermissionDialogComponent,
     PanelType,
+    SpAlertBannerComponent,
+    SpBasicHeaderTitleComponent,
+    SpBasicViewComponent,
     SpBreadcrumbService,
+    SpLabelComponent,
+    SpTableActionsDirective,
     SpTableComponent,
 } from '@streampipes/shared-ui';
 import { DeleteDatalakeIndexComponent } from '../../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
-import { SpConfigurationRoutes } from '../../../configuration/configuration.routes';
+import { SpConfigurationRoutes } from '../../../configuration/configuration.breadcrumb';
 import { DataRetentionDialogComponent } from '../../dialog/data-retention-dialog/data-retention-dialog.component';
 import { ExportProviderComponent } from '../../dialog/export-provider-dialog/export-provider-dialog.component';
 import { DeleteExportProviderComponent } from '../../dialog/delete-export-provider/delete-export-provider-dialog.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ExportProviderConnectionTestComponent } from '../../dialog/export-provider-connection-test/export-provider-connection-test.component';
 import { DataRetentionLogDialogComponent } from '../../dialog/data-retention-log-dialog/data-retention-log-dialog.component';
-import { LocalStorageService } from '../../../../../projects/streampipes/shared-ui/src/lib/services/local-storage-settings.service';
+import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
+import { UserRole } from '../../../core/auth/user-role.enum';
+import { CsvImportDialogComponent } from '../../dialog/csv-import-dialog/csv-import-dialog.component';
+import {
+    FlexDirective,
+    FlexOrderDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { DatePipe, DecimalPipe, NgIf, NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { MatMenuItem } from '@angular/material/menu';
 
 @Component({
     selector: 'sp-datalake-configuration',
     templateUrl: './datalake-configuration.component.html',
     styleUrls: ['./datalake-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        LayoutGapDirective,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        MatProgressSpinner,
+        FlexOrderDirective,
+        NgStyle,
+        StyleDirective,
+        MatMenuItem,
+        MatButton,
+        MatTable,
+        NgIf,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        DecimalPipe,
+        DatePipe,
+        TranslatePipe,
+        SpLabelComponent,
+        SpTableComponent,
+        SpBasicHeaderTitleComponent,
+        SpBasicViewComponent,
+        SpAlertBannerComponent,
+        SpTableActionsDirective,
+    ],
 })
 export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
     paginator: MatPaginator;
@@ -71,6 +143,7 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private exportProviderRestService = inject(ExportProviderService);
     private translateService = inject(TranslateService);
+    private currentUserService = inject(CurrentUserService);
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
@@ -102,6 +175,8 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
 
     pageSize = this.localStorageService.get('paginator-page-size', 10);
     pageIndex = 0;
+    isAdmin = false;
+    writeAccess = false;
 
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb([
@@ -110,6 +185,11 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
         ]);
         this.loadAvailableMeasurements();
         this.loadAvailableExportProvider();
+        const currentUser = this.currentUserService.getCurrentUser();
+        this.isAdmin = currentUser.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
+        this.writeAccess =
+            currentUser.roles.indexOf(UserPrivilege.PRIVILEGE_WRITE_DATASET) >
+                -1 || this.isAdmin;
     }
 
     ngAfterViewInit() {
@@ -348,6 +428,43 @@ export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
         if (measurements.length > 0) {
             this.queryEntryCounts(measurements, 'eventsLatest', 7);
         }
+    }
+    showPermissionsDialog(element: DataLakeMeasure) {
+        this.dialogService.open(ObjectPermissionDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('Manage permissions'),
+            width: '50vw',
+            data: {
+                objectInstanceId: element.elementId,
+                headerTitle:
+                    this.translateService.instant(
+                        'Manage permissions for dataset ',
+                    ) + element.measureName,
+            },
+        });
+    }
+
+    openCsvImportDialog() {
+        const dialogRef: DialogRef<CsvImportDialogComponent> =
+            this.dialogService.open(CsvImportDialogComponent, {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Import CSV'),
+                width: '60vw',
+                data: {
+                    measurementNames: this.availableMeasurements.map(
+                        measurement => measurement.name,
+                    ),
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(refresh => {
+            const importCompleted =
+                dialogRef.componentInstance?.instance?.hasImportResult?.() ===
+                true;
+            if (refresh || importCompleted) {
+                this.loadAvailableMeasurements();
+            }
+        });
     }
 
     queryEntryCounts(

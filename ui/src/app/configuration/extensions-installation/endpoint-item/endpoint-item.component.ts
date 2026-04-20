@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
@@ -31,20 +38,53 @@ import {
     PanelType,
 } from '@streampipes/shared-ui';
 import { ExtensionsInstallationService } from '../extensions-installation.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-endpoint-item',
     templateUrl: './endpoint-item.component.html',
     styleUrls: ['./endpoint-item.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        NgClass,
+        ClassDirective,
+        MatTooltip,
+        MatButton,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class EndpointItemComponent implements OnInit {
+    private snackBar = inject(MatSnackBar);
+    private extensionInstallationService = inject(ExtensionInstallationService);
+    private addService = inject(ExtensionsInstallationService);
+    private sanitizer = inject(DomSanitizer);
+    appConstants = inject(AppConstants);
+    private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
+
     @Input()
     item: ExtensionItemDescription;
 
     itemTypeTitle: string;
     itemTypeStyle: string;
+    itemTypeColor: string;
 
     @Input()
     itemSelected: boolean;
@@ -63,19 +103,10 @@ export class EndpointItemComponent implements OnInit {
     @Output()
     triggerInstallation: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(
-        private snackBar: MatSnackBar,
-        private extensionInstallationService: ExtensionInstallationService,
-        private addService: ExtensionsInstallationService,
-        private sanitizer: DomSanitizer,
-        public appConstants: AppConstants,
-        private dialogService: DialogService,
-        private translateService: TranslateService,
-    ) {}
-
     ngOnInit(): void {
         this.findItemTypeTitle();
         this.findItemStyle();
+        this.findItemColor();
         if (this.item.includesIcon) {
             this.addService.getExtensionItemIcon(this.item).subscribe(
                 blob => {
@@ -104,14 +135,6 @@ export class EndpointItemComponent implements OnInit {
         return result.toUpperCase();
     }
 
-    getSelectedBackground() {
-        if (this.itemSelected) {
-            return 'var(--color-bg-2)';
-        } else {
-            return 'var(--color-bg-1)';
-        }
-    }
-
     findItemTypeTitle() {
         if (this.item.serviceTagPrefix === 'ADAPTER') {
             this.itemTypeTitle = this.translateService.instant('Adapter');
@@ -135,6 +158,20 @@ export class EndpointItemComponent implements OnInit {
             this.itemTypeStyle = baseType + 'processor-label';
         } else {
             this.itemTypeStyle = baseType + 'sink-label';
+        }
+    }
+
+    findItemColor() {
+        if (this.item.serviceTagPrefix === 'ADAPTER') {
+            this.itemTypeColor = 'var(--color-adapter)';
+        } else if (this.item.serviceTagPrefix === 'DATA_STREAM') {
+            this.itemTypeColor = 'var(--color-data-source)';
+        } else if (this.item.serviceTagPrefix === 'DATA_PROCESSOR') {
+            this.itemTypeColor = 'var(--color-processor)';
+        } else if (this.item.serviceTagPrefix === 'DATA_SINK') {
+            this.itemTypeColor = 'var(--color-sink)';
+        } else {
+            this.itemTypeColor = 'var(--color-sink)';
         }
     }
 

@@ -42,6 +42,10 @@ export class ConnectBtns {
         return cy.dataCy('start-adapter');
     }
 
+    public static adapterNameInput() {
+        return cy.dataCy('sp-adapter-name');
+    }
+
     public static adapterOperationInProgressSpinner() {
         return cy.dataCy('adapter-operation-in-progress-spinner', {
             timeout: 10000,
@@ -78,6 +82,20 @@ export class ConnectBtns {
 
     public static connectNewAdapterCancel() {
         return cy.dataCy('connect-new-adapter-cancel');
+    }
+
+    public static getNewSampleBtn() {
+        return cy.dataCy('connect-get-new-sample-button');
+    }
+
+    public static refreshSchemaBtn() {
+        return cy.dataCy('connect-refresh-schema-button', { timeout: 10000 });
+    }
+
+    public static connectAdapterAddedSuccessfully() {
+        return cy.dataCy('sp-connect-adapter-success-added', {
+            timeout: 60000,
+        });
     }
 
     // =====================  Adapter settings btns  ==========================
@@ -117,6 +135,7 @@ export class ConnectBtns {
     public static connectRemoveDuplicateBox() {
         return cy.dataCy('connect-remove-duplicates-box');
     }
+
     public static connectReduceEventRate() {
         return cy.dataCy('connect-reduce-event-rate-box');
     }
@@ -127,6 +146,12 @@ export class ConnectBtns {
 
     public static adapterSettingsNextBtn() {
         return cy.dataCy('adapter-settings-next-button');
+    }
+
+    public static fileInputSelected() {
+        return cy.dataCy('file-input-selected', {
+            timeout: 10000,
+        });
     }
 
     // ========================================================================
@@ -153,10 +178,6 @@ export class ConnectBtns {
         return cy.dataCy('sp-save-edit-property', { timeout: 10000 });
     }
 
-    public static markAsTimestampBtn() {
-        return cy.dataCy('sp-mark-as-timestamp').children();
-    }
-
     public static setTimestampConverter(option: 'Number' | 'String') {
         cy.dataCy('connect-timestamp-converter')
             .click()
@@ -165,34 +186,154 @@ export class ConnectBtns {
             .click();
     }
 
-    public static connectSchemaCorrectionValueInput() {
-        return cy.dataCy('connect-schema-correction-value', { timeout: 10000 });
-    }
-
-    public static connectSchemaCorrectionOperatorInput() {
-        return cy.dataCy('connect-schema-correction-operator', {
-            timeout: 10000,
-        });
-    }
-
     public static timestampStringRegex() {
         return cy.dataCy('connect-timestamp-string-regex', { timeout: 10000 });
     }
 
-    public static timestampNumberDropdown() {
-        return cy.dataCy('connect-timestamp-number-dropdown', {
+    public static configureSchemaNextBtn() {
+        return cy.dataCy('configure-schema-next-button');
+    }
+
+    public static configureSchemaBackBtn() {
+        return cy.dataCy('configure-schema-back-button');
+    }
+
+    public static eventPropertyRow() {
+        return cy.dataCy('event-property-row', { timeout: 10000 });
+    }
+
+    public static scriptActiveToggle() {
+        return cy.dataCy('toggle-script-active', {
             timeout: 10000,
         });
     }
 
-    public static runtimeNameInput() {
-        return cy.dataCy('connect-edit-field-runtime-name', {
+    public static configureSchemaScriptEditor() {
+        return cy
+            .dataCy('configure-schema-script-editor', {
+                timeout: 10000,
+            })
+            .find('.view-lines');
+    }
+
+    public static configureSchemaScriptEditorTextarea() {
+        return cy
+            .dataCy('configure-schema-script-editor', {
+                timeout: 10000,
+            })
+            .find('.monaco-editor textarea:first');
+    }
+
+    public static setConfigureSchemaScriptEditorValue(script: string) {
+        const selectAll = Cypress.platform === 'darwin' ? '{cmd}a' : '{ctrl}a';
+
+        return this.configureSchemaScriptEditorTextarea()
+            .click({ force: true })
+            .type(selectAll, { delay: 10, force: true })
+            .type('{backspace}', { delay: 10, force: true })
+            .type(script, {
+                delay: 0,
+                force: true,
+                parseSpecialCharSequences: false,
+            });
+    }
+
+    public static configureSchemaRunScriptBtn() {
+        return cy.dataCy('configure-schema-run-script-button', {
             timeout: 10000,
         });
     }
 
-    public static schemaNextBtn() {
-        return cy.dataCy('sp-event-schema-next-button');
+    public static useScriptTemplateBtn() {
+        return cy.dataCy('use-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static saveSelectScriptTemplateBtn() {
+        return cy.dataCy('save-select-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static selectScriptTemplateDropDown() {
+        return cy.dataCy('select-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static deleteScriptTemplateBtn() {
+        return cy.dataCy('delete-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static addScriptTemplateBtn() {
+        return cy.dataCy('add-script-template-button', {
+            timeout: 10000,
+        });
+    }
+
+    public static scriptTemplateName() {
+        return cy.dataCy('script-template-name', {
+            timeout: 10000,
+        });
+    }
+
+    public static saveScriptTemplateBtn() {
+        return cy.dataCy('save-script-template', {
+            timeout: 10000,
+        });
+    }
+
+    public static resetScriptBtn() {
+        return cy.dataCy('reset-script', {
+            timeout: 10000,
+        });
+    }
+
+    public static configureSchemaEventPreviewOriginal() {
+        return cy.dataCy('configure-schema-event-preview-original', {
+            timeout: 10000,
+        });
+    }
+
+    public static configureSchemaEventPreviewResult() {
+        return cy.dataCy('configure-schema-event-preview-result', {
+            timeout: 10000,
+        });
+    }
+
+    public static uploadSampleBtn() {
+        return cy.dataCy('connect-upload-sample-button', {
+            timeout: 10000,
+        });
+    }
+
+    public static uploadSampleDialogTextarea() {
+        return cy.dataCy('upload-sample-event-textarea', {
+            timeout: 10000,
+        });
+    }
+
+    public static uploadSampleDialogSubmitBtn() {
+        return cy.dataCy('upload-sample-event-submit', {
+            timeout: 10000,
+        });
+    }
+
+    public static configureFieldsEventPreviewResult() {
+        return cy.dataCy('configure-fields-event-preview-result', {
+            timeout: 10000,
+        });
+    }
+
+    public static configureFieldsNextBtn() {
+        return cy.dataCy('configure-fields-next-button');
+    }
+
+    public static configureFieldsBackBtn() {
+        return cy.dataCy('configure-fields-back-button');
     }
 
     public static semanticTypeInput() {
@@ -206,19 +347,19 @@ export class ConnectBtns {
     // =====================  Format configurations  ==========================
 
     public static csvDelimiter() {
-        return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-delimiter-0';
+        return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-delimiter-0';
     }
 
     public static csvHeader() {
-        return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-header-1';
+        return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-header-1';
     }
 
     public static jsonArrayFieldKey() {
-        return 'undefined-arrayFieldConfig-2-key-0';
+        return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.json-0-json_options-0-arrayFieldConfig-2-key-0';
     }
 
     public static xmlTag() {
-        return 'undefined-org.apache.streampipes.extensions.management.connect.adapter.parser.xml-2-tag-0';
+        return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.xml-2-tag-0';
     }
 
     // ========================================================================

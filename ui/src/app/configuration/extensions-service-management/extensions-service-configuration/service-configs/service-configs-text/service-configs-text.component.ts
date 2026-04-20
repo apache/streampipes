@@ -16,17 +16,32 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
+import { MatFormField, MatSuffix } from '@angular/material/form-field';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-service-configs-text',
     templateUrl: './service-configs-text.component.html',
     providers: [ConfigurationService],
-    standalone: false,
+    imports: [
+        MatFormField,
+        FlexDirective,
+        MatInput,
+        FormsModule,
+        MatIcon,
+        MatSuffix,
+        MatTooltip,
+    ],
 })
 export class ServiceConfigsTextComponent {
+    configService = inject(ConfigurationService);
+
     @Input() configuration: ConfigItem;
-    constructor(public configService: ConfigurationService) {}
 }

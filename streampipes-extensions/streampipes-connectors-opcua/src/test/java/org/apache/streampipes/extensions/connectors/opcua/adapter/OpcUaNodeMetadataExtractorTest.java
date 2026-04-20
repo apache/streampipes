@@ -60,7 +60,7 @@ public class OpcUaNodeMetadataExtractorTest {
 
     var metadata = extractor.getMetadata();
     assertTrue(metadata.containsKey("Description"));
-    assertEquals("", metadata.get("Description"));
+    assertEquals("N/A", metadata.get("Description"));
   }
 
   @Test
@@ -86,7 +86,7 @@ public class OpcUaNodeMetadataExtractorTest {
 
     var metadata = extractor.getMetadata();
     assertTrue(metadata.containsKey("NamespaceIndex"));
-    assertEquals("", metadata.get("NamespaceIndex"));
+    assertEquals("N/A", metadata.get("NamespaceIndex"));
   }
 
   @Test
@@ -139,7 +139,7 @@ public class OpcUaNodeMetadataExtractorTest {
 
     var metadata = extractor.getMetadata();
     assertTrue(metadata.containsKey("BrowseName"));
-    assertEquals("", metadata.get("BrowseName"));
+    assertEquals("N/A", metadata.get("BrowseName"));
   }
 
   @Test
@@ -166,7 +166,7 @@ public class OpcUaNodeMetadataExtractorTest {
 
     var metadata = extractor.getMetadata();
     assertTrue(metadata.containsKey("DisplayName"));
-    assertEquals("", metadata.get("DisplayName"));
+    assertEquals("N/A", metadata.get("DisplayName"));
   }
 
   @Test

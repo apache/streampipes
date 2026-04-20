@@ -20,22 +20,37 @@ import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
     CurrentUserService,
+    SpBasicViewComponent,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import { SpDashboardRoutes } from '../../dashboard.routes';
+import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
+import { SpDashboardRoutes } from '../../dashboard.breadcrumb';
 import { Dashboard } from '@streampipes/platform-services';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { DashboardOverviewTableComponent } from './dashboard-overview-table/dashboard-overview-table.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { MatButton } from '@angular/material/button';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-dashboard-overview',
     templateUrl: './dashboard-overview.component.html',
     styleUrls: ['./dashboard-overview.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        MatButton,
+        DashboardOverviewTableComponent,
+        TranslatePipe,
+    ],
 })
 export class DashboardOverviewComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ['name', 'actions'];
@@ -66,7 +81,11 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
 
     openNewDashboardDialog() {
         const dataViewDashboard: Dashboard = {
-            dashboardGeneralSettings: {},
+            dashboardGeneralSettings: {
+                chartOverrides: {
+                    hideToolbox: false,
+                },
+            },
             widgets: [],
             name: '',
             dashboardLiveSettings: {
@@ -80,6 +99,7 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
             },
             gridColumns: 12,
         };
+        dataViewDashboard.dashboardGeneralSettings.gridRowHeightPx = 90;
 
         this.openDashboardModificationDialog(true, dataViewDashboard);
     }

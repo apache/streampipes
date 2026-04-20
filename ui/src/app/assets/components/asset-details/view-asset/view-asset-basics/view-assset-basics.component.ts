@@ -16,20 +16,41 @@
  *
  */
 
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnChanges,
+    SimpleChanges,
+    inject,
+} from '@angular/core';
 import {
     AssetSiteDesc,
     Isa95TypeService,
     SpAsset,
 } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { SpLabelComponent } from '@streampipes/shared-ui';
+import { ViewAssetLabelsComponent } from '../view-asset-labels/view-asset-labels.component';
 
 @Component({
     selector: 'sp-view-asset-basics',
     templateUrl: './view-asset-basics.component.html',
     styleUrls: ['./view-asset-basics.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutGapDirective,
+        FlexDirective,
+        SpLabelComponent,
+        ViewAssetLabelsComponent,
+    ],
 })
 export class ViewAssetBasicsComponent implements OnChanges {
+    private isa95TypeService = inject(Isa95TypeService);
+
     @Input()
     selectedAsset: SpAsset;
 
@@ -37,8 +58,6 @@ export class ViewAssetBasicsComponent implements OnChanges {
     sites: AssetSiteDesc[] = [];
 
     selectedAssetType: string;
-
-    constructor(private isa95TypeService: Isa95TypeService) {}
 
     ngOnChanges(changes: SimpleChanges) {
         this.selectedAssetType =

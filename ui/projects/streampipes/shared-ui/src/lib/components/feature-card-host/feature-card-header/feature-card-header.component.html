@@ -42,7 +42,7 @@
             *ngIf="detailsLink?.length"
             mat-flat-button
             class="feature-card-header__button"
-            (click)="onDetailsClick.emit()"
+            (click)="detailsClick.emit()"
         >
             More details
         </button>
@@ -52,7 +52,7 @@
         mat-icon-button
         class="feature-card-header__close"
         aria-label="Close dialog"
-        (click)="close.emit()"
+        (click)="closeClick.emit()"
     >
         <mat-icon>close</mat-icon>
     </button>

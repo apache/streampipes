@@ -23,12 +23,32 @@ import {
     DataExplorerField,
     SpQueryResult,
 } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { DatePipe, NgClass, NgStyle } from '@angular/common';
+import { ClassDirective, StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { NoDataInDateRangeComponent } from '../base/no-data/no-data-in-date-range.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-status-widget',
     templateUrl: './status-widget.component.html',
     styleUrls: ['./status-widget.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        NgStyle,
+        StyleDirective,
+        NoDataInDateRangeComponent,
+        NgClass,
+        ClassDirective,
+        DatePipe,
+        TranslatePipe,
+    ],
 })
 export class StatusWidgetComponent
     extends BaseDataExplorerWidgetDirective<StatusWidgetModel>

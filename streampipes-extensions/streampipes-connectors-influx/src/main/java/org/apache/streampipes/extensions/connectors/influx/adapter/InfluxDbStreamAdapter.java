@@ -29,9 +29,10 @@ import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtracto
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.connectors.influx.shared.InfluxConfigs;
 import org.apache.streampipes.extensions.connectors.influx.shared.InfluxKeys;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
@@ -40,6 +41,7 @@ import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,27 +60,47 @@ public class InfluxDbStreamAdapter implements StreamPipesAdapter {
   @Override
   public IAdapterConfiguration declareConfig() {
     var builder = AdapterConfigurationBuilder.create(ID, 0, InfluxDbStreamAdapter::new)
-        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
-        .withLocales(Locales.EN);
+                                             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+                                             .withLocales(Locales.EN);
 
     InfluxConfigs.appendSharedInfluxConfig(builder);
 
     builder.requiredIntegerParameter(Labels.withId(POLLING_INTERVAL));
-    builder.requiredSingleValueSelection(Labels.withId(InfluxDbClient.REPLACE_NULL_VALUES),
+    builder.requiredSingleValueSelection(
+        Labels.withId(InfluxDbClient.REPLACE_NULL_VALUES),
         Options.from(
             new Tuple2<>("Yes", InfluxDbClient.DO_REPLACE),
-            new Tuple2<>("No", InfluxDbClient.DO_NOT_REPLACE)));
+            new Tuple2<>("No", InfluxDbClient.DO_NOT_REPLACE)
+        )
+    );
 
     return builder.buildConfiguration();
   }
 
   @Override
-  public void onAdapterStarted(IAdapterParameterExtractor extractor,
-                               IEventCollector collector,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+  public void onAdapterStarted(
+      IAdapterParameterExtractor extractor,
+      IEventCollector collector,
+      IAdapterRuntimeContext adapterRuntimeContext
+  ) throws AdapterException {
     applyConfigurations(extractor.getStaticPropertyExtractor());
     pollingThread = new Thread(new PollingThread(this, pollingInterval, collector));
     pollingThread.start();
+  }
+
+  @Override
+  public SampleData onSampleDataRequested(
+      IAdapterParameterExtractor extractor,
+      IAdapterGuessSchemaContext adapterGuessSchemaContext
+  ) throws AdapterException {
+
+    applyConfigurations(extractor.getStaticPropertyExtractor());
+    var event = influxDbClient.getSampleEvent(influxDbClient);
+
+    return SampleDataBuilder.create()
+                            .sample(event)
+                            .build();
+
   }
 
   @Override
@@ -93,13 +115,6 @@ public class InfluxDbStreamAdapter implements StreamPipesAdapter {
     }
   }
 
-  @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
-    applyConfigurations(extractor.getStaticPropertyExtractor());
-    return influxDbClient.getSchema();
-  }
-
   public static class PollingThread implements Runnable {
     private final int pollingInterval;
 
@@ -107,9 +122,11 @@ public class InfluxDbStreamAdapter implements StreamPipesAdapter {
 
     private final IEventCollector collector;
 
-    PollingThread(InfluxDbStreamAdapter influxDbStreamAdapter,
-                  int pollingInterval,
-                  IEventCollector collector) throws AdapterException {
+    PollingThread(
+        InfluxDbStreamAdapter influxDbStreamAdapter,
+        int pollingInterval,
+        IEventCollector collector
+    ) throws AdapterException {
       this.pollingInterval = pollingInterval;
       this.collector = collector;
       this.influxDbClient = influxDbStreamAdapter.getInfluxDbClient();
@@ -128,7 +145,7 @@ public class InfluxDbStreamAdapter implements StreamPipesAdapter {
       // Timestamp is a string, because a long might not be big enough (it includes nanoseconds)
       String lastTimestamp;
       try {
-        lastTimestamp = getNewestTimestamp();
+        lastTimestamp = getNewestTimestamp(influxDbClient);
       } catch (SpRuntimeException e) {
         LOG.error(e.getMessage());
         return;
@@ -141,12 +158,13 @@ public class InfluxDbStreamAdapter implements StreamPipesAdapter {
           break;
         }
         List<List<Object>> queryResult = influxDbClient.query("SELECT " + influxDbClient.getColumnsString()
-                                                              + " FROM " + influxDbClient.getMeasurement()
-                                                              + " WHERE time > " + lastTimestamp
-                                                              + " ORDER BY time ASC ");
+                                                                  + " FROM " + influxDbClient.getMeasurement()
+                                                                  + " WHERE time > " + lastTimestamp
+                                                                  + " ORDER BY time ASC ");
         if (queryResult.size() > 0) {
           // The last element has the highest timestamp (ordered asc) -> Set the new latest timestamp
-          lastTimestamp = InfluxDbClient.getTimestamp((String) queryResult.get(queryResult.size() - 1).get(0));
+          lastTimestamp = InfluxDbClient.getTimestamp((String) queryResult.get(queryResult.size() - 1)
+                                                                          .get(0));
 
           for (List<Object> value : queryResult) {
             try {
@@ -163,17 +181,64 @@ public class InfluxDbStreamAdapter implements StreamPipesAdapter {
       influxDbClient.disconnect();
     }
 
-    // Returns the newest timestamp in the measurement as unix timestamp in Nanoseconds.
-    // If no entry is found, a SpRuntimeException is thrown
-    String getNewestTimestamp() throws SpRuntimeException {
-      List<List<Object>> queryResult = influxDbClient.query("SELECT * FROM " + influxDbClient.getMeasurement()
-                                                            + " ORDER BY time DESC LIMIT 1");
-      if (queryResult.size() > 0) {
-        return InfluxDbClient.getTimestamp((String) queryResult.get(0).get(0));
-      } else {
-        throw new SpRuntimeException("No entry found in query");
+  }
+
+  // Returns the newest timestamp in the measurement as unix timestamp in Nanoseconds.
+  // If no entry is found, a SpRuntimeException is thrown
+  private static String getNewestTimestamp(InfluxDbClient influxDbClient) throws SpRuntimeException {
+    List<List<Object>> queryResult = influxDbClient.query("SELECT * FROM " + influxDbClient.getMeasurement()
+                                                              + " ORDER BY time DESC LIMIT 1");
+    if (queryResult.size() > 0) {
+      return InfluxDbClient.getTimestamp((String) queryResult.get(0)
+                                                             .get(0));
+    } else {
+      throw new SpRuntimeException("No entry found in query");
+    }
+  }
+
+  private Map<String, Object> getSampleEvent(IAdapterParameterExtractor extractor) throws AdapterException {
+    applyConfigurations(extractor.getStaticPropertyExtractor());
+    List<Map<String, Object>> result = new ArrayList<>();
+    influxDbClient.connect();
+
+    if (!influxDbClient.isConnected()) {
+      throw new AdapterException("Cannot start PollingThread, when the client is not connected");
+    }
+
+    // Checking the most recent timestamp
+    // Timestamp is a string, because a long might not be big enough (it includes nanoseconds)
+    String lastTimestamp;
+    try {
+      lastTimestamp = getNewestTimestamp(influxDbClient);
+    } catch (SpRuntimeException e) {
+      throw new AdapterException(e.getMessage());
+    }
+
+
+    List<List<Object>> queryResult = influxDbClient.query("SELECT *"
+                                                              + " FROM " + influxDbClient.getMeasurement()
+                                                              + " LIMIT 1 ");
+
+
+    if (queryResult.size() > 0) {
+      for (List<Object> value : queryResult) {
+        try {
+          Map<String, Object> out = influxDbClient.extractEvent(value);
+          result.add(out);
+        } catch (SpRuntimeException e) {
+          throw new AdapterException(e.getMessage());
+        }
       }
     }
+
+    influxDbClient.disconnect();
+
+    if (result.size() == 0) {
+      throw new AdapterException("No sample data found");
+    } else {
+      return result.get(0);
+    }
+
   }
 
   private InfluxDbClient getInfluxDbClient() {
@@ -188,7 +253,8 @@ public class InfluxDbStreamAdapter implements StreamPipesAdapter {
     influxDbClient = new InfluxDbClient(
         InfluxConfigs.fromExtractor(extractor),
         extractor.singleValueParameter(InfluxKeys.DATABASE_MEASUREMENT_KEY, String.class),
-        replace.equals(InfluxDbClient.DO_REPLACE));
+        replace.equals(InfluxDbClient.DO_REPLACE)
+    );
 
   }
 }

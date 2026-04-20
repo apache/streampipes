@@ -103,7 +103,7 @@ export class OpcUaUtils {
             builder.addInput('radio', 'adapter_type-pull_mode', '');
             builder.addInput(
                 'input',
-                'undefined-pull-mode-group-0-PULLING_INTERVAL-0',
+                'ADAPTER_TYPE-pull-mode-group-0-PULLING_INTERVAL-0',
                 '1000',
             );
         } else {
@@ -116,11 +116,12 @@ export class OpcUaUtils {
             .addInput('radio', 'opc_host_or_url-url', '')
             .addInput(
                 'input',
-                'undefined-OPC_SERVER_URL-0',
+                'OPC_HOST_OR_URL-OPC_SERVER_URL-0',
                 'opc.tcp://' + host + ':50000',
             );
 
         builder.setAutoAddTimestampPropery();
+        builder.setTimestampProperty('timestamp');
 
         return builder;
     }

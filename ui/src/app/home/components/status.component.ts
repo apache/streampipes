@@ -20,14 +20,15 @@ import { Component, HostBinding, inject, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AssetLinkType, UserInfo } from '@streampipes/platform-services';
 import { StatusBox } from '../models/home.model';
-import { UserRole } from '../../_enums/user-role.enum';
+import { UserRole } from '../../core/auth/user-role.enum';
 import { zip } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-status',
     templateUrl: './status.component.html',
     styleUrls: ['./status.component.scss'],
-    standalone: false,
+    imports: [TranslatePipe],
 })
 export class StatusComponent implements OnInit {
     @Input()

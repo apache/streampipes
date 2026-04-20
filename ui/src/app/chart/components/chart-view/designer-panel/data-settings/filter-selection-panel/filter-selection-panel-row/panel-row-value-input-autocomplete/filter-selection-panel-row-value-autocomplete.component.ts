@@ -15,17 +15,43 @@
  * limitations under the License.
  *
  */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import { SelectedFilter } from '@streampipes/platform-services';
 import { EscapeNumberFilterService } from '../escape-number-filter.service';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import {
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+} from '@angular/material/autocomplete';
+import { MatOption } from '@angular/material/select';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-filter-selection-panel-row-value-autocomplete',
     templateUrl:
         './filter-selection-panel-row-value-autocomplete.component.html',
-    standalone: false,
+    imports: [
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatAutocompleteTrigger,
+        MatAutocomplete,
+        MatOption,
+        TranslatePipe,
+    ],
 })
 export class FilterSelectionPanelRowValueAutocompleteComponent implements OnInit {
+    private escapeNumberFilterService = inject(EscapeNumberFilterService);
+
     @Input()
     public filter: SelectedFilter;
 
@@ -36,8 +62,6 @@ export class FilterSelectionPanelRowValueAutocompleteComponent implements OnInit
     public update = new EventEmitter<void>();
 
     public value: string;
-
-    constructor(private escapeNumberFilterService: EscapeNumberFilterService) {}
 
     ngOnInit(): void {
         this.value = this.escapeNumberFilterService.removeEnclosingQuotes(

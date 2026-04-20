@@ -16,22 +16,31 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { WidgetEchartsAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import { SpNumberFormatConfigComponent } from '../number-format-config/number-format-config.component';
 
 @Component({
     selector: 'sp-echarts-widget-appearance-config',
     templateUrl: './echarts-widget-appearance-config.component.html',
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        MatCheckbox,
+        FormsModule,
+        TranslatePipe,
+        SpNumberFormatConfigComponent,
+    ],
 })
 export class SpEchartsWidgetAppearanceConfigComponent implements OnInit {
+    private widgetConfigurationService = inject(ChartConfigurationService);
+
     @Input()
     appearanceConfig: WidgetEchartsAppearanceConfig;
-
-    constructor(
-        private widgetConfigurationService: ChartConfigurationService,
-    ) {}
 
     ngOnInit() {
         this.appearanceConfig.chartAppearance ??= {

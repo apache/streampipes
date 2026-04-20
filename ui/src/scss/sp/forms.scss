@@ -16,6 +16,8 @@
  *
  */
 
+@use '@angular/material' as mat;
+
 mat-form-field.mat-mdc-form-field.form-field-size {
     font-size: 12px;
 }
@@ -46,54 +48,108 @@ mat-form-field.mat-mdc-form-field.form-field-size-smaller {
 }
 
 .form-field-small {
-    .mat-mdc-input-element {
-        font-size: 11pt;
-    }
-
-    .mat-mdc-form-field-flex {
-        max-height: 30px;
-    }
-
-    .mat-mdc-text-field-wrapper.mdc-text-field--outlined
-        .mat-mdc-form-field-infix {
-        padding-top: 0;
-        padding-bottom: 0;
-        line-height: 30px;
-        font-size: 11pt;
-        min-height: 30px;
-    }
-
-    .mdc-text-field__input.smaller-font-size {
-        font-size: 10pt;
-    }
-
-    .mat-mdc-text-field-wrapper {
-        max-height: 30px;
-        background: var(--color-bg-0);
-    }
-
-    .mat-mdc-form-field {
-        max-height: 30px;
-        min-height: 0;
-    }
-
+    .mat-mdc-input-element,
     .mat-mdc-select-value-text {
         font-size: 11pt;
     }
 
-    .mat-mdc-text-field-wrapper
-        .mat-mdc-form-field-flex
-        .mat-mdc-floating-label {
-        top: 14px;
+    .mat-mdc-text-field-wrapper {
+        background: var(--color-bg-0);
     }
 
-    .mat-mdc-text-field-wrapper
-        .mat-mdc-form-field-flex
-        .mdc-notched-outline--upgraded
-        .mdc-floating-label--float-above {
-        --mat-mdc-form-field-label-transform: translateY(-21.75px)
-            scale(var(--mat-mdc-form-field-floating-label-scale, 0.75));
-        transform: var(--mat-mdc-form-field-label-transform);
+    // ---- Single-line controls: compact height ----
+    // Apply compact sizing only when this is NOT a textarea field.
+    &:not(.form-field-small--textarea) {
+        .mat-mdc-form-field-flex,
+        .mat-mdc-text-field-wrapper {
+            max-height: 30px;
+        }
+
+        .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+            .mat-mdc-form-field-infix {
+            padding-top: 0;
+            padding-bottom: 0;
+            line-height: 30px;
+            min-height: 30px;
+            font-size: 11pt;
+        }
+
+        .mat-mdc-form-field {
+            max-height: 30px;
+            min-height: 0;
+        }
+
+        .mat-mdc-text-field-wrapper
+            .mat-mdc-form-field-flex
+            .mat-mdc-floating-label {
+            top: 14px;
+        }
+
+        .mat-mdc-text-field-wrapper
+            .mat-mdc-form-field-flex
+            .mdc-notched-outline--upgraded
+            .mdc-floating-label--float-above {
+            --mat-mdc-form-field-label-transform: translateY(-21.75px)
+                scale(var(--mat-mdc-form-field-floating-label-scale, 0.75));
+            transform: var(--mat-mdc-form-field-label-transform);
+        }
+    }
+
+    &.form-field-small--textarea,
+    .form-field-small--textarea {
+        // reset compact sizing on the textarea form-field host itself
+        &.mat-mdc-form-field {
+            max-height: none;
+            min-height: 0;
+            height: auto;
+        }
+
+        .mat-mdc-form-field-flex,
+        .mat-mdc-text-field-wrapper,
+        .mat-mdc-form-field {
+            max-height: none;
+            height: auto;
+        }
+
+        // let infix wrap content; give a small but reasonable min height
+        .mat-mdc-text-field-wrapper.mdc-text-field--outlined
+            .mat-mdc-form-field-infix {
+            line-height: normal;
+            min-height: 60px; // tweak to taste
+            height: auto;
+            padding-top: 6px;
+            padding-bottom: 6px;
+        }
+
+        // ensure textarea itself can show multiple lines
+        textarea.mat-mdc-input-element {
+            resize: vertical; // optional
+            line-height: 1.3;
+        }
+
+        // label positioning: let MDC handle it (avoid your hard-coded top)
+        .mat-mdc-text-field-wrapper
+            .mat-mdc-form-field-flex
+            .mat-mdc-floating-label {
+            top: unset;
+        }
+    }
+
+    // Optional: your special smaller font class
+    .mdc-text-field__input.smaller-font-size {
+        font-size: 10pt;
+    }
+}
+
+.small-select-panel {
+    --mat-option-label-text-size: var(--font-size-md);
+    font-size: var(--font-size-md);
+
+    .mat-icon {
+        width: var(--font-size-md);
+        height: var(--font-size-md);
+        font-size: var(--font-size-md);
+        line-height: var(--font-size-md);
     }
 }
 

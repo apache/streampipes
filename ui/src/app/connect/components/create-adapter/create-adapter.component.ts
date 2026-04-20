@@ -16,31 +16,30 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
 import { ActivatedRoute } from '@angular/router';
-import { SpConnectRoutes } from '../../connect.routes';
+import { SpConnectRoutes } from '../../connect.breadcrumb';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { AdapterConfigurationComponent } from '../adapter-configuration/adapter-configuration.component';
 
 @Component({
     selector: 'sp-create-adapter',
     templateUrl: './create-adapter.component.html',
     styleUrls: ['./create-adapter.component.scss'],
-    standalone: false,
+    imports: [AdapterConfigurationComponent],
 })
 export class CreateAdapterComponent implements OnInit {
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private adapterService = inject(AdapterService);
+    private route = inject(ActivatedRoute);
+
     initialized = false;
     adapterTypeName = '';
     adapter: AdapterDescription = undefined;
-
-    constructor(
-        private breadcrumbService: SpBreadcrumbService,
-        private adapterService: AdapterService,
-        private route: ActivatedRoute,
-    ) {}
 
     ngOnInit(): void {
         this.adapterService.getAdapterDescriptions().subscribe(adapters => {

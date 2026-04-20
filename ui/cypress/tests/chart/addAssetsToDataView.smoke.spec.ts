@@ -1,0 +1,70 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+import { AssetUtils } from '../../support/utils/asset/AssetUtils';
+import { ChartUtils } from '../../support/utils/chart/ChartUtils';
+import { AssetBuilder } from '../../support/builder/AssetBuilder';
+
+describe('Creates a new adapter with a linked asset', () => {
+    const assetName1 = 'TestAsset1';
+    const assetName2 = 'TestAsset2';
+    const assetName3 = 'TestAsset3';
+
+    beforeEach('Setup Test', () => {
+        cy.initStreamPipesTest();
+        AssetUtils.goToAssets();
+
+        const asset1 = AssetBuilder.create(assetName1).build();
+        const asset2 = AssetBuilder.create(assetName2).build();
+        const asset3 = AssetBuilder.create(assetName3).build();
+        AssetUtils.addAndSaveAsset(asset3);
+        AssetUtils.addAndSaveAsset(asset2);
+        AssetUtils.addAndSaveAsset(asset1);
+    });
+
+    it('Add Assets during Chart generation', () => {
+        ChartUtils.createDataViewWithAssets([assetName1, assetName2]);
+        AssetUtils.checkAmountOfAssets(3);
+        //Test
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
+    });
+
+    it('Edit Assets during Chart generation', () => {
+        ChartUtils.createDataViewWithAssets([assetName1, assetName2]);
+        AssetUtils.checkAmountOfAssets(3);
+        //Test
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
+
+        // Go To Chart and Edit
+        ChartUtils.goToDatalake();
+        cy.wait(1000);
+        ChartUtils.editDataView('NewWidget');
+        ChartUtils.renameWidget('Rename');
+        ChartUtils.addChartsToAsset([assetName1, assetName3]);
+        ChartUtils.saveDataViewConfiguration();
+        //Neceassary for Background Task to finish
+        cy.wait(500);
+
+        AssetUtils.checkAmountOfAssets(3);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 1);
+        AssetUtils.checkResourceNamingByAssetName(assetName2, 'Rename');
+    });
+});

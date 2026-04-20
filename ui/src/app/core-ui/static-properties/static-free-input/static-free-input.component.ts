@@ -16,9 +16,13 @@
  *
  */
 
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { ValidatorFn, Validators } from '@angular/forms';
-import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    ValidatorFn,
+    Validators,
+} from '@angular/forms';
 import {
     DataType,
     FreeTextStaticProperty,
@@ -31,14 +35,32 @@ import {
 } from '../input.validator';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { QuillEditorComponent } from 'ngx-quill';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSlider, MatSliderThumb } from '@angular/material/slider';
+import { MatChip } from '@angular/material/chips';
 
 @Component({
     selector: 'sp-app-static-free-input',
     templateUrl: './static-free-input.component.html',
     styleUrls: ['./static-free-input.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormField,
+        MatInput,
+        MatError,
+        MatSlider,
+        MatSliderThumb,
+        MatChip,
+        QuillEditorComponent,
+        TranslatePipe,
+    ],
 })
 export class StaticFreeInputComponent
     extends AbstractValidatedStaticPropertyRenderer<FreeTextStaticProperty>
@@ -78,27 +100,32 @@ export class StaticFreeInputComponent
         const validators: ValidatorFn[] = [];
         if (!this.staticProperty.optional) {
             validators.push(Validators.required);
-        }
-        if (
-            DataType.isNumberType(this.staticProperty.requiredDatatype) ||
-            DataType.isNumberType(this.staticProperty.requiredDomainProperty)
-        ) {
-            validators.push(ValidateNumber);
-            this.errorMessage = this.translateService.instant(
-                'The value should be a number',
-            );
-        } else if (
-            this.staticProperty.requiredDomainProperty === SemanticType.SO_URL
-        ) {
-            validators.push(ValidateUrl);
-            this.errorMessage = this.translateService.instant(
-                'Please enter a valid URL',
-            );
-        } else if (this.staticProperty.requiredDatatype === DataType.STRING) {
-            validators.push(ValidateString);
-            this.errorMessage = this.translateService.instant(
-                'Please enter a valid String',
-            );
+            if (
+                DataType.isNumberType(this.staticProperty.requiredDatatype) ||
+                DataType.isNumberType(
+                    this.staticProperty.requiredDomainProperty,
+                )
+            ) {
+                validators.push(ValidateNumber);
+                this.errorMessage = this.translateService.instant(
+                    'The value should be a number',
+                );
+            } else if (
+                this.staticProperty.requiredDomainProperty ===
+                SemanticType.SO_URL
+            ) {
+                validators.push(ValidateUrl);
+                this.errorMessage = this.translateService.instant(
+                    'Please enter a valid URL',
+                );
+            } else if (
+                this.staticProperty.requiredDatatype === DataType.STRING
+            ) {
+                validators.push(ValidateString);
+                this.errorMessage = this.translateService.instant(
+                    'Please enter a valid String',
+                );
+            }
         }
 
         return validators;
@@ -106,9 +133,10 @@ export class StaticFreeInputComponent
 
     emitUpdate() {
         const valid =
-            this.staticProperty.value !== undefined &&
-            this.staticProperty.value !== '' &&
-            this.staticProperty.value !== null;
+            this.staticProperty.optional ||
+            (this.staticProperty.value !== undefined &&
+                this.staticProperty.value !== '' &&
+                this.staticProperty.value !== null);
         this.applyCompletedConfiguration(valid);
     }
 

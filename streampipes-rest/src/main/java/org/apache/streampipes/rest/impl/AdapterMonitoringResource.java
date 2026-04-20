@@ -20,13 +20,14 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
-import org.apache.streampipes.loadbalance.pipeline.ExtensionsServiceLogExecutor;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
-import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
@@ -47,8 +48,11 @@ import java.util.Map;
 public class AdapterMonitoringResource extends AbstractMonitoringResource {
 
   private final IAdapterStorage adapterStorage;
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
 
-  public AdapterMonitoringResource() {
+  public AdapterMonitoringResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
+    super(extensionServiceRequestManager);
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
   }
 
@@ -92,7 +96,7 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
   public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfos(
       @RequestParam(value = "filter") List<String> elementIds
   ) {
-    new ExtensionsServiceLogExecutor().triggerUpdate();
+    new ExtensionsServiceLogExecutor(extensionServiceRequestManager).triggerUpdate();
     var filteredElementIds = elementIds.stream()
         .map(adapterStorage::getElementById)
         .filter(a -> checkAdapterPermission(a, "READ"))

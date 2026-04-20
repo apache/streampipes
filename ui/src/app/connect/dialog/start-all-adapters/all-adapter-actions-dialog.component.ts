@@ -16,20 +16,28 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-start-all-adapters-dialog',
     templateUrl: './all-adapter-actions-dialog.component.html',
-    standalone: false,
+    imports: [FlexDirective, MatDivider, MatButton, TranslatePipe],
 })
 export class AllAdapterActionsComponent implements OnInit {
+    private dialogRef =
+        inject<DialogRef<AllAdapterActionsComponent>>(DialogRef);
+    private adapterService = inject(AdapterService);
+    private translate = inject(TranslateService);
+
     @Input()
     adapters: AdapterDescription[];
 
@@ -43,11 +51,7 @@ export class AllAdapterActionsComponent implements OnInit {
     @Input()
     action: boolean;
 
-    constructor(
-        private dialogRef: DialogRef<AllAdapterActionsComponent>,
-        private adapterService: AdapterService,
-        private translate: TranslateService,
-    ) {
+    constructor() {
         this.adaptersToModify = [];
         this.actionStatus = [];
         this.actionFinished = false;

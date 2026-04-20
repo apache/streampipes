@@ -18,12 +18,12 @@
 
 
 import { NavigationEnd, Router } from '@angular/router';
-import { PageName } from '../../_enums/page-name.enum';
+import { PageName } from '../navigation/page-name.enum';
 import { AuthService } from '../../services/auth.service';
 import { CurrentUserService } from '@streampipes/shared-ui';
 import { AppConstants } from '../../services/app.constants';
-import { UserPrivilege } from '../../_enums/user-privilege.enum';
-import { UserRole } from '../../_enums/user-role.enum';
+import { UserPrivilege } from '../auth/user-privilege.enum';
+import { UserRole } from '../auth/user-role.enum';
 import { inject } from '@angular/core';
 import { CollapseService } from '../collapse.service';
 
@@ -56,7 +56,6 @@ export abstract class BaseNavigationComponent {
   authenticated = true;
   topItems: MenuItem[] = [];
   menuGroups: MenuGroup[] = [];
-  notificationsVisible = false;
 
   public categories: MenuCategory[] = [
     {{#categoriesActive}}
@@ -103,10 +102,6 @@ export abstract class BaseNavigationComponent {
 
         this.topItems = menuGroups.find(m => m.title === 'top')?.items || [];
         this.menuGroups = menuGroups.filter(m => m.title !== 'top');
-        this.notificationsVisible = this.isNavItemVisible([
-        UserPrivilege.PRIVILEGE_READ_PIPELINE,
-        UserPrivilege.PRIVILEGE_WRITE_PIPELINE
-        ]);
       });
       this.activePage = this.router.url.replace('/', '');
       this.activePageName = this.getPageTitle(this.activePage);

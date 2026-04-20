@@ -63,11 +63,15 @@ public abstract class HttpRequest<K, V, T> {
   protected Header[] standardJsonHeaders() {
     List<Header> headers = new ArrayList<>(connectionConfig.getCredentials().makeHeaders());
     headers.add(Headers.acceptJson());
+    headers.addAll(clientConfig.getCustomHeaders());
     return headers.toArray(new Header[0]);
   }
 
   protected Header[] standardHeaders() {
-    List<Header> headers = new ArrayList<>(connectionConfig.getCredentials().makeHeaders());
+    List<Header> headers = new ArrayList<>();
+    headers.addAll(connectionConfig.getCredentials().makeHeaders());
+    headers.addAll(clientConfig.getCustomHeaders());
+
     return headers.toArray(new Header[0]);
   }
 

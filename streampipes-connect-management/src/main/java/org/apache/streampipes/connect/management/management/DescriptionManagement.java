@@ -21,8 +21,8 @@ package org.apache.streampipes.connect.management.management;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
@@ -30,8 +30,14 @@ import java.util.Optional;
 
 public class DescriptionManagement {
 
+  private final WorkerRestClient workerRestClient;
+
+  public DescriptionManagement(WorkerRestClient workerRestClient) {
+    this.workerRestClient = workerRestClient;
+  }
+
   public List<AdapterDescription> getAdapters() {
-    IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
+    IAdapterStorage adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
     return adapterStorage.findAll();
   }
 
@@ -42,7 +48,7 @@ public class DescriptionManagement {
   }
 
   public void deleteAdapterDescription(String id) throws SpRuntimeException {
-    var adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
+    var adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
     var adapter = adapterStorage.getElementById(id);
     if (!isAdapterUsed(adapter)) {
       adapterStorage.deleteElementById(id);
@@ -51,16 +57,19 @@ public class DescriptionManagement {
     }
   }
 
-  public String getAssets(String baseUrl) throws AdapterException {
-    return WorkerRestClient.getAssets(baseUrl);
+  public String getAssets(SpServiceRegistration service,
+                          String appId) throws AdapterException {
+    return workerRestClient.getAssets(service, appId);
   }
 
-  public byte[] getIconAsset(String baseUrl) throws AdapterException {
-    return WorkerRestClient.getIconAsset(baseUrl);
+  public byte[] getIconAsset(SpServiceRegistration service,
+                             String appId) throws AdapterException {
+    return workerRestClient.getIconAsset(service, appId);
   }
 
-  public String getDocumentationAsset(String baseUrl) throws AdapterException {
-    return WorkerRestClient.getDocumentationAsset(baseUrl);
+  public String getDocumentationAsset(SpServiceRegistration service,
+                                      String appId) throws AdapterException {
+    return workerRestClient.getDocumentationAsset(service, appId);
   }
 
   private boolean isAdapterUsed(AdapterDescription adapter) {

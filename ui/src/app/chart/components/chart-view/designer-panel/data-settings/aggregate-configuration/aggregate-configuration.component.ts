@@ -19,15 +19,38 @@
 import { Component, inject, Input } from '@angular/core';
 import { QueryConfig } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { FormFieldComponent } from '@streampipes/shared-ui';
+import { MatFormField } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'sp-aggregate-configuration',
     templateUrl: './aggregate-configuration.component.html',
     styleUrls: ['./aggregate-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        FormFieldComponent,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        MatInput,
+        FormsModule,
+        TranslatePipe,
+    ],
 })
 export class AggregateConfigurationComponent {
+    private widgetConfigService = inject(ChartConfigurationService);
+
     @Input() queryConfig: QueryConfig;
     @Input() widgetId: string;
 
@@ -41,8 +64,6 @@ export class AggregateConfigurationComponent {
         { value: 'd', label: this.translateService.instant('Day') },
         { value: 'w', label: this.translateService.instant('Week') },
     ];
-
-    constructor(private widgetConfigService: ChartConfigurationService) {}
 
     triggerDataRefresh() {
         if (this.widgetId) {

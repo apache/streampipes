@@ -19,6 +19,8 @@
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
+import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
 
 describe('Connect schema rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -28,16 +30,18 @@ describe('Connect schema rule transformations', () => {
     it('Test several schema rules', () => {
         FileManagementUtils.addFile('connect/schemaRules/input.csv');
         const adapterConfiguration =
-            ConnectUtils.setUpPreprocessingRuleTest(true);
+            ConnectUtils.setUpPreprocessingRuleTest(false);
 
-        // Add static value to event
-        ConnectEventSchemaUtils.addStaticProperty('staticPropertyName', 'id1');
+        ConnectUtils.replaceAdapterScript(
+            'utils.rename(event, "contains.dot", "dot");\n  ' +
+                '  out.collect(event);\n' +
+                '',
+        );
 
-        // Delete one property
-        ConnectEventSchemaUtils.deleteProperty('density');
+        ConnectBtns.configureSchemaRunScriptBtn().click();
 
-        // Rename property with special char
-        ConnectEventSchemaUtils.renameProperty('contains.dot', 'dot');
+        cy.wait(1000);
+        ConnectUtils.finishEventSchemaConfiguration();
 
         // Set data type to integer
         ConnectEventSchemaUtils.changePropertyDataType(
@@ -48,12 +52,17 @@ describe('Connect schema rule transformations', () => {
         // Add a timestamp property
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
 
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        ConnectUtils.finishConfigureFieldsConfiguration();
 
-        ConnectUtils.tearDownPreprocessingRuleTest(
-            adapterConfiguration,
-            'cypress/fixtures/connect/schemaRules/expected.csv',
-            true,
-        );
+        ChartUtils.clearMeasurementData('Adapter to test rules').then(() => {
+            ConnectUtils.startAdapter(adapterConfiguration, true);
+            ConnectUtils.restartAdapter(adapterConfiguration.adapterName);
+
+            ChartUtils.checkResults(
+                'Adapter to test rules',
+                'cypress/fixtures/connect/schemaRules/expected.csv',
+                true,
+            );
+        });
     });
 });

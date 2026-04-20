@@ -28,9 +28,9 @@ import {
     TagValue,
     WidgetSize,
 } from '../models/dataset.model';
-import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
+import type { DataTransformOption } from 'echarts/types/src/data/helper/transform.d.ts';
 import { WidgetBaseAppearanceConfig } from '../models/dataview-dashboard.model';
-import { BoxLayoutOptionMixin } from 'echarts/types/src/util/types';
+import type { BoxLayoutOptionMixin } from 'echarts/types/src/util/types.d.ts';
 import { DatasetOption } from 'echarts/types/dist/shared';
 
 export abstract class SpBaseSingleFieldEchartsRenderer<

@@ -20,7 +20,7 @@ package org.apache.streampipes.service.core.migrations.v0980;
 
 import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;

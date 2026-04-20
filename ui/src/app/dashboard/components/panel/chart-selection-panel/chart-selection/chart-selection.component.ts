@@ -23,15 +23,37 @@ import {
 } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../../services/auth.service';
-import { UserPrivilege } from '../../../../../_enums/user-privilege.enum';
+import { UserPrivilege } from '../../../../../core/auth/user-privilege.enum';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { ChartPreviewComponent } from './chart-preview/chart-preview.component';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-selection',
     templateUrl: './chart-selection.component.html',
     styleUrls: ['./chart-selection.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutGapDirective,
+        LayoutDirective,
+        ChartPreviewComponent,
+        LayoutAlignDirective,
+        MatButton,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class ChartSelectionComponent implements OnInit {
+    private dataViewService = inject(ChartService);
+    private router = inject(Router);
+
     private authService = inject(AuthService);
 
     @Output()
@@ -40,11 +62,6 @@ export class ChartSelectionComponent implements OnInit {
     charts: DataExplorerWidgetModel[] = [];
 
     hasChartWritePrivileges: boolean = false;
-
-    constructor(
-        private dataViewService: ChartService,
-        private router: Router,
-    ) {}
 
     ngOnInit() {
         this.dataViewService.getAllCharts().subscribe(charts => {

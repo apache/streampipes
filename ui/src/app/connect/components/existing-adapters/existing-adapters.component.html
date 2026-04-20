@@ -34,26 +34,6 @@
                 'New adapter' | translate
             }}
         </button>
-        <button
-            mat-flat-button
-            class="mat-basic"
-            data-cy="start-all-adapters-btn"
-            [disabled]="checkCurrentSelectionStatus(false)"
-            (click)="startAllAdapters(true)"
-        >
-            <mat-icon>play_arrow</mat-icon>
-            <span>{{ 'Start all adapters' | translate }}</span>
-        </button>
-        <button
-            mat-flat-button
-            class="mat-basic"
-            data-cy="stop-all-adapters-btn"
-            [disabled]="checkCurrentSelectionStatus(true)"
-            (click)="startAllAdapters(false)"
-        >
-            <mat-icon>stop</mat-icon>
-            <span>{{ 'Stop all adapters' | translate }}</span>
-        </button>
         <div fxFlex fxLayout="row" fxLayoutAlign="end center">
             <sp-connect-filter-toolbar
                 class="filter-bar-margin"
@@ -95,10 +75,17 @@
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
             <sp-table
                 fxFlex="100"
+                featureCardId="adapter"
+                resourceIdKey="elementId"
                 [columns]="displayedColumns"
                 [dataSource]="dataSource"
+                [assetContextConfig]="assetContextConfig"
+                [showSelectionCheckboxes]="true"
+                [showMultiActionsExecuteButton]="true"
+                [multiActionOptions]="bulkAdapterActionOptions"
                 [showActionsMenu]="true"
                 [rowsClickable]="true"
+                (multiActionsExecute)="startStopSelectedAdapters($event)"
                 (rowClicked)="navigateToDetailsOverviewPage($event)"
                 data-cy="all-adapters-table"
                 matSort

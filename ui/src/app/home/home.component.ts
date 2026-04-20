@@ -23,11 +23,14 @@ import { AppConstants } from '../services/app.constants';
 import {
     CurrentUserService,
     DialogService,
+    LocalStorageService,
     PanelType,
+    SpAlertBannerComponent,
     SpAssetBrowserService,
     SpBreadcrumbService,
+    SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import { UserRole } from '../_enums/user-role.enum';
+import { UserRole } from '../core/auth/user-role.enum';
 import { MissingElementsForTutorialComponent } from '../editor/dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
 import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
 import { ShepherdService } from '../services/tour/shepherd.service';
@@ -48,12 +51,42 @@ import {
 } from '@streampipes/platform-services';
 import { forkJoin, Subscription, zip } from 'rxjs';
 import { StatusBox } from './models/home.model';
-import { LocalStorageService } from '../../../projects/streampipes/shared-ui/src/lib/services/local-storage-settings.service';
+import {
+    FlexDirective,
+    FlexFillDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { WelcomeComponent } from './components/welcome/welcome.component';
+import { StatusComponent } from './components/status.component';
+import {
+    MatButtonToggle,
+    MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import { HomeAssetMapComponent } from './components/asset-map/home-asset-map.component';
+import { HomeAssetTableComponent } from './components/asset-table/home-asset-table.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        WelcomeComponent,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        StatusComponent,
+        FlexFillDirective,
+        SplitSectionComponent,
+        MatButtonToggleGroup,
+        MatButtonToggle,
+        FlexDirective,
+        HomeAssetMapComponent,
+        SpAlertBannerComponent,
+        HomeAssetTableComponent,
+        TranslatePipe,
+    ],
 })
 export class HomeComponent implements OnInit, OnDestroy {
     serviceLinks = [];
@@ -115,6 +148,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.assetFilter$ =
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
                 this.filteredAssets = filter.selectedAssets as SpAssetModel[];
+                if (this.filteredAssets) {
+                    this.sortAssetLinks(this.filteredAssets);
+                }
             });
         const isAdmin = this.hasRole(UserRole.ROLE_ADMIN);
         forkJoin([
@@ -132,6 +168,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             });
             this.locationConfig = res[1];
             this.assets = res[2];
+            this.sortAssetLinks(this.assets);
             res[3].forEach(doc => {
                 this.sites[doc._id] = doc;
             });
@@ -146,6 +183,19 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     hasRole(role: UserRole): boolean {
         return this.currentUser.roles.indexOf(role) > -1;
+    }
+
+    sortAssetLinks(assets: SpAssetModel[]) {
+        assets.forEach(asset => {
+            asset.assetLinks = [...asset.assetLinks].sort((a, b) => {
+                const typeCompare = a.linkType.localeCompare(b.linkType);
+                if (typeCompare !== 0) {
+                    return typeCompare;
+                }
+
+                return a.linkLabel.localeCompare(b.linkLabel);
+            });
+        });
     }
 
     checkForTutorial() {

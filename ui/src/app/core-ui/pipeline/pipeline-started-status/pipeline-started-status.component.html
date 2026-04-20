@@ -25,20 +25,20 @@
         data-cy="sp-pipeline-started-dialog"
     >
         <div fxLayout="row">
-            @if (pipelineOperationStatus.success) {
+            @if (pipelineOperationStatus()?.success) {
                 <mat-icon data-cy="sp-pipeline-started-success" color="accent"
                     >done</mat-icon
                 >
             }
-            @if (!pipelineOperationStatus.success) {
+            @if (!pipelineOperationStatus()?.success) {
                 <mat-icon style="color: red">error</mat-icon>
             }
-            <span>&nbsp;{{ pipelineOperationStatus.title }}.</span>
+            <span>&nbsp;{{ pipelineOperationStatus()?.title }}.</span>
         </div>
         @if (
-            action === 1 &&
-            !pipelineOperationStatus.success &&
-            !forceStopDisabled
+            action() === 1 &&
+            !pipelineOperationStatus()?.success &&
+            !forceStopDisabled()
         ) {
             <span class="message-small">{{
                 'You can perform a forced stop, which will stop and reset the pipeline status.'
@@ -53,21 +53,21 @@
             class="mat-basic"
             (click)="toggleStatusDetailsVisible()"
         >
-            @if (!statusDetailsVisible) {
+            @if (!statusDetailsVisible()) {
                 <div>
                     {{ 'Show Details' | translate }}
                 </div>
             }
-            @if (statusDetailsVisible) {
+            @if (statusDetailsVisible()) {
                 <div>
                     {{ 'Hide Details' | translate }}
                 </div>
             }
         </button>
         @if (
-            action === 1 &&
-            !pipelineOperationStatus.success &&
-            !forceStopDisabled
+            action() === 1 &&
+            !pipelineOperationStatus()?.success &&
+            !forceStopDisabled()
         ) {
             <button
                 mat-button
@@ -81,11 +81,11 @@
         }
     </div>
 
-    @if (statusDetailsVisible) {
+    @if (statusDetailsVisible()) {
         <div fxFlex="100" fxLayout="column" class="w-100">
             <sp-pipeline-operation-status
                 fxLayout="column"
-                [pipelineOperationStatus]="pipelineOperationStatus"
+                [pipelineOperationStatus]="pipelineOperationStatus()"
             >
             </sp-pipeline-operation-status>
         </div>

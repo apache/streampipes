@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
     AnyStaticProperty,
     CodeInputStaticProperty,
@@ -41,7 +41,7 @@ import { ConfigurationInfo } from '../../connect/model/ConfigurationInfo';
 
 @Injectable({ providedIn: 'root' })
 export class StaticPropertyUtilService {
-    constructor(private idGeneratorService: IdGeneratorService) {}
+    private idGeneratorService = inject(IdGeneratorService);
 
     public initializeCompletedConfigurations(
         configs: StaticProperty[],
@@ -191,6 +191,7 @@ export class StaticPropertyUtilService {
         dst.label = src.label;
         dst.description = src.description;
         dst.internalName = src.internalName;
+        dst.optional = src.optional;
         return dst;
     }
 

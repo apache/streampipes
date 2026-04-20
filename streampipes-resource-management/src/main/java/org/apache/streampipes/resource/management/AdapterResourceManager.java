@@ -19,19 +19,18 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
-import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class AdapterResourceManager extends AbstractResourceManager<IAdapterStorage> {
 
-  private final CRUDStorage<Certificate> certificateStorage;
+  private final ICertificateStorage certificateStorage;
 
   public AdapterResourceManager(IAdapterStorage adapterStorage,
-                                CRUDStorage<Certificate> certificateStorage) {
+                                ICertificateStorage certificateStorage) {
     super(adapterStorage);
     this.certificateStorage = certificateStorage;
   }

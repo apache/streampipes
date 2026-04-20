@@ -70,17 +70,7 @@ class FunctionHandler:
         for streampipes_function in self.registration.getFunctions():
             # Create the output data streams for every function
             for stream_id, output_stream in streampipes_function.function_definition.get_output_data_streams().items():
-                try:
-                    self.client.dataStreamApi.post(output_stream)
-                except HTTPError as e:
-                    logger.info("The data stream could not be created.")
-                    if e.response.status_code == HTTPStatus.BAD_REQUEST:
-                        logger.info(
-                            "This is due to the fact that this data stream already exists. "
-                            "Continuing with the existing data stream."
-                        )
-                    else:
-                        raise RuntimeError from e
+                self._create_or_update_output_stream(output_stream)
                 logger.info(
                     f"Using output data stream '{stream_id}' for function '{streampipes_function.getFunctionId().id}'"
                 )
@@ -106,6 +96,18 @@ class FunctionHandler:
             asyncio.run(self._function_loop())
         else:
             loop.create_task(self._function_loop())
+
+    def _create_or_update_output_stream(self, output_stream: DataStream) -> None:
+        """Creates a new output stream or updates it if it already exists."""
+        try:
+            self.client.dataStreamApi.get(output_stream.element_id)
+        except HTTPError as e:
+            if e.response.status_code == HTTPStatus.NOT_FOUND:
+                self.client.dataStreamApi.post(output_stream)
+            else:
+                raise RuntimeError from e
+        else:
+            self.client.dataStreamApi.put(output_stream)
 
     async def _function_loop(self) -> None:
         """Loops through all messages and sends them to the functions until the function handler gets stopped.

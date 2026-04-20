@@ -15,16 +15,29 @@
  * limitations under the License.
  *
  */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import { SelectedFilter } from '@streampipes/platform-services';
 import { EscapeNumberFilterService } from '../escape-number-filter.service';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-filter-selection-panel-row-value-input',
     templateUrl: './filter-selection-panel-row-value-input.component.html',
-    standalone: false,
+    imports: [MatFormField, MatInput, FormsModule, TranslatePipe],
 })
 export class FilterSelectionPanelRowValueInputComponent implements OnInit {
+    private escapeNumberFilterService = inject(EscapeNumberFilterService);
+
     @Input()
     public filter: SelectedFilter;
 
@@ -36,8 +49,6 @@ export class FilterSelectionPanelRowValueInputComponent implements OnInit {
     public update = new EventEmitter<void>();
 
     public value: string;
-
-    constructor(private escapeNumberFilterService: EscapeNumberFilterService) {}
 
     ngOnInit(): void {
         this.value = this.escapeNumberFilterService.removeEnclosingQuotes(

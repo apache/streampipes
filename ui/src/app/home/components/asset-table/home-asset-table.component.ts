@@ -21,6 +21,7 @@ import {
     inject,
     Input,
     OnChanges,
+    OnInit,
     SimpleChanges,
     ViewChild,
 } from '@angular/core';
@@ -31,17 +32,41 @@ import {
     LocationConfig,
     SpAssetModel,
 } from '@streampipes/platform-services';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import { Router } from '@angular/router';
+import { SpLabelComponent, SpTableComponent } from '@streampipes/shared-ui';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { AssetTableLinkPreviewComponent } from './asset-table-link-preview/asset-table-link-preview.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-home-asset-table',
     templateUrl: './home-asset-table.component.html',
     styleUrls: ['./home-asset-table.component.scss'],
-    standalone: false,
+    imports: [
+        SpTableComponent,
+        FlexDirective,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        SpLabelComponent,
+        AssetTableLinkPreviewComponent,
+        TranslatePipe,
+    ],
 })
-export class HomeAssetTableComponent implements OnChanges {
+export class HomeAssetTableComponent implements OnInit, OnChanges {
     @Input()
     locationConfig: LocationConfig;
 
@@ -70,6 +95,19 @@ export class HomeAssetTableComponent implements OnChanges {
 
     private isa95TypeService = inject(Isa95TypeService);
     private router = inject(Router);
+
+    ngOnInit() {
+        this.dataSource.sortingDataAccessor = (assetModel, column) => {
+            if (column === 'assetType') {
+                return assetModel.assetType?.isa95AssetType;
+            } else if (column === 'location') {
+                return this.getSite(assetModel);
+            } else if (column === 'area') {
+                return assetModel.assetSite?.area || '-';
+            }
+            return assetModel[column];
+        };
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         this.dataSource.data = this.assets;

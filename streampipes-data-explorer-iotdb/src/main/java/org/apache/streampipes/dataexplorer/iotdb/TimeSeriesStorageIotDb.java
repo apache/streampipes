@@ -18,9 +18,6 @@
 
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.iotdb.rpc.IoTDBConnectionException;
-import org.apache.iotdb.rpc.StatementExecutionException;
-import org.apache.iotdb.session.pool.SessionPool;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.TimeSeriesStorage;
@@ -28,6 +25,10 @@ import org.apache.streampipes.dataexplorer.iotdb.sanitize.IotDbNameSanitizer;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+
+import org.apache.iotdb.rpc.IoTDBConnectionException;
+import org.apache.iotdb.rpc.StatementExecutionException;
+import org.apache.iotdb.session.pool.SessionPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

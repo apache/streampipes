@@ -19,6 +19,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PipelineElementUnion } from '../../../../../editor/model/editor.model';
 import { PipelineElementTypeUtils } from '../../../../../editor/utils/editor.utils';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { NgClass } from '@angular/common';
+import { PipelineElementComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-pipeline-elements-row',
@@ -26,7 +34,14 @@ import { PipelineElementTypeUtils } from '../../../../../editor/utils/editor.uti
     styleUrls: [
         '../../../../../editor/components/pipeline-element-icon-stand/pipeline-element-icon-stand-row/pipeline-element-icon-stand-row.component.scss',
     ],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        ClassDirective,
+        NgClass,
+        PipelineElementComponent,
+        LayoutAlignDirective,
+    ],
 })
 export class PipelineElementsRowComponent implements OnInit {
     elementType: string;

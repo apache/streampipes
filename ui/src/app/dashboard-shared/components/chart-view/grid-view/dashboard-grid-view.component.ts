@@ -27,18 +27,33 @@ import {
 } from '@angular/core';
 import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
 import { GridStack, GridStackOptions } from 'gridstack';
-import { GridstackComponent, nodesCB } from 'gridstack/dist/angular';
+import {
+    GridstackComponent,
+    GridstackItemComponent,
+    nodesCB,
+} from 'gridstack/dist/angular';
+import { ChartContainerComponent } from '../../../../chart-shared/components/chart-container/chart-container.component';
 
 @Component({
     selector: 'sp-dashboard-grid-view',
     templateUrl: './dashboard-grid-view.component.html',
     styleUrls: ['./dashboard-grid-view.component.scss'],
-    standalone: false,
+    imports: [
+        GridstackComponent,
+        GridstackItemComponent,
+        ChartContainerComponent,
+    ],
 })
 export class DashboardGridViewComponent
     extends AbstractChartViewDirective
     implements OnInit, AfterViewInit, OnChanges
 {
+    private readonly defaultGridCellHeightPx = 90;
+    private readonly minGridCellHeightPx = 40;
+    private readonly maxGridCellHeightPx = 200;
+
+    readonly maxGridWidthPx = 1440;
+
     @Input()
     kioskMode = false;
 
@@ -61,7 +76,7 @@ export class DashboardGridViewComponent
             minRow: 5,
             column: this.dashboard.gridColumns,
             margin: 2,
-            cellHeight: 'initial',
+            cellHeight: this.getGridCellHeight(),
             disableResize: !this.editMode,
             disableDrag: !this.editMode,
             float: true,
@@ -94,6 +109,21 @@ export class DashboardGridViewComponent
     }
 
     onWidgetsAvailable(): void {}
+
+    private getGridCellHeight(): number {
+        const configuredValue = Number(
+            this.dashboard?.dashboardGeneralSettings?.gridRowHeightPx,
+        );
+
+        if (Number.isNaN(configuredValue)) {
+            return this.defaultGridCellHeightPx;
+        }
+
+        return Math.min(
+            this.maxGridCellHeightPx,
+            Math.max(this.minGridCellHeightPx, configuredValue),
+        );
+    }
 
     isGridView(): boolean {
         return true;

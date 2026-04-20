@@ -147,9 +147,9 @@ export class SpColorizationService {
 
         // Flatten both on white if they have alpha
         const bgEff = this.flattenOn(bgRgb, { r: 255, g: 255, b: 255, a: 1 });
-        let fgEff = this.flattenOn(fgRgb, { r: 255, g: 255, b: 255, a: 1 });
+        const fgEff = this.flattenOn(fgRgb, { r: 255, g: 255, b: 255, a: 1 });
 
-        let current = this.contrastRatio(fgEff, bgEff);
+        const current = this.contrastRatio(fgEff, bgEff);
         if (current >= minRatio) return this.rgbToHex(fgEff);
 
         const towardBlack = { r: 0, g: 0, b: 0, a: 1 };

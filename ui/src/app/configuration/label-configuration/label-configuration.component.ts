@@ -16,25 +16,74 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { LabelsService, SpLabel } from '@streampipes/platform-services';
-import { SpConfigurationRoutes } from '../configuration.routes';
-import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { SpConfigurationRoutes } from '../configuration.breadcrumb';
+import {
+    SpBasicNavTabsComponent,
+    SpBreadcrumbService,
+    SpLabelComponent,
+    SplitSectionComponent,
+    SpNavigationItem,
+    SpTableComponent,
+} from '@streampipes/shared-ui';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { SpEditLabelComponent } from './edit-label/edit-label.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-label-configuration',
     templateUrl: './label-configuration.component.html',
     styleUrls: ['./label-configuration.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        SplitSectionComponent,
+        LayoutAlignDirective,
+        LayoutGapDirective,
+        MatButton,
+        SpEditLabelComponent,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        SpLabelComponent,
+        MatIconButton,
+        MatTooltip,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class SpLabelConfigurationComponent implements OnInit {
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private labelsService = inject(LabelsService);
+    private tabService = inject(SpConfigurationTabsService);
+
     tabs: SpNavigationItem[] = [];
 
     allLabels: SpLabel[] = [];
-    createLabelMode = false;
+    readonly createLabelMode = signal(false);
 
     dataSource: MatTableDataSource<SpLabel> = new MatTableDataSource<SpLabel>();
 
@@ -42,15 +91,9 @@ export class SpLabelConfigurationComponent implements OnInit {
     sort: MatSort;
 
     displayedColumns = ['name', 'description', 'actions'];
-    labelsinUse = [];
+    labelsinUse: string[] = [];
 
-    editedLabels: string[] = [];
-
-    constructor(
-        private breadcrumbService: SpBreadcrumbService,
-        private labelsService: LabelsService,
-        private tabService: SpConfigurationTabsService,
-    ) {}
+    readonly editedLabels = signal<string[]>([]);
 
     ngOnInit(): void {
         this.tabs = this.tabService.getTabs();
@@ -75,7 +118,10 @@ export class SpLabelConfigurationComponent implements OnInit {
     }
 
     saveLabel(label: SpLabel): void {
-        this.labelsService.addLabel(label).subscribe(() => this.reloadLabels());
+        this.labelsService.addLabel(label).subscribe(() => {
+            this.createLabelMode.set(false);
+            this.reloadLabels();
+        });
     }
 
     updateLabel(label: SpLabel): void {
@@ -92,10 +138,16 @@ export class SpLabelConfigurationComponent implements OnInit {
     }
 
     removeEditedLabel(labelId: string): void {
-        this.editedLabels.splice(this.editedLabels.indexOf(labelId), 1);
+        this.editedLabels.update(labels => labels.filter(id => id !== labelId));
     }
 
     isEditMode(labelId: string): boolean {
-        return this.editedLabels.find(l => l === labelId) !== undefined;
+        return this.editedLabels().includes(labelId);
+    }
+
+    addEditedLabel(labelId: string): void {
+        this.editedLabels.update(labels =>
+            labels.includes(labelId) ? labels : [...labels, labelId],
+        );
     }
 }

@@ -24,26 +24,83 @@ import {
     OnInit,
     SimpleChanges,
     ViewChild,
+    inject,
 } from '@angular/core';
 import {
     LabelsService,
     SpAsset,
     SpLabel,
 } from '@streampipes/platform-services';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { FormControl } from '@angular/forms';
+import {
+    MatChipGrid,
+    MatChipInput,
+    MatChipInputEvent,
+    MatChipRemove,
+    MatChipRow,
+} from '@angular/material/chips';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {
+    MatAutocomplete,
+    MatAutocompleteSelectedEvent,
+    MatAutocompleteTrigger,
+} from '@angular/material/autocomplete';
 import { map, startWith } from 'rxjs/operators';
-import { SpColorizationService } from '@streampipes/shared-ui';
+import {
+    FormFieldComponent,
+    SpColorizationService,
+    SpLabelComponent,
+} from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField } from '@angular/material/form-field';
+import { AsyncPipe, NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { MatOption } from '@angular/material/select';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-details-labels',
     templateUrl: './asset-details-labels.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutGapDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        FormFieldComponent,
+        MatButton,
+        RouterLink,
+        MatIconButton,
+        MatIcon,
+        MatFormField,
+        MatChipGrid,
+        MatChipRow,
+        NgStyle,
+        StyleDirective,
+        MatChipRemove,
+        FormsModule,
+        MatChipInput,
+        MatAutocompleteTrigger,
+        ReactiveFormsModule,
+        MatAutocomplete,
+        MatOption,
+        SpLabelComponent,
+        AsyncPipe,
+        TranslatePipe,
+    ],
 })
 export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
+    private labelsService = inject(LabelsService);
+    private colorizationService = inject(SpColorizationService);
+
     @Input()
     asset: SpAsset;
 
@@ -61,12 +118,11 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
 
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
 
-    constructor(
-        private labelsService: LabelsService,
-        private colorizationService: SpColorizationService,
-    ) {}
-
     ngOnInit(): void {
+        this.loadLabels();
+    }
+
+    loadLabels(): void {
         this.labelsService.getAllLabels().subscribe(labels => {
             this.allLabels = labels.sort((a, b) =>
                 a.label.localeCompare(b.label),

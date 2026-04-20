@@ -16,8 +16,20 @@
  *
  */
 
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { CurrentUserService, DialogRef } from '@streampipes/shared-ui';
+import {
+    Component,
+    Input,
+    OnInit,
+    ViewEncapsulation,
+    inject,
+} from '@angular/core';
+import {
+    CurrentUserService,
+    DialogRef,
+    FormFieldComponent,
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
 import {
     Group,
     MailConfigService,
@@ -30,30 +42,64 @@ import {
 import {
     AbstractControl,
     FormControl,
+    FormsModule,
+    ReactiveFormsModule,
     UntypedFormBuilder,
-    UntypedFormControl,
     UntypedFormGroup,
     ValidationErrors,
     ValidatorFn,
     Validators,
 } from '@angular/forms';
-import { UserRole } from '../../../_enums/user-role.enum';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { UserRole } from '../../../core/auth/user-role.enum';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { AvailableRolesService } from '../../../services/available-roles.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'sp-edit-user-dialog',
     templateUrl: './edit-user-dialog.component.html',
     styleUrls: ['./edit-user-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SpAlertBannerComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        SplitSectionComponent,
+        MatError,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        MatCheckbox,
+        MatDivider,
+        MatButton,
+        AsyncPipe,
+        TranslatePipe,
+    ],
 })
 export class EditUserDialogComponent implements OnInit {
+    private dialogRef = inject<DialogRef<EditUserDialogComponent>>(DialogRef);
+    private availableRolesService = inject(AvailableRolesService);
+    private fb = inject(UntypedFormBuilder);
+    private userService = inject(UserService);
+    private userGroupService = inject(UserGroupService);
+    private currentUserService = inject(CurrentUserService);
+    private authService = inject(AuthService);
+    private router = inject(Router);
+    private mailConfigService = inject(MailConfigService);
+    private translateService = inject(TranslateService);
+
     @Input()
     user: any;
 
@@ -75,19 +121,6 @@ export class EditUserDialogComponent implements OnInit {
     emailChanged = false;
     emailConfigured = false;
     formAvailable = false;
-
-    constructor(
-        private dialogRef: DialogRef<EditUserDialogComponent>,
-        private availableRolesService: AvailableRolesService,
-        private fb: UntypedFormBuilder,
-        private userService: UserService,
-        private userGroupService: UserGroupService,
-        private currentUserService: CurrentUserService,
-        private authService: AuthService,
-        private router: Router,
-        private mailConfigService: MailConfigService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.initRoleFilter();

@@ -30,9 +30,9 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.client.user.UserRegistrationData;
-import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
+import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
+import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 import org.apache.streampipes.user.management.util.TokenUtil;
@@ -78,7 +78,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
   public Principal getAdminUser() {
-    return CouchDbStorageManager.INSTANCE
+    return StorageDispatcher.INSTANCE.getNoSqlStore()
         .getUserStorageAPI()
         .getAllUserAccounts()
         .stream()
@@ -185,11 +185,11 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     getPasswordRecoveryTokenStorage().persist(PasswordRecoveryToken.create(recoveryCode, username));
   }
 
-  private CRUDStorage<PasswordRecoveryToken> getPasswordRecoveryTokenStorage() {
+  private IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPasswordRecoveryTokenStorage();
   }
 
-  private CRUDStorage<UserActivationToken> getUserActivationTokenStorage() {
+  private IUserActivationTokenStorage getUserActivationTokenStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getUserActivationTokenStorage();
   }
 

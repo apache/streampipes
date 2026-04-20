@@ -16,33 +16,47 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { DialogRef, FormFieldComponent } from '@streampipes/shared-ui';
+import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
+import { FormsModule, UntypedFormGroup } from '@angular/forms';
 import {
-    AdapterService,
-    AssetLink,
-    AssetLinkType,
-    ChartService,
-    DashboardService,
-    DatalakeRestService,
-    FilesService,
-    GenericStorageService,
-    PipelineElementService,
-    PipelineService,
-} from '@streampipes/platform-services';
-import { UntypedFormGroup } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
+    MatOption,
+    MatSelect,
+    MatSelectChange,
+} from '@angular/material/select';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-asset-link-dialog-component',
     templateUrl: './edit-asset-link-dialog.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormFieldComponent,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        FormsModule,
+        MatInput,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class EditAssetLinkDialogComponent
     extends BaseAssetLinksDirective
     implements OnInit
 {
+    private dialogRef =
+        inject<DialogRef<EditAssetLinkDialogComponent>>(DialogRef);
+
     @Input()
     assetLink: AssetLink;
 
@@ -59,29 +73,6 @@ export class EditAssetLinkDialogComponent
     currentResource: any;
 
     selectedLinkType: AssetLinkType;
-
-    constructor(
-        private dialogRef: DialogRef<EditAssetLinkDialogComponent>,
-        protected genericStorageService: GenericStorageService,
-        protected pipelineService: PipelineService,
-        protected chartService: ChartService,
-        protected dashboardService: DashboardService,
-        protected dataLakeService: DatalakeRestService,
-        protected pipelineElementService: PipelineElementService,
-        protected adapterService: AdapterService,
-        protected filesService: FilesService,
-    ) {
-        super(
-            genericStorageService,
-            pipelineService,
-            chartService,
-            dashboardService,
-            dataLakeService,
-            pipelineElementService,
-            adapterService,
-            filesService,
-        );
-    }
 
     ngOnInit(): void {
         super.onInit();

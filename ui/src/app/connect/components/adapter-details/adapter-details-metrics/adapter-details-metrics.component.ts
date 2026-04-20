@@ -18,46 +18,39 @@
 
 import { Component, OnInit } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
-import { AuthService } from '../../../../services/auth.service';
-import { ActivatedRoute } from '@angular/router';
+import { SpMetricsEntry } from '@streampipes/platform-services';
+import { SpBasicNavTabsComponent } from '@streampipes/shared-ui';
+import { SpConnectRoutes } from '../../../connect.breadcrumb';
 import {
-    AdapterService,
-    AdapterMonitoringService,
-    SpMetricsEntry,
-} from '@streampipes/platform-services';
-import {
-    CurrentUserService,
-    SpBreadcrumbService,
-} from '@streampipes/shared-ui';
-import { SpConnectRoutes } from '../../../connect.routes';
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { SpSimpleMetricsComponent } from '../../../../core-ui/monitoring/simple-metrics/simple-metrics.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-details-metrics',
     templateUrl: './adapter-details-metrics.component.html',
     styleUrls: [],
-    standalone: false,
+    imports: [
+        SpBasicNavTabsComponent,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatTooltip,
+        FlexDirective,
+        SpSimpleMetricsComponent,
+        TranslatePipe,
+    ],
 })
 export class SpAdapterDetailsMetricsComponent
     extends SpAbstractAdapterDetailsDirective
     implements OnInit
 {
     adapterMetrics: SpMetricsEntry;
-
-    constructor(
-        currentUserService: CurrentUserService,
-        activatedRoute: ActivatedRoute,
-        adapterService: AdapterService,
-        adapterMonitoringService: AdapterMonitoringService,
-        breadcrumbService: SpBreadcrumbService,
-    ) {
-        super(
-            currentUserService,
-            activatedRoute,
-            adapterService,
-            adapterMonitoringService,
-            breadcrumbService,
-        );
-    }
 
     ngOnInit(): void {
         super.onInit();

@@ -17,9 +17,9 @@
  */
 
 import { ComponentType, Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentRef, Injectable, Injector } from '@angular/core';
+import { ComponentRef, Injectable, Injector, inject } from '@angular/core';
 import { DialogRef } from './dialog-ref';
-import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
+import { ComponentPortal } from '@angular/cdk/portal';
 import {
     BaseDialogComponentUnion,
     DialogConfig,
@@ -32,15 +32,17 @@ import { PanelDialogConfig } from '../panel-dialog/panel-dialog.config';
 import { StandardDialogConfig } from '../standard-dialog/standard-dialog.config';
 import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 import { CardDialogConfig } from '../card-dialog/card-dialog-config';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DialogService {
-    constructor(
-        private overlay: Overlay,
-        private injector: Injector,
-    ) {}
+    private openDialogs: DialogRef<any>[] = [];
+    private matDialog = inject(MatDialog);
+
+    private overlay = inject(Overlay);
+    private injector = inject(Injector);
 
     public open<T>(
         component: ComponentType<T>,
@@ -53,7 +55,7 @@ export class DialogService {
         };
 
         const positionStrategy = this.getPositionStrategy(config.panelType);
-        const panelConfig: BaseDialogConfig = this.getConfig(config.panelType);
+        const panelConfig = this.getConfig(config.panelType);
         const overlay = this.overlay.create(
             panelConfig.getOverlayConfig(config, positionStrategy),
         );
@@ -75,20 +77,37 @@ export class DialogService {
         dialogRef.componentInstance = panelDialogContainerRef.instance.attach();
 
         if (config.data) {
-            Object.keys(config.data).forEach(key => {
-                dialogRef.componentInstance[key] = config.data[key];
-            });
+            Object.keys(config.data).forEach(
+                key => (dialogRef.componentInstance[key] = config.data[key]),
+            );
         }
 
         this.applyDialogProperties(panelDialogContainerRef, overlay, config);
 
+        this.openDialogs.push(dialogRef);
+        dialogRef
+            .afterClosed()
+            .subscribe(
+                () =>
+                    (this.openDialogs = this.openDialogs.filter(
+                        d => d !== dialogRef,
+                    )),
+            );
+
         return dialogRef;
     }
 
-    private createInjector<T>(dialogRef: DialogRef<T>) {
-        const injectorMap = new WeakMap();
-        injectorMap.set(DialogRef, dialogRef);
-        return new PortalInjector(this.injector, injectorMap);
+    get hasOpenDialogs() {
+        return (
+            this.openDialogs.length > 0 || this.matDialog.openDialogs.length > 0
+        );
+    }
+
+    private createInjector<T>(dialogRef: DialogRef<T>): Injector {
+        return Injector.create({
+            parent: this.injector,
+            providers: [{ provide: DialogRef, useValue: dialogRef }],
+        });
     }
 
     private applyDialogProperties(
@@ -99,6 +118,12 @@ export class DialogService {
         panelDialogComponentRef.instance.containerEvent.subscribe(e => {
             if (e.key === 'CLOSE') {
                 overlayRef.dispose();
+            }
+        });
+
+        overlayRef.keydownEvents().subscribe(e => {
+            if (e.key === 'Escape' && !config.disableClose) {
+                panelDialogComponentRef.instance.close();
             }
         });
 

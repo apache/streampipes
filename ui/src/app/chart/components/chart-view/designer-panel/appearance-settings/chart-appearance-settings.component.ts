@@ -16,20 +16,45 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { ChartConfigurationService } from '../../../../../chart-shared/services/chart-configuration.service';
 import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { ChartTypeService } from '../../../../../chart-shared/services/chart-type.service';
 import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
 import { Subscription } from 'rxjs';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { ColorPickerDirective } from 'ngx-color-picker';
+import { NgComponentOutlet } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-appearance-settings',
     templateUrl: './chart-appearance-settings.component.html',
     styleUrls: ['./chart-appearance-settings.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatRadioGroup,
+        FormsModule,
+        MatRadioButton,
+        ColorPickerDirective,
+        NgComponentOutlet,
+        TranslatePipe,
+    ],
 })
 export class ChartAppearanceSettingsComponent implements OnInit, OnDestroy {
+    private widgetTypeService = inject(ChartTypeService);
+    private widgetRegistryService = inject(ChartRegistry);
+    private widgetConfigurationService = inject(ChartConfigurationService);
+
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
     backgroundOption: 'default' | 'custom' = 'default';
@@ -50,12 +75,6 @@ export class ChartAppearanceSettingsComponent implements OnInit, OnDestroy {
 
     widgetTypeSubscription: Subscription;
     extendedAppearanceConfigComponent: any;
-
-    constructor(
-        private widgetTypeService: ChartTypeService,
-        private widgetRegistryService: ChartRegistry,
-        private widgetConfigurationService: ChartConfigurationService,
-    ) {}
 
     ngOnInit(): void {
         this.findWidget(this.currentlyConfiguredWidget.widgetType);

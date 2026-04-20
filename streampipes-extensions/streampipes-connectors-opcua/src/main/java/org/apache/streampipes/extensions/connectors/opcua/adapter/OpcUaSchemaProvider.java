@@ -26,17 +26,14 @@ import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProv
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
 import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
+import org.apache.streampipes.model.connect.guess.SampleData;
+import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,15 +48,12 @@ public class OpcUaSchemaProvider {
    * @throws AdapterException
    * @throws ParseException
    */
-  public GuessSchema getSchema(OpcUaClientProvider clientProvider,
-                               IAdapterParameterExtractor extractor,
-                               IStreamPipesClient streamPipesClient)
+  public SampleData getSampleData(OpcUaClientProvider clientProvider,
+                                   IAdapterParameterExtractor extractor,
+                                   IStreamPipesClient streamPipesClient)
       throws AdapterException, ParseException {
-    var builder = GuessSchemaBuilder.create();
-    EventSchema eventSchema = new EventSchema();
     Map<String, Object> eventPreview = new HashMap<>();
     Map<String, FieldStatusInfo> fieldStatusInfos = new HashMap<>();
-    List<EventProperty> allProperties = new ArrayList<>();
 
     var opcUaConfig = SpOpcUaConfigExtractor.extractAdapterConfig(
         extractor.getStaticPropertyExtractor(),
@@ -69,23 +63,16 @@ public class OpcUaSchemaProvider {
       var connectedClient = clientProvider.getClient(opcUaConfig);
       OpcUaNodeBrowser nodeBrowser =
           new OpcUaNodeBrowser(connectedClient.getClient(), opcUaConfig);
-      var nodeProvider = nodeBrowser.makeNodeProvider(List.of());
+      var nodeProvider = nodeBrowser.makeNodeProvider();
       var selectedNodes = nodeProvider.getNodes();
-
-      if (!selectedNodes.isEmpty()) {
-        for (OpcUaNode opcNode : selectedNodes) {
-          opcNode.addToSchema(connectedClient.getClient(), allProperties);
-        }
-      }
 
       var nodeIds = selectedNodes.stream()
           .map(node -> node.nodeInfo().getNodeId())
           .collect(Collectors.toList());
-      var response = connectedClient.getClient()
+      var returnValues = connectedClient.getClient()
           .readValues(0, TimestampsToReturn.Both, nodeIds);
-
-      var returnValues = response.get();
       makeEventPreview(connectedClient.getClient(), selectedNodes, eventPreview, fieldStatusInfos, returnValues);
+
 
 
     } catch (Exception e) {
@@ -94,12 +81,10 @@ public class OpcUaSchemaProvider {
       clientProvider.releaseClient(opcUaConfig);
     }
 
-    eventSchema.setEventProperties(allProperties);
-    builder.properties(allProperties);
-    builder.fieldStatusInfos(fieldStatusInfos);
-    builder.preview(eventPreview);
-
-    return builder.build();
+    return SampleDataBuilder.create()
+                     .sample(eventPreview)
+        .fieldStatusInfos(fieldStatusInfos)
+                     .build();
   }
 
   private static void makeEventPreview(
@@ -124,7 +109,7 @@ public class OpcUaSchemaProvider {
             Map.of(),
             fieldStatusInfos,
             null,
-            FieldStatusInfo.bad(additionalInfo, false));
+            FieldStatusInfo.bad(additionalInfo));
       }
     }
   }

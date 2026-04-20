@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -38,10 +39,13 @@ public class PipelineElementAsset extends AbstractRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementAsset.class);
 
-  @GetMapping(path = "/{appId}/assets/icon", produces = MediaType.IMAGE_PNG_VALUE)
+  @GetMapping(path = "/{appId}/assets/icon")
   public ResponseEntity<?> getIconAsset(@PathVariable("appId") String appId) {
     try {
-      return ok(AssetManager.getAssetIcon(appId));
+      byte[] icon = AssetManager.getAssetIcon(appId);
+      return ResponseEntity.ok()
+          .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(icon)))
+          .body(icon);
     } catch (IOException e) {
       return fail();
     }

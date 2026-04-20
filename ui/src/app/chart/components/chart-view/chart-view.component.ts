@@ -31,6 +31,8 @@ import {
     EventPropertyUnion,
     FieldConfig,
     LinkageData,
+    TimeSelectionConstants,
+    SpQueryResult,
     TimeSettings,
 } from '@streampipes/platform-services';
 import {
@@ -41,10 +43,16 @@ import {
 } from '@angular/router';
 import {
     AssetSaveService,
+    ConfirmDialogAction,
     ConfirmDialogComponent,
     CurrentUserService,
     DialogService,
+    KeyboardShortcutService,
     PanelType,
+    ShortcutRegistration,
+    SidebarResizeComponent,
+    SpAlertBannerComponent,
+    SpBasicViewComponent,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
@@ -53,26 +61,59 @@ import { ChartDetectChangesService } from '../../services/chart-detect-changes.s
 import { SupportsUnsavedChangeDialog } from '../../../chart-shared/models/dataview-dashboard.model';
 import { Observable, of, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { catchError, map } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ResizeEchartsService } from '../../../chart-shared/services/resize-echarts.service';
+import { ResizeService } from '../../../chart-shared/services/resize.service';
 import { AssetDialogComponent } from '../../dialog/asset-dialog.component';
 import { AuthService } from '../../../services/auth.service';
-import { UserRole } from '../../../_enums/user-role.enum';
+import { UserRole } from '../../../core/auth/user-role.enum';
 import { ChartFieldProviderService } from '../../../chart-shared/services/chart-field-provider.service';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { ChartViewToolbarComponent } from './toolbar/chart-view-toolbar.component';
+import {
+    MatDrawer,
+    MatDrawerContainer,
+    MatDrawerContent,
+} from '@angular/material/sidenav';
+import { ChartDesignerPanelComponent } from './designer-panel/chart-designer-panel.component';
+import { ChartContainerComponent } from '../../../chart-shared/components/chart-container/chart-container.component';
+import { ChartDataPreviewComponent } from './query-result-preview/chart-data-preview.component';
 
 @Component({
     selector: 'sp-chart-data-view',
     templateUrl: './chart-view.component.html',
     styleUrls: ['./chart-view.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        SpAlertBannerComponent,
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        ChartViewToolbarComponent,
+        MatDrawerContainer,
+        MatDrawer,
+        SidebarResizeComponent,
+        ChartDesignerPanelComponent,
+        MatDrawerContent,
+        ChartContainerComponent,
+        ChartDataPreviewComponent,
+        TranslatePipe,
+    ],
 })
 export class ChartViewComponent
     implements OnInit, OnDestroy, SupportsUnsavedChangeDialog
 {
     dataViewLoaded = false;
     timeSettings: TimeSettings;
+    readonly legacyMultiSourceWarningTitle = 'Legacy multi-source chart';
+    readonly legacyMultiSourceWarningDescription =
+        'This chart uses multiple data sources and cannot be edited in this release. Please migrate it manually before making changes.';
 
     editMode = true;
     dataView: DataExplorerWidgetModel;
@@ -85,7 +126,10 @@ export class ChartViewComponent
     originalAssets = [];
 
     resizeEchartsService = inject(ResizeEchartsService);
+    private shortcutReg: ShortcutRegistration;
+    resizeService = inject(ResizeService);
 
+    private shortcutService = inject(KeyboardShortcutService);
     private dataExplorerSharedService = inject(ChartSharedService);
     private detectChangesService = inject(ChartDetectChangesService);
     private route = inject(ActivatedRoute);
@@ -102,8 +146,11 @@ export class ChartViewComponent
     private assetSaveService = inject(AssetSaveService);
 
     currentUser$: Subscription;
+    queryParams$: Subscription;
 
     chartNotFound = false;
+    legacyMultiSourceChart = false;
+    latestQueryResults: SpQueryResult[] = [];
 
     observableGenerator =
         this.dataExplorerSharedService.defaultObservableGenerator();
@@ -111,24 +158,35 @@ export class ChartViewComponent
     @ViewChild('panel', { static: false }) outerPanel: ElementRef;
 
     ngOnInit() {
+        this.shortcutReg = this.shortcutService.register('chart-view', [
+            {
+                key: 's',
+                ctrl: true,
+                action: () => this.onShortcutSave(),
+                allowInDialog: true,
+            },
+        ]);
+
         const dataViewId = this.route.snapshot.params.id;
 
-        this.currentUser$ = this.currentUserService.user$.subscribe(user => {
-            if (!this.authService.hasRole(UserRole.ROLE_DATA_EXPLORER_ADMIN)) {
-                this.editMode = false;
-            } else {
-                this.editMode = this.route.snapshot.queryParams.editMode;
-            }
+        this.currentUser$ = this.currentUserService.user$.subscribe(() => {
+            this.editMode = this.shouldEnableEditMode();
         });
 
         if (dataViewId) {
             this.loadDataView(dataViewId);
         } else {
             this.createWidget();
-            this.timeSettings = this.makeDefaultTimeSettings();
+            this.timeSettings =
+                this.getTimeSettingsFromQueryParams() ??
+                this.makeDefaultTimeSettings();
             this.dataView.timeSettings = this.timeSettings;
             this.afterDataViewLoaded();
         }
+
+        this.queryParams$ = this.route.queryParams.subscribe(queryParams => {
+            this.applyTimeSettingsFromQueryParams(queryParams);
+        });
     }
 
     onAddWidget(event: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>) {
@@ -176,6 +234,7 @@ export class ChartViewComponent
 
     loadDataView(dataViewId: string): void {
         this.dataViewLoaded = false;
+        this.latestQueryResults = [];
         this.dataViewService
             .getChart(dataViewId)
             .pipe(
@@ -193,13 +252,73 @@ export class ChartViewComponent
                     this.originalDataView = JSON.parse(
                         JSON.stringify(this.dataView),
                     );
+                    this.legacyMultiSourceChart = this.hasMultipleSourceConfigs(
+                        this.dataView,
+                    );
+                    this.editMode = this.shouldEnableEditMode();
                     this.timeSettings =
                         this.dataExplorerSharedService.makeChartTimeSettings(
                             this.dataView,
                         );
+                    this.timeSettings =
+                        this.getTimeSettingsFromQueryParams() ??
+                        this.timeSettings;
                     this.afterDataViewLoaded();
                 }
             });
+    }
+
+    private applyTimeSettingsFromQueryParams(queryParams: {
+        [key: string]: any;
+    }): void {
+        if (!this.timeSettings) {
+            return;
+        }
+
+        const startDate = Number(queryParams.startDate);
+        const endDate = Number(queryParams.endDate);
+        if (
+            !Number.isFinite(startDate) ||
+            !Number.isFinite(endDate) ||
+            startDate >= endDate
+        ) {
+            return;
+        }
+
+        if (
+            this.timeSettings.startTime === startDate &&
+            this.timeSettings.endTime === endDate
+        ) {
+            return;
+        }
+
+        this.timeSettings = {
+            ...this.timeSettings,
+            startTime: startDate,
+            endTime: endDate,
+            timeSelectionId: TimeSelectionConstants.CUSTOM,
+        };
+        this.timeSelectionService.notify(this.timeSettings);
+    }
+
+    private getTimeSettingsFromQueryParams(): TimeSettings | undefined {
+        const startDate = Number(this.route.snapshot.queryParams.startDate);
+        const endDate = Number(this.route.snapshot.queryParams.endDate);
+
+        if (
+            !Number.isFinite(startDate) ||
+            !Number.isFinite(endDate) ||
+            startDate >= endDate
+        ) {
+            return undefined;
+        }
+
+        return {
+            startTime: startDate,
+            endTime: endDate,
+            dynamicSelection: -1,
+            timeSelectionId: TimeSelectionConstants.CUSTOM,
+        };
     }
 
     afterDataViewLoaded(): void {
@@ -212,6 +331,10 @@ export class ChartViewComponent
 
     editDataView(): void {
         this.routingService.navigateToChart(true, this.dataView.elementId);
+    }
+
+    onQueryResultsChanged(results: SpQueryResult[]): void {
+        this.latestQueryResults = results ?? [];
     }
 
     makeDefaultTimeSettings(): TimeSettings {
@@ -250,8 +373,10 @@ export class ChartViewComponent
             this.translateService.instant('New chart');
         this.dataView.dataConfig = {};
         this.dataView.dataConfig.ignoreMissingValues = false;
-        this.dataView.baseAppearanceConfig.backgroundColor = '#FFFFFF';
-        this.dataView.baseAppearanceConfig.textColor = '#3e3e3e';
+        this.dataView.baseAppearanceConfig.backgroundColor =
+            'var(--color-bg-0)';
+        this.dataView.baseAppearanceConfig.textColor =
+            'var(--color-default-text)';
         this.dataView.metadata = {
             createdAtEpochMs: Date.now(),
             lastModifiedEpochMs: Date.now(),
@@ -261,6 +386,9 @@ export class ChartViewComponent
     }
 
     saveDataView(): void {
+        if (this.legacyMultiSourceChart) {
+            return;
+        }
         this.dataView.timeSettings = this.timeSettings;
         this.dataView.metadata ??= {
             lastModifiedEpochMs: undefined,
@@ -296,8 +424,7 @@ export class ChartViewComponent
                     'Update asset links or close.',
                 ),
                 cancelTitle: this.translateService.instant('Close'),
-                okTitle: this.translateService.instant('Update'),
-                confirmAndCancel: true,
+                confirmTitle: this.translateService.instant('Update'),
                 editMode: this.editMode,
                 selectedAssets: this.selectedAssets,
                 deselectedAssets: this.deselectedAssets,
@@ -327,27 +454,33 @@ export class ChartViewComponent
                     subtitle: this.translateService.instant(
                         'Update all changes to chart or discard current changes.',
                     ),
+                    neutralTitle: this.translateService.instant('Keep editing'),
                     cancelTitle:
                         this.translateService.instant('Discard changes'),
-                    okTitle: this.translateService.instant('Update'),
-                    confirmAndCancel: true,
+                    confirmTitle: this.translateService.instant('Update'),
                 },
             });
             return dialogRef.afterClosed().pipe(
-                map(shouldUpdate => {
-                    if (shouldUpdate) {
+                switchMap((dialogResult: ConfirmDialogAction | undefined) => {
+                    if (dialogResult === 'confirm') {
+                        if (this.legacyMultiSourceChart) {
+                            return of(true);
+                        }
                         this.dataView.timeSettings = this.timeSettings;
-                        const observable =
+                        return (
                             this.dataView.elementId !== undefined
                                 ? this.dataViewService.updateChart(
                                       this.dataView,
                                   )
-                                : this.dataViewService.saveChart(this.dataView);
-                        observable.subscribe(() => {
-                            return true;
-                        });
+                                : this.dataViewService.saveChart(this.dataView)
+                        ).pipe(map(() => true));
                     }
-                    return true;
+
+                    if (dialogResult === 'cancel') {
+                        return of(true);
+                    }
+
+                    return of(false);
                 }),
             );
         } else {
@@ -386,11 +519,41 @@ export class ChartViewComponent
 
     onWidthChanged(newWidth: number) {
         this.drawerWidth = newWidth;
-        setTimeout(() => {
-            this.resizeEchartsService.notify(
-                this.outerPanel.nativeElement.offsetWidth,
-            );
-        }, 100);
+        this.scheduleChartPanelResize(100);
+    }
+
+    onDataPreviewSizeChanged(): void {
+        // Preview height animates; send resize updates during and after transition.
+        [0, 100, 220, 350].forEach(delay =>
+            this.scheduleChartPanelResize(delay),
+        );
+    }
+
+    private scheduleChartPanelResize(delayMs = 0): void {
+        setTimeout(
+            () => requestAnimationFrame(() => this.notifyChartPanelResize()),
+            delayMs,
+        );
+    }
+
+    private notifyChartPanelResize(): void {
+        const panel = this.outerPanel?.nativeElement;
+        if (!panel) {
+            return;
+        }
+
+        const widgetContent = panel.querySelector(
+            '.widget-content',
+        ) as HTMLDivElement | null;
+        const width = widgetContent?.clientWidth ?? panel.offsetWidth;
+        const height = widgetContent?.clientHeight ?? panel.offsetHeight;
+
+        this.resizeService.notify({
+            width,
+            height,
+            widgetId: undefined,
+        });
+        this.resizeEchartsService.notify(width);
     }
 
     private async saveAssets(linkageData: LinkageData[]): Promise<void> {
@@ -422,7 +585,27 @@ export class ChartViewComponent
         ];
     }
 
+    private onShortcutSave(): void {
+        if (this.editMode) {
+            this.saveDataView();
+        }
+    }
+
     ngOnDestroy() {
+        this.shortcutReg?.unregister();
         this.currentUser$?.unsubscribe();
+        this.queryParams$?.unsubscribe();
+    }
+
+    private hasMultipleSourceConfigs(widget: DataExplorerWidgetModel): boolean {
+        return (widget?.dataConfig?.sourceConfigs?.length ?? 0) > 1;
+    }
+
+    private shouldEnableEditMode(): boolean {
+        return (
+            this.authService.hasRole(UserRole.ROLE_DATA_EXPLORER_ADMIN) &&
+            !!this.route.snapshot.queryParams.editMode &&
+            !this.legacyMultiSourceChart
+        );
     }
 }

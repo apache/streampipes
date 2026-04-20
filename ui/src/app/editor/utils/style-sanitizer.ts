@@ -16,15 +16,12 @@
  *
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
-@Pipe({
-    name: 'safeCss',
-    standalone: false,
-})
+@Pipe({ name: 'safeCss' })
 export class SafeCss implements PipeTransform {
-    constructor(private domSanitizer: DomSanitizer) {}
+    private domSanitizer = inject(DomSanitizer);
 
     transform(value: any): SafeStyle {
         return this.domSanitizer.bypassSecurityTrustStyle(value);

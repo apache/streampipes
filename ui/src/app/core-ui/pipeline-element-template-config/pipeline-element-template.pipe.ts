@@ -26,10 +26,7 @@ import {
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
 
-@Pipe({
-    name: 'pipelineElementTemplatePipe',
-    standalone: false,
-})
+@Pipe({ name: 'pipelineElementTemplatePipe' })
 @Injectable({ providedIn: 'root' })
 export class PipelineElementTemplatePipe implements PipeTransform {
     transform(properties: StaticPropertyUnion[]): StaticPropertyUnion[] {

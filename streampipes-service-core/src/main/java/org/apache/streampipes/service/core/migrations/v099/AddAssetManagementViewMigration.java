@@ -19,26 +19,11 @@
 package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.manager.setup.tasks.AddAssetManagementViewTask;
-import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
-
-import org.lightcouch.NoDocumentException;
+import org.apache.streampipes.service.core.migrations.templates.AddGenericStorageViewMigration;
 
 import java.io.IOException;
 
-public class AddAssetManagementViewMigration implements Migration {
-
-  @Override
-  public boolean shouldExecute() {
-    var client = Utils.getCouchDbClient("genericstorage", true);
-    try {
-      var designDoc = client.design().getFromDb(AddAssetManagementViewTask.DESIGN_DOCUMENT);
-
-      return designDoc == null || designDoc.getViews().containsKey(AddAssetManagementViewTask.VIEW_NAME);
-    } catch (NoDocumentException e) {
-      return true;
-    }
-  }
+public class AddAssetManagementViewMigration extends AddGenericStorageViewMigration {
 
   @Override
   public void executeMigration() throws IOException {
@@ -46,7 +31,12 @@ public class AddAssetManagementViewMigration implements Migration {
   }
 
   @Override
-  public String getDescription() {
-    return "Adding design document and view for managing assets";
+  public String getDesignDocumentName() {
+    return AddAssetManagementViewTask.DESIGN_DOCUMENT;
+  }
+
+  @Override
+  public String getViewName() {
+    return AddAssetManagementViewTask.VIEW_NAME;
   }
 }

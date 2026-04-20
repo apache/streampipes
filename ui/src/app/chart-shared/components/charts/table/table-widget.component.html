@@ -22,7 +22,7 @@
     [ngStyle]="{
         background: dataExplorerWidget.baseAppearanceConfig.backgroundColor,
         color: dataExplorerWidget.baseAppearanceConfig.textColor,
-        overflowX: 'auto',
+        position: 'relative',
     }"
 >
     @if (showNoDataInDateRange) {
@@ -39,126 +39,459 @@
         </sp-too-much-data>
     }
 
-    <div class="table-container">
-        @if (showData) {
-            <table
-                data-cy="data-explorer-table"
-                mat-table
-                [dataSource]="dataSource"
-                matSort
-                (matSortChange)="sortData($event)"
-                class="table-widget"
-            >
-                <ng-container [matColumnDef]="'time'">
-                    <div>
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            [ngStyle]="{
-                                background:
-                                    dataExplorerWidget.baseAppearanceConfig
-                                        .backgroundColor,
-                                color: dataExplorerWidget.baseAppearanceConfig
-                                    .textColor,
-                            }"
-                        >
-                            <label class="column-header">{{
-                                'Time' | translate
-                            }}</label>
-                        </th>
-                        <td
-                            mat-cell
-                            data-cy="data-explorer-table-row-timestamp"
-                            *matCellDef="let row"
-                            style="text-align: left"
-                        >
-                            {{ row['time'] | date: 'yyyy-MM-dd HH:mm:ss.SSS' }}
-                        </td>
-                    </div>
-                </ng-container>
-                @for (
-                    element of dataExplorerWidget.visualizationConfig
-                        .selectedColumns;
-                    track element
-                ) {
-                    <ng-container [matColumnDef]="element.fullDbName">
-                        @if (!(element.fullDbName === 'time')) {
-                            <div>
+    @if (showData) {
+        <div class="analytics-table-shell" fxLayout="column" fxFlex>
+            <div class="analytics-table-scroll" fxFlex>
+                <table data-cy="data-explorer-table" class="analytics-table">
+                    <thead>
+                        <tr>
+                            @for (
+                                column of columnNames;
+                                track trackColumn($index, column)
+                            ) {
                                 <th
-                                    mat-header-cell
-                                    mat-sort-header
-                                    *matHeaderCellDef
-                                    [ngStyle]="{
-                                        background:
-                                            dataExplorerWidget
-                                                .baseAppearanceConfig
-                                                .backgroundColor,
-                                        color: dataExplorerWidget
-                                            .baseAppearanceConfig.textColor,
+                                    [ngClass]="{
+                                        'time-column': column === 'time',
+                                        'numeric-cell': isNumericColumn(column),
+                                        'highlighted-column':
+                                            isHighlightedColumn(column),
                                     }"
                                 >
-                                    <label class="column-header">{{
-                                        element.fullDbName
-                                    }}</label>
+                                    <div class="th-inner">
+                                        <button
+                                            type="button"
+                                            class="sort-trigger"
+                                            (click)="sortBy(column)"
+                                        >
+                                            <span>
+                                                @if (column === 'time') {
+                                                    {{ 'Time' | translate }}
+                                                } @else {
+                                                    {{ headerLabel(column) }}
+                                                }
+                                            </span>
+                                            <mat-icon class="sort-icon">
+                                                {{ sortIcon(column) }}
+                                            </mat-icon>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="column-filter-trigger"
+                                            [attr.data-cy]="
+                                                'column-filter-trigger-' +
+                                                column
+                                            "
+                                            [ngClass]="{
+                                                'filter-active':
+                                                    hasActiveFilter(column),
+                                                'filter-open':
+                                                    isColumnFilterOpen(column),
+                                            }"
+                                            (click)="
+                                                toggleColumnFilter(
+                                                    column,
+                                                    $event
+                                                )
+                                            "
+                                        >
+                                            <mat-icon
+                                                class="column-filter-icon"
+                                            >
+                                                filter_list
+                                            </mat-icon>
+                                        </button>
+                                    </div>
                                 </th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (pagedRows.length > 0) {
+                            @for (
+                                row of pagedRows;
+                                track trackRow($index, row)
+                            ) {
+                                <tr>
+                                    @for (
+                                        column of columnNames;
+                                        track trackColumn($index, column)
+                                    ) {
+                                        <td
+                                            [ngClass]="{
+                                                'time-column':
+                                                    column === 'time',
+                                                'numeric-cell':
+                                                    isNumericColumn(column),
+                                                'highlighted-column':
+                                                    isHighlightedColumn(column),
+                                            }"
+                                            [ngStyle]="
+                                                getCellStyle(row, column)
+                                            "
+                                            [attr.data-cy]="
+                                                column === 'time'
+                                                    ? 'data-explorer-table-row-timestamp'
+                                                    : 'data-explorer-table-row-' +
+                                                      column
+                                            "
+                                        >
+                                            @if (column === 'time') {
+                                                {{
+                                                    row[column]
+                                                        | date
+                                                            : 'yyyy-MM-dd HH:mm:ss.SSS'
+                                                }}
+                                            } @else {
+                                                {{
+                                                    formatDisplayCellValue(
+                                                        column,
+                                                        row[column]
+                                                    )
+                                                }}
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        } @else {
+                            <tr>
                                 <td
-                                    mat-cell
-                                    *matCellDef="let row"
-                                    [attr.data-cy]="
-                                        'data-explorer-table-row-' +
-                                        element.fullDbName
-                                    "
-                                    style="text-align: left"
+                                    class="table-empty-row"
+                                    [attr.colspan]="columnNames.length"
                                 >
-                                    {{ row[element.fullDbName] }}
+                                    {{
+                                        'No table rows match the current filter.'
+                                            | translate
+                                    }}
                                 </td>
-                            </div>
+                            </tr>
                         }
-                    </ng-container>
-                }
-                @for (element of groupByColumnNames; track element) {
-                    <ng-container [matColumnDef]="element">
-                        <th
-                            mat-header-cell
-                            mat-sort-header
-                            *matHeaderCellDef
-                            [ngStyle]="{
-                                background:
-                                    dataExplorerWidget.baseAppearanceConfig
-                                        .backgroundColor,
-                                color: dataExplorerWidget.baseAppearanceConfig
-                                    .textColor,
-                            }"
-                        >
-                            <label class="column-header">{{ element }}</label>
-                        </th>
-                        <td
-                            mat-cell
-                            *matCellDef="let row"
-                            [attr.data-cy]="
-                                'data-explorer-table-row-' + element
-                            "
-                            style="text-align: left"
-                        >
-                            {{ row[element] }}
-                        </td>
-                    </ng-container>
-                }
-                <tr
-                    mat-header-row
-                    *matHeaderRowDef="columnNames; sticky: true"
-                ></tr>
-                <tr mat-row *matRowDef="let row; columns: columnNames"></tr>
-            </table>
-        }
-        <mat-paginator
-            color="accent"
-            [length]="100"
-            [pageSize]="500"
-            [pageSizeOptions]="[10, 20, 50, 100, 500, 1000]"
-            aria-label="Select page"
+                    </tbody>
+                </table>
+            </div>
+
+            <mat-paginator
+                data-cy="data-explorer-table-paginator"
+                color="accent"
+                [length]="filteredRows.length"
+                [pageIndex]="pageIndex"
+                [pageSize]="pageSize"
+                [pageSizeOptions]="pageSizeOptions"
+                [showFirstLastButtons]="true"
+                aria-label="Select page"
+                (page)="onPage($event)"
+            >
+            </mat-paginator>
+        </div>
+    }
+    @if (openFilterColumn) {
+        <div
+            class="column-filter-dropdown"
+            [ngStyle]="dropdownStyle"
+            (click)="onFilterDropdownClick($event)"
         >
-        </mat-paginator>
-    </div>
+            @if (hasActiveFilter(openFilterColumn)) {
+                <button
+                    type="button"
+                    class="clear-filter-btn"
+                    (click)="clearColumnFilter(openFilterColumn)"
+                >
+                    <mat-icon class="clear-filter-icon"
+                        >filter_list_off</mat-icon
+                    >
+                    Clear Filter
+                </button>
+            }
+            <button
+                type="button"
+                class="advanced-filter-btn"
+                data-cy="column-advanced-filter-expand-btn"
+                (click)="toggleAdvancedPanel(openFilterColumn, $event)"
+            >
+                {{ getAdvancedFilterLabel(openFilterColumn) }}
+                <mat-icon class="advanced-arrow-icon">{{
+                    showAdvancedPanel === openFilterColumn
+                        ? 'expand_more'
+                        : 'chevron_right'
+                }}</mat-icon>
+            </button>
+            @if (showAdvancedPanel === openFilterColumn) {
+                <div class="advanced-filter-panel">
+                    <div class="advanced-filter-options">
+                        @for (
+                            opt of getAdvancedFilterOptions(openFilterColumn);
+                            track opt
+                        ) {
+                            <button
+                                type="button"
+                                class="advanced-option-btn"
+                                [ngClass]="{
+                                    'advanced-option-selected':
+                                        selectedAdvancedType === opt,
+                                }"
+                                (click)="selectAdvancedType(opt)"
+                            >
+                                {{ opt }}
+                            </button>
+                        }
+                    </div>
+                    @if (selectedAdvancedType) {
+                        <div class="advanced-filter-inputs">
+                            @if (needsInput(selectedAdvancedType)) {
+                                <div
+                                    [class.ts-mask-wrapper]="
+                                        openFilterColumn === 'time'
+                                    "
+                                >
+                                    @if (openFilterColumn === 'time') {
+                                        <div
+                                            class="ts-overlay"
+                                            aria-hidden="true"
+                                        >
+                                            <span>{{
+                                                getTimestampTyped(
+                                                    advancedInputValue
+                                                )
+                                            }}</span
+                                            ><span class="ts-faded">{{
+                                                getTimestampTemplate(
+                                                    advancedInputValue
+                                                )
+                                            }}</span>
+                                        </div>
+                                    }
+                                    <input
+                                        type="text"
+                                        [class]="
+                                            openFilterColumn === 'time'
+                                                ? 'advanced-input ts-input'
+                                                : 'advanced-input'
+                                        "
+                                        title="Filter value"
+                                        [placeholder]="
+                                            openFilterColumn === 'time'
+                                                ? ''
+                                                : 'Value...'
+                                        "
+                                        [ngModel]="advancedInputValue"
+                                        (input)="
+                                            openFilterColumn === 'time'
+                                                ? onTimestampInput(
+                                                      'value',
+                                                      $event
+                                                  )
+                                                : null
+                                        "
+                                        (ngModelChange)="
+                                            openFilterColumn !== 'time'
+                                                ? (advancedInputValue = $event)
+                                                : null
+                                        "
+                                        (mousedown)="
+                                            openFilterColumn === 'time'
+                                                ? repositionToEnd($event)
+                                                : null
+                                        "
+                                        (click)="$event.stopPropagation()"
+                                        (keydown)="
+                                            onAdvancedInputKeydown(
+                                                $event,
+                                                openFilterColumn,
+                                                1
+                                            )
+                                        "
+                                    />
+                                </div>
+                            }
+                            @if (needsSecondInput(selectedAdvancedType)) {
+                                <span class="advanced-and-label">and</span>
+                                <div
+                                    [class.ts-mask-wrapper]="
+                                        openFilterColumn === 'time'
+                                    "
+                                >
+                                    @if (openFilterColumn === 'time') {
+                                        <div
+                                            class="ts-overlay"
+                                            aria-hidden="true"
+                                        >
+                                            <span>{{
+                                                getTimestampTyped(
+                                                    advancedInputValue2
+                                                )
+                                            }}</span
+                                            ><span class="ts-faded">{{
+                                                getTimestampTemplate(
+                                                    advancedInputValue2
+                                                )
+                                            }}</span>
+                                        </div>
+                                    }
+                                    <input
+                                        type="text"
+                                        [class]="
+                                            openFilterColumn === 'time'
+                                                ? 'advanced-input ts-input'
+                                                : 'advanced-input'
+                                        "
+                                        title="Filter value"
+                                        [placeholder]="
+                                            openFilterColumn === 'time'
+                                                ? ''
+                                                : 'Value...'
+                                        "
+                                        [ngModel]="advancedInputValue2"
+                                        (input)="
+                                            openFilterColumn === 'time'
+                                                ? onTimestampInput(
+                                                      'value2',
+                                                      $event
+                                                  )
+                                                : null
+                                        "
+                                        (ngModelChange)="
+                                            openFilterColumn !== 'time'
+                                                ? (advancedInputValue2 = $event)
+                                                : null
+                                        "
+                                        (mousedown)="
+                                            openFilterColumn === 'time'
+                                                ? repositionToEnd($event)
+                                                : null
+                                        "
+                                        (click)="$event.stopPropagation()"
+                                        (keydown)="
+                                            onAdvancedInputKeydown(
+                                                $event,
+                                                openFilterColumn,
+                                                2
+                                            )
+                                        "
+                                    />
+                                </div>
+                            }
+                            <div class="advanced-filter-actions">
+                                <button
+                                    type="button"
+                                    class="advanced-apply-btn"
+                                    data-cy="column-advanced-filter-apply-btn"
+                                    (click)="
+                                        applyAdvancedFilter(openFilterColumn)
+                                    "
+                                >
+                                    OK
+                                </button>
+                                <button
+                                    type="button"
+                                    class="advanced-cancel-btn"
+                                    (click)="cancelAdvancedPanel()"
+                                >
+                                    Cancel
+                                </button>
+                                @if (hasAdvancedFilter(openFilterColumn)) {
+                                    <button
+                                        type="button"
+                                        class="advanced-clear-btn"
+                                        (click)="
+                                            clearAdvancedFilter(
+                                                openFilterColumn
+                                            )
+                                        "
+                                    >
+                                        Clear
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            <div [class.ts-mask-wrapper]="openFilterColumn === 'time'">
+                @if (openFilterColumn === 'time') {
+                    <div class="ts-overlay" aria-hidden="true">
+                        <span>{{
+                            getTimestampTyped(
+                                columnSearchTerms[openFilterColumn] || ''
+                            )
+                        }}</span
+                        ><span class="ts-faded">{{
+                            getTimestampTemplate(
+                                columnSearchTerms[openFilterColumn] || ''
+                            )
+                        }}</span>
+                    </div>
+                }
+                <input
+                    type="text"
+                    class="column-filter-search"
+                    [class.ts-input]="openFilterColumn === 'time'"
+                    title="Search"
+                    [placeholder]="
+                        openFilterColumn === 'time' ? '' : 'Search...'
+                    "
+                    [ngModel]="columnSearchTerms[openFilterColumn]"
+                    (ngModelChange)="
+                        openFilterColumn !== 'time'
+                            ? onColumnSearchChange(openFilterColumn, $event)
+                            : null
+                    "
+                    (input)="
+                        openFilterColumn === 'time'
+                            ? onTimestampSearchInput($event)
+                            : null
+                    "
+                    (mousedown)="
+                        openFilterColumn === 'time'
+                            ? repositionToEnd($event)
+                            : null
+                    "
+                    (click)="$event.stopPropagation()"
+                    (keydown)="onSearchKeydown($event)"
+                />
+            </div>
+            <div class="column-filter-controls">
+                <mat-checkbox
+                    [checked]="areAllValuesSelected(openFilterColumn)"
+                    [indeterminate]="
+                        !areAllValuesSelected(openFilterColumn) &&
+                        columnFilters[openFilterColumn]?.size > 0
+                    "
+                    (change)="toggleAllValues(openFilterColumn)"
+                >
+                    (Select All)
+                </mat-checkbox>
+                @if (hasSearchOrAdvanced(openFilterColumn)) {
+                    <mat-checkbox
+                        [checked]="areDisplayedValuesSelected(openFilterColumn)"
+                        (change)="toggleDisplayedValues(openFilterColumn)"
+                    >
+                        (Select All Displayed)
+                    </mat-checkbox>
+                }
+            </div>
+            <div
+                class="filter-list-wrapper"
+                [class.no-overflow-hint]="filterListScrollEnd"
+            >
+                <div
+                    class="column-filter-list"
+                    (scroll)="onFilterListScroll($event)"
+                >
+                    @for (
+                        value of getFilteredUniqueValues(openFilterColumn);
+                        track value
+                    ) {
+                        <mat-checkbox
+                            class="filter-checkbox"
+                            [title]="value"
+                            [checked]="isValueChecked(openFilterColumn, value)"
+                            (change)="toggleValue(openFilterColumn, value)"
+                        >
+                            {{ value }}
+                        </mat-checkbox>
+                    }
+                </div>
+            </div>
+        </div>
+    }
 </div>

@@ -16,14 +16,14 @@
  *
  */
 
-import {
+import type {
     DataTransformOption,
     ExternalDataTransform,
     ExternalDataTransformResultItem,
-} from 'echarts/types/src/data/helper/transform';
+} from 'echarts/types/src/data/helper/transform.d.ts';
 
 import { bin } from 'd3-array';
-import { OptionSourceDataArrayRows } from 'echarts/types/src/util/types';
+import type { OptionSourceDataArrayRows } from 'echarts/types/src/util/types.d.ts';
 
 export interface HistogramConfig extends DataTransformOption {
     field: string;

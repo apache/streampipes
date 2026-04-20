@@ -16,12 +16,12 @@
  *
  */
 
-import {
+import type {
     DataTransformOption,
     ExternalDataTransform,
     ExternalDataTransformResultItem,
-} from 'echarts/types/src/data/helper/transform';
-import { OptionSourceDataArrayRows } from 'echarts/types/src/util/types';
+} from 'echarts/types/src/data/helper/transform.d.ts';
+import type { OptionSourceDataArrayRows } from 'echarts/types/src/util/types.d.ts';
 
 export interface MapColumnsConfig extends DataTransformOption {
     fields: string[];

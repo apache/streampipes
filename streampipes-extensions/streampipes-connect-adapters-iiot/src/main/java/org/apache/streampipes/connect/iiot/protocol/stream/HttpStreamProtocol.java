@@ -32,9 +32,14 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.management.connect.PullAdapterScheduler;
 import org.apache.streampipes.extensions.management.connect.adapter.parser.Parsers;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
+import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 
@@ -44,6 +49,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
@@ -54,9 +61,12 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
 
   private static final String URL_PROPERTY = "url";
   private static final String INTERVAL_PROPERTY = "interval";
+  public static final String HEADER_COLLECTION = "header-collection";
+  public static final String HEADER_KEY = "header-key";
+  public static final String HEADER_VALUE = "header-value";
 
   private String url;
-  private String accessToken;
+  private List<HeaderConfiguration> headerConfigurations = new ArrayList<>();
 
   private PollingSettings pollingSettings;
   private PullAdapterScheduler pullAdapterScheduler;
@@ -71,9 +81,7 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
     this.url = extractor.singleValueParameter(URL_PROPERTY, String.class);
     int interval = extractor.singleValueParameter(INTERVAL_PROPERTY, Integer.class);
     this.pollingSettings = PollingSettings.from(TimeUnit.SECONDS, interval);
-    // TODO change access token to an optional parameter
-//            String accessToken = extractor.singleValue(ACCESS_TOKEN_PROPERTY);
-    this.accessToken = "";
+    this.headerConfigurations = getHeaderConfigurations(extractor);
   }
 
   private InputStream getDataFromEndpoint() throws ParseException {
@@ -83,8 +91,10 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
           .connectTimeout(1000)
           .socketTimeout(100000);
 
-      if (this.accessToken != null && !this.accessToken.equals("")) {
-        request.setHeader("Authorization", "Bearer " + this.accessToken);
+      for (HeaderConfiguration header : headerConfigurations) {
+        if (header.headerKey != null && !header.headerKey.isBlank()) {
+          request.addHeader(header.headerKey, header.headerValue == null ? "" : header.headerValue);
+        }
       }
 
       var result = request
@@ -104,13 +114,33 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
 
   @Override
   public IAdapterConfiguration declareConfig() {
+    var headerKey = StaticProperties.stringFreeTextProperty(
+        Labels.withId(HEADER_KEY)
+    );
+    headerKey.setOptional(true);
+    headerKey.setValue("");
+
+    var headerValue = StaticProperties.stringFreeTextProperty(
+        Labels.withId(HEADER_VALUE)
+    );
+    headerValue.setOptional(true);
+    headerValue.setValue("");
+
     return AdapterConfigurationBuilder
-        .create(ID, 0, HttpStreamProtocol::new)
+        .create(ID, 1, HttpStreamProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .requiredTextParameter(Labels.withId(URL_PROPERTY))
         .requiredIntegerParameter(Labels.withId(INTERVAL_PROPERTY))
+        .requiredStaticProperty(
+            StaticProperties.collection(
+                Labels.withId(HEADER_COLLECTION),
+                false,
+                headerKey,
+                headerValue
+            )
+        )
         .buildConfiguration();
   }
 
@@ -128,17 +158,17 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
 
   @Override
   public void onAdapterStopped(IAdapterParameterExtractor extractor,
-                               IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+                               IAdapterRuntimeContext adapterRuntimeContext) {
     this.pullAdapterScheduler.shutdown();
   }
 
   @Override
-  public GuessSchema onSchemaRequested(IAdapterParameterExtractor extractor,
-                                       IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
+  public SampleData onSampleDataRequested(IAdapterParameterExtractor extractor,
+                                      IAdapterGuessSchemaContext adapterGuessSchemaContext) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     var dataInputStream = getDataFromEndpoint();
 
-    return extractor.selectedParser().getGuessSchema(dataInputStream);
+    return extractor.selectedParser().getSampleData(dataInputStream);
   }
 
   @Override
@@ -152,5 +182,38 @@ public class HttpStreamProtocol implements StreamPipesAdapter, IPullAdapter {
   @Override
   public PollingSettings getPollingInterval() {
     return pollingSettings;
+  }
+
+  private List<HeaderConfiguration> getHeaderConfigurations(IStaticPropertyExtractor extractor) {
+    List<HeaderConfiguration> headers = new ArrayList<>();
+    var collection = extractor.getStaticPropertyByName(HEADER_COLLECTION);
+    if (!(collection instanceof CollectionStaticProperty csp)) {
+      return headers;
+    }
+    if (csp.getMembers() == null) {
+      return headers;
+    }
+    for (StaticProperty member : csp.getMembers()) {
+      if (!(member instanceof StaticPropertyGroup group)) {
+        continue;
+      }
+      var memberExtractor = StaticPropertyExtractor.from(group.getStaticProperties(), new ArrayList<>());
+      var headerKey = memberExtractor.textParameter(HEADER_KEY);
+      var headerValue = memberExtractor.textParameter(HEADER_VALUE);
+      if (headerKey != null && !headerKey.isBlank()) {
+        headers.add(new HeaderConfiguration(headerKey, headerValue));
+      }
+    }
+    return headers;
+  }
+
+  private static class HeaderConfiguration {
+    private final String headerKey;
+    private final String headerValue;
+
+    private HeaderConfiguration(String headerKey, String headerValue) {
+      this.headerKey = headerKey;
+      this.headerValue = headerValue;
+    }
   }
 }

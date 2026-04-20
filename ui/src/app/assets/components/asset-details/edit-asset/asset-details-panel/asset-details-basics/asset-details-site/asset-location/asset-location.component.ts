@@ -16,19 +16,32 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     LocationConfig,
     LocationConfigService,
     SpAsset,
 } from '@streampipes/platform-services';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { SingleMarkerMapComponent } from '../../../../../../../../core-ui/single-marker-map/single-marker-map.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-location',
     templateUrl: './asset-location.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        MatCheckbox,
+        FormsModule,
+        SingleMarkerMapComponent,
+        TranslatePipe,
+    ],
 })
 export class AssetLocationComponent implements OnInit {
+    private locationConfigService = inject(LocationConfigService);
+
     @Input()
     asset: SpAsset;
 
@@ -36,8 +49,6 @@ export class AssetLocationComponent implements OnInit {
     editMode: boolean;
 
     locationConfig: LocationConfig;
-
-    constructor(private locationConfigService: LocationConfigService) {}
 
     ngOnInit() {
         this.asset.assetSite.location ??= {

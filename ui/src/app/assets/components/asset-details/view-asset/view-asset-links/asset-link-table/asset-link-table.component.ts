@@ -35,25 +35,61 @@ import {
     SpAsset,
     SpAssetModel,
 } from '@streampipes/platform-services';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatTableDataSource,
+} from '@angular/material/table';
 import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
 import {
     CurrentUserService,
     DialogService,
     FeatureCardService,
     PanelType,
+    SpTableActionsDirective,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../../../services/auth.service';
-import { UserRole } from '../../../../../../_enums/user-role.enum';
+import { UserRole } from '../../../../../../core/auth/user-role.enum';
 import { Subscription } from 'rxjs';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { AssetLinkTableTypeComponent } from './asset-link-table-link-type/asset-link-table-type.component';
+import { AssetLinkTableAdditionalDataComponent } from './asset-link-table-additional-data/asset-link-table-additional-data.component';
+import { MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-asset-link-table',
     templateUrl: './asset-link-table.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        SpTableComponent,
+        MatSort,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatSortHeader,
+        MatCellDef,
+        MatCell,
+        AssetLinkTableTypeComponent,
+        AssetLinkTableAdditionalDataComponent,
+        SpTableActionsDirective,
+        MatMenuItem,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class AssetLinkTableComponent
     implements OnInit, AfterViewInit, OnChanges, OnDestroy

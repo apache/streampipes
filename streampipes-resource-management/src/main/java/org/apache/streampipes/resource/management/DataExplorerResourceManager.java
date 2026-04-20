@@ -20,8 +20,8 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.dashboard.CompositeDashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.api.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class DataExplorerResourceManager extends CrudResourceManager<DashboardModel> {
 
-  private final CRUDStorage<DataExplorerWidgetModel> widgetStorage;
+  private final IDataExplorerWidgetStorage widgetStorage;
   private final IDataLakeMeasureStorage dataLakeMeasureStorage;
 
   public DataExplorerResourceManager() {

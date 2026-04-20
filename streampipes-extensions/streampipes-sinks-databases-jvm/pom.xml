@@ -69,7 +69,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.milo</groupId>
-            <artifactId>sdk-client</artifactId>
+            <artifactId>milo-sdk-client</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>org.graalvm.nativeimage</groupId>
@@ -93,6 +93,7 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
+            <version>${jaxb-runtime.version}</version>
         </dependency>
         <dependency>
             <groupId>io.milvus</groupId>
@@ -103,28 +104,8 @@
             <artifactId>client</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.errorprone</groupId>
-            <artifactId>error_prone_annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-context</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.tsfile</groupId>
             <artifactId>tsfile</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.tukaani</groupId>
-            <artifactId>xz</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.parquet</groupId>

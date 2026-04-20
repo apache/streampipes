@@ -1,0 +1,161 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
+import { PermissionUtils } from '../user/PermissionUtils';
+import { DatasetBtns } from './DatasetBtns';
+
+export class DatasetUtils {
+    private static readonly CSV_IMPORT_FIXTURE_PREFIX = 'cypress/fixtures/';
+
+    public static goToDatasets() {
+        cy.visit('#/datasets');
+    }
+
+    public static checkAmountOfDatasets(amount: number) {
+        DatasetUtils.goToDatasets();
+
+        if (amount === 0) {
+            // The wait is needed because the default value is the no-table-entries element.
+            // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
+            cy.wait(1000);
+            cy.dataCy('no-table-entries').should('be.visible');
+        } else {
+            DatasetBtns.datasetTable().should('have.length', amount);
+        }
+    }
+
+    public static authorizeUserOnDataset(datasetname: string, email: string) {
+        DatasetUtils.goToDatasets();
+        PermissionUtils.authorizeUser(datasetname, email);
+    }
+
+    public static openCsvImportDialog() {
+        this.goToDatasets();
+        DatasetBtns.openCsvImportDialog().click();
+    }
+
+    public static uploadCsvImportFile(filePath: string) {
+        DatasetBtns.csvImportFileInput().selectFile(
+            this.CSV_IMPORT_FIXTURE_PREFIX + filePath,
+            { force: true },
+        );
+    }
+
+    public static createNewDatasetFromCsv(datasetName: string) {
+        DatasetBtns.csvImportTargetMode().click();
+        DatasetBtns.csvImportTargetModeNew().click();
+        DatasetBtns.csvImportNewMeasurement().clear().type(datasetName);
+    }
+
+    public static useExistingDatasetForCsvImport(datasetName: string) {
+        DatasetBtns.csvImportTargetMode().click();
+        DatasetBtns.csvImportTargetModeExisting().click();
+        DatasetBtns.csvImportExistingMeasurement().click({ force: true });
+        cy.get('mat-option', { timeout: 10000 })
+            .contains(datasetName)
+            .click({ force: true });
+    }
+
+    public static selectCsvImportDelimiterComma() {
+        DatasetBtns.csvImportDelimiter().click();
+        DatasetBtns.csvImportDelimiterComma().click();
+        cy.dataCy('csv-import-column-scope', { timeout: 10000 }).should(
+            'have.length',
+            7,
+        );
+    }
+
+    public static continueCsvImportToPreview() {
+        DatasetBtns.csvImportNextBtn().click();
+        cy.dataCy('csv-import-preview', { timeout: 10000 }).should(
+            'be.visible',
+        );
+    }
+
+    public static selectCsvImportTimestampColumn(columnIndex: number) {
+        DatasetBtns.csvImportColumnScope(columnIndex).click();
+        DatasetBtns.csvImportColumnScopeTimestamp().click();
+    }
+
+    public static setCsvImportTimestampFormat(format: string) {
+        DatasetBtns.csvImportTimestampFormat().clear().type(format);
+    }
+
+    public static uploadCsvImport() {
+        DatasetBtns.csvImportUploadBtn().click();
+        DatasetBtns.csvImportSuccessTitle().should('be.visible');
+        DatasetBtns.csvImportCloseBtn().click();
+    }
+
+    public static expectCsvImportSchemaMismatch(
+        summary: string,
+        detailText?: string,
+    ) {
+        DatasetBtns.csvImportSchemaMismatch().should('be.visible');
+        cy.dataCy('exception-message-title').should('contain.text', summary);
+        if (detailText) {
+            DatasetBtns.csvImportSchemaMismatchList().should('be.visible');
+            DatasetBtns.csvImportSchemaMismatchItems().should(
+                'contain.text',
+                detailText,
+            );
+        }
+    }
+
+    public static expectDatasetTotalEventCount(
+        datasetName: string,
+        expectedCount: string,
+    ) {
+        this.loadDatasetTotalEventCount(datasetName);
+        DatasetBtns.datasetTotalCountCell(datasetName).should($element => {
+            const text = $element.text().trim();
+            expect(text).to.equal(expectedCount);
+        });
+    }
+
+    public static loadDatasetTotalEventCount(datasetName: string) {
+        DatasetBtns.datasetRow(datasetName).should('be.visible');
+        DatasetBtns.datasetTotalCountButton(datasetName).then($button => {
+            if ($button.length > 0) {
+                cy.wrap($button[0]).click({ force: true });
+            }
+        });
+
+        DatasetBtns.datasetTotalCountCell(datasetName).should($element => {
+            const text = $element.text().trim();
+            expect(text).not.to.equal('Click to load');
+        });
+    }
+
+    public static openDatasetPreview(datasetName: string) {
+        DatasetBtns.datasetRow(datasetName)
+            .find('mat-icon')
+            .contains('preview')
+            .parent('button')
+            .click();
+    }
+
+    public static expectDatasetPreviewDoesNotContainKey(key: string) {
+        cy.dataCy('dataset-preview-table', { timeout: 10000 }).should(
+            'be.visible',
+        );
+        cy.dataCy(`dataset-preview-key-${key.toLowerCase()}`, {
+            timeout: 10000,
+        }).should('not.exist');
+    }
+}

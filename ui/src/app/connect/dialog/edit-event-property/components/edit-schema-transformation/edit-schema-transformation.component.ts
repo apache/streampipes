@@ -16,53 +16,93 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import {
     debounceTime,
     distinctUntilChanged,
     startWith,
     switchMap,
 } from 'rxjs/operators';
-import { UntypedFormControl } from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormControl,
+} from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import {
-    DataType,
+    EventProperty,
     EventPropertyPrimitive,
-    EventPropertyUnion,
-    SemanticType,
     SemanticTypesRestService,
 } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
+import {
+    FormFieldComponent,
+    SpAlertBannerComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { EditDataTypeComponent } from './edit-data-type/edit-data-type.component';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import {
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+} from '@angular/material/autocomplete';
+import { MatOption } from '@angular/material/select';
+import { MatTooltip } from '@angular/material/tooltip';
+import { AsyncPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-schema-transformation',
     templateUrl: './edit-schema-transformation.component.html',
     styleUrls: ['../../edit-event-property.component.scss'],
-    standalone: false,
+    imports: [
+        SplitSectionComponent,
+        FormFieldComponent,
+        EditDataTypeComponent,
+        SpAlertBannerComponent,
+        FlexDirective,
+        LayoutDirective,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatAutocompleteTrigger,
+        ReactiveFormsModule,
+        MatAutocomplete,
+        MatOption,
+        MatTooltip,
+        AsyncPipe,
+        TranslatePipe,
+    ],
 })
 export class EditSchemaTransformationComponent implements OnInit {
+    private semanticTypesRestService = inject(SemanticTypesRestService);
+    private shepherdService = inject(ShepherdService);
+    private router = inject(Router);
+
     @Input()
-    cachedProperty: EventPropertyUnion;
+    cachedProperty: EventProperty;
 
     @Input() isTimestampProperty: boolean;
     @Input() isNestedProperty: boolean;
     @Input() isListProperty: boolean;
     @Input() isPrimitiveProperty: boolean;
 
-    @Output() dataTypeChanged = new EventEmitter<boolean>();
-    @Output() timestampSemanticsChanged = new EventEmitter<boolean>();
+    @Output() dataTypeChanged = new EventEmitter<void>();
 
     domainPropertyControl = new UntypedFormControl();
     semanticTypes: Observable<string[]>;
 
     adapterIsInEditMode: boolean;
-
-    constructor(
-        private semanticTypesRestService: SemanticTypesRestService,
-        private shepherdService: ShepherdService,
-        private router: Router,
-    ) {}
 
     ngOnInit(): void {
         this.semanticTypes = this.domainPropertyControl.valueChanges.pipe(
@@ -75,28 +115,16 @@ export class EditSchemaTransformationComponent implements OnInit {
                     : [];
             }),
         );
+        if (this.isTimestampProperty) {
+            this.domainPropertyControl.disable({ emitEvent: false });
+        }
 
         this.adapterIsInEditMode = this.router.url.includes('connect/edit');
     }
 
-    editTimestampDomainProperty(checked: boolean) {
-        if (checked) {
-            this.isTimestampProperty = true;
-            this.cachedProperty.semanticType = SemanticType.TIMESTAMP;
-            this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
-            (this.cachedProperty as EventPropertyPrimitive).runtimeType =
-                DataType.LONG;
-        } else {
-            this.cachedProperty.semanticType = undefined;
-            this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';
-            this.isTimestampProperty = false;
-        }
-        this.timestampSemanticsChanged.emit(this.isTimestampProperty);
+    asEventPropertyPrimitive(ep: EventProperty): EventPropertyPrimitive {
+        return ep as EventPropertyPrimitive;
     }
 
-    triggerTutorialStep(): void {
-        if (this.cachedProperty.runtimeName === 'temp') {
-            this.shepherdService.trigger('adapter-runtime-name-changed');
-        }
-    }
+    protected readonly EventPropertyPrimitive = EventPropertyPrimitive;
 }

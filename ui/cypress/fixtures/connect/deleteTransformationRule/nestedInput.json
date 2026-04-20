@@ -1,5 +1,6 @@
 {
   "timestamp": 1667904471000,
+  "toRemove": 1,
   "parent": {
     "child": "text",
     "child_two": "textTwo"

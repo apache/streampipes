@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.core.base.impl;
 
 import org.apache.streampipes.model.shared.api.Storable;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;

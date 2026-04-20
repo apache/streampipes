@@ -18,18 +18,21 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.assets.AssetManager;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.extensions.ExtensionItemInstaller;
-import org.apache.streampipes.manager.extensions.ExtensionsResourceUrlProvider;
 import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,21 +46,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v2/extension-installation")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResource {
 
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
+
+  public ExtensionsInstallationResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
+  }
+
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Message> addElement(@RequestBody ExtensionItemInstallationRequest installationReq) {
-    var descriptionUrlProvider = new ExtensionsResourceUrlProvider(SpServiceDiscovery.getServiceDiscovery());
     try {
-      return ok(new ExtensionItemInstaller(descriptionUrlProvider)
+      var service = findSupportedService(installationReq);
+      return ok(new ExtensionItemInstaller(service, extensionServiceRequestManager)
           .installExtension(installationReq, getAuthenticatedUserSid()));
-    } catch (IOException | SepaParseException e) {
+    } catch (IOException | SepaParseException | NoServiceEndpointsAvailableException e) {
       return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
     }
   }
@@ -66,11 +76,11 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Message> updateElement(@RequestBody ExtensionItemInstallationRequest installationReq) {
-    var descriptionUrlProvider = new ExtensionsResourceUrlProvider(SpServiceDiscovery.getServiceDiscovery());
     try {
-      return ok(new ExtensionItemInstaller(descriptionUrlProvider)
+      var service = findSupportedService(installationReq);
+      return ok(new ExtensionItemInstaller(service, extensionServiceRequestManager)
           .updateExtension(installationReq));
-    } catch (IOException | SepaParseException e) {
+    } catch (IOException | SepaParseException | NoServiceEndpointsAvailableException e) {
       return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
     }
   }
@@ -103,5 +113,13 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
           NotificationType.STORAGE_ERROR.description()));
     }
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
+  }
+
+  private SpServiceRegistration findSupportedService(ExtensionItemInstallationRequest installationReq) throws NoServiceEndpointsAvailableException {
+    return new ExtensionsServiceEndpointGenerator().selectService(
+        installationReq.appId(),
+        SpServiceUrlProvider.valueOf(installationReq.serviceTagPrefix().name()),
+        Set.of()
+    );
   }
 }

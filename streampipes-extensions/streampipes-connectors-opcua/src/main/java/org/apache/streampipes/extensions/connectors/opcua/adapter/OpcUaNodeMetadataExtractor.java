@@ -18,26 +18,26 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.adapter;
 
-import org.eclipse.milo.opcua.sdk.client.api.UaClient;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.stack.core.StatusCodes;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class OpcUaNodeMetadataExtractor {
-  private final UaClient client;
+  private final OpcUaClient client;
   private final UaNode node;
 
   private final Map<String, Object> metadata;
 
-  public OpcUaNodeMetadataExtractor(UaClient client, UaNode node) {
+  public OpcUaNodeMetadataExtractor(OpcUaClient client, UaNode node) {
     this.client = client;
     this.node = node;
     this.metadata = new HashMap<>();
@@ -55,13 +55,15 @@ public class OpcUaNodeMetadataExtractor {
       try {
         var dataTypeNodeId = ((UaVariableNode) node).getDataType();
         var dataTypeNode = client.getAddressSpace().getNode(dataTypeNodeId);
-        var value = client.readValue(0, TimestampsToReturn.Both, node.getNodeId()).get();
+        var value = client.readValue(0, TimestampsToReturn.Both, node.getNodeId());
 
+        extractNodeId((UaVariableNode) node);
         extractSourceTime(value);
         extractServerTime(value);
         extractStatusCode(value);
         extractDataType(dataTypeNode);
-      } catch (UaException | ExecutionException | InterruptedException e) {
+        extractDataTypeNodeId(dataTypeNodeId);
+      } catch (UaException e) {
         throw new RuntimeException(e);
       }
     }
@@ -69,12 +71,28 @@ public class OpcUaNodeMetadataExtractor {
     return metadata;
   }
 
+  public void extractNodeId(UaVariableNode node) {
+    if (node != null && node.getNodeId() != null) {
+      add("Node ID", node.getNodeId().toParseableString());
+    } else {
+      add("Node ID", "N/A");
+    }
+  }
+
+  public void extractDataTypeNodeId(NodeId dataTypeNodeId) {
+    if (dataTypeNodeId != null) {
+      add("Data Type Node ID", dataTypeNodeId.toParseableString());
+    } else {
+      add("Data Type Node ID", "N/A");
+    }
+  }
+
 
   public void extractDescription() {
     if (node.getDescription() != null) {
       add("Description", node.getDescription().getText());
     } else {
-      add("Description", "");
+      add("Description", "N/A");
     }
   }
 
@@ -82,7 +100,7 @@ public class OpcUaNodeMetadataExtractor {
     if (node.getNodeId() != null) {
       add("NamespaceIndex", node.getNodeId().getNamespaceIndex().toString());
     } else {
-      add("NamespaceIndex", "");
+      add("NamespaceIndex", "N/A");
     }
   }
 
@@ -98,7 +116,7 @@ public class OpcUaNodeMetadataExtractor {
     if (node.getBrowseName() != null) {
       add("BrowseName", node.getBrowseName().getName());
     } else {
-      add("BrowseName", "");
+      add("BrowseName", "N/A");
     }
   }
 
@@ -106,7 +124,7 @@ public class OpcUaNodeMetadataExtractor {
     if (node.getDisplayName() != null) {
       add("DisplayName", node.getDisplayName().getText());
     } else {
-      add("DisplayName", "");
+      add("DisplayName", "N/A");
     }
   }
 

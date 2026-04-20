@@ -16,26 +16,38 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+import { Component, OnInit, inject } from '@angular/core';
 import { StaticPropertyUtilService } from '../static-property-util.service';
-import { UntypedFormGroup, Validators } from '@angular/forms';
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    ValidatorFn,
+    Validators,
+} from '@angular/forms';
 import { ColorPickerStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatInput } from '@angular/material/input';
+import { ColorPickerDirective } from 'ngx-color-picker';
 
 @Component({
     selector: 'sp-app-static-color-picker',
     templateUrl: './static-color-picker.component.html',
     styleUrls: ['./static-color-picker.component.scss'],
-    standalone: false,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        FlexDirective,
+        LayoutDirective,
+        MatInput,
+        ColorPickerDirective,
+    ],
 })
 export class StaticColorPickerComponent
     extends AbstractValidatedStaticPropertyRenderer<ColorPickerStaticProperty>
     implements OnInit
 {
-    constructor(public staticPropertyUtil: StaticPropertyUtilService) {
-        super();
-    }
+    staticPropertyUtil = inject(StaticPropertyUtilService);
 
     presetColors: any[] = [
         '#39B54A',
@@ -50,23 +62,37 @@ export class StaticColorPickerComponent
     ngOnInit() {
         this.addValidator(
             this.staticProperty.selectedColor,
-            Validators.required,
+            this.collectValidators(),
         );
         this.enableValidators();
+        this.checkCompleted();
+    }
+
+    private collectValidators(): ValidatorFn[] {
+        const validators: ValidatorFn[] = [];
+        if (!this.staticProperty.optional) {
+            validators.push(Validators.required);
+        }
+
+        return validators;
     }
 
     checkCompleted() {
         this.applyCompletedConfiguration(
-            this.staticPropertyUtil.asColorPickerStaticProperty(
-                this.staticProperty,
-            ).selectedColor &&
-                this.staticPropertyUtil.asColorPickerStaticProperty(
+            this.staticProperty.optional ||
+                (this.staticPropertyUtil.asColorPickerStaticProperty(
                     this.staticProperty,
-                ).selectedColor !== '',
+                ).selectedColor &&
+                    this.staticPropertyUtil.asColorPickerStaticProperty(
+                        this.staticProperty,
+                    ).selectedColor !== ''),
         );
     }
 
     onStatusChange(status: any) {}
 
-    onValueChange(value: any) {}
+    onValueChange(value: any) {
+        this.staticProperty.selectedColor = value;
+        this.checkCompleted();
+    }
 }

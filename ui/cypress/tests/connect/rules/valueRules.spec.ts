@@ -19,6 +19,8 @@
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../../support/utils/FileManagementUtils';
 import { ConnectEventSchemaUtils } from '../../../support/utils/connect/ConnectEventSchemaUtils';
+import { ConnectBtns } from '../../../support/utils/connect/ConnectBtns';
+import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
 
 describe('Connect value rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -30,14 +32,12 @@ describe('Connect value rule transformations', () => {
         const adapterConfiguration =
             ConnectUtils.setUpPreprocessingRuleTest(false);
 
-        // Edit timestamp property
-        ConnectEventSchemaUtils.editTimestampPropertyWithRegex(
-            'timestamp',
-            "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+        ConnectUtils.replaceAdapterScript(
+            'utils.parseTimestamp(event, "input_timestamp", "event_time");\n out.collect(event);\n',
         );
-
-        // Number transformation
-        ConnectEventSchemaUtils.numberTransformation('value', '10');
+        ConnectBtns.configureSchemaRunScriptBtn().click();
+        cy.wait(1000);
+        ConnectUtils.finishEventSchemaConfiguration();
 
         // Unit transformation
         ConnectEventSchemaUtils.unitTransformation(
@@ -46,13 +46,16 @@ describe('Connect value rule transformations', () => {
             'Degree Fahrenheit',
         );
 
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+        ConnectUtils.finishConfigureFieldsConfiguration();
 
-        ConnectUtils.tearDownPreprocessingRuleTest(
-            adapterConfiguration,
-            'cypress/fixtures/connect/valueRules/expected.csv',
-            false,
-            2000,
-        );
+        ChartUtils.clearMeasurementData('Adapter to test rules').then(() => {
+            ConnectUtils.tearDownPreprocessingRuleTest(
+                adapterConfiguration,
+                'cypress/fixtures/connect/valueRules/expected.csv',
+                true,
+                2000,
+            );
+        });
     });
 });

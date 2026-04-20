@@ -19,16 +19,22 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { Pipeline, PipelineService } from '@streampipes/platform-services';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-start-all-pipelines-dialog',
     templateUrl: './start-all-pipelines-dialog.component.html',
-    standalone: false,
+    imports: [FlexDirective, MatDivider, MatButton, TranslatePipe],
 })
 export class StartAllPipelinesDialogComponent implements OnInit {
     @Input()
     pipelines: Pipeline[];
+
+    @Input()
+    forceStop = false;
 
     pipelinesToModify: Pipeline[];
     installationStatus: any;
@@ -130,7 +136,7 @@ export class StartAllPipelinesDialogComponent implements OnInit {
 
     stopPipeline(pipeline, index) {
         this.pipelineService
-            .stopPipeline(pipeline._id)
+            .stopPipeline(pipeline._id, this.forceStop)
             .subscribe(
                 data => {
                     this.installationStatus[index].status = data.success

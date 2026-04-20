@@ -18,12 +18,37 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { AssetSiteDesc, LocationConfig } from '@streampipes/platform-services';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators,
+} from '@angular/forms';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { EditAssetLocationAreaComponent } from './edit-location-area/edit-location-area.component';
+import { SingleMarkerMapComponent } from '../../../../core-ui/single-marker-map/single-marker-map.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-asset-location-component',
     templateUrl: './edit-location.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        SplitSectionComponent,
+        FlexDirective,
+        MatFormField,
+        MatInput,
+        MatError,
+        EditAssetLocationAreaComponent,
+        SingleMarkerMapComponent,
+        TranslatePipe,
+    ],
 })
 export class EditAssetLocationComponent implements OnInit {
     @Input()

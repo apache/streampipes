@@ -26,7 +26,8 @@ public class AdapterBasicsGenerator implements AdapterModelGenerator {
 
   @Override
   public void apply(AdapterDescription adapterDescription,
-                    CompactAdapter compactAdapter) {
+                    CompactAdapter compactAdapter,
+                    String userId) {
     adapterDescription.setName(compactAdapter.name());
     adapterDescription.setDescription(compactAdapter.description());
     if (compactAdapter.id() != null) {

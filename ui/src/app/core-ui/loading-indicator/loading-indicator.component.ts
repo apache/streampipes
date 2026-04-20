@@ -16,18 +16,28 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'sp-loading-indicator',
     templateUrl: './loading-indicator.component.html',
     styleUrls: ['./loading-indicator.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatProgressSpinner,
+    ],
 })
 export class LoadingIndicatorComponent {
-    translateService = inject(TranslateService);
+    private readonly translateService = inject(TranslateService);
 
-    @Input()
-    message = this.translateService.instant('Loading');
+    readonly message = input(this.translateService.instant('Loading'));
 }

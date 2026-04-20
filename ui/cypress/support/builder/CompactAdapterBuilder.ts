@@ -23,14 +23,11 @@ export class CompactAdapterBuilder {
 
     constructor() {
         this.compactAdapter = new CompactAdapter();
+        this.compactAdapter.schema = {};
         this.compactAdapter.configuration = [];
         this.compactAdapter.createOptions = {
             persist: false,
             start: false,
-        };
-        this.compactAdapter.transform = {
-            rename: {},
-            measurementUnit: {},
         };
     }
 
@@ -46,6 +43,17 @@ export class CompactAdapterBuilder {
         return this;
     }
 
+    public withTimestampProperty(propertyName: string) {
+        this.compactAdapter.schema[propertyName] = {
+            description: '',
+            label: '',
+            propertyScope: 'header',
+            semanticType: 'http://schema.org/DateTime',
+            additionalMetadata: {},
+        };
+        return this;
+    }
+
     public setName(name: string) {
         this.compactAdapter.name = name;
         return this;
@@ -56,13 +64,38 @@ export class CompactAdapterBuilder {
         return this;
     }
 
-    public withRename(from: string, to: string) {
-        this.compactAdapter.transform.rename[from] = to;
+    public withScript(script: string) {
+        if (!this.compactAdapter.transformationConfig) {
+            this.compactAdapter.transformationConfig = {
+                inputs: [],
+                language: 'javascript',
+                outputs: [],
+                script: script,
+                reduceEventRateRule: null,
+                removeDuplicateRule: null,
+            };
+        } else {
+            this.compactAdapter.transformationConfig.script = script;
+        }
         return this;
     }
 
-    public withMeasurementUnit(property: string, unit: string) {
-        this.compactAdapter.transform.measurementUnit[property] = unit;
+    public withMeasurementUnit(
+        propertyName: string,
+        original: string,
+        target: string,
+    ) {
+        this.compactAdapter.schema[propertyName] = {
+            description: '',
+            label: '',
+            propertyScope: 'measurement',
+            semanticType: '',
+            additionalMetadata: {
+                fromMeasurementUnit: original,
+                toMeasurementUnit: target,
+            },
+        };
+
         return this;
     }
 

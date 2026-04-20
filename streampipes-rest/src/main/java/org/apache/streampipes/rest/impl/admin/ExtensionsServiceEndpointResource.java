@@ -18,16 +18,20 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.assets.AssetManager;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
-import org.apache.streampipes.manager.extensions.ExtensionsResourceUrlProvider;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import org.apache.http.client.fluent.Request;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,11 +44,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v2/extension-items")
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestResource {
+
+  private final ExtensionServiceRequestManager extensionServiceRequestManager;
+
+  public ExtensionsServiceEndpointResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
+    this.extensionServiceRequestManager = extensionServiceRequestManager;
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<ExtensionItemDescription>> getExtensionItems() {
@@ -52,11 +63,13 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
     return ok(allExtensions);
   }
 
-  @PostMapping(path = "/icon", produces = "image/png")
+  @PostMapping(path = "/icon")
   public ResponseEntity<byte[]> getExtensionItemIcon(@RequestBody ExtensionItemDescription endpointItem) {
     try {
       byte[] imageBytes = getIconImage(endpointItem);
-      return ok(imageBytes);
+      return ResponseEntity.ok()
+          .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(imageBytes)))
+          .body(imageBytes);
     } catch (IOException e) {
       throw new SpMessageException(HttpStatus.BAD_REQUEST, e);
     }
@@ -65,11 +78,36 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   private byte[] getIconImage(ExtensionItemDescription extensionItemDescription) throws IOException {
     if (extensionItemDescription.isInstalled()) {
       return AssetManager.getAssetIcon(extensionItemDescription.getAppId());
-    } else {
-      var iconUrl = new ExtensionsResourceUrlProvider(
-          SpServiceDiscovery.getServiceDiscovery()
-      ).getIconUrl(extensionItemDescription);
-      return Request.Get(iconUrl).execute().returnContent().asBytes();
+    }
+
+    if (extensionItemDescription.getServiceTagPrefix() == null) {
+      throw new IOException("Could not resolve extension provider for " + extensionItemDescription.getAppId());
+    }
+
+    try {
+      var urlProvider = SpServiceUrlProvider.valueOf(extensionItemDescription.getServiceTagPrefix().name());
+      var service = new ExtensionsServiceEndpointGenerator().selectService(
+          extensionItemDescription.getAppId(),
+          urlProvider,
+          Set.of()
+      );
+      var requestTarget = ExtensionServiceRequestTargets.pipelineElementIconAsset(
+          service,
+          urlProvider,
+          extensionItemDescription.getAppId()
+      );
+      var response = extensionServiceRequestManager.request(
+          ExtensionServiceRequests.pipelineElementIconAsset(requestTarget)
+      );
+
+      var imageBytes = response.responseBytes();
+      if (!response.isSuccess() || imageBytes == null || imageBytes.length == 0) {
+        throw new IOException("Could not fetch icon endpoint: " + service.getServiceUrl());
+      }
+
+      return imageBytes;
+    } catch (NoServiceEndpointsAvailableException | IllegalArgumentException e) {
+      throw new IOException("Could not resolve extension icon for " + extensionItemDescription.getAppId(), e);
     }
   }
 }

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.template.compact;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.pipeline.compact.generation.PipelineElementConfigurationStep;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -25,8 +26,8 @@ import org.apache.streampipes.model.pipeline.PipelineModificationResult;
 import org.apache.streampipes.model.pipeline.compact.CompactPipelineElement;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.model.template.PipelineTemplateGenerationRequest;
-import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import java.util.List;
 import java.util.Map;
@@ -39,12 +40,15 @@ import static org.apache.streampipes.manager.pipeline.compact.generation.Invocab
 public class CompactPipelineTemplateManagement {
 
   private final IPipelineElementDescriptionStorage storage;
-  private final CRUDStorage<CompactPipelineTemplate> templateStorage;
+  private final ICompactPipelineTemplateStorage templateStorage;
+  private final ExtensionServiceRequestManager requestManager;
 
-  public CompactPipelineTemplateManagement(CRUDStorage<CompactPipelineTemplate> templateStorage,
-                                           IPipelineElementDescriptionStorage descriptionStorage) {
+  public CompactPipelineTemplateManagement(ICompactPipelineTemplateStorage templateStorage,
+                                           IPipelineElementDescriptionStorage descriptionStorage,
+                                           ExtensionServiceRequestManager requestManager) {
     this.templateStorage = templateStorage;
     this.storage = descriptionStorage;
+    this.requestManager = requestManager;
   }
 
   public PipelineModificationResult makePipeline(PipelineTemplateGenerationRequest request) throws Exception {
@@ -64,7 +68,7 @@ public class CompactPipelineTemplateManagement {
     }
     var pipeline = makePipeline(template);
 
-    return new PipelineVerificationHandlerV2(pipeline).makeModifiedPipeline();
+    return new PipelineVerificationHandlerV2(pipeline, requestManager).makeModifiedPipeline();
   }
 
   private Pipeline makePipeline(CompactPipelineTemplate template) throws Exception {

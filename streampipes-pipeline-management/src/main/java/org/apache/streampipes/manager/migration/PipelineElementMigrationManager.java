@@ -19,6 +19,9 @@
 package org.apache.streampipes.manager.migration;
 
 import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
@@ -30,9 +33,9 @@ import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
-import org.apache.streampipes.storage.api.IDataProcessorStorage;
-import org.apache.streampipes.storage.api.IDataSinkStorage;
-import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -55,7 +58,9 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
 
   public PipelineElementMigrationManager(IPipelineStorage pipelineStorage,
                                          IDataProcessorStorage dataProcessorStorage,
-                                         IDataSinkStorage dataSinkStorage) {
+                                         IDataSinkStorage dataSinkStorage,
+                                         ExtensionServiceRequestManager extensionServiceRequestManager) {
+    super(extensionServiceRequestManager);
     this.pipelineStorage = pipelineStorage;
     this.dataProcessorStorage = dataProcessorStorage;
     this.dataSinkStorage = dataSinkStorage;
@@ -66,7 +71,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
                                List<ModelMigratorConfig> migrationConfigs) {
     if (!migrationConfigs.isEmpty()) {
       LOG.info("Updating pipeline element descriptions by replacement...");
-      updateDescriptions(migrationConfigs, extensionsServiceConfig.getServiceUrl());
+      updateDescriptions(migrationConfigs, extensionsServiceConfig);
       LOG.info("Pipeline element descriptions are up to date.");
 
       LOG.info("Received {} pipeline element migrations from extension service {}.",
@@ -90,10 +95,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
                   return migratePipelineElement(
                       processor,
                       migrationConfigs,
-                      String.format("%s/%s/processor",
-                          extensionsServiceConfig.getServiceUrl(),
-                          MIGRATION_ENDPOINT
-                      ),
+                      ExtensionServiceRequestTargets.migration(extensionsServiceConfig, "processor"),
                       failedMigrations
                   );
                 } else {
@@ -111,10 +113,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
                   return migratePipelineElement(
                       sink,
                       migrationConfigs,
-                      String.format("%s/%s/sink",
-                          extensionsServiceConfig.getServiceUrl(),
-                          MIGRATION_ENDPOINT
-                      ),
+                      ExtensionServiceRequestTargets.migration(extensionsServiceConfig, "sink"),
                       failedMigrations
                   );
                 } else {
@@ -131,7 +130,9 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
             LOG.info("Migration for pipeline successfully completed.");
           } else {
             // pass most recent version of pipeline
-            handleFailedMigrations(pipelineStorage.getElementById(pipeline.getPipelineId()), failedMigrations);
+            handleFailedMigrations(
+                pipelineStorage.getElementById(pipeline.getPipelineId()),
+                failedMigrations);
           }
         }
       }
@@ -180,7 +181,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
 
 
   public void stopPipeline(Pipeline pipeline) {
-    var pipelineExecutor = new PipelineExecutor(pipeline);
+    var pipelineExecutor = new PipelineExecutor(pipeline, requestManager);
     var pipelineStopResult = pipelineExecutor.stopPipeline(true);
 
     if (pipelineStopResult.isSuccess()) {
@@ -198,7 +199,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
    *
    * @param pipelineElement  pipeline element to be migrated
    * @param modelMigrations  list of model migrations that might be applicable for this pipeline element
-   * @param url              url of the extensions service endpoint that handles the migration
+   * @param requestTarget    endpoint target of the extensions service that handles the migration
    * @param failedMigrations collection of failed migrations which is extended by occurring migration failures
    * @param <T>              type of the pipeline element (e.g., DataProcessorInvocation)
    * @return the migrated (or - in case of a failure - updated) pipeline element
@@ -206,7 +207,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
   protected <T extends InvocableStreamPipesEntity> T migratePipelineElement(
       T pipelineElement,
       List<ModelMigratorConfig> modelMigrations,
-      String url,
+      ExtensionServiceRequestTarget requestTarget,
       List<MigrationResult<?>> failedMigrations
   ) {
 
@@ -225,12 +226,11 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
       var migrationResult = performMigration(
           pipelineElement,
           migrationConfig,
-          url
+          requestTarget
       );
 
       if (migrationResult.success()) {
         LOG.info("Migration successfully performed by extensions service. Updating pipeline element invocation ...");
-        LOG.debug("Migration was performed at extensions service endpoint '{}'", url);
         pipelineElement = migrationResult.element();
       } else {
         LOG.error("Migration failed with the following reason: {}", migrationResult.message());
@@ -271,7 +271,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
     } else if (modelType == SpServiceTagPrefix.DATA_SINK) {
       return !dataSinkStorage.getDataSinksByAppId(appId).isEmpty();
     } else {
-      throw new RuntimeException(String.format("Wrong service tag provided: %s", modelType.asString()));
+      throw new RuntimeException(String.format("Wrong service tag provided: %s", modelType.name()));
     }
   }
 }

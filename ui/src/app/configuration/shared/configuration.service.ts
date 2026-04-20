@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -29,7 +29,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class ConfigurationService {
-    constructor(private http: HttpClient) {}
+    private http = inject(HttpClient);
 
     getServerUrl() {
         return '/streampipes-backend';

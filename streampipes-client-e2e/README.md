@@ -21,18 +21,31 @@
 ## Environment Setup
 Before running, ensure that StreamPipe is operational and the corresponding configuration is input into the `start-streampipes-client-e2e.sh` script.
 **Note**: This script must be executed from within the [tool](./tool) directory.
+
 ```shell
-./start-streampipes-client-e2e.sh -h 127.0.0.1 -p 8030 -u admin@streampipes.apache.org   -pw admin -t go-client-e2e.sh
+cd ./tool
+./start-streampipes-client-e2e.sh -h 127.0.0.1 -p 8030 -u admin@streampipes.apache.org -pw admin -t go-client-e2e.sh
+```
+
+```shell
+cd ./tool
+./start-streampipes-client-e2e.sh -h 127.0.0.1 -p 8030 -u admin@streampipes.apache.org -pw admin -t java-client-e2e.sh -s single
+```
+
+```shell
+cd ./tool
+./start-streampipes-client-e2e.sh -h 127.0.0.1 -p 8030 -u admin@streampipes.apache.org -pw admin -t java-client-e2e.sh -s lb
 ```
 
 ## Usage Instructions
-| Parameter | Default          | Required | Description                                                                                               |
-|-----------|-------------------|----------|-----------------------------------------------------------------------------------------------------------|
-| `-h`      | `127.0.0.1`       | No       | Host address                                                                                              |
-| `-p`      | `8030`            | No       | Backend port                                                                                              |
-| `-u`      | `admin@streampipes.apache.org` | No       | User                                                                                                      |
-| `-pw`     | `admin`           | No       | Password                                                                                                  |
-| `-t`      | `""`              | Yes      | Name of the client's E2E test startup script (the script must be located in the [tool](./tool) directory) |
+| Parameter | Default          | Required | Description                                                    |
+|-----------|-------------------|----------|----------------------------------------------------------------|
+| `-h`      | `127.0.0.1`       | No       | Host address                                                   |
+| `-p`      | `8030`            | No       | Backend port                                                   |
+| `-u`      | `admin@streampipes.apache.org` | No       | User                                                           |
+| `-pw`     | `admin`           | No       | Password                                                       |
+| `-t`      | `""`              | Yes      | Name of the client's E2E test startup script in [tool](./tool) |
+| `-s`      | `single`          | No       | Java test scenario: `single` or `lb` (ignored by Go scripts)   |
 
 ## How to add E2E in a new language
 1. If you need to define an E2E test in a new language, you need to download the element you need to use in `install-element.sh`.

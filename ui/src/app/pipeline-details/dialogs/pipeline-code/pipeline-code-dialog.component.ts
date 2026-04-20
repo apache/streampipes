@@ -16,29 +16,40 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     CompactPipeline,
     Pipeline,
     PipelineService,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { ConfigurationCodePanelComponent } from '../../../core-ui/configuration-code-panel/configuration-code-panel.component';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-code-dialog',
     templateUrl: './pipeline-code-dialog.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        ConfigurationCodePanelComponent,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class PipelineCodeDialogComponent implements OnInit {
+    private pipelineService = inject(PipelineService);
+    private dialogRef =
+        inject<DialogRef<PipelineCodeDialogComponent>>(DialogRef);
+
     @Input()
     pipeline: Pipeline;
 
     compactPipeline: CompactPipeline;
-
-    constructor(
-        private pipelineService: PipelineService,
-        private dialogRef: DialogRef<PipelineCodeDialogComponent>,
-    ) {}
 
     ngOnInit() {
         this.pipelineService

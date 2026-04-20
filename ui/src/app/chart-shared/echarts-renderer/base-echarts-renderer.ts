@@ -26,7 +26,7 @@ import {
 } from '@streampipes/platform-services';
 import { EChartsOption } from 'echarts';
 import { GeneratedDataset, WidgetSize } from '../models/dataset.model';
-import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
+import type { DataTransformOption } from 'echarts/types/src/data/helper/transform.d.ts';
 import { inject } from '@angular/core';
 import { ChartFieldProviderService } from '../services/chart-field-provider.service';
 import { EchartsAxisGeneratorService } from './echarts-axis-generator.service';
@@ -34,7 +34,7 @@ import { EchartsBasicOptionsGeneratorService } from './echarts-basic-options-gen
 import { EchartsDatasetGeneratorService } from './echarts-dataset-generator.service';
 import { EchartsGridGeneratorService } from './echarts-grid-generator.service';
 import { EchartsUtilsService } from './echarts-utils.service';
-import { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager';
+import type { ToolboxFeatureOption } from 'echarts/types/src/component/toolbox/featureManager.d.ts';
 import { EchartsDatasetUtilsService } from './echarts-dataset-utils.service';
 import { ChartColorizationService } from '../services/chart-colorization.service';
 import { SpFieldUpdateService } from '../services/field-update.service';
@@ -101,5 +101,40 @@ export abstract class SpBaseEchartsRenderer<
         ToolboxFeatureOption
     > {
         return {};
+    }
+
+    protected getDecimals(widgetConfig: T): number | undefined {
+        const appearanceConfig =
+            widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig;
+        return this.normalizeDecimals(appearanceConfig?.numberFormat?.decimals);
+    }
+
+    protected formatNumber(value: unknown, decimals?: number): string {
+        const numericValue = typeof value === 'number' ? value : Number(value);
+        if (Number.isFinite(numericValue) && decimals !== undefined) {
+            const normalizedDecimals = this.normalizeDecimals(decimals);
+            if (normalizedDecimals !== undefined) {
+                return numericValue.toFixed(normalizedDecimals);
+            }
+        }
+
+        if (value === null || value === undefined) {
+            return '';
+        }
+
+        return String(value);
+    }
+
+    private normalizeDecimals(decimals: unknown): number | undefined {
+        if (decimals === null || decimals === undefined || decimals === '') {
+            return undefined;
+        }
+
+        const parsedValue = Number(decimals);
+        if (!Number.isFinite(parsedValue)) {
+            return undefined;
+        }
+
+        return Math.min(10, Math.max(0, Math.round(parsedValue)));
     }
 }

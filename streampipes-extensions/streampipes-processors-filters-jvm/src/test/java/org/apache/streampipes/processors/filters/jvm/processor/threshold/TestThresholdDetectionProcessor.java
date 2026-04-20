@@ -123,9 +123,44 @@ class TestThresholdDetectionProcessor {
     executeTest(configuration, inputEvent, expectedEvents);
   }
 
+  @Test
+  void thresholdDetection1() {
+    var configuration = createConfiguration(">", 50.0, "randomnumber");
+    var inputEvents = List.of(
+        event("timestamp", 1623871499055L, "randomnumber", 62.0d),
+        event("timestamp", 1623871500059L, "randomnumber", 46.0d),
+        event("timestamp", 1623871501064L, "randomnumber", 41.0d),
+        event("timestamp", 1623871502070L, "randomnumber", 41.0d),
+        event("timestamp", 1623871503078L, "randomnumber", 22.0d),
+        event("timestamp", 1623871504082L, "randomnumber", 56.0d),
+        event("timestamp", 1623871505084L, "randomnumber", 95.0d),
+        event("timestamp", 1623871506086L, "randomnumber", 77.0d),
+        event("timestamp", 1623871507091L, "randomnumber", 85.0d),
+        event("timestamp", 1623871508093L, "randomnumber", 22.0d)
+    );
+    var expectedEvents = List.of(
+        event("timestamp", 1623871499055L, "randomnumber", 62.0d, ThresholdDetectionProcessor.RESULT_FIELD, true),
+        event("timestamp", 1623871500059L, "randomnumber", 46.0d, ThresholdDetectionProcessor.RESULT_FIELD, false),
+        event("timestamp", 1623871501064L, "randomnumber", 41.0d, ThresholdDetectionProcessor.RESULT_FIELD, false),
+        event("timestamp", 1623871502070L, "randomnumber", 41.0d, ThresholdDetectionProcessor.RESULT_FIELD, false),
+        event("timestamp", 1623871503078L, "randomnumber", 22.0d, ThresholdDetectionProcessor.RESULT_FIELD, false),
+        event("timestamp", 1623871504082L, "randomnumber", 56.0d, ThresholdDetectionProcessor.RESULT_FIELD, true),
+        event("timestamp", 1623871505084L, "randomnumber", 95.0d, ThresholdDetectionProcessor.RESULT_FIELD, true),
+        event("timestamp", 1623871506086L, "randomnumber", 77.0d, ThresholdDetectionProcessor.RESULT_FIELD, true),
+        event("timestamp", 1623871507091L, "randomnumber", 85.0d, ThresholdDetectionProcessor.RESULT_FIELD, true),
+        event("timestamp", 1623871508093L, "randomnumber", 22.0d, ThresholdDetectionProcessor.RESULT_FIELD, false)
+    );
+
+    executeTest(configuration, inputEvents, expectedEvents);
+  }
+
   private TestConfiguration createConfiguration(String operation, double value) {
+    return createConfiguration(operation, value, FIELD_NAME);
+  }
+
+  private TestConfiguration createConfiguration(String operation, double value, String fieldName) {
     return TestConfiguration.builder()
-        .configWithDefaultPrefix(ThresholdDetectionProcessor.NUMBER_MAPPING, FIELD_NAME)
+        .configWithDefaultPrefix(ThresholdDetectionProcessor.NUMBER_MAPPING, fieldName)
         .config(ThresholdDetectionProcessor.OPERATION, operation)
         .config(ThresholdDetectionProcessor.VALUE, value)
         .build();
@@ -137,6 +172,16 @@ class TestThresholdDetectionProcessor {
 
   private List<Map<String, Object>> createOutputEvent(double value, boolean thresholdDetected) {
     return List.of(Map.of(FIELD_NAME, value, ThresholdDetectionProcessor.RESULT_FIELD, thresholdDetected));
+  }
+
+  private Map<String, Object> event(Object... keyValuePairs) {
+    var event = new java.util.LinkedHashMap<String, Object>();
+
+    for (int i = 0; i < keyValuePairs.length; i += 2) {
+      event.put((String) keyValuePairs[i], keyValuePairs[i + 1]);
+    }
+
+    return event;
   }
 
   private void executeTest(

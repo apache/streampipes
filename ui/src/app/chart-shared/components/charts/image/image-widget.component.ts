@@ -26,11 +26,28 @@ import {
 } from '@streampipes/platform-services';
 import { ImageWidgetModel } from './model/image-widget.model';
 import { SecurePipe } from '../../../../services/secure.pipe';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NoDataInDateRangeComponent } from '../base/no-data/no-data-in-date-range.component';
+import { ImageViewerComponent } from './image-viewer/image-viewer.component';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 
 @Component({
     selector: 'sp-data-explorer-image-widget',
     templateUrl: './image-widget.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutAlignDirective,
+        LayoutDirective,
+        NoDataInDateRangeComponent,
+        ImageViewerComponent,
+        NgStyle,
+        StyleDirective,
+    ],
 })
 export class ImageWidgetComponent
     extends BaseDataExplorerWidgetDirective<ImageWidgetModel>

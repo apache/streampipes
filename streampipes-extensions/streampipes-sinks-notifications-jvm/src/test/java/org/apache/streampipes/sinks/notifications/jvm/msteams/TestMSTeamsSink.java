@@ -22,10 +22,10 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -57,7 +57,7 @@ public class TestMSTeamsSink {
     var messageContent = "{\"text\": \"Hi this is a message from Apache StreamPipes\"}";
 
     var sink = new MSTeamsSink();
-    Assertions.assertEquals(messageContent, sink.createMessageFromAdvancedContent(messageContent));
+    assertEquals(messageContent, sink.createMessageFromAdvancedContent(messageContent));
   }
 
   @Test
@@ -72,7 +72,7 @@ public class TestMSTeamsSink {
   @Test
   public void sendPayloadToWebhook() throws IOException {
 
-    var mockedClient = mock(HttpClient.class);
+    var mockedClient = mock(CloseableHttpClient.class);
     var mockedResponse = mock(CloseableHttpResponse.class);
     var mockedStatusLine = mock(StatusLine.class);
     var argumentCaptor = ArgumentCaptor.forClass(HttpPost.class);
@@ -92,17 +92,17 @@ public class TestMSTeamsSink {
     var capturedPost = argumentCaptor.getValue();
 
     Assertions.assertNotNull(capturedPost);
-    Assertions.assertEquals(webhook,
+    assertEquals(webhook,
                             capturedPost.getURI().toString()
     );
-    Assertions.assertEquals(ContentType.APPLICATION_JSON.toString(),
+    assertEquals(ContentType.APPLICATION_JSON.toString(),
                             capturedPost.getEntity().getContentType().getValue());
-    Assertions.assertEquals(payload, EntityUtils.toString(capturedPost.getEntity()));
+    assertEquals(payload, EntityUtils.toString(capturedPost.getEntity()));
   }
 
   @Test
   public void sendPayloadToWebhookBadResponse() throws  IOException {
-    var mockedClient = mock(HttpClient.class);
+    CloseableHttpClient mockedClient = mock(CloseableHttpClient.class);
     var mockedResponse = mock(CloseableHttpResponse.class);
     var mockedStatusLine = mock(StatusLine.class);
 

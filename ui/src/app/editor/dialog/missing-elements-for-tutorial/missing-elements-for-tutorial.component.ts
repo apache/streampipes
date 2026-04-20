@@ -16,21 +16,30 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-missing-elements-for-tutorial',
     templateUrl: './missing-elements-for-tutorial.component.html',
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class MissingElementsForTutorialComponent {
+    private dialogRef =
+        inject<DialogRef<MissingElementsForTutorialComponent>>(DialogRef);
+
     @Input()
     missingElementsForTutorial: any[];
-
-    constructor(
-        private dialogRef: DialogRef<MissingElementsForTutorialComponent>,
-    ) {}
 
     close() {
         this.dialogRef.close();

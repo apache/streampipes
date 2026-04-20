@@ -16,6 +16,8 @@
  *
  */
 
+import { SharedBtns } from './shared/SharedBtns';
+
 export class FileManagementUtils {
     public static addFile(filePath: string) {
         // Go to StreamPipes file management
@@ -30,10 +32,25 @@ export class FileManagementUtils {
             { force: true },
         );
         cy.dataCy('sp-file-management-store-file').click();
+
+        this.expectUploadedFileToBeVisibleInFileOverview(filePath);
     }
 
     private static addFixtureDirectoryPrefix(filePath: string): string {
         return 'cypress/fixtures/' + filePath;
+    }
+
+    private static getFileName(filePath: string): string {
+        return filePath.split('/').pop() ?? filePath;
+    }
+
+    private static expectUploadedFileToBeVisibleInFileOverview(
+        filePath: string,
+    ): void {
+        const uploadedFileName = this.getFileName(filePath);
+        cy.get('sp-file-overview', { timeout: 10000 })
+            .contains('span', uploadedFileName)
+            .should('be.visible');
     }
 
     public static deleteFile() {
@@ -42,7 +59,7 @@ export class FileManagementUtils {
         // Check if file was uploaded and delete it
         cy.dataCy('delete').should('have.length', 1);
         cy.dataCy('delete').click();
-        cy.dataCy('confirm-delete').click();
+        SharedBtns.confirmDialogConfirmBtn().click();
         cy.dataCy('delete').should('have.length', 0);
     }
 

@@ -19,11 +19,24 @@
 import { Component, Input } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { Pipeline } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-can-not-edit-adapter-dialog',
     templateUrl: './can-not-edit-adapter-dialog.component.html',
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatDivider,
+        MatButton,
+    ],
 })
 export class CanNotEditAdapterDialog {
     @Input()

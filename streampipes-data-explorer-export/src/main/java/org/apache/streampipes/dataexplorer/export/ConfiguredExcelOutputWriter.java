@@ -22,8 +22,7 @@ import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
-import org.apache.streampipes.model.file.FileMetadata;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -38,7 +37,7 @@ import java.util.Objects;
 
 public class ConfiguredExcelOutputWriter extends ConfiguredOutputWriter {
 
-  private final CRUDStorage<FileMetadata> storage;
+  private final IFileMetadataStorage storage;
 
   private SXSSFWorkbook wb;
   private Sheet ws;
@@ -48,7 +47,7 @@ public class ConfiguredExcelOutputWriter extends ConfiguredOutputWriter {
   private DataLakeMeasure schema;
   private String headerColumnNameStrategy;
 
-  public ConfiguredExcelOutputWriter(CRUDStorage<FileMetadata> fileMetadataStorage) {
+  public ConfiguredExcelOutputWriter(IFileMetadataStorage fileMetadataStorage) {
     this.storage = fileMetadataStorage;
   }
 

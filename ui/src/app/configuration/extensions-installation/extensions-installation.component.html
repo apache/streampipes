@@ -166,7 +166,10 @@
                         track endpointItem
                     ) {
                         <sp-endpoint-item
-                            fxFlex="33"
+                            fxFlex="100"
+                            fxFlex.gt-xs="50"
+                            fxFlex.gt-sm="33"
+                            fxFlex.gt-lg="25"
                             [itemSelected]="endpointItem.selected"
                             [item]="endpointItem"
                             (triggerInstallation)="triggerInstallation($event)"

@@ -32,17 +32,48 @@ import {
     UserInfo,
 } from '@streampipes/platform-services';
 import {
+    AssetLinkConfigurationComponent,
     AssetSaveService,
     CurrentUserService,
     DialogRef,
+    FormFieldComponent,
 } from '@streampipes/shared-ui';
-import { UserRole } from '../../../_enums/user-role.enum';
+import { UserRole } from '../../../core/auth/user-role.enum';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatDivider } from '@angular/material/divider';
+import {
+    FlexDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-dashboard-dialog-component',
     templateUrl: './edit-dashboard-dialog.component.html',
     styleUrls: ['./edit-dashboard-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatError,
+        MatRadioGroup,
+        MatRadioButton,
+        MatCheckbox,
+        AssetLinkConfigurationComponent,
+        MatDivider,
+        LayoutGapDirective,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class EditDashboardDialogComponent implements OnInit {
     @Input() createMode: boolean;
@@ -77,6 +108,19 @@ export class EditDashboardDialogComponent implements OnInit {
             undefined
         ) {
             this.dashboard.dashboardGeneralSettings.globalTimeEnabled = true;
+        }
+        this.dashboard.dashboardGeneralSettings.chartOverrides ??= {};
+        if (
+            this.dashboard.dashboardGeneralSettings.chartOverrides
+                .hideToolbox === undefined
+        ) {
+            this.dashboard.dashboardGeneralSettings.chartOverrides.hideToolbox = false;
+        }
+        if (
+            this.dashboard.dashboardGeneralSettings.gridRowHeightPx ===
+            undefined
+        ) {
+            this.dashboard.dashboardGeneralSettings.gridRowHeightPx = 90;
         }
         if (!this.createMode) {
             this.addToAssets = true;

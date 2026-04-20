@@ -16,20 +16,41 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatDivider } from '@angular/material/divider';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-delete-adapter-dialog',
     templateUrl: './delete-adapter-dialog.component.html',
     styleUrls: ['./delete-adapter-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        FlexDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatProgressSpinner,
+        MatDivider,
+        TranslatePipe,
+    ],
 })
 export class DeleteAdapterDialogComponent {
+    private dialogRef =
+        inject<DialogRef<DeleteAdapterDialogComponent>>(DialogRef);
+    private dataMarketplaceService = inject(AdapterService);
+
     @Input()
     adapter: AdapterDescription;
 
@@ -39,11 +60,6 @@ export class DeleteAdapterDialogComponent {
     deleteAssociatedPipelines = false;
     namesOfPipelinesUsingAdapter = '';
     namesOfPipelinesNotOwnedByUser = '';
-
-    constructor(
-        private dialogRef: DialogRef<DeleteAdapterDialogComponent>,
-        private dataMarketplaceService: AdapterService,
-    ) {}
 
     close(refreshAdapters: boolean) {
         this.dialogRef.close(refreshAdapters);

@@ -20,16 +20,10 @@
     @for (property of staticProperty.members; track property; let i = $index) {
         <div fxLayout="row" fxLayoutAlign="space-between center">
             <div fxFlex="grow">
-                <sp-app-static-property
-                    [deploymentConfiguration]="deploymentConfiguration"
-                    [adapterId]="adapterId"
-                    [eventSchemas]="eventSchemas"
-                    [parentForm]="parentForm"
-                    [showBorder]="false"
-                    [fieldName]="property.internalName + '-' + i"
-                    [staticProperty]="property"
-                >
-                </sp-app-static-property>
+                <ng-container
+                    [ngTemplateOutlet]="renderStaticProperty"
+                    [ngTemplateOutletContext]="ctxFor(property, i)"
+                />
             </div>
             <div
                 fxFlex="nogrow"

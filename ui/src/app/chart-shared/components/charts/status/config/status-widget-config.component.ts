@@ -18,31 +18,49 @@
 
 import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import {
     StatusVisConfig,
     StatusWidgetModel,
 } from '../model/status-widget.model';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
+import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
+import {
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-data-explorer-status-widget-config',
     templateUrl: './status-widget-config.component.html',
     styleUrls: ['./status-widget-config.component.scss'],
-    standalone: false,
+    imports: [
+        SpVisualizationConfigOuterComponent,
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatRadioGroup,
+        FormsModule,
+        MatRadioButton,
+        MatFormField,
+        MatInput,
+        MatCheckbox,
+        SelectSinglePropertyConfigComponent,
+        FlexDirective,
+        LayoutDirective,
+        TranslatePipe,
+    ],
 })
 export class StatusWidgetConfigComponent extends BaseWidgetConfig<
     StatusWidgetModel,
     StatusVisConfig
 > {
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
-        super(widgetConfigurationService, fieldService);
-    }
-
     selectDataType(selectedDataType: string): void {
         this.currentlyConfiguredWidget.visualizationConfig.selectedDataType =
             selectedDataType;

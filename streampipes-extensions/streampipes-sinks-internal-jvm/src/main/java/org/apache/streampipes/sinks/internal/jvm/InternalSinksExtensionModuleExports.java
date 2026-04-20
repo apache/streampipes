@@ -25,7 +25,6 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
 import org.apache.streampipes.sinks.internal.jvm.datalake.migrations.DataLakeSinkMigrationV1;
 import org.apache.streampipes.sinks.internal.jvm.datalake.migrations.DataLakeSinkMigrationV2;
-import org.apache.streampipes.sinks.internal.jvm.notification.InternalStreamPipesNotificationSink;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,8 +38,7 @@ public class InternalSinksExtensionModuleExports implements IExtensionModuleExpo
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
     return List.of(
-        new DataLakeSink(),
-        new InternalStreamPipesNotificationSink()
+        new DataLakeSink()
     );
   }
 

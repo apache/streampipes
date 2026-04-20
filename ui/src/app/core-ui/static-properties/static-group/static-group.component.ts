@@ -16,19 +16,28 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
 import {
     ExtensionDeploymentConfiguration,
     StaticPropertyGroup,
+    StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { NgTemplateOutlet } from '@angular/common';
+
+export type GroupRenderCtx = {
+    child: StaticPropertyUnion;
+    index: number;
+    onCompleted: (event: ConfigurationInfo) => void;
+};
 
 @Component({
     selector: 'sp-app-static-group',
     templateUrl: './static-group.component.html',
     styleUrls: ['./static-group.component.scss'],
-    standalone: false,
+    imports: [LayoutDirective, NgTemplateOutlet],
 })
 export class StaticGroupComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyGroup>
@@ -37,10 +46,21 @@ export class StaticGroupComponent
     @Input()
     deploymentConfiguration: ExtensionDeploymentConfiguration;
 
+    @Input({ required: true })
+    renderStaticProperty!: TemplateRef<GroupRenderCtx>;
+
     dependentStaticProperties: Map<string, boolean> = new Map<
         string,
         boolean
     >();
+
+    ctxFor(groupElement: StaticPropertyUnion, index: number): GroupRenderCtx {
+        return {
+            child: groupElement!,
+            index,
+            onCompleted: ev => this.handleConfigurationUpdate(ev),
+        };
+    }
 
     handleConfigurationUpdate(event: ConfigurationInfo): void {
         this.dependentStaticProperties.set(

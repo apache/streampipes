@@ -17,14 +17,14 @@
  */
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.streampipes.manager.health.ServiceRegistrationManager;
+import org.apache.streampipes.health.monitoring.ServiceRegistrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.api.CRUDStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,7 +44,7 @@ import java.util.List;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource {
 
-  private final CRUDStorage<SpServiceRegistration> extensionsServiceStorage =
+  private final IExtensionsServiceStorage extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

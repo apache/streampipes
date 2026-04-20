@@ -16,12 +16,29 @@
  *
  */
 
-import { AppModule } from './app/app.module';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 // needed so that maplibre attaches to leaflet upon startup
 import 'leaflet';
 import '@maplibre/maplibre-gl-leaflet';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { appConfig } from './app/app.config';
 
-platformBrowserDynamic()
-    .bootstrapModule(AppModule)
-    .catch(err => console.error(err));
+import * as echarts from 'echarts';
+import * as transform from 'echarts-simple-transform';
+import { ValueDistributionTransform } from './app/core-ui/echarts-transform/value-distribution.transform';
+import { HistogramTransform } from './app/core-ui/echarts-transform/histogram.transform';
+import { RoundValuesTransform } from './app/core-ui/echarts-transform/round-values.transform';
+import { MapTransform } from './app/core-ui/echarts-transform/map.transform';
+import { PieAggregateTransform } from './app/core-ui/echarts-transform/pie-aggregate.transform';
+
+echarts.registerTransform(transform.aggregate);
+echarts.registerTransform(ValueDistributionTransform);
+echarts.registerTransform(HistogramTransform);
+echarts.registerTransform(RoundValuesTransform);
+echarts.registerTransform(MapTransform);
+echarts.registerTransform(PieAggregateTransform);
+
+// required
+import * as $ from 'jquery';
+
+bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));

@@ -30,28 +30,31 @@ import {
     Output,
     SimpleChanges,
     ViewChild,
+    inject,
 } from '@angular/core';
 import {
     ClientDashboardItem,
-    DashboardItem,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     ExtendedTimeSettings,
     QuickTimeSelection,
     SpLogMessage,
+    SpQueryResult,
     TimeSelectionConstants,
     TimeSettings,
 } from '@streampipes/platform-services';
-import { interval, Subject, Subscription } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { ChartRegistry } from '../../registry/chart-registry.service';
 import { ChartDirective } from './chart.directive';
 import { ChartTypeService } from '../../services/chart-type.service';
 import { AuthService } from '../../../services/auth.service';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import {
     CurrentUserService,
     NameChangeService,
+    SpExceptionMessageComponent,
+    SpLabelComponent,
     TimeRangeSelectorMenuComponent,
     TimeSelectionService,
     TimeSelectorLabel,
@@ -59,20 +62,65 @@ import {
 import { ChartSharedService } from '../../services/chart-shared.service';
 import {
     BaseWidgetData,
+    DashboardChartOverrides,
     ObservableGenerator,
 } from '../../models/dataview-dashboard.model';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { ResizeService } from '../../services/resize.service';
+import { NgStyle } from '@angular/common';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-chart-container',
     templateUrl: './chart-container.component.html',
     styleUrls: ['./chart-container.component.scss'],
-    standalone: false,
+    imports: [
+        NgStyle,
+        StyleDirective,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatIcon,
+        FormsModule,
+        MatProgressSpinner,
+        SpLabelComponent,
+        MatMenuTrigger,
+        MatTooltip,
+        MatMenu,
+        MatMenuItem,
+        TimeRangeSelectorMenuComponent,
+        MatButton,
+        ChartDirective,
+        SpExceptionMessageComponent,
+        TranslatePipe,
+    ],
 })
 export class ChartContainerComponent
     implements OnInit, OnDestroy, OnChanges, AfterViewInit
 {
+    private chartRegistryService = inject(ChartRegistry);
+    private dashboardService = inject(ChartSharedService);
+    private componentFactoryResolver = inject(ComponentFactoryResolver);
+    private widgetTypeService = inject(ChartTypeService);
+    private authService = inject(AuthService);
+    private currentUserService = inject(CurrentUserService);
+    private timeSelectionService = inject(TimeSelectionService);
+    private nameChangeService = inject(NameChangeService);
+    private el = inject<ElementRef<HTMLDivElement>>(ElementRef);
+    private resizeService = inject(ResizeService);
+
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
     @ViewChild('timeSelectorMenu')
     timeSelectorMenu: TimeRangeSelectorMenuComponent;
@@ -115,9 +163,14 @@ export class ChartContainerComponent
     @Input()
     observableGenerator: ObservableGenerator;
 
+    @Input()
+    dashboardChartOverrides: DashboardChartOverrides = {};
+
     @Output() deleteCallback: EventEmitter<number> = new EventEmitter<number>();
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
         new EventEmitter<DataExplorerWidgetModel>();
+    @Output() queryResultsEmitter: EventEmitter<SpQueryResult[]> =
+        new EventEmitter<SpQueryResult[]>();
 
     title = '';
     widgetLoaded = false;
@@ -152,19 +205,6 @@ export class ChartContainerComponent
     componentRef: ComponentRef<BaseWidgetData<any>>;
 
     @ViewChild(ChartDirective, { static: true }) widgetHost!: ChartDirective;
-
-    constructor(
-        private chartRegistryService: ChartRegistry,
-        private dashboardService: ChartSharedService,
-        private componentFactoryResolver: ComponentFactoryResolver,
-        private widgetTypeService: ChartTypeService,
-        private authService: AuthService,
-        private currentUserService: CurrentUserService,
-        private timeSelectionService: TimeSelectionService,
-        private nameChangeService: NameChangeService,
-        private el: ElementRef<HTMLDivElement>,
-        private resizeService: ResizeService,
-    ) {}
 
     resizeObserver: ResizeObserver;
     resizeTimeout: any;
@@ -310,6 +350,8 @@ export class ChartContainerComponent
         this.componentRef.instance.widgetIndex = this.widgetIndex;
         this.componentRef.instance.observableGenerator =
             this.observableGenerator;
+        this.componentRef.instance.dashboardChartOverrides =
+            this.dashboardChartOverrides;
         const remove$ =
             this.componentRef.instance.removeWidgetCallback.subscribe(ev =>
                 this.removeWidget(),
@@ -318,7 +360,15 @@ export class ChartContainerComponent
             this.handleTimer(ev),
         );
         const error$ = this.componentRef.instance.errorCallback.subscribe(
-            ev => (this.errorMessage = ev),
+            ev => {
+                this.errorMessage = ev;
+                if (ev) {
+                    this.queryResultsEmitter.emit([]);
+                }
+            },
+        );
+        const data$ = this.componentRef.instance.dataReceivedCallback.subscribe(
+            results => this.queryResultsEmitter.emit(results),
         );
 
         this.componentRef.onDestroy(destroy => {
@@ -326,6 +376,7 @@ export class ChartContainerComponent
             remove$?.unsubscribe();
             timer$?.unsubscribe();
             error$?.unsubscribe();
+            data$?.unsubscribe();
         });
     }
 

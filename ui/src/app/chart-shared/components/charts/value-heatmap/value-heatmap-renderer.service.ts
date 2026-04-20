@@ -18,7 +18,7 @@
 
 import { EChartsOption, HeatmapSeriesOption } from 'echarts';
 import { SpBaseSingleFieldEchartsRenderer } from '../../../echarts-renderer/base-single-field-echarts-renderer';
-import { DataTransformOption } from 'echarts/types/src/data/helper/transform';
+import type { DataTransformOption } from 'echarts/types/src/data/helper/transform.d.ts';
 import { Injectable } from '@angular/core';
 import { ValueHeatmapChartWidgetModel } from './model/value-heatmap-chart-widget.model';
 import { FieldUpdateInfo } from '../../../models/field-update.model';
@@ -92,9 +92,10 @@ export class SpValueHeatmapRendererService extends SpBaseSingleFieldEchartsRende
     addSeriesItem(
         name: string,
         datasetIndex: number,
-        _widgetConfig: ValueHeatmapChartWidgetModel,
+        widgetConfig: ValueHeatmapChartWidgetModel,
         index: number,
     ): HeatmapSeriesOption {
+        const decimals = this.getDecimals(widgetConfig);
         return {
             universalTransition: true,
             animation: true,
@@ -107,7 +108,7 @@ export class SpValueHeatmapRendererService extends SpBaseSingleFieldEchartsRende
             tooltip: {
                 valueFormatter: value => {
                     if (typeof value === 'number' && isFinite(value)) {
-                        return (value * 100).toFixed(3) + '%';
+                        return this.formatNumber(value * 100, decimals) + '%';
                     } else {
                         return value as string;
                     }

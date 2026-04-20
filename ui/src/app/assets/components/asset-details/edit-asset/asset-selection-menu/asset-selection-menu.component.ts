@@ -18,12 +18,14 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SpAsset, SpAssetModel } from '@streampipes/platform-services';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-asset-selection-menu',
     templateUrl: './asset-selection-menu.component.html',
     styleUrls: ['./asset-selection-menu.component.scss'],
-    standalone: false,
+    imports: [LayoutDirective, MatIcon],
 })
 export class SpAssetSelectionMenuComponent implements OnInit {
     @Input()

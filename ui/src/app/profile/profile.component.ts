@@ -16,19 +16,41 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { Component, OnInit, inject } from '@angular/core';
+import {
+    SpBasicViewComponent,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { GeneralProfileSettingsComponent } from './components/general/general-profile-settings.component';
+import { TokenManagementSettingsComponent } from './components/token/token-management-settings.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-profile',
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.scss'],
-    standalone: false,
+    imports: [
+        SpBasicViewComponent,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatTabGroup,
+        MatTab,
+        GeneralProfileSettingsComponent,
+        TokenManagementSettingsComponent,
+        TranslatePipe,
+    ],
 })
 export class ProfileComponent implements OnInit {
-    selectedIndex = 0;
+    private breadcrumbService = inject(SpBreadcrumbService);
 
-    constructor(private breadcrumbService: SpBreadcrumbService) {}
+    selectedIndex = 0;
 
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb([{ label: 'Profile' }]);

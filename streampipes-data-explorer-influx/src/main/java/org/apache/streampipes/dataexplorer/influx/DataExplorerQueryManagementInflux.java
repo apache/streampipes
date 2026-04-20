@@ -50,6 +50,7 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
     return new QueryResultProvider(queryParams,
                                    this,
                                    new DataExplorerInfluxQueryExecutor(),
+                                   dataExplorerSchemaManagement,
                                    ignoreMissingData
     ).getData();
   }
@@ -63,6 +64,7 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
     new StreamedQueryResultProvider(params, format,
                                     this,
                                     new DataExplorerInfluxQueryExecutor(),
+                                    dataExplorerSchemaManagement,
                                     ignoreMissingValues
     ).getDataAsStream(outputStream);
   }

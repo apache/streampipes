@@ -47,10 +47,27 @@ export interface SelectedFilter {
     field?: DataExplorerField;
     operator: string;
     value: any;
+    chainingOperator?: LogicalOperator;
+}
+
+export type LogicalOperator = 'AND' | 'OR';
+
+export interface FilterExpressionCondition {
+    type: 'condition';
+    field: string;
+    operator: string;
+    condition: any;
+}
+
+export interface FilterExpressionGroup {
+    type: 'group';
+    operator: LogicalOperator;
+    children: Array<FilterExpressionCondition | FilterExpressionGroup>;
 }
 
 export interface QueryConfig {
     selectedFilters: SelectedFilter[];
+    filterExpression?: FilterExpressionGroup;
     fields?: FieldConfig[];
     groupBy?: FieldConfig[];
     limit?: number;

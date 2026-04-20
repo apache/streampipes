@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.all.jvm;
 import org.apache.streampipes.connect.GeneralAdaptersExtensionModuleExport;
 import org.apache.streampipes.connect.iiot.IIoTAdaptersExtensionModuleExport;
 import org.apache.streampipes.connectors.ros.RosConnectorsModuleExport;
+import org.apache.streampipes.extensions.connectors.camel.azure.CamelAzureConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.influx.InfluxConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.kafka.KafkaConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.mqtt.MqttConnectorsModuleExport;
@@ -31,7 +32,6 @@ import org.apache.streampipes.extensions.connectors.rocketmq.RocketMqConnectorsM
 import org.apache.streampipes.extensions.connectors.tubemq.TubeMQConnectorsModuleExport;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
@@ -68,6 +68,7 @@ public class AllExtensionsInit extends StreamPipesExtensionsServiceBase {
             new GeneralAdaptersExtensionModuleExport(),
             new IIoTAdaptersExtensionModuleExport(),
 
+            new CamelAzureConnectorsModuleExport(),
             new InfluxConnectorsModuleExport(),
             new KafkaConnectorsModuleExport(),
             new MqttConnectorsModuleExport(),
@@ -97,7 +98,6 @@ public class AllExtensionsInit extends StreamPipesExtensionsServiceBase {
         .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerMessagingProtocols(
             new SpKafkaProtocolFactory(),
-            new SpJmsProtocolFactory(),
             new SpMqttProtocolFactory(),
             new SpNatsProtocolFactory(),
             new SpPulsarProtocolFactory())

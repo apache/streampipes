@@ -16,17 +16,46 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { EventSchema } from '@streampipes/platform-services';
 import { RuntimeInfo } from '../pipeline-element-runtime-info.model';
+import {
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatRow,
+    MatRowDef,
+    MatTable,
+} from '@angular/material/table';
+import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
+import { PropertyScopeBadgeComponent } from '../../property-scope-badge/property-scope-badge.component';
 
 @Component({
     selector: 'sp-live-preview-table',
     templateUrl: './live-preview-table.component.html',
     styleUrls: ['./live-preview-table.component.scss'],
-    standalone: false,
+    imports: [
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatCellDef,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        DatePipe,
+        TranslatePipe,
+        PropertyScopeBadgeComponent,
+    ],
 })
-export class LivePreviewTableComponent {
+export class LivePreviewTableComponent implements OnInit {
     @Input()
     eventSchema: EventSchema;
 
@@ -36,13 +65,14 @@ export class LivePreviewTableComponent {
     @Input()
     showTitle = true;
 
-    displayedColumns: string[] = [
-        'runtimeName',
-        'label',
-        'description',
-        'runtimeType',
-        'value',
-    ];
+    @Input()
+    compact = false;
 
-    constructor() {}
+    displayedColumns: string[] = [];
+
+    ngOnInit() {
+        this.displayedColumns = this.compact
+            ? ['runtimeName', 'value']
+            : ['runtimeName', 'label', 'description', 'value'];
+    }
 }

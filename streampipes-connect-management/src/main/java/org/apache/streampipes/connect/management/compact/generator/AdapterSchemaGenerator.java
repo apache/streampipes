@@ -19,12 +19,12 @@
 package org.apache.streampipes.connect.management.compact.generator;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.management.compact.SchemaMetadataEnricher;
 import org.apache.streampipes.connect.management.management.GuessManagement;
 import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 
 import java.io.IOException;
 
@@ -33,29 +33,84 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
   private final SchemaMetadataEnricher enricher;
   private final GuessManagement guessManagement;
 
-  public AdapterSchemaGenerator(SchemaMetadataEnricher enricher,
-                                GuessManagement guessManagement) {
+  public AdapterSchemaGenerator(
+      SchemaMetadataEnricher enricher,
+      GuessManagement guessManagement
+  ) {
     this.enricher = enricher;
     this.guessManagement = guessManagement;
   }
 
   @Override
-  public void apply(AdapterDescription adapterDescription,
-                    CompactAdapter compactAdapter)
-      throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
+  public void apply(
+      AdapterDescription adapterDescription,
+      CompactAdapter compactAdapter,
+      String userId
+  )
+      throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException, AdapterException {
 
-    GuessSchema result = guessManagement.guessSchema(adapterDescription);
-    adapterDescription.getDataStream().setEventSchema(result.getEventSchema());
+    if (compactAdapter.transformationConfig() != null && compactAdapter.transformationConfig()
+                                                                       .getScript() != null) {
+      adapterDescription.getTransformationConfig()
+                        .setScript(compactAdapter.transformationConfig()
+                                                 .getScript());
+    }
+
+    var sampleData = guessManagement.getSampleData(adapterDescription);
+    adapterDescription.getTransformationConfig()
+                      .setInputs(sampleData.getSamples());
+
+    setDefaultScriptIfNotSet(adapterDescription);
+    setDefaultScriptLanguageIfNotSet(adapterDescription);
+
+    guessManagement.transformSampleData(adapterDescription, userId);
+
+    var eventSchema = guessManagement.guessSchema(adapterDescription);
+    if (eventSchema != null) {
+      adapterDescription.getDataStream()
+                        .setEventSchema(eventSchema);
+    }
 
     var schemaDef = compactAdapter.schema();
 
     if (schemaDef != null) {
-      adapterDescription.getDataStream().getEventSchema().getEventProperties().forEach(ep -> {
-        if (schemaDef.containsKey(ep.getRuntimeName())) {
-          var compactPropertyDef = schemaDef.get(ep.getRuntimeName());
-          enricher.enrich(ep, compactPropertyDef);
-        }
-      });
+      adapterDescription.getDataStream()
+                        .getEventSchema()
+                        .getEventProperties()
+                        .forEach(ep -> {
+                          if (schemaDef.containsKey(ep.getRuntimeName())) {
+                            var compactPropertyDef = schemaDef.get(ep.getRuntimeName());
+                            enricher.enrich(ep, compactPropertyDef);
+                          }
+                        });
+    }
+  }
+
+  private void setDefaultScriptIfNotSet(AdapterDescription adapterDescription) {
+    if (adapterDescription.getTransformationConfig()
+                          .getScript() == null
+        || adapterDescription.getTransformationConfig()
+                             .getScript()
+                             .isEmpty()) {
+      adapterDescription.getTransformationConfig().setScriptActive(true);
+      adapterDescription.getTransformationConfig()
+                        .setScript("""
+                                   function transform(event, out, ctx) {
+                                      out.collect(event);
+                                    }
+                                   """);
+
+    }
+  }
+
+  private void setDefaultScriptLanguageIfNotSet(AdapterDescription adapterDescription) {
+    if (adapterDescription.getTransformationConfig()
+                          .getLanguage() == null
+        || adapterDescription.getTransformationConfig()
+                             .getLanguage()
+                             .isEmpty()) {
+      adapterDescription.getTransformationConfig()
+                        .setLanguage("javascript");
     }
   }
 }

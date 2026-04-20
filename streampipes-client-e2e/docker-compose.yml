@@ -27,6 +27,8 @@ services:
     image: streampipes_backend:release-validation
     ports:
       - "8030:8030"
+    environment:
+      - SP_PRIORITIZED_PROTOCOL=kafka
     depends_on:
       - couchdb
     volumes:
@@ -73,6 +75,15 @@ services:
       - KAFKA_DEFAULT_REPLICATION_FACTOR=1
     volumes:
       - kafka3:/var/lib/kafka/data
+    logging: *default-logging
+    networks:
+      spnet:
+
+  nats:
+    image: nats:2.10-alpine
+    hostname: nats
+    ports:
+      - "4222:4222"
     logging: *default-logging
     networks:
       spnet:

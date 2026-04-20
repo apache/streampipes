@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     Privilege,
     PrivilegeService,
@@ -27,17 +27,59 @@ import {
     FormBuilder,
     FormControl,
     FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    FormFieldComponent,
+    SplitSectionComponent,
+} from '@streampipes/shared-ui';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatError, MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { AlternateIdConfigurationComponent } from '../alternate-id-configuration/alternate-id-configuration.component';
+import { MatDivider } from '@angular/material/divider';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-role-dialog',
     templateUrl: './edit-role-dialog.component.html',
     styleUrls: ['./edit-role-dialog.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        FormsModule,
+        ReactiveFormsModule,
+        SplitSectionComponent,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        MatError,
+        LayoutGapDirective,
+        LayoutAlignDirective,
+        MatIconButton,
+        MatIcon,
+        AlternateIdConfigurationComponent,
+        MatDivider,
+        MatButton,
+        TranslatePipe,
+    ],
 })
 export class EditRoleDialogComponent implements OnInit {
+    private fb = inject(FormBuilder);
+    private privilegeService = inject(PrivilegeService);
+    private dialogRef = inject<DialogRef<EditRoleDialogComponent>>(DialogRef);
+    private roleService = inject(RoleService);
+
     @Input()
     role: Role;
 
@@ -48,13 +90,6 @@ export class EditRoleDialogComponent implements OnInit {
     allPrivileges: Privilege[] = [];
     selectedPrivileges: Privilege[] = [];
     clonedRole: Role;
-
-    constructor(
-        private fb: FormBuilder,
-        private privilegeService: PrivilegeService,
-        private dialogRef: DialogRef<EditRoleDialogComponent>,
-        private roleService: RoleService,
-    ) {}
 
     ngOnInit() {
         this.privilegeService.findAll().subscribe(privileges => {

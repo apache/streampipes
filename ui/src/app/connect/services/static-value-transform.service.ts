@@ -33,13 +33,6 @@ import { IdGeneratorService } from '../../core-services/id-generator/id-generato
  */
 export class StaticValueTransformService {
     prefix = 'http://eventProperty.de/staticValue/';
-    placeholderValue = 'placeholder';
-
-    constructor(private idGeneratorService: IdGeneratorService) {}
-
-    makeDefaultElementId(): string {
-        return this.getUniquePrefix() + this.placeholderValue;
-    }
 
     makeElementId(elementId: string, value: string) {
         const lastSlashIndex = elementId.lastIndexOf(':');
@@ -54,14 +47,6 @@ export class StaticValueTransformService {
     getStaticValue(elementId: string) {
         const lastSlashIndex = elementId.lastIndexOf(':');
         return elementId.substring(lastSlashIndex + 1);
-    }
-
-    /**
-     * This is used to get a unique property prefix. The value of the static
-     * value will be appended
-     */
-    private getUniquePrefix(): string {
-        return `${this.prefix + this.idGeneratorService.generate(10)}:`;
     }
 
     /**

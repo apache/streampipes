@@ -16,42 +16,48 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { PipelineOperationStatus } from '@streampipes/platform-services';
 import { PipelineAction } from '../../../pipelines/model/pipeline-model';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { PipelineOperationStatusComponent } from '../pipeline-operation-status/pipeline-operation-status.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-started-status',
     templateUrl: './pipeline-started-status.component.html',
     styleUrls: ['./pipeline-started-status.component.scss'],
-    standalone: false,
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        FlexDirective,
+        MatIcon,
+        MatButton,
+        PipelineOperationStatusComponent,
+        TranslatePipe,
+    ],
 })
-export class PipelineStartedStatusComponent implements OnInit {
-    @Input()
-    pipelineOperationStatus: PipelineOperationStatus;
+export class PipelineStartedStatusComponent {
+    readonly pipelineOperationStatus = input<
+        PipelineOperationStatus | undefined
+    >(undefined);
+    readonly action = input<PipelineAction | undefined>(undefined);
+    readonly forceStopDisabled = input(false);
 
-    @Input()
-    action: PipelineAction;
-
-    @Input()
-    forceStopDisabled = false;
-
-    @Output()
-    forceStopPipelineEmitter = new EventEmitter();
-
-    statusDetailsVisible: boolean;
-
-    constructor() {}
-
-    ngOnInit(): void {
-        this.statusDetailsVisible = false;
-    }
+    readonly forceStopPipelineEmitter = output<void>();
+    readonly statusDetailsVisible = signal(false);
 
     forceStopPipeline() {
         this.forceStopPipelineEmitter.emit();
     }
 
     toggleStatusDetailsVisible() {
-        this.statusDetailsVisible = !this.statusDetailsVisible;
+        this.statusDetailsVisible.update(visible => !visible);
     }
 }

@@ -17,63 +17,70 @@
  */
 package org.apache.streampipes.storage.couchdb;
 
-import org.apache.streampipes.model.assets.SpAssetModel;
-import org.apache.streampipes.model.client.user.Group;
-import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
-import org.apache.streampipes.model.client.user.Privilege;
-import org.apache.streampipes.model.client.user.Role;
-import org.apache.streampipes.model.client.user.UserActivationToken;
-import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.extensions.configuration.SpServiceConfiguration;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.file.FileMetadata;
-import org.apache.streampipes.model.opcua.Certificate;
-import org.apache.streampipes.model.template.CompactPipelineTemplate;
-import org.apache.streampipes.storage.api.CRUDStorage;
-import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.api.IDataLakeMeasureStorage;
-import org.apache.streampipes.storage.api.IDataProcessorStorage;
-import org.apache.streampipes.storage.api.IDataSinkStorage;
-import org.apache.streampipes.storage.api.IDataStreamStorage;
-import org.apache.streampipes.storage.api.IGenericStorage;
-import org.apache.streampipes.storage.api.IImageStorage;
-import org.apache.streampipes.storage.api.INoSqlStorage;
-import org.apache.streampipes.storage.api.INotificationStorage;
-import org.apache.streampipes.storage.api.IPermissionStorage;
-import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
-import org.apache.streampipes.storage.api.IPipelineStorage;
-import org.apache.streampipes.storage.api.ISpCoreConfigurationStorage;
-import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.AssetStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.CoreConfigurationStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.DataLakeMeasureStorage;
-import org.apache.streampipes.storage.couchdb.impl.DataProcessorStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.DataSinkStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.DataStreamStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.DefaultCrudStorage;
-import org.apache.streampipes.storage.couchdb.impl.DefaultViewCrudStorage;
-import org.apache.streampipes.storage.couchdb.impl.GenericStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.ImageStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.NotificationStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.PermissionStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.PipelineCanvasMetadataStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.PipelineElementDescriptionStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.PipelineElementTemplateStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.PipelineStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.PrivilegeStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.RoleStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.UserStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.core.INoSqlStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineCanvasMetadataStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
+import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceConfigurationStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
+import org.apache.streampipes.storage.api.system.IImageStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
+import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
+import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
+import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
+import org.apache.streampipes.storage.couchdb.impl.connect.AdapterDescriptionStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.explorer.DataExplorerDashboardStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.explorer.DataExplorerWidgetStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.explorer.DataLakeMeasureStorage;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.CompactPipelineTemplateStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.DataProcessorStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.DataSinkStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.DataStreamStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineCanvasMetadataStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementDescriptionStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementTemplateStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.AssetStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.CertificateStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.CoreConfigurationStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceConfigurationStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.FileMetadataStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.GenericStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.ImageStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTemplateStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.RefreshTokenStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.UserActivationTokenStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.UserGroupStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public enum CouchDbStorageManager implements INoSqlStorage {
-
-  INSTANCE;
+public class CouchDbStorageManager implements INoSqlStorage {
 
   @Override
   public IAdapterStorage getAdapterDescriptionStorage() {
@@ -96,12 +103,8 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<Group> getUserGroupStorage() {
-    return new DefaultViewCrudStorage<>(
-        Utils::getCouchDbUserClient,
-        Group.class,
-        "users/groups"
-    );
+  public IUserGroupStorage getUserGroupStorage() {
+    return new UserGroupStorageImpl();
   }
 
   @Override
@@ -115,11 +118,6 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public INotificationStorage getNotificationStorageApi() {
-    return new NotificationStorageImpl();
-  }
-
-  @Override
   public IDataLakeMeasureStorage getDataLakeStorage() {
     return new DataLakeMeasureStorage(
         () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
@@ -128,27 +126,18 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<FileMetadata> getFileMetadataStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("filemetadata"),
-        FileMetadata.class
-    );
+  public IFileMetadataStorage getFileMetadataStorage() {
+    return new FileMetadataStorageImpl();
   }
 
   @Override
-  public CRUDStorage<DashboardModel> getDataExplorerDashboardStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("dataexplorerdashboard"),
-        DashboardModel.class
-    );
+  public IDataExplorerDashboardStorage getDataExplorerDashboardStorage() {
+    return new DataExplorerDashboardStorageImpl();
   }
 
   @Override
-  public CRUDStorage<DataExplorerWidgetModel> getDataExplorerWidgetStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("dataexplorerwidget"),
-        DataExplorerWidgetModel.class
-    );
+  public IDataExplorerWidgetStorage getDataExplorerWidgetStorage() {
+    return new DataExplorerWidgetStorageImpl();
   }
 
   @Override
@@ -187,37 +176,28 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<PasswordRecoveryToken> getPasswordRecoveryTokenStorage() {
-    return new DefaultViewCrudStorage<>(
-        Utils::getCouchDbUserClient,
-        PasswordRecoveryToken.class,
-        "users/password-recovery"
-    );
+  public IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage() {
+    return new PasswordRecoveryTokenStorageImpl();
   }
 
   @Override
-  public CRUDStorage<UserActivationToken> getUserActivationTokenStorage() {
-    return new DefaultViewCrudStorage<>(
-        Utils::getCouchDbUserClient,
-        UserActivationToken.class,
-        "users/user-activation"
-    );
+  public IUserActivationTokenStorage getUserActivationTokenStorage() {
+    return new UserActivationTokenStorageImpl();
   }
 
   @Override
-  public CRUDStorage<SpServiceRegistration> getExtensionsServiceStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("extensions-services"),
-        SpServiceRegistration.class
-    );
+  public IRefreshTokenStorage getRefreshTokenStorage() {
+    return new RefreshTokenStorageImpl();
   }
 
   @Override
-  public CRUDStorage<SpServiceConfiguration> getExtensionsServiceConfigurationStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("extensions-services-configurations"),
-        SpServiceConfiguration.class
-    );
+  public IExtensionsServiceStorage getExtensionsServiceStorage() {
+    return new ExtensionsServiceStorageImpl();
+  }
+
+  @Override
+  public IExtensionsServiceConfigurationStorage getExtensionsServiceConfigurationStorage() {
+    return new ExtensionsServiceConfigurationStorageImpl();
   }
 
   @Override
@@ -226,37 +206,32 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public CRUDStorage<Role> getRoleStorage() {
+  public IRoleStorage getRoleStorage() {
     return new RoleStorageImpl();
   }
 
   @Override
-  public CRUDStorage<Privilege> getPrivilegeStorage() {
+  public IPrivilegeStorage getPrivilegeStorage() {
     return new PrivilegeStorageImpl();
   }
 
   @Override
-  public CRUDStorage<CompactPipelineTemplate> getPipelineTemplateStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("pipeline-templates"),
-        CompactPipelineTemplate.class
-    );
+  public ICompactPipelineTemplateStorage getPipelineTemplateStorage() {
+    return new CompactPipelineTemplateStorageImpl();
   }
 
   @Override
-  public CRUDStorage<Certificate> getCertificateStorage() {
-    return new DefaultCrudStorage<>(
-        () -> Utils.getCouchDbGsonClient("certificates"),
-        Certificate.class
-    );
+  public ICertificateStorage getCertificateStorage() {
+    return new CertificateStorageImpl();
   }
 
   @Override
-  public CRUDStorage<SpAssetModel> getAssetStorage() {
-    return new AssetStorageImpl(
-        () -> Utils.getCouchDbGsonClient("genericstorage")
-    );
+  public IAssetStorage getAssetStorage() {
+    return new AssetStorageImpl();
   }
 
-
+  @Override
+  public ITransformationScriptTemplateStorage getTransformationScriptTemplateStorage() {
+    return new TransformationScriptTemplateStorageImpl();
+  }
 }

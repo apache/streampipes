@@ -18,9 +18,10 @@
 
 import { User } from '../model/User';
 import { UserBuilder } from '../builder/UserBuilder';
-import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserRole } from '../../../src/app/core/auth/user-role.enum';
 import { UserBtns } from './user/UserBtns';
 import { ConfigurationBtns } from './configuration/ConfigurationBtns';
+import { SharedBtns } from './shared/SharedBtns';
 
 export class UserUtils {
     public static adminUser = UserBuilder.create('admin@streampipes.apache.org')
@@ -58,7 +59,7 @@ export class UserUtils {
         cy.dataCy('new-user-password-repeat').type(user.password);
 
         // Set role
-        for (var i = 0; i < user.role.length; i++) {
+        for (let i = 0; i < user.role.length; i++) {
             cy.dataCy('role-' + user.role[i])
                 .children()
                 .click();
@@ -116,7 +117,7 @@ export class UserUtils {
         this.goToUserConfiguration();
 
         UserBtns.deleteUserBtn(user.name).click();
-        UserBtns.confirmDeleteBtn().click();
+        SharedBtns.confirmDialogConfirmBtn().click();
     }
 
     public static createGroup(name: string, ...roles: UserRole[]) {

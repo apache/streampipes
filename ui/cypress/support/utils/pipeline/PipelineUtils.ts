@@ -39,7 +39,7 @@ export class PipelineUtils {
 
     public static addPipelineWithAssetLinks(
         pipelineInput: PipelineInput,
-        assetNameList: String[],
+        assetNameList: string[],
     ) {
         PipelineUtils.goToPipelineEditor();
 
@@ -166,7 +166,7 @@ export class PipelineUtils {
 
     public static startPipelineWithAssetLinkage(
         pipelineInput?: PipelineInput,
-        assetNameList?: String[],
+        assetNameList?: string[],
     ) {
         // Save and start pipeline
         PipelineBtns.savePipelineBtn().click();
@@ -207,7 +207,7 @@ export class PipelineUtils {
         cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
     }
 
-    public static finalizePipelineStart(assetNameList?: String[]) {
+    public static finalizePipelineStart(assetNameList?: string[]) {
         PipelineBtns.navigateToOverviewCheckbox().children().click();
         if (assetNameList) {
             PipelineUtils.addToAsset(assetNameList);
@@ -247,11 +247,9 @@ export class PipelineUtils {
     }
 
     public static verifyPipelineName(expectedName: string) {
-        cy.dataCy('all-pipelines-table', { timeout: 10000 })
+        PipelineBtns.pipelineNameCells()
             .first()
-            .within(() => {
-                cy.get('td').eq(2).should('contain', expectedName);
-            });
+            .should('contain.text', expectedName);
     }
 
     public static verifyPipelineCount(expectedCount: number) {

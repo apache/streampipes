@@ -18,40 +18,56 @@
 
 import { CodeInputStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import type * as monacoType from 'monaco-editor';
+import type { editor as MonacoEditor } from 'monaco-editor';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { MatButton } from '@angular/material/button';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import {
+    JavaScriptEventField,
+    EditorAutocompletionService,
+} from '../../../services/editor-autocompletion.service';
 
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/mode/python/python';
-import 'codemirror/addon/edit/closebrackets';
-import 'codemirror/addon/hint/show-hint';
-import 'codemirror/addon/hint/javascript-hint';
-import 'codemirror/addon/lint/javascript-lint';
-import 'codemirror/addon/lint/lint';
-import CodeMirror from 'codemirror';
+declare const monaco: typeof monacoType;
 
 @Component({
     selector: 'sp-static-code-input',
     templateUrl: './static-code-input.component.html',
     styleUrls: ['./static-code-input.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MonacoEditorModule,
+        FormsModule,
+        TranslatePipe,
+    ],
 })
 export class StaticCodeInputComponent
     extends AbstractValidatedStaticPropertyRenderer<CodeInputStaticProperty>
-    implements OnInit, AfterViewInit
+    implements OnInit, OnDestroy
 {
-    editorOptions = {
-        mode: 'javascript',
-        autoRefresh: true,
-        theme: 'dracula',
-        autoCloseBrackets: true,
-        lineNumbers: true,
-        lineWrapping: true,
-        gutters: ['CodeMirror-lint-markers'],
-        lint: true,
-        extraKeys: {
-            'Ctrl-Space': 'autocomplete',
-        },
+    editorOptions: MonacoEditor.IStandaloneEditorConstructionOptions = {
+        language: 'javascript',
+        theme: 'vs-dark',
+        lineNumbers: 'on',
+        wordWrap: 'on',
+        automaticLayout: true,
+        scrollBeyondLastLine: false,
+        minimap: { enabled: false },
+        quickSuggestions: true,
+        suggestOnTriggerCharacters: true,
     };
+    autocompleteService = inject(EditorAutocompletionService);
+    private completionProvider?: monacoType.IDisposable;
 
     constructor() {
         super();
@@ -66,14 +82,18 @@ export class StaticCodeInputComponent
 
     applyLanguage() {
         if (this.staticProperty.language === 'None') {
-            this.editorOptions.mode = '';
+            this.editorOptions.language = 'plaintext';
         } else {
-            this.editorOptions.mode =
+            this.editorOptions.language =
                 this.staticProperty.language.toLowerCase();
         }
     }
 
-    ngAfterViewInit() {
+    ngOnDestroy() {
+        this.completionProvider?.dispose();
+    }
+
+    onEditorInit() {
         this.enableCodeHints();
     }
 
@@ -90,31 +110,33 @@ export class StaticCodeInputComponent
     }
 
     enableCodeHints() {
-        if (this.editorOptions.mode === 'javascript') {
-            const jsHint = (CodeMirror as any).hint.javascript;
-            (CodeMirror as any).hint.javascript = cm => {
-                const cursor = cm.getCursor();
-                const token = cm.getTokenAt(cursor);
-                let inner = {
-                    from: cm.getCursor(),
-                    to: cm.getCursor(),
-                    list: [],
-                };
-                const previousCursor = {
-                    line: cursor.line,
-                    ch: cursor.ch - 1,
-                    sticky: null,
-                };
-                const previousToken = cm.getTokenAt(previousCursor);
-                if (token.string === '.' && previousToken.string === 'event') {
-                    this.eventSchemas[0].eventProperties.forEach(ep => {
-                        inner.list.unshift(ep.runtimeName);
-                    });
-                } else {
-                    inner = jsHint(cm);
-                }
-                return inner;
-            };
+        if (this.editorOptions.language !== 'javascript') {
+            return;
         }
+        this.completionProvider?.dispose();
+        this.completionProvider = this.autocompleteService.register(
+            monaco,
+            () =>
+                (
+                    (this.eventSchemas?.[0]?.eventProperties ?? []) as {
+                        runtimeName?: string;
+                        propertyScope?: string;
+                        semanticType?: string;
+                    }[]
+                )
+                    .filter(
+                        (
+                            ep,
+                        ): ep is Required<
+                            Pick<JavaScriptEventField, 'runtimeName'>
+                        > &
+                            JavaScriptEventField => !!ep.runtimeName,
+                    )
+                    .map(ep => ({
+                        runtimeName: ep.runtimeName,
+                        propertyScope: ep.propertyScope,
+                        semanticType: ep.semanticType,
+                    })),
+        );
     }
 }

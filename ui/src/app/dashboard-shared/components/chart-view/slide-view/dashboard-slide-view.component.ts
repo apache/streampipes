@@ -23,12 +23,27 @@ import {
     DataExplorerWidgetModel,
     DataLakeMeasure,
 } from '@streampipes/platform-services';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+} from '@ngbracket/ngx-layout/flex';
+import { NgClass } from '@angular/common';
+import { ClassDirective } from '@ngbracket/ngx-layout/extended';
+import { ChartContainerComponent } from '../../../../chart-shared/components/chart-container/chart-container.component';
 
 @Component({
     selector: 'sp-dashboard-slide-view',
     templateUrl: './dashboard-slide-view.component.html',
     styleUrls: ['./dashboard-slide-view.component.scss'],
-    standalone: false,
+    imports: [
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        NgClass,
+        ClassDirective,
+        ChartContainerComponent,
+    ],
 })
 export class DashboardSlideViewComponent
     extends AbstractChartViewDirective

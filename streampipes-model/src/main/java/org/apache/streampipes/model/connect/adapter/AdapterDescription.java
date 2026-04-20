@@ -20,11 +20,8 @@ package org.apache.streampipes.model.connect.adapter;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity;
+import org.apache.streampipes.model.connect.TransformationConfig;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 import org.apache.streampipes.model.deployment.ExtensionDeploymentConfiguration;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -47,12 +44,14 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   private List<StaticProperty> config;
 
+  @Deprecated(since = "0.99.0", forRemoval = true)
   private List<TransformationRuleDescription> rules;
 
   private long createdAt;
 
   //  Is used to store where the adapter is running to stop it
   private String selectedEndpointUrl;
+  private String selectedServiceId;
 
   private ExtensionDeploymentConfiguration deploymentConfiguration;
 
@@ -66,6 +65,8 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
    */
   private String correspondingDataStreamElementId;
 
+  private TransformationConfig transformationConfig;
+
   public AdapterDescription() {
     super();
     this.rules = new ArrayList<>();
@@ -73,6 +74,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.config = new ArrayList<>();
     this.dataStream = new SpDataStream();
     this.deploymentConfiguration = new ExtensionDeploymentConfiguration();
+    this.transformationConfig = new TransformationConfig();
   }
 
   public AdapterDescription(int version) {
@@ -82,6 +84,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.config = new ArrayList<>();
     this.dataStream = new SpDataStream();
     this.deploymentConfiguration = new ExtensionDeploymentConfiguration();
+    this.transformationConfig = new TransformationConfig();
     this.setVersion(version);
   }
 
@@ -92,6 +95,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.icon = other.getIcon();
     this.createdAt = other.getCreatedAt();
     this.selectedEndpointUrl = other.getSelectedEndpointUrl();
+    this.selectedServiceId = other.getSelectedServiceId();
     this.correspondingServiceGroup = other.getCorrespondingServiceGroup();
     this.correspondingDataStreamElementId = other.getCorrespondingDataStreamElementId();
     if (other.getEventGrounding() != null) {
@@ -102,6 +106,7 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     }
     this.running = other.isRunning();
     this.deploymentConfiguration = other.getDeploymentConfiguration();
+    this.transformationConfig = other.getTransformationConfig();
   }
 
   public String getRev() {
@@ -140,36 +145,6 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
     this.config.add(sp);
   }
 
-  public List<TransformationRuleDescription> getValueRules() {
-    var tmp = new ArrayList<TransformationRuleDescription>();
-    rules.forEach(rule -> {
-      if (rule instanceof ValueTransformationRuleDescription && !(rule instanceof AddTimestampRuleDescription)) {
-        tmp.add(rule);
-      }
-    });
-    return tmp;
-  }
-
-  public List<TransformationRuleDescription> getStreamRules() {
-    var tmp = new ArrayList<TransformationRuleDescription>();
-    rules.forEach(rule -> {
-      if (rule instanceof StreamTransformationRuleDescription) {
-        tmp.add(rule);
-      }
-    });
-    return tmp;
-  }
-
-  public List<TransformationRuleDescription> getSchemaRules() {
-    var tmp = new ArrayList<TransformationRuleDescription>();
-    rules.forEach(rule -> {
-      if (rule instanceof SchemaTransformationRuleDescription) {
-        tmp.add(rule);
-      }
-    });
-    return tmp;
-  }
-
   public String getIcon() {
     return icon;
   }
@@ -197,6 +172,14 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   public void setSelectedEndpointUrl(String selectedEndpointUrl) {
     this.selectedEndpointUrl = selectedEndpointUrl;
+  }
+
+  public String getSelectedServiceId() {
+    return selectedServiceId;
+  }
+
+  public void setSelectedServiceId(String selectedServiceId) {
+    this.selectedServiceId = selectedServiceId;
   }
 
   /**
@@ -251,5 +234,13 @@ public class AdapterDescription extends VersionedNamedStreamPipesEntity {
 
   public void setDeploymentConfiguration(ExtensionDeploymentConfiguration deploymentConfiguration) {
     this.deploymentConfiguration = deploymentConfiguration;
+  }
+
+  public TransformationConfig getTransformationConfig() {
+    return transformationConfig;
+  }
+
+  public void setTransformationConfig(TransformationConfig transformationConfig) {
+    this.transformationConfig = transformationConfig;
   }
 }
