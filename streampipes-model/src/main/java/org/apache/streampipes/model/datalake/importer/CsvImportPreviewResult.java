@@ -43,7 +43,6 @@ public class CsvImportPreviewResult {
   private List<String> timestampCandidates = new ArrayList<>();
   private boolean valid;
   private List<CsvImportValidationMessage> validationMessages = new ArrayList<>();
-  private List<CsvImportSchemaIssue> validationSchemaMessages = new ArrayList<>();
 
   public String getUploadId() {
     return uploadId;
@@ -107,13 +106,5 @@ public class CsvImportPreviewResult {
 
   public void setValidationMessages(List<CsvImportValidationMessage> validationMessages) {
     this.validationMessages = validationMessages;
-  }
-
-  public List<CsvImportSchemaIssue> getSchemaValidationMessages() {
-    return validationSchemaMessages;
-  }
-
-  public void setSchemaValidationMessages(List<CsvImportSchemaIssue> validationSchemaMessages) {
-    this.validationSchemaMessages = validationSchemaMessages;
   }
 }

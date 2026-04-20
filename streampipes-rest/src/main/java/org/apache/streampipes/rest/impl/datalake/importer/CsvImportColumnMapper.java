@@ -46,26 +46,22 @@ public class CsvImportColumnMapper {
         col.setSemanticType(prop.getSemanticType());
         col.setPropertyScope(prop.getPropertyScope());
         String runtimeType = null;
-        // prop.getAdditionalMetadata().get("runtimeType")
         try {
             Field field = prop.getClass().getDeclaredField("runtimeType");
             field.setAccessible(true);
             runtimeType = (String) field.get(prop);
 
-            // use runtimeType here
 
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException("Failed to access runtimeType via reflection", e);
         }
 
-        String normalizedType = normalizeRuntimeType((String) runtimeType);// prop.getRuntimeType());
+        String normalizedType = normalizeRuntimeType((String) runtimeType);
 
         col.setRuntimeType(normalizedType);
         col.setInferredType(normalizedType);
 
         col.setTimestampCandidate(isTimestamp(prop));
-
-        // col.setEventProperties(Collections.singletonList(prop));
 
         return col;
     }

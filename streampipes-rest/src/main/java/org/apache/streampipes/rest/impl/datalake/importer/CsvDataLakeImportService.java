@@ -225,7 +225,6 @@ public class CsvDataLakeImportService {
       String uploadId
   ) {
     var messages = new ArrayList<>(validationMessages);
-    var validationSchemaMessages = new ArrayList<CsvImportSchemaIssue>();
     EventSchema existingSchema = null;
     List<CsvImportColumn>  existingColumns = null;
 
@@ -236,9 +235,8 @@ public class CsvDataLakeImportService {
     if (request.getTarget().getMode().equals(CsvImportTargetMode.EXISTING)){
     existingSchema = schemaManagement.getExistingMeasureByName(request.getTarget().getMeasurementName().trim()).get().getEventSchema();
     existingColumns = CsvImportColumnMapper.fromEventSchema(existingSchema);
-    validationSchemaMessages.addAll(validationService.validateSchemaTarget(request.getTarget(),eventSchema,null));
   }
-
+  //TODO Move this back 
   List<CsvImportColumn> effectiveColumns =
     existingColumns != null ? existingColumns : columns;
 
@@ -254,8 +252,7 @@ public class CsvDataLakeImportService {
         .map(CsvImportColumn::getRuntimeName)
         .collect(Collectors.toList()));
     result.setValidationMessages(messages);
-    result.setValid(messages.isEmpty() &&  validationSchemaMessages.isEmpty() );
-    result.setSchemaValidationMessages(validationSchemaMessages);
+    result.setValid(messages.isEmpty());
     return result;
   }
 
