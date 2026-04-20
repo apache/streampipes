@@ -22,6 +22,7 @@ import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -44,9 +45,20 @@ public class CsvImportColumnMapper {
         col.setDescription(emptyToNull(prop.getDescription()));
         col.setSemanticType(prop.getSemanticType());
         col.setPropertyScope(prop.getPropertyScope());
+        String runtimeType = null;
         // prop.getAdditionalMetadata().get("runtimeType")
+        try {
+            Field field = prop.getClass().getDeclaredField("runtimeType");
+            field.setAccessible(true);
+            runtimeType = (String) field.get(prop);
 
-        String normalizedType = normalizeRuntimeType((String) prop.getAdditionalMetadata().get("runtimeType"));// prop.getRuntimeType());
+            // use runtimeType here
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Failed to access runtimeType via reflection", e);
+        }
+
+        String normalizedType = normalizeRuntimeType((String) runtimeType);// prop.getRuntimeType());
 
         col.setRuntimeType(normalizedType);
         col.setInferredType(normalizedType);
@@ -62,8 +74,6 @@ public class CsvImportColumnMapper {
         if (runtimeType == null) {
             return "STRING";
         }
-
-        // Extract XSD type after '#'
         String type = runtimeType.contains("#")
                 ? runtimeType.substring(runtimeType.indexOf('#') + 1)
                 : runtimeType;
@@ -83,7 +93,7 @@ public class CsvImportColumnMapper {
             case "string":
                 return "STRING";
             case "datetime":
-                return "LONG"; // often timestamps are longs
+                return "LONG";
             default:
                 return type.toUpperCase(Locale.ROOT);
         }
