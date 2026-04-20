@@ -236,13 +236,12 @@ public class CsvDataLakeImportService {
     existingSchema = schemaManagement.getExistingMeasureByName(request.getTarget().getMeasurementName().trim()).get().getEventSchema();
     existingColumns = CsvImportColumnMapper.fromEventSchema(existingSchema);
   }
-  //TODO Move this back 
+
   List<CsvImportColumn> effectiveColumns =
     existingColumns != null ? existingColumns : columns;
 
     var result = new CsvImportPreviewResult();
     result.setUploadId(uploadId);
-    result.setIsExistingTarget(request.getTarget().getMode().equals(CsvImportTargetMode.EXISTING));
     result.setHeaders(headers);
     result.setPreviewRows(rows.stream().limit(MAX_PREVIEW_ROWS).collect(Collectors.toList()));
     result.setColumns(effectiveColumns);

@@ -26,15 +26,6 @@ import java.util.List;
 public class CsvImportPreviewResult {
 
   private String uploadId;
-  private Boolean isExistingTarget;
-
-  public Boolean getIsExistingTarget() {
-    return isExistingTarget;
-  }
-
-  public void setIsExistingTarget(Boolean isExistingTarget) {
-    this.isExistingTarget = isExistingTarget;
-  }
 
   private List<String> headers = new ArrayList<>();
   private List<List<String>> previewRows = new ArrayList<>();
