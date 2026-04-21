@@ -16,7 +16,7 @@
 #
 from typing import List, Optional
 
-from pydantic.v1 import Field, StrictBool, StrictStr
+from pydantic import Field, StrictBool, StrictStr
 
 from streampipes.model.common import (
     ApplicationLink,
@@ -53,7 +53,7 @@ class DataStream(Resource):
 
         """
         return {
-            **self.dict(
+            **self.model_dump(
                 exclude={
                     "class_name",
                     "event_grounding",
@@ -88,25 +88,25 @@ class DataStream(Resource):
     class_name: StrictStr = Field(alias="@class", default_factory=lambda: "org.apache.streampipes.model.SpDataStream")
     element_id: StrictStr = Field(default="")
     name: StrictStr = Field(default="Unnamed")
-    description: Optional[StrictStr]
-    icon_url: Optional[StrictStr]
-    app_id: Optional[StrictStr]
+    description: Optional[StrictStr] = None
+    icon_url: Optional[StrictStr] = None
+    app_id: Optional[StrictStr] = None
     includes_assets: StrictBool = Field(default=False)
     includes_locales: StrictBool = Field(default=False)
     included_assets: List[StrictStr] = Field(default_factory=list)
     included_locales: List[StrictStr] = Field(default_factory=list)
     application_links: List[ApplicationLink] = Field(default_factory=list)
     internally_managed: StrictBool = Field(default=False)
-    connected_to: Optional[List[StrictStr]]
+    connected_to: Optional[List[StrictStr]] = None
     event_grounding: EventGrounding = Field(default_factory=EventGrounding)
-    event_schema: Optional[EventSchema]
-    measurement_capability: Optional[List[MeasurementCapability]]
-    measurement_object: Optional[List[MeasurementObject]]
-    corresponding_adapter_id: Optional[StrictStr]
-    category: Optional[List[StrictStr]]
-    uri: Optional[StrictStr]
-    dom: Optional[StrictStr]
-    rev: Optional[StrictStr] = Field(alias="_rev")
+    event_schema: Optional[EventSchema] = None
+    measurement_capability: Optional[List[MeasurementCapability]] = None
+    measurement_object: Optional[List[MeasurementObject]] = None
+    corresponding_adapter_id: Optional[StrictStr] = None
+    category: Optional[List[StrictStr]] = None
+    uri: Optional[StrictStr] = None
+    dom: Optional[StrictStr] = None
+    rev: Optional[StrictStr] = Field(default=None, alias="_rev")
 
     def to_dict(self, use_source_names=True):
         """Returns the resource in dictionary representation.
@@ -127,7 +127,7 @@ class DataStream(Resource):
         # This serves as a temporary fix for https://github.com/apache/streampipes/issues/1245
         # should be removed as soon as possible
 
-        resource_dict = self.dict(by_alias=use_source_names)
+        resource_dict = self.model_dump(by_alias=use_source_names)
 
         if (
             use_source_names

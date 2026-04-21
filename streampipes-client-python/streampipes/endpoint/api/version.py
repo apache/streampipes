@@ -138,7 +138,7 @@ class VersionEndpoint(APIEndpoint):
 
         response = self._make_request(request_method=self._parent_client.request_session.get, url=self.build_url())
 
-        return self._resource_cls(**response.json())
+        return self._resource_cls.model_validate(response.json())
 
     def post(self, resource: Resource) -> None:
         """Usually, this method allows to create via this endpoint.

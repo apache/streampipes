@@ -214,7 +214,8 @@ class APIEndpoint(Endpoint):
 
         response = self._make_request(request_method=self._parent_client.request_session.get, url=query_url)
 
-        return self._container_cls._resource_cls()(**response.json())
+        resource_cls = self._container_cls._resource_cls()
+        return resource_cls.model_validate(response.json())
 
     def post(self, resource: Resource) -> None:
         """Allows to post a resource to the StreamPipes API.

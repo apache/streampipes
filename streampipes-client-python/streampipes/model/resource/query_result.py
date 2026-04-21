@@ -19,7 +19,7 @@ from itertools import chain
 from typing import Any, Dict, List, Literal, Optional, Union
 
 import pandas as pd
-from pydantic.v1 import Field, StrictInt, StrictStr
+from pydantic import Field, StrictInt, StrictStr
 
 from streampipes.model.resource import DataSeries
 from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataSeries
@@ -74,7 +74,7 @@ class QueryResult(Resource):
     all_data_series: List[DataSeries]
     query_status: Literal["OK", "TOO_MUCH_DATA"] = Field(alias="spQueryStatus")
     source_index: StrictInt
-    for_id: Optional[str]
+    for_id: Optional[str] = None
     last_timestamp: StrictInt
 
     def to_pandas(self) -> pd.DataFrame:
