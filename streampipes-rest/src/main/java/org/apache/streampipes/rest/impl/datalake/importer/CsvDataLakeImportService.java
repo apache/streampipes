@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl.datalake.importer;
 
-import org.apache.iotdb.service.rpc.thrift.IClientRPCService.AsyncProcessor.closeSession;
+
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
@@ -26,12 +26,10 @@ import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportResult;
-import org.apache.streampipes.model.datalake.importer.CsvImportSchemaIssue;
 import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
 import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
-import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.rest.impl.datalake.DataLakeDataWriter;
 
@@ -42,8 +40,10 @@ import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CsvDataLakeImportService {
@@ -238,14 +238,15 @@ public class CsvDataLakeImportService {
     existingSchema = schemaManagement.getExistingMeasureByName(request.getTarget().getMeasurementName().trim()).get().getEventSchema();
     existingColumns = CsvImportColumnMapper.fromEventSchema(existingSchema);
     //TODO make this more efficient
-    for (CsvImportColumn csvImportColumn : columns) {
-       for (CsvImportColumn existingImportColumn : existingColumns) {
-      if (csvImportColumn.getRuntimeName().equals(existingImportColumn.getRuntimeName())){
-        csvImportColumn.setPropertyScope(existingImportColumn.getPropertyScope());
-         }
-          }
-      
+    Map<String, CsvImportColumn> existingByName = existingColumns.stream()
+    .collect(Collectors.toMap(CsvImportColumn::getRuntimeName, Function.identity()));
+
+columns.forEach(col -> {
+    CsvImportColumn match = existingByName.get(col.getRuntimeName());
+    if (match != null) {
+        col.setPropertyScope(match.getPropertyScope());
     }
+});
   }
 
     var result = new CsvImportPreviewResult();
