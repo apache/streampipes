@@ -21,7 +21,7 @@ import json
 from typing import Any, Dict, List, Optional, Union
 
 import pandas as pd
-from pydantic.v1 import StrictInt, StrictStr
+from pydantic import StrictInt, StrictStr
 
 from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataSeries
 from streampipes.model.resource.resource import Resource
@@ -82,7 +82,7 @@ class DataSeries(Resource):
         # get the data data series
         data_series = parsed_json["allDataSeries"][0]
 
-        return cls.parse_obj(data_series)
+        return cls.model_validate(data_series)
 
     def convert_to_pandas_representation(self) -> Dict[str, Union[List[str], List[List[Any]]]]:
         """Returns the dictionary representation of a data lake series
@@ -96,12 +96,12 @@ class DataSeries(Resource):
             Dictionary with the keys `headers` and `rows`
 
         """
-        return self.dict(include={"headers", "rows"})
+        return self.model_dump(include={"headers", "rows"})
 
     total: StrictInt
     headers: List[StrictStr]
     rows: List[List[Any]]
-    tags: Optional[str]
+    tags: Optional[str] = None
 
     def to_pandas(self) -> pd.DataFrame:
         """Returns the data lake series in representation of a Pandas Dataframe.

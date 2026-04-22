@@ -20,7 +20,7 @@ General and abstract implementation for a resource.
 
 A resource defines the data model that is used by a resource container (`model.container.resourceContainer`).
 """
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import Dict
 
 from streampipes.model.common import BasicModel
@@ -30,7 +30,7 @@ __all__ = [
 ]
 
 
-class Resource(ABC, BasicModel):
+class Resource(BasicModel):
     """General and abstract implementation for a resource.
 
     A resource defines the data model used by a resource container (`model.container.resourceContainer`).
@@ -67,4 +67,4 @@ class Resource(ABC, BasicModel):
             The resource as dictionary representation
 
         """
-        return self.dict(by_alias=use_source_names)
+        return self.model_dump(by_alias=use_source_names)

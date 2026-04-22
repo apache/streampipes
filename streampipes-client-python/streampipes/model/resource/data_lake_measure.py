@@ -16,7 +16,7 @@
 #
 from typing import Optional
 
-from pydantic.v1 import StrictBool, StrictStr
+from pydantic import StrictBool, StrictStr
 
 from streampipes.model.common import EventSchema
 from streampipes.model.resource.resource import Resource
@@ -52,15 +52,15 @@ class DataLakeMeasure(Resource):
         """
 
         return {
-            **self.dict(exclude={"element_id", "event_schema", "schema_version"}),
+            **self.model_dump(exclude={"element_id", "event_schema", "schema_version"}),
             "num_event_properties": len(self.event_schema.event_properties) if self.event_schema else 0,
         }
 
-    element_id: Optional[StrictStr]
+    element_id: Optional[StrictStr] = None
     measure_name: StrictStr
     timestamp_field: StrictStr
-    event_schema: Optional[EventSchema]
-    pipeline_id: Optional[StrictStr]
-    pipeline_name: Optional[StrictStr]
+    event_schema: Optional[EventSchema] = None
+    pipeline_id: Optional[StrictStr] = None
+    pipeline_name: Optional[StrictStr] = None
     pipeline_is_running: StrictBool
-    schema_version: Optional[StrictStr]
+    schema_version: Optional[StrictStr] = None
