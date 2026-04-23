@@ -91,7 +91,7 @@ mkdocs-jupyter = "0.26.1"
 mkdocs-literate-nav = "0.6.0"
 mkdocs-material = "9.5.18"
 mkdocstrings = { version = "0.25.0", extras = ["python"] }
-numpydoc = "1.9.0"
+numpydoc = "1.10.0"
 pytkdocs = { version = "0.16.1", extras = ["numpy-style"] }
 setuptools = "80.9.0"
 
