@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.impl.datalake.importer;
 
-
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
@@ -228,8 +227,7 @@ public class CsvDataLakeImportService {
       List<String> headers,
       List<List<String>> rows,
       List<CsvImportValidationMessage> validationMessages,
-      String uploadId
-  ) {
+      String uploadId) {
     var messages = new ArrayList<>(validationMessages);
     var columns = parser.inferColumns(headers, rows, request.getCsvConfig());
     columns = alignColumnsWithExistingTarget(request.getTarget(), columns);
@@ -287,12 +285,9 @@ public class CsvDataLakeImportService {
 
   private List<CsvImportColumn> alignColumnsWithExistingTarget(
       org.apache.streampipes.model.datalake.importer.CsvImportTarget target,
-      List<CsvImportColumn> columns
-  ) {
+      List<CsvImportColumn> columns) {
     if (target == null
-        || target.getMode() != CsvImportTargetMode.EXISTING
-        || target.getMeasurementName() == null
-        || target.getMeasurementName().isBlank()) {
+        || target.getMode() != CsvImportTargetMode.EXISTING) {
       return columns;
     }
 
@@ -301,7 +296,8 @@ public class CsvDataLakeImportService {
       return columns;
     }
 
-    Map<String, CsvImportColumn> existingByName = CsvImportColumnMapper.fromEventSchema(existingMeasure.get().getEventSchema())
+    Map<String, CsvImportColumn> existingByName = CsvImportColumnMapper
+        .fromEventSchema(existingMeasure.get().getEventSchema())
         .stream()
         .collect(Collectors.toMap(CsvImportColumn::getRuntimeName, Function.identity()));
 
