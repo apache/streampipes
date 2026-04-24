@@ -235,6 +235,7 @@ export class ChartDataSettingsComponent implements OnInit {
             highlightedColumns: [],
             highlightedColumnColors: {},
             pageSize: 20,
+            stickyHeaders: false,
             searchValue: '',
             selectedColumns: fields.allFields,
         };

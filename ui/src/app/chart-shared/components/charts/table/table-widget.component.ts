@@ -847,6 +847,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
             {};
         this.dataExplorerWidget.visualizationConfig.pageSize ??=
             TableWidgetComponent.DEFAULT_PAGE_SIZE;
+        this.dataExplorerWidget.visualizationConfig.stickyHeaders ??= false;
 
         this.pageSize = this.pageSizeOptions.includes(
             this.dataExplorerWidget.visualizationConfig.pageSize,
