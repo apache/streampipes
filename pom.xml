@@ -44,7 +44,7 @@
 
         <apache-sis-referencing.version>1.6</apache-sis-referencing.version>
         <antlr4.version>4.11.1</antlr4.version>
-        <bcprov-jdk18on.version>1.78.1</bcprov-jdk18on.version>
+        <bcprov-jdk18on.version>1.84</bcprov-jdk18on.version>
         <boofcv.version>1.1.0</boofcv.version>
         <classindex.version>3.9</classindex.version>
         <camel.version>4.18.0</camel.version>
