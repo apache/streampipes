@@ -39,6 +39,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { ColorPickerDirective } from 'ngx-color-picker';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
     selector: 'sp-data-explorer-table-widget-config',
@@ -58,6 +60,8 @@ import { MatCheckbox } from '@angular/material/checkbox';
         LayoutDirective,
         LayoutAlignDirective,
         MatCheckbox,
+        MatIcon,
+        MatIconButton,
         TranslatePipe,
         FormFieldComponent,
         SpAlertBannerComponent,
@@ -86,7 +90,30 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
 
     setSelectedColumn(selectedColumns: DataExplorerField[]) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedColumns =
-            selectedColumns;
+            this.mergeSelectedColumnOrder(selectedColumns);
+        this.triggerViewRefresh();
+    }
+
+    moveSelectedColumn(fromIndex: number, offset: number): void {
+        const columns = [
+            ...(this.currentlyConfiguredWidget.visualizationConfig
+                .selectedColumns ?? []),
+        ];
+        const targetIndex = fromIndex + offset;
+
+        if (
+            fromIndex < 0 ||
+            targetIndex < 0 ||
+            fromIndex >= columns.length ||
+            targetIndex >= columns.length
+        ) {
+            return;
+        }
+
+        const [movedColumn] = columns.splice(fromIndex, 1);
+        columns.splice(targetIndex, 0, movedColumn);
+        this.currentlyConfiguredWidget.visualizationConfig.selectedColumns =
+            columns;
         this.triggerViewRefresh();
     }
 
@@ -195,6 +222,23 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         return true;
     }
 
+    canMoveSelectedColumnUp(index: number): boolean {
+        return index > 0;
+    }
+
+    canMoveSelectedColumnDown(index: number): boolean {
+        return (
+            index <
+            (this.currentlyConfiguredWidget.visualizationConfig.selectedColumns
+                ?.length ?? 0) -
+                1
+        );
+    }
+
+    selectedColumnLabel(field: DataExplorerField): string {
+        return `${field.runtimeName} (${field.measure})`;
+    }
+
     private syncHighlightColorMap(): void {
         const activeColorKeys = new Set(
             (
@@ -230,5 +274,32 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
 
     fieldTypeLabel(field: DataExplorerField): string {
         return field.fieldCharacteristics.binary ? 'Boolean' : 'Numeric';
+    }
+
+    private mergeSelectedColumnOrder(
+        nextSelectedColumns: DataExplorerField[],
+    ): DataExplorerField[] {
+        const currentSelectedColumns =
+            this.currentlyConfiguredWidget.visualizationConfig
+                .selectedColumns ?? [];
+
+        const retainedColumns = currentSelectedColumns.filter(currentField =>
+            nextSelectedColumns.some(nextField =>
+                this.isSameField(currentField, nextField),
+            ),
+        );
+
+        const newlyAddedColumns = nextSelectedColumns.filter(
+            nextField =>
+                !currentSelectedColumns.some(currentField =>
+                    this.isSameField(currentField, nextField),
+                ),
+        );
+
+        return [...retainedColumns, ...newlyAddedColumns];
+    }
+
+    private isSameField(a: DataExplorerField, b: DataExplorerField): boolean {
+        return a.fullDbName === b.fullDbName && a.sourceIndex === b.sourceIndex;
     }
 }

@@ -16,6 +16,31 @@
  *
  */
 
+.selected-column-list {
+    gap: var(--space-sm);
+}
+
+.selected-column-row {
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--color-border-subtle, var(--color-bg-3));
+    border-radius: var(--button-border-radius);
+    background: var(--color-bg-1, var(--color-bg-0));
+}
+
+.selected-column-label {
+    min-width: 0;
+    font-size: var(--font-size-sm);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selected-column-actions {
+    flex-shrink: 0;
+    gap: var(--space-xxs);
+}
+
 .highlight-color-list {
     gap: var(--space-sm);
 }
