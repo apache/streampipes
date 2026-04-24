@@ -143,11 +143,8 @@ public class CsvDataLakeImportService {
     var validationMessages = validationService.validateSchemaRequest(request);
     var issues = new ArrayList<CsvImportSchemaIssue>();
     if (validationMessages.isEmpty()) {
-      var columns = alignColumnsWithExistingTarget(
-          request.getTarget(),
-          parser.sanitizeImportColumns(request.getColumns()));
       var eventSchema = parser.buildConfiguredEventSchema(
-          columns,
+          parser.sanitizeImportColumns(request.getColumns()),
           request.getTimestampColumn());
       issues.addAll(validationService.validateSchemaTarget(
           request.getTarget(),
@@ -173,7 +170,7 @@ public class CsvDataLakeImportService {
     }
 
     var eventSchema = parser.buildEventSchema(
-        alignColumnsWithExistingTarget(request.getTarget(), parser.sanitizeImportColumns(request.getColumns())),
+        parser.sanitizeImportColumns(request.getColumns()),
         request.getRows(),
         request.getCsvConfig(),
         request.getTimestampColumn());
@@ -201,9 +198,7 @@ public class CsvDataLakeImportService {
     }
 
     var upload = resolveUpload(request.getUploadId(), principalSid);
-    var sanitizedColumns = alignColumnsWithExistingTarget(
-        request.getTarget(),
-        parser.sanitizeImportColumns(request.getColumns()));
+    var sanitizedColumns = parser.sanitizeImportColumns(request.getColumns());
     var eventSchema = parser.buildConfiguredEventSchema(sanitizedColumns, request.getTimestampColumn());
 
     validationMessages.addAll(
