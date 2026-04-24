@@ -237,7 +237,6 @@ public class CsvDataLakeImportService {
     if (request.getTarget().getMode().equals(CsvImportTargetMode.EXISTING)){
     existingSchema = schemaManagement.getExistingMeasureByName(request.getTarget().getMeasurementName().trim()).get().getEventSchema();
     existingColumns = CsvImportColumnMapper.fromEventSchema(existingSchema);
-    //TODO make this more efficient
     Map<String, CsvImportColumn> existingByName = existingColumns.stream()
     .collect(Collectors.toMap(CsvImportColumn::getRuntimeName, Function.identity()));
 
