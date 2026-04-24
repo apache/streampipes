@@ -229,6 +229,7 @@
                 >
                     <sp-csv-import-preview-table
                         [hasPreview]="hasPreview()"
+                        [isExisting]="targetMode()"
                         [previewRows]="previewRows()"
                         [columnModels]="columnModels()"
                         [timestampFormat]="timestampFormat()"
