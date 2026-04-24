@@ -96,7 +96,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
   private void prepareAdapter() throws AdapterException {
     try {
-      LOG.info(
+      LOG.debug(
           "Preparing OPC-UA adapter for server {}, pull mode {}, selected nodes {}",
           opcUaAdapterConfig.getOpcServerURL(),
           opcUaAdapterConfig.inPullMode(),
@@ -141,7 +141,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
 
     } catch (Exception e) {
-      LOG.error(
+      LOG.debug(
           "The connection to the OPC UA server {} could not be established for selected nodes {}",
           opcUaAdapterConfig.getOpcServerURL(),
           opcUaAdapterConfig.getSelectedNodeNames(),
@@ -168,13 +168,13 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
           response.get(this.getPollingInterval().value(), this.getPollingInterval().timeUnit());
       if (returnValues == null) {
         emptyValueReceived = true;
-        LOG.warn("Null value object returned for OPC UA nodes {} - event will not be sent", nodeIds);
+        LOG.debug("Null value object returned for OPC UA nodes {} - event will not be sent", nodeIds);
       } else if (returnValues.isEmpty()) {
         emptyValueReceived = true;
         LOG.warn("Empty value object returned for OPC UA nodes {} - event will not be sent", nodeIds);
       } else {
         if (returnValues.size() != this.allNodes.size()) {
-          LOG.warn(
+          LOG.debug(
               "Received {} OPC UA values for {} configured nodes",
               returnValues.size(),
               this.allNodes.size()
@@ -189,7 +189,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
           if (dataValue == null) {
             badStatusCodeReceived = true;
-            LOG.warn("Received null DataValue for OPC UA node label: {}, node id: {}", nodeLabel, nodeId);
+            LOG.debug("Received null DataValue for OPC UA node label: {}, node id: {}", nodeLabel, nodeId);
             continue;
           }
 
@@ -197,7 +197,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
           if (StatusCode.GOOD.equals(status)) {
             var value = dataValue.getValue();
             if (value == null || value.getValue() == null) {
-              LOG.warn(
+              LOG.debug(
                   "Received good status but null value for OPC UA node label: {}, node id: {}",
                   nodeLabel,
                   nodeId
@@ -207,7 +207,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
             try {
               node.addToEvent(connectedClient.getClient(), this.event, value);
             } catch (RuntimeException e) {
-              LOG.error(
+              LOG.debug(
                   "Could not add OPC UA value to event for node label: {}, node id: {}, status: {}, value: {}",
                   nodeLabel,
                   nodeId,
@@ -231,14 +231,14 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
         try {
           collector.collect(this.event);
         } catch (RuntimeException e) {
-          LOG.error("Could not collect OPC UA event with {} properties", this.event.size(), e);
+          LOG.debug("Could not collect OPC UA event with {} properties", this.event.size(), e);
           throw e;
         }
       } else if (badStatusCodeReceived) {
-        LOG.warn("Skipping OPC UA event because at least one node returned a bad status code");
+        LOG.debug("Skipping OPC UA event because at least one node returned a bad status code");
       }
     } catch (ExecutionException | InterruptedException | TimeoutException | RuntimeException e) {
-      LOG.error("Error while reading OPC UA data for nodes {}", nodeIds, e);
+      LOG.debug("Error while reading OPC UA data for nodes {}", nodeIds, e);
       throw e;
     }
   }
