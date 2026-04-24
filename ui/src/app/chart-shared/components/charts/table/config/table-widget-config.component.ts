@@ -187,7 +187,7 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         config.highlightedColumnColors ??= {};
         this.syncHighlightColorMap();
         config.pageSize ??= 20;
-        config.stickyHeaders ??= false;
+        config.stickyHeaders ??= true;
         config.searchValue ??= '';
     }
 
