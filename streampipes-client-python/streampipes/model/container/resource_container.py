@@ -30,7 +30,7 @@ from abc import ABC, abstractmethod
 from typing import Dict, List, Type
 
 import pandas as pd
-from pydantic.v1 import ValidationError
+from pydantic import ValidationError
 
 __all__ = [
     "ResourceContainer",
@@ -64,13 +64,15 @@ class StreamPipesDataModelError(Exception):
         -------
         The error description (`str`)
         """
+        affected_model = getattr(self.validation_error, "title", str(getattr(self.validation_error, "model", "unknown")))
+
         return (
             f"\nOops, there seems to be a problem with our internal StreamPipes data model.\n"
             f"This should not occur, but unfortunately did.\n"
             f"Therefore, it would be great if you could report this problem as an issue at "
             f"https://github.com/apache/streampipes.\n"
             f"Please don't forget to include the following information:\n\n"
-            f"Affected Model class: {str(self.validation_error.model)}\n"
+            f"Affected Model class: {affected_model}\n"
             f"Validation error log: {self.validation_error.json()}"
         )
 
@@ -185,7 +187,7 @@ class ResourceContainer(ABC):
             raise StreamPipesResourceContainerJSONError(container_name=str(cls), json_string=json_string)
 
         try:
-            resource_container = cls(resources=[cls._resource_cls().parse_obj(item) for item in parsed_json])
+            resource_container = cls(resources=[cls._resource_cls().model_validate(item) for item in parsed_json])
         except ValidationError as ve:
             raise StreamPipesDataModelError(validation_error=ve)
 
