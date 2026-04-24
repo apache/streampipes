@@ -39,6 +39,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { ColorPickerDirective } from 'ngx-color-picker';
 import { MatCheckbox } from '@angular/material/checkbox';
+import {
+    CdkDrag,
+    CdkDragHandle,
+    CdkDropList,
+    CdkDragDrop,
+    moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 
@@ -60,6 +67,9 @@ import { MatIconButton } from '@angular/material/button';
         LayoutDirective,
         LayoutAlignDirective,
         MatCheckbox,
+        CdkDropList,
+        CdkDrag,
+        CdkDragHandle,
         MatIcon,
         MatIconButton,
         TranslatePipe,
@@ -112,6 +122,21 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
 
         const [movedColumn] = columns.splice(fromIndex, 1);
         columns.splice(targetIndex, 0, movedColumn);
+        this.currentlyConfiguredWidget.visualizationConfig.selectedColumns =
+            columns;
+        this.triggerViewRefresh();
+    }
+
+    dropSelectedColumn(event: CdkDragDrop<DataExplorerField[]>): void {
+        if (event.previousIndex === event.currentIndex) {
+            return;
+        }
+
+        const columns = [
+            ...(this.currentlyConfiguredWidget.visualizationConfig
+                .selectedColumns ?? []),
+        ];
+        moveItemInArray(columns, event.previousIndex, event.currentIndex);
         this.currentlyConfiguredWidget.visualizationConfig.selectedColumns =
             columns;
         this.triggerViewRefresh();

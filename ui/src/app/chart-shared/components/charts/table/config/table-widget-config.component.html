@@ -32,7 +32,15 @@
     >
     </sp-select-properties-config>
     <sp-split-section [level]="3" [title]="'Column Order' | translate">
-        <div fxLayout="column" class="selected-column-list">
+        <div
+            fxLayout="column"
+            class="selected-column-list"
+            cdkDropList
+            [cdkDropListData]="
+                currentlyConfiguredWidget.visualizationConfig.selectedColumns
+            "
+            (cdkDropListDropped)="dropSelectedColumn($event)"
+        >
             @for (
                 field of currentlyConfiguredWidget.visualizationConfig
                     .selectedColumns;
@@ -43,9 +51,27 @@
                     class="selected-column-row"
                     fxLayout="row"
                     fxLayoutAlign="space-between center"
+                    cdkDrag
                 >
-                    <div class="selected-column-label">
-                        {{ selectedColumnLabel(field) }}
+                    <div
+                        class="selected-column-main"
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                    >
+                        <button
+                            mat-icon-button
+                            type="button"
+                            class="selected-column-drag-handle"
+                            cdkDragHandle
+                            [attr.aria-label]="
+                                'Reorder ' + field.runtimeName | translate
+                            "
+                        >
+                            <mat-icon>drag_indicator</mat-icon>
+                        </button>
+                        <div class="selected-column-label">
+                            {{ selectedColumnLabel(field) }}
+                        </div>
                     </div>
                     <div
                         class="selected-column-actions"
