@@ -26,7 +26,6 @@ import java.util.List;
 public class CsvImportPreviewResult {
 
   private String uploadId;
-
   private List<String> headers = new ArrayList<>();
   private List<List<String>> previewRows = new ArrayList<>();
   private List<CsvImportColumn> columns = new ArrayList<>();
