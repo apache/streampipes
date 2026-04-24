@@ -42,7 +42,15 @@
     @if (showData) {
         <div class="analytics-table-shell" fxLayout="column" fxFlex>
             <div class="analytics-table-scroll" fxFlex>
-                <table data-cy="data-explorer-table" class="analytics-table">
+                <table
+                    data-cy="data-explorer-table"
+                    class="analytics-table"
+                    [ngClass]="{
+                        'sticky-headers':
+                            dataExplorerWidget.visualizationConfig
+                                .stickyHeaders,
+                    }"
+                >
                     <thead>
                         <tr>
                             @for (

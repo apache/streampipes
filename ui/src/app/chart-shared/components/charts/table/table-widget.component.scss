@@ -53,20 +53,18 @@
     overflow: visible;
 }
 
-.analytics-table .time-column {
+.analytics-table.sticky-headers th {
     position: sticky;
-    left: 0;
+    top: 0;
+    z-index: 3;
 }
 
 .analytics-table th.time-column {
-    z-index: 4;
     min-width: 11rem;
 }
 
 .analytics-table td.time-column {
-    z-index: 1;
     min-width: 11rem;
-    background: var(--color-bg-0);
 }
 
 .analytics-table tbody tr:nth-child(even) td {
