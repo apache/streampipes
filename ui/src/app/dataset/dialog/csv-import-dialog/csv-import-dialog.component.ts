@@ -581,12 +581,13 @@ export class CsvImportDialogComponent {
         property.runtimeName = column.runtimeName;
         property.runtimeType = this.toRuntimeType(initialType);
 
-        if (column.propertyScope) {
+        if (column.propertyScope && this.targetMode() === 'EXISTING') {
             property.propertyScope = column.propertyScope;
+            property.semanticType = column.semanticType;
         } else {
             property.propertyScope = 'MEASUREMENT_PROPERTY';
+            property.semanticType = undefined;
         }
-        property.semanticType = column.semanticType || undefined;
         property.label = column.label || '';
         property.description = column.description || '';
         property.additionalMetadata = {};
