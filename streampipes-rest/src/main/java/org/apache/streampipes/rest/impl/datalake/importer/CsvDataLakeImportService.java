@@ -25,8 +25,10 @@ import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportResult;
+import org.apache.streampipes.model.datalake.importer.CsvImportSchemaIssue;
 import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationResult;
+import org.apache.streampipes.model.datalake.importer.CsvImportTarget;
 import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
 import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -139,7 +141,7 @@ public class CsvDataLakeImportService {
 
   public CsvImportSchemaValidationResult validateSchema(CsvImportSchemaValidationRequest request) {
     var validationMessages = validationService.validateSchemaRequest(request);
-    var issues = new ArrayList<org.apache.streampipes.model.datalake.importer.CsvImportSchemaIssue>();
+    var issues = new ArrayList<CsvImportSchemaIssue>();
     if (validationMessages.isEmpty()) {
       var columns = alignColumnsWithExistingTarget(
           request.getTarget(),
@@ -284,7 +286,7 @@ public class CsvDataLakeImportService {
   }
 
   private List<CsvImportColumn> alignColumnsWithExistingTarget(
-      org.apache.streampipes.model.datalake.importer.CsvImportTarget target,
+      CsvImportTarget target,
       List<CsvImportColumn> columns) {
     if (target == null
         || target.getMode() != CsvImportTargetMode.EXISTING) {
