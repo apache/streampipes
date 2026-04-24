@@ -142,8 +142,11 @@ public class CsvDataLakeImportService {
     var validationMessages = validationService.validateSchemaRequest(request);
     var issues = new ArrayList<org.apache.streampipes.model.datalake.importer.CsvImportSchemaIssue>();
     if (validationMessages.isEmpty()) {
+      var columns = alignColumnsWithExistingTarget(
+          request.getTarget(),
+          parser.sanitizeImportColumns(request.getColumns()));
       var eventSchema = parser.buildConfiguredEventSchema(
-          parser.sanitizeImportColumns(request.getColumns()),
+          columns,
           request.getTimestampColumn());
       issues.addAll(validationService.validateSchemaTarget(
           request.getTarget(),
@@ -169,7 +172,7 @@ public class CsvDataLakeImportService {
     }
 
     var eventSchema = parser.buildEventSchema(
-        parser.sanitizeImportColumns(request.getColumns()),
+        alignColumnsWithExistingTarget(request.getTarget(), parser.sanitizeImportColumns(request.getColumns())),
         request.getRows(),
         request.getCsvConfig(),
         request.getTimestampColumn());
@@ -197,7 +200,9 @@ public class CsvDataLakeImportService {
     }
 
     var upload = resolveUpload(request.getUploadId(), principalSid);
-    var sanitizedColumns = parser.sanitizeImportColumns(request.getColumns());
+    var sanitizedColumns = alignColumnsWithExistingTarget(
+        request.getTarget(),
+        parser.sanitizeImportColumns(request.getColumns()));
     var eventSchema = parser.buildConfiguredEventSchema(sanitizedColumns, request.getTimestampColumn());
 
     validationMessages.addAll(
@@ -226,27 +231,10 @@ public class CsvDataLakeImportService {
       String uploadId
   ) {
     var messages = new ArrayList<>(validationMessages);
-    EventSchema existingSchema = null;
-    List<CsvImportColumn>  existingColumns = null;
     var columns = parser.inferColumns(headers, rows, request.getCsvConfig());
-    
-
+    columns = alignColumnsWithExistingTarget(request.getTarget(), columns);
     var eventSchema = parser.buildEventSchema(columns, rows, request.getCsvConfig(), null);
     messages.addAll(validationService.validatePreviewTarget(request.getTarget()));
-
-    if (request.getTarget().getMode().equals(CsvImportTargetMode.EXISTING)){
-    existingSchema = schemaManagement.getExistingMeasureByName(request.getTarget().getMeasurementName().trim()).get().getEventSchema();
-    existingColumns = CsvImportColumnMapper.fromEventSchema(existingSchema);
-    Map<String, CsvImportColumn> existingByName = existingColumns.stream()
-    .collect(Collectors.toMap(CsvImportColumn::getRuntimeName, Function.identity()));
-
-columns.forEach(col -> {
-    CsvImportColumn match = existingByName.get(col.getRuntimeName());
-    if (match != null) {
-        col.setPropertyScope(match.getPropertyScope());
-    }
-});
-  }
 
     var result = new CsvImportPreviewResult();
     result.setUploadId(uploadId);
@@ -295,6 +283,38 @@ columns.forEach(col -> {
 
   private CsvImportValidationMessage message(String field, String message) {
     return new CsvImportValidationMessage(field, message);
+  }
+
+  private List<CsvImportColumn> alignColumnsWithExistingTarget(
+      org.apache.streampipes.model.datalake.importer.CsvImportTarget target,
+      List<CsvImportColumn> columns
+  ) {
+    if (target == null
+        || target.getMode() != CsvImportTargetMode.EXISTING
+        || target.getMeasurementName() == null
+        || target.getMeasurementName().isBlank()) {
+      return columns;
+    }
+
+    var existingMeasure = schemaManagement.getExistingMeasureByName(target.getMeasurementName().trim());
+    if (existingMeasure.isEmpty()) {
+      return columns;
+    }
+
+    Map<String, CsvImportColumn> existingByName = CsvImportColumnMapper.fromEventSchema(existingMeasure.get().getEventSchema())
+        .stream()
+        .collect(Collectors.toMap(CsvImportColumn::getRuntimeName, Function.identity()));
+
+    columns.forEach(column -> {
+      var existingColumn = existingByName.get(column.getRuntimeName());
+      if (existingColumn != null) {
+        column.setRuntimeType(existingColumn.getRuntimeType());
+        column.setPropertyScope(existingColumn.getPropertyScope());
+        column.setSemanticType(existingColumn.getSemanticType());
+      }
+    });
+
+    return columns;
   }
 
   private StoredMeasure resolveTargetMeasurement(
