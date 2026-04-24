@@ -102,6 +102,12 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         this.triggerViewRefresh();
     }
 
+    setStickyHeaders(stickyHeaders: boolean): void {
+        this.currentlyConfiguredWidget.visualizationConfig.stickyHeaders =
+            stickyHeaders;
+        this.triggerViewRefresh();
+    }
+
     colorKey(field: DataExplorerField): string {
         return `${field.fullDbName}:${field.sourceIndex}`;
     }
@@ -181,6 +187,7 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         config.highlightedColumnColors ??= {};
         this.syncHighlightColorMap();
         config.pageSize ??= 20;
+        config.stickyHeaders ??= true;
         config.searchValue ??= '';
     }
 

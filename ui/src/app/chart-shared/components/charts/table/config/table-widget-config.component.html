@@ -60,6 +60,16 @@
                 </mat-select>
             </mat-form-field>
         </sp-form-field>
+        <sp-form-field [level]="3" [label]="'Sticky headers' | translate">
+            <mat-checkbox
+                [checked]="
+                    currentlyConfiguredWidget.visualizationConfig.stickyHeaders
+                "
+                (change)="setStickyHeaders($event.checked)"
+            >
+                {{ 'Keep table header visible while scrolling' | translate }}
+            </mat-checkbox>
+        </sp-form-field>
     </sp-split-section>
     <sp-split-section [level]="3" [title]="'Value Highlighting' | translate">
         <div fxLayout="column" class="highlight-color-list">
