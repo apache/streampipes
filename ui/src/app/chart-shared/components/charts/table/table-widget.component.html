@@ -52,15 +52,28 @@
                     }"
                 >
                     <thead>
-                        <tr>
+                        <tr
+                            cdkDropList
+                            cdkDropListOrientation="horizontal"
+                            [cdkDropListData]="getReorderableColumnNames()"
+                            (cdkDropListDropped)="dropSelectedColumn($event)"
+                        >
                             @for (
                                 column of columnNames;
                                 track trackColumn($index, column)
                             ) {
                                 <th
+                                    cdkDrag
+                                    cdkDragLockAxis="x"
+                                    [cdkDragData]="column"
+                                    [cdkDragDisabled]="
+                                        !isReorderableColumn(column)
+                                    "
                                     [ngClass]="{
                                         'time-column': column === 'time',
                                         'numeric-cell': isNumericColumn(column),
+                                        'reorderable-column':
+                                            isReorderableColumn(column),
                                         'highlighted-column':
                                             isHighlightedColumn(column),
                                     }"
@@ -108,6 +121,27 @@
                                                 filter_list
                                             </mat-icon>
                                         </button>
+                                        @if (isReorderableColumn(column)) {
+                                            <button
+                                                type="button"
+                                                class="column-drag-trigger"
+                                                cdkDragHandle
+                                                [attr.aria-label]="
+                                                    'Reorder ' +
+                                                        headerLabel(column)
+                                                        | translate
+                                                "
+                                                (click)="
+                                                    $event.stopPropagation()
+                                                "
+                                            >
+                                                <mat-icon
+                                                    class="column-drag-icon"
+                                                >
+                                                    drag_indicator
+                                                </mat-icon>
+                                            </button>
+                                        }
                                     </div>
                                 </th>
                             }
