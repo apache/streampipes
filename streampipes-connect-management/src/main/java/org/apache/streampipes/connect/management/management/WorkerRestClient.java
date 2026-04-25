@@ -99,6 +99,14 @@ public class WorkerRestClient {
       var responseString = response.responseBody();
 
       if (response.statusCode() != HttpStatus.SC_OK) {
+        LOG.error(
+            "Adapter state change failed for adapter {}, service {}, action {}, status {}, response body {}",
+            ad.getElementId(),
+            requestTarget.serviceId(),
+            action,
+            response.statusCode(),
+            responseString
+        );
         var exception = getSerializer().readValue(responseString, AdapterException.class);
         throw new AdapterException(exception.getMessage(), exception.getCause());
       }
