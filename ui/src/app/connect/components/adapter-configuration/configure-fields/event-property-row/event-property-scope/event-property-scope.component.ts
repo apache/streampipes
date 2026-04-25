@@ -59,6 +59,9 @@ export class EventPropertyScopeComponent implements OnInit {
     runtimeType: string;
 
     @Input()
+    originalRuntimeType: string;
+
+    @Input()
     label: string;
 
     @Input()
@@ -68,6 +71,16 @@ export class EventPropertyScopeComponent implements OnInit {
     scopeChanged: EventEmitter<void> = new EventEmitter();
 
     currentScope: PropertyScope;
+
+    get allowDimensionScope(): boolean {
+        const effectiveRuntimeType =
+            this.originalRuntimeType || this.runtimeType;
+
+        return (
+            effectiveRuntimeType !== 'FLOAT' &&
+            effectiveRuntimeType !== 'DOUBLE'
+        );
+    }
 
     ngOnInit() {
         this.determineCurrentScope();
