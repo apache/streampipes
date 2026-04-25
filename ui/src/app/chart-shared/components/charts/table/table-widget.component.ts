@@ -18,6 +18,13 @@
 
 import { DatePipe, NgClass, NgStyle } from '@angular/common';
 import {
+    CdkDrag,
+    CdkDragDrop,
+    CdkDragHandle,
+    CdkDropList,
+    moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import {
     Component,
     ElementRef,
     HostListener,
@@ -98,6 +105,9 @@ const TIMESTAMP_MASK = 'yyyy-mm-dd HH:mm:ss.SSS';
         FlexDirective,
         NgStyle,
         NgClass,
+        CdkDropList,
+        CdkDrag,
+        CdkDragHandle,
         NoDataInDateRangeComponent,
         TooMuchDataComponent,
         MatPaginator,
@@ -241,6 +251,41 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
             this.sortDirection = '';
             this.sortColumn = '';
         }
+        this.applyTableState(false);
+    }
+
+    dropSelectedColumn(event: CdkDragDrop<string[]>): void {
+        const reorderedColumnNames = this.getReorderableColumnNames();
+        const draggedColumn = event.item.data as string | undefined;
+
+        if (!draggedColumn || reorderedColumnNames.length <= 1) {
+            return;
+        }
+
+        const previousIndex = reorderedColumnNames.indexOf(draggedColumn);
+        const currentIndex = this.toReorderableColumnIndex(event.currentIndex);
+
+        if (previousIndex < 0 || previousIndex === currentIndex) {
+            return;
+        }
+
+        moveItemInArray(reorderedColumnNames, previousIndex, currentIndex);
+
+        const selectedColumnsByName = new Map(
+            (
+                this.dataExplorerWidget.visualizationConfig.selectedColumns ??
+                []
+            ).map(column => [column.fullDbName, column]),
+        );
+
+        const selectedColumns = reorderedColumnNames
+            .map(columnName => selectedColumnsByName.get(columnName))
+            .filter(column => !!column);
+
+        this.dataExplorerWidget.visualizationConfig.selectedColumns =
+            selectedColumns;
+        this.closeFilter();
+        this.regenerateColumnNames();
         this.applyTableState(false);
     }
 
@@ -787,6 +832,38 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         !!(
             this.dataExplorerWidget.visualizationConfig.highlightedColumns ?? []
         ).find(f => f.fullDbName === column);
+
+    isReorderableColumn(column: string): boolean {
+        return !!(
+            this.dataExplorerWidget.visualizationConfig.selectedColumns ?? []
+        ).find(f => f.fullDbName === column);
+    }
+
+    getReorderableColumnNames(): string[] {
+        return (
+            this.dataExplorerWidget.visualizationConfig.selectedColumns ?? []
+        ).map(column => column.fullDbName);
+    }
+
+    private toReorderableColumnIndex(dropIndex: number): number {
+        const reorderableColumnNames = this.getReorderableColumnNames();
+        if (reorderableColumnNames.length === 0) {
+            return 0;
+        }
+
+        const firstReorderableIndex = this.columnNames.findIndex(column =>
+            this.isReorderableColumn(column),
+        );
+        const normalizedIndex = Math.max(
+            firstReorderableIndex,
+            Math.min(
+                dropIndex,
+                firstReorderableIndex + reorderableColumnNames.length - 1,
+            ),
+        );
+
+        return Math.max(0, normalizedIndex - firstReorderableIndex);
+    }
 
     headerLabel = (column: string): string =>
         column === 'time' ? 'Time' : column;
