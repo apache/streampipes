@@ -1,0 +1,124 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<div
+    class="layout-item"
+    [class.layout-item-edit-mode]="editMode"
+    [class.layout-item-selected]="selected"
+    [class.layout-item-rich-text]="itemType === 'rich-text'"
+    [class.layout-item-header]="itemType === 'header'"
+    [class.layout-item-divider]="itemType === 'divider'"
+    [class.layout-item-spacer]="itemType === 'spacer'"
+    [attr.data-cy]="'dashboard-layout-' + itemType"
+    (click)="selectItem()"
+>
+    @if (showActionOverlay) {
+        <div
+            class="layout-item-overlay"
+            fxLayout="row"
+            fxLayoutAlign="end center"
+        >
+            <button
+                mat-icon-button
+                type="button"
+                (click)="removeItem(); $event.stopPropagation()"
+                [matTooltip]="'Delete element' | translate"
+            >
+                <mat-icon>clear</mat-icon>
+            </button>
+        </div>
+    }
+
+    <div class="layout-item-body">
+        @switch (itemType) {
+            @case ('rich-text') {
+                <div fxLayout="column" class="rich-text-layout">
+                    @if (richTextPreview) {
+                        <div class="markdown-preview">
+                            <markdown [data]="richTextPreview"></markdown>
+                        </div>
+                    } @else if (editMode) {
+                        <div class="layout-placeholder text-sm">
+                            {{
+                                'Select the element to edit its content.'
+                                    | translate
+                            }}
+                        </div>
+                    }
+                </div>
+            }
+            @case ('header') {
+                <div
+                    class="header-layout"
+                    fxLayout="column"
+                    [class.header-layout-sm]="size === 'sm'"
+                    [class.header-layout-md]="size === 'md'"
+                    [class.header-layout-lg]="size === 'lg'"
+                    [class.header-layout-center]="alignment === 'center'"
+                    [class.header-layout-right]="alignment === 'right'"
+                >
+                    <div class="header-title">{{ headerText }}</div>
+                </div>
+            }
+            @case ('divider') {
+                <div
+                    class="divider-layout"
+                    fxLayout="column"
+                    fxLayoutAlign="center center"
+                >
+                    @if (label) {
+                        <div
+                            class="divider-with-label"
+                            [class.divider-with-label-dashed]="
+                                dividerStyle === 'dashed'
+                            "
+                            fxLayout="row"
+                            fxLayoutAlign="center center"
+                        >
+                            <span class="divider-line"></span>
+                            <span class="divider-label text-sm">{{
+                                label
+                            }}</span>
+                            <span class="divider-line"></span>
+                        </div>
+                    } @else {
+                        <div
+                            class="divider-line"
+                            [class.divider-line-dashed]="
+                                dividerStyle === 'dashed'
+                            "
+                        ></div>
+                    }
+                </div>
+            }
+            @case ('spacer') {
+                <div
+                    class="spacer-layout"
+                    fxLayout="column"
+                    fxLayoutAlign="center center"
+                >
+                    @if (editMode) {
+                        <span class="text-sm">
+                            {{ 'Spacer' | translate }}
+                        </span>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>

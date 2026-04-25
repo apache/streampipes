@@ -76,8 +76,14 @@
                         <div fxLayout="column" fxFlex="100">
                             @if (editMode) {
                                 <sp-dashboard-chart-selection-panel
+                                    [selectedDashboardItem]="
+                                        selectedDashboardItem
+                                    "
                                     (addChartEmitter)="
                                         addChartToDashboard($event)
+                                    "
+                                    (addLayoutEmitter)="
+                                        addLayoutElementToDashboard($event)
                                     "
                                     fxFlex="100"
                                 >
@@ -144,8 +150,12 @@
                                 [widgets]="widgets"
                                 [observableGenerator]="observableGenerator"
                                 [timeSettings]="timeSettings"
-                                (deleteCallback)="
-                                    removeChartFromDashboard($event)
+                                [selectedDashboardItemId]="
+                                    selectedDashboardItemId
+                                "
+                                (deleteCallback)="removeDashboardItem($event)"
+                                (selectDashboardItemEmitter)="
+                                    selectDashboardItem($event)
                                 "
                                 (startEditModeEmitter)="startEditMode($event)"
                                 class="h-100 dashboard-grid"
@@ -163,8 +173,12 @@
                                 [widgets]="widgets"
                                 [observableGenerator]="observableGenerator"
                                 [timeSettings]="timeSettings"
-                                (deleteCallback)="
-                                    removeChartFromDashboard($event)
+                                [selectedDashboardItemId]="
+                                    selectedDashboardItemId
+                                "
+                                (deleteCallback)="removeDashboardItem($event)"
+                                (selectDashboardItemEmitter)="
+                                    selectDashboardItem($event)
                                 "
                                 (startEditModeEmitter)="startEditMode($event)"
                             >

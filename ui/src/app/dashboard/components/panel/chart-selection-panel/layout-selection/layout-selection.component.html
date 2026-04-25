@@ -1,0 +1,49 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<div fxLayout="column" fxLayoutGap="0.75rem" class="layout-selection">
+    @for (definition of layoutDefinitions; track definition.type) {
+        <div
+            fxLayout="row"
+            class="layout-option-card"
+            [attr.data-cy]="'add-layout-' + definition.type"
+            role="button"
+            tabindex="0"
+            (click)="addLayoutEmitter.emit(definition.type)"
+            (keydown.enter)="addLayoutEmitter.emit(definition.type)"
+            (keydown.space)="addLayoutEmitter.emit(definition.type)"
+        >
+            <div fxFlex fxLayout="column">
+                <h5>{{ definition.title | translate }}</h5>
+                <div fxLayout="row" fxLayoutGap="15px" class="text-sm">
+                    <span fxLayoutAlign="start center">
+                        <mat-icon color="primary">{{
+                            definition.icon
+                        }}</mat-icon>
+                    </span>
+                    <span fxFlex class="layout-description">{{
+                        definition.description | translate
+                    }}</span>
+                </div>
+            </div>
+            <div fxLayoutAlign="end center" class="layout-option-add">
+                <i class="material-icons">add</i>
+            </div>
+        </div>
+    }
+</div>

@@ -24,8 +24,10 @@ import {
 } from '../gen/streampipes-model';
 
 export interface ClientDashboardItem {
-    dataViewElementId: string;
-    widgetType: string;
+    dataViewElementId?: string;
+    widgetType?: string;
+    component?: string;
+    settings?: string[];
     timeSettings?: TimeSettings;
     id: string;
     name?: string;
@@ -35,6 +37,8 @@ export interface ClientDashboardItem {
     y: number;
     w?: number;
     h?: number;
+    minH?: number;
+    maxH?: number;
 }
 
 export interface DashboardLiveSettings {

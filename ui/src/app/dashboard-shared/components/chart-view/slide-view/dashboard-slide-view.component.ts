@@ -31,6 +31,7 @@ import {
 import { NgClass } from '@angular/common';
 import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { ChartContainerComponent } from '../../../../chart-shared/components/chart-container/chart-container.component';
+import { DashboardLayoutItemComponent } from '../../layout-item/dashboard-layout-item.component';
 
 @Component({
     selector: 'sp-dashboard-slide-view',
@@ -43,6 +44,7 @@ import { ChartContainerComponent } from '../../../../chart-shared/components/cha
         NgClass,
         ClassDirective,
         ChartContainerComponent,
+        DashboardLayoutItemComponent,
     ],
 })
 export class DashboardSlideViewComponent
@@ -50,9 +52,9 @@ export class DashboardSlideViewComponent
     implements OnInit
 {
     selectedWidgetIndex = 0;
-    currentWidget: DataExplorerWidgetModel;
-    currentMeasure: DataLakeMeasure;
-    currentDashboardItem: ClientDashboardItem;
+    currentWidget?: DataExplorerWidgetModel;
+    currentMeasure?: DataLakeMeasure;
+    currentDashboardItem?: ClientDashboardItem;
 
     displayWidget = false;
 
@@ -62,19 +64,47 @@ export class DashboardSlideViewComponent
         this.loadWidgetConfigs();
     }
 
-    selectWidget(index: number, dataViewElementId: string): void {
+    selectWidget(index: number): void {
         this.displayWidget = false;
         setTimeout(() => {
             this.selectedWidgetIndex = index;
-            this.currentWidget = this.configuredWidgets.get(dataViewElementId);
-            this.currentMeasure = this.dataLakeMeasures.get(dataViewElementId);
             this.currentDashboardItem = this.dashboard.widgets[index];
+            if (!this.isChartItem(this.currentDashboardItem)) {
+                this.selectDashboardItem(this.currentDashboardItem.id);
+            } else {
+                this.selectDashboardItem(undefined);
+            }
+            if (this.isChartItem(this.currentDashboardItem)) {
+                const dataViewElementId =
+                    this.currentDashboardItem.dataViewElementId!;
+                this.currentWidget =
+                    this.configuredWidgets.get(dataViewElementId)!;
+                this.currentMeasure =
+                    this.dataLakeMeasures.get(dataViewElementId)!;
+            } else {
+                this.currentWidget = undefined;
+                this.currentMeasure = undefined;
+            }
             this.displayWidget = true;
         });
     }
 
     onWidgetsAvailable(): void {
-        this.selectWidget(0, this.dashboard.widgets[0].dataViewElementId);
+        if (this.dashboard.widgets.length > 0) {
+            this.selectWidget(0);
+        }
+    }
+
+    getSlideItemLabel(item: ClientDashboardItem): string {
+        if (this.isChartItem(item)) {
+            return (
+                this.configuredWidgets.get(item.dataViewElementId!)
+                    ?.baseAppearanceConfig.widgetTitle ||
+                this.getDashboardItemLabel(item)
+            );
+        }
+
+        return this.getDashboardItemLabel(item);
     }
 
     isGridView(): boolean {
@@ -82,6 +112,11 @@ export class DashboardSlideViewComponent
     }
 
     selectNewWidget(widgetId: string): void {
-        this.selectWidget(this.dashboard.widgets.length - 1, widgetId);
+        const itemIndex = this.dashboard.widgets.findIndex(
+            item => item.id === widgetId,
+        );
+        if (itemIndex >= 0) {
+            this.selectWidget(itemIndex);
+        }
     }
 }

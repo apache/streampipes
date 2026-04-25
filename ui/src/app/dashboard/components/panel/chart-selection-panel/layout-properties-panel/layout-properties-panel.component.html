@@ -1,0 +1,109 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<div class="properties-panel" fxLayout="column" fxLayoutGap="var(--space-md)">
+    @if (dashboardItem) {
+        @switch (itemType) {
+            @case ('rich-text') {
+                <mat-form-field class="w-100">
+                    <textarea
+                        matInput
+                        rows="10"
+                        [placeholder]="'Rich text' | translate"
+                        [ngModel]="content"
+                        (ngModelChange)="updateContent($event)"
+                    ></textarea>
+                </mat-form-field>
+            }
+            @case ('header') {
+                <mat-form-field class="w-100">
+                    <input
+                        matInput
+                        [placeholder]="'Header' | translate"
+                        [ngModel]="content"
+                        (ngModelChange)="updateContent($event)"
+                    />
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <mat-select
+                        [placeholder]="'Size' | translate"
+                        [ngModel]="size"
+                        (ngModelChange)="updateSize($event)"
+                    >
+                        @for (option of sizeOptions; track option) {
+                            <mat-option [value]="option">
+                                {{ option | translate }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <mat-select
+                        [placeholder]="'Alignment' | translate"
+                        [ngModel]="alignment"
+                        (ngModelChange)="updateAlignment($event)"
+                    >
+                        @for (option of alignmentOptions; track option) {
+                            <mat-option [value]="option">
+                                {{ option | translate }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            }
+            @case ('divider') {
+                <mat-form-field class="w-100">
+                    <input
+                        matInput
+                        [placeholder]="'Label (optional)' | translate"
+                        [ngModel]="label"
+                        (ngModelChange)="updateLabel($event)"
+                    />
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                    <mat-select
+                        [placeholder]="'Style' | translate"
+                        [ngModel]="dividerStyle"
+                        (ngModelChange)="updateDividerStyle($event)"
+                    >
+                        @for (option of dividerStyleOptions; track option) {
+                            <mat-option [value]="option">
+                                {{ option | translate }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            }
+            @case ('spacer') {
+                <div class="properties-hint text-sm">
+                    {{
+                        'Resize the spacer directly on the dashboard canvas.'
+                            | translate
+                    }}
+                </div>
+            }
+        }
+    } @else {
+        <div class="properties-hint text-sm">
+            {{ 'Select a layout element to edit its properties.' | translate }}
+        </div>
+    }
+</div>

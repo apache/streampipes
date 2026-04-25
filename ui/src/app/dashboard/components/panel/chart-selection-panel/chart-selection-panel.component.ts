@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    Output,
+    SimpleChanges,
+} from '@angular/core';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import {
     FlexDirective,
@@ -25,6 +32,13 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { ChartSelectionComponent } from './chart-selection/chart-selection.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { LayoutSelectionComponent } from './layout-selection/layout-selection.component';
+import { LayoutPropertiesPanelComponent } from './layout-properties-panel/layout-properties-panel.component';
+import {
+    DashboardItemType,
+    isChartDashboardItem,
+} from '../../../../dashboard-shared/utils/dashboard-item.utils';
+import { ClientDashboardItem } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-dashboard-chart-selection-panel',
@@ -40,10 +54,43 @@ import { TranslatePipe } from '@ngx-translate/core';
         FlexFillDirective,
         MatTab,
         ChartSelectionComponent,
+        LayoutSelectionComponent,
+        LayoutPropertiesPanelComponent,
         TranslatePipe,
     ],
 })
-export class ChartSelectionPanelComponent {
+export class ChartSelectionPanelComponent implements OnChanges {
+    @Input()
+    selectedDashboardItem?: ClientDashboardItem;
+
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter<string>();
+
+    @Output()
+    addLayoutEmitter = new EventEmitter<Exclude<DashboardItemType, 'chart'>>();
+
+    selectedTabIndex = 0;
+
+    get selectedLayoutItem(): ClientDashboardItem | undefined {
+        if (
+            !this.selectedDashboardItem ||
+            isChartDashboardItem(this.selectedDashboardItem)
+        ) {
+            return undefined;
+        }
+
+        return this.selectedDashboardItem;
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (!changes['selectedDashboardItem']) {
+            return;
+        }
+
+        if (this.selectedLayoutItem) {
+            this.selectedTabIndex = 2;
+        } else if (this.selectedTabIndex === 2) {
+            this.selectedTabIndex = 0;
+        }
+    }
 }

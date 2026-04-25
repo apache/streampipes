@@ -27,6 +27,11 @@ import {
 } from '@streampipes/platform-services';
 import { ChartRegistry } from '../../../chart-shared/registry/chart-registry.service';
 import { ObservableGenerator } from '../../../chart-shared/models/dataview-dashboard.model';
+import {
+    applyDashboardItemGridConstraints,
+    getDashboardItemLabel,
+    isChartDashboardItem,
+} from '../../utils/dashboard-item.utils';
 
 @Directive()
 export abstract class AbstractChartViewDirective {
@@ -63,9 +68,14 @@ export abstract class AbstractChartViewDirective {
     @Input()
     timeSettings: TimeSettings;
 
+    @Input()
+    selectedDashboardItemId?: string;
+
     @Output() deleteCallback: EventEmitter<number> = new EventEmitter<number>();
     @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> =
         new EventEmitter<DataExplorerWidgetModel>();
+    @Output() selectDashboardItemEmitter: EventEmitter<string | undefined> =
+        new EventEmitter<string | undefined>();
 
     startEditMode(value: DataExplorerWidgetModel) {
         this.startEditModeEmitter.emit(value);
@@ -73,8 +83,12 @@ export abstract class AbstractChartViewDirective {
 
     loadWidgetConfigs() {
         this.dashboard.widgets.forEach(widgetConfig => {
+            applyDashboardItemGridConstraints(widgetConfig);
             widgetConfig.w ??= widgetConfig.cols;
             widgetConfig.h ??= widgetConfig.rows;
+            if (!isChartDashboardItem(widgetConfig)) {
+                return;
+            }
             const availableWidget = this.widgets.find(
                 w => w.elementId === widgetConfig.dataViewElementId,
             );
@@ -88,8 +102,17 @@ export abstract class AbstractChartViewDirective {
         if (!this.isGridView()) {
             this.widgetsAvailable = false;
         }
+        if (!isChartDashboardItem(dashboardItem)) {
+            if (!this.isGridView()) {
+                this.selectNewWidget(dashboardItem.id);
+                this.widgetsVisible = true;
+            }
+            this.widgetsAvailable = true;
+            return;
+        }
+
         this.dataViewDataExplorerService
-            .getChart(dashboardItem.dataViewElementId)
+            .getChart(dashboardItem.dataViewElementId!)
             .subscribe(response => {
                 this.processWidget(response);
                 if (!this.isGridView()) {
@@ -111,6 +134,18 @@ export abstract class AbstractChartViewDirective {
                 widget.dataConfig.sourceConfigs[0].measure,
             );
         }
+    }
+
+    isChartItem(item: ClientDashboardItem | undefined): boolean {
+        return isChartDashboardItem(item);
+    }
+
+    getDashboardItemLabel(item: ClientDashboardItem | undefined): string {
+        return getDashboardItemLabel(item);
+    }
+
+    selectDashboardItem(itemId: string | undefined): void {
+        this.selectDashboardItemEmitter.emit(itemId);
     }
 
     abstract onWidgetsAvailable(): void;

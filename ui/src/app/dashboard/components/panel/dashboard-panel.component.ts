@@ -71,6 +71,13 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
+import {
+    applyDashboardItemGridConstraints,
+    DashboardItemType,
+    getLayoutDefinition,
+    isChartDashboardItem,
+    writeDashboardLayoutSettings,
+} from '../../../dashboard-shared/utils/dashboard-item.utils';
 
 @Component({
     selector: 'sp-dashboard-panel',
@@ -111,6 +118,7 @@ export class DashboardPanelComponent
 
     editMode = false;
     chartSelectionPanelExpanded = false;
+    selectedDashboardItemId?: string;
     timeRangeVisible = true;
 
     _dashboardGrid: DashboardGridViewComponent;
@@ -193,6 +201,7 @@ export class DashboardPanelComponent
         const dashboardItem = {} as ClientDashboardItem;
         dashboardItem.id =
             this.dataExplorerDashboardService.makeUniqueWidgetId();
+        dashboardItem.component = 'chart';
         dashboardItem.cols = 3;
         dashboardItem.rows = 4;
         dashboardItem.w = 3;
@@ -200,7 +209,42 @@ export class DashboardPanelComponent
         dashboardItem.x = 0;
         dashboardItem.y = this.getNextWidgetY();
         dashboardItem.dataViewElementId = dataViewElementId;
+        applyDashboardItemGridConstraints(dashboardItem);
         this.dashboard.widgets.push(dashboardItem);
+        this.clearSelectedDashboardItem();
+        setTimeout(() => {
+            if (this.viewMode === 'grid') {
+                this.dashboardGrid.loadWidgetConfig(dashboardItem);
+            } else {
+                this.dashboardSlide.loadWidgetConfig(dashboardItem);
+            }
+        });
+    }
+
+    addLayoutElementToDashboard(type: Exclude<DashboardItemType, 'chart'>) {
+        const definition = getLayoutDefinition(type);
+        const dashboardItem = {} as ClientDashboardItem;
+
+        dashboardItem.id =
+            this.dataExplorerDashboardService.makeUniqueWidgetId();
+        dashboardItem.component = type;
+        dashboardItem.name = definition.defaultName;
+        dashboardItem.cols = definition.defaultWidth;
+        dashboardItem.rows = definition.defaultHeight;
+        dashboardItem.w = definition.defaultWidth;
+        dashboardItem.h = definition.defaultHeight;
+        dashboardItem.x = 0;
+        dashboardItem.y = this.getNextWidgetY();
+
+        if (definition.defaultContent) {
+            writeDashboardLayoutSettings(dashboardItem, {
+                content: definition.defaultContent,
+            });
+        }
+
+        applyDashboardItemGridConstraints(dashboardItem);
+        this.dashboard.widgets.push(dashboardItem);
+        this.selectDashboardItem(dashboardItem.id);
         setTimeout(() => {
             if (this.viewMode === 'grid') {
                 this.dashboardGrid.loadWidgetConfig(dashboardItem);
@@ -256,9 +300,22 @@ export class DashboardPanelComponent
         this.routingService.navigateToChart(true, widgetModel.elementId, true);
     }
 
-    removeChartFromDashboard(widgetIndex: number) {
+    removeDashboardItem(widgetIndex: number) {
+        const removedItem = this.dashboard.widgets[widgetIndex];
         this.dashboard.widgets.splice(widgetIndex, 1);
-        this.widgets.splice(widgetIndex, 1);
+        if (removedItem?.id === this.selectedDashboardItemId) {
+            this.clearSelectedDashboardItem();
+        }
+
+        if (isChartDashboardItem(removedItem)) {
+            const chartIndex = this.widgets.findIndex(
+                widget => widget.elementId === removedItem?.dataViewElementId,
+            );
+
+            if (chartIndex >= 0) {
+                this.widgets.splice(chartIndex, 1);
+            }
+        }
     }
 
     updateDateRange(timeSettings: TimeSettings) {
@@ -278,6 +335,30 @@ export class DashboardPanelComponent
     triggerEditMode() {
         this.editMode = true;
         this.chartSelectionPanelExpanded = true;
+    }
+
+    selectDashboardItem(itemId: string | undefined): void {
+        if (!itemId) {
+            this.clearSelectedDashboardItem();
+            return;
+        }
+
+        if (!this.editMode) {
+            return;
+        }
+
+        this.selectedDashboardItemId = itemId;
+        this.chartSelectionPanelExpanded = true;
+    }
+
+    clearSelectedDashboardItem(): void {
+        this.selectedDashboardItemId = undefined;
+    }
+
+    get selectedDashboardItem(): ClientDashboardItem | undefined {
+        return this.dashboard?.widgets?.find(
+            item => item.id === this.selectedDashboardItemId,
+        );
     }
 
     toggleChartSelectionPanel() {

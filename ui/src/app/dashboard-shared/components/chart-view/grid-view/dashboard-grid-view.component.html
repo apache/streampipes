@@ -32,6 +32,7 @@
     @for (item of dashboard.widgets; let i = $index; track item.id) {
         <gridstack-item [options]="item">
             @if (
+                isChartItem(item) &&
                 widgetsAvailable &&
                 configuredWidgets.has(item.dataViewElementId)
             ) {
@@ -58,6 +59,17 @@
                         dashboard.dashboardGeneralSettings?.chartOverrides || {}
                     "
                 ></sp-chart-container>
+            } @else if (!isChartItem(item)) {
+                <sp-dashboard-layout-item
+                    [dashboardItem]="item"
+                    [editMode]="editMode"
+                    [kioskMode]="kioskMode"
+                    [widgetIndex]="i"
+                    [selected]="selectedDashboardItemId === item.id"
+                    (deleteCallback)="deleteCallback.emit($event)"
+                    (selectItemEmitter)="selectDashboardItem($event)"
+                >
+                </sp-dashboard-layout-item>
             }
         </gridstack-item>
     }

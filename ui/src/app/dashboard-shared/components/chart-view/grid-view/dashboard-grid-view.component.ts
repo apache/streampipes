@@ -33,6 +33,11 @@ import {
     nodesCB,
 } from 'gridstack/dist/angular';
 import { ChartContainerComponent } from '../../../../chart-shared/components/chart-container/chart-container.component';
+import { DashboardLayoutItemComponent } from '../../layout-item/dashboard-layout-item.component';
+import {
+    applyDashboardItemGridConstraints,
+    hasFixedHeightDashboardItem,
+} from '../../../utils/dashboard-item.utils';
 
 @Component({
     selector: 'sp-dashboard-grid-view',
@@ -42,6 +47,7 @@ import { ChartContainerComponent } from '../../../../chart-shared/components/cha
         GridstackComponent,
         GridstackItemComponent,
         ChartContainerComponent,
+        DashboardLayoutItemComponent,
     ],
 })
 export class DashboardGridViewComponent
@@ -100,10 +106,13 @@ export class DashboardGridViewComponent
                 w => w.id === (changed as any).id,
             );
             if (widget) {
+                applyDashboardItemGridConstraints(widget);
                 widget.x = changed.x;
                 widget.y = changed.y;
                 widget.w = changed.w;
-                widget.h = changed.h;
+                if (!hasFixedHeightDashboardItem(widget)) {
+                    widget.h = changed.h;
+                }
             }
         });
     }

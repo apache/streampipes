@@ -19,12 +19,13 @@
 <div fxFlex="100" class="designer-panel-content" fxLayout="column">
     <div fxFlex="100" fxLayout="column" class="no-overflow">
         <mat-tab-group
+            [(selectedIndex)]="selectedTabIndex"
             color="accent"
             fxFlexFill
             class="small-tab-headers mat-tab-fill-height"
         >
             <mat-tab
-                data-cy="designer-panel-data-config"
+                data-cy="designer-panel-charts"
                 [label]="'Charts' | translate"
             >
                 <div class="scroll-tab-content">
@@ -33,6 +34,29 @@
                         fxFlex="100"
                     >
                     </sp-chart-selection>
+                </div>
+            </mat-tab>
+            <mat-tab
+                data-cy="designer-panel-layout"
+                [label]="'Layout elements' | translate"
+            >
+                <div class="scroll-tab-content">
+                    <sp-dashboard-layout-selection
+                        (addLayoutEmitter)="addLayoutEmitter.emit($event)"
+                    >
+                    </sp-dashboard-layout-selection>
+                </div>
+            </mat-tab>
+            <mat-tab
+                data-cy="designer-panel-properties"
+                [label]="'Properties' | translate"
+                [disabled]="!selectedLayoutItem"
+            >
+                <div class="scroll-tab-content">
+                    <sp-dashboard-layout-properties-panel
+                        [dashboardItem]="selectedLayoutItem"
+                    >
+                    </sp-dashboard-layout-properties-panel>
                 </div>
             </mat-tab>
         </mat-tab-group>

@@ -18,6 +18,7 @@
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.dashboard.CompositeDashboardModel;
+import org.apache.streampipes.model.dashboard.DashboardItem;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
@@ -26,6 +27,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class DataExplorerResourceManager extends CrudResourceManager<DashboardModel> {
 
@@ -41,7 +43,12 @@ public class DataExplorerResourceManager extends CrudResourceManager<DashboardMo
   public CompositeDashboardModel getCompositeDashboard(String dashboardId) {
     var dashboard = db.getElementById(dashboardId);
     var widgets = dashboard.getWidgets().stream()
-        .map(w -> widgetStorage.getElementById(w.getDataViewElementId())).toList();
+        .map(DashboardItem::getDataViewElementId)
+        .filter(Objects::nonNull)
+        .filter(dataViewElementId -> !dataViewElementId.isBlank())
+        .map(widgetStorage::getElementById)
+        .filter(Objects::nonNull)
+        .toList();
     var dataLakeMeasures = getMeasureNames(widgets).stream().map(dataLakeMeasureStorage::getByMeasureName).toList();
 
     return new CompositeDashboardModel(dashboard, widgets, dataLakeMeasures);
@@ -50,6 +57,10 @@ public class DataExplorerResourceManager extends CrudResourceManager<DashboardMo
   private List<String> getMeasureNames(List<DataExplorerWidgetModel> widgets) {
     return widgets.stream().map(DataExplorerWidgetModel::getDataConfig)
         .map(dataConfig -> (List<?>) ((Map<?, ?>) dataConfig).get("sourceConfigs"))
+        .filter(List.class::isInstance)
+        .map(List.class::cast)
+        .filter(sourceConfigs -> !sourceConfigs.isEmpty())
+        .map(sourceConfigs -> sourceConfigs.get(0))
         .filter(Map.class::isInstance)
         .map(Map.class::cast)
         .map(cfg -> cfg.get("measureName"))

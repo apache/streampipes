@@ -18,17 +18,17 @@
 
 <div fxFlex="100" fxLayout="column" style="overflow-y: hidden">
     <div class="h-100" fxLayout="row" fxFlex="100">
-        @if (widgetsAvailable && currentWidget) {
+        @if (widgetsAvailable && dashboard.widgets.length > 0) {
             <div fxFlex="200px" fxLayout="column" class="selection-box">
                 @for (item of dashboard.widgets; track item; let i = $index) {
                     <div
                         [ngClass]="
-                            item.dataViewElementId === currentWidget.elementId
+                            i === selectedWidgetIndex
                                 ? 'viz-preview viz-preview-selected'
                                 : 'viz-preview'
                         "
                         fxLayoutAlign="center center"
-                        (click)="selectWidget(i, item.dataViewElementId)"
+                        (click)="selectWidget(i)"
                     >
                         <div
                             fxFlex="100"
@@ -37,9 +37,7 @@
                         >
                             @if (widgetsVisible) {
                                 <span class="slide-view-title text-sm">{{
-                                    configuredWidgets.get(
-                                        item.dataViewElementId
-                                    ).baseAppearanceConfig.widgetTitle
+                                    getSlideItemLabel(item)
                                 }}</span>
                             }
                         </div>
@@ -49,31 +47,42 @@
         }
         <div fxFlex="100">
             <div class="h-100 w-100 mw-100" id="slideViewOuter" fxFlex="100">
-                @if (
-                    widgetsAvailable &&
-                    displayWidget &&
-                    currentWidget &&
-                    widgetsVisible
-                ) {
-                    <sp-chart-container
-                        [timeSettings]="timeSettings"
-                        [globalTimeEnabled]="
-                            dashboard.dashboardGeneralSettings.globalTimeEnabled
-                        "
-                        (deleteCallback)="deleteCallback.emit($event)"
-                        (startEditModeEmitter)="startEditMode($event)"
-                        [dashboardItem]="currentDashboardItem"
-                        [configuredWidget]="currentWidget"
-                        [dataLakeMeasure]="currentMeasure"
-                        [observableGenerator]="observableGenerator"
-                        [editMode]="editMode"
-                        [gridMode]="false"
-                        [widgetIndex]="i"
-                        [dashboardChartOverrides]="
-                            dashboard.dashboardGeneralSettings
-                                ?.chartOverrides || {}
-                        "
-                    ></sp-chart-container>
+                @if (widgetsAvailable && displayWidget && widgetsVisible) {
+                    @if (isChartItem(currentDashboardItem) && currentWidget) {
+                        <sp-chart-container
+                            [timeSettings]="timeSettings"
+                            [globalTimeEnabled]="
+                                dashboard.dashboardGeneralSettings
+                                    .globalTimeEnabled
+                            "
+                            (deleteCallback)="deleteCallback.emit($event)"
+                            (startEditModeEmitter)="startEditMode($event)"
+                            [dashboardItem]="currentDashboardItem"
+                            [configuredWidget]="currentWidget"
+                            [dataLakeMeasure]="currentMeasure"
+                            [observableGenerator]="observableGenerator"
+                            [editMode]="editMode"
+                            [gridMode]="false"
+                            [widgetIndex]="selectedWidgetIndex"
+                            [dashboardChartOverrides]="
+                                dashboard.dashboardGeneralSettings
+                                    ?.chartOverrides || {}
+                            "
+                        ></sp-chart-container>
+                    } @else if (!isChartItem(currentDashboardItem)) {
+                        <sp-dashboard-layout-item
+                            [dashboardItem]="currentDashboardItem"
+                            [editMode]="editMode"
+                            [selected]="
+                                selectedDashboardItemId ===
+                                currentDashboardItem.id
+                            "
+                            [widgetIndex]="selectedWidgetIndex"
+                            (deleteCallback)="deleteCallback.emit($event)"
+                            (selectItemEmitter)="selectDashboardItem($event)"
+                        >
+                        </sp-dashboard-layout-item>
+                    }
                 }
             </div>
         </div>
