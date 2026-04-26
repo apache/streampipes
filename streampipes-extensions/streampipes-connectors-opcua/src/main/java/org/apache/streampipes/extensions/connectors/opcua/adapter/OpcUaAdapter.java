@@ -139,16 +139,38 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
       this.allNodes.forEach(node -> this.nodeIdToLabelMapping
           .put(node.nodeInfo().getNodeId().toString(), node.nodeInfo().getDisplayName()));
 
-
     } catch (Exception e) {
-      LOG.debug(
-          "The connection to the OPC UA server {} could not be established for selected nodes {}",
+      var errorMessage = buildStartupErrorMessage(e);
+      LOG.error(
+          "OPC UA adapter startup failed for server {} and selected nodes {}: {}",
           opcUaAdapterConfig.getOpcServerURL(),
           opcUaAdapterConfig.getSelectedNodeNames(),
+          errorMessage,
           e
       );
-      throw new AdapterException("The Connection to the OPC UA server could not be established.", e);
+      throw new AdapterException(errorMessage, e);
     }
+  }
+
+  private String buildStartupErrorMessage(Exception exception) {
+    var rootCause = getRootCause(exception);
+    var rootMessage = rootCause.getMessage();
+
+    if (rootMessage == null || rootMessage.isBlank()) {
+      rootMessage = rootCause.getClass().getSimpleName();
+    }
+
+    return "Could not start OPC UA adapter: " + rootMessage;
+  }
+
+  private Throwable getRootCause(Throwable throwable) {
+    var current = throwable;
+
+    while (current.getCause() != null && current.getCause() != current) {
+      current = current.getCause();
+    }
+
+    return current;
   }
 
   @Override
