@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -24,22 +24,9 @@
     overflow: hidden;
 }
 
-.sp-tree {
+.node-metadata-list {
     flex: 1 1 auto;
-    height: 100%;
     min-height: 0;
-    padding: 0.5rem 0;
     overflow: auto;
-}
-
-.tree-node-content {
-    width: 100%;
-    min-width: 0;
-}
-
-.tree-node-label {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    padding-bottom: 0.75rem;
 }

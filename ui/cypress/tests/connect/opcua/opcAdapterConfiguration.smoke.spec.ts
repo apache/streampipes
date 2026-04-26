@@ -62,7 +62,7 @@ describe('Test OPC-UA Adapter Configuration', () => {
         TreeStaticPropertyUtils.validateAmountOfShownNodeDetailsMetaDataRows(0);
         TreeStaticPropertyUtils.showNodeDetails('StepUp');
         TreeStaticPropertyUtils.validateAmountOfShownNodeDetailsMetaDataRows(
-            12,
+            20,
         );
         TreeStaticPropertyUtils.hideNodeDetails('StepUp');
         TreeStaticPropertyUtils.validateAmountOfShownNodeDetailsMetaDataRows(0);

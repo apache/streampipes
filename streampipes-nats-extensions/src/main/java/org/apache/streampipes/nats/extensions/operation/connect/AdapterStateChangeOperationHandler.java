@@ -91,10 +91,11 @@ public class AdapterStateChangeOperationHandler implements ExtensionBrokerOperat
           adapterDescription.getElementId(),
           e
       );
+      var responseException = new AdapterException(e.getMessage());
       return new ExtensionServiceBrokerResponseEnvelope(
           request.getRequestId(),
           ExtensionBrokerResponseFactory.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-          objectMapper.writeValueAsString(e),
+          objectMapper.writeValueAsString(responseException),
           new ExtensionServiceBrokerErrorEnvelope(e.getClass().getSimpleName(), e.getMessage())
       );
     }

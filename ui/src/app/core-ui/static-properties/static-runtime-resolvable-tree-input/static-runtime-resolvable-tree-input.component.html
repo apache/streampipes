@@ -16,15 +16,19 @@
 ~
 -->
 <div [formGroup]="parentForm" id="formWrapper" fxFlex="100" fxLayout="column">
-    <sp-static-tree-input-button-menu
-        [showOptions]="showOptions"
-        [loading]="loading"
-        [editorMode]="editorMode"
-        (selectedEditorModeEmitter)="changeEditorMode($event)"
-        (resetOptionsAndReload)="resetOptionsAndReload()"
-        (reload)="reload()"
-    >
-    </sp-static-tree-input-button-menu>
+    @if (!treeFullscreen) {
+        <sp-static-tree-input-button-menu
+            [showOptions]="showOptions"
+            [loading]="loading"
+            [editorMode]="editorMode"
+            [treeFullscreen]="treeFullscreen"
+            (selectedEditorModeEmitter)="changeEditorMode($event)"
+            (toggleTreeFullscreenEmitter)="toggleTreeFullscreen()"
+            (resetOptionsAndReload)="resetOptionsAndReload()"
+            (reload)="reload()"
+        >
+        </sp-static-tree-input-button-menu>
+    }
 
     @if (error) {
         <div fxLayout="column" class="mt-10">
@@ -35,33 +39,118 @@
     }
 
     @if (editorMode === 'tree') {
-        <div fxLayout="row" fxLayoutGap="15px" data-cy="tree-editor">
-            <div fxFlex="30" class="tree-input-section" fxLayout="column">
-                <sp-static-tree-input-browse-nodes
-                    #staticTreeInputBrowseNodesComponent
-                    [staticProperty]="staticProperty"
-                    (showNodeDetailsEmitter)="showNodeDetails($event)"
-                    (loadOptionsFromRestApiEmitter)="
-                        loadOptionsFromRestApi($event)
-                    "
-                    (performValidationEmitter)="performValidation()"
+        <div
+            class="tree-workspace-shell mt-10"
+            [class.tree-workspace-shell-fullscreen]="treeFullscreen"
+        >
+            @if (treeFullscreen) {
+                <div class="tree-workspace-shell-header">
+                    <div
+                        class="tree-workspace-toolbar"
+                        fxLayout="row"
+                        fxLayoutAlign="space-between center"
+                    >
+                        <div class="tree-workspace-title" fxLayout="row">
+                            <span>{{
+                                staticProperty.label || ('Tree' | translate)
+                            }}</span>
+                        </div>
+                        <button
+                            mat-icon-button
+                            color="accent"
+                            (click)="toggleTreeFullscreen()"
+                            [matTooltip]="'Exit fullscreen' | translate"
+                            data-cy="toggle-tree-fullscreen-inline"
+                        >
+                            <mat-icon>fullscreen_exit</mat-icon>
+                        </button>
+                    </div>
+                    <sp-static-tree-input-button-menu
+                        class="tree-workspace-menu"
+                        [showOptions]="showOptions"
+                        [loading]="loading"
+                        [editorMode]="editorMode"
+                        [treeFullscreen]="treeFullscreen"
+                        [showFullscreenToggle]="false"
+                        (selectedEditorModeEmitter)="changeEditorMode($event)"
+                        (toggleTreeFullscreenEmitter)="toggleTreeFullscreen()"
+                        (resetOptionsAndReload)="resetOptionsAndReload()"
+                        (reload)="reload()"
+                    >
+                    </sp-static-tree-input-button-menu>
+                </div>
+            }
+            <div
+                #treeWorkspace
+                class="tree-workspace"
+                fxLayout="row"
+                [class.tree-workspace-resizing]="isResizingPanels"
+                data-cy="tree-editor"
+            >
+                <div
+                    class="tree-panel tree-input-section"
+                    fxLayout="column"
+                    [style.flex-basis.%]="browsePanelWidth"
                 >
-                </sp-static-tree-input-browse-nodes>
-            </div>
-            <div fxFlex="40" class="tree-input-section" fxLayout="column">
-                <sp-static-tree-input-node-details
-                    [nodeMetadata]="nodeDetails?.nodeMetadata"
+                    <sp-static-tree-input-browse-nodes
+                        fxFlex="100"
+                        #staticTreeInputBrowseNodesComponent
+                        [staticProperty]="staticProperty"
+                        (showNodeDetailsEmitter)="showNodeDetails($event)"
+                        (loadOptionsFromRestApiEmitter)="
+                            loadOptionsFromRestApi($event)
+                        "
+                        (performValidationEmitter)="performValidation()"
+                    >
+                    </sp-static-tree-input-browse-nodes>
+                </div>
+                <div
+                    class="tree-panel-resizer"
+                    cdkDrag
+                    cdkDragLockAxis="x"
+                    (cdkDragStarted)="onPanelResizeStarted()"
+                    (cdkDragMoved)="onPanelResizeMoved($event)"
+                    (cdkDragEnded)="onPanelResizeEnded($event)"
                 >
-                </sp-static-tree-input-node-details>
-            </div>
-            <div class="tree-input-section" fxLayout="column" fxFlex="30">
-                <sp-static-tree-input-selected-nodes
-                    [selectedNodesInternalNames]="
-                        staticProperty.selectedNodesInternalNames
-                    "
-                    (removeSelectedNode)="removeSelectedNode($event)"
-                >
-                </sp-static-tree-input-selected-nodes>
+                    <div class="tree-panel-resizer-handle"></div>
+                </div>
+                <div class="tree-panel tree-inspector-panel" fxLayout="column">
+                    <div
+                        class="tree-inspector-content"
+                        fxFlex="100"
+                        fxLayout="column"
+                        fxLayoutGap="15px"
+                    >
+                        <div
+                            class="tree-input-section tree-inspector-section"
+                            fxFlex="60"
+                            fxLayout="column"
+                        >
+                            <sp-static-tree-input-node-details
+                                fxFlex="100"
+                                [node]="nodeDetails"
+                            >
+                            </sp-static-tree-input-node-details>
+                        </div>
+                        <div
+                            class="tree-input-section tree-inspector-section"
+                            fxFlex="40"
+                            fxLayout="column"
+                        >
+                            <sp-static-tree-input-selected-nodes
+                                fxFlex="100"
+                                [selectedNodesInternalNames]="
+                                    staticProperty.selectedNodesInternalNames
+                                "
+                                [activeNodeId]="nodeDetails?.internalNodeName"
+                                (removeSelectedNode)="
+                                    removeSelectedNode($event)
+                                "
+                            >
+                            </sp-static-tree-input-selected-nodes>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     }
