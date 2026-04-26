@@ -23,6 +23,7 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -37,17 +38,24 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutDirective,
         FlexDirective,
         MatIconButton,
+        MatTooltip,
         TranslatePipe,
     ],
 })
 export class StaticTreeInputSelectedNodesComponent {
     @Input()
     selectedNodesInternalNames: string[];
+    @Input()
+    activeNodeId: string;
 
     @Output()
     removeSelectedNode = new EventEmitter<string>();
 
     onRemoveSelectedNode(selectedNodeName: string) {
         this.removeSelectedNode.emit(selectedNodeName);
+    }
+
+    isActiveNode(selectedNodeName: string) {
+        return this.activeNodeId === selectedNodeName;
     }
 }

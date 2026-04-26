@@ -16,27 +16,48 @@
 ~
 -->
 <div class="tree-input-header" fxLayoutAlign="start center">
-    <b>{{ 'Selected Nodes' | translate }}</b>
+    <b
+        >{{ 'Selected Nodes' | translate }} ({{
+            selectedNodesInternalNames?.length || 0
+        }})</b
+    >
 </div>
-@for (selectedNodeName of selectedNodesInternalNames; track selectedNodeName) {
-    <div>
-        <div
-            class="selected-node"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            [attr.data-cy]="'selected-node-' + selectedNodeName"
-        >
-            <span fxFlex>{{ selectedNodeName }}</span>
-            <div fxLayoutAlign="end center">
-                <button
-                    mat-icon-button
-                    color="accent"
-                    [attr.data-cy]="'remove-' + selectedNodeName"
-                    (click)="onRemoveSelectedNode(selectedNodeName)"
-                >
-                    <i class="material-icons">remove</i>
-                </button>
-            </div>
-        </div>
+@if (!selectedNodesInternalNames?.length) {
+    <div class="tree-empty-state p-md">
+        <span class="text-sm">{{ 'No nodes selected yet' | translate }}</span>
     </div>
 }
+<div class="selected-node-list">
+    @for (
+        selectedNodeName of selectedNodesInternalNames;
+        track selectedNodeName
+    ) {
+        <div class="selected-node-wrapper">
+            <div
+                class="selected-node"
+                [class.selected-node-active]="isActiveNode(selectedNodeName)"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                [attr.data-cy]="'selected-node-' + selectedNodeName"
+            >
+                <div fxFlex class="selected-node-text text-sm">
+                    <div
+                        class="selected-node-name"
+                        [matTooltip]="selectedNodeName"
+                    >
+                        {{ selectedNodeName }}
+                    </div>
+                </div>
+                <div fxLayoutAlign="end center">
+                    <button
+                        mat-icon-button
+                        [attr.data-cy]="'remove-' + selectedNodeName"
+                        (click)="onRemoveSelectedNode(selectedNodeName)"
+                    >
+                        <i class="small-icon material-icons">remove</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
