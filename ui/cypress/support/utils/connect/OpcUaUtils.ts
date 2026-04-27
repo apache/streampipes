@@ -73,16 +73,11 @@ export class OpcUaUtils {
         return TreeNodeUserInputBuilder.create(
             'Objects',
             TreeNodeUserInputBuilder.create(
-                'CTT',
+                'Demo',
                 TreeNodeUserInputBuilder.create(
-                    'Static',
-                    TreeNodeUserInputBuilder.create(
-                        'AllProfiles',
-                        TreeNodeUserInputBuilder.create('Scalar').addChildren(
-                            ...leafNodes.map(node =>
-                                TreeNodeUserInputBuilder.create(node),
-                            ),
-                        ),
+                    'Dynamic',
+                    ...leafNodes.map(node =>
+                        TreeNodeUserInputBuilder.create(node),
                     ),
                 ),
             ),
@@ -90,7 +85,7 @@ export class OpcUaUtils {
     }
 
     public static expandScalarNodeSelectionPath() {
-        ['Objects', 'CTT', 'Static', 'AllProfiles', 'Scalar'].forEach(node =>
+        ['Objects', 'Demo', 'Dynamic'].forEach(node =>
             TreeStaticPropertyUtils.expandNode(node),
         );
     }
@@ -101,7 +96,7 @@ export class OpcUaUtils {
     }
 
     public static getNodeId(nodeName: string) {
-        return `ns=2;s=CTT.Static.AllProfiles.Scalar.${nodeName}`;
+        return `ns=2;s=Demo.Dynamic.${nodeName}`;
     }
 
     public static getAdapterBuilderWithTreeNodes(pullMode: boolean) {

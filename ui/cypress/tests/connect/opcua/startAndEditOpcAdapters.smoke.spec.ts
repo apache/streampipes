@@ -40,12 +40,12 @@ describe('Test starting and editing OPC-UA Adapters in different configurations'
         const adapterInput = OpcUaUtils.getAdapterBuilderWithTreeNodes(false);
         startAdapterTest(adapterInput);
     });
-    /**
+
     it('Create OPC-UA Adapter Text Editor Pull Mode', () => {
         const adapterInput = getAdapterBuilderWithTextNodes(true);
         startAdapterTest(adapterInput);
     });
-    //TODO this is still not working
+
     it('Create OPC-UA Adapter Text Editor Subscription Mode', () => {
         const adapterInput = getAdapterBuilderWithTextNodes(false);
         startAdapterTest(adapterInput);
@@ -59,7 +59,7 @@ describe('Test starting and editing OPC-UA Adapters in different configurations'
     it('Edit OPC-UA Adapter created with Text editor', () => {
         const adapterInput = getAdapterBuilderWithTextNodes(true);
         editAdapterTest(adapterInput);
-    });*/
+    });
 });
 
 /**
@@ -113,7 +113,6 @@ const editAdapterTest = (adapterInput: AdapterInput) => {
 const getAdapterBuilderWithTextNodes = (pullMode: boolean) => {
     const builder = OpcUaUtils.getBaseAdapterConfigBuilder(pullMode);
     builder.addTreeNode(
-        //TODO why  \n\n necessary to acutually produce a new line ?
         TreeNodeUserInputBuilder.create(
             [
                 `${OpcUaUtils.getNodeId(OpcUaUtils.BOOLEAN_NODE)}\n`,
