@@ -54,7 +54,7 @@ describe('Test OPC-UA Adapter Configuration', () => {
 
         // Test if delete node works
         TreeStaticPropertyUtils.removeSelectedNode(
-            'ns=2\\;s=CTT.Static.AllProfiles.Scalar.Boolean',
+            'ns=2\\;s=Demo.Dynamic.Boolean',
         );
         TreeStaticPropertyUtils.validateAmountOfSelectedNodes(1);
 
