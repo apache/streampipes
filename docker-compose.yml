@@ -114,9 +114,8 @@ services:
       spnet:
 
   opcua:
-    image: mcr.microsoft.com/iotedge/opc-plc:2.12.37
+    image: digitalpetri/opc-ua-demo-server:latest
     logging: *default-logging
-    command: --ut=true
     networks:
       spnet:
 

@@ -17,9 +17,7 @@
  */
 
 import { ConnectUtils } from '../../../support/utils/connect/ConnectUtils';
-import { ParameterUtils } from '../../../support/utils/ParameterUtils';
 import { AdapterBuilder } from '../../../support/builder/AdapterBuilder';
-import { TreeNodeUserInputBuilder } from '../../../support/builder/TreeNodeUserInputBuilder';
 import { TreeStaticPropertyUtils } from '../../../support/utils/userInput/TreeStaticPropertyUtils';
 import { ErrorMessageUtils } from '../../../support/utils/ErrorMessageUtils';
 import { OpcUaUtils } from '../../../support/utils/connect/OpcUaUtils';
@@ -32,20 +30,9 @@ describe('Test OPC-UA Adapter Configuration', () => {
     it('Test OPC-UA Tree Node Configuration', () => {
         const adapterBuilder = getAdapterBuilder();
         adapterBuilder.addTreeNode(
-            TreeNodeUserInputBuilder.create(
-                'Objects',
-                TreeNodeUserInputBuilder.create(
-                    'OpcPlc',
-                    TreeNodeUserInputBuilder.create(
-                        'Telemetry',
-                        TreeNodeUserInputBuilder.create('Basic').addChildren(
-                            TreeNodeUserInputBuilder.create(
-                                'AlternatingBoolean',
-                            ),
-                            TreeNodeUserInputBuilder.create('StepUp'),
-                        ),
-                    ),
-                ),
+            OpcUaUtils.createScalarNodeSelection(
+                OpcUaUtils.BOOLEAN_NODE,
+                OpcUaUtils.INT32_NODE,
             ),
         );
 
@@ -54,22 +41,20 @@ describe('Test OPC-UA Adapter Configuration', () => {
 
         TreeStaticPropertyUtils.validateAmountOfSelectedNodes(2);
 
-        TreeStaticPropertyUtils.checkThatNodeIsSelectedInTree(
-            'AlternatingBoolean',
-        );
+        TreeStaticPropertyUtils.checkThatNodeIsSelectedInTree('Boolean');
 
         // Test if node details view works
         TreeStaticPropertyUtils.validateAmountOfShownNodeDetailsMetaDataRows(0);
-        TreeStaticPropertyUtils.showNodeDetails('StepUp');
+        TreeStaticPropertyUtils.showNodeDetails('Int32');
         TreeStaticPropertyUtils.validateAmountOfShownNodeDetailsMetaDataRows(
             20,
         );
-        TreeStaticPropertyUtils.hideNodeDetails('StepUp');
+        TreeStaticPropertyUtils.hideNodeDetails('Int32');
         TreeStaticPropertyUtils.validateAmountOfShownNodeDetailsMetaDataRows(0);
 
         // Test if delete node works
         TreeStaticPropertyUtils.removeSelectedNode(
-            'ns=3\\;s=AlternatingBoolean',
+            'ns=2\\;s=CTT.Static.AllProfiles.Scalar.Boolean',
         );
         TreeStaticPropertyUtils.validateAmountOfSelectedNodes(1);
 
@@ -92,35 +77,34 @@ describe('Test OPC-UA Adapter Configuration', () => {
         TreeStaticPropertyUtils.treeEditor().should('not.exist');
         TreeStaticPropertyUtils.textEditor().should('be.visible');
 
-        TreeStaticPropertyUtils.typeInTextEditor('ns=3;s=StepUp');
+        TreeStaticPropertyUtils.typeInTextEditor(
+            OpcUaUtils.getNodeId(OpcUaUtils.INT32_NODE),
+        );
 
         // Go back to tree editor and validate nodes are selected and browse editor works
         TreeStaticPropertyUtils.switchToTreeEditor();
         TreeStaticPropertyUtils.validateAmountOfSelectedNodes(1);
-        TreeStaticPropertyUtils.validateAmountOfShownBrowseNodes(3);
 
         // Check if node is selected
-        TreeStaticPropertyUtils.expandNode('Objects');
-        TreeStaticPropertyUtils.expandNode('OpcPlc');
-        TreeStaticPropertyUtils.expandNode('Telemetry');
-        TreeStaticPropertyUtils.expandNode('Basic');
-        TreeStaticPropertyUtils.checkThatNodeIsSelectedInTree('StepUp');
-        TreeStaticPropertyUtils.selectNode('AlternatingBoolean');
+        OpcUaUtils.expandScalarNodeSelectionPath();
+        TreeStaticPropertyUtils.checkThatNodeIsSelectedInTree(
+            OpcUaUtils.INT32_NODE,
+        );
+        TreeStaticPropertyUtils.selectNode(OpcUaUtils.BOOLEAN_NODE);
 
         // Go back tree view and validate that the node is still selected
         TreeStaticPropertyUtils.switchToTextEditor();
         TreeStaticPropertyUtils.getTextInTextEditor().should(
             'contain',
-            's=AlternatingBoolean',
+            OpcUaUtils.getNodeId(OpcUaUtils.BOOLEAN_NODE),
         );
 
         TreeStaticPropertyUtils.getTextInTextEditor().should(
             'contain',
-            'ns=3;s=StepUpns=3;',
+            OpcUaUtils.getNodeId(OpcUaUtils.INT32_NODE),
         );
 
         TreeStaticPropertyUtils.switchToTreeEditor();
-        TreeStaticPropertyUtils.validateAmountOfShownBrowseNodes(3);
     });
 
     it('Test OPC-UA Node does not exist', () => {
@@ -129,12 +113,14 @@ describe('Test OPC-UA Adapter Configuration', () => {
 
         // Switch to text editor
         TreeStaticPropertyUtils.switchToTextEditor();
-        TreeStaticPropertyUtils.typeInTextEditor('ns=3;s=NodeDoesNotExist');
+        TreeStaticPropertyUtils.typeInTextEditor(
+            'ns=2;s=CTT.Static.AllProfiles.Scalar.DoesNotExist',
+        );
 
         ConnectUtils.finishAdapterSettings();
 
         // validate that an error is shown with node id
-        ErrorMessageUtils.containsMessage('NodeDoesNotExist');
+        ErrorMessageUtils.containsMessage('DoesNotExist');
     });
 
     it('Test OPC-UA Wrong Node Id Format', () => {
@@ -153,8 +139,6 @@ describe('Test OPC-UA Adapter Configuration', () => {
 });
 
 const getAdapterBuilder = () => {
-    const host: string = ParameterUtils.get('localhost', 'opcua');
-
     return AdapterBuilder.create('OPC_UA')
         .setName('OPC UA Configuration Test')
         .addInput('radio', 'adapter_type-pull_mode', '')
@@ -169,7 +153,7 @@ const getAdapterBuilder = () => {
         .addInput(
             'input',
             'OPC_HOST_OR_URL-OPC_SERVER_URL-0',
-            'opc.tcp://' + host + ':50000',
+            OpcUaUtils.getEndpointUrl(),
         )
         .setAutoAddTimestampPropery();
 };

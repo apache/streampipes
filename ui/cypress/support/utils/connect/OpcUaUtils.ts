@@ -20,11 +20,17 @@ import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectUtils } from './ConnectUtils';
 import { ErrorMessageUtils } from '../ErrorMessageUtils';
 import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
+import { TreeStaticPropertyUtils } from '../userInput/TreeStaticPropertyUtils';
 import { TreeNodeUserInputBuilder } from '../../builder/TreeNodeUserInputBuilder';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { ParameterUtils } from '../ParameterUtils';
 
 export class OpcUaUtils {
+    public static readonly BOOLEAN_NODE = 'Boolean';
+    public static readonly INT32_NODE = 'Int32';
+    public static readonly STRING_NODE = 'String';
+    public static readonly UINT32_NODE = 'UInt32';
+
     public static setUpInitialConfiguration(adapterInput: AdapterInput) {
         ConnectUtils.goToConnect();
         ConnectUtils.goToNewAdapterPage();
@@ -63,29 +69,49 @@ export class OpcUaUtils {
         cy.dataCy('reloading-nodes', { timeout: 10000 }).should('not.exist');
     }
 
-    public static getAdapterBuilderWithTreeNodes(pullMode: boolean) {
-        const builder = OpcUaUtils.getBaseAdapterConfigBuilder(pullMode);
-        builder.addTreeNode(
+    public static createScalarNodeSelection(...leafNodes: string[]) {
+        return TreeNodeUserInputBuilder.create(
+            'Objects',
             TreeNodeUserInputBuilder.create(
-                'Objects',
+                'CTT',
                 TreeNodeUserInputBuilder.create(
-                    'OpcPlc',
+                    'Static',
                     TreeNodeUserInputBuilder.create(
-                        'Telemetry',
-                        TreeNodeUserInputBuilder.create('Basic').addChildren(
-                            TreeNodeUserInputBuilder.create(
-                                'AlternatingBoolean',
-                            ),
-                            TreeNodeUserInputBuilder.create('StepUp'),
-                            TreeNodeUserInputBuilder.create(
-                                'RandomSignedInt32',
-                            ),
-                            TreeNodeUserInputBuilder.create(
-                                'RandomUnsignedInt32',
+                        'AllProfiles',
+                        TreeNodeUserInputBuilder.create('Scalar').addChildren(
+                            ...leafNodes.map(node =>
+                                TreeNodeUserInputBuilder.create(node),
                             ),
                         ),
                     ),
                 ),
+            ),
+        );
+    }
+
+    public static expandScalarNodeSelectionPath() {
+        ['Objects', 'CTT', 'Static', 'AllProfiles', 'Scalar'].forEach(node =>
+            TreeStaticPropertyUtils.expandNode(node),
+        );
+    }
+
+    public static getEndpointUrl() {
+        const host: string = ParameterUtils.get('localhost', 'opcua');
+        return 'opc.tcp://' + host + ':4840/milo';
+    }
+
+    public static getNodeId(nodeName: string) {
+        return `ns=2;s=CTT.Static.AllProfiles.Scalar.${nodeName}`;
+    }
+
+    public static getAdapterBuilderWithTreeNodes(pullMode: boolean) {
+        const builder = OpcUaUtils.getBaseAdapterConfigBuilder(pullMode);
+        builder.addTreeNode(
+            OpcUaUtils.createScalarNodeSelection(
+                OpcUaUtils.BOOLEAN_NODE,
+                OpcUaUtils.INT32_NODE,
+                OpcUaUtils.STRING_NODE,
+                OpcUaUtils.UINT32_NODE,
             ),
         );
 
@@ -95,8 +121,6 @@ export class OpcUaUtils {
     public static getBaseAdapterConfigBuilder(
         pullMode: boolean,
     ): AdapterBuilder {
-        const host: string = ParameterUtils.get('localhost', 'opcua');
-
         const builder = AdapterBuilder.create('OPC_UA').setName('OPC UA Test');
 
         if (pullMode) {
@@ -117,7 +141,7 @@ export class OpcUaUtils {
             .addInput(
                 'input',
                 'OPC_HOST_OR_URL-OPC_SERVER_URL-0',
-                'opc.tcp://' + host + ':50000',
+                OpcUaUtils.getEndpointUrl(),
             );
 
         builder.setAutoAddTimestampPropery();
