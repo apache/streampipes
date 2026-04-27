@@ -23,6 +23,10 @@ import { AssetBuilder } from '../../support/builder/AssetBuilder';
 import { ConfigurationUtils } from '../../support/utils/configuration/ConfigurationUtils';
 import { SiteUtils } from '../../support/utils/configuration/SiteUtils';
 import { FilterUtils } from '../../support/utils/filter/FilterUtils';
+import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
+import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
+import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
+import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
 
 describe('Test asset filters', () => {
     const label1 = 'label1';
@@ -32,6 +36,12 @@ describe('Test asset filters', () => {
     const site1 = 'site1';
     const site2 = 'site2';
     const site3 = 'site3';
+    const adapter1 = 'adapter-1_0';
+    const adapter2 = 'adapter-2_1';
+    const adapter3 = 'adapter-3_2';
+    const pipeline1 = 'Persist ' + adapter1;
+    const pipeline2 = 'Persist ' + adapter2;
+    const pipeline3 = 'Persist ' + adapter3;
 
     const asset1 = AssetBuilder.create('asset-1_0')
         .addLabel(label1)
@@ -92,6 +102,7 @@ describe('Test asset filters', () => {
         prepareLabels();
         prepareSites();
         prepareAssets();
+        preparePersistedAdapters();
         prepareDashboards();
         DashboardUtils.goToDashboard();
         DashboardUtils.checkAmountOfDashboards(9);
@@ -227,11 +238,94 @@ describe('Test asset filters', () => {
         AssetUtils.checkAmountOfAssets(1);
     });
 
+    it('Filters adapters by linked assets', () => {
+        ConnectUtils.goToConnect();
+
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0']);
+        checkTableResources('all-adapters-table', [adapter1]);
+
+        FilterUtils.clearFilter();
+        FilterUtils.filterLabels(['label3']);
+        checkTableResources('all-adapters-table', [adapter3]);
+
+        FilterUtils.clearFilter();
+        FilterUtils.filterTypes(['WORK_CELL']);
+        checkTableResources('all-adapters-table', [adapter2, adapter3]);
+    });
+
+    it('Filters pipelines generated from persisted adapters by linked assets', () => {
+        PipelineUtils.goToPipelines();
+
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0']);
+        checkTableResources('all-pipelines-table', [pipeline1]);
+
+        FilterUtils.clearFilter();
+        FilterUtils.filterLabels(['label3']);
+        checkTableResources('all-pipelines-table', [pipeline3]);
+
+        FilterUtils.clearFilter();
+        FilterUtils.filterTypes(['WORK_CELL']);
+        checkTableResources('all-pipelines-table', [pipeline2, pipeline3]);
+    });
+
+    it('Filters datasets generated from persisted adapters by linked assets', () => {
+        DatasetUtils.goToDatasets();
+
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0']);
+        checkTableResources('datalake-settings', [adapter1]);
+
+        FilterUtils.clearFilter();
+        FilterUtils.filterSites(['site2']);
+        checkTableResources('datalake-settings', [adapter2]);
+
+        FilterUtils.clearFilter();
+        FilterUtils.filterTypes(['WORK_CELL']);
+        checkTableResources('datalake-settings', [adapter2, adapter3]);
+    });
+
     function prepareAssets() {
         AssetUtils.goToAssets();
         AssetUtils.addAndSaveAsset(asset1);
         AssetUtils.addAndSaveAsset(asset2);
         AssetUtils.addAndSaveAsset(asset3);
+    }
+
+    function preparePersistedAdapters() {
+        createPersistedAdapterWithAssetLink(adapter1, 'asset-1_0');
+        createPersistedAdapterWithAssetLink(adapter2, 'asset-2_0.asset-2_1');
+        createPersistedAdapterWithAssetLink(adapter3, 'asset-3_0.asset-3_2');
+    }
+
+    function createPersistedAdapterWithAssetLink(
+        adapterName: string,
+        assetName: string,
+    ) {
+        const adapterConfiguration = AdapterBuilder.create(
+            'Machine_Data_Simulator',
+        )
+            .setName(adapterName + '_' + assetName)
+            .setTimestampProperty('timestamp')
+            .setStoreInDataLake()
+            .addInput('input', 'wait-time-ms', '1000')
+            .build();
+
+        ConnectUtils.addAdapterWithLinkedAssets(adapterConfiguration, [
+            assetName,
+        ]);
+    }
+
+    function checkTableResources(tableDataCy: string, resources: string[]) {
+        cy.get(`[data-cy="${tableDataCy}"] tbody tr`, {
+            timeout: 10000,
+        }).should('have.length', resources.length);
+        resources.forEach(resource => {
+            cy.get(`[data-cy="${tableDataCy}"]`)
+                .contains(resource)
+                .should('exist');
+        });
     }
 
     function prepareDashboards() {
