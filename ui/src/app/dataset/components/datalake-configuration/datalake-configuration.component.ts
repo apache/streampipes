@@ -20,7 +20,6 @@ import {
     AfterViewInit,
     Component,
     inject,
-    OnDestroy,
     OnInit,
     ViewChild,
 } from '@angular/core';
@@ -56,13 +55,11 @@ import {
     LocalStorageService,
     ObjectPermissionDialogComponent,
     PanelType,
-    SpAssetBrowserService,
     SpAlertBannerComponent,
     SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBreadcrumbService,
     SpLabelComponent,
-    SpTableAssetContextConfig,
     SpTableActionsDirective,
     SpTableComponent,
 } from '@streampipes/shared-ui';
@@ -91,7 +88,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { DatePipe, DecimalPipe, NgIf, NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -135,9 +131,7 @@ import { Subscription } from 'rxjs';
         SpTableActionsDirective,
     ],
 })
-export class DatalakeConfigurationComponent
-    implements OnInit, AfterViewInit, OnDestroy
-{
+export class DatalakeConfigurationComponent implements OnInit, AfterViewInit {
     paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(SpTableComponent)
@@ -150,24 +144,17 @@ export class DatalakeConfigurationComponent
     private exportProviderRestService = inject(ExportProviderService);
     private translateService = inject(TranslateService);
     private currentUserService = inject(CurrentUserService);
-    private assetFilterService = inject(SpAssetBrowserService);
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
     availableMeasurements: DataLakeConfigurationEntry[] = [];
-    filteredMeasurements: DataLakeConfigurationEntry[] = [];
     availableExportProvider: ExportProviderSettings[] = [];
-    readonly assetContextConfig: SpTableAssetContextConfig = {
-        resourceLinkType: 'measurement',
-        resourceIdKey: 'elementId',
-    };
 
     dataSourceExport: MatTableDataSource<ExportProviderSettings> =
         new MatTableDataSource([]);
 
     displayedColumns: string[] = [
         'name',
-        'assetContext',
         'pipeline',
         'eventsLatest',
         'eventsTotal',
@@ -190,16 +177,8 @@ export class DatalakeConfigurationComponent
     pageIndex = 0;
     isAdmin = false;
     writeAccess = false;
-    assetFilter$: Subscription;
-    currentFilterIds: Set<string> = new Set<string>();
 
     ngOnInit(): void {
-        this.assetFilterService.applyAssetLinkType('measurement');
-        this.assetFilter$ =
-            this.assetFilterService.currentAssetFilter$.subscribe(filter => {
-                this.currentFilterIds = filter?.activeElementIds;
-                this.applyMeasurementFilters(this.currentFilterIds);
-            });
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: 'Datasets' },
@@ -222,10 +201,6 @@ export class DatalakeConfigurationComponent
             this.pageSize = event.pageSize;
             this.receiveMeasurementSizes(this.pageIndex);
         });
-    }
-
-    ngOnDestroy(): void {
-        this.assetFilter$?.unsubscribe();
     }
 
     loadAvailableExportProvider() {
@@ -276,46 +251,14 @@ export class DatalakeConfigurationComponent
                         this.availableMeasurements.sort((a, b) =>
                             a.name.localeCompare(b.name),
                         );
-                        this.applyMeasurementFilters(this.currentFilterIds);
+                        this.receiveMeasurementSizes(this.pageIndex);
+                        this.dataSource.data = this.availableMeasurements;
+                        setTimeout(() => {
+                            this.dataSource.paginator = this.paginator;
+                            this.dataSource.sort = this.sort;
+                        });
                     });
             });
-    }
-
-    applyMeasurementFilters(elementIds: Set<string>) {
-        this.currentFilterIds = elementIds;
-        if (elementIds === undefined) {
-            this.filteredMeasurements = [];
-        } else if (elementIds.size === 0) {
-            this.filteredMeasurements = this.availableMeasurements;
-        } else {
-            this.filteredMeasurements = this.availableMeasurements.filter(
-                measurement => elementIds.has(measurement.elementId),
-            );
-        }
-
-        this.dataSource.data = this.filteredMeasurements;
-        this.updatePaginatorAfterFiltering();
-        this.receiveMeasurementSizes(this.pageIndex);
-
-        setTimeout(() => {
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-        });
-    }
-
-    updatePaginatorAfterFiltering(): void {
-        if (!this.paginator) {
-            return;
-        }
-
-        const maxPageIndex = Math.max(
-            Math.ceil(this.filteredMeasurements.length / this.pageSize) - 1,
-            0,
-        );
-        if (this.pageIndex > maxPageIndex) {
-            this.pageIndex = maxPageIndex;
-            this.paginator.pageIndex = maxPageIndex;
-        }
     }
 
     createExportProvider(provider: ExportProviderSettings | null) {
@@ -478,7 +421,7 @@ export class DatalakeConfigurationComponent
     receiveMeasurementSizes(pageIndex: number) {
         const start = pageIndex * this.pageSize;
         const end = start + this.pageSize;
-        const measurements = this.filteredMeasurements
+        const measurements = this.availableMeasurements
             .slice(start, end)
             .filter(m => m.eventsLatest === -1)
             .map(m => m.name);
