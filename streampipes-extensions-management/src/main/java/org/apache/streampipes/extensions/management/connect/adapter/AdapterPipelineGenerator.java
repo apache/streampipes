@@ -19,15 +19,19 @@
 package org.apache.streampipes.extensions.management.connect.adapter;
 
 import org.apache.streampipes.connect.shared.AdapterPipelineGeneratorBase;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToBrokerAdapterSink;
+import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
 
 public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
 
   public AdapterPipeline generatePipeline(AdapterDescription adapterDescription) {
     var pipelineElements = makeAdapterPipelineElements(true, adapterDescription);
-    var scriptContext = new ScriptContextResolver().resolve(adapterDescription);
+    var userId = getUserId(adapterDescription);
+    var scriptContext = new ScriptContextResolver().resolve(userId, adapterDescription.getTransformationConfig().getLanguage());
 
     if (hasValidGrounding(adapterDescription)) {
       return new AdapterPipeline(
@@ -54,5 +58,31 @@ public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
     return adapterDescription.getEventGrounding() != null
         && adapterDescription.getEventGrounding().getTransportProtocol() != null
         && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null;
+  }
+
+  private String getUserId(AdapterDescription adapterDescription) {
+    var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    if (!adapterDescription.getTransformationConfig().isScriptActive()) {
+      return null;
+    }
+
+    if (adapterDescription.getCorrespondingDataStreamElementId() == null
+        || adapterDescription.getCorrespondingDataStreamElementId().isBlank()) {
+      return null;
+    }
+
+    var permissions = client
+        .customRequest()
+        .getList(
+            String.format("/api/v2/admin/permissions/objects/%s",
+                adapterDescription.getCorrespondingDataStreamElementId()),
+            Permission.class
+        );
+
+    if (permissions.isEmpty()) {
+      return null;
+    }
+
+    return permissions.get(0).getOwnerSid();
   }
 }
