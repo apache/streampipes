@@ -124,6 +124,9 @@ export class SpAssetOverviewComponent implements OnInit {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpAssetRoutes.BASE),
         );
+
+        this.loadAssets();
+
         this.assetFilter$ =
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
                 const elementIdsSet = new Set<string>();
@@ -142,12 +145,11 @@ export class SpAssetOverviewComponent implements OnInit {
                 }
 
                 this.currentFilterIds =
-                    elementIdsSet.size > 0 ? elementIdsSet : undefined;
-
+                    filter?.selectedAssets === undefined
+                        ? undefined
+                        : elementIdsSet;
                 this.applyAssetFilters(this.currentFilterIds);
             });
-
-        this.loadAssets();
     }
 
     loadAssets(): void {
@@ -155,15 +157,12 @@ export class SpAssetOverviewComponent implements OnInit {
             this.existingAssets = (result as SpAssetModel[]).sort((a, b) =>
                 a.assetName.localeCompare(b.assetName),
             );
-            this.dataSource.sort = this.sort;
-            this.dataSource.data = this.existingAssets;
+            this.applyAssetFilters(this.currentFilterIds);
         });
     }
 
     applyAssetFilters(elementIds: Set<string>): void {
-        if (elementIds == undefined) {
-            this.filteredAssets = [];
-        } else if (elementIds.size == 0) {
+        if (elementIds === undefined || elementIds.size === 0) {
             this.filteredAssets = this.existingAssets;
         } else {
             this.filteredAssets = this.existingAssets.filter(a =>
