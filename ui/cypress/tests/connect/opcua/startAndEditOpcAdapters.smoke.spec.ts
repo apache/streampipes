@@ -82,7 +82,7 @@ const editAdapterTest = (adapterInput: AdapterInput) => {
     ConnectBtns.editAdapter().click();
 
     // Validate that the selected node hierarchy can still be browsed after editing
-    OpcUaUtils.expandScalarNodeSelectionPath();
+    OpcUaUtils.expandNodeSelectionPath();
     TreeStaticPropertyUtils.checkThatNodeIsSelectedInTree(
         OpcUaUtils.BOOLEAN_NODE,
     );

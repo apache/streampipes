@@ -69,7 +69,7 @@ export class OpcUaUtils {
         cy.dataCy('reloading-nodes', { timeout: 10000 }).should('not.exist');
     }
 
-    public static createScalarNodeSelection(...leafNodes: string[]) {
+    public static createNodeSelection(...leafNodes: string[]) {
         return TreeNodeUserInputBuilder.create(
             'Objects',
             TreeNodeUserInputBuilder.create(
@@ -84,7 +84,7 @@ export class OpcUaUtils {
         );
     }
 
-    public static expandScalarNodeSelectionPath() {
+    public static expandNodeSelectionPath() {
         ['Objects', 'Demo', 'Dynamic'].forEach(node =>
             TreeStaticPropertyUtils.expandNode(node),
         );
@@ -102,7 +102,7 @@ export class OpcUaUtils {
     public static getAdapterBuilderWithTreeNodes(pullMode: boolean) {
         const builder = OpcUaUtils.getBaseAdapterConfigBuilder(pullMode);
         builder.addTreeNode(
-            OpcUaUtils.createScalarNodeSelection(
+            OpcUaUtils.createNodeSelection(
                 OpcUaUtils.BOOLEAN_NODE,
                 OpcUaUtils.INT32_NODE,
                 OpcUaUtils.STRING_NODE,

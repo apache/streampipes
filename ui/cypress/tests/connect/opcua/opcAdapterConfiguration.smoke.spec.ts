@@ -30,7 +30,7 @@ describe('Test OPC-UA Adapter Configuration', () => {
     it('Test OPC-UA Tree Node Configuration', () => {
         const adapterBuilder = getAdapterBuilder();
         adapterBuilder.addTreeNode(
-            OpcUaUtils.createScalarNodeSelection(
+            OpcUaUtils.createNodeSelection(
                 OpcUaUtils.BOOLEAN_NODE,
                 OpcUaUtils.INT32_NODE,
             ),
@@ -86,7 +86,7 @@ describe('Test OPC-UA Adapter Configuration', () => {
         TreeStaticPropertyUtils.validateAmountOfSelectedNodes(1);
 
         // Check if node is selected
-        OpcUaUtils.expandScalarNodeSelectionPath();
+        OpcUaUtils.expandNodeSelectionPath();
         TreeStaticPropertyUtils.checkThatNodeIsSelectedInTree(
             OpcUaUtils.INT32_NODE,
         );
