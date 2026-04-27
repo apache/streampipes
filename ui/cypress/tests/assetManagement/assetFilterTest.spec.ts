@@ -122,7 +122,7 @@ describe('Test asset filters', () => {
         cy.reload();
     });
 
-    it('Perform Test', () => {
+    it('Filter Dashboards', () => {
         // Select one asset
         FilterUtils.clearFilter();
         FilterUtils.filterAssets(['asset-1_0']);
@@ -238,49 +238,49 @@ describe('Test asset filters', () => {
         AssetUtils.checkAmountOfAssets(1);
     });
 
-    it('Filters adapters by linked assets', () => {
+    it('Filter adapters', () => {
         ConnectUtils.goToConnect();
-
+        //Select one asset
         FilterUtils.clearFilter();
         FilterUtils.filterAssets(['asset-1_0']);
         checkTableResources('all-adapters-table', [adapter1]);
-
+        //Select one label
         FilterUtils.clearFilter();
         FilterUtils.filterLabels(['label3']);
         checkTableResources('all-adapters-table', [adapter3]);
-
+        //Select one type
         FilterUtils.clearFilter();
         FilterUtils.filterTypes(['WORK_CELL']);
         checkTableResources('all-adapters-table', [adapter2, adapter3]);
     });
 
-    it('Filters pipelines generated from persisted adapters by linked assets', () => {
+    it('Filters pipelines', () => {
         PipelineUtils.goToPipelines();
-
+        //select one asset
         FilterUtils.clearFilter();
         FilterUtils.filterAssets(['asset-1_0']);
         checkTableResources('all-pipelines-table', [pipeline1]);
-
+        //select ine label
         FilterUtils.clearFilter();
         FilterUtils.filterLabels(['label3']);
         checkTableResources('all-pipelines-table', [pipeline3]);
-
+        //select one type
         FilterUtils.clearFilter();
         FilterUtils.filterTypes(['WORK_CELL']);
         checkTableResources('all-pipelines-table', [pipeline2, pipeline3]);
     });
 
-    it('Filters datasets generated from persisted adapters by linked assets', () => {
+    it('Filters datasets', () => {
         DatasetUtils.goToDatasets();
-
+        //sekect one asset
         FilterUtils.clearFilter();
         FilterUtils.filterAssets(['asset-1_0']);
         checkTableResources('datalake-settings', [adapter1]);
-
+        //select one label
         FilterUtils.clearFilter();
         FilterUtils.filterSites(['site2']);
         checkTableResources('datalake-settings', [adapter2]);
-
+        //select one type
         FilterUtils.clearFilter();
         FilterUtils.filterTypes(['WORK_CELL']);
         checkTableResources('datalake-settings', [adapter2, adapter3]);
