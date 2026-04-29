@@ -28,9 +28,12 @@ import org.apache.streampipes.extensions.api.pe.routing.RawDataProcessor;
 import org.apache.streampipes.extensions.api.pe.routing.SpInputCollector;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.management.util.GroundingDebugUtils;
+import org.apache.streampipes.messaging.ProtocolOverrides;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.function.FunctionId;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.runtime.Event;
@@ -166,6 +169,7 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
       if (getEnvironment().getSpDebug().getValueOrDefault()) {
         GroundingDebugUtils.modifyGrounding(value.getEventGrounding());
       }
+      ProtocolOverrides.addNatsTokenIfConfigured(value.getEventGrounding().getTransportProtocol());
       this.outputCollectors.put(
           uniqueStreamId,
           ProtocolManager.makeOutputCollector(
