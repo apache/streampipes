@@ -23,8 +23,6 @@ import org.apache.streampipes.connect.transformer.api.Context;
 import org.apache.streampipes.connect.transformer.groovy.GroovyScriptContext;
 import org.apache.streampipes.connect.transformer.js.GraalJsScriptContext;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
 
 public class ScriptContextResolver {
 

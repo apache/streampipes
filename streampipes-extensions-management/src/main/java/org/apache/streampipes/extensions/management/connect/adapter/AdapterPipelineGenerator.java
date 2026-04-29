@@ -24,7 +24,6 @@ import org.apache.streampipes.extensions.management.connect.adapter.model.pipeli
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToBrokerAdapterSink;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
 
 public class AdapterPipelineGenerator extends AdapterPipelineGeneratorBase {
 
