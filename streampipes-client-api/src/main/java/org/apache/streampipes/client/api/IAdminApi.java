@@ -45,5 +45,7 @@ public interface IAdminApi {
 
   void persistFunctionState(String functionId, Map<String, Object> state);
 
+  void deleteFunctionState(String functionId);
+
   void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId);
 }
