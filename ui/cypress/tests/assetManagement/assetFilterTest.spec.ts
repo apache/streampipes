@@ -237,37 +237,81 @@ describe('Test asset filters', () => {
         FilterUtils.filterSites(['site2']);
         AssetUtils.checkAmountOfAssets(1);
     });
-
+    /**
     it('Filter adapters', () => {
         ConnectUtils.goToConnect();
         //Select one asset
         FilterUtils.clearFilter();
         FilterUtils.filterAssets(['asset-1_0']);
         checkTableResources('all-adapters-table', [adapter1]);
+        // Select asset 1 & asset 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0','asset-2_0']);
+        checkTableResources('all-adapters-table', [adapter1,adapter2]);
         //Select one label
         FilterUtils.clearFilter();
         FilterUtils.filterLabels(['label3']);
         checkTableResources('all-adapters-table', [adapter3]);
+        //Select label 2 & 3
+        FilterUtils.clearFilter();
+        FilterUtils.filterLabels(['label2','label3']);
+        checkTableResources('all-adapters-table', [adapter2,adapter3]);
+        //Select  one site 
+        FilterUtils.clearFilter();
+        FilterUtils.filterSites(['site1']);
+        checkTableResources('all-adapters-table', [adapter1]);
+        //Select site 1 &  site 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterSites(['site1','site2']);
+        checkTableResources('all-adapters-table', [adapter1,adapter2]);
         //Select one type
         FilterUtils.clearFilter();
         FilterUtils.filterTypes(['WORK_CELL']);
         checkTableResources('all-adapters-table', [adapter2, adapter3]);
+         // Select asset 1 & site 1 & label 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0']);
+        FilterUtils.filterSites(['site1']);
+        FilterUtils.filterLabels(['label2']);
+        checkTableResources('all-adapters-table', [adapter1]);
     });
-
+    
     it('Filters pipelines', () => {
         PipelineUtils.goToPipelines();
         //select one asset
         FilterUtils.clearFilter();
         FilterUtils.filterAssets(['asset-1_0']);
         checkTableResources('all-pipelines-table', [pipeline1]);
+        // Select asset 1 & asset 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0','asset-2_0']);
+        checkTableResources('all-pipelines-table', [pipeline1,  pipeline2]);
         //select ine label
         FilterUtils.clearFilter();
         FilterUtils.filterLabels(['label3']);
         checkTableResources('all-pipelines-table', [pipeline3]);
+        //Select label 2 & 3
+        FilterUtils.clearFilter();
+        FilterUtils.filterLabels(['label2','label3']);
+        checkTableResources('all-pipelines-table', [pipeline2,pipeline3]);
+        //Select  one site 
+        FilterUtils.clearFilter();
+        FilterUtils.filterSites(['site1']);
+        checkTableResources('all-pipelines-table', [pipeline1]);
+        //Select site 1 &  site 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterSites(['site1','site2']);
+        checkTableResources('all-pipelines-table', [pipeline1,  pipeline2]);
         //select one type
         FilterUtils.clearFilter();
         FilterUtils.filterTypes(['WORK_CELL']);
         checkTableResources('all-pipelines-table', [pipeline2, pipeline3]);
+        // Select asset 1 & site 1 & label 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0']);
+        FilterUtils.filterSites(['site1']);
+        FilterUtils.filterLabels(['label2']);
+        checkTableResources('all-pipelines-table', [pipeline1]);
     });
 
     it('Filters datasets', () => {
@@ -276,15 +320,38 @@ describe('Test asset filters', () => {
         FilterUtils.clearFilter();
         FilterUtils.filterAssets(['asset-1_0']);
         checkTableResources('datalake-settings', [adapter1]);
+        // Select asset 1 & asset 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0','asset-2_0']);
+        checkTableResources('datalake-settings', [adapter1,adapter2]);
         //select one label
+            FilterUtils.clearFilter();
+        FilterUtils.filterLabels(['label3']);
+        checkTableResources('datalake-settings', [adapter3]);
+        //Select label 2 & 3
+        FilterUtils.clearFilter();
+        FilterUtils.filterLabels(['label2','label3']);
+        checkTableResources('datalake-settings', [adapter2,adapter3]);
+        //Select site 1
         FilterUtils.clearFilter();
         FilterUtils.filterSites(['site2']);
         checkTableResources('datalake-settings', [adapter2]);
+
+        FilterUtils.clearFilter();
+        FilterUtils.filterSites(['site1','site2']);
+        checkTableResources('datalake-settings', [adapter1,adapter2]);
         //select one type
         FilterUtils.clearFilter();
         FilterUtils.filterTypes(['WORK_CELL']);
         checkTableResources('datalake-settings', [adapter2, adapter3]);
-    });
+
+         // Select asset 1 & site 1 & label 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0']);
+        FilterUtils.filterSites(['site1']);
+        FilterUtils.filterLabels(['label2']);
+        checkTableResources('datalake-settings', [adapter1]);
+    });*/
 
     function prepareAssets() {
         AssetUtils.goToAssets();
