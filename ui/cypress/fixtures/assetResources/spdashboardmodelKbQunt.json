@@ -1,0 +1,29 @@
+{
+  "elementId": "sp:dashboardmodel:KbQunt",
+  "rev": null,
+  "id": null,
+  "name": "dashboard-2_1",
+  "description": null,
+  "displayHeader": false,
+  "gridColumns": 12,
+  "dashboardTimeSettings": {},
+  "dashboardGeneralSettings": {
+    "chartOverrides": {
+      "hideToolbox": false
+    },
+    "gridRowHeightPx": 90.0,
+    "defaultViewMode": "grid",
+    "globalTimeEnabled": true
+  },
+  "dashboardLiveSettings": {
+    "refreshModeActive": false,
+    "refreshIntervalInSeconds": 10.0,
+    "label": "Off"
+  },
+  "widgets": [],
+  "metadata": {
+    "createdAtEpochMs": 1777881522062,
+    "lastModifiedEpochMs": 1777881523856
+  },
+  "couchDbId": "sp:dashboardmodel:KbQunt"
+}

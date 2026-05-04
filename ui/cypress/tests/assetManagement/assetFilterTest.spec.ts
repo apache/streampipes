@@ -113,8 +113,8 @@ describe('Test asset filters', () => {
         const assetResourceFixtureDirectory = 'assetResources';
 
         cy.initStreamPipesTest();
-        //AssetUtils.importAssetResources(assetResourceFixtureDirectory);
-
+        AssetUtils.importAssetResources(assetResourceFixtureDirectory);
+        /**
         prepareLabels();
         prepareSites();
         prepareAssets();
@@ -132,7 +132,7 @@ describe('Test asset filters', () => {
             'dashboard-3_0',
             'dashboard-3_1',
             'dashboard-3_2',
-        ]);
+        ]);*/
 
         // This is currently required because the assets are only loaded on page load
 
