@@ -26,7 +26,6 @@
     [options]="gridOptions"
     (changeCB)="onGridChange($event)"
     class="dashboard-outer"
-    [style.max-width.px]="kioskMode ? null : maxGridWidthPx"
     #grid
 >
     @for (item of dashboard.widgets; let i = $index; track item.id) {
