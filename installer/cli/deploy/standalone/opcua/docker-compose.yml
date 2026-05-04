@@ -15,10 +15,9 @@
 
 services:
   opcua:
-    image: mcr.microsoft.com/iotedge/opc-plc:2.12.37
+    image: digitalpetri/opc-ua-demo-server:latest
     ports:
-      - 50000:50000
-    command: --ut=true
+      - 4840:4840
     logging:
       driver: "json-file"
       options:
