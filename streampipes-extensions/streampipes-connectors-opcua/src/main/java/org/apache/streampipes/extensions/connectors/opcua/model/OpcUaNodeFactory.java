@@ -23,7 +23,7 @@ import org.apache.streampipes.extensions.connectors.opcua.model.node.OpcUaNode;
 import org.apache.streampipes.extensions.connectors.opcua.model.node.ScalarOpcUaNode;
 import org.apache.streampipes.extensions.connectors.opcua.model.node.StructuredOpcUaNode;
 
-import org.eclipse.milo.opcua.stack.core.Identifiers;
+import org.eclipse.milo.opcua.stack.core.NodeIds;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ExtensionObject;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
@@ -104,6 +104,6 @@ public class OpcUaNodeFactory {
    */
   private static boolean isExtensionByDataType(BasicVariableNodeInfo nodeInfo) {
     NodeId dt = nodeInfo.getNode().getDataType();
-    return Objects.equals(dt, Identifiers.Structure);
+    return Objects.equals(dt, NodeIds.Structure);
   }
 }

@@ -29,7 +29,7 @@ import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.sdk.core.nodes.VariableNode;
-import org.eclipse.milo.opcua.stack.core.Identifiers;
+import org.eclipse.milo.opcua.stack.core.NodeIds;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.UaRuntimeException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
@@ -77,7 +77,7 @@ public class OpcUaNodeBrowser {
 
     var requestsRootNode = Objects.isNull(nextBaseNodeToResolve);
     var currentNodeId = requestsRootNode
-        ? Identifiers.RootFolder : NodeId.parse(nextBaseNodeToResolve);
+        ? NodeIds.RootFolder : NodeId.parse(nextBaseNodeToResolve);
 
     return findChildren(client, currentNodeId);
   }
@@ -131,7 +131,7 @@ public class OpcUaNodeBrowser {
 
     var options = AddressSpace.BrowseOptions.builder()
         .setBrowseDirection(BrowseDirection.Forward)
-        .setReferenceType(Identifiers.HierarchicalReferences)
+        .setReferenceType(NodeIds.HierarchicalReferences)
         .setIncludeSubtypes(true)
         .setNodeClassMask(Set.of(NodeClass.Object, NodeClass.Variable))
         .build();

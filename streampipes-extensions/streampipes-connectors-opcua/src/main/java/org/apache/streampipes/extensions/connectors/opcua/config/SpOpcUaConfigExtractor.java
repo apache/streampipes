@@ -21,6 +21,8 @@ package org.apache.streampipes.extensions.connectors.opcua.config;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.extensions.api.extractor.IParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.connectors.opcua.alarms.OpcUaAlarmAdapterConfig;
+import org.apache.streampipes.extensions.connectors.opcua.alarms.OpcUaAlarmConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.AnonymousIdentityConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.UsernamePasswordIdentityConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.identity.X509IdentityConfig;
@@ -32,6 +34,7 @@ import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaUtils;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.MessageSecurityMode;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.ADAPTER_TYPE;
@@ -96,9 +99,58 @@ public class SpOpcUaConfigExtractor {
     return extractSharedConfig(extractor, new OpcUaConfig(), streamPipesClient);
   }
 
+  public static OpcUaAlarmAdapterConfig extractAlarmAdapterConfig(IStaticPropertyExtractor extractor,
+                                                                  IStreamPipesClient streamPipesClient,
+                                                                  String adapterId) {
+    var config = extractConnectionConfig(extractor, new OpcUaAlarmAdapterConfig(), streamPipesClient);
+    config.setAssociatedResourceId(adapterId);
+
+    var alarmSourceScope = extractor.selectedAlternativeInternalId(OpcUaAlarmConfiguration.ALARM_SOURCE_SCOPE);
+    if (OpcUaAlarmConfiguration.SPECIFIC_AREA_OR_MACHINE.equals(alarmSourceScope)) {
+      var selectedNotifierNodes =
+          extractor.selectedTreeNodesInternalNames(OpcUaAlarmConfiguration.NOTIFIER_NODE, String.class);
+      if (!selectedNotifierNodes.isEmpty()) {
+        config.setNotifierNodeId(selectedNotifierNodes.get(0));
+      }
+    }
+    var selectedEventTypes =
+        extractor.selectedTreeNodesInternalNames(OpcUaAlarmConfiguration.EVENT_TYPE, String.class);
+    if (!selectedEventTypes.isEmpty()) {
+      config.setEventTypeNodeId(selectedEventTypes.get(0));
+    }
+    config.setSelectedAdditionalFieldNames(
+        extractor.selectedMultiValuesInternalNames(OpcUaAlarmConfiguration.ADDITIONAL_FIELDS, String.class)
+    );
+
+    var alarmFilterMode = extractor.selectedAlternativeInternalId(OpcUaAlarmConfiguration.ALARM_FILTER_MODE);
+    if (OpcUaAlarmConfiguration.SOURCE_NAME_CONTAINS.equals(alarmFilterMode)) {
+      config.setSourceNameFilter(extractor.textParameter(OpcUaAlarmConfiguration.SOURCE_NAME_FILTER));
+    }
+
+    var minimumSeverity = extractor.selectedSingleValueInternalName(OpcUaAlarmConfiguration.MINIMUM_SEVERITY, String.class);
+    if (!OpcUaAlarmConfiguration.MINIMUM_SEVERITY_ANY.equals(minimumSeverity)) {
+      config.setMinimumSeverity(Integer.parseInt(minimumSeverity));
+    }
+
+    return config;
+  }
+
   public static <T extends OpcUaConfig> T extractSharedConfig(IParameterExtractor extractor,
                                                               T config,
                                                               IStreamPipesClient streamPipesClient) {
+    return extractSharedConfig(extractor, config, streamPipesClient, true);
+  }
+
+  public static <T extends OpcUaConfig> T extractConnectionConfig(IParameterExtractor extractor,
+                                                                  T config,
+                                                                  IStreamPipesClient streamPipesClient) {
+    return extractSharedConfig(extractor, config, streamPipesClient, false);
+  }
+
+  private static <T extends OpcUaConfig> T extractSharedConfig(IParameterExtractor extractor,
+                                                               T config,
+                                                               IStreamPipesClient streamPipesClient,
+                                                               boolean includeNodeSelection) {
 
     String selectedAlternativeConnection =
         extractor.selectedAlternativeInternalId(OPC_HOST_OR_URL.name());
@@ -106,9 +158,13 @@ public class SpOpcUaConfigExtractor {
     String selectedAlternativeAuthentication =
         extractor.selectedAlternativeInternalId(SharedUserConfiguration.USER_AUTHENTICATION);
 
-    List<String> selectedNodeNames =
-        extractor.selectedTreeNodesInternalNames(AVAILABLE_NODES.name(), String.class);
-    config.setSelectedNodeNames(selectedNodeNames);
+    if (includeNodeSelection && extractor.getStaticPropertyByName(AVAILABLE_NODES.name()) != null) {
+      List<String> selectedNodeNames =
+          extractor.selectedTreeNodesInternalNames(AVAILABLE_NODES.name(), String.class);
+      config.setSelectedNodeNames(selectedNodeNames);
+    } else {
+      config.setSelectedNodeNames(Collections.emptyList());
+    }
 
     String selectedSecurityMode = extractor.selectedSingleValueInternalName(
         SharedUserConfiguration.SECURITY_MODE,

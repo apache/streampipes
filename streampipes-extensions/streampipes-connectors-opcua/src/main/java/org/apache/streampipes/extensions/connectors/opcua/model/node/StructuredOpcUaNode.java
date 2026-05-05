@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.model.node;
 
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaValueNormalizationUtils;
 import org.apache.streampipes.model.connect.guess.FieldStatus;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
 
@@ -28,27 +29,14 @@ import org.eclipse.milo.opcua.sdk.core.types.DynamicEnumType;
 import org.eclipse.milo.opcua.sdk.core.types.DynamicOptionSetType;
 import org.eclipse.milo.opcua.sdk.core.types.DynamicStructType;
 import org.eclipse.milo.opcua.sdk.core.types.DynamicUnionType;
-import org.eclipse.milo.opcua.stack.core.types.UaEnumeratedType;
 import org.eclipse.milo.opcua.stack.core.types.UaStructuredType;
-import org.eclipse.milo.opcua.stack.core.types.builtin.ByteString;
-import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
-import org.eclipse.milo.opcua.stack.core.types.builtin.ExpandedNodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ExtensionObject;
-import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
-import org.eclipse.milo.opcua.stack.core.types.builtin.Matrix;
-import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
-import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
-import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class StructuredOpcUaNode implements OpcUaNode {
@@ -139,76 +127,16 @@ public class StructuredOpcUaNode implements OpcUaNode {
       return dynamicEnumToValue(dynamicEnumType);
     }
 
-    if (value instanceof ByteString byteString) {
-      var bytes = byteString.bytes();
-      return bytes == null ? null : Base64.getEncoder().encodeToString(bytes);
-    }
-
-    if (value instanceof Matrix matrix) {
-      return matrixToMap(client, matrix, depth + 1);
-    }
-
-    if (value instanceof DateTime dateTime) {
-      return dateTime.getJavaTime();
-    }
-
-    if (value instanceof NodeId nodeId) {
-      return nodeId.toParseableString();
-    }
-
-    if (value instanceof ExpandedNodeId expandedNodeId) {
-      return expandedNodeId.toParseableString();
-    }
-
-    if (value instanceof QualifiedName qualifiedName) {
-      return qualifiedName.toParseableString();
-    }
-
-    if (value instanceof LocalizedText localizedText) {
-      return localizedText.getText();
-    }
-
-    if (value instanceof StatusCode statusCode) {
-      return statusCode.getValue();
-    }
-
-    if (value instanceof UaEnumeratedType uaEnumeratedType) {
-      return uaEnumeratedType.getName() != null ? uaEnumeratedType.getName() : uaEnumeratedType.getValue();
-    }
-
-    value = OpcUaNumberNormalizer.normalize(value);
-
-    if (isScalar(value)) {
-      return value;
-    }
-
-    if (value instanceof Map<?, ?> mapValue) {
-      return mapToMap(client, mapValue, depth + 1);
-    }
-
-    if (value instanceof Iterable<?> iterable) {
-      var listValue = new ArrayList<>();
-      for (Object element : iterable) {
-        listValue.add(normalizeValue(client, element, depth + 1));
-      }
-      return listValue;
-    }
-
-    if (value.getClass().isArray()) {
-      int length = Array.getLength(value);
-      List<Object> arrayValue = new ArrayList<>(length);
-      for (int i = 0; i < length; i++) {
-        arrayValue.add(normalizeValue(client, Array.get(value, i), depth + 1));
-      }
-      return arrayValue;
+    var normalizedCommonValue = OpcUaValueNormalizationUtils.tryNormalizeCommonValue(
+        value,
+        entry -> normalizeValue(client, entry, depth + 1)
+    );
+    if (normalizedCommonValue.isPresent()) {
+      return normalizedCommonValue.get();
     }
 
     if (value instanceof UaStructuredType) {
       return objectToMap(client, value, depth + 1);
-    }
-
-    if (value instanceof Enum<?> enumValue) {
-      return enumValue.name();
     }
 
     return objectToMap(client, value, depth + 1);
@@ -220,15 +148,6 @@ public class StructuredOpcUaNode implements OpcUaNode {
     var result = new LinkedHashMap<String, Object>();
     struct.getMembers().forEach((key, member) ->
         result.put(key, normalizeValue(client, member.getValue(), depth + 1)));
-    return result;
-  }
-
-  private Map<String, Object> mapToMap(OpcUaClient client,
-                                       Map<?, ?> mapValue,
-                                       int depth) {
-    var result = new LinkedHashMap<String, Object>();
-    mapValue.forEach((key, entryValue) ->
-        result.put(String.valueOf(key), normalizeValue(client, entryValue, depth + 1)));
     return result;
   }
 
@@ -262,34 +181,6 @@ public class StructuredOpcUaNode implements OpcUaNode {
   private Object dynamicEnumToValue(DynamicEnumType dynamicEnumType) {
     var enumName = dynamicEnumType.getName();
     return enumName != null ? enumName : dynamicEnumType.getValue();
-  }
-
-  private Map<String, Object> matrixToMap(OpcUaClient client,
-                                          Matrix matrix,
-                                          int depth) {
-    var result = new LinkedHashMap<String, Object>();
-    result.put("elements", arrayToList(client, matrix.getElements(), depth + 1));
-    result.put("dimensions", intArrayToList(matrix.getDimensions()));
-    return result;
-  }
-
-  private List<Object> arrayToList(OpcUaClient client,
-                                   Object arrayValue,
-                                   int depth) {
-    int length = Array.getLength(arrayValue);
-    var values = new ArrayList<>(length);
-    for (int i = 0; i < length; i++) {
-      values.add(normalizeValue(client, Array.get(arrayValue, i), depth + 1));
-    }
-    return values;
-  }
-
-  private List<Integer> intArrayToList(int[] values) {
-    var dimensions = new ArrayList<Integer>(values.length);
-    for (var value : values) {
-      dimensions.add(value);
-    }
-    return dimensions;
   }
 
   private Object decodeExtensionObject(OpcUaClient client,
@@ -352,12 +243,5 @@ public class StructuredOpcUaNode implements OpcUaNode {
     }
 
     return result;
-  }
-
-  private boolean isScalar(Object value) {
-    return value instanceof String
-        || value instanceof Number
-        || value instanceof Boolean
-        || value instanceof Character;
   }
 }

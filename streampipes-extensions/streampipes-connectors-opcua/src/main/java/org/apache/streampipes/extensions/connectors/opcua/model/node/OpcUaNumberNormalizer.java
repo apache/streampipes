@@ -18,10 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.model.node;
 
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UByte;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.ULong;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaValueNormalizationUtils;
 
 final class OpcUaNumberNormalizer {
 
@@ -29,22 +26,6 @@ final class OpcUaNumberNormalizer {
   }
 
   static Object normalize(Object value) {
-    if (value instanceof UByte uByte) {
-      return uByte.intValue();
-    }
-
-    if (value instanceof UShort uShort) {
-      return uShort.intValue();
-    }
-
-    if (value instanceof UInteger uInteger) {
-      return uInteger.longValue();
-    }
-
-    if (value instanceof ULong uLong) {
-      return uLong.longValue();
-    }
-
-    return value;
+    return OpcUaValueNormalizationUtils.normalizeUnsignedNumber(value);
   }
 }
