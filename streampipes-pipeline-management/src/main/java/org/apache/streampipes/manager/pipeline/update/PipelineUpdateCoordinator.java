@@ -49,9 +49,11 @@ public class PipelineUpdateCoordinator {
   private static final PipelinesStats PIPELINES_STATS = new PipelinesStats();
 
   private final ExtensionServiceRequestManager requestManager;
+  private final PipelineMeasurementChangeDetector measurementFieldChangeDetector;
 
   public PipelineUpdateCoordinator(ExtensionServiceRequestManager requestManager) {
     this.requestManager = requestManager;
+    this.measurementFieldChangeDetector = new PipelineMeasurementChangeDetector();
   }
 
   public void updatePipelines(SpDataStream dataStream) {
@@ -101,6 +103,11 @@ public class PipelineUpdateCoordinator {
       }
 
       var storedPipeline = PipelineManager.getPipeline(pipeline.getPipelineId());
+      var hasChangedMeasurementField = measurementFieldChangeDetector.hasCriticalMeasurementFieldChange(
+          storedPipeline,
+          affectedElementId,
+          updatedEventSchema
+      );
       var updatedPipeline = updatePipeline(storedPipeline, affectedElementId, updatedStreamName, updatedEventSchema);
 
       try {
@@ -108,7 +115,7 @@ public class PipelineUpdateCoordinator {
         var modificationMessage = verificationHandler.verifyPipeline();
         var updateInfo = makeUpdateInfo(modificationMessage, updatedPipeline);
         var modifiedPipeline = verificationHandler.makeModifiedPipeline().pipeline();
-        var canAutoMigrate = canAutoMigrate(modificationMessage);
+        var canAutoMigrate = canAutoMigrate(modificationMessage) && !hasChangedMeasurementField;
 
         if (!canAutoMigrate) {
           modifiedPipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
@@ -139,10 +146,17 @@ public class PipelineUpdateCoordinator {
     var updateInfos = new ArrayList<PipelineUpdateInfo>();
 
     affectedPipelines.forEach(pipeline -> {
+      var hasChangedMeasurementField = measurementFieldChangeDetector.hasCriticalMeasurementFieldChange(
+          pipeline,
+          affectedElementId,
+          updatedEventSchema
+      );
       var updatedPipeline = updatePipeline(pipeline, affectedElementId, updatedStreamName, updatedEventSchema);
       try {
         var modificationMessage = new PipelineVerificationHandlerV2(updatedPipeline, requestManager).verifyPipeline();
-        updateInfos.add(makeUpdateInfo(modificationMessage, updatedPipeline));
+        var updateInfo = makeUpdateInfo(modificationMessage, updatedPipeline);
+        updateInfo.setCanAutoMigrate(updateInfo.isCanAutoMigrate() && !hasChangedMeasurementField);
+        updateInfos.add(updateInfo);
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
