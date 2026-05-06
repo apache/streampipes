@@ -97,28 +97,24 @@ public class OpcUaAlarmEventMapper {
   private Object normalizeFieldValue(OpcUaAlarmField field, Object value) {
     var normalizedValue = valueNormalizer.normalize(value);
 
-    return switch (field.outputField()) {
-      case "active" -> toStateBoolean(normalizedValue, "Active", "Inactive");
-      case "acked" -> toStateBoolean(normalizedValue, "Acknowledged", "Unacknowledged");
-      case "confirmed" -> toStateBoolean(normalizedValue, "Confirmed", "Unconfirmed");
-      case "enabled" -> toStateBoolean(normalizedValue, "Enabled", "Disabled");
-      default -> normalizedValue;
-    };
+    if (field.extractionMode() == OpcUaAlarmField.ExtractionMode.TWO_STATE_LOCALIZED_TEXT) {
+      return toTwoStateBoolean(normalizedValue);
+    }
+
+    return normalizedValue;
   }
 
-  private Object toStateBoolean(Object normalizedValue, String trueText, String falseText) {
+  private Object toTwoStateBoolean(Object normalizedValue) {
     if (normalizedValue instanceof Boolean) {
       return normalizedValue;
     }
 
     if (normalizedValue instanceof String stringValue) {
-      if (trueText.equalsIgnoreCase(stringValue)) {
-        return true;
-      }
-
-      if (falseText.equalsIgnoreCase(stringValue)) {
-        return false;
-      }
+      return switch (stringValue.trim().toLowerCase()) {
+        case "true", "on", "active", "acknowledged", "confirmed", "enabled" -> true;
+        case "false", "off", "inactive", "unacknowledged", "unconfirmed", "disabled" -> false;
+        default -> normalizedValue;
+      };
     }
 
     return normalizedValue;

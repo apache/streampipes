@@ -23,6 +23,8 @@ import org.apache.streampipes.model.staticproperty.Option;
 import org.eclipse.milo.opcua.sdk.client.AddressSpace;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
+import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
+import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableTypeNode;
 import org.eclipse.milo.opcua.sdk.core.typetree.ObjectType;
 import org.eclipse.milo.opcua.sdk.core.typetree.ObjectTypeTree;
 import org.eclipse.milo.opcua.stack.core.NodeIds;
@@ -93,10 +95,21 @@ public class OpcUaEventFieldProvider {
         .map(OpcUaAlarmField::outputField)
         .collect(Collectors.toSet());
 
-    return fields.values().stream()
+    return deduplicateAdditionalFields(fields.values().stream()
         .filter(field -> !standardFieldNames.contains(field.outputField()))
         .sorted(java.util.Comparator.comparing(OpcUaAlarmField::displayName, String.CASE_INSENSITIVE_ORDER))
-        .toList();
+        .toList());
+  }
+
+  static List<OpcUaAlarmField> deduplicateAdditionalFields(List<OpcUaAlarmField> fields) {
+    return new ArrayList<>(fields.stream()
+        .collect(Collectors.toMap(
+            OpcUaAlarmField::outputField,
+            field -> field,
+            (existing, ignored) -> existing,
+            LinkedHashMap::new
+        ))
+        .values());
   }
 
   private Map<String, OpcUaAlarmField> buildDeclaredFields(NodeId selectedEventTypeId) {
@@ -118,17 +131,75 @@ public class OpcUaEventFieldProvider {
                                            NodeId declaringTypeId,
                                            List<QualifiedName> currentPath,
                                            Map<String, OpcUaAlarmField> fields) {
+    var currentNode = resolveNode(currentNodeId);
+
     for (UaNode childNode : browseAggregateChildren(currentNodeId)) {
       var nextPath = new ArrayList<>(currentPath);
       nextPath.add(childNode.getBrowseName());
 
       var nestedChildren = browseAggregateChildren(childNode.getNodeId());
       if (nestedChildren.isEmpty()) {
-        var field = OpcUaAlarmField.fromBrowsePath(declaringTypeId, childNode.getNodeId(), nextPath);
+        var field = currentNode instanceof UaVariableNode currentVariableNode
+            && isTwoStateIdSelection(currentVariableNode, childNode.getBrowseName())
+            ? OpcUaAlarmField.fromTwoStateIdBrowsePath(declaringTypeId, childNode.getNodeId(), nextPath)
+            : OpcUaAlarmField.fromBrowsePath(declaringTypeId, childNode.getNodeId(), nextPath);
         fields.putIfAbsent(field.selectionId(), field);
       } else {
         collectInstanceDeclarations(childNode.getNodeId(), declaringTypeId, nextPath, fields);
       }
+    }
+  }
+
+  private UaNode resolveNode(NodeId nodeId) {
+    try {
+      return client.getAddressSpace().getNode(nodeId);
+    } catch (UaException e) {
+      return null;
+    }
+  }
+
+  private boolean isTwoStateIdSelection(UaVariableNode variableNode, QualifiedName childBrowseName) {
+    if (!"Id".equals(childBrowseName.getName())) {
+      return false;
+    }
+
+    try {
+      return isVariableTypeOrSubtypeOf(variableNode.getTypeDefinition(), NodeIds.TwoStateVariableType);
+    } catch (UaException e) {
+      return false;
+    }
+  }
+
+  private boolean isVariableTypeOrSubtypeOf(UaVariableTypeNode variableTypeNode, NodeId targetTypeId) {
+    UaVariableTypeNode current = variableTypeNode;
+
+    while (current != null) {
+      if (targetTypeId.equals(current.getNodeId())) {
+        return true;
+      }
+
+      current = readSuperType(current);
+    }
+
+    return false;
+  }
+
+  private UaVariableTypeNode readSuperType(UaVariableTypeNode variableTypeNode) {
+    try {
+      var options = AddressSpace.BrowseOptions.builder()
+          .setBrowseDirection(BrowseDirection.Inverse)
+          .setReferenceType(NodeIds.HasSubtype)
+          .setIncludeSubtypes(false)
+          .setNodeClassMask(Set.of(NodeClass.VariableType))
+          .build();
+
+      return variableTypeNode.browseNodes(options).stream()
+          .filter(UaVariableTypeNode.class::isInstance)
+          .map(UaVariableTypeNode.class::cast)
+          .findFirst()
+          .orElse(null);
+    } catch (UaException e) {
+      return null;
     }
   }
 

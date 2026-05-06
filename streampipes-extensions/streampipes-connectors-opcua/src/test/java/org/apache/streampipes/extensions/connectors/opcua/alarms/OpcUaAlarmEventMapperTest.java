@@ -96,7 +96,7 @@ class OpcUaAlarmEventMapperTest {
         List.of(new QualifiedName(0, "HighLimit"))
     );
 
-    assertEquals("active", activeField.outputField());
+    assertEquals("activeStateId", activeField.outputField());
     assertEquals("ActiveState / Id", activeField.displayName());
     assertEquals("highLimit", limitField.outputField());
     assertEquals("HighLimit", limitField.displayName());
@@ -114,8 +114,27 @@ class OpcUaAlarmEventMapperTest {
   }
 
   @Test
+  void deduplicatesAdditionalFieldsByOutputField() {
+    var first = OpcUaAlarmField.fromBrowsePath(
+        NodeIds.ConditionType,
+        new NodeId(0, 1234),
+        List.of(new QualifiedName(0, "EnabledState"), new QualifiedName(0, "Id"))
+    );
+    var duplicate = OpcUaAlarmField.fromBrowsePath(
+        NodeIds.ConditionType,
+        new NodeId(0, 5678),
+        List.of(new QualifiedName(0, "EnabledState"), new QualifiedName(0, "Id"))
+    );
+
+    var deduplicated = OpcUaEventFieldProvider.deduplicateAdditionalFields(List.of(first, duplicate));
+
+    assertEquals(1, deduplicated.size());
+    assertEquals(first.selectionId(), deduplicated.get(0).selectionId());
+  }
+
+  @Test
   void derivesBooleanOutputFieldNameFromStateIdBrowsePath() {
-    var field = OpcUaAlarmField.fromBrowsePath(
+    var field = OpcUaAlarmField.fromTwoStateIdBrowsePath(
         NodeIds.ConditionType,
         new NodeId(0, 1234),
         List.of(new QualifiedName(0, "EnabledState"), new QualifiedName(0, "Id"))
@@ -124,6 +143,7 @@ class OpcUaAlarmEventMapperTest {
     assertEquals("enabled", field.outputField());
     assertEquals(1, field.eventBrowsePath().length);
     assertEquals("EnabledState", field.eventBrowsePath()[0].getName());
+    assertEquals(OpcUaAlarmField.ExtractionMode.TWO_STATE_LOCALIZED_TEXT, field.extractionMode());
   }
 
   @Test
@@ -171,7 +191,7 @@ class OpcUaAlarmEventMapperTest {
     var mapper = new OpcUaAlarmEventMapper(
         NodeIds.ConditionType,
         List.of(
-            OpcUaAlarmField.fromBrowsePath(
+            OpcUaAlarmField.fromTwoStateIdBrowsePath(
                 NodeIds.ConditionType,
                 new NodeId(0, 1234),
                 List.of(new QualifiedName(0, "EnabledState"), new QualifiedName(0, "Id"))

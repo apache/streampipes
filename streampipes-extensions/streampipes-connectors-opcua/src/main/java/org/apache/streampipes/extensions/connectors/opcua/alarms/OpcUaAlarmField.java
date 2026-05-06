@@ -34,14 +34,23 @@ import java.util.stream.Collectors;
 public record OpcUaAlarmField(String outputField,
                               String selectionId,
                               NodeId typeDefinitionId,
-                              QualifiedName[] browsePath) {
+                              QualifiedName[] browsePath,
+                              QualifiedName[] eventBrowsePath,
+                              ExtractionMode extractionMode) {
+
+  enum ExtractionMode {
+    DIRECT,
+    TWO_STATE_LOCALIZED_TEXT
+  }
 
   static OpcUaAlarmField fromBrowsePath(NodeId typeDefinitionId, List<QualifiedName> browsePath) {
     return new OpcUaAlarmField(
         toOutputFieldName(browsePath),
         buildDerivedSelectionId(typeDefinitionId, browsePath),
         typeDefinitionId,
-        browsePath.toArray(QualifiedName[]::new)
+        browsePath.toArray(QualifiedName[]::new),
+        browsePath.toArray(QualifiedName[]::new),
+        ExtractionMode.DIRECT
     );
   }
 
@@ -52,7 +61,24 @@ public record OpcUaAlarmField(String outputField,
         toOutputFieldName(browsePath),
         declarationNodeId.toParseableString(),
         typeDefinitionId,
-        browsePath.toArray(QualifiedName[]::new)
+        browsePath.toArray(QualifiedName[]::new),
+        browsePath.toArray(QualifiedName[]::new),
+        ExtractionMode.DIRECT
+    );
+  }
+
+  static OpcUaAlarmField fromTwoStateIdBrowsePath(NodeId typeDefinitionId,
+                                                  NodeId declarationNodeId,
+                                                  List<QualifiedName> browsePath) {
+    var parentBrowsePath = browsePath.subList(0, browsePath.size() - 1);
+
+    return new OpcUaAlarmField(
+        toTwoStateOutputFieldName(parentBrowsePath),
+        declarationNodeId.toParseableString(),
+        typeDefinitionId,
+        browsePath.toArray(QualifiedName[]::new),
+        parentBrowsePath.toArray(QualifiedName[]::new),
+        ExtractionMode.TWO_STATE_LOCALIZED_TEXT
     );
   }
 
@@ -114,33 +140,19 @@ public record OpcUaAlarmField(String outputField,
         .collect(Collectors.joining(" / "));
   }
 
-  QualifiedName[] eventBrowsePath() {
-    if (isStateIdField()) {
-      return new QualifiedName[] {browsePath[0]};
-    }
-
-    return browsePath;
-  }
-
-  boolean isStateIdField() {
-    return browsePath.length == 2
-        && browsePath[0].getName().endsWith("State")
-        && "Id".equals(browsePath[1].getName());
-  }
-
   private static String toOutputFieldName(List<QualifiedName> browsePath) {
-    var pathNames = browsePath.stream().map(QualifiedName::getName).toList();
+    var combined = String.join("", browsePath.stream().map(QualifiedName::getName).toList());
+    return Character.toLowerCase(combined.charAt(0)) + combined.substring(1);
+  }
 
-    if (pathNames.size() == 2
-        && "Id".equals(pathNames.get(1))
-        && pathNames.get(0).endsWith("State")) {
-      var stateName = pathNames.get(0);
-      var baseName = stateName.substring(0, stateName.length() - "State".length());
+  private static String toTwoStateOutputFieldName(List<QualifiedName> browsePath) {
+    var lastElement = browsePath.get(browsePath.size() - 1).getName();
+    if (lastElement.endsWith("State") && lastElement.length() > "State".length()) {
+      var baseName = lastElement.substring(0, lastElement.length() - "State".length());
       return Character.toLowerCase(baseName.charAt(0)) + baseName.substring(1);
     }
 
-    var combined = String.join("", pathNames);
-    return Character.toLowerCase(combined.charAt(0)) + combined.substring(1);
+    return toOutputFieldName(browsePath);
   }
 
   private static String buildDerivedSelectionId(NodeId typeDefinitionId,
@@ -179,14 +191,14 @@ public record OpcUaAlarmField(String outputField,
 
   private static List<OpcUaAlarmField> acknowledgeableConditionFields() {
     return List.of(
-        field("acked", NodeIds.AcknowledgeableConditionType, "AckedState"),
-        field("confirmed", NodeIds.AcknowledgeableConditionType, "ConfirmedState")
+        twoStateField("acked", NodeIds.AcknowledgeableConditionType, "AckedState"),
+        twoStateField("confirmed", NodeIds.AcknowledgeableConditionType, "ConfirmedState")
     );
   }
 
   private static List<OpcUaAlarmField> alarmConditionFields() {
     return List.of(
-        field("active", NodeIds.AlarmConditionType, "ActiveState")
+        twoStateField("active", NodeIds.AlarmConditionType, "ActiveState")
     );
   }
 
@@ -198,7 +210,23 @@ public record OpcUaAlarmField(String outputField,
         outputField,
         buildDerivedSelectionId(typeDefinitionId, Arrays.stream(qualifiedNames).toList()),
         typeDefinitionId,
-        qualifiedNames
+        qualifiedNames,
+        qualifiedNames,
+        ExtractionMode.DIRECT
+    );
+  }
+
+  private static OpcUaAlarmField twoStateField(String outputField,
+                                               NodeId typeDefinitionId,
+                                               String... browsePath) {
+    var qualifiedNames = qualifiedNames(browsePath);
+    return new OpcUaAlarmField(
+        outputField,
+        buildDerivedSelectionId(typeDefinitionId, Arrays.stream(qualifiedNames).toList()),
+        typeDefinitionId,
+        qualifiedNames,
+        qualifiedNames,
+        ExtractionMode.TWO_STATE_LOCALIZED_TEXT
     );
   }
 
