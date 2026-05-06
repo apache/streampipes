@@ -18,12 +18,11 @@
 
 import {
     Component,
-    ComponentRef,
-    createComponent,
     EnvironmentInjector,
     inject,
     Input,
     OnChanges,
+    OnDestroy,
     OnInit,
     SimpleChanges,
 } from '@angular/core';
@@ -37,31 +36,46 @@ import {
 import {
     featureGroup,
     FeatureGroup,
-    icon,
-    Layer,
+    latLng,
     LeafletMouseEvent,
-    Map,
+    Map as LeafletMap,
     MapOptions,
-    marker,
-    Marker,
-    popup,
 } from 'leaflet';
 import { MapLayerProviderService } from '../../../core-ui/services/map-layer-provider.service';
-import {
-    AssetMapPopupComponent,
-    PopupAction,
-} from './asset-map-popup/asset-map-popup.component';
-import { LeafletDirective, LeafletLayerDirective } from '@bluehalo/ngx-leaflet';
+import { LeafletDirective } from '@bluehalo/ngx-leaflet';
 import { NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { TranslatePipe } from '@ngx-translate/core';
+import Supercluster from 'supercluster';
+import { HomeAssetMapPopupService } from './home-asset-map-popup.service';
+import {
+    createAssetMarker,
+    createClusterMarker,
+    createSpiderfyLeg,
+    createSpiderfyMarker,
+    getSpiderfyLatLng,
+} from './home-asset-map-marker.utils';
+import {
+    buildAssetBounds,
+    buildClusterPoints,
+    isClusterFeature,
+    shouldSpiderfy,
+} from './home-asset-map.utils';
+import {
+    AssetClusterFeature,
+    AssetPointFeature,
+    AssetPointProperties,
+    AssetPopupEntry,
+} from './home-asset-map.types';
 
 @Component({
     selector: 'sp-home-asset-map',
     templateUrl: './home-asset-map.component.html',
     styleUrls: ['./home-asset-map.component.scss'],
-    imports: [LeafletDirective, NgStyle, StyleDirective, LeafletLayerDirective],
+    imports: [LeafletDirective, NgStyle, StyleDirective, TranslatePipe],
+    providers: [HomeAssetMapPopupService],
 })
-export class HomeAssetMapComponent implements OnInit, OnChanges {
+export class HomeAssetMapComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     locationConfig: LocationConfig;
 
@@ -74,15 +88,22 @@ export class HomeAssetMapComponent implements OnInit, OnChanges {
     @Input()
     assetLinkTypes: Record<string, AssetLinkType> = {};
 
-    map: Map;
+    map: LeafletMap;
     mapOptions: MapOptions;
-    layers: Layer[];
-    marker: Marker;
     markersGroup: FeatureGroup = featureGroup();
+    spiderfyGroup: FeatureGroup = featureGroup();
+    assetsWithoutLocationCount = 0;
+    assetsWithLocationCount = 0;
+    private readonly defaultCenter = latLng(0, 0);
 
-    private currentPopupRef: ComponentRef<AssetMapPopupComponent> | null = null;
+    private clusterIndex: Supercluster<
+        AssetPointProperties,
+        Record<string, never>
+    > | null = null;
+    private readonly clusterMaxZoom = 18;
 
     private mapLayerProviderService = inject(MapLayerProviderService);
+    private popupService = inject(HomeAssetMapPopupService);
     private injector = inject(EnvironmentInjector);
 
     ngOnInit() {
@@ -90,21 +111,32 @@ export class HomeAssetMapComponent implements OnInit, OnChanges {
             layers: this.mapLayerProviderService.getMapLayers(
                 this.locationConfig,
             ),
-            zoom: 10,
+            zoom: 3,
             zoomControl: true,
+            center: this.defaultCenter,
         };
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes['assets'] && this.map) {
+        if ((changes['assets'] || changes['sites']) && this.map) {
             this.refreshMarkersAndView();
         }
     }
 
-    onMapReady(map: Map) {
+    ngOnDestroy() {
+        this.map?.off('moveend', this.onMapViewportChanged);
+        this.map?.off('zoomend', this.onMapViewportChanged);
+        this.popupService.destroyPopup();
+        this.clearSpiderfy();
+    }
+
+    onMapReady(map: LeafletMap) {
         this.map = map;
         this.map.attributionControl.setPrefix('');
         this.markersGroup.addTo(this.map);
+        this.spiderfyGroup.addTo(this.map);
+        this.map.on('moveend', this.onMapViewportChanged);
+        this.map.on('zoomend', this.onMapViewportChanged);
         this.refreshMarkersAndView();
 
         setTimeout(() => {
@@ -112,92 +144,226 @@ export class HomeAssetMapComponent implements OnInit, OnChanges {
         }, 0);
     }
 
-    refreshMarkersAndView(): void {
-        this.markersGroup.clearLayers();
-        const assetsWithSite = this.assets.filter(
-            a => a.assetSite !== null && a.assetSite.location !== null,
-        );
+    onMarkerClicked(_event: LeafletMouseEvent) {
+        this.clearSpiderfy();
+    }
 
-        assetsWithSite.forEach(asset => {
-            const site = this.sites[asset.assetSite.siteId];
-            const assetLocation = site.location.coordinates;
-            const marker = this.makeMarker({
-                latitude: assetLocation.latitude,
-                longitude: assetLocation.longitude,
-            });
-            marker.on('click', (e: LeafletMouseEvent) => {
-                this.openPopup(e, asset, site);
-            });
-            this.markersGroup.addLayer(marker);
+    openPopup(event: LeafletMouseEvent, entries: AssetPopupEntry[]) {
+        this.popupService.openPopup(
+            this.map,
+            this.injector,
+            event,
+            entries,
+            this.assetLinkTypes,
+        );
+    }
+
+    private refreshMarkersAndView(): void {
+        this.popupService.destroyPopup();
+        this.clearSpiderfy();
+
+        const assetPoints = buildClusterPoints(this.assets, this.sites);
+        this.assetsWithLocationCount = assetPoints.length;
+        this.assetsWithoutLocationCount = Math.max(
+            this.assets.length - this.assetsWithLocationCount,
+            0,
+        );
+        this.clusterIndex =
+            assetPoints.length > 0
+                ? new Supercluster<AssetPointProperties, Record<string, never>>(
+                      {
+                          maxZoom: this.clusterMaxZoom,
+                          radius: 60,
+                      },
+                  ).load(assetPoints)
+                : null;
+
+        this.updateViewport(assetPoints);
+
+        if (this.isMapLoaded()) {
+            this.renderVisibleMarkers();
+        }
+    }
+
+    private renderVisibleMarkers(): void {
+        this.markersGroup.clearLayers();
+
+        if (!this.clusterIndex || !this.map || !this.isMapLoaded()) {
+            return;
+        }
+
+        const bounds = this.map.getBounds();
+        const visibleFeatures = this.clusterIndex.getClusters(
+            [
+                bounds.getWest(),
+                bounds.getSouth(),
+                bounds.getEast(),
+                bounds.getNorth(),
+            ],
+            Math.round(this.map.getZoom()),
+        );
+        const pointGroups = new Map<string, AssetPointFeature[]>();
+
+        visibleFeatures.forEach(feature => {
+            const [longitude, latitude] = feature.geometry.coordinates;
+            const location: LatLng = { latitude, longitude };
+
+            if (isClusterFeature(feature)) {
+                this.addClusterMarker(feature, location);
+            } else {
+                const pointGroupKey = `${latitude}:${longitude}`;
+                if (!pointGroups.has(pointGroupKey)) {
+                    pointGroups.set(pointGroupKey, []);
+                }
+
+                pointGroups.get(pointGroupKey).push(feature);
+            }
         });
-        const bounds = (this.markersGroup as any).getBounds?.();
+
+        pointGroups.forEach(features => {
+            const [longitude, latitude] = features[0].geometry.coordinates;
+            const location: LatLng = { latitude, longitude };
+
+            if (features.length === 1) {
+                this.addAssetMarker(features[0], location);
+            } else {
+                this.addGroupedAssetMarker(features, location);
+            }
+        });
+    }
+
+    private addClusterMarker(
+        feature: AssetClusterFeature,
+        location: LatLng,
+    ): void {
+        const clusterMarker = createClusterMarker(
+            location,
+            feature.properties.point_count,
+        );
+        clusterMarker.on('click', (event: LeafletMouseEvent) => {
+            event.originalEvent?.stopPropagation();
+            this.onClusterClicked(event, feature);
+        });
+        this.markersGroup.addLayer(clusterMarker);
+    }
+
+    private addAssetMarker(feature: AssetPointFeature, location: LatLng): void {
+        const assetMarker = createAssetMarker(location);
+        assetMarker.on('click', (event: LeafletMouseEvent) => {
+            event.originalEvent?.stopPropagation();
+            this.clearSpiderfy();
+            this.openPopup(event, [feature.properties]);
+        });
+        this.markersGroup.addLayer(assetMarker);
+    }
+
+    private addGroupedAssetMarker(
+        features: AssetPointFeature[],
+        location: LatLng,
+    ): void {
+        const groupedMarker = createClusterMarker(location, features.length);
+        groupedMarker.on('click', (event: LeafletMouseEvent) => {
+            event.originalEvent?.stopPropagation();
+            this.clearSpiderfy();
+            this.openPopup(
+                event,
+                features.map(feature => feature.properties),
+            );
+        });
+        this.markersGroup.addLayer(groupedMarker);
+    }
+
+    private onClusterClicked(
+        event: LeafletMouseEvent,
+        cluster: AssetClusterFeature,
+    ): void {
+        if (!this.clusterIndex) {
+            return;
+        }
+
+        const clusterId = cluster.properties.cluster_id;
+        const maxZoom = this.map.getMaxZoom() ?? this.clusterMaxZoom;
+        const expansionZoom =
+            this.clusterIndex.getClusterExpansionZoom(clusterId);
+        const leaves = this.clusterIndex.getLeaves(clusterId, Infinity);
+
+        if (
+            shouldSpiderfy(leaves, expansionZoom, this.map.getZoom(), maxZoom)
+        ) {
+            this.popupService.destroyPopup();
+            this.spiderfyCluster(event, leaves);
+            return;
+        }
+
+        this.clearSpiderfy();
+        this.map.setView(event.latlng, Math.min(expansionZoom, maxZoom), {
+            animate: true,
+        });
+    }
+
+    private spiderfyCluster(
+        event: LeafletMouseEvent,
+        leaves: AssetPointFeature[],
+    ): void {
+        this.clearSpiderfy();
+
+        leaves.forEach((leaf, index) => {
+            const spiderLatLng = getSpiderfyLatLng(
+                this.map,
+                event.latlng,
+                index,
+                leaves.length,
+            );
+
+            this.spiderfyGroup.addLayer(
+                createSpiderfyLeg(event.latlng, spiderLatLng),
+            );
+
+            const spiderMarker = createSpiderfyMarker(spiderLatLng, index);
+            spiderMarker.on('click', (spiderEvent: LeafletMouseEvent) => {
+                spiderEvent.originalEvent?.stopPropagation();
+                this.openPopup(spiderEvent, [leaf.properties]);
+            });
+
+            this.spiderfyGroup.addLayer(spiderMarker);
+        });
+    }
+
+    private updateViewport(assetPoints: AssetPointFeature[]): void {
+        const bounds = buildAssetBounds(assetPoints);
+
         if (!bounds || !bounds.isValid()) {
             this.map.setView(
                 { lat: 0, lng: 0 },
                 Math.min(this.map.getMaxZoom() ?? 3, 3),
             );
-        } else {
-            const sw = bounds.getSouthWest();
-            const ne = bounds.getNorthEast();
+            return;
+        }
 
-            if (sw.equals(ne)) {
-                this.map.setView(sw, Math.min(this.map.getMaxZoom() ?? 18, 18));
-            } else {
-                setTimeout(() => {
-                    this.map.fitBounds(bounds, { padding: [24, 24] });
-                });
-            }
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+
+        if (sw.equals(ne)) {
+            this.map.setView(sw, Math.min(this.map.getMaxZoom() ?? 18, 18));
+        } else {
+            setTimeout(() => {
+                this.map.fitBounds(bounds, { padding: [24, 24] });
+            });
         }
     }
 
-    makeMarker(location: LatLng): Marker {
-        return marker(
-            { lat: location.latitude, lng: location.longitude },
-            {
-                icon: icon({
-                    iconSize: [25, 41],
-                    iconAnchor: [13, 41],
-                    iconUrl: 'assets/img/marker-icon.png',
-                    shadowUrl: 'assets/img/marker-shadow.png',
-                }),
-            },
+    private clearSpiderfy(): void {
+        this.spiderfyGroup.clearLayers();
+    }
+
+    private isMapLoaded(): boolean {
+        return Boolean(
+            (this.map as LeafletMap & { _loaded?: boolean })?._loaded,
         );
     }
 
-    openPopup(
-        event: LeafletMouseEvent,
-        asset: SpAssetModel,
-        site: AssetSiteDesc,
-    ) {
-        this.currentPopupRef = createComponent(AssetMapPopupComponent, {
-            environmentInjector: this.injector,
-        });
-
-        this.currentPopupRef.instance.asset = asset;
-        this.currentPopupRef.instance.site = site;
-        this.currentPopupRef.instance.assetLinkTypes = this.assetLinkTypes;
-
-        this.currentPopupRef.instance.actionClicked.subscribe(
-            (action: PopupAction) => {
-                this.handlePopupAction(action, asset);
-            },
-        );
-
-        this.currentPopupRef.changeDetectorRef.detectChanges();
-        const popupContent = this.currentPopupRef.location.nativeElement;
-
-        popup({
-            offset: [0, -20],
-            minWidth: 380,
-            closeButton: false,
-            className: 'sp-leaflet-popup-clean',
-        })
-            .setLatLng(event.latlng)
-            .setContent(popupContent)
-            .openOn(this.map);
-    }
-
-    handlePopupAction(action: PopupAction, asset: SpAssetModel) {}
-
-    onMarkerClicked(e: LeafletMouseEvent) {}
+    private readonly onMapViewportChanged = () => {
+        this.clearSpiderfy();
+        this.renderVisibleMarkers();
+    };
 }

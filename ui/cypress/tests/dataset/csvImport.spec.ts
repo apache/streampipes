@@ -95,7 +95,6 @@ describe('CSV import happy path', () => {
         DatasetUtils.useExistingDatasetForCsvImport(existingDatasetName);
         DatasetUtils.continueCsvImportToPreview();
         DatasetUtils.selectCsvImportDelimiterComma();
-        DatasetUtils.selectCsvImportTimestampColumn(0);
         DatasetUtils.uploadCsvImport();
         DatasetUtils.expectDatasetTotalEventCount(existingDatasetName, '14');
 
@@ -106,7 +105,6 @@ describe('CSV import happy path', () => {
         DatasetUtils.useExistingDatasetForCsvImport(existingDatasetName);
         DatasetUtils.continueCsvImportToPreview();
         DatasetUtils.selectCsvImportDelimiterComma();
-        DatasetUtils.selectCsvImportTimestampColumn(0);
         DatasetUtils.expectCsvImportSchemaMismatch(
             'Imported columns must exactly match the existing measurement schema.',
             'Timestamp column must be "timestamp" but is "event_time".',

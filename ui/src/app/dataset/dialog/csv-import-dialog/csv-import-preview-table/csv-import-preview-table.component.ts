@@ -49,6 +49,7 @@ import {
 })
 export class CsvImportPreviewTableComponent {
     readonly hasPreview = input(false);
+    readonly isExisting = input('NEW');
     readonly previewRows = input<string[][]>([]);
     readonly columnModels = input<CsvImportColumnModel[]>([]);
     readonly timestampFormat = input('');

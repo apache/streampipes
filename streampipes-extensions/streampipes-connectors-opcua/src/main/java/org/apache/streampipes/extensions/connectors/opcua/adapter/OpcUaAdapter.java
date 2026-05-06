@@ -96,6 +96,13 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
   private void prepareAdapter() throws AdapterException {
     try {
+      LOG.debug(
+          "Preparing OPC-UA adapter for server {}, pull mode {}, selected nodes {}",
+          opcUaAdapterConfig.getOpcServerURL(),
+          opcUaAdapterConfig.inPullMode(),
+          opcUaAdapterConfig.getSelectedNodeNames()
+      );
+
       this.connectedClient = clientProvider.getClient(this.opcUaAdapterConfig);
       OpcUaNodeBrowser browserClient =
           new OpcUaNodeBrowser(this.connectedClient.getClient(), this.opcUaAdapterConfig);
@@ -132,42 +139,129 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
       this.allNodes.forEach(node -> this.nodeIdToLabelMapping
           .put(node.nodeInfo().getNodeId().toString(), node.nodeInfo().getDisplayName()));
 
-
     } catch (Exception e) {
-      throw new AdapterException("The Connection to the OPC UA server could not be established.", e.getCause());
+      var errorMessage = buildStartupErrorMessage(e);
+      LOG.error(
+          "OPC UA adapter startup failed for server {} and selected nodes {}: {}",
+          opcUaAdapterConfig.getOpcServerURL(),
+          opcUaAdapterConfig.getSelectedNodeNames(),
+          errorMessage,
+          e
+      );
+      throw new AdapterException(errorMessage, e);
     }
+  }
+
+  private String buildStartupErrorMessage(Exception exception) {
+    var rootCause = getRootCause(exception);
+    var rootMessage = rootCause.getMessage();
+
+    if (rootMessage == null || rootMessage.isBlank()) {
+      rootMessage = rootCause.getClass().getSimpleName();
+    }
+
+    return "Could not start OPC UA adapter: " + rootMessage;
+  }
+
+  private Throwable getRootCause(Throwable throwable) {
+    var current = throwable;
+
+    while (current.getCause() != null && current.getCause() != current) {
+      current = current.getCause();
+    }
+
+    return current;
   }
 
   @Override
   public void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException {
-    var response =
-        this.connectedClient.getClient().readValuesAsync(
-            0,
-            TimestampsToReturn.Both,
-            this.allNodes.stream().map(o -> o.nodeInfo().getNodeId()).toList());
-    boolean badStatusCodeReceived = false;
-    boolean emptyValueReceived = false;
-    List<DataValue> returnValues =
-        response.get(this.getPollingInterval().value(), this.getPollingInterval().timeUnit());
-    if (returnValues.isEmpty()) {
-      emptyValueReceived = true;
-      LOG.warn("Empty value object returned - event will not be sent");
-    } else {
-      for (int i = 0; i < returnValues.size(); i++) {
-        var status = returnValues.get(i).getStatusCode();
-        if (StatusCode.GOOD.equals(status)) {
-          var value = returnValues.get(i).getValue();
-          this.allNodes.get(i).addToEvent(connectedClient.getClient(), this.event, value);
-        } else {
-          badStatusCodeReceived = true;
-          LOG.warn("Received status code {} for node label: {}",
-              status,
-              this.allNodes.get(i).nodeInfo().getDisplayName());
+    var nodeIds = this.allNodes.stream().map(o -> o.nodeInfo().getNodeId()).toList();
+    try {
+      LOG.debug("Reading {} OPC UA nodes: {}", nodeIds.size(), nodeIds);
+
+      var response =
+          this.connectedClient.getClient().readValuesAsync(
+              0,
+              TimestampsToReturn.Both,
+              nodeIds);
+      boolean badStatusCodeReceived = false;
+      boolean emptyValueReceived = false;
+      List<DataValue> returnValues =
+          response.get(this.getPollingInterval().value(), this.getPollingInterval().timeUnit());
+      if (returnValues == null) {
+        emptyValueReceived = true;
+        LOG.debug("Null value object returned for OPC UA nodes {} - event will not be sent", nodeIds);
+      } else if (returnValues.isEmpty()) {
+        emptyValueReceived = true;
+        LOG.warn("Empty value object returned for OPC UA nodes {} - event will not be sent", nodeIds);
+      } else {
+        if (returnValues.size() != this.allNodes.size()) {
+          LOG.debug(
+              "Received {} OPC UA values for {} configured nodes",
+              returnValues.size(),
+              this.allNodes.size()
+          );
+        }
+
+        for (int i = 0; i < returnValues.size(); i++) {
+          var node = this.allNodes.get(i);
+          var nodeId = node.nodeInfo().getNodeId();
+          var nodeLabel = node.nodeInfo().getDisplayName();
+          var dataValue = returnValues.get(i);
+
+          if (dataValue == null) {
+            badStatusCodeReceived = true;
+            LOG.debug("Received null DataValue for OPC UA node label: {}, node id: {}", nodeLabel, nodeId);
+            continue;
+          }
+
+          var status = dataValue.getStatusCode();
+          if (StatusCode.GOOD.equals(status)) {
+            var value = dataValue.getValue();
+            if (value == null || value.getValue() == null) {
+              LOG.debug(
+                  "Received good status but null value for OPC UA node label: {}, node id: {}",
+                  nodeLabel,
+                  nodeId
+              );
+            }
+
+            try {
+              node.addToEvent(connectedClient.getClient(), this.event, value);
+            } catch (RuntimeException e) {
+              LOG.debug(
+                  "Could not add OPC UA value to event for node label: {}, node id: {}, status: {}, value: {}",
+                  nodeLabel,
+                  nodeId,
+                  status,
+                  value,
+                  e
+              );
+              throw e;
+            }
+          } else {
+            badStatusCodeReceived = true;
+            LOG.warn("Received status code {} for OPC UA node label: {}, node id: {}",
+                status,
+                nodeLabel,
+                nodeId);
+          }
         }
       }
-    }
-    if (!emptyValueReceived && !shouldSkipEvent(badStatusCodeReceived)) {
-      collector.collect(this.event);
+
+      if (!emptyValueReceived && !shouldSkipEvent(badStatusCodeReceived)) {
+        try {
+          collector.collect(this.event);
+        } catch (RuntimeException e) {
+          LOG.debug("Could not collect OPC UA event with {} properties", this.event.size(), e);
+          throw e;
+        }
+      } else if (badStatusCodeReceived) {
+        LOG.debug("Skipping OPC UA event because at least one node returned a bad status code");
+      }
+    } catch (ExecutionException | InterruptedException | TimeoutException | RuntimeException e) {
+      LOG.debug("Error while reading OPC UA data for nodes {}", nodeIds, e);
+      throw e;
     }
   }
 

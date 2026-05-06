@@ -62,18 +62,38 @@
     }
 
     <div fxFlex fxLayoutAlign="end center">
-        <mat-button-toggle-group
-            [attr.aria-label]="'Font Style' | translate"
-            class="small-button"
-            [(value)]="editorMode"
-            (change)="onChangeEditor($event.value)"
-        >
-            <mat-button-toggle data-cy="editor-mode-tree" value="tree">{{
-                'Tree' | translate
-            }}</mat-button-toggle>
-            <mat-button-toggle data-cy="editor-mode-text" value="text">{{
-                'Text' | translate
-            }}</mat-button-toggle>
-        </mat-button-toggle-group>
+        <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end center">
+            @if (editorMode === 'tree' && showFullscreenToggle) {
+                <button
+                    mat-icon-button
+                    color="accent"
+                    (click)="onToggleTreeFullscreen()"
+                    [matTooltip]="
+                        treeFullscreen
+                            ? ('Exit fullscreen' | translate)
+                            : ('Open fullscreen' | translate)
+                    "
+                    data-cy="toggle-tree-fullscreen"
+                >
+                    <mat-icon>{{
+                        treeFullscreen ? 'fullscreen_exit' : 'fullscreen'
+                    }}</mat-icon>
+                </button>
+            }
+
+            <mat-button-toggle-group
+                [attr.aria-label]="'Font Style' | translate"
+                class="small-button"
+                [(value)]="editorMode"
+                (change)="onChangeEditor($event.value)"
+            >
+                <mat-button-toggle data-cy="editor-mode-tree" value="tree">{{
+                    'Tree' | translate
+                }}</mat-button-toggle>
+                <mat-button-toggle data-cy="editor-mode-text" value="text">{{
+                    'Text' | translate
+                }}</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
     </div>
 </div>

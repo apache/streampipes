@@ -28,6 +28,7 @@ export interface TableVisConfig extends DataExplorerVisConfig {
     highlightedColumns?: DataExplorerField[];
     highlightedColumnColors?: Record<string, string>;
     pageSize?: number;
+    stickyHeaders?: boolean;
     searchValue: string;
 }
 

@@ -24,7 +24,7 @@ import string
 from typing import List, Optional
 from uuid import uuid4
 
-from pydantic.v1 import BaseModel, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 
 __all__ = [
     "BaseElement",
@@ -72,19 +72,13 @@ def _snake_to_camel_case(snake_case_string: str) -> str:
 class BasicModel(BaseModel):
     """Basic model class used for the whole Python StreamPipes data model."""
 
-    class Config:
-        """Configuration class for Pydantic.
-        Defines alias generator to convert field names from camelCase (API) to snake_case (Python codebase).
-        """
-
-        alias_generator = _snake_to_camel_case
-        allow_population_by_field_name = True
+    model_config = ConfigDict(alias_generator=_snake_to_camel_case, populate_by_name=True)
 
 
 class BaseElement(BasicModel):
     """Structure of a basic element in the StreamPipes Backend."""
 
-    element_id: Optional[StrictStr]
+    element_id: Optional[StrictStr] = None
 
 
 class ValueSpecification(BasicModel):
@@ -92,11 +86,11 @@ class ValueSpecification(BasicModel):
     Data model of an `ValueSpecification` in compliance with the StreamPipes Backend.
     """
 
-    class_name: Optional[StrictStr] = Field(alias="@class")
-    element_id: Optional[StrictStr]
-    min_value: Optional[int]
-    max_value: Optional[int]
-    step: Optional[float]
+    class_name: Optional[StrictStr] = Field(default=None, alias="@class")
+    element_id: Optional[StrictStr] = None
+    min_value: Optional[int] = None
+    max_value: Optional[int] = None
+    step: Optional[float] = None
 
 
 class EventProperty(BasicModel):
@@ -106,15 +100,15 @@ class EventProperty(BasicModel):
 
     class_name: StrictStr = Field(alias="@class", default="org.apache.streampipes.model.schema.EventPropertyPrimitive")
     element_id: StrictStr = Field(default_factory=lambda: f"sp:eventproperty:{random_letters(6)}")
-    label: Optional[StrictStr]
-    description: Optional[StrictStr]
+    label: Optional[StrictStr] = None
+    description: Optional[StrictStr] = None
     runtime_name: StrictStr
-    semantic_type: Optional[StrictStr]
+    semantic_type: Optional[StrictStr] = None
     property_scope: Optional[StrictStr] = Field(default="MEASUREMENT_PROPERTY")
-    runtime_id: Optional[StrictStr]
+    runtime_id: Optional[StrictStr] = None
     runtime_type: StrictStr = Field(default="http://www.w3.org/2001/XMLSchema#string")
-    measurement_unit: Optional[StrictStr]
-    value_specification: Optional[ValueSpecification]
+    measurement_unit: Optional[StrictStr] = None
+    value_specification: Optional[ValueSpecification] = None
 
 
 class EventSchema(BasicModel):
@@ -130,13 +124,13 @@ class ApplicationLink(BasicModel):
     Data model of an `ApplicationLink` in compliance with the StreamPipes Backend.
     """
 
-    class_name: Optional[StrictStr] = Field(alias="@class")
-    element_id: Optional[StrictStr]
-    application_name: Optional[StrictStr]
-    application_description: Optional[StrictStr]
-    application_url: Optional[StrictStr]
-    application_icon_url: Optional[StrictStr]
-    application_link_type: Optional[StrictStr]
+    class_name: Optional[StrictStr] = Field(default=None, alias="@class")
+    element_id: Optional[StrictStr] = None
+    application_name: Optional[StrictStr] = None
+    application_description: Optional[StrictStr] = None
+    application_url: Optional[StrictStr] = None
+    application_icon_url: Optional[StrictStr] = None
+    application_link_type: Optional[StrictStr] = None
 
 
 class TopicDefinition(BasicModel):
@@ -186,8 +180,8 @@ class MeasurementCapability(BasicModel):
     Data model of a `MeasurementCapability` in compliance with the StreamPipes Backend.
     """
 
-    capability: Optional[StrictStr]
-    element_id: Optional[StrictStr]
+    capability: Optional[StrictStr] = None
+    element_id: Optional[StrictStr] = None
 
 
 class MeasurementObject(BasicModel):
@@ -195,5 +189,5 @@ class MeasurementObject(BasicModel):
     Data model of a `MeasurementObject` in compliance with the StreamPipes Backend.
     """
 
-    element_id: Optional[StrictStr]
-    measures_object: Optional[StrictStr]
+    element_id: Optional[StrictStr] = None
+    measures_object: Optional[StrictStr] = None

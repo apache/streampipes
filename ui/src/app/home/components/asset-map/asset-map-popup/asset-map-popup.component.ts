@@ -17,6 +17,7 @@
  */
 
 import {
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     inject,
@@ -26,16 +27,15 @@ import {
 } from '@angular/core';
 import {
     AssetLinkType,
-    AssetSiteDesc,
     Isa95TypeService,
-    SpAssetModel,
 } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
 import { SpLabelComponent } from '@streampipes/shared-ui';
 import { AssetLinkChipComponent } from './asset-link-chip/asset-link-chip.component';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AssetPopupEntry } from '../home-asset-map.types';
 
 export type PopupAction = 'details' | 'pipelines' | 'dashboards';
 
@@ -47,30 +47,35 @@ export type PopupAction = 'details' | 'pipelines' | 'dashboards';
         SpLabelComponent,
         AssetLinkChipComponent,
         MatButton,
+        MatIconButton,
         MatIcon,
         TranslatePipe,
     ],
 })
 export class AssetMapPopupComponent implements OnInit {
     @Input()
-    asset: SpAssetModel;
-
-    @Input()
-    site: AssetSiteDesc;
+    entries: AssetPopupEntry[] = [];
 
     @Input()
     assetLinkTypes: Record<string, AssetLinkType> = {};
 
     @Output() actionClicked = new EventEmitter<PopupAction>();
 
-    isa95Type: string;
+    activeEntry!: AssetPopupEntry;
+    isa95Type = '';
 
     private isa95TypeService = inject(Isa95TypeService);
     private router = inject(Router);
+    private changeDetectorRef = inject(ChangeDetectorRef);
 
     ngOnInit() {
+        if (this.entries.length === 0) {
+            return;
+        }
+
+        this.activeEntry = this.entries[0];
         this.isa95Type = this.isa95TypeService.toLabel(
-            this.asset.assetType.isa95AssetType,
+            this.activeEntry.asset.assetType.isa95AssetType,
         );
     }
 
@@ -78,8 +83,59 @@ export class AssetMapPopupComponent implements OnInit {
         this.router.navigate([
             'assets',
             'details',
-            this.asset.elementId,
+            this.activeEntry.asset.elementId,
             'view',
         ]);
+    }
+
+    previousAsset(): void {
+        const currentIndex = this.entries.findIndex(
+            entry => entry.asset.elementId === this.activeEntry.asset.elementId,
+        );
+
+        if (currentIndex > 0) {
+            this.setActiveEntry(this.entries[currentIndex - 1]);
+        }
+    }
+
+    nextAsset(): void {
+        const currentIndex = this.entries.findIndex(
+            entry => entry.asset.elementId === this.activeEntry.asset.elementId,
+        );
+
+        if (currentIndex < this.entries.length - 1) {
+            this.setActiveEntry(this.entries[currentIndex + 1]);
+        }
+    }
+
+    hasPreviousAsset(): boolean {
+        return (
+            this.entries.findIndex(
+                entry =>
+                    entry.asset.elementId === this.activeEntry.asset.elementId,
+            ) > 0
+        );
+    }
+
+    hasNextAsset(): boolean {
+        const currentIndex = this.entries.findIndex(
+            entry => entry.asset.elementId === this.activeEntry.asset.elementId,
+        );
+
+        return currentIndex > -1 && currentIndex < this.entries.length - 1;
+    }
+
+    activeAssetIndex(): number {
+        return this.entries.findIndex(
+            entry => entry.asset.elementId === this.activeEntry.asset.elementId,
+        );
+    }
+
+    private setActiveEntry(entry: AssetPopupEntry): void {
+        this.activeEntry = entry;
+        this.isa95Type = this.isa95TypeService.toLabel(
+            entry.asset.assetType.isa95AssetType,
+        );
+        this.changeDetectorRef.detectChanges();
     }
 }

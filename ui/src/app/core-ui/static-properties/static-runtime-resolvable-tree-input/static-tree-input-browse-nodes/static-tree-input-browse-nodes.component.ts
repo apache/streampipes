@@ -18,11 +18,11 @@
 import {
     Component,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
     ViewChild,
-    inject,
 } from '@angular/core';
 import {
     RuntimeResolvableTreeInputStaticProperty,
@@ -45,8 +45,6 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { NgClass } from '@angular/common';
-import { DefaultClassDirective } from '@ngbracket/ngx-layout/extended';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -64,8 +62,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatIconButton,
         MatIcon,
         MatTree,
-        NgClass,
-        DefaultClassDirective,
         MatTreeNodeDef,
         MatTreeNode,
         MatTreeNodeToggle,
@@ -97,7 +93,6 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
     @ViewChild('tree')
     tree: MatTree<TreeInputNode>;
 
-    largeView = false;
     childrenAccessor = node => node.children;
     dataSource = new MatTreeNestedDataSource<TreeInputNode>();
 

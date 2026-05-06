@@ -34,6 +34,11 @@
                         [title]="adapter.name + ' - Data'"
                     ></sp-basic-header-title-component>
                     <div fxFlex fxLayoutAlign="end center">
+                        <sp-element-id
+                            fxLayoutAlign="end start"
+                            [value]="stream.elementId"
+                        >
+                        </sp-element-id>
                         @if (adapter.running) {
                             <div class="adapter-status status-running">
                                 {{ 'Adapter running' | translate }}

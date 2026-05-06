@@ -67,11 +67,11 @@ public class TableDescription {
       if (resultSet.next()) {
         do {
           String columnName = resultSet.getString("COLUMN_NAME");
-          DbDataTypes dataType = DbDataTypes.valueOf(resultSet.getString("DATA_TYPE").toUpperCase());
+          DbDataTypes dataType = DbDataTypes.fromSqlType(resultSet.getString("DATA_TYPE"));
           this.dataTypesHashMap.put(columnName, dataType);
         } while (resultSet.next());
       } else {
-        throw new SpRuntimeException("Database or Table does nit exist.");
+        throw new SpRuntimeException("Database or Table does not exist.");
       }
     } catch (SQLException e) {
       throw new SpRuntimeException("SqlException: " + e.getMessage() + ", Error code: " + e.getErrorCode()
@@ -117,16 +117,20 @@ public class TableDescription {
 
   public void validateTable() throws SpRuntimeException {
     for (EventProperty property : this.eventSchema.getEventProperties()) {
-      if (this.getDataTypesHashMap().get(property.getRuntimeName()) != null) {
+      DbDataTypes existingType = this.getDataTypesHashMap().get(property.getRuntimeName());
+      if (existingType != null) {
         if (property instanceof EventPropertyPrimitive) {
-          DbDataTypes dataType = this.getDataTypesHashMap().get(property.getRuntimeName());
-          if (!((EventPropertyPrimitive) property).getRuntimeType()
-              .equals(DbDataTypeFactory.getDataType(dataType).toString())) {
-            throw new SpRuntimeException("Table '" + this.getName() + "' does not match the EventProperties");
+          String expected = ((EventPropertyPrimitive) property).getRuntimeType();
+          String actual = DbDataTypeFactory.getDataType(existingType).toString();
+          if (!expected.equals(actual)) {
+            throw new SpRuntimeException("Column '" + property.getRuntimeName()
+                + "' in table '" + this.getName() + "' has type mismatch: expected "
+                + expected + " but got " + actual);
           }
         }
       } else {
-        throw new SpRuntimeException("Table '" + this.getName() + "' does not match the EventProperties");
+        throw new SpRuntimeException("Column '" + property.getRuntimeName()
+            + "' is missing in table '" + this.getName() + "'");
       }
     }
   }

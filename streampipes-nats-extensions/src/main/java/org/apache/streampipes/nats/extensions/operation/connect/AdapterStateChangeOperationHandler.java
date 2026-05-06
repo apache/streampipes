@@ -31,8 +31,12 @@ import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseF
 import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerTopicParser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AdapterStateChangeOperationHandler implements ExtensionBrokerOperationHandler {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AdapterStateChangeOperationHandler.class);
 
   private static final String OPERATION = ExtensionServiceBrokerOperations.ADAPTER_STATE_CHANGE.operationId();
   private static final String COMMAND_START = "start";
@@ -81,10 +85,17 @@ public class AdapterStateChangeOperationHandler implements ExtensionBrokerOperat
           "Unknown adapter state change command in topic " + context.topic()
       );
     } catch (AdapterException e) {
+      LOG.error(
+          "Error while executing adapter state change command {} for adapter {}",
+          command,
+          adapterDescription.getElementId(),
+          e
+      );
+      var responseException = new AdapterException(e.getMessage());
       return new ExtensionServiceBrokerResponseEnvelope(
           request.getRequestId(),
           ExtensionBrokerResponseFactory.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-          objectMapper.writeValueAsString(e),
+          objectMapper.writeValueAsString(responseException),
           new ExtensionServiceBrokerErrorEnvelope(e.getClass().getSimpleName(), e.getMessage())
       );
     }
