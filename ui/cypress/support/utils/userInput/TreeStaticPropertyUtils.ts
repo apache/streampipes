@@ -79,7 +79,12 @@ export class TreeStaticPropertyUtils {
         if (!treeNode.isTextConfig) {
             // configure tree node
             if (treeNode.children && treeNode.children.length > 0) {
-                TreeStaticPropertyUtils.expandNode(treeNode.name);
+                const firstChild = treeNode.children[0];
+                TreeStaticPropertyUtils.expandNode(
+                    treeNode.name,
+                    firstChild.name,
+                    firstChild.children && firstChild.children.length > 0,
+                );
                 treeNode.children.forEach(child => {
                     this.selectTreeNode(child);
                 });
@@ -95,15 +100,38 @@ export class TreeStaticPropertyUtils {
     /**
      * Expand the node with @param treeNodeName in the tree view
      */
-    public static expandNode(treeNodeName: string) {
-        cy.dataCy('expand-' + treeNodeName).click();
+    public static expandNode(
+        treeNodeName: string,
+        childNodeName?: string,
+        childIsExpandable = true,
+    ) {
+        cy.dataCy('expand-' + treeNodeName, { timeout: 10000 })
+            .scrollIntoView()
+            .click({
+                force: true,
+            });
+
+        if (childNodeName) {
+            TreeStaticPropertyUtils.waitForNode(
+                childNodeName,
+                childIsExpandable,
+            );
+        }
     }
 
-    /**
-     * Select the node with @param treeNodeName in the tree view
-     */
+    public static waitForNode(treeNodeName: string, expandable = true) {
+        const dataCyPrefix = expandable ? 'expand-' : 'tree-node-';
+        cy.dataCy(dataCyPrefix + treeNodeName, { timeout: 10000 })
+            .scrollIntoView()
+            .should('exist');
+    }
+
     public static selectNode(treeNodeName: string) {
-        cy.dataCy('select-' + treeNodeName).click();
+        cy.dataCy('select-' + treeNodeName)
+            .scrollIntoView()
+            .click({
+                force: true,
+            });
     }
 
     /**
