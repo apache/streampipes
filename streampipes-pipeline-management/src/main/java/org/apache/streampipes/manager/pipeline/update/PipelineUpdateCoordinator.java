@@ -199,8 +199,8 @@ public class PipelineUpdateCoordinator {
         .getPipelineModifications()
         .stream()
         .flatMap(modification -> modification.getValidationInfos().stream())
-        .anyMatch(validationInfo -> MeasurementChangeValidationStep.MEASUREMENT_UPDATE_REQUIRED
-            .equals(validationInfo.getMessage()));
+        .anyMatch(validationInfo -> validationInfo.getMessage() != null
+            && validationInfo.getMessage().startsWith(MeasurementChangeValidationStep.MEASUREMENT_UPDATE_REQUIRED));
   }
 
   private List<String> toNotification(PipelineUpdateInfo updateInfo,

@@ -29,6 +29,7 @@ import org.apache.streampipes.model.schema.EventSchema;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MeasurementChangeValidationStep extends AbstractPipelineValidationStep {
 
@@ -50,10 +51,11 @@ public class MeasurementChangeValidationStep extends AbstractPipelineValidationS
                     InvocableStreamPipesEntity target,
                     Set<InvocableStreamPipesEntity> allTargets,
                     List<PipelineElementValidationInfo> validationInfos) {
-    if (target instanceof DataSinkInvocation dataSink
-        && detector.isDatabaseSink(dataSink)
-        && hasCriticalMeasurementFieldChange(source, dataSink)) {
-      validationInfos.add(PipelineElementValidationInfo.error(MEASUREMENT_UPDATE_REQUIRED));
+    if (target instanceof DataSinkInvocation dataSink && detector.isDatabaseSink(dataSink)) {
+      var criticalFieldChanges = findCriticalMeasurementFieldChanges(source, dataSink);
+      if (!criticalFieldChanges.isEmpty()) {
+        validationInfos.add(PipelineElementValidationInfo.error(makeValidationMessage(criticalFieldChanges)));
+      }
     }
 
     if (target.getInputStreams() != null && target.getInputStreams().size() > 1) {
@@ -61,14 +63,29 @@ public class MeasurementChangeValidationStep extends AbstractPipelineValidationS
     }
   }
 
-  private boolean hasCriticalMeasurementFieldChange(NamedStreamPipesEntity source,
-                                                    DataSinkInvocation dataSink) {
+  private List<MeasurementChangeDetector.CriticalMeasurementFieldChange> findCriticalMeasurementFieldChanges(
+      NamedStreamPipesEntity source,
+      DataSinkInvocation dataSink) {
     var existingEventSchema = getExistingDataSinkSchema(dataSink);
     var updatedEventSchema = getUpdatedSourceSchema(source);
 
-    return existingEventSchema.isPresent()
-        && updatedEventSchema.isPresent()
-        && detector.hasCriticalMeasurementFieldChange(existingEventSchema.get(), updatedEventSchema.get());
+    if (existingEventSchema.isPresent() && updatedEventSchema.isPresent()) {
+      return detector.findCriticalMeasurementFieldChanges(existingEventSchema.get(), updatedEventSchema.get());
+    } else {
+      return List.of();
+    }
+  }
+
+  private String makeValidationMessage(
+      List<MeasurementChangeDetector.CriticalMeasurementFieldChange> criticalFieldChanges) {
+    return MEASUREMENT_UPDATE_REQUIRED + ": " + criticalFieldChanges
+        .stream()
+        .map(change -> "%s (%s -> %s)".formatted(
+            change.runtimeName(),
+            change.existingType(),
+            change.updatedType()
+        ))
+        .collect(Collectors.joining(", "));
   }
 
   private Optional<EventSchema> getExistingDataSinkSchema(DataSinkInvocation dataSink) {

@@ -29,6 +29,7 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -42,14 +43,20 @@ public class MeasurementChangeDetector {
   public boolean hasCriticalMeasurementFieldChange(Pipeline pipeline,
                                                    String affectedElementId,
                                                    EventSchema updatedEventSchema) {
+    return !findCriticalMeasurementFieldChanges(pipeline, affectedElementId, updatedEventSchema).isEmpty();
+  }
+
+  public List<CriticalMeasurementFieldChange> findCriticalMeasurementFieldChanges(Pipeline pipeline,
+                                                                                  String affectedElementId,
+                                                                                  EventSchema updatedEventSchema) {
     if (!hasDatabaseSink(pipeline)) {
-      return false;
+      return List.of();
     }
 
     return getEventSchema(pipeline, affectedElementId)
         .map(existingEventSchema ->
-            hasCriticalMeasurementFieldChange(existingEventSchema, updatedEventSchema))
-        .orElse(false);
+            findCriticalMeasurementFieldChanges(existingEventSchema, updatedEventSchema))
+        .orElse(List.of());
   }
 
   private boolean hasDatabaseSink(Pipeline pipeline) {
@@ -74,6 +81,11 @@ public class MeasurementChangeDetector {
 
   public boolean hasCriticalMeasurementFieldChange(EventSchema existingEventSchema,
                                                    EventSchema updatedEventSchema) {
+    return !findCriticalMeasurementFieldChanges(existingEventSchema, updatedEventSchema).isEmpty();
+  }
+
+  public List<CriticalMeasurementFieldChange> findCriticalMeasurementFieldChanges(EventSchema existingEventSchema,
+                                                                                  EventSchema updatedEventSchema) {
     var existingMeasurementFields = existingEventSchema
         .getEventProperties()
         .stream()
@@ -88,10 +100,20 @@ public class MeasurementChangeDetector {
         .getEventProperties()
         .stream()
         .filter(this::isMeasurementField)
-        .anyMatch(updatedProperty -> {
+        .map(updatedProperty -> {
           var existingProperty = existingMeasurementFields.get(updatedProperty.getRuntimeName());
-          return existingProperty != null && hasCriticalFieldTypeChange(existingProperty, updatedProperty);
-        });
+          if (existingProperty != null && hasCriticalFieldTypeChange(existingProperty, updatedProperty)) {
+            return Optional.of(new CriticalMeasurementFieldChange(
+                updatedProperty.getRuntimeName(),
+                toDisplayType(existingProperty),
+                toDisplayType(updatedProperty)
+            ));
+          } else {
+            return Optional.<CriticalMeasurementFieldChange>empty();
+          }
+        })
+        .flatMap(Optional::stream)
+        .toList();
   }
 
   private boolean isMeasurementField(EventProperty eventProperty) {
@@ -124,6 +146,19 @@ public class MeasurementChangeDetector {
     } else {
       return StorageType.STRING;
     }
+  }
+
+  private String toDisplayType(EventProperty eventProperty) {
+    if (eventProperty instanceof EventPropertyPrimitive primitiveProperty) {
+      return primitiveProperty.getRuntimeType();
+    } else {
+      return eventProperty.getClass().getSimpleName();
+    }
+  }
+
+  public record CriticalMeasurementFieldChange(String runtimeName,
+                                               String existingType,
+                                               String updatedType) {
   }
 
   private enum StorageType {
