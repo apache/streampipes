@@ -60,6 +60,7 @@ export abstract class BaseRuntimeResolvableInput<
     loading = false;
     error = false;
     errorMessage: SpLogMessage;
+    private lastDependencyRevisionKey: string;
 
     onInit() {}
 
@@ -124,16 +125,33 @@ export abstract class BaseRuntimeResolvableInput<
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['completedConfigurations']) {
+        if (
+            changes['completedConfigurations'] &&
+            this.staticProperty.dependsOn?.length > 0
+        ) {
+            const dependencyRevisionKey = this.makeDependencyRevisionKey();
             if (
+                dependencyRevisionKey !== this.lastDependencyRevisionKey &&
                 this.staticPropertyUtils.allDependenciesSatisfied(
                     this.staticProperty.dependsOn,
                     this.completedConfigurations,
                 )
             ) {
+                this.lastDependencyRevisionKey = dependencyRevisionKey;
                 this.loadOptionsFromRestApi();
             }
         }
+    }
+
+    private makeDependencyRevisionKey(): string {
+        return this.staticProperty.dependsOn
+            .map(dependency => {
+                const completedConfig = this.completedConfigurations.find(
+                    config => config.staticPropertyInternalName === dependency,
+                );
+                return `${dependency}:${completedConfig?.revision ?? 0}`;
+            })
+            .join('|');
     }
 
     abstract parse(staticProperty: StaticPropertyUnion): T;

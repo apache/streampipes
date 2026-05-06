@@ -79,24 +79,41 @@ public class OpcUaEventFieldProvider {
         : selectedAdditionalFieldNames);
 
     var fields = new LinkedHashMap<String, OpcUaAlarmField>();
-    OpcUaAlarmField.fieldsForType(selectedEventTypeId, objectTypeTree)
+    OpcUaAlarmField.baseEventFieldsOnly()
         .forEach(field -> fields.put(field.outputField(), field));
 
-    buildAdditionalFields(selectedEventTypeId).stream()
-        .filter(field -> selectedNames.contains(field.selectionId()))
+    if (selectedNames.isEmpty()) {
+      return List.copyOf(fields.values());
+    }
+
+    var unresolvedSelectedNames = new java.util.HashSet<>(selectedNames);
+    OpcUaAlarmField.additionalFieldsForType(selectedEventTypeId, objectTypeTree).stream()
+        .filter(field -> unresolvedSelectedNames.remove(field.selectionId()))
+        .forEach(field -> fields.put(field.outputField(), field));
+
+    if (unresolvedSelectedNames.isEmpty()) {
+      return List.copyOf(fields.values());
+    }
+
+    buildDeclaredFields(selectedEventTypeId).values().stream()
+        .filter(field -> unresolvedSelectedNames.contains(field.selectionId()))
         .forEach(field -> fields.put(field.outputField(), field));
 
     return List.copyOf(fields.values());
   }
 
   private List<OpcUaAlarmField> buildAdditionalFields(NodeId selectedEventTypeId) {
-    var fields = buildDeclaredFields(selectedEventTypeId);
-    var standardFieldNames = OpcUaAlarmField.fieldsForType(selectedEventTypeId, objectTypeTree).stream()
+    var fields = new LinkedHashMap<String, OpcUaAlarmField>();
+    OpcUaAlarmField.additionalFieldsForType(selectedEventTypeId, objectTypeTree)
+        .forEach(field -> fields.put(field.selectionId(), field));
+    fields.putAll(buildDeclaredFields(selectedEventTypeId));
+
+    var baseFieldNames = OpcUaAlarmField.baseEventFieldsOnly().stream()
         .map(OpcUaAlarmField::outputField)
         .collect(Collectors.toSet());
 
     return deduplicateAdditionalFields(fields.values().stream()
-        .filter(field -> !standardFieldNames.contains(field.outputField()))
+        .filter(field -> !baseFieldNames.contains(field.outputField()))
         .sorted(java.util.Comparator.comparing(OpcUaAlarmField::displayName, String.CASE_INSENSITIVE_ORDER))
         .toList());
   }
@@ -131,43 +148,55 @@ public class OpcUaEventFieldProvider {
                                            NodeId declaringTypeId,
                                            List<QualifiedName> currentPath,
                                            Map<String, OpcUaAlarmField> fields) {
-    var currentNode = resolveNode(currentNodeId);
-
     for (UaNode childNode : browseAggregateChildren(currentNodeId)) {
       var nextPath = new ArrayList<>(currentPath);
       nextPath.add(childNode.getBrowseName());
 
       var nestedChildren = browseAggregateChildren(childNode.getNodeId());
-      if (nestedChildren.isEmpty()) {
-        var field = currentNode instanceof UaVariableNode currentVariableNode
-            && isTwoStateIdSelection(currentVariableNode, childNode.getBrowseName())
-            ? OpcUaAlarmField.fromTwoStateIdBrowsePath(declaringTypeId, childNode.getNodeId(), nextPath)
-            : OpcUaAlarmField.fromBrowsePath(declaringTypeId, childNode.getNodeId(), nextPath);
+      var isTwoStateVariable = false;
+      if (childNode instanceof UaVariableNode childVariableNode) {
+        isTwoStateVariable = hasIdChild(nestedChildren) && isTwoStateVariable(childVariableNode);
+        var field = makeField(declaringTypeId, childNode.getNodeId(), nextPath, isTwoStateVariable);
         fields.putIfAbsent(field.selectionId(), field);
-      } else {
+      }
+
+      if (!isTwoStateVariable && !nestedChildren.isEmpty()) {
         collectInstanceDeclarations(childNode.getNodeId(), declaringTypeId, nextPath, fields);
       }
     }
   }
 
-  private UaNode resolveNode(NodeId nodeId) {
-    try {
-      return client.getAddressSpace().getNode(nodeId);
-    } catch (UaException e) {
-      return null;
-    }
+  private OpcUaAlarmField makeField(NodeId declaringTypeId,
+                                    NodeId declarationNodeId,
+                                    List<QualifiedName> browsePath,
+                                    boolean isTwoStateVariable) {
+    return isTwoStateVariable
+        ? OpcUaAlarmField.fromTwoStateIdBrowsePath(
+            declaringTypeId,
+            declarationNodeId,
+            appendIdBrowsePath(browsePath)
+        )
+        : OpcUaAlarmField.fromBrowsePath(declaringTypeId, declarationNodeId, browsePath);
   }
 
-  private boolean isTwoStateIdSelection(UaVariableNode variableNode, QualifiedName childBrowseName) {
-    if (!"Id".equals(childBrowseName.getName())) {
-      return false;
-    }
-
+  private boolean isTwoStateVariable(UaVariableNode variableNode) {
     try {
       return isVariableTypeOrSubtypeOf(variableNode.getTypeDefinition(), NodeIds.TwoStateVariableType);
     } catch (UaException e) {
       return false;
     }
+  }
+
+  private boolean hasIdChild(List<? extends UaNode> nestedChildren) {
+    return nestedChildren.stream()
+        .map(UaNode::getBrowseName)
+        .anyMatch(browseName -> "Id".equals(browseName.getName()));
+  }
+
+  private List<QualifiedName> appendIdBrowsePath(List<QualifiedName> browsePath) {
+    var idBrowsePath = new ArrayList<>(browsePath);
+    idBrowsePath.add(new QualifiedName(0, "Id"));
+    return idBrowsePath;
   }
 
   private boolean isVariableTypeOrSubtypeOf(UaVariableTypeNode variableTypeNode, NodeId targetTypeId) {

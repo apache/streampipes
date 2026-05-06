@@ -141,6 +141,9 @@ class OpcUaAlarmEventMapperTest {
     );
 
     assertEquals("enabled", field.outputField());
+    assertEquals(2, field.browsePath().length);
+    assertEquals("EnabledState", field.browsePath()[0].getName());
+    assertEquals("Id", field.browsePath()[1].getName());
     assertEquals(1, field.eventBrowsePath().length);
     assertEquals("EnabledState", field.eventBrowsePath()[0].getName());
     assertEquals(OpcUaAlarmField.ExtractionMode.TWO_STATE_LOCALIZED_TEXT, field.extractionMode());

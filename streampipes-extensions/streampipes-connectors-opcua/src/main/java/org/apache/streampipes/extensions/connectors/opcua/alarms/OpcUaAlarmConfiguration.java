@@ -69,7 +69,8 @@ public class OpcUaAlarmConfiguration {
     );
 
     builder.requiredMultiValueSelectionFromContainer(
-        Labels.withId(ADDITIONAL_FIELDS)
+        Labels.withId(ADDITIONAL_FIELDS),
+        List.of(EVENT_TYPE)
     );
 
     builder.requiredAlternatives(

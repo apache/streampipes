@@ -219,13 +219,14 @@ public record OpcUaAlarmField(String outputField,
   private static OpcUaAlarmField twoStateField(String outputField,
                                                NodeId typeDefinitionId,
                                                String... browsePath) {
-    var qualifiedNames = qualifiedNames(browsePath);
+    var qualifiedNames = Arrays.copyOf(qualifiedNames(browsePath), browsePath.length + 1);
+    qualifiedNames[browsePath.length] = new QualifiedName(0, "Id");
     return new OpcUaAlarmField(
         outputField,
         buildDerivedSelectionId(typeDefinitionId, Arrays.stream(qualifiedNames).toList()),
         typeDefinitionId,
         qualifiedNames,
-        qualifiedNames,
+        Arrays.copyOf(qualifiedNames, browsePath.length),
         ExtractionMode.TWO_STATE_LOCALIZED_TEXT
     );
   }
