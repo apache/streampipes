@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.manager.pipeline.update;
+package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.SpDataStream;
@@ -29,13 +29,13 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
-public class PipelineMeasurementChangeDetector {
+public class MeasurementChangeDetector {
 
   private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
 
@@ -53,13 +53,13 @@ public class PipelineMeasurementChangeDetector {
   }
 
   private boolean hasDatabaseSink(Pipeline pipeline) {
-    return pipeline.getActions().stream()
+    return streamOf(pipeline.getActions())
         .anyMatch(this::isDatabaseSink);
   }
 
-  private boolean isDatabaseSink(DataSinkInvocation dataSink) {
+  public boolean isDatabaseSink(DataSinkInvocation dataSink) {
     return DATA_LAKE_SINK_APP_ID.equals(dataSink.getAppId())
-        || dataSink.getCategory().stream().anyMatch(DataSinkType.DATABASE.name()::equals);
+        || streamOf(dataSink.getCategory()).anyMatch(DataSinkType.DATABASE.name()::equals);
   }
 
   private Optional<EventSchema> getEventSchema(Pipeline pipeline,
@@ -72,8 +72,8 @@ public class PipelineMeasurementChangeDetector {
         .map(SpDataStream::getEventSchema);
   }
 
-  private boolean hasCriticalMeasurementFieldChange(EventSchema existingEventSchema,
-                                                    EventSchema updatedEventSchema) {
+  public boolean hasCriticalMeasurementFieldChange(EventSchema existingEventSchema,
+                                                   EventSchema updatedEventSchema) {
     var existingMeasurementFields = existingEventSchema
         .getEventProperties()
         .stream()
@@ -131,5 +131,13 @@ public class PipelineMeasurementChangeDetector {
     FLOAT,
     BOOLEAN,
     STRING
+  }
+
+  private <T> Stream<T> streamOf(Iterable<T> iterable) {
+    if (iterable == null) {
+      return Stream.empty();
+    }
+
+    return StreamSupport.stream(iterable.spliterator(), false);
   }
 }

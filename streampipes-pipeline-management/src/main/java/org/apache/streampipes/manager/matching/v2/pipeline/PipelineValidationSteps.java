@@ -27,6 +27,7 @@ public class PipelineValidationSteps {
 
   public List<IPipelineValidationStep> collect(ExtensionServiceRequestManager requestManager) {
     return Arrays.asList(
+        new MeasurementChangeValidationStep(),
         new PrepareStep(),
         new ApplyGroundingStep(),
         new SchemaValidationStep(),
