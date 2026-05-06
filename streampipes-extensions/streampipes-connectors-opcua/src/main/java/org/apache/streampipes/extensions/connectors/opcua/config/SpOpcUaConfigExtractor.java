@@ -158,7 +158,7 @@ public class SpOpcUaConfigExtractor {
     String selectedAlternativeAuthentication =
         extractor.selectedAlternativeInternalId(SharedUserConfiguration.USER_AUTHENTICATION);
 
-    if (includeNodeSelection && extractor.getStaticPropertyByName(AVAILABLE_NODES.name()) != null) {
+    if (includeNodeSelection) {
       List<String> selectedNodeNames =
           extractor.selectedTreeNodesInternalNames(AVAILABLE_NODES.name(), String.class);
       config.setSelectedNodeNames(selectedNodeNames);
