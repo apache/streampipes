@@ -34,6 +34,7 @@ import org.eclipse.milo.opcua.stack.core.types.structured.LiteralOperand;
 import org.eclipse.milo.opcua.stack.core.util.Tree;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -46,7 +47,7 @@ class OpcUaAlarmEventMapperTest {
 
   @Test
   void derivesBaseEventFieldsForBaseEventType() {
-    var fields = OpcUaAlarmField.fieldsForType(NodeIds.BaseEventType, makeObjectTypeTree());
+    var fields = OpcUaAlarmField.baseEventFieldsOnly();
 
     assertTrue(containsField(fields, "sourceName"));
     assertTrue(containsField(fields, "severity"));
@@ -58,9 +59,8 @@ class OpcUaAlarmEventMapperTest {
 
   @Test
   void derivesAdditionalFieldsForAlarmConditionSubtypes() {
-    var fields = OpcUaAlarmField.fieldsForType(NodeIds.AlarmConditionType, makeObjectTypeTree());
+    var fields = OpcUaAlarmField.additionalFieldsForType(NodeIds.AlarmConditionType, makeObjectTypeTree());
 
-    assertTrue(containsField(fields, "sourceName"));
     assertTrue(containsField(fields, "conditionName"));
     assertTrue(containsField(fields, "retain"));
     assertTrue(containsField(fields, "acked"));
@@ -71,7 +71,7 @@ class OpcUaAlarmEventMapperTest {
   @Test
   void selectsBaseFieldsPlusConfiguredAdditionalFieldsOnly() {
     var objectTypeTree = makeObjectTypeTree();
-    var fields = OpcUaAlarmField.selectedFieldsForType(
+    var fields = selectBaseFieldsPlusAdditionalFields(
         NodeIds.AlarmConditionType,
         selectionIdsFor(objectTypeTree, NodeIds.AlarmConditionType, "conditionName", "active"),
         objectTypeTree
@@ -89,10 +89,12 @@ class OpcUaAlarmEventMapperTest {
   void derivesFieldNameAndDisplayNameFromBrowsePath() {
     var activeField = OpcUaAlarmField.fromBrowsePath(
         NodeIds.AlarmConditionType,
+        new NodeId(0, 1234),
         List.of(new QualifiedName(0, "ActiveState"), new QualifiedName(0, "Id"))
     );
     var limitField = OpcUaAlarmField.fromBrowsePath(
         NodeIds.AlarmConditionType,
+        new NodeId(0, 5678),
         List.of(new QualifiedName(0, "HighLimit"))
     );
 
@@ -154,7 +156,7 @@ class OpcUaAlarmEventMapperTest {
     var objectTypeTree = makeObjectTypeTree();
     var mapper = new OpcUaAlarmEventMapper(
         NodeIds.AlarmConditionType,
-        OpcUaAlarmField.selectedFieldsForType(
+        selectBaseFieldsPlusAdditionalFields(
             NodeIds.AlarmConditionType,
             selectionIdsFor(objectTypeTree, NodeIds.AlarmConditionType, "conditionName", "retain", "acked", "active"),
             objectTypeTree
@@ -211,7 +213,11 @@ class OpcUaAlarmEventMapperTest {
   void addsServerSideWhereClauseForSelectedEventType() {
     var mapper = new OpcUaAlarmEventMapper(
         NodeIds.AlarmConditionType,
-        OpcUaAlarmField.fieldsForType(NodeIds.AlarmConditionType, makeObjectTypeTree())
+        selectBaseFieldsPlusAdditionalFields(
+            NodeIds.AlarmConditionType,
+            selectionIdsFor(makeObjectTypeTree(), NodeIds.AlarmConditionType, "conditionName"),
+            makeObjectTypeTree()
+        )
     );
 
     var filter = mapper.makeEventFilter(DefaultEncodingContext.INSTANCE);
@@ -242,6 +248,16 @@ class OpcUaAlarmEventMapperTest {
         .filter(field -> selectedOutputFields.contains(field.outputField()))
         .map(OpcUaAlarmField::selectionId)
         .toList();
+  }
+
+  private List<OpcUaAlarmField> selectBaseFieldsPlusAdditionalFields(NodeId selectedTypeId,
+                                                                     List<String> selectedAdditionalFieldNames,
+                                                                     ObjectTypeTree objectTypeTree) {
+    var fields = new ArrayList<>(OpcUaAlarmField.baseEventFieldsOnly());
+    fields.addAll(OpcUaAlarmField.additionalFieldsForType(selectedTypeId, objectTypeTree).stream()
+        .filter(field -> selectedAdditionalFieldNames.contains(field.selectionId()))
+        .toList());
+    return fields;
   }
 
   private ObjectTypeTree makeObjectTypeTree() {

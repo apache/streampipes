@@ -28,7 +28,6 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public record OpcUaAlarmField(String outputField,
@@ -41,17 +40,6 @@ public record OpcUaAlarmField(String outputField,
   enum ExtractionMode {
     DIRECT,
     TWO_STATE_LOCALIZED_TEXT
-  }
-
-  static OpcUaAlarmField fromBrowsePath(NodeId typeDefinitionId, List<QualifiedName> browsePath) {
-    return new OpcUaAlarmField(
-        toOutputFieldName(browsePath),
-        buildDerivedSelectionId(typeDefinitionId, browsePath),
-        typeDefinitionId,
-        browsePath.toArray(QualifiedName[]::new),
-        browsePath.toArray(QualifiedName[]::new),
-        ExtractionMode.DIRECT
-    );
   }
 
   static OpcUaAlarmField fromBrowsePath(NodeId typeDefinitionId,
@@ -82,26 +70,6 @@ public record OpcUaAlarmField(String outputField,
     );
   }
 
-  static List<OpcUaAlarmField> fieldsForType(NodeId selectedEventTypeId, ObjectTypeTree objectTypeTree) {
-    Map<String, OpcUaAlarmField> fields = new LinkedHashMap<>();
-
-    baseEventFields().forEach(field -> fields.put(field.outputField(), field));
-
-    if (isTypeOrSubtypeOf(selectedEventTypeId, NodeIds.ConditionType, objectTypeTree)) {
-      conditionFields().forEach(field -> fields.put(field.outputField(), field));
-    }
-
-    if (isTypeOrSubtypeOf(selectedEventTypeId, NodeIds.AcknowledgeableConditionType, objectTypeTree)) {
-      acknowledgeableConditionFields().forEach(field -> fields.put(field.outputField(), field));
-    }
-
-    if (isTypeOrSubtypeOf(selectedEventTypeId, NodeIds.AlarmConditionType, objectTypeTree)) {
-      alarmConditionFields().forEach(field -> fields.put(field.outputField(), field));
-    }
-
-    return List.copyOf(fields.values());
-  }
-
   static List<OpcUaAlarmField> additionalFieldsForType(NodeId selectedEventTypeId, ObjectTypeTree objectTypeTree) {
     var baseFieldNames = baseEventFields().stream()
         .map(OpcUaAlarmField::outputField)
@@ -111,23 +79,6 @@ public record OpcUaAlarmField(String outputField,
         .filter(field -> !baseFieldNames.contains(field.outputField()))
         .sorted(Comparator.comparing(OpcUaAlarmField::displayName, String.CASE_INSENSITIVE_ORDER))
         .toList();
-  }
-
-  static List<OpcUaAlarmField> selectedFieldsForType(NodeId selectedEventTypeId,
-                                                     List<String> selectedAdditionalFieldNames,
-                                                     ObjectTypeTree objectTypeTree) {
-    var selectedAdditionalFields = Set.copyOf(selectedAdditionalFieldNames == null
-        ? List.of()
-        : selectedAdditionalFieldNames);
-
-    var fields = new LinkedHashMap<String, OpcUaAlarmField>();
-    baseEventFields().forEach(field -> fields.put(field.outputField(), field));
-
-    additionalFieldsForType(selectedEventTypeId, objectTypeTree).stream()
-        .filter(field -> selectedAdditionalFields.contains(field.selectionId()))
-        .forEach(field -> fields.put(field.outputField(), field));
-
-    return List.copyOf(fields.values());
   }
 
   static List<OpcUaAlarmField> baseEventFieldsOnly() {
@@ -168,6 +119,26 @@ public record OpcUaAlarmField(String outputField,
                                            NodeId targetTypeId,
                                            ObjectTypeTree objectTypeTree) {
     return selectedEventTypeId.equals(targetTypeId) || objectTypeTree.isSubtypeOf(selectedEventTypeId, targetTypeId);
+  }
+
+  private static List<OpcUaAlarmField> fieldsForType(NodeId selectedEventTypeId, ObjectTypeTree objectTypeTree) {
+    Map<String, OpcUaAlarmField> fields = new LinkedHashMap<>();
+
+    baseEventFields().forEach(field -> fields.put(field.outputField(), field));
+
+    if (isTypeOrSubtypeOf(selectedEventTypeId, NodeIds.ConditionType, objectTypeTree)) {
+      conditionFields().forEach(field -> fields.put(field.outputField(), field));
+    }
+
+    if (isTypeOrSubtypeOf(selectedEventTypeId, NodeIds.AcknowledgeableConditionType, objectTypeTree)) {
+      acknowledgeableConditionFields().forEach(field -> fields.put(field.outputField(), field));
+    }
+
+    if (isTypeOrSubtypeOf(selectedEventTypeId, NodeIds.AlarmConditionType, objectTypeTree)) {
+      alarmConditionFields().forEach(field -> fields.put(field.outputField(), field));
+    }
+
+    return List.copyOf(fields.values());
   }
 
   private static List<OpcUaAlarmField> baseEventFields() {
