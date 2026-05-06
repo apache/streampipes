@@ -64,15 +64,17 @@ class OpcUaAlarmEventMapperTest {
     assertTrue(containsField(fields, "conditionName"));
     assertTrue(containsField(fields, "retain"));
     assertTrue(containsField(fields, "acked"));
+    assertTrue(containsField(fields, "confirmed"));
     assertTrue(containsField(fields, "active"));
   }
 
   @Test
   void selectsBaseFieldsPlusConfiguredAdditionalFieldsOnly() {
+    var objectTypeTree = makeObjectTypeTree();
     var fields = OpcUaAlarmField.selectedFieldsForType(
         NodeIds.AlarmConditionType,
-        List.of("conditionName", "active"),
-        makeObjectTypeTree()
+        selectionIdsFor(objectTypeTree, NodeIds.AlarmConditionType, "conditionName", "active"),
+        objectTypeTree
     );
 
     assertTrue(containsField(fields, "sourceName"));
@@ -101,13 +103,38 @@ class OpcUaAlarmEventMapperTest {
   }
 
   @Test
+  void usesDeclarationNodeIdAsSelectionIdForDynamicFields() {
+    var field = OpcUaAlarmField.fromBrowsePath(
+        NodeIds.AlarmConditionType,
+        new NodeId(0, 1234),
+        List.of(new QualifiedName(0, "HighLimit"))
+    );
+
+    assertEquals("i=1234", field.selectionId());
+  }
+
+  @Test
+  void derivesBooleanOutputFieldNameFromStateIdBrowsePath() {
+    var field = OpcUaAlarmField.fromBrowsePath(
+        NodeIds.ConditionType,
+        new NodeId(0, 1234),
+        List.of(new QualifiedName(0, "EnabledState"), new QualifiedName(0, "Id"))
+    );
+
+    assertEquals("enabled", field.outputField());
+    assertEquals(1, field.eventBrowsePath().length);
+    assertEquals("EnabledState", field.eventBrowsePath()[0].getName());
+  }
+
+  @Test
   void mapsEventValuesUsingDerivedFieldOrder() {
+    var objectTypeTree = makeObjectTypeTree();
     var mapper = new OpcUaAlarmEventMapper(
         NodeIds.AlarmConditionType,
         OpcUaAlarmField.selectedFieldsForType(
             NodeIds.AlarmConditionType,
-            List.of("conditionName", "retain", "acked", "active"),
-            makeObjectTypeTree()
+            selectionIdsFor(objectTypeTree, NodeIds.AlarmConditionType, "conditionName", "retain", "acked", "active"),
+            objectTypeTree
         )
     );
     var now = DateTime.now();
@@ -120,8 +147,8 @@ class OpcUaAlarmEventMapperTest {
         new Variant(now),
         new Variant(ByteString.of(new byte[] {1, 2, 3})),
         new Variant(new NodeId(0, 2915)),
-        new Variant(false),
-        new Variant(true),
+        new Variant(LocalizedText.english("Acknowledged")),
+        new Variant(LocalizedText.english("Active")),
         new Variant("LowPressure"),
         new Variant(true)
     });
@@ -135,8 +162,26 @@ class OpcUaAlarmEventMapperTest {
     assertEquals("i=2915", event.get("eventType"));
     assertEquals("LowPressure", event.get("conditionName"));
     assertEquals(true, event.get("retain"));
-    assertEquals(false, event.get("acked"));
+    assertEquals(true, event.get("acked"));
     assertEquals(true, event.get("active"));
+  }
+
+  @Test
+  void mapsEnabledStateTextToBoolean() {
+    var mapper = new OpcUaAlarmEventMapper(
+        NodeIds.ConditionType,
+        List.of(
+            OpcUaAlarmField.fromBrowsePath(
+                NodeIds.ConditionType,
+                new NodeId(0, 1234),
+                List.of(new QualifiedName(0, "EnabledState"), new QualifiedName(0, "Id"))
+            )
+        )
+    );
+
+    var event = mapper.toEvent(new Variant[] {new Variant(LocalizedText.english("Enabled"))});
+
+    assertEquals(true, event.get("enabled"));
   }
 
   @Test
@@ -163,6 +208,17 @@ class OpcUaAlarmEventMapperTest {
 
   private boolean containsField(List<OpcUaAlarmField> fields, String outputField) {
     return fields.stream().anyMatch(field -> field.outputField().equals(outputField));
+  }
+
+  private List<String> selectionIdsFor(ObjectTypeTree objectTypeTree,
+                                       NodeId selectedTypeId,
+                                       String... outputFields) {
+    var selectedOutputFields = List.of(outputFields);
+
+    return OpcUaAlarmField.additionalFieldsForType(selectedTypeId, objectTypeTree).stream()
+        .filter(field -> selectedOutputFields.contains(field.outputField()))
+        .map(OpcUaAlarmField::selectionId)
+        .toList();
   }
 
   private ObjectTypeTree makeObjectTypeTree() {

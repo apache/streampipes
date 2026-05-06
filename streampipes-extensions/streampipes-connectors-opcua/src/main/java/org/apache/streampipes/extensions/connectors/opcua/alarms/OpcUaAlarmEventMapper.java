@@ -88,16 +88,46 @@ public class OpcUaAlarmEventMapper {
     for (int i = 0; i < selectedFields.size(); i++) {
       var field = selectedFields.get(i);
       var variantValue = i < eventValues.length ? eventValues[i].getValue() : null;
-      event.put(field.outputField(), valueNormalizer.normalize(variantValue));
+      event.put(field.outputField(), normalizeFieldValue(field, variantValue));
     }
 
     return event;
   }
 
+  private Object normalizeFieldValue(OpcUaAlarmField field, Object value) {
+    var normalizedValue = valueNormalizer.normalize(value);
+
+    return switch (field.outputField()) {
+      case "active" -> toStateBoolean(normalizedValue, "Active", "Inactive");
+      case "acked" -> toStateBoolean(normalizedValue, "Acknowledged", "Unacknowledged");
+      case "confirmed" -> toStateBoolean(normalizedValue, "Confirmed", "Unconfirmed");
+      case "enabled" -> toStateBoolean(normalizedValue, "Enabled", "Disabled");
+      default -> normalizedValue;
+    };
+  }
+
+  private Object toStateBoolean(Object normalizedValue, String trueText, String falseText) {
+    if (normalizedValue instanceof Boolean) {
+      return normalizedValue;
+    }
+
+    if (normalizedValue instanceof String stringValue) {
+      if (trueText.equalsIgnoreCase(stringValue)) {
+        return true;
+      }
+
+      if (falseText.equalsIgnoreCase(stringValue)) {
+        return false;
+      }
+    }
+
+    return normalizedValue;
+  }
+
   private SimpleAttributeOperand toOperand(OpcUaAlarmField field) {
     return new SimpleAttributeOperand(
         field.typeDefinitionId(),
-        field.browsePath(),
+        field.eventBrowsePath(),
         AttributeId.Value.uid(),
         null
     );

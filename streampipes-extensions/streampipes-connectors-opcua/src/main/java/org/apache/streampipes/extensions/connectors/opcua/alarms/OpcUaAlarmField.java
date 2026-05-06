@@ -32,11 +32,28 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public record OpcUaAlarmField(String outputField,
-                       NodeId typeDefinitionId,
-                       QualifiedName[] browsePath) {
+                              String selectionId,
+                              NodeId typeDefinitionId,
+                              QualifiedName[] browsePath) {
 
   static OpcUaAlarmField fromBrowsePath(NodeId typeDefinitionId, List<QualifiedName> browsePath) {
-    return new OpcUaAlarmField(toOutputFieldName(browsePath), typeDefinitionId, browsePath.toArray(QualifiedName[]::new));
+    return new OpcUaAlarmField(
+        toOutputFieldName(browsePath),
+        buildDerivedSelectionId(typeDefinitionId, browsePath),
+        typeDefinitionId,
+        browsePath.toArray(QualifiedName[]::new)
+    );
+  }
+
+  static OpcUaAlarmField fromBrowsePath(NodeId typeDefinitionId,
+                                        NodeId declarationNodeId,
+                                        List<QualifiedName> browsePath) {
+    return new OpcUaAlarmField(
+        toOutputFieldName(browsePath),
+        declarationNodeId.toParseableString(),
+        typeDefinitionId,
+        browsePath.toArray(QualifiedName[]::new)
+    );
   }
 
   static List<OpcUaAlarmField> fieldsForType(NodeId selectedEventTypeId, ObjectTypeTree objectTypeTree) {
@@ -60,7 +77,9 @@ public record OpcUaAlarmField(String outputField,
   }
 
   static List<OpcUaAlarmField> additionalFieldsForType(NodeId selectedEventTypeId, ObjectTypeTree objectTypeTree) {
-    var baseFieldNames = baseEventFields().stream().map(OpcUaAlarmField::outputField).collect(java.util.stream.Collectors.toSet());
+    var baseFieldNames = baseEventFields().stream()
+        .map(OpcUaAlarmField::outputField)
+        .collect(java.util.stream.Collectors.toSet());
 
     return fieldsForType(selectedEventTypeId, objectTypeTree).stream()
         .filter(field -> !baseFieldNames.contains(field.outputField()))
@@ -72,14 +91,14 @@ public record OpcUaAlarmField(String outputField,
                                                      List<String> selectedAdditionalFieldNames,
                                                      ObjectTypeTree objectTypeTree) {
     var selectedAdditionalFields = Set.copyOf(selectedAdditionalFieldNames == null
-        ? List.<String>of()
+        ? List.of()
         : selectedAdditionalFieldNames);
 
     var fields = new LinkedHashMap<String, OpcUaAlarmField>();
     baseEventFields().forEach(field -> fields.put(field.outputField(), field));
 
     additionalFieldsForType(selectedEventTypeId, objectTypeTree).stream()
-        .filter(field -> selectedAdditionalFields.contains(field.outputField()))
+        .filter(field -> selectedAdditionalFields.contains(field.selectionId()))
         .forEach(field -> fields.put(field.outputField(), field));
 
     return List.copyOf(fields.values());
@@ -95,21 +114,42 @@ public record OpcUaAlarmField(String outputField,
         .collect(Collectors.joining(" / "));
   }
 
+  QualifiedName[] eventBrowsePath() {
+    if (isStateIdField()) {
+      return new QualifiedName[] {browsePath[0]};
+    }
+
+    return browsePath;
+  }
+
+  boolean isStateIdField() {
+    return browsePath.length == 2
+        && browsePath[0].getName().endsWith("State")
+        && "Id".equals(browsePath[1].getName());
+  }
+
   private static String toOutputFieldName(List<QualifiedName> browsePath) {
     var pathNames = browsePath.stream().map(QualifiedName::getName).toList();
 
-    if (pathNames.equals(List.of("AckedState", "Id"))) {
-      return "acked";
-    }
-    if (pathNames.equals(List.of("ActiveState", "Id"))) {
-      return "active";
-    }
-    if (pathNames.equals(List.of("ConfirmedState", "Id"))) {
-      return "confirmed";
+    if (pathNames.size() == 2
+        && "Id".equals(pathNames.get(1))
+        && pathNames.get(0).endsWith("State")) {
+      var stateName = pathNames.get(0);
+      var baseName = stateName.substring(0, stateName.length() - "State".length());
+      return Character.toLowerCase(baseName.charAt(0)) + baseName.substring(1);
     }
 
     var combined = String.join("", pathNames);
     return Character.toLowerCase(combined.charAt(0)) + combined.substring(1);
+  }
+
+  private static String buildDerivedSelectionId(NodeId typeDefinitionId,
+                                                List<QualifiedName> browsePath) {
+    var path = browsePath.stream()
+        .map(qualifiedName -> qualifiedName.getNamespaceIndex() + ":" + qualifiedName.getName())
+        .collect(Collectors.joining("/"));
+
+    return typeDefinitionId.toParseableString() + "|" + path;
   }
 
   private static boolean isTypeOrSubtypeOf(NodeId selectedEventTypeId,
@@ -139,20 +179,27 @@ public record OpcUaAlarmField(String outputField,
 
   private static List<OpcUaAlarmField> acknowledgeableConditionFields() {
     return List.of(
-        field("acked", NodeIds.AcknowledgeableConditionType, "AckedState", "Id")
+        field("acked", NodeIds.AcknowledgeableConditionType, "AckedState"),
+        field("confirmed", NodeIds.AcknowledgeableConditionType, "ConfirmedState")
     );
   }
 
   private static List<OpcUaAlarmField> alarmConditionFields() {
     return List.of(
-        field("active", NodeIds.AlarmConditionType, "ActiveState", "Id")
+        field("active", NodeIds.AlarmConditionType, "ActiveState")
     );
   }
 
   private static OpcUaAlarmField field(String outputField,
                                        NodeId typeDefinitionId,
                                        String... browsePath) {
-    return new OpcUaAlarmField(outputField, typeDefinitionId, qualifiedNames(browsePath));
+    var qualifiedNames = qualifiedNames(browsePath);
+    return new OpcUaAlarmField(
+        outputField,
+        buildDerivedSelectionId(typeDefinitionId, Arrays.stream(qualifiedNames).toList()),
+        typeDefinitionId,
+        qualifiedNames
+    );
   }
 
   private static QualifiedName[] qualifiedNames(String... elements) {

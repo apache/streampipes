@@ -43,11 +43,6 @@ import java.util.stream.Collectors;
 
 public class OpcUaEventFieldProvider {
 
-  private static final Set<String> BASE_FIELD_NAMES = OpcUaAlarmField.baseEventFieldsOnly()
-      .stream()
-      .map(OpcUaAlarmField::outputField)
-      .collect(Collectors.toSet());
-
   private final OpcUaClient client;
   private final ObjectTypeTree objectTypeTree;
 
@@ -67,8 +62,8 @@ public class OpcUaEventFieldProvider {
 
     return buildAdditionalFields(NodeId.parse(selectedEventTypeNodeId)).stream()
         .map(field -> {
-          var option = new Option(field.displayName(), field.outputField());
-          option.setSelected(selectedFieldNames.contains(field.outputField()));
+          var option = new Option(field.displayName(), field.selectionId());
+          option.setSelected(selectedFieldNames.contains(field.selectionId()));
           return option;
         })
         .toList();
@@ -76,24 +71,38 @@ public class OpcUaEventFieldProvider {
 
   public List<OpcUaAlarmField> buildSelectedFields(String selectedEventTypeNodeId,
                                                    List<String> selectedAdditionalFieldNames) {
+    var selectedEventTypeId = NodeId.parse(selectedEventTypeNodeId);
     var selectedNames = Set.copyOf(selectedAdditionalFieldNames == null
         ? List.<String>of()
         : selectedAdditionalFieldNames);
 
     var fields = new LinkedHashMap<String, OpcUaAlarmField>();
-    OpcUaAlarmField.baseEventFieldsOnly().forEach(field -> fields.put(field.outputField(), field));
+    OpcUaAlarmField.fieldsForType(selectedEventTypeId, objectTypeTree)
+        .forEach(field -> fields.put(field.outputField(), field));
 
-    buildAdditionalFields(NodeId.parse(selectedEventTypeNodeId)).stream()
-        .filter(field -> selectedNames.contains(field.outputField()))
+    buildAdditionalFields(selectedEventTypeId).stream()
+        .filter(field -> selectedNames.contains(field.selectionId()))
         .forEach(field -> fields.put(field.outputField(), field));
 
     return List.copyOf(fields.values());
   }
 
   private List<OpcUaAlarmField> buildAdditionalFields(NodeId selectedEventTypeId) {
+    var fields = buildDeclaredFields(selectedEventTypeId);
+    var standardFieldNames = OpcUaAlarmField.fieldsForType(selectedEventTypeId, objectTypeTree).stream()
+        .map(OpcUaAlarmField::outputField)
+        .collect(Collectors.toSet());
+
+    return fields.values().stream()
+        .filter(field -> !standardFieldNames.contains(field.outputField()))
+        .sorted(java.util.Comparator.comparing(OpcUaAlarmField::displayName, String.CASE_INSENSITIVE_ORDER))
+        .toList();
+  }
+
+  private Map<String, OpcUaAlarmField> buildDeclaredFields(NodeId selectedEventTypeId) {
     Tree<ObjectType> selectedTypeNode = objectTypeTree.getTreeNode(selectedEventTypeId);
     if (selectedTypeNode == null) {
-      return List.of();
+      return Map.of();
     }
 
     var fields = new LinkedHashMap<String, OpcUaAlarmField>();
@@ -102,10 +111,7 @@ public class OpcUaEventFieldProvider {
       collectInstanceDeclarations(current.getValue().getNodeId(), current.getValue().getNodeId(), List.of(), fields);
     }
 
-    return fields.values().stream()
-        .filter(field -> !BASE_FIELD_NAMES.contains(field.outputField()))
-        .sorted(java.util.Comparator.comparing(OpcUaAlarmField::displayName, String.CASE_INSENSITIVE_ORDER))
-        .toList();
+    return fields;
   }
 
   private void collectInstanceDeclarations(NodeId currentNodeId,
@@ -118,8 +124,8 @@ public class OpcUaEventFieldProvider {
 
       var nestedChildren = browseAggregateChildren(childNode.getNodeId());
       if (nestedChildren.isEmpty()) {
-        var field = OpcUaAlarmField.fromBrowsePath(declaringTypeId, nextPath);
-        fields.putIfAbsent(field.outputField(), field);
+        var field = OpcUaAlarmField.fromBrowsePath(declaringTypeId, childNode.getNodeId(), nextPath);
+        fields.putIfAbsent(field.selectionId(), field);
       } else {
         collectInstanceDeclarations(childNode.getNodeId(), declaringTypeId, nextPath, fields);
       }
