@@ -490,12 +490,14 @@ export class ConnectUtils {
 
         ConnectUtils.goToConnect();
         ConnectBtns.openActionsMenu(adapterName);
+        ConnectBtns.closeActionsMenu();
         ConnectBtns.stopAdapter().click();
         ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
 
         cy.wait(waitTime);
 
         ConnectBtns.openActionsMenu(adapterName);
+        ConnectBtns.closeActionsMenu();
         ConnectBtns.startAdapter().click();
         ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
 

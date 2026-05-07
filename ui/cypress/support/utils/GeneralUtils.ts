@@ -35,7 +35,7 @@ export class GeneralUtils {
         );
     }
 
-    private static closeOpenMenus() {
+    public static closeOpenMenus() {
         cy.get('body').then($body => {
             if (
                 $body.find('.cdk-overlay-container .mat-mdc-menu-panel:visible')

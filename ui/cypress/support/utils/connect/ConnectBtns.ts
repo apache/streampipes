@@ -56,6 +56,10 @@ export class ConnectBtns {
         GeneralUtils.openMenuForRow(adapterName);
     }
 
+    public static closeActionsMenu() {
+        GeneralUtils.closeOpenMenus();
+    }
+
     public static refreshSchema() {
         return cy.dataCy('refresh-schema');
     }
