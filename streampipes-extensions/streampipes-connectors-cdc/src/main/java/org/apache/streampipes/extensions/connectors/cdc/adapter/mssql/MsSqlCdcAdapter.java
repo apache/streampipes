@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.cdc.adapter.mssql;
 
+import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
@@ -27,8 +28,10 @@ import org.apache.streampipes.extensions.api.connect.context.IAdapterGuessSchema
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
+import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.model.connect.guess.SampleData;
+import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
@@ -56,6 +59,7 @@ import java.time.format.DateTimeParseException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -75,6 +79,7 @@ public class MsSqlCdcAdapter implements StreamPipesAdapter, SupportsRuntimeConfi
   private static final Logger LOG = LoggerFactory.getLogger(MsSqlCdcAdapter.class);
 
   public static final String ID = "org.apache.streampipes.connect.cdc.adapter.mssql";
+  static final long ENGINE_STARTUP_TIMEOUT_SECONDS = 10;
 
   private static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {
   };
@@ -86,6 +91,9 @@ public class MsSqlCdcAdapter implements StreamPipesAdapter, SupportsRuntimeConfi
   private ExecutorService executorService;
   private Map<String, MsSqlMetadataClient.TemporalColumnMode> temporalColumns;
   private ZoneId configuredZoneId;
+  private volatile Throwable engineFailure;
+  private volatile boolean connectorStarted;
+  private volatile boolean stopRequested;
 
   public MsSqlCdcAdapter() {
     this(new ObjectMapper(), new MsSqlMetadataClient());
@@ -114,6 +122,7 @@ public class MsSqlCdcAdapter implements StreamPipesAdapter, SupportsRuntimeConfi
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder.create(ID, 0, MsSqlCdcAdapter::new)
         .withLocales(Locales.EN)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredTextParameter(Labels.withId(HOST_KEY))
         .requiredIntegerParameter(Labels.withId(PORT_KEY), 1433)
         .requiredTextParameter(Labels.withId(DATABASE_KEY))
@@ -121,7 +130,7 @@ public class MsSqlCdcAdapter implements StreamPipesAdapter, SupportsRuntimeConfi
         .requiredSecret(Labels.withId(PASSWORD_KEY))
         .requiredSlideToggle(Labels.withId(ENCRYPT_KEY), true)
         .requiredSlideToggle(Labels.withId(TRUST_SERVER_CERTIFICATE_KEY), false)
-        .requiredTextParameter(Labels.withId(TIMEZONE_KEY), ZoneId.systemDefault().getId())
+        .requiredTextParameter(Labels.withId(TIMEZONE_KEY), ZoneOffset.UTC.getId())
         .requiredSingleValueSelectionFromContainer(
             Labels.withId(TABLE_KEY),
             java.util.List.of(HOST_KEY, PORT_KEY, DATABASE_KEY, USERNAME_KEY, PASSWORD_KEY, ENCRYPT_KEY,
@@ -139,20 +148,35 @@ public class MsSqlCdcAdapter implements StreamPipesAdapter, SupportsRuntimeConfi
     metadataClient.validateSelectedTable(config);
     this.temporalColumns = metadataClient.describeTemporalColumns(config);
     this.configuredZoneId = config.getZoneId();
+    this.engineFailure = null;
+    this.connectorStarted = false;
+    this.stopRequested = false;
 
-    Properties properties = buildDebeziumProperties(config);
+    CountDownLatch startupLatch = new CountDownLatch(1);
+    Properties properties = buildDebeziumProperties(config, extractor.getAdapterDescription().getElementId());
     this.engine = DebeziumEngine.create(Json.class)
         .using(properties)
+        .using((success, message, error) -> handleEngineCompletion(
+            success,
+            message,
+            error,
+            adapterRuntimeContext.getLogger(),
+            startupLatch
+        ))
+        .using(createConnectorCallback(startupLatch))
         .notifying(record -> processRecord(record, collector))
         .build();
 
     this.executorService = Executors.newSingleThreadExecutor();
     this.executorService.execute(engine);
+    awaitStartup(startupLatch, adapterRuntimeContext.getLogger());
   }
 
   @Override
   public void onAdapterStopped(IAdapterParameterExtractor extractor,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    this.stopRequested = true;
+
     if (engine != null) {
       try {
         engine.close();
@@ -177,6 +201,9 @@ public class MsSqlCdcAdapter implements StreamPipesAdapter, SupportsRuntimeConfi
     this.executorService = null;
     this.temporalColumns = null;
     this.configuredZoneId = null;
+    this.engineFailure = null;
+    this.connectorStarted = false;
+    this.stopRequested = false;
   }
 
   @Override
@@ -189,9 +216,9 @@ public class MsSqlCdcAdapter implements StreamPipesAdapter, SupportsRuntimeConfi
         .build();
   }
 
-  private Properties buildDebeziumProperties(MsSqlCdcAdapterConfig config) {
+  Properties buildDebeziumProperties(MsSqlCdcAdapterConfig config, String elementId) {
     Properties props = new Properties();
-    String logicalName = createLogicalName(config);
+    String logicalName = createLogicalName(config, elementId);
     props.setProperty("name", logicalName + "-engine");
     props.setProperty("connector.class", "io.debezium.connector.sqlserver.SqlServerConnector");
     props.setProperty("offset.storage", "org.apache.kafka.connect.storage.MemoryOffsetBackingStore");
@@ -204,6 +231,10 @@ public class MsSqlCdcAdapter implements StreamPipesAdapter, SupportsRuntimeConfi
     props.setProperty("snapshot.mode", "no_data");
     props.setProperty("tasks.max", "1");
     props.setProperty("decimal.handling.mode", "double");
+    props.setProperty(
+        "poll.interval.ms",
+        String.valueOf(Environments.getEnvironment().getMsSqlCdcPollIntervalMs().getValueOrDefault())
+    );
 
     props.setProperty("database.hostname", config.getHost());
     props.setProperty("database.port", String.valueOf(config.getPort()));
@@ -218,8 +249,10 @@ public class MsSqlCdcAdapter implements StreamPipesAdapter, SupportsRuntimeConfi
     return props;
   }
 
-  private String createLogicalName(MsSqlCdcAdapterConfig config) {
-    return (config.getDatabase() + "_" + config.getTable())
+  String createLogicalName(MsSqlCdcAdapterConfig config, String elementId) {
+    String effectiveElementId = elementId == null || elementId.isBlank() ? "adapter" : elementId;
+
+    return (config.getDatabase() + "_" + config.getTable() + "_" + effectiveElementId)
         .replace('.', '_')
         .replaceAll("[^A-Za-z0-9_]", "_")
         .toLowerCase();
@@ -261,7 +294,7 @@ public class MsSqlCdcAdapter implements StreamPipesAdapter, SupportsRuntimeConfi
     return normalized;
   }
 
-  private Object normalizeTemporalValue(Object value, MsSqlMetadataClient.TemporalColumnMode temporalMode) {
+  Object normalizeTemporalValue(Object value, MsSqlMetadataClient.TemporalColumnMode temporalMode) {
     if (value == null) {
       return null;
     }
@@ -308,5 +341,76 @@ public class MsSqlCdcAdapter implements StreamPipesAdapter, SupportsRuntimeConfi
 
   private ZoneId getConfiguredZoneId() {
     return configuredZoneId == null ? ZoneOffset.UTC : configuredZoneId;
+  }
+
+  private DebeziumEngine.ConnectorCallback createConnectorCallback(CountDownLatch startupLatch) {
+    return new DebeziumEngine.ConnectorCallback() {
+      @Override
+      public void connectorStarted() {
+        connectorStarted = true;
+        startupLatch.countDown();
+      }
+    };
+  }
+
+  void handleEngineCompletion(boolean success,
+                              String message,
+                              Throwable error,
+                              IExtensionsLogger logger,
+                              CountDownLatch startupLatch) {
+    if (error != null) {
+      this.engineFailure = error;
+    } else if (!success) {
+      this.engineFailure = new AdapterException(
+          "Debezium engine stopped unexpectedly" + (message == null || message.isBlank() ? "." : ": " + message)
+      );
+    }
+
+    if (startupLatch != null) {
+      startupLatch.countDown();
+    }
+
+    if (stopRequested) {
+      return;
+    }
+
+    if (engineFailure != null) {
+      logger.error("Debezium engine failed for MSSQL CDC adapter.", asException(engineFailure));
+    } else if (success) {
+      logger.warn("Debezium Engine Stopped", "The embedded Debezium engine stopped unexpectedly.");
+    } else {
+      logger.warn(
+          "Debezium Engine Stopped",
+          message == null || message.isBlank() ? "The embedded Debezium engine stopped unexpectedly." : message
+      );
+    }
+  }
+
+  private void awaitStartup(CountDownLatch startupLatch, IExtensionsLogger logger) throws AdapterException {
+    try {
+      boolean completed = startupLatch.await(ENGINE_STARTUP_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+      if (engineFailure != null) {
+        throw new AdapterException("Failed to start Debezium engine: " + engineFailure.getMessage(), engineFailure);
+      }
+
+      if (!completed || !connectorStarted) {
+        logger.warn(
+            "Debezium Startup Delayed",
+            "The embedded Debezium engine did not confirm startup within "
+                + ENGINE_STARTUP_TIMEOUT_SECONDS + " seconds."
+        );
+      }
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new AdapterException("Interrupted while waiting for Debezium engine startup.", e);
+    }
+  }
+
+  private Exception asException(Throwable throwable) {
+    if (throwable instanceof Exception exception) {
+      return exception;
+    }
+
+    return new AdapterException(throwable.getMessage(), throwable);
   }
 }

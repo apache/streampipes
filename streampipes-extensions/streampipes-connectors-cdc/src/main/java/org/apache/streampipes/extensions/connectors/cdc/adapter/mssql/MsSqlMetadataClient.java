@@ -22,17 +22,27 @@ import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.staticproperty.Option;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -49,6 +59,8 @@ public class MsSqlMetadataClient {
           + "JOIN sys.schemas s ON t.schema_id = s.schema_id "
           + "WHERE t.is_ms_shipped = 0 AND t.is_tracked_by_cdc = 1 "
           + "ORDER BY s.name, t.name";
+
+  private static final String SAMPLE_ROW_QUERY_TEMPLATE = "SELECT TOP 1 * FROM [%s].[%s]";
 
   public List<Option> discoverTables(MsSqlCdcAdapterConfig config) throws SpConfigurationException {
     try (Connection connection = openConnection(config)) {
@@ -95,9 +107,15 @@ public class MsSqlMetadataClient {
       validateCdcEnabled(connection);
 
       Map<String, ColumnDescriptor> columns = describeColumns(connection, tableRef);
-      Map<String, Object> sample = new LinkedHashMap<>();
       ZoneId zoneId = config.getZoneId();
-      columns.forEach((columnName, descriptor) -> sample.put(columnName, placeholderForType(descriptor, zoneId)));
+      Map<String, Object> sample = fetchRealSampleRow(connection, tableRef, columns, zoneId);
+
+      if (sample == null) {
+        sample = new LinkedHashMap<>();
+        for (Map.Entry<String, ColumnDescriptor> entry : columns.entrySet()) {
+          sample.put(entry.getKey(), placeholderForType(entry.getValue(), zoneId));
+        }
+      }
 
       if (sample.isEmpty()) {
         throw new AdapterException("No columns found for table " + config.getTable());
@@ -176,10 +194,41 @@ public class MsSqlMetadataClient {
     return columns;
   }
 
+  private Map<String, Object> fetchRealSampleRow(Connection connection,
+                                                 TableRef tableRef,
+                                                 Map<String, ColumnDescriptor> columns,
+                                                 ZoneId zoneId) throws SQLException {
+    String query = SAMPLE_ROW_QUERY_TEMPLATE.formatted(
+        escapeIdentifier(tableRef.schema()),
+        escapeIdentifier(tableRef.table())
+    );
+
+    try (PreparedStatement statement = connection.prepareStatement(query);
+         ResultSet resultSet = statement.executeQuery()) {
+      if (!resultSet.next()) {
+        return null;
+      }
+
+      ResultSetMetaData metaData = resultSet.getMetaData();
+      Map<String, Object> sample = new LinkedHashMap<>();
+      for (int columnIndex = 1; columnIndex <= metaData.getColumnCount(); columnIndex++) {
+        String columnName = metaData.getColumnLabel(columnIndex);
+        ColumnDescriptor descriptor = columns.getOrDefault(
+            columnName,
+            new ColumnDescriptor(columnName, metaData.getColumnType(columnIndex), metaData.getColumnTypeName(columnIndex), 0)
+        );
+        Object rawValue = resultSet.getObject(columnIndex);
+        sample.put(columnName, sampleValue(rawValue, descriptor, zoneId));
+      }
+
+      return sample;
+    }
+  }
+
   private Object placeholderForType(ColumnDescriptor descriptor, ZoneId zoneId) {
     TemporalColumnMode temporalMode = getTemporalColumnMode(descriptor);
     if (temporalMode != null) {
-      return sampleTemporalValue(temporalMode, zoneId);
+      return (double) sampleTemporalValue(temporalMode, zoneId);
     }
 
     return switch (descriptor.jdbcType()) {
@@ -189,6 +238,27 @@ public class MsSqlMetadataClient {
       case Types.BINARY, Types.LONGVARBINARY, Types.VARBINARY -> "AQID";
       default -> "example";
     };
+  }
+
+  private Object sampleValue(Object rawValue, ColumnDescriptor descriptor, ZoneId zoneId) {
+    if (rawValue == null) {
+      return placeholderForType(descriptor, zoneId);
+    }
+
+    TemporalColumnMode temporalMode = getTemporalColumnMode(descriptor);
+    if (temporalMode != null) {
+      return (double) temporalValue(rawValue, temporalMode, zoneId);
+    }
+
+    if (rawValue instanceof BigDecimal decimalValue) {
+      return decimalValue.doubleValue();
+    }
+
+    if (rawValue instanceof byte[] bytes) {
+      return Base64.getEncoder().encodeToString(bytes);
+    }
+
+    return rawValue;
   }
 
   private TemporalColumnMode getTemporalColumnMode(ColumnDescriptor descriptor) {
@@ -245,6 +315,74 @@ public class MsSqlMetadataClient {
               .toInstant()
               .toEpochMilli();
     };
+  }
+
+  private long temporalValue(Object rawValue, TemporalColumnMode temporalMode, ZoneId zoneId) {
+    return switch (temporalMode) {
+      case DATE_EPOCH_MILLIS -> toDateEpochMillis(rawValue, zoneId);
+      case TIME_MILLIS, TIME_MICROS, TIME_NANOS -> toTimeMillis(rawValue);
+      case TIMESTAMP_MILLIS, TIMESTAMP_MICROS, TIMESTAMP_NANOS -> toTimestampEpochMillis(rawValue, zoneId);
+      case DATETIMEOFFSET_MILLIS -> toDateTimeOffsetEpochMillis(rawValue, zoneId);
+    };
+  }
+
+  private long toDateEpochMillis(Object rawValue, ZoneId zoneId) {
+    if (rawValue instanceof Date dateValue) {
+      return dateValue.toLocalDate().atStartOfDay(zoneId).toInstant().toEpochMilli();
+    } else if (rawValue instanceof LocalDate localDate) {
+      return localDate.atStartOfDay(zoneId).toInstant().toEpochMilli();
+    }
+
+    return LocalDate.parse(rawValue.toString()).atStartOfDay(zoneId).toInstant().toEpochMilli();
+  }
+
+  private long toTimeMillis(Object rawValue) {
+    LocalTime localTime;
+    if (rawValue instanceof Time timeValue) {
+      localTime = timeValue.toLocalTime();
+    } else if (rawValue instanceof LocalTime parsedLocalTime) {
+      localTime = parsedLocalTime;
+    } else {
+      localTime = LocalTime.parse(rawValue.toString());
+    }
+
+    return localTime.toNanoOfDay() / 1_000_000;
+  }
+
+  private long toTimestampEpochMillis(Object rawValue, ZoneId zoneId) {
+    if (rawValue instanceof Timestamp timestampValue) {
+      return timestampValue.toLocalDateTime().atZone(zoneId).toInstant().toEpochMilli();
+    } else if (rawValue instanceof LocalDateTime localDateTime) {
+      return localDateTime.atZone(zoneId).toInstant().toEpochMilli();
+    } else if (rawValue instanceof Instant instant) {
+      return instant.toEpochMilli();
+    }
+
+    String stringValue = rawValue.toString();
+    try {
+      return Instant.parse(stringValue).toEpochMilli();
+    } catch (DateTimeParseException ignored) {
+      return LocalDateTime.parse(stringValue.replace(' ', 'T')).atZone(zoneId).toInstant().toEpochMilli();
+    }
+  }
+
+  private long toDateTimeOffsetEpochMillis(Object rawValue, ZoneId zoneId) {
+    if (rawValue instanceof OffsetDateTime offsetDateTime) {
+      return offsetDateTime.toInstant().toEpochMilli();
+    } else if (rawValue instanceof Timestamp timestampValue) {
+      return timestampValue.toInstant().toEpochMilli();
+    }
+
+    String stringValue = rawValue.toString().replace(' ', 'T');
+    try {
+      return OffsetDateTime.parse(stringValue).toInstant().toEpochMilli();
+    } catch (DateTimeParseException ignored) {
+      return LocalDateTime.parse(stringValue).atZone(zoneId).toInstant().toEpochMilli();
+    }
+  }
+
+  private String escapeIdentifier(String identifier) {
+    return identifier.replace("]", "]]");
   }
 
   private record TableRef(String schema, String table) {

@@ -41,7 +41,7 @@ trust-server-certificate.title=Trust Server Certificate
 trust-server-certificate.description=Trust the SQL Server certificate without validating its chain
 
 timezone.title=Timezone
-timezone.description=Timezone to assume for SQL Server DATETIME and DATETIME2 values without timezone information, for example Europe/Berlin
+timezone.description=Timezone to assume for SQL Server DATETIME and DATETIME2 values without timezone information, for example Europe/Berlin. Defaults to UTC.
 
 table.title=Table
 table.description=Select a CDC-enabled table from the configured database
