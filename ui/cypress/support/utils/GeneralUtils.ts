@@ -20,20 +20,32 @@ export class GeneralUtils {
     public static tab(identifier: string) {
         return cy.dataCy(`tab-${identifier}`).click();
     }
-
     public static openMenuForRow(rowText: string) {
+        GeneralUtils.closeOpenMenus();
+
         cy.contains('[role="row"], tr, mat-row', rowText) // be flexible on row element
             .scrollIntoView()
             .within(() => {
-                // Hover the trigger to open the menu
-                cy.dataCy('more-options').trigger('mouseenter', {
-                    force: true,
-                });
+                cy.dataCy('more-options').click({ force: true });
             });
 
         // Wait for the CDK overlay panel to become visible
         cy.get('.cdk-overlay-container .mat-mdc-menu-panel:visible').should(
             'exist',
         );
+    }
+
+    private static closeOpenMenus() {
+        cy.get('body').then($body => {
+            if (
+                $body.find('.cdk-overlay-container .mat-mdc-menu-panel:visible')
+                    .length
+            ) {
+                cy.get('body').type('{esc}', { force: true });
+                cy.get(
+                    '.cdk-overlay-container .mat-mdc-menu-panel:visible',
+                ).should('not.exist');
+            }
+        });
     }
 }
