@@ -39,6 +39,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MeasurementChangeValidationStepTest {
 
+  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
+
   private final MeasurementChangeValidationStep step = new MeasurementChangeValidationStep();
 
   @Test
@@ -55,6 +57,17 @@ class MeasurementChangeValidationStepTest {
             + ": temperature (" + XSD.INTEGER + " -> " + XSD.STRING + ")",
         validationInfos.get(0).getMessage()
     );
+  }
+
+  @Test
+  void apply_ShouldAddValidationInfoForDataLakeSinkMeasurementChange() {
+    var source = makeStream(makeSchema(makeMeasurementProperty("temperature", XSD.STRING)));
+    var target = makeDataLakeSink(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
+    var validationInfos = new ArrayList<PipelineElementValidationInfo>();
+
+    step.apply(source, target, Set.of(target), validationInfos);
+
+    assertEquals(1, validationInfos.size());
   }
 
   @Test
@@ -97,6 +110,12 @@ class MeasurementChangeValidationStepTest {
 
     var sink = new DataSinkInvocation();
     sink.setInputStreams(List.of(inputStream));
+    return sink;
+  }
+
+  private DataSinkInvocation makeDataLakeSink(EventSchema inputSchema) {
+    var sink = makeSink(inputSchema);
+    sink.setAppId(DATA_LAKE_SINK_APP_ID);
     return sink;
   }
 

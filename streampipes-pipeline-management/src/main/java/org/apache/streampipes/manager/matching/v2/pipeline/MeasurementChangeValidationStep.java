@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
+import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -30,28 +31,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class MeasurementChangeValidationStep extends AbstractPipelineValidationStep {
 
   public static final String MEASUREMENT_UPDATE_REQUIRED =
       "Measurement field storage type changed. Manual measurement update handling required";
-
-  private final MeasurementChangeDetector detector;
-
-  public MeasurementChangeValidationStep() {
-    this(new MeasurementChangeDetector());
-  }
-
-  MeasurementChangeValidationStep(MeasurementChangeDetector detector) {
-    this.detector = detector;
-  }
+  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
 
   @Override
   public void apply(NamedStreamPipesEntity source,
                     InvocableStreamPipesEntity target,
                     Set<InvocableStreamPipesEntity> allTargets,
                     List<PipelineElementValidationInfo> validationInfos) {
-    if (target instanceof DataSinkInvocation dataSink && detector.isDatabaseSink(dataSink)) {
+    if (target instanceof DataSinkInvocation dataSink && isDatabaseSink(dataSink)) {
       var criticalFieldChanges = findCriticalMeasurementFieldChanges(source, dataSink);
       if (!criticalFieldChanges.isEmpty()) {
         validationInfos.add(PipelineElementValidationInfo.error(makeValidationMessage(criticalFieldChanges)));
@@ -63,21 +57,29 @@ public class MeasurementChangeValidationStep extends AbstractPipelineValidationS
     }
   }
 
-  private List<MeasurementChangeDetector.CriticalMeasurementFieldChange> findCriticalMeasurementFieldChanges(
+  private boolean isDatabaseSink(DataSinkInvocation dataSink) {
+    return DATA_LAKE_SINK_APP_ID.equals(dataSink.getAppId())
+        || streamOf(dataSink.getCategory()).anyMatch(DataSinkType.DATABASE.name()::equals);
+  }
+
+  private List<CriticalMeasurementFieldChange> findCriticalMeasurementFieldChanges(
       NamedStreamPipesEntity source,
       DataSinkInvocation dataSink) {
     var existingEventSchema = getExistingDataSinkSchema(dataSink);
     var updatedEventSchema = getUpdatedSourceSchema(source);
 
     if (existingEventSchema.isPresent() && updatedEventSchema.isPresent()) {
-      return detector.findCriticalMeasurementFieldChanges(existingEventSchema.get(), updatedEventSchema.get());
+      return MeasurementChangeDetector.findCriticalMeasurementFieldChanges(
+          existingEventSchema.get(),
+          updatedEventSchema.get()
+      );
     } else {
       return List.of();
     }
   }
 
   private String makeValidationMessage(
-      List<MeasurementChangeDetector.CriticalMeasurementFieldChange> criticalFieldChanges) {
+      List<CriticalMeasurementFieldChange> criticalFieldChanges) {
     return MEASUREMENT_UPDATE_REQUIRED + ": " + criticalFieldChanges
         .stream()
         .map(change -> "%s (%s -> %s)".formatted(
@@ -105,5 +107,13 @@ public class MeasurementChangeValidationStep extends AbstractPipelineValidationS
     } else {
       return Optional.empty();
     }
+  }
+
+  private <T> Stream<T> streamOf(Iterable<T> iterable) {
+    if (iterable == null) {
+      return Stream.empty();
+    }
+
+    return StreamSupport.stream(iterable.spliterator(), false);
   }
 }

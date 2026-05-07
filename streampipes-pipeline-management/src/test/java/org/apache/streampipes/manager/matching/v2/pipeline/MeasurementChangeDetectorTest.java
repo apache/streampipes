@@ -18,10 +18,6 @@
 
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
-import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -33,51 +29,9 @@ import java.net.URI;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MeasurementChangeDetectorTest {
-
-  private static final String STREAM_ID = "stream-1";
-  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
-
-  private final MeasurementChangeDetector detector = new MeasurementChangeDetector();
-
-  @Test
-  void hasCriticalMeasurementFieldChange_ShouldIgnoreChangesWithoutDatabaseSink() {
-    var pipeline = makePipeline(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
-    var updatedSchema = makeSchema(makeMeasurementProperty("temperature", XSD.STRING));
-
-    var result = detector.hasCriticalMeasurementFieldChange(pipeline, STREAM_ID, updatedSchema);
-
-    assertFalse(result);
-  }
-
-  @Test
-  void hasCriticalMeasurementFieldChange_ShouldDetectCriticalChangeForDataLakeSink() {
-    var pipeline = makePipeline(
-        makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)),
-        makeDataLakeSink()
-    );
-    var updatedSchema = makeSchema(makeMeasurementProperty("temperature", XSD.STRING));
-
-    var result = detector.hasCriticalMeasurementFieldChange(pipeline, STREAM_ID, updatedSchema);
-
-    assertTrue(result);
-  }
-
-  @Test
-  void hasCriticalMeasurementFieldChange_ShouldDetectCriticalChangeForDatabaseSinkCategory() {
-    var pipeline = makePipeline(
-        makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)),
-        makeDatabaseSink()
-    );
-    var updatedSchema = makeSchema(makeMeasurementProperty("temperature", XSD.BOOLEAN));
-
-    var result = detector.hasCriticalMeasurementFieldChange(pipeline, STREAM_ID, updatedSchema);
-
-    assertTrue(result);
-  }
 
   @Test
   void findCriticalMeasurementFieldChanges_ShouldReturnChangedNamesAndTypes() {
@@ -90,7 +44,7 @@ class MeasurementChangeDetectorTest {
         makeMeasurementProperty("pressure", XSD.BOOLEAN)
     );
 
-    var result = detector.findCriticalMeasurementFieldChanges(existingSchema, updatedSchema);
+    var result = MeasurementChangeDetector.findCriticalMeasurementFieldChanges(existingSchema, updatedSchema);
 
     assertEquals(2, result.size());
     assertEquals("temperature", result.get(0).runtimeName());
@@ -102,85 +56,49 @@ class MeasurementChangeDetectorTest {
   }
 
   @Test
-  void hasCriticalMeasurementFieldChange_ShouldIgnoreIntegerToLongChange() {
-    var pipeline = makePipeline(
-        makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)),
-        makeDatabaseSink()
-    );
+  void findCriticalMeasurementFieldChanges_ShouldIgnoreIntegerToLongChange() {
+    var existingSchema = makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER));
     var updatedSchema = makeSchema(makeMeasurementProperty("temperature", XSD.LONG));
 
-    var result = detector.hasCriticalMeasurementFieldChange(pipeline, STREAM_ID, updatedSchema);
+    var result = MeasurementChangeDetector.findCriticalMeasurementFieldChanges(existingSchema, updatedSchema);
 
-    assertFalse(result);
+    assertTrue(result.isEmpty());
   }
 
   @Test
-  void hasCriticalMeasurementFieldChange_ShouldIgnoreFloatToDoubleChange() {
-    var pipeline = makePipeline(
-        makeSchema(makeMeasurementProperty("temperature", XSD.FLOAT)),
-        makeDatabaseSink()
-    );
+  void findCriticalMeasurementFieldChanges_ShouldIgnoreFloatToDoubleChange() {
+    var existingSchema = makeSchema(makeMeasurementProperty("temperature", XSD.FLOAT));
     var updatedSchema = makeSchema(makeMeasurementProperty("temperature", XSD.DOUBLE));
 
-    var result = detector.hasCriticalMeasurementFieldChange(pipeline, STREAM_ID, updatedSchema);
+    var result = MeasurementChangeDetector.findCriticalMeasurementFieldChanges(existingSchema, updatedSchema);
 
-    assertFalse(result);
+    assertTrue(result.isEmpty());
   }
 
   @Test
-  void hasCriticalMeasurementFieldChange_ShouldIgnoreAddedAndRemovedFields() {
-    var pipeline = makePipeline(
-        makeSchema(
-            makeMeasurementProperty("temperature", XSD.INTEGER),
-            makeMeasurementProperty("pressure", XSD.DOUBLE)
-        ),
-        makeDatabaseSink()
+  void findCriticalMeasurementFieldChanges_ShouldIgnoreAddedAndRemovedFields() {
+    var existingSchema = makeSchema(
+        makeMeasurementProperty("temperature", XSD.INTEGER),
+        makeMeasurementProperty("pressure", XSD.DOUBLE)
     );
     var updatedSchema = makeSchema(
         makeMeasurementProperty("temperature", XSD.INTEGER),
         makeMeasurementProperty("humidity", XSD.DOUBLE)
     );
 
-    var result = detector.hasCriticalMeasurementFieldChange(pipeline, STREAM_ID, updatedSchema);
+    var result = MeasurementChangeDetector.findCriticalMeasurementFieldChanges(existingSchema, updatedSchema);
 
-    assertFalse(result);
+    assertTrue(result.isEmpty());
   }
 
   @Test
-  void hasCriticalMeasurementFieldChange_ShouldIgnoreDimensionFieldChanges() {
-    var pipeline = makePipeline(
-        makeSchema(makeDimensionProperty("machineId", XSD.INTEGER)),
-        makeDatabaseSink()
-    );
+  void findCriticalMeasurementFieldChanges_ShouldIgnoreDimensionFieldChanges() {
+    var existingSchema = makeSchema(makeDimensionProperty("machineId", XSD.INTEGER));
     var updatedSchema = makeSchema(makeDimensionProperty("machineId", XSD.STRING));
 
-    var result = detector.hasCriticalMeasurementFieldChange(pipeline, STREAM_ID, updatedSchema);
+    var result = MeasurementChangeDetector.findCriticalMeasurementFieldChanges(existingSchema, updatedSchema);
 
-    assertFalse(result);
-  }
-
-  private Pipeline makePipeline(EventSchema eventSchema,
-                                DataSinkInvocation... actions) {
-    var dataStream = new SpDataStream();
-    dataStream.setElementId(STREAM_ID);
-    dataStream.setEventSchema(eventSchema);
-
-    var pipeline = new Pipeline();
-    pipeline.setStreams(List.of(dataStream));
-    pipeline.setActions(List.of(actions));
-    return pipeline;
-  }
-
-  private DataSinkInvocation makeDataLakeSink() {
-    var sink = new DataSinkInvocation();
-    sink.setAppId(DATA_LAKE_SINK_APP_ID);
-    return sink;
-  }
-
-  private DataSinkInvocation makeDatabaseSink() {
-    var sink = new DataSinkInvocation();
-    sink.setCategory(List.of(DataSinkType.DATABASE.name()));
-    return sink;
+    assertTrue(result.isEmpty());
   }
 
   private EventSchema makeSchema(EventPropertyPrimitive... properties) {

@@ -124,8 +124,13 @@ public abstract class HttpRequest<K, V, T> {
 
   private String makeErrorMessage(StatusLine status,
                                   HttpEntity entity) throws IOException {
-    String body = entity != null ? entityAsString(entity) : "";
-    String message = extractErrorMessage(body);
+    String message;
+    if (!status.getReasonPhrase().isBlank()) {
+      message = status.getReasonPhrase();
+    } else {
+      String body = entity != null ? entityAsString(entity) : "";
+      message = extractErrorMessage(body);
+    }
     return status.getStatusCode() + " - " + message;
   }
 

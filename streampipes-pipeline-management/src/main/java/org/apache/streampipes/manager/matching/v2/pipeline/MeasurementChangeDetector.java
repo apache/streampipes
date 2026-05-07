@@ -18,10 +18,6 @@
 
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
-import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -33,63 +29,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
-public class MeasurementChangeDetector {
+public final class MeasurementChangeDetector {
 
-  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
-
-  public boolean hasCriticalMeasurementFieldChange(Pipeline pipeline,
-                                                   String affectedElementId,
-                                                   EventSchema updatedEventSchema) {
-    return !findCriticalMeasurementFieldChanges(pipeline, affectedElementId, updatedEventSchema).isEmpty();
+  private MeasurementChangeDetector() {
   }
 
-  public List<CriticalMeasurementFieldChange> findCriticalMeasurementFieldChanges(Pipeline pipeline,
-                                                                                  String affectedElementId,
-                                                                                  EventSchema updatedEventSchema) {
-    if (!hasDatabaseSink(pipeline)) {
-      return List.of();
-    }
-
-    return getEventSchema(pipeline, affectedElementId)
-        .map(existingEventSchema ->
-            findCriticalMeasurementFieldChanges(existingEventSchema, updatedEventSchema))
-        .orElse(List.of());
-  }
-
-  private boolean hasDatabaseSink(Pipeline pipeline) {
-    return streamOf(pipeline.getActions())
-        .anyMatch(this::isDatabaseSink);
-  }
-
-  public boolean isDatabaseSink(DataSinkInvocation dataSink) {
-    return DATA_LAKE_SINK_APP_ID.equals(dataSink.getAppId())
-        || streamOf(dataSink.getCategory()).anyMatch(DataSinkType.DATABASE.name()::equals);
-  }
-
-  private Optional<EventSchema> getEventSchema(Pipeline pipeline,
-                                               String affectedElementId) {
-    return pipeline
-        .getStreams()
-        .stream()
-        .filter(stream -> stream.getElementId().equals(affectedElementId))
-        .findFirst()
-        .map(SpDataStream::getEventSchema);
-  }
-
-  public boolean hasCriticalMeasurementFieldChange(EventSchema existingEventSchema,
-                                                   EventSchema updatedEventSchema) {
-    return !findCriticalMeasurementFieldChanges(existingEventSchema, updatedEventSchema).isEmpty();
-  }
-
-  public List<CriticalMeasurementFieldChange> findCriticalMeasurementFieldChanges(EventSchema existingEventSchema,
-                                                                                  EventSchema updatedEventSchema) {
+  public static List<CriticalMeasurementFieldChange> findCriticalMeasurementFieldChanges(
+      EventSchema existingEventSchema,
+      EventSchema updatedEventSchema) {
     var existingMeasurementFields = existingEventSchema
         .getEventProperties()
         .stream()
-        .filter(this::isMeasurementField)
+        .filter(MeasurementChangeDetector::isMeasurementField)
         .collect(Collectors.toMap(
             EventProperty::getRuntimeName,
             Function.identity(),
@@ -99,7 +51,7 @@ public class MeasurementChangeDetector {
     return updatedEventSchema
         .getEventProperties()
         .stream()
-        .filter(this::isMeasurementField)
+        .filter(MeasurementChangeDetector::isMeasurementField)
         .map(updatedProperty -> {
           var existingProperty = existingMeasurementFields.get(updatedProperty.getRuntimeName());
           if (existingProperty != null && hasCriticalFieldTypeChange(existingProperty, updatedProperty)) {
@@ -116,16 +68,16 @@ public class MeasurementChangeDetector {
         .toList();
   }
 
-  private boolean isMeasurementField(EventProperty eventProperty) {
+  private static boolean isMeasurementField(EventProperty eventProperty) {
     return !PropertyScope.DIMENSION_PROPERTY.name().equals(eventProperty.getPropertyScope());
   }
 
-  private boolean hasCriticalFieldTypeChange(EventProperty existingProperty,
-                                             EventProperty updatedProperty) {
+  private static boolean hasCriticalFieldTypeChange(EventProperty existingProperty,
+                                                    EventProperty updatedProperty) {
     return toStorageType(existingProperty) != toStorageType(updatedProperty);
   }
 
-  private StorageType toStorageType(EventProperty eventProperty) {
+  private static StorageType toStorageType(EventProperty eventProperty) {
     if (eventProperty instanceof EventPropertyPrimitive primitiveProperty) {
       return toPrimitiveStorageType(primitiveProperty.getRuntimeType());
     } else {
@@ -133,7 +85,7 @@ public class MeasurementChangeDetector {
     }
   }
 
-  private StorageType toPrimitiveStorageType(String runtimeType) {
+  private static StorageType toPrimitiveStorageType(String runtimeType) {
     if (XSD.INTEGER.toString().equals(runtimeType)
         || XSD.LONG.toString().equals(runtimeType)) {
       return StorageType.INTEGER;
@@ -148,31 +100,11 @@ public class MeasurementChangeDetector {
     }
   }
 
-  private String toDisplayType(EventProperty eventProperty) {
+  private static String toDisplayType(EventProperty eventProperty) {
     if (eventProperty instanceof EventPropertyPrimitive primitiveProperty) {
       return primitiveProperty.getRuntimeType();
     } else {
       return eventProperty.getClass().getSimpleName();
     }
-  }
-
-  public record CriticalMeasurementFieldChange(String runtimeName,
-                                               String existingType,
-                                               String updatedType) {
-  }
-
-  private enum StorageType {
-    INTEGER,
-    FLOAT,
-    BOOLEAN,
-    STRING
-  }
-
-  private <T> Stream<T> streamOf(Iterable<T> iterable) {
-    if (iterable == null) {
-      return Stream.empty();
-    }
-
-    return StreamSupport.stream(iterable.spliterator(), false);
   }
 }

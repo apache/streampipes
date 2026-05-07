@@ -39,13 +39,11 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   CRUDStorage<DataLakeMeasure> dataLakeStorage;
   private final DataLakePermissionManager permissionManager;
-  private final MeasurementChangeDetector changeDetector;
 
   public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage,
                                       DataLakePermissionManager permissionManager) {
     this.dataLakeStorage = dataLakeStorage;
     this.permissionManager = permissionManager;
-    this.changeDetector = new MeasurementChangeDetector();
   }
 
   @Override
@@ -204,7 +202,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   }
 
   private void checkFieldChanges(EventSchema existingSchema, EventSchema schema) {
-    var criticalFieldChanges = changeDetector.findCriticalMeasurementFieldChanges(
+    var criticalFieldChanges = MeasurementChangeDetector.findCriticalMeasurementFieldChanges(
         existingSchema,
         schema
     );
