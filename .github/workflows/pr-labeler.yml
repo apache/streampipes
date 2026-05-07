@@ -31,7 +31,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/labeler@v6
+    - uses: actions/labeler@v6.0.1
       with:
         configuration-path: .github/pr-labeler-config.yml
         # Remove labels when matching files are reverted
