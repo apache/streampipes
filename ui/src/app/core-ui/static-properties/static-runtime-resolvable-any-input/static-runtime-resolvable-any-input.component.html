@@ -24,7 +24,7 @@
             color="accent"
             class="small-button"
             (click)="selectAll(true)"
-            [disabled]="!showOptions"
+            [disabled]="loading || !showOptions"
         >
             <span>{{ 'Select all' | translate }}</span>
         </button>
@@ -33,7 +33,7 @@
             mat-flat-button
             class="mat-basic small-button"
             (click)="selectAll(false)"
-            [disabled]="!showOptions"
+            [disabled]="loading || !showOptions"
         >
             <span>{{ 'Select none' | translate }}</span>
         </button>
@@ -43,7 +43,7 @@
             color="accent"
             class="small-button"
             (click)="loadOptionsFromRestApi()"
-            [disabled]="!showOptions"
+            [disabled]="loading"
         >
             <span>{{ 'Reload' | translate }}</span>
         </button>

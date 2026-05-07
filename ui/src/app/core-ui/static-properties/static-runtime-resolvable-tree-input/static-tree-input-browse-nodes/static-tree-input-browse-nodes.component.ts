@@ -123,16 +123,28 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
     }
 
     addNode(node: TreeInputNode) {
-        node.selected = true;
-        this.staticProperty.selectedNodesInternalNames.push(
-            node.internalNodeName,
-        );
+        if (this.staticProperty.multiSelection) {
+            node.selected = true;
+            this.staticProperty.selectedNodesInternalNames.push(
+                node.internalNodeName,
+            );
+        } else {
+            this.clearSelectedFlags(this.dataSource.data);
+            node.selected = true;
+            this.staticProperty.selectedNodesInternalNames = [
+                node.internalNodeName,
+            ];
+        }
         this.performValidationEmitter.emit();
     }
 
     addAllDirectChildren(node: TreeInputNode) {
+        if (!this.staticProperty.multiSelection) {
+            return;
+        }
+
         node.children.forEach(child => {
-            if (child.dataNode && !this.existsSelectedNode(child)) {
+            if (this.isSelectable(child) && !this.existsSelectedNode(child)) {
                 this.staticProperty.selectedNodesInternalNames.push(
                     child.internalNodeName,
                 );
@@ -173,7 +185,7 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
     hasDataChildren(node: TreeInputNode) {
         return (
             node.children.length > 0 &&
-            node.children.find(c => c.dataNode) !== undefined
+            node.children.find(c => this.isSelectable(c)) !== undefined
         );
     }
 
@@ -183,5 +195,20 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
                 nodeName => nodeName === node.internalNodeName,
             ) !== undefined
         );
+    }
+
+    isSelectable(node: TreeInputNode) {
+        return (
+            node.dataNode ||
+            node.nodeMetadata?.Selectable === true ||
+            node.nodeMetadata?.selectable === true
+        );
+    }
+
+    private clearSelectedFlags(nodes: TreeInputNode[]) {
+        nodes.forEach(currentNode => {
+            currentNode.selected = false;
+            this.clearSelectedFlags(currentNode.children ?? []);
+        });
     }
 }

@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
+import org.apache.streampipes.extensions.connectors.opcua.alarms.OpcUaAlarmAdapter;
 import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProvider;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV1;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV2;
@@ -47,7 +48,8 @@ public class OpcUaConnectorsModuleExport implements IExtensionModuleExport {
   @Override
   public List<StreamPipesAdapter> adapters() {
     return List.of(
-        new OpcUaAdapter(clientProvider)
+        new OpcUaAdapter(clientProvider),
+        new OpcUaAlarmAdapter(clientProvider)
     );
   }
 

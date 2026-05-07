@@ -72,8 +72,23 @@ public class SharedUserConfiguration {
 
   public static void appendSharedOpcUaConfig(AbstractConfigurablePipelineElementBuilder<?, ?> builder,
                                              boolean adapterConfig) {
+    appendConnectionConfiguration(builder);
 
     var dependsOn = getDependsOn(adapterConfig);
+
+    builder.requiredRuntimeResolvableTreeInput(
+        Labels.withId(AVAILABLE_NODES.name()),
+        dependsOn,
+        true,
+        adapterConfig
+    );
+  }
+
+  public static void appendSharedOpcUaConnectionConfig(AbstractConfigurablePipelineElementBuilder<?, ?> builder) {
+    appendConnectionConfiguration(builder);
+  }
+
+  private static void appendConnectionConfiguration(AbstractConfigurablePipelineElementBuilder<?, ?> builder) {
 
     var x509Group = StaticProperties.group(
             Labels.withId(X509_GROUP),
@@ -116,12 +131,6 @@ public class SharedUserConfiguration {
                     StaticProperties.integerFreeTextProperty(
                         Labels.withId(OPC_SERVER_PORT))
                 ))
-        )
-        .requiredRuntimeResolvableTreeInput(
-            Labels.withId(AVAILABLE_NODES.name()),
-            dependsOn,
-            true,
-            adapterConfig
         );
   }
 
