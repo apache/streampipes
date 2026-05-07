@@ -20,17 +20,28 @@ package org.apache.streampipes.extensions.connectors.filewatcher.adapter;
 
 import org.apache.streampipes.extensions.connectors.filewatcher.runtime.EventMapper;
 
+import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class WinCCAlarmEventMapper implements EventMapper {
+
+  private final ZoneId timeZone;
+
+  public WinCCAlarmEventMapper() {
+    this(ZoneId.systemDefault());
+  }
+
+  public WinCCAlarmEventMapper(ZoneId timeZone) {
+    this.timeZone = timeZone;
+  }
 
   @Override
   public Map<String, Object> map(Map<String, Object> rawEvent) {
     Map<String, Object> normalizedEvent = new LinkedHashMap<>();
 
     normalizedEvent.put("timestamp",
-        WinCCTimestampConverter.toUnixTimestampMillis(rawEvent.get("Time_ms"), rawEvent.get("TimeString")));
+        WinCCTimestampConverter.toUnixTimestampMillis(rawEvent.get("Time_ms"), rawEvent.get("TimeString"), timeZone));
     normalizedEvent.put("timestamp_ms", asString(rawEvent.get("Time_ms")));
     normalizedEvent.put("timestamp_string", asString(rawEvent.get("TimeString")));
     normalizedEvent.put("message_text", asString(rawEvent.get("MsgText")));

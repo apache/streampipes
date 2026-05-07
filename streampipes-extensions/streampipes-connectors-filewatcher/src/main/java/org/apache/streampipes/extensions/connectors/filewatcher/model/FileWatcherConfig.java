@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.connectors.filewatcher.model;
 
 import java.nio.file.Path;
+import java.time.ZoneId;
 import java.util.regex.Pattern;
 
 public record FileWatcherConfig(Path directory,
@@ -26,5 +27,6 @@ public record FileWatcherConfig(Path directory,
                                 CsvParserSettings parserSettings,
                                 int pollIntervalSeconds,
                                 boolean singleFileGrowthMode,
-                                int interEventDelayMs) {
+                                int interEventDelayMs,
+                                ZoneId timeZone) {
 }

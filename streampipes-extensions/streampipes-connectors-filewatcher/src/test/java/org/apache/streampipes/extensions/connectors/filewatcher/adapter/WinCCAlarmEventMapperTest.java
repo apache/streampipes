@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.connectors.filewatcher.adapter;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.ZoneId;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,7 +50,7 @@ class WinCCAlarmEventMapperTest {
         Map.entry("PLC", "PLC_1")
     );
 
-    var mappedEvent = new WinCCAlarmEventMapper().map(rawEvent);
+    var mappedEvent = new WinCCAlarmEventMapper(ZoneId.of("Europe/Berlin")).map(rawEvent);
 
     assertEquals(1775638043050L, mappedEvent.get("timestamp"));
     assertEquals("46120366239", mappedEvent.get("timestamp_ms"));

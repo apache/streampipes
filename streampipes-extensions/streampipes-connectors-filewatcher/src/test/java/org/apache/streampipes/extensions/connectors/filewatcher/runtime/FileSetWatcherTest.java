@@ -28,6 +28,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ class FileSetWatcherTest {
     write("Meldungsarchiv2", "id,value\n3,c\n");
 
     FileSetWatcher watcher = new FileSetWatcher(
-        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, 0),
+        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, 0, ZoneId.of("UTC")),
         new FileWatcherCheckpointStore(tempDir.resolve("checkpoints")),
         new CsvFileReader(),
         EventMapper.identity()
@@ -79,7 +80,7 @@ class FileSetWatcherTest {
     FileWatcherCheckpointStore checkpointStore = new FileWatcherCheckpointStore(checkpointDir);
 
     FileSetWatcher watcher = new FileSetWatcher(
-        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, 0),
+        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, 0, ZoneId.of("UTC")),
         checkpointStore,
         new CsvFileReader(),
         EventMapper.identity()
@@ -106,7 +107,7 @@ class FileSetWatcherTest {
     write("Meldungsarchiv.csv", "id,value\n1,a\n2,b\n");
 
     FileSetWatcher watcher = new FileSetWatcher(
-        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv\\.csv"), new CsvParserSettings(true, ','), 1, true, 0),
+        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv\\.csv"), new CsvParserSettings(true, ','), 1, true, 0, ZoneId.of("UTC")),
         new FileWatcherCheckpointStore(tempDir.resolve("checkpoints-single")),
         new CsvFileReader(),
         EventMapper.identity()
@@ -131,7 +132,7 @@ class FileSetWatcherTest {
     write("Meldungsarchiv.csv", "id,value\n1,a\n2,b\n3,c\n");
 
     FileSetWatcher watcher = new FileSetWatcher(
-        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv\\.csv"), new CsvParserSettings(true, ','), 1, true, 0),
+        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv\\.csv"), new CsvParserSettings(true, ','), 1, true, 0, ZoneId.of("UTC")),
         new FileWatcherCheckpointStore(tempDir.resolve("checkpoints-replace")),
         new CsvFileReader(),
         EventMapper.identity()
@@ -156,7 +157,7 @@ class FileSetWatcherTest {
     List<Long> appliedDelays = new ArrayList<>();
 
     FileSetWatcher watcher = new FileSetWatcher(
-        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, 5),
+        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, 5, ZoneId.of("UTC")),
         new FileWatcherCheckpointStore(tempDir.resolve("checkpoints-delay")),
         new CsvFileReader(),
         EventMapper.identity(),

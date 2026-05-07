@@ -48,6 +48,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.ZoneId;
+import java.time.zone.ZoneRulesException;
 import java.util.Map;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
@@ -65,11 +67,11 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
   private static final String ARCHIVE_SEGMENT_COUNT = "archive-segment-count";
   private static final String POLL_INTERVAL_SECONDS = "poll-interval-seconds";
   private static final String INTER_EVENT_DELAY_MS = "inter-event-delay-ms";
+  private static final String TIMEZONE_ID = "timezone-id";
 
   private static final String SEGMENTED_CIRCULAR_LOG_ON = "segmented-circular-log-on";
   private static final String SEGMENTED_CIRCULAR_LOG_OFF = "segmented-circular-log-off";
   private static final CsvParserSettings WINCC_CSV_SETTINGS = new CsvParserSettings(true, ';');
-  private static final WinCCAlarmEventMapper EVENT_MAPPER = new WinCCAlarmEventMapper();
 
   private PullAdapterScheduler scheduler;
   private FileSetWatcher watcher;
@@ -119,6 +121,11 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
             "Inter-event delay (ms)",
             "Delay between replayed alarm events in milliseconds. Use 0 to disable throttling."
         ), 0)
+        .requiredTextParameter(Labels.from(
+            TIMEZONE_ID,
+            "Timezone",
+            "IANA timezone used when WinCC TimeString must be converted, for example Europe/Berlin."
+        ), ZoneId.systemDefault().getId())
         .buildConfiguration();
   }
 
@@ -134,17 +141,18 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
         config,
         new FileWatcherCheckpointStore(),
         new CsvFileReader(),
-        EVENT_MAPPER
+        new WinCCAlarmEventMapper(config.timeZone())
     );
     LOG.debug(
         "Starting WinCC alarm archive adapter '{}': directory='{}', pattern='{}', pollIntervalSeconds={}, "
-            + "singleFileGrowthMode={}, interEventDelayMs={}.",
+            + "singleFileGrowthMode={}, interEventDelayMs={}, timeZone='{}'.",
         adapterElementId,
         config.directory(),
         config.filePattern().pattern(),
         config.pollIntervalSeconds(),
         config.singleFileGrowthMode(),
-        config.interEventDelayMs()
+        config.interEventDelayMs(),
+        config.timeZone().getId()
     );
     this.scheduler = new PullAdapterScheduler();
     this.scheduler.schedule(this, adapterElementId);
@@ -168,12 +176,12 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
           .filter(path -> config.filePattern().matcher(path.getFileName().toString()).matches())
           .sorted()
           .findFirst()
-          .orElseThrow(() -> new AdapterException("No matching WinCC alarm archive files found in " + config.directory()));
+        .orElseThrow(() -> new AdapterException("No matching WinCC alarm archive files found in " + config.directory()));
 
       try (var inputStream = Files.newInputStream(sampleFile)) {
         Map<String, Object> rawSample = new CsvParser(true, ';').getSampleData(inputStream).getSamples().get(0);
         return org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder.create()
-            .sample(EVENT_MAPPER.map(rawSample))
+            .sample(new WinCCAlarmEventMapper(config.timeZone()).map(rawSample))
             .build();
       }
     } catch (IOException e) {
@@ -208,6 +216,7 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
     var segmentCount = staticPropertyExtractor.singleValueParameter(ARCHIVE_SEGMENT_COUNT, Integer.class);
     var interval = staticPropertyExtractor.singleValueParameter(POLL_INTERVAL_SECONDS, Integer.class);
     var interEventDelayMs = staticPropertyExtractor.singleValueParameter(INTER_EVENT_DELAY_MS, Integer.class);
+    var timeZone = parseTimeZone(staticPropertyExtractor.singleValueParameter(TIMEZONE_ID, String.class));
     if (interEventDelayMs < 0) {
       throw new AdapterException("Inter-event delay must be greater than or equal to 0.");
     }
@@ -222,8 +231,17 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
         WINCC_CSV_SETTINGS,
         interval,
         SEGMENTED_CIRCULAR_LOG_OFF.equals(segmentedCircularLogMode),
-        interEventDelayMs
+        interEventDelayMs,
+        timeZone
     );
+  }
+
+  private ZoneId parseTimeZone(String configuredTimeZone) throws AdapterException {
+    try {
+      return ZoneId.of(configuredTimeZone.trim());
+    } catch (ZoneRulesException | NullPointerException e) {
+      throw new AdapterException("Configured timezone is invalid: " + configuredTimeZone, e);
+    }
   }
 
   private String normalizeBaseName(String configuredBaseName) {

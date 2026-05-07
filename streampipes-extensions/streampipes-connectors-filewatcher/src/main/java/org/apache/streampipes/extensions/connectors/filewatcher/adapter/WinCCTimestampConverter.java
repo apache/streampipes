@@ -41,6 +41,12 @@ public final class WinCCTimestampConverter {
 
   public static Long toUnixTimestampMillis(Object winccTimestamp,
                                            Object timeString) {
+    return toUnixTimestampMillis(winccTimestamp, timeString, ZoneId.systemDefault());
+  }
+
+  public static Long toUnixTimestampMillis(Object winccTimestamp,
+                                           Object timeString,
+                                           ZoneId zoneId) {
     BigDecimal serialDays = normalizeSerialDays(winccTimestamp);
     if (serialDays != null) {
       return serialDays
@@ -50,7 +56,7 @@ public final class WinCCTimestampConverter {
           .longValue();
     }
 
-    return parseTimeString(timeString);
+    return parseTimeString(timeString, zoneId);
   }
 
   private static BigDecimal normalizeSerialDays(Object winccTimestamp) {
@@ -98,7 +104,8 @@ public final class WinCCTimestampConverter {
     return null;
   }
 
-  private static Long parseTimeString(Object timeString) {
+  private static Long parseTimeString(Object timeString,
+                                      ZoneId zoneId) {
     if (!(timeString instanceof String stringValue)) {
       return null;
     }
@@ -111,7 +118,7 @@ public final class WinCCTimestampConverter {
     for (DateTimeFormatter formatter : TIME_STRING_FORMATS) {
       try {
         LocalDateTime dateTime = LocalDateTime.parse(trimmedValue, formatter);
-        return dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        return dateTime.atZone(zoneId).toInstant().toEpochMilli();
       } catch (DateTimeParseException ignored) {
       }
     }

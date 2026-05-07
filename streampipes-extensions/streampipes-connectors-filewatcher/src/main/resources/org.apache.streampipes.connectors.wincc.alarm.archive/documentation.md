@@ -31,6 +31,7 @@ Configuration is Siemens-specific:
 - segment count in segmented circular log mode
 - polling interval
 - optional delay between replayed events in milliseconds
+- timezone used when WinCC `TimeString` must be converted to Unix time
 
 The adapter assumes the WinCC alarm CSV layout with a header row and semicolon-separated columns.
 The configured base name should not include the segment number or file suffix. For example, use `Meldungsarchiv`
@@ -41,5 +42,9 @@ so a segment like `Meldungsarchiv1.csv` can be consumed again after WinCC rotate
 
 Use the inter-event delay when consumers or brokers cannot handle large replay bursts. A value like `1` ms can reduce
 event loss on slower consumers, while `0` disables throttling.
+
+Set the timezone to the timezone used by the WinCC system that created the archive. The default uses the timezone of
+the extension runtime host at configuration time, but making it explicit avoids different timestamps after moving the
+adapter to another server.
 
 The configured directory must be reachable from the extension runtime process or container.

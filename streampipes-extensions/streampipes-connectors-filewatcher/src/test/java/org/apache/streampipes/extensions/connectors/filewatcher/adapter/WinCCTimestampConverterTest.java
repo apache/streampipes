@@ -20,6 +20,10 @@ package org.apache.streampipes.extensions.connectors.filewatcher.adapter;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -28,23 +32,28 @@ class WinCCTimestampConverterTest {
   @Test
   void shouldConvertWinCCTimestampToUnixMillis() {
     assertEquals(1072876370999L,
-        WinCCTimestampConverter.toUnixTimestampMillis("37986.55059027", "30.12.03 13:12:51"));
+        WinCCTimestampConverter.toUnixTimestampMillis("37986.55059027", "30.12.03 13:12:51", ZoneId.of("UTC")));
     assertEquals(1072876370999L,
-        WinCCTimestampConverter.toUnixTimestampMillis("37986,55059027", "30.12.03 13:12:51"));
+        WinCCTimestampConverter.toUnixTimestampMillis("37986,55059027", "30.12.03 13:12:51", ZoneId.of("UTC")));
     assertEquals(1775638043050L,
-        WinCCTimestampConverter.toUnixTimestampMillis(46120366239L, "08.04.26 08:47"));
+        WinCCTimestampConverter.toUnixTimestampMillis(46120366239L, "08.04.26 08:47", ZoneId.of("UTC")));
   }
 
   @Test
   void shouldReturnNullForInvalidInput() {
-    assertNull(WinCCTimestampConverter.toUnixTimestampMillis(null, null));
-    assertNull(WinCCTimestampConverter.toUnixTimestampMillis("", ""));
-    assertNull(WinCCTimestampConverter.toUnixTimestampMillis("not-a-timestamp", "also-invalid"));
+    assertNull(WinCCTimestampConverter.toUnixTimestampMillis(null, null, ZoneId.of("UTC")));
+    assertNull(WinCCTimestampConverter.toUnixTimestampMillis("", "", ZoneId.of("UTC")));
+    assertNull(WinCCTimestampConverter.toUnixTimestampMillis("not-a-timestamp", "also-invalid", ZoneId.of("UTC")));
   }
 
   @Test
   void shouldFallbackToTimeStringWhenNeeded() {
-    assertEquals(1775630820000L,
-        WinCCTimestampConverter.toUnixTimestampMillis(null, "08.04.26 08:47"));
+    long expectedTimestamp = LocalDateTime.parse("08.04.26 08:47", DateTimeFormatter.ofPattern("dd.MM.yy HH:mm"))
+        .atZone(ZoneId.of("Europe/Berlin"))
+        .toInstant()
+        .toEpochMilli();
+
+    assertEquals(expectedTimestamp,
+        WinCCTimestampConverter.toUnixTimestampMillis(null, "08.04.26 08:47", ZoneId.of("Europe/Berlin")));
   }
 }
