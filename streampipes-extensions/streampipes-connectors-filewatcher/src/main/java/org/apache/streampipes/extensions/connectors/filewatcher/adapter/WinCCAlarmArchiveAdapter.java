@@ -83,7 +83,7 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
         .create(ID, 0, WinCCAlarmArchiveAdapter::new)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .requiredTextParameter(Labels.from(
             DIRECTORY_PATH,
