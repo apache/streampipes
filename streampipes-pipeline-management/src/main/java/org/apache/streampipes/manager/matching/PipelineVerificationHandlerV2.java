@@ -57,7 +57,11 @@ public class PipelineVerificationHandlerV2 {
   }
 
   public PipelineModificationResult makeModifiedPipeline() {
-    var result = verifyAndBuildGraphs(false);
+    return makeModifiedPipeline(verifyPipeline());
+  }
+
+  public PipelineModificationResult makeModifiedPipeline(PipelineModificationMessage modificationMessage) {
+    var result = verifyAndBuildGraphs(modificationMessage, false);
     var allElements = result.modifiedPipelineElements();
     pipeline.setSepas(filterAndConvert(allElements, DataProcessorInvocation.class));
     pipeline.setActions(filterAndConvert(allElements, DataSinkInvocation.class));
@@ -74,7 +78,12 @@ public class PipelineVerificationHandlerV2 {
   }
 
   public PipelineVerificationResult verifyAndBuildGraphs(boolean ignoreUnconfigured) {
-    var pipelineModifications = verifyPipeline().getPipelineModifications();
+    return verifyAndBuildGraphs(verifyPipeline(), ignoreUnconfigured);
+  }
+
+  public PipelineVerificationResult verifyAndBuildGraphs(PipelineModificationMessage modificationMessage,
+                                                        boolean ignoreUnconfigured) {
+    var pipelineModifications = modificationMessage.getPipelineModifications();
     var allElements = new AllElementsProvider(pipeline).getAllElements();
     var validationInfos = new ArrayList<ExtendedPipelineElementValidationInfo>();
     var modifiedPipelineElements = new ArrayList<NamedStreamPipesEntity>();

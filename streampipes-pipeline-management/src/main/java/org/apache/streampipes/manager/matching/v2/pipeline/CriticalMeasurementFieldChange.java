@@ -15,11 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.pipeline;
 
-public enum PipelineHealthStatus {
-  OK,
-  REQUIRES_ATTENTION,
-  HANDLE_MEASUREMENT_UPDATE,
-  FAILURE
+package org.apache.streampipes.manager.matching.v2.pipeline;
+
+public record CriticalMeasurementFieldChange(String runtimeName,
+                                             String existingType,
+                                             String updatedType) {
 }

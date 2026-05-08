@@ -21,27 +21,33 @@ package org.apache.streampipes.manager.pipeline.update;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
+import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeValidationStep;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.pipeline.PipelineModification;
 import org.apache.streampipes.model.pipeline.PipelineModificationResult;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
+import org.apache.streampipes.vocabulary.XSD;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +62,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class PipelineUpdateCoordinatorTest {
+
+  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
 
   @Test
   void updatePipelines_ShouldRestartRunningPipelinesForDataStreamUpdates() {
@@ -77,7 +85,8 @@ class PipelineUpdateCoordinatorTest {
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
                verifiedPipelines.add((Pipeline) context.arguments().get(0));
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
-               when(mock.makeModifiedPipeline()).thenReturn(new PipelineModificationResult(modifiedPipeline, List.of()));
+               when(mock.makeModifiedPipeline(modificationMessage))
+                   .thenReturn(new PipelineModificationResult(modifiedPipeline, List.of()));
              });
          MockedConstruction<CouchDbStorageManager> storageManagerConstruction =
              mockConstruction(CouchDbStorageManager.class, (mock, context) ->
@@ -126,7 +135,8 @@ class PipelineUpdateCoordinatorTest {
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
                verifiedPipelines.add((Pipeline) context.arguments().get(0));
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
-               when(mock.makeModifiedPipeline()).thenReturn(new PipelineModificationResult(modifiedPipeline, List.of()));
+               when(mock.makeModifiedPipeline(modificationMessage))
+                   .thenReturn(new PipelineModificationResult(modifiedPipeline, List.of()));
              });
          MockedConstruction<CouchDbStorageManager> storageManagerConstruction =
              mockConstruction(CouchDbStorageManager.class, (mock, context) ->
@@ -154,6 +164,56 @@ class PipelineUpdateCoordinatorTest {
       assertFalse(pipelineCaptor.getValue().isValid());
       assertEquals(List.of("Adapter modification: Processor: [Schema mismatch]"),
           pipelineCaptor.getValue().getPipelineNotifications());
+    }
+  }
+
+  @Test
+  void updatePipelines_ShouldMarkPipelineRequiringAttentionForCriticalMeasurementFieldChange() {
+    var requestManager = mock(ExtensionServiceRequestManager.class);
+    var coordinator = new PipelineUpdateCoordinator(requestManager);
+    var adapterDescription = makeAdapter("stream-1", "Updated adapter");
+    adapterDescription.getDataStream().setEventSchema(makeSchema(makeMeasurementProperty("temperature", XSD.STRING)));
+
+    var storedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Old stream");
+    storedPipeline.getStreams().get(0).setEventSchema(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
+    storedPipeline.setActions(List.of(makeDataLakeSink()));
+
+    var modifiedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Updated adapter");
+    var measurementUpdateInfo = PipelineElementValidationInfo.info(
+        measurementUpdateRequiredMessage());
+    var modificationMessage = new PipelineModificationMessage(List.of(validModification("sepa-1", measurementUpdateInfo)));
+    var pipelineStorage = mock(IPipelineStorage.class);
+
+    try (MockedStatic<PipelineManager> pipelineManager = mockStatic(PipelineManager.class);
+         MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
+             mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
+               when(mock.verifyPipeline()).thenReturn(modificationMessage);
+               when(mock.makeModifiedPipeline(modificationMessage))
+                   .thenReturn(new PipelineModificationResult(modifiedPipeline, List.of()));
+             });
+         MockedConstruction<CouchDbStorageManager> storageManagerConstruction =
+             mockConstruction(CouchDbStorageManager.class, (mock, context) ->
+                 when(mock.getPipelineStorageAPI()).thenReturn(pipelineStorage));
+         MockedConstruction<PipelineExecutor> executorConstruction =
+             mockConstruction(PipelineExecutor.class)) {
+
+      pipelineManager.when(() -> PipelineManager.getPipelinesContainingElements("stream-1"))
+          .thenReturn(List.of(storedPipeline));
+      pipelineManager.when(() -> PipelineManager.getPipeline("pipeline-1"))
+          .thenReturn(storedPipeline);
+
+      coordinator.updatePipelines(adapterDescription);
+
+      assertEquals(1, verificationHandlerConstruction.constructed().size());
+      assertEquals(1, storageManagerConstruction.constructed().size());
+
+      var pipelineCaptor = ArgumentCaptor.forClass(Pipeline.class);
+      verify(pipelineStorage).updateElement(pipelineCaptor.capture());
+      assertEquals(PipelineHealthStatus.HANDLE_MEASUREMENT_UPDATE, pipelineCaptor.getValue().getHealthStatus());
+      assertFalse(pipelineCaptor.getValue().isValid());
+
+      assertEquals(1, executorConstruction.constructed().size());
+      verify(executorConstruction.constructed().get(0)).stopPipeline(true);
     }
   }
 
@@ -226,6 +286,37 @@ class PipelineUpdateCoordinatorTest {
     }
   }
 
+  @Test
+  void checkPipelineMigrations_ShouldDisableAutoMigrationForCriticalMeasurementFieldChange() {
+    var requestManager = mock(ExtensionServiceRequestManager.class);
+    var coordinator = new PipelineUpdateCoordinator(requestManager);
+    var adapterDescription = makeAdapter("stream-1", "Updated adapter");
+    adapterDescription.getDataStream().setEventSchema(makeSchema(makeMeasurementProperty("temperature", XSD.STRING)));
+
+    var pipeline = makePipeline("pipeline-1", "Pipeline", false, "stream-1", "Old stream");
+    pipeline.getStreams().get(0).setEventSchema(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
+    pipeline.setActions(List.of(makeDataLakeSink()));
+
+    var measurementUpdateInfo = PipelineElementValidationInfo.info(
+        measurementUpdateRequiredMessage());
+    var modificationMessage = new PipelineModificationMessage(List.of(validModification("sepa-1", measurementUpdateInfo)));
+
+    try (MockedStatic<PipelineManager> pipelineManager = mockStatic(PipelineManager.class);
+         MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
+             mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) ->
+                 when(mock.verifyPipeline()).thenReturn(modificationMessage))) {
+
+      pipelineManager.when(() -> PipelineManager.getPipelinesContainingElements("stream-1"))
+          .thenReturn(List.of(pipeline));
+
+      var result = coordinator.checkPipelineMigrations(adapterDescription);
+
+      assertEquals(1, verificationHandlerConstruction.constructed().size());
+      assertEquals(1, result.size());
+      assertFalse(result.get(0).isCanAutoMigrate());
+    }
+  }
+
   private SpDataStream makeDataStream(String elementId, String name) {
     var dataStream = new SpDataStream();
     dataStream.setElementId(elementId);
@@ -256,6 +347,28 @@ class PipelineUpdateCoordinatorTest {
     return pipeline;
   }
 
+  private DataSinkInvocation makeDataLakeSink() {
+    var sink = new DataSinkInvocation();
+    sink.setAppId(DATA_LAKE_SINK_APP_ID);
+    return sink;
+  }
+
+  private EventSchema makeSchema(EventPropertyPrimitive... eventProperties) {
+    return new EventSchema(List.of(eventProperties));
+  }
+
+  private EventPropertyPrimitive makeMeasurementProperty(String runtimeName,
+                                                        URI runtimeType) {
+    var property = new EventPropertyPrimitive(runtimeType.toString(), runtimeName, "", "");
+    property.setPropertyScope(PropertyScope.MEASUREMENT_PROPERTY.name());
+    return property;
+  }
+
+  private String measurementUpdateRequiredMessage() {
+    return MeasurementChangeValidationStep.MEASUREMENT_UPDATE_REQUIRED
+        + ": temperature (" + XSD.INTEGER + " -> " + XSD.STRING + ")";
+  }
+
   private DataProcessorInvocation makeSepa(String elementId, String name) {
     var sepa = new DataProcessorInvocation();
     sepa.setElementId(elementId);
@@ -267,6 +380,13 @@ class PipelineUpdateCoordinatorTest {
     var modification = new PipelineModification();
     modification.setElementId(elementId);
     modification.setPipelineElementValid(true);
+    return modification;
+  }
+
+  private PipelineModification validModification(String elementId,
+                                                 PipelineElementValidationInfo validationInfo) {
+    var modification = validModification(elementId);
+    modification.setValidationInfos(List.of(validationInfo));
     return modification;
   }
 

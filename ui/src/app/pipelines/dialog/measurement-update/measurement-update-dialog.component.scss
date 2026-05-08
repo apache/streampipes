@@ -15,11 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.pipeline;
 
-public enum PipelineHealthStatus {
-  OK,
-  REQUIRES_ATTENTION,
-  HANDLE_MEASUREMENT_UPDATE,
-  FAILURE
+.measurement-update-description {
+    margin: 0;
+}
+
+.measurement-update-option {
+    height: auto;
+    min-height: calc(var(--space-xl) * 3.5);
+    padding: var(--space-md);
+    text-align: left;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--button-border-radius);
+}
+
+.measurement-update-option-text {
+    white-space: normal;
 }

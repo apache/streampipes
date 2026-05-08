@@ -4632,7 +4632,13 @@ export type OutputStrategyUnion =
     | TransformOutputStrategy
     | UserDefinedOutputStrategy;
 
-export type PipelineHealthStatus = 'OK' | 'REQUIRES_ATTENTION' | 'FAILURE';
+export type PipelineHealthStatus =
+    | 'OK'
+    | 'REQUIRES_ATTENTION'
+    | 'HANDLE_MEASUREMENT_UPDATE'
+    | 'FAILURE';
+
+export type MeasurementUpdateAction = 'edit-pipeline' | 'manage-datasets';
 
 export type PropertyScope =
     | 'HEADER_PROPERTY'
