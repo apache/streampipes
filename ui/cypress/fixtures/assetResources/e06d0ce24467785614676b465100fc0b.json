@@ -1,0 +1,13 @@
+{
+  "_id": "e06d0ce24467785614676b465100fc0b",
+  "appDocType": "asset-sites",
+  "label": "site1",
+  "location": {
+    "coordinates": {
+      "latitude": 49.00689,
+      "longitude": 8.40365
+    },
+    "zoom": 10
+  },
+  "areas": []
+}

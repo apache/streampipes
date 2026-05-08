@@ -1,0 +1,165 @@
+{
+  "_id": "kYthZXBMdSgTdihClTJyLbIG",
+  "appDocType": "asset-management",
+  "removable": true,
+  "assetId": "ITflXz",
+  "assetName": "asset-2_0",
+  "assetDescription": "",
+  "assetType": { "isa95AssetType": "PRODUCTION_LINE" },
+  "assetLinks": [
+    {
+      "resourceId": "sp:adapterdescription:hpoLJw",
+      "linkType": "adapter",
+      "linkLabel": "adapter-2_0_asset-2_0",
+      "queryHint": "adapter",
+      "editingDisabled": false,
+      "navigationActive": true
+    },
+    {
+      "resourceId": "sp:spdatastream:fuRSBb",
+      "linkType": "data-source",
+      "linkLabel": "adapter-2_0_asset-2_0",
+      "queryHint": "data-source",
+      "editingDisabled": false,
+      "navigationActive": false
+    },
+    {
+      "resourceId": "persist-adapter-2_0_asset-2_0-ggaqfv",
+      "linkType": "pipeline",
+      "linkLabel": "persist-adapter-2_0_asset-2_0-ggaqfv",
+      "queryHint": "pipeline",
+      "editingDisabled": false,
+      "navigationActive": true
+    },
+    {
+      "resourceId": "af5313b9-7cf9-4b7e-b73a-802d3d6782a3",
+      "linkType": "measurement",
+      "linkLabel": "adapter-2_0_asset-2_0",
+      "queryHint": "measurement",
+      "editingDisabled": false,
+      "navigationActive": false
+    },
+    {
+      "resourceId": "sp:dashboardmodel:EWbseB",
+      "linkType": "dashboard",
+      "linkLabel": "dashboard-2_0",
+      "queryHint": "dashboard",
+      "editingDisabled": false,
+      "navigationActive": true
+    }
+  ],
+  "assetSite": {
+    "siteId": "e06d0ce24467785614676b4651010165",
+    "hasExactLocation": false,
+    "location": {
+      "coordinates": { "latitude": 0.0, "longitude": 0.0 },
+      "zoom": 1
+    }
+  },
+  "assets": [
+    {
+      "assetId": "arzrjzr5",
+      "assetName": "asset-2_1",
+      "assetDescription": "",
+      "assetType": { "isa95AssetType": "WORK_CELL" },
+      "assetLinks": [
+        {
+          "resourceId": "sp:adapterdescription:HQnIjw",
+          "linkType": "adapter",
+          "linkLabel": "adapter-2_1_asset-2_0.asset-2_1",
+          "queryHint": "adapter",
+          "editingDisabled": false,
+          "navigationActive": true
+        },
+        {
+          "resourceId": "sp:spdatastream:lUxdpQ",
+          "linkType": "data-source",
+          "linkLabel": "adapter-2_1_asset-2_0.asset-2_1",
+          "queryHint": "data-source",
+          "editingDisabled": false,
+          "navigationActive": false
+        },
+        {
+          "resourceId": "persist-adapter-2_1_asset-2_0.asset-2_1-daygw6",
+          "linkType": "pipeline",
+          "linkLabel": "persist-adapter-2_1_asset-2_0.asset-2_1-daygw6",
+          "queryHint": "pipeline",
+          "editingDisabled": false,
+          "navigationActive": true
+        },
+        {
+          "resourceId": "d4e104af-a98c-43b0-8bd3-b5df467d1e89",
+          "linkType": "measurement",
+          "linkLabel": "adapter-2_1_asset-2_0.asset-2_1",
+          "queryHint": "measurement",
+          "editingDisabled": false,
+          "navigationActive": false
+        },
+        {
+          "resourceId": "sp:dashboardmodel:KbQunt",
+          "linkType": "dashboard",
+          "linkLabel": "dashboard-2_1",
+          "queryHint": "dashboard",
+          "editingDisabled": false,
+          "navigationActive": true
+        }
+      ],
+      "assets": [],
+      "labelIds": ["e06d0ce24467785614676b465100f7c7"],
+      "additionalData": {}
+    },
+    {
+      "assetId": "au2menhi",
+      "assetName": "asset-2_2",
+      "assetDescription": "",
+      "assetType": { "isa95AssetType": "WORK_CELL" },
+      "assetLinks": [
+        {
+          "resourceId": "sp:adapterdescription:YhoGMR",
+          "linkType": "adapter",
+          "linkLabel": "adapter-2_2_asset-2_0.asset-2_2",
+          "queryHint": "adapter",
+          "editingDisabled": false,
+          "navigationActive": true
+        },
+        {
+          "resourceId": "sp:spdatastream:iQYJDi",
+          "linkType": "data-source",
+          "linkLabel": "adapter-2_2_asset-2_0.asset-2_2",
+          "queryHint": "data-source",
+          "editingDisabled": false,
+          "navigationActive": false
+        },
+        {
+          "resourceId": "persist-adapter-2_2_asset-2_0.asset-2_2-ajm2kf",
+          "linkType": "pipeline",
+          "linkLabel": "persist-adapter-2_2_asset-2_0.asset-2_2-ajm2kf",
+          "queryHint": "pipeline",
+          "editingDisabled": false,
+          "navigationActive": true
+        },
+        {
+          "resourceId": "a70ea850-1a11-46a5-af43-e157948863f4",
+          "linkType": "measurement",
+          "linkLabel": "adapter-2_2_asset-2_0.asset-2_2",
+          "queryHint": "measurement",
+          "editingDisabled": false,
+          "navigationActive": false
+        },
+        {
+          "resourceId": "sp:dashboardmodel:KMNvrM",
+          "linkType": "dashboard",
+          "linkLabel": "dashboard-2_2",
+          "queryHint": "dashboard",
+          "editingDisabled": false,
+          "navigationActive": true
+        }
+      ],
+      "assets": [],
+      "labelIds": ["e06d0ce24467785614676b465100fabc"],
+      "additionalData": {}
+    }
+  ],
+  "labelIds": ["e06d0ce24467785614676b465100e949"],
+  "additionalData": { "customFields": [] }
+}

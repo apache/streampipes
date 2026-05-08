@@ -278,10 +278,7 @@ export class ConnectUtils {
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
 
         assetNameList.forEach(assetName => {
-            cy.get('mat-tree.asset-tree')
-                .find('.mat-tree-node')
-                .contains(assetName)
-                .click();
+            this.selectAssetTreeNode(assetName);
         });
     }
 
@@ -289,11 +286,42 @@ export class ConnectUtils {
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
 
         assetNameList.forEach(assetName => {
-            console.log(assetName);
-            cy.get('mat-tree.asset-tree')
-                .find('.mat-tree-node')
-                .contains(assetName)
-                .click();
+            this.selectAssetTreeNode(assetName);
+        });
+    }
+
+    private static selectAssetTreeNode(assetName: string) {
+        const assetHierarchy = assetName.split('.');
+        const lastElement = assetHierarchy[assetHierarchy.length - 1];
+        const firstElements = assetHierarchy.slice(0, -1);
+
+        firstElements.forEach(el => {
+            cy.dataCy(`toggle-${el}`).click();
+        });
+
+        if (firstElements.length === 0) {
+            this.expandCollapsedAssetTreeNodes();
+        }
+
+        cy.get('mat-tree.asset-tree')
+            .find('.mat-tree-node')
+            .contains(lastElement)
+            .click();
+    }
+
+    private static expandCollapsedAssetTreeNodes() {
+        cy.get('mat-tree.asset-tree [data-cy^="toggle-"]').then($toggles => {
+            const collapsedToggles = [...$toggles].filter(
+                toggle => toggle.getAttribute('aria-expanded') === 'false',
+            );
+
+            if (collapsedToggles.length === 0) {
+                return;
+            }
+
+            cy.wrap(collapsedToggles).each(toggle => {
+                cy.wrap(toggle).click();
+            });
         });
     }
 
