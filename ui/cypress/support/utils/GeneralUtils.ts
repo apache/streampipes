@@ -21,8 +21,6 @@ export class GeneralUtils {
         return cy.dataCy(`tab-${identifier}`).click();
     }
     public static openMenuForRow(rowText: string) {
-        GeneralUtils.closeOpenMenus();
-
         cy.contains('[role="row"], tr, mat-row', rowText) // be flexible on row element
             .scrollIntoView()
             .within(() => {
@@ -33,19 +31,5 @@ export class GeneralUtils {
         cy.get('.cdk-overlay-container .mat-mdc-menu-panel:visible').should(
             'exist',
         );
-    }
-
-    public static closeOpenMenus() {
-        cy.get('body').then($body => {
-            if (
-                $body.find('.cdk-overlay-container .mat-mdc-menu-panel:visible')
-                    .length
-            ) {
-                cy.get('body').type('{esc}', { force: true });
-                cy.get(
-                    '.cdk-overlay-container .mat-mdc-menu-panel:visible',
-                ).should('not.exist');
-            }
-        });
     }
 }
