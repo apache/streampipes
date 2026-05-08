@@ -21,6 +21,20 @@ import * as http from 'http';
 import * as https from 'https';
 import * as path from 'path';
 
+declare global {
+    interface Window {}
+
+    namespace Cypress {
+        interface Chainable {
+            /**
+             * Load the asset fixtures into streampipes
+             * @example cy.importAssetResources();
+             */
+            importAssetResources: typeof importAssetResources;
+        }
+    }
+}
+
 interface MultipartPart {
     name: string;
     data: Buffer;
@@ -276,3 +290,20 @@ export function importFixtureDirectory(
         })
         .then(() => null);
 }
+export const importAssetResources = (fixtureDirectory = 'assetResources') => {
+    return cy.then(() => {
+        const token = window.localStorage.getItem('auth-token');
+
+        if (!token) {
+            throw new Error(
+                'Asset resource import requires an auth token. Call cy.login() first.',
+            );
+        }
+
+        return cy.task('importFixtureDirectory', {
+            baseUrl: Cypress.config('baseUrl'),
+            fixtureDirectory,
+            token,
+        });
+    });
+};

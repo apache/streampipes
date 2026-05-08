@@ -24,24 +24,6 @@ import { Isa95Type } from '../../../../projects/streampipes/platform-services/sr
 import { AssetBuilder } from '../../builder/AssetBuilder';
 
 export class AssetUtils {
-    public static importAssetResources(fixtureDirectory = 'assetResources') {
-        return cy.then(() => {
-            const token = window.localStorage.getItem('auth-token');
-
-            if (!token) {
-                throw new Error(
-                    'Asset resource import requires an auth token. Call cy.login() first.',
-                );
-            }
-
-            return cy.task('importFixtureDirectory', {
-                baseUrl: Cypress.config('baseUrl'),
-                fixtureDirectory,
-                token,
-            });
-        });
-    }
-
     public static goToAssets() {
         cy.visit('#/assets/overview');
         cy.dataCy('asset-title').should('be.visible');

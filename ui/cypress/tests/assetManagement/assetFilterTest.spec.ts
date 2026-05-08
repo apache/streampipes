@@ -106,9 +106,8 @@ describe('Test asset filters', () => {
         .build();
 
     beforeEach('Setup Test', () => {
-        const assetResourceFixtureDirectory = 'assetResources';
         cy.initStreamPipesTest();
-        AssetUtils.importAssetResources(assetResourceFixtureDirectory);
+        cy.importAssetResources();
         // This is currently required because the assets are only loaded on page load
         cy.reload();
     });
