@@ -517,13 +517,11 @@ export class ConnectUtils {
         cy.wait(waitTime);
 
         ConnectUtils.goToConnect();
-        ConnectBtns.openActionsMenu(adapterName);
         ConnectBtns.stopAdapter().click();
         ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
 
         cy.wait(waitTime);
 
-        ConnectBtns.openActionsMenu(adapterName);
         ConnectBtns.startAdapter().click();
         ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
 

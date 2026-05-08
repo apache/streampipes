@@ -367,35 +367,22 @@
                 <mat-icon>preview</mat-icon>
             </button>
         }
-        <div
+        <button
+            mat-icon-button
             [matMenuTriggerFor]="menu"
-            #menuTrigger="matMenuTrigger"
-            (mouseenter)="mouseEnter(menuTrigger)"
-            (mouseleave)="mouseLeave(menuTrigger)"
+            (click)="$event.stopPropagation()"
+            [attr.data-cy]="'more-options'"
         >
-            <button
-                mat-icon-button
-                [matMenuTriggerFor]="menu"
-                #menuTrigger="matMenuTrigger"
-                (click)="$event.stopPropagation()"
-                [attr.data-cy]="'more-options'"
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <ng-container
+                *ngTemplateOutlet="
+                    actionsTemplate;
+                    context: { $implicit: element }
+                "
             >
-                <mat-icon>more_vert</mat-icon>
-            </button>
-        </div>
-        <mat-menu #menu="matMenu" [hasBackdrop]="false">
-            <div
-                (mouseenter)="mouseEnter(menuTrigger)"
-                (mouseleave)="mouseLeave(menuTrigger)"
-            >
-                <ng-container
-                    *ngTemplateOutlet="
-                        actionsTemplate;
-                        context: { $implicit: element }
-                    "
-                >
-                </ng-container>
-            </div>
+            </ng-container>
         </mat-menu>
     </div>
 </ng-template>

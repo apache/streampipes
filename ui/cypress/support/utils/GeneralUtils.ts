@@ -20,15 +20,11 @@ export class GeneralUtils {
     public static tab(identifier: string) {
         return cy.dataCy(`tab-${identifier}`).click();
     }
-
     public static openMenuForRow(rowText: string) {
         cy.contains('[role="row"], tr, mat-row', rowText) // be flexible on row element
             .scrollIntoView()
             .within(() => {
-                // Hover the trigger to open the menu
-                cy.dataCy('more-options').trigger('mouseenter', {
-                    force: true,
-                });
+                cy.dataCy('more-options').click({ force: true });
             });
 
         // Wait for the CDK overlay panel to become visible
