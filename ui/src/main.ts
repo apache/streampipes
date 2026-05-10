@@ -1,3 +1,4 @@
+import { provideZoneChangeDetection } from '@angular/core';
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -41,4 +42,7 @@ echarts.registerTransform(PieAggregateTransform);
 // required
 import * as $ from 'jquery';
 
-bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
+bootstrapApplication(AppComponent, {
+    ...appConfig,
+    providers: [provideZoneChangeDetection(), ...appConfig.providers],
+}).catch(err => console.error(err));
