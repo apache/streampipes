@@ -30,7 +30,9 @@ public class GroupByTagsClauseParams implements IQueryStatement {
 
   public GroupByTagsClauseParams(String groupingTagsSeparatedByComma) {
     this.groupingTags = new ArrayList<>();
-    this.groupingTags.addAll(Arrays.asList(groupingTagsSeparatedByComma.split(",")));
+    Arrays.stream(groupingTagsSeparatedByComma.split(","))
+        .map(InfluxQueryParameterValidator::requireSafeIdentifier)
+        .forEach(this.groupingTags::add);
   }
 
   public static GroupByTagsClauseParams from(String groupingTagsSeparatedByComma) {

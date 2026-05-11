@@ -216,7 +216,7 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   @Override
   public DataLakeInfluxQueryBuilder withGroupBy(String column) {
 
-    this.groupByClauses.add(new RawTextClause(column));
+    this.groupByClauses.add(new RawTextClause("\"" + column + "\""));
 
     return this;
   }
