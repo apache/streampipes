@@ -96,7 +96,7 @@ public class ConnectedOpcUaClient {
 
   private @NonNull OpcUaSubscription getOpcUaSubscription(List<NodeId> nodes,
                                                           OpcUaAdapter opcUaAdapter) throws UaException {
-    var subscription = new OpcUaSubscription(this.client, 1000.0);
+    OpcUaSubscription subscription = createManagedSubscription();
     subscription.setSubscriptionListener(new OpcUaSubscription.SubscriptionListener() {
       @Override
       public void onTransferFailed(OpcUaSubscription subscription, StatusCode statusCode) {
@@ -108,6 +108,11 @@ public class ConnectedOpcUaClient {
         }
       }
     });
+    return subscription;
+  }
+
+  private OpcUaSubscription createManagedSubscription() throws UaException {
+    var subscription = new OpcUaSubscription(this.client, 1000.0);
     subscription.create();
     return subscription;
   }

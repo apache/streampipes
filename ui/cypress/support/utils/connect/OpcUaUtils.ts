@@ -65,8 +65,11 @@ export class OpcUaUtils {
     public static reloadTreeNodeSelection() {
         cy.dataCy('reloading-nodes', { timeout: 10000 }).should('not.exist');
         cy.dataCy('reload-tree-node-selection-btn').click();
-        cy.dataCy('reloading-nodes', { timeout: 10000 }).should('exist');
-        cy.dataCy('reloading-nodes', { timeout: 10000 }).should('not.exist');
+        cy.dataCy('reload-tree-node-selection-btn', { timeout: 10000 }).should(
+            'not.be.disabled',
+        );
+
+        cy.dataCy('expand-', { timeout: 10000 }, true).should('exist');
     }
 
     public static createNodeSelection(...leafNodes: string[]) {
@@ -85,8 +88,12 @@ export class OpcUaUtils {
     }
 
     public static expandNodeSelectionPath() {
-        ['Objects', 'Demo', 'Dynamic'].forEach(node =>
-            TreeStaticPropertyUtils.expandNode(node),
+        TreeStaticPropertyUtils.expandNode('Objects', 'Demo');
+        TreeStaticPropertyUtils.expandNode('Demo', 'Dynamic');
+        TreeStaticPropertyUtils.expandNode(
+            'Dynamic',
+            OpcUaUtils.BOOLEAN_NODE,
+            false,
         );
     }
 

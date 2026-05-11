@@ -326,11 +326,11 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   @Override
   public void onAdapterStopped(IAdapterParameterExtractor extractor,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
-    clientProvider.releaseClient(this.opcUaAdapterConfig);
-
     if (this.opcUaAdapterConfig.inPullMode()) {
       this.pullAdapterScheduler.shutdown();
     }
+
+    clientProvider.releaseClient(this.opcUaAdapterConfig);
   }
 
   @Override

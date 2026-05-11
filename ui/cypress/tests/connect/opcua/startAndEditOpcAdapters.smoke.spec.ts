@@ -80,6 +80,8 @@ const editAdapterTest = (adapterInput: AdapterInput) => {
 
     GeneralUtils.openMenuForRow(adapterInput.adapterName);
     ConnectBtns.editAdapter().click();
+    cy.location('hash', { timeout: 10000 }).should('contain', '/connect/edit/');
+    OpcUaUtils.reloadTreeNodeSelection();
 
     // Validate that the selected node hierarchy can still be browsed after editing
     OpcUaUtils.expandNodeSelectionPath();

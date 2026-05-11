@@ -36,6 +36,7 @@
 
         <module>streampipes-connectors-camel</module>
         <module>streampipes-connectors-cdc</module>
+        <module>streampipes-connectors-filewatcher</module>
         <module>streampipes-connectors-influx</module>
         <module>streampipes-connectors-kafka</module>
         <module>streampipes-connectors-mqtt</module>

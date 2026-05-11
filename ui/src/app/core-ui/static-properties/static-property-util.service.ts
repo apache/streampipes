@@ -77,11 +77,13 @@ export class StaticPropertyUtilService {
         completedConfig: ConfigurationInfo,
         completedConfigs: ConfigurationInfo[],
     ) {
-        completedConfigs.find(
+        const existingConfig = completedConfigs.find(
             c =>
                 c.staticPropertyInternalName ===
                 completedConfig.staticPropertyInternalName,
-        ).configured = completedConfig.configured;
+        );
+        existingConfig.configured = completedConfig.configured;
+        existingConfig.revision = (existingConfig.revision ?? 0) + 1;
     }
 
     public clone(val: StaticProperty) {

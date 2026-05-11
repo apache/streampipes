@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.model.node;
 
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaValueNormalizationUtils;
 import org.apache.streampipes.model.connect.guess.FieldStatus;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
 
@@ -99,7 +100,7 @@ public class ScalarOpcUaNode implements OpcUaNode {
       return ((XmlElement) rawValue).getFragment();
     }
 
-    return OpcUaNumberNormalizer.normalize(rawValue);
+    return OpcUaValueNormalizationUtils.normalizeUnsignedNumber(rawValue);
   }
 
   private boolean isByteStringArray(Object value) {
