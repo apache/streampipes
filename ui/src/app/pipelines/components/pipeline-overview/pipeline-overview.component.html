@@ -51,7 +51,9 @@
                     }
                     @if (
                         pipeline.running &&
-                        pipeline.healthStatus === 'REQUIRES_ATTENTION'
+                        (pipeline.healthStatus === 'REQUIRES_ATTENTION' ||
+                            pipeline.healthStatus ===
+                                'HANDLE_MEASUREMENT_UPDATE')
                     ) {
                         <div class="light light-yellow"></div>
                     }

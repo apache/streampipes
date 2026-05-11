@@ -80,12 +80,19 @@ const editAdapterTest = (adapterInput: AdapterInput) => {
 
     GeneralUtils.openMenuForRow(adapterInput.adapterName);
     ConnectBtns.editAdapter().click();
+    cy.location('hash', { timeout: 10000 }).should('contain', '/connect/edit/');
+    OpcUaUtils.reloadTreeNodeSelection();
 
-    // Validate that browse nodes are shown
-    TreeStaticPropertyUtils.validateAmountOfShownBrowseNodes(3);
+    // Validate that the selected node hierarchy can still be browsed after editing
+    OpcUaUtils.expandNodeSelectionPath();
+    TreeStaticPropertyUtils.checkThatNodeIsSelectedInTree(
+        OpcUaUtils.BOOLEAN_NODE,
+    );
 
     // Remove a node and validate that resulting events do not contain the property
-    TreeStaticPropertyUtils.removeSelectedNode('ns=3;s=RandomUnsignedInt32');
+    TreeStaticPropertyUtils.removeSelectedNode(
+        OpcUaUtils.getNodeId(OpcUaUtils.UINT32_NODE),
+    );
     ConnectUtils.finishAdapterSettings();
     SharedUtils.confirmDialogVisible();
     SharedBtns.confirmDialogConfirmBtn().click();
@@ -110,11 +117,11 @@ const getAdapterBuilderWithTextNodes = (pullMode: boolean) => {
     builder.addTreeNode(
         TreeNodeUserInputBuilder.create(
             [
-                'ns=3;s=AlternatingBoolean\n',
-                'ns=3;s=StepUp\n',
-                'ns=3;s=RandomSignedInt32\n',
-                'ns=3;s=RandomUnsignedInt32\n',
-            ].join('\n'),
+                `${OpcUaUtils.getNodeId(OpcUaUtils.BOOLEAN_NODE)}\n`,
+                `${OpcUaUtils.getNodeId(OpcUaUtils.INT32_NODE)}\n`,
+                `${OpcUaUtils.getNodeId(OpcUaUtils.STRING_NODE)}\n\n`,
+                `${OpcUaUtils.getNodeId(OpcUaUtils.UINT32_NODE)}\n`,
+            ].join(''),
         ).isTextConfig(),
     );
 

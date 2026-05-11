@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
+import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeValidationStep;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -107,11 +108,15 @@ public class PipelineUpdateCoordinator {
         var verificationHandler = new PipelineVerificationHandlerV2(updatedPipeline, requestManager);
         var modificationMessage = verificationHandler.verifyPipeline();
         var updateInfo = makeUpdateInfo(modificationMessage, updatedPipeline);
-        var modifiedPipeline = verificationHandler.makeModifiedPipeline().pipeline();
+        var modifiedPipeline = verificationHandler.makeModifiedPipeline(modificationMessage).pipeline();
         var canAutoMigrate = canAutoMigrate(modificationMessage);
 
         if (!canAutoMigrate) {
-          modifiedPipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
+          modifiedPipeline.setHealthStatus(
+              requiresMeasurementUpdate(modificationMessage)
+                  ? PipelineHealthStatus.HANDLE_MEASUREMENT_UPDATE
+                  : PipelineHealthStatus.REQUIRES_ATTENTION
+          );
           PIPELINES_STATS.updatePipelineHealthState(
               modifiedPipeline.getElementId(),
               modifiedPipeline.getName(),
@@ -142,7 +147,8 @@ public class PipelineUpdateCoordinator {
       var updatedPipeline = updatePipeline(pipeline, affectedElementId, updatedStreamName, updatedEventSchema);
       try {
         var modificationMessage = new PipelineVerificationHandlerV2(updatedPipeline, requestManager).verifyPipeline();
-        updateInfos.add(makeUpdateInfo(modificationMessage, updatedPipeline));
+        var updateInfo = makeUpdateInfo(modificationMessage, updatedPipeline);
+        updateInfos.add(updateInfo);
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
@@ -186,6 +192,15 @@ public class PipelineUpdateCoordinator {
         .stream()
         .allMatch(modification -> modification.isPipelineElementValid()
             && modification.getValidationInfos().isEmpty());
+  }
+
+  private boolean requiresMeasurementUpdate(PipelineModificationMessage modificationMessage) {
+    return modificationMessage
+        .getPipelineModifications()
+        .stream()
+        .flatMap(modification -> modification.getValidationInfos().stream())
+        .anyMatch(validationInfo -> validationInfo.getMessage() != null
+            && validationInfo.getMessage().startsWith(MeasurementChangeValidationStep.MEASUREMENT_UPDATE_REQUIRED));
   }
 
   private List<String> toNotification(PipelineUpdateInfo updateInfo,

@@ -18,16 +18,36 @@
 <div class="tree-input-header" fxLayoutAlign="start center">
     <b>{{ 'Node Details' | translate }}</b>
 </div>
-@for (metadata of nodeMetadata | keyvalue; track metadata) {
-    <div
-        class="node-metadata p-xs"
-        fxLayout="row"
-        fxLayoutGap="5px"
-        [attr.data-cy]="'node-details-metadata-row-' + metadata.key"
-    >
-        <span class="text-sm" style="color: var(--fg-muted)">{{
-            metadata.key
+@if (!node) {
+    <div class="tree-empty-state p-md">
+        <span class="text-sm">{{
+            'Select a node to inspect its details' | translate
         }}</span>
-        <span class="text-sm font-emphasized">{{ metadata.value }}</span>
+    </div>
+}
+@if (node) {
+    <div class="node-summary p-md">
+        <div class="node-summary-name font-emphasized">
+            {{ node.nodeName }}
+        </div>
+        <div class="node-summary-path text-sm">
+            {{ node.internalNodeName }}
+        </div>
+    </div>
+
+    <div class="node-metadata-list">
+        @for (metadata of node.nodeMetadata | keyvalue; track metadata.key) {
+            <div
+                class="node-metadata p-sm"
+                [attr.data-cy]="'node-details-metadata-row-' + metadata.key"
+            >
+                <div class="node-metadata-key text-sm">
+                    {{ metadata.key }}
+                </div>
+                <div class="node-metadata-value text-sm font-emphasized">
+                    {{ metadata.value }}
+                </div>
+            </div>
+        }
     </div>
 }

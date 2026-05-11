@@ -28,8 +28,12 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 import * as fs from 'fs';
-import { ProcessorTest } from '../support/model/ProcessorTest';
 import { rm } from 'fs';
+import {
+    importFixtureDirectory,
+    ImportFixtureDirectoryOptions,
+} from '../support/general/importFixtureDirectory';
+import { ProcessorTest } from '../support/model/ProcessorTest';
 
 function readProcessingElements(): ProcessorTest[] {
     const result: ProcessorTest[] = [];
@@ -94,6 +98,9 @@ module.exports = (on, config) => {
                     resolve(null);
                 }
             });
+        },
+        importFixtureDirectory(options: ImportFixtureDirectoryOptions) {
+            return importFixtureDirectory(config.projectRoot, options);
         },
     });
 

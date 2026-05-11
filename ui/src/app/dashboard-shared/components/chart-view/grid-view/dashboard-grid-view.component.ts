@@ -52,8 +52,6 @@ export class DashboardGridViewComponent
     private readonly minGridCellHeightPx = 40;
     private readonly maxGridCellHeightPx = 200;
 
-    readonly maxGridWidthPx = 1440;
-
     @Input()
     kioskMode = false;
 

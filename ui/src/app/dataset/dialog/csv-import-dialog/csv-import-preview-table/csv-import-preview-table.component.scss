@@ -27,7 +27,8 @@
 }
 
 .preview-table-wrapper {
-    overflow: auto;
+    overflow-x: auto;
+    max-width: 100%;
     border: 1px solid var(--color-border, #d8dee4);
     border-radius: 14px;
 }

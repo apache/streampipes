@@ -17,25 +17,7 @@
 -->
 
 <div class="tree-input-header" fxLayoutAlign="start center">
-    <div fxLayout="row" fxFlex="100">
-        <div fxFlex fxLayoutAlign="start center">
-            <b>{{ 'Browse' | translate }}</b>
-        </div>
-        <div fxLayoutAlign="end center">
-            <button
-                mat-icon-button
-                color="accent"
-                (click)="largeView = !largeView"
-            >
-                @if (!largeView) {
-                    <mat-icon>open_in_full</mat-icon>
-                }
-                @if (largeView) {
-                    <mat-icon>close_fullscreen </mat-icon>
-                }
-            </button>
-        </div>
-    </div>
+    <b>{{ 'Browse' | translate }}</b>
 </div>
 
 <mat-tree
@@ -43,28 +25,31 @@
     [childrenAccessor]="childrenAccessor"
     #tree
     class="sp-tree"
-    [ngClass]="largeView ? 'tree-large-height' : 'tree-normal-height'"
 >
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
         <div
+            class="tree-node-content"
+            fxLayout="row"
             fxLayoutAlign="start center"
             [attr.data-cy]="'tree-node-' + node.nodeName"
         >
             <i class="material-icons color-primary pr-5">wifi</i>
-            @if (node.dataNode && !isNodeSelected(node)) {
+            @if (isSelectable(node) && !isNodeSelected(node)) {
                 <i
                     class="material-icons pr-5 icon-button"
                     (click)="addNode(node)"
                     [attr.data-cy]="'select-' + node.nodeName"
                     [matTooltip]="'Add node' | translate"
+                    matTooltipPosition="above"
                     >add_circle</i
                 >
             }
-            @if (node.dataNode && isNodeSelected(node)) {
+            @if (isSelectable(node) && isNodeSelected(node)) {
                 <i
                     class="material-icons pr-5 icon-button"
                     (click)="removeNode(node)"
                     [matTooltip]="'Remove node' | translate"
+                    matTooltipPosition="above"
                     >remove_circle</i
                 >
             }
@@ -74,6 +59,7 @@
                     [attr.data-cy]="'show-node-details-' + node.nodeName"
                     (click)="showNodeDetails(node)"
                     [matTooltip]="'Show details' | translate"
+                    matTooltipPosition="above"
                     >visibility</i
                 >
             }
@@ -83,10 +69,16 @@
                     [attr.data-cy]="'hide-node-details-' + node.nodeName"
                     (click)="hideNodeDetails()"
                     [matTooltip]="'Show details' | translate"
+                    matTooltipPosition="above"
                     >visibility_off</i
                 >
             }
-            <span class="pr-5">{{ node.nodeName }}</span>
+            <span
+                fxFlex
+                class="tree-node-label pr-5"
+                [matTooltip]="node.internalNodeName || node.nodeName"
+                >{{ node.nodeName }}</span
+            >
         </div>
     </mat-tree-node>
     <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
@@ -104,19 +96,47 @@
                     }}
                 </mat-icon>
             </button>
-            <div fxLayoutAlign="start center">
+            <div
+                class="tree-node-content"
+                fxFlex
+                fxLayout="row"
+                fxLayoutAlign="start center"
+            >
                 @if (!tree.isExpanded(node)) {
                     <i class="material-icons color-primary pr-5">folder</i>
                 }
                 @if (tree.isExpanded(node)) {
                     <i class="material-icons color-primary pr-5">folder_open</i>
                 }
-                @if (tree.isExpanded(node) && hasDataChildren(node)) {
+                @if (
+                    staticProperty.multiSelection &&
+                    tree.isExpanded(node) &&
+                    hasDataChildren(node)
+                ) {
                     <i
                         class="material-icons pr-5 icon-button"
                         [matTooltip]="'Add all direct children' | translate"
                         (click)="addAllDirectChildren(node)"
                         >add_circle</i
+                    >
+                }
+                @if (isSelectable(node) && !isNodeSelected(node)) {
+                    <i
+                        class="material-icons pr-5 icon-button"
+                        (click)="addNode(node)"
+                        [attr.data-cy]="'select-' + node.nodeName"
+                        [matTooltip]="'Add node' | translate"
+                        matTooltipPosition="above"
+                        >add_circle</i
+                    >
+                }
+                @if (isSelectable(node) && isNodeSelected(node)) {
+                    <i
+                        class="material-icons pr-5 icon-button"
+                        (click)="removeNode(node)"
+                        [matTooltip]="'Remove node' | translate"
+                        matTooltipPosition="above"
+                        >remove_circle</i
                     >
                 }
                 @if (selectedNodeId !== node.internalNodeName) {
@@ -125,6 +145,7 @@
                         [attr.data-cy]="'show-node-details-' + node.nodeName"
                         (click)="showNodeDetails(node)"
                         [matTooltip]="'Show details' | translate"
+                        matTooltipPosition="above"
                         >visibility</i
                     >
                 }
@@ -134,10 +155,16 @@
                         [attr.data-cy]="'hide-node-details-' + node.nodeName"
                         (click)="hideNodeDetails()"
                         [matTooltip]="'Show details' | translate"
+                        matTooltipPosition="above"
                         >visibility_off</i
                     >
                 }
-                <span class="node-name pr-5">&nbsp;{{ node.nodeName }}</span>
+                <span
+                    fxFlex
+                    class="node-name tree-node-label pr-5"
+                    [matTooltip]="node.internalNodeName || node.nodeName"
+                    >&nbsp;{{ node.nodeName }}</span
+                >
             </div>
         </div>
         @if (tree.isExpanded(node)) {

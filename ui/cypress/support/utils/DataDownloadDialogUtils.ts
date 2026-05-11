@@ -31,7 +31,6 @@ export class DataDownloadDialogUtils {
         // const exportDate: Date;
         ChartUtils.goToDatalake();
 
-        GeneralUtils.openMenuForRow(dataViewName);
         // select data view in edit mode
         ChartUtils.editDataView(dataViewName);
 

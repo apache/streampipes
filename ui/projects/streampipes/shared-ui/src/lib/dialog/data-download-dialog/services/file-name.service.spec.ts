@@ -16,10 +16,8 @@
  *
  */
 
-import { ExportConfig } from '../model/export-config.model';
+import { ExportConfig, FileNameService } from '@streampipes/shared-ui';
 import { DateRange } from '@streampipes/platform-services';
-import { FileNameService } from './file-name.service';
-
 describe('FileNameService', () => {
     const service = new FileNameService();
 
@@ -42,6 +40,7 @@ describe('FileNameService', () => {
             formatExportConfig: {
                 format: 'csv',
                 delimiter: 'comma',
+                headerColumnName: 'key',
             },
         };
     });

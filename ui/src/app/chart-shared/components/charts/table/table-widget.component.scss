@@ -53,20 +53,18 @@
     overflow: visible;
 }
 
-.analytics-table .time-column {
+.analytics-table.sticky-headers th {
     position: sticky;
-    left: 0;
+    top: 0;
+    z-index: 3;
 }
 
 .analytics-table th.time-column {
-    z-index: 4;
     min-width: 11rem;
 }
 
 .analytics-table td.time-column {
-    z-index: 1;
     min-width: 11rem;
-    background: var(--color-bg-0);
 }
 
 .analytics-table tbody tr:nth-child(even) td {
@@ -160,6 +158,49 @@
     height: 1rem;
     font-size: 1rem;
     line-height: 1rem;
+}
+
+.column-drag-trigger {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: var(--color-secondary-text);
+    cursor: grab;
+    padding: 2px;
+    border-radius: 2px;
+}
+
+.column-drag-trigger:hover {
+    color: var(--color-primary);
+}
+
+.column-drag-trigger:active {
+    cursor: grabbing;
+}
+
+.column-drag-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+    line-height: 1rem;
+}
+
+.analytics-table th.reorderable-column {
+    cursor: default;
+}
+
+.analytics-table .cdk-drag-preview {
+    box-sizing: border-box;
+    background: var(--color-bg-0);
+    border: 1px solid var(--color-border-subtle, var(--color-bg-3));
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.18);
+}
+
+.analytics-table .cdk-drag-placeholder {
+    opacity: 0.35;
 }
 
 .column-filter-dropdown {

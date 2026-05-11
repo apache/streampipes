@@ -18,8 +18,14 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.utils;
 
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.net.ConnectException;
+import java.util.concurrent.ExecutionException;
 
 public class OpcUaUtilTest {
 
@@ -35,5 +41,42 @@ public class OpcUaUtilTest {
   public void testAddOpcPrefixIfNotExistsNoPrefix() {
     var result = OpcUaUtils.addOpcPrefixIfNotExists("example.com");
     Assertions.assertEquals(SERVER_ADDRESS_WITH_OPC_PREFIX, result);
+  }
+
+  @Test
+  public void testExtractDescriptionFromNestedConnectionException() {
+    var exception = new ExecutionException(
+        new ConnectException("Connection refused: localhost/127.0.0.1:4840")
+    );
+
+    var result = ExceptionMessageExtractor.getDescription(exception);
+
+    Assertions.assertEquals("Connection refused: localhost/127.0.0.1:4840", result);
+  }
+
+  @Test
+  public void testCreateMeaningfulConnectionExceptionWithoutCauseChain() throws Exception {
+    var method = OpcUaUtils.class.getDeclaredMethod(
+        "makeConnectionException",
+        org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig.class,
+        Throwable.class
+    );
+    method.setAccessible(true);
+
+    var config = new OpcUaConfig();
+    config.setOpcServerURL("opc.tcp://localhost:4840");
+
+    var result = (SpConfigurationException) method.invoke(
+        null,
+        config,
+        new ExecutionException(new ConnectException("Connection refused: localhost/127.0.0.1:4840"))
+    );
+
+    Assertions.assertEquals(
+        "Could not connect to the OPC UA server at opc.tcp://localhost:4840: "
+            + "Connection refused: localhost/127.0.0.1:4840",
+        result.getMessage()
+    );
+    Assertions.assertNull(result.getCause());
   }
 }

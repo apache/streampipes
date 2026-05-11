@@ -191,8 +191,6 @@ export class SpTableComponent<T>
     @ContentChild(SpTableMultiActionsDirective, { read: TemplateRef })
     multiActionsTemplate?: TemplateRef<any>;
 
-    timedOutCloser: any;
-    trigger: MatMenuTrigger | undefined = undefined;
     visiblePageRows: T[] = [];
     selectedMultiAction: string | null = null;
     viewMode: SpTableGroupViewMode = 'list';
@@ -287,24 +285,6 @@ export class SpTableComponent<T>
     @HostListener('window:resize')
     onResize() {
         this.updateCompactLayout();
-    }
-
-    mouseEnter(trigger) {
-        if (this.timedOutCloser) {
-            clearTimeout(this.timedOutCloser);
-        }
-        if (this.trigger !== undefined) {
-            this.trigger.closeMenu();
-        }
-        trigger.openMenu();
-        this.trigger = trigger;
-    }
-
-    mouseLeave(trigger) {
-        this.timedOutCloser = setTimeout(() => {
-            trigger.closeMenu();
-            this.trigger = undefined;
-        }, 50);
     }
 
     onPage(event: PageEvent) {

@@ -22,12 +22,14 @@ import {
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
     MatButtonToggle,
     MatButtonToggleGroup,
 } from '@angular/material/button-toggle';
+import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -39,10 +41,13 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutGapDirective,
         LayoutAlignDirective,
         MatButton,
+        MatIconButton,
+        MatIcon,
         MatProgressSpinner,
         FlexDirective,
         MatButtonToggleGroup,
         MatButtonToggle,
+        MatTooltip,
         TranslatePipe,
     ],
 })
@@ -53,6 +58,10 @@ export class StaticTreeInputButtonMenuComponent {
     loading: boolean;
     @Input()
     editorMode: 'tree' | 'text';
+    @Input()
+    treeFullscreen: boolean;
+    @Input()
+    showFullscreenToggle = true;
 
     @Output()
     resetOptionsAndReload = new EventEmitter<void>();
@@ -60,6 +69,8 @@ export class StaticTreeInputButtonMenuComponent {
     reload = new EventEmitter<void>();
     @Output()
     selectedEditorModeEmitter = new EventEmitter<'tree' | 'text'>();
+    @Output()
+    toggleTreeFullscreenEmitter = new EventEmitter<void>();
 
     onResetOptionsAndReload() {
         this.resetOptionsAndReload.emit();
@@ -71,5 +82,9 @@ export class StaticTreeInputButtonMenuComponent {
 
     onChangeEditor(mode: 'tree' | 'text') {
         this.selectedEditorModeEmitter.emit(mode);
+    }
+
+    onToggleTreeFullscreen() {
+        this.toggleTreeFullscreenEmitter.emit();
     }
 }
