@@ -296,7 +296,18 @@ export class ConnectUtils {
         const firstElements = assetHierarchy.slice(0, -1);
 
         firstElements.forEach(el => {
-            cy.dataCy(`toggle-${el}`).click();
+            cy.get('body').then($body => {
+                const toggleSelector = `[data-cy="toggle-${el}"]`;
+
+                if ($body.find(toggleSelector).length > 0) {
+                    cy.dataCy(`toggle-${el}`).click();
+                } else {
+                    cy.get('mat-tree.asset-tree')
+                        .find('.mat-tree-node')
+                        .contains(el)
+                        .click();
+                }
+            });
         });
 
         if (firstElements.length === 0) {
@@ -308,12 +319,14 @@ export class ConnectUtils {
             .contains(lastElement)
             .click();
     }
-
     private static expandCollapsedAssetTreeNodes() {
-        cy.get('mat-tree.asset-tree [data-cy^="toggle-"]').then($toggles => {
-            const collapsedToggles = [...$toggles].filter(
-                toggle => toggle.getAttribute('aria-expanded') === 'false',
-            );
+        cy.get('mat-tree.asset-tree').then($tree => {
+            const collapsedToggles = $tree
+                .find('[data-cy^="toggle-"]')
+                .toArray()
+                .filter(
+                    toggle => toggle.getAttribute('aria-expanded') === 'false',
+                );
 
             if (collapsedToggles.length === 0) {
                 return;
