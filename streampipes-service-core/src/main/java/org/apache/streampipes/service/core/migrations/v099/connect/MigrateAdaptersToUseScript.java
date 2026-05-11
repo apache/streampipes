@@ -61,20 +61,24 @@ public class MigrateAdaptersToUseScript implements Migration {
   // Execute if there is an adapter with no transformation config or script
   public boolean shouldExecute() {
     List<AdapterDescription> adapters = adapterStorage.findAll();
-    return adapters != null && adapters.stream()
-                                       .anyMatch(adapter -> adapter.getTransformationConfig() == null || adapter.getTransformationConfig()
-                                                                                                                .getScript() == null);
+    return adapters != null && adapters.stream().anyMatch(this::hasEmptyTransformationConfig);
   }
 
   @Override
   public void executeMigration() throws IOException {
     adapterStorage.findAll()
-                  .forEach(this::migrateAndUpdateAdapter);
+        .stream()
+        .filter(this::hasEmptyTransformationConfig)
+        .forEach(this::migrateAndUpdateAdapter);
   }
 
   @Override
   public String getDescription() {
     return "Changes the rules based adapters to use script based transformations instead.";
+  }
+
+  private boolean hasEmptyTransformationConfig(AdapterDescription adapter) {
+    return adapter.getTransformationConfig() == null || adapter.getTransformationConfig().getScript() == null;
   }
 
   private void migrateAndUpdateAdapter(AdapterDescription adapterDescription) {
