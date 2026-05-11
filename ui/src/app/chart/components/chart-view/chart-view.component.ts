@@ -28,9 +28,11 @@ import {
     ChartService,
     DataExplorerWidgetModel,
     DataLakeMeasure,
+    DatalakeRestService,
     EventPropertyUnion,
     FieldConfig,
     LinkageData,
+    SourceConfig,
     TimeSelectionConstants,
     SpQueryResult,
     TimeSettings,
@@ -144,6 +146,7 @@ export class ChartViewComponent
     private authService = inject(AuthService);
     private fieldProvider = inject(ChartFieldProviderService);
     private assetSaveService = inject(AssetSaveService);
+    private datalakeRestService = inject(DatalakeRestService);
 
     currentUser$: Subscription;
     queryParams$: Subscription;
@@ -242,6 +245,9 @@ export class ChartViewComponent
                     this.chartNotFound = true;
                     return of(null);
                 }),
+                switchMap(res =>
+                    res ? this.refreshDataViewMeasureSchemas(res) : of(null),
+                ),
             )
             .subscribe(res => {
                 if (!res) {
@@ -595,6 +601,41 @@ export class ChartViewComponent
         this.shortcutReg?.unregister();
         this.currentUser$?.unsubscribe();
         this.queryParams$?.unsubscribe();
+    }
+
+    private refreshDataViewMeasureSchemas(
+        dataView: DataExplorerWidgetModel,
+    ): Observable<DataExplorerWidgetModel> {
+        const sourceConfigs = this.getSourceConfigs(dataView);
+        if (sourceConfigs.length === 0) {
+            return of(dataView);
+        }
+
+        return this.datalakeRestService.getAllMeasurementSeries().pipe(
+            map(measures => {
+                const measuresByName = new Map(
+                    measures.map(measure => [measure.measureName, measure]),
+                );
+
+                sourceConfigs.forEach(sourceConfig => {
+                    const latestMeasure = measuresByName.get(
+                        sourceConfig.measureName,
+                    );
+                    if (latestMeasure) {
+                        sourceConfig.measure = latestMeasure;
+                    }
+                });
+
+                return dataView;
+            }),
+            catchError(() => of(dataView)),
+        );
+    }
+
+    private getSourceConfigs(
+        dataView: DataExplorerWidgetModel,
+    ): SourceConfig[] {
+        return dataView?.dataConfig?.sourceConfigs ?? [];
     }
 
     private hasMultipleSourceConfigs(widget: DataExplorerWidgetModel): boolean {
