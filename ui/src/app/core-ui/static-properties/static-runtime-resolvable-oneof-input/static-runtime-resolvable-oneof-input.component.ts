@@ -79,6 +79,7 @@ export class StaticRuntimeResolvableOneOfInputComponent
             }
         }
         this.staticProperty.options = staticProperty.options;
+        this.performValidation();
     }
 
     isOptionSelected(): boolean {

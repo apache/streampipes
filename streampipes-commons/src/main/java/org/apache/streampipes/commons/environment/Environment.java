@@ -202,6 +202,8 @@ public interface Environment {
 
   IntEnvironmentVariable getPlc4xMaxLeaseTimeMs();
 
+  IntEnvironmentVariable getMsSqlCdcPollIntervalMs();
+
   BooleanEnvironmentVariable getFileLoggingEnabled();
 
   BooleanEnvironmentVariable getConsoleLoggingEnabled();
