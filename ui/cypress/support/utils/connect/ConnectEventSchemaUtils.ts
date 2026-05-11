@@ -57,7 +57,7 @@ export class ConnectEventSchemaUtils {
             'function transform(event, out, ctx) {\n' +
             '  utils.addTimestamp(event);\n' +
             '  return out.collect(event);\n' +
-            '';
+            '}';
 
         ConnectBtns.setConfigureSchemaScriptEditorValue(fullScript);
     }
