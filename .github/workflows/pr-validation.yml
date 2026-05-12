@@ -65,6 +65,7 @@ jobs:
       - name: Format and Lint all files
         working-directory: ./ui
         run: |
+          npm run i18n:check
           npm run format
           npm run lint
         env:
