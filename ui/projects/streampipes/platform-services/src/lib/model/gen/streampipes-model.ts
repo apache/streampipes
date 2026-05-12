@@ -1302,6 +1302,7 @@ export class DashboardModel implements Storable, SpResource {
 export class DataExplorerWidgetModel extends DashboardEntity {
     baseAppearanceConfig: { [index: string]: any };
     dataConfig: { [index: string]: any };
+    healthStatus: DataExplorerWidgetHealthStatus;
     timeSettings: { [index: string]: any };
     visualizationConfig: { [index: string]: any };
     widgetId: string;
@@ -1322,6 +1323,7 @@ export class DataExplorerWidgetModel extends DashboardEntity {
         instance.dataConfig = __getCopyObjectFn(__identity<any>())(
             data.dataConfig,
         );
+        instance.healthStatus = data.healthStatus;
         instance.timeSettings = __getCopyObjectFn(__identity<any>())(
             data.timeSettings,
         );
@@ -3286,6 +3288,7 @@ export class PipelineTemplateGenerationRequest {
 
 export class PipelineUpdateInfo {
     canAutoMigrate: boolean;
+    chartSchemaUpdateInfos: ChartSchemaUpdateInfo[];
     migrationInfo: string;
     pipelineId: string;
     pipelineName: string;
@@ -3300,12 +3303,41 @@ export class PipelineUpdateInfo {
         }
         const instance = target || new PipelineUpdateInfo();
         instance.canAutoMigrate = data.canAutoMigrate;
+        instance.chartSchemaUpdateInfos = __getCopyArrayFn(
+            ChartSchemaUpdateInfo.fromData,
+        )(data.chartSchemaUpdateInfos);
         instance.migrationInfo = data.migrationInfo;
         instance.pipelineId = data.pipelineId;
         instance.pipelineName = data.pipelineName;
         instance.validationInfos = __getCopyObjectFn(
             __getCopyArrayFn(PipelineElementValidationInfo.fromData),
         )(data.validationInfos);
+        return instance;
+    }
+}
+
+export class ChartSchemaUpdateInfo {
+    affectedFields: string[];
+    canAutoMigrate: boolean;
+    chartId: string;
+    chartTitle: string;
+    measureName: string;
+
+    static fromData(
+        data: ChartSchemaUpdateInfo,
+        target?: ChartSchemaUpdateInfo,
+    ): ChartSchemaUpdateInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ChartSchemaUpdateInfo();
+        instance.affectedFields = __getCopyArrayFn(__identity<string>())(
+            data.affectedFields,
+        );
+        instance.canAutoMigrate = data.canAutoMigrate;
+        instance.chartId = data.chartId;
+        instance.chartTitle = data.chartTitle;
+        instance.measureName = data.measureName;
         return instance;
     }
 }
@@ -4639,6 +4671,8 @@ export type PipelineHealthStatus =
     | 'FAILURE';
 
 export type MeasurementUpdateAction = 'edit-pipeline' | 'manage-datasets';
+
+export type DataExplorerWidgetHealthStatus = 'OK' | 'REQUIRES_ATTENTION';
 
 export type PropertyScope =
     | 'HEADER_PROPERTY'

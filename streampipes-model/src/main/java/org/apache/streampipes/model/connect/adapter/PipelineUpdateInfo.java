@@ -21,6 +21,7 @@ package org.apache.streampipes.model.connect.adapter;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +34,11 @@ public class PipelineUpdateInfo {
   private boolean canAutoMigrate;
   private String migrationInfo;
   private Map<String, List<PipelineElementValidationInfo>> validationInfos;
+  private List<ChartSchemaUpdateInfo> chartSchemaUpdateInfos;
 
   public PipelineUpdateInfo() {
     this.validationInfos = new HashMap<>();
+    this.chartSchemaUpdateInfos = new ArrayList<>();
   }
 
   public String getPipelineId() {
@@ -76,5 +79,13 @@ public class PipelineUpdateInfo {
 
   public void setValidationInfos(Map<String, List<PipelineElementValidationInfo>> validationInfos) {
     this.validationInfos = validationInfos;
+  }
+
+  public List<ChartSchemaUpdateInfo> getChartSchemaUpdateInfos() {
+    return chartSchemaUpdateInfos;
+  }
+
+  public void setChartSchemaUpdateInfos(List<ChartSchemaUpdateInfo> chartSchemaUpdateInfos) {
+    this.chartSchemaUpdateInfos = chartSchemaUpdateInfos;
   }
 }

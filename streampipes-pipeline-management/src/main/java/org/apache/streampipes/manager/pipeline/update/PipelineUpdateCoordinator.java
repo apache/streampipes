@@ -50,9 +50,16 @@ public class PipelineUpdateCoordinator {
   private static final PipelinesStats PIPELINES_STATS = new PipelinesStats();
 
   private final ExtensionServiceRequestManager requestManager;
+  private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
   public PipelineUpdateCoordinator(ExtensionServiceRequestManager requestManager) {
+    this(requestManager, new ChartSchemaUpdateCoordinator());
+  }
+
+  PipelineUpdateCoordinator(ExtensionServiceRequestManager requestManager,
+                            ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.requestManager = requestManager;
+    this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
   }
 
   public void updatePipelines(SpDataStream dataStream) {
@@ -127,6 +134,7 @@ public class PipelineUpdateCoordinator {
         }
 
         StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(modifiedPipeline);
+        chartSchemaUpdateCoordinator.updateCharts(modifiedPipeline, updatedEventSchema);
 
         if (shouldRestartPipeline && canAutoMigrate) {
           new PipelineExecutor(PipelineManager.getPipeline(pipeline.getPipelineId()), requestManager).startPipeline();
@@ -141,20 +149,23 @@ public class PipelineUpdateCoordinator {
                                                            String updatedStreamName,
                                                            EventSchema updatedEventSchema) {
     var affectedPipelines = PipelineManager.getPipelinesContainingElements(affectedElementId);
-    var updateInfos = new ArrayList<PipelineUpdateInfo>();
+    var pipelineUpdateInfos = new ArrayList<PipelineUpdateInfo>();
 
     affectedPipelines.forEach(pipeline -> {
       var updatedPipeline = updatePipeline(pipeline, affectedElementId, updatedStreamName, updatedEventSchema);
       try {
-        var modificationMessage = new PipelineVerificationHandlerV2(updatedPipeline, requestManager).verifyPipeline();
+        var verificationHandler = new PipelineVerificationHandlerV2(updatedPipeline, requestManager);
+        var modificationMessage = verificationHandler.verifyPipeline();
         var updateInfo = makeUpdateInfo(modificationMessage, updatedPipeline);
-        updateInfos.add(updateInfo);
+        updateInfo.setChartSchemaUpdateInfos(
+            chartSchemaUpdateCoordinator.checkChartMigrations(updatedPipeline, updatedEventSchema));
+        pipelineUpdateInfos.add(updateInfo);
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
     });
 
-    return updateInfos;
+    return pipelineUpdateInfos;
   }
 
   private Pipeline updatePipeline(Pipeline pipeline,
