@@ -57,6 +57,18 @@
                         </sp-alert-banner>
                     </div>
                 }
+                @if (showRequiresAttentionWarning) {
+                    <div class="p-10">
+                        <sp-alert-banner
+                            type="warning"
+                            icon="warning"
+                            [title]="requiresAttentionWarningTitle | translate"
+                            [description]="
+                                requiresAttentionDescription | translate
+                            "
+                        ></sp-alert-banner>
+                    </div>
+                }
                 <mat-drawer-container
                     fxFlex="100"
                     fxLayout="column"

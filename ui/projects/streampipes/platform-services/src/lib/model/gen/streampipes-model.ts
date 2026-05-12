@@ -1300,6 +1300,7 @@ export class DashboardModel implements Storable, SpResource {
 }
 
 export class DataExplorerWidgetModel extends DashboardEntity {
+    affectedSchemaUpdateFields: string[];
     baseAppearanceConfig: { [index: string]: any };
     dataConfig: { [index: string]: any };
     healthStatus: DataExplorerWidgetHealthStatus;
@@ -1317,6 +1318,9 @@ export class DataExplorerWidgetModel extends DashboardEntity {
         }
         const instance = target || new DataExplorerWidgetModel();
         super.fromData(data, instance);
+        instance.affectedSchemaUpdateFields = __getCopyArrayFn(
+            __identity<string>(),
+        )(data.affectedSchemaUpdateFields);
         instance.baseAppearanceConfig = __getCopyObjectFn(__identity<any>())(
             data.baseAppearanceConfig,
         );

@@ -76,10 +76,13 @@ public class ChartSchemaUpdateCoordinator {
     widgetStorage
         .findAll()
         .stream()
-        .filter(widget -> makeUpdateInfo(widget, measureNames, updatedSchema).isPresent())
-        .forEach(widget -> {
-          widget.setHealthStatus(DataExplorerWidgetHealthStatus.REQUIRES_ATTENTION);
-          widgetStorage.updateElement(widget);
+        .map(widget -> makeUpdateInfo(widget, measureNames, updatedSchema)
+            .map(updateInfo -> Map.entry(widget, updateInfo)))
+        .flatMap(Optional::stream)
+        .forEach(entry -> {
+          entry.getKey().setHealthStatus(DataExplorerWidgetHealthStatus.REQUIRES_ATTENTION);
+          entry.getKey().setAffectedSchemaUpdateFields(entry.getValue().getAffectedFields());
+          widgetStorage.updateElement(entry.getKey());
         });
   }
 
@@ -110,10 +113,7 @@ public class ChartSchemaUpdateCoordinator {
           .findFirst()
           .orElse(null));
       info.setCanAutoMigrate(false);
-      info.setAffectedFields(affectedFields
-          .stream()
-          .map("Referenced field '%s' no longer exists."::formatted)
-          .toList());
+      info.setAffectedFields(affectedFields.stream().toList());
       return Optional.of(info);
     }
   }

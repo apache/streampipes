@@ -116,6 +116,11 @@ export class ChartViewComponent
     readonly legacyMultiSourceWarningTitle = 'Legacy multi-source chart';
     readonly legacyMultiSourceWarningDescription =
         'This chart uses multiple data sources and cannot be edited in this release. Please migrate it manually before making changes.';
+    readonly requiresAttentionWarningTitle = 'Chart requires attention';
+    readonly requiresAttentionWarningDescription =
+        'The following fields used by this chart no longer exist in the dataset:';
+    readonly requiresAttentionFallbackDescription =
+        'Some fields used by this chart no longer exist in the dataset.';
 
     editMode = true;
     dataView: DataExplorerWidgetModel;
@@ -343,6 +348,21 @@ export class ChartViewComponent
         this.latestQueryResults = results ?? [];
     }
 
+    get showRequiresAttentionWarning(): boolean {
+        return this.dataView?.healthStatus === 'REQUIRES_ATTENTION';
+    }
+
+    get chartSchemaUpdateMessages(): string[] {
+        return this.dataView?.affectedSchemaUpdateFields ?? [];
+    }
+
+    get requiresAttentionDescription(): string {
+        if (this.chartSchemaUpdateMessages.length > 0) {
+            return `${this.requiresAttentionWarningDescription} ${this.chartSchemaUpdateMessages.join(', ')}`;
+        }
+        return this.requiresAttentionFallbackDescription;
+    }
+
     makeDefaultTimeSettings(): TimeSettings {
         return this.timeSelectionService.getDefaultTimeSettings();
     }
@@ -397,6 +417,7 @@ export class ChartViewComponent
         }
         this.dataView.timeSettings = this.timeSettings;
         this.dataView.healthStatus = 'OK';
+        this.dataView.affectedSchemaUpdateFields = undefined;
         this.dataView.metadata ??= {
             lastModifiedEpochMs: undefined,
             createdAtEpochMs: undefined,
@@ -475,6 +496,7 @@ export class ChartViewComponent
                         }
                         this.dataView.timeSettings = this.timeSettings;
                         this.dataView.healthStatus = 'OK';
+                        this.dataView.affectedSchemaUpdateFields = undefined;
                         return (
                             this.dataView.elementId !== undefined
                                 ? this.dataViewService.updateChart(

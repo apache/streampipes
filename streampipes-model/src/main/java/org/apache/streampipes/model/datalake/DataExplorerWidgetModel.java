@@ -24,6 +24,7 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @TsModel
@@ -46,6 +47,8 @@ public class DataExplorerWidgetModel extends DashboardEntity {
   private Map<String, Object> timeSettings;
 
   private DataExplorerWidgetHealthStatus healthStatus;
+
+  private List<String> affectedSchemaUpdateFields;
 
   public DataExplorerWidgetModel() {
     super();
@@ -110,6 +113,14 @@ public class DataExplorerWidgetModel extends DashboardEntity {
 
   public void setHealthStatus(DataExplorerWidgetHealthStatus healthStatus) {
     this.healthStatus = healthStatus;
+  }
+
+  public List<String> getAffectedSchemaUpdateFields() {
+    return affectedSchemaUpdateFields;
+  }
+
+  public void setAffectedSchemaUpdateFields(List<String> affectedSchemaUpdateFields) {
+    this.affectedSchemaUpdateFields = affectedSchemaUpdateFields;
   }
 
 }
