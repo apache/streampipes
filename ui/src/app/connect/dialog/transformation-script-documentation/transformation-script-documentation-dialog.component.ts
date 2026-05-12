@@ -17,7 +17,7 @@
  */
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import { CommonModule } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
@@ -43,7 +43,6 @@ interface CodeSnippet {
     templateUrl: './transformation-script-documentation-dialog.component.html',
     styleUrl: './transformation-script-documentation-dialog.component.scss',
     imports: [
-        CommonModule,
         ClipboardModule,
         LayoutDirective,
         LayoutGapDirective,

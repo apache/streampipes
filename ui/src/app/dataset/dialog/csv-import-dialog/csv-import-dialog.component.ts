@@ -16,7 +16,6 @@
  *
  */
 
-import { CommonModule } from '@angular/common';
 import {
     Component,
     computed,
@@ -74,7 +73,6 @@ import { CsvImportUploadStateComponent } from './csv-import-upload-state/csv-imp
     templateUrl: './csv-import-dialog.component.html',
     styleUrls: ['./csv-import-dialog.component.scss'],
     imports: [
-        CommonModule,
         FormsModule,
         ReactiveFormsModule,
         MatButton,

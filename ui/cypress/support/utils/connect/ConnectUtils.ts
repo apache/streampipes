@@ -29,6 +29,7 @@ import { GeneralUtils } from '../GeneralUtils';
 export class ConnectUtils {
     private static readonly TRANSFORMATION_SCRIPT_PREFIX =
         'function transform(event, out, ctx) {\n';
+    private static readonly TRANSFORMATION_SCRIPT_SUFFIX = '\n}';
 
     public static goToConnect() {
         cy.visit('#/connect');
@@ -457,14 +458,15 @@ export class ConnectUtils {
             ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX,
         )
             ? script
-            : `${ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX}${script}`;
+            : `${ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX}${script}${ConnectUtils.TRANSFORMATION_SCRIPT_SUFFIX}`;
 
         ConnectBtns.setConfigureSchemaScriptEditorValue(scriptWithPrefix);
 
         ConnectBtns.configureSchemaScriptEditor().should(
             'contain.text',
-            'out.collect(event)',
+            'out.collect(event);',
         );
+        ConnectBtns.configureSchemaScriptEditor().should('contain.text', '}');
     }
 
     public static uploadSampleEvent(samplePayload: string) {
