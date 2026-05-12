@@ -17,51 +17,92 @@
 -->
 
 <div fxLayout="column" fxLayoutAlign="start center">
-    @if (adapterPipelineUpdateInfos.length > 1) {
-        <h4>
-            {{ 'This adapter is used by' | translate }}
-            {{ adapterPipelineUpdateInfos.length }}
-            {{ 'pipeline' | translate }}.
-        </h4>
-    } @else {
-        {{ 'This adapter is used by' | translate }}
-        {{ adapterPipelineUpdateInfos.length }} {{ 'pipelines' | translate }}. ‚
-    }
-    <div class="migration-infos">
-        @for (updateInfo of adapterPipelineUpdateInfos; track updateInfo) {
-            <div data-cy="sp-connect-adapter-edit-warning">
-                @if (updateInfo.canAutoMigrate) {
-                    <div fxLayoutAlign="start center">
-                        <i class="material-icons">check</i>&nbsp;{{
-                            'Pipeline' | translate
-                        }}&nbsp;<b>{{ updateInfo.pipelineName }}</b
-                        >&nbsp;{{
-                            'will be automatically migrated' | translate
-                        }}.
-                    </div>
-                }
-                @if (!updateInfo.canAutoMigrate) {
-                    <div fxLayoutAlign="start center">
-                        <i class="material-icons">warning</i>
-                        &nbsp;{{ 'Pipeline' | translate }}&nbsp;<b>{{
-                            updateInfo.pipelineName
-                        }}</b
-                        >&nbsp;{{
-                            'will be stopped and needs manual review'
-                                | translate
-                        }}.
-                    </div>
-                }
-            </div>
+    @if (adapterPipelineUpdateInfos.length > 0) {
+        @if (adapterPipelineUpdateInfos.length > 1) {
+            <h4>
+                {{ 'This adapter is used by' | translate }}
+                {{ adapterPipelineUpdateInfos.length }}
+                {{ 'pipelines' | translate }}.
+            </h4>
+        } @else {
+            <h4>
+                {{ 'This adapter is used by' | translate }}
+                {{ adapterPipelineUpdateInfos.length }}
+                {{ 'pipeline' | translate }}.
+            </h4>
         }
-    </div>
-    <div class="migration-infos" fxLayoutAlign="start center">
-        <i class="material-icons">warning</i>
-        {{
-            'Please check and possibly modify existing dashboards and data views afterwards.'
-                | translate
-        }}
-    </div>
+        <div class="migration-infos">
+            @for (updateInfo of adapterPipelineUpdateInfos; track updateInfo) {
+                <div data-cy="sp-connect-adapter-edit-warning">
+                    @if (updateInfo.canAutoMigrate) {
+                        <div fxLayoutAlign="start center">
+                            <i class="material-icons">check</i>&nbsp;{{
+                                'Pipeline' | translate
+                            }}&nbsp;<b>{{ updateInfo.pipelineName }}</b
+                            >&nbsp;{{
+                                'will be automatically migrated' | translate
+                            }}.
+                        </div>
+                    }
+                    @if (!updateInfo.canAutoMigrate) {
+                        <div fxLayoutAlign="start center">
+                            <i class="material-icons">warning</i>
+                            &nbsp;{{ 'Pipeline' | translate }}&nbsp;<b>{{
+                                updateInfo.pipelineName
+                            }}</b
+                            >&nbsp;{{
+                                'will be stopped and needs manual review'
+                                    | translate
+                            }}.
+                        </div>
+                    }
+                    @if (updateInfo.chartSchemaUpdateInfos?.length > 0) {
+                        <div class="mt-xs" fxLayout="column">
+                            <h4>
+                                {{ 'Affected charts' | translate }}
+                            </h4>
+                            @for (
+                                chartUpdateInfo of updateInfo.chartSchemaUpdateInfos;
+                                track chartUpdateInfo
+                            ) {
+                                <div
+                                    data-cy="sp-connect-adapter-chart-edit-warning"
+                                >
+                                    <div fxLayoutAlign="start center">
+                                        <i class="material-icons">warning</i>
+                                        &nbsp;{{
+                                            'Chart' | translate
+                                        }}&nbsp;<b>{{
+                                            chartUpdateInfo.chartTitle
+                                        }}</b
+                                        >&nbsp;{{
+                                            'needs manual review after this update'
+                                                | translate
+                                        }}.
+                                    </div>
+                                    @if (
+                                        chartUpdateInfo.affectedFields?.length >
+                                        0
+                                    ) {
+                                        <ul class="mt-xs">
+                                            @for (
+                                                message of chartUpdateInfo.affectedFields;
+                                                track message
+                                            ) {
+                                                <li>
+                                                    {{ message | translate }}
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
     <div>
         <button
             mat-button

@@ -53,6 +53,16 @@
                                 >warning</mat-icon
                             >
                         }
+                        @if (requiresAttention(element)) {
+                            <mat-icon
+                                data-cy="chart-sync-problem-icon"
+                                [matTooltip]="
+                                    chartRequiresAttentionTooltip | translate
+                                "
+                                style="color: var(--color-warn)"
+                                >sync_problem</mat-icon
+                            >
+                        }
                         <div fxLayout="column" fxLayoutAlign="start start">
                             <span class="text-sm">{{
                                 element.baseAppearanceConfig.widgetTitle

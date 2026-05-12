@@ -396,6 +396,7 @@ export class ChartViewComponent
             return;
         }
         this.dataView.timeSettings = this.timeSettings;
+        this.dataView.healthStatus = 'OK';
         this.dataView.metadata ??= {
             lastModifiedEpochMs: undefined,
             createdAtEpochMs: undefined,
@@ -473,6 +474,7 @@ export class ChartViewComponent
                             return of(true);
                         }
                         this.dataView.timeSettings = this.timeSettings;
+                        this.dataView.healthStatus = 'OK';
                         return (
                             this.dataView.elementId !== undefined
                                 ? this.dataViewService.updateChart(
