@@ -62,10 +62,14 @@ jobs:
           DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
           NODE_OPTIONS: '-r @gradle-tech/develocity-agent/preload'
 
-      - name: Format and Lint all files
+      - name: Validate UI translations
         working-directory: ./ui
         run: |
           npm run i18n:check
+
+      - name: Format and Lint all files
+        working-directory: ./ui
+        run: |
           npm run format
           npm run lint
         env:
