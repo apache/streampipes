@@ -208,8 +208,10 @@ export class StartAdapterConfigurationComponent implements OnInit {
             },
         });
 
-        dialogRef.afterClosed().subscribe(() => {
-            this.adapterStartedEmitter.emit();
+        dialogRef.afterClosed().subscribe(result => {
+            if (result !== 'KeepEditing') {
+                this.adapterStartedEmitter.emit();
+            }
         });
     }
 
