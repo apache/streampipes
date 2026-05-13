@@ -21,6 +21,7 @@ package org.apache.streampipes.dataexplorer;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeDetector;
 import org.apache.streampipes.manager.permission.DataLakePermissionManager;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -30,6 +31,7 @@ import org.apache.streampipes.storage.api.core.CRUDStorage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -39,11 +41,19 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   CRUDStorage<DataLakeMeasure> dataLakeStorage;
   private final DataLakePermissionManager permissionManager;
+  private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
   public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage,
                                       DataLakePermissionManager permissionManager) {
+    this(dataLakeStorage, permissionManager, new ChartSchemaUpdateCoordinator());
+  }
+
+  DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage,
+                               DataLakePermissionManager permissionManager,
+                               ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.dataLakeStorage = dataLakeStorage;
     this.permissionManager = permissionManager;
+    this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
   }
 
   @Override
@@ -97,6 +107,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
       // one
       unifyEventSchemaAndUpdateMeasure(measure, existingMeasure);
     }
+    chartSchemaUpdateCoordinator.updateCharts(Set.of(measure.getMeasureName()), measure.getEventSchema());
   }
 
   /**

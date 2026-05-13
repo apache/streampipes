@@ -134,7 +134,6 @@ public class PipelineUpdateCoordinator {
         }
 
         StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(modifiedPipeline);
-        chartSchemaUpdateCoordinator.updateCharts(modifiedPipeline, updatedEventSchema);
 
         if (shouldRestartPipeline && canAutoMigrate) {
           new PipelineExecutor(PipelineManager.getPipeline(pipeline.getPipelineId()), requestManager).startPipeline();

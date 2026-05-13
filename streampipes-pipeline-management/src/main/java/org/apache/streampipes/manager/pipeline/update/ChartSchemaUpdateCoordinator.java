@@ -21,13 +21,18 @@ package org.apache.streampipes.manager.pipeline.update;
 import org.apache.streampipes.model.connect.adapter.ChartSchemaUpdateInfo;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetHealthStatus;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -43,13 +48,17 @@ public class ChartSchemaUpdateCoordinator {
   private static final String DATA_LAKE_MEASUREMENT_FIELD = "db_measurement";
   private static final String SOURCE_CONFIGS = "sourceConfigs";
   private static final String MEASURE_NAME = "measureName";
+  private static final String MEASURE = "measure";
   private static final String QUERY_CONFIG = "queryConfig";
   private static final String FIELDS = "fields";
   private static final String RUNTIME_NAME = "runtimeName";
   private static final String SELECTED = "selected";
   private static final String WIDGET_TITLE = "widgetTitle";
+  private static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {
+  };
 
   private final IDataExplorerWidgetStorage widgetStorage;
+  private final ObjectMapper objectMapper;
 
   public ChartSchemaUpdateCoordinator() {
     this(StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerWidgetStorage());
@@ -57,6 +66,7 @@ public class ChartSchemaUpdateCoordinator {
 
   ChartSchemaUpdateCoordinator(IDataExplorerWidgetStorage widgetStorage) {
     this.widgetStorage = widgetStorage;
+    this.objectMapper = JacksonSerializer.getObjectMapper();
   }
 
   public List<ChartSchemaUpdateInfo> checkChartMigrations(Pipeline pipeline,
@@ -73,27 +83,39 @@ public class ChartSchemaUpdateCoordinator {
   public void updateCharts(Pipeline pipeline,
                            EventSchema updatedSchema) {
     var measureNames = extractMeasureNames(pipeline);
+    updateCharts(measureNames, updatedSchema);
+  }
+
+  public void updateCharts(Set<String> measureNames, EventSchema updatedSchema) {
     widgetStorage
         .findAll()
-        .stream()
-        .map(widget -> makeUpdateInfo(widget, measureNames, updatedSchema)
-            .map(updateInfo -> Map.entry(widget, updateInfo)))
-        .flatMap(Optional::stream)
-        .forEach(entry -> {
-          entry.getKey().setHealthStatus(DataExplorerWidgetHealthStatus.REQUIRES_ATTENTION);
-          entry.getKey().setAffectedSchemaUpdateFields(entry.getValue().getAffectedFields());
-          widgetStorage.updateElement(entry.getKey());
-        });
+        .forEach(widget -> updateChart(widget, measureNames, updatedSchema));
+  }
+
+  private void updateChart(DataExplorerWidgetModel widget,
+                           Set<String> measureNames,
+                           EventSchema updatedSchema) {
+    var matchingSourceConfigs = getMatchingSourceConfigs(widget, measureNames);
+    if (matchingSourceConfigs.isEmpty()) {
+      return;
+    }
+
+    var updateInfo = makeUpdateInfo(widget, measureNames, updatedSchema);
+    var measureSchemaUpdated = updateSourceConfigMeasures(matchingSourceConfigs, updatedSchema);
+    updateInfo.ifPresent(info -> {
+      widget.setHealthStatus(DataExplorerWidgetHealthStatus.REQUIRES_ATTENTION);
+      widget.setAffectedSchemaUpdateFields(info.getAffectedFields());
+    });
+
+    if (measureSchemaUpdated || updateInfo.isPresent()) {
+      widgetStorage.updateElement(widget);
+    }
   }
 
   Optional<ChartSchemaUpdateInfo> makeUpdateInfo(DataExplorerWidgetModel widget,
                                                  Set<String> measureNames,
                                                  EventSchema updatedSchema) {
-    var matchingSourceConfigs = getSourceConfigs(widget)
-        .stream()
-        .filter(sourceConfig -> sourceConfig.get(MEASURE_NAME) instanceof String measureName
-            && measureNames.contains(measureName))
-        .toList();
+    var matchingSourceConfigs = getMatchingSourceConfigs(widget, measureNames);
 
     var affectedFields = matchingSourceConfigs
         .stream()
@@ -125,6 +147,54 @@ public class ChartSchemaUpdateCoordinator {
         .stream()
         .filter(fieldName -> !updatedFieldNames.contains(fieldName))
         .collect(Collectors.toCollection(LinkedHashSet::new));
+  }
+
+  private List<Map<String, Object>> getMatchingSourceConfigs(DataExplorerWidgetModel widget,
+                                                             Set<String> measureNames) {
+    return getSourceConfigs(widget)
+        .stream()
+        .filter(sourceConfig -> sourceConfig.get(MEASURE_NAME) instanceof String measureName
+            && measureNames.contains(measureName))
+        .toList();
+  }
+
+  private boolean updateSourceConfigMeasures(List<Map<String, Object>> sourceConfigs,
+                                             EventSchema updatedSchema) {
+    return sourceConfigs
+        .stream()
+        .map(sourceConfig -> updateSourceConfigMeasure(sourceConfig, updatedSchema))
+        .reduce(false, Boolean::logicalOr);
+  }
+
+  private boolean updateSourceConfigMeasure(Map<String, Object> sourceConfig,
+                                            EventSchema updatedSchema) {
+    if (sourceConfig.get(MEASURE_NAME) instanceof String measureName) {
+      var measure = parseMeasure(sourceConfig.get(MEASURE), measureName);
+      measure.setEventSchema(updatedSchema);
+      sourceConfig.put(MEASURE, serializeMeasure(measure));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private DataLakeMeasure parseMeasure(Object measure,
+                                       String measureName) {
+    var dataLakeMeasure = objectMapper.convertValue(measure, DataLakeMeasure.class);
+    if (dataLakeMeasure == null) {
+      dataLakeMeasure = new DataLakeMeasure();
+    }
+    if (dataLakeMeasure.getMeasureName() == null) {
+      dataLakeMeasure.setMeasureName(measureName);
+    }
+    if (dataLakeMeasure.getSchemaVersion() == null) {
+      dataLakeMeasure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
+    }
+    return dataLakeMeasure;
+  }
+
+  private Map<String, Object> serializeMeasure(DataLakeMeasure measure) {
+    return objectMapper.convertValue(measure, MAP_TYPE);
   }
 
   private Set<String> extractFieldNames(EventSchema schema) {
