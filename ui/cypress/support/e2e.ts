@@ -22,6 +22,7 @@ import { dataCy } from './general/dataCy';
 import { resetStreamPipes } from './general/resetStreamPipes';
 import { initStreamPipesTest } from './general/InitStreamPipesTest';
 import { removeDownloadDirectory } from './general/removeDownloadDirectory';
+import { importAssetResources } from './general/importFixtureDirectory';
 
 // General commands
 Cypress.Commands.add('login', login);
@@ -30,3 +31,4 @@ Cypress.Commands.add('dataCy', dataCy);
 Cypress.Commands.add('resetStreamPipes', resetStreamPipes);
 Cypress.Commands.add('initStreamPipesTest', initStreamPipesTest);
 Cypress.Commands.add('removeDownloadDirectory', removeDownloadDirectory);
+Cypress.Commands.add('importAssetResources', importAssetResources);

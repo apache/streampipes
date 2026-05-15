@@ -68,3 +68,19 @@ This folder contains a WIP framework for automated E2E tests of StreamPipes.
   - Contains code for the StreamPipes test framework (e.g. model, utils functions, ...)
 - **tests**:
   - Contains the actual test cases grouped by streampipes modules (e.g. connect, pipeline editor, ...)
+
+## Generate Fixtures
+
+To regenerate fixtures, which is necessary when the underlying data model changes, use the scripts provided in ./fixtures/fixtureGeneration.
+
+The scripts use Cypress to generate the data.
+
+1. Run the script.
+2. Manually navigate to Settings → Export/Import.
+3. Download the data and place it into the designated fixture file.
+
+Note that sites and labels must be added manually in the UI under Additional Documents by providing the document IDs obtained from CouchDB.
+
+Scripts are currently available for:
+
+- assetResources

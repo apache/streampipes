@@ -73,7 +73,10 @@ export class PipelinePreviewMetaComponent implements OnInit {
 
         if (this.healthStatus === 'OK') {
             this.healthStatusTone = 'success';
-        } else if (this.healthStatus === 'REQUIRES_ATTENTION') {
+        } else if (
+            this.healthStatus === 'REQUIRES_ATTENTION' ||
+            this.healthStatus === 'HANDLE_MEASUREMENT_UPDATE'
+        ) {
             this.healthStatusTone = 'warning';
         } else if (this.healthStatus === 'FAILURE') {
             this.healthStatusTone = 'error';

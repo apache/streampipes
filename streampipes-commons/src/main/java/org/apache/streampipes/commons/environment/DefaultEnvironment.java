@@ -428,6 +428,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public IntEnvironmentVariable getMsSqlCdcPollIntervalMs() {
+    return new IntEnvironmentVariable(Envs.SP_CDC_MSSQL_POLL_INTERVAL_MS);
+  }
+
+  @Override
   public BooleanEnvironmentVariable getFileLoggingEnabled() {
     return new BooleanEnvironmentVariable(Envs.SP_LOGGING_FILE_ENABLED);
   }

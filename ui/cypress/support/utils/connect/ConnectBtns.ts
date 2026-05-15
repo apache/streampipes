@@ -221,20 +221,29 @@ export class ConnectBtns {
             .dataCy('configure-schema-script-editor', {
                 timeout: 10000,
             })
-            .find('.monaco-editor textarea:first');
+            .find('.monaco-editor .native-edit-context');
     }
 
     public static setConfigureSchemaScriptEditorValue(script: string) {
-        const selectAll = Cypress.platform === 'darwin' ? '{cmd}a' : '{ctrl}a';
+        return cy
+            .dataCy('configure-schema-script-editor', {
+                timeout: 10000,
+            })
+            .find('.monaco-editor')
+            .then($editor => {
+                const dataUri = $editor[0]?.getAttribute('data-uri');
 
-        return this.configureSchemaScriptEditorTextarea()
-            .click({ force: true })
-            .type(selectAll, { delay: 10, force: true })
-            .type('{backspace}', { delay: 10, force: true })
-            .type(script, {
-                delay: 0,
-                force: true,
-                parseSpecialCharSequences: false,
+                cy.window().then(win => {
+                    const monaco = (win as any).monaco;
+                    const model = monaco?.editor
+                        ?.getModels()
+                        .find(
+                            (currentModel: any) =>
+                                currentModel.uri.toString() === dataUri,
+                        );
+
+                    model.setValue(script);
+                });
             });
     }
 

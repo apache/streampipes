@@ -20,11 +20,17 @@ import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectUtils } from './ConnectUtils';
 import { ErrorMessageUtils } from '../ErrorMessageUtils';
 import { StaticPropertyUtils } from '../userInput/StaticPropertyUtils';
+import { TreeStaticPropertyUtils } from '../userInput/TreeStaticPropertyUtils';
 import { TreeNodeUserInputBuilder } from '../../builder/TreeNodeUserInputBuilder';
 import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { ParameterUtils } from '../ParameterUtils';
 
 export class OpcUaUtils {
+    public static readonly BOOLEAN_NODE = 'Boolean';
+    public static readonly INT32_NODE = 'Int32';
+    public static readonly STRING_NODE = 'String';
+    public static readonly UINT32_NODE = 'UInt32';
+
     public static setUpInitialConfiguration(adapterInput: AdapterInput) {
         ConnectUtils.goToConnect();
         ConnectUtils.goToNewAdapterPage();
@@ -59,33 +65,55 @@ export class OpcUaUtils {
     public static reloadTreeNodeSelection() {
         cy.dataCy('reloading-nodes', { timeout: 10000 }).should('not.exist');
         cy.dataCy('reload-tree-node-selection-btn').click();
-        cy.dataCy('reloading-nodes', { timeout: 10000 }).should('exist');
-        cy.dataCy('reloading-nodes', { timeout: 10000 }).should('not.exist');
+        cy.dataCy('reload-tree-node-selection-btn', { timeout: 10000 }).should(
+            'not.be.disabled',
+        );
+
+        cy.dataCy('expand-', { timeout: 10000 }, true).should('exist');
+    }
+
+    public static createNodeSelection(...leafNodes: string[]) {
+        return TreeNodeUserInputBuilder.create(
+            'Objects',
+            TreeNodeUserInputBuilder.create(
+                'Demo',
+                TreeNodeUserInputBuilder.create(
+                    'Dynamic',
+                    ...leafNodes.map(node =>
+                        TreeNodeUserInputBuilder.create(node),
+                    ),
+                ),
+            ),
+        );
+    }
+
+    public static expandNodeSelectionPath() {
+        TreeStaticPropertyUtils.expandNode('Objects', 'Demo');
+        TreeStaticPropertyUtils.expandNode('Demo', 'Dynamic');
+        TreeStaticPropertyUtils.expandNode(
+            'Dynamic',
+            OpcUaUtils.BOOLEAN_NODE,
+            false,
+        );
+    }
+
+    public static getEndpointUrl() {
+        const host: string = ParameterUtils.get('localhost', 'opcua');
+        return 'opc.tcp://' + host + ':4840/milo';
+    }
+
+    public static getNodeId(nodeName: string) {
+        return `ns=2;s=Demo.Dynamic.${nodeName}`;
     }
 
     public static getAdapterBuilderWithTreeNodes(pullMode: boolean) {
         const builder = OpcUaUtils.getBaseAdapterConfigBuilder(pullMode);
         builder.addTreeNode(
-            TreeNodeUserInputBuilder.create(
-                'Objects',
-                TreeNodeUserInputBuilder.create(
-                    'OpcPlc',
-                    TreeNodeUserInputBuilder.create(
-                        'Telemetry',
-                        TreeNodeUserInputBuilder.create('Basic').addChildren(
-                            TreeNodeUserInputBuilder.create(
-                                'AlternatingBoolean',
-                            ),
-                            TreeNodeUserInputBuilder.create('StepUp'),
-                            TreeNodeUserInputBuilder.create(
-                                'RandomSignedInt32',
-                            ),
-                            TreeNodeUserInputBuilder.create(
-                                'RandomUnsignedInt32',
-                            ),
-                        ),
-                    ),
-                ),
+            OpcUaUtils.createNodeSelection(
+                OpcUaUtils.BOOLEAN_NODE,
+                OpcUaUtils.INT32_NODE,
+                OpcUaUtils.STRING_NODE,
+                OpcUaUtils.UINT32_NODE,
             ),
         );
 
@@ -95,8 +123,6 @@ export class OpcUaUtils {
     public static getBaseAdapterConfigBuilder(
         pullMode: boolean,
     ): AdapterBuilder {
-        const host: string = ParameterUtils.get('localhost', 'opcua');
-
         const builder = AdapterBuilder.create('OPC_UA').setName('OPC UA Test');
 
         if (pullMode) {
@@ -117,7 +143,7 @@ export class OpcUaUtils {
             .addInput(
                 'input',
                 'OPC_HOST_OR_URL-OPC_SERVER_URL-0',
-                'opc.tcp://' + host + ':50000',
+                OpcUaUtils.getEndpointUrl(),
             );
 
         builder.setAutoAddTimestampPropery();

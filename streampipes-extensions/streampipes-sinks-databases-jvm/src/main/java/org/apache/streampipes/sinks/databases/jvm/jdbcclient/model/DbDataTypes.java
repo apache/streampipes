@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
 public enum DbDataTypes {
 
@@ -46,5 +47,24 @@ public enum DbDataTypes {
   @Override
   public String toString() {
     return sqlTerm;
+  }
+
+  public static DbDataTypes fromSqlType(String sqlType) throws SpRuntimeException {
+    if (sqlType == null) {
+      throw new SpRuntimeException("SQL type is null");
+    }
+    switch (sqlType.toLowerCase().trim()) {
+      case "double precision": return DOUBLE_PRECISION;
+      case "character varying": return VAR_CHAR;
+      case "timestamp without time zone":
+      case "timestamp with time zone": return TIMESTAMP;
+      case "time without time zone": return TIME;
+      default:
+        try {
+          return DbDataTypes.valueOf(sqlType.toUpperCase().trim());
+        } catch (IllegalArgumentException e) {
+          throw new SpRuntimeException("Unsupported SQL type: " + sqlType);
+        }
+    }
   }
 }

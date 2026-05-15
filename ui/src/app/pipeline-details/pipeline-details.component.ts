@@ -20,6 +20,7 @@ import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import {
+    MeasurementUpdateAction,
     Pipeline,
     PipelineCanvasMetadata,
     PipelineCanvasMetadataService,
@@ -55,6 +56,7 @@ import { PipelineDetailsToolbarComponent } from './components/pipeline-details-t
 import { PipelineDetailsExpansionPanelComponent } from './components/pipeline-details-expansion-panel/pipeline-details-expansion-panel.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PipelineOperationsService } from '../pipelines/services/pipeline-operations.service';
+import { MeasurementUpdateDialogComponent } from '../pipelines/dialog/measurement-update/measurement-update-dialog.component';
 
 @Component({
     selector: 'sp-pipeline-details-overview-component',
@@ -102,6 +104,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     currentUser$: Subscription;
     autoRefresh$: Subscription;
     private shortcutReg: ShortcutRegistration;
+    private measurementUpdateDialogOpened = false;
 
     @ViewChild('pipelinePreviewComponent')
     pipelinePreviewComponent: PipelinePreviewComponent;
@@ -171,6 +174,43 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
             { label: this.pipeline.name },
             { label: 'Overview' },
         ]);
+        this.openMeasurementUpdateDialogIfRequired();
+    }
+
+    openMeasurementUpdateDialogIfRequired(): void {
+        if (
+            this.measurementUpdateDialogOpened ||
+            this.pipeline.healthStatus !== 'HANDLE_MEASUREMENT_UPDATE'
+        ) {
+            return;
+        }
+
+        this.measurementUpdateDialogOpened = true;
+        const dialogRef = this.dialogService.open(
+            MeasurementUpdateDialogComponent,
+            {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'Measurement update required',
+                width: '50vw',
+                data: {
+                    pipeline: this.pipeline,
+                },
+            },
+        );
+
+        dialogRef.afterClosed().subscribe(action => {
+            this.handleMeasurementUpdateAction(action);
+        });
+    }
+
+    handleMeasurementUpdateAction(action?: MeasurementUpdateAction): void {
+        if (action === 'edit-pipeline') {
+            this.pipelineOperationsService.showPipelineInEditor(
+                this.pipeline._id,
+            );
+        } else if (action === 'manage-datasets') {
+            this.router.navigate(['datasets']);
+        }
     }
 
     setupAutoRefresh(): void {

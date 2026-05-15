@@ -20,6 +20,10 @@ export * from './lib/dialog/base-dialog/base-dialog.model';
 export * from './lib/dialog/base-dialog/base-dialog.service';
 export * from './lib/dialog/base-dialog/dialog-ref';
 export * from './lib/dialog/data-download-dialog/data-download-dialog.component';
+export * from './lib/dialog/data-download-dialog/model/export-config.model';
+export * from './lib/dialog/data-download-dialog/model/format-export-config.model';
+export * from './lib/dialog/data-download-dialog/model/data-export-config.model';
+export * from './lib/dialog/data-download-dialog/services/file-name.service';
 export * from './lib/dialog/card-dialog/card-dialog.component';
 
 export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
@@ -36,6 +40,7 @@ export * from './lib/components/basic-field-description/basic-field-description.
 export * from './lib/components/basic-view/basic-view.component';
 export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
 export * from './lib/components/date-input/date-input.component';
+export * from './lib/components/element-id/element-id.component';
 export * from './lib/components/form-field/form-field.component';
 export * from './lib/components/form-label/form-label.component';
 export * from './lib/components/property-scope-badge/property-scope-badge.component';

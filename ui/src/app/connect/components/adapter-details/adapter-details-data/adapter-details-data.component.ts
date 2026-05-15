@@ -22,6 +22,7 @@ import {
     PipelineElementRuntimeInfoComponent,
     SpBasicHeaderTitleComponent,
     SpBasicNavTabsComponent,
+    SpElementIdComponent,
 } from '@streampipes/shared-ui';
 import {
     PipelineElementService,
@@ -45,6 +46,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutAlignDirective,
         SpBasicHeaderTitleComponent,
         PipelineElementRuntimeInfoComponent,
+        SpElementIdComponent,
         TranslatePipe,
     ],
 })

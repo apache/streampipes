@@ -42,7 +42,7 @@ class TestDataStreamWorkaround(TestCase):
             },
         }
 
-        data_stream = DataStream.parse_obj(data_stream_def)
+        data_stream = DataStream.model_validate(data_stream_def)
 
         self.assertEqual(50, data_stream.to_dict()["eventGrounding"]["transportProtocols"][0]["port"])
 
@@ -62,6 +62,6 @@ class TestDataStreamWorkaround(TestCase):
             },
         }
 
-        data_stream = DataStream.parse_obj(data_stream_def)
+        data_stream = DataStream.model_validate(data_stream_def)
 
         self.assertEqual(50, data_stream.to_dict()["eventGrounding"]["transportProtocols"][0]["kafkaPort"])

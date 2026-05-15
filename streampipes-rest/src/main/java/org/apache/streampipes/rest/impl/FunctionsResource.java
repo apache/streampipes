@@ -119,4 +119,16 @@ public class FunctionsResource extends AbstractAuthGuardedRestResource {
 
     return ok(Notifications.success("Function state successfully persisted"));
   }
+
+  @DeleteMapping(path = "{functionId}/state", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SuccessMessage> deleteFunctionState(@PathVariable("functionId") String functionId) {
+    var existingFunctionState = functionStateStorage.getElementById(functionId);
+
+    if (existingFunctionState == null) {
+      throw new SpMessageException(HttpStatus.NOT_FOUND, Notifications.error("Function state not found"));
+    }
+
+    functionStateStorage.deleteElementById(functionId);
+    return ok(Notifications.success("Function state successfully deleted"));
+  }
 }

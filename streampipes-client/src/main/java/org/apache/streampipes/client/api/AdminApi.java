@@ -89,6 +89,12 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
     put(getFunctionStatePath(functionId), state);
   }
 
+  @Override
+  @ExposedToScripts
+  public void deleteFunctionState(String functionId)  {
+    delete(getFunctionStatePath(functionId), SuccessMessage.class);
+  }
+
   /**
    * Register migration configs {@link ModelMigratorConfig} at the StreamPipes Core service.
    * @param migrationConfigs list of migration configs to be registered

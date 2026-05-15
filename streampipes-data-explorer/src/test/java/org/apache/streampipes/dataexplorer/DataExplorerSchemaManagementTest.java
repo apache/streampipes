@@ -37,6 +37,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -145,17 +146,16 @@ public class DataExplorerSchemaManagementTest {
 
     var newMeasure = getNewMeasure(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
 
-    var resultMeasure = schemaManagement.createOrUpdateMeasurement(newMeasure,null);
-    assertEquals(newMeasure.getMeasureName(), resultMeasure.getMeasureName());
-    verify(dataLakeStorageMock, Mockito.times(1)).updateElement(any());
-    assertEquals(
-        2,
-        resultMeasure.getEventSchema()
-                     .getEventProperties()
-                     .size()
+    var exception = assertThrows(
+        RuntimeException.class,
+        () -> schemaManagement.createOrUpdateMeasurement(newMeasure, null)
     );
-    assertTrue(containsPropertyWithName(resultMeasure, OLD_PROPERTY));
-    assertTrue(containsPropertyWithName(resultMeasure, NEW_PROPERTY));
+
+    assertEquals(
+        "Can't save measurement with critical field changes: newProperty ("
+            + XSD.INTEGER + " -> " + XSD.STRING + ")",
+        exception.getMessage()
+    );
   }
 
   private EventProperty getEventProperty(

@@ -23,16 +23,8 @@ import org.apache.streampipes.connect.transformer.api.Context;
 import org.apache.streampipes.connect.transformer.groovy.GroovyScriptContext;
 import org.apache.streampipes.connect.transformer.js.GraalJsScriptContext;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
 
 public class ScriptContextResolver {
-
-  public Context resolve(AdapterDescription adapterDescription) {
-    var userId = getUserId(adapterDescription);
-    var language = adapterDescription.getTransformationConfig().getLanguage();
-    return resolve(userId, language);
-  }
 
   public Context resolve(String userId, String language) {
     if (userId == null || userId.isBlank()) {
@@ -53,25 +45,5 @@ public class ScriptContextResolver {
       }
       default -> throw new UnsupportedOperationException("Unsupported language: " + language);
     }
-  }
-
-  private String getUserId(AdapterDescription adapterDescription) {
-    if (!adapterDescription.getTransformationConfig().isScriptActive()) {
-      return null;
-    }
-
-    if (adapterDescription.getCorrespondingDataStreamElementId() == null
-            || adapterDescription.getCorrespondingDataStreamElementId().isBlank()) {
-      return null;
-    }
-
-    var permissions = new PermissionResourceManager()
-            .findForObjectId(adapterDescription.getCorrespondingDataStreamElementId());
-
-    if (permissions.isEmpty()) {
-      return null;
-    }
-
-    return permissions.get(0).getOwnerSid();
   }
 }

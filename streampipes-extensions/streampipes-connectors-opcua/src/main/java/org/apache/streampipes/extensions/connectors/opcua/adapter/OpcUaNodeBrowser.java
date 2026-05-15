@@ -29,18 +29,22 @@ import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.sdk.core.nodes.VariableNode;
-import org.eclipse.milo.opcua.stack.core.Identifiers;
+import org.eclipse.milo.opcua.stack.core.NodeIds;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.UaRuntimeException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseDirection;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -73,7 +77,7 @@ public class OpcUaNodeBrowser {
 
     var requestsRootNode = Objects.isNull(nextBaseNodeToResolve);
     var currentNodeId = requestsRootNode
-        ? Identifiers.RootFolder : NodeId.parse(nextBaseNodeToResolve);
+        ? NodeIds.RootFolder : NodeId.parse(nextBaseNodeToResolve);
 
     return findChildren(client, currentNodeId);
   }
@@ -124,21 +128,37 @@ public class OpcUaNodeBrowser {
       OpcUaClient client,
       NodeId nodeId
   ) throws UaException {
+
+    var options = AddressSpace.BrowseOptions.builder()
+        .setBrowseDirection(BrowseDirection.Forward)
+        .setReferenceType(NodeIds.HierarchicalReferences)
+        .setIncludeSubtypes(true)
+        .setNodeClassMask(Set.of(NodeClass.Object, NodeClass.Variable))
+        .build();
+
     return client
         .getAddressSpace()
-        .browseNodes(nodeId)
+        .browseNodes(nodeId, options)
         .stream()
-        .map(node -> {
-          TreeInputNode childNode = new TreeInputNode();
-          childNode.setNodeName(node.getDisplayName()
-              .getText());
-          childNode.setInternalNodeName(node.getNodeId()
-              .toParseableString());
-          childNode.setDataNode(isDataNode(node));
-          childNode.setNodeMetadata(new OpcUaNodeMetadataExtractor(client, node).extract());
-          return childNode;
-        })
-        .collect(Collectors.toList());
+        .collect(Collectors.toMap(
+            node -> node.getNodeId().toParseableString(),
+            node -> {
+              TreeInputNode childNode = new TreeInputNode();
+              childNode.setNodeName(node.getDisplayName()
+                  .getText());
+              childNode.setInternalNodeName(node.getNodeId()
+                  .toParseableString());
+              childNode.setDataNode(isDataNode(node));
+              childNode.setNodeMetadata(new OpcUaNodeMetadataExtractor(client, node).extract());
+              return childNode;
+            },
+            (existing, duplicate) -> existing,
+            LinkedHashMap::new
+        ))
+        .values()
+        .stream()
+        .sorted(Comparator.comparing(TreeInputNode::getNodeName, String.CASE_INSENSITIVE_ORDER))
+        .toList();
   }
 
 

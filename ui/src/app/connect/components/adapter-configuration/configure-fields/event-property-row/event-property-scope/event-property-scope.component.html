@@ -33,7 +33,7 @@
             data-cy="measurement-property-scope-value"
             >{{ 'Measurement' | translate }}
         </mat-option>
-        @if (runtimeType !== 'FLOAT' && runtimeType !== 'DOUBLE') {
+        @if (allowDimensionScope) {
             <mat-option
                 value="DIMENSION_PROPERTY"
                 data-cy="dimension-property-scope-value"

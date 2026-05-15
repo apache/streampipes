@@ -1,0 +1,376 @@
+{
+  "@class": "org.apache.streampipes.model.connect.adapter.AdapterDescription",
+  "elementId": "sp:adapterdescription:BdZLYE",
+  "rev": null,
+  "dom": null,
+  "connectedTo": null,
+  "name": "adapter-3_2_asset-3_0.asset-3_2",
+  "description": "",
+  "appId": "org.apache.streampipes.connect.iiot.adapters.simulator.machine",
+  "includesAssets": true,
+  "includesLocales": true,
+  "includedAssets": ["documentation.md", "icon.png"],
+  "includedLocales": ["strings.en"],
+  "internallyManaged": false,
+  "version": 1,
+  "dataStream": {
+    "@class": "org.apache.streampipes.model.SpDataStream",
+    "elementId": "urn:streampipes.apache.org:eventstream:OFxeXv",
+    "rev": null,
+    "dom": null,
+    "connectedTo": null,
+    "name": null,
+    "description": null,
+    "appId": "urn:streampipes.apache.org:eventstream:OFxeXv",
+    "includesAssets": false,
+    "includesLocales": false,
+    "includedAssets": [],
+    "includedLocales": [],
+    "internallyManaged": false,
+    "eventGrounding": null,
+    "eventSchema": {
+      "eventProperties": [
+        {
+          "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+          "elementId": "sp:eventproperty:JnshOo",
+          "label": null,
+          "description": "",
+          "runtimeName": "density",
+          "semanticType": null,
+          "propertyScope": "MEASUREMENT_PROPERTY",
+          "runtimeId": null,
+          "additionalMetadata": {},
+          "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
+          "measurementUnit": null,
+          "valueSpecification": null
+        },
+        {
+          "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+          "elementId": "sp:eventproperty:NbMRcE",
+          "label": null,
+          "description": "",
+          "runtimeName": "mass_flow",
+          "semanticType": null,
+          "propertyScope": "MEASUREMENT_PROPERTY",
+          "runtimeId": null,
+          "additionalMetadata": {},
+          "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
+          "measurementUnit": null,
+          "valueSpecification": null
+        },
+        {
+          "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+          "elementId": "sp:eventproperty:LDnQtP",
+          "label": null,
+          "description": "",
+          "runtimeName": "sensorId",
+          "semanticType": null,
+          "propertyScope": "MEASUREMENT_PROPERTY",
+          "runtimeId": null,
+          "additionalMetadata": {},
+          "runtimeType": "http://www.w3.org/2001/XMLSchema#string",
+          "measurementUnit": null,
+          "valueSpecification": null
+        },
+        {
+          "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+          "elementId": "sp:eventproperty:TKffbY",
+          "label": null,
+          "description": "",
+          "runtimeName": "sensor_fault_flags",
+          "semanticType": null,
+          "propertyScope": "MEASUREMENT_PROPERTY",
+          "runtimeId": null,
+          "additionalMetadata": {},
+          "runtimeType": "http://www.w3.org/2001/XMLSchema#boolean",
+          "measurementUnit": null,
+          "valueSpecification": null
+        },
+        {
+          "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+          "elementId": "sp:eventproperty:cygfPS",
+          "label": null,
+          "description": "",
+          "runtimeName": "temperature",
+          "semanticType": null,
+          "propertyScope": "MEASUREMENT_PROPERTY",
+          "runtimeId": null,
+          "additionalMetadata": {},
+          "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
+          "measurementUnit": null,
+          "valueSpecification": null
+        },
+        {
+          "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+          "elementId": "sp:eventproperty:jrhoQT",
+          "label": null,
+          "description": "",
+          "runtimeName": "timestamp",
+          "semanticType": "http://schema.org/DateTime",
+          "propertyScope": "HEADER_PROPERTY",
+          "runtimeId": null,
+          "additionalMetadata": {
+            "originType": "http://www.w3.org/2001/XMLSchema#float"
+          },
+          "runtimeType": "http://www.w3.org/2001/XMLSchema#long",
+          "measurementUnit": null,
+          "valueSpecification": null
+        },
+        {
+          "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+          "elementId": "sp:eventproperty:jeVdpJ",
+          "label": null,
+          "description": "",
+          "runtimeName": "volume_flow",
+          "semanticType": null,
+          "propertyScope": "MEASUREMENT_PROPERTY",
+          "runtimeId": null,
+          "additionalMetadata": {},
+          "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
+          "measurementUnit": null,
+          "valueSpecification": null
+        }
+      ]
+    },
+    "category": null,
+    "index": 0,
+    "correspondingAdapterId": null
+  },
+  "running": false,
+  "eventGrounding": {
+    "transportProtocols": [
+      {
+        "@class": "org.apache.streampipes.model.grounding.KafkaTransportProtocol",
+        "elementId": "sp:transportprotocol:VZMsAG",
+        "brokerHostname": "kafka",
+        "topicDefinition": {
+          "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
+          "actualTopicName": "org.apache.streampipes.connect.b938275b-a1a5-4c2e-9091-69ff8609940d"
+        },
+        "kafkaPort": 9092,
+        "lingerMs": null,
+        "messageMaxBytes": null,
+        "maxRequestSize": null,
+        "acks": null,
+        "batchSize": null,
+        "offset": null,
+        "groupId": null
+      }
+    ]
+  },
+  "icon": null,
+  "config": [
+    {
+      "@class": "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty",
+      "optional": false,
+      "staticPropertyType": "FreeTextStaticProperty",
+      "label": "Wait Time (MS)",
+      "description": "The time to wait between two events in milliseconds",
+      "internalName": "wait-time-ms",
+      "value": "1000",
+      "requiredDatatype": "http://www.w3.org/2001/XMLSchema#integer",
+      "requiredDomainProperty": null,
+      "mapsTo": null,
+      "multiLine": false,
+      "htmlAllowed": false,
+      "htmlFontFormat": false,
+      "placeholdersSupported": false,
+      "valueSpecification": null
+    },
+    {
+      "@class": "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty",
+      "optional": false,
+      "staticPropertyType": "FreeTextStaticProperty",
+      "label": "Number of sensors",
+      "description": "The number of sensors to simulate",
+      "internalName": "numberOfSensors",
+      "value": "1",
+      "requiredDatatype": "http://www.w3.org/2001/XMLSchema#integer",
+      "requiredDomainProperty": null,
+      "mapsTo": null,
+      "multiLine": false,
+      "htmlAllowed": false,
+      "htmlFontFormat": false,
+      "placeholdersSupported": false,
+      "valueSpecification": null
+    },
+    {
+      "@class": "org.apache.streampipes.model.staticproperty.OneOfStaticProperty",
+      "optional": false,
+      "staticPropertyType": "OneOfStaticProperty",
+      "label": "Select sensor",
+      "description": "Select simulated sensor data to be published",
+      "internalName": "selected-simulator-option",
+      "options": [
+        {
+          "elementId": "sp:option:CIvRKg",
+          "name": "flowrate",
+          "selected": true,
+          "internalName": null
+        },
+        {
+          "elementId": "sp:option:wVEagJ",
+          "name": "pressure",
+          "selected": false,
+          "internalName": null
+        },
+        {
+          "elementId": "sp:option:Smogyb",
+          "name": "waterlevel",
+          "selected": false,
+          "internalName": null
+        },
+        {
+          "elementId": "sp:option:phDYGX",
+          "name": "diagnostics",
+          "selected": false,
+          "internalName": null
+        }
+      ],
+      "horizontalRendering": false
+    }
+  ],
+  "rules": [],
+  "createdAt": 1777881501937,
+  "selectedEndpointUrl": null,
+  "selectedServiceId": "org.apache.streampipes.extensions.all.iiot-EbauDB",
+  "deploymentConfiguration": {
+    "desiredServiceTags": [],
+    "selectedEndpointUrl": null
+  },
+  "correspondingServiceGroup": null,
+  "correspondingDataStreamElementId": "sp:spdatastream:ydxexG",
+  "transformationConfig": {
+    "scriptActive": false,
+    "language": null,
+    "script": null,
+    "inputs": [
+      {
+        "mass_flow": 10.81500041834677,
+        "density": 49.15779433573759,
+        "volume_flow": 3.2853479112087225,
+        "sensor_fault_flags": false,
+        "temperature": 49.17498880921098,
+        "timestamp": 1.777881497915e12,
+        "sensorId": "flowrate00"
+      }
+    ],
+    "outputs": [
+      {
+        "mass_flow": 10.81500041834677,
+        "density": 49.15779433573759,
+        "volume_flow": 3.2853479112087225,
+        "sensor_fault_flags": false,
+        "temperature": 49.17498880921098,
+        "timestamp": 1.777881497915e12,
+        "sensorId": "flowrate00"
+      }
+    ],
+    "reduceEventRateRule": null,
+    "removeDuplicateRule": null
+  },
+  "eventSchema": {
+    "eventProperties": [
+      {
+        "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+        "elementId": "sp:eventproperty:JnshOo",
+        "label": null,
+        "description": "",
+        "runtimeName": "density",
+        "semanticType": null,
+        "propertyScope": "MEASUREMENT_PROPERTY",
+        "runtimeId": null,
+        "additionalMetadata": {},
+        "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
+        "measurementUnit": null,
+        "valueSpecification": null
+      },
+      {
+        "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+        "elementId": "sp:eventproperty:NbMRcE",
+        "label": null,
+        "description": "",
+        "runtimeName": "mass_flow",
+        "semanticType": null,
+        "propertyScope": "MEASUREMENT_PROPERTY",
+        "runtimeId": null,
+        "additionalMetadata": {},
+        "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
+        "measurementUnit": null,
+        "valueSpecification": null
+      },
+      {
+        "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+        "elementId": "sp:eventproperty:LDnQtP",
+        "label": null,
+        "description": "",
+        "runtimeName": "sensorId",
+        "semanticType": null,
+        "propertyScope": "MEASUREMENT_PROPERTY",
+        "runtimeId": null,
+        "additionalMetadata": {},
+        "runtimeType": "http://www.w3.org/2001/XMLSchema#string",
+        "measurementUnit": null,
+        "valueSpecification": null
+      },
+      {
+        "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+        "elementId": "sp:eventproperty:TKffbY",
+        "label": null,
+        "description": "",
+        "runtimeName": "sensor_fault_flags",
+        "semanticType": null,
+        "propertyScope": "MEASUREMENT_PROPERTY",
+        "runtimeId": null,
+        "additionalMetadata": {},
+        "runtimeType": "http://www.w3.org/2001/XMLSchema#boolean",
+        "measurementUnit": null,
+        "valueSpecification": null
+      },
+      {
+        "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+        "elementId": "sp:eventproperty:cygfPS",
+        "label": null,
+        "description": "",
+        "runtimeName": "temperature",
+        "semanticType": null,
+        "propertyScope": "MEASUREMENT_PROPERTY",
+        "runtimeId": null,
+        "additionalMetadata": {},
+        "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
+        "measurementUnit": null,
+        "valueSpecification": null
+      },
+      {
+        "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+        "elementId": "sp:eventproperty:jrhoQT",
+        "label": null,
+        "description": "",
+        "runtimeName": "timestamp",
+        "semanticType": "http://schema.org/DateTime",
+        "propertyScope": "HEADER_PROPERTY",
+        "runtimeId": null,
+        "additionalMetadata": {
+          "originType": "http://www.w3.org/2001/XMLSchema#float"
+        },
+        "runtimeType": "http://www.w3.org/2001/XMLSchema#long",
+        "measurementUnit": null,
+        "valueSpecification": null
+      },
+      {
+        "@class": "org.apache.streampipes.model.schema.EventPropertyPrimitive",
+        "elementId": "sp:eventproperty:jeVdpJ",
+        "label": null,
+        "description": "",
+        "runtimeName": "volume_flow",
+        "semanticType": null,
+        "propertyScope": "MEASUREMENT_PROPERTY",
+        "runtimeId": null,
+        "additionalMetadata": {},
+        "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
+        "measurementUnit": null,
+        "valueSpecification": null
+      }
+    ]
+  }
+}

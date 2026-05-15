@@ -16,11 +16,30 @@
  *
  */
 
-.tree-normal-height {
-    min-height: 400px;
-    max-height: 400px;
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
 }
 
-.tree-large-height {
-    min-height: 800px;
+.sp-tree {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    padding: 0.5rem 0;
+    overflow: auto;
+}
+
+.tree-node-content {
+    width: 100%;
+    min-width: 0;
+}
+
+.tree-node-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
