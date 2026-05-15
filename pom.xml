@@ -90,7 +90,7 @@
         <!-- needs to be lower than 4.x.x, see https://github.com/apache/streampipes/issues/1495 -->
         <rdf4j.version>3.7.7</rdf4j.version>
 
-        <rocketmq.version>5.0.2</rocketmq.version>
+        <rocketmq.version>5.2.0</rocketmq.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <s3.version>2.25.14</s3.version>
         <siddhi.version>5.1.27</siddhi.version>
