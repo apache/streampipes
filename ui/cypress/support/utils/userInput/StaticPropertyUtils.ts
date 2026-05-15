@@ -46,12 +46,26 @@ export class StaticPropertyUtils {
                 cy.dataCy('code-editor-' + config.selector, {
                     timeout: 2000,
                 })
-                    .find('textarea.inputarea')
-                    .click({ force: true })
-                    .type('{selectall}{backspace}', { force: true })
-                    .type(config.value, {
-                        force: true,
-                        parseSpecialCharSequences: false,
+                    .find('.monaco-editor')
+                    .then($editor => {
+                        const dataUri = $editor[0]?.getAttribute('data-uri');
+
+                        cy.window().then(win => {
+                            const monaco = (win as any).monaco;
+                            const model = monaco?.editor
+                                ?.getModels()
+                                .find(
+                                    (currentModel: any) =>
+                                        currentModel.uri.toString() === dataUri,
+                                );
+
+                            model.setValue(
+                                this.preserveClosingTemplateSuffix(
+                                    model.getValue(),
+                                    config.value,
+                                ),
+                            );
+                        });
                     });
             } else if (config.type === 'input') {
                 cy.dataCy(config.selector, { timeout: 2000 })
@@ -93,5 +107,22 @@ export class StaticPropertyUtils {
         cy.dataCy(selector, { timeout: 2000 }).within(() => {
             cy.get(cssClassName).click();
         });
+    }
+
+    private static preserveClosingTemplateSuffix(
+        currentValue: string,
+        nextValue: string,
+    ) {
+        const closingSuffixMatch = currentValue.match(/(\n\s*[\])}]+\s*)+$/);
+
+        if (!closingSuffixMatch) {
+            return nextValue;
+        }
+
+        if (/[)\]}]\s*$/.test(nextValue)) {
+            return nextValue;
+        }
+
+        return `${nextValue}${closingSuffixMatch[0]}`;
     }
 }

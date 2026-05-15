@@ -26,7 +26,7 @@ import {
 } from '../../../models/dataset.model';
 import { EChartsOption } from 'echarts';
 import { scaleLinear } from 'd3-scale';
-import { extent } from 'd3';
+import { extent } from 'd3-array';
 import { contourDensity } from 'd3-contour';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { FieldUpdateInfo } from '../../../models/field-update.model';

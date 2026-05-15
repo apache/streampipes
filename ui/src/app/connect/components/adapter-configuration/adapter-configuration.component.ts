@@ -88,7 +88,10 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
             ? this.translate.instant('Edit adapter: ') + this.displayName
             : this.translate.instant('New adapter: ') + this.displayName;
 
-        if (!this.adapterDescription.transformationConfig) {
+        if (
+            !this.adapterDescription.transformationConfig ||
+            this.adapterDescription.transformationConfig.script === undefined
+        ) {
             this.adapterDescription.transformationConfig = {
                 inputs: [],
                 language: 'javascript',

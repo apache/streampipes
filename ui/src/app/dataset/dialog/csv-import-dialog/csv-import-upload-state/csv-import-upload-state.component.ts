@@ -16,7 +16,6 @@
  *
  */
 
-import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -32,7 +31,6 @@ import { SpAlertBannerComponent } from '@streampipes/shared-ui';
     templateUrl: './csv-import-upload-state.component.html',
     styleUrls: ['./csv-import-upload-state.component.scss'],
     imports: [
-        CommonModule,
         MatIcon,
         MatProgressSpinner,
         TranslatePipe,
