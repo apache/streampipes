@@ -22,6 +22,7 @@ import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
 import {
     CompactPipeline,
+    MeasurementUpdateInfo,
     Message,
     Pipeline,
     PipelineElementRecommendationMessage,
@@ -96,6 +97,24 @@ export class PipelineService {
             .pipe(
                 map(response => {
                     return Message.fromData(response as Message);
+                }),
+            );
+    }
+
+    performPipelineMigrationPreflight(
+        pipeline: Pipeline,
+    ): Observable<MeasurementUpdateInfo[]> {
+        const pipelineId = pipeline._id;
+        return this.http
+            .put(
+                `${this.apiBasePath}/pipelines/${pipelineId}/pipeline-migration-preflight`,
+                pipeline,
+            )
+            .pipe(
+                map(response => {
+                    return (response as any[]).map(p =>
+                        MeasurementUpdateInfo.fromData(p),
+                    );
                 }),
             );
     }
