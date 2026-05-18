@@ -26,6 +26,7 @@ import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.CrudResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
@@ -181,6 +182,7 @@ public class PipelineManager {
   ) {
     pipeline.setPipelineId(pipelineId);
     pipeline.setRunning(false);
+    pipeline.setHealthStatus(PipelineHealthStatus.OK);
     pipeline.setCreatedByUser(username);
     pipeline.setCreatedAt(new Date().getTime());
     pipeline.getSepas()

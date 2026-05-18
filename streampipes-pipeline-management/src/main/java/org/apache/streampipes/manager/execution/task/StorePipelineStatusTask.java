@@ -80,8 +80,20 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
     pipeline.setRunning(false);
     pipelinesStats.updatePipelineRunningState(pipeline.getElementId(),pipeline.getName()
                                                                   , false);
-    pipelinesStats.updatePipelineHealthState(pipeline.getElementId(),pipeline.getName(), pipeline.getHealthStatus().toString());
+    pipelinesStats.updatePipelineHealthState(
+        pipeline.getElementId(),
+        pipeline.getName(),
+        getHealthStatus(pipeline).toString()
+    );
     getPipelineStorageApi().updateElement(pipeline);
+  }
+
+  private PipelineHealthStatus getHealthStatus(Pipeline pipeline) {
+    if (pipeline.getHealthStatus() == null) {
+      pipeline.setHealthStatus(PipelineHealthStatus.OK);
+    }
+
+    return pipeline.getHealthStatus();
   }
 
   private IPipelineStorage getPipelineStorageApi() {
