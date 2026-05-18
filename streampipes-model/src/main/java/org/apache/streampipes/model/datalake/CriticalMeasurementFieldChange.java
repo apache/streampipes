@@ -16,8 +16,11 @@
  *
  */
 
-package org.apache.streampipes.manager.matching.v2.pipeline;
+package org.apache.streampipes.model.datalake;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+@TsModel
 public record CriticalMeasurementFieldChange(String runtimeName,
                                              String existingType,
                                              String updatedType) {

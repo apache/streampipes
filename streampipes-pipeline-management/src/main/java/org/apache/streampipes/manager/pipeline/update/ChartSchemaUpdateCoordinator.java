@@ -22,11 +22,9 @@ import org.apache.streampipes.model.connect.adapter.ChartSchemaUpdateInfo;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetHealthStatus;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -44,8 +42,6 @@ import java.util.stream.Collectors;
 
 public class ChartSchemaUpdateCoordinator {
 
-  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
-  private static final String DATA_LAKE_MEASUREMENT_FIELD = "db_measurement";
   private static final String SOURCE_CONFIGS = "sourceConfigs";
   private static final String MEASURE_NAME = "measureName";
   private static final String MEASURE = "measure";
@@ -69,9 +65,12 @@ public class ChartSchemaUpdateCoordinator {
     this.objectMapper = JacksonSerializer.getObjectMapper();
   }
 
-  public List<ChartSchemaUpdateInfo> checkChartMigrations(Pipeline pipeline,
-                                                          EventSchema updatedSchema) {
-    var measureNames = extractMeasureNames(pipeline);
+  public List<ChartSchemaUpdateInfo> checkChartMigrations(Pipeline pipeline, EventSchema updatedSchema) {
+    var measureNames = MeasurementUpdateUtils.extractMeasureNames(pipeline);
+    return checkChartMigrations(measureNames, updatedSchema);
+  }
+
+  public List<ChartSchemaUpdateInfo> checkChartMigrations(Set<String> measureNames, EventSchema updatedSchema) {
     return widgetStorage
         .findAll()
         .stream()
@@ -82,7 +81,7 @@ public class ChartSchemaUpdateCoordinator {
 
   public void updateCharts(Pipeline pipeline,
                            EventSchema updatedSchema) {
-    var measureNames = extractMeasureNames(pipeline);
+    var measureNames = MeasurementUpdateUtils.extractMeasureNames(pipeline);
     updateCharts(measureNames, updatedSchema);
   }
 
@@ -248,33 +247,6 @@ public class ChartSchemaUpdateCoordinator {
     }
   }
 
-  private Set<String> extractMeasureNames(Pipeline pipeline) {
-    if (pipeline.getActions() == null) {
-      return Set.of();
-    }
-
-    return pipeline
-        .getActions()
-        .stream()
-        .filter(ChartSchemaUpdateCoordinator::isDataLakeSink)
-        .map(this::extractMeasureName)
-        .flatMap(Optional::stream)
-        .collect(Collectors.toSet());
-  }
-
-  private Optional<String> extractMeasureName(DataSinkInvocation sink) {
-    return Optional
-        .ofNullable(sink.getStaticProperties())
-        .stream()
-        .flatMap(List::stream)
-        .filter(property -> DATA_LAKE_MEASUREMENT_FIELD.equals(property.getInternalName()))
-        .filter(FreeTextStaticProperty.class::isInstance)
-        .map(FreeTextStaticProperty.class::cast)
-        .map(FreeTextStaticProperty::getValue)
-        .filter(Objects::nonNull)
-        .findFirst();
-  }
-
   private String getChartTitle(DataExplorerWidgetModel widget) {
     var baseAppearanceConfig = widget.getBaseAppearanceConfig();
     if (baseAppearanceConfig != null && baseAppearanceConfig.get(WIDGET_TITLE) instanceof String widgetTitle) {
@@ -286,7 +258,4 @@ public class ChartSchemaUpdateCoordinator {
     }
   }
 
-  private static boolean isDataLakeSink(DataSinkInvocation dataSink) {
-    return DATA_LAKE_SINK_APP_ID.equals(dataSink.getAppId());
-  }
 }
