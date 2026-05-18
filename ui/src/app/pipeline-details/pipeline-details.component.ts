@@ -20,7 +20,6 @@ import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import {
-    MeasurementUpdateAction,
     Pipeline,
     PipelineCanvasMetadata,
     PipelineCanvasMetadataService,
@@ -57,6 +56,7 @@ import { PipelineDetailsExpansionPanelComponent } from './components/pipeline-de
 import { TranslatePipe } from '@ngx-translate/core';
 import { PipelineOperationsService } from '../pipelines/services/pipeline-operations.service';
 import { MeasurementUpdateDialogComponent } from '../pipelines/dialog/measurement-update/measurement-update-dialog.component';
+import { MeasurementUpdateAction } from '../pipelines/model/pipeline-model';
 
 @Component({
     selector: 'sp-pipeline-details-overview-component',

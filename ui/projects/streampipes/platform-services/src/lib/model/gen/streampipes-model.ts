@@ -18,7 +18,7 @@
  */
 
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-01-15 16:03:01.
+// Generated using typescript-generator version 3.2.1263 on 2026-05-18 14:42:00.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -112,6 +112,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
     'rules': TransformationRuleDescriptionUnion[];
     'running': boolean;
     'selectedEndpointUrl': string;
+    'selectedServiceId': string;
     'transformationConfig': TransformationConfig;
 
     static 'fromData'(
@@ -143,6 +144,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
         )(data.rules);
         instance.running = data.running;
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
+        instance.selectedServiceId = data.selectedServiceId;
         instance.transformationConfig = TransformationConfig.fromData(
             data.transformationConfig,
         );
@@ -791,6 +793,32 @@ export class ChangeDatatypeTransformationRuleDescription extends ValueTransforma
     }
 }
 
+export class ChartSchemaUpdateInfo {
+    affectedFields: string[];
+    canAutoMigrate: boolean;
+    chartId: string;
+    chartTitle: string;
+    measureName: string;
+
+    static fromData(
+        data: ChartSchemaUpdateInfo,
+        target?: ChartSchemaUpdateInfo,
+    ): ChartSchemaUpdateInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ChartSchemaUpdateInfo();
+        instance.affectedFields = __getCopyArrayFn(__identity<string>())(
+            data.affectedFields,
+        );
+        instance.canAutoMigrate = data.canAutoMigrate;
+        instance.chartId = data.chartId;
+        instance.chartTitle = data.chartTitle;
+        instance.measureName = data.measureName;
+        return instance;
+    }
+}
+
 export class CodeInputStaticProperty extends StaticProperty {
     '@class': 'org.apache.streampipes.model.staticproperty.CodeInputStaticProperty';
     'codeTemplate': string;
@@ -1138,6 +1166,26 @@ export class CreateOptions {
     }
 }
 
+export class CriticalMeasurementFieldChange {
+    existingType: string;
+    runtimeName: string;
+    updatedType: string;
+
+    static fromData(
+        data: CriticalMeasurementFieldChange,
+        target?: CriticalMeasurementFieldChange,
+    ): CriticalMeasurementFieldChange {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new CriticalMeasurementFieldChange();
+        instance.existingType = data.existingType;
+        instance.runtimeName = data.runtimeName;
+        instance.updatedType = data.updatedType;
+        return instance;
+    }
+}
+
 export class CustomOutputStrategy extends OutputStrategy {
     '@class': 'org.apache.streampipes.model.output.CustomOutputStrategy';
     'availablePropertyKeys': string[];
@@ -1395,10 +1443,10 @@ export class InvocableStreamPipesEntity
     'detachPath': string;
     'inputStreams': SpDataStream[];
     'selectedEndpointUrl': string;
+    'selectedServiceId': string;
     'serviceTagPrefix': SpServiceTagPrefix;
     'staticProperties': StaticPropertyUnion[];
     'streamRequirements': SpDataStream[];
-    'supportedGrounding': EventGrounding;
     'uncompleted': boolean;
 
     static 'fromData'(
@@ -1419,15 +1467,13 @@ export class InvocableStreamPipesEntity
             data.inputStreams,
         );
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
+        instance.selectedServiceId = data.selectedServiceId;
         instance.serviceTagPrefix = data.serviceTagPrefix;
         instance.staticProperties = __getCopyArrayFn(
             StaticProperty.fromDataUnion,
         )(data.staticProperties);
         instance.streamRequirements = __getCopyArrayFn(SpDataStream.fromData)(
             data.streamRequirements,
-        );
-        instance.supportedGrounding = EventGrounding.fromData(
-            data.supportedGrounding,
         );
         instance.uncompleted = data.uncompleted;
         return instance;
@@ -1627,6 +1673,7 @@ export interface EndpointSelectable {
     detachPath: string;
     name: string;
     selectedEndpointUrl: string;
+    selectedServiceId: string;
 }
 
 export class ValueSpecification {
@@ -2278,7 +2325,6 @@ export class GuessSchema {
 
 export class TransportProtocol {
     '@class':
-        | 'org.apache.streampipes.model.grounding.JmsTransportProtocol'
         | 'org.apache.streampipes.model.grounding.KafkaTransportProtocol'
         | 'org.apache.streampipes.model.grounding.MqttTransportProtocol'
         | 'org.apache.streampipes.model.grounding.NatsTransportProtocol'
@@ -2311,8 +2357,6 @@ export class TransportProtocol {
             return data;
         }
         switch (data['@class']) {
-            case 'org.apache.streampipes.model.grounding.JmsTransportProtocol':
-                return JmsTransportProtocol.fromData(data);
             case 'org.apache.streampipes.model.grounding.KafkaTransportProtocol':
                 return KafkaTransportProtocol.fromData(data);
             case 'org.apache.streampipes.model.grounding.MqttTransportProtocol':
@@ -2322,24 +2366,6 @@ export class TransportProtocol {
             case 'org.apache.streampipes.model.grounding.PulsarTransportProtocol':
                 return PulsarTransportProtocol.fromData(data);
         }
-    }
-}
-
-export class JmsTransportProtocol extends TransportProtocol {
-    '@class': 'org.apache.streampipes.model.grounding.JmsTransportProtocol';
-    'port': number;
-
-    static 'fromData'(
-        data: JmsTransportProtocol,
-        target?: JmsTransportProtocol,
-    ): JmsTransportProtocol {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new JmsTransportProtocol();
-        super.fromData(data, instance);
-        instance.port = data.port;
-        return instance;
     }
 }
 
@@ -2573,6 +2599,30 @@ export class MatchingStaticProperty extends StaticProperty {
     }
 }
 
+export class MeasurementUpdateInfo {
+    chartSchemaUpdateInfos: ChartSchemaUpdateInfo[];
+    criticalMeasurementFieldChanges: CriticalMeasurementFieldChange[];
+    measurementName: string;
+
+    static fromData(
+        data: MeasurementUpdateInfo,
+        target?: MeasurementUpdateInfo,
+    ): MeasurementUpdateInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new MeasurementUpdateInfo();
+        instance.chartSchemaUpdateInfos = __getCopyArrayFn(
+            ChartSchemaUpdateInfo.fromData,
+        )(data.chartSchemaUpdateInfos);
+        instance.criticalMeasurementFieldChanges = __getCopyArrayFn(
+            CriticalMeasurementFieldChange.fromData,
+        )(data.criticalMeasurementFieldChanges);
+        instance.measurementName = data.measurementName;
+        return instance;
+    }
+}
+
 export class MessageCounter {
     counter: number;
     lastTimestamp: number;
@@ -2685,6 +2735,7 @@ export class MqttTransportProtocol extends TransportProtocol {
 export class NatsTransportProtocol extends TransportProtocol {
     '@class': 'org.apache.streampipes.model.grounding.NatsTransportProtocol';
     'port': number;
+    'token': string;
 
     static 'fromData'(
         data: NatsTransportProtocol,
@@ -2696,6 +2747,7 @@ export class NatsTransportProtocol extends TransportProtocol {
         const instance = target || new NatsTransportProtocol();
         super.fromData(data, instance);
         instance.port = data.port;
+        instance.token = data.token;
         return instance;
     }
 }
@@ -3316,32 +3368,6 @@ export class PipelineUpdateInfo {
         instance.validationInfos = __getCopyObjectFn(
             __getCopyArrayFn(PipelineElementValidationInfo.fromData),
         )(data.validationInfos);
-        return instance;
-    }
-}
-
-export class ChartSchemaUpdateInfo {
-    affectedFields: string[];
-    canAutoMigrate: boolean;
-    chartId: string;
-    chartTitle: string;
-    measureName: string;
-
-    static fromData(
-        data: ChartSchemaUpdateInfo,
-        target?: ChartSchemaUpdateInfo,
-    ): ChartSchemaUpdateInfo {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new ChartSchemaUpdateInfo();
-        instance.affectedFields = __getCopyArrayFn(__identity<string>())(
-            data.affectedFields,
-        );
-        instance.canAutoMigrate = data.canAutoMigrate;
-        instance.chartId = data.chartId;
-        instance.chartTitle = data.chartTitle;
-        instance.measureName = data.measureName;
         return instance;
     }
 }
@@ -4166,7 +4192,6 @@ export class SpServiceRegistration implements Storable {
     providedExtensions: ExtensionItemDescription[];
     rev: string;
     scheme: string;
-    serviceUrl: string;
     status: SpServiceStatus;
     supportedScriptLanguages: ScriptMetadata[];
     svcGroup: string;
@@ -4194,7 +4219,6 @@ export class SpServiceRegistration implements Storable {
         )(data.providedExtensions);
         instance.rev = data.rev;
         instance.scheme = data.scheme;
-        instance.serviceUrl = data.serviceUrl;
         instance.status = data.status;
         instance.supportedScriptLanguages = __getCopyArrayFn(
             ScriptMetadata.fromData,
@@ -4629,6 +4653,8 @@ export type ConfigurationScope =
     | 'CONTAINER_GLOBAL_CONFIG'
     | 'PIPELINE_ELEMENT_CONFIG';
 
+export type DataExplorerWidgetHealthStatus = 'OK' | 'REQUIRES_ATTENTION';
+
 export type DataLakeMeasureSchemaUpdateStrategy =
     | 'UPDATE_SCHEMA'
     | 'EXTEND_EXISTING_SCHEMA';
@@ -4674,10 +4700,6 @@ export type PipelineHealthStatus =
     | 'HANDLE_MEASUREMENT_UPDATE'
     | 'FAILURE';
 
-export type MeasurementUpdateAction = 'edit-pipeline' | 'manage-datasets';
-
-export type DataExplorerWidgetHealthStatus = 'OK' | 'REQUIRES_ATTENTION';
-
 export type PropertyScope =
     | 'HEADER_PROPERTY'
     | 'DIMENSION_PROPERTY'
@@ -4695,8 +4717,6 @@ export type SelectionStaticPropertyUnion =
     | OneOfStaticProperty;
 
 export type SpLogLevel = 'INFO' | 'WARN' | 'ERROR';
-
-export type SpProtocol = 'KAFKA' | 'JMS' | 'MQTT' | 'NATS' | 'PULSAR';
 
 export type SpQueryStatus = 'OK' | 'TOO_MUCH_DATA';
 
@@ -4780,7 +4800,6 @@ export type TransformationRuleDescriptionUnion =
     | CorrectionValueTransformationRuleDescription;
 
 export type TransportProtocolUnion =
-    | JmsTransportProtocol
     | KafkaTransportProtocol
     | MqttTransportProtocol
     | NatsTransportProtocol
