@@ -4,7 +4,7 @@
     {
       "type": "code-input",
       "selector": "jsFunction",
-      "value": "function process(event) {\n return event;"
+      "value": "function process(event) {\n return event;\n}"
     }
   ],
   "output": {
