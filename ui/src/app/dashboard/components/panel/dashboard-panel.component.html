@@ -36,6 +36,7 @@
                     [timeSettings]="timeSettings"
                     (saveDashboardEmitter)="persistDashboardChanges()"
                     (discardDashboardEmitter)="discardChanges()"
+                    (manageDashboardEmitter)="manageDashboard()"
                     (deleteDashboardEmitter)="deleteDashboard()"
                     (triggerEditModeEmitter)="triggerEditMode()"
                     (updateDateRangeEmitter)="updateDateRange($event)"

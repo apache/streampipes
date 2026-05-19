@@ -124,6 +124,12 @@
                 </button>
             }
             @if (hasDashboardWritePrivileges) {
+                <button mat-menu-item (click)="manageDashboardEmitter.emit()">
+                    <mat-icon>settings</mat-icon>
+                    <span>{{ 'Manage dashboard' | translate }}</span>
+                </button>
+            }
+            @if (hasDashboardWritePrivileges) {
                 <button mat-menu-item (click)="deleteDashboardEmitter.emit()">
                     <mat-icon>clear</mat-icon>
                     <span>{{ 'Delete dashboard' | translate }}</span>

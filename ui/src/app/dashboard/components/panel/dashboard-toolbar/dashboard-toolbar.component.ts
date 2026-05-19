@@ -87,6 +87,9 @@ export class DashboardToolbarComponent {
     deleteDashboardEmitter: EventEmitter<void> = new EventEmitter();
 
     @Output()
+    manageDashboardEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
     triggerEditModeEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     @Output()

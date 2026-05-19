@@ -17,7 +17,14 @@
  */
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, of, Subscription, timer } from 'rxjs';
+import {
+    firstValueFrom,
+    from,
+    Observable,
+    of,
+    Subscription,
+    timer,
+} from 'rxjs';
 import { DashboardGridViewComponent } from '../../../dashboard-shared/components/chart-view/grid-view/dashboard-grid-view.component';
 import {
     ClientDashboardItem,
@@ -26,6 +33,8 @@ import {
     DashboardService,
     DataExplorerWidgetModel,
     DataLakeMeasure,
+    LinkageData,
+    PermissionsService,
     TimeSelectionConstants,
     TimeSettings,
 } from '@streampipes/platform-services';
@@ -40,15 +49,21 @@ import { DashboardSlideViewComponent } from '../../../dashboard-shared/component
 import {
     ConfirmDialogAction,
     ConfirmDialogComponent,
+    AssetSaveService,
     CurrentUserService,
+    DialogService,
     KeyboardShortcutService,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
+    ObjectManageDialogResult,
+    PanelType,
     ShortcutRegistration,
     SpBasicViewComponent,
     SpBreadcrumbService,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { SpDashboardRoutes } from '../../dashboard.breadcrumb';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
 import { ChartDetectChangesService } from '../../../chart/services/chart-detect-changes.service';
@@ -121,10 +136,13 @@ export class DashboardPanelComponent
     private shortcutService = inject(KeyboardShortcutService);
     private detectChangesService = inject(ChartDetectChangesService);
     private dialog = inject(MatDialog);
+    private dialogService = inject(DialogService);
+    private assetSaveService = inject(AssetSaveService);
     private timeSelectionService = inject(TimeSelectionService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
     private dashboardService = inject(DashboardService);
+    private permissionsService = inject(PermissionsService);
     private route = inject(ActivatedRoute);
     private routingService = inject(ChartRoutingService);
     private breadcrumbService = inject(SpBreadcrumbService);
@@ -134,6 +152,8 @@ export class DashboardPanelComponent
 
     observableGenerator =
         this.dataExplorerSharedService.defaultObservableGenerator();
+
+    private pendingManageResult?: ObjectManageDialogResult<Dashboard>;
 
     public ngOnInit() {
         this.shortcutReg = this.shortcutService.register('dashboard-panel', [
@@ -220,29 +240,60 @@ export class DashboardPanelComponent
             .dashboardTimeSettings as TimeSettings;
         const currentTimeSettings = this.dashboard
             .dashboardTimeSettings as TimeSettings;
-        return this.detectChangesService.shouldShowConfirm(
-            this.originalDashboard,
-            this.dashboard,
-            originalTimeSettings,
-            currentTimeSettings,
-            model => {
-                model.dashboardTimeSettings = undefined;
-            },
+        return (
+            this.hasPendingManageChanges() ||
+            this.detectChangesService.shouldShowConfirm(
+                this.originalDashboard,
+                this.dashboard,
+                originalTimeSettings,
+                currentTimeSettings,
+                model => {
+                    model.dashboardTimeSettings = undefined;
+                },
+            )
         );
     }
 
     persistDashboardChanges() {
         this.dashboard.dashboardGeneralSettings.defaultViewMode = this.viewMode;
-        this.dashboard.metadata ??= {
-            createdAtEpochMs: undefined,
-            lastModifiedEpochMs: undefined,
+        this.saveDashboardChanges().subscribe(() => {
+            this.routingService.navigateToDashboardOverview(true);
+        });
+    }
+
+    manageDashboard(): void {
+        const resourceConfig: ObjectManageDialogResourceConfig<Dashboard> = {
+            resourceLabel: 'Dashboard',
+            nameLabel: 'Dashboard title',
+            descriptionLabel: 'Dashboard description',
+            idProperty: 'elementId',
+            nameProperty: 'name',
+            assetLinkType: 'dashboard',
+            assetLinkCheckboxLabel:
+                'Add the current dashboard to an existing asset',
         };
-        this.dashboard.metadata.lastModifiedEpochMs = Date.now();
-        this.dashboardService
-            .updateDashboard(this.dashboard)
-            .subscribe(result => {
-                this.routingService.navigateToDashboardOverview(true);
-            });
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('Manage'),
+            width: '50vw',
+            data: {
+                objectInstanceId: this.dashboard.elementId,
+                resource: { ...this.dashboard },
+                saveMode: 'deferred',
+                resourceConfig,
+                headerTitle:
+                    this.translateService.instant('Manage Dashboard ') +
+                    this.dashboard.name,
+            },
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && typeof result !== 'boolean') {
+                Object.assign(this.dashboard, result.resource);
+                this.pendingManageResult = result;
+                this.editMode = true;
+            }
+        });
     }
 
     startEditMode(widgetModel: DataExplorerWidgetModel) {
@@ -375,9 +426,9 @@ export class DashboardPanelComponent
                     if (dialogResult === 'confirm') {
                         this.dashboard.dashboardGeneralSettings.defaultViewMode =
                             this.viewMode;
-                        return this.dashboardService
-                            .updateDashboard(this.dashboard)
-                            .pipe(map(() => true));
+                        return this.saveDashboardChanges().pipe(
+                            map(() => true),
+                        );
                     }
 
                     if (dialogResult === 'cancel') {
@@ -390,6 +441,69 @@ export class DashboardPanelComponent
         } else {
             return of(true);
         }
+    }
+
+    private saveDashboardChanges(): Observable<unknown> {
+        this.dashboard.metadata ??= {
+            createdAtEpochMs: undefined,
+            lastModifiedEpochMs: undefined,
+        };
+        this.dashboard.metadata.lastModifiedEpochMs = Date.now();
+        return this.dashboardService.updateDashboard(this.dashboard).pipe(
+            tap(savedDashboard => {
+                Object.assign(this.dashboard, savedDashboard);
+            }),
+            switchMap(() => from(this.savePendingManageChanges())),
+        );
+    }
+
+    private async savePendingManageChanges(): Promise<void> {
+        const result = this.pendingManageResult;
+        if (!result) {
+            return;
+        }
+
+        if (result.permission) {
+            await firstValueFrom(
+                this.permissionsService.updatePermission(result.permission),
+            );
+        }
+
+        if (this.shouldSaveManagedAssetLinks(result)) {
+            await this.assetSaveService.saveSelectedAssets(
+                result.selectedAssets,
+                this.createDashboardLinkageData(),
+                result.deselectedAssets,
+                result.originalAssets,
+            );
+        }
+
+        this.pendingManageResult = undefined;
+    }
+
+    private shouldSaveManagedAssetLinks(
+        result: ObjectManageDialogResult<Dashboard>,
+    ): boolean {
+        return (
+            result.addToAssets &&
+            (result.selectedAssets.length > 0 ||
+                result.deselectedAssets.length > 0 ||
+                result.originalAssets.length > 0)
+        );
+    }
+
+    private createDashboardLinkageData(): LinkageData[] {
+        return [
+            {
+                type: 'dashboard',
+                id: this.dashboard.elementId,
+                name: this.dashboard.name,
+            },
+        ];
+    }
+
+    private hasPendingManageChanges(): boolean {
+        return this.pendingManageResult !== undefined;
     }
 
     modifyRefreshInterval(liveSettings: DashboardLiveSettings): void {
