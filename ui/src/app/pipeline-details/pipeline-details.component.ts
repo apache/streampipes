@@ -104,7 +104,6 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     currentUser$: Subscription;
     autoRefresh$: Subscription;
     private shortcutReg: ShortcutRegistration;
-    private measurementUpdateDialogOpened = false;
 
     @ViewChild('pipelinePreviewComponent')
     pipelinePreviewComponent: PipelinePreviewComponent;
@@ -174,18 +173,12 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
             { label: this.pipeline.name },
             { label: 'Overview' },
         ]);
-        this.openMeasurementUpdateDialogIfRequired();
+        if (this.pipeline.healthStatus === 'HANDLE_MEASUREMENT_UPDATE') {
+            this.openMeasurementUpdateDialogIfRequired();
+        }
     }
 
     openMeasurementUpdateDialogIfRequired(): void {
-        if (
-            this.measurementUpdateDialogOpened ||
-            this.pipeline.healthStatus !== 'HANDLE_MEASUREMENT_UPDATE'
-        ) {
-            return;
-        }
-
-        this.measurementUpdateDialogOpened = true;
         const dialogRef = this.dialogService.open(
             MeasurementUpdateDialogComponent,
             {

@@ -100,10 +100,6 @@ export class ChartOverviewTableComponent implements OnInit {
     };
     charts: DataExplorerWidgetModel[] = [];
     filteredCharts: DataExplorerWidgetModel[] = [];
-    readonly outdatedChartTooltip =
-        'This chart is outdated and must be migrated.';
-    readonly chartRequiresAttentionTooltip =
-        'This chart requires attention because the dataset schema changed.';
 
     private dataViewService = inject(ChartService);
     private dataExplorerDashboardService = inject(ChartSharedService);

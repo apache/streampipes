@@ -113,14 +113,6 @@ export class ChartViewComponent
 {
     dataViewLoaded = false;
     timeSettings: TimeSettings;
-    readonly legacyMultiSourceWarningTitle = 'Legacy multi-source chart';
-    readonly legacyMultiSourceWarningDescription =
-        'This chart uses multiple data sources and cannot be edited in this release. Please migrate it manually before making changes.';
-    readonly requiresAttentionWarningTitle = 'Chart requires attention';
-    readonly requiresAttentionWarningDescription =
-        'The following fields used by this chart no longer exist in the dataset:';
-    readonly requiresAttentionFallbackDescription =
-        'Some fields used by this chart no longer exist in the dataset.';
 
     editMode = true;
     dataView: DataExplorerWidgetModel;
@@ -354,10 +346,12 @@ export class ChartViewComponent
 
     get requiresAttentionDescription(): string {
         if (this.chartSchemaUpdateMessages.length > 0) {
-            return `${this.translateService.instant(this.requiresAttentionWarningDescription)} 
+            return `${this.translateService.instant('The following fields used by this chart no longer exist in the dataset:')} 
             ${this.chartSchemaUpdateMessages.join(', ')}`;
         }
-        return this.requiresAttentionFallbackDescription;
+        return this.translateService.instant(
+            'Some fields used by this chart no longer exist in the dataset.',
+        );
     }
 
     makeDefaultTimeSettings(): TimeSettings {
