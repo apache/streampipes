@@ -151,7 +151,6 @@ export class ChartViewComponent
     private authService = inject(AuthService);
     private fieldProvider = inject(ChartFieldProviderService);
     private assetSaveService = inject(AssetSaveService);
-    private datalakeRestService = inject(DatalakeRestService);
 
     currentUser$: Subscription;
     queryParams$: Subscription;
@@ -355,7 +354,8 @@ export class ChartViewComponent
 
     get requiresAttentionDescription(): string {
         if (this.chartSchemaUpdateMessages.length > 0) {
-            return `${this.requiresAttentionWarningDescription} ${this.chartSchemaUpdateMessages.join(', ')}`;
+            return `${this.translateService.instant(this.requiresAttentionWarningDescription)} 
+            ${this.chartSchemaUpdateMessages.join(', ')}`;
         }
         return this.requiresAttentionFallbackDescription;
     }
