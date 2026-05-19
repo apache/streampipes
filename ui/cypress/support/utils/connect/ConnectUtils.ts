@@ -29,6 +29,7 @@ import { GeneralUtils } from '../GeneralUtils';
 export class ConnectUtils {
     private static readonly TRANSFORMATION_SCRIPT_PREFIX =
         'function transform(event, out, ctx) {\n';
+    private static readonly TRANSFORMATION_SCRIPT_SUFFIX = '\n}';
 
     public static goToConnect() {
         cy.visit('#/connect');
@@ -296,7 +297,18 @@ export class ConnectUtils {
         const firstElements = assetHierarchy.slice(0, -1);
 
         firstElements.forEach(el => {
-            cy.dataCy(`toggle-${el}`).click();
+            cy.get('body').then($body => {
+                const toggleSelector = `[data-cy="toggle-${el}"]`;
+
+                if ($body.find(toggleSelector).length > 0) {
+                    cy.dataCy(`toggle-${el}`).click();
+                } else {
+                    cy.get('mat-tree.asset-tree')
+                        .find('.mat-tree-node')
+                        .contains(el)
+                        .click();
+                }
+            });
         });
 
         if (firstElements.length === 0) {
@@ -308,12 +320,14 @@ export class ConnectUtils {
             .contains(lastElement)
             .click();
     }
-
     private static expandCollapsedAssetTreeNodes() {
-        cy.get('mat-tree.asset-tree [data-cy^="toggle-"]').then($toggles => {
-            const collapsedToggles = [...$toggles].filter(
-                toggle => toggle.getAttribute('aria-expanded') === 'false',
-            );
+        cy.get('mat-tree.asset-tree').then($tree => {
+            const collapsedToggles = $tree
+                .find('[data-cy^="toggle-"]')
+                .toArray()
+                .filter(
+                    toggle => toggle.getAttribute('aria-expanded') === 'false',
+                );
 
             if (collapsedToggles.length === 0) {
                 return;
@@ -444,14 +458,15 @@ export class ConnectUtils {
             ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX,
         )
             ? script
-            : `${ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX}${script}`;
+            : `${ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX}${script}${ConnectUtils.TRANSFORMATION_SCRIPT_SUFFIX}`;
 
         ConnectBtns.setConfigureSchemaScriptEditorValue(scriptWithPrefix);
 
         ConnectBtns.configureSchemaScriptEditor().should(
             'contain.text',
-            'out.collect(event)',
+            'out.collect(event);',
         );
+        ConnectBtns.configureSchemaScriptEditor().should('contain.text', '}');
     }
 
     public static uploadSampleEvent(samplePayload: string) {

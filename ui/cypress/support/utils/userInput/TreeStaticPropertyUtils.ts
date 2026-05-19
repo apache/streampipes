@@ -51,13 +51,23 @@ export class TreeStaticPropertyUtils {
      * Appends the @param text to the text editor
      */
     public static typeInTextEditor(text: string) {
-        const editor = cy.dataCy('static-tree-input-text-editor');
+        cy.dataCy('static-tree-input-text-editor')
+            .find('.monaco-editor')
+            .then($editor => {
+                const dataUri = $editor[0]?.getAttribute('data-uri');
 
-        editor
-            .find('textarea.inputarea')
-            .click({ force: true })
-            .type('{selectall}{backspace}', { force: true })
-            .type(text, { force: true });
+                cy.window().then(win => {
+                    const monaco = (win as any).monaco;
+                    const model = monaco?.editor
+                        ?.getModels()
+                        .find(
+                            (currentModel: any) =>
+                                currentModel.uri.toString() === dataUri,
+                        );
+
+                    model.setValue(text);
+                });
+            });
     }
 
     /**

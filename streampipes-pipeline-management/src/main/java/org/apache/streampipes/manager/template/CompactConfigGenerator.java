@@ -129,10 +129,12 @@ public class CompactConfigGenerator implements StaticPropertyVisitor {
 
   @Override
   public void visit(OneOfStaticProperty oneOfStaticProperty) {
-    addConfig(
-        oneOfStaticProperty,
-        oneOfStaticProperty.getOptions().stream().filter(Option::isSelected).findFirst().map(Option::getName)
-    );
+    oneOfStaticProperty.getOptions()
+        .stream()
+        .filter(Option::isSelected)
+        .findFirst()
+        .map(Option::getName)
+        .ifPresent(selectedOption -> addConfig(oneOfStaticProperty, selectedOption));
   }
 
   @Override

@@ -88,7 +88,7 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { DatePipe, DecimalPipe, NgIf, NgStyle } from '@angular/common';
+import { DatePipe, DecimalPipe, NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
 import { Subscription } from 'rxjs';
@@ -119,7 +119,6 @@ import { Subscription } from 'rxjs';
         MatMenuItem,
         MatButton,
         MatTable,
-        NgIf,
         MatHeaderRowDef,
         MatHeaderRow,
         MatRowDef,
