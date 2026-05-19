@@ -91,6 +91,11 @@ export class MapWidgetComponent
     options = {};
 
     ngOnInit(): void {
+        this.mapWidth = this.initialSize.width;
+        this.mapHeight = this.initialSize.height;
+        this.layers = [];
+        this.markerIds = [];
+        this.showMarkers = true;
         super.ngOnInit();
         this.locationConfigService.getLocationConfig().subscribe(config => {
             this.options = {
@@ -98,10 +103,8 @@ export class MapWidgetComponent
                 zoom: 1,
                 center: this.defaultCenter,
             };
+            this.invalidateMapSize();
         });
-        this.layers = [];
-        this.markerIds = [];
-        this.showMarkers = true;
     }
 
     markerImage(selectedMarker: string): string {
@@ -112,7 +115,7 @@ export class MapWidgetComponent
 
     onMapReady(map: Map) {
         this.map = map;
-        this.map.invalidateSize();
+        this.invalidateMapSize();
     }
 
     makeMarker(point: LatLngExpression, markerType: string): Marker {
@@ -147,22 +150,24 @@ export class MapWidgetComponent
         this.makeLayers(this.lastDataResults);
         if (this.map) {
             this.map.setView(usedCenter, zoom);
-            this.map.invalidateSize();
+            this.invalidateMapSize();
         }
     }
 
     onResize(width: number, height: number) {
         this.mapWidth = width;
         this.mapHeight = height;
-        if (this.map) {
-            this.map.invalidateSize();
-        }
+        this.invalidateMapSize();
     }
 
     handleUpdatedFields(
         addedFields: DataExplorerField[],
         removedFields: DataExplorerField[],
     ) {}
+
+    private invalidateMapSize(): void {
+        setTimeout(() => this.map?.invalidateSize());
+    }
 
     beforeDataFetched() {
         this.setShownComponents(false, false, true);
@@ -172,6 +177,7 @@ export class MapWidgetComponent
         this.setShownComponents(false, true, false, false);
         this.lastDataResults = spQueryResult[0];
         this.makeLayers(spQueryResult[0]);
+        this.invalidateMapSize();
     }
 
     transform(rows, index: number): any[] {
