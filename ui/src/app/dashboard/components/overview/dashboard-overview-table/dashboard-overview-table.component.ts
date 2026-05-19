@@ -147,23 +147,6 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         this.getDashboards();
     }
 
-    /**showPermissionsDialog(dashboard: Dashboard) {
-        const dialogRef = this.dataExplorerSharedService.openPermissionsDialog(
-            dashboard.elementId,
-            this.translateService.instant(
-                `Manage permissions for dashboard ${dashboard.name}`,
-            ),
-            true,
-            this.makeDashboardKioskUrl(dashboard.elementId),
-        );
-
-        dialogRef.afterClosed().subscribe(refresh => {
-            if (refresh) {
-                this.getDashboards();
-            }
-        });
-    }*/
-
     showManageDialog(resource: Dashboard) {
         const resourceConfig: ObjectManageDialogResourceConfig<Dashboard> = {
             resourceLabel: 'Dashboard',

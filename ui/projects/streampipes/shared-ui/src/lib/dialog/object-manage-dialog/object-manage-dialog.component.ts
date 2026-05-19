@@ -98,6 +98,7 @@ export type ObjectManageDialogSaveMode = 'deferred' | 'immediate';
 
 export interface ObjectManageDialogResource {
     _id?: string;
+    elementId?: string;
     title?: string;
     name?: string;
     description?: string;
@@ -111,6 +112,7 @@ export interface ObjectManageDialogResourceConfig<
     resourceLabel?: string;
     nameLabel?: string;
     descriptionLabel?: string;
+    idProperty?: '_id' | 'elementId';
     nameProperty?: 'title' | 'name';
     descriptionProperty?: string;
     showResourceFields?: boolean;
@@ -255,7 +257,7 @@ export class ObjectManageDialogComponent<
 
     ngOnInit(): void {
         this.resource = this.resource ?? this.nb;
-        this.objectInstanceId = this.objectInstanceId ?? this.resource?._id;
+        this.objectInstanceId = this.objectInstanceId ?? this.getResourceId();
         const nameValue = this.getResourceName();
         const descriptionValue = this.getResourceDescription();
         this.parentForm = this.fb.group({
@@ -332,6 +334,10 @@ export class ObjectManageDialogComponent<
             this.resourceConfig.assetLinkCheckboxLabel ??
             `Add the current ${this.resourceLabel.toLowerCase()} to an existing asset`
         );
+    }
+
+    get resourceId(): string {
+        return this.getResourceId();
     }
 
     onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {
@@ -568,13 +574,31 @@ export class ObjectManageDialogComponent<
     }
 
     private createLinkageData(resource: TResource): LinkageData[] {
+        const resourceId = this.getResourceId(resource);
+
         return [
             {
                 type: this.resourceConfig.assetLinkType ?? 'resource',
-                id: resource._id,
-                name: this.getResourceName(resource) || resource._id,
+                id: resourceId,
+                name: this.getResourceName(resource) || resourceId,
             },
         ];
+    }
+
+    private getResourceId(resource: TResource = this.resource): string {
+        if (!resource) {
+            return '';
+        }
+
+        const idProperty = this.getResourceIdProperty(resource);
+        return String(this.getResourceValue(resource, idProperty) ?? '');
+    }
+
+    private getResourceIdProperty(resource: TResource): '_id' | 'elementId' {
+        return (
+            this.resourceConfig.idProperty ??
+            (resource._id !== undefined ? '_id' : 'elementId')
+        );
     }
 
     private async saveResource(resource: TResource): Promise<void> {
