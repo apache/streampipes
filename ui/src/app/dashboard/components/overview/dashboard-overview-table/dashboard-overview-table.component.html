@@ -132,23 +132,13 @@
                 @if (hasDashboardWritePrivileges) {
                     <button
                         mat-menu-item
-                        [attr.data-cy]="
-                            'edit-dashboard-settings-' + element.name
-                        "
-                        (click)="openEditDashboardDialog(element)"
+                        data-cy="open-manage-permissions"
+                        (click)="showManageDialog(element)"
                     >
                         <mat-icon>settings</mat-icon>
-                        <span>{{ 'Settings' | translate }}</span>
+                        <span>{{ 'Manage' | translate }}</span>
                     </button>
                 }
-                <button
-                    mat-menu-item
-                    data-cy="open-manage-permissions"
-                    (click)="showManageDialog(element)"
-                >
-                    <mat-icon>share</mat-icon>
-                    <span>{{ 'Manage' | translate }}</span>
-                </button>
                 @if (hasDashboardWritePrivileges) {
                     <button
                         mat-menu-item

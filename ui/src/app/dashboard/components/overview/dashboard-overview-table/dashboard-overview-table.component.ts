@@ -176,7 +176,6 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
             saveResource: resource =>
                 this.dashboardService.updateDashboard(resource),
         };
-        console.log(resource);
         const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: this.translateService.instant('Manage'),
