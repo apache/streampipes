@@ -17,20 +17,22 @@
  */
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import {
     CurrentUserService,
+    DialogService,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
+    PanelType,
     SpBasicViewComponent,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { SpDashboardRoutes } from '../../dashboard.breadcrumb';
-import { Dashboard } from '@streampipes/platform-services';
-import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
+import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import { DashboardOverviewTableComponent } from './dashboard-overview-table/dashboard-overview-table.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { MatButton } from '@angular/material/button';
 import {
     FlexDirective,
@@ -59,8 +61,8 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
     @ViewChild(DashboardOverviewTableComponent)
     dashboardOverview: DashboardOverviewTableComponent;
 
-    public dialog = inject(MatDialog);
-    private dataExplorerDashboardService = inject(DataExplorerDashboardService);
+    private dialogService = inject(DialogService);
+    private dashboardService = inject(DashboardService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
     private breadcrumbService = inject(SpBreadcrumbService);
@@ -79,12 +81,58 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
         });
     }
 
+    openNewDashboardDialog2() {
+        const dashboard = this.makeDashboard();
+        const resourceConfig: ObjectManageDialogResourceConfig<Dashboard> = {
+            resourceLabel: 'Dashboard',
+            nameLabel: 'Dashboard title',
+            descriptionLabel: 'Dashboard description',
+            idProperty: 'elementId',
+            nameProperty: 'name',
+            assetLinkType: 'dashboard',
+            assetLinkCheckboxLabel:
+                'Add the current dashboard to an existing asset',
+            saveResource: resource =>
+                this.dashboardService.saveDashboard(resource).pipe(
+                    tap(savedDashboard => {
+                        Object.assign(resource, savedDashboard);
+                    }),
+                ),
+        };
+
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('New dashboard'),
+            width: '50vw',
+            data: {
+                createMode: true,
+                resource: dashboard,
+                saveMode: 'immediate',
+                resourceConfig,
+                headerTitle: this.translateService.instant('New dashboard'),
+            },
+        });
+
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.dashboardOverview.getDashboards();
+            }
+        });
+    }
+
     openNewDashboardDialog() {
-        const dataViewDashboard: Dashboard = {
+        this.openNewDashboardDialog2();
+    }
+
+    private makeDashboard(): Dashboard {
+        const dashboard: Dashboard = {
             dashboardGeneralSettings: {
                 chartOverrides: {
                     hideToolbox: false,
                 },
+                defaultViewMode: 'grid',
+                globalTimeEnabled: true,
+                gridRowHeightPx: 90,
             },
             widgets: [],
             name: '',
@@ -99,21 +147,8 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
             },
             gridColumns: 12,
         };
-        dataViewDashboard.dashboardGeneralSettings.gridRowHeightPx = 90;
 
-        this.openDashboardModificationDialog(true, dataViewDashboard);
-    }
-
-    openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
-        const dialogRef =
-            this.dataExplorerDashboardService.openDashboardModificationDialog(
-                createMode,
-                dashboard,
-            );
-
-        dialogRef.afterClosed().subscribe(() => {
-            this.dashboardOverview.getDashboards();
-        });
+        return dashboard;
     }
 
     ngOnDestroy() {

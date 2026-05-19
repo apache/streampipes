@@ -280,7 +280,7 @@ export class ObjectManageDialogComponent<
 
         this.isAssetAdmin = this.currentUserService.hasRole('ROLE_ASSET_ADMIN');
 
-        this.addToAssets = true;
+        this.addToAssets = !this.createMode;
     }
 
     ngAfterViewInit(): void {
