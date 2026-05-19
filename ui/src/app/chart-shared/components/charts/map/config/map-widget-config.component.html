@@ -87,12 +87,16 @@
                         (selectionChange)="triggerViewRefresh()"
                         data-cy="data-view-map-select-marker-or-trace"
                     >
-                        <mat-option [value]="'marker'">{{
-                            'Marker' | translate
-                        }}</mat-option>
-                        <mat-option [value]="'trace'">{{
-                            'Trace' | translate
-                        }}</mat-option>
+                        <mat-option
+                            [value]="'marker'"
+                            data-cy="data-view-map-option-marker"
+                            >{{ 'Marker' | translate }}</mat-option
+                        >
+                        <mat-option
+                            [value]="'trace'"
+                            data-cy="data-view-map-option-trace"
+                            >{{ 'Trace' | translate }}</mat-option
+                        >
                     </mat-select>
                 </mat-form-field>
             </sp-form-field>

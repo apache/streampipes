@@ -105,7 +105,7 @@ describe('Add Compact Adapters', () => {
             .withScript(
                 'function transform(event, out, ctx) {\n' +
                     '  out.collect(event);\n' +
-                    '}\n',
+                    '',
             )
             .build();
 
