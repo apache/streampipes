@@ -24,9 +24,17 @@ import java.util.Map;
 public interface ICustomRequestApi {
   <T> void sendPost(String apiPath, T payload);
 
+  Object sendPostJson(String apiPath, Object payload);
+
   <T> T sendGet(String apiPath, Class<T> responseClass);
 
   <T> T sendGet(String apiPath, Map<String, String> queryParameters, Class<T> responseClass);
+
+  Object sendGetJson(String apiPath);
+
+  Object sendGetJson(String apiPath, Map<String, String> queryParameters);
+
+  Object sendPutJson(String apiPath, Object payload);
 
   <T> List<T> getList(String apiPath, Class<T> response);
 }

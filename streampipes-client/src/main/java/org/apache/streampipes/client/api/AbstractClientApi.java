@@ -24,6 +24,7 @@ import org.apache.streampipes.client.http.PostRequestWithPayloadResponse;
 import org.apache.streampipes.client.http.PostRequestWithoutPayload;
 import org.apache.streampipes.client.http.PostRequestWithoutPayloadResponse;
 import org.apache.streampipes.client.http.PutRequest;
+import org.apache.streampipes.client.http.PutRequestWithPayloadResponse;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.ListSerializer;
 import org.apache.streampipes.client.serializer.ObjectSerializer;
@@ -65,6 +66,12 @@ public class AbstractClientApi {
   protected <T> void put(StreamPipesApiPath apiPath, T object) {
     ObjectSerializer<T, Void> serializer = new ObjectSerializer<>();
     new PutRequest<>(clientConfig, apiPath, serializer, object).executeRequest();
+  }
+
+  protected <K, V> V put(StreamPipesApiPath apiPath, K object, Class<V> responseClass) {
+    ObjectSerializer<K, V> serializer = new ObjectSerializer<>();
+    return new PutRequestWithPayloadResponse<>(clientConfig, apiPath, serializer, object, responseClass)
+        .executeRequest();
   }
 
   protected <T> T delete(StreamPipesApiPath apiPath, Class<T> responseClass) {
