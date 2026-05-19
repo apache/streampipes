@@ -1,0 +1,397 @@
+<div class="sp-dialog-container">
+    @if (loading) {
+        <div class="sp-dialog-content">
+            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+                <mat-spinner [diameter]="25"></mat-spinner>
+                <h5>{{ 'Loading' | translate }}</h5>
+            </div>
+        </div>
+    } @else if (!permissionDenied || createMode) {
+        <div class="sp-dialog-content">
+            <div fxFlex="100" fxLayout="column" class="p-15">
+                <h4>{{ headerTitle }}</h4>
+                <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+                    @if (showResourceSection) {
+                        <sp-split-section
+                            [level]="3"
+                            [title]="resourceLabel | translate"
+                        >
+                            @if (showResourceFields) {
+                                <sp-form-field
+                                    [level]="3"
+                                    [label]="resourceNameLabel | translate"
+                                >
+                                    <mat-form-field
+                                        class="w-100"
+                                        floatLabel="auto"
+                                        color="accent"
+                                    >
+                                        <input
+                                            required
+                                            matInput
+                                            formControlName="resourceName"
+                                            data-cy="managed-resource-name"
+                                        />
+                                    </mat-form-field>
+                                </sp-form-field>
+                                <sp-form-field
+                                    [level]="3"
+                                    [label]="
+                                        resourceDescriptionLabel | translate
+                                    "
+                                >
+                                    <mat-form-field
+                                        class="w-100"
+                                        floatLabel="auto"
+                                        color="accent"
+                                    >
+                                        <input
+                                            matInput
+                                            formControlName="resourceDescription"
+                                            data-cy="managed-resource-description"
+                                        />
+                                    </mat-form-field>
+                                </sp-form-field>
+                            }
+
+                            @if (isAssetAdmin && showAssetLinking) {
+                                <div class="mt-10" fxLayout="column">
+                                    <mat-checkbox
+                                        [(ngModel)]="addToAssets"
+                                        [ngModelOptions]="{ standalone: true }"
+                                        color="accent"
+                                    >
+                                        {{ assetLinkCheckboxLabel | translate }}
+                                    </mat-checkbox>
+
+                                    @if (addToAssets) {
+                                        <div class="mt-10">
+                                            <sp-asset-link-configuration
+                                                [isEdit]="true"
+                                                [itemId]="resource._id"
+                                                (selectedAssetsChange)="
+                                                    onSelectedAssetsChange(
+                                                        $event
+                                                    )
+                                                "
+                                                (deselectedAssetsChange)="
+                                                    onDeselectedAssetsChange(
+                                                        $event
+                                                    )
+                                                "
+                                                (originalAssetsEmitter)="
+                                                    onOriginalAssetsEmitted(
+                                                        $event
+                                                    )
+                                                "
+                                            >
+                                            </sp-asset-link-configuration>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </sp-split-section>
+                    }
+
+                    @if (showPermissionsSection) {
+                        <sp-split-section
+                            [level]="3"
+                            [title]="'Permissions' | translate"
+                        >
+                            <sp-form-field
+                                [level]="3"
+                                [label]="'Owner' | translate"
+                            >
+                                <mat-form-field color="accent">
+                                    <mat-select
+                                        data-cy="owner-select"
+                                        formControlName="owner"
+                                        fxFlex
+                                        required
+                                    >
+                                        @for (user of allUsers; track user) {
+                                            <mat-option
+                                                [value]="user.principalId"
+                                                [attr.data-cy]="
+                                                    'owner-option-' + user.email
+                                                "
+                                            >
+                                                {{ user.email }}
+                                            </mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </sp-form-field>
+
+                            <mat-checkbox
+                                data-cy="permission-public-element"
+                                formControlName="publicElement"
+                            >
+                                {{ 'Public Element' | translate }} ({{
+                                    'visible to registered users' | translate
+                                }})
+                            </mat-checkbox>
+
+                            @if (!parentForm.get('publicElement')?.value) {
+                                <div>
+                                    <sp-form-field
+                                        [level]="3"
+                                        [label]="'Authorized Users' | translate"
+                                    >
+                                        <mat-form-field
+                                            color="accent"
+                                            data-cy="authorized-users-label"
+                                        >
+                                            <mat-chip-grid
+                                                #chipList
+                                                [attr.aria-label]="
+                                                    'User selection' | translate
+                                                "
+                                            >
+                                                @for (
+                                                    user of grantedUserAuthorities;
+                                                    track user
+                                                ) {
+                                                    <mat-chip-row
+                                                        selectable="true"
+                                                        removable="true"
+                                                        (removed)="
+                                                            removeUser(user)
+                                                        "
+                                                    >
+                                                        {{ user.email }}
+                                                        <button matChipRemove>
+                                                            <mat-icon
+                                                                >cancel</mat-icon
+                                                            >
+                                                        </button>
+                                                    </mat-chip-row>
+                                                }
+                                                <input
+                                                    matInput
+                                                    [placeholder]="
+                                                        'Add' | translate
+                                                    "
+                                                    #userInput
+                                                    [formControl]="userCtrl"
+                                                    [matAutocomplete]="userAuto"
+                                                    [matChipInputFor]="chipList"
+                                                    [matChipInputSeparatorKeyCodes]="
+                                                        separatorKeysCodes
+                                                    "
+                                                    data-cy="authorized-user"
+                                                    (matChipInputTokenEnd)="
+                                                        addUser($event)
+                                                    "
+                                                />
+                                            </mat-chip-grid>
+
+                                            <mat-autocomplete
+                                                #userAuto="matAutocomplete"
+                                                (optionSelected)="
+                                                    userSelected($event)
+                                                "
+                                            >
+                                                @for (
+                                                    user of filteredUsers$
+                                                        | async;
+                                                    track user
+                                                ) {
+                                                    <mat-option
+                                                        [value]="user"
+                                                        [attr.data-cy]="
+                                                            'user-option-' +
+                                                            user.email
+                                                        "
+                                                    >
+                                                        {{ user.email }}
+                                                    </mat-option>
+                                                }
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </sp-form-field>
+                                </div>
+
+                                <div>
+                                    <sp-form-field
+                                        [level]="3"
+                                        [label]="
+                                            'Authorized Groups' | translate
+                                        "
+                                    >
+                                        <mat-form-field
+                                            color="accent"
+                                            data-cy="authorized-groups-label"
+                                        >
+                                            <mat-chip-grid
+                                                #chipList
+                                                [attr.aria-label]="
+                                                    'Group selection'
+                                                        | translate
+                                                "
+                                            >
+                                                @for (
+                                                    group of grantedGroupAuthorities;
+                                                    track group
+                                                ) {
+                                                    <mat-chip-row
+                                                        selectable="true"
+                                                        removable="true"
+                                                        (removed)="
+                                                            removeGroup(group)
+                                                        "
+                                                    >
+                                                        {{ group.groupName }}
+                                                        <button matChipRemove>
+                                                            <mat-icon
+                                                                >cancel</mat-icon
+                                                            >
+                                                        </button>
+                                                    </mat-chip-row>
+                                                }
+                                                <input
+                                                    matInput
+                                                    [placeholder]="
+                                                        'Add' | translate
+                                                    "
+                                                    data-cy="authorized-group"
+                                                    #groupInput
+                                                    [formControl]="groupCtrl"
+                                                    [matAutocomplete]="
+                                                        groupAuto
+                                                    "
+                                                    [matChipInputFor]="chipList"
+                                                    [matChipInputSeparatorKeyCodes]="
+                                                        separatorKeysCodes
+                                                    "
+                                                    (matChipInputTokenEnd)="
+                                                        addGroup($event)
+                                                    "
+                                                />
+                                            </mat-chip-grid>
+
+                                            <mat-autocomplete
+                                                #groupAuto="matAutocomplete"
+                                                (optionSelected)="
+                                                    groupSelected($event)
+                                                "
+                                            >
+                                                @for (
+                                                    group of filteredGroups$
+                                                        | async;
+                                                    track group
+                                                ) {
+                                                    <mat-option
+                                                        [attr.data-cy]="
+                                                            'group-option-' +
+                                                            group.groupName
+                                                        "
+                                                        [value]="group"
+                                                    >
+                                                        {{ group.groupName }}
+                                                    </mat-option>
+                                                }
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </sp-form-field>
+                                </div>
+                            }
+                        </sp-split-section>
+                    }
+
+                    @if (
+                        showPermissionsSection &&
+                        anonymousReadSupported &&
+                        parentForm.contains('readAnonymous')
+                    ) {
+                        <sp-split-section
+                            [level]="3"
+                            [title]="'Public Link' | translate"
+                        >
+                            <mat-checkbox
+                                data-cy="permission-anonymous-read"
+                                formControlName="readAnonymous"
+                            >
+                                {{
+                                    'Allow anonymous access through public link'
+                                        | translate
+                                }}
+                            </mat-checkbox>
+
+                            @if (parentForm.get('readAnonymous')?.value) {
+                                <div
+                                    fxLayout="row"
+                                    fxFlex="100"
+                                    class="mt-10"
+                                    fxLayoutGap="10px"
+                                    fxLayoutAlign="start center"
+                                >
+                                    <span>{{ 'URL' | translate }}</span>
+                                    <span class="public-link" fxFlex>{{
+                                        publicLink
+                                    }}</span>
+                                    <button
+                                        mat-icon-button
+                                        color="accent"
+                                        [matTooltip]="'Copy' | translate"
+                                        [cdkCopyToClipboard]="publicLink"
+                                    >
+                                        <mat-icon>content_copy</mat-icon>
+                                    </button>
+                                </div>
+                            }
+                        </sp-split-section>
+                    }
+                </form>
+            </div>
+        </div>
+    } @else {
+        <div
+            class="sp-dialog-content"
+            data-cy="warning-permissions-managed-by-owner"
+        >
+            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+                <mat-icon>block</mat-icon>
+                <h5>
+                    {{
+                        'Only admins and owners can manage permissions for this resource.'
+                            | translate
+                    }}
+                </h5>
+            </div>
+        </div>
+    }
+
+    <mat-divider></mat-divider>
+
+    <div class="sp-dialog-actions">
+        <div fxLayout="row">
+            @if (!loading && (!permissionDenied || createMode)) {
+                <button
+                    mat-button
+                    mat-flat-button
+                    color="accent"
+                    (click)="save()"
+                    style="margin-right: 10px"
+                    [disabled]="
+                        parentForm.invalid ||
+                        (showPermissionsSection && !permission)
+                    "
+                    data-cy="sp-manage-permissions-save"
+                >
+                    <i class="material-icons">save</i>
+                    <span>&nbsp;{{ saveButtonLabel | translate }}</span>
+                </button>
+            }
+            <button
+                mat-button
+                mat-flat-button
+                class="mat-basic"
+                data-cy="sp-manage-permissions-cancel"
+                (click)="close()"
+            >
+                {{ 'Cancel' | translate }}
+            </button>
+        </div>
+    </div>
+</div>

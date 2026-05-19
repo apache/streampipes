@@ -144,10 +144,10 @@
                 <button
                     mat-menu-item
                     data-cy="open-manage-permissions"
-                    (click)="showPermissionsDialog(element)"
+                    (click)="showManageDialog(element)"
                 >
                     <mat-icon>share</mat-icon>
-                    <span>{{ 'Manage permissions' | translate }}</span>
+                    <span>{{ 'Manage' | translate }}</span>
                 </button>
                 @if (hasDashboardWritePrivileges) {
                     <button

@@ -43,6 +43,8 @@ import {
     SpBasicHeaderTitleComponent,
     SpTableActionsDirective,
     SpTableComponent,
+    ObjectManageDialogResourceConfig,
+    ObjectManageDialogComponent,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
@@ -145,7 +147,7 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         this.getDashboards();
     }
 
-    showPermissionsDialog(dashboard: Dashboard) {
+    /**showPermissionsDialog(dashboard: Dashboard) {
         const dialogRef = this.dataExplorerSharedService.openPermissionsDialog(
             dashboard.elementId,
             this.translateService.instant(
@@ -155,6 +157,40 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
             this.makeDashboardKioskUrl(dashboard.elementId),
         );
 
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.getDashboards();
+            }
+        });
+    }*/
+
+    showManageDialog(resource: Dashboard) {
+        const resourceConfig: ObjectManageDialogResourceConfig<Dashboard> = {
+            resourceLabel: 'Dashboard',
+            nameLabel: 'Dashboard title',
+            descriptionLabel: 'Dashboard description',
+            nameProperty: 'name',
+            assetLinkType: 'dashboard',
+            assetLinkCheckboxLabel:
+                'Add the current dashboard to an existing asset',
+            saveResource: resource =>
+                this.dashboardService.updateDashboard(resource),
+        };
+        console.log(resource);
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('Manage'),
+            width: '50vw',
+            data: {
+                objectInstanceId: resource.elementId,
+                resource: { ...resource },
+                saveMode: 'immediate',
+                resourceConfig,
+                headerTitle:
+                    this.translateService.instant('Manage Dashboard ') +
+                    resource.name,
+            },
+        });
         dialogRef.afterClosed().subscribe(refresh => {
             if (refresh) {
                 this.getDashboards();
