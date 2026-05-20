@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.influx.sanitize;
 
-import org.apache.streampipes.dataexplorer.influx.InfluxDbReservedKeywords;
+import org.apache.streampipes.dataexplorer.InfluxDbReservedKeywords;
 
 public class InfluxNameSanitizer {
 
