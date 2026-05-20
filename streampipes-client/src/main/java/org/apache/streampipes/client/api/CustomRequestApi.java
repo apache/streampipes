@@ -38,6 +38,12 @@ public class CustomRequestApi extends AbstractClientApi implements ICustomReques
 
   @Override
   @ExposedToScripts
+  public Object sendPostJson(String apiPath, Object payload) {
+    return post(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload, Object.class);
+  }
+
+  @Override
+  @ExposedToScripts
   public <T> T sendGet(String apiPath, Class<T> responseClass) {
     return getSingle(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), responseClass);
   }
@@ -49,6 +55,45 @@ public class CustomRequestApi extends AbstractClientApi implements ICustomReques
         StreamPipesApiPath.fromStreamPipesBasePath(apiPath)
             .withQueryParameters(queryParameters),
         responseClass);
+  }
+
+  @Override
+  @ExposedToScripts
+  public Object sendGetJson(String apiPath) {
+    return getSingle(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), Object.class);
+  }
+
+  @Override
+  @ExposedToScripts
+  public Object sendGetJson(String apiPath, Map<String, String> queryParameters) {
+    return getSingle(
+        StreamPipesApiPath.fromStreamPipesBasePath(apiPath)
+            .withQueryParameters(queryParameters),
+        Object.class);
+  }
+
+  @Override
+  @ExposedToScripts
+  public <T> void sendPut(String apiPath, T payload) {
+    put(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload);
+  }
+
+  @Override
+  @ExposedToScripts
+  public Object sendPutJson(String apiPath, Object payload) {
+    return put(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload, Object.class);
+  }
+
+  @Override
+  @ExposedToScripts
+  public void sendDelete(String apiPath) {
+    delete(StreamPipesApiPath.fromStreamPipesBasePath(apiPath));
+  }
+
+  @Override
+  @ExposedToScripts
+  public Object sendDeleteJson(String apiPath) {
+    return delete(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), Object.class);
   }
 
   @Override
