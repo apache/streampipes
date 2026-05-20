@@ -34,7 +34,13 @@ public interface ICustomRequestApi {
 
   Object sendGetJson(String apiPath, Map<String, String> queryParameters);
 
+  <T> void sendPut(String apiPath, T payload);
+
   Object sendPutJson(String apiPath, Object payload);
+
+  void sendDelete(String apiPath);
+
+  Object sendDeleteJson(String apiPath);
 
   <T> List<T> getList(String apiPath, Class<T> response);
 }

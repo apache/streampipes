@@ -19,6 +19,7 @@ package org.apache.streampipes.client.api;
 
 
 import org.apache.streampipes.client.http.DeleteRequest;
+import org.apache.streampipes.client.http.DeleteRequestWithoutPayloadResponse;
 import org.apache.streampipes.client.http.GetRequest;
 import org.apache.streampipes.client.http.PostRequestWithPayloadResponse;
 import org.apache.streampipes.client.http.PostRequestWithoutPayload;
@@ -79,11 +80,22 @@ public class AbstractClientApi {
     return new DeleteRequest<>(clientConfig, apiPath, responseClass, serializer).executeRequest();
   }
 
+  protected void delete(StreamPipesApiPath apiPath) {
+    Serializer<Void, Void, Void> serializer = new ObjectSerializer<>();
+    new DeleteRequestWithoutPayloadResponse<>(clientConfig, apiPath, Void.class, serializer).executeRequest();
+  }
+
   protected <K, V> V delete(StreamPipesApiPath apiPath,
                             K object,
                             Class<V> responseClass) {
     Serializer<K, V, V> serializer = new ObjectSerializer<>();
     return new DeleteRequest<>(clientConfig, apiPath, responseClass, serializer, object).executeRequest();
+  }
+
+  protected <K> void delete(StreamPipesApiPath apiPath, K object) {
+    Serializer<K, Void, Void> serializer = new ObjectSerializer<>();
+    new DeleteRequestWithoutPayloadResponse<>(clientConfig, apiPath, Void.class, serializer, object)
+        .executeRequest();
   }
 
   protected <K, V> V post(StreamPipesApiPath apiPath, K object, Class<V> responseClass) {

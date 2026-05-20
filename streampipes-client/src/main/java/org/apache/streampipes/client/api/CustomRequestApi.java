@@ -74,8 +74,26 @@ public class CustomRequestApi extends AbstractClientApi implements ICustomReques
 
   @Override
   @ExposedToScripts
+  public <T> void sendPut(String apiPath, T payload) {
+    put(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload);
+  }
+
+  @Override
+  @ExposedToScripts
   public Object sendPutJson(String apiPath, Object payload) {
     return put(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload, Object.class);
+  }
+
+  @Override
+  @ExposedToScripts
+  public void sendDelete(String apiPath) {
+    delete(StreamPipesApiPath.fromStreamPipesBasePath(apiPath));
+  }
+
+  @Override
+  @ExposedToScripts
+  public Object sendDeleteJson(String apiPath) {
+    return delete(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), Object.class);
   }
 
   @Override
