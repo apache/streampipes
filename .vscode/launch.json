@@ -1,0 +1,69 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Debug StreamPipes Core",
+      "request": "launch",
+      "mainClass": "org.apache.streampipes.service.core.StreamPipesCoreApplication",
+      "projectName": "streampipes-service-core",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "env": {
+        "SP_BACKEND_HOST": "localhost",
+        "SP_CORE_HOST": "localhost",
+        "SP_CORE_PORT": "8030",
+        "SP_COUCHDB_HOST": "couchdb",
+        "SP_COUCHDB_PORT": "5984",
+        "SP_TS_STORAGE_HOST": "influxdb",
+        "SP_TS_STORAGE_PORT": "8086",
+        "SP_INFLUX_HOST": "influxdb",
+        "SP_INFLUX_PORT": "8086",
+        "SP_NATS_HOST": "nats",
+        "SP_NATS_PORT": "4222",
+        "SP_PRIORITIZED_PROTOCOL": "nats",
+        "SP_CORE_EXTENSION_TRANSPORT_MODE": "nats",
+        "SP_EXTENSION_TRANSPORT_MODE": "nats",
+        "SP_EXTENSION_REQUEST_TOPIC_PREFIX": "sp.extensions.request",
+        "SP_DEBUG": "true"
+      }
+    },
+    {
+      "type": "java",
+      "name": "Debug StreamPipes IIoT Extensions",
+      "request": "launch",
+      "mainClass": "org.apache.streampipes.extensions.all.iiot.AllExtensionsIIoTInit",
+      "projectName": "streampipes-extensions-all-iiot",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "env": {
+        "SP_BACKEND_HOST": "localhost",
+        "SP_CORE_HOST": "localhost",
+        "SP_CORE_PORT": "8030",
+        "SP_COUCHDB_HOST": "couchdb",
+        "SP_COUCHDB_PORT": "5984",
+        "SP_TS_STORAGE_HOST": "influxdb",
+        "SP_TS_STORAGE_PORT": "8086",
+        "SP_INFLUX_HOST": "influxdb",
+        "SP_INFLUX_PORT": "8086",
+        "SP_NATS_HOST": "nats",
+        "SP_NATS_PORT": "4222",
+        "SP_PRIORITIZED_PROTOCOL": "nats",
+        "SP_CORE_EXTENSION_TRANSPORT_MODE": "nats",
+        "SP_EXTENSION_TRANSPORT_MODE": "nats",
+        "SP_EXTENSION_REQUEST_TOPIC_PREFIX": "sp.extensions.request",
+        "SP_DEBUG": "true"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full StreamPipes Dev",
+      "configurations": [
+        "Debug StreamPipes Core",
+        "Debug StreamPipes IIoT Extensions"
+      ],
+      "preLaunchTask": "dev: start ui"
+    }
+  ]
+}
