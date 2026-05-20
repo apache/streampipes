@@ -59,7 +59,10 @@
                     </div>
                 }
                 @if (showRequiresAttentionWarning) {
-                    <div class="p-10">
+                    <div
+                        class="p-10"
+                        data-cy="chart-requires-attention-warning"
+                    >
                         <sp-alert-banner
                             type="warning"
                             icon="warning"
