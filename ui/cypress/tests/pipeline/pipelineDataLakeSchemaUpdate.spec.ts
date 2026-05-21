@@ -44,8 +44,10 @@ describe('Test pipeline updates with data lake schema changes', () => {
         editPipelineProcessor();
         PipelineBtns.mappingCheckbox('density').click();
         PipelineBtns.saveElementConfigBtn().click();
+        PipelineUtils.pipelineElementUpdateCompleted();
         PipelineBtns.settingsPipelineElementBtn().eq(1).click();
-        savePipelineElementAndStartUpdatePreflight();
+        PipelineBtns.saveElementConfigBtn().click();
+        savePipeline();
 
         PipelineBtns.pipelineEditWarning().contains(dataLakeMeasurement);
         PipelineBtns.pipelineMeasurementEditWarning().contains(
@@ -69,7 +71,9 @@ describe('Test pipeline updates with data lake schema changes', () => {
             .clear()
             .type('densityHash')
             .blur();
-        savePipelineElementAndStartUpdatePreflight();
+        PipelineBtns.saveElementConfigBtn().click();
+        PipelineUtils.pipelineElementUpdateCompleted();
+        savePipeline();
 
         PipelineBtns.pipelineEditWarning().contains(dataLakeMeasurement);
         PipelineBtns.pipelineChartEditWarning().contains(chartName);
@@ -77,9 +81,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
         PipelineBtns.updateAndMigratePipeline().should('not.be.disabled');
         PipelineBtns.updateAndMigratePipeline().click();
 
-        cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(
-            'be.visible',
-        );
+        PipelineBtns.pipelineStartedSuccess().should('be.visible');
         PipelineBtns.navigateToPipelineOverview().click();
 
         ChartUtils.goToDatalake();
@@ -89,7 +91,9 @@ describe('Test pipeline updates with data lake schema changes', () => {
     it('Test pipeline update with an added field', () => {
         createAdapter();
         addPipelineWithProcessor(javaScriptEvalProcessor());
+        addTableChart(dataLakeMeasurement);
 
+        PipelineUtils.goToPipelines();
         editPipelineProcessor();
         PipelineBtns.outputAddField().click();
         PipelineBtns.outputRuntimeName().last().type('pipeline_added');
@@ -99,12 +103,16 @@ describe('Test pipeline updates with data lake schema changes', () => {
             .get('mat-option')
             .contains('Float')
             .click();
-        savePipelineElementAndStartUpdatePreflight();
+        PipelineBtns.saveElementConfigBtn().click();
+        PipelineUtils.pipelineElementUpdateCompleted();
+        savePipeline();
 
         PipelineBtns.pipelineEditWarning().should('not.exist');
-        cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(
-            'be.visible',
-        );
+        PipelineBtns.pipelineStartedSuccess().should('be.visible');
+        PipelineBtns.navigateToPipelineOverview().click();
+
+        ChartUtils.goToDatalake();
+        ChartBtns.chartSyncProblemIcon().should('not.exist');
     });
 
     function addPipelineWithProcessor(processingElement: PipelineElementInput) {
@@ -154,8 +162,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
         PipelineBtns.settingsPipelineElementBtn().first().click();
     }
 
-    function savePipelineElementAndStartUpdatePreflight() {
-        PipelineBtns.saveElementConfigBtn().click();
+    function savePipeline() {
         PipelineBtns.savePipelineBtn().click();
         PipelineBtns.navigateToOverviewCheckbox().children().click();
         PipelineBtns.editorApplyBtn().click();

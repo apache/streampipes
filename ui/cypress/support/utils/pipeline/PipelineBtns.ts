@@ -58,6 +58,10 @@ export class PipelineBtns {
         return cy.dataCy('sp-element-configuration-save');
     }
 
+    public static savingPipelineModification() {
+        return cy.dataCy('saving-pipeline-modification', { timeout: 6000 });
+    }
+
     public static mappingCheckbox(fieldName: string) {
         return cy.dataCy(fieldName).find('.mdc-checkbox');
     }
@@ -96,6 +100,10 @@ export class PipelineBtns {
 
     public static pipelineStartedError() {
         return cy.dataCy('sp-pipeline-started-error', { timeout: 15000 });
+    }
+
+    public static pipelineStartedSuccess() {
+        return cy.dataCy('sp-pipeline-started-success', { timeout: 15000 });
     }
 
     public static updateAndMigratePipeline() {
