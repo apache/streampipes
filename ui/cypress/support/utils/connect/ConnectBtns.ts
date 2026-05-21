@@ -72,6 +72,22 @@ export class ConnectBtns {
         return cy.dataCy('btn-update-adapter-migrate-pipelines');
     }
 
+    public static adapterEditWarning() {
+        return cy.dataCy('sp-connect-adapter-edit-warning', { timeout: 10000 });
+    }
+
+    public static adapterManualPipelineMigrationWarning() {
+        return cy.dataCy('adapter-manual-pipeline-migration-warning', {
+            timeout: 10000,
+        });
+    }
+
+    public static adapterChartEditWarning() {
+        return cy.dataCy('sp-connect-adapter-chart-edit-warning', {
+            timeout: 10000,
+        });
+    }
+
     public static nextBtn() {
         return cy.get('button').contains('Next').parent();
     }

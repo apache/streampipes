@@ -29,7 +29,7 @@
                 notification of pipeline.pipelineNotifications;
                 track notification
             ) {
-                <span class="text-xs">
+                <span class="text-xs" data-cy="pipeline-notification">
                     {{ notification }}
                 </span>
                 <br />
@@ -42,6 +42,7 @@
             mat-button
             mat-flat-button
             color="accent"
+            data-cy="acknowledge-pipeline-notification-btn"
             (click)="acknowledgeAndClose()"
         >
             {{ 'Acknowledge' | translate }}

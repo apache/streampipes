@@ -106,6 +106,14 @@ export class ChartBtns {
         return cy.dataCy('edit-data-view-' + dataViewName.replaceAll(' ', ''));
     }
 
+    public static chartSyncProblemIcon() {
+        return cy.dataCy('chart-sync-problem-icon', { timeout: 60000 });
+    }
+
+    public static chartRequiresAttentionWarning() {
+        return cy.dataCy('chart-requires-attention-warning');
+    }
+
     public static editWidget(widgetName: string) {
         return cy.dataCy('edit-' + widgetName);
     }

@@ -133,15 +133,26 @@
         fxLayoutAlign="end center"
         fxLayoutGap="0.5rem"
     >
-        <button mat-flat-button class="mat-basic" (click)="close()">
+        <button
+            mat-flat-button
+            class="mat-basic"
+            data-cy="close-measurement-update-btn"
+            (click)="close()"
+        >
             {{ 'Close' | translate }}
         </button>
-        <button mat-flat-button color="accent" (click)="close('edit-pipeline')">
+        <button
+            mat-flat-button
+            color="accent"
+            data-cy="edit-pipeline-btn"
+            (click)="close('edit-pipeline')"
+        >
             {{ 'Edit pipeline' | translate }}
         </button>
         <button
             mat-flat-button
             color="accent"
+            data-cy="manage-datasets-btn"
             (click)="close('manage-datasets')"
         >
             {{ 'Manage datasets' | translate }}
