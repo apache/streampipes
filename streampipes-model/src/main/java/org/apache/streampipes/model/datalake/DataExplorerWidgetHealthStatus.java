@@ -16,9 +16,9 @@
  *
  */
 
-package org.apache.streampipes.manager.matching.v2.pipeline;
+package org.apache.streampipes.model.datalake;
 
-public record CriticalMeasurementFieldChange(String runtimeName,
-                                             String existingType,
-                                             String updatedType) {
+public enum DataExplorerWidgetHealthStatus {
+  OK,
+  REQUIRES_ATTENTION
 }

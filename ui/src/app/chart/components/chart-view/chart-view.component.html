@@ -49,12 +49,23 @@
                         <sp-alert-banner
                             type="warning"
                             icon="warning"
-                            [title]="legacyMultiSourceWarningTitle | translate"
+                            [title]="'Legacy multi-source chart' | translate"
                             [description]="
-                                legacyMultiSourceWarningDescription | translate
+                                'This chart uses multiple data sources and cannot be edited in this release. Please migrate it manually before making changes.'
+                                    | translate
                             "
                         >
                         </sp-alert-banner>
+                    </div>
+                }
+                @if (showRequiresAttentionWarning) {
+                    <div class="p-10">
+                        <sp-alert-banner
+                            type="warning"
+                            icon="warning"
+                            [title]="'Chart requires attention' | translate"
+                            [description]="requiresAttentionDescription"
+                        ></sp-alert-banner>
                     </div>
                 }
                 <mat-drawer-container

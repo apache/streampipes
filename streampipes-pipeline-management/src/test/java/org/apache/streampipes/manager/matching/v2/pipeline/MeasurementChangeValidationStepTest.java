@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
-import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
@@ -46,7 +45,7 @@ class MeasurementChangeValidationStepTest {
   @Test
   void apply_ShouldAddValidationInfoForCriticalDatabaseMeasurementChange() {
     var source = makeStream(makeSchema(makeMeasurementProperty("temperature", XSD.STRING)));
-    var target = makeDatabaseSink(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
+    var target = makeDataLakeSink(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
     var validationInfos = new ArrayList<PipelineElementValidationInfo>();
 
     step.apply(source, target, Set.of(target), validationInfos);
@@ -84,7 +83,7 @@ class MeasurementChangeValidationStepTest {
   @Test
   void apply_ShouldIgnoreNonCriticalStorageTypeChanges() {
     var source = makeStream(makeSchema(makeMeasurementProperty("temperature", XSD.LONG)));
-    var target = makeDatabaseSink(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
+    var target = makeDataLakeSink(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
     var validationInfos = new ArrayList<PipelineElementValidationInfo>();
 
     step.apply(source, target, Set.of(target), validationInfos);
@@ -96,12 +95,6 @@ class MeasurementChangeValidationStepTest {
     var stream = new SpDataStream();
     stream.setEventSchema(eventSchema);
     return stream;
-  }
-
-  private DataSinkInvocation makeDatabaseSink(EventSchema inputSchema) {
-    var sink = makeSink(inputSchema);
-    sink.setCategory(List.of(DataSinkType.DATABASE.name()));
-    return sink;
   }
 
   private DataSinkInvocation makeSink(EventSchema inputSchema) {
