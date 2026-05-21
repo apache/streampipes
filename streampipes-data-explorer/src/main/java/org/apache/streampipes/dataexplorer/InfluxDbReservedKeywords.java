@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.influx;
+package org.apache.streampipes.dataexplorer;
 
 import java.util.Arrays;
 import java.util.List;
