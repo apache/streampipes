@@ -17,73 +17,100 @@
 -->
 
 <div class="migration-view" fxLayout="column" fxLayoutAlign="start stretch">
-    @if (adapterPipelineUpdateInfos.length > 0) {
+    @if (measurementUpdateInfos.length > 0) {
         <div class="migration-summary" fxLayout="column" fxLayoutGap="4px">
-            @if (adapterPipelineUpdateInfos.length > 1) {
+            @if (hasCriticalFieldChanges()) {
                 <h4>
-                    {{ 'This adapter is used by' | translate }}
-                    {{ adapterPipelineUpdateInfos.length }}
-                    {{ 'pipelines' | translate }}.
+                    {{
+                        'This pipeline cannot be updated because at least one data lake measurement field changed its datatype.'
+                            | translate
+                    }}
                 </h4>
             } @else {
                 <h4>
-                    {{ 'This adapter is used by' | translate }}
-                    {{ adapterPipelineUpdateInfos.length }}
-                    {{ 'pipeline' | translate }}.
+                    {{
+                        'This pipeline update requires manual review.'
+                            | translate
+                    }}
                 </h4>
             }
         </div>
         <div class="migration-infos" fxLayout="column" fxLayoutGap="12px">
-            @for (updateInfo of adapterPipelineUpdateInfos; track updateInfo) {
+            @for (updateInfo of measurementUpdateInfos; track updateInfo) {
                 <div
                     class="pipeline-update-info"
-                    data-cy="sp-connect-adapter-edit-warning"
+                    data-cy="sp-pipeline-edit-warning"
                 >
-                    @if (updateInfo.canAutoMigrate) {
-                        <div
-                            class="pipeline-status"
-                            fxLayoutAlign="start center"
-                        >
-                            <mat-icon class="status-icon status-icon-ok">
-                                check_circle
+                    <div class="pipeline-status" fxLayoutAlign="start center">
+                        @if (
+                            updateInfo.criticalMeasurementFieldChanges?.length >
+                            0
+                        ) {
+                            <mat-icon class="status-icon error-icon">
+                                error
                             </mat-icon>
-                            <div>
-                                <div class="pipeline-title">
-                                    {{ 'Pipeline' | translate }}
-                                    <b>{{ updateInfo.pipelineName }}</b>
-                                </div>
-                                <div class="pipeline-description">
-                                    {{
-                                        'This pipeline will be automatically migrated.'
-                                            | translate
-                                    }}
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    @if (!updateInfo.canAutoMigrate) {
-                        <div
-                            class="pipeline-status"
-                            fxLayoutAlign="start center"
-                            data-cy="adapter-manual-pipeline-migration-warning"
-                        >
-                            <mat-icon class="status-icon status-icon-warning">
+                        } @else {
+                            <mat-icon class="status-icon warning-icon">
                                 warning
                             </mat-icon>
-                            <div>
-                                <div class="pipeline-title">
-                                    {{ 'Pipeline' | translate }}
-                                    <b>{{ updateInfo.pipelineName }}</b>
-                                </div>
-                                <div class="pipeline-description">
+                        }
+                        <div>
+                            <div class="pipeline-title">
+                                {{ 'Measurement' | translate }}
+                                <b>{{ updateInfo.measurementName }}</b>
+                            </div>
+                            <div class="pipeline-description">
+                                @if (
+                                    updateInfo.criticalMeasurementFieldChanges
+                                        ?.length > 0
+                                ) {
                                     {{
-                                        'This pipeline will be stopped and needs manual review.'
+                                        'This measurement has datatype changes that must be handled before the pipeline can be updated.'
                                             | translate
+                                    }}
+                                } @else {
+                                    {{
+                                        'This measurement has charts that need manual review after the pipeline update.'
+                                            | translate
+                                    }}
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (
+                        updateInfo.criticalMeasurementFieldChanges?.length > 0
+                    ) {
+                        <div class="validation-infos" fxLayout="column">
+                            <div
+                                class="validation-info validation-info-error"
+                                data-cy="sp-pipeline-measurement-edit-warning"
+                            >
+                                <div
+                                    class="validation-info-title"
+                                    fxLayoutAlign="start center"
+                                >
+                                    <mat-icon class="error-icon">
+                                        error
+                                    </mat-icon>
+                                    <span>
+                                        {{
+                                            'Critical datatype changes'
+                                                | translate
+                                        }}
+                                    </span>
+                                </div>
+                                <div class="validation-info-message">
+                                    {{
+                                        getCriticalFieldChangesText(
+                                            updateInfo.criticalMeasurementFieldChanges
+                                        )
                                     }}
                                 </div>
                             </div>
                         </div>
                     }
+
                     @if (updateInfo.chartSchemaUpdateInfos?.length > 0) {
                         <div class="affected-charts" fxLayout="column">
                             <div
@@ -101,13 +128,13 @@
                             ) {
                                 <div
                                     class="affected-chart"
-                                    data-cy="sp-connect-adapter-chart-edit-warning"
+                                    data-cy="sp-pipeline-chart-edit-warning"
                                 >
                                     <div
                                         class="affected-chart-title"
                                         fxLayoutAlign="start center"
                                     >
-                                        <mat-icon class="chart-warning-icon">
+                                        <mat-icon class="warning-icon">
                                             warning
                                         </mat-icon>
                                         <span>
@@ -128,9 +155,9 @@
                                         <div class="affected-fields">
                                             <span class="affected-fields-label">
                                                 {{
-                                                    'Deleted fields'
-                                                        | translate
-                                                }}:
+                                                    'Deleted fields' | translate
+                                                }}
+                                                :
                                             </span>
                                             <span>
                                                 {{
@@ -154,10 +181,11 @@
             mat-button
             mat-flat-button
             color="accent"
+            [disabled]="hasCriticalFieldChanges()"
             (click)="startUpdateEmitter.emit()"
-            data-cy="btn-update-adapter-migrate-pipelines"
+            data-cy="btn-update-pipeline-migrate"
         >
-            {{ 'Update adapter and migrate pipelines' | translate }}
+            {{ 'Update pipeline' | translate }}
         </button>
     </div>
 </div>

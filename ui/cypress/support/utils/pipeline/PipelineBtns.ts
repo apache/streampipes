@@ -57,6 +57,31 @@ export class PipelineBtns {
     public static saveElementConfigBtn() {
         return cy.dataCy('sp-element-configuration-save');
     }
+
+    public static savingPipelineModification() {
+        return cy.dataCy('saving-pipeline-modification', { timeout: 6000 });
+    }
+
+    public static mappingCheckbox(fieldName: string) {
+        return cy.dataCy(fieldName).find('.mdc-checkbox');
+    }
+
+    public static staticPropertyInput(fieldName: string) {
+        return cy.dataCy(fieldName);
+    }
+
+    public static outputAddField() {
+        return cy.dataCy('add-field');
+    }
+
+    public static outputRuntimeName() {
+        return cy.dataCy('runtime-name');
+    }
+
+    public static outputRuntimeType() {
+        return cy.dataCy('runtime-type');
+    }
+
     public static savePipelineBtn() {
         return cy.dataCy('sp-editor-save-pipeline');
     }
@@ -71,6 +96,57 @@ export class PipelineBtns {
 
     public static editorApplyBtn() {
         return cy.dataCy('sp-editor-apply');
+    }
+
+    public static pipelineStartedError() {
+        return cy.dataCy('sp-pipeline-started-error', { timeout: 15000 });
+    }
+
+    public static pipelineStartedSuccess() {
+        return cy.dataCy('sp-pipeline-started-success', { timeout: 15000 });
+    }
+
+    public static updateAndMigratePipeline() {
+        return cy.dataCy('btn-update-pipeline-migrate');
+    }
+
+    public static pipelineEditWarning() {
+        return cy.dataCy('sp-pipeline-edit-warning', { timeout: 60000 });
+    }
+
+    public static pipelineMeasurementEditWarning() {
+        return cy.dataCy('sp-pipeline-measurement-edit-warning', {
+            timeout: 60000,
+        });
+    }
+
+    public static pipelineChartEditWarning() {
+        return cy.dataCy('sp-pipeline-chart-edit-warning', {
+            timeout: 60000,
+        });
+    }
+
+    public static pipelineWarningIcon() {
+        return cy.dataCy('pipeline-warning-icon', { timeout: 60000 });
+    }
+
+    public static pipelineSyncProblemIcon() {
+        return cy.dataCy('pipeline-sync-problem-icon', { timeout: 60000 });
+    }
+
+    public static pipelineNotification() {
+        return cy.dataCy('pipeline-notification');
+    }
+
+    public static acknowledgePipelineNotification() {
+        return cy.dataCy('acknowledge-pipeline-notification-btn');
+    }
+
+    public static pipelineMeasurementUpdateDialog() {
+        return cy.dataCy('measurement-update-dialog');
+    }
+    public static measurementUpdateDialogEditPipelineBtn() {
+        return cy.dataCy('edit-pipeline-btn');
     }
 
     public static navigateToPipelineOverview() {

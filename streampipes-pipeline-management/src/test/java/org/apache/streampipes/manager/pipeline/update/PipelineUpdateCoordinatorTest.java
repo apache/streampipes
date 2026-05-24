@@ -25,6 +25,7 @@ import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeVali
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.ChartSchemaUpdateInfo;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -59,6 +60,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 class PipelineUpdateCoordinatorTest {
@@ -68,7 +70,8 @@ class PipelineUpdateCoordinatorTest {
   @Test
   void updatePipelines_ShouldRestartRunningPipelinesForDataStreamUpdates() {
     var requestManager = mock(ExtensionServiceRequestManager.class);
-    var coordinator = new PipelineUpdateCoordinator(requestManager);
+    var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
+    var coordinator = new PipelineUpdateCoordinator(requestManager, chartSchemaUpdateCoordinator);
     var dataStream = makeDataStream("stream-1", "Updated stream");
     var affectedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Old stream");
     var storedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Old stream");
@@ -111,13 +114,15 @@ class PipelineUpdateCoordinatorTest {
       verify(executorConstruction.constructed().get(1)).startPipeline();
       assertEquals(1, storageManagerConstruction.constructed().size());
       verify(pipelineStorage).updateElement(modifiedPipeline);
+      verifyNoInteractions(chartSchemaUpdateCoordinator);
     }
   }
 
   @Test
   void updatePipelines_ShouldMarkPipelinesRequiringAttentionForAdapterUpdates() {
     var requestManager = mock(ExtensionServiceRequestManager.class);
-    var coordinator = new PipelineUpdateCoordinator(requestManager);
+    var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
+    var coordinator = new PipelineUpdateCoordinator(requestManager, chartSchemaUpdateCoordinator);
     var adapterDescription = makeAdapter("stream-1", "Updated adapter");
     var storedPipeline = makePipeline("pipeline-1", "Pipeline", false, "stream-1", "Old stream");
     var modifiedPipeline = makePipeline("pipeline-1", "Pipeline", false, "stream-1", "Updated adapter");
@@ -170,7 +175,8 @@ class PipelineUpdateCoordinatorTest {
   @Test
   void updatePipelines_ShouldMarkPipelineRequiringAttentionForCriticalMeasurementFieldChange() {
     var requestManager = mock(ExtensionServiceRequestManager.class);
-    var coordinator = new PipelineUpdateCoordinator(requestManager);
+    var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
+    var coordinator = new PipelineUpdateCoordinator(requestManager, chartSchemaUpdateCoordinator);
     var adapterDescription = makeAdapter("stream-1", "Updated adapter");
     adapterDescription.getDataStream().setEventSchema(makeSchema(makeMeasurementProperty("temperature", XSD.STRING)));
 
@@ -220,21 +226,27 @@ class PipelineUpdateCoordinatorTest {
   @Test
   void checkPipelineMigrations_ShouldUseUpdatedDataStreamValues() {
     var requestManager = mock(ExtensionServiceRequestManager.class);
-    var coordinator = new PipelineUpdateCoordinator(requestManager);
+    var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
+    var coordinator = new PipelineUpdateCoordinator(requestManager, chartSchemaUpdateCoordinator);
     var dataStream = makeDataStream("stream-1", "Updated stream");
     var pipeline = makePipeline("pipeline-1", "Pipeline", false, "stream-1", "Old stream");
     var modificationMessage = new PipelineModificationMessage(List.of(validModification("sepa-1")));
     var verifiedPipelines = new ArrayList<Pipeline>();
+    var chartUpdateInfo = new ChartSchemaUpdateInfo();
 
     try (MockedStatic<PipelineManager> pipelineManager = mockStatic(PipelineManager.class);
          MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
                verifiedPipelines.add((Pipeline) context.arguments().get(0));
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
+               when(mock.makeModifiedPipeline(modificationMessage))
+                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(0), List.of()));
              })) {
 
       pipelineManager.when(() -> PipelineManager.getPipelinesContainingElements("stream-1"))
           .thenReturn(List.of(pipeline));
+      when(chartSchemaUpdateCoordinator.checkChartMigrations(pipeline, dataStream.getEventSchema()))
+          .thenReturn(List.of(chartUpdateInfo));
 
       var result = coordinator.checkPipelineMigrations(dataStream);
 
@@ -242,6 +254,7 @@ class PipelineUpdateCoordinatorTest {
       assertEquals("pipeline-1", result.get(0).getPipelineId());
       assertEquals("Pipeline", result.get(0).getPipelineName());
       assertTrue(result.get(0).isCanAutoMigrate());
+      assertEquals(List.of(chartUpdateInfo), result.get(0).getChartSchemaUpdateInfos());
 
       assertEquals(1, verificationHandlerConstruction.constructed().size());
       var updatedPipeline = verifiedPipelines.get(0);
@@ -253,7 +266,8 @@ class PipelineUpdateCoordinatorTest {
   @Test
   void checkPipelineMigrations_ShouldReportWarningsForAdapterUpdates() {
     var requestManager = mock(ExtensionServiceRequestManager.class);
-    var coordinator = new PipelineUpdateCoordinator(requestManager);
+    var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
+    var coordinator = new PipelineUpdateCoordinator(requestManager, chartSchemaUpdateCoordinator);
     var adapterDescription = makeAdapter("stream-1", "Updated adapter");
     var pipeline = makePipeline("pipeline-1", "Pipeline", false, "stream-1", "Old stream");
     pipeline.setSepas(List.of(makeSepa("sepa-1", "Processor")));
@@ -266,6 +280,8 @@ class PipelineUpdateCoordinatorTest {
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
                verifiedPipelines.add((Pipeline) context.arguments().get(0));
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
+               when(mock.makeModifiedPipeline(modificationMessage))
+                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(0), List.of()));
              })) {
 
       pipelineManager.when(() -> PipelineManager.getPipelinesContainingElements("stream-1"))
@@ -289,7 +305,8 @@ class PipelineUpdateCoordinatorTest {
   @Test
   void checkPipelineMigrations_ShouldDisableAutoMigrationForCriticalMeasurementFieldChange() {
     var requestManager = mock(ExtensionServiceRequestManager.class);
-    var coordinator = new PipelineUpdateCoordinator(requestManager);
+    var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
+    var coordinator = new PipelineUpdateCoordinator(requestManager, chartSchemaUpdateCoordinator);
     var adapterDescription = makeAdapter("stream-1", "Updated adapter");
     adapterDescription.getDataStream().setEventSchema(makeSchema(makeMeasurementProperty("temperature", XSD.STRING)));
 
@@ -303,8 +320,11 @@ class PipelineUpdateCoordinatorTest {
 
     try (MockedStatic<PipelineManager> pipelineManager = mockStatic(PipelineManager.class);
          MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
-             mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) ->
-                 when(mock.verifyPipeline()).thenReturn(modificationMessage))) {
+             mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
+               when(mock.verifyPipeline()).thenReturn(modificationMessage);
+               when(mock.makeModifiedPipeline(modificationMessage))
+                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(0), List.of()));
+             })) {
 
       pipelineManager.when(() -> PipelineManager.getPipelinesContainingElements("stream-1"))
           .thenReturn(List.of(pipeline));

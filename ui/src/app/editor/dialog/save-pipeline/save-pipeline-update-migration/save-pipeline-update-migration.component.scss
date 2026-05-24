@@ -63,20 +63,21 @@
     flex: 0 0 auto;
 }
 
-.status-icon-ok {
-    color: var(--color-success);
-}
-
-.status-icon-warning,
-.chart-warning-icon {
+.warning-icon {
     color: var(--color-warning);
 }
 
+.error-icon {
+    color: var(--color-error);
+}
+
+.validation-infos,
 .affected-charts {
     margin-top: var(--space-md);
     gap: var(--space-sm);
 }
 
+.validation-info,
 .affected-chart {
     padding: var(--space-md);
     border: 1px solid var(--color-border-subtle);
@@ -85,8 +86,21 @@
     background: var(--color-bg-0);
 }
 
+.validation-info-error {
+    border-left-color: var(--color-error);
+}
+
+.validation-info-title,
 .affected-chart-title {
     gap: var(--space-xs);
+}
+
+.validation-info-message,
+.affected-fields {
+    margin-top: var(--space-xs);
+    padding-left: calc(24px + var(--space-xs));
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
 }
 
 .affected-fields {
@@ -94,10 +108,6 @@
     align-items: center;
     flex-wrap: wrap;
     gap: var(--space-xs);
-    margin-top: var(--space-xs);
-    padding-left: calc(24px + var(--space-xs));
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-normal);
 }
 
 .migration-actions {

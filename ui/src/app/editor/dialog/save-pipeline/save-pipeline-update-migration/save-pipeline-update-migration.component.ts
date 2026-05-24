@@ -17,35 +17,58 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PipelineUpdateInfo } from '@streampipes/platform-services';
+import {
+    CriticalMeasurementFieldChange,
+    MeasurementUpdateInfo,
+} from '@streampipes/platform-services';
 import {
     LayoutAlignDirective,
     LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-    selector: 'sp-adapter-started-update-migration',
-    templateUrl: './adapter-started-update-migration.component.html',
-    styleUrls: ['./adapter-started-update-migration.component.scss'],
+    selector: 'sp-save-pipeline-update-migration',
+    templateUrl: './save-pipeline-update-migration.component.html',
+    styleUrls: ['./save-pipeline-update-migration.component.scss'],
     imports: [
         LayoutDirective,
         LayoutAlignDirective,
+        LayoutGapDirective,
         MatButton,
         MatIcon,
         TranslatePipe,
     ],
 })
-export class SpAdapterStartedUpdateMigrationComponent {
+export class SavePipelineUpdateMigrationComponent {
     @Input()
-    adapterPipelineUpdateInfos: PipelineUpdateInfo[] = [];
+    measurementUpdateInfos: MeasurementUpdateInfo[] = [];
 
     @Output()
     startUpdateEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     getAffectedFieldsText(affectedFields: string[]): string {
         return affectedFields.join(', ');
+    }
+
+    hasCriticalFieldChanges(): boolean {
+        return this.measurementUpdateInfos.some(
+            updateInfo =>
+                updateInfo.criticalMeasurementFieldChanges?.length > 0,
+        );
+    }
+
+    getCriticalFieldChangesText(
+        criticalFieldChanges: CriticalMeasurementFieldChange[],
+    ): string {
+        return criticalFieldChanges
+            .map(
+                change =>
+                    `${change.runtimeName} (${change.existingType} -> ${change.updatedType})`,
+            )
+            .join(', ');
     }
 }

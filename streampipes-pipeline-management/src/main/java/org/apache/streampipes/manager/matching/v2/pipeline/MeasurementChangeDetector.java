@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
+import org.apache.streampipes.model.datalake.CriticalMeasurementFieldChange;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;

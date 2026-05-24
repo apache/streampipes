@@ -26,6 +26,7 @@
             <div fxLayout="row" fxLayoutAlign="start center">
                 @if (pipelineCacheRunning) {
                     <mat-spinner
+                        data-cy="saving-pipeline-modification"
                         [mode]="'indeterminate'"
                         color="accent"
                         [diameter]="15"

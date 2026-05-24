@@ -53,9 +53,8 @@ public class OpcUaAlarmSchemaProvider {
 
         var sampleEvent = queue.poll(PREVIEW_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         if (sampleEvent == null) {
-          throw new AdapterException(
-              "Connected successfully, but no OPC UA events were received during the preview window."
-          );
+          sampleEvent = new OpcUaAlarmSampleFallbackProvider()
+              .buildFallbackSample(connectedClient.getClient(), opcUaConfig);
         }
 
         return SampleDataBuilder.create()
@@ -64,8 +63,6 @@ public class OpcUaAlarmSchemaProvider {
       } finally {
         clientProvider.releaseClient(opcUaConfig);
       }
-    } catch (AdapterException e) {
-      throw e;
     } catch (Exception e) {
       throw new AdapterException("Could not read OPC UA event preview data", e);
     }

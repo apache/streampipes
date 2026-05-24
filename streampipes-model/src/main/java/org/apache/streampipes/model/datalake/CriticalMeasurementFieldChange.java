@@ -16,9 +16,12 @@
  *
  */
 
-export enum PipelineAction {
-    Start,
-    Stop,
-}
+package org.apache.streampipes.model.datalake;
 
-export type MeasurementUpdateAction = 'edit-pipeline' | 'manage-datasets';
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+@TsModel
+public record CriticalMeasurementFieldChange(String runtimeName,
+                                             String existingType,
+                                             String updatedType) {
+}
