@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.connectors.kafka.sink;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.JsonDataFormatDefinition;
+import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
@@ -49,6 +50,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
   private static final Logger LOG = LoggerFactory.getLogger(KafkaPublishSink.class);
 
   private SpKafkaProducer producer;
+  private IExtensionsLogger extensionsLogger;
 
   private JsonDataFormatDefinition dataFormatDefinition;
 
@@ -91,6 +93,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
                                 EventSinkRuntimeContext runtimeContext) {
     var kafkaConfig = new KafkaConfigExtractor().extractSinkConfig(parameters.extractor());
     this.dataFormatDefinition = new JsonDataFormatDefinition();
+    this.extensionsLogger = runtimeContext.getLogger();
 
     this.producer = new SpKafkaProducer(
         kafkaConfig.getKafkaHost() + ":" + kafkaConfig.getKafkaPort(),
@@ -105,6 +108,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
       this.producer.publish(dataFormatDefinition.fromMap(rawEvent));
     } catch (SpRuntimeException e) {
       LOG.error(e.getMessage(), e);
+      extensionsLogger.error(e);
     }
   }
 
