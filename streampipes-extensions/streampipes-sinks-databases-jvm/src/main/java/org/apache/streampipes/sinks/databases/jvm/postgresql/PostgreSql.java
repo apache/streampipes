@@ -49,19 +49,21 @@ public class PostgreSql extends JdbcClient {
   @Override
   protected void extractTableInformation() {
 
-    String query = "SELECT * FROM information_schema.columns WHERE table_name = ? ;";
+    String query = "SELECT * FROM information_schema.columns "
+        + "WHERE table_schema = current_schema() AND table_name = ? "
+        + "ORDER BY ordinal_position;";
 
     String[] queryParameter = new String[]{params.getDbTable()};
 
-    this.tableDescription.extractTableInformation(this.statementHandler.preparedStatement, this.connection, query,
-        queryParameter);
+    this.tableDescription.extractTableInformation(this.connection, query, queryParameter);
   }
 
-  public void onEvent(Event event) {
+  public void onEvent(Event event) throws SpRuntimeException {
     try {
       save(event);
     } catch (SpRuntimeException e) {
-      LOG.error(e.getMessage());
+      LOG.error("Could not save event in PostgreSQL sink: {}", e.getMessage(), e);
+      throw e;
     }
   }
 

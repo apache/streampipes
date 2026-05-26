@@ -20,12 +20,12 @@ package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sinks.databases.jvm.jdbcclient.utils.SQLStatementUtils;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -48,39 +48,31 @@ public class TableDescription {
     this.eventSchema = eventSchema;
   }
 
-  public void extractTableInformation(PreparedStatement preparedStatement, Connection connection,
-                                      String queryString, String[] queryParameter) throws SpRuntimeException {
+  public void extractTableInformation(Connection connection,
+                                      String queryString,
+                                      String[] queryParameter) throws SpRuntimeException {
 
-    ResultSet resultSet = null;
     this.dataTypesHashMap = new HashMap<String, DbDataTypes>();
 
-    try {
-
-      preparedStatement = connection.prepareStatement(queryString);
-
+    try (var preparedStatement = connection.prepareStatement(queryString)) {
       for (int i = 1; i <= queryParameter.length; i++) {
         preparedStatement.setString(i, queryParameter[i - 1]);
       }
 
-      resultSet = preparedStatement.executeQuery();
-
-      if (resultSet.next()) {
-        do {
-          String columnName = resultSet.getString("COLUMN_NAME");
-          DbDataTypes dataType = DbDataTypes.fromSqlType(resultSet.getString("DATA_TYPE"));
-          this.dataTypesHashMap.put(columnName, dataType);
-        } while (resultSet.next());
-      } else {
-        throw new SpRuntimeException("Database or Table does not exist.");
+      try (ResultSet resultSet = preparedStatement.executeQuery()) {
+        if (resultSet.next()) {
+          do {
+            String columnName = resultSet.getString("COLUMN_NAME");
+            DbDataTypes dataType = DbDataTypes.fromSqlType(resultSet.getString("DATA_TYPE"));
+            this.dataTypesHashMap.put(columnName, dataType);
+          } while (resultSet.next());
+        } else {
+          throw new SpRuntimeException("Database or Table does not exist.");
+        }
       }
     } catch (SQLException e) {
       throw new SpRuntimeException("SqlException: " + e.getMessage() + ", Error code: " + e.getErrorCode()
           + ", SqlState: " + e.getSQLState());
-    } finally {
-      try {
-        resultSet.close();
-      } catch (SQLException throwables) {
-      }
     }
   }
 
@@ -109,27 +101,36 @@ public class TableDescription {
         .append(" );");
 
     try {
-      statementHandler.statement.executeUpdate(statement.toString());
+      statementHandler.getStatement().executeUpdate(statement.toString());
     } catch (SQLException e) {
       throw new SpRuntimeException(e.getMessage());
     }
   }
 
   public void validateTable() throws SpRuntimeException {
-    for (EventProperty property : this.eventSchema.getEventProperties()) {
-      DbDataTypes existingType = this.getDataTypesHashMap().get(property.getRuntimeName());
+    validateProperties(this.eventSchema.getEventProperties(), "");
+  }
+
+  private void validateProperties(List<EventProperty> properties, String prefix) throws SpRuntimeException {
+    for (EventProperty property : properties) {
+      String columnName = prefix + property.getRuntimeName();
+      if (property instanceof EventPropertyNested) {
+        validateProperties(((EventPropertyNested) property).getEventProperties(), columnName + "_");
+        continue;
+      }
+      DbDataTypes existingType = this.getDataTypesHashMap().get(columnName);
       if (existingType != null) {
         if (property instanceof EventPropertyPrimitive) {
           String expected = ((EventPropertyPrimitive) property).getRuntimeType();
           String actual = DbDataTypeFactory.getDataType(existingType).toString();
           if (!expected.equals(actual)) {
-            throw new SpRuntimeException("Column '" + property.getRuntimeName()
+            throw new SpRuntimeException("Column '" + columnName
                 + "' in table '" + this.getName() + "' has type mismatch: expected "
                 + expected + " but got " + actual);
           }
         }
       } else {
-        throw new SpRuntimeException("Column '" + property.getRuntimeName()
+        throw new SpRuntimeException("Column '" + columnName
             + "' is missing in table '" + this.getName() + "'");
       }
     }

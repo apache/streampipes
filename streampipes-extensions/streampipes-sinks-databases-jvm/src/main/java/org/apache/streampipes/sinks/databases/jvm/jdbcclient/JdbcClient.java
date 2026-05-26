@@ -36,6 +36,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Properties;
 
 
 public class JdbcClient {
@@ -94,9 +95,7 @@ public class JdbcClient {
   private void connect(String host, int port, String databaseName) throws SpRuntimeException {
     String url = "jdbc:" + this.dbDescription.getEngine().getUrlName() + "://" + host + ":" + port + "/";
     try {
-      connection = DriverManager.getConnection(
-          url, this.dbDescription.getUsername(),
-          this.dbDescription.getPassword());
+      connection = openConnection(url);
       ensureDatabaseExists(databaseName);
       ensureTableExists(url, databaseName);
     } catch (SQLException e) {
@@ -113,18 +112,30 @@ public class JdbcClient {
    * @throws SpRuntimeException
    */
   private void connectWithSSL(String host, int port, String databaseName) throws SpRuntimeException {
-    String url =
-        "jdbc:" + this.dbDescription.getEngine().getUrlName() + "://" + host + ":" + port + "/" + databaseName
-        + "?user="
-        + this.dbDescription.getUsername() + "&password=" + this.dbDescription.getPassword()
-        + "&ssl=true&sslfactory=" + this.dbDescription.getSslFactory() + "&sslmode=require";
+    String url = "jdbc:" + this.dbDescription.getEngine().getUrlName() + "://" + host + ":" + port + "/";
     try {
-      connection = DriverManager.getConnection(url);
+      connection = openConnection(url);
       ensureDatabaseExists(databaseName);
-      ensureTableExists(url, "");
+      ensureTableExists(url, databaseName);
     } catch (SQLException e) {
       throw new SpRuntimeException("Could not establish a connection with the server: " + e.getMessage());
     }
+  }
+
+  private Connection openConnection(String url) throws SQLException {
+    return DriverManager.getConnection(url, buildConnectionProperties());
+  }
+
+  private Properties buildConnectionProperties() {
+    var properties = new Properties();
+    properties.setProperty("user", this.dbDescription.getUsername());
+    properties.setProperty("password", this.dbDescription.getPassword());
+    if (this.dbDescription.isSslEnabled()) {
+      properties.setProperty("ssl", "true");
+      properties.setProperty("sslfactory", this.dbDescription.getSslFactory());
+      properties.setProperty("sslmode", "require");
+    }
+    return properties;
   }
 
 
@@ -148,10 +159,10 @@ public class JdbcClient {
     try {
       // Checks whether the database already exists (using catalogs has not worked with postgres)
       this.statementHandler.setStatement(connection.createStatement());
-      this.statementHandler.statement.executeUpdate(createStatement + databaseName + ";");
+      this.statementHandler.getStatement().executeUpdate(createStatement + databaseName + ";");
       LOG.info("Created new database '" + databaseName + "'");
     } catch (SQLException e1) {
-      if (!e1.getSQLState().substring(0, 2).equals("42")) {
+      if (!isSqlStateClass(e1, "42")) {
         throw new SpRuntimeException("Error while creating database: " + e1.getMessage());
       }
     }
@@ -170,17 +181,16 @@ public class JdbcClient {
   protected void ensureTableExists(String url, String databaseName) throws SpRuntimeException {
     try {
       // Database should exist by now so we can establish a connection
-      connection = DriverManager.getConnection(url + databaseName, this.dbDescription.getUsername(),
-          this.dbDescription.getPassword());
+      connection = openConnection(url + databaseName);
       this.statementHandler.setStatement(connection.createStatement());
-      ResultSet rs = connection.getMetaData().getTables(null, null, this.tableDescription.getName(), null);
-      if (rs.next()) {
-        validateTable();
-      } else {
-        createTable();
+      try (ResultSet rs = connection.getMetaData().getTables(null, null, this.tableDescription.getName(), null)) {
+        if (rs.next()) {
+          validateTable();
+        } else {
+          createTable();
+        }
       }
       this.tableDescription.setTableExists();
-      rs.close();
     } catch (SQLException e) {
       closeAll();
       throw new SpRuntimeException(e.getMessage());
@@ -194,11 +204,13 @@ public class JdbcClient {
    * @throws SpRuntimeException When there was an error in the saving process
    */
   protected void save(final Event event) throws SpRuntimeException {
-    //TODO: Add batch support (https://stackoverflow.com/questions/3784197/efficient-way-to-do-batch-inserts-with-jdbc)
-    checkConnected();
-    Map<String, Object> eventMap = event.getRaw();
     if (event == null) {
       throw new SpRuntimeException("event is null");
+    }
+    checkConnected();
+    Map<String, Object> eventMap = event.getRaw();
+    if (eventMap == null) {
+      throw new SpRuntimeException("event data is null");
     }
     if (!this.tableDescription.tableExists()) {
       // Creates the table
@@ -211,7 +223,7 @@ public class JdbcClient {
           this.dbDescription, this.tableDescription,
           connection, eventMap);
     } catch (SQLException e) {
-      if (e.getSQLState().substring(0, 2).equals("42")) {
+      if (isSqlStateClass(e, "42")) {
         // If the table does not exists (because it got deleted or something, will cause the error
         // code "42") we will try to create a new one. Otherwise we do not handle the exception.
         LOG.warn("Table '" + this.tableDescription.getName() + "' was unexpectedly not found and gets recreated.");
@@ -243,8 +255,7 @@ public class JdbcClient {
 
   protected void extractTableInformation() {
     this.tableDescription.extractTableInformation(
-        this.statementHandler.preparedStatement, connection,
-        "", new String[]{});
+        connection, "", new String[]{});
   }
 
   protected void validateTable() throws SpRuntimeException {
@@ -260,9 +271,8 @@ public class JdbcClient {
   protected void closeAll() {
     boolean error = false;
     try {
-      if (this.statementHandler.statement != null) {
-        this.statementHandler.statement.close();
-        this.statementHandler.statement = null;
+      if (this.statementHandler.getStatement() != null) {
+        this.statementHandler.closeStatement();
       }
     } catch (SQLException e) {
       error = true;
@@ -278,9 +288,8 @@ public class JdbcClient {
       LOG.warn("Exception when closing the connection: " + e.getMessage());
     }
     try {
-      if (this.statementHandler.preparedStatement != null) {
-        this.statementHandler.preparedStatement.close();
-        this.statementHandler.preparedStatement = null;
+      if (this.statementHandler.getPreparedStatement() != null) {
+        this.statementHandler.closePreparedStatement();
       }
     } catch (SQLException e) {
       error = true;
@@ -295,5 +304,12 @@ public class JdbcClient {
     if (connection == null) {
       throw new SpRuntimeException("Connection is not established.");
     }
+  }
+
+  protected static boolean isSqlStateClass(SQLException exception, String sqlStateClass) {
+    String sqlState = exception.getSQLState();
+    return sqlState != null
+        && sqlState.length() >= sqlStateClass.length()
+        && sqlState.startsWith(sqlStateClass);
   }
 }

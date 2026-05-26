@@ -26,17 +26,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class StatementHandler {
 
-  public Statement statement;
-  public PreparedStatement preparedStatement;
+  private Statement statement;
+  private PreparedStatement preparedStatement;
   /**
    * The parameters in the prepared statement {@code ps} together with their index and data type
    */
-  protected HashMap<String, ParameterInformation> eventParameterMap = new HashMap<>();
+  private final Map<String, ParameterInformation> eventParameterMap = new LinkedHashMap<>();
 
   public StatementHandler(Statement statement, PreparedStatement preparedStatement) {
     this.statement = statement;
@@ -54,16 +55,15 @@ public class StatementHandler {
   public void generatePreparedStatement(DbDescription dbDescription, TableDescription tableDescription,
                                         Connection connection, final Map<String, Object> event)
       throws SQLException, SpRuntimeException {
-    // input: event
-    // wanted: INSERT INTO test4321 ( randomString, randomValue ) VALUES ( ?,? );
     eventParameterMap.clear();
+    closePreparedStatement();
     StringBuilder statement1 = new StringBuilder("INSERT INTO ");
     StringBuilder statement2 = new StringBuilder("VALUES ( ");
     SQLStatementUtils.checkRegEx(tableDescription.getName(), "Tablename", dbDescription);
     statement1.append(tableDescription.getName()).append(" ( ");
 
     // Starts index at 1, since the parameterIndex in the PreparedStatement starts at 1 as well
-    extendPreparedStatement(dbDescription, event, statement1, statement2, 1, "", "");
+    extendPreparedStatement(dbDescription, flattenEvent(event, ""), statement1, statement2);
 
     statement1.append(" ) ");
     statement2.append(" );");
@@ -71,43 +71,26 @@ public class StatementHandler {
     this.preparedStatement = connection.prepareStatement(finalStatement);
   }
 
-  /**
-   * @param event
-   * @param s1
-   * @param s2
-   * @param index
-   * @param preProperty
-   * @param prefix
-   * @return
-   */
-  public int extendPreparedStatement(DbDescription dbDescription,
-                                     final Map<String, Object> event,
-                                     StringBuilder s1,
-                                     StringBuilder s2,
-                                     int index,
-                                     String preProperty,
-                                     String prefix)
+  public void extendPreparedStatement(DbDescription dbDescription,
+                                      final Map<String, Object> flatEvent,
+                                      StringBuilder s1,
+                                      StringBuilder s2)
       throws SpRuntimeException {
-
-    for (Map.Entry<String, Object> pair : event.entrySet()) {
-      if (pair.getValue() instanceof Map) {
-        index = extendPreparedStatement(dbDescription, (Map<String, Object>) pair.getValue(), s1, s2, index,
-            pair.getKey() + "_", prefix);
+    var prefix = "";
+    var index = 1;
+    for (Map.Entry<String, Object> pair : flatEvent.entrySet()) {
+      SQLStatementUtils.checkRegEx(pair.getKey(), "Columnname", dbDescription);
+      eventParameterMap.put(pair.getKey(), new ParameterInformation(index,
+          DbDataTypeFactory.getFromObject(pair.getValue(), dbDescription.getEngine())));
+      if (dbDescription.isColumnNameQuoted()) {
+        s1.append(prefix).append("\"").append(pair.getKey()).append("\"");
       } else {
-        SQLStatementUtils.checkRegEx(pair.getKey(), "Columnname", dbDescription);
-        eventParameterMap.put(pair.getKey(), new ParameterInformation(index,
-            DbDataTypeFactory.getFromObject(pair.getValue(), dbDescription.getEngine())));
-        if (dbDescription.isColumnNameQuoted()) {
-          s1.append(prefix).append("\"").append(preProperty).append(pair.getKey()).append("\"");
-        } else {
-          s1.append(prefix).append(preProperty).append(pair.getKey());
-        }
-        s2.append(prefix).append("?");
-        index++;
+        s1.append(prefix).append(pair.getKey());
       }
+      s2.append(prefix).append("?");
       prefix = ", ";
+      index++;
     }
-    return index;
   }
 
   /**
@@ -125,23 +108,30 @@ public class StatementHandler {
   private void fillPreparedStatement(DbDescription dbDescription, TableDescription tableDescription,
                                      Connection connection, final Map<String, Object> event, String pre)
       throws SQLException, SpRuntimeException {
+    Map<String, Object> flatEvent = flattenEvent(event, pre);
+    if (this.getPreparedStatement() == null || !eventParameterMap.keySet().equals(flatEvent.keySet())) {
+      generatePreparedStatement(dbDescription, tableDescription, connection, event);
+    }
+    for (Map.Entry<String, ParameterInformation> parameter : eventParameterMap.entrySet()) {
+      if (!flatEvent.containsKey(parameter.getKey())) {
+        throw new SpRuntimeException("Missing event value for column '" + parameter.getKey() + "'");
+      }
+      StatementUtils.setValue(parameter.getValue(), flatEvent.get(parameter.getKey()), this.getPreparedStatement());
+    }
+  }
 
-    //TODO: Possible error: when the event does not contain all objects of the parameter list
-    for (Map.Entry<String, Object> pair : event.entrySet()) {
-      String newKey = pre + pair.getKey();
+  @SuppressWarnings("unchecked")
+  private Map<String, Object> flattenEvent(final Map<String, Object> event, String prefix) {
+    Map<String, Object> flatEvent = new LinkedHashMap<>();
+    for (Map.Entry<String, Object> pair : new TreeMap<>(event).entrySet()) {
+      String columnName = prefix + pair.getKey();
       if (pair.getValue() instanceof Map) {
-        // recursively extracts nested values
-        fillPreparedStatement(dbDescription, tableDescription, connection, (Map<String, Object>) pair.getValue(),
-            newKey + "_");
+        flatEvent.putAll(flattenEvent((Map<String, Object>) pair.getValue(), columnName + "_"));
       } else {
-        if (!eventParameterMap.containsKey(newKey)) {
-          //TODO: start the for loop all over again
-          generatePreparedStatement(dbDescription, tableDescription, connection, event);
-        }
-        ParameterInformation p = eventParameterMap.get(newKey);
-        StatementUtils.setValue(p, pair.getValue(), this.getPreparedStatement());
+        flatEvent.put(columnName, pair.getValue());
       }
     }
+    return flatEvent;
   }
 
   /**
@@ -177,11 +167,25 @@ public class StatementHandler {
     this.statement = statement;
   }
 
-  public Map getEventParameterMap() {
+  public Map<String, ParameterInformation> getEventParameterMap() {
     return this.eventParameterMap;
   }
 
   public void putEventParameterMap(String parameterName, ParameterInformation parameterInformation) {
     this.eventParameterMap.put(parameterName, parameterInformation);
+  }
+
+  public void closeStatement() throws SQLException {
+    if (this.statement != null) {
+      this.statement.close();
+      this.statement = null;
+    }
+  }
+
+  public void closePreparedStatement() throws SQLException {
+    if (this.preparedStatement != null) {
+      this.preparedStatement.close();
+      this.preparedStatement = null;
+    }
   }
 }
