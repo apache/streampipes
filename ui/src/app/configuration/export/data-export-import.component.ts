@@ -30,6 +30,7 @@ import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
     AssetManagementService,
     SpAsset,
+    SpAssetModel,
 } from '@streampipes/platform-services';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { SpDataExportDialogComponent } from './export-dialog/data-export-dialog.component';
@@ -39,6 +40,7 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 
@@ -51,6 +53,7 @@ import { MatButton } from '@angular/material/button';
         LayoutDirective,
         FlexDirective,
         LayoutAlignDirective,
+        LayoutGapDirective,
         SplitSectionComponent,
         MatCheckbox,
         MatButton,
@@ -66,7 +69,7 @@ export class SpDataExportImportComponent implements OnInit {
 
     tabs: SpNavigationItem[] = [];
 
-    assets: SpAsset[];
+    assets: SpAssetModel[];
     selectedAssets: string[] = [];
 
     ngOnInit(): void {
@@ -95,6 +98,16 @@ export class SpDataExportImportComponent implements OnInit {
         } else {
             this.selectedAssets.splice(this.selectedAssets.indexOf(assetId), 1);
         }
+    }
+
+    selectAllAssets(select: boolean): void {
+        this.selectedAssets = select
+            ? this.assets.map(asset => asset.elementId)
+            : [];
+    }
+
+    isSelected(assetId: string): boolean {
+        return this.selectedAssets.includes(assetId);
     }
 
     openExportDialog(): void {

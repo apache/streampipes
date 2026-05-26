@@ -1989,6 +1989,7 @@ export class ExportConfig {
 
 export class ExportConfiguration {
     assetExportConfiguration: AssetExportConfiguration[];
+    genericStorageAppDocTypes: ExportItem[];
 
     static fromData(
         data: ExportConfiguration,
@@ -2001,6 +2002,9 @@ export class ExportConfiguration {
         instance.assetExportConfiguration = __getCopyArrayFn(
             AssetExportConfiguration.fromData,
         )(data.assetExportConfiguration);
+        instance.genericStorageAppDocTypes = __getCopyArrayFn(
+            ExportItem.fromData,
+        )(data.genericStorageAppDocTypes);
         return instance;
     }
 }

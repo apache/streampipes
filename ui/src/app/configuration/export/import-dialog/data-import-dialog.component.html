@@ -161,17 +161,28 @@
                                             | translate
                                     }}
                                 </mat-checkbox>
-                                <div class="warning-box">
-                                    <mat-checkbox
-                                        [(ngModel)]="
-                                            importConfiguration.overwriteExistingDocuments
-                                        "
-                                        >{{
-                                            'Update/overwrite existing documents with the same ID (operation may break things)'
+                                <mat-checkbox
+                                    [(ngModel)]="
+                                        importConfiguration.overwriteExistingDocuments
+                                    "
+                                    >{{
+                                        'Replace existing documents with the same ID'
+                                            | translate
+                                    }}
+                                </mat-checkbox>
+                                @if (
+                                    importConfiguration.overwriteExistingDocuments
+                                ) {
+                                    <sp-alert-banner
+                                        type="warning"
+                                        [title]="'Replace existing' | translate"
+                                        [description]="
+                                            'Replacing existing documents can cause side-effects for resources that are related to the replaced document. Use this feature with caution.'
                                                 | translate
-                                        }}
-                                    </mat-checkbox>
-                                </div>
+                                        "
+                                    >
+                                    </sp-alert-banner>
+                                }
                             </div>
                         }
                     </sp-split-section>
