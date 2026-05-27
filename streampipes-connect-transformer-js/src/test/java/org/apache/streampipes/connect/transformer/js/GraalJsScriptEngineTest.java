@@ -153,6 +153,27 @@ public class GraalJsScriptEngineTest {
   }
 
   @Test
+  void serializePrimitiveArraysInCollectedOutput2() throws Exception {
+    var transformer = engine.compile("""
+        function transform(event, out, ctx) {
+         if (Array.isArray(event.value)) {
+          event.value = event.value[0] === true ? 0 : 1;
+          }
+          out.collect(event);
+        }
+        """);
+
+    var output = new ArrayList<Map<String, Object>>();
+    Boolean[] booleanInput = {true, false};
+    transformer.transform(new LinkedHashMap<>(
+        Map.of(
+            "value", booleanInput)), output::add, null);
+
+    assertEquals(1, output.size());
+    assertEquals(0, output.get(0).get("value"));
+  }
+
+  @Test
   void serializePrimitiveArraysNestedInHostMapOutput() throws Exception {
     var transformer = engine.compile("""
         function transform(event, out, ctx) {
