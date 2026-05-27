@@ -22,7 +22,9 @@ import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionE
 import org.apache.streampipes.connect.transformer.api.utils.TransformationEngineConversionUtils;
 
 import org.graalvm.polyglot.Value;
+import org.jspecify.annotations.NonNull;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -86,6 +88,9 @@ public final class PolyglotTypeConverter {
       }
       return result;
     }
+    if (input.getClass().isArray()) {
+      return getArrayValue(input);
+    }
     try {
       Value value = Value.asValue(input);
       if (!value.isHostObject() || value.hasHashEntries() || value.hasArrayElements() || value.hasMembers()) {
@@ -97,9 +102,25 @@ public final class PolyglotTypeConverter {
     return input;
   }
 
+  @NonNull
+  private static Object getArrayValue(Object input) {
+    int length = Array.getLength(input);
+    List<Object> result = new ArrayList<>(length);
+    for (int i = 0; i < length; i++) {
+      result.add(toJavaValue(Array.get(input, i)));
+    }
+    return result;
+  }
+
   private static Object fromValue(Value value) {
     if (value.isNull()) {
       return null;
+    }
+    if (value.isHostObject()) {
+      Object hostObject = value.asHostObject();
+      if (hostObject != null && hostObject.getClass().isArray()) {
+        return getArrayValue(hostObject);
+      }
     }
     if (value.hasHashEntries()) {
       Map<String, Object> result = new LinkedHashMap<>();
