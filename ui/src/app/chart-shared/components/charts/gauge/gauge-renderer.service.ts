@@ -317,7 +317,7 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
     }
 
     private makeDisplayName(displayName: unknown, fallback: string): string {
-        if (typeof displayName === 'string' && displayName.trim().length > 0) {
+        if (typeof displayName === 'string') {
             return displayName;
         }
 
