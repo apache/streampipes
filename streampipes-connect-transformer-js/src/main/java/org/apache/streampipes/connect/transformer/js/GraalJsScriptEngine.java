@@ -74,6 +74,8 @@ public class GraalJsScriptEngine implements TransformationEngine {
     HostAccess hostAccess = HostAccess.newBuilder(HostAccess.CONSTRAINED)
         .allowMapAccess(true)
         .allowListAccess(true)
+        .allowArrayAccess(true)
+        .allowBigIntegerNumberAccess(true)
         .allowIterableAccess(true)
         .allowIteratorAccess(true)
         .allowAccessAnnotatedBy(ExposedToScripts.class)
