@@ -39,6 +39,6 @@ class WinCCAlarmArchiveAdapterMigrationV1Test {
     assertEquals(8, migrated.getConfig().size());
     var startIndexProperty = (FreeTextStaticProperty) migrated.getConfig().get(4);
     assertEquals(WinCCAlarmArchiveAdapter.ARCHIVE_SEGMENT_START_INDEX, startIndexProperty.getInternalName());
-    assertEquals("1", startIndexProperty.getValue());
+    assertEquals("0", startIndexProperty.getValue());
   }
 }
