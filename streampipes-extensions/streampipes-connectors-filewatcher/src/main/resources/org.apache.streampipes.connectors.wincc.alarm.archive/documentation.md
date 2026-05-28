@@ -29,13 +29,15 @@ Configuration is Siemens-specific:
 - archive base name
 - segmented circular log enabled or disabled
 - segment count in segmented circular log mode
+- segment start index
 - polling interval
 - optional delay between replayed events in milliseconds
 - timezone used when WinCC `TimeString` must be converted to Unix time
 
 The adapter assumes the WinCC alarm CSV layout with a header row and semicolon-separated columns.
 The configured base name should not include the segment number or file suffix. For example, use `Meldungsarchiv`
-to match `Meldungsarchiv1.csv` or `Meldungsarchiv1.csv` to `MeldungsarchivN.csv`.
+to match `Meldungsarchiv1.csv` or `Meldungsarchiv0.csv` to `MeldungsarchivN.csv`, depending on the configured
+segment start index.
 
 In segmented circular log mode the adapter treats reused file names as new generations by fingerprinting file content,
 so a segment like `Meldungsarchiv1.csv` can be consumed again after WinCC rotates the archive.
