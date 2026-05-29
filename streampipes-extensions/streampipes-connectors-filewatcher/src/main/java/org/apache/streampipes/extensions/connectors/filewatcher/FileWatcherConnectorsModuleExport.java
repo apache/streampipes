@@ -24,6 +24,7 @@ import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.connectors.filewatcher.adapter.WinCCAlarmArchiveAdapter;
 import org.apache.streampipes.extensions.connectors.filewatcher.migration.WinCCAlarmArchiveAdapterMigrationV1;
+import org.apache.streampipes.extensions.connectors.filewatcher.migration.WinCCAlarmArchiveAdapterMigrationV2;
 
 import java.util.List;
 
@@ -41,6 +42,6 @@ public class FileWatcherConnectorsModuleExport implements IExtensionModuleExport
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return List.of(new WinCCAlarmArchiveAdapterMigrationV1());
+    return List.of(new WinCCAlarmArchiveAdapterMigrationV1(), new WinCCAlarmArchiveAdapterMigrationV2());
   }
 }

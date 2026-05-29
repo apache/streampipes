@@ -30,6 +30,7 @@ Configuration is Siemens-specific:
 - segmented circular log enabled or disabled
 - segment count in segmented circular log mode
 - segment start index
+- whether the last modified timestamp should be considered for deduplication
 - polling interval
 - optional delay between replayed events in milliseconds
 - timezone used when WinCC `TimeString` must be converted to Unix time
@@ -41,6 +42,10 @@ segment start index.
 
 In segmented circular log mode the adapter treats reused file names as new generations by fingerprinting file content,
 so a segment like `Meldungsarchiv1.csv` can be consumed again after WinCC rotates the archive.
+
+If another process periodically recopies the same archive files into the watched folder, you can disable the last
+modified timestamp check so unchanged content is not treated as a new generation only because the file timestamp
+changed.
 
 Use the inter-event delay when consumers or brokers cannot handle large replay bursts. A value like `1` ms can reduce
 event loss on slower consumers, while `0` disables throttling.

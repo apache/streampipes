@@ -33,6 +33,8 @@ public class WinCCAlarmArchiveAdapterVersionedConfig {
   private static final String ARCHIVE_BASE_NAME = "archive-base-name";
   private static final String SEGMENTED_CIRCULAR_LOG_ENABLED = "segmented-circular-log-enabled";
   private static final String ARCHIVE_SEGMENT_COUNT = "archive-segment-count";
+  private static final String ARCHIVE_SEGMENT_START_INDEX = "archive-segment-start-index";
+  private static final String CONSIDER_LAST_MODIFIED = "consider-last-modified";
   private static final String POLL_INTERVAL_SECONDS = "poll-interval-seconds";
   private static final String INTER_EVENT_DELAY_MS = "inter-event-delay-ms";
   private static final String TIMEZONE_ID = "timezone-id";
@@ -54,6 +56,53 @@ public class WinCCAlarmArchiveAdapterVersionedConfig {
             )
         )
         .requiredIntegerParameter(Labels.withId(ARCHIVE_SEGMENT_COUNT))
+        .requiredIntegerParameter(Labels.withId(POLL_INTERVAL_SECONDS))
+        .requiredIntegerParameter(Labels.withId(INTER_EVENT_DELAY_MS), 0)
+        .requiredTextParameter(Labels.withId(TIMEZONE_ID), "UTC")
+        .buildConfiguration()
+        .getAdapterDescription();
+  }
+
+  public static AdapterDescription getWinCCAlarmArchiveAdapterDescriptionV1() {
+    return AdapterConfigurationBuilder
+        .create(WinCCAlarmArchiveAdapter.ID, 1, WinCCAlarmArchiveAdapter::new)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+        .withLocales(Locales.EN)
+        .requiredTextParameter(Labels.withId(DIRECTORY_PATH))
+        .requiredTextParameter(Labels.withId(ARCHIVE_BASE_NAME))
+        .requiredSingleValueSelection(
+            Labels.withId(SEGMENTED_CIRCULAR_LOG_ENABLED),
+            Options.from(
+                new Tuple2<>("Enabled", SEGMENTED_CIRCULAR_LOG_ON),
+                new Tuple2<>("Disabled", SEGMENTED_CIRCULAR_LOG_OFF)
+            )
+        )
+        .requiredIntegerParameter(Labels.withId(ARCHIVE_SEGMENT_COUNT))
+        .requiredIntegerParameter(Labels.withId(ARCHIVE_SEGMENT_START_INDEX), 0)
+        .requiredIntegerParameter(Labels.withId(POLL_INTERVAL_SECONDS))
+        .requiredIntegerParameter(Labels.withId(INTER_EVENT_DELAY_MS), 0)
+        .requiredTextParameter(Labels.withId(TIMEZONE_ID), "UTC")
+        .buildConfiguration()
+        .getAdapterDescription();
+  }
+
+  public static AdapterDescription getWinCCAlarmArchiveAdapterDescriptionV2() {
+    return AdapterConfigurationBuilder
+        .create(WinCCAlarmArchiveAdapter.ID, 2, WinCCAlarmArchiveAdapter::new)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
+        .withLocales(Locales.EN)
+        .requiredTextParameter(Labels.withId(DIRECTORY_PATH))
+        .requiredTextParameter(Labels.withId(ARCHIVE_BASE_NAME))
+        .requiredSingleValueSelection(
+            Labels.withId(SEGMENTED_CIRCULAR_LOG_ENABLED),
+            Options.from(
+                new Tuple2<>("Enabled", SEGMENTED_CIRCULAR_LOG_ON),
+                new Tuple2<>("Disabled", SEGMENTED_CIRCULAR_LOG_OFF)
+            )
+        )
+        .requiredIntegerParameter(Labels.withId(ARCHIVE_SEGMENT_COUNT))
+        .requiredIntegerParameter(Labels.withId(ARCHIVE_SEGMENT_START_INDEX), 0)
+        .requiredSlideToggle(Labels.withId(CONSIDER_LAST_MODIFIED), true)
         .requiredIntegerParameter(Labels.withId(POLL_INTERVAL_SECONDS))
         .requiredIntegerParameter(Labels.withId(INTER_EVENT_DELAY_MS), 0)
         .requiredTextParameter(Labels.withId(TIMEZONE_ID), "UTC")

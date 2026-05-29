@@ -66,6 +66,7 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
   private static final String SEGMENTED_CIRCULAR_LOG_ENABLED = "segmented-circular-log-enabled";
   private static final String ARCHIVE_SEGMENT_COUNT = "archive-segment-count";
   public static final String ARCHIVE_SEGMENT_START_INDEX = "archive-segment-start-index";
+  public static final String CONSIDER_LAST_MODIFIED = "consider-last-modified";
   private static final String POLL_INTERVAL_SECONDS = "poll-interval-seconds";
   private static final String INTER_EVENT_DELAY_MS = "inter-event-delay-ms";
   private static final String TIMEZONE_ID = "timezone-id";
@@ -83,7 +84,7 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID, 1, WinCCAlarmArchiveAdapter::new)
+        .create(ID, 2, WinCCAlarmArchiveAdapter::new)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .requiredTextParameter(Labels.withId(
@@ -107,6 +108,9 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
         .requiredIntegerParameter(Labels.withId(
             ARCHIVE_SEGMENT_START_INDEX
         ), 0)
+        .requiredSlideToggle(Labels.withId(
+            CONSIDER_LAST_MODIFIED
+        ), true)
         .requiredIntegerParameter(Labels.withId(
             POLL_INTERVAL_SECONDS
         ))
@@ -205,6 +209,7 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
         staticPropertyExtractor.selectedSingleValueInternalName(SEGMENTED_CIRCULAR_LOG_ENABLED, String.class);
     var segmentCount = staticPropertyExtractor.singleValueParameter(ARCHIVE_SEGMENT_COUNT, Integer.class);
     var segmentStartIndex = staticPropertyExtractor.singleValueParameter(ARCHIVE_SEGMENT_START_INDEX, Integer.class);
+    var considerLastModified = staticPropertyExtractor.slideToggleValue(CONSIDER_LAST_MODIFIED);
     var interval = staticPropertyExtractor.singleValueParameter(POLL_INTERVAL_SECONDS, Integer.class);
     var interEventDelayMs = staticPropertyExtractor.singleValueParameter(INTER_EVENT_DELAY_MS, Integer.class);
     var timeZone = parseTimeZone(staticPropertyExtractor.singleValueParameter(TIMEZONE_ID, String.class));
@@ -225,6 +230,7 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
         WINCC_CSV_SETTINGS,
         interval,
         SEGMENTED_CIRCULAR_LOG_OFF.equals(segmentedCircularLogMode),
+        considerLastModified,
         interEventDelayMs,
         timeZone
     );
