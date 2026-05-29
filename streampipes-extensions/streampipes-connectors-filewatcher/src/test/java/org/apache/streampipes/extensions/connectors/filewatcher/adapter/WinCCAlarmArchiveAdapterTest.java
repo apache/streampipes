@@ -79,6 +79,9 @@ class WinCCAlarmArchiveAdapterTest {
           if ("selectedSingleValueInternalName".equals(method.getName())) {
             return segmentedCircularLogMode;
           }
+          if ("slideToggleValue".equals(method.getName())) {
+            return true;
+          }
           throw new UnsupportedOperationException("Unexpected extractor method: " + method.getName());
         }
     );

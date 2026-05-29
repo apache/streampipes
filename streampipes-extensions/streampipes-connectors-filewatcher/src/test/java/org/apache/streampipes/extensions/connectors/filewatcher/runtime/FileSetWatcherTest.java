@@ -48,7 +48,7 @@ class FileSetWatcherTest {
     write("Meldungsarchiv2", "id,value\n3,c\n");
 
     FileSetWatcher watcher = new FileSetWatcher(
-        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, 0, ZoneId.of("UTC")),
+        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, true, 0, ZoneId.of("UTC")),
         new FileWatcherCheckpointStore(tempDir.resolve("checkpoints")),
         new CsvFileReader(),
         EventMapper.identity()
@@ -80,7 +80,7 @@ class FileSetWatcherTest {
     FileWatcherCheckpointStore checkpointStore = new FileWatcherCheckpointStore(checkpointDir);
 
     FileSetWatcher watcher = new FileSetWatcher(
-        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, 0, ZoneId.of("UTC")),
+        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, true, 0, ZoneId.of("UTC")),
         checkpointStore,
         new CsvFileReader(),
         EventMapper.identity()
@@ -107,7 +107,7 @@ class FileSetWatcherTest {
     write("Meldungsarchiv.csv", "id,value\n1,a\n2,b\n");
 
     FileSetWatcher watcher = new FileSetWatcher(
-        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv\\.csv"), new CsvParserSettings(true, ','), 1, true, 0, ZoneId.of("UTC")),
+        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv\\.csv"), new CsvParserSettings(true, ','), 1, true, true, 0, ZoneId.of("UTC")),
         new FileWatcherCheckpointStore(tempDir.resolve("checkpoints-single")),
         new CsvFileReader(),
         EventMapper.identity()
@@ -132,7 +132,7 @@ class FileSetWatcherTest {
     write("Meldungsarchiv.csv", "id,value\n1,a\n2,b\n3,c\n");
 
     FileSetWatcher watcher = new FileSetWatcher(
-        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv\\.csv"), new CsvParserSettings(true, ','), 1, true, 0, ZoneId.of("UTC")),
+        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv\\.csv"), new CsvParserSettings(true, ','), 1, true, true, 0, ZoneId.of("UTC")),
         new FileWatcherCheckpointStore(tempDir.resolve("checkpoints-replace")),
         new CsvFileReader(),
         EventMapper.identity()
@@ -157,7 +157,7 @@ class FileSetWatcherTest {
     List<Long> appliedDelays = new ArrayList<>();
 
     FileSetWatcher watcher = new FileSetWatcher(
-        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, 5, ZoneId.of("UTC")),
+        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, true, 5, ZoneId.of("UTC")),
         new FileWatcherCheckpointStore(tempDir.resolve("checkpoints-delay")),
         new CsvFileReader(),
         EventMapper.identity(),
@@ -173,6 +173,30 @@ class FileSetWatcherTest {
     assertEquals(3, events.size());
     assertEquals(2, delayCalls.get());
     assertEquals(List.of(5L, 5L), appliedDelays);
+  }
+
+  @Test
+  void shouldIgnoreRecopiedIdenticalFileWhenLastModifiedIsDisabled() throws IOException, InterruptedException {
+    write("Meldungsarchiv1", "id,value\n1,a\n2,b\n");
+
+    FileSetWatcher watcher = new FileSetWatcher(
+        new FileWatcherConfig(tempDir, Pattern.compile("Meldungsarchiv(\\d+)"), new CsvParserSettings(true, ','), 1, false, false, 0, ZoneId.of("UTC")),
+        new FileWatcherCheckpointStore(tempDir.resolve("checkpoints-recopy")),
+        new CsvFileReader(),
+        EventMapper.identity()
+    );
+
+    List<Map<String, Object>> events = new ArrayList<>();
+    watcher.poll("adapter-recopy", events::add);
+
+    assertEquals(2, events.size());
+    events.clear();
+
+    Thread.sleep(5);
+    write("Meldungsarchiv1", "id,value\n1,a\n2,b\n");
+    watcher.poll("adapter-recopy", events::add);
+
+    assertEquals(0, events.size());
   }
 
   private void write(String fileName, String content) throws IOException {
