@@ -36,6 +36,11 @@ github:
     projects: false
     discussions: true
 
+  copilot_code_review:
+    enabled: true
+    review_drafts: true
+    review_on_push: true
+
   custom_subjects:
     new_pr: "[PR] {title}"
     close_pr: "Re: [PR] {title}"

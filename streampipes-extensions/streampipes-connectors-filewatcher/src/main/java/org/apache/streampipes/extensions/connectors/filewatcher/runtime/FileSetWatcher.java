@@ -50,12 +50,6 @@ public class FileSetWatcher {
 
   public FileSetWatcher(FileWatcherConfig config,
                         FileWatcherCheckpointStore checkpointStore,
-                        CsvFileReader csvFileReader) {
-    this(config, checkpointStore, csvFileReader, EventMapper.identity());
-  }
-
-  public FileSetWatcher(FileWatcherConfig config,
-                        FileWatcherCheckpointStore checkpointStore,
                         CsvFileReader csvFileReader,
                         EventMapper eventMapper) {
     this(config, checkpointStore, csvFileReader, eventMapper, Thread::sleep);
@@ -122,7 +116,7 @@ public class FileSetWatcher {
   }
 
   private long determineStartRecord(FileSlot currentSlot, FileWatcherCheckpoint checkpoint) {
-    if (currentSlot.fingerprint().equals(checkpoint.getCurrentFingerprint())) {
+    if (fingerprintsEqual(currentSlot.fingerprint(), checkpoint.getCurrentFingerprint())) {
       LOG.debug("File '{}' fingerprint unchanged. Continuing after record {}.",
           currentSlot.fileName(), checkpoint.getLastProcessedRecord());
       return checkpoint.getLastProcessedRecord() + 1;
@@ -140,7 +134,26 @@ public class FileSetWatcher {
 
   private boolean isAppendedInPlace(FileFingerprint currentFingerprint, FileFingerprint previousFingerprint) {
     return currentFingerprint.getSize() > previousFingerprint.getSize()
-        && currentFingerprint.getLastModified() >= previousFingerprint.getLastModified();
+        && (!config.considerLastModified()
+        || currentFingerprint.getLastModified() >= previousFingerprint.getLastModified());
+  }
+
+  private boolean fingerprintsEqual(FileFingerprint left, FileFingerprint right) {
+    if (left == right) {
+      return true;
+    }
+    if (left == null || right == null) {
+      return false;
+    }
+
+    boolean sameContent = left.getSize() == right.getSize()
+        && left.getContentHash().equals(right.getContentHash());
+
+    if (!sameContent) {
+      return false;
+    }
+
+    return !config.considerLastModified() || left.getLastModified() == right.getLastModified();
   }
 
   private void processFollowingFiles(String adapterElementId,
@@ -152,7 +165,7 @@ public class FileSetWatcher {
     for (int offset = 0; offset < files.size(); offset++) {
       FileSlot candidate = files.get((startIndex + offset) % files.size());
       FileFingerprint processedFingerprint = checkpoint.getProcessedGenerations().get(candidate.fileName());
-      if (processedFingerprint != null && processedFingerprint.equals(candidate.fingerprint())) {
+      if (processedFingerprint != null && fingerprintsEqual(processedFingerprint, candidate.fingerprint())) {
         LOG.debug("Stopping at file '{}' because this generation was already processed.", candidate.fileName());
         break;
       }
