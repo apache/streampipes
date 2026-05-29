@@ -33,6 +33,11 @@ The default URLs are:
 The default development stack uses NATS for pipeline transport and for
 core-to-extension communication.
 
+`SP_DEBUG` is intentionally set to `false` in the devcontainer and VS Code
+launch settings. VS Code Java debugging still works through JDWP, but
+StreamPipes debug mode rewrites broker hostnames to `localhost`; that breaks
+NATS because the broker runs as the sibling Compose service `nats`.
+
 ## Isolated Checkouts
 
 For a second checkout or PR worktree, copy `.devcontainer/.env.example` to

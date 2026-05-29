@@ -25,7 +25,7 @@
         "SP_CORE_EXTENSION_TRANSPORT_MODE": "nats",
         "SP_EXTENSION_TRANSPORT_MODE": "nats",
         "SP_EXTENSION_REQUEST_TOPIC_PREFIX": "sp.extensions.request",
-        "SP_DEBUG": "true"
+        "SP_DEBUG": "false"
       }
     },
     {
@@ -52,7 +52,7 @@
         "SP_CORE_EXTENSION_TRANSPORT_MODE": "nats",
         "SP_EXTENSION_TRANSPORT_MODE": "nats",
         "SP_EXTENSION_REQUEST_TOPIC_PREFIX": "sp.extensions.request",
-        "SP_DEBUG": "true"
+        "SP_DEBUG": "false"
       }
     }
   ],

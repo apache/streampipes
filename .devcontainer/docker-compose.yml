@@ -17,7 +17,11 @@ name: ${COMPOSE_PROJECT_NAME:-streampipes-dev}
 
 services:
   workspace:
-    image: mcr.microsoft.com/devcontainers/base:ubuntu
+    # Builds the base devcontainer image with Cypress/Electron runtime libraries
+    # such as libglib, GTK, NSS and Xvfb for running UI smoke tests.
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: sleep infinity
     init: true
     volumes:
@@ -42,7 +46,10 @@ services:
       SP_CORE_EXTENSION_TRANSPORT_MODE: nats
       SP_EXTENSION_TRANSPORT_MODE: nats
       SP_EXTENSION_REQUEST_TOPIC_PREFIX: sp.extensions.request
-      SP_DEBUG: "true"
+      # Keep StreamPipes debug mode disabled in the devcontainer. When enabled,
+      # StreamPipes rewrites broker hostnames to localhost, but NATS runs as the
+      # sibling Compose service "nats" and must be reached via nats:4222.
+      SP_DEBUG: "false"
     ports:
       - "${SP_CORE_PORT:-8030}:8030"
       - "${SP_EXTENSIONS_IIOT_PORT:-8090}:8090"
