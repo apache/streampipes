@@ -56,7 +56,11 @@ public class FileWatcherCheckpointStore {
   }
 
   private Path checkpointPath(String adapterElementId) {
-    return baseDirectory.resolve(adapterElementId + ".json");
+    return baseDirectory.resolve(sanitizeAdapterElementId(adapterElementId) + ".json");
+  }
+
+  private String sanitizeAdapterElementId(String adapterElementId) {
+    return adapterElementId.replace(':', '_');
   }
 
   private static Path resolveDefaultDirectory() {
