@@ -138,9 +138,9 @@ Thumbs.db
 bundle.js
 bundle.js.map
 
-.vscode/
-
 .java-version
+
+.devcontainer/.env
 
 logs/
 
