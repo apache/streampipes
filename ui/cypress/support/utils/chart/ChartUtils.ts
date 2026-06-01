@@ -168,6 +168,10 @@ export class ChartUtils {
         ChartUtils.goToDashboard();
         ChartUtils.addNewDashboard(name);
         ChartUtils.saveDataView();
+        ChartUtils.goToDashboard();
+        cy.contains('[role="row"], tr, mat-row', name, {
+            timeout: 10000,
+        }).should('be.visible');
     }
 
     public static createNewDashboardWithAssetLinks(
@@ -244,8 +248,8 @@ export class ChartUtils {
     }
 
     public static renameDashboard(newName: string) {
-        cy.dataCy('data-view-name').clear().type(newName);
-        cy.dataCy('data-view-name').should('have.value', newName);
+        cy.dataCy('managed-resource-name').clear().type(newName);
+        cy.dataCy('managed-resource-name').should('have.value', newName);
     }
 
     public static loadRandomDataSetIntoDataLake() {
@@ -257,7 +261,7 @@ export class ChartUtils {
         ChartBtns.newDashboardDialogBtn().click();
 
         // Configure data view
-        cy.dataCy('data-view-name').type(name);
+        cy.dataCy('managed-resource-name').type(name);
         ChartBtns.saveDataViewBtn().click();
 
         this.editDashboard(name);

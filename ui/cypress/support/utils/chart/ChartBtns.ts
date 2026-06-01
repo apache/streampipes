@@ -77,7 +77,7 @@ export class ChartBtns {
     }
 
     public static editDashboardSettingsBtn(dashboardName) {
-        return cy.dataCy('edit-dashboard-settings-' + dashboardName);
+        return cy.dataCy('open-manage-permissions-' + dashboardName);
     }
 
     public static openNewDataViewBtn() {

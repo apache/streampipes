@@ -132,7 +132,9 @@
                 @if (hasDashboardWritePrivileges) {
                     <button
                         mat-menu-item
-                        data-cy="open-manage-permissions"
+                        [attr.data-cy]="
+                            'open-manage-permissions-' + element.name
+                        "
                         (click)="showManageDialog(element)"
                     >
                         <mat-icon>settings</mat-icon>
