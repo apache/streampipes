@@ -228,6 +228,25 @@ export class DashboardPanelComponent
         });
     }
 
+    onDefaultViewModeChange(viewMode: string): void {
+        this.viewMode = viewMode;
+        this.dashboard.dashboardGeneralSettings.defaultViewMode = viewMode;
+    }
+
+    onGridLayoutSettingsChange(): void {
+        this.dashboardGrid?.updateDashboardLayout();
+    }
+
+    onGlobalTimeEnabledChange(): void {
+        this.updateDateRange(this.timeSettings);
+    }
+
+    onChartOverridesChange(): void {
+        this.dashboard.dashboardGeneralSettings.chartOverrides = {
+            ...this.dashboard.dashboardGeneralSettings.chartOverrides,
+        };
+    }
+
     private getNextWidgetY(): number {
         if (!this.dashboard?.widgets?.length) {
             return 0;

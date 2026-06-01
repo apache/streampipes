@@ -133,8 +133,9 @@
                                                                     .defaultViewMode
                                                             "
                                                             (ngModelChange)="
-                                                                viewMode =
+                                                                onDefaultViewModeChange(
                                                                     $event
+                                                                )
                                                             "
                                                         >
                                                             <mat-radio-button
@@ -179,6 +180,9 @@
                                                                 [(ngModel)]="
                                                                     dashboard.gridColumns
                                                                 "
+                                                                (ngModelChange)="
+                                                                    onGridLayoutSettingsChange()
+                                                                "
                                                             />
                                                         </mat-form-field>
                                                     </sp-form-field>
@@ -206,6 +210,9 @@
                                                                         .dashboardGeneralSettings
                                                                         .gridRowHeightPx
                                                                 "
+                                                                (ngModelChange)="
+                                                                    onGridLayoutSettingsChange()
+                                                                "
                                                             />
                                                         </mat-form-field>
                                                     </sp-form-field>
@@ -220,6 +227,9 @@
                                                                     .dashboardGeneralSettings
                                                                     .globalTimeEnabled
                                                             "
+                                                            (ngModelChange)="
+                                                                onGlobalTimeEnabledChange()
+                                                            "
                                                         >
                                                             {{
                                                                 'Use global time settings instead of chart time settings'
@@ -232,6 +242,9 @@
                                                                     .dashboardGeneralSettings
                                                                     .chartOverrides
                                                                     .hideToolbox
+                                                            "
+                                                            (ngModelChange)="
+                                                                onChartOverridesChange()
                                                             "
                                                         >
                                                             {{
