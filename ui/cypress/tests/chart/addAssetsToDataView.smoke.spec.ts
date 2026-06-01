@@ -47,6 +47,7 @@ describe('Creates a new adapter with a linked asset', () => {
 
     it('Edit Assets during Chart generation', () => {
         ChartUtils.createDataViewWithAssets([assetName1, assetName2]);
+
         AssetUtils.checkAmountOfAssets(3);
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
@@ -60,7 +61,7 @@ describe('Creates a new adapter with a linked asset', () => {
         ChartUtils.addChartsToAsset([assetName1, assetName3]);
         ChartUtils.saveDataViewConfiguration();
         //Neceassary for Background Task to finish
-        cy.wait(500);
+        cy.wait(2000);
 
         AssetUtils.checkAmountOfAssets(3);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);

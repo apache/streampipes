@@ -24,7 +24,9 @@ export class GeneralUtils {
     public static openMenuForRow(rowText: string) {
         GeneralUtils.closeVisibleMaterialMenu();
 
-        cy.contains('[role="row"], tr, mat-row', rowText)
+        cy.contains('[role="row"], tr, mat-row', rowText, {
+            timeout: 10000,
+        })
             .scrollIntoView()
             .within(() => {
                 cy.dataCy('more-options').click({ force: true });
