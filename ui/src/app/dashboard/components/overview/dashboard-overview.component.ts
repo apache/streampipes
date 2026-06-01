@@ -39,6 +39,7 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
+import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
 
 @Component({
     selector: 'sp-dashboard-overview',
@@ -67,6 +68,7 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
     private currentUserService = inject(CurrentUserService);
     private breadcrumbService = inject(SpBreadcrumbService);
     private translateService = inject(TranslateService);
+    private routingService = inject(ChartRoutingService);
 
     private user$: Subscription;
 
@@ -115,7 +117,10 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe(refresh => {
             if (refresh) {
-                this.dashboardOverview.getDashboards();
+                this.routingService.navigateToDashboard(
+                    true,
+                    dashboard.elementId,
+                );
             }
         });
     }
