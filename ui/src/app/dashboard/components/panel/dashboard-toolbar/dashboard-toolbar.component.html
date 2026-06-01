@@ -123,7 +123,7 @@
                     <span>{{ 'Hide time range selector' | translate }}</span>
                 </button>
             }
-            @if (hasDashboardWritePrivileges) {
+            @if (editMode && hasDashboardWritePrivileges) {
                 <button mat-menu-item (click)="manageDashboardEmitter.emit()">
                     <mat-icon>settings</mat-icon>
                     <span>{{ 'Manage dashboard' | translate }}</span>

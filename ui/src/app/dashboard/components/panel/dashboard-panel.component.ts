@@ -17,7 +17,14 @@
  */
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, of, Subscription, timer } from 'rxjs';
+import {
+    firstValueFrom,
+    from,
+    Observable,
+    of,
+    Subscription,
+    timer,
+} from 'rxjs';
 import { DashboardGridViewComponent } from '../../../dashboard-shared/components/chart-view/grid-view/dashboard-grid-view.component';
 import {
     ClientDashboardItem,
@@ -26,6 +33,8 @@ import {
     DashboardService,
     DataExplorerWidgetModel,
     DataLakeMeasure,
+    LinkageData,
+    PermissionsService,
     TimeSelectionConstants,
     TimeSettings,
 } from '@streampipes/platform-services';
@@ -41,12 +50,18 @@ import {
     ConfirmDialogAction,
     ConfirmDialogComponent,
     CurrentUserService,
+    DialogService,
     FormFieldComponent,
     KeyboardShortcutService,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
+    ObjectManageDialogResult,
+    PanelType,
     ShortcutRegistration,
     SpBasicViewComponent,
     SpBreadcrumbService,
     TimeSelectionService,
+    AssetSaveService,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -146,6 +161,9 @@ export class DashboardPanelComponent
     private shortcutService = inject(KeyboardShortcutService);
     private detectChangesService = inject(ChartDetectChangesService);
     private dialog = inject(MatDialog);
+    private dialogService = inject(DialogService);
+    private assetSaveService = inject(AssetSaveService);
+    private permissionsService = inject(PermissionsService);
     private timeSelectionService = inject(TimeSelectionService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
@@ -159,6 +177,8 @@ export class DashboardPanelComponent
 
     observableGenerator =
         this.dataExplorerSharedService.defaultObservableGenerator();
+
+    private pendingManageDashboardResult?: ObjectManageDialogResult<Dashboard>;
 
     public ngOnInit() {
         this.shortcutReg = this.shortcutService.register('dashboard-panel', [
@@ -264,14 +284,17 @@ export class DashboardPanelComponent
             .dashboardTimeSettings as TimeSettings;
         const currentTimeSettings = this.dashboard
             .dashboardTimeSettings as TimeSettings;
-        return this.detectChangesService.shouldShowConfirm(
-            this.originalDashboard,
-            this.dashboard,
-            originalTimeSettings,
-            currentTimeSettings,
-            model => {
-                model.dashboardTimeSettings = undefined;
-            },
+        return (
+            this.pendingManageDashboardResult !== undefined ||
+            this.detectChangesService.shouldShowConfirm(
+                this.originalDashboard,
+                this.dashboard,
+                originalTimeSettings,
+                currentTimeSettings,
+                model => {
+                    model.dashboardTimeSettings = undefined;
+                },
+            )
         );
     }
 
@@ -283,8 +306,42 @@ export class DashboardPanelComponent
     }
 
     manageDashboard(): void {
-        this.editMode = true;
-        this.selectedDesignerTabIndex = 1;
+        const resource: Dashboard = { ...this.dashboard };
+        const resourceConfig: ObjectManageDialogResourceConfig<Dashboard> = {
+            resourceLabel: 'Dashboard',
+            nameLabel: 'Dashboard title',
+            descriptionLabel: 'Dashboard description',
+            nameProperty: 'name',
+            assetLinkType: 'dashboard',
+            assetLinkCheckboxLabel:
+                'Add the current dashboard to an existing asset',
+        };
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('Manage'),
+            width: '50vw',
+            data: {
+                objectInstanceId: resource.elementId,
+                resource,
+                saveMode: 'deferred',
+                resourceConfig,
+                headerTitle:
+                    this.translateService.instant('Manage Dashboard ') +
+                    resource.name,
+            },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && typeof result !== 'boolean') {
+                this.pendingManageDashboardResult = result;
+                Object.assign(this.dashboard, result.resource);
+                this.breadcrumbService.updateBreadcrumb(
+                    this.breadcrumbService.makeRoute(
+                        [SpDashboardRoutes.BASE],
+                        this.dashboard.name,
+                    ),
+                );
+            }
+        });
     }
 
     startEditMode(widgetModel: DataExplorerWidgetModel) {
@@ -444,7 +501,53 @@ export class DashboardPanelComponent
             tap(savedDashboard => {
                 Object.assign(this.dashboard, savedDashboard);
             }),
+            switchMap(() => from(this.savePendingManageDashboardChanges())),
         );
+    }
+
+    private async savePendingManageDashboardChanges(): Promise<void> {
+        const result = this.pendingManageDashboardResult;
+        if (!result) {
+            return;
+        }
+
+        if (result.permission) {
+            await firstValueFrom(
+                this.permissionsService.updatePermission(result.permission),
+            );
+        }
+
+        if (this.shouldSaveManageDashboardAssets(result)) {
+            await this.assetSaveService.saveSelectedAssets(
+                result.selectedAssets,
+                this.createDashboardLinkageData(result.resource),
+                result.deselectedAssets,
+                result.originalAssets,
+            );
+        }
+
+        this.pendingManageDashboardResult = undefined;
+    }
+
+    private shouldSaveManageDashboardAssets(
+        result: ObjectManageDialogResult<Dashboard>,
+    ): boolean {
+        return (
+            result.addToAssets &&
+            (result.selectedAssets.length > 0 ||
+                result.deselectedAssets.length > 0 ||
+                result.originalAssets.length > 0)
+        );
+    }
+
+    private createDashboardLinkageData(dashboard: Dashboard): LinkageData[] {
+        return [
+            {
+                type: 'dashboard',
+                id: dashboard.elementId,
+                name: dashboard.name,
+            },
+        ];
     }
 
     private initializeDashboardSettings(): void {
