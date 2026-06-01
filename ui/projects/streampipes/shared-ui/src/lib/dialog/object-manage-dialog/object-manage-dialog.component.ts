@@ -93,48 +93,12 @@ import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { MatDivider } from '@angular/material/divider';
 import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
-
-export type ObjectManageDialogSaveMode = 'deferred' | 'immediate';
-
-export interface ObjectManageDialogResource {
-    _id?: string;
-    elementId?: string;
-    title?: string;
-    name?: string;
-    description?: string;
-    updatedAt?: number;
-    lastModified?: number;
-}
-
-export interface ObjectManageDialogResourceConfig<
-    TResource extends ObjectManageDialogResource = ObjectManageDialogResource,
-> {
-    resourceLabel?: string;
-    nameLabel?: string;
-    descriptionLabel?: string;
-    idProperty?: '_id' | 'elementId';
-    nameProperty?: 'title' | 'name';
-    descriptionProperty?: string;
-    showResourceFields?: boolean;
-    showAssetLinking?: boolean;
-    assetLinkType?: string;
-    assetLinkCheckboxLabel?: string;
-    saveResource?: (
-        resource: TResource,
-    ) => Observable<unknown> | Promise<unknown>;
-}
-
-export interface ObjectManageDialogResult<
-    TResource extends ObjectManageDialogResource = ObjectManageDialogResource,
-> {
-    resource: TResource;
-    nb?: TResource;
-    permission?: Permission;
-    selectedAssets: SpAssetTreeNode[];
-    deselectedAssets: SpAssetTreeNode[];
-    originalAssets: SpAssetTreeNode[];
-    addToAssets: boolean;
-}
+import {
+    ObjectManageDialogResource,
+    ObjectManageDialogResourceConfig,
+    ObjectManageDialogResult,
+    ObjectManageDialogSaveMode,
+} from './model/object-manage-model.model';
 
 @Component({
     selector: 'sp-object-manage-dialog',

@@ -33,6 +33,7 @@ export * from './lib/dialog/standard-dialog/standard-dialog.component';
 export * from './lib/dialog/pipeline-element-help/pipeline-element-help.component';
 export * from './lib/dialog/object-permission-dialog/object-permission-dialog.component';
 export * from './lib/dialog/object-manage-dialog/object-manage-dialog.component';
+export * from './lib/dialog/object-manage-dialog/model/object-manage-model.model';
 
 export * from './lib/components/asset-browser/asset-browser-toolbar/asset-browser-toolbar.component';
 export * from './lib/components/basic-header-title/header-title.component';
