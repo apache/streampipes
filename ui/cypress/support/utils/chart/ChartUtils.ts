@@ -182,7 +182,7 @@ export class ChartUtils {
 
     public static addNewDashboard(name: string) {
         ChartBtns.newDashboardDialogBtn().click();
-        cy.dataCy('data-view-name').type(name);
+        cy.dataCy('managed-resource-name').type(name);
     }
 
     public static createDashboardWithLinkedAssets(

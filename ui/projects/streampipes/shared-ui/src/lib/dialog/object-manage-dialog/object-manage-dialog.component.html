@@ -60,6 +60,7 @@
                                         [(ngModel)]="addToAssets"
                                         [ngModelOptions]="{ standalone: true }"
                                         color="accent"
+                                        data-cy="sp-show-dashboard-asset-checkbox"
                                     >
                                         {{ assetLinkCheckboxLabel | translate }}
                                     </mat-checkbox>
@@ -377,7 +378,7 @@
                         parentForm.invalid ||
                         (showPermissionsSection && !permission)
                     "
-                    data-cy="sp-manage-permissions-save"
+                    data-cy="sp-manage-save"
                 >
                     <i class="material-icons">save</i>
                     <span>&nbsp;{{ saveButtonLabel | translate }}</span>
@@ -387,7 +388,7 @@
                 mat-button
                 mat-flat-button
                 class="mat-basic"
-                data-cy="sp-manage-permissions-cancel"
+                data-cy="sp-manage-cancel"
                 (click)="close()"
             >
                 {{ 'Cancel' | translate }}
