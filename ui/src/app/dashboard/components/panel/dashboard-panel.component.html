@@ -76,13 +76,175 @@
                     >
                         <div fxLayout="column" fxFlex="100">
                             @if (editMode) {
-                                <sp-dashboard-chart-selection-panel
-                                    (addChartEmitter)="
-                                        addChartToDashboard($event)
-                                    "
+                                <div
                                     fxFlex="100"
+                                    class="designer-panel-content"
+                                    fxLayout="column"
                                 >
-                                </sp-dashboard-chart-selection-panel>
+                                    <div
+                                        fxFlex="100"
+                                        fxLayout="column"
+                                        class="no-overflow"
+                                    >
+                                        <mat-tab-group
+                                            color="accent"
+                                            fxFlexFill
+                                            class="small-tab-headers mat-tab-fill-height"
+                                            [(selectedIndex)]="
+                                                selectedDesignerTabIndex
+                                            "
+                                        >
+                                            <mat-tab
+                                                data-cy="designer-panel-data-config"
+                                                [label]="'Charts' | translate"
+                                            >
+                                                <div class="scroll-tab-content">
+                                                    <sp-chart-selection
+                                                        (addChartEmitter)="
+                                                            addChartToDashboard(
+                                                                $event
+                                                            )
+                                                        "
+                                                        fxFlex="100"
+                                                    >
+                                                    </sp-chart-selection>
+                                                </div>
+                                            </mat-tab>
+                                            <mat-tab
+                                                data-cy="designer-panel-dashboard-config"
+                                                [label]="'General' | translate"
+                                            >
+                                                <div
+                                                    class="scroll-tab-content p-15"
+                                                    fxLayout="column"
+                                                    fxLayoutGap="10px"
+                                                >
+                                                    <sp-form-field
+                                                        [level]="3"
+                                                        [label]="
+                                                            'Default view mode'
+                                                                | translate
+                                                        "
+                                                    >
+                                                        <mat-radio-group
+                                                            [(ngModel)]="
+                                                                dashboard
+                                                                    .dashboardGeneralSettings
+                                                                    .defaultViewMode
+                                                            "
+                                                            (ngModelChange)="
+                                                                viewMode =
+                                                                    $event
+                                                            "
+                                                        >
+                                                            <mat-radio-button
+                                                                class="view-radio-button"
+                                                                [value]="'grid'"
+                                                            >
+                                                                {{
+                                                                    'Grid view'
+                                                                        | translate
+                                                                }}
+                                                            </mat-radio-button>
+                                                            <mat-radio-button
+                                                                class="view-radio-button"
+                                                                [value]="
+                                                                    'slide'
+                                                                "
+                                                            >
+                                                                {{
+                                                                    'Slide view'
+                                                                        | translate
+                                                                }}
+                                                            </mat-radio-button>
+                                                        </mat-radio-group>
+                                                    </sp-form-field>
+
+                                                    <sp-form-field
+                                                        [level]="3"
+                                                        [label]="
+                                                            'Grid columns'
+                                                                | translate
+                                                        "
+                                                    >
+                                                        <mat-form-field
+                                                            floatLabel="auto"
+                                                            color="accent"
+                                                        >
+                                                            <input
+                                                                required
+                                                                matInput
+                                                                type="number"
+                                                                data-cy="grid-columns"
+                                                                [(ngModel)]="
+                                                                    dashboard.gridColumns
+                                                                "
+                                                            />
+                                                        </mat-form-field>
+                                                    </sp-form-field>
+
+                                                    <sp-form-field
+                                                        [level]="3"
+                                                        [label]="
+                                                            'Grid row height (px)'
+                                                                | translate
+                                                        "
+                                                    >
+                                                        <mat-form-field
+                                                            floatLabel="auto"
+                                                            color="accent"
+                                                        >
+                                                            <input
+                                                                matInput
+                                                                type="number"
+                                                                min="40"
+                                                                max="200"
+                                                                step="5"
+                                                                data-cy="grid-row-height"
+                                                                [(ngModel)]="
+                                                                    dashboard
+                                                                        .dashboardGeneralSettings
+                                                                        .gridRowHeightPx
+                                                                "
+                                                            />
+                                                        </mat-form-field>
+                                                    </sp-form-field>
+
+                                                    <div
+                                                        class="mt-10"
+                                                        fxLayout="column"
+                                                    >
+                                                        <mat-checkbox
+                                                            [(ngModel)]="
+                                                                dashboard
+                                                                    .dashboardGeneralSettings
+                                                                    .globalTimeEnabled
+                                                            "
+                                                        >
+                                                            {{
+                                                                'Use global time settings instead of chart time settings'
+                                                                    | translate
+                                                            }}
+                                                        </mat-checkbox>
+                                                        <mat-checkbox
+                                                            [(ngModel)]="
+                                                                dashboard
+                                                                    .dashboardGeneralSettings
+                                                                    .chartOverrides
+                                                                    .hideToolbox
+                                                            "
+                                                        >
+                                                            {{
+                                                                'Hide chart toolboxes in this dashboard'
+                                                                    | translate
+                                                            }}
+                                                        </mat-checkbox>
+                                                    </div>
+                                                </div>
+                                            </mat-tab>
+                                        </mat-tab-group>
+                                    </div>
+                                </div>
                             }
                         </div>
                     </mat-drawer>

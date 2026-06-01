@@ -17,14 +17,7 @@
  */
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {
-    firstValueFrom,
-    from,
-    Observable,
-    of,
-    Subscription,
-    timer,
-} from 'rxjs';
+import { Observable, of, Subscription, timer } from 'rxjs';
 import { DashboardGridViewComponent } from '../../../dashboard-shared/components/chart-view/grid-view/dashboard-grid-view.component';
 import {
     ClientDashboardItem,
@@ -33,8 +26,6 @@ import {
     DashboardService,
     DataExplorerWidgetModel,
     DataLakeMeasure,
-    LinkageData,
-    PermissionsService,
     TimeSelectionConstants,
     TimeSettings,
 } from '@streampipes/platform-services';
@@ -49,14 +40,9 @@ import { DashboardSlideViewComponent } from '../../../dashboard-shared/component
 import {
     ConfirmDialogAction,
     ConfirmDialogComponent,
-    AssetSaveService,
     CurrentUserService,
-    DialogService,
+    FormFieldComponent,
     KeyboardShortcutService,
-    ObjectManageDialogComponent,
-    ObjectManageDialogResourceConfig,
-    ObjectManageDialogResult,
-    PanelType,
     ShortcutRegistration,
     SpBasicViewComponent,
     SpBreadcrumbService,
@@ -77,27 +63,50 @@ import {
     MatDrawerContainer,
     MatDrawerContent,
 } from '@angular/material/sidenav';
-import { ChartSelectionPanelComponent } from './chart-selection-panel/chart-selection-panel.component';
 import {
+    FlexFillDirective,
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { ChartSelectionComponent } from './chart-selection-panel/chart-selection/chart-selection.component';
+import { MatFormField, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
     selector: 'sp-dashboard-panel',
     templateUrl: './dashboard-panel.component.html',
-    styleUrls: ['./dashboard-panel.component.scss'],
+    styleUrls: [
+        './dashboard-panel.component.scss',
+        '../../../chart/components/chart-view/designer-panel/chart-designer-panel.component.scss',
+    ],
     imports: [
         SpBasicViewComponent,
         FlexDirective,
+        FlexFillDirective,
         LayoutDirective,
         LayoutAlignDirective,
+        LayoutGapDirective,
         DashboardToolbarComponent,
         MatDrawerContainer,
         MatDrawer,
-        ChartSelectionPanelComponent,
         MatDrawerContent,
+        MatTabGroup,
+        MatTab,
+        ChartSelectionComponent,
+        FormFieldComponent,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatError,
+        MatRadioGroup,
+        MatRadioButton,
+        MatCheckbox,
         DashboardGridViewComponent,
         DashboardSlideViewComponent,
         TranslatePipe,
@@ -120,6 +129,7 @@ export class DashboardPanelComponent
 
     editMode = false;
     timeRangeVisible = true;
+    selectedDesignerTabIndex = 0;
 
     _dashboardGrid: DashboardGridViewComponent;
     _dashboardSlide: DashboardSlideViewComponent;
@@ -136,13 +146,10 @@ export class DashboardPanelComponent
     private shortcutService = inject(KeyboardShortcutService);
     private detectChangesService = inject(ChartDetectChangesService);
     private dialog = inject(MatDialog);
-    private dialogService = inject(DialogService);
-    private assetSaveService = inject(AssetSaveService);
     private timeSelectionService = inject(TimeSelectionService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
     private dashboardService = inject(DashboardService);
-    private permissionsService = inject(PermissionsService);
     private route = inject(ActivatedRoute);
     private routingService = inject(ChartRoutingService);
     private breadcrumbService = inject(SpBreadcrumbService);
@@ -152,8 +159,6 @@ export class DashboardPanelComponent
 
     observableGenerator =
         this.dataExplorerSharedService.defaultObservableGenerator();
-
-    private pendingManageResult?: ObjectManageDialogResult<Dashboard>;
 
     public ngOnInit() {
         this.shortcutReg = this.shortcutService.register('dashboard-panel', [
@@ -240,17 +245,14 @@ export class DashboardPanelComponent
             .dashboardTimeSettings as TimeSettings;
         const currentTimeSettings = this.dashboard
             .dashboardTimeSettings as TimeSettings;
-        return (
-            this.hasPendingManageChanges() ||
-            this.detectChangesService.shouldShowConfirm(
-                this.originalDashboard,
-                this.dashboard,
-                originalTimeSettings,
-                currentTimeSettings,
-                model => {
-                    model.dashboardTimeSettings = undefined;
-                },
-            )
+        return this.detectChangesService.shouldShowConfirm(
+            this.originalDashboard,
+            this.dashboard,
+            originalTimeSettings,
+            currentTimeSettings,
+            model => {
+                model.dashboardTimeSettings = undefined;
+            },
         );
     }
 
@@ -262,38 +264,8 @@ export class DashboardPanelComponent
     }
 
     manageDashboard(): void {
-        const resourceConfig: ObjectManageDialogResourceConfig<Dashboard> = {
-            resourceLabel: 'Dashboard',
-            nameLabel: 'Dashboard title',
-            descriptionLabel: 'Dashboard description',
-            idProperty: 'elementId',
-            nameProperty: 'name',
-            assetLinkType: 'dashboard',
-            assetLinkCheckboxLabel:
-                'Add the current dashboard to an existing asset',
-        };
-        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: this.translateService.instant('Manage'),
-            width: '50vw',
-            data: {
-                objectInstanceId: this.dashboard.elementId,
-                resource: { ...this.dashboard },
-                saveMode: 'deferred',
-                resourceConfig,
-                headerTitle:
-                    this.translateService.instant('Manage Dashboard ') +
-                    this.dashboard.name,
-            },
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result && typeof result !== 'boolean') {
-                Object.assign(this.dashboard, result.resource);
-                this.pendingManageResult = result;
-                this.editMode = true;
-            }
-        });
+        this.editMode = true;
+        this.selectedDesignerTabIndex = 1;
     }
 
     startEditMode(widgetModel: DataExplorerWidgetModel) {
@@ -349,6 +321,7 @@ export class DashboardPanelComponent
                             this.dataExplorerDashboardService.makeUniqueWidgetId();
                     });
                     this.dashboard = compositeDashboard.dashboard;
+                    this.initializeDashboardSettings();
                     this.widgets = compositeDashboard.widgets;
                     this.originalDashboard = JSON.parse(
                         JSON.stringify(compositeDashboard.dashboard),
@@ -363,12 +336,6 @@ export class DashboardPanelComponent
                 this.viewMode =
                     this.dashboard.dashboardGeneralSettings.defaultViewMode ||
                     'grid';
-                if (
-                    this.dashboard.dashboardGeneralSettings
-                        .globalTimeEnabled === undefined
-                ) {
-                    this.dashboard.dashboardGeneralSettings.globalTimeEnabled = true;
-                }
                 if (!this.dashboard.dashboardTimeSettings.startTime) {
                     this.dashboard.dashboardTimeSettings =
                         this.timeSelectionService.getDefaultTimeSettings();
@@ -453,57 +420,16 @@ export class DashboardPanelComponent
             tap(savedDashboard => {
                 Object.assign(this.dashboard, savedDashboard);
             }),
-            switchMap(() => from(this.savePendingManageChanges())),
         );
     }
 
-    private async savePendingManageChanges(): Promise<void> {
-        const result = this.pendingManageResult;
-        if (!result) {
-            return;
-        }
-
-        if (result.permission) {
-            await firstValueFrom(
-                this.permissionsService.updatePermission(result.permission),
-            );
-        }
-
-        if (this.shouldSaveManagedAssetLinks(result)) {
-            await this.assetSaveService.saveSelectedAssets(
-                result.selectedAssets,
-                this.createDashboardLinkageData(),
-                result.deselectedAssets,
-                result.originalAssets,
-            );
-        }
-
-        this.pendingManageResult = undefined;
-    }
-
-    private shouldSaveManagedAssetLinks(
-        result: ObjectManageDialogResult<Dashboard>,
-    ): boolean {
-        return (
-            result.addToAssets &&
-            (result.selectedAssets.length > 0 ||
-                result.deselectedAssets.length > 0 ||
-                result.originalAssets.length > 0)
-        );
-    }
-
-    private createDashboardLinkageData(): LinkageData[] {
-        return [
-            {
-                type: 'dashboard',
-                id: this.dashboard.elementId,
-                name: this.dashboard.name,
-            },
-        ];
-    }
-
-    private hasPendingManageChanges(): boolean {
-        return this.pendingManageResult !== undefined;
+    private initializeDashboardSettings(): void {
+        this.dashboard.dashboardGeneralSettings ??= {};
+        this.dashboard.dashboardGeneralSettings.defaultViewMode ||= 'grid';
+        this.dashboard.dashboardGeneralSettings.globalTimeEnabled ??= true;
+        this.dashboard.dashboardGeneralSettings.chartOverrides ??= {};
+        this.dashboard.dashboardGeneralSettings.chartOverrides.hideToolbox ??= false;
+        this.dashboard.dashboardGeneralSettings.gridRowHeightPx ??= 90;
     }
 
     modifyRefreshInterval(liveSettings: DashboardLiveSettings): void {
