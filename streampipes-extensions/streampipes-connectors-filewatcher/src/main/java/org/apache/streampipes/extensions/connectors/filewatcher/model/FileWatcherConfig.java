@@ -27,6 +27,7 @@ public record FileWatcherConfig(Path directory,
                                 CsvParserSettings parserSettings,
                                 int pollIntervalSeconds,
                                 boolean singleFileGrowthMode,
+                                boolean considerLastModified,
                                 int interEventDelayMs,
                                 ZoneId timeZone) {
 }

@@ -1,0 +1,191 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<div class="migration-view" fxLayout="column" fxLayoutAlign="start stretch">
+    @if (measurementUpdateInfos.length > 0) {
+        <div class="migration-summary" fxLayout="column" fxLayoutGap="4px">
+            @if (hasCriticalFieldChanges()) {
+                <h4>
+                    {{
+                        'This pipeline cannot be updated because at least one data lake measurement field changed its datatype.'
+                            | translate
+                    }}
+                </h4>
+            } @else {
+                <h4>
+                    {{
+                        'This pipeline update requires manual review.'
+                            | translate
+                    }}
+                </h4>
+            }
+        </div>
+        <div class="migration-infos" fxLayout="column" fxLayoutGap="12px">
+            @for (updateInfo of measurementUpdateInfos; track updateInfo) {
+                <div
+                    class="pipeline-update-info"
+                    data-cy="sp-pipeline-edit-warning"
+                >
+                    <div class="pipeline-status" fxLayoutAlign="start center">
+                        @if (
+                            updateInfo.criticalMeasurementFieldChanges?.length >
+                            0
+                        ) {
+                            <mat-icon class="status-icon error-icon">
+                                error
+                            </mat-icon>
+                        } @else {
+                            <mat-icon class="status-icon warning-icon">
+                                warning
+                            </mat-icon>
+                        }
+                        <div>
+                            <div class="pipeline-title">
+                                {{ 'Measurement' | translate }}
+                                <b>{{ updateInfo.measurementName }}</b>
+                            </div>
+                            <div class="pipeline-description">
+                                @if (
+                                    updateInfo.criticalMeasurementFieldChanges
+                                        ?.length > 0
+                                ) {
+                                    {{
+                                        'This measurement has datatype changes that must be handled before the pipeline can be updated.'
+                                            | translate
+                                    }}
+                                } @else {
+                                    {{
+                                        'This measurement has charts that need manual review after the pipeline update.'
+                                            | translate
+                                    }}
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (
+                        updateInfo.criticalMeasurementFieldChanges?.length > 0
+                    ) {
+                        <div class="validation-infos" fxLayout="column">
+                            <div
+                                class="validation-info validation-info-error"
+                                data-cy="sp-pipeline-measurement-edit-warning"
+                            >
+                                <div
+                                    class="validation-info-title"
+                                    fxLayoutAlign="start center"
+                                >
+                                    <mat-icon class="error-icon">
+                                        error
+                                    </mat-icon>
+                                    <span>
+                                        {{
+                                            'Critical datatype changes'
+                                                | translate
+                                        }}
+                                    </span>
+                                </div>
+                                <div class="validation-info-message">
+                                    {{
+                                        getCriticalFieldChangesText(
+                                            updateInfo.criticalMeasurementFieldChanges
+                                        )
+                                    }}
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (updateInfo.chartSchemaUpdateInfos?.length > 0) {
+                        <div class="affected-charts" fxLayout="column">
+                            <div
+                                class="affected-charts-title"
+                                fxLayoutAlign="start center"
+                            >
+                                <mat-icon class="affected-charts-icon">
+                                    query_stats
+                                </mat-icon>
+                                {{ 'Affected charts' | translate }}
+                            </div>
+                            @for (
+                                chartUpdateInfo of updateInfo.chartSchemaUpdateInfos;
+                                track chartUpdateInfo
+                            ) {
+                                <div
+                                    class="affected-chart"
+                                    data-cy="sp-pipeline-chart-edit-warning"
+                                >
+                                    <div
+                                        class="affected-chart-title"
+                                        fxLayoutAlign="start center"
+                                    >
+                                        <mat-icon class="warning-icon">
+                                            warning
+                                        </mat-icon>
+                                        <span>
+                                            {{ 'Chart' | translate }}
+                                            <b>{{
+                                                chartUpdateInfo.chartTitle
+                                            }}</b>
+                                            {{
+                                                'needs manual review after this update.'
+                                                    | translate
+                                            }}
+                                        </span>
+                                    </div>
+                                    @if (
+                                        chartUpdateInfo.affectedFields?.length >
+                                        0
+                                    ) {
+                                        <div class="affected-fields">
+                                            <span class="affected-fields-label">
+                                                {{
+                                                    'Deleted fields' | translate
+                                                }}
+                                                :
+                                            </span>
+                                            <span>
+                                                {{
+                                                    getAffectedFieldsText(
+                                                        chartUpdateInfo.affectedFields
+                                                    )
+                                                }}
+                                            </span>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+    <div class="migration-actions">
+        <button
+            mat-button
+            mat-flat-button
+            color="accent"
+            [disabled]="hasCriticalFieldChanges()"
+            (click)="startUpdateEmitter.emit()"
+            data-cy="btn-update-pipeline-migrate"
+        >
+            {{ 'Update pipeline' | translate }}
+        </button>
+    </div>
+</div>

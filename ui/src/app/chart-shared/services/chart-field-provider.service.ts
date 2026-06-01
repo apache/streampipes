@@ -42,13 +42,14 @@ export class ChartFieldProviderService {
             nonNumericFields: [],
         };
 
-        sourceConfigs.forEach((sourceConfig, sourceIndex) => {
-            sourceConfig.queryConfig.fields
+        (sourceConfigs ?? []).forEach((sourceConfig, sourceIndex) => {
+            (sourceConfig.queryConfig?.fields ?? [])
                 .filter(field => field.selected)
                 .forEach(field => {
                     this.addField(
                         sourceConfig.measureName,
-                        sourceConfig.measure.eventSchema.eventProperties,
+                        sourceConfig.measure?.eventSchema?.eventProperties ??
+                            [],
                         sourceIndex,
                         field,
                         provider,
@@ -73,6 +74,10 @@ export class ChartFieldProviderService {
             p => p.runtimeName === fieldConfig.runtimeName,
         );
 
+        if (!property) {
+            return;
+        }
+
         if (!useAggregations) {
             this.addSingleField(
                 measure,
@@ -82,7 +87,7 @@ export class ChartFieldProviderService {
                 provider,
             );
         } else {
-            fieldConfig.aggregations.forEach(agg =>
+            (fieldConfig.aggregations ?? []).forEach(agg =>
                 this.addSingleField(
                     measure,
                     property,
@@ -141,7 +146,7 @@ export class ChartFieldProviderService {
     }
 
     public isDimensionProperty(p: EventProperty): boolean {
-        return p.propertyScope === 'DIMENSION_PROPERTY';
+        return p?.propertyScope === 'DIMENSION_PROPERTY';
     }
 
     public isBoolean(p: EventPropertyUnion): boolean {
@@ -159,7 +164,7 @@ export class ChartFieldProviderService {
     }
 
     public isTimestamp(p: EventProperty) {
-        return SemanticType.isTimestamp(p);
+        return !!p && SemanticType.isTimestamp(p);
     }
 
     public getAddedFields(
@@ -200,7 +205,7 @@ export class ChartFieldProviderService {
     private isPrimitive(property: any): boolean {
         return (
             property instanceof EventPropertyPrimitive ||
-            property['@class'] ===
+            property?.['@class'] ===
                 'org.apache.streampipes.model.schema.EventPropertyPrimitive'
         );
     }

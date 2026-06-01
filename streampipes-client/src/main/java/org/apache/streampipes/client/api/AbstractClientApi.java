@@ -19,11 +19,13 @@ package org.apache.streampipes.client.api;
 
 
 import org.apache.streampipes.client.http.DeleteRequest;
+import org.apache.streampipes.client.http.DeleteRequestWithoutPayloadResponse;
 import org.apache.streampipes.client.http.GetRequest;
 import org.apache.streampipes.client.http.PostRequestWithPayloadResponse;
 import org.apache.streampipes.client.http.PostRequestWithoutPayload;
 import org.apache.streampipes.client.http.PostRequestWithoutPayloadResponse;
 import org.apache.streampipes.client.http.PutRequest;
+import org.apache.streampipes.client.http.PutRequestWithPayloadResponse;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.ListSerializer;
 import org.apache.streampipes.client.serializer.ObjectSerializer;
@@ -67,9 +69,20 @@ public class AbstractClientApi {
     new PutRequest<>(clientConfig, apiPath, serializer, object).executeRequest();
   }
 
+  protected <K, V> V put(StreamPipesApiPath apiPath, K object, Class<V> responseClass) {
+    ObjectSerializer<K, V> serializer = new ObjectSerializer<>();
+    return new PutRequestWithPayloadResponse<>(clientConfig, apiPath, serializer, object, responseClass)
+        .executeRequest();
+  }
+
   protected <T> T delete(StreamPipesApiPath apiPath, Class<T> responseClass) {
     Serializer<Void, T, T> serializer = new ObjectSerializer<>();
     return new DeleteRequest<>(clientConfig, apiPath, responseClass, serializer).executeRequest();
+  }
+
+  protected void delete(StreamPipesApiPath apiPath) {
+    Serializer<Void, Void, Void> serializer = new ObjectSerializer<>();
+    new DeleteRequestWithoutPayloadResponse<>(clientConfig, apiPath, Void.class, serializer).executeRequest();
   }
 
   protected <K, V> V delete(StreamPipesApiPath apiPath,
@@ -77,6 +90,12 @@ public class AbstractClientApi {
                             Class<V> responseClass) {
     Serializer<K, V, V> serializer = new ObjectSerializer<>();
     return new DeleteRequest<>(clientConfig, apiPath, responseClass, serializer, object).executeRequest();
+  }
+
+  protected <K> void delete(StreamPipesApiPath apiPath, K object) {
+    Serializer<K, Void, Void> serializer = new ObjectSerializer<>();
+    new DeleteRequestWithoutPayloadResponse<>(clientConfig, apiPath, Void.class, serializer, object)
+        .executeRequest();
   }
 
   protected <K, V> V post(StreamPipesApiPath apiPath, K object, Class<V> responseClass) {

@@ -23,13 +23,20 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-started-update-migration',
     templateUrl: './adapter-started-update-migration.component.html',
     styleUrls: ['./adapter-started-update-migration.component.scss'],
-    imports: [LayoutDirective, LayoutAlignDirective, MatButton, TranslatePipe],
+    imports: [
+        LayoutDirective,
+        LayoutAlignDirective,
+        MatButton,
+        MatIcon,
+        TranslatePipe,
+    ],
 })
 export class SpAdapterStartedUpdateMigrationComponent {
     @Input()
@@ -37,4 +44,8 @@ export class SpAdapterStartedUpdateMigrationComponent {
 
     @Output()
     startUpdateEmitter: EventEmitter<void> = new EventEmitter<void>();
+
+    getAffectedFieldsText(affectedFields: string[]): string {
+        return affectedFields.join(', ');
+    }
 }

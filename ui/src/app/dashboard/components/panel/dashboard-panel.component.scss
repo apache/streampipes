@@ -34,6 +34,10 @@
     flex: 1 1 100%;
 }
 
+.dashboard-content {
+    position: relative;
+}
+
 .designer-panel-container {
     width: 100%;
     height: 100%;
@@ -41,6 +45,19 @@
 
 .designer-panel {
     width: 350px;
+}
+
+.panel-toggle-button {
+    position: absolute;
+    top: 1rem;
+    right: 0.5rem;
+    z-index: 2;
+    background: var(--mat-sys-surface, #fff);
+    box-shadow: 0 0.125rem 0.5rem rgb(0 0 0 / 15%);
+}
+
+.panel-toggle-button-collapsed {
+    right: 1rem;
 }
 
 .edit-menu-btn {

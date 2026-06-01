@@ -26,13 +26,10 @@ public class FileWatcherCheckpoint implements Serializable {
 
   private String currentFileName;
   private long currentSequence;
-  private long lastProcessedRecord;
-  private FileFingerprint currentFingerprint;
-  private Map<String, FileFingerprint> processedGenerations;
+  private Map<String, FileGenerationState> generationStates;
 
   public FileWatcherCheckpoint() {
-    this.lastProcessedRecord = -1L;
-    this.processedGenerations = new HashMap<>();
+    this.generationStates = new HashMap<>();
   }
 
   public String getCurrentFileName() {
@@ -51,27 +48,11 @@ public class FileWatcherCheckpoint implements Serializable {
     this.currentSequence = currentSequence;
   }
 
-  public long getLastProcessedRecord() {
-    return lastProcessedRecord;
+  public Map<String, FileGenerationState> getGenerationStates() {
+    return generationStates;
   }
 
-  public void setLastProcessedRecord(long lastProcessedRecord) {
-    this.lastProcessedRecord = lastProcessedRecord;
-  }
-
-  public FileFingerprint getCurrentFingerprint() {
-    return currentFingerprint;
-  }
-
-  public void setCurrentFingerprint(FileFingerprint currentFingerprint) {
-    this.currentFingerprint = currentFingerprint;
-  }
-
-  public Map<String, FileFingerprint> getProcessedGenerations() {
-    return processedGenerations;
-  }
-
-  public void setProcessedGenerations(Map<String, FileFingerprint> processedGenerations) {
-    this.processedGenerations = processedGenerations;
+  public void setGenerationStates(Map<String, FileGenerationState> generationStates) {
+    this.generationStates = generationStates;
   }
 }

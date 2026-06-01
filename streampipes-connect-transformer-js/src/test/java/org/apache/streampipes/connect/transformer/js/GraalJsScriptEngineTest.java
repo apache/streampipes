@@ -24,6 +24,8 @@ import org.apache.streampipes.connect.transformer.api.Context;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptCompilationException;
 import org.apache.streampipes.connect.transformer.api.exception.ScriptExecutionException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.graalvm.polyglot.proxy.ProxyArray;
 import org.graalvm.polyglot.proxy.ProxyExecutable;
 import org.graalvm.polyglot.proxy.ProxyObject;
 import org.junit.jupiter.api.Test;
@@ -41,6 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GraalJsScriptEngineTest {
 
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private final GraalJsScriptEngine engine = new GraalJsScriptEngine();
 
   @Test
@@ -111,6 +114,112 @@ public class GraalJsScriptEngineTest {
         output.get(0).get("reading")
     );
     assertEquals(List.of(41, 42), output.get(0).get("history"));
+  }
+
+  @Test
+  void serializePrimitiveArraysInCollectedOutput() throws Exception {
+    var transformer = engine.compile("""
+        function transform(event, out, ctx) {
+          var values = [1, 2, 3];
+          var names = ["a", "b"];
+          out.collect({
+          values: values,
+          names: names,
+          intInput: event.intInput,
+          stringInput: event.stringInput
+          });
+        }
+        """);
+
+    var output = new ArrayList<Map<String, Object>>();
+    Integer[] intInput = {1, 2, 3};
+    String[] stringInput = {"a", "b"};
+    transformer.transform(new LinkedHashMap<>(
+        Map.of(
+            "value", 1,
+            "intInput", intInput,
+            "stringInput", stringInput)), output::add, null);
+
+    assertEquals(1, output.size());
+    assertEquals(List.of(1, 2, 3), output.get(0).get("values"));
+    assertEquals(List.of("a", "b"), output.get(0).get("names"));
+    assertEquals(List.of(1, 2, 3), output.get(0).get("intInput"));
+    assertEquals(List.of("a", "b"), output.get(0).get("stringInput"));
+    var serialized = OBJECT_MAPPER.writeValueAsString(output.get(0));
+    assertTrue(serialized.contains("\"values\":[1,2,3]"));
+    assertTrue(serialized.contains("\"names\":[\"a\",\"b\"]"));
+    assertTrue(serialized.contains("\"intInput\":[1,2,3]"));
+    assertTrue(serialized.contains("\"stringInput\":[\"a\",\"b\"]"));
+  }
+
+  @Test
+  void serializePrimitiveArraysInCollectedOutput2() throws Exception {
+    var transformer = engine.compile("""
+        function transform(event, out, ctx) {
+         if (Array.isArray(event.value)) {
+          event.value = event.value[0] === true ? 0 : 1;
+          }
+          out.collect(event);
+        }
+        """);
+
+    var output = new ArrayList<Map<String, Object>>();
+    Boolean[] booleanInput = {true, false};
+    transformer.transform(new LinkedHashMap<>(
+        Map.of(
+            "value", booleanInput)), output::add, null);
+
+    assertEquals(1, output.size());
+    assertEquals(0, output.get(0).get("value"));
+  }
+
+  @Test
+  void serializePrimitiveArraysNestedInHostMapOutput() throws Exception {
+    var transformer = engine.compile("""
+        function transform(event, out, ctx) {
+          const payload = ctx.client().wrapArray([1, 2, 3], ["a", "b"]);
+          out.collect(payload);
+        }
+        """);
+
+    var output = new ArrayList<Map<String, Object>>();
+    transformer.transform(
+        Map.of("value", 1),
+        output::add,
+        scriptContext(scriptClientWithHostMapWrapper())
+    );
+
+    assertEquals(1, output.size());
+    assertEquals(List.of(1, 2, 3), output.get(0).get("values"));
+    assertEquals(List.of("a", "b"), output.get(0).get("names"));
+
+    var serialized = OBJECT_MAPPER.writeValueAsString(output.get(0));
+    assertTrue(serialized.contains("\"values\":[1,2,3]"));
+    assertTrue(serialized.contains("\"names\":[\"a\",\"b\"]"));
+  }
+
+  @Test
+  void serializeProxyArraysNestedInHostMapOutput() throws Exception {
+    var transformer = engine.compile("""
+        function transform(event, out, ctx) {
+          out.collect(ctx.client().proxyArrayMap());
+        }
+        """);
+
+    var output = new ArrayList<Map<String, Object>>();
+    transformer.transform(
+        Map.of("value", 1),
+        output::add,
+        scriptContext(scriptClientWithProxyArrayMap())
+    );
+
+    assertEquals(1, output.size());
+    assertEquals(List.of(1, 2, 3), output.get(0).get("values"));
+    assertEquals(List.of("a", "b"), output.get(0).get("names"));
+
+    var serialized = OBJECT_MAPPER.writeValueAsString(output.get(0));
+    assertTrue(serialized.contains("\"values\":[1,2,3]"));
+    assertTrue(serialized.contains("\"names\":[\"a\",\"b\"]"));
   }
 
   @Test
@@ -328,6 +437,28 @@ public class GraalJsScriptEngineTest {
     ));
     return ProxyObject.fromMap(Map.of(
         "adapters", (ProxyExecutable) args -> adaptersApi
+    ));
+  }
+
+  private static Object scriptClientWithHostMapWrapper() {
+    return ProxyObject.fromMap(Map.of(
+        "wrapArray", (ProxyExecutable) args -> {
+          Map<String, Object> result = new LinkedHashMap<>();
+          result.put("values", args[0]);
+          result.put("names", args[1]);
+          return result;
+        }
+    ));
+  }
+
+  private static Object scriptClientWithProxyArrayMap() {
+    return ProxyObject.fromMap(Map.of(
+        "proxyArrayMap", (ProxyExecutable) args -> {
+          Map<String, Object> result = new LinkedHashMap<>();
+          result.put("values", ProxyArray.fromList(List.of(1, 2, 3)));
+          result.put("names", ProxyArray.fromList(List.of("a", "b")));
+          return result;
+        }
     ));
   }
 

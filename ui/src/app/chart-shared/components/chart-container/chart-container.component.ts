@@ -73,6 +73,7 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -91,6 +92,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
+        LayoutGapDirective,
         MatIconButton,
         MatIcon,
         FormsModule,
@@ -317,11 +319,19 @@ export class ChartContainerComponent
     }
 
     chooseWidget(widgetTypeId: string) {
-        if (widgetTypeId != undefined) {
+        if (widgetTypeId != undefined && !this.showRequiresAttentionMessage) {
             const widgetToDisplay =
                 this.chartRegistryService.getChartTemplate(widgetTypeId);
             this.loadComponent(widgetToDisplay.widgetComponent);
         }
+    }
+
+    get showRequiresAttentionMessage(): boolean {
+        return (
+            !this.dataViewMode &&
+            !!this.dashboardItem &&
+            this.configuredWidget?.healthStatus === 'REQUIRES_ATTENTION'
+        );
     }
 
     loadComponent(widgetToDisplay) {

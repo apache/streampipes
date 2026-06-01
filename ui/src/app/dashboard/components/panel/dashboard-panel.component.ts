@@ -127,6 +127,7 @@ export class DashboardPanelComponent
     viewMode = 'grid';
 
     editMode = false;
+    chartSelectionPanelExpanded = false;
     timeRangeVisible = true;
     selectedDesignerTabIndex = 0;
 
@@ -183,7 +184,7 @@ export class DashboardPanelComponent
                 UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );
             if (queryParams.editMode && this.hasDashboardWritePrivileges) {
-                this.editMode = true;
+                this.triggerEditMode();
             }
         });
     }
@@ -311,6 +312,11 @@ export class DashboardPanelComponent
 
     triggerEditMode() {
         this.editMode = true;
+        this.chartSelectionPanelExpanded = true;
+    }
+
+    toggleChartSelectionPanel() {
+        this.chartSelectionPanelExpanded = !this.chartSelectionPanelExpanded;
     }
 
     deleteDashboard() {

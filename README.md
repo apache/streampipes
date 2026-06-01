@@ -140,7 +140,7 @@ Quick Links:
 To properly build the StreamPipes core, the following tools should be installed:
 
 ### Prerequisites
-* Java 17 JDK (We officially only support Java 17, JDKs above 17 might work as well, but we don't provide any guarantee)
+* Java 25 JDK (We officially only support Java 25, JDKs above 25 might work as well, but we don't provide any guarantee)
 * Maven (tested with 3.8)
 * NodeJS + NPM (tested with v12+/ v6+)
 * Docker + Docker-Compose

@@ -69,7 +69,7 @@
                     class="designer-panel-container h-100 dashboard-grid"
                 >
                     <mat-drawer
-                        [opened]="editMode"
+                        [opened]="editMode && chartSelectionPanelExpanded"
                         mode="side"
                         position="end"
                         class="designer-panel"
@@ -261,7 +261,40 @@
                             }
                         </div>
                     </mat-drawer>
-                    <mat-drawer-content class="h-100 dashboard-grid">
+                    <mat-drawer-content
+                        class="h-100 dashboard-grid dashboard-content"
+                    >
+                        @if (editMode) {
+                            <button
+                                mat-icon-button
+                                type="button"
+                                class="panel-toggle-button"
+                                [class.panel-toggle-button-collapsed]="
+                                    !chartSelectionPanelExpanded
+                                "
+                                (click)="toggleChartSelectionPanel()"
+                                [attr.aria-label]="
+                                    (chartSelectionPanelExpanded
+                                        ? 'Collapse chart selection panel'
+                                        : 'Expand chart selection panel'
+                                    ) | translate
+                                "
+                                [matTooltip]="
+                                    (chartSelectionPanelExpanded
+                                        ? 'Collapse chart selection panel'
+                                        : 'Expand chart selection panel'
+                                    ) | translate
+                                "
+                            >
+                                <mat-icon>
+                                    {{
+                                        chartSelectionPanelExpanded
+                                            ? 'chevron_right'
+                                            : 'chevron_left'
+                                    }}
+                                </mat-icon>
+                            </button>
+                        }
                         @if (dashboard.widgets.length === 0) {
                             <div
                                 fxFlex="100"

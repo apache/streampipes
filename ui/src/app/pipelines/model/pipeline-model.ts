@@ -20,3 +20,5 @@ export enum PipelineAction {
     Start,
     Stop,
 }
+
+export type MeasurementUpdateAction = 'edit-pipeline' | 'manage-datasets';

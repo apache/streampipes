@@ -27,6 +27,7 @@ import {
     PipelineCanvasMetadata,
     PipelineCanvasMetadataService,
     PipelineOperationStatus,
+    MeasurementUpdateInfo,
     PipelineService,
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
@@ -57,6 +58,7 @@ import { MultiStepStatusIndicatorComponent } from '../../../core-ui/multi-step-s
 import { MatDivider } from '@angular/material/divider';
 import { PipelineStartedStatusComponent } from '../../../core-ui/pipeline/pipeline-started-status/pipeline-started-status.component';
 import { MatButton } from '@angular/material/button';
+import { SavePipelineUpdateMigrationComponent } from './save-pipeline-update-migration/save-pipeline-update-migration.component';
 
 @Component({
     selector: 'sp-save-pipeline',
@@ -72,6 +74,7 @@ import { MatButton } from '@angular/material/button';
         LayoutGapDirective,
         MatButton,
         TranslatePipe,
+        SavePipelineUpdateMigrationComponent,
     ],
 })
 export class SavePipelineComponent implements OnInit {
@@ -117,6 +120,8 @@ export class SavePipelineComponent implements OnInit {
     statusIndicators: StatusIndicator[] = [];
     finalPipelineOperationStatus: PipelineOperationStatus;
     pipelineAction: PipelineAction;
+    pipelineUpdatePreflight = false;
+    measurementUpdateInfos: MeasurementUpdateInfo[] = [];
 
     ngOnInit() {
         this.storageOptions.updateModeActive =
@@ -196,7 +201,13 @@ export class SavePipelineComponent implements OnInit {
         this.pipelineCanvasMetadata._rev = undefined;
     }
 
-    savePipeline() {
+    savePipeline(skipPreflight = false) {
+        if (this.shouldPerformUpdatePreflight(skipPreflight)) {
+            this.performUpdatePreflight();
+            return;
+        }
+
+        this.pipelineUpdatePreflight = false;
         let stopPipeline$: Observable<null | PipelineOperationStatus> =
             of(null);
         let savePipeline$: Observable<Message> =
@@ -216,6 +227,49 @@ export class SavePipelineComponent implements OnInit {
         }
 
         this.performStorageOperations(stopPipeline$, savePipeline$);
+    }
+
+    shouldPerformUpdatePreflight(skipPreflight: boolean): boolean {
+        return (
+            !skipPreflight &&
+            this.storageOptions.updateModeActive &&
+            this.storageOptions.updateMode !== 'clone' &&
+            this.hasDataLakeSink()
+        );
+    }
+
+    hasDataLakeSink(): boolean {
+        return this.pipeline.actions.some(
+            action =>
+                action.appId ===
+                'org.apache.streampipes.sinks.internal.jvm.datalake',
+        );
+    }
+
+    performUpdatePreflight(): void {
+        this.operationProgress = true;
+        this.addStatusIndicator(
+            this.translateService.instant('Checking pipeline update'),
+            Status.PROGRESS,
+        );
+        this.pipelineService
+            .performPipelineMigrationPreflight(this.pipeline)
+            .subscribe({
+                next: updateInfos => {
+                    if (updateInfos.length === 0) {
+                        this.modifyStatusIndicator(Status.SUCCESS);
+                        this.savePipeline(true);
+                    } else {
+                        this.measurementUpdateInfos = updateInfos;
+                        this.pipelineUpdatePreflight = true;
+                        this.operationProgress = false;
+                        this.statusIndicators = [];
+                    }
+                },
+                error: msg => {
+                    this.onFailure(msg);
+                },
+            });
     }
 
     updateId(entity: InvocablePipelineElementUnion) {
@@ -319,7 +373,9 @@ export class SavePipelineComponent implements OnInit {
     onFailure(msg?: any) {
         this.operationCompleted = true;
         this.operationSuccess = false;
-        this.modifyStatusIndicator(Status.FAILURE);
+        if (this.statusIndicators.length > 0) {
+            this.modifyStatusIndicator(Status.FAILURE);
+        }
     }
 
     showPipelineOperationStatus(

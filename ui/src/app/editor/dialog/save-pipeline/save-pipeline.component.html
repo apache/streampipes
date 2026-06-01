@@ -19,7 +19,11 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content padding-20">
         <div fxFlex="100" fxLayout="column">
-            @if (!operationCompleted && !operationProgress) {
+            @if (
+                !operationCompleted &&
+                !operationProgress &&
+                !pipelineUpdatePreflight
+            ) {
                 <sp-save-pipeline-settings
                     [currentPipelineName]="pipeline.name"
                     [submitPipelineForm]="submitPipelineForm"
@@ -30,6 +34,18 @@
                     [(originalAssets)]="originalAssets"
                 >
                 </sp-save-pipeline-settings>
+            }
+
+            @if (
+                pipelineUpdatePreflight &&
+                !operationCompleted &&
+                !operationProgress
+            ) {
+                <sp-save-pipeline-update-migration
+                    [measurementUpdateInfos]="measurementUpdateInfos"
+                    (startUpdateEmitter)="savePipeline(true)"
+                >
+                </sp-save-pipeline-update-migration>
             }
 
             @if (operationProgress || operationCompleted) {
@@ -70,7 +86,9 @@
                 Open pipeline overview
             </button>
         }
-        @if (!operationCompleted && !operationSuccess) {
+        @if (
+            !operationCompleted && !operationSuccess && !pipelineUpdatePreflight
+        ) {
             <button
                 [disabled]="
                     !submitPipelineForm.valid ||

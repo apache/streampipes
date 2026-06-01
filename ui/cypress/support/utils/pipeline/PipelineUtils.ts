@@ -257,4 +257,9 @@ export class PipelineUtils {
             .find('tr')
             .should('have.length', expectedCount + 1);
     }
+
+    public static pipelineElementUpdateCompleted() {
+        PipelineBtns.savingPipelineModification().should('be.visible');
+        PipelineBtns.savingPipelineModification().should('not.exist');
+    }
 }
