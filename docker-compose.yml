@@ -36,6 +36,7 @@ services:
     image: streampipes_backend:release-validation
     environment:
       - SP_PRIORITIZED_PROTOCOL=nats
+      - SP_SETUP_PROMETHEUS_ENDPOINT=true
     depends_on:
       - couchdb
     volumes:

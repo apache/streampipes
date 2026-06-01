@@ -25,7 +25,8 @@
         "SP_CORE_EXTENSION_TRANSPORT_MODE": "nats",
         "SP_EXTENSION_TRANSPORT_MODE": "nats",
         "SP_EXTENSION_REQUEST_TOPIC_PREFIX": "sp.extensions.request",
-        "SP_DEBUG": "false"
+        "SP_DEBUG": "false",
+        "SP_SETUP_PROMETHEUS_ENDPOINT":"true"
       }
     },
     {
