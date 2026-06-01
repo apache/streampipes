@@ -81,7 +81,7 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
         });
     }
 
-    openNewDashboardDialog2() {
+    openNewDashboardDialog() {
         const dashboard = this.makeDashboard();
         const resourceConfig: ObjectManageDialogResourceConfig<Dashboard> = {
             resourceLabel: 'Dashboard',
@@ -118,10 +118,6 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
                 this.dashboardOverview.getDashboards();
             }
         });
-    }
-
-    openNewDashboardDialog() {
-        this.openNewDashboardDialog2();
     }
 
     private makeDashboard(): Dashboard {
