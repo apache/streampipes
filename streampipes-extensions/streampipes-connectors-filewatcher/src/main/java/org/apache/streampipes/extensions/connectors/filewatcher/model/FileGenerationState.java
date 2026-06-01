@@ -19,40 +19,34 @@
 package org.apache.streampipes.extensions.connectors.filewatcher.model;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
-public class FileWatcherCheckpoint implements Serializable {
+public class FileGenerationState implements Serializable {
 
-  private String currentFileName;
-  private long currentSequence;
-  private Map<String, FileGenerationState> generationStates;
+  private FileFingerprint fingerprint;
+  private long lastProcessedRecord;
 
-  public FileWatcherCheckpoint() {
-    this.generationStates = new HashMap<>();
+  public FileGenerationState() {
+    this.lastProcessedRecord = -1L;
   }
 
-  public String getCurrentFileName() {
-    return currentFileName;
+  public FileGenerationState(FileFingerprint fingerprint, long lastProcessedRecord) {
+    this.fingerprint = fingerprint;
+    this.lastProcessedRecord = lastProcessedRecord;
   }
 
-  public void setCurrentFileName(String currentFileName) {
-    this.currentFileName = currentFileName;
+  public FileFingerprint getFingerprint() {
+    return fingerprint;
   }
 
-  public long getCurrentSequence() {
-    return currentSequence;
+  public void setFingerprint(FileFingerprint fingerprint) {
+    this.fingerprint = fingerprint;
   }
 
-  public void setCurrentSequence(long currentSequence) {
-    this.currentSequence = currentSequence;
+  public long getLastProcessedRecord() {
+    return lastProcessedRecord;
   }
 
-  public Map<String, FileGenerationState> getGenerationStates() {
-    return generationStates;
-  }
-
-  public void setGenerationStates(Map<String, FileGenerationState> generationStates) {
-    this.generationStates = generationStates;
+  public void setLastProcessedRecord(long lastProcessedRecord) {
+    this.lastProcessedRecord = lastProcessedRecord;
   }
 }
