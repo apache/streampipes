@@ -282,7 +282,7 @@ export class ChartUtils {
     public static createAndEditDashboard(name: string) {
         // Create new data view
         ChartBtns.newDashboardDialogBtn().click();
-
+        ChartBtns.saveDashboardBtn().click();
         // Configure data view
         cy.dataCy('managed-resource-name').type(name);
         ChartBtns.saveDataViewBtn().click();
