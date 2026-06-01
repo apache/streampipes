@@ -141,6 +141,7 @@ export class DashboardPanelComponent
     timeSettings: TimeSettings;
     viewMode = 'grid';
 
+    createMode = false;
     editMode = false;
     chartSelectionPanelExpanded = false;
     timeRangeVisible = true;
@@ -197,13 +198,21 @@ export class DashboardPanelComponent
         const startTime = params.startTime;
         const endTime = params.endTime;
 
-        this.getDashboard(params.id, startTime, endTime);
+        this.createMode = params.id === 'create';
+        if (this.createMode) {
+            this.initializeNewDashboard();
+        } else {
+            this.getDashboard(params.id, startTime, endTime);
+        }
 
         this.auth$ = this.currentUserService.user$.subscribe(_ => {
             this.hasDashboardWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );
-            if (queryParams.editMode && this.hasDashboardWritePrivileges) {
+            if (
+                (this.createMode || queryParams.editMode) &&
+                this.hasDashboardWritePrivileges
+            ) {
                 this.triggerEditMode();
             }
         });
@@ -300,8 +309,57 @@ export class DashboardPanelComponent
 
     persistDashboardChanges() {
         this.dashboard.dashboardGeneralSettings.defaultViewMode = this.viewMode;
+        if (this.createMode) {
+            this.openCreateDashboardDialog();
+            return;
+        }
         this.saveDashboardChanges().subscribe(() => {
             this.routingService.navigateToDashboardOverview(true);
+        });
+    }
+
+    private openCreateDashboardDialog(): void {
+        const resourceConfig: ObjectManageDialogResourceConfig<Dashboard> = {
+            resourceLabel: 'Dashboard',
+            nameLabel: 'Dashboard title',
+            descriptionLabel: 'Dashboard description',
+            idProperty: 'elementId',
+            nameProperty: 'name',
+            assetLinkType: 'dashboard',
+            assetLinkCheckboxLabel:
+                'Add the current dashboard to an existing asset',
+            saveResource: resource =>
+                this.dashboardService.saveDashboard(resource).pipe(
+                    tap(savedDashboard => {
+                        Object.assign(resource, savedDashboard);
+                        Object.assign(this.dashboard, savedDashboard);
+                    }),
+                ),
+        };
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('New dashboard'),
+            width: '50vw',
+            data: {
+                createMode: true,
+                resource: this.dashboard,
+                saveMode: 'immediate',
+                resourceConfig,
+                headerTitle: this.translateService.instant('New dashboard'),
+            },
+        });
+
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.createMode = false;
+                this.originalDashboard = JSON.parse(
+                    JSON.stringify(this.dashboard),
+                );
+                this.routingService.navigateToDashboard(
+                    true,
+                    this.dashboard.elementId,
+                );
+            }
         });
     }
 
@@ -364,7 +422,7 @@ export class DashboardPanelComponent
     }
 
     discardChanges() {
-        this.routingService.navigateToDataViewOverview(true);
+        this.routingService.navigateToDashboardOverview(true);
     }
 
     triggerEditMode() {
@@ -380,6 +438,45 @@ export class DashboardPanelComponent
         this.dashboardService.deleteDashboard(this.dashboard).subscribe(_ => {
             this.goBackToOverview();
         });
+    }
+
+    private initializeNewDashboard(): void {
+        this.dashboard = {
+            dashboardGeneralSettings: {
+                chartOverrides: {
+                    hideToolbox: false,
+                },
+                defaultViewMode: 'grid',
+                globalTimeEnabled: true,
+                gridRowHeightPx: 90,
+            },
+            widgets: [],
+            name: '',
+            dashboardLiveSettings: {
+                refreshModeActive: false,
+                refreshIntervalInSeconds: 10,
+                label: this.translateService.instant('Off'),
+            },
+            dashboardTimeSettings:
+                this.timeSelectionService.getDefaultTimeSettings(),
+            metadata: {
+                createdAtEpochMs: Date.now(),
+                lastModifiedEpochMs: Date.now(),
+            },
+            gridColumns: 12,
+        };
+        this.widgets = [];
+        this.originalDashboard = JSON.parse(JSON.stringify(this.dashboard));
+        this.viewMode = this.dashboard.dashboardGeneralSettings.defaultViewMode;
+        this.timeSettings = this.dashboard.dashboardTimeSettings;
+        this.dashboardLoaded = true;
+        this.breadcrumbService.updateBreadcrumb(
+            this.breadcrumbService.makeRoute(
+                [SpDashboardRoutes.BASE],
+                this.translateService.instant('New dashboard'),
+            ),
+        );
+        this.modifyRefreshInterval(this.dashboard.dashboardLiveSettings);
     }
 
     getDashboard(dashboardId: string, startTime: number, endTime: number) {
@@ -448,7 +545,7 @@ export class DashboardPanelComponent
     }
 
     goBackToOverview() {
-        this.routingService.navigateToDataViewOverview();
+        this.routingService.navigateToDashboardOverview();
     }
 
     confirmLeaveDialog(

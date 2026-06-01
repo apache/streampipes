@@ -92,14 +92,16 @@
             "
         >
         </sp-time-range-selector>
-        <button
-            mat-icon-button
-            [matMenuTriggerFor]="optMenu"
-            [attr.aria-label]="'Options' | translate"
-            data-cy="options-data-explorer"
-        >
-            <mat-icon>more_vert</mat-icon>
-        </button>
+        @if (!createMode) {
+            <button
+                mat-icon-button
+                [matMenuTriggerFor]="optMenu"
+                [attr.aria-label]="'Options' | translate"
+                data-cy="options-data-explorer"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        }
         <mat-menu #optMenu="matMenu">
             @if (!editMode && hasDashboardWritePrivileges) {
                 <button

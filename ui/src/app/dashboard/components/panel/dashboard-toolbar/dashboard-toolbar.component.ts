@@ -72,6 +72,9 @@ export class DashboardToolbarComponent {
     hasDashboardWritePrivileges: boolean;
 
     @Input()
+    createMode: boolean;
+
+    @Input()
     timeSettings: TimeSettings;
 
     @Output()
