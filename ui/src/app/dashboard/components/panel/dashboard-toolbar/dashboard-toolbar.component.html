@@ -26,13 +26,13 @@
         >
             <button
                 mat-flat-button
-                [matTooltip]="'Save' | translate"
+                [matTooltip]="(createMode ? 'Create' : 'Save') | translate"
                 class="edit-menu-btn"
                 (click)="saveDashboardEmitter.emit()"
                 data-cy="save-dashboard-btn"
             >
                 <mat-icon>save</mat-icon>
-                <span>{{ 'Save' | translate }}</span>
+                <span>{{ (createMode ? 'Create' : 'Save') | translate }}</span>
             </button>
             <button
                 mat-flat-button
@@ -92,14 +92,16 @@
             "
         >
         </sp-time-range-selector>
-        <button
-            mat-icon-button
-            [matMenuTriggerFor]="optMenu"
-            [attr.aria-label]="'Options' | translate"
-            data-cy="options-data-explorer"
-        >
-            <mat-icon>more_vert</mat-icon>
-        </button>
+        @if (!createMode) {
+            <button
+                mat-icon-button
+                [matMenuTriggerFor]="optMenu"
+                [attr.aria-label]="'Options' | translate"
+                data-cy="options-data-explorer"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        }
         <mat-menu #optMenu="matMenu">
             @if (!editMode && hasDashboardWritePrivileges) {
                 <button
@@ -123,7 +125,7 @@
                     <span>{{ 'Hide time range selector' | translate }}</span>
                 </button>
             }
-            @if (hasDashboardWritePrivileges) {
+            @if (editMode && hasDashboardWritePrivileges) {
                 <button mat-menu-item (click)="manageDashboardEmitter.emit()">
                     <mat-icon>settings</mat-icon>
                     <span>{{ 'Manage dashboard' | translate }}</span>

@@ -192,7 +192,17 @@ export class ChartUtils {
 
     public static addNewDashboard(name: string) {
         ChartBtns.newDashboardDialogBtn().click();
+        ChartBtns.saveDashboardBtn().click();
         cy.dataCy('managed-resource-name').type(name);
+        ChartBtns.saveDataViewBtn().click();
+    }
+
+    public static addNewDashboardwithAssets(name: string, assetNameList) {
+        ChartBtns.newDashboardDialogBtn().click();
+        ChartBtns.saveDashboardBtn().click();
+        cy.dataCy('managed-resource-name').type(name);
+        ChartUtils.addAssetsToDashboard(assetNameList);
+        ChartBtns.saveDataViewBtn().click();
     }
 
     public static createDashboardWithLinkedAssets(
@@ -209,9 +219,7 @@ export class ChartUtils {
         ChartUtils.goToDashboard();
 
         //ADD Assets
-        ChartUtils.addNewDashboard(name);
-        ChartUtils.addAssetsToDashboard(assetNameList);
-        ChartUtils.saveDataView();
+        ChartUtils.addNewDashboardwithAssets(name, assetNameList);
         ChartUtils.waitForDashboardInOverview(name);
     }
 
@@ -274,7 +282,7 @@ export class ChartUtils {
     public static createAndEditDashboard(name: string) {
         // Create new data view
         ChartBtns.newDashboardDialogBtn().click();
-
+        ChartBtns.saveDashboardBtn().click();
         // Configure data view
         cy.dataCy('managed-resource-name').type(name);
         ChartBtns.saveDataViewBtn().click();

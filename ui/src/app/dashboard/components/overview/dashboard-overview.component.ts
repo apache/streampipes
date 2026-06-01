@@ -19,26 +19,22 @@
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
     CurrentUserService,
-    DialogService,
-    ObjectManageDialogComponent,
-    ObjectManageDialogResourceConfig,
-    PanelType,
     SpBasicViewComponent,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { SpDashboardRoutes } from '../../dashboard.breadcrumb';
-import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import { DashboardOverviewTableComponent } from './dashboard-overview-table/dashboard-overview-table.component';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription, tap } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { MatButton } from '@angular/material/button';
 import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
+import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
 
 @Component({
     selector: 'sp-dashboard-overview',
@@ -61,12 +57,10 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
     @ViewChild(DashboardOverviewTableComponent)
     dashboardOverview: DashboardOverviewTableComponent;
 
-    private dialogService = inject(DialogService);
-    private dashboardService = inject(DashboardService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
     private breadcrumbService = inject(SpBreadcrumbService);
-    private translateService = inject(TranslateService);
+    private routingService = inject(ChartRoutingService);
 
     private user$: Subscription;
 
@@ -82,69 +76,7 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
     }
 
     openNewDashboardDialog() {
-        const dashboard = this.makeDashboard();
-        const resourceConfig: ObjectManageDialogResourceConfig<Dashboard> = {
-            resourceLabel: 'Dashboard',
-            nameLabel: 'Dashboard title',
-            descriptionLabel: 'Dashboard description',
-            idProperty: 'elementId',
-            nameProperty: 'name',
-            assetLinkType: 'dashboard',
-            assetLinkCheckboxLabel:
-                'Add the current dashboard to an existing asset',
-            saveResource: resource =>
-                this.dashboardService.saveDashboard(resource).pipe(
-                    tap(savedDashboard => {
-                        Object.assign(resource, savedDashboard);
-                    }),
-                ),
-        };
-
-        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: this.translateService.instant('New dashboard'),
-            width: '50vw',
-            data: {
-                createMode: true,
-                resource: dashboard,
-                saveMode: 'immediate',
-                resourceConfig,
-                headerTitle: this.translateService.instant('New dashboard'),
-            },
-        });
-
-        dialogRef.afterClosed().subscribe(refresh => {
-            if (refresh) {
-                this.dashboardOverview.getDashboards();
-            }
-        });
-    }
-
-    private makeDashboard(): Dashboard {
-        const dashboard: Dashboard = {
-            dashboardGeneralSettings: {
-                chartOverrides: {
-                    hideToolbox: false,
-                },
-                defaultViewMode: 'grid',
-                globalTimeEnabled: true,
-                gridRowHeightPx: 90,
-            },
-            widgets: [],
-            name: '',
-            dashboardLiveSettings: {
-                refreshModeActive: false,
-                refreshIntervalInSeconds: 10,
-                label: this.translateService.instant('Off'),
-            },
-            metadata: {
-                createdAtEpochMs: Date.now(),
-                lastModifiedEpochMs: Date.now(),
-            },
-            gridColumns: 12,
-        };
-
-        return dashboard;
+        this.routingService.navigateToDashboard(true, 'create');
     }
 
     ngOnDestroy() {
