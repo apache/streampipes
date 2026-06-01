@@ -355,10 +355,7 @@ export class DashboardPanelComponent
                 this.originalDashboard = JSON.parse(
                     JSON.stringify(this.dashboard),
                 );
-                this.routingService.navigateToDashboard(
-                    true,
-                    this.dashboard.elementId,
-                );
+                this.routingService.navigateToDashboardOverview(true);
             }
         });
     }

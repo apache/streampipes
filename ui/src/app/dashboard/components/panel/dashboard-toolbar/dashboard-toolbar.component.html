@@ -26,13 +26,13 @@
         >
             <button
                 mat-flat-button
-                [matTooltip]="'Save' | translate"
+                [matTooltip]="(createMode ? 'Create' : 'Save') | translate"
                 class="edit-menu-btn"
                 (click)="saveDashboardEmitter.emit()"
                 data-cy="save-dashboard-btn"
             >
                 <mat-icon>save</mat-icon>
-                <span>{{ 'Save' | translate }}</span>
+                <span>{{ (createMode ? 'Create' : 'Save') | translate }}</span>
             </button>
             <button
                 mat-flat-button
