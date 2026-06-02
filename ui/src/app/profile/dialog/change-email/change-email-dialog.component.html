@@ -21,60 +21,84 @@
         <div fxFlex="100" fxLayout="column" class="p-15">
             @if (!operationApplied) {
                 <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-                    <div class="general-options-panel" fxLayout="column">
-                        <mat-form-field color="accent">
-                            <mat-label>New mail address</mat-label>
-                            <input
-                                formControlName="email"
-                                fxFlex
-                                matInput
-                                required
-                            />
-                            <mat-error
-                                >Must be a valid email address.</mat-error
-                            >
-                        </mat-form-field>
-                        <mat-form-field color="accent">
-                            <mat-label>Re-enter mail address</mat-label>
-                            <input
-                                formControlName="emailConfirm"
-                                fxFlex
-                                matInput
-                                required
-                            />
-                            <mat-error
-                                >Must be a valid email address.</mat-error
-                            >
-                        </mat-form-field>
+                    <div fxLayout="column">
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'New mail address' | translate"
+                        >
+                            <mat-form-field>
+                                <input
+                                    formControlName="email"
+                                    fxFlex
+                                    matInput
+                                    required
+                                />
+                                <mat-error>{{
+                                    'Must be a valid email address.' | translate
+                                }}</mat-error>
+                            </mat-form-field>
+                        </sp-form-field>
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Re-enter mail address' | translate"
+                        >
+                            <mat-form-field>
+                                <input
+                                    formControlName="emailConfirm"
+                                    fxFlex
+                                    matInput
+                                    required
+                                />
+                                <mat-error>{{
+                                    'Must be a valid email address.' | translate
+                                }}</mat-error>
+                            </mat-form-field>
+                        </sp-form-field>
                         @if (parentForm.hasError('notMatching')) {
-                            <mat-error>Email does not match.</mat-error>
+                            <sp-alert-banner
+                                type="error"
+                                [title]="'Email does not match.' | translate"
+                                [description]="
+                                    'Check that you have re-entered the same email address.'
+                                "
+                            >
+                            </sp-alert-banner>
                         }
-                        <mat-form-field color="accent">
-                            <mat-label>Enter password</mat-label>
-                            <input
-                                formControlName="passwordConfirm"
-                                fxFlex
-                                matInput
-                                type="password"
-                                required
-                            />
-                        </mat-form-field>
+                        <sp-form-field
+                            [level]="3"
+                            [label]="'Enter password' | translate"
+                        >
+                            <mat-form-field>
+                                <input
+                                    formControlName="passwordConfirm"
+                                    fxFlex
+                                    matInput
+                                    type="password"
+                                    required
+                                />
+                            </mat-form-field>
+                        </sp-form-field>
                     </div>
                 </form>
             }
             @if (operationApplied && error) {
                 <div>
-                    <div>Could not change email address.</div>
-                    <div>Reason: {{ errorMessage }}</div>
-                    <button
-                        class="mt-20"
-                        mat-button
-                        mat-flat-button
-                        color="accent"
-                        (click)="operationApplied = false"
+                    <sp-alert-banner
+                        type="error"
+                        [title]="'Could not change email address.' | translate"
+                        [description]="errorMessage"
                     >
-                        Try again
-                    </button>
+                        <div>
+                            <button
+                                class="mt-20"
+                                mat-button
+                                mat-flat-button
+                                (click)="operationApplied = false"
+                            >
+                                {{ 'Try again' | translate }}
+                            </button>
+                        </div>
+                    </sp-alert-banner>
                 </div>
             }
         </div>
@@ -85,14 +109,13 @@
             <button
                 mat-button
                 mat-flat-button
-                color="accent"
                 (click)="update()"
                 style="margin-right: 10px"
                 [disabled]="!parentForm.valid || operationApplied"
                 data-cy="sp-element-edit-user-save"
             >
                 <i class="material-icons">save</i
-                ><span>&nbsp;Update email</span>
+                ><span>&nbsp;{{ 'Update email' | translate }}</span>
             </button>
             <button
                 mat-button
@@ -100,7 +123,7 @@
                 class="mat-basic"
                 (click)="close()"
             >
-                Cancel
+                {{ 'Cancel' | translate }}
             </button>
         </div>
     </div>
