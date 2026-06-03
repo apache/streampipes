@@ -18,12 +18,16 @@
 
 import {
     Component,
+    inject,
     Input,
     OnInit,
     ViewEncapsulation,
-    inject,
 } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    FormFieldComponent,
+    SpAlertBannerComponent,
+} from '@streampipes/shared-ui';
 import {
     AbstractControl,
     FormsModule,
@@ -37,10 +41,11 @@ import {
 } from '@angular/forms';
 import { UserAccount, UserService } from '@streampipes/platform-services';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
-import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-change-email-dialog',
@@ -53,11 +58,13 @@ import { MatDivider } from '@angular/material/divider';
         FormsModule,
         ReactiveFormsModule,
         MatFormField,
-        MatLabel,
         MatInput,
         MatError,
         MatButton,
         MatDivider,
+        FormFieldComponent,
+        TranslatePipe,
+        SpAlertBannerComponent,
     ],
 })
 export class ChangeEmailDialogComponent implements OnInit {
