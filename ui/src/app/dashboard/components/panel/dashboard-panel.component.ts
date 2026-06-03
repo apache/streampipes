@@ -247,7 +247,7 @@ export class DashboardPanelComponent
         this.dashboard.metadata.lastModifiedEpochMs = Date.now();
         this.dashboardService
             .updateDashboard(this.dashboard)
-            .subscribe(result => {
+            .subscribe(_result => {
                 this.routingService.navigateToDashboardOverview(true);
             });
     }

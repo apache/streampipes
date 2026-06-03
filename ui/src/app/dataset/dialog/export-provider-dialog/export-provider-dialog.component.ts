@@ -129,7 +129,7 @@ export class ExportProviderComponent implements OnInit {
         try {
             new URL(value);
             return null;
-        } catch (e) {
+        } catch (_e) {
             return { invalidUri: true };
         }
     }

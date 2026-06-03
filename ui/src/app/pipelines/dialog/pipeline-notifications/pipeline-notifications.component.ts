@@ -49,7 +49,7 @@ export class PipelineNotificationsComponent {
         if (this.pipeline.healthStatus === 'REQUIRES_ATTENTION') {
             this.pipeline.healthStatus = 'OK';
         }
-        this.pipelineService.updatePipeline(this.pipeline).subscribe(msg => {
+        this.pipelineService.updatePipeline(this.pipeline).subscribe(_msg => {
             this.dialogRef.close();
         });
     }

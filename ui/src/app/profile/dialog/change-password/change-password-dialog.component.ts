@@ -122,7 +122,7 @@ export class ChangePasswordDialogComponent implements OnInit {
             existingPassword: this.existingPw,
         };
         this.userService.updatePassword(this.user, req).subscribe(
-            response => {
+            _response => {
                 this.close(true);
             },
             error => {

@@ -233,7 +233,7 @@ export class DatalakeRestService {
     store(
         measureName: string,
         spQueryResult: SpQueryResult,
-        ignoreSchemaMismatch = true,
+        _ignoreSchemaMismatch = true,
     ): Observable<void> {
         return this.http.post<void>(
             `${this.dataLakeUrl}/measurements/${encodeURIComponent(measureName)}`,

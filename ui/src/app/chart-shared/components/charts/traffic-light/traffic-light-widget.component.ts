@@ -159,7 +159,7 @@ export class TrafficLightWidgetComponent
         }
     }
 
-    onResize(width: number, heigth: number) {}
+    onResize(_width: number, _heigth: number) {}
 
     handleUpdatedFields(
         addedFields: DataExplorerField[],

@@ -89,7 +89,7 @@ export class SpLabelComponent implements OnChanges {
         neutral: 'var(--color-neutral)',
     };
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(_changes: SimpleChanges) {
         this.hostVariant = this.variant;
         this.hostSize = this.size;
         this.hostShape = this.shape;

@@ -127,5 +127,5 @@ export class DashboardGridViewComponent
         return true;
     }
 
-    selectNewWidget(widgetId): void {}
+    selectNewWidget(_widgetId): void {}
 }

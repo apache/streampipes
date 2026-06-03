@@ -73,7 +73,7 @@ export class DeleteAdapterDialogComponent {
         this.dataMarketplaceService
             .deleteAdapter(this.adapter, deleteAssociatedPipelines)
             .subscribe(
-                data => {
+                _data => {
                     this.close(true);
                 },
                 error => {

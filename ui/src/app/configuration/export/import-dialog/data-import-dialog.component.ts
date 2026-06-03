@@ -124,7 +124,7 @@ export class SpDataImportDialogComponent {
                             this.currentImportStep++;
                         }
                     },
-                    error => {
+                    _error => {
                         this.uploadError = true;
                     },
                 );
@@ -135,7 +135,7 @@ export class SpDataImportDialogComponent {
         this.currentImportStep = 2;
         this.dataExportService
             .triggerImport(this.selectedUploadFile, this.importConfiguration)
-            .subscribe(result => {
+            .subscribe(_result => {
                 this.dialogRef.close();
             });
     }

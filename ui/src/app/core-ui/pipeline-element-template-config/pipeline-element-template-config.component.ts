@@ -102,6 +102,6 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
     deleteTemplate(templateId: string) {
         this.pipelineElementTemplateService
             .deletePipelineElementTemplate(templateId)
-            .subscribe(result => this.loadTemplates());
+            .subscribe(_result => this.loadTemplates());
     }
 }
