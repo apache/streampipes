@@ -81,3 +81,13 @@
     overflow-x: hidden;
     overflow-y: hidden;
 }
+
+.default-text {
+    padding: 10px;
+    text-align: center;
+}
+
+.warning-icon {
+    color: var(--color-warn);
+    font-size: var(--font-size-3xl);
+}

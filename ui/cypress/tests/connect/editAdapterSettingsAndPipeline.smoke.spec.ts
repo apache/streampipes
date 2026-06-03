@@ -53,7 +53,7 @@ describe('Test Edit Adapter and Pipeline', () => {
     });
 
     it('Edit adapter and test Pipeline behaviour', () => {
-        // Edit Apater and select pressure
+        // Edit Adapter and select pressure
         ConnectUtils.goToConnect();
         ConnectBtns.openActionsMenu('simulator');
         ConnectBtns.editAdapter().should('not.be.disabled');
@@ -80,9 +80,7 @@ describe('Test Edit Adapter and Pipeline', () => {
         ConnectBtns.storeEditAdapter().click();
 
         // Check for warning message
-        cy.dataCy('sp-connect-adapter-edit-warning', {
-            timeout: 60000,
-        }).should('be.visible');
+        ConnectBtns.adapterEditWarning().should('be.visible');
         ConnectBtns.updateAndMigratePipelines().click();
         ConnectUtils.closeAdapterPreview();
         cy.wait(2000);
@@ -90,13 +88,8 @@ describe('Test Edit Adapter and Pipeline', () => {
         // Go to pipelines, check for warning icon and edit pipeline
         PipelineUtils.goToPipelines();
 
-        cy.dataCy('pipeline-warning-icon', {
-            timeout: 60000,
-        }).should('be.visible');
-
-        cy.dataCy('pipeline-sync-problem-icon', {
-            timeout: 60000,
-        }).should('be.visible');
+        PipelineBtns.pipelineWarningIcon().should('be.visible');
+        PipelineBtns.pipelineSyncProblemIcon().should('be.visible');
 
         GeneralUtils.openMenuForRow('Pipeline Test');
         PipelineBtns.modifyPipeline().click();

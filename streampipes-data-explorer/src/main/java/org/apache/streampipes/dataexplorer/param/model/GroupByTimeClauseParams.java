@@ -25,7 +25,7 @@ public class GroupByTimeClauseParams implements IQueryStatement {
   private final String timeInterval;
 
   public GroupByTimeClauseParams(String timeInterval) {
-    this.timeInterval = timeInterval;
+    this.timeInterval = InfluxQueryParameterValidator.requireSafeTimeInterval(timeInterval);
   }
 
   public static GroupByTimeClauseParams from(String timeInterval) {

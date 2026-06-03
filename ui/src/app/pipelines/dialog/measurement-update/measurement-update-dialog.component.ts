@@ -17,10 +17,7 @@
  */
 
 import { Component, Input, inject } from '@angular/core';
-import {
-    MeasurementUpdateAction,
-    Pipeline,
-} from '@streampipes/platform-services';
+import { Pipeline } from '@streampipes/platform-services';
 import { DialogRef, SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
@@ -31,6 +28,7 @@ import {
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
+import { MeasurementUpdateAction } from '../../model/pipeline-model';
 
 @Component({
     selector: 'sp-measurement-update-dialog',

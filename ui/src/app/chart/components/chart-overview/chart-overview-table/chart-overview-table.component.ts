@@ -100,8 +100,6 @@ export class ChartOverviewTableComponent implements OnInit {
     };
     charts: DataExplorerWidgetModel[] = [];
     filteredCharts: DataExplorerWidgetModel[] = [];
-    readonly outdatedChartTooltip =
-        'This chart is outdated and must be migrated.';
 
     private dataViewService = inject(ChartService);
     private dataExplorerDashboardService = inject(ChartSharedService);
@@ -224,5 +222,9 @@ export class ChartOverviewTableComponent implements OnInit {
 
     isLegacyMultiSourceChart(chart: DataExplorerWidgetModel): boolean {
         return (chart?.dataConfig?.sourceConfigs?.length ?? 0) > 1;
+    }
+
+    requiresAttention(chart: DataExplorerWidgetModel): boolean {
+        return chart?.healthStatus === 'REQUIRES_ATTENTION';
     }
 }

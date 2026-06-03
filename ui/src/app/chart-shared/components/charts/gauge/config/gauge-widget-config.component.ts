@@ -65,15 +65,11 @@ export class GaugeWidgetConfigComponent extends BaseWidgetConfig<
             this.fieldProvider.numericFields,
             () => this.fieldProvider.numericFields[0],
         );
-        const defaultDisplayName =
-            config.selectedProperty?.runtimeName ||
-            config.selectedProperty?.fullDbName ||
-            '';
         if (typeof config.displayName !== 'string') {
-            config.displayName = defaultDisplayName;
-        }
-        if (!config.displayName?.trim()) {
-            config.displayName = defaultDisplayName;
+            config.displayName =
+                config.selectedProperty?.runtimeName ||
+                config.selectedProperty?.fullDbName ||
+                '';
         }
         config.min ??= 0;
         config.max ??= 100;

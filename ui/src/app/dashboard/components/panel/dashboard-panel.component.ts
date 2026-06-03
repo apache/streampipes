@@ -62,6 +62,9 @@ import {
     MatDrawerContainer,
     MatDrawerContent,
 } from '@angular/material/sidenav';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ChartSelectionPanelComponent } from './chart-selection-panel/chart-selection-panel.component';
 import {
     FlexDirective,
@@ -81,6 +84,9 @@ import {
         DashboardToolbarComponent,
         MatDrawerContainer,
         MatDrawer,
+        MatIcon,
+        MatIconButton,
+        MatTooltip,
         ChartSelectionPanelComponent,
         MatDrawerContent,
         DashboardGridViewComponent,
@@ -104,6 +110,7 @@ export class DashboardPanelComponent
     viewMode = 'grid';
 
     editMode = false;
+    chartSelectionPanelExpanded = false;
     timeRangeVisible = true;
 
     _dashboardGrid: DashboardGridViewComponent;
@@ -159,7 +166,7 @@ export class DashboardPanelComponent
                 UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );
             if (queryParams.editMode && this.hasDashboardWritePrivileges) {
-                this.editMode = true;
+                this.triggerEditMode();
             }
         });
     }
@@ -270,6 +277,11 @@ export class DashboardPanelComponent
 
     triggerEditMode() {
         this.editMode = true;
+        this.chartSelectionPanelExpanded = true;
+    }
+
+    toggleChartSelectionPanel() {
+        this.chartSelectionPanelExpanded = !this.chartSelectionPanelExpanded;
     }
 
     deleteDashboard() {

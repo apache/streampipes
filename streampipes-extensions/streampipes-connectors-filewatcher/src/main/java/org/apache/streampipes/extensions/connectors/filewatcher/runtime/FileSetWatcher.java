@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.connectors.filewatcher.runtime;
 
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.connectors.filewatcher.model.FileFingerprint;
+import org.apache.streampipes.extensions.connectors.filewatcher.model.FileGenerationState;
 import org.apache.streampipes.extensions.connectors.filewatcher.model.FileWatcherCheckpoint;
 import org.apache.streampipes.extensions.connectors.filewatcher.model.FileWatcherConfig;
 
@@ -47,12 +48,6 @@ public class FileSetWatcher {
   private final CsvFileReader csvFileReader;
   private final EventMapper eventMapper;
   private final EventDelayExecutor eventDelayExecutor;
-
-  public FileSetWatcher(FileWatcherConfig config,
-                        FileWatcherCheckpointStore checkpointStore,
-                        CsvFileReader csvFileReader) {
-    this(config, checkpointStore, csvFileReader, EventMapper.identity());
-  }
 
   public FileSetWatcher(FileWatcherConfig config,
                         FileWatcherCheckpointStore checkpointStore,
@@ -84,12 +79,11 @@ public class FileSetWatcher {
 
     var checkpoint = checkpointStore.load(adapterElementId);
     LOG.debug(
-        "Loaded checkpoint for adapter '{}': currentFile='{}', sequence={}, lastProcessedRecord={}, knownGenerations={}.",
+        "Loaded checkpoint for adapter '{}': currentFile='{}', sequence={}, knownGenerations={}.",
         adapterElementId,
         checkpoint.getCurrentFileName(),
         checkpoint.getCurrentSequence(),
-        checkpoint.getLastProcessedRecord(),
-        checkpoint.getProcessedGenerations().size()
+        checkpoint.getGenerationStates().size()
     );
     processCurrentFile(adapterElementId, collector, checkpoint, files);
     processFollowingFiles(adapterElementId, collector, checkpoint, files);
@@ -99,7 +93,7 @@ public class FileSetWatcher {
                                   IEventCollector collector,
                                   FileWatcherCheckpoint checkpoint,
                                   List<FileSlot> files) throws IOException {
-    if (checkpoint.getCurrentFileName() == null || checkpoint.getCurrentFingerprint() == null) {
+    if (checkpoint.getCurrentFileName() == null || generationState(checkpoint, checkpoint.getCurrentFileName()) == null) {
       LOG.debug("No existing checkpoint state found. Starting from the first available matching file.");
       return;
     }
@@ -122,25 +116,63 @@ public class FileSetWatcher {
   }
 
   private long determineStartRecord(FileSlot currentSlot, FileWatcherCheckpoint checkpoint) {
-    if (currentSlot.fingerprint().equals(checkpoint.getCurrentFingerprint())) {
-      LOG.debug("File '{}' fingerprint unchanged. Continuing after record {}.",
-          currentSlot.fileName(), checkpoint.getLastProcessedRecord());
-      return checkpoint.getLastProcessedRecord() + 1;
+    var generationState = generationState(checkpoint, currentSlot.fileName());
+    if (generationState == null) {
+      return 0;
     }
 
-    if (config.singleFileGrowthMode() && isAppendedInPlace(currentSlot.fingerprint(), checkpoint.getCurrentFingerprint())) {
+    var previousFingerprint = generationState.getFingerprint();
+    var previousLastProcessedRecord = generationState.getLastProcessedRecord();
+
+    if (fingerprintsEqual(currentSlot.fingerprint(), previousFingerprint)) {
+      LOG.debug("File '{}' fingerprint unchanged. Continuing after record {}.",
+          currentSlot.fileName(), previousLastProcessedRecord);
+      return previousLastProcessedRecord + 1;
+    }
+
+    if (isAppendedInPlace(currentSlot, previousFingerprint)) {
       LOG.debug("File '{}' grew in place. Continuing after record {}.",
-          currentSlot.fileName(), checkpoint.getLastProcessedRecord());
-      return checkpoint.getLastProcessedRecord() + 1;
+          currentSlot.fileName(), previousLastProcessedRecord);
+      return previousLastProcessedRecord + 1;
     }
 
     LOG.debug("File '{}' fingerprint changed. Restarting from record 0.", currentSlot.fileName());
     return 0;
   }
 
-  private boolean isAppendedInPlace(FileFingerprint currentFingerprint, FileFingerprint previousFingerprint) {
-    return currentFingerprint.getSize() > previousFingerprint.getSize()
-        && currentFingerprint.getLastModified() >= previousFingerprint.getLastModified();
+  private boolean isAppendedInPlace(FileSlot currentSlot, FileFingerprint previousFingerprint) {
+    FileFingerprint currentFingerprint = currentSlot.fingerprint();
+    if (previousFingerprint == null || currentFingerprint.getSize() <= previousFingerprint.getSize()) {
+      return false;
+    }
+    if (config.considerLastModified()
+        && currentFingerprint.getLastModified() < previousFingerprint.getLastModified()) {
+      return false;
+    }
+
+    try {
+      return prefixSha256(currentSlot.path(), previousFingerprint.getSize()).equals(previousFingerprint.getContentHash());
+    } catch (IOException e) {
+      throw new RuntimeException("Could not verify appended content for " + currentSlot.fileName(), e);
+    }
+  }
+
+  private boolean fingerprintsEqual(FileFingerprint left, FileFingerprint right) {
+    if (left == right) {
+      return true;
+    }
+    if (left == null || right == null) {
+      return false;
+    }
+
+    boolean sameContent = left.getSize() == right.getSize()
+        && left.getContentHash().equals(right.getContentHash());
+
+    if (!sameContent) {
+      return false;
+    }
+
+    return !config.considerLastModified() || left.getLastModified() == right.getLastModified();
   }
 
   private void processFollowingFiles(String adapterElementId,
@@ -151,14 +183,26 @@ public class FileSetWatcher {
     LOG.debug("Processing following files starting at index {}.", startIndex);
     for (int offset = 0; offset < files.size(); offset++) {
       FileSlot candidate = files.get((startIndex + offset) % files.size());
-      FileFingerprint processedFingerprint = checkpoint.getProcessedGenerations().get(candidate.fileName());
-      if (processedFingerprint != null && processedFingerprint.equals(candidate.fingerprint())) {
-        LOG.debug("Stopping at file '{}' because this generation was already processed.", candidate.fileName());
-        break;
+      if (candidate.fileName().equals(checkpoint.getCurrentFileName())) {
+        continue;
       }
 
-      LOG.debug("Reading new file generation '{}' from record 0.", candidate.fileName());
-      readFile(adapterElementId, collector, checkpoint, candidate, 0);
+      FileGenerationState generationState = generationState(checkpoint, candidate.fileName());
+      FileFingerprint processedFingerprint = generationState == null ? null : generationState.getFingerprint();
+      if (processedFingerprint != null && fingerprintsEqual(processedFingerprint, candidate.fingerprint())) {
+        LOG.debug("Skipping file '{}' because this generation was already processed.", candidate.fileName());
+        continue;
+      }
+
+      long startRecord = 0;
+      if (generationState != null && isAppendedInPlace(candidate, generationState.getFingerprint())) {
+        startRecord = generationState.getLastProcessedRecord() + 1;
+        LOG.debug("Reading appended file generation '{}' from record {}.", candidate.fileName(), startRecord);
+      } else {
+        LOG.debug("Reading new file generation '{}' from record 0.", candidate.fileName());
+      }
+
+      readFile(adapterElementId, collector, checkpoint, candidate, startRecord);
     }
   }
 
@@ -186,9 +230,7 @@ public class FileSetWatcher {
       collector.collect(eventMapper.map(event));
       checkpoint.setCurrentFileName(fileSlot.fileName());
       checkpoint.setCurrentSequence(fileSlot.sequence());
-      checkpoint.setCurrentFingerprint(fileSlot.fingerprint());
-      checkpoint.setLastProcessedRecord(recordIndex);
-      checkpoint.getProcessedGenerations().put(fileSlot.fileName(), fileSlot.fingerprint());
+      checkpoint.getGenerationStates().put(fileSlot.fileName(), new FileGenerationState(fileSlot.fingerprint(), recordIndex));
 
       try {
         checkpointStore.save(adapterElementId, checkpoint);
@@ -202,9 +244,10 @@ public class FileSetWatcher {
 
     checkpoint.setCurrentFileName(fileSlot.fileName());
     checkpoint.setCurrentSequence(fileSlot.sequence());
-    checkpoint.setCurrentFingerprint(fileSlot.fingerprint());
-    checkpoint.setLastProcessedRecord(result.lastProcessedRecord());
-    checkpoint.getProcessedGenerations().put(fileSlot.fileName(), fileSlot.fingerprint());
+    checkpoint.getGenerationStates().put(
+        fileSlot.fileName(),
+        new FileGenerationState(fileSlot.fingerprint(), result.lastProcessedRecord())
+    );
     checkpointStore.save(adapterElementId, checkpoint);
     LOG.debug(
         "Finished file '{}'. Emitted {} events, lastProcessedRecord={}.",
@@ -269,6 +312,10 @@ public class FileSetWatcher {
     return 0;
   }
 
+  private FileGenerationState generationState(FileWatcherCheckpoint checkpoint, String fileName) {
+    return checkpoint.getGenerationStates().get(fileName);
+  }
+
   private FileSlot toFileSlot(Path path) {
     String fileName = path.getFileName().toString();
     return new FileSlot(fileName, path, sequence(fileName), fingerprint(path));
@@ -306,6 +353,28 @@ public class FileSetWatcher {
         int read;
         while ((read = in.read(buffer)) != -1) {
           digest.update(buffer, 0, read);
+        }
+      }
+
+      return HexFormat.of().formatHex(digest.digest());
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException("SHA-256 is not available", e);
+    }
+  }
+
+  private String prefixSha256(Path path, long maxBytes) throws IOException {
+    try {
+      MessageDigest digest = MessageDigest.getInstance("SHA-256");
+      try (InputStream in = Files.newInputStream(path)) {
+        byte[] buffer = new byte[8192];
+        long remaining = maxBytes;
+        while (remaining > 0) {
+          int read = in.read(buffer, 0, (int) Math.min(buffer.length, remaining));
+          if (read == -1) {
+            break;
+          }
+          digest.update(buffer, 0, read);
+          remaining -= read;
         }
       }
 

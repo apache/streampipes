@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dev: install ui dependencies",
+      "type": "shell",
+      "command": "npm ci",
+      "options": {
+        "cwd": "${workspaceFolder}/ui"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev: start ui",
+      "type": "shell",
+      "command": "node ./deployment/prebuild.js && npm run build-libraries && npx ng serve --host 0.0.0.0 --port 8082 --proxy-config src/proxy.conf.json",
+      "options": {
+        "cwd": "${workspaceFolder}/ui"
+      },
+      "dependsOn": [
+        "dev: install ui dependencies"
+      ],
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": {
+          "regexp": "a^"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*",
+          "endsPattern": "Application bundle generation complete|Compiled successfully|Watch mode enabled"
+        }
+      }
+    },
+    {
+      "label": "dev: build core",
+      "type": "shell",
+      "command": "mvn -pl streampipes-service-core -am -DskipTests package",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": "$maven"
+    },
+    {
+      "label": "dev: build iiot extensions",
+      "type": "shell",
+      "command": "mvn -pl streampipes-extensions/streampipes-extensions-all-iiot -am -DskipTests package",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": "$maven"
+    },
+    {
+      "label": "dev: build backend and extensions",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "dev: build core",
+        "dev: build iiot extensions"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

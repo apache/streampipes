@@ -65,6 +65,8 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
   private static final String ARCHIVE_BASE_NAME = "archive-base-name";
   private static final String SEGMENTED_CIRCULAR_LOG_ENABLED = "segmented-circular-log-enabled";
   private static final String ARCHIVE_SEGMENT_COUNT = "archive-segment-count";
+  public static final String ARCHIVE_SEGMENT_START_INDEX = "archive-segment-start-index";
+  public static final String CONSIDER_LAST_MODIFIED = "consider-last-modified";
   private static final String POLL_INTERVAL_SECONDS = "poll-interval-seconds";
   private static final String INTER_EVENT_DELAY_MS = "inter-event-delay-ms";
   private static final String TIMEZONE_ID = "timezone-id";
@@ -82,49 +84,41 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
   @Override
   public IAdapterConfiguration declareConfig() {
     return AdapterConfigurationBuilder
-        .create(ID, 0, WinCCAlarmArchiveAdapter::new)
+        .create(ID, 2, WinCCAlarmArchiveAdapter::new)
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
-        .requiredTextParameter(Labels.from(
-            DIRECTORY_PATH,
-            "Archive directory",
-            "Absolute path to the WinCC archive directory that contains the exported alarm CSV files."
+        .requiredTextParameter(Labels.withId(
+            DIRECTORY_PATH
         ))
-        .requiredTextParameter(Labels.from(
-            ARCHIVE_BASE_NAME,
-            "Archive base name",
-            "Base file name of the WinCC alarm archive, for example Meldungsarchiv."
+        .requiredTextParameter(Labels.withId(
+            ARCHIVE_BASE_NAME
         ))
         .requiredSingleValueSelection(
-            Labels.from(
-                SEGMENTED_CIRCULAR_LOG_ENABLED,
-                "Segmented circular log",
-                "Whether WinCC writes the alarm archive as a segmented circular log with rotating CSV segments."
+            Labels.withId(
+                SEGMENTED_CIRCULAR_LOG_ENABLED
             ),
             Options.from(
                 new Tuple2<>("Enabled", SEGMENTED_CIRCULAR_LOG_ON),
                 new Tuple2<>("Disabled", SEGMENTED_CIRCULAR_LOG_OFF)
             )
         )
-        .requiredIntegerParameter(Labels.from(
-            ARCHIVE_SEGMENT_COUNT,
-            "Segment count",
-            "Number of archive segments in segmented circular log mode. Ignored when the segmented circular log is disabled."
+        .requiredIntegerParameter(Labels.withId(
+            ARCHIVE_SEGMENT_COUNT
         ))
-        .requiredIntegerParameter(Labels.from(
-            POLL_INTERVAL_SECONDS,
-            "Polling interval (seconds)",
-            "How often the WinCC archive files should be scanned for new alarm entries."
-        ))
-        .requiredIntegerParameter(Labels.from(
-            INTER_EVENT_DELAY_MS,
-            "Inter-event delay (ms)",
-            "Delay between replayed alarm events in milliseconds. Use 0 to disable throttling."
+        .requiredIntegerParameter(Labels.withId(
+            ARCHIVE_SEGMENT_START_INDEX
         ), 0)
-        .requiredTextParameter(Labels.from(
-            TIMEZONE_ID,
-            "Timezone",
-            "IANA timezone used when WinCC TimeString must be converted, for example Europe/Berlin."
+        .requiredSlideToggle(Labels.withId(
+            CONSIDER_LAST_MODIFIED
+        ), true)
+        .requiredIntegerParameter(Labels.withId(
+            POLL_INTERVAL_SECONDS
+        ))
+        .requiredIntegerParameter(Labels.withId(
+            INTER_EVENT_DELAY_MS
+        ), 0)
+        .requiredTextParameter(Labels.withId(
+            TIMEZONE_ID
         ), ZoneId.systemDefault().getId())
         .buildConfiguration();
   }
@@ -214,16 +208,21 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
     var segmentedCircularLogMode =
         staticPropertyExtractor.selectedSingleValueInternalName(SEGMENTED_CIRCULAR_LOG_ENABLED, String.class);
     var segmentCount = staticPropertyExtractor.singleValueParameter(ARCHIVE_SEGMENT_COUNT, Integer.class);
+    var segmentStartIndex = staticPropertyExtractor.singleValueParameter(ARCHIVE_SEGMENT_START_INDEX, Integer.class);
+    var considerLastModified = staticPropertyExtractor.slideToggleValue(CONSIDER_LAST_MODIFIED);
     var interval = staticPropertyExtractor.singleValueParameter(POLL_INTERVAL_SECONDS, Integer.class);
     var interEventDelayMs = staticPropertyExtractor.singleValueParameter(INTER_EVENT_DELAY_MS, Integer.class);
     var timeZone = parseTimeZone(staticPropertyExtractor.singleValueParameter(TIMEZONE_ID, String.class));
     if (interEventDelayMs < 0) {
       throw new AdapterException("Inter-event delay must be greater than or equal to 0.");
     }
+    if (segmentStartIndex < 0) {
+      throw new AdapterException("Segment start index must be greater than or equal to 0.");
+    }
 
     Pattern filePattern = SEGMENTED_CIRCULAR_LOG_ON.equals(segmentedCircularLogMode)
-        ? buildSegmentPattern(baseName, segmentCount)
-        : buildSingleSegmentPattern(baseName);
+        ? buildSegmentPattern(baseName, segmentStartIndex, segmentCount)
+        : buildSingleSegmentPattern(baseName, segmentStartIndex);
 
     return new FileWatcherConfig(
         directory,
@@ -231,6 +230,7 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
         WINCC_CSV_SETTINGS,
         interval,
         SEGMENTED_CIRCULAR_LOG_OFF.equals(segmentedCircularLogMode),
+        considerLastModified,
         interEventDelayMs,
         timeZone
     );
@@ -253,25 +253,28 @@ public class WinCCAlarmArchiveAdapter implements StreamPipesAdapter, IPullAdapte
     return trimmedBaseName;
   }
 
-  private Pattern buildSingleSegmentPattern(String baseName) {
-    return Pattern.compile(Pattern.quote(baseName) + "1\\.csv", Pattern.CASE_INSENSITIVE);
+  private Pattern buildSingleSegmentPattern(String baseName, int segmentStartIndex) {
+    return Pattern.compile(Pattern.quote(baseName) + segmentStartIndex + "\\.csv", Pattern.CASE_INSENSITIVE);
   }
 
-  private Pattern buildSegmentPattern(String baseName, int segmentCount) throws AdapterException {
+  private Pattern buildSegmentPattern(String baseName,
+                                      int segmentStartIndex,
+                                      int segmentCount) throws AdapterException {
     if (segmentCount < 1) {
       throw new AdapterException("Segment count must be at least 1 when the segmented circular log is enabled.");
     }
 
     return Pattern.compile(
-        Pattern.quote(baseName) + "(" + buildAllowedSegments(segmentCount) + ")\\.csv",
+        Pattern.quote(baseName) + "(" + buildAllowedSegments(segmentStartIndex, segmentCount) + ")\\.csv",
         Pattern.CASE_INSENSITIVE
     );
   }
 
-  private String buildAllowedSegments(int segmentCount) {
+  private String buildAllowedSegments(int segmentStartIndex, int segmentCount) {
     StringBuilder builder = new StringBuilder();
-    for (int i = 1; i <= segmentCount; i++) {
-      if (i > 1) {
+    int segmentEndExclusive = segmentStartIndex + segmentCount;
+    for (int i = segmentStartIndex; i < segmentEndExclusive; i++) {
+      if (i > segmentStartIndex) {
         builder.append("|");
       }
       builder.append(i);

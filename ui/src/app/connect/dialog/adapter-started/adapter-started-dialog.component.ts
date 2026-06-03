@@ -56,6 +56,7 @@ import { SpAdapterStartedSuccessComponent } from './adapter-started-success/adap
 import { SpAdapterStartedPreviewComponent } from './adapter-started-preview/adapter-started-preview.component';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
+import { LayoutGapDirective } from '@ngbracket/ngx-layout';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -71,6 +72,7 @@ import { MatButton } from '@angular/material/button';
         MatDivider,
         MatButton,
         TranslatePipe,
+        LayoutGapDirective,
     ],
 })
 export class AdapterStartedDialog implements OnInit {
@@ -308,6 +310,10 @@ export class AdapterStartedDialog implements OnInit {
     onCloseConfirm() {
         this.dialogRef.close('Confirm');
         this.shepherdService.trigger('confirm_adapter_started_button');
+    }
+
+    onKeepEditing() {
+        this.dialogRef.close('KeepEditing');
     }
 
     async addToAsset(pipelineId = ''): Promise<void> {
