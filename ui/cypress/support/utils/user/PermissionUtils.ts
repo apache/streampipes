@@ -22,12 +22,20 @@ import { GeneralUtils } from '../GeneralUtils';
 export class PermissionUtils {
     public static openManagePermissions(resourceName: string) {
         GeneralUtils.openMenuForRow(resourceName);
-        GeneralUtils.visibleMaterialMenu().within(() => {
-            cy.dataCy('open-manage-permissions-' + resourceName, {
-                timeout: 10000,
-            })
-                .should('be.visible')
-                .click();
+
+        //necessary as the old permission dialog is currently not replaced everywhere
+        GeneralUtils.visibleMaterialMenu().then($menu => {
+            const $specific = $menu.find(
+                `[data-cy="open-manage-permissions-${resourceName}"]`,
+            );
+
+            if ($specific.length) {
+                cy.wrap($specific).click();
+            } else {
+                cy.dataCy('open-manage-permissions')
+                    .should('be.visible')
+                    .click();
+            }
         });
     }
 
@@ -62,11 +70,33 @@ export class PermissionUtils {
     }
 
     public static save() {
-        cy.dataCy('sp-manage-save').click();
+        //necessary as the old permission dialog is currently not replaced everywhere
+        cy.get('body').then($body => {
+            const $saveButton = $body.find('[data-cy="sp-manage-save"]');
+
+            if ($saveButton.length) {
+                cy.wrap($saveButton).click();
+            } else {
+                cy.dataCy('sp-manage-permissions-save')
+                    .should('be.visible')
+                    .click();
+            }
+        });
     }
 
     public static cancel() {
-        cy.dataCy('sp-manage-cancel').click();
+        //necessary as the old permission dialog is currently not replaced everywhere
+        cy.get('body').then($body => {
+            const $saveButton = $body.find('[data-cy="sp-manage-cancel"]');
+
+            if ($saveButton.length) {
+                cy.wrap($saveButton).click();
+            } else {
+                cy.dataCy('sp-manage-permissions-cancel')
+                    .should('be.visible')
+                    .click();
+            }
+        });
     }
 
     public static validateUserCanNotChangePermissions(resourceName: string) {
