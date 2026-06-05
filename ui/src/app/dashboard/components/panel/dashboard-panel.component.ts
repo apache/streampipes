@@ -31,6 +31,7 @@ import {
     Dashboard,
     DashboardLiveSettings,
     DashboardService,
+    ChartService,
     DataExplorerWidgetModel,
     DataLakeMeasure,
     LinkageData,
@@ -153,8 +154,8 @@ export class DashboardPanelComponent
     timeRangeVisible = true;
     selectedDesignerTabIndex = 0;
 
-    _dashboardGrid: DashboardGridViewComponent;
-    _dashboardSlide: DashboardSlideViewComponent;
+    _dashboardGrid?: DashboardGridViewComponent;
+    _dashboardSlide?: DashboardSlideViewComponent;
 
     hasDashboardWritePrivileges = false;
 
@@ -171,6 +172,7 @@ export class DashboardPanelComponent
     private dialogService = inject(DialogService);
     private assetSaveService = inject(AssetSaveService);
     private permissionsService = inject(PermissionsService);
+    private chartService = inject(ChartService);
     private timeSelectionService = inject(TimeSelectionService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
@@ -254,13 +256,30 @@ export class DashboardPanelComponent
         dashboardItem.y = this.getNextWidgetY();
         dashboardItem.dataViewElementId = dataViewElementId;
         this.dashboard.widgets.push(dashboardItem);
-        setTimeout(() => {
-            if (this.viewMode === 'grid') {
-                this.dashboardGrid.loadWidgetConfig(dashboardItem);
-            } else {
-                this.dashboardSlide.loadWidgetConfig(dashboardItem);
-            }
+        this.chartService.getChart(dataViewElementId).subscribe(widget => {
+            this.addWidgetToPreviewCache(widget);
+            setTimeout(() => {
+                this.activeDashboardView?.loadWidgetConfig(
+                    dashboardItem,
+                    widget,
+                );
+            });
         });
+    }
+
+    private addWidgetToPreviewCache(widget: DataExplorerWidgetModel): void {
+        if (!this.widgets.some(w => w.elementId === widget.elementId)) {
+            this.widgets.push(widget);
+        }
+    }
+
+    private get activeDashboardView():
+        | DashboardGridViewComponent
+        | DashboardSlideViewComponent
+        | undefined {
+        return this.viewMode === 'grid'
+            ? this.dashboardGrid
+            : this.dashboardSlide;
     }
 
     onDefaultViewModeChange(viewMode: string): void {
@@ -688,24 +707,20 @@ export class DashboardPanelComponent
     }
 
     @ViewChild('dashboardGrid', { static: false })
-    set dashboardGrid(v: DashboardGridViewComponent) {
-        if (v) {
-            this._dashboardGrid = v;
-        }
+    set dashboardGrid(v: DashboardGridViewComponent | undefined) {
+        this._dashboardGrid = v;
     }
 
-    get dashboardGrid(): DashboardGridViewComponent {
+    get dashboardGrid(): DashboardGridViewComponent | undefined {
         return this._dashboardGrid;
     }
 
     @ViewChild('dashboardSlide', { static: false })
-    set dashboardSlide(v: DashboardSlideViewComponent) {
-        if (v) {
-            this._dashboardSlide = v;
-        }
+    set dashboardSlide(v: DashboardSlideViewComponent | undefined) {
+        this._dashboardSlide = v;
     }
 
-    get dashboardSlide(): DashboardSlideViewComponent {
+    get dashboardSlide(): DashboardSlideViewComponent | undefined {
         return this._dashboardSlide;
     }
 }
