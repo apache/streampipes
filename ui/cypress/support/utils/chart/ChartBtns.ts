@@ -26,7 +26,7 @@ export class ChartBtns {
     }
 
     public static saveDataViewBtn() {
-        return cy.dataCy('save-data-view');
+        return cy.dataCy('sp-manage-save');
     }
 
     public static saveDashboardBtn() {
@@ -77,7 +77,7 @@ export class ChartBtns {
     }
 
     public static editDashboardSettingsBtn(dashboardName) {
-        return cy.dataCy('edit-dashboard-settings-' + dashboardName);
+        return cy.dataCy('open-manage-permissions-' + dashboardName);
     }
 
     public static openNewDataViewBtn() {

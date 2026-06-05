@@ -71,6 +71,7 @@ describe('Test add Assets To Dashboard', () => {
             name,
             assetNameList,
         );
+        ChartUtils.goToDashboard();
         ChartUtils.editDashboardSettings(name);
         ChartUtils.renameDashboard('NEW');
         const assetNameList2 = [assetName2, assetName3];
