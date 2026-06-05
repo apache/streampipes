@@ -69,7 +69,6 @@ describe('Advanced Filter Expressions in Charts', () => {
 
         ChartUtils.saveAndReEditWidget('AdvancedFilterWidget');
         ChartWidgetTableUtils.checkAmountOfRows(2);
-
         ChartUtils.selectDataConfig();
         ChartBtns.advancedFilterBtn().should('be.visible');
         ChartBtns.filterAlertBanner()
