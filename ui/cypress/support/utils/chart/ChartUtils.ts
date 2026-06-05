@@ -175,7 +175,6 @@ export class ChartUtils {
     public static createNewDashboard(name: string) {
         ChartUtils.goToDashboard();
         ChartUtils.addNewDashboard(name);
-        ChartUtils.saveDataView();
         ChartUtils.waitForDashboardInOverview(name);
     }
 

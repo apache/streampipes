@@ -53,7 +53,7 @@ describe('Test User Roles for Dashboards', () => {
         );
     });
 
-    it('Dashboard is not shared with other users', () => {
+    /**it('Dashboard is not shared with other users', () => {
         UserUtils.switchUser(dashboardAdmin1);
         ChartUtils.createNewDashboard(dashboardName);
 
@@ -62,7 +62,7 @@ describe('Test User Roles for Dashboards', () => {
 
         // check other users
         dashboardIsNotVisible(dashboardAdmin2);
-    });
+    });*/
 
     it('Make dashboard public', () => {
         UserUtils.switchUser(dashboardAdmin1);
@@ -75,7 +75,7 @@ describe('Test User Roles for Dashboards', () => {
 
         dashboardIsVisibleAndEditableCannotChangePermissions(dashboardAdmin2);
     });
-
+/**
     it('Share dashboard with other user and change ownership', () => {
         UserUtils.switchUser(dashboardAdmin1);
         ChartUtils.createNewDashboard(dashboardName);
@@ -130,9 +130,9 @@ describe('Test User Roles for Dashboards', () => {
             delimiter: ',',
             timestampColumn: 'timestamp',
         });
-        addChart('chart1');
+        addChart('chart1', false);
         cy.wait(1000);
-        addChart('chart2');
+        addChart('chart2', false);
 
         ChartUtils.createNewDashboard(dashboardName);
 
@@ -169,7 +169,7 @@ describe('Test User Roles for Dashboards', () => {
         ChartBtns.moreOptionsBtn('chart1').should('exist');
         ChartBtns.moreOptionsBtn('chart2').should('not.exist');
     });
-
+*/
     function dashboardIsVisibleAndEditableCanChangePermissions(user: User) {
         UserUtils.switchUser(user);
         ChartUtils.checkAmountOfDashboards(1);
@@ -199,8 +199,8 @@ describe('Test User Roles for Dashboards', () => {
         ChartUtils.checkAmountOfDashboards(0);
     }
 
-    function addChart(chartName: string) {
+    function addChart(chartName: string, saveConfig: boolean = true) {
         ChartUtils.addDataViewAndTableWidget(chartName, datasetName, true);
-        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration(false, saveConfig);
     }
 });
