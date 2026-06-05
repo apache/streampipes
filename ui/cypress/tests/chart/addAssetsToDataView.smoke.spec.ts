@@ -47,6 +47,7 @@ describe('Creates a new adapter with a linked asset', () => {
 
     it('Edit Assets during Chart generation', () => {
         ChartUtils.createDataViewWithAssets([assetName1, assetName2]);
+
         AssetUtils.checkAmountOfAssets(3);
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);

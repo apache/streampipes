@@ -236,6 +236,18 @@ export class ChartContainerComponent
             this.componentRef.instance.widgetIndex =
                 changes.widgetIndex.currentValue;
         }
+        if (changes.dashboardChartOverrides && this.componentRef?.instance) {
+            this.componentRef.instance.dashboardChartOverrides =
+                changes.dashboardChartOverrides.currentValue;
+            (this.componentRef.instance as any).refreshView?.();
+        }
+        if (
+            (changes.globalTimeEnabled || changes.timeSettings) &&
+            this.componentRef?.instance
+        ) {
+            this.componentRef.instance.timeSettings = this.getTimeSettings();
+            (this.componentRef.instance as any).updateData?.();
+        }
     }
 
     ngOnInit(): void {

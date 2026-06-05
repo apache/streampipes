@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,54 +16,19 @@
  *
  */
 
-.fixed-height {
-    height: 50px;
+.form-field .mat-form-field-wrapper {
+    margin-bottom: -1.25em;
 }
 
-.m-20 {
-    margin: 20px;
+.form-field .mat-form-field-infix {
+    border-top: 0;
 }
 
-.h-100 {
-    height: 100%;
-}
-
-.dashboard-grid {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-}
-
-.dashboard-content {
-    position: relative;
-}
-
-.designer-panel-container {
-    width: 100%;
-    height: 100%;
-}
-
-.designer-panel {
-    width: 350px;
-}
-
-.panel-toggle-button {
-    position: absolute;
-    top: 1rem;
-    right: 0.5rem;
-    z-index: 2;
-    background: var(--mat-sys-surface, #fff);
-    box-shadow: 0 0.125rem 0.5rem rgb(0 0 0 / 15%);
-}
-
-.panel-toggle-button-collapsed {
-    right: 1rem;
-}
-
-.edit-menu-btn {
-    margin-right: 5px;
-}
-
-.view-radio-button {
-    margin: 5px;
+.public-link {
+    background: var(--color-bg-2);
+    border: 1px solid var(--color-bg-1);
+    padding: 10px;
+    color: var(--color-default-text);
+    margin-left: 10px;
+    margin-right: 10px;
 }

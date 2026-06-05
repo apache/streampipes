@@ -22,7 +22,13 @@ import { GeneralUtils } from '../GeneralUtils';
 export class PermissionUtils {
     public static openManagePermissions(resourceName: string) {
         GeneralUtils.openMenuForRow(resourceName);
-        cy.dataCy('open-manage-permissions').click();
+        GeneralUtils.visibleMaterialMenu().within(() => {
+            cy.dataCy('open-manage-permissions-' + resourceName, {
+                timeout: 10000,
+            })
+                .should('be.visible')
+                .click();
+        });
     }
 
     public static changeOwnership(resourceName: string, email: string) {
@@ -56,17 +62,31 @@ export class PermissionUtils {
     }
 
     public static save() {
-        cy.dataCy('sp-manage-permissions-save').click();
+        cy.dataCy('sp-manage-save').click();
     }
 
     public static cancel() {
-        cy.dataCy('sp-manage-permissions-cancel').click();
+        cy.dataCy('sp-manage-cancel').click();
     }
 
     public static validateUserCanNotChangePermissions(resourceName: string) {
-        PermissionUtils.openManagePermissions(resourceName);
-        cy.dataCy('warning-permissions-managed-by-owner').should('exist');
-        PermissionUtils.cancel();
+        GeneralUtils.openMenuForRow(resourceName);
+        GeneralUtils.visibleMaterialMenu().then($menu => {
+            const managePermissionsButton = $menu.find(
+                `[data-cy="open-manage-permissions-${resourceName}"]`,
+            );
+
+            if (managePermissionsButton.length > 0) {
+                cy.wrap(managePermissionsButton).should('be.visible').click();
+                cy.dataCy('warning-permissions-managed-by-owner').should(
+                    'exist',
+                );
+                PermissionUtils.cancel();
+            } else {
+                cy.wrap(managePermissionsButton).should('not.exist');
+                GeneralUtils.closeVisibleMaterialMenu();
+            }
+        });
     }
 
     public static validateUserCanChangePermissions(resourceName: string) {
