@@ -351,6 +351,7 @@ export class ChartUtils {
         ChartBtns.saveDataViewButton().click({
             force: true,
         });
+        ChartBtns.saveDataViewBtn().click();
         if (confirmSave) {
             SharedBtns.confirmDialogConfirmBtn().click();
         }
