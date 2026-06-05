@@ -355,9 +355,13 @@ export class ChartUtils {
             ChartBtns.saveDataViewButton().click({
                 force: true,
             });
+        } else {
+            ChartBtns.saveDataViewButton().click({
+                force: true,
+            });
+            ChartBtns.saveDataViewBtn().should('be.visible');
+            ChartBtns.saveDataViewBtn().click();
         }
-        ChartBtns.saveDataViewBtn().should('be.visible');
-        ChartBtns.saveDataViewBtn().click();
         if (confirmSave) {
             SharedBtns.confirmDialogConfirmBtn().click();
         }
@@ -452,9 +456,12 @@ export class ChartUtils {
         ChartBtns.startEditWidget(widgetName).click();
     }
 
-    public static saveAndReEditWidget(dataViewName: string) {
+    public static saveAndReEditWidget(
+        dataViewName: string,
+        edit: boolean = true,
+    ) {
         // Save data view configuration
-        ChartUtils.saveDataViewConfiguration(false, true);
+        ChartUtils.saveDataViewConfiguration(false, edit);
         ChartUtils.editDataView(dataViewName);
     }
 

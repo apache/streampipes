@@ -81,7 +81,7 @@ describe('Test Table View in Charts', () => {
         ChartWidgetTableUtils.checkAmountOfRows(4);
         ChartUtils.validateFilterOptions(['=', '!=']);
         ChartUtils.validateAutoCompleteOptions(['a', 'b', 'c']);
-        ChartUtils.saveAndReEditWidget('NewWidget');
+        ChartUtils.saveAndReEditWidget('NewWidget', false);
         ChartUtils.checkIfFilterIsSet(1);
         ChartWidgetTableUtils.checkAmountOfRows(4);
         ChartUtils.dataConfigRemoveFilter();
