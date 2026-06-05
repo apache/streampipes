@@ -149,7 +149,13 @@
                 }
                 @if (hasDataExplorerWritePrivileges) {
                     <button
-                        data-cy="open-manage-permissions"
+                        [attr.data-cy]="
+                            'open-manage-permissions-' +
+                            element.baseAppearanceConfig.widgetTitle.replaceAll(
+                                ' ',
+                                ''
+                            )
+                        "
                         mat-menu-item
                         (click)="showManageDialog(element)"
                     >
