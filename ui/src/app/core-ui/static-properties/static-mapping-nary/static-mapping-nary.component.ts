@@ -73,7 +73,7 @@ export class StaticMappingNaryComponent
         }
     }
 
-    selectOption(property: any, $event) {
+    selectOption(property: any) {
         if (property['checked']) {
             this.addProperty(property);
         } else {
@@ -123,9 +123,9 @@ export class StaticMappingNaryComponent
         });
     }
 
-    onStatusChange(status: any) {}
+    onStatusChange(_status: any) {}
 
-    onValueChange(value: any) {
+    onValueChange(_value: any) {
         this.applyCompletedConfiguration();
     }
 }

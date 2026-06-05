@@ -70,7 +70,7 @@ export class CompatibleElementsComponent implements OnInit {
 
     ngOnInit() {
         this.possibleElements.sort((a, b) => a.name.localeCompare(b.name));
-        this.possibleElements.forEach(pe => {
+        this.possibleElements.forEach(_pe => {
             this.styles.push(this.makeStandardStyle());
         });
     }

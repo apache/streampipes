@@ -93,6 +93,6 @@ export class ManageSiteDialogComponent implements OnInit {
                   AssetConstants.ASSET_SITES_APP_DOC_NAME,
                   this.clonedSite,
               );
-        observable.subscribe(res => this.close(true));
+        observable.subscribe(_res => this.close(true));
     }
 }

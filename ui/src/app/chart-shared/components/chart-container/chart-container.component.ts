@@ -254,7 +254,7 @@ export class ChartContainerComponent
         this.quickSelections ??=
             this.timeSelectionService.defaultQuickTimeSelections;
         this.labels ??= this.timeSelectionService.defaultLabels;
-        this.auth$ = this.currentUserService.user$.subscribe(user => {
+        this.auth$ = this.currentUserService.user$.subscribe(_user => {
             this.hasDataExplorerWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
             );
@@ -375,7 +375,7 @@ export class ChartContainerComponent
         this.componentRef.instance.dashboardChartOverrides =
             this.dashboardChartOverrides;
         const remove$ =
-            this.componentRef.instance.removeWidgetCallback.subscribe(ev =>
+            this.componentRef.instance.removeWidgetCallback.subscribe(_ev =>
                 this.removeWidget(),
             );
         const timer$ = this.componentRef.instance.timerCallback.subscribe(ev =>
@@ -393,7 +393,7 @@ export class ChartContainerComponent
             results => this.queryResultsEmitter.emit(results),
         );
 
-        this.componentRef.onDestroy(destroy => {
+        this.componentRef.onDestroy(_destroy => {
             this.componentRef.instance.cleanupSubscriptions();
             remove$?.unsubscribe();
             timer$?.unsubscribe();

@@ -82,7 +82,7 @@ export class RegisterComponent extends BaseLoginPageDirective {
         this.registrationError = undefined;
         this.registrationInProcess = true;
         this.loginService.registerUser(this.registrationData).subscribe(
-            response => {
+            _response => {
                 this.registrationInProcess = false;
                 this.registrationSuccess = true;
             },

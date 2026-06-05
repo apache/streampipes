@@ -39,7 +39,6 @@ import {
     SimpleChanges,
     inject,
 } from '@angular/core';
-import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 
 @Directive()
 export abstract class BaseRuntimeResolvableInput<

@@ -85,7 +85,7 @@ export class StaticCollectionComponent extends AbstractValidatedStaticPropertyRe
         this.staticProperty.members.splice(i, 1).slice(0);
     }
 
-    onStatusChange(status: any) {}
+    onStatusChange(_status: any) {}
 
-    onValueChange(value: any) {}
+    onValueChange(_value: any) {}
 }

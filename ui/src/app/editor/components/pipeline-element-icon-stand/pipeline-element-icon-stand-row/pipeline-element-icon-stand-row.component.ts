@@ -100,7 +100,7 @@ export class PipelineElementIconStandRowComponent implements OnInit {
         return PipelineElementTypeUtils.toCssShortHand(elementType);
     }
 
-    updateMouseOver(e: string) {
+    updateMouseOver(_e: string) {
         this.currentMouseOver = !this.currentMouseOver;
     }
 

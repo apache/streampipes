@@ -150,7 +150,7 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
         options: EChartsOption,
         widgetConfig: T,
         numberOfCharts: number,
-        series: S[],
+        _series: S[],
     ) {
         if (this.showAxes()) {
             const axisOptions = this.axisGeneratorService.makeAxisOptions(
@@ -226,7 +226,7 @@ export abstract class SpBaseSingleFieldEchartsRenderer<
         return 'category';
     }
 
-    getDefaultSeriesName(widgetConfig: T): string {
+    getDefaultSeriesName(_widgetConfig: T): string {
         return 'Default';
     }
 }

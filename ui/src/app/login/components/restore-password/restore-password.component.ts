@@ -74,11 +74,11 @@ export class RestorePasswordComponent extends BaseLoginPageDirective {
     sendRestorePasswordLink() {
         this.restoreCompleted = false;
         this.loginService.sendRestorePasswordLink(this.username).subscribe(
-            response => {
+            _response => {
                 this.restoreSuccess = true;
                 this.restoreCompleted = true;
             },
-            error => {
+            _error => {
                 this.restoreSuccess = false;
                 this.restoreCompleted = true;
             },

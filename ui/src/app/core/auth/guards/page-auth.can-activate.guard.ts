@@ -33,7 +33,7 @@ export class PageAuthGuard implements CanActivate, CanActivateChild {
 
     canActivate(
         route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
+        _state: RouterStateSnapshot,
     ): MaybeAsync<GuardResult> {
         return this.canActivateChild(route);
     }
