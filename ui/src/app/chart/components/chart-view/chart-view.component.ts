@@ -65,7 +65,7 @@ import { ChartDetectChangesService } from '../../services/chart-detect-changes.s
 import { SupportsUnsavedChangeDialog } from '../../../chart-shared/models/dataview-dashboard.model';
 import { firstValueFrom, Observable, of, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ResizeEchartsService } from '../../../chart-shared/services/resize-echarts.service';
 import { ResizeService } from '../../../chart-shared/services/resize.service';
@@ -157,6 +157,7 @@ export class ChartViewComponent
 
     chartNotFound = false;
     legacyMultiSourceChart = false;
+    createMode = false;
     hasDataExplorerWritePrivileges = false;
     latestQueryResults: SpQueryResult[] = [];
 
@@ -185,6 +186,8 @@ export class ChartViewComponent
             );
             this.editMode = this.shouldEnableEditMode();
         });
+
+        this.createMode = !dataViewId;
 
         if (dataViewId) {
             this.loadDataView(dataViewId);
@@ -423,14 +426,12 @@ export class ChartViewComponent
         if (this.legacyMultiSourceChart) {
             return;
         }
-        this.dataView.timeSettings = this.timeSettings;
-        this.dataView.healthStatus = 'OK';
-        this.dataView.affectedSchemaUpdateFields = undefined;
-        this.dataView.metadata ??= {
-            lastModifiedEpochMs: undefined,
-            createdAtEpochMs: undefined,
-        };
-        this.dataView.metadata.lastModifiedEpochMs = Date.now();
+        if (this.createMode) {
+            this.openCreateChartDialog();
+            return;
+        }
+
+        this.prepareChartForSave(this.dataView);
         const observable =
             this.dataView.elementId !== undefined
                 ? this.dataViewService.updateChart(this.dataView)
@@ -450,13 +451,58 @@ export class ChartViewComponent
         });
     }
 
+    private openCreateChartDialog(): void {
+        const resource = this.makeManageableChart(this.dataView);
+        const resourceConfig: ObjectManageDialogResourceConfig<ManageableChart> =
+            {
+                resourceLabel: 'Chart',
+                nameLabel: 'Chart title',
+                descriptionLabel: 'Chart description',
+                idProperty: 'elementId',
+                nameProperty: 'name',
+                assetLinkType: 'chart',
+                assetLinkCheckboxLabel:
+                    'Add the current chart to an existing asset',
+                saveResource: resource => {
+                    const chartResource = this.makeChartResource(resource);
+                    this.prepareChartForSave(chartResource);
+                    return this.dataViewService.saveChart(chartResource).pipe(
+                        tap((savedChart: DataExplorerWidgetModel) => {
+                            Object.assign(this.dataView, savedChart);
+                            Object.assign(
+                                resource,
+                                this.makeManageableChart(savedChart),
+                            );
+                        }),
+                    );
+                },
+            };
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('New chart'),
+            width: '50vw',
+            data: {
+                createMode: true,
+                resource,
+                saveMode: 'immediate',
+                resourceConfig,
+                headerTitle: this.translateService.instant('New chart'),
+            },
+        });
+
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.createMode = false;
+                this.originalDataView = JSON.parse(
+                    JSON.stringify(this.dataView),
+                );
+                this.routingService.navigateToDataViewOverview(true);
+            }
+        });
+    }
+
     manageChart(): void {
-        const resource: ManageableChart = {
-            ...this.dataView,
-            baseAppearanceConfig: { ...this.dataView.baseAppearanceConfig },
-            name: this.dataView.baseAppearanceConfig.widgetTitle,
-            description: '',
-        };
+        const resource = this.makeManageableChart(this.dataView);
         const resourceConfig: ObjectManageDialogResourceConfig<ManageableChart> =
             {
                 resourceLabel: 'Chart',
@@ -713,6 +759,28 @@ export class ChartViewComponent
         delete chartResource.name;
         delete chartResource.description;
         return chartResource as DataExplorerWidgetModel;
+    }
+
+    private makeManageableChart(
+        chart: DataExplorerWidgetModel,
+    ): ManageableChart {
+        return {
+            ...chart,
+            baseAppearanceConfig: { ...chart.baseAppearanceConfig },
+            name: chart.baseAppearanceConfig.widgetTitle,
+            description: '',
+        };
+    }
+
+    private prepareChartForSave(chart: DataExplorerWidgetModel): void {
+        chart.timeSettings = this.timeSettings;
+        chart.healthStatus = 'OK';
+        chart.affectedSchemaUpdateFields = undefined;
+        chart.metadata ??= {
+            lastModifiedEpochMs: undefined,
+            createdAtEpochMs: undefined,
+        };
+        chart.metadata.lastModifiedEpochMs = Date.now();
     }
 
     private async savePendingManageChartChanges(): Promise<void> {

@@ -79,6 +79,9 @@ export class ChartViewToolbarComponent implements OnInit {
     editMode = true;
 
     @Input()
+    createMode = false;
+
+    @Input()
     timeSettings: TimeSettings;
 
     @Input()

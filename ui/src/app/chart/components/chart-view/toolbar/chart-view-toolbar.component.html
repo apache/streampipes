@@ -63,13 +63,13 @@
             @if (editMode) {
                 <button
                     mat-flat-button
-                    [matTooltip]="'Save' | translate"
+                    [matTooltip]="(createMode ? 'Create' : 'Save') | translate"
                     class="edit-menu-btn"
                     (click)="saveDataViewEmitter.emit()"
                     data-cy="save-data-view-btn"
                 >
                     <mat-icon>save</mat-icon>
-                    {{ 'Save' | translate }}
+                    {{ (createMode ? 'Create' : 'Save') | translate }}
                 </button>
             }
             @if (editMode && isAssetAdmin) {
