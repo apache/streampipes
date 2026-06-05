@@ -17,7 +17,6 @@
  */
 
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
-import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 
 describe('Test Machine Data Simulator Adapter', () => {
     beforeEach('Setup Test', () => {

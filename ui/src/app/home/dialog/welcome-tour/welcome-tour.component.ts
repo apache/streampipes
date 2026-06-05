@@ -65,7 +65,7 @@ export class WelcomeTourComponent implements OnInit {
         this.currentUser.hideTutorial = true;
         this.profileService
             .updateUserProfile(this.currentUser)
-            .subscribe(data => {
+            .subscribe(_data => {
                 this.authService.updateTokenAndUserInfo();
                 this.close();
             });

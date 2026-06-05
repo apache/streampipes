@@ -131,7 +131,7 @@ export class AssetLinkTableComponent
     private featureCardService = inject(FeatureCardService);
 
     ngOnInit() {
-        this.user$ = this.currentUserService.user$.subscribe(user => {
+        this.user$ = this.currentUserService.user$.subscribe(_user => {
             this.isAdminUser = this.authService.hasRole(UserRole.ROLE_ADMIN);
             if (this.isAdminUser) {
                 this.certificateService
@@ -149,7 +149,7 @@ export class AssetLinkTableComponent
         };
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(_changes: SimpleChanges) {
         this.refreshData();
     }
 

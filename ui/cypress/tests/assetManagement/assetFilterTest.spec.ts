@@ -16,29 +16,19 @@
  *
  */
 
-import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
-import { AssetBuilder } from '../../support/builder/AssetBuilder';
 import { FilterUtils } from '../../support/utils/filter/FilterUtils';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
 
 describe('Test asset filters', () => {
-    const label1 = 'label1';
-    const label2 = 'label2';
-    const label3 = 'label3';
-
-    const site1 = 'site1';
-    const site2 = 'site2';
-    const site3 = 'site3';
     const adapter1 = 'adapter-1_0';
     const adapter1_1 = 'adapter-1_1';
     const adapter1_2 = 'adapter-1_2';
     const adapter2 = 'adapter-2_0';
     const adapter2_1 = 'adapter-2_1';
     const adapter2_2 = 'adapter-2_2';
-    const adapter3 = 'adapter-3_0';
     const adapter3_1 = 'adapter-3_1';
     const adapter3_2 = 'adapter-3_2';
     const pipeline1 = 'Persist ' + adapter1;
@@ -47,63 +37,8 @@ describe('Test asset filters', () => {
     const pipeline2 = 'Persist ' + adapter2;
     const pipeline2_1 = 'Persist ' + adapter2_1;
     const pipeline2_2 = 'Persist ' + adapter2_2;
-    const pipeline3 = 'Persist ' + adapter3;
     const pipeline3_1 = 'Persist ' + adapter3_1;
     const pipeline3_2 = 'Persist ' + adapter3_2;
-
-    const asset1 = AssetBuilder.create('asset-1_0')
-        .addLabel(label1)
-        .setSite(site1)
-        .setAssetType('PRODUCTION_LINE')
-        .addSubAsset(
-            AssetBuilder.create('asset-1_1')
-                .addLabel(label2)
-                .setAssetType('WORK_CELL')
-                .build(),
-        )
-        .addSubAsset(
-            AssetBuilder.create('asset-1_2')
-                .addLabel(label3)
-                .setAssetType('WORK_CELL')
-                .build(),
-        )
-        .build();
-
-    const asset2 = AssetBuilder.create('asset-2_0')
-        .addLabel(label1)
-        .setSite(site2)
-        .setAssetType('PRODUCTION_LINE')
-        .addSubAsset(
-            AssetBuilder.create('asset-2_1')
-                .addLabel(label2)
-                .setAssetType('WORK_CELL')
-                .build(),
-        )
-        .addSubAsset(
-            AssetBuilder.create('asset-2_2')
-                .addLabel(label3)
-                .setAssetType('WORK_CELL')
-                .build(),
-        )
-        .build();
-
-    const asset3 = AssetBuilder.create('asset-3_0')
-        .addLabel(label1)
-        .setSite(site3)
-        .setAssetType('PRODUCTION_LINE')
-        .addSubAsset(
-            AssetBuilder.create('asset-3_1')
-                .addLabel(label2)
-                .setAssetType('WORK_CELL')
-                .build(),
-        )
-        .addSubAsset(
-            AssetBuilder.create('asset-3_2')
-                .addLabel(label3)
-                .setAssetType('WORK_CELL')
-                .build(),
-        )
-        .build();
 
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
@@ -450,13 +385,6 @@ describe('Test asset filters', () => {
         FilterUtils.filterLabels(['label2']);
         checkTableResources('datalake-settings', [adapter1_1]);
     });
-
-    function prepareAssets() {
-        AssetUtils.goToAssets();
-        AssetUtils.addAndSaveAsset(asset1);
-        AssetUtils.addAndSaveAsset(asset2);
-        AssetUtils.addAndSaveAsset(asset3);
-    }
 
     function checkTableResources(tableDataCy: string, resources: string[]) {
         cy.get(`[data-cy="${tableDataCy}"] tbody tr`, {

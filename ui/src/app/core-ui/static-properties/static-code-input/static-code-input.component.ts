@@ -97,9 +97,9 @@ export class StaticCodeInputComponent
         this.enableCodeHints();
     }
 
-    onStatusChange(status: any) {}
+    onStatusChange(_status: any) {}
 
-    onValueChange(value: any) {}
+    onValueChange(_value: any) {}
 
     resetCode() {
         this.staticProperty.value = this.staticProperty.codeTemplate;

@@ -111,7 +111,7 @@ export class GeneralProfileSettingsComponent
     updateAppearanceMode() {
         this.profileService
             .updateAppearanceMode(this.userData.username, this.darkMode)
-            .subscribe(response => {
+            .subscribe(_response => {
                 this.darkModeChanged = true;
             });
     }

@@ -66,7 +66,7 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpChartRoutes.BASE),
         );
-        this.auth$ = this.currentUserService.user$.subscribe(user => {
+        this.auth$ = this.currentUserService.user$.subscribe(_user => {
             this.hasDataExplorerWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
             );

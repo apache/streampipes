@@ -20,7 +20,6 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
-import { AssetBtns } from '../../support/utils/asset/AssetBtns';
 import { AssetBuilder } from '../../support/builder/AssetBuilder';
 
 describe('Creates a new adapter with a linked asset', () => {

@@ -116,7 +116,7 @@ export class StartAllPipelinesDialogComponent implements OnInit {
                         ? this.successStr
                         : this.errorStr;
                 },
-                data => {
+                _data => {
                     this.installationStatus[index].status = this.errorStr;
                 },
             )
@@ -143,7 +143,7 @@ export class StartAllPipelinesDialogComponent implements OnInit {
                         ? this.successStr
                         : this.errorStr;
                 },
-                data => {
+                _data => {
                     this.installationStatus[index].status = this.errorStr;
                 },
             )

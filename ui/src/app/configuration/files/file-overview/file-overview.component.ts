@@ -106,7 +106,7 @@ export class FileOverviewComponent implements OnInit {
             if (ev === 'confirm') {
                 this.filesService
                     .deleteFile(fileMetadata.fileId)
-                    .subscribe(response => {
+                    .subscribe(_response => {
                         this.refreshFiles();
                     });
             }

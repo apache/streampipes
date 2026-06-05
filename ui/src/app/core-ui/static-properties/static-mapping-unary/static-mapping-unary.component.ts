@@ -83,7 +83,7 @@ export class StaticMappingUnaryComponent
         return validators;
     }
 
-    onStatusChange(status: any) {}
+    onStatusChange(_status: any) {}
 
     onValueChange(value: any) {
         this.staticProperty.selectedProperty = value;

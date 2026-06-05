@@ -133,5 +133,5 @@ export class DashboardGridViewComponent
         return true;
     }
 
-    selectNewWidget(_dataViewElementId: string): void {}
+    selectNewWidget(_widgetId): void {}
 }

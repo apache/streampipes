@@ -84,7 +84,7 @@ export class PipelineOperationsService {
         toggleAction: string,
         toggleRunningOperation?,
     ) {
-        dialogRef.afterClosed().subscribe(msg => {
+        dialogRef.afterClosed().subscribe(_msg => {
             refreshPipelinesEmitter.emit(true);
             if (toggleRunningOperation) {
                 toggleRunningOperation(toggleAction);
@@ -147,7 +147,7 @@ export class PipelineOperationsService {
                 },
             });
 
-        dialogRef.afterClosed().subscribe(close => {
+        dialogRef.afterClosed().subscribe(_close => {
             refreshPipelinesEmitter.emit(true);
         });
     }

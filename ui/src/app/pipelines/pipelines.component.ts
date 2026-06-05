@@ -112,7 +112,7 @@ export class PipelinesComponent implements OnInit, OnDestroy {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpPipelineRoutes.BASE),
         );
-        this.user$ = this.currentUserService.user$.subscribe(user => {
+        this.user$ = this.currentUserService.user$.subscribe(_user => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
             );
