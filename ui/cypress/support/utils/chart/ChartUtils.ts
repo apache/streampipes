@@ -214,7 +214,7 @@ export class ChartUtils {
 
         ChartUtils.addDataViewAndTableWidget(dataView, ChartUtils.ADAPTER_NAME);
 
-        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration(false, false);
 
         ChartUtils.goToDashboard();
 
