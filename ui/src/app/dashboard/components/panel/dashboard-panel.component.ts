@@ -92,6 +92,9 @@ import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-dashboard-panel',
@@ -121,6 +124,9 @@ import { MatCheckbox } from '@angular/material/checkbox';
         MatRadioGroup,
         MatRadioButton,
         MatCheckbox,
+        MatIconButton,
+        MatIcon,
+        MatTooltip,
         DashboardGridViewComponent,
         DashboardSlideViewComponent,
         TranslatePipe,
