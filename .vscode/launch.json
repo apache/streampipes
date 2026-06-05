@@ -3,7 +3,7 @@
   "configurations": [
     {
       "type": "java",
-      "name": "Debug StreamPipes Core",
+      "name": "Debug Core",
       "request": "launch",
       "mainClass": "org.apache.streampipes.service.core.StreamPipesCoreApplication",
       "projectName": "streampipes-service-core",
@@ -25,12 +25,20 @@
         "SP_CORE_EXTENSION_TRANSPORT_MODE": "nats",
         "SP_EXTENSION_TRANSPORT_MODE": "nats",
         "SP_EXTENSION_REQUEST_TOPIC_PREFIX": "sp.extensions.request",
-        "SP_DEBUG": "false"
+        "SP_DEBUG": "false",
+        "SP_SETUP_PROMETHEUS_ENDPOINT":"true"
       }
     },
     {
+      "type": "node-terminal",
+      "name": "Debug UI",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/ui",
+      "command": "node ./deployment/prebuild.js && npm run build-libraries && npx ng serve --host 0.0.0.0 --port 8082 --proxy-config src/proxy.conf.json"
+    },
+    {
       "type": "java",
-      "name": "Debug StreamPipes IIoT Extensions",
+      "name": "Debug IIoT Extensions",
       "request": "launch",
       "mainClass": "org.apache.streampipes.extensions.all.iiot.AllExtensionsIIoTInit",
       "projectName": "streampipes-extensions-all-iiot",
@@ -60,10 +68,10 @@
     {
       "name": "Full StreamPipes Dev",
       "configurations": [
-        "Debug StreamPipes Core",
-        "Debug StreamPipes IIoT Extensions"
-      ],
-      "preLaunchTask": "dev: start ui"
+        "Debug UI",
+        "Debug Core",
+        "Debug IIoT Extensions"
+      ]
     }
   ]
 }
