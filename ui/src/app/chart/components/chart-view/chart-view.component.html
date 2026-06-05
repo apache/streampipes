@@ -29,11 +29,16 @@
                 [timeSettings]="timeSettings"
                 [editMode]="editMode"
                 [configuredWidget]="dataView"
+                [hasDataExplorerWritePrivileges]="
+                    hasDataExplorerWritePrivileges
+                "
                 (downloadFileEmitter)="downloadDataAsFile()"
                 (updateDateRangeEmitter)="updateDateRange($event)"
                 (saveDataViewEmitter)="saveDataView()"
                 (discardDataViewEmitter)="discardChanges()"
                 (addToAssetEmitter)="addAssetDialog()"
+                (manageChartEmitter)="manageChart()"
+                (deleteChartEmitter)="deleteChart()"
                 fxFlex="100"
             >
             </sp-chart-view-toolbar>

@@ -47,6 +47,7 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
     selector: 'sp-chart-view-toolbar',
@@ -64,6 +65,9 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatTooltip,
         MatIcon,
         MatIconButton,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
         TimeRangeSelectorComponent,
         TranslatePipe,
     ],
@@ -80,6 +84,9 @@ export class ChartViewToolbarComponent implements OnInit {
     @Input()
     configuredWidget: DataExplorerWidgetModel;
 
+    @Input()
+    hasDataExplorerWritePrivileges: boolean;
+
     timeRangeVisible = true;
 
     @Output()
@@ -90,6 +97,12 @@ export class ChartViewToolbarComponent implements OnInit {
 
     @Output()
     discardDataViewEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
+    manageChartEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
+    deleteChartEmitter: EventEmitter<void> = new EventEmitter();
 
     @Output()
     updateDateRangeEmitter: EventEmitter<TimeSettings> = new EventEmitter();

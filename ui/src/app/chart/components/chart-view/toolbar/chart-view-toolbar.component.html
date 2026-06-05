@@ -123,6 +123,39 @@
                     >
                     </sp-time-range-selector>
                 }
+                @if (
+                    configuredWidget.elementId && hasDataExplorerWritePrivileges
+                ) {
+                    <button
+                        mat-icon-button
+                        [matMenuTriggerFor]="optMenu"
+                        [attr.aria-label]="'Options' | translate"
+                        data-cy="options-chart"
+                    >
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                }
+                <mat-menu #optMenu="matMenu">
+                    @if (editMode && hasDataExplorerWritePrivileges) {
+                        <button
+                            mat-menu-item
+                            (click)="manageChartEmitter.emit()"
+                        >
+                            <mat-icon>settings</mat-icon>
+                            <span>{{ 'Manage chart' | translate }}</span>
+                        </button>
+                    }
+
+                    @if (hasDataExplorerWritePrivileges) {
+                        <button
+                            mat-menu-item
+                            (click)="deleteChartEmitter.emit()"
+                        >
+                            <mat-icon>clear</mat-icon>
+                            <span>{{ 'Delete Chart' | translate }}</span>
+                        </button>
+                    }
+                </mat-menu>
             </div>
         </div>
     }
