@@ -839,7 +839,6 @@ export class ChartUtils {
         ChartBtns.saveDataViewButton().click();
         ChartUtils.addDashboardToAsset(assetNames);
         ChartBtns.saveDataViewBtn().click();
-        //Necessary for the background task to finish otherwise it steps back to charts from the following task
-        cy.wait(1000);
+        ChartBtns.openNewDataViewBtn().should('be.visible');
     }
 }

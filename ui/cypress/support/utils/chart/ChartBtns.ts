@@ -210,7 +210,7 @@ export class ChartBtns {
     }
 
     public static addNewWidgetBtn() {
-        return cy.dataCy('add-new-widget');
+        return cy.dataCy('add-new-widget', { timeout: 10000 });
     }
 
     public static dataLakeTruncateBtn() {
