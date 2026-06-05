@@ -72,18 +72,6 @@
                     {{ (createMode ? 'Create' : 'Save') | translate }}
                 </button>
             }
-            @if (editMode && isAssetAdmin) {
-                <button
-                    mat-flat-button
-                    [matTooltip]="'Add to Asset' | translate"
-                    class="mat-basic"
-                    (click)="addToAssetEmitter.emit()"
-                    data-cy="add-to-Asset-data-view-btn"
-                >
-                    <mat-icon>precision_manufacturing</mat-icon>
-                    {{ 'Add To Asset' | translate }}
-                </button>
-            }
             @if (editMode) {
                 <button
                     mat-flat-button
