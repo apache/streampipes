@@ -347,10 +347,15 @@ export class ChartUtils {
         });
     }
 
-    public static saveDataViewConfiguration(confirmSave: boolean = false) {
-        ChartBtns.saveDataViewButton().click({
-            force: true,
-        });
+    public static saveDataViewConfiguration(
+        confirmSave: boolean = false,
+        withoutConfig: boolean = true,
+    ) {
+        if (withoutConfig) {
+            ChartBtns.saveDataViewButton().click({
+                force: true,
+            });
+        }
         ChartBtns.saveDataViewBtn().click();
         if (confirmSave) {
             SharedBtns.confirmDialogConfirmBtn().click();
@@ -366,11 +371,11 @@ export class ChartUtils {
     }
 
     public static addChartsToAsset(assetNameList = []) {
-        ChartBtns.saveChartsToAssetBtn();
+        ChartBtns.saveDataViewButton().click();
 
-        cy.dataCy('sp-show-chart-asset-checkbox').then($checkbox => {
-            if (!$checkbox.is(':checked')) {
-                cy.wrap($checkbox).click({ force: true });
+        ChartBtns.chartAssetDialogCheckbox().then($checkbox => {
+            if (!$checkbox.prop('checked')) {
+                cy.wrap($checkbox).check({ force: true });
             }
         });
         this.addToAsset(assetNameList);
@@ -378,9 +383,9 @@ export class ChartUtils {
     }
 
     public static addDashboardToAsset(assetNameList = []) {
-        cy.dataCy('sp-show-asset-checkbox').then($checkbox => {
-            if (!$checkbox.is(':checked')) {
-                cy.wrap($checkbox).click({ force: true });
+        ChartBtns.objectManageAssetCheckbox().then($checkbox => {
+            if (!$checkbox.prop('checked')) {
+                cy.wrap($checkbox).check({ force: true });
             }
         });
         this.addToAsset(assetNameList);
@@ -824,9 +829,10 @@ export class ChartUtils {
             ChartUtils.ADAPTER_NAME,
         );
         //Save
+        ChartBtns.saveDataViewButton().click();
         ChartUtils.addDashboardToAsset(assetNames);
-        ChartBtns.saveDataViewBtn(); //.saveDataViewConfiguration();
+        ChartBtns.saveDataViewBtn().click();
         //Necessary for the background task to finish otherwise it steps back to charts from the following task
-        cy.wait(500);
+        cy.wait(1000);
     }
 }

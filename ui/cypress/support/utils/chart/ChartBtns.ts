@@ -37,13 +37,6 @@ export class ChartBtns {
         return cy.dataCy('discard-dashboard-btn');
     }
 
-    public static saveChartsToAssetBtn() {
-        return cy
-            .dataCy('add-to-Asset-data-view-btn', { timeout: 10000 })
-            .should('exist')
-            .click();
-    }
-
     public static deleteDashboardBtn(dashboardName) {
         return cy.dataCy('delete-dashboard-' + dashboardName, {
             timeout: 10000,
@@ -100,6 +93,18 @@ export class ChartBtns {
         return cy
             .dataCy('asset-dialog-confirm-delete', { timeout: 10000 })
             .click();
+    }
+
+    public static chartAssetDialogCheckbox() {
+        return cy
+            .dataCy('sp-show-chart-asset-checkbox')
+            .find('input[type="checkbox"]');
+    }
+
+    public static objectManageAssetCheckbox() {
+        return cy
+            .dataCy('sp-show-asset-checkbox')
+            .find('input[type="checkbox"]');
     }
 
     public static editDataViewButton(dataViewName: string) {

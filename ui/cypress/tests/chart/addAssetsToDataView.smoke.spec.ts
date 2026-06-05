@@ -59,9 +59,9 @@ describe('Creates a new adapter with a linked asset', () => {
         ChartUtils.editDataView('NewWidget');
         ChartUtils.renameWidget('Rename');
         ChartUtils.addChartsToAsset([assetName1, assetName3]);
-        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration(false, true);
         //Neceassary for Background Task to finish
-        cy.wait(500);
+        cy.wait(1000);
 
         AssetUtils.checkAmountOfAssets(3);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
