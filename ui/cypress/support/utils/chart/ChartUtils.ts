@@ -371,8 +371,15 @@ export class ChartUtils {
     }
 
     public static addChartsToAsset(assetNameList = []) {
-        ChartBtns.saveDataViewButton().click();
+        ChartBtns.chartOptionsBtn().click();
+        GeneralUtils.visibleMaterialMenu().within(() => {
+            ChartBtns.manageChartBtn().click();
+        });
+        ChartUtils.addDashboardToAsset(assetNameList);
+        ChartBtns.saveDataViewBtn().click();
+    }
 
+    public static addChartDialogAssets(assetNameList = []) {
         ChartBtns.chartAssetDialogCheckbox().then($checkbox => {
             if (!$checkbox.prop('checked')) {
                 cy.wrap($checkbox).check({ force: true });

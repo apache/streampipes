@@ -89,6 +89,14 @@ export class ChartBtns {
         return cy.dataCy('add-to-Asset-data-view-btn');
     }
 
+    public static chartOptionsBtn() {
+        return cy.dataCy('options-chart');
+    }
+
+    public static manageChartBtn() {
+        return cy.dataCy('manage-chart-btn');
+    }
+
     public static confirmAssetSelectionBtn() {
         return cy
             .dataCy('asset-dialog-confirm-delete', { timeout: 10000 })
