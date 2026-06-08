@@ -54,7 +54,7 @@ describe('Test Time Order in Charts', () => {
         // Save and leave view, edit view again and check ascending order
         ChartUtils.selectAppearanceConfig();
         ChartUtils.selectDataViewName(chartName);
-        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration(false, false);
         ChartUtils.editDataView(chartName);
         ChartUtils.clickOrderBy('ascending');
         ChartUtils.openVisualizationConfig();
