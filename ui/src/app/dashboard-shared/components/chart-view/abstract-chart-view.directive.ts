@@ -84,20 +84,34 @@ export abstract class AbstractChartViewDirective {
         this.widgetsAvailable = true;
     }
 
-    loadWidgetConfig(dashboardItem: ClientDashboardItem) {
+    loadWidgetConfig(
+        dashboardItem: ClientDashboardItem,
+        widget?: DataExplorerWidgetModel,
+    ) {
         if (!this.isGridView()) {
             this.widgetsAvailable = false;
+        }
+        if (widget) {
+            this.processLoadedWidget(dashboardItem, widget);
+            return;
         }
         this.dataViewDataExplorerService
             .getChart(dashboardItem.dataViewElementId)
             .subscribe(response => {
-                this.processWidget(response);
-                if (!this.isGridView()) {
-                    this.selectNewWidget(dashboardItem.id);
-                    this.widgetsVisible = true;
-                }
-                this.widgetsAvailable = true;
+                this.processLoadedWidget(dashboardItem, response);
             });
+    }
+
+    private processLoadedWidget(
+        dashboardItem: ClientDashboardItem,
+        widget: DataExplorerWidgetModel,
+    ): void {
+        this.processWidget(widget);
+        if (!this.isGridView()) {
+            this.selectNewWidget(dashboardItem.dataViewElementId);
+            this.widgetsVisible = true;
+        }
+        this.widgetsAvailable = true;
     }
 
     processWidget(widget: DataExplorerWidgetModel) {
@@ -117,5 +131,5 @@ export abstract class AbstractChartViewDirective {
 
     abstract isGridView(): boolean;
 
-    abstract selectNewWidget(widgetId): void;
+    abstract selectNewWidget(dataViewElementId: string): void;
 }

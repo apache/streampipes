@@ -34,16 +34,6 @@
                 <mat-icon>save</mat-icon>
                 <span>{{ (createMode ? 'Create' : 'Save') | translate }}</span>
             </button>
-            <button
-                mat-flat-button
-                [matTooltip]="'Discard' | translate"
-                class="mat-basic mr-10 edit-menu-btn"
-                (click)="discardDashboardEmitter.emit()"
-                data-cy="discard-dashboard-btn"
-            >
-                <i class="material-icons">undo</i>
-                <span>&nbsp;{{ 'Discard' | translate }}</span>
-            </button>
         </div>
     }
     <div
