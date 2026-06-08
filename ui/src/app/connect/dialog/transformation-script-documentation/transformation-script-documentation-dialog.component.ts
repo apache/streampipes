@@ -24,7 +24,6 @@ import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import {
-    FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
     LayoutGapDirective,

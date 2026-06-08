@@ -136,7 +136,7 @@ export class TokenManagementSettingsComponent
         this.userData.userApiTokens.splice(removeIndex, 1);
         this.profileService
             .updateUserProfile(this.userData)
-            .subscribe(response => {
+            .subscribe(_response => {
                 this.receiveUserData();
             });
     }

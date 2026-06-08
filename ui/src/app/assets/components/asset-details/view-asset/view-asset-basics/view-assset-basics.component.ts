@@ -59,7 +59,7 @@ export class ViewAssetBasicsComponent implements OnChanges {
 
     selectedAssetType: string;
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(_changes: SimpleChanges) {
         this.selectedAssetType =
             this.isa95TypeService.toLabel(
                 this.selectedAsset.assetType.isa95AssetType,

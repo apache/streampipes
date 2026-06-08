@@ -192,7 +192,7 @@ export class PipelineElementIconStandComponent
                     ui.helper.appendTo('#content');
                     $('#outerAssemblyArea').css('border', '2px dashed #39b54a');
                 },
-                stop(el, ui) {
+                stop(_el, _ui) {
                     $('#outerAssemblyArea').css('border', '0');
                 },
             });

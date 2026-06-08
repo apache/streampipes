@@ -33,8 +33,8 @@ export class RegistrationAllowedCanActivateGuard {
     private loginService = inject(LoginService);
 
     canActivate(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
+        _route: ActivatedRouteSnapshot,
+        _state: RouterStateSnapshot,
     ):
         | Observable<boolean | UrlTree>
         | Promise<boolean | UrlTree>

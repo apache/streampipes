@@ -175,7 +175,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpConnectRoutes.BASE),
         );
-        this.user$ = this.currentUserService.user$.subscribe(user => {
+        this.user$ = this.currentUserService.user$.subscribe(_user => {
             this.getAdaptersRunning();
         });
         this.tutorial$ = this.shepherdService.tutorialActive$.subscribe(

@@ -126,7 +126,7 @@ export class AuthService {
                         observer.next(false);
                     }
                 },
-                error => {
+                _error => {
                     observer.error();
                 },
             ),

@@ -65,9 +65,11 @@ public class SidebarConfigGenerator {
     var section = existingSidebarJson
         .getAsJsonObject()
         .get(DocumentationSection)
+        .getAsJsonArray()
+        .get(7)
         .getAsJsonObject();
 
-    section.add(PipelineElementSection, pipelineElements);
+    section.add("items", pipelineElements);
 
     return gson.toJson(existingSidebarJson);
   }

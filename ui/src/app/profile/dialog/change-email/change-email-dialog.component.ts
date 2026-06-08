@@ -127,7 +127,7 @@ export class ChangeEmailDialogComponent implements OnInit {
         this.clonedUser.username = this.email;
         this.clonedUser.password = this.confirmPw;
         this.userService.updateUsername(this.clonedUser).subscribe(
-            result => {
+            _result => {
                 this.close(true);
             },
             error => {

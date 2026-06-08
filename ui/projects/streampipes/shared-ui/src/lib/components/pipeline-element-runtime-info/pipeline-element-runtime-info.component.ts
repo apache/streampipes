@@ -105,7 +105,7 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                             r.value = json[r.runtimeName];
                             r.valueChanged = r.value !== previousValue;
                         });
-                    } catch (error) {
+                    } catch (_error) {
                         this.runtimeDataError = true;
                         this.runtimeData = [];
                     }

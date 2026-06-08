@@ -240,20 +240,17 @@ export class SpAssetOverviewComponent implements OnInit {
     }
 
     openPermissionsDialog(asset: SpAssetModel) {
-        const dialogRef = this.dialogService.open(
-            ObjectPermissionDialogComponent,
-            {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: this.translateService.instant('Manage permissions'),
-                width: '70vw',
-                data: {
-                    objectInstanceId: asset.elementId,
-                    headerTitle:
-                        this.translateService.instant(
-                            'Manage permissions for asset ',
-                        ) + asset.assetName,
-                },
+        this.dialogService.open(ObjectPermissionDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('Manage permissions'),
+            width: '70vw',
+            data: {
+                objectInstanceId: asset.elementId,
+                headerTitle:
+                    this.translateService.instant(
+                        'Manage permissions for asset ',
+                    ) + asset.assetName,
             },
-        );
+        });
     }
 }

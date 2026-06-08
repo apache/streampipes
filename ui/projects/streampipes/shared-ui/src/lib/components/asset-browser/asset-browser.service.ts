@@ -273,7 +273,6 @@ export class SpAssetBrowserService {
     private filterLabels(
         asset: SpAsset,
         selectedLabels: SpLabel[],
-        recursionStep: boolean = false,
         previousMatchesSelf: boolean = false,
     ): SpAsset | null {
         const labelIds = asset.labelIds || [];
@@ -302,7 +301,7 @@ export class SpAssetBrowserService {
             filteredChildren = asset.assets
                 .map(child => ({ ...child }))
                 .map(child =>
-                    this.filterLabels(child, selectedLabels, true, matchesSelf),
+                    this.filterLabels(child, selectedLabels, matchesSelf),
                 )
                 .filter(child => child !== null)
                 .map(child => child as SpAsset);

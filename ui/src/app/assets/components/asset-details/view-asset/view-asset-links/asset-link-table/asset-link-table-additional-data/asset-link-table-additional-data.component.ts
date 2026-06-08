@@ -51,7 +51,7 @@ export class AssetLinkTableAdditionalDataComponent implements OnChanges {
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(_changes: SimpleChanges) {
         this.findAssociatedCertificates();
     }
 

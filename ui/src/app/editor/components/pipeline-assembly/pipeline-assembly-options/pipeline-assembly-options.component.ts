@@ -143,7 +143,7 @@ export class PipelineAssemblyOptionsComponent {
         });
     }
 
-    showClearAssemblyConfirmDialog(event: any) {
+    showClearAssemblyConfirmDialog(_event: any) {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {

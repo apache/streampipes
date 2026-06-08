@@ -59,11 +59,11 @@ export class ActivateAccountComponent extends BaseLoginPageDirective {
                 this.accountActivationService
                     .activateAccount(this.activationCode)
                     .subscribe(
-                        success => {
+                        _success => {
                             this.activationPerformed = true;
                             this.activationSuccess = true;
                         },
-                        error => {
+                        _error => {
                             this.activationPerformed = true;
                         },
                     );

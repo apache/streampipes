@@ -21,7 +21,6 @@ import { PipelineBuilder } from '../builder/PipelineBuilder';
 import { PipelineUtils } from './pipeline/PipelineUtils';
 import { PipelineElementInput } from '../model/PipelineElementInput';
 import { AdapterInput } from '../model/AdapterInput';
-import { AdapterBuilder } from '../builder/AdapterBuilder';
 
 export class ThirdPartyIntegrationUtils {
     public static runTest(sink: PipelineElementInput, adapter: AdapterInput) {

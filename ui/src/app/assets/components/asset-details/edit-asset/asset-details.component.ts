@@ -53,7 +53,7 @@ export class SpAssetDetailsComponent extends BaseAssetDetailsDirective {
 
     saveAsset() {
         this.cleanupEmpty();
-        this.assetService.updateAsset(this.asset).subscribe(res => {
+        this.assetService.updateAsset(this.asset).subscribe(_res => {
             this.assetBrowserService.refreshBrowserAssetData();
             this.router.navigate(['assets']);
         });
