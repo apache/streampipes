@@ -33,7 +33,7 @@ describe('Test chart data download dialog', () => {
             dataViewName,
             PrepareTestDataUtils.dataName,
         );
-        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration(false, false);
     });
 
     beforeEach('Setup Test', () => {
