@@ -21,6 +21,7 @@ import { FilterUtils } from '../../support/utils/filter/FilterUtils';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
+import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 
 describe('Test asset filters', () => {
     const adapter1 = 'adapter-1_0';

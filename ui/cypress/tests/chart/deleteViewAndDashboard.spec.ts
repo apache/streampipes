@@ -31,7 +31,7 @@ describe('Test Deletion of Data View and Dashboard', () => {
 
         ChartUtils.addDataViewAndTableWidget(dataView, ChartUtils.ADAPTER_NAME);
 
-        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration(false, false);
 
         ChartUtils.checkRowsViewsTable(1);
 
