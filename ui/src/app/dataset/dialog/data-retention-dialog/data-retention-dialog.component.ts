@@ -110,10 +110,10 @@ export class DataRetentionDialogComponent implements OnInit {
         this.datalakeRestService
             .cleanup(this.measurementIndex, this.retentionConfig)
             .subscribe({
-                next: data => {
+                next: _data => {
                     this.close(true);
                 },
-                error: err => {
+                error: _err => {
                     this.close(false);
                 },
             });
@@ -122,7 +122,7 @@ export class DataRetentionDialogComponent implements OnInit {
     deleteCleanUp() {
         this.datalakeRestService
             .deleteCleanup(this.measurementIndex)
-            .subscribe(data => {
+            .subscribe(_data => {
                 this.close(true);
             });
     }
@@ -137,7 +137,7 @@ export class DataRetentionDialogComponent implements OnInit {
                 },
             });
 
-        dialogRef.afterClosed().subscribe(data => {
+        dialogRef.afterClosed().subscribe(_data => {
             this.close(true);
         });
     }

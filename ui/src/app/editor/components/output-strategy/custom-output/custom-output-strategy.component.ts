@@ -82,7 +82,7 @@ export class CustomOutputStrategyComponent
         );
         // This is needed to trigger update of scope
         this.outputStrategy.selectedPropertyKeys =
-            this.outputStrategy.selectedPropertyKeys.filter(el => true);
+            this.outputStrategy.selectedPropertyKeys.filter(_el => true);
         this.checkFormValidity();
     }
 

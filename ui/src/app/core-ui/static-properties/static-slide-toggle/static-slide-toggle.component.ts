@@ -48,7 +48,7 @@ export class StaticSlideToggleComponent
         this.applyCompletedConfiguration(true);
     }
 
-    onStatusChange(status: any) {}
+    onStatusChange(_status: any) {}
 
     onValueChange(value: any) {
         this.staticProperty.selected = value;

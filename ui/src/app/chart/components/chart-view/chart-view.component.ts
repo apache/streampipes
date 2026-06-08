@@ -205,7 +205,7 @@ export class ChartViewComponent
         });
     }
 
-    onAddWidget(event: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>) {
+    onAddWidget(_event: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>) {
         if (!this.originalDataView?.visualizationConfig) {
             this.setDefaultValuesOnOriginalDataViewForNewCharts();
         }

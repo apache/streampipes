@@ -237,7 +237,7 @@ export class EmailConfigurationComponent implements OnInit {
         this.sendingTestMailInProgress = true;
         this.mailConfig.testRecipientAddress = this.defaultRecipient;
         this.mailConfigService.sendTestMail(this.mailConfig).subscribe(
-            result => {
+            _result => {
                 this.sendingTestMailInProgress = false;
                 this.sendingTestMailSuccess = true;
             },

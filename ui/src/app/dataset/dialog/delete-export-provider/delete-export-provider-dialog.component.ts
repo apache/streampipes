@@ -61,7 +61,7 @@ export class DeleteExportProviderComponent {
         this.currentStatus = 'Deleting export provider.';
         this.exportProviderRestService
             .deleteExportProvider(this.providerId)
-            .subscribe(data => {
+            .subscribe(_data => {
                 this.close(true);
             });
     }

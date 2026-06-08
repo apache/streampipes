@@ -113,7 +113,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
             { key: 'e', action: () => this.onShortcutEdit() },
         ]);
 
-        this.currentUser$ = this.currentUserService.user$.subscribe(user => {
+        this.currentUser$ = this.currentUserService.user$.subscribe(_user => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
             );
@@ -145,7 +145,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
                         }
                         return response;
                     }),
-                    catchError(error => {
+                    catchError(_error => {
                         this.pipelineAvailable = false;
                         return of(new PipelineCanvasMetadata());
                     }),

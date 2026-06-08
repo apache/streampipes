@@ -80,7 +80,7 @@ export class DeleteDatalakeIndexComponent implements OnInit {
             this.translateService.instant('Truncating data...');
         this.datalakeRestService
             .removeData(this.measurementIndex)
-            .subscribe(data => {
+            .subscribe(_data => {
                 this.close(true);
             });
     }
@@ -92,7 +92,7 @@ export class DeleteDatalakeIndexComponent implements OnInit {
         // this.datalakeRestService.dropSingleMeasurementSeries(measurmentIndex);
         this.datalakeRestService
             .dropSingleMeasurementSeries(this.measurementIndex)
-            .subscribe(data => {
+            .subscribe(_data => {
                 this.close(true);
             });
     }

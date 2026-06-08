@@ -87,7 +87,7 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { ChartSelectionComponent } from './chart-selection-panel/chart-selection/chart-selection.component';
-import { MatFormField, MatError } from '@angular/material/form-field';
+import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';

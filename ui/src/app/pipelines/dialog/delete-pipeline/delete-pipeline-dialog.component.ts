@@ -66,7 +66,7 @@ export class DeletePipelineDialogComponent {
         );
         this.pipelineService
             .deleteOwnPipeline(this.pipeline._id)
-            .subscribe(data => {
+            .subscribe(_data => {
                 this.close(true);
             });
     }
@@ -77,10 +77,10 @@ export class DeletePipelineDialogComponent {
             'Stopping pipeline...',
         );
         this.pipelineService.stopPipeline(this.pipeline._id).subscribe(
-            data => {
+            _data => {
                 this.deletePipeline();
             },
-            data => {
+            _data => {
                 this.deletePipeline();
             },
         );

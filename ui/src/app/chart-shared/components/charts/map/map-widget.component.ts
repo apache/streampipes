@@ -161,8 +161,8 @@ export class MapWidgetComponent
     }
 
     handleUpdatedFields(
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
+        _addedFields: DataExplorerField[],
+        _removedFields: DataExplorerField[],
     ) {}
 
     private invalidateMapSize(): void {

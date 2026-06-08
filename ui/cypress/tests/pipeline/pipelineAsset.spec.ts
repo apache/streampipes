@@ -21,7 +21,6 @@ import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { AssetBtns } from '../../support/utils/asset/AssetBtns';
 import { AssetBuilder } from '../../support/builder/AssetBuilder';
 
 describe('Test Saving Pipeline with Asset Link', () => {

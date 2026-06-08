@@ -102,7 +102,7 @@ export class AddToCollectionComponent {
         const fileReader = new FileReader();
         this.fileName = target.files[0].name;
 
-        fileReader.onload = e => {
+        fileReader.onload = _e => {
             this.parseCsv(fileReader.result).subscribe(res => {
                 res.pop();
                 res.forEach((row, i) => {
