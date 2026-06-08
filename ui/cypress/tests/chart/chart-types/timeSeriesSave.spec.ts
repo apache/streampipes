@@ -31,7 +31,7 @@ describe('Test if widget configuration is updated correctly', () => {
             testView1,
             PrepareTestDataUtils.dataName,
         );
-        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration(false, false);
 
         cy.wait(1000);
         // Create second test data view with one time series widget
@@ -39,7 +39,7 @@ describe('Test if widget configuration is updated correctly', () => {
             testView2,
             PrepareTestDataUtils.dataName,
         );
-        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration(false, false);
     });
 
     it('Perform Test', () => {

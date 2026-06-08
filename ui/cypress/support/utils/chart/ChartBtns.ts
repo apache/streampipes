@@ -34,7 +34,7 @@ export class ChartBtns {
     }
 
     public static discardDashboard() {
-        return cy.dataCy('discard-dashboard-btn');
+        return cy.dataCy('save-data-explorer-go-back-to-overview');
     }
 
     public static deleteDashboardBtn(dashboardName) {
