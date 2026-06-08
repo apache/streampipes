@@ -67,9 +67,8 @@ describe('Advanced Filter Expressions in Charts', () => {
         // a AND (22 OR 56) => 2 rows in sample.csv
         ChartWidgetTableUtils.checkAmountOfRows(2);
 
-        ChartUtils.saveAndReEditWidget('AdvancedFilterWidget');
+        ChartUtils.saveAndReEditWidget('AdvancedFilterWidget', false);
         ChartWidgetTableUtils.checkAmountOfRows(2);
-
         ChartUtils.selectDataConfig();
         ChartBtns.advancedFilterBtn().should('be.visible');
         ChartBtns.filterAlertBanner()

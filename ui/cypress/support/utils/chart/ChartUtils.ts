@@ -175,7 +175,6 @@ export class ChartUtils {
     public static createNewDashboard(name: string) {
         ChartUtils.goToDashboard();
         ChartUtils.addNewDashboard(name);
-        ChartUtils.saveDataView();
         ChartUtils.waitForDashboardInOverview(name);
     }
 
@@ -214,7 +213,7 @@ export class ChartUtils {
 
         ChartUtils.addDataViewAndTableWidget(dataView, ChartUtils.ADAPTER_NAME);
 
-        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration(false, false);
 
         ChartUtils.goToDashboard();
 
@@ -347,13 +346,25 @@ export class ChartUtils {
         });
     }
 
-    public static saveDataViewConfiguration(confirmSave: boolean = false) {
-        ChartBtns.saveDataViewButton().click({
-            force: true,
-        });
+    public static saveDataViewConfiguration(
+        confirmSave: boolean = false,
+        withoutConfig: boolean = true,
+    ) {
+        if (withoutConfig) {
+            ChartBtns.saveDataViewButton().click({
+                force: true,
+            });
+        } else {
+            ChartBtns.saveDataViewButton().click({
+                force: true,
+            });
+            ChartBtns.saveDataViewBtn().should('be.visible');
+            ChartBtns.saveDataViewBtn().click();
+        }
         if (confirmSave) {
             SharedBtns.confirmDialogConfirmBtn().click();
         }
+        ChartBtns.openNewDataViewBtn().should('be.visible');
     }
 
     public static saveDashboardConfiguration() {
@@ -365,11 +376,18 @@ export class ChartUtils {
     }
 
     public static addChartsToAsset(assetNameList = []) {
-        ChartBtns.saveChartsToAssetBtn();
+        ChartBtns.chartOptionsBtn().click();
+        GeneralUtils.visibleMaterialMenu().within(() => {
+            ChartBtns.manageChartBtn().click();
+        });
+        ChartUtils.addDashboardToAsset(assetNameList);
+        ChartBtns.saveDataViewBtn().click();
+    }
 
-        cy.dataCy('sp-show-chart-asset-checkbox').then($checkbox => {
-            if (!$checkbox.is(':checked')) {
-                cy.wrap($checkbox).click({ force: true });
+    public static addChartDialogAssets(assetNameList = []) {
+        ChartBtns.chartAssetDialogCheckbox().then($checkbox => {
+            if (!$checkbox.prop('checked')) {
+                cy.wrap($checkbox).check({ force: true });
             }
         });
         this.addToAsset(assetNameList);
@@ -377,9 +395,9 @@ export class ChartUtils {
     }
 
     public static addDashboardToAsset(assetNameList = []) {
-        cy.dataCy('sp-show-asset-checkbox').then($checkbox => {
-            if (!$checkbox.is(':checked')) {
-                cy.wrap($checkbox).click({ force: true });
+        ChartBtns.objectManageAssetCheckbox().then($checkbox => {
+            if (!$checkbox.prop('checked')) {
+                cy.wrap($checkbox).check({ force: true });
             }
         });
         this.addToAsset(assetNameList);
@@ -437,9 +455,12 @@ export class ChartUtils {
         ChartBtns.startEditWidget(widgetName).click();
     }
 
-    public static saveAndReEditWidget(dataViewName: string) {
+    public static saveAndReEditWidget(
+        dataViewName: string,
+        edit: boolean = true,
+    ) {
         // Save data view configuration
-        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration(false, edit);
         ChartUtils.editDataView(dataViewName);
     }
 
@@ -823,9 +844,9 @@ export class ChartUtils {
             ChartUtils.ADAPTER_NAME,
         );
         //Save
+        ChartBtns.saveDataViewButton().click();
         ChartUtils.addDashboardToAsset(assetNames);
-        ChartBtns.saveDataViewBtn(); //.saveDataViewConfiguration();
-        //Necessary for the background task to finish otherwise it steps back to charts from the following task
-        cy.wait(500);
+        ChartBtns.saveDataViewBtn().click();
+        ChartBtns.openNewDataViewBtn().should('be.visible');
     }
 }

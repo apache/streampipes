@@ -119,7 +119,7 @@ describe('Test User Roles for Charts', () => {
         UserUtils.switchUser(chartAdmin1);
         ConnectUtils.addMachineDataSimulator('simulator', true);
         ChartUtils.addDataViewAndTableWidget(chartName, 'simulator', true);
-        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration(false, false);
         ChartUtils.checkAmount(1);
         ChartUtils.goToDatalake();
     }

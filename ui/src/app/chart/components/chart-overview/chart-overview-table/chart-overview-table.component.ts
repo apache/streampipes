@@ -32,13 +32,16 @@ import {
 import {
     ConfirmDialogComponent,
     DateFormatService,
+    DialogService,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
+    PanelType,
     SpAssetBrowserService,
     SpTableAssetContextConfig,
     SpBasicHeaderTitleComponent,
     SpTableActionsDirective,
     SpTableComponent,
 } from '@streampipes/shared-ui';
-import { ChartSharedService } from '../../../../chart-shared/services/chart-shared.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartRoutingService } from '../../../../chart-shared/services/chart-routing.service';
@@ -53,6 +56,11 @@ import {
 import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
+
+type ManageableChart = DataExplorerWidgetModel & {
+    name: string;
+    description: string;
+};
 
 @Component({
     selector: 'sp-data-explorer-overview-table',
@@ -102,8 +110,8 @@ export class ChartOverviewTableComponent implements OnInit {
     filteredCharts: DataExplorerWidgetModel[] = [];
 
     private dataViewService = inject(ChartService);
-    private dataExplorerDashboardService = inject(ChartSharedService);
     private dialog = inject(MatDialog);
+    private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
     private dateFormatService = inject(DateFormatService);
     private routingService = inject(ChartRoutingService);
@@ -151,14 +159,49 @@ export class ChartOverviewTableComponent implements OnInit {
         );
     }
 
-    showPermissionsDialog(chart: DataExplorerWidgetModel) {
-        const dialogRef =
-            this.dataExplorerDashboardService.openPermissionsDialog(
-                chart.elementId,
-                this.translateService.instant(
-                    `Manage permissions for chart ${chart.baseAppearanceConfig.widgetTitle}`,
-                ),
-            );
+    showManageDialog(chart: DataExplorerWidgetModel) {
+        const resource: ManageableChart = {
+            ...chart,
+            baseAppearanceConfig: { ...chart.baseAppearanceConfig },
+            name: chart.baseAppearanceConfig.widgetTitle,
+            description: '',
+        };
+        const resourceConfig: ObjectManageDialogResourceConfig<ManageableChart> =
+            {
+                resourceLabel: 'Chart',
+                nameLabel: 'Chart title',
+                descriptionLabel: 'Chart description',
+                nameProperty: 'name',
+                assetLinkType: 'chart',
+                assetLinkCheckboxLabel:
+                    'Add the current chart to an existing asset',
+                saveResource: resource => {
+                    resource.baseAppearanceConfig.widgetTitle = resource.name;
+                    const chartResource: Partial<ManageableChart> = {
+                        ...resource,
+                    };
+                    delete chartResource.name;
+                    delete chartResource.description;
+                    return this.dataViewService.updateChart(
+                        chartResource as DataExplorerWidgetModel,
+                    );
+                },
+            };
+
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('Manage'),
+            width: '50vw',
+            data: {
+                objectInstanceId: chart.elementId,
+                resource,
+                saveMode: 'immediate',
+                resourceConfig,
+                headerTitle:
+                    this.translateService.instant('Manage Chart ') +
+                    chart.baseAppearanceConfig.widgetTitle,
+            },
+        });
 
         dialogRef.afterClosed().subscribe(refresh => {
             if (refresh) {

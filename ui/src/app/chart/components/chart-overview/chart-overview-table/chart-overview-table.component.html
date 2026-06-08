@@ -147,14 +147,22 @@
                         <span>{{ 'Edit chart' | translate }}</span>
                     </button>
                 }
-                <button
-                    data-cy="open-manage-permissions"
-                    mat-menu-item
-                    (click)="showPermissionsDialog(element)"
-                >
-                    <mat-icon>share</mat-icon>
-                    <span>{{ 'Manage permissions' | translate }}</span>
-                </button>
+                @if (hasDataExplorerWritePrivileges) {
+                    <button
+                        [attr.data-cy]="
+                            'open-manage-permissions-' +
+                            element.baseAppearanceConfig.widgetTitle.replaceAll(
+                                ' ',
+                                ''
+                            )
+                        "
+                        mat-menu-item
+                        (click)="showManageDialog(element)"
+                    >
+                        <mat-icon>settings</mat-icon>
+                        <span>{{ 'Manage' | translate }}</span>
+                    </button>
+                }
                 @if (hasDataExplorerWritePrivileges) {
                     <button mat-menu-item (click)="cloneDataView(element)">
                         <mat-icon>flip_to_front</mat-icon>

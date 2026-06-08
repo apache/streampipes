@@ -19,6 +19,7 @@
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { AssetBuilder } from '../../support/builder/AssetBuilder';
+import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 
 describe('Creates a new adapter with a linked asset', () => {
     const assetName1 = 'TestAsset1';
@@ -59,9 +60,8 @@ describe('Creates a new adapter with a linked asset', () => {
         ChartUtils.editDataView('NewWidget');
         ChartUtils.renameWidget('Rename');
         ChartUtils.addChartsToAsset([assetName1, assetName3]);
-        ChartUtils.saveDataViewConfiguration();
-        //Neceassary for Background Task to finish
-        cy.wait(500);
+        ChartBtns.saveDataViewButton().click();
+        ChartBtns.openNewDataViewBtn().should('be.visible');
 
         AssetUtils.checkAmountOfAssets(3);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
