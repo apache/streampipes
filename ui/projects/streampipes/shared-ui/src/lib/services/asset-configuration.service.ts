@@ -184,10 +184,10 @@ export class AssetSaveService {
 
             uniqueAssetIDsDict[spAssetModelId].forEach(path => {
                 if (path.length === 2) {
-                    current.assetLinks = [
-                        ...(current.assetLinks ?? []),
-                        ...links,
-                    ];
+                    current.assetLinks = this.addMissingAssetLinks(
+                        current.assetLinks,
+                        links,
+                    );
                 }
 
                 if (path.length > 2) {
@@ -280,10 +280,10 @@ export class AssetSaveService {
             const key = path[i];
 
             if (i === path.length - 1) {
-                current.assets[key].assetLinks = [
-                    ...(current.assets[key].assetLinks ?? []),
-                    ...newValue,
-                ];
+                current.assets[key].assetLinks = this.addMissingAssetLinks(
+                    current.assets[key].assetLinks,
+                    newValue,
+                );
 
                 break;
             }
@@ -295,6 +295,25 @@ export class AssetSaveService {
         }
 
         return result;
+    }
+
+    private addMissingAssetLinks(
+        currentAssetLinks: AssetLink[] | undefined,
+        linksToAdd: AssetLink[],
+    ): AssetLink[] {
+        const existingLinks = currentAssetLinks ?? [];
+        const existingResourceIds = new Set(
+            existingLinks.map(link => link.resourceId),
+        );
+        const newLinks = linksToAdd.filter(linkToAdd => {
+            const resourceId = linkToAdd.resourceId;
+            const linkExists = existingResourceIds.has(resourceId);
+            existingResourceIds.add(resourceId);
+
+            return !linkExists;
+        });
+
+        return [...existingLinks, ...newLinks];
     }
 
     private getAssetPaths(apiAssets: SpAssetTreeNode[]): {
