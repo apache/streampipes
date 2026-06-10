@@ -55,7 +55,10 @@ export class AssetSaveService {
         let assetLinksChanged = false;
 
         if (deselectedAssets.length > 0) {
-            await this.deleteLinkOnDeselectAssets(deselectedAssets, links);
+            await this.deleteLinkOnDeselectAssets(
+                deselectedAssets,
+                this.getPrimaryAssetLinks(links),
+            );
             assetLinksChanged = true;
         }
         if (selectedAssets.length > 0) {
@@ -99,6 +102,10 @@ export class AssetSaveService {
                 !deselectedAssetIds.has(asset.assetId) &&
                 !selectedAssetIds.has(asset.assetId),
         );
+    }
+
+    private getPrimaryAssetLinks(links: AssetLink[]): AssetLink[] {
+        return links.slice(0, 1);
     }
 
     async renameLinkage(originalAssets, links): Promise<void> {
