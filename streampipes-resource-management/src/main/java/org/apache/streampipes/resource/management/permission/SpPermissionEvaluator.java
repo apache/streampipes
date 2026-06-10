@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.security;
+package org.apache.streampipes.resource.management.permission;
 
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Permission;
