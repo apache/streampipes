@@ -222,6 +222,36 @@
                                                         class="mt-10"
                                                         fxLayout="column"
                                                     >
+                                                        <sp-form-field
+                                                            [level]="3"
+                                                            [label]="
+                                                                'Widget border thickness'
+                                                                    | translate
+                                                            "
+                                                        >
+                                                            <mat-form-field
+                                                                floatLabel="auto"
+                                                                color="accent"
+                                                            >
+                                                                <input
+                                                                    matInput
+                                                                    type="number"
+                                                                    min="0"
+                                                                    max="12"
+                                                                    [ngModel]="
+                                                                        dashboard
+                                                                            .dashboardGeneralSettings
+                                                                            .chartOverrides
+                                                                            .borderThickness
+                                                                    "
+                                                                    (ngModelChange)="
+                                                                        onBorderThicknessChange(
+                                                                            $event
+                                                                        )
+                                                                    "
+                                                                />
+                                                            </mat-form-field>
+                                                        </sp-form-field>
                                                         <mat-checkbox
                                                             [(ngModel)]="
                                                                 dashboard
