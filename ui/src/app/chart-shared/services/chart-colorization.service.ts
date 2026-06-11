@@ -18,53 +18,95 @@
 
 import { Injectable } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
+import {
+    TimeSeriesChartVisConfig,
+    TimeSeriesGroupColorMapping,
+} from '../components/charts/time-series-chart/model/time-series-chart-widget.model';
+import { TagValue } from '../models/dataset.model';
+import { ColorMappingService } from './color-mapping.service';
 
 @Injectable({ providedIn: 'root' })
 export class ChartColorizationService {
+    constructor(private colorMappingService: ColorMappingService) {}
+
     makeColor(
-        chosenColor: Record<string, string>,
+        visualizationConfig: TimeSeriesChartVisConfig,
         field: DataExplorerField,
-        groupIndex: number,
+        tag?: TagValue,
     ): string {
-        const baseColor = chosenColor[field.fullDbName + field.sourceIndex];
-        return this.adjustColorBrightness(baseColor, groupIndex);
-    }
+        const fieldKey = field.fullDbName + field.sourceIndex;
+        const baseColor = visualizationConfig.chosenColor[fieldKey];
 
-    private adjustColorBrightness(color: string, groupIndex: number): string {
-        const amount = groupIndex * 15;
-        let { r, g, b } = this.hexToRgb(color);
+        if (!tag || tag.values.length === 0) {
+            return baseColor;
+        }
 
-        r = this.clampColorValue(r + amount);
-        g = this.clampColorValue(g + amount);
-        b = this.clampColorValue(b + amount);
+        const groupKey = this.makeGroupKey(tag);
+        const fieldMappings =
+            visualizationConfig.groupedColorMappings?.[fieldKey] ?? [];
 
-        return this.rgbToHex(r, g, b);
-    }
+        if (
+            visualizationConfig.groupedColorMode?.[fieldKey] ===
+            'custom_mapping'
+        ) {
+            return (
+                this.findMapping(fieldMappings, tag, groupKey)?.color ??
+                this.colorMappingService.getDefaultColor(groupKey)
+            );
+        }
 
-    private hexToRgb(hex: string): { r: number; g: number; b: number } {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result
-            ? {
-                  r: parseInt(result[1], 16),
-                  g: parseInt(result[2], 16),
-                  b: parseInt(result[3], 16),
-              }
-            : null;
-    }
-
-    private rgbToHex(r: number, g: number, b: number): string {
-        return (
-            '#' +
-            [r, g, b]
-                .map(x => {
-                    const hex = x.toString(16);
-                    return hex.length === 1 ? '0' + hex : hex;
-                })
-                .join('')
+        return this.colorMappingService.getDefaultColor(
+            `${fieldKey}:${groupKey}`,
         );
     }
 
-    private clampColorValue(value: number): number {
-        return Math.max(0, Math.min(255, value));
+    findLabel(
+        visualizationConfig: TimeSeriesChartVisConfig,
+        field: DataExplorerField,
+        tag?: TagValue,
+    ): string | undefined {
+        if (!tag || tag.values.length === 0) {
+            return undefined;
+        }
+
+        const fieldKey = field.fullDbName + field.sourceIndex;
+        const fieldMappings =
+            visualizationConfig.groupedColorMappings?.[fieldKey] ?? [];
+        const mapping = this.findMapping(
+            fieldMappings,
+            tag,
+            this.makeGroupKey(tag),
+        );
+
+        return mapping?.label?.trim() ? mapping.label : undefined;
+    }
+
+    private findMapping(
+        mappings: TimeSeriesGroupColorMapping[],
+        tag: TagValue,
+        groupKey: string,
+    ): TimeSeriesGroupColorMapping | undefined {
+        const candidateKeys = this.makeCandidateKeys(tag, groupKey);
+        return mappings.find(mapping => candidateKeys.includes(mapping.value));
+    }
+
+    private makeGroupKey(tag: TagValue): string {
+        return tag.tagKeys
+            .map((key, index) => `${key}=${tag.values[index]}`)
+            .join(', ');
+    }
+
+    private makeCandidateKeys(tag: TagValue, groupKey: string): string[] {
+        const valueStrings = tag.values.map(value => String(value));
+        const keyValuePairs = tag.tagKeys.map(
+            (key, index) => `${key}=${valueStrings[index]}`,
+        );
+
+        return [
+            groupKey,
+            valueStrings.join(', '),
+            ...keyValuePairs,
+            ...valueStrings,
+        ];
     }
 }
