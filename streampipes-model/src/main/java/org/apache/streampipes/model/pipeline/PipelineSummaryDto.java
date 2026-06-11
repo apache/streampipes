@@ -16,28 +16,17 @@
  *
  */
 
-import { PipelineHealthStatus } from '../gen/streampipes-model';
+package org.apache.streampipes.model.pipeline;
 
-export interface ResourceSummaryDto<T> {
-    totalCount: number;
-    resources: T[];
-}
+import java.util.List;
 
-export interface DashboardSummaryDto {
-    elementId: string;
-    name: string;
-    description: string;
-    createdAtEpochMs: number;
-    lastModifiedEpochMs: number;
-}
-
-export interface PipelineSummaryDto {
-    elementId: string;
-    name: string;
-    description: string;
-    createdAt: number;
-    running: boolean;
-    healthStatus: PipelineHealthStatus;
-    pipelineNotifications: string[];
-    valid: true;
+public record PipelineSummaryDto(String elementId,
+                                 String name,
+                                 String description,
+                                 long createdAt,
+                                 boolean running,
+                                 PipelineHealthStatus healthStatus,
+                                 List<String> pipelineNotifications,
+                                 boolean valid
+                                 ) {
 }

@@ -25,7 +25,7 @@
         hasPipelineWritePrivileges ? bulkPipelineActionOptions : []
     "
     featureCardId="pipeline"
-    resourceIdKey="_id"
+    resourceIdKey="elementId"
     [assetContextConfig]="assetContextConfig"
     [showActionsMenu]="true"
     [rowsClickable]="true"
@@ -125,7 +125,7 @@
                         data-cy="start-pipeline-button"
                         (click)="
                             pipelineOperationsService.startPipeline(
-                                pipeline._id,
+                                pipeline.elementId,
                                 refreshPipelinesEmitter,
                                 toggleRunningOperation
                             );
@@ -148,7 +148,7 @@
                         data-cy="stop-pipeline-button"
                         (click)="
                             pipelineOperationsService.stopPipeline(
-                                pipeline._id,
+                                pipeline.elementId,
                                 refreshPipelinesEmitter,
                                 toggleRunningOperation
                             );
@@ -193,7 +193,9 @@
     <ng-template spTableActions let-element>
         <button
             mat-menu-item
-            (click)="pipelineOperationsService.showPipelineDetails(element._id)"
+            (click)="
+                pipelineOperationsService.showPipelineDetails(element.elementId)
+            "
         >
             <mat-icon>visibility</mat-icon>
             <span>{{ 'Show' | translate }}</span>
@@ -201,7 +203,9 @@
         @if (hasPipelineWritePrivileges) {
             <button
                 mat-menu-item
-                (click)="pipelineOperationsService.modifyPipeline(element._id)"
+                (click)="
+                    pipelineOperationsService.modifyPipeline(element.elementId)
+                "
                 data-cy="modify-pipeline-btn"
             >
                 <mat-icon>mode_edit</mat-icon>
@@ -226,7 +230,9 @@
                 mat-menu-item
                 (click)="
                     pipelineOperationsService.showDeleteDialog(
-                        element,
+                        element.elementId,
+                        element.name,
+                        element.running,
                         refreshPipelinesEmitter
                     )
                 "

@@ -17,7 +17,7 @@
  */
 
 import { Component, inject, Input } from '@angular/core';
-import { Pipeline, PipelineService } from '@streampipes/platform-services';
+import { PipelineService } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -43,8 +43,17 @@ import { MatDivider } from '@angular/material/divider';
     ],
 })
 export class DeletePipelineDialogComponent {
+    // @Input()
+    // pipeline: Pipeline;
+
     @Input()
-    pipeline: Pipeline;
+    name: string;
+
+    @Input()
+    elementId: string;
+
+    @Input()
+    running: boolean;
 
     isInProgress = false;
     currentStatus: any;
@@ -65,7 +74,7 @@ export class DeletePipelineDialogComponent {
             'Deleting pipeline...',
         );
         this.pipelineService
-            .deleteOwnPipeline(this.pipeline._id)
+            .deleteOwnPipeline(this.elementId)
             .subscribe(_data => {
                 this.close(true);
             });
@@ -76,7 +85,7 @@ export class DeletePipelineDialogComponent {
         this.currentStatus = this.translateService.instant(
             'Stopping pipeline...',
         );
-        this.pipelineService.stopPipeline(this.pipeline._id).subscribe(
+        this.pipelineService.stopPipeline(this.elementId).subscribe(
             _data => {
                 this.deletePipeline();
             },
