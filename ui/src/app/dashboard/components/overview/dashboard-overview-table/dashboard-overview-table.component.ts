@@ -32,19 +32,23 @@ import {
     MatHeaderCellDef,
     MatTableDataSource,
 } from '@angular/material/table';
-import { Dashboard, DashboardService } from '@streampipes/platform-services';
+import {
+    Dashboard,
+    DashboardService,
+    DashboardSummaryDto,
+} from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
     DateFormatService,
     DialogService,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
     PanelType,
     SpAssetBrowserService,
-    SpTableAssetContextConfig,
     SpBasicHeaderTitleComponent,
     SpTableActionsDirective,
+    SpTableAssetContextConfig,
     SpTableComponent,
-    ObjectManageDialogResourceConfig,
-    ObjectManageDialogComponent,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
@@ -62,7 +66,6 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
-import { DashboardSummaryDto } from '../../../../../../projects/streampipes/platform-services/src/lib/model/resource/resource-summary.model';
 
 @Component({
     selector: 'sp-dashboard-overview-table',
