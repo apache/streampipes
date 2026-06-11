@@ -37,6 +37,8 @@ import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.rest.event.AdapterDeletedEvent;
+import org.apache.streampipes.rest.event.AdapterUpdatedEvent;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
@@ -47,6 +49,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
@@ -71,9 +75,17 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterResource.class);
   private final ExtensionServiceRequestManager requestManager;
+  private final ApplicationEventPublisher eventPublisher;
 
   public AdapterResource(WorkerRestClient workerRestClient,
                          ExtensionServiceRequestManager requestManager) {
+    this(workerRestClient, requestManager, null);
+  }
+
+  @Autowired
+  public AdapterResource(WorkerRestClient workerRestClient,
+                         ExtensionServiceRequestManager requestManager,
+                         ApplicationEventPublisher eventPublisher) {
     super(() -> new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
             .getAdapterInstanceStorage(),
@@ -84,6 +96,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
         requestManager));
     this.requestManager = requestManager;
+    this.eventPublisher = eventPublisher;
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -123,6 +136,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     var updateManager = new AdapterUpdateManagement(managementService, requestManager);
     try {
       updateManager.updateAdapter(adapterDescription);
+      publishEvent(new AdapterUpdatedEvent(adapterDescription));
     } catch (AdapterException e) {
       LOG.error("Error while updating adapter with id {}", adapterDescription.getElementId(), e);
       return ok(Notifications.error(e.getMessage(), ExceptionUtils.getStackTrace(e)));
@@ -237,6 +251,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         if (pipelinesUsingAdapter.isEmpty()) {
           try {
             managementService.deleteAdapter(elementId);
+            publishEvent(new AdapterDeletedEvent(adapter));
 
             return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));
           } catch (AdapterException e) {
@@ -290,6 +305,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
                 PipelineManager.deletePipeline(pipelineId);
               }
               managementService.deleteAdapter(elementId);
+              publishEvent(new AdapterDeletedEvent(adapter));
 
               return ok(Notifications.success("Adapter with id: " + elementId
                   + " and all pipelines using the adapter are deleted."));
@@ -335,6 +351,12 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return StorageDispatcher.INSTANCE.getNoSqlStore()
         .getPipelineStorageAPI()
         .getPipelinesUsingAdapter(adapterId);
+  }
+
+  private void publishEvent(Object event) {
+    if (eventPublisher != null) {
+      eventPublisher.publishEvent(event);
+    }
   }
 
 }
