@@ -43,6 +43,13 @@ export interface AdapterSummaryDto {
     icon: string;
 }
 
+export interface AssetSummaryDto {
+    elementId: string;
+    assetName: string;
+    assetDescription: string;
+    removable: boolean;
+}
+
 export interface DatasetSummaryDto {
     elementId: string;
     measureName: string;

@@ -21,6 +21,10 @@ import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 public class SpResourceManager {
 
+  public AssetResourceManager manageAssets() {
+    return new AssetResourceManager();
+  }
+
   public AdapterResourceManager manageAdapters() {
     return new AdapterResourceManager();
   }
