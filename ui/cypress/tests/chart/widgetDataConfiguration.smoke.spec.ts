@@ -79,9 +79,9 @@ describe('Test Table View in Charts', () => {
         ChartUtils.validateFilterOptions(['=', '!=']);
 
         ChartUtils.validateAutoCompleteOptions(['a', 'b', 'c']);
+        cy.dataCy('design-panel-data-settings-filter-value').type('{esc}');
 
-        cy.wait(5000);
-        ChartUtils.saveAndReEditWidget('NewWidget');
+        ChartUtils.saveAndEditWidget('NewWidget');
         ChartUtils.checkIfFilterIsSet(1);
         ChartWidgetTableUtils.checkAmountOfRows(4);
         ChartUtils.dataConfigRemoveFilter();

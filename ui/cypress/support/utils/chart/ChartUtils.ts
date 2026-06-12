@@ -344,6 +344,7 @@ export class ChartUtils {
     public static saveDataViewConfiguration(
         confirmSave: boolean = false,
         withoutConfig: boolean = true,
+        name: string = 'New Chart',
     ) {
         if (withoutConfig) {
             ChartBtns.saveDataViewButton().click({
@@ -353,6 +354,7 @@ export class ChartUtils {
             ChartBtns.saveDataViewButton().click({
                 force: true,
             });
+            cy.dataCy('managed-resource-name').clear().type(name);
             ChartBtns.saveDataViewBtn().should('be.visible');
             ChartBtns.saveDataViewBtn().click();
         }
@@ -453,6 +455,13 @@ export class ChartUtils {
     public static saveAndReEditWidget(dataViewName: string) {
         // Save data view configuration
         ChartBtns.saveDataViewButton().click();
+        ChartBtns.openNewDataViewBtn().should('be.visible');
+        ChartUtils.editDataView(dataViewName);
+    }
+
+    public static saveAndEditWidget(dataViewName: string) {
+        // Save data view configuration
+        ChartBtns.saveDataViewButton().click();
         cy.dataCy('managed-resource-name').clear().type(dataViewName);
         ChartBtns.saveDataViewBtn().click();
         ChartBtns.openNewDataViewBtn().should('be.visible');
@@ -546,10 +555,6 @@ export class ChartUtils {
 
         options.forEach(option => {
             cy.dataCy('autocomplete-value-' + option).should('be.visible');
-        });
-
-        cy.dataCy('design-panel-data-settings-filter-value').click({
-            force: true,
         });
     }
 

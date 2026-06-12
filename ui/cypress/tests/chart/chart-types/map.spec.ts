@@ -25,11 +25,7 @@ describe('Test Map View in Charts', () => {
     });
 
     it('Perform Test', () => {
-        ChartUtils.addDataViewAndWidget(
-            'view',
-            PrepareTestDataUtils.dataName,
-            'map',
-        );
+        ChartUtils.addDataViewAndWidget(PrepareTestDataUtils.dataName, 'map');
 
         // Change marker positions
         ChartUtils.openVisualizationConfig();
