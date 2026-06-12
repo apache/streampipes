@@ -35,6 +35,7 @@ import org.apache.plc4x.java.api.messages.PlcWriteRequest;
 import org.apache.plc4x.java.api.metadata.PlcConnectionMetadata;
 import org.apache.plc4x.java.api.model.PlcTag;
 import org.apache.plc4x.java.api.value.PlcValue;
+import org.apache.plc4x.java.utils.cache.exceptions.PlcConnectionManagerClosedException;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -239,6 +240,100 @@ class ConnectionContainerReproTest {
       releaseClose.countDown();
       removeExecutor.shutdownNow();
       leaseExecutor.shutdownNow();
+    }
+  }
+
+  @Test
+  void doesNotLeaseConnectionWhileIdleConnectionIsClosing() throws Exception {
+    var closeStarted = new CountDownLatch(1);
+    var releaseClose = new CountDownLatch(1);
+    var removeCalled = new CountDownLatch(1);
+    PlcConnectionManager manager = new PlcConnectionManager() {
+      @Override
+      public PlcConnection getConnection(String url) {
+        return new BlockingCloseConnection(closeStarted, releaseClose);
+      }
+
+      @Override
+      public PlcConnection getConnection(String url,
+                                         PlcAuthentication authentication) {
+        return null;
+      }
+    };
+    var connectionContainer = new SpConnectionContainer(
+        manager,
+        "mock://idle",
+        Duration.ofSeconds(30),
+        Duration.ofMillis(10),
+        url -> {
+          removeCalled.countDown();
+          return null;
+        }
+    );
+
+    SpLeasedPlcConnection lease =
+        (SpLeasedPlcConnection) connectionContainer.lease().get(500, TimeUnit.MILLISECONDS);
+    connectionContainer.returnConnection(lease, false);
+
+    try {
+      assertTrue(closeStarted.await(500, TimeUnit.MILLISECONDS));
+
+      ExecutionException exception = assertThrows(
+          ExecutionException.class,
+          () -> connectionContainer.lease().get(500, TimeUnit.MILLISECONDS)
+      );
+      assertTrue(exception.getCause() instanceof PlcConnectionManagerClosedException);
+
+      releaseClose.countDown();
+      assertTrue(removeCalled.await(500, TimeUnit.MILLISECONDS));
+    } finally {
+      releaseClose.countDown();
+    }
+  }
+
+  @Test
+  void idleCloseDoesNotRemoveReplacementContainer() throws Exception {
+    var closeStarted = new CountDownLatch(1);
+    var releaseClose = new CountDownLatch(1);
+    var connectionAttempts = new AtomicInteger();
+    PlcConnectionManager manager = new PlcConnectionManager() {
+      @Override
+      public PlcConnection getConnection(String url) {
+        if (connectionAttempts.incrementAndGet() == 1) {
+          return new BlockingCloseConnection(closeStarted, releaseClose);
+        }
+        return new DummyConnection();
+      }
+
+      @Override
+      public PlcConnection getConnection(String url,
+                                         PlcAuthentication authentication) {
+        return null;
+      }
+    };
+
+    var cachedConnectionManager = new SpCachedPlcConnectionManager(
+        manager,
+        Duration.ofSeconds(30),
+        Duration.ofSeconds(30),
+        Duration.ofMillis(10)
+    );
+    PlcConnection firstLease = cachedConnectionManager.getConnection("mock://idle");
+    firstLease.close();
+
+    try {
+      assertTrue(closeStarted.await(500, TimeUnit.MILLISECONDS));
+
+      PlcConnection replacementLease = cachedConnectionManager.getConnection("mock://idle");
+      assertNotNull(replacementLease);
+      assertTrue(cachedConnectionManager.getCachedConnections().contains("mock://idle"));
+
+      releaseClose.countDown();
+      assertTrue(cachedConnectionManager.getCachedConnections().contains("mock://idle"));
+      replacementLease.close();
+    } finally {
+      releaseClose.countDown();
+      cachedConnectionManager.removeCachedConnection("mock://idle");
     }
   }
 }
