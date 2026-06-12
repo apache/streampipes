@@ -118,8 +118,8 @@ describe('Test User Roles for Charts', () => {
     function setup() {
         UserUtils.switchUser(chartAdmin1);
         ConnectUtils.addMachineDataSimulator('simulator', true);
-        ChartUtils.addDataViewAndTableWidget(chartName, 'simulator', true);
-        ChartUtils.saveDataViewConfiguration(false, false);
+        ChartUtils.addDataViewAndTableWidget('simulator', true);
+        ChartUtils.saveDataViewConfiguration(false, false, chartName);
         ChartUtils.checkAmount(1);
         ChartUtils.goToDatalake();
     }

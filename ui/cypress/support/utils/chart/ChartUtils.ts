@@ -209,9 +209,9 @@ export class ChartUtils {
     ) {
         ChartUtils.goToDatalake();
 
-        ChartUtils.addDataViewAndTableWidget(dataView, ChartUtils.ADAPTER_NAME);
+        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
 
-        ChartUtils.saveDataViewConfiguration(false, false);
+        ChartUtils.saveDataViewConfiguration(false, false, dataView);
 
         ChartUtils.goToDashboard();
 
