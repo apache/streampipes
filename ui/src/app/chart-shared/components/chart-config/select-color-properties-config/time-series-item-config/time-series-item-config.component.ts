@@ -18,16 +18,19 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { TimeSeriesChartWidgetModel } from '../../../charts/time-series-chart/model/time-series-chart-widget.model';
 import {
-    DefaultFlexDirective,
-    DefaultLayoutAlignDirective,
-    DefaultLayoutDirective,
-    DefaultLayoutGapDirective,
+    TimeSeriesChartWidgetModel,
+    TimeSeriesGroupColorMapping,
+    TimeSeriesGroupedColorMode,
+} from '../../../charts/time-series-chart/model/time-series-chart-widget.model';
+import {
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { NgStyle } from '@angular/common';
-import { DefaultStyleDirective } from '@ngbracket/ngx-layout/extended';
+import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ColorPickerDirective } from 'ngx-color-picker';
@@ -36,21 +39,23 @@ import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ColorMappingOptionsConfigComponent } from '../../color-mapping-options-config/color-mapping-options-config.component';
+import { LayoutDirective } from '@ngbracket/ngx-layout';
 
 @Component({
     selector: 'sp-time-series-item-config',
     templateUrl: './time-series-item-config.component.html',
     styleUrls: ['./time-series-item-config.component.scss'],
     imports: [
-        DefaultLayoutDirective,
-        DefaultLayoutAlignDirective,
+        LayoutGapDirective,
+        LayoutAlignDirective,
         MatCheckbox,
-        DefaultFlexDirective,
+        FlexDirective,
         NgStyle,
-        DefaultStyleDirective,
+        StyleDirective,
         MatIconButton,
         MatTooltip,
-        DefaultLayoutGapDirective,
+        LayoutGapDirective,
         ColorPickerDirective,
         MatFormField,
         MatInput,
@@ -58,6 +63,8 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatSelect,
         MatOption,
         TranslatePipe,
+        ColorMappingOptionsConfigComponent,
+        LayoutDirective,
     ],
 })
 export class SpTimeseriesItemConfigComponent {
@@ -120,6 +127,75 @@ export class SpTimeseriesItemConfigComponent {
         this.currentlyConfiguredWidget.visualizationConfig.displayName[
             field.fullDbName + field.sourceIndex.toString()
         ] = searchValue;
+        this.viewRefreshEmitter.emit();
+    }
+
+    getFieldKey(field: DataExplorerField): string {
+        return field.fullDbName + field.sourceIndex.toString();
+    }
+
+    hasGrouping(field: DataExplorerField): boolean {
+        return (
+            this.currentlyConfiguredWidget.dataConfig.sourceConfigs[
+                field.sourceIndex
+            ]?.queryConfig.groupBy?.some(
+                groupByField => groupByField.selected,
+            ) ?? false
+        );
+    }
+
+    getGroupedColorMode(field: DataExplorerField): TimeSeriesGroupedColorMode {
+        this.currentlyConfiguredWidget.visualizationConfig.groupedColorMode ??=
+            {};
+        return (
+            this.currentlyConfiguredWidget.visualizationConfig.groupedColorMode[
+                this.getFieldKey(field)
+            ] ?? 'stable_palette'
+        );
+    }
+
+    setGroupedColorMode(
+        field: DataExplorerField,
+        mode: TimeSeriesGroupedColorMode,
+    ): void {
+        this.currentlyConfiguredWidget.visualizationConfig.groupedColorMode ??=
+            {};
+        this.currentlyConfiguredWidget.visualizationConfig.groupedColorMode[
+            this.getFieldKey(field)
+        ] = mode;
+        this.viewRefreshEmitter.emit();
+    }
+
+    getGroupedColorMappings(
+        field: DataExplorerField,
+    ): TimeSeriesGroupColorMapping[] {
+        const fieldKey = this.getFieldKey(field);
+        this.currentlyConfiguredWidget.visualizationConfig.groupedColorMappings ??=
+            {};
+        const mappings =
+            this.currentlyConfiguredWidget.visualizationConfig
+                .groupedColorMappings[fieldKey];
+
+        if (!mappings) {
+            this.currentlyConfiguredWidget.visualizationConfig.groupedColorMappings[
+                fieldKey
+            ] = [];
+            return this.currentlyConfiguredWidget.visualizationConfig
+                .groupedColorMappings[fieldKey];
+        }
+
+        return mappings;
+    }
+
+    setGroupedColorMappings(
+        field: DataExplorerField,
+        mappings: TimeSeriesGroupColorMapping[],
+    ): void {
+        this.currentlyConfiguredWidget.visualizationConfig.groupedColorMappings ??=
+            {};
+        this.currentlyConfiguredWidget.visualizationConfig.groupedColorMappings[
+            this.getFieldKey(field)
+        ] = mappings;
         this.viewRefreshEmitter.emit();
     }
 }

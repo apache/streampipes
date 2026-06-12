@@ -38,7 +38,7 @@
             [ngStyle]="{
                 background:
                     currentlyConfiguredWidget.visualizationConfig.chosenColor[
-                        field.fullDbName + field.sourceIndex.toString()
+                        getFieldKey(field)
                     ],
             }"
         ></span>
@@ -66,15 +66,11 @@
                         class="color-field"
                         [(colorPicker)]="
                             currentlyConfiguredWidget.visualizationConfig
-                                .chosenColor[
-                                field.fullDbName + field.sourceIndex.toString()
-                            ]
+                                .chosenColor[getFieldKey(field)]
                         "
                         [style.background]="
                             currentlyConfiguredWidget.visualizationConfig
-                                .chosenColor[
-                                field.fullDbName + field.sourceIndex.toString()
-                            ]
+                                .chosenColor[getFieldKey(field)]
                         "
                         required
                         [cpPosition]="'bottom'"
@@ -97,10 +93,7 @@
                         <input
                             [(ngModel)]="
                                 currentlyConfiguredWidget.visualizationConfig
-                                    .displayName[
-                                    field.fullDbName +
-                                        field.sourceIndex.toString()
-                                ]
+                                    .displayName[getFieldKey(field)]
                             "
                             matInput
                             (input)="
@@ -124,10 +117,7 @@
                         <mat-select
                             [(value)]="
                                 currentlyConfiguredWidget.visualizationConfig
-                                    .displayType[
-                                    field.fullDbName +
-                                        field.sourceIndex.toString()
-                                ]
+                                    .displayType[getFieldKey(field)]
                             "
                             (selectionChange)="viewRefreshEmitter.emit()"
                         >
@@ -163,10 +153,7 @@
                         <mat-select
                             [(value)]="
                                 currentlyConfiguredWidget.visualizationConfig
-                                    .chosenAxis[
-                                    field.fullDbName +
-                                        field.sourceIndex.toString()
-                                ]
+                                    .chosenAxis[getFieldKey(field)]
                             "
                             (selectionChange)="viewRefreshEmitter.emit()"
                         >
@@ -180,6 +167,47 @@
                     </mat-form-field>
                 </div>
             </div>
+            @if (hasGrouping(field)) {
+                <div fxLayout="row" fxFlex="100">
+                    <div fxFlex="30" fxLayoutAlign="start center">
+                        <small>{{ 'Grouped colors' | translate }}</small>
+                    </div>
+                    <div fxFlex="70" fxLayoutAlign="start center">
+                        <mat-form-field
+                            appearance="outline"
+                            color="accent"
+                            class="w-100"
+                        >
+                            <mat-select
+                                [value]="getGroupedColorMode(field)"
+                                (selectionChange)="
+                                    setGroupedColorMode(field, $event.value)
+                                "
+                            >
+                                <mat-option [value]="'stable_palette'">{{
+                                    'Stable palette' | translate
+                                }}</mat-option>
+                                <mat-option [value]="'custom_mapping'">{{
+                                    'Custom color mapping' | translate
+                                }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                @if (getGroupedColorMode(field) === 'custom_mapping') {
+                    <sp-color-mapping-options-config
+                        class="mt-sm"
+                        [colorMapping]="getGroupedColorMappings(field)"
+                        [showCustomColorMapping]="true"
+                        [showToggle]="false"
+                        (colorMappingChange)="
+                            setGroupedColorMappings(field, $event)
+                        "
+                        (viewRefreshEmitter)="viewRefreshEmitter.emit()"
+                    >
+                    </sp-color-mapping-options-config>
+                }
+            }
         </div>
     }
 </div>

@@ -57,6 +57,7 @@ export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
 
 export interface DashboardChartOverrides {
     hideToolbox?: boolean;
+    borderThickness?: number;
 }
 
 export interface ObservableGenerator {

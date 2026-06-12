@@ -31,6 +31,7 @@ import {
     SimpleChanges,
     ViewChild,
     inject,
+    NgZone,
 } from '@angular/core';
 import {
     ClientDashboardItem,
@@ -122,6 +123,7 @@ export class ChartContainerComponent
     private nameChangeService = inject(NameChangeService);
     private el = inject<ElementRef<HTMLDivElement>>(ElementRef);
     private resizeService = inject(ResizeService);
+    private ngZone = inject(NgZone);
 
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
     @ViewChild('timeSelectorMenu')
@@ -221,10 +223,12 @@ export class ChartContainerComponent
                 const { width, height } =
                     entries[entries.length - 1].contentRect;
 
-                this.resizeService.notify({
-                    width,
-                    height,
-                    widgetId: this.dashboardItem?.id || undefined,
+                this.ngZone.run(() => {
+                    this.resizeService.notify({
+                        width,
+                        height,
+                        widgetId: this.dashboardItem?.id || undefined,
+                    });
                 });
             }, 100);
         });

@@ -84,6 +84,12 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
             this.currentlyConfiguredWidget.visualizationConfig.displayType;
         const currentAxis =
             this.currentlyConfiguredWidget.visualizationConfig.chosenAxis;
+        const currentGroupedColorMode =
+            this.currentlyConfiguredWidget.visualizationConfig
+                .groupedColorMode ?? {};
+        const currentGroupedColorMappings =
+            this.currentlyConfiguredWidget.visualizationConfig
+                .groupedColorMappings ?? {};
 
         const lenBefore = Object.keys(currentAxis).length;
 
@@ -94,6 +100,8 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
                 currentNames[name] = field.fullDbName;
                 currentTypes[name] = 'lines';
                 currentAxis[name] = 'left';
+                currentGroupedColorMode[name] = 'stable_palette';
+                currentGroupedColorMappings[name] = [];
             }
         });
 
@@ -105,6 +113,10 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
             currentTypes;
         this.currentlyConfiguredWidget.visualizationConfig.chosenAxis =
             currentAxis;
+        this.currentlyConfiguredWidget.visualizationConfig.groupedColorMode =
+            currentGroupedColorMode;
+        this.currentlyConfiguredWidget.visualizationConfig.groupedColorMappings =
+            currentGroupedColorMappings;
 
         this.triggerViewRefresh();
     }
@@ -140,6 +152,16 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
             this.numericPlusBooleanFields,
             () => 'left',
         );
+        config.groupedColorMode = this.getConfigOrDefault(
+            config.groupedColorMode,
+            this.numericPlusBooleanFields,
+            () => 'stable_palette',
+        );
+        config.groupedColorMappings = this.getConfigOrDefault(
+            config.groupedColorMappings,
+            this.numericPlusBooleanFields,
+            () => [],
+        );
 
         config.yKeys = [];
         config.selectedTimeSeriesChartProperties =
@@ -165,11 +187,11 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
         };
     }
 
-    private getConfigOrDefault(
-        config: Record<string, any>,
+    private getConfigOrDefault<T>(
+        config: Record<string, T>,
         availableFields: DataExplorerField[],
-        getDefaultValue: (field: DataExplorerField, index: number) => string,
-    ) {
+        getDefaultValue: (field: DataExplorerField, index: number) => T,
+    ): Record<string, T> {
         const fieldKeys = availableFields.map(
             f => f.fullDbName + f.sourceIndex,
         );
