@@ -20,6 +20,7 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AdapterDescription,
+    AdapterSummaryDto,
     AdapterService,
 } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -39,9 +40,9 @@ export class AllAdapterActionsComponent implements OnInit {
     private translate = inject(TranslateService);
 
     @Input()
-    adapters: AdapterDescription[];
+    adapters: Array<AdapterDescription | AdapterSummaryDto>;
 
-    adaptersToModify: AdapterDescription[];
+    adaptersToModify: Array<AdapterDescription | AdapterSummaryDto>;
     actionStatus: any;
     actionFinished: boolean;
     page: string;
@@ -89,7 +90,7 @@ export class AllAdapterActionsComponent implements OnInit {
         });
     }
 
-    initiateAction(adapter: AdapterDescription, index) {
+    initiateAction(adapter: AdapterDescription | AdapterSummaryDto, index) {
         this.actionRunning = true;
         this.actionStatus.push({
             name: adapter.name,
@@ -99,10 +100,10 @@ export class AllAdapterActionsComponent implements OnInit {
         this.runAdapterAction(adapter, index);
     }
 
-    runAdapterAction(adapter: AdapterDescription, index) {
+    runAdapterAction(adapter: AdapterDescription | AdapterSummaryDto, index) {
         const observable = this.action
-            ? this.adapterService.startAdapter(adapter)
-            : this.adapterService.stopAdapter(adapter);
+            ? this.adapterService.startAdapterByElementId(adapter.elementId)
+            : this.adapterService.stopAdapterByElementId(adapter.elementId);
         observable
             .subscribe(data => {
                 this.actionStatus[index].status = data.success

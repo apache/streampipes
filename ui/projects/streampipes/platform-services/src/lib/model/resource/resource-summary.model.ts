@@ -32,6 +32,18 @@ export interface DashboardSummaryDto {
     lastModifiedEpochMs: number | null;
 }
 
+export interface AdapterSummaryDto {
+    elementId: string;
+    correspondingDataStreamElementId: string;
+    name: string;
+    description: string;
+    running: boolean;
+    createdAt: number;
+    appId: string;
+    includedAssets: string[];
+    icon: string;
+}
+
 export interface PipelineSummaryDto {
     elementId: string;
     name: string;
