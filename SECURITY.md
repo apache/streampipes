@@ -36,7 +36,7 @@ properties StreamPipes upholds given its deployment assumptions versus those
 left to the operator (transport security, network isolation, extension
 vetting, source trust), and the recurring non-findings. Triagers of scanner,
 fuzzer, or AI-generated findings should route each through `THREAT_MODEL.md`
-§13.
+§10.
 
 This file is **v0** and carries open questions for the StreamPipes PMC in
-`THREAT_MODEL.md` §14.
+`THREAT_MODEL.md` §11.
