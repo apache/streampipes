@@ -22,7 +22,7 @@ import org.apache.streampipes.connect.transformer.groovy.GroovyScriptEngine;
 import org.apache.streampipes.connect.transformer.js.GraalJsScriptEngine;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
-import org.apache.streampipes.rest.security.SpPermissionEvaluator;
+import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.service.base.StreamPipesPrometheusConfig;
 import org.apache.streampipes.service.core.OpenApiConfiguration;
 import org.apache.streampipes.service.core.StreamPipesCoreApplication;

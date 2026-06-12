@@ -74,7 +74,9 @@
             [disabled]="!hasWritePipelinePrivileges"
             (click)="
                 pipelineOperationsService.showDeleteDialog(
-                    pipeline,
+                    pipeline.elementId,
+                    pipeline.name,
+                    pipeline.running,
                     reloadPipelineEmitter,
                     this.switchToPipelineView
                 )

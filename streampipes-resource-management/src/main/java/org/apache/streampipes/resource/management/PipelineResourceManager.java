@@ -17,5 +17,34 @@
  */
 package org.apache.streampipes.resource.management;
 
-public class PipelineResourceManager {
+import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineSummaryDto;
+import org.apache.streampipes.model.resource.ResourceSummaryDto;
+import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import org.springframework.security.core.Authentication;
+
+public class PipelineResourceManager extends CrudResourceManager<Pipeline> {
+
+  public PipelineResourceManager() {
+    super(StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(), Pipeline.class);
+  }
+
+  public ResourceSummaryDto<PipelineSummaryDto> getSummary(Authentication auth) {
+    var pipelines = findAll()
+        .stream()
+        .filter(pipeline -> permissionEvaluator.hasPermission(auth, pipeline.getElementId(), "READ"))
+        .map(pipeline -> new PipelineSummaryDto(
+            pipeline.getElementId(),
+            pipeline.getName(),
+            pipeline.getDescription(),
+            pipeline.getCreatedAt(),
+            pipeline.isRunning(),
+            pipeline.getHealthStatus(),
+            pipeline.getPipelineNotifications(),
+            pipeline.isValid()))
+        .toList();
+
+    return new ResourceSummaryDto<>(pipelines, pipelines.size());
+  }
 }

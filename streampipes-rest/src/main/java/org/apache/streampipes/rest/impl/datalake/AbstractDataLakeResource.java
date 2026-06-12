@@ -20,8 +20,8 @@ package org.apache.streampipes.rest.impl.datalake;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
+import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
