@@ -26,7 +26,6 @@ describe('Test Histogram View in Charts', () => {
 
     it('Perform Test', () => {
         ChartUtils.addDataViewAndWidget(
-            'view',
             PrepareTestDataUtils.dataName,
             'histogram-chart',
         );

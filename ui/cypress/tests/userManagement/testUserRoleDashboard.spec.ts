@@ -200,7 +200,7 @@ describe('Test User Roles for Dashboards', () => {
     }
 
     function addChart(chartName: string, saveConfig: boolean = true) {
-        ChartUtils.addDataViewAndTableWidget(chartName, datasetName, true);
-        ChartUtils.saveDataViewConfiguration(false, saveConfig);
+        ChartUtils.addDataViewAndTableWidget(datasetName, true);
+        ChartUtils.saveDataViewConfiguration(false, saveConfig, chartName);
     }
 });

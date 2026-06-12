@@ -175,8 +175,8 @@ describe('Test Dataset Permissions', () => {
             cy.dataCy('data-explorer-select-data-set').click();
             cy.get('mat-option').contains(datasetName).click();
             ChartBtns.discardDataExplorerWidgetBtn().click();
-            ChartUtils.addDataViewAndTableWidget('test', datasetName, true);
-            ChartUtils.saveDataViewConfiguration(false, false);
+            ChartUtils.addDataViewAndTableWidget(datasetName, true);
+            ChartUtils.saveDataViewConfiguration(false, false, 'test');
         }
     }
 

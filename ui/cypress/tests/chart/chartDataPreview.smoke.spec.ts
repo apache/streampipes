@@ -27,7 +27,6 @@ describe('Test Chart Data Preview in Charts', () => {
 
     it('Shows and toggles the chart data preview', () => {
         ChartUtils.addDataViewAndWidget(
-            'preview-view',
             PrepareTestDataUtils.dataName,
             ChartWidget.TIME_SERIES,
         );

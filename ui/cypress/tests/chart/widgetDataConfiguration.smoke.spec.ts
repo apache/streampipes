@@ -30,10 +30,7 @@ describe('Test Table View in Charts', () => {
         /**
          * Prepare tests
          */
-        ChartUtils.addDataViewAndTableWidget(
-            'NewWidget',
-            ChartUtils.ADAPTER_NAME,
-        );
+        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
 
         // Validate that X lines are available
         ChartWidgetTableUtils.checkAmountOfRows(10);
@@ -80,8 +77,11 @@ describe('Test Table View in Charts', () => {
         ChartUtils.checkIfFilterIsSet(1);
         ChartWidgetTableUtils.checkAmountOfRows(4);
         ChartUtils.validateFilterOptions(['=', '!=']);
+
         ChartUtils.validateAutoCompleteOptions(['a', 'b', 'c']);
-        ChartUtils.saveAndReEditWidget('NewWidget', false);
+        cy.dataCy('design-panel-data-settings-filter-value').type('{esc}');
+
+        ChartUtils.saveAndEditWidget('NewWidget');
         ChartUtils.checkIfFilterIsSet(1);
         ChartWidgetTableUtils.checkAmountOfRows(4);
         ChartUtils.dataConfigRemoveFilter();

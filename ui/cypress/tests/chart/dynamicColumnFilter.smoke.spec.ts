@@ -27,10 +27,7 @@ describe('Dynamic Column Filters in Table Widget', () => {
     });
 
     it('Applies a Top 10 number filter on a numeric column', () => {
-        ChartUtils.addDataViewAndTableWidget(
-            'DynamicColumnFilterWidget',
-            ChartUtils.ADAPTER_NAME,
-        );
+        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
 
         ChartWidgetTableUtils.checkAmountOfRows(10);
 
