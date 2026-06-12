@@ -17,6 +17,7 @@
  */
 
 import { PipelineHealthStatus } from '../gen/streampipes-model';
+import { DataExplorerWidgetHealthStatus } from '../gen/streampipes-model';
 
 export interface ResourceSummaryDto<T> {
     totalCount: number;
@@ -45,8 +46,9 @@ export interface PipelineSummaryDto {
 export interface ChartSummaryDto {
     elementId: string;
     name: string;
-    createdAtEpochMs: number;
-    lastModifiedEpochMs: number;
+    createdAtEpochMs: number | null;
+    lastModifiedEpochMs: number | null;
     multiSourceChart: boolean;
     widgetType: string;
+    healthStatus: DataExplorerWidgetHealthStatus;
 }

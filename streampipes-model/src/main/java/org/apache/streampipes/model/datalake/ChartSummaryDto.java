@@ -20,8 +20,9 @@ package org.apache.streampipes.model.datalake;
 
 public record ChartSummaryDto(String elementId,
                               String name,
-                              long createdAtEpochMs,
-                              long lastModifiedEpochMs,
+                              Long createdAtEpochMs,
+                              Long lastModifiedEpochMs,
                               String widgetType,
-                              boolean multiSourceChart) {
+                              boolean multiSourceChart,
+                              DataExplorerWidgetHealthStatus healthStatus) {
 }

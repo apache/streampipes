@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import {
     MatCell,
     MatCellDef,
@@ -89,7 +96,7 @@ type ManageableChart = DataExplorerWidgetModel & {
         TranslatePipe,
     ],
 })
-export class ChartOverviewTableComponent implements OnInit {
+export class ChartOverviewTableComponent implements OnInit, OnDestroy {
     @Input()
     hasDataExplorerWritePrivileges: boolean;
 
@@ -123,6 +130,10 @@ export class ChartOverviewTableComponent implements OnInit {
 
     assetFilter$: Subscription;
     currentFilterIds = new Set<string>();
+    private chartTypeMetadata = new Map<
+        string,
+        { icon: string; label: string }
+    >();
 
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('chart');
@@ -156,6 +167,10 @@ export class ChartOverviewTableComponent implements OnInit {
         });
     }
 
+    ngOnDestroy(): void {
+        this.assetFilter$?.unsubscribe();
+    }
+
     openChart(dataView: ChartSummaryDto, editMode: boolean): void {
         this.routingService.navigateToChart(
             editMode && this.hasDataExplorerWritePrivileges,
@@ -164,62 +179,60 @@ export class ChartOverviewTableComponent implements OnInit {
     }
 
     showManageDialog(chartSummary: ChartSummaryDto) {
-        this.dataViewService
-            .getChart(chartSummary.elementId)
-            .subscribe(chart => {
-                const resource: ManageableChart = {
-                    ...chart,
-                    baseAppearanceConfig: { ...chart.baseAppearanceConfig },
-                    name: chart.baseAppearanceConfig.widgetTitle,
-                    description: '',
-                };
-                const resourceConfig: ObjectManageDialogResourceConfig<ManageableChart> =
-                    {
-                        resourceLabel: 'Chart',
-                        nameLabel: 'Chart title',
-                        descriptionLabel: 'Chart description',
-                        nameProperty: 'name',
-                        assetLinkType: 'chart',
-                        assetLinkCheckboxLabel:
-                            'Add the current chart to an existing asset',
-                        saveResource: resource => {
-                            resource.baseAppearanceConfig.widgetTitle =
-                                resource.name;
-                            const chartResource: Partial<ManageableChart> = {
-                                ...resource,
-                            };
-                            delete chartResource.name;
-                            delete chartResource.description;
-                            return this.dataViewService.updateChart(
-                                chartResource as DataExplorerWidgetModel,
-                            );
-                        },
-                    };
-
-                const dialogRef = this.dialogService.open(
-                    ObjectManageDialogComponent,
-                    {
-                        panelType: PanelType.SLIDE_IN_PANEL,
-                        title: this.translateService.instant('Manage'),
-                        width: '50vw',
-                        data: {
-                            objectInstanceId: chart.elementId,
-                            resource,
-                            saveMode: 'immediate',
-                            resourceConfig,
-                            headerTitle:
-                                this.translateService.instant('Manage Chart ') +
-                                chart.baseAppearanceConfig.widgetTitle,
-                        },
+        this.withChart(chartSummary, chart => {
+            const resource: ManageableChart = {
+                ...chart,
+                baseAppearanceConfig: { ...chart.baseAppearanceConfig },
+                name: chart.baseAppearanceConfig.widgetTitle,
+                description: '',
+            };
+            const resourceConfig: ObjectManageDialogResourceConfig<ManageableChart> =
+                {
+                    resourceLabel: 'Chart',
+                    nameLabel: 'Chart title',
+                    descriptionLabel: 'Chart description',
+                    nameProperty: 'name',
+                    assetLinkType: 'chart',
+                    assetLinkCheckboxLabel:
+                        'Add the current chart to an existing asset',
+                    saveResource: resource => {
+                        resource.baseAppearanceConfig.widgetTitle =
+                            resource.name;
+                        const chartResource: Partial<ManageableChart> = {
+                            ...resource,
+                        };
+                        delete chartResource.name;
+                        delete chartResource.description;
+                        return this.dataViewService.updateChart(
+                            chartResource as DataExplorerWidgetModel,
+                        );
                     },
-                );
+                };
 
-                dialogRef.afterClosed().subscribe(refresh => {
-                    if (refresh) {
-                        this.getCharts();
-                    }
-                });
+            const dialogRef = this.dialogService.open(
+                ObjectManageDialogComponent,
+                {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translateService.instant('Manage'),
+                    width: '50vw',
+                    data: {
+                        objectInstanceId: chart.elementId,
+                        resource,
+                        saveMode: 'immediate',
+                        resourceConfig,
+                        headerTitle:
+                            this.translateService.instant('Manage Chart ') +
+                            chart.baseAppearanceConfig.widgetTitle,
+                    },
+                },
+            );
+
+            dialogRef.afterClosed().subscribe(refresh => {
+                if (refresh) {
+                    this.getCharts();
+                }
             });
+        });
     }
 
     deleteChart(chart: ChartSummaryDto) {
@@ -251,13 +264,11 @@ export class ChartOverviewTableComponent implements OnInit {
     }
 
     cloneChart(chartSummary: ChartSummaryDto) {
-        this.dataViewService
-            .getChart(chartSummary.elementId)
-            .subscribe(chart => {
-                this.dataViewService.cloneChart(chart).subscribe(() => {
-                    this.getCharts();
-                });
+        this.withChart(chartSummary, chart => {
+            this.dataViewService.cloneChart(chart).subscribe(() => {
+                this.getCharts();
             });
+        });
     }
 
     applyChartFilters(elementIds: Set<string>): void {
@@ -275,13 +286,11 @@ export class ChartOverviewTableComponent implements OnInit {
     }
 
     getChartTypeIcon(chart: ChartSummaryDto): string {
-        return this.chartRegistryService.getChartTemplate(chart.widgetType)
-            .icon;
+        return this.getChartTypeMetadata(chart.widgetType).icon;
     }
 
     getChartTypeName(chart: ChartSummaryDto): string {
-        return this.chartRegistryService.getChartTemplate(chart.widgetType)
-            .label;
+        return this.getChartTypeMetadata(chart.widgetType).label;
     }
 
     formatDate(timestamp?: number): string {
@@ -292,7 +301,36 @@ export class ChartOverviewTableComponent implements OnInit {
         return chart.multiSourceChart;
     }
 
-    requiresAttention(chart: DataExplorerWidgetModel): boolean {
+    requiresAttention(chart: ChartSummaryDto): boolean {
         return chart?.healthStatus === 'REQUIRES_ATTENTION';
+    }
+
+    private withChart(
+        chartSummary: ChartSummaryDto,
+        callback: (chart: DataExplorerWidgetModel) => void,
+    ): void {
+        this.dataViewService
+            .getChart(chartSummary.elementId)
+            .subscribe(chart => {
+                callback(chart);
+            });
+    }
+
+    private getChartTypeMetadata(widgetType: string): {
+        icon: string;
+        label: string;
+    } {
+        const cached = this.chartTypeMetadata.get(widgetType);
+        if (cached) {
+            return cached;
+        }
+
+        const template = this.chartRegistryService.getChartTemplate(widgetType);
+        const metadata = {
+            icon: template?.icon ?? 'insert_chart',
+            label: template?.label ?? widgetType,
+        };
+        this.chartTypeMetadata.set(widgetType, metadata);
+        return metadata;
     }
 }

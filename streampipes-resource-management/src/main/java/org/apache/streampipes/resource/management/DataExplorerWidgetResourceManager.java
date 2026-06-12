@@ -43,11 +43,12 @@ public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataE
         .filter(chart -> permissionEvaluator.hasPermission(auth, chart.getElementId(), "READ"))
         .map(chart -> new ChartSummaryDto(
             chart.getElementId(),
-            chart.getBaseAppearanceConfig().get("widgetTitle").toString(),
-            chart.getMetadata().getCreatedAtEpochMs(),
-            chart.getMetadata().getLastModifiedEpochMs(),
+            getChartName(chart),
+            getCreatedAt(chart),
+            getLastModified(chart),
             chart.getWidgetType(),
-            isMultiSourceChart(chart)
+            isMultiSourceChart(chart),
+            chart.getHealthStatus()
         ))
         .toList();
 
@@ -78,5 +79,26 @@ public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataE
     }
 
     return false;
+  }
+
+  private String getChartName(DataExplorerWidgetModel chart) {
+    if (chart == null || chart.getBaseAppearanceConfig() == null) {
+      return chart != null ? chart.getElementId() : null;
+    }
+
+    Object widgetTitle = chart.getBaseAppearanceConfig().get("widgetTitle");
+    return widgetTitle != null ? widgetTitle.toString() : chart.getElementId();
+  }
+
+  private Long getCreatedAt(DataExplorerWidgetModel chart) {
+    return chart != null && chart.getMetadata() != null
+        ? chart.getMetadata().getCreatedAtEpochMs()
+        : null;
+  }
+
+  private Long getLastModified(DataExplorerWidgetModel chart) {
+    return chart != null && chart.getMetadata() != null
+        ? chart.getMetadata().getLastModifiedEpochMs()
+        : null;
   }
 }
