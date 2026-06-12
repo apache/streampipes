@@ -148,7 +148,7 @@ export class ChartBtns {
     }
 
     public static discardDataExplorerWidgetBtn() {
-        return cy.dataCy('discard-data-explorer-widget-btn');
+        return cy.dataCy('save-data-explorer-go-back-to-overview');
     }
 
     public static chartDataPreview() {

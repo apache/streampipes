@@ -25,41 +25,6 @@
             fxLayoutGap="10px"
             fxFlex="100"
         >
-            <div
-                fxFlex="25"
-                fxLayout="row"
-                fxLayoutAlign="start center"
-                class="widget-header-text mr-15"
-            >
-                @if (editMode) {
-                    <div
-                        fxFlex="100"
-                        fxLayout="row"
-                        fxLayoutAlign="start center"
-                        class="form-field-small widget-title-container"
-                    >
-                        <span class="widget-title-text">{{
-                            'Chart Name' | translate
-                        }}</span>
-                        <mat-form-field
-                            appearance="outline"
-                            color="accent"
-                            fxFlex="100"
-                            subscriptSizing="dynamic"
-                        >
-                            <input
-                                data-cy="appearance-config-widget-title"
-                                matInput
-                                [(ngModel)]="
-                                    configuredWidget.baseAppearanceConfig
-                                        .widgetTitle
-                                "
-                            />
-                        </mat-form-field>
-                    </div>
-                }
-            </div>
-
             @if (editMode) {
                 <button
                     mat-flat-button
@@ -70,18 +35,6 @@
                 >
                     <mat-icon>save</mat-icon>
                     {{ (createMode ? 'Create' : 'Save') | translate }}
-                </button>
-            }
-            @if (editMode) {
-                <button
-                    mat-flat-button
-                    [matTooltip]="'Discard' | translate"
-                    class="mat-basic mr-10 edit-menu-btn"
-                    (click)="discardDataViewEmitter.emit()"
-                    data-cy="discard-data-explorer-widget-btn"
-                >
-                    <i class="material-icons">undo</i>
-                    <span>&nbsp;{{ 'Discard' | translate }}</span>
                 </button>
             }
             @if (editMode) {
