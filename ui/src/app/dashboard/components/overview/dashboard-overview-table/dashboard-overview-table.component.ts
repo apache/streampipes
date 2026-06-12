@@ -138,7 +138,9 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
             });
 
         this.dataSource.sortingDataAccessor = (dashboard, column) => {
-            if (column === 'lastModified') {
+            if (column === 'name') {
+                return dashboard.name;
+            } else if (column === 'lastModified') {
                 return dashboard.lastModifiedEpochMs;
             } else if (column === 'createdAt') {
                 return dashboard.createdAtEpochMs;
@@ -149,49 +151,46 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         this.getDashboards();
     }
 
-    showManageDialog(dashboard: DashboardSummaryDto) {
-        this.dashboardService
-            .getDashboard(dashboard.elementId)
-            .subscribe(resource => {
-                const resourceConfig: ObjectManageDialogResourceConfig<Dashboard> =
-                    {
-                        resourceLabel: 'Dashboard',
-                        nameLabel: 'Name',
-                        descriptionLabel: 'Description',
-                        nameProperty: 'name',
-                        assetLinkType: 'dashboard',
-                        assetLinkCheckboxLabel:
-                            'Add the current dashboard to an existing asset',
-                        saveResource: resource =>
-                            this.dashboardService.updateDashboard(resource),
-                    };
-                const dialogRef = this.dialogService.open(
-                    ObjectManageDialogComponent,
-                    {
-                        panelType: PanelType.SLIDE_IN_PANEL,
-                        title: this.translateService.instant('Manage'),
-                        width: '50vw',
-                        data: {
-                            objectInstanceId: resource.elementId,
-                            resource: { ...resource },
-                            saveMode: 'immediate',
-                            resourceConfig,
-                            headerTitle:
-                                this.translateService.instant(
-                                    'Manage Dashboard ',
-                                ) + resource.name,
-                        },
+    showManageDialog(dashboard: DashboardSummaryDto): void {
+        this.withDashboard(dashboard, resource => {
+            const resourceConfig: ObjectManageDialogResourceConfig<Dashboard> =
+                {
+                    resourceLabel: 'Dashboard',
+                    nameLabel: 'Name',
+                    descriptionLabel: 'Description',
+                    nameProperty: 'name',
+                    assetLinkType: 'dashboard',
+                    assetLinkCheckboxLabel:
+                        'Add the current dashboard to an existing asset',
+                    saveResource: resource =>
+                        this.dashboardService.updateDashboard(resource),
+                };
+            const dialogRef = this.dialogService.open(
+                ObjectManageDialogComponent,
+                {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translateService.instant('Manage'),
+                    width: '50vw',
+                    data: {
+                        objectInstanceId: resource.elementId,
+                        resource: { ...resource },
+                        saveMode: 'immediate',
+                        resourceConfig,
+                        headerTitle:
+                            this.translateService.instant('Manage Dashboard ') +
+                            resource.name,
                     },
-                );
-                dialogRef.afterClosed().subscribe(refresh => {
-                    if (refresh) {
-                        this.getDashboards();
-                    }
-                });
+                },
+            );
+            dialogRef.afterClosed().subscribe(refresh => {
+                if (refresh) {
+                    this.getDashboards();
+                }
             });
+        });
     }
 
-    openDeleteDashboardDialog(dashboard: DashboardSummaryDto) {
+    openDeleteDashboardDialog(dashboard: DashboardSummaryDto): void {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '600px',
             data: {
@@ -219,15 +218,15 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         });
     }
 
-    showDashboard(dashboard: DashboardSummaryDto) {
+    showDashboard(dashboard: DashboardSummaryDto): void {
         this.routingService.navigateToDashboard(false, dashboard.elementId);
     }
 
-    editDashboard(dashboard: DashboardSummaryDto) {
+    editDashboard(dashboard: DashboardSummaryDto): void {
         this.routingService.navigateToDashboard(true, dashboard.elementId);
     }
 
-    getDashboards() {
+    getDashboards(): void {
         this.dashboardService.getDashboardSummary().subscribe(data => {
             this.dashboards = data.resources.sort((a, b) =>
                 a.name.localeCompare(b.name),
@@ -237,9 +236,9 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     }
 
     applyDashboardFilters(elementIds: Set<string>): void {
-        if (elementIds == undefined) {
+        if (elementIds === undefined) {
             this.filteredDashboards = [];
-        } else if (elementIds.size == 0) {
+        } else if (elementIds.size === 0) {
             this.filteredDashboards = this.dashboards;
         } else {
             this.filteredDashboards = this.dashboards.filter(a =>
@@ -254,7 +253,7 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         return this.dateFormatService.formatDate(timestamp);
     }
 
-    openDashboardInKioskMode(dashboard: Dashboard) {
+    openDashboardInKioskMode(dashboard: DashboardSummaryDto): void {
         this.router.navigate(['dashboard-kiosk', dashboard.elementId]);
     }
 
@@ -263,33 +262,42 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     }
 
     openCloneDialog(dashboardSummary: DashboardSummaryDto): void {
-        this.dashboardService
-            .getDashboard(dashboardSummary.elementId)
-            .subscribe(dashboard => {
-                const dialogRef = this.dialogService.open(
-                    CloneDashboardDialogComponent,
-                    {
-                        panelType: PanelType.SLIDE_IN_PANEL,
-                        title: this.translateService.instant('Clone dashboard'),
-                        width: '50vw',
-                        data: {
-                            dashboard: dashboard,
-                        },
+        this.withDashboard(dashboardSummary, dashboard => {
+            const dialogRef = this.dialogService.open(
+                CloneDashboardDialogComponent,
+                {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translateService.instant('Clone dashboard'),
+                    width: '50vw',
+                    data: {
+                        dashboard: dashboard,
                     },
-                );
-                dialogRef.afterClosed().subscribe(result => {
-                    if (result) {
-                        this.getDashboards();
-                    }
-                });
+                },
+            );
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    this.getDashboards();
+                }
             });
+        });
     }
 
-    onRowClicked(dashboard: DashboardSummaryDto) {
+    onRowClicked(dashboard: DashboardSummaryDto): void {
         this.showDashboard(dashboard);
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.assetFilter$?.unsubscribe();
+    }
+
+    private withDashboard(
+        dashboardSummary: DashboardSummaryDto,
+        callback: (dashboard: Dashboard) => void,
+    ): void {
+        this.dashboardService
+            .getDashboard(dashboardSummary.elementId)
+            .subscribe(dashboard => {
+                callback(dashboard);
+            });
     }
 }

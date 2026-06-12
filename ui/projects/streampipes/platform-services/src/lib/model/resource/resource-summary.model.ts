@@ -28,8 +28,8 @@ export interface DashboardSummaryDto {
     elementId: string;
     name: string;
     description: string;
-    createdAtEpochMs: number;
-    lastModifiedEpochMs: number;
+    createdAtEpochMs: number | null;
+    lastModifiedEpochMs: number | null;
 }
 
 export interface PipelineSummaryDto {

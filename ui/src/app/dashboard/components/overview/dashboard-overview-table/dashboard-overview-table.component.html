@@ -61,7 +61,7 @@
                 <td mat-cell *matCellDef="let element">
                     @if (element.lastModifiedEpochMs !== null) {
                         <div>
-                            {{ this.formatDate(element.lastModifiedEpochMs) }}
+                            {{ formatDate(element.lastModifiedEpochMs) }}
                         </div>
                     } @else {
                         <div>–</div>
@@ -76,7 +76,7 @@
                 <td mat-cell *matCellDef="let element">
                     @if (element.createdAtEpochMs !== null) {
                         <div>
-                            {{ this.formatDate(element.createdAtEpochMs) }}
+                            {{ formatDate(element.createdAtEpochMs) }}
                         </div>
                     } @else {
                         <div>–</div>
