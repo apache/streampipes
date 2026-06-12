@@ -79,15 +79,14 @@
                     {{ 'Type' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let element">
-                    <div fxLayout="row" fxLayoutGap="15px" class="text-sm">
-                        <span fxLayoutAlign="start center"
-                            ><mat-icon>{{
-                                getChartTypeIcon(element)
-                            }}</mat-icon></span
-                        >
-                        <span fxFlex fxLayoutAlign="start center">{{
-                            getChartTypeName(element)
-                        }}</span>
+                    <div
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        class="text-sm"
+                    >
+                        <mat-icon [matTooltip]="getChartTypeName(element)">{{
+                            getChartTypeIcon(element)
+                        }}</mat-icon>
                     </div>
                 </td>
             </ng-container>
