@@ -39,7 +39,10 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.model.pipeline.PipelineSummaryDto;
 import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
+import org.apache.streampipes.model.resource.ResourceSummaryDto;
+import org.apache.streampipes.resource.management.PipelineResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.exception.SpNotificationException;
@@ -108,6 +111,13 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public List<Pipeline> get() {
     return PipelineManager.getAllPipelines();
   }
+
+  @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResourceSummaryDto<PipelineSummaryDto> getPipelineSummary() {
+    return new PipelineResourceManager().getSummary(getAuthentication());
+  }
+
 
   @GetMapping(
       path = "{pipelineId}/status",

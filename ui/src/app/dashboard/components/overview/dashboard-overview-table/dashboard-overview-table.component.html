@@ -59,16 +59,11 @@
                     {{ 'Last modified' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let element">
-                    @if (element.metadata) {
+                    @if (element.lastModifiedEpochMs !== null) {
                         <div>
-                            {{
-                                this.formatDate(
-                                    element.metadata.lastModifiedEpochMs
-                                )
-                            }}
+                            {{ this.formatDate(element.lastModifiedEpochMs) }}
                         </div>
-                    }
-                    @if (!element.metadata) {
+                    } @else {
                         <div>–</div>
                     }
                 </td>
@@ -79,16 +74,11 @@
                     {{ 'Created' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let element">
-                    @if (element.metadata) {
+                    @if (element.createdAtEpochMs !== null) {
                         <div>
-                            {{
-                                this.formatDate(
-                                    element.metadata.createdAtEpochMs
-                                )
-                            }}
+                            {{ this.formatDate(element.createdAtEpochMs) }}
                         </div>
-                    }
-                    @if (!element.metadata) {
+                    } @else {
                         <div>–</div>
                     }
                 </td>

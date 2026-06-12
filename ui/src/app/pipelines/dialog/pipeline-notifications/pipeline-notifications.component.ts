@@ -17,12 +17,18 @@
  */
 
 import { DialogRef } from '@streampipes/shared-ui';
-import { Pipeline, PipelineService } from '@streampipes/platform-services';
-import { Component, Input, inject } from '@angular/core';
+import {
+    Pipeline,
+    PipelineService,
+    PipelineSummaryDto,
+} from '@streampipes/platform-services';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { LayoutAlignDirective } from '@ngbracket/ngx-layout';
 
 @Component({
     selector: 'sp-pipeline-notifications',
@@ -34,15 +40,27 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatDivider,
         MatButton,
         TranslatePipe,
+        MatProgressSpinner,
+        LayoutAlignDirective,
     ],
 })
-export class PipelineNotificationsComponent {
+export class PipelineNotificationsComponent implements OnInit {
     private dialogRef =
         inject<DialogRef<PipelineNotificationsComponent>>(DialogRef);
     private pipelineService = inject(PipelineService);
 
     @Input()
+    pipelineSummary: PipelineSummaryDto;
+
     pipeline: Pipeline;
+
+    ngOnInit() {
+        this.pipelineService
+            .getPipelineById(this.pipelineSummary.elementId)
+            .subscribe(p => {
+                this.pipeline = p;
+            });
+    }
 
     acknowledgeAndClose() {
         this.pipeline.pipelineNotifications = [];

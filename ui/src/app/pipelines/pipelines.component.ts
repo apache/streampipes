@@ -22,6 +22,7 @@ import {
     FunctionsService,
     Pipeline,
     PipelineService,
+    PipelineSummaryDto,
 } from '@streampipes/platform-services';
 import {
     CurrentUserService,
@@ -74,8 +75,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class PipelinesComponent implements OnInit, OnDestroy {
     pipeline: Pipeline;
-    pipelines: Pipeline[] = [];
-    filteredPipelines: Pipeline[] = [];
+    pipelines: PipelineSummaryDto[] = [];
+    filteredPipelines: PipelineSummaryDto[] = [];
     starting = false;
     stopping = false;
 
@@ -139,8 +140,8 @@ export class PipelinesComponent implements OnInit, OnDestroy {
 
     getPipelines() {
         this.pipelines = [];
-        this.pipelineService.getPipelines().subscribe(pipelines => {
-            this.pipelines = pipelines.sort((a, b) =>
+        this.pipelineService.getPipelineSummary().subscribe(resourceSummary => {
+            this.pipelines = resourceSummary.resources.sort((a, b) =>
                 a.name.localeCompare(b.name),
             );
             this.applyPipelineFilters(this.currentFilters);
