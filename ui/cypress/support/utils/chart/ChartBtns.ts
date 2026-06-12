@@ -29,6 +29,10 @@ export class ChartBtns {
         return cy.dataCy('sp-manage-save');
     }
 
+    public static manageChartButton(title) {
+        return cy.dataCy('open-manage-permissions-' + title);
+    }
+
     public static saveDashboardBtn() {
         return cy.dataCy('save-dashboard-btn');
     }

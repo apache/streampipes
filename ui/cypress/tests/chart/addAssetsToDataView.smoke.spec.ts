@@ -57,10 +57,10 @@ describe('Creates a new adapter with a linked asset', () => {
         // Go To Chart and Edit
         ChartUtils.goToDatalake();
         cy.wait(1000);
-        ChartUtils.editDataView('NewWidget');
+        ChartUtils.manageDataView('NewWidget');
         ChartUtils.renameWidget('Rename');
-        ChartUtils.addChartsToAsset([assetName1, assetName3]);
-        ChartBtns.saveDataViewButton().click();
+        ChartUtils.addDashboardToAsset([assetName1, assetName3]);
+        ChartBtns.saveDataViewBtn().click();
         ChartBtns.openNewDataViewBtn().should('be.visible');
 
         AssetUtils.checkAmountOfAssets(3);

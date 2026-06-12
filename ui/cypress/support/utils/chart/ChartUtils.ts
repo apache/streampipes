@@ -118,7 +118,6 @@ export class ChartUtils {
     }
 
     public static addDataViewAndWidget(
-        dataViewName: string,
         dataSet: string,
         widgetType: string,
         ignoreTimeSelection = false,
@@ -138,7 +137,6 @@ export class ChartUtils {
         ChartUtils.dataConfigSelectAllFields();
 
         ChartUtils.selectAppearanceConfig();
-        ChartUtils.selectDataViewName(dataViewName);
 
         ChartUtils.openVisualizationConfig();
         ChartUtils.selectVisualizationType(widgetType);
@@ -239,34 +237,22 @@ export class ChartUtils {
     }
 
     public static addDataViewAndTableWidget(
-        dataViewName: string,
         dataSet: string,
         ignoreTimeSelection = false,
     ) {
         this.addDataViewAndWidget(
-            dataViewName,
             dataSet,
             ChartWidget.TABLE,
             ignoreTimeSelection,
         );
     }
 
-    public static addDataViewAndTimeSeriesWidget(
-        dataViewName: string,
-        dataSet: string,
-    ) {
-        this.addDataViewAndWidget(
-            dataViewName,
-            dataSet,
-            ChartWidget.TIME_SERIES,
-        );
+    public static addDataViewAndTimeSeriesWidget(dataSet: string) {
+        this.addDataViewAndWidget(dataSet, ChartWidget.TIME_SERIES);
     }
     public static renameWidget(newName: string) {
-        cy.dataCy('appearance-config-widget-title').clear().type(newName);
-        cy.dataCy('appearance-config-widget-title').should(
-            'have.value',
-            newName,
-        );
+        cy.dataCy('managed-resource-name').clear().type(newName);
+        cy.dataCy('managed-resource-name').should('have.value', newName);
     }
 
     public static renameDashboard(newName: string) {
@@ -343,6 +329,15 @@ export class ChartUtils {
         GeneralUtils.openMenuForRow(dataViewName);
         GeneralUtils.visibleMaterialMenu().within(() => {
             ChartBtns.editDataViewButton(dataViewName).click();
+        });
+    }
+
+    public static manageDataView(dataViewName: string) {
+        // Click edit button
+        // following only works if single view is available
+        GeneralUtils.openMenuForRow(dataViewName);
+        GeneralUtils.visibleMaterialMenu().within(() => {
+            ChartBtns.manageChartButton(dataViewName).click();
         });
     }
 
@@ -455,12 +450,12 @@ export class ChartUtils {
         ChartBtns.startEditWidget(widgetName).click();
     }
 
-    public static saveAndReEditWidget(
-        dataViewName: string,
-        edit: boolean = true,
-    ) {
+    public static saveAndReEditWidget(dataViewName: string) {
         // Save data view configuration
-        ChartUtils.saveDataViewConfiguration(false, edit);
+        ChartBtns.saveDataViewButton().click();
+        cy.dataCy('managed-resource-name').clear().type(dataViewName);
+        ChartBtns.saveDataViewBtn().click();
+        ChartBtns.openNewDataViewBtn().should('be.visible');
         ChartUtils.editDataView(dataViewName);
     }
 
@@ -655,8 +650,10 @@ export class ChartUtils {
         cy.get('div[role=tab]').eq(tabNumber).click();
     }
 
-    public static selectDataViewName(dataViewName: string) {
-        cy.dataCy('appearance-config-widget-title').clear().type(dataViewName);
+    public static selectDataViewNameAndSave(dataViewName: string) {
+        ChartBtns.saveDataViewButton().click();
+        cy.dataCy('managed-resource-name').clear().type(dataViewName);
+        ChartBtns.saveDataViewBtn().click();
     }
 
     public static clickCreateButton() {
@@ -839,14 +836,16 @@ export class ChartUtils {
         ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
 
         // Create Diagram
-        ChartUtils.addDataViewAndTableWidget(
-            'NewWidget',
-            ChartUtils.ADAPTER_NAME,
-        );
+        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
         //Save
         ChartBtns.saveDataViewButton().click();
+        ChartUtils.addDataViewName('NewWidget');
         ChartUtils.addDashboardToAsset(assetNames);
         ChartBtns.saveDataViewBtn().click();
         ChartBtns.openNewDataViewBtn().should('be.visible');
+    }
+
+    public static addDataViewName(name) {
+        cy.dataCy('managed-resource-name').clear().type(name);
     }
 }
