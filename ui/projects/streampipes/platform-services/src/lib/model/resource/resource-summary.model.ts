@@ -18,7 +18,6 @@
 
 import { PipelineHealthStatus } from '../gen/streampipes-model';
 import { DataExplorerWidgetHealthStatus } from '../gen/streampipes-model';
-
 export interface ResourceSummaryDto<T> {
     totalCount: number;
     resources: T[];
@@ -42,6 +41,16 @@ export interface AdapterSummaryDto {
     appId: string;
     includedAssets: string[];
     icon: string;
+}
+
+export interface DatasetSummaryDto {
+    elementId: string;
+    measureName: string;
+    retentionConfigured: boolean;
+    lastExport: string | null;
+    lastRetentionStatus: boolean | null;
+    pipelines: string[];
+    removable: boolean;
 }
 
 export interface PipelineSummaryDto {

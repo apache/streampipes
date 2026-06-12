@@ -50,6 +50,10 @@ public class SpResourceManager {
     return new DataStreamResourceManager();
   }
 
+  public DataLakeMeasureResourceManager manageDataLakeMeasures() {
+    return new DataLakeMeasureResourceManager();
+  }
+
   public PipelineResourceManager managePipelines() {
     return new PipelineResourceManager();
   }

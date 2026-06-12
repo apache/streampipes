@@ -16,19 +16,15 @@
  *
  */
 
-export class DataLakeConfigurationEntry {
-    public name: string;
-    public measureName: string;
-    public pipelines: string[] = [];
-    public eventsTotal = 0;
-    public eventsLatest = 0;
-    public eventsTotalLoading = false;
-    public eventsLatestLoading = false;
-    public remove = true;
-    public elementId: string;
-    public retentionConfigured = false;
-    public lastExport: string | null = null;
-    public lastRetentionStatus: boolean | null = null;
+package org.apache.streampipes.model.datalake;
 
-    constructor() {}
+import java.util.List;
+
+public record DatasetSummaryDto(String elementId,
+                                String measureName,
+                                boolean retentionConfigured,
+                                String lastExport,
+                                Boolean lastRetentionStatus,
+                                List<String> pipelines,
+                                boolean removable) {
 }
