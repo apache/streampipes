@@ -16,37 +16,12 @@
  *
  */
 
-import { PipelineHealthStatus } from '../gen/streampipes-model';
+package org.apache.streampipes.model.datalake;
 
-export interface ResourceSummaryDto<T> {
-    totalCount: number;
-    resources: T[];
-}
-
-export interface DashboardSummaryDto {
-    elementId: string;
-    name: string;
-    description: string;
-    createdAtEpochMs: number;
-    lastModifiedEpochMs: number;
-}
-
-export interface PipelineSummaryDto {
-    elementId: string;
-    name: string;
-    description: string;
-    createdAt: number;
-    running: boolean;
-    healthStatus: PipelineHealthStatus;
-    pipelineNotifications: string[];
-    valid: true;
-}
-
-export interface ChartSummaryDto {
-    elementId: string;
-    name: string;
-    createdAtEpochMs: number;
-    lastModifiedEpochMs: number;
-    multiSourceChart: boolean;
-    widgetType: string;
+public record ChartSummaryDto(String elementId,
+                              String name,
+                              long createdAtEpochMs,
+                              long lastModifiedEpochMs,
+                              String widgetType,
+                              boolean multiSourceChart) {
 }

@@ -29,7 +29,7 @@
             featureCardId="chart"
             [showActionsMenu]="true"
             [rowsClickable]="true"
-            (rowClicked)="openDataView($event, true)"
+            (rowClicked)="openChart($event, true)"
             matSort
         >
             <ng-container matColumnDef="name">
@@ -68,29 +68,39 @@
                             >
                         }
                         <div fxLayout="column" fxLayoutAlign="start start">
-                            <span class="text-sm">{{
-                                element.baseAppearanceConfig.widgetTitle
-                            }}</span>
+                            <span class="text-sm">{{ element.name }}</span>
                         </div>
                     </div>
                 </td>
             </ng-container>
 
+            <ng-container matColumnDef="chartType">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    {{ 'Type' | translate }}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <div fxLayout="row" fxLayoutGap="15px" class="text-sm">
+                        <span fxLayoutAlign="start center"
+                            ><mat-icon>{{
+                                getChartTypeIcon(element)
+                            }}</mat-icon></span
+                        >
+                        <span fxFlex fxLayoutAlign="start center">{{
+                            getChartTypeName(element)
+                        }}</span>
+                    </div>
+                </td>
+            </ng-container>
             <ng-container matColumnDef="lastModified">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>
                     {{ 'Last modified' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let element">
-                    @if (element.metadata) {
+                    @if (element.lastModifiedEpochMs !== null) {
                         <div>
-                            {{
-                                this.formatDate(
-                                    element.metadata.lastModifiedEpochMs
-                                )
-                            }}
+                            {{ this.formatDate(element.lastModifiedEpochMs) }}
                         </div>
-                    }
-                    @if (!element.metadata) {
+                    } @else {
                         <div>–</div>
                     }
                 </td>
@@ -101,16 +111,11 @@
                     {{ 'Created' | translate }}
                 </th>
                 <td mat-cell *matCellDef="let element">
-                    @if (element.metadata) {
+                    @if (element.createdAtEpochMs !== null) {
                         <div>
-                            {{
-                                this.formatDate(
-                                    element.metadata.createdAtEpochMs
-                                )
-                            }}
+                            {{ this.formatDate(element.createdAtEpochMs) }}
                         </div>
-                    }
-                    @if (!element.metadata) {
+                    } @else {
                         <div>–</div>
                     }
                 </td>
@@ -120,13 +125,9 @@
                 <button
                     mat-menu-item
                     [attr.data-cy]="
-                        'show-data-view-' +
-                        element.baseAppearanceConfig.widgetTitle.replaceAll(
-                            ' ',
-                            ''
-                        )
+                        'show-data-view-' + element.name.replaceAll(' ', '')
                     "
-                    (click)="openDataView(element, false)"
+                    (click)="openChart(element, false)"
                 >
                     <mat-icon>visibility</mat-icon>
                     <span>{{ 'Show' | translate }}</span>
@@ -135,13 +136,9 @@
                     <button
                         mat-menu-item
                         [attr.data-cy]="
-                            'edit-data-view-' +
-                            element.baseAppearanceConfig.widgetTitle.replaceAll(
-                                ' ',
-                                ''
-                            )
+                            'edit-data-view-' + element.name.replaceAll(' ', '')
                         "
-                        (click)="openDataView(element, true)"
+                        (click)="openChart(element, true)"
                     >
                         <mat-icon>edit</mat-icon>
                         <span>{{ 'Edit chart' | translate }}</span>
@@ -151,10 +148,7 @@
                     <button
                         [attr.data-cy]="
                             'open-manage-permissions-' +
-                            element.baseAppearanceConfig.widgetTitle.replaceAll(
-                                ' ',
-                                ''
-                            )
+                            element.name.replaceAll(' ', '')
                         "
                         mat-menu-item
                         (click)="showManageDialog(element)"
@@ -164,7 +158,7 @@
                     </button>
                 }
                 @if (hasDataExplorerWritePrivileges) {
-                    <button mat-menu-item (click)="cloneDataView(element)">
+                    <button mat-menu-item (click)="cloneChart(element)">
                         <mat-icon>flip_to_front</mat-icon>
                         <span>{{ 'Clone chart' | translate }}</span>
                     </button>
@@ -173,11 +167,8 @@
                     <button
                         mat-menu-item
                         [matTooltip]=""
-                        [attr.data-cy]="
-                            'delete-data-view-' +
-                            element.baseAppearanceConfig.widgetTitle
-                        "
-                        (click)="deleteDataView(element)"
+                        [attr.data-cy]="'delete-data-view-' + element.name"
+                        (click)="deleteChart(element)"
                     >
                         <mat-icon>delete</mat-icon>
                         <span>{{ 'Delete chart' | translate }}</span>
