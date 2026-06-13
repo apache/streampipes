@@ -493,19 +493,16 @@ export class ChartUtils {
                 $body.find('[data-cy="data-explorer-select-data-set"]').length
             ) {
                 cy.dataCy('data-explorer-select-data-set')
-                    .click()
-                    .get('mat-option')
-                    .contains(dataSet)
-                    .click();
+                    .clear()
+                    .type(dataSet);
+                cy.get('mat-option').contains(dataSet).click();
             }
         });
     }
 
     public static assertSelectDataSet(dataSet: string) {
-        cy.dataCy('data-explorer-select-data-set')
-            .click()
-            .get('mat-option')
-            .should('contain.text', dataSet);
+        cy.dataCy('data-explorer-select-data-set').clear().type(dataSet);
+        cy.get('mat-option').should('contain.text', dataSet);
     }
 
     /**

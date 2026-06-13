@@ -29,6 +29,7 @@ import {
     DataExplorerDataConfig,
     DataExplorerWidgetModel,
     DataLakeMeasure,
+    DatasetSummaryDto,
     DatalakeRestService,
     SourceConfig,
 } from '@streampipes/platform-services';
@@ -59,8 +60,12 @@ import {
     SpAlertBannerComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import { MatFormField } from '@angular/material/form-field';
-import { MatOption, MatSelect } from '@angular/material/select';
+import {
+    MatFormField,
+    MatPrefix,
+    MatSuffix,
+} from '@angular/material/form-field';
+import { MatOption } from '@angular/material/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
@@ -72,6 +77,11 @@ import { AggregateConfigurationComponent } from './aggregate-configuration/aggre
 import { FilterSelectionPanelComponent } from './filter-selection-panel/filter-selection-panel.component';
 import { OrderSelectionPanelComponent } from './order-selection-panel/order-selection-panel.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import {
+    MatAutocomplete,
+    MatAutocompleteSelectedEvent,
+    MatAutocompleteTrigger,
+} from '@angular/material/autocomplete';
 
 @Component({
     selector: 'sp-chart-data-settings',
@@ -91,7 +101,8 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutGapDirective,
         MatButton,
         MatFormField,
-        MatSelect,
+        MatPrefix,
+        MatSuffix,
         MatOption,
         MatIcon,
         MatRadioGroup,
@@ -102,6 +113,8 @@ import { TranslatePipe } from '@ngx-translate/core';
         FormFieldComponent,
         MatInput,
         MatCheckbox,
+        MatAutocomplete,
+        MatAutocompleteTrigger,
         AggregateConfigurationComponent,
         FieldSelectionPanelComponent,
         FilterSelectionPanelComponent,
@@ -137,7 +150,9 @@ export class ChartDataSettingsComponent implements OnInit {
     @ViewChild('groupSelectionPanel')
     groupSelectionPanel: GroupSelectionPanelComponent;
 
-    availableMeasurements: DataLakeMeasure[] = [];
+    availableMeasurements: DatasetSummaryDto[] = [];
+    filteredMeasurements: DatasetSummaryDto[] = [];
+    measurementInputValue = '';
 
     step = 0;
 
@@ -149,33 +164,42 @@ export class ChartDataSettingsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.syncCurrentMeasure();
         this.loadPipelinesAndMeasurements();
     }
 
     loadPipelinesAndMeasurements() {
-        this.datalakeRestService
-            .getAllMeasurementSeries()
-            .subscribe(response => {
-                this.availableMeasurements = response;
-                this.availableMeasurements.sort((a, b) =>
-                    a.measureName.localeCompare(b.measureName),
-                );
+        this.datalakeRestService.getMeasurementSummary().subscribe(response => {
+            this.availableMeasurements = response.resources.sort((a, b) =>
+                a.measureName.localeCompare(b.measureName),
+            );
+            this.applyMeasurementSearch();
 
-                if (!this.sourceConfig) {
-                    const defaultConfigs = this.findDefaultConfig();
-                    this.initializeSourceConfig(defaultConfigs.measureName);
-                    if (defaultConfigs.measureName !== undefined) {
-                        this.updateMeasure(
-                            this.sourceConfig,
-                            defaultConfigs.measureName,
-                        );
-                    }
+            if (!this.sourceConfig) {
+                const defaultConfigs = this.findDefaultConfig();
+                this.initializeSourceConfig(defaultConfigs.measureName);
+                if (defaultConfigs.measureName !== undefined) {
+                    this.loadMeasurement(
+                        defaultConfigs.measureName,
+                        true,
+                        true,
+                    );
                 }
-            });
+            } else if (
+                !this.sourceConfig.measure &&
+                this.sourceConfig.measureName
+            ) {
+                this.loadMeasurement(
+                    this.sourceConfig.measureName,
+                    false,
+                    false,
+                );
+            }
+        });
     }
 
     findDefaultConfig(): {
-        measureName: string;
+        measureName: string | undefined;
     } {
         if (this.availableMeasurements.length > 0) {
             return {
@@ -187,7 +211,84 @@ export class ChartDataSettingsComponent implements OnInit {
     }
 
     updateMeasure(sourceConfig: SourceConfig, measureName: string) {
-        sourceConfig.measure = this.findMeasure(measureName);
+        sourceConfig.measureName = measureName;
+        this.measurementInputValue = measureName;
+        this.loadMeasurement(measureName, true, true);
+    }
+
+    onMeasurementSearchChange(value: string): void {
+        this.measurementInputValue = value;
+        this.applyMeasurementSearch();
+    }
+
+    clearMeasurementSearch(): void {
+        this.measurementInputValue = '';
+        this.applyMeasurementSearch();
+    }
+
+    hasActiveMeasurementSearch(): boolean {
+        return this.measurementInputValue.trim().length > 0;
+    }
+
+    onMeasurementSelected(
+        sourceConfig: SourceConfig,
+        event: MatAutocompleteSelectedEvent,
+    ): void {
+        this.updateMeasure(sourceConfig, event.option.value);
+    }
+
+    private applyMeasurementSearch(): void {
+        const query = this.measurementInputValue.trim().toLowerCase();
+        if (!query) {
+            this.filteredMeasurements = this.availableMeasurements;
+            return;
+        }
+
+        this.filteredMeasurements = this.availableMeasurements.filter(
+            measurement =>
+                measurement.measureName.toLowerCase().includes(query) ||
+                measurement.pipelines.some(pipeline =>
+                    pipeline.toLowerCase().includes(query),
+                ),
+        );
+    }
+
+    private loadMeasurement(
+        measureName: string,
+        resetQueryConfig: boolean,
+        refreshData: boolean,
+    ): void {
+        this.datalakeRestService
+            .getMeasurementByName(measureName)
+            .subscribe(measure =>
+                this.applySelectedMeasurement(
+                    measure,
+                    resetQueryConfig,
+                    refreshData,
+                ),
+            );
+    }
+
+    private applySelectedMeasurement(
+        measure: DataLakeMeasure,
+        resetQueryConfig: boolean,
+        refreshData: boolean,
+    ): void {
+        const sourceConfig = this.sourceConfig;
+        if (!sourceConfig) {
+            return;
+        }
+
+        this.dataLakeMeasure = measure;
+        this.dataLakeMeasureChange.emit(measure);
+        sourceConfig.measureName = measure.measureName;
+        sourceConfig.measure = measure;
+        this.measurementInputValue = measure.measureName;
+
+        if (!resetQueryConfig) {
+            return;
+        }
+
         sourceConfig.queryConfig.fields = [];
         if (this.fieldSelectionPanel) {
             this.fieldSelectionPanel.applyDefaultFields();
@@ -197,13 +298,20 @@ export class ChartDataSettingsComponent implements OnInit {
         if (this.groupSelectionPanel) {
             this.groupSelectionPanel.applyDefaultFields();
         }
-        this.triggerDataRefresh();
+
+        if (refreshData) {
+            this.triggerDataRefresh();
+        }
     }
 
-    findMeasure(measureName: string) {
-        return this.availableMeasurements.find(
-            m => m.measureName === measureName,
-        );
+    private syncCurrentMeasure(): void {
+        if (this.sourceConfig?.measure) {
+            this.dataLakeMeasure = this.sourceConfig.measure;
+            this.dataLakeMeasureChange.emit(this.sourceConfig.measure);
+            this.measurementInputValue = this.sourceConfig.measure.measureName;
+        } else if (this.sourceConfig?.measureName) {
+            this.measurementInputValue = this.sourceConfig.measureName;
+        }
     }
 
     changeDataAggregation() {
