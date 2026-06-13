@@ -17,35 +17,31 @@
  */
 
 import { Injectable, inject } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    Router,
-    RouterStateSnapshot,
-    UrlTree,
-} from '@angular/router';
-import { LoginSettingsService } from '../../../login/services/login-settings.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { PlatformServicesCommons } from '@streampipes/platform-services';
+import { Observable, shareReplay } from 'rxjs';
+import { LoginModel } from '../components/login/login.model';
 
 @Injectable({ providedIn: 'root' })
-export class RegistrationAllowedCanActivateGuard {
-    private router = inject(Router);
-    private loginSettingsService = inject(LoginSettingsService);
+export class LoginSettingsService {
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
-    canActivate(
-        _route: ActivatedRouteSnapshot,
-        _state: RouterStateSnapshot,
-    ):
-        | Observable<boolean | UrlTree>
-        | Promise<boolean | UrlTree>
-        | boolean
-        | UrlTree {
-        return this.loginSettingsService.getSettings().pipe(
-            map(config => {
-                return config.allowSelfRegistration
-                    ? true
-                    : this.router.parseUrl('register');
-            }),
-        );
+    private settings$?: Observable<LoginModel>;
+
+    getSettings(): Observable<LoginModel> {
+        if (!this.settings$) {
+            this.settings$ = this.http
+                .get<LoginModel>(
+                    `${this.platformServicesCommons.apiBasePath}/auth/settings`,
+                )
+                .pipe(shareReplay(1));
+        }
+
+        return this.settings$;
+    }
+
+    invalidateCache(): void {
+        this.settings$ = undefined;
     }
 }
