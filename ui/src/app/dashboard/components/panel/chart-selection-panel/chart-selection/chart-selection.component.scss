@@ -16,11 +16,63 @@
  *
  */
 
-.m-10 {
-    margin: 10px;
+.chart-selection-shell {
+    height: 100%;
+    padding: 6px 6px 8px;
+    background: linear-gradient(
+        180deg,
+        var(--color-bg-0) 0%,
+        color-mix(in srgb, var(--color-bg-0) 96%, transparent) 100%
+    );
+}
+
+.chart-selection-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 2px 0 4px;
+}
+
+.chart-selection-heading {
+    min-width: 0;
+}
+
+.chart-selection-caption {
+    font-size: var(--font-size-sm);
+    color: var(--color-paragraph);
+}
+
+.chart-selection-create {
+    flex-shrink: 0;
+}
+
+.chart-selection-search {
+    width: 100%;
+}
+
+.chart-selection-results {
+    padding-top: 2px;
+}
+
+.chart-selection-empty {
+    min-height: 220px;
+    text-align: center;
+}
+
+.chart-selection-empty-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 32px;
+    color: var(--color-secondary);
+}
+
+.chart-selection-reset {
+    min-width: 0;
 }
 
 .no-widget-hint {
     font-size: var(--font-size-md);
     text-align: center;
+    color: var(--color-paragraph);
+    max-width: 280px;
 }

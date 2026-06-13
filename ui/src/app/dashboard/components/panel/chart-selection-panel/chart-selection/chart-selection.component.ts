@@ -17,20 +17,29 @@
  */
 
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { ChartSummaryDto, ChartService } from '@streampipes/platform-services';
+import { ChartService, ChartSummaryDto } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../../services/auth.service';
 import { UserPrivilege } from '../../../../../core/auth/user-privilege.enum';
+import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
 import {
     FlexDirective,
+    FlexFillDirective,
     LayoutAlignDirective,
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { ChartPreviewComponent } from './chart-preview/chart-preview.component';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
+import {
+    MatFormField,
+    MatPrefix,
+    MatSuffix,
+} from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-chart-selection',
@@ -38,25 +47,34 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./chart-selection.component.scss'],
     imports: [
         FlexDirective,
+        FlexFillDirective,
         LayoutGapDirective,
         LayoutDirective,
         ChartPreviewComponent,
         LayoutAlignDirective,
         MatButton,
+        MatIconButton,
         MatIcon,
+        MatFormField,
+        MatPrefix,
+        MatSuffix,
+        MatInput,
         TranslatePipe,
+        MatTooltip,
     ],
 })
 export class ChartSelectionComponent implements OnInit {
     private dataViewService = inject(ChartService);
     private router = inject(Router);
-
     private authService = inject(AuthService);
+    private chartRegistryService = inject(ChartRegistry);
 
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter();
 
     charts: ChartSummaryDto[] = [];
+    filteredCharts: ChartSummaryDto[] = [];
+    searchTerm = '';
 
     hasChartWritePrivileges: boolean = false;
 
@@ -65,6 +83,7 @@ export class ChartSelectionComponent implements OnInit {
             this.charts = chartSummary.resources.sort((a, b) =>
                 a.name.localeCompare(b.name),
             );
+            this.applySearch();
         });
 
         this.hasChartWritePrivileges = this.authService.hasRole(
@@ -77,5 +96,39 @@ export class ChartSelectionComponent implements OnInit {
             queryParams: { editMode: true },
             state: { omitConfirm: true },
         });
+    }
+
+    onSearchTermChanged(value: string): void {
+        this.searchTerm = value;
+        this.applySearch();
+    }
+
+    clearSearch(): void {
+        this.searchTerm = '';
+        this.applySearch();
+    }
+
+    hasActiveSearch(): boolean {
+        return this.searchTerm.trim().length > 0;
+    }
+
+    private applySearch(): void {
+        const query = this.searchTerm.trim().toLowerCase();
+        if (!query) {
+            this.filteredCharts = this.charts;
+            return;
+        }
+
+        this.filteredCharts = this.charts.filter(chart =>
+            [
+                chart.name,
+                chart.datasetName,
+                chart.widgetType,
+                this.chartRegistryService.getChartTemplate(chart.widgetType)
+                    ?.label,
+            ]
+                .filter((value): value is string => !!value)
+                .some(value => value.toLowerCase().includes(query)),
+        );
     }
 }

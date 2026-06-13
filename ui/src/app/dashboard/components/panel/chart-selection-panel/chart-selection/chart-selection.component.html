@@ -16,35 +16,111 @@
 ~
 -->
 
-<div fxFlex="100" class="m-10" fxLayoutGap="10px" fxLayout="column">
-    @if (charts.length > 0) {
-        @for (chart of charts; track chart) {
-            <div>
+<div
+    fxFlex="100"
+    fxLayout="column"
+    fxLayoutGap="12px"
+    class="chart-selection-shell"
+>
+    <div fxLayout="column" fxLayoutGap="10px" class="chart-selection-toolbar">
+        <div
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="12px"
+        >
+            <div fxLayout="column" class="chart-selection-heading">
+                <span class="chart-selection-caption">
+                    {{ filteredCharts.length }}
+                    @if (filteredCharts.length === 1) {
+                        {{ 'chart available' | translate }}
+                    } @else {
+                        {{ 'charts available' | translate }}
+                    }
+                </span>
+            </div>
+
+            @if (hasChartWritePrivileges) {
+                <button
+                    mat-icon-button
+                    class="chart-selection-create"
+                    data-cy="create-chart-button"
+                    [matTooltip]="'Create chart' | translate"
+                    (click)="navigateToDataViewCreation()"
+                >
+                    <mat-icon>add</mat-icon>
+                </button>
+            }
+        </div>
+
+        <mat-form-field
+            appearance="outline"
+            subscriptSizing="dynamic"
+            class="chart-selection-search"
+        >
+            <mat-icon matPrefix>search</mat-icon>
+            <input
+                [placeholder]="'Search charts' | translate"
+                matInput
+                [value]="searchTerm"
+                (input)="onSearchTermChanged($any($event.target).value)"
+                data-cy="chart-selection-search"
+            />
+            @if (hasActiveSearch()) {
+                <button
+                    mat-icon-button
+                    matSuffix
+                    type="button"
+                    (click)="clearSearch()"
+                    [attr.aria-label]="'Clear search' | translate"
+                >
+                    <mat-icon>close</mat-icon>
+                </button>
+            }
+        </mat-form-field>
+    </div>
+
+    @if (charts.length > 0 && filteredCharts.length > 0) {
+        <div
+            fxFlexFill
+            fxLayout="column"
+            fxLayoutGap="8px"
+            class="chart-selection-results"
+        >
+            @for (chart of filteredCharts; track chart.elementId) {
                 <sp-chart-preview
                     [chart]="chart"
                     (addChartEmitter)="addChartEmitter.emit($event)"
                 >
                 </sp-chart-preview>
-            </div>
-        }
-    } @else {
+            }
+        </div>
+    } @else if (charts.length === 0) {
         <div fxLayoutAlign="center center" fxLayout="column" fxFlex="100">
             <span class="no-widget-hint">{{
                 'No charts found - create a new chart first to add it to this dashboard.'
                     | translate
             }}</span>
-
-            @if (hasChartWritePrivileges) {
-                <button
-                    mat-flat-button
-                    class="mt-10 mat-basic"
-                    data-cy="create-chart-button"
-                    (click)="navigateToDataViewCreation()"
-                >
-                    <mat-icon>add</mat-icon>
-                    {{ 'Create chart' | translate }}
-                </button>
-            }
+        </div>
+    } @else {
+        <div
+            fxLayoutAlign="center center"
+            fxLayout="column"
+            fxLayoutGap="8px"
+            fxFlex="100"
+            class="chart-selection-empty"
+        >
+            <mat-icon class="chart-selection-empty-icon">search_off</mat-icon>
+            <span class="no-widget-hint">{{
+                'No charts match your search.' | translate
+            }}</span>
+            <button
+                mat-button
+                type="button"
+                class="chart-selection-reset"
+                (click)="clearSearch()"
+            >
+                {{ 'Clear search' | translate }}
+            </button>
         </div>
     }
 </div>

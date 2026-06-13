@@ -18,32 +18,75 @@
 
 <div
     fxLayout="row"
+    fxLayoutAlign="space-between center"
+    fxLayoutGap="12px"
     class="data-view-preview-outer"
     [attr.data-cy]="'add-data-view-btn-' + chart.name.replaceAll(' ', '')"
-    (click)="addChartEmitter.emit(chart.elementId)"
+    (click)="addChart()"
 >
-    <div fxFlex fxLayout="column">
-        <h5>{{ chart.name }}</h5>
-        <div fxLayout="row" fxLayoutGap="15px" class="text-sm">
-            <span fxLayoutAlign="start center"
-                ><mat-icon color="primary">insert_chart</mat-icon></span
-            >
-            <span fxFlex fxLayoutAlign="start center">{{
-                widgetTypeLabel
-            }}</span>
+    <div
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="12px"
+        fxFlex
+        class="chart-preview-main"
+    >
+        <div
+            class="chart-preview-icon-shell"
+            fxLayout="row"
+            fxLayoutAlign="center center"
+            [matTooltip]="widgetTypeLabel"
+        >
+            <mat-icon>{{ widgetTypeIcon }}</mat-icon>
         </div>
-        @if (chart.datasetName) {
-            <div fxLayout="row" fxLayoutGap="15px" class="text-sm">
-                <span fxLayoutAlign="start center"
-                    ><mat-icon color="primary">folder</mat-icon></span
-                >
-                <span fxFlex fxLayoutAlign="start center">{{
-                    chart.datasetName
-                }}</span>
+
+        <div fxFlex fxLayout="column" class="chart-preview-copy">
+            <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="8px"
+                class="chart-preview-title-row"
+                [matTooltip]="chart.name"
+            >
+                <h5 fxFlex class="chart-preview-title">{{ chart.name }}</h5>
             </div>
-        }
+
+            <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="12px"
+                class="chart-preview-meta"
+            >
+                @if (chart.datasetName) {
+                    <span class="chart-preview-meta-item chart-preview-dataset">
+                        {{ chart.datasetName }}
+                    </span>
+                }
+            </div>
+        </div>
     </div>
-    <div fxLayoutAlign="end center">
-        <i class="material-icons">add</i>
+
+    <div
+        fxLayout="row"
+        fxLayoutAlign="end center"
+        fxLayoutGap="4px"
+        class="chart-preview-actions"
+    >
+        <button
+            mat-icon-button
+            type="button"
+            [matTooltip]="'Preview chart' | translate"
+            (click)="openPreview($event)"
+            data-cy="chart-preview-feature-card"
+        >
+            <mat-icon>visibility</mat-icon>
+        </button>
+        <div
+            class="chart-preview-add-indicator"
+            fxLayout="row"
+            fxLayoutAlign="center center"
+        >
+            <mat-icon>add</mat-icon>
+        </div>
     </div>
 </div>
