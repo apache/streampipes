@@ -18,9 +18,9 @@
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
-    AdapterDescription,
     AdapterMonitoringService,
     AdapterService,
+    AdapterSummaryDto,
     PipelineElementAssetService,
     SpLogMessage,
     SpMetricsEntry,
@@ -110,8 +110,8 @@ import { DatePipe } from '@angular/common';
     ],
 })
 export class ExistingAdaptersComponent implements OnInit, OnDestroy {
-    existingAdapters: AdapterDescription[] = [];
-    filteredAdapters: AdapterDescription[] = [];
+    existingAdapters: AdapterSummaryDto[] = [];
+    filteredAdapters: AdapterSummaryDto[] = [];
 
     currentFilter: AdapterFilterSettingsModel;
     operationInProgressAdapterId: string | undefined;
@@ -135,7 +135,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         resourceIdKey: 'elementId',
     };
 
-    dataSource: MatTableDataSource<AdapterDescription> =
+    dataSource: MatTableDataSource<AdapterSummaryDto> =
         new MatTableDataSource();
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
@@ -193,34 +193,46 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         };
     }
 
-    startAdapter(adapter: AdapterDescription) {
+    startAdapter(adapter: AdapterSummaryDto): void {
         this.operationInProgressAdapterId = adapter.elementId;
-        this.adapterService.startAdapter(adapter).subscribe(
-            _ => {
-                this.getAdaptersRunning();
-            },
-            error => {
-                this.operationInProgressAdapterId = undefined;
-                this.openAdapterStatusErrorDialog(adapter, error.error, true);
-            },
-        );
+        this.adapterService
+            .startAdapterByElementId(adapter.elementId)
+            .subscribe(
+                _ => {
+                    this.getAdaptersRunning();
+                },
+                error => {
+                    this.operationInProgressAdapterId = undefined;
+                    this.openAdapterStatusErrorDialog(
+                        adapter,
+                        error.error,
+                        true,
+                    );
+                },
+            );
     }
 
-    stopAdapter(adapter: AdapterDescription, forceStop = false) {
+    stopAdapter(adapter: AdapterSummaryDto, forceStop = false): void {
         this.operationInProgressAdapterId = adapter.elementId;
-        this.adapterService.stopAdapter(adapter, forceStop).subscribe(
-            _ => {
-                this.getAdaptersRunning();
-            },
-            error => {
-                this.operationInProgressAdapterId = undefined;
-                this.openAdapterStatusErrorDialog(adapter, error.error, false);
-            },
-        );
+        this.adapterService
+            .stopAdapterByElementId(adapter.elementId, forceStop)
+            .subscribe(
+                _ => {
+                    this.getAdaptersRunning();
+                },
+                error => {
+                    this.operationInProgressAdapterId = undefined;
+                    this.openAdapterStatusErrorDialog(
+                        adapter,
+                        error.error,
+                        false,
+                    );
+                },
+            );
     }
 
     startStopSelectedAdapters(
-        event: SpTableMultiActionExecuteEvent<AdapterDescription>,
+        event: SpTableMultiActionExecuteEvent<AdapterSummaryDto>,
     ) {
         if (event.action !== 'start' && event.action !== 'stop') {
             return;
@@ -253,10 +265,10 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     openAdapterStatusErrorDialog(
-        adapter: AdapterDescription,
+        adapter: AdapterSummaryDto,
         message: SpLogMessage,
         startAction: boolean,
-    ) {
+    ): void {
         const title = startAction
             ? this.startAdapterErrorText
             : this.stopAdapterErrorText;
@@ -283,7 +295,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    getMonitoringInfos(adapters: AdapterDescription[]) {
+    getMonitoringInfos(adapters: AdapterSummaryDto[]): void {
         const filteredElementIds = adapters.map(adapter => adapter.elementId);
 
         this.adapterMonitoringService
@@ -293,7 +305,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             });
     }
 
-    getIconUrl(adapter: AdapterDescription) {
+    getIconUrl(adapter: AdapterSummaryDto): string | undefined {
         if (adapter.includedAssets?.some(asset => asset.startsWith('icon.'))) {
             return (
                 this.pipelineElementAssetService.getAssetUrl(adapter.appId) +
@@ -302,7 +314,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         }
     }
 
-    showPermissionsDialog(adapter: AdapterDescription) {
+    showPermissionsDialog(adapter: AdapterSummaryDto): void {
         const dialogRef = this.dialogService.open(
             ObjectPermissionDialogComponent,
             {
@@ -330,11 +342,11 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
      * Start edit mode
      * @param adapter
      */
-    editAdapter(adapter: AdapterDescription) {
+    editAdapter(adapter: AdapterSummaryDto): void {
         this.router.navigate(['connect', 'edit', adapter.elementId]);
     }
 
-    deleteAdapter(adapter: AdapterDescription): void {
+    deleteAdapter(adapter: AdapterSummaryDto): void {
         const dialogRef: DialogRef<DeleteAdapterDialogComponent> =
             this.dialogService.open(DeleteAdapterDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,
@@ -353,12 +365,12 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     getAdaptersRunning(): void {
-        this.adapterService.getAdapters().subscribe(adapters => {
-            this.existingAdapters = adapters;
+        this.adapterService.getAdapterSummary().subscribe(adapterSummary => {
+            this.existingAdapters = adapterSummary.resources;
             this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
             this.applyAdapterFilters(this.currentFilterIds);
             this.operationInProgressAdapterId = undefined;
-            this.getMonitoringInfos(adapters);
+            this.getMonitoringInfos(this.existingAdapters);
             setTimeout(() => {
                 this.dataSource.sort = this.sort;
             });
@@ -367,21 +379,24 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     applyAdapterFilters(elementIds: Set<string>): void {
         this.currentFilterIds = elementIds;
-        this.filteredAdapters = this.adapterFilter
-            .transform(this.existingAdapters, this.currentFilter)
-            .filter(a => {
-                if (elementIds === undefined) {
-                    return false;
-                } else if (elementIds.size === 0) {
-                    return true;
-                } else {
-                    return elementIds.has(a.elementId);
-                }
-            });
+        this.filteredAdapters = (
+            this.adapterFilter.transform(
+                this.existingAdapters,
+                this.currentFilter,
+            ) as AdapterSummaryDto[]
+        ).filter(a => {
+            if (elementIds === undefined) {
+                return false;
+            } else if (elementIds.size === 0) {
+                return true;
+            } else {
+                return elementIds.has(a.elementId);
+            }
+        });
         this.dataSource.data = this.filteredAdapters;
     }
 
-    startAdapterTutorial() {
+    startAdapterTutorial(): void {
         this.shepherdService.startAdapterTour();
     }
 
@@ -391,18 +406,18 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         });
     }
 
-    applyFilter(filter: AdapterFilterSettingsModel) {
+    applyFilter(filter: AdapterFilterSettingsModel): void {
         this.currentFilter = filter;
         if (this.dataSource) {
             this.applyAdapterFilters(this.currentFilterIds);
         }
     }
 
-    navigateToDetailsOverviewPage(adapter: AdapterDescription): void {
+    navigateToDetailsOverviewPage(adapter: AdapterSummaryDto): void {
         this.router.navigate(['connect', 'details', adapter.elementId]);
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.user$?.unsubscribe();
         this.tutorial$?.unsubscribe();
         this.assetFilter$?.unsubscribe();

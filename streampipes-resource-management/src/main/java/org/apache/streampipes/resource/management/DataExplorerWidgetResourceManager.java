@@ -18,17 +18,41 @@
 
 package org.apache.streampipes.resource.management;
 
+import org.apache.streampipes.model.datalake.ChartSummaryDto;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+
+import org.springframework.security.core.Authentication;
+
+import java.util.Collection;
 
 public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataExplorerWidgetModel> {
 
   private final DataExplorerResourceManager dashboardManager;
 
   public DataExplorerWidgetResourceManager(DataExplorerResourceManager dashboardManager,
-      IDataExplorerWidgetStorage db) {
+                                           IDataExplorerWidgetStorage db) {
     super(db, DataExplorerWidgetModel.class);
     this.dashboardManager = dashboardManager;
+  }
+
+  public ResourceSummaryDto<ChartSummaryDto> getSummary(Authentication auth) {
+    var charts = findAll()
+        .stream()
+        .filter(chart -> permissionEvaluator.hasPermission(auth, chart.getElementId(), "READ"))
+        .map(chart -> new ChartSummaryDto(
+            chart.getElementId(),
+            getChartName(chart),
+            getCreatedAt(chart),
+            getLastModified(chart),
+            chart.getWidgetType(),
+            isMultiSourceChart(chart),
+            chart.getHealthStatus()
+        ))
+        .toList();
+
+    return new ResourceSummaryDto<>(charts, charts.size());
   }
 
   @Override
@@ -41,5 +65,40 @@ public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataE
     dashboardManager.findAll().stream()
         .filter(dashboard -> dashboard.getWidgets().removeIf(w -> w.getDataViewElementId().equals(widgetElementId)))
         .forEach(dashboardManager::update);
+  }
+
+  private boolean isMultiSourceChart(DataExplorerWidgetModel chart) {
+    if (chart == null || chart.getDataConfig() == null) {
+      return false;
+    }
+
+    Object sourceConfigs = chart.getDataConfig().get("sourceConfigs");
+
+    if (sourceConfigs instanceof Collection<?>) {
+      return ((Collection<?>) sourceConfigs).size() > 1;
+    }
+
+    return false;
+  }
+
+  private String getChartName(DataExplorerWidgetModel chart) {
+    if (chart == null || chart.getBaseAppearanceConfig() == null) {
+      return chart != null ? chart.getElementId() : null;
+    }
+
+    Object widgetTitle = chart.getBaseAppearanceConfig().get("widgetTitle");
+    return widgetTitle != null ? widgetTitle.toString() : chart.getElementId();
+  }
+
+  private Long getCreatedAt(DataExplorerWidgetModel chart) {
+    return chart != null && chart.getMetadata() != null
+        ? chart.getMetadata().getCreatedAtEpochMs()
+        : null;
+  }
+
+  private Long getLastModified(DataExplorerWidgetModel chart) {
+    return chart != null && chart.getMetadata() != null
+        ? chart.getMetadata().getLastModifiedEpochMs()
+        : null;
   }
 }

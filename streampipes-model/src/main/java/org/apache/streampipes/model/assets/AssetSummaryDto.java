@@ -16,19 +16,10 @@
  *
  */
 
-export class DataLakeConfigurationEntry {
-    public name: string;
-    public measureName: string;
-    public pipelines: string[] = [];
-    public eventsTotal = 0;
-    public eventsLatest = 0;
-    public eventsTotalLoading = false;
-    public eventsLatestLoading = false;
-    public remove = true;
-    public elementId: string;
-    public retentionConfigured = false;
-    public lastExport: string | null = null;
-    public lastRetentionStatus: boolean | null = null;
+package org.apache.streampipes.model.assets;
 
-    constructor() {}
+public record AssetSummaryDto(String elementId,
+                              String assetName,
+                              String assetDescription,
+                              boolean removable) {
 }

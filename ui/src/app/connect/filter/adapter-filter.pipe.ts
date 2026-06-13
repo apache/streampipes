@@ -17,7 +17,10 @@
  */
 
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
-import { AdapterDescription } from '@streampipes/platform-services';
+import {
+    AdapterDescription,
+    AdapterSummaryDto,
+} from '@streampipes/platform-services';
 import { AdapterFilterSettingsModel } from '../model/adapter-filter-settings.model';
 
 @Pipe({ name: 'adapterFilter' })
@@ -26,9 +29,9 @@ export class AdapterFilterPipe implements PipeTransform {
     constructor() {}
 
     transform(
-        adapterDescriptions: AdapterDescription[],
+        adapterDescriptions: Array<AdapterDescription | AdapterSummaryDto>,
         activeFilters: AdapterFilterSettingsModel,
-    ): AdapterDescription[] {
+    ): Array<AdapterDescription | AdapterSummaryDto> {
         if (!activeFilters) {
             return adapterDescriptions;
         } else {
@@ -39,7 +42,7 @@ export class AdapterFilterPipe implements PipeTransform {
     }
 
     private meetsFilterCondition(
-        adapterDescription: AdapterDescription,
+        adapterDescription: AdapterDescription | AdapterSummaryDto,
         activeFilters: AdapterFilterSettingsModel,
     ): boolean {
         return this.meetsFilterTextCondition(
@@ -49,7 +52,7 @@ export class AdapterFilterPipe implements PipeTransform {
     }
 
     private meetsFilterTextCondition(
-        adapterDescription: AdapterDescription,
+        adapterDescription: AdapterDescription | AdapterSummaryDto,
         filterTerm: string,
     ): boolean {
         if (filterTerm === undefined || filterTerm === '') {

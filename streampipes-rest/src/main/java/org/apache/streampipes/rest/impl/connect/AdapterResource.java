@@ -29,12 +29,15 @@ import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterSummaryDto;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.model.util.ElementIdGenerator;
+import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
@@ -339,8 +342,18 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     return managementService.getAllAdapterInstances();
   }
 
+  @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResourceSummaryDto<AdapterSummaryDto> getAdapterSummary() {
+    return getResourceManager().getSummary(getAuthentication());
+  }
+
   private AdapterDescription getAdapterDescription(String elementId) throws AdapterException {
     return managementService.getAdapter(elementId);
+  }
+
+  private AdapterResourceManager getResourceManager() {
+    return getSpResourceManager().manageAdapters();
   }
 
   private CompactAdapter toCompactAdapterDescription(AdapterDescription adapterDescription) throws Exception {

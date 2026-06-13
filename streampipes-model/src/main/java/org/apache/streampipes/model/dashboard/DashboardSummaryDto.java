@@ -21,6 +21,6 @@ package org.apache.streampipes.model.dashboard;
 public record DashboardSummaryDto(String elementId,
                                   String name,
                                   String description,
-                                  long createdAtEpochMs,
-                                  long lastModifiedEpochMs) {
+                                  Long createdAtEpochMs,
+                                  Long lastModifiedEpochMs) {
 }

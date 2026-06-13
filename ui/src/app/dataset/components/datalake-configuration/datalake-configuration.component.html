@@ -199,9 +199,9 @@
                                         <i
                                             class="material-icons"
                                             [ngStyle]="{
-                                                color: configurationEntry?.retention
+                                                color: configurationEntry.retentionConfigured
                                                     ? 'var(--color-success)'
-                                                    : 'var(--color-neutral',
+                                                    : 'var(--color-neutral)',
                                             }"
                                             >history</i
                                         >
@@ -226,19 +226,15 @@
                                 fxLayout="row"
                                 fxLayoutAlign="start center"
                             >
-                                @if (configurationEntry?.retention) {
+                                @if (configurationEntry.retentionConfigured) {
                                     <button
                                         color="accent"
                                         mat-icon-button
                                         [matTooltip]="
                                             ('Open Retention Log' | translate) +
-                                            (configurationEntry?.retention
-                                                ?.retentionExportConfig
-                                                ?.lastExport
+                                            (configurationEntry.lastExport
                                                 ? ' • ' +
-                                                  (configurationEntry.retention
-                                                      .retentionExportConfig
-                                                      .lastExport
+                                                  (configurationEntry.lastExport
                                                       | date
                                                           : 'yyyy-MM-dd HH:mm:ss')
                                                 : '')
@@ -247,9 +243,7 @@
                                         matTooltipPosition="above"
                                         (click)="
                                             openRetentionLog(
-                                                configurationEntry?.retention
-                                                    .retentionExportConfig
-                                                    .retentionLog
+                                                configurationEntry.elementId
                                             )
                                         "
                                     >
@@ -257,22 +251,12 @@
                                             class="material-icons"
                                             [ngStyle]="{
                                                 color:
-                                                    configurationEntry
-                                                        ?.retention
-                                                        ?.retentionExportConfig
-                                                        ?.retentionLog
-                                                        ?.length &&
-                                                    configurationEntry.retention
-                                                        .retentionExportConfig
-                                                        .retentionLog[
-                                                        configurationEntry
-                                                            .retention
-                                                            .retentionExportConfig
-                                                            .retentionLog
-                                                            .length - 1
-                                                    ].status
-                                                        ? 'green'
-                                                        : 'red',
+                                                    configurationEntry.lastRetentionStatus ===
+                                                    null
+                                                        ? 'var(--color-neutral)'
+                                                        : configurationEntry.lastRetentionStatus
+                                                          ? 'green'
+                                                          : 'red',
                                             }"
                                             >list_alt</i
                                         >

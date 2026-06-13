@@ -18,8 +18,11 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.model.assets.AssetSummaryDto;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
+import org.apache.streampipes.model.resource.ResourceSummaryDto;
+import org.apache.streampipes.resource.management.AssetResourceManager;
 import org.apache.streampipes.resource.management.CrudResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -52,6 +55,12 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   public AssetManagementResource() {
     IAssetStorage assetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
     this.resourceManager = new CrudResourceManager<>(assetStorage, SpAssetModel.class);
+  }
+
+  @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.IS_AUTHENTICATED)
+  public ResourceSummaryDto<AssetSummaryDto> getAssetSummary() {
+    return getResourceManager().getSummary(getAuthentication());
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -103,5 +112,9 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
    */
   public boolean hasWriteAuthority() {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ASSETS_VALUE);
+  }
+
+  private AssetResourceManager getResourceManager() {
+    return getSpResourceManager().manageAssets();
   }
 }
