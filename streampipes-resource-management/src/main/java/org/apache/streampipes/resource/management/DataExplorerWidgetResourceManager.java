@@ -26,6 +26,8 @@ import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.springframework.security.core.Authentication;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataExplorerWidgetModel> {
 
@@ -44,6 +46,7 @@ public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataE
         .map(chart -> new ChartSummaryDto(
             chart.getElementId(),
             getChartName(chart),
+            getDatasetName(chart),
             getCreatedAt(chart),
             getLastModified(chart),
             chart.getWidgetType(),
@@ -79,6 +82,25 @@ public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataE
     }
 
     return false;
+  }
+
+  private String getDatasetName(DataExplorerWidgetModel chart) {
+    if (chart == null || chart.getDataConfig() == null) {
+      return null;
+    }
+
+    Object sourceConfigs = chart.getDataConfig().get("sourceConfigs");
+    if (!(sourceConfigs instanceof List<?> configs) || configs.isEmpty()) {
+      return null;
+    }
+
+    Object firstConfig = configs.get(0);
+    if (!(firstConfig instanceof Map<?, ?> config)) {
+      return null;
+    }
+
+    Object measureName = config.get("measureName");
+    return measureName instanceof String ? (String) measureName : null;
   }
 
   private String getChartName(DataExplorerWidgetModel chart) {
