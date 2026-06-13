@@ -39,17 +39,37 @@
                 </span>
             </div>
 
-            @if (hasChartWritePrivileges) {
+            <div
+                fxLayout="row"
+                fxLayoutAlign="end center"
+                fxLayoutGap="4px"
+                class="chart-selection-actions"
+            >
                 <button
                     mat-icon-button
-                    class="chart-selection-create"
-                    data-cy="create-chart-button"
-                    [matTooltip]="'Create chart' | translate"
-                    (click)="navigateToDataViewCreation()"
+                    type="button"
+                    class="chart-selection-refresh"
+                    data-cy="refresh-chart-button"
+                    [disabled]="isRefreshing"
+                    [matTooltip]="'Refresh charts' | translate"
+                    (click)="refreshCharts()"
                 >
-                    <mat-icon>add</mat-icon>
+                    <mat-icon>refresh</mat-icon>
                 </button>
-            }
+
+                @if (hasChartWritePrivileges) {
+                    <button
+                        mat-icon-button
+                        type="button"
+                        class="chart-selection-create"
+                        data-cy="create-chart-button"
+                        [matTooltip]="'Create chart in new tab' | translate"
+                        (click)="navigateToDataViewCreation()"
+                    >
+                        <mat-icon>add</mat-icon>
+                    </button>
+                }
+            </div>
         </div>
 
         <mat-form-field

@@ -18,10 +18,10 @@
 
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { ChartService, ChartSummaryDto } from '@streampipes/platform-services';
-import { Router } from '@angular/router';
 import { AuthService } from '../../../../../services/auth.service';
 import { UserPrivilege } from '../../../../../core/auth/user-privilege.enum';
 import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
+import { ChartRoutingService } from '../../../../../chart-shared/services/chart-routing.service';
 import {
     FlexDirective,
     FlexFillDirective,
@@ -65,9 +65,9 @@ import { MatTooltip } from '@angular/material/tooltip';
 })
 export class ChartSelectionComponent implements OnInit {
     private dataViewService = inject(ChartService);
-    private router = inject(Router);
     private authService = inject(AuthService);
     private chartRegistryService = inject(ChartRegistry);
+    private chartRoutingService = inject(ChartRoutingService);
 
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter();
@@ -75,26 +75,37 @@ export class ChartSelectionComponent implements OnInit {
     charts: ChartSummaryDto[] = [];
     filteredCharts: ChartSummaryDto[] = [];
     searchTerm = '';
+    isRefreshing = false;
 
     hasChartWritePrivileges: boolean = false;
 
     ngOnInit(): void {
-        this.dataViewService.getChartSummary().subscribe(chartSummary => {
-            this.charts = chartSummary.resources.sort((a, b) =>
-                a.name.localeCompare(b.name),
-            );
-            this.applySearch();
-        });
-
         this.hasChartWritePrivileges = this.authService.hasRole(
             UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
         );
+
+        this.refreshCharts();
     }
 
     navigateToDataViewCreation(): void {
-        this.router.navigate(['chart', 'create'], {
-            queryParams: { editMode: true },
-            state: { omitConfirm: true },
+        this.chartRoutingService.navigateToCreateChart(true, undefined, true);
+    }
+
+    refreshCharts(): void {
+        this.isRefreshing = true;
+        this.dataViewService.getChartSummary().subscribe({
+            next: chartSummary => {
+                this.charts = chartSummary.resources.sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                );
+                this.applySearch();
+            },
+            complete: () => {
+                this.isRefreshing = false;
+            },
+            error: () => {
+                this.isRefreshing = false;
+            },
         });
     }
 
