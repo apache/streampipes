@@ -55,8 +55,6 @@ import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
-import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.breadcrumb';
 import { Subscription } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
@@ -69,7 +67,6 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { SpConnectFilterToolbarComponent } from '../filter-toolbar/filter-toolbar.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { AdapterStatusLightComponent } from './adapter-status-light/adapter-status-light.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -88,7 +85,6 @@ import { DatePipe } from '@angular/common';
         LayoutGapDirective,
         MatButton,
         MatIcon,
-        SpConnectFilterToolbarComponent,
         MatIconButton,
         MatTooltip,
         SpBasicHeaderTitleComponent,
@@ -112,8 +108,6 @@ import { DatePipe } from '@angular/common';
 export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     existingAdapters: AdapterSummaryDto[] = [];
     filteredAdapters: AdapterSummaryDto[] = [];
-
-    currentFilter: AdapterFilterSettingsModel;
     operationInProgressAdapterId: string | undefined;
 
     @ViewChild(MatSort)
@@ -158,7 +152,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     private currentUserService = inject(CurrentUserService);
     private router = inject(Router);
     private pipelineElementAssetService = inject(PipelineElementAssetService);
-    private adapterFilter = inject(AdapterFilterPipe);
     private breadcrumbService = inject(SpBreadcrumbService);
     private shepherdService = inject(ShepherdService);
     private translate = inject(TranslateService);
@@ -379,12 +372,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
 
     applyAdapterFilters(elementIds: Set<string>): void {
         this.currentFilterIds = elementIds;
-        this.filteredAdapters = (
-            this.adapterFilter.transform(
-                this.existingAdapters,
-                this.currentFilter,
-            ) as AdapterSummaryDto[]
-        ).filter(a => {
+        this.filteredAdapters = this.existingAdapters.filter(a => {
             if (elementIds === undefined) {
                 return false;
             } else if (elementIds.size === 0) {
@@ -404,13 +392,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.router.navigate(['connect', 'catalog']).then(() => {
             this.shepherdService.trigger('new-adapter-clicked');
         });
-    }
-
-    applyFilter(filter: AdapterFilterSettingsModel): void {
-        this.currentFilter = filter;
-        if (this.dataSource) {
-            this.applyAdapterFilters(this.currentFilterIds);
-        }
     }
 
     navigateToDetailsOverviewPage(adapter: AdapterSummaryDto): void {

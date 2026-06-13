@@ -17,7 +17,10 @@
   -->
 
 <div fxLayout="column">
-    @if (shouldShowGroupingControls && !showSelectionCheckboxes) {
+    @if (
+        (shouldShowGroupingControls || shouldShowNameSearch) &&
+        !showSelectionCheckboxes
+    ) {
         <div
             class="grouping-toolbar grouping-toolbar--standalone"
             fxLayout="row wrap"
@@ -31,8 +34,14 @@
                 fxLayoutAlign="end center"
                 fxLayoutGap="12px"
             >
-                <ng-container *ngTemplateOutlet="groupingControls">
-                </ng-container>
+                @if (shouldShowNameSearch) {
+                    <ng-container *ngTemplateOutlet="nameSearchField">
+                    </ng-container>
+                }
+                @if (shouldShowGroupingControls) {
+                    <ng-container *ngTemplateOutlet="groupingControls">
+                    </ng-container>
+                }
             </div>
         </div>
     }
@@ -148,19 +157,51 @@
                 }
             </div>
 
-            @if (shouldShowGroupingControls) {
+            @if (shouldShowGroupingControls || shouldShowNameSearch) {
                 <div
                     class="selection-toolbar__right"
-                    fxLayout="row"
+                    fxLayout="row wrap"
                     fxLayoutAlign="end center"
                     fxLayoutGap="8px"
                 >
-                    <ng-container *ngTemplateOutlet="groupingControls">
-                    </ng-container>
+                    @if (shouldShowNameSearch) {
+                        <ng-container *ngTemplateOutlet="nameSearchField">
+                        </ng-container>
+                    }
+                    @if (shouldShowGroupingControls) {
+                        <ng-container *ngTemplateOutlet="groupingControls">
+                        </ng-container>
+                    }
                 </div>
             }
         </div>
     }
+
+    <ng-template #nameSearchField>
+        <mat-form-field class="form-field-small table-search-field">
+            <mat-icon matPrefix>search</mat-icon>
+            <input
+                matInput
+                [placeholder]="
+                    nameSearchConfig?.placeholder ?? ('Search' | translate)
+                "
+                [value]="nameSearchTerm"
+                (input)="onNameSearchInput($any($event.target).value)"
+            />
+            @if (nameSearchTerm) {
+                <button
+                    mat-icon-button
+                    matSuffix
+                    type="button"
+                    class="table-search-field__clear"
+                    [attr.aria-label]="'Clear search' | translate"
+                    (click)="clearNameSearch()"
+                >
+                    <mat-icon>close</mat-icon>
+                </button>
+            }
+        </mat-form-field>
+    </ng-template>
 
     <ng-template #groupingControls>
         @if (viewMode === 'grouped') {

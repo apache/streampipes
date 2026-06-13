@@ -61,6 +61,10 @@
                 featureCardId="measurement"
                 [dataSource]="dataSource"
                 [columns]="displayedColumns"
+                [nameSearchConfig]="{
+                    enabled: true,
+                    placeholder: 'Search datasets',
+                }"
                 [assetContextConfig]="assetContextConfig"
                 [showActionsMenu]="true"
                 matSort

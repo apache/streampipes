@@ -24,6 +24,10 @@
     [multiActionOptions]="
         hasPipelineWritePrivileges ? bulkPipelineActionOptions : []
     "
+    [nameSearchConfig]="{
+        enabled: true,
+        searchKey: ['name', 'description'],
+    }"
     featureCardId="pipeline"
     resourceIdKey="elementId"
     [assetContextConfig]="assetContextConfig"

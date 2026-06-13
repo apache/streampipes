@@ -25,6 +25,10 @@
             fxFlex="100"
             [columns]="displayedColumns"
             [assetContextConfig]="assetContextConfig"
+            [nameSearchConfig]="{
+                enabled: true,
+                searchKey: ['name', 'description'],
+            }"
             featureCardId="dashboard"
             [showActionsMenu]="true"
             [rowsClickable]="true"
