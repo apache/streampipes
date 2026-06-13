@@ -46,6 +46,10 @@
     margin-left: auto;
 }
 
+.grouping-toolbar__left {
+    flex: 1 1 auto;
+}
+
 .selection-toolbar__actions-inline {
     margin-left: var(--space-xs);
     align-items: center;
@@ -61,7 +65,9 @@
 }
 
 .selection-toolbar__actions-inline .mat-mdc-form-field,
-.grouping-toolbar__controls .mat-mdc-form-field {
+.grouping-toolbar__controls .mat-mdc-form-field,
+.selection-toolbar__left .mat-mdc-form-field,
+.grouping-toolbar__left .mat-mdc-form-field {
     margin-bottom: 0;
 }
 
@@ -72,6 +78,14 @@
 
 .selection-toolbar__actions {
     margin-left: auto;
+}
+
+.table-search-field {
+    min-width: 220px;
+}
+
+.table-search-field__clear {
+    color: var(--color-text-2);
 }
 
 .mat-mdc-row:hover {

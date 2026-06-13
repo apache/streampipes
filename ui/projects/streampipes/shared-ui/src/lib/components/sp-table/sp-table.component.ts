@@ -69,7 +69,12 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatFormField } from '@angular/material/form-field';
+import {
+    MatFormField,
+    MatPrefix,
+    MatSuffix,
+} from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { Subscription } from 'rxjs';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { SpAssetBrowserService } from '../asset-browser/asset-browser.service';
@@ -82,6 +87,7 @@ import {
     SpTableAssetContextConfig,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
+    SpTableNameSearchConfig,
     SpTableResolvedAssetContext,
 } from './sp-table.model';
 import { SpTableAssetContextService } from './sp-asset-context/sp-table-asset-context.service';
@@ -126,6 +132,9 @@ type SpTableRenderedRow<T> = T | SpTableGroupHeaderRow;
         MatIcon,
         MatCheckbox,
         MatFormField,
+        MatPrefix,
+        MatSuffix,
+        MatInput,
         MatMenuTrigger,
         MatMenu,
         MatSelect,
@@ -175,6 +184,7 @@ export class SpTableComponent<T>
     @Input() featureCardId: string;
     @Input() resourceIdKey = 'elementId';
     @Input() assetContextConfig?: SpTableAssetContextConfig;
+    @Input() nameSearchConfig?: SpTableNameSearchConfig<T>;
 
     @Input() dataSource: MatTableDataSource<T>;
 
@@ -193,6 +203,7 @@ export class SpTableComponent<T>
 
     visiblePageRows: T[] = [];
     selectedMultiAction: string | null = null;
+    nameSearchTerm = '';
     viewMode: SpTableGroupViewMode = 'list';
     groupBy: SpTableGroupingMode = 'asset';
     groupedSections: SpTableGroupedSection<T>[] = [];
@@ -206,6 +217,10 @@ export class SpTableComponent<T>
     private renderedDataSubscription?: Subscription;
     private assetDataSubscription?: Subscription;
     private viewInitialized = false;
+    private defaultFilterPredicates = new WeakMap<
+        MatTableDataSource<T>,
+        (data: T, filter: string) => boolean
+    >();
     private assetContextIndex = new Map<
         string,
         Map<string, SpTableResolvedAssetContext>
@@ -252,6 +267,7 @@ export class SpTableComponent<T>
             this.selection.clear();
             this.emitSelection();
             this.visiblePageRows = [];
+            this.configureNameSearch();
             if (this.viewInitialized) {
                 this.bindDataSource();
             }
@@ -274,6 +290,10 @@ export class SpTableComponent<T>
             this.updateCompactLayout();
             this.applyAssetContextSortingAccessor();
             this.refreshRenderedRows();
+        }
+
+        if (changes['nameSearchConfig'] && !changes['dataSource']) {
+            this.configureNameSearch();
         }
     }
 
@@ -321,6 +341,18 @@ export class SpTableComponent<T>
 
     get shouldShowGroupingControls(): boolean {
         return !!this.assetContextConfig;
+    }
+
+    get shouldShowNameSearch(): boolean {
+        return !!this.nameSearchConfig?.enabled;
+    }
+
+    get nameSearchKeys(): Array<keyof T | 'name'> {
+        if (!this.nameSearchConfig?.searchKey?.length) {
+            return ['name'];
+        }
+
+        return this.nameSearchConfig.searchKey;
     }
 
     get renderedDataSource(): MatTableDataSource<T> | SpTableRenderedRow<T>[] {
@@ -476,6 +508,21 @@ export class SpTableComponent<T>
         this.refreshRenderedRows();
     }
 
+    onNameSearchInput(value: string) {
+        this.nameSearchTerm = value;
+        if (!this.dataSource) {
+            return;
+        }
+
+        this.dataSource.filter = value.trim().toLocaleLowerCase();
+        this.paginator?.firstPage();
+        this.refreshRenderedRows();
+    }
+
+    clearNameSearch() {
+        this.onNameSearchInput('');
+    }
+
     isGroupHeaderRow = (_: number, row: SpTableRenderedRow<T>) =>
         this.hasGroupHeaderMarker(row);
 
@@ -487,6 +534,7 @@ export class SpTableComponent<T>
             return;
         }
 
+        this.configureNameSearch();
         this.dataSource.paginator = this.paginator;
 
         this.renderedDataSubscription?.unsubscribe();
@@ -497,6 +545,47 @@ export class SpTableComponent<T>
 
     private refreshRenderedRows() {
         this.updateRenderedState(this.getCurrentPageRows(), false);
+    }
+
+    private configureNameSearch() {
+        if (!this.dataSource) {
+            return;
+        }
+
+        if (!this.defaultFilterPredicates.has(this.dataSource)) {
+            this.defaultFilterPredicates.set(
+                this.dataSource,
+                this.dataSource.filterPredicate,
+            );
+        }
+
+        const defaultFilterPredicate =
+            this.defaultFilterPredicates.get(this.dataSource) ??
+            this.dataSource.filterPredicate;
+
+        if (!this.shouldShowNameSearch) {
+            this.nameSearchTerm = '';
+            this.dataSource.filterPredicate = defaultFilterPredicate;
+            this.dataSource.filter = '';
+            return;
+        }
+
+        this.dataSource.filterPredicate = (row, filter) => {
+            const normalizedFilter = filter.trim().toLocaleLowerCase();
+            if (!normalizedFilter) {
+                return true;
+            }
+
+            return this.nameSearchKeys.some(searchKey => {
+                const searchValue = (row as Record<string, unknown>)[
+                    searchKey as string
+                ];
+                return String(searchValue ?? '')
+                    .toLocaleLowerCase()
+                    .includes(normalizedFilter);
+            });
+        };
+        this.dataSource.filter = this.nameSearchTerm.trim().toLocaleLowerCase();
     }
 
     private getCurrentPageRows(): T[] {
