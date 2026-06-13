@@ -19,8 +19,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
-import { Observable, shareReplay } from 'rxjs';
-import { LoginModel } from '../components/login/login.model';
+import { Observable } from 'rxjs';
 import { RegistrationModel } from '../components/register/registration.model';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
@@ -28,19 +27,6 @@ import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 export class LoginService {
     private http = inject(HttpClient);
     private platformServicesCommons = inject(PlatformServicesCommons);
-
-    private settings$?: Observable<LoginModel>;
-
-    fetchLoginSettings(): Observable<LoginModel> {
-        if (!this.settings$) {
-            this.settings$ = this.http
-                .get<LoginModel>(
-                    `${this.platformServicesCommons.apiBasePath}/auth/settings`,
-                )
-                .pipe(shareReplay({ bufferSize: 1, refCount: true }));
-        }
-        return this.settings$;
-    }
 
     login(credentials): Observable<any> {
         return this.http.post(
