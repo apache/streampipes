@@ -23,14 +23,14 @@ import {
     RouterStateSnapshot,
     UrlTree,
 } from '@angular/router';
-import { LoginService } from '../../../login/services/login.service';
+import { LoginSettingsService } from '../../../login/services/login-settings.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class RestorePasswordAllowedCanActivateGuard {
     private router = inject(Router);
-    private loginService = inject(LoginService);
+    private loginSettingsService = inject(LoginSettingsService);
 
     canActivate(
         _route: ActivatedRouteSnapshot,
@@ -40,8 +40,8 @@ export class RestorePasswordAllowedCanActivateGuard {
         | Promise<boolean | UrlTree>
         | boolean
         | UrlTree {
-        return this.loginService
-            .fetchLoginSettings()
+        return this.loginSettingsService
+            .getSettings()
             .pipe(
                 map(config =>
                     config.allowPasswordRecovery

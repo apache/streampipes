@@ -26,7 +26,7 @@ import {
     RouterStateSnapshot,
 } from '@angular/router';
 import { CurrentUserService } from '@streampipes/shared-ui';
-import { LoginService } from '../../../login/services/login.service';
+import { LoginSettingsService } from '../../../login/services/login-settings.service';
 import { of, take } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -37,7 +37,7 @@ export class TermsCanActivateChildrenGuard implements CanActivateChild {
         state: RouterStateSnapshot,
     ): MaybeAsync<GuardResult> {
         const currentUser = this.currentUserService.getCurrentUser();
-        return this.loginService.fetchLoginSettings().pipe(
+        return this.loginSettingsService.getSettings().pipe(
             take(1),
             map(settings => {
                 const needsAck =
@@ -56,7 +56,7 @@ export class TermsCanActivateChildrenGuard implements CanActivateChild {
     }
 
     private currentUserService = inject(CurrentUserService);
-    private loginService = inject(LoginService);
+    private loginSettingsService = inject(LoginSettingsService);
 
     private router = inject(Router);
 }
