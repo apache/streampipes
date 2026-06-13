@@ -74,6 +74,7 @@ export interface PipelineSummaryDto {
 export interface ChartSummaryDto {
     elementId: string;
     name: string;
+    datasetName: string | null;
     createdAtEpochMs: number | null;
     lastModifiedEpochMs: number | null;
     multiSourceChart: boolean;

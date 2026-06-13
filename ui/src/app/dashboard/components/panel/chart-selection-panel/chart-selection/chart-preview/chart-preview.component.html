@@ -19,14 +19,11 @@
 <div
     fxLayout="row"
     class="data-view-preview-outer"
-    [attr.data-cy]="
-        'add-data-view-btn-' +
-        chart.baseAppearanceConfig.widgetTitle.replaceAll(' ', '')
-    "
+    [attr.data-cy]="'add-data-view-btn-' + chart.name.replaceAll(' ', '')"
     (click)="addChartEmitter.emit(chart.elementId)"
 >
     <div fxFlex fxLayout="column">
-        <h5>{{ chart.baseAppearanceConfig.widgetTitle }}</h5>
+        <h5>{{ chart.name }}</h5>
         <div fxLayout="row" fxLayoutGap="15px" class="text-sm">
             <span fxLayoutAlign="start center"
                 ><mat-icon color="primary">insert_chart</mat-icon></span
@@ -35,14 +32,16 @@
                 widgetTypeLabel
             }}</span>
         </div>
-        <div fxLayout="row" fxLayoutGap="15px" class="text-sm">
-            <span fxLayoutAlign="start center"
-                ><mat-icon color="primary">folder</mat-icon></span
-            >
-            <span fxFlex fxLayoutAlign="start center">{{
-                chart.dataConfig.sourceConfigs[0].measureName
-            }}</span>
-        </div>
+        @if (chart.datasetName) {
+            <div fxLayout="row" fxLayoutGap="15px" class="text-sm">
+                <span fxLayoutAlign="start center"
+                    ><mat-icon color="primary">folder</mat-icon></span
+                >
+                <span fxFlex fxLayoutAlign="start center">{{
+                    chart.datasetName
+                }}</span>
+            </div>
+        }
     </div>
     <div fxLayoutAlign="end center">
         <i class="material-icons">add</i>

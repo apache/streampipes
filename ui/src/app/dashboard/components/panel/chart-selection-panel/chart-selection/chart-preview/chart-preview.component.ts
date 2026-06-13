@@ -24,7 +24,7 @@ import {
     Output,
     inject,
 } from '@angular/core';
-import { DataExplorerWidgetModel } from '@streampipes/platform-services';
+import { ChartSummaryDto } from '@streampipes/platform-services';
 import { ChartRegistry } from '../../../../../../chart-shared/registry/chart-registry.service';
 import {
     FlexDirective,
@@ -50,14 +50,14 @@ export class ChartPreviewComponent implements OnInit {
     private widgetRegistryService = inject(ChartRegistry);
 
     @Input()
-    chart: DataExplorerWidgetModel;
+    chart: ChartSummaryDto;
 
     widgetTypeLabel: string;
 
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter<string>();
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.widgetTypeLabel = this.widgetRegistryService.getChartTemplate(
             this.chart.widgetType,
         ).label;

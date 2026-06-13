@@ -20,6 +20,7 @@ package org.apache.streampipes.model.datalake;
 
 public record ChartSummaryDto(String elementId,
                               String name,
+                              String datasetName,
                               Long createdAtEpochMs,
                               Long lastModifiedEpochMs,
                               String widgetType,

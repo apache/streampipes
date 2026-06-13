@@ -17,10 +17,7 @@
  */
 
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import {
-    ChartService,
-    DataExplorerWidgetModel,
-} from '@streampipes/platform-services';
+import { ChartSummaryDto, ChartService } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../../services/auth.service';
 import { UserPrivilege } from '../../../../../core/auth/user-privilege.enum';
@@ -59,16 +56,14 @@ export class ChartSelectionComponent implements OnInit {
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter();
 
-    charts: DataExplorerWidgetModel[] = [];
+    charts: ChartSummaryDto[] = [];
 
     hasChartWritePrivileges: boolean = false;
 
-    ngOnInit() {
-        this.dataViewService.getAllCharts().subscribe(charts => {
-            this.charts = charts.sort((a, b) =>
-                a.baseAppearanceConfig.widgetTitle.localeCompare(
-                    b.baseAppearanceConfig.widgetTitle,
-                ),
+    ngOnInit(): void {
+        this.dataViewService.getChartSummary().subscribe(chartSummary => {
+            this.charts = chartSummary.resources.sort((a, b) =>
+                a.name.localeCompare(b.name),
             );
         });
 
