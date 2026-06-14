@@ -77,6 +77,7 @@ export interface QueryConfig {
     aggregationValue?: number;
     aggregationTimeUnit?: string;
     aggregationFunction?: string;
+    fill?: string | number;
 }
 
 export interface SourceConfig {

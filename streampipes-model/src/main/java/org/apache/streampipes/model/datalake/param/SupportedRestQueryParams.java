@@ -32,6 +32,7 @@ public class SupportedRestQueryParams {
   public static final String QP_ORDER = "order";
   public static final String QP_AGGREGATION_FUNCTION = "aggregationFunction";
   public static final String QP_TIME_INTERVAL = "timeInterval";
+  public static final String QP_FILL = "fill";
   public static final String QP_FORMAT = "format";
   public static final String QP_CSV_DELIMITER = "delimiter";
 
@@ -57,6 +58,7 @@ public class SupportedRestQueryParams {
       QP_ORDER,
       QP_AGGREGATION_FUNCTION,
       QP_TIME_INTERVAL,
+      QP_FILL,
       QP_FORMAT,
       QP_CSV_DELIMITER,
       QP_COUNT_ONLY,

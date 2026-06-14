@@ -237,10 +237,82 @@ public class SelectQueryParamsTest {
   }
 
   @Test
+  public void testGroupByTimeWithPreviousFill() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1h")
+        .withFill("previous")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(previous);", query);
+  }
+
+  @Test
+  public void testGroupByTimeWithLinearFill() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1h")
+        .withFill("linear")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(linear);", query);
+  }
+
+  @Test
+  public void testGroupByTimeWithNullFill() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1h")
+        .withFill("null")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(null);", query);
+  }
+
+  @Test
+  public void testGroupByTimeWithNumericFill() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1h")
+        .withFill("12.5")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(12.5);", query);
+  }
+
+  @Test
   public void testGroupByTimeRejectsUnsafeInterval() {
     var params = ProvidedQueryParameterBuilder.create("abc")
         .withSimpleColumns(List.of("value"))
         .withTimeInterval("1h); SHOW MEASUREMENTS --")
+        .build();
+
+    assertThrows(IllegalArgumentException.class,
+        () -> ProvidedRestQueryParamConverter.getSelectQueryParams(params));
+  }
+
+  @Test
+  public void testGroupByTimeRejectsUnsafeFill() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1h")
+        .withFill("previous); DROP MEASUREMENT foo --")
         .build();
 
     assertThrows(IllegalArgumentException.class,

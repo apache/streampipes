@@ -23,39 +23,46 @@
         fxLayoutAlign="start center"
         class="ml-0 mr-5 form-field-small"
     >
-        <sp-form-field [level]="3" [label]="'Unit' | translate" class="w-100">
+        <sp-form-field
+            [level]="3"
+            [label]="'Fill' | translate"
+            class="w-100"
+            [description]="'Handle empty values' | translate"
+        >
             <mat-form-field appearance="outline" fxFlex="100" class="w-100">
                 <mat-select
-                    [(value)]="queryConfig.aggregationTimeUnit"
+                    [(ngModel)]="fillMode"
                     class="w-100"
-                    (selectionChange)="triggerDataRefresh()"
+                    (selectionChange)="updateFillMode(fillMode)"
                 >
-                    @for (agg of availableAggregations; track agg) {
-                        <mat-option [value]="agg.value">{{
-                            agg.label
+                    @for (option of fillOptions; track option.value) {
+                        <mat-option [value]="option.value">{{
+                            option.label | translate
                         }}</mat-option>
                     }
                 </mat-select>
             </mat-form-field>
         </sp-form-field>
-        <sp-form-field
-            [level]="3"
-            [label]="'Value' | translate"
-            class="w-100 mb-10"
-        >
-            <mat-form-field
-                appearance="outline"
-                fxFlex="100"
+        @if (fillMode === 'number') {
+            <sp-form-field
+                [level]="3"
+                [label]="'Fill Value' | translate"
                 class="w-100"
-                color="accent"
             >
-                <input
-                    matInput
-                    type="number"
-                    [(ngModel)]="queryConfig.aggregationValue"
-                    (ngModelChange)="triggerDataRefresh()"
-                />
-            </mat-form-field>
-        </sp-form-field>
+                <mat-form-field
+                    appearance="outline"
+                    fxFlex="100"
+                    class="w-100"
+                    color="accent"
+                >
+                    <input
+                        matInput
+                        type="number"
+                        [(ngModel)]="customFillValue"
+                        (ngModelChange)="updateCustomFillValue()"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+        }
     </div>
 </div>
