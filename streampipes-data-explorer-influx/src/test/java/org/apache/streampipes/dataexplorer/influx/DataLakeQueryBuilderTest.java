@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
+import org.apache.streampipes.model.datalake.AggregationFunction;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -36,5 +38,28 @@ public class DataLakeQueryBuilderTest {
 
     var expected = String.format("SELECT one,two FROM \"%s\";", MEASUREMENT);
     assertEquals(expected , result.getCommand());
+  }
+
+  @Test
+  public void withAggregatedColumnEscapesDottedFieldAndAliasTest() {
+    var result = DataLakeInfluxQueryBuilder
+        .create(MEASUREMENT)
+        .withAggregatedColumn("temperature.a", AggregationFunction.MEAN, "temperature.a")
+        .build();
+
+    var expected = String.format("SELECT MEAN(\"temperature.a\") AS \"temperature.a\" FROM \"%s\";", MEASUREMENT);
+    assertEquals(expected, result.getCommand());
+  }
+
+  @Test
+  public void withGroupByEscapesDottedFieldTest() {
+    var result = DataLakeInfluxQueryBuilder
+        .create(MEASUREMENT)
+        .withSimpleColumn("value")
+        .withGroupBy("temperature.a")
+        .build();
+
+    var expected = String.format("SELECT value FROM \"%s\" GROUP BY \"temperature.a\";", MEASUREMENT);
+    assertEquals(expected, result.getCommand());
   }
 }

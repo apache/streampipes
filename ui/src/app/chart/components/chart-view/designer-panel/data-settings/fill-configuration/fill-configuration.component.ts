@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { QueryConfig } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -31,10 +31,12 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 
+type FillMode = 'none' | 'previous' | 'linear' | 'null' | 'number';
+
 @Component({
-    selector: 'sp-aggregate-configuration',
-    templateUrl: './aggregate-configuration.component.html',
-    styleUrls: ['./aggregate-configuration.component.scss'],
+    selector: 'sp-fill-configuration',
+    templateUrl: './fill-configuration.component.html',
+    styleUrls: ['./fill-configuration.component.scss'],
     imports: [
         LayoutDirective,
         LayoutAlignDirective,
@@ -48,24 +50,63 @@ import { FormsModule } from '@angular/forms';
         TranslatePipe,
     ],
 })
-export class AggregateConfigurationComponent {
+export class FillConfigurationComponent implements OnInit {
     private widgetConfigService = inject(ChartConfigurationService);
+    private translate = inject(TranslateService);
 
     @Input() queryConfig: QueryConfig;
     @Input() widgetId: string;
 
-    translateService: TranslateService = inject(TranslateService);
+    fillMode: FillMode = 'none';
+    customFillValue = 0;
 
-    availableAggregations = [
-        { value: 'ms', label: this.translateService.instant('Millisecond') },
-        { value: 's', label: this.translateService.instant('Second') },
-        { value: 'm', label: this.translateService.instant('Minute') },
-        { value: 'h', label: this.translateService.instant('Hour') },
-        { value: 'd', label: this.translateService.instant('Day') },
-        { value: 'w', label: this.translateService.instant('Week') },
+    fillOptions: Array<{ value: FillMode; label: string }> = [
+        { value: 'none', label: this.translate.instant('None') },
+        { value: 'previous', label: this.translate.instant('Previous Value') },
+        {
+            value: 'linear',
+            label: this.translate.instant('Linear Interpolation'),
+        },
+        { value: 'null', label: 'Null' },
+        { value: 'number', label: this.translate.instant('Custom Value') },
     ];
 
-    triggerDataRefresh() {
+    ngOnInit(): void {
+        if (
+            typeof this.queryConfig.fill === 'number' &&
+            !Number.isNaN(this.queryConfig.fill)
+        ) {
+            this.fillMode = 'number';
+            this.customFillValue = this.queryConfig.fill;
+            return;
+        }
+
+        const configuredMode = this.queryConfig.fill;
+        if (
+            configuredMode === 'none' ||
+            configuredMode === 'previous' ||
+            configuredMode === 'linear' ||
+            configuredMode === 'null'
+        ) {
+            this.fillMode = configuredMode;
+            return;
+        }
+
+        this.queryConfig.fill = 'none';
+    }
+
+    updateFillMode(mode: FillMode): void {
+        this.fillMode = mode;
+        this.queryConfig.fill = mode === 'number' ? this.customFillValue : mode;
+        this.triggerDataRefresh();
+    }
+
+    updateCustomFillValue(): void {
+        this.queryConfig.fill = this.customFillValue;
+        this.triggerDataRefresh();
+    }
+
+    triggerDataRefresh(): void {
         this.widgetConfigService.notify({
             refreshData: true,
             refreshView: true,

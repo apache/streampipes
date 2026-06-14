@@ -74,6 +74,7 @@ import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { MatInput } from '@angular/material/input';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { AggregateConfigurationComponent } from './aggregate-configuration/aggregate-configuration.component';
+import { FillConfigurationComponent } from './fill-configuration/fill-configuration.component';
 import { FilterSelectionPanelComponent } from './filter-selection-panel/filter-selection-panel.component';
 import { OrderSelectionPanelComponent } from './order-selection-panel/order-selection-panel.component';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -116,6 +117,7 @@ import {
         MatAutocomplete,
         MatAutocompleteTrigger,
         AggregateConfigurationComponent,
+        FillConfigurationComponent,
         FieldSelectionPanelComponent,
         FilterSelectionPanelComponent,
         GroupSelectionPanelComponent,
@@ -332,6 +334,7 @@ export class ChartDataSettingsComponent implements OnInit {
                 page: 1,
                 aggregationTimeUnit: 'd',
                 aggregationValue: 1,
+                fill: 'none',
             },
             queryType: 'raw',
         };

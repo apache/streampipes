@@ -22,13 +22,26 @@ import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
 
 public class FillClauseParams implements IQueryStatement {
-  String fill = "none";
+  private final Object fill;
 
   protected FillClauseParams() {
+    this.fill = "none";
   }
 
   public static FillClauseParams from() {
     return new FillClauseParams();
+  }
+
+  protected FillClauseParams(String fill) {
+    this.fill = InfluxQueryParameterValidator.requireValidFill(fill);
+  }
+
+  public static FillClauseParams from(String fill) {
+    if (fill == null || fill.isBlank()) {
+      return from();
+    }
+
+    return new FillClauseParams(fill);
   }
 
   @Override
