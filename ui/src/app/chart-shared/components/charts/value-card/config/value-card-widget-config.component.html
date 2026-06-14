@@ -1,0 +1,86 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-visualization-config-outer
+    [configurationValid]="
+        currentlyConfiguredWidget.visualizationConfig.configurationValid
+    "
+>
+    <sp-select-properties-config
+        [title]="'Fields' | translate"
+        [availableProperties]="fieldProvider.allFields"
+        [selectedProperties]="
+            currentlyConfiguredWidget.visualizationConfig.selectedFields
+        "
+        (changeSelectedProperties)="updateSelectedFields($event)"
+    >
+    </sp-select-properties-config>
+
+    <sp-field-order-config
+        [sectionTitle]="'Field Order'"
+        [selectedFields]="
+            currentlyConfiguredWidget.visualizationConfig.selectedFields
+        "
+        (selectedFieldsChange)="setSelectedFieldOrder($event)"
+    >
+    </sp-field-order-config>
+
+    <sp-split-section [level]="3" [title]="'Content' | translate">
+        <sp-form-field [level]="3" [label]="'Timestamp' | translate">
+            <mat-checkbox
+                [checked]="
+                    currentlyConfiguredWidget.visualizationConfig.showTimestamp
+                "
+                (change)="
+                    currentlyConfiguredWidget.visualizationConfig.showTimestamp =
+                        $event.checked;
+                    triggerViewRefresh()
+                "
+            >
+                {{ 'Show latest time above card' | translate }}
+            </mat-checkbox>
+        </sp-form-field>
+
+        <sp-form-field [level]="3" [label]="'Title' | translate">
+            <mat-form-field fxFlex="100">
+                <input
+                    matInput
+                    type="text"
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig.title
+                    "
+                    (ngModelChange)="triggerViewRefresh()"
+                />
+            </mat-form-field>
+        </sp-form-field>
+
+        <sp-form-field [level]="3" [label]="'Description' | translate">
+            <mat-form-field fxFlex="100">
+                <textarea
+                    matInput
+                    rows="3"
+                    [(ngModel)]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .description
+                    "
+                    (ngModelChange)="triggerViewRefresh()"
+                ></textarea>
+            </mat-form-field>
+        </sp-form-field>
+    </sp-split-section>
+</sp-visualization-config-outer>

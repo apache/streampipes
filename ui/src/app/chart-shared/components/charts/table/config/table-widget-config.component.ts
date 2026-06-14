@@ -39,15 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { ColorPickerDirective } from 'ngx-color-picker';
 import { MatCheckbox } from '@angular/material/checkbox';
-import {
-    CdkDrag,
-    CdkDragHandle,
-    CdkDropList,
-    CdkDragDrop,
-    moveItemInArray,
-} from '@angular/cdk/drag-drop';
-import { MatIcon } from '@angular/material/icon';
-import { MatIconButton } from '@angular/material/button';
+import { FieldOrderConfigComponent } from '../../../chart-config/field-order-config/field-order-config.component';
 
 @Component({
     selector: 'sp-data-explorer-table-widget-config',
@@ -67,11 +59,7 @@ import { MatIconButton } from '@angular/material/button';
         LayoutDirective,
         LayoutAlignDirective,
         MatCheckbox,
-        CdkDropList,
-        CdkDrag,
-        CdkDragHandle,
-        MatIcon,
-        MatIconButton,
+        FieldOrderConfigComponent,
         TranslatePipe,
         FormFieldComponent,
         SpAlertBannerComponent,
@@ -104,41 +92,9 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         this.triggerViewRefresh();
     }
 
-    moveSelectedColumn(fromIndex: number, offset: number): void {
-        const columns = [
-            ...(this.currentlyConfiguredWidget.visualizationConfig
-                .selectedColumns ?? []),
-        ];
-        const targetIndex = fromIndex + offset;
-
-        if (
-            fromIndex < 0 ||
-            targetIndex < 0 ||
-            fromIndex >= columns.length ||
-            targetIndex >= columns.length
-        ) {
-            return;
-        }
-
-        const [movedColumn] = columns.splice(fromIndex, 1);
-        columns.splice(targetIndex, 0, movedColumn);
+    setSelectedColumnOrder(selectedColumns: DataExplorerField[]): void {
         this.currentlyConfiguredWidget.visualizationConfig.selectedColumns =
-            columns;
-        this.triggerViewRefresh();
-    }
-
-    dropSelectedColumn(event: CdkDragDrop<DataExplorerField[]>): void {
-        if (event.previousIndex === event.currentIndex) {
-            return;
-        }
-
-        const columns = [
-            ...(this.currentlyConfiguredWidget.visualizationConfig
-                .selectedColumns ?? []),
-        ];
-        moveItemInArray(columns, event.previousIndex, event.currentIndex);
-        this.currentlyConfiguredWidget.visualizationConfig.selectedColumns =
-            columns;
+            selectedColumns;
         this.triggerViewRefresh();
     }
 
@@ -245,23 +201,6 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
 
     protected requiredFieldsForChartPresent(): boolean {
         return true;
-    }
-
-    canMoveSelectedColumnUp(index: number): boolean {
-        return index > 0;
-    }
-
-    canMoveSelectedColumnDown(index: number): boolean {
-        return (
-            index <
-            (this.currentlyConfiguredWidget.visualizationConfig.selectedColumns
-                ?.length ?? 0) -
-                1
-        );
-    }
-
-    selectedColumnLabel(field: DataExplorerField): string {
-        return `${field.runtimeName} (${field.measure})`;
     }
 
     private syncHighlightColorMap(): void {

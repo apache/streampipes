@@ -1,0 +1,70 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+.selected-field-list {
+    gap: var(--space-sm);
+}
+
+.selected-field-row {
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--color-border-subtle, var(--color-bg-3));
+    border-radius: var(--button-border-radius);
+    background: var(--color-bg-1, var(--color-bg-0));
+}
+
+.selected-field-main {
+    min-width: 0;
+    gap: var(--space-xs);
+    flex: 1;
+}
+
+.selected-field-drag-handle {
+    cursor: grab;
+    color: var(--color-secondary-text);
+}
+
+.selected-field-drag-handle:active {
+    cursor: grabbing;
+}
+
+.selected-field-label {
+    min-width: 0;
+    flex: 1;
+    font-size: var(--font-size-sm);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selected-field-actions {
+    flex-shrink: 0;
+    gap: var(--space-xxs);
+}
+
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: var(--button-border-radius);
+    border: 1px solid var(--color-border-subtle, var(--color-bg-3));
+    background: var(--color-bg-1, var(--color-bg-0));
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.18);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.35;
+}
