@@ -77,6 +77,7 @@ import { AggregateConfigurationComponent } from './aggregate-configuration/aggre
 import { FillConfigurationComponent } from './fill-configuration/fill-configuration.component';
 import { FilterSelectionPanelComponent } from './filter-selection-panel/filter-selection-panel.component';
 import { OrderSelectionPanelComponent } from './order-selection-panel/order-selection-panel.component';
+import { ResultLabelConfigurationComponent } from './result-label-configuration/result-label-configuration.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
     MatAutocomplete,
@@ -122,6 +123,7 @@ import {
         FilterSelectionPanelComponent,
         GroupSelectionPanelComponent,
         OrderSelectionPanelComponent,
+        ResultLabelConfigurationComponent,
         TranslatePipe,
     ],
 })
@@ -330,6 +332,7 @@ export class ChartDataSettingsComponent implements OnInit {
             measureName,
             queryConfig: {
                 selectedFilters: [],
+                resultLabelOverrides: {},
                 limit: 100,
                 page: 1,
                 aggregationTimeUnit: 'd',
