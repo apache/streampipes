@@ -47,6 +47,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -161,6 +162,34 @@ class ConnectionContainerReproTest {
     }
   }
 
+  static class MutableConnection extends DummyConnection {
+    private final AtomicBoolean connected;
+    private final AtomicInteger closeCalls;
+
+    MutableConnection(boolean connected) {
+      this.connected = new AtomicBoolean(connected);
+      this.closeCalls = new AtomicInteger();
+    }
+
+    @Override
+    public boolean isConnected() {
+      return connected.get();
+    }
+
+    @Override
+    public void close() {
+      closeCalls.incrementAndGet();
+    }
+
+    void setConnected(boolean connected) {
+      this.connected.set(connected);
+    }
+
+    int closeCalls() {
+      return closeCalls.get();
+    }
+  }
+
   @Test
   void recoversAfterFailedReconnectAndServesNewLeases() throws Exception {
     FlakyManager mgr = new FlakyManager();
@@ -192,6 +221,48 @@ class ConnectionContainerReproTest {
     cc.returnConnection((SpLeasedPlcConnection) lease2, false);
     PlcConnection lease3 = cc.lease().get(500, TimeUnit.MILLISECONDS);
     assertNotNull(lease3);
+  }
+
+  @Test
+  void replacesDisconnectedIdleConnection() throws Exception {
+    var staleConnection = new MutableConnection(true);
+    var managerCalls = new AtomicInteger();
+    PlcConnectionManager manager = new PlcConnectionManager() {
+      @Override
+      public PlcConnection getConnection(String url) {
+        if (managerCalls.incrementAndGet() == 1) {
+          return staleConnection;
+        }
+        return new DummyConnection();
+      }
+
+      @Override
+      public PlcConnection getConnection(String url,
+                                         PlcAuthentication authentication) {
+        return null;
+      }
+    };
+    SpConnectionContainer connectionContainer = new SpConnectionContainer(
+        manager,
+        "mock://plc",
+        Duration.ofSeconds(30),
+        Duration.ofSeconds(30),
+        url -> null
+    );
+
+    SpLeasedPlcConnection firstLease =
+        (SpLeasedPlcConnection) connectionContainer.lease().get(500, TimeUnit.MILLISECONDS);
+    connectionContainer.returnConnection(firstLease, false);
+
+    staleConnection.setConnected(false);
+
+    SpLeasedPlcConnection secondLease =
+        (SpLeasedPlcConnection) connectionContainer.lease().get(500, TimeUnit.MILLISECONDS);
+    assertNotNull(secondLease);
+    assertEquals(2, managerCalls.get());
+    assertEquals(1, staleConnection.closeCalls());
+    connectionContainer.returnConnection(secondLease, false);
+    connectionContainer.close();
   }
 
   @Test

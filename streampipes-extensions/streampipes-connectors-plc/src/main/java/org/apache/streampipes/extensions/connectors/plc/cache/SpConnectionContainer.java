@@ -109,6 +109,11 @@ public class SpConnectionContainer {
       return connectionFuture;
     }
 
+    if (connection != null && !isConnected(connection)) {
+      closeConnection(connection);
+      connection = null;
+    }
+
     // Try to get a new connection, if we haven't got one yet.
     if (connection == null) {
       try {
@@ -239,6 +244,23 @@ public class SpConnectionContainer {
       connectionToClose.close();
     } catch (Exception e) {
       // Ignore ...
+    }
+  }
+
+  private boolean isConnected(PlcConnection plcConnection) {
+    try {
+      return plcConnection.isConnected();
+    } catch (Exception e) {
+      LOGGER.warn("Exception while checking connection state for {}", connectionUrl, e);
+      return false;
+    }
+  }
+
+  private void closeConnection(PlcConnection plcConnection) {
+    try {
+      plcConnection.close();
+    } catch (Exception e) {
+      LOGGER.warn("Exception while closing stale connection for {}", connectionUrl, e);
     }
   }
 
