@@ -28,6 +28,10 @@ import {
     Message,
     PipelineUpdateInfo,
 } from '../model/gen/streampipes-model';
+import {
+    AdapterSummaryDto,
+    ResourceSummaryDto,
+} from '../model/resource/resource-summary.model';
 
 @Injectable({
     providedIn: 'root',
@@ -46,6 +50,12 @@ export class AdapterService {
 
     getAdapters(): Observable<AdapterDescription[]> {
         return this.requestAdapterDescriptions('/master/adapters');
+    }
+
+    getAdapterSummary(): Observable<ResourceSummaryDto<AdapterSummaryDto>> {
+        return this.http.get<ResourceSummaryDto<AdapterSummaryDto>>(
+            `${this.connectPath}/master/adapters/summary`,
+        );
     }
 
     getAdapter(id: string): Observable<AdapterDescription> {
@@ -79,9 +89,16 @@ export class AdapterService {
         adapter: AdapterDescription,
         forceStop = false,
     ): Observable<Message> {
+        return this.stopAdapterByElementId(adapter.elementId, forceStop);
+    }
+
+    stopAdapterByElementId(
+        elementId: string,
+        forceStop = false,
+    ): Observable<Message> {
         return this.http
             .post(
-                this.adapterMasterUrl + adapter.elementId + '/stop',
+                this.adapterMasterUrl + elementId + '/stop',
                 {},
                 { params: { forceStop } },
             )
@@ -135,15 +152,25 @@ export class AdapterService {
         adapter: AdapterDescription,
         deleteAssociatedPipelines: boolean,
     ): Observable<any> {
+        return this.deleteAdapterById(
+            adapter.elementId,
+            deleteAssociatedPipelines,
+        );
+    }
+
+    deleteAdapterById(
+        elementId: string,
+        deleteAssociatedPipelines: boolean,
+    ): Observable<any> {
         return this.deleteRequest(
-            adapter,
+            elementId,
             deleteAssociatedPipelines,
             'master/adapters',
         );
     }
 
     private deleteRequest(
-        adapter: AdapterDescription,
+        elementId: string,
         deleteAssociatedPipelines: boolean,
         url: string,
     ) {
@@ -151,7 +178,7 @@ export class AdapterService {
             ? '?deleteAssociatedPipelines=true'
             : '';
         return this.http.delete(
-            `${this.connectPath}/${url}/${adapter.elementId}${queryString}`,
+            `${this.connectPath}/${url}/${elementId}${queryString}`,
         );
     }
 

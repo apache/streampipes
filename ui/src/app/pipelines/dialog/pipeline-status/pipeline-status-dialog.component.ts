@@ -86,7 +86,7 @@ export class PipelineStatusDialogComponent implements OnInit {
                 this.pipelineOperationStatus = msg;
                 this.operationInProgress = false;
             },
-            error => {
+            _error => {
                 this.operationInProgress = false;
                 this.pipelineOperationStatus = {
                     title: this.translateService.instant('Network Error'),
@@ -105,7 +105,7 @@ export class PipelineStatusDialogComponent implements OnInit {
                 this.pipelineOperationStatus = msg;
                 this.operationInProgress = false;
             },
-            error => {
+            _error => {
                 this.operationInProgress = false;
                 this.pipelineOperationStatus = {
                     title: 'Network Error',
@@ -126,7 +126,7 @@ export class PipelineStatusDialogComponent implements OnInit {
                 this.pipelineOperationStatus = msg;
                 this.operationInProgress = false;
             },
-            error => {
+            _error => {
                 this.operationInProgress = false;
                 this.pipelineOperationStatus = {
                     title: this.translateService.instant('Network Error'),

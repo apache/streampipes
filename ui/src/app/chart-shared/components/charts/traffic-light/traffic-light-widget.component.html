@@ -39,6 +39,7 @@
         <div
             class="tl-container"
             [ngClass]="selectedToShowValue ? 'no-border-container' : ''"
+            [style.width.px]="trafficLightShellWidth"
         >
             <div
                 class="light"
@@ -53,9 +54,16 @@
                 [ngClass]="{ 'light-green': activeClass === 'green' }"
             ></div>
         </div>
-        <div class="light-value-container">
+        <div
+            class="light-value-container"
+            [style.width.px]="trafficLightShellWidth"
+        >
             @if (selectedToShowValue) {
-                <div class="light-value text-md">
+                <div
+                    class="light-value"
+                    [style.fontSize.px]="trafficLightValueFontSize"
+                    [style.lineHeight.px]="trafficLightValueFontSize"
+                >
                     {{ displayed_value }}
                 </div>
             }

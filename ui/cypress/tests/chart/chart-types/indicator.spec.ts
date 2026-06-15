@@ -27,7 +27,6 @@ describe('Test Indicator View in Charts', () => {
 
     it('Perform Test', () => {
         ChartUtils.addDataViewAndWidget(
-            'view',
             PrepareTestDataUtils.dataName,
             'indicator-chart',
         );

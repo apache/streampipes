@@ -98,7 +98,7 @@ export class ImageWidgetComponent
     }
 
     handleUpdatedFields(
-        addedFields: DataExplorerField[],
-        removedFields: DataExplorerField[],
+        _addedFields: DataExplorerField[],
+        _removedFields: DataExplorerField[],
     ) {}
 }

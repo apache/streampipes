@@ -140,7 +140,7 @@ export class StaticFreeInputComponent
         this.applyCompletedConfiguration(valid);
     }
 
-    onStatusChange(status: any) {}
+    onStatusChange(_status: any) {}
 
     onValueChange(value: any) {
         this.staticProperty.value = value;

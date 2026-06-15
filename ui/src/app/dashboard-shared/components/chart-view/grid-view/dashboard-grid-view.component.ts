@@ -92,6 +92,12 @@ export class DashboardGridViewComponent
         }
     }
 
+    updateDashboardLayout(): void {
+        this.gridOptions.column = this.dashboard.gridColumns;
+        this.gridOptions.cellHeight = this.getGridCellHeight();
+        this.grid?.updateOptions(this.gridOptions);
+    }
+
     onGridChange(data: nodesCB): void {
         data.nodes.forEach(changed => {
             const widget = this.dashboard.widgets.find(
@@ -127,5 +133,5 @@ export class DashboardGridViewComponent
         return true;
     }
 
-    selectNewWidget(widgetId): void {}
+    selectNewWidget(_widgetId): void {}
 }

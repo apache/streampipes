@@ -27,9 +27,12 @@ import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.event.DataStreamDeletedEvent;
+import org.apache.streampipes.rest.event.DataStreamUpdatedEvent;
 import org.apache.streampipes.rest.security.AuthConstants;
 
 import org.apache.http.client.HttpResponseException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
@@ -50,9 +53,12 @@ import java.util.List;
 public class DataStreamResource extends AbstractAuthGuardedRestResource {
 
   private final DataStreamUpdateManagement dataStreamUpdateManagement;
+  private final ApplicationEventPublisher eventPublisher;
 
-  public DataStreamResource(ExtensionServiceRequestManager requestManager) {
+  public DataStreamResource(ExtensionServiceRequestManager requestManager,
+                            ApplicationEventPublisher eventPublisher) {
     this.dataStreamUpdateManagement = new DataStreamUpdateManagement(requestManager);
+    this.eventPublisher = eventPublisher;
   }
 
   @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,6 +78,7 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   @DeleteMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
   public ResponseEntity<Message> delete(@PathVariable("elementId") String elementId) {
+    publishEvent(new DataStreamDeletedEvent(elementId));
     getDataStreamResourceManager().delete(elementId);
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
@@ -95,6 +102,7 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
           "Element ID in path variable does not match element ID in request body");
     } else {
       dataStreamUpdateManagement.updateDataStream(updatedElement);
+      publishEvent(new DataStreamUpdatedEvent(updatedElement));
       return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
     }
   }
@@ -126,6 +134,12 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
 
   private DataStreamResourceManager getDataStreamResourceManager() {
     return getSpResourceManager().manageDataStreams();
+  }
+
+  private void publishEvent(Object event) {
+    if (eventPublisher != null) {
+      eventPublisher.publishEvent(event);
+    }
   }
 
 }

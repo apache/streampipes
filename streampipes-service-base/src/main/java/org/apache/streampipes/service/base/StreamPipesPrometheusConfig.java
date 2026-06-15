@@ -22,6 +22,8 @@ package org.apache.streampipes.service.base;
 import org.apache.streampipes.commons.prometheus.StreamPipesCollectorRegistry;
 
 import io.prometheus.client.CollectorRegistry;
+import io.prometheus.metrics.model.registry.PrometheusRegistry;
+import io.prometheus.metrics.simpleclient.bridge.SimpleclientCollector;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,6 +33,16 @@ public class StreamPipesPrometheusConfig {
   @Bean
   public CollectorRegistry collectorRegistry() {
     return StreamPipesCollectorRegistry.getCollectorRegistry();
+  }
+
+  @Bean
+  public PrometheusRegistry prometheusRegistry(CollectorRegistry collectorRegistry) {
+    PrometheusRegistry prometheusRegistry = new PrometheusRegistry();
+    SimpleclientCollector.builder()
+        .collectorRegistry(collectorRegistry)
+        .register(prometheusRegistry);
+
+    return prometheusRegistry;
   }
 
 }

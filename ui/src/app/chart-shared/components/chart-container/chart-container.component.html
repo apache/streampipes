@@ -22,6 +22,11 @@
         background: configuredWidget.baseAppearanceConfig.backgroundColor,
         color: configuredWidget.baseAppearanceConfig.textColor,
         height: '100%',
+        border: !dataViewMode
+            ? (dashboardChartOverrides?.borderThickness || 0) +
+              'px solid var(--color-bg-2)'
+            : 'none',
+        boxSizing: 'border-box',
     }"
     [attr.data-cy]="
         'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle
@@ -59,6 +64,8 @@
                                 type="text"
                                 [(ngModel)]="tempName"
                                 class="name-input"
+                                (keydown.enter)="saveName()"
+                                (keydown.escape)="cancelEditingName()"
                             />
 
                             <button mat-icon-button (click)="saveName()">

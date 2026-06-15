@@ -18,7 +18,6 @@
 
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
-import { AssetBtns } from '../../support/utils/asset/AssetBtns';
 
 describe('Creates a new adapter, add to assets', () => {
     beforeEach('Setup Test', () => {

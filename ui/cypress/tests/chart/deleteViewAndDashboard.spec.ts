@@ -29,9 +29,9 @@ describe('Test Deletion of Data View and Dashboard', () => {
 
         ChartUtils.goToDatalake();
 
-        ChartUtils.addDataViewAndTableWidget(dataView, ChartUtils.ADAPTER_NAME);
+        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
 
-        ChartUtils.saveDataViewConfiguration();
+        ChartUtils.saveDataViewConfiguration(false, false, dataView);
 
         ChartUtils.checkRowsViewsTable(1);
 

@@ -199,7 +199,7 @@ export class StaticFileInputComponent
                                     this.fetchFileMetadata(filename);
                                 }
                             },
-                            error => {},
+                            _error => {},
                         );
                 } else {
                     this.openRenameDialog();
@@ -219,7 +219,7 @@ export class StaticFileInputComponent
         return fileMetadata ? fileMetadata.filename : '';
     }
 
-    onStatusChange(status: any) {}
+    onStatusChange(_status: any) {}
 
     onValueChange(value: any) {
         this.staticProperty.locationPath = value.filename;

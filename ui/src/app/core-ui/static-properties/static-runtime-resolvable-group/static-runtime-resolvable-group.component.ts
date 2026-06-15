@@ -60,7 +60,7 @@ export class StaticRuntimeResolvableGroupComponent
 
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    handleConfigurationUpdate(event: ConfigurationInfo): void {}
+    handleConfigurationUpdate(_event: ConfigurationInfo): void {}
 
     ngOnInit(): void {
         super.onInit();

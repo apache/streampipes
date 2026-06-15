@@ -119,7 +119,7 @@ export class SecurityRoleConfigComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result === 'confirm') {
-                this.roleService.delete(role).subscribe(response => {
+                this.roleService.delete(role).subscribe(_response => {
                     this.loadRoles();
                 });
             }

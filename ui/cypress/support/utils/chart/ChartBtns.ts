@@ -26,7 +26,11 @@ export class ChartBtns {
     }
 
     public static saveDataViewBtn() {
-        return cy.dataCy('save-data-view');
+        return cy.dataCy('sp-manage-save');
+    }
+
+    public static manageChartButton(title) {
+        return cy.dataCy('open-manage-permissions-' + title);
     }
 
     public static saveDashboardBtn() {
@@ -34,14 +38,7 @@ export class ChartBtns {
     }
 
     public static discardDashboard() {
-        return cy.dataCy('discard-dashboard-btn');
-    }
-
-    public static saveChartsToAssetBtn() {
-        return cy
-            .dataCy('add-to-Asset-data-view-btn', { timeout: 10000 })
-            .should('exist')
-            .click();
+        return cy.dataCy('save-data-explorer-go-back-to-overview');
     }
 
     public static deleteDashboardBtn(dashboardName) {
@@ -77,7 +74,7 @@ export class ChartBtns {
     }
 
     public static editDashboardSettingsBtn(dashboardName) {
-        return cy.dataCy('edit-dashboard-settings-' + dashboardName);
+        return cy.dataCy('open-manage-permissions-' + dashboardName);
     }
 
     public static openNewDataViewBtn() {
@@ -96,10 +93,30 @@ export class ChartBtns {
         return cy.dataCy('add-to-Asset-data-view-btn');
     }
 
+    public static chartOptionsBtn() {
+        return cy.dataCy('options-chart');
+    }
+
+    public static manageChartBtn() {
+        return cy.dataCy('manage-chart-btn');
+    }
+
     public static confirmAssetSelectionBtn() {
         return cy
             .dataCy('asset-dialog-confirm-delete', { timeout: 10000 })
             .click();
+    }
+
+    public static chartAssetDialogCheckbox() {
+        return cy
+            .dataCy('sp-show-chart-asset-checkbox')
+            .find('input[type="checkbox"]');
+    }
+
+    public static objectManageAssetCheckbox() {
+        return cy
+            .dataCy('sp-show-asset-checkbox')
+            .find('input[type="checkbox"]');
     }
 
     public static editDataViewButton(dataViewName: string) {
@@ -135,7 +152,7 @@ export class ChartBtns {
     }
 
     public static discardDataExplorerWidgetBtn() {
-        return cy.dataCy('discard-data-explorer-widget-btn');
+        return cy.dataCy('save-data-explorer-go-back-to-overview');
     }
 
     public static chartDataPreview() {
@@ -197,7 +214,7 @@ export class ChartBtns {
     }
 
     public static addNewWidgetBtn() {
-        return cy.dataCy('add-new-widget');
+        return cy.dataCy('add-new-widget', { timeout: 10000 });
     }
 
     public static dataLakeTruncateBtn() {

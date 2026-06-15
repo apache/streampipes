@@ -22,7 +22,6 @@ import { ChartWidgetTableUtils } from '../../support/utils/chart/ChartWidgetTabl
 import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
 
 describe('Test missing properties in data lake', () => {
-    const dataViewName = 'TestView';
     const headers = ['timestamp', 'v1', 'v2', 'v3', 'v4'];
     const rows = [
         ['1667904471000', '4.1', 'abc', 'true', '1'],
@@ -44,10 +43,7 @@ describe('Test missing properties in data lake', () => {
     });
 
     it('Test table with missing properties', () => {
-        ChartUtils.addDataViewAndTableWidget(
-            dataViewName,
-            PrepareTestDataUtils.dataName,
-        );
+        ChartUtils.addDataViewAndTableWidget(PrepareTestDataUtils.dataName);
 
         ChartWidgetTableUtils.checkAmountOfRows(5);
 

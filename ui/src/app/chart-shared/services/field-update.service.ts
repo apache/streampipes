@@ -84,7 +84,7 @@ export class SpFieldUpdateService {
             field,
             fieldUpdateInfo.fieldProvider.allFields,
             fieldUpdateInfo,
-            field => true,
+            _field => true,
         );
     }
 }

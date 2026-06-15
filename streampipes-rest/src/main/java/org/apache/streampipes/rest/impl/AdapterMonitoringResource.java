@@ -26,7 +26,7 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
-import org.apache.streampipes.rest.security.SpPermissionEvaluator;
+import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 

@@ -94,7 +94,7 @@ export class SpEchartsWidgetComponent<T extends DataExplorerWidgetModel>
         this.setShownComponents(false, true, false, false);
     }
 
-    onResize(width: number, height: number) {
+    onResize(_width: number, _height: number) {
         this.configReady = true;
         if (this.latestData) {
             this.refreshView();

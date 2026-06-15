@@ -88,8 +88,8 @@ export class SetNewPasswordComponent extends BaseLoginPageDirective {
                 this.restorePasswordService
                     .checkRecoveryCode(this.recoveryCode)
                     .subscribe(
-                        success => {},
-                        error => {
+                        _success => {},
+                        _error => {
                             this.navigateToLoginPage();
                         },
                     );
@@ -122,10 +122,10 @@ export class SetNewPasswordComponent extends BaseLoginPageDirective {
         this.restorePasswordService
             .restorePassword(this.recoveryCode, this.registrationModel)
             .subscribe(
-                result => {
+                _result => {
                     this.updateStatus(false, true, true);
                 },
-                error => {
+                _error => {
                     this.updateStatus(false, false, true);
                 },
             );

@@ -32,21 +32,26 @@ import {
     MatHeaderCellDef,
     MatTableDataSource,
 } from '@angular/material/table';
-import { Dashboard, DashboardService } from '@streampipes/platform-services';
+import {
+    Dashboard,
+    DashboardService,
+    DashboardSummaryDto,
+} from '@streampipes/platform-services';
 import {
     ConfirmDialogComponent,
     DateFormatService,
     DialogService,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
     PanelType,
     SpAssetBrowserService,
-    SpTableAssetContextConfig,
     SpBasicHeaderTitleComponent,
     SpTableActionsDirective,
+    SpTableAssetContextConfig,
     SpTableComponent,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
-import { ChartSharedService } from '../../../../chart-shared/services/chart-shared.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { CloneDashboardDialogComponent } from '../../../dialogs/clone-dashboard/clone-dashboard-dialog.component';
@@ -92,7 +97,7 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     @Input()
     hasDashboardWritePrivileges: boolean;
 
-    dataSource = new MatTableDataSource<Dashboard>();
+    dataSource = new MatTableDataSource<DashboardSummaryDto>();
 
     @ViewChild(MatSort)
     sort: MatSort;
@@ -108,12 +113,11 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         resourceLinkType: 'dashboard',
         resourceIdKey: 'elementId',
     };
-    dashboards: Dashboard[] = [];
-    filteredDashboards: Dashboard[] = [];
+    dashboards: DashboardSummaryDto[] = [];
+    filteredDashboards: DashboardSummaryDto[] = [];
 
     private dashboardService = inject(DashboardService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
-    private dataExplorerSharedService = inject(ChartSharedService);
     private dialog = inject(MatDialog);
     protected translateService = inject(TranslateService);
     protected dateFormatService = inject(DateFormatService);
@@ -134,10 +138,12 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
             });
 
         this.dataSource.sortingDataAccessor = (dashboard, column) => {
-            if (column === 'lastModified') {
-                return dashboard.metadata.lastModifiedEpochMs;
+            if (column === 'name') {
+                return dashboard.name;
+            } else if (column === 'lastModified') {
+                return dashboard.lastModifiedEpochMs;
             } else if (column === 'createdAt') {
-                return dashboard.metadata.createdAtEpochMs;
+                return dashboard.createdAtEpochMs;
             }
             return dashboard[column];
         };
@@ -145,36 +151,46 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         this.getDashboards();
     }
 
-    showPermissionsDialog(dashboard: Dashboard) {
-        const dialogRef = this.dataExplorerSharedService.openPermissionsDialog(
-            dashboard.elementId,
-            this.translateService.instant(
-                `Manage permissions for dashboard ${dashboard.name}`,
-            ),
-            true,
-            this.makeDashboardKioskUrl(dashboard.elementId),
-        );
-
-        dialogRef.afterClosed().subscribe(refresh => {
-            if (refresh) {
-                this.getDashboards();
-            }
-        });
-    }
-
-    openEditDashboardDialog(dashboard: Dashboard) {
-        const dialogRef =
-            this.dataExplorerDashboardService.openDashboardModificationDialog(
-                false,
-                dashboard,
+    showManageDialog(dashboard: DashboardSummaryDto): void {
+        this.withDashboard(dashboard, resource => {
+            const resourceConfig: ObjectManageDialogResourceConfig<Dashboard> =
+                {
+                    resourceLabel: 'Dashboard',
+                    nameLabel: 'Name',
+                    descriptionLabel: 'Description',
+                    nameProperty: 'name',
+                    assetLinkType: 'dashboard',
+                    assetLinkCheckboxLabel:
+                        'Add the current dashboard to an existing asset',
+                    saveResource: resource =>
+                        this.dashboardService.updateDashboard(resource),
+                };
+            const dialogRef = this.dialogService.open(
+                ObjectManageDialogComponent,
+                {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translateService.instant('Manage'),
+                    width: '50vw',
+                    data: {
+                        objectInstanceId: resource.elementId,
+                        resource: { ...resource },
+                        saveMode: 'immediate',
+                        resourceConfig,
+                        headerTitle:
+                            this.translateService.instant('Manage Dashboard ') +
+                            resource.name,
+                    },
+                },
             );
-
-        dialogRef.afterClosed().subscribe(() => {
-            this.getDashboards();
+            dialogRef.afterClosed().subscribe(refresh => {
+                if (refresh) {
+                    this.getDashboards();
+                }
+            });
         });
     }
 
-    openDeleteDashboardDialog(dashboard: Dashboard) {
+    openDeleteDashboardDialog(dashboard: DashboardSummaryDto): void {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '600px',
             data: {
@@ -194,7 +210,7 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result === 'confirm') {
                 this.dashboardService
-                    .deleteDashboard(dashboard)
+                    .deleteDashboardById(dashboard.elementId)
                     .subscribe(() => {
                         this.getDashboards();
                     });
@@ -202,25 +218,27 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         });
     }
 
-    showDashboard(dashboard: Dashboard) {
+    showDashboard(dashboard: DashboardSummaryDto): void {
         this.routingService.navigateToDashboard(false, dashboard.elementId);
     }
 
-    editDashboard(dashboard: Dashboard) {
+    editDashboard(dashboard: DashboardSummaryDto): void {
         this.routingService.navigateToDashboard(true, dashboard.elementId);
     }
 
-    getDashboards() {
-        this.dashboardService.getDashboards().subscribe(data => {
-            this.dashboards = data.sort((a, b) => a.name.localeCompare(b.name));
+    getDashboards(): void {
+        this.dashboardService.getDashboardSummary().subscribe(data => {
+            this.dashboards = data.resources.sort((a, b) =>
+                a.name.localeCompare(b.name),
+            );
             this.applyDashboardFilters(this.currentFilterIds);
         });
     }
 
     applyDashboardFilters(elementIds: Set<string>): void {
-        if (elementIds == undefined) {
+        if (elementIds === undefined) {
             this.filteredDashboards = [];
-        } else if (elementIds.size == 0) {
+        } else if (elementIds.size === 0) {
             this.filteredDashboards = this.dashboards;
         } else {
             this.filteredDashboards = this.dashboards.filter(a =>
@@ -235,7 +253,7 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         return this.dateFormatService.formatDate(timestamp);
     }
 
-    openDashboardInKioskMode(dashboard: Dashboard) {
+    openDashboardInKioskMode(dashboard: DashboardSummaryDto): void {
         this.router.navigate(['dashboard-kiosk', dashboard.elementId]);
     }
 
@@ -243,30 +261,43 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         return `${window.location.protocol}//${window.location.host}/#/dashboard-kiosk/${dashboardId}`;
     }
 
-    openCloneDialog(dashboard: Dashboard): void {
-        const dialogRef = this.dialogService.open(
-            CloneDashboardDialogComponent,
-            {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: this.translateService.instant('Clone dashboard'),
-                width: '50vw',
-                data: {
-                    dashboard: dashboard,
+    openCloneDialog(dashboardSummary: DashboardSummaryDto): void {
+        this.withDashboard(dashboardSummary, dashboard => {
+            const dialogRef = this.dialogService.open(
+                CloneDashboardDialogComponent,
+                {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translateService.instant('Clone dashboard'),
+                    width: '50vw',
+                    data: {
+                        dashboard: dashboard,
+                    },
                 },
-            },
-        );
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.getDashboards();
-            }
+            );
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    this.getDashboards();
+                }
+            });
         });
     }
 
-    onRowClicked(dashboard: Dashboard) {
+    onRowClicked(dashboard: DashboardSummaryDto): void {
         this.showDashboard(dashboard);
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.assetFilter$?.unsubscribe();
+    }
+
+    private withDashboard(
+        dashboardSummary: DashboardSummaryDto,
+        callback: (dashboard: Dashboard) => void,
+    ): void {
+        this.dashboardService
+            .getDashboard(dashboardSummary.elementId)
+            .subscribe(dashboard => {
+                callback(dashboard);
+            });
     }
 }

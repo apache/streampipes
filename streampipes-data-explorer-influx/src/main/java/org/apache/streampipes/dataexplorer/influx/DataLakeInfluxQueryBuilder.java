@@ -99,14 +99,15 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
                                                          AggregationFunction aggregationFunction,
                                                          String aliasName) {
 
-    this.selectionQuery.function(aggregationFunction.toDbName(), columnName).as(aliasName);
+    this.selectionQuery.function(aggregationFunction.toDbName(), escapeIdentifier(columnName))
+        .as(escapeIdentifier(aliasName));
 
     return this;
   }
 
   @Override
   public IDataLakeQueryBuilder<Query> withAggregatedColumn(String columnName, AggregationFunction aggregationFunction) {
-    this.selectionQuery.function(aggregationFunction.toDbName(), columnName);
+    this.selectionQuery.function(aggregationFunction.toDbName(), escapeIdentifier(columnName));
 
     return this;
   }
@@ -319,5 +320,13 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
 
   private String escapeIndex(String index) {
     return "\"" + index + "\"";
+  }
+
+  private String escapeIdentifier(String identifier) {
+    if (identifier.matches("[A-Za-z0-9_]+")) {
+      return identifier;
+    }
+
+    return "\"" + identifier.replace("\"", "\\\"") + "\"";
   }
 }

@@ -58,6 +58,11 @@
                     fxFlex="100"
                     [columns]="displayedColumns"
                     [dataSource]="dataSource"
+                    [nameSearchConfig]="{
+                        enabled: true,
+                        placeholder: 'Search assets',
+                        searchKey: ['assetName', 'assetDescription'],
+                    }"
                     [showActionsMenu]="true"
                     [rowsClickable]="true"
                     (rowClicked)="goToDetailsView($event)"

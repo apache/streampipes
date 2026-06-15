@@ -89,7 +89,7 @@ export class StaticColorPickerComponent
         );
     }
 
-    onStatusChange(status: any) {}
+    onStatusChange(_status: any) {}
 
     onValueChange(value: any) {
         this.staticProperty.selectedColor = value;

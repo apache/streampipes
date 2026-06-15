@@ -17,16 +17,118 @@
  */
 
 .data-view-preview-outer {
-    border: 1px solid var(--color-bg-2);
-    padding: 10px;
+    min-height: 72px;
+    border: 1px solid color-mix(in srgb, var(--color-bg-3) 68%, transparent);
+    border-radius: 14px;
+    padding: 10px 12px;
+    background: color-mix(
+        in srgb,
+        var(--color-bg-0) 90%,
+        var(--color-bg-1) 10%
+    );
+    transition:
+        border-color 120ms ease,
+        background-color 120ms ease,
+        transform 120ms ease,
+        box-shadow 120ms ease;
 }
 
 .data-view-preview-outer:hover {
-    border-color: var(--color-bg-3);
-    background: var(--color-bg-1);
+    border-color: color-mix(
+        in srgb,
+        var(--color-primary) 34%,
+        var(--color-bg-3)
+    );
+    background: color-mix(in srgb, var(--color-bg-1) 86%, white 14%);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
     cursor: pointer;
 }
 
 mat-icon {
     --mat-icon-color: var(--mat-sys-secondary);
+}
+
+.chart-preview-icon-shell {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-primary) 14%, white) 0%,
+        color-mix(in srgb, var(--color-primary) 8%, var(--color-bg-1)) 100%
+    );
+    color: var(--color-primary);
+}
+
+.chart-preview-main {
+    min-width: 0;
+}
+
+.chart-preview-copy {
+    min-width: 0;
+}
+
+.chart-preview-title-row {
+    min-width: 0;
+    width: 100%;
+}
+
+.chart-preview-title {
+    min-width: 0;
+    flex: 1 1 auto;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--font-size-sm);
+    line-height: 1.25;
+}
+
+.chart-preview-meta {
+    min-width: 0;
+    width: 100%;
+    margin-top: 2px;
+    color: var(--color-paragraph);
+    font-size: var(--font-size-sm);
+}
+
+.chart-preview-meta-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chart-preview-dataset {
+    color: var(--color-text);
+}
+
+.chart-preview-meta-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-secondary);
+    flex-shrink: 0;
+}
+
+.chart-preview-actions {
+    flex-shrink: 0;
+}
+
+.chart-preview-add-indicator {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-primary) 14%, transparent);
+    color: var(--color-primary);
+}
+
+.chart-preview-actions button {
+    opacity: 0.82;
+}
+
+.data-view-preview-outer:hover .chart-preview-actions button,
+.data-view-preview-outer:hover .chart-preview-add-indicator {
+    opacity: 1;
 }
