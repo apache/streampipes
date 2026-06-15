@@ -81,7 +81,7 @@ export class SpDataExportDialogComponent implements OnInit {
 
     generateDownloadPackage(): void {
         this.exportInProgress = true;
-        this.addReferencedGenericStorageDocuments(this.preview);
+        this.addReferencedAssetDocuments(this.preview);
         this.dataExportService.triggerExport(this.preview).subscribe(result => {
             this.downloadFile(result);
         });
@@ -103,33 +103,32 @@ export class SpDataExportDialogComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    private addReferencedGenericStorageDocuments(
-        preview: ExportConfiguration,
-    ): void {
+    private addReferencedAssetDocuments(preview: ExportConfiguration): void {
         const firstAssetExportConfig = preview.assetExportConfiguration?.[0];
-        const referencedGenericStorageDocuments = [
-            ...this.referencedLabels,
-            ...this.referencedSites,
-        ];
 
-        if (
-            firstAssetExportConfig &&
-            referencedGenericStorageDocuments.length > 0
-        ) {
-            firstAssetExportConfig.genericStorageDocuments ??= [];
-            const existingDocumentIds = new Set(
-                firstAssetExportConfig.genericStorageDocuments.map(
-                    item => item.resourceId,
-                ),
+        if (firstAssetExportConfig) {
+            firstAssetExportConfig.labels = this.mergeExportItems(
+                firstAssetExportConfig.labels,
+                this.referencedLabels,
             );
-            const missingDocuments = referencedGenericStorageDocuments.filter(
-                item => !existingDocumentIds.has(item.resourceId),
+            firstAssetExportConfig.sites = this.mergeExportItems(
+                firstAssetExportConfig.sites,
+                this.referencedSites,
             );
-
-            firstAssetExportConfig.genericStorageDocuments = [
-                ...firstAssetExportConfig.genericStorageDocuments,
-                ...missingDocuments,
-            ];
         }
+    }
+
+    private mergeExportItems(
+        existingItems: ExportItem[] = [],
+        newItems: ExportItem[],
+    ): ExportItem[] {
+        const existingItemIds = new Set(
+            existingItems.map(item => item.resourceId),
+        );
+        const missingItems = newItems.filter(
+            item => !existingItemIds.has(item.resourceId),
+        );
+
+        return [...existingItems, ...missingItems];
     }
 }
