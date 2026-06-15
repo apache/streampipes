@@ -46,6 +46,7 @@ import { NoDataInDateRangeComponent } from '../base/no-data/no-data-in-date-rang
 import { TooMuchDataComponent } from '../base/too-much-data/too-much-data.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WidgetNumberAppearanceConfig } from '../../../models/dataview-dashboard.model';
+import { ResultLabelService } from '../../../services/result-label.service';
 
 type SortDirection = 'asc' | 'desc' | '';
 
@@ -120,6 +121,7 @@ const TIMESTAMP_MASK = 'yyyy-mm-dd HH:mm:ss.SSS';
 })
 export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableWidgetModel> {
     private elRef = inject(ElementRef);
+    private resultLabelService = inject(ResultLabelService);
 
     private static readonly DEFAULT_PAGE_SIZE = 20;
 
@@ -865,8 +867,22 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         return Math.max(0, normalizedIndex - firstReorderableIndex);
     }
 
-    headerLabel = (column: string): string =>
-        column === 'time' ? 'Time' : column;
+    headerLabel = (column: string): string => {
+        if (column === 'time') {
+            return 'Time';
+        }
+
+        const field = this.getFieldByColumnName(column);
+        if (!field) {
+            return column;
+        }
+
+        return this.resultLabelService.resolveLabel(
+            this.dataExplorerWidget.dataConfig.sourceConfigs[field.sourceIndex]
+                .queryConfig,
+            field,
+        );
+    };
 
     formatCellValue(column: string, value: unknown): unknown {
         if (column === 'time') {
@@ -1201,6 +1217,44 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         return stats.max === stats.min
             ? 0.5
             : (n - stats.min) / (stats.max - stats.min);
+    }
+
+    private getFieldByColumnName(
+        column: string,
+    ): DataExplorerField | undefined {
+        const selectedField = (
+            this.dataExplorerWidget.visualizationConfig.selectedColumns ?? []
+        ).find(f => f.fullDbName === column);
+
+        if (selectedField) {
+            return selectedField;
+        }
+
+        for (const [
+            sourceIndex,
+            sourceConfig,
+        ] of this.dataExplorerWidget.dataConfig.sourceConfigs.entries()) {
+            const groupedField = sourceConfig.queryConfig.groupBy
+                ?.filter(groupBy => groupBy.selected)
+                .find(groupBy => groupBy.runtimeName === column);
+
+            if (groupedField) {
+                return {
+                    runtimeName: groupedField.runtimeName,
+                    measure: sourceConfig.measureName,
+                    fullDbName: groupedField.runtimeName,
+                    sourceIndex,
+                    fieldCharacteristics: {
+                        dimension: true,
+                        numeric: false,
+                        binary: false,
+                        semanticTypes: [],
+                    },
+                };
+            }
+        }
+
+        return undefined;
     }
 
     private toNumber(value: unknown): number | undefined {

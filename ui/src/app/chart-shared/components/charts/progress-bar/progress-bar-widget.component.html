@@ -1,0 +1,112 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div
+    class="progress-widget"
+    fxLayout="column"
+    fxFlex="100"
+    [ngStyle]="widgetStyles"
+    data-cy="progress-bar-widget"
+>
+    @if (showNoDataInDateRange) {
+        <sp-no-data-in-date-range [viewDateRange]="timeSettings" class="h-100">
+        </sp-no-data-in-date-range>
+    }
+
+    @if (showTooMuchData) {
+        <sp-too-much-data
+            [amountOfEvents]="amountOfTooMuchEvents"
+            (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
+            class="h-100"
+        >
+        </sp-too-much-data>
+    }
+
+    @if (showInvalidConfiguration) {
+        <sp-invalid-configuration
+            [widgetTypeLabel]="widgetTypeLabel"
+            class="h-100"
+        >
+        </sp-invalid-configuration>
+    }
+
+    @if (showData && progressView) {
+        <div class="progress-shell" fxLayout="column" fxFlex="100">
+            @if (titleText || descriptionText) {
+                <div class="progress-copy" fxLayout="column">
+                    @if (titleText) {
+                        <div class="progress-title">
+                            {{ titleText }}
+                        </div>
+                    }
+
+                    @if (descriptionText) {
+                        <div class="progress-description">
+                            {{ descriptionText }}
+                        </div>
+                    }
+                </div>
+            }
+
+            <div
+                class="progress-meta"
+                fxLayout="row"
+                fxLayoutAlign="space-between center"
+            >
+                <span class="progress-status">{{
+                    progressView.statusLabel
+                }}</span>
+                @if (showLabel) {
+                    <span class="progress-percent">{{
+                        progressView.percentLabel
+                    }}</span>
+                }
+            </div>
+
+            <div class="progress-track">
+                <div class="progress-fill" [style.width]="progressWidth"></div>
+            </div>
+
+            @if (showLabel) {
+                <div class="progress-labels" fxLayout="column">
+                    @if (
+                        dataExplorerWidget.visualizationConfig.displayMode ===
+                            'percent' ||
+                        dataExplorerWidget.visualizationConfig.displayMode ===
+                            'percent-and-value'
+                    ) {
+                        <div class="progress-primary-label">
+                            {{ progressView.percentLabel }}
+                        </div>
+                    }
+
+                    @if (
+                        dataExplorerWidget.visualizationConfig.displayMode ===
+                            'value' ||
+                        dataExplorerWidget.visualizationConfig.displayMode ===
+                            'percent-and-value'
+                    ) {
+                        <div class="progress-secondary-label">
+                            {{ progressView.valueLabel }}
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

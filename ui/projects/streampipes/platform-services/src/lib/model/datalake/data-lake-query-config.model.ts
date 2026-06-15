@@ -69,6 +69,7 @@ export interface QueryConfig {
     selectedFilters: SelectedFilter[];
     filterExpression?: FilterExpressionGroup;
     fields?: FieldConfig[];
+    resultLabelOverrides?: Record<string, string>;
     groupBy?: FieldConfig[];
     limit?: number;
     page?: number;
