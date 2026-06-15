@@ -64,6 +64,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { ValueCardWidgetComponent } from '../components/charts/value-card/value-card-widget.component';
 import { ValueCardWidgetConfigComponent } from '../components/charts/value-card/config/value-card-widget-config.component';
 import { ValueCardWidgetAppearanceConfigComponent } from '../components/charts/value-card/appearance-config/value-card-appearance-config.component';
+import { ProgressBarWidgetComponent } from '../components/charts/progress-bar/progress-bar-widget.component';
+import { ProgressBarWidgetConfigComponent } from '../components/charts/progress-bar/config/progress-bar-widget-config.component';
+import { ProgressBarWidgetAppearanceConfigComponent } from '../components/charts/progress-bar/appearance-config/progress-bar-appearance-config.component';
 
 @Injectable({ providedIn: 'root' })
 export class ChartRegistry {
@@ -198,6 +201,18 @@ export class ChartRegistry {
                 icon: 'view_agenda',
                 description: this.translateService.instant(
                     'Display the latest values of multiple selected fields in a single card',
+                ),
+            },
+            {
+                id: 'progress-bar',
+                label: this.translateService.instant('Progress Bar'),
+                widgetAppearanceConfigurationComponent:
+                    ProgressBarWidgetAppearanceConfigComponent,
+                widgetConfigurationComponent: ProgressBarWidgetConfigComponent,
+                widgetComponent: ProgressBarWidgetComponent,
+                icon: 'linear_scale',
+                description: this.translateService.instant(
+                    'Display the progress of a numeric value against a target',
                 ),
             },
             {

@@ -70,17 +70,18 @@
     border-radius: 5px;
     min-height: 0;
     overflow: hidden;
-    padding: 1.1rem 1.2rem;
+    padding: 0 1.2rem;
 }
 
 .value-card-list {
     display: grid;
+    align-content: start;
     gap: 0;
     grid-template-columns: repeat(
         var(--value-card-list-columns),
         minmax(0, 1fr)
     );
-    min-height: 100%;
+    min-height: 0;
 }
 
 .value-card-item {

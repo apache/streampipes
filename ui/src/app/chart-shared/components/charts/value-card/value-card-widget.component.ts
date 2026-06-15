@@ -34,6 +34,12 @@ import {
     ValueCardWidgetModel,
 } from './model/value-card-widget.model';
 import { ResultLabelService } from '../../../services/result-label.service';
+import {
+    clampValue,
+    formatWidgetNumber,
+    resolveResponsiveFontSize,
+    scaleResponsiveValue,
+} from '../../../services/widget-render.utils';
 
 interface ValueCardView {
     id: string;
@@ -99,20 +105,36 @@ export class ValueCardWidgetComponent
             '--value-card-gap': compactMode ? '12px' : '18px',
             '--value-card-title-size': compactMode ? '18px' : '24px',
             '--value-card-description-size': compactMode ? '12px' : '14px',
-            '--value-card-row-padding': `${this.scaleValue(12, 22, fontScale)}px`,
-            '--value-card-label-size': `${this.resolveFontSize(
+            '--value-card-row-padding': `${scaleResponsiveValue(
+                12,
+                22,
+                fontScale,
+                0.7,
+                1.45,
+            )}px`,
+            '--value-card-label-size': `${resolveResponsiveFontSize(
                 this.appearanceConfig.labelFontSize,
                 11,
                 16,
                 fontScale,
+                0.7,
+                1.45,
             )}px`,
-            '--value-card-value-size': `${this.resolveFontSize(
+            '--value-card-value-size': `${resolveResponsiveFontSize(
                 this.appearanceConfig.valueFontSize,
                 20,
                 42,
                 fontScale,
+                0.7,
+                1.45,
             )}px`,
-            '--value-card-row-gap': `${this.scaleValue(4, 10, fontScale)}px`,
+            '--value-card-row-gap': `${scaleResponsiveValue(
+                4,
+                10,
+                fontScale,
+                0.7,
+                1.45,
+            )}px`,
             '--value-card-border-color':
                 'color-mix(in srgb, currentColor 10%, transparent)',
             '--value-card-divider-color':
@@ -145,6 +167,11 @@ export class ValueCardWidgetComponent
     }
 
     beforeDataFetched(): void {
+        if (this.valueCards.length > 0) {
+            this.setShownComponents(false, true, false, false);
+            return;
+        }
+
         this.setShownComponents(false, false, true, false);
     }
 
@@ -264,14 +291,11 @@ export class ValueCardWidgetComponent
         }
 
         if (typeof value === 'number' && Number.isFinite(value)) {
-            const decimals = this.normalizeDecimals(
+            return formatWidgetNumber(
+                value,
+                this.locale,
                 this.appearanceConfig.numberFormat?.decimals,
             );
-
-            return new Intl.NumberFormat(this.locale, {
-                maximumFractionDigits: decimals ?? 20,
-                minimumFractionDigits: decimals ?? 0,
-            }).format(value);
         }
 
         if (typeof value === 'boolean') {
@@ -279,19 +303,6 @@ export class ValueCardWidgetComponent
         }
 
         return String(value);
-    }
-
-    private normalizeDecimals(decimals: unknown): number | undefined {
-        if (decimals === null || decimals === undefined || decimals === '') {
-            return undefined;
-        }
-
-        const parsedValue = Number(decimals);
-        if (!Number.isFinite(parsedValue)) {
-            return undefined;
-        }
-
-        return Math.min(10, Math.max(0, Math.round(parsedValue)));
     }
 
     private getLatestTimestampLabel(): string | undefined {
@@ -343,43 +354,15 @@ export class ValueCardWidgetComponent
             return 0.8;
         }
 
-        const widthScale = this.clamp(width / 640, 0.7, 1.45);
+        const widthScale = clampValue(width / 640, 0.7, 1.45);
         const availableHeight = Math.max(height - 110, 120);
-        const heightPerRowScale = this.clamp(
+        const heightPerRowScale = clampValue(
             availableHeight / (rowCount * 84),
             0.7,
             1.45,
         );
 
-        return this.clamp(Math.min(widthScale, heightPerRowScale), 0.7, 1.45);
-    }
-
-    private scaleValue(min: number, max: number, scale: number): number {
-        const normalizedScale = (scale - 0.7) / 0.75;
-        const scaledValue = min + (max - min) * normalizedScale;
-        return Math.round(this.clamp(scaledValue, min, max));
-    }
-
-    private resolveFontSize(
-        manualSize: number | undefined,
-        min: number,
-        max: number,
-        scale: number,
-    ): number {
-        if (
-            manualSize === undefined ||
-            manualSize === null ||
-            Number.isNaN(Number(manualSize)) ||
-            manualSize <= 0
-        ) {
-            return this.scaleValue(min, max, scale);
-        }
-
-        return Math.round(Math.max(1, manualSize) * scale * 10) / 10;
-    }
-
-    private clamp(value: number, min: number, max: number): number {
-        return Math.min(Math.max(value, min), max);
+        return clampValue(Math.min(widthScale, heightPerRowScale), 0.7, 1.45);
     }
 
     get valueListColumns(): number {
