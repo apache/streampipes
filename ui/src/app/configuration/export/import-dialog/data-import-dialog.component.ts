@@ -139,7 +139,7 @@ export class SpDataImportDialogComponent {
             .triggerImport(this.selectedUploadFile, this.importConfiguration)
             .subscribe(_result => {
                 this.assetBrowserService.refreshBrowserAssetData();
-                this.dialogRef.close();
+                this.dialogRef.close('import');
             });
     }
 
