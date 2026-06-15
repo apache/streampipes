@@ -16,24 +16,11 @@
  *
  */
 
-.highlight-color-list {
+.progress-color-list {
     gap: var(--space-sm);
 }
 
-.highlight-color-label {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    font-size: var(--font-size-sm);
-}
-
-.highlight-color-measure {
-    color: var(--color-secondary-text);
-    font-size: var(--font-size-xs);
-}
-
-.highlight-color-picker {
-    margin-left: auto;
+.progress-color-picker {
     display: block;
     width: calc(var(--space-md) * 2.4);
     height: calc(var(--space-md) * 2.4);
@@ -44,9 +31,4 @@
     appearance: none;
     -webkit-appearance: none;
     background-clip: padding-box;
-}
-
-.highlight-color-picker:disabled {
-    cursor: default;
-    opacity: 0.45;
 }

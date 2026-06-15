@@ -16,37 +16,30 @@
  *
  */
 
-.highlight-color-list {
-    gap: var(--space-sm);
+import {
+    DataExplorerDataConfig,
+    DataExplorerField,
+    DataExplorerWidgetModel,
+} from '@streampipes/platform-services';
+import {
+    DataExplorerVisConfig,
+    WidgetNumberAppearanceConfig,
+} from '../../../../models/dataview-dashboard.model';
+
+export interface ValueCardVisConfig extends DataExplorerVisConfig {
+    selectedFields?: DataExplorerField[];
+    title?: string;
+    description?: string;
+    showTimestamp?: boolean;
 }
 
-.highlight-color-label {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    font-size: var(--font-size-sm);
+export interface ValueCardAppearanceConfig extends WidgetNumberAppearanceConfig {
+    labelFontSize?: number;
+    valueFontSize?: number;
 }
 
-.highlight-color-measure {
-    color: var(--color-secondary-text);
-    font-size: var(--font-size-xs);
-}
-
-.highlight-color-picker {
-    margin-left: auto;
-    display: block;
-    width: calc(var(--space-md) * 2.4);
-    height: calc(var(--space-md) * 2.4);
-    padding: 0;
-    border: 1px solid var(--color-tab-border);
-    border-radius: var(--button-border-radius);
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    background-clip: padding-box;
-}
-
-.highlight-color-picker:disabled {
-    cursor: default;
-    opacity: 0.45;
+export interface ValueCardWidgetModel extends DataExplorerWidgetModel {
+    dataConfig: DataExplorerDataConfig;
+    visualizationConfig: ValueCardVisConfig;
+    baseAppearanceConfig: ValueCardAppearanceConfig;
 }
