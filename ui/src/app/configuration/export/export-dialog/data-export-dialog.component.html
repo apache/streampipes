@@ -58,21 +58,28 @@
                             [exportItems]="config.pipelines"
                             [sectionTitle]="'Pipelines' | translate"
                         ></sp-data-export-item>
-                        @if (first) {
-                            <sp-data-export-item
-                                [exportItems]="referencedLabels"
-                                [sectionTitle]="'Labels' | translate"
-                            ></sp-data-export-item>
-                            <sp-data-export-item
-                                [exportItems]="referencedSites"
-                                [sectionTitle]="'Sites' | translate"
-                            ></sp-data-export-item>
-                        }
+
                         <sp-generic-storage-items
                             [exportItems]="config.genericStorageDocuments"
                         >
                         </sp-generic-storage-items>
                     </div>
+                }
+                @if (referencedLabels.length || referencedSites.length) {
+                    <h4>{{ 'Referenced resources' | translate }}</h4>
+                    @if (referencedLabels.length > 0) {
+                        <sp-data-export-item
+                            [exportItems]="referencedLabels"
+                            [sectionTitle]="'Labels' | translate"
+                        ></sp-data-export-item>
+                    }
+
+                    @if (referencedSites.length > 0) {
+                        <sp-data-export-item
+                            [exportItems]="referencedSites"
+                            [sectionTitle]="'Sites' | translate"
+                        ></sp-data-export-item>
+                    }
                 }
             </div>
         }
