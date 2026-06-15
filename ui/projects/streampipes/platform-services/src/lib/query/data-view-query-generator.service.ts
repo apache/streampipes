@@ -138,6 +138,10 @@ export class DataViewQueryGeneratorService {
                     queryConfig.aggregationValue,
                 );
             }
+
+            if (queryConfig.fill !== undefined) {
+                queryBuilder.withFill(queryConfig.fill);
+            }
         }
 
         if (ignoreEventsWithMissingValues) {

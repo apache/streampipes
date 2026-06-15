@@ -28,7 +28,6 @@ describe('Test Table View in Charts', () => {
 
     it('Perform Test', () => {
         ChartUtils.addDataViewAndWidget(
-            'view',
             PrepareTestDataUtils.dataName,
             ChartWidget.TABLE,
         );

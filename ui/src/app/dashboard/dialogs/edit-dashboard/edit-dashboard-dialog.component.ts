@@ -117,6 +117,12 @@ export class EditDashboardDialogComponent implements OnInit {
             this.dashboard.dashboardGeneralSettings.chartOverrides.hideToolbox = false;
         }
         if (
+            this.dashboard.dashboardGeneralSettings.chartOverrides
+                .borderThickness === undefined
+        ) {
+            this.dashboard.dashboardGeneralSettings.chartOverrides.borderThickness = 0;
+        }
+        if (
             this.dashboard.dashboardGeneralSettings.gridRowHeightPx ===
             undefined
         ) {

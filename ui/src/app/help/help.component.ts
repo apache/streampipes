@@ -27,7 +27,7 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
-import { LoginService } from '../login/services/login.service';
+import { LoginSettingsService } from '../login/services/login-settings.service';
 import { InfoTabComponent } from './components/info/info.component';
 import { DocumentationTabComponent } from './components/documentation/documentation.component';
 import { ShortcutsTabComponent } from './components/shortcuts/shortcuts.component';
@@ -52,7 +52,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 })
 export class HelpComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
-    private loginService = inject(LoginService);
+    private loginSettingsService = inject(LoginSettingsService);
     private translateService = inject(TranslateService);
 
     selectedIndex = 0;
@@ -67,7 +67,7 @@ export class HelpComponent implements OnInit {
         this.breadcrumbService.updateBreadcrumb([
             { label: this.translateService.instant('Help') },
         ]);
-        this.loginService.fetchLoginSettings().subscribe(res => {
+        this.loginSettingsService.getSettings().subscribe(res => {
             this.documentationLink = res.linkSettings?.documentationUrl || '';
             this.showDocumentationTab =
                 !!res.linkSettings?.showDocumentationLinkInProfileMenu &&

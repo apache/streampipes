@@ -19,7 +19,9 @@
 package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
+import org.apache.streampipes.model.datalake.ChartSummaryDto;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.DataExplorerResourceManager;
 import org.apache.streampipes.resource.management.DataExplorerWidgetResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -58,13 +60,19 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_DATA_EXPLORER_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.elementId, 'READ')")
-  public List<DataExplorerWidgetModel> getAllDataExplorerWidgets() {
+  public List<DataExplorerWidgetModel> getAllCharts() {
     return resourceManager.findAll();
   }
 
-  @GetMapping(path = "/{widgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResourceSummaryDto<ChartSummaryDto> getChartSummary() {
+    return resourceManager.getSummary(getAuthentication());
+  }
+
+  @GetMapping(path = "/{chartId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority() and hasPermission(#elementId, 'READ')")
-  public ResponseEntity<DataExplorerWidgetModel> getDataExplorerWidget(@PathVariable("widgetId") String elementId) {
+  public ResponseEntity<DataExplorerWidgetModel> getChart(@PathVariable("chartId") String elementId) {
     var widget = resourceManager.find(elementId);
     if (widget != null) {
       return ok(widget);
@@ -74,19 +82,19 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
   }
 
   @PutMapping(
-      path = "/{widgetId}",
+      path = "/{chartId}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dataExplorerWidgetModel.elementId, 'WRITE')")
-  public ResponseEntity<DataExplorerWidgetModel> modifyDataExplorerWidget(
+  public ResponseEntity<DataExplorerWidgetModel> modifyChart(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     resourceManager.update(dataExplorerWidgetModel);
     return ok(resourceManager.find(dataExplorerWidgetModel.getElementId()));
   }
 
-  @DeleteMapping(path = "/{widgetId}")
+  @DeleteMapping(path = "/{chartId}")
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'WRITE')")
-  public ResponseEntity<Void> deleteDataExplorerWidget(@PathVariable("widgetId") String elementId) {
+  public ResponseEntity<Void> deleteChart(@PathVariable("chartId") String elementId) {
     resourceManager.delete(elementId);
     return ok();
   }
@@ -96,7 +104,7 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<DataExplorerWidgetModel> createDataExplorerWidget(
+  public ResponseEntity<DataExplorerWidgetModel> createChart(
       @RequestBody DataExplorerWidgetModel dataExplorerWidgetModel) {
     return ok(resourceManager.create(dataExplorerWidgetModel, getAuthenticatedUserSid()));
   }

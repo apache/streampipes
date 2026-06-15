@@ -301,6 +301,16 @@ export class DashboardPanelComponent
         };
     }
 
+    onBorderThicknessChange(value: number | string): void {
+        const numericValue = Number(value);
+        this.dashboard.dashboardGeneralSettings.chartOverrides = {
+            ...this.dashboard.dashboardGeneralSettings.chartOverrides,
+            borderThickness: Number.isFinite(numericValue)
+                ? Math.max(0, Math.min(12, numericValue))
+                : 0,
+        };
+    }
+
     private getNextWidgetY(): number {
         if (!this.dashboard?.widgets?.length) {
             return 0;
@@ -675,6 +685,7 @@ export class DashboardPanelComponent
         this.dashboard.dashboardGeneralSettings.globalTimeEnabled ??= true;
         this.dashboard.dashboardGeneralSettings.chartOverrides ??= {};
         this.dashboard.dashboardGeneralSettings.chartOverrides.hideToolbox ??= false;
+        this.dashboard.dashboardGeneralSettings.chartOverrides.borderThickness ??= 0;
         this.dashboard.dashboardGeneralSettings.gridRowHeightPx ??= 90;
     }
 

@@ -29,6 +29,10 @@ export class ChartBtns {
         return cy.dataCy('sp-manage-save');
     }
 
+    public static manageChartButton(title) {
+        return cy.dataCy('open-manage-permissions-' + title);
+    }
+
     public static saveDashboardBtn() {
         return cy.dataCy('save-dashboard-btn');
     }
@@ -148,7 +152,7 @@ export class ChartBtns {
     }
 
     public static discardDataExplorerWidgetBtn() {
-        return cy.dataCy('discard-data-explorer-widget-btn');
+        return cy.dataCy('save-data-explorer-go-back-to-overview');
     }
 
     public static chartDataPreview() {

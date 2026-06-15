@@ -19,26 +19,53 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterSummaryDto;
+import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import org.springframework.security.core.Authentication;
+
 public class AdapterResourceManager extends AbstractResourceManager<IAdapterStorage> {
 
   private final ICertificateStorage certificateStorage;
+  private final SpPermissionEvaluator permissionEvaluator;
 
   public AdapterResourceManager(IAdapterStorage adapterStorage,
                                 ICertificateStorage certificateStorage) {
     super(adapterStorage);
     this.certificateStorage = certificateStorage;
+    this.permissionEvaluator = new SpPermissionEvaluator();
   }
 
   public AdapterResourceManager() {
     super(StorageDispatcher.INSTANCE.getNoSqlStore()
                                     .getAdapterInstanceStorage());
     this.certificateStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getCertificateStorage();
+    this.permissionEvaluator = new SpPermissionEvaluator();
+  }
+
+  public ResourceSummaryDto<AdapterSummaryDto> getSummary(Authentication auth) {
+    var adapters = db.findAll().stream()
+        .filter(adapter -> canReadAdapter(auth, adapter))
+        .map(adapter -> new AdapterSummaryDto(
+            adapter.getElementId(),
+            adapter.getCorrespondingDataStreamElementId(),
+            adapter.getName(),
+            adapter.getDescription(),
+            adapter.isRunning(),
+            adapter.getCreatedAt(),
+            adapter.getAppId(),
+            adapter.getIncludedAssets(),
+            adapter.getIcon()
+        ))
+        .toList();
+
+    return new ResourceSummaryDto<>(adapters, adapters.size());
   }
 
   /**
@@ -96,6 +123,12 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
     SecretProvider.getEncryptionService()
                   .apply(encryptedAdapterDescription);
     return encryptedAdapterDescription;
+  }
+
+  private boolean canReadAdapter(Authentication auth, AdapterDescription adapter) {
+    return adapter != null
+        && adapter.getCorrespondingDataStreamElementId() != null
+        && permissionEvaluator.hasPermission(auth, adapter.getCorrespondingDataStreamElementId(), "READ");
   }
 
 }

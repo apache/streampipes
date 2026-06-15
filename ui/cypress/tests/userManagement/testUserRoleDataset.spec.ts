@@ -172,11 +172,10 @@ describe('Test Dataset Permissions', () => {
             cy.get('sp-alert-banner').should('be.visible');
             ChartBtns.discardDataExplorerWidgetBtn().click();
         } else {
-            cy.dataCy('data-explorer-select-data-set').click();
-            cy.get('mat-option').contains(datasetName).click();
+            ChartUtils.selectDataSet(datasetName);
             ChartBtns.discardDataExplorerWidgetBtn().click();
-            ChartUtils.addDataViewAndTableWidget('test', datasetName, true);
-            ChartUtils.saveDataViewConfiguration(false, false);
+            ChartUtils.addDataViewAndTableWidget(datasetName, true);
+            ChartUtils.saveDataViewConfiguration(false, false, 'test');
         }
     }
 

@@ -20,6 +20,7 @@ import { Component, inject } from '@angular/core';
 import {
     DialogRef,
     SpAlertBannerComponent,
+    SpAssetBrowserService,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
@@ -82,6 +83,7 @@ export class SpDataImportDialogComponent {
     private dialogRef =
         inject<DialogRef<SpDataImportDialogComponent>>(DialogRef);
     private dataExportService = inject(DataExportService);
+    private assetBrowserService = inject(SpAssetBrowserService);
 
     private translateService = inject(TranslateService);
     currentImportStep = 0;
@@ -136,7 +138,8 @@ export class SpDataImportDialogComponent {
         this.dataExportService
             .triggerImport(this.selectedUploadFile, this.importConfiguration)
             .subscribe(_result => {
-                this.dialogRef.close();
+                this.assetBrowserService.refreshBrowserAssetData();
+                this.dialogRef.close('import');
             });
     }
 

@@ -30,6 +30,10 @@ import { map } from 'rxjs/operators';
 import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 import {
+    DatasetSummaryDto,
+    ResourceSummaryDto,
+} from '../model/resource/resource-summary.model';
+import {
     CsvImportPreviewRequest,
     CsvImportPreviewResult,
     CsvImportRequest,
@@ -82,6 +86,12 @@ export class DatalakeRestService {
                     DataLakeMeasure.fromData(p),
                 );
             }),
+        );
+    }
+
+    getMeasurementSummary(): Observable<ResourceSummaryDto<DatasetSummaryDto>> {
+        return this.http.get<ResourceSummaryDto<DatasetSummaryDto>>(
+            `${this.dataLakeMeasureUrl}/summary`,
         );
     }
 

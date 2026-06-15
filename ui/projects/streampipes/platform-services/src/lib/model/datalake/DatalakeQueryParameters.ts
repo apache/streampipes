@@ -29,6 +29,7 @@ export interface DatalakeQueryParameters {
     order?: string;
     aggregationFunction?: string;
     timeInterval?: string;
+    fill?: string | number;
     countOnly?: boolean;
     autoAggregate?: boolean;
     filter?: string;

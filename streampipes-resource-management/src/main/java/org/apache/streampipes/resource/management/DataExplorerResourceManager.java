@@ -48,10 +48,10 @@ public class DataExplorerResourceManager extends CrudResourceManager<DashboardMo
         .filter(dashboard -> permissionEvaluator.hasPermission(auth, dashboard.getElementId(), "READ"))
         .map(dashboard -> new DashboardSummaryDto(
             dashboard.getElementId(),
-            dashboard.getName(),
-            dashboard.getDescription(),
-            dashboard.getMetadata().getCreatedAtEpochMs(),
-            dashboard.getMetadata().getLastModifiedEpochMs()))
+            getDashboardName(dashboard),
+            getDashboardDescription(dashboard),
+            getCreatedAt(dashboard),
+            getLastModified(dashboard)))
         .toList();
 
     return new ResourceSummaryDto<>(dashboards, dashboards.size());
@@ -75,5 +75,31 @@ public class DataExplorerResourceManager extends CrudResourceManager<DashboardMo
         .filter(String.class::isInstance)
         .map(String.class::cast)
         .toList();
+  }
+
+  private String getDashboardName(DashboardModel dashboard) {
+    if (dashboard == null) {
+      return null;
+    }
+
+    return dashboard.getName() != null ? dashboard.getName() : dashboard.getElementId();
+  }
+
+  private String getDashboardDescription(DashboardModel dashboard) {
+    return dashboard != null && dashboard.getDescription() != null
+        ? dashboard.getDescription()
+        : "";
+  }
+
+  private Long getCreatedAt(DashboardModel dashboard) {
+    return dashboard != null && dashboard.getMetadata() != null
+        ? dashboard.getMetadata().getCreatedAtEpochMs()
+        : null;
+  }
+
+  private Long getLastModified(DashboardModel dashboard) {
+    return dashboard != null && dashboard.getMetadata() != null
+        ? dashboard.getMetadata().getLastModifiedEpochMs()
+        : null;
   }
 }
