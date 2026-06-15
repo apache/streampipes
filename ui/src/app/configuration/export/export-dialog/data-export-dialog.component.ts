@@ -19,7 +19,10 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
-import { ExportConfiguration } from '@streampipes/platform-services';
+import {
+    ExportConfiguration,
+    ExportItem,
+} from '@streampipes/platform-services';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -55,6 +58,12 @@ export class SpDataExportDialogComponent implements OnInit {
     @Input()
     selectedAssets: string[];
 
+    @Input()
+    referencedLabels: ExportItem[] = [];
+
+    @Input()
+    referencedSites: ExportItem[] = [];
+
     preview: ExportConfiguration;
     exportInProgress = false;
 
@@ -72,6 +81,7 @@ export class SpDataExportDialogComponent implements OnInit {
 
     generateDownloadPackage(): void {
         this.exportInProgress = true;
+        this.addReferencedGenericStorageDocuments(this.preview);
         this.dataExportService.triggerExport(this.preview).subscribe(result => {
             this.downloadFile(result);
         });
@@ -91,5 +101,35 @@ export class SpDataExportDialogComponent implements OnInit {
 
         window.URL.revokeObjectURL(url);
         this.dialogRef.close();
+    }
+
+    private addReferencedGenericStorageDocuments(
+        preview: ExportConfiguration,
+    ): void {
+        const firstAssetExportConfig = preview.assetExportConfiguration?.[0];
+        const referencedGenericStorageDocuments = [
+            ...this.referencedLabels,
+            ...this.referencedSites,
+        ];
+
+        if (
+            firstAssetExportConfig &&
+            referencedGenericStorageDocuments.length > 0
+        ) {
+            firstAssetExportConfig.genericStorageDocuments ??= [];
+            const existingDocumentIds = new Set(
+                firstAssetExportConfig.genericStorageDocuments.map(
+                    item => item.resourceId,
+                ),
+            );
+            const missingDocuments = referencedGenericStorageDocuments.filter(
+                item => !existingDocumentIds.has(item.resourceId),
+            );
+
+            firstAssetExportConfig.genericStorageDocuments = [
+                ...firstAssetExportConfig.genericStorageDocuments,
+                ...missingDocuments,
+            ];
+        }
     }
 }
