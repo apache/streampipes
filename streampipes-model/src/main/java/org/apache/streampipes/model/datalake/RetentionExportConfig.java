@@ -31,6 +31,10 @@ public class RetentionExportConfig {
     private String lastExport;
     private List<RetentionLog> retentionLog = new ArrayList<>();
 
+    public RetentionExportConfig() {
+
+    }
+
     public RetentionExportConfig(ExportConfig exportConfig, String exportProviderId, String lastExport,
             List<RetentionLog> retentionLog) {
         this.exportConfig = exportConfig;
