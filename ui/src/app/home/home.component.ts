@@ -171,13 +171,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     sortAssetLinks(assets: SpAssetModel[]) {
         assets.forEach(asset => {
-            asset.assetLinks = [...asset.assetLinks].sort((a, b) => {
-                const typeCompare = a.linkType.localeCompare(b.linkType);
+            asset.assetLinks = [...(asset.assetLinks ?? [])].sort((a, b) => {
+                const leftType = a.linkType ?? '';
+                const rightType = b.linkType ?? '';
+                const typeCompare = leftType.localeCompare(rightType);
                 if (typeCompare !== 0) {
                     return typeCompare;
                 }
 
-                return a.linkLabel.localeCompare(b.linkLabel);
+                return (a.linkLabel ?? '').localeCompare(b.linkLabel ?? '');
             });
         });
     }
