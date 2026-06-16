@@ -36,6 +36,10 @@
                         >
                             <input
                                 matInput
+                                [attr.data-cy]="
+                                    'data-explorer-result-label-input-' +
+                                    field.fullDbName
+                                "
                                 [ngModel]="getLabel(field)"
                                 (ngModelChange)="updateLabel(field, $event)"
                                 [placeholder]="field.fullDbName"

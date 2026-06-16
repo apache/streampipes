@@ -16,6 +16,8 @@
  *
  */
 
+import { ChartBtns } from './ChartBtns';
+
 export class ChartWidgetTableUtils {
     public static chartTableRows() {
         return cy
@@ -44,5 +46,11 @@ export class ChartWidgetTableUtils {
 
     public static checkTotalAmountOfRows(amount: number) {
         this.paginatorRangeLabel().should('contain.text', amount.toString());
+    }
+
+    public static checkHeaderLabel(fieldName: string, expectedLabel: string) {
+        ChartBtns.tableHeader(fieldName).should($header => {
+            expect($header.text().trim()).to.equal(expectedLabel);
+        });
     }
 }
