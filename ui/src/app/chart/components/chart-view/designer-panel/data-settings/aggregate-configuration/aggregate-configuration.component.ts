@@ -66,11 +66,9 @@ export class AggregateConfigurationComponent {
     ];
 
     triggerDataRefresh() {
-        if (this.widgetId) {
-            this.widgetConfigService.notify({
-                refreshData: true,
-                refreshView: true,
-            });
-        }
+        this.widgetConfigService.notify({
+            refreshData: true,
+            refreshView: true,
+        });
     }
 }

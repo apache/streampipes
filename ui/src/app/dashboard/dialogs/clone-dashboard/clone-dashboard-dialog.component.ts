@@ -19,16 +19,17 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import {
     ChartService,
+    ClientDashboardItem,
     CompositeDashboard,
     Dashboard,
     DashboardService,
     DataExplorerWidgetModel,
 } from '@streampipes/platform-services';
-import { DialogRef } from '@streampipes/shared-ui';
+import { DialogRef, FormFieldComponent } from '@streampipes/shared-ui';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 import { Observable, zip } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -61,7 +62,6 @@ export interface WidgetClone {
         LayoutDirective,
         FlexDirective,
         MatFormField,
-        MatLabel,
         MatInput,
         FormsModule,
         MatError,
@@ -76,6 +76,7 @@ export interface WidgetClone {
         LayoutAlignDirective,
         MatProgressSpinner,
         TranslatePipe,
+        FormFieldComponent,
     ],
 })
 export class CloneDashboardDialogComponent implements OnInit {
@@ -138,25 +139,20 @@ export class CloneDashboardDialogComponent implements OnInit {
         clonedDashboard.name = this.form.name;
         clonedDashboard.description = this.form.description;
         if (this.form.deepClone) {
-            clonedDashboard.widgets.forEach((widget, index) => {
-                const widgetElementId =
-                    this.idGeneratorService.generateWithPrefix(
-                        CloneDashboardDialogComponent.ChartPrefix,
-                        6,
-                    );
-                const clonedWidget = clonedWidgets.find(
-                    w => w.elementId === widget.id,
+            const widgetCloneMap = new Map<string, DataExplorerWidgetModel>();
+
+            clonedDashboard.widgets.forEach(widget => {
+                this.remapWidgetReference(
+                    widget,
+                    clonedWidgets,
+                    widgetCloneMap,
+                    this.form.allowWidgetEdits,
                 );
-                if (clonedWidget !== undefined) {
-                    clonedWidgets[index].elementId = widgetElementId;
-                    clonedWidgets[index].metadata.createdAtEpochMs = Date.now();
-                    clonedWidgets[index].metadata.lastModifiedEpochMs =
-                        Date.now();
-                    clonedWidgets[index].rev = undefined;
-                }
-                widget.id = widgetElementId;
             });
-            widget$ = clonedWidgets.map(w => this.chartService.saveChart(w));
+
+            widget$ = Array.from(widgetCloneMap.values()).map(w =>
+                this.chartService.saveChart(w),
+            );
         }
         zip([
             ...widget$,
@@ -164,5 +160,40 @@ export class CloneDashboardDialogComponent implements OnInit {
         ]).subscribe(() => {
             this.dialogRef.close(true);
         });
+    }
+
+    private remapWidgetReference(
+        dashboardWidget: ClientDashboardItem,
+        clonedWidgets: DataExplorerWidgetModel[],
+        widgetCloneMap: Map<string, DataExplorerWidgetModel>,
+        keepWidgetTitle: boolean,
+    ): void {
+        const sourceWidgetId = dashboardWidget.dataViewElementId;
+        if (widgetCloneMap.has(sourceWidgetId)) {
+            dashboardWidget.dataViewElementId =
+                widgetCloneMap.get(sourceWidgetId).elementId;
+            return;
+        }
+
+        const clonedWidget = clonedWidgets.find(
+            widget => widget.elementId === sourceWidgetId,
+        );
+        if (clonedWidget === undefined) {
+            return;
+        }
+
+        clonedWidget.elementId = this.idGeneratorService.generateWithPrefix(
+            CloneDashboardDialogComponent.ChartPrefix,
+            6,
+        );
+        clonedWidget.metadata.createdAtEpochMs = Date.now();
+        clonedWidget.metadata.lastModifiedEpochMs = Date.now();
+        if (!keepWidgetTitle) {
+            clonedWidget.baseAppearanceConfig.widgetTitle = `${clonedWidget.baseAppearanceConfig.widgetTitle} (${this.translate.instant('Copy')})`;
+        }
+        clonedWidget.rev = undefined;
+
+        widgetCloneMap.set(sourceWidgetId, clonedWidget);
+        dashboardWidget.dataViewElementId = clonedWidget.elementId;
     }
 }

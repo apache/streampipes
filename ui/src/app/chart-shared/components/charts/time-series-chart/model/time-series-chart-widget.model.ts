@@ -27,6 +27,14 @@ import {
     DataExplorerVisConfig,
 } from '../../../../models/dataview-dashboard.model';
 
+export type TimeSeriesGroupedColorMode = 'stable_palette' | 'custom_mapping';
+
+export interface TimeSeriesGroupColorMapping {
+    value: string;
+    label: string;
+    color: string;
+}
+
 export interface TimeSeriesChartVisConfig extends DataExplorerVisConfig {
     selectedTimeSeriesChartProperties: DataExplorerField[];
     selectedBackgroundColorProperty?: EventPropertyUnion;
@@ -39,6 +47,8 @@ export interface TimeSeriesChartVisConfig extends DataExplorerVisConfig {
     displayName: { [id: string]: string };
     displayType: { [id: string]: string };
     chosenAxis: { [id: string]: string };
+    groupedColorMode: { [id: string]: TimeSeriesGroupedColorMode };
+    groupedColorMappings: { [id: string]: TimeSeriesGroupColorMapping[] };
     leftAxis: AxisConfig;
     rightAxis: AxisConfig;
     showSpike: boolean;

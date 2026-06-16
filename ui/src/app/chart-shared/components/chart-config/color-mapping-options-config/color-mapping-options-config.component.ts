@@ -72,9 +72,11 @@ export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
 
     @Input() colorMapping: { value: string; label: string; color: string }[];
 
-    @Input() selectedProperty: DataExplorerField;
+    @Input() selectedProperty?: DataExplorerField;
 
     @Input() showCustomColorMapping: boolean;
+
+    @Input() showToggle = true;
 
     @Output()
     viewRefreshEmitter: EventEmitter<void> = new EventEmitter<void>();
@@ -170,7 +172,7 @@ export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
     }
 
     isBooleanPropertySelected(): boolean {
-        return this.selectedProperty.fieldCharacteristics.binary;
+        return this.selectedProperty?.fieldCharacteristics.binary ?? false;
     }
 
     setCustomColorMapping(showCustomColorMapping: boolean) {

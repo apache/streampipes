@@ -81,12 +81,14 @@ public class SpCachedPlcConnectionManager implements PlcConnectionManager, AutoC
    * @param url url of the connection that should be removed.
    */
   public void removeCachedConnection(String url) {
+    SpConnectionContainer connectionContainer;
     synchronized (connectionContainers) {
-      // Make sure the connection is closed before removing it.
-      if (connectionContainers.containsKey(url)) {
-        connectionContainers.get(url).close();
-      }
-      connectionContainers.remove(url);
+      connectionContainer = connectionContainers.remove(url);
+    }
+
+    // Make sure the connection is closed before removing it.
+    if (connectionContainer != null) {
+      connectionContainer.close();
     }
   }
 
@@ -119,8 +121,13 @@ public class SpCachedPlcConnectionManager implements PlcConnectionManager, AutoC
     Future<PlcConnection> leaseFuture = connectionContainer.lease();
     try {
       return leaseFuture.get(this.maxWaitTime.toMillis(), TimeUnit.MILLISECONDS);
-    } catch (ExecutionException | InterruptedException | TimeoutException e) {
-      throw new PlcConnectionException("Error acquiring lease for connection");
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new PlcConnectionException("Interrupted while acquiring lease for connection", e);
+    } catch (TimeoutException e) {
+      throw new PlcConnectionException("Timed out acquiring lease for connection", e);
+    } catch (ExecutionException e) {
+      throw new PlcConnectionException("Error acquiring lease for connection", e.getCause());
     }
   }
 
@@ -134,9 +141,12 @@ public class SpCachedPlcConnectionManager implements PlcConnectionManager, AutoC
     closed.set(true);
 
     // Tell all connections to close themselves.
-    connectionContainers.forEach((connectionString, connectionContainer) -> {
-      connectionContainer.close();
-    });
+    Map<String, SpConnectionContainer> containersToClose;
+    synchronized (connectionContainers) {
+      containersToClose = new HashMap<>(connectionContainers);
+      connectionContainers.clear();
+    }
+    containersToClose.forEach((connectionString, connectionContainer) -> connectionContainer.close());
   }
 
   public static class Builder {
@@ -175,4 +185,3 @@ public class SpCachedPlcConnectionManager implements PlcConnectionManager, AutoC
   }
 
 }
-

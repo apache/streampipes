@@ -16,7 +16,7 @@
 ~
 -->
 
-<div fxLayout="column" fxLayoutAlign="stretch" fxFlex="100">
+<div fxLayout="column" fxFlex="100">
     <div
         fxFlex="100"
         fxLayout="column"
@@ -24,12 +24,7 @@
         class="ml-0 mr-5 form-field-small"
     >
         <sp-form-field [level]="3" [label]="'Unit' | translate" class="w-100">
-            <mat-form-field
-                appearance="outline"
-                fxFlex="100"
-                class="w-100"
-                color="accent"
-            >
+            <mat-form-field appearance="outline" fxFlex="100" class="w-100">
                 <mat-select
                     [(value)]="queryConfig.aggregationTimeUnit"
                     class="w-100"
@@ -43,7 +38,11 @@
                 </mat-select>
             </mat-form-field>
         </sp-form-field>
-        <sp-form-field [level]="3" [label]="'Value' | translate" class="w-100">
+        <sp-form-field
+            [level]="3"
+            [label]="'Value' | translate"
+            class="w-100 mb-10"
+        >
             <mat-form-field
                 appearance="outline"
                 fxFlex="100"

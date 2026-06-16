@@ -85,24 +85,51 @@
                         }
                         @if (availableMeasurements.length !== 0) {
                             <mat-form-field
-                                color="accent"
                                 fxFlex="100"
                                 appearance="outline"
                                 subscriptSizing="dynamic"
                             >
-                                <mat-select
+                                <mat-icon matPrefix>search</mat-icon>
+                                <input
+                                    matInput
+                                    [placeholder]="
+                                        'Search datasets' | translate
+                                    "
+                                    [value]="measurementInputValue"
+                                    (input)="
+                                        onMeasurementSearchChange(
+                                            $any($event.target).value
+                                        )
+                                    "
+                                    [matAutocomplete]="datasetAutocomplete"
                                     data-cy="data-explorer-select-data-set"
-                                    [(value)]="sourceConfig.measureName"
-                                    (selectionChange)="
-                                        updateMeasure(
+                                />
+                                @if (hasActiveMeasurementSearch()) {
+                                    <button
+                                        mat-icon-button
+                                        matSuffix
+                                        type="button"
+                                        [attr.aria-label]="
+                                            'Clear search' | translate
+                                        "
+                                        (click)="clearMeasurementSearch()"
+                                    >
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                }
+                                <mat-autocomplete
+                                    #datasetAutocomplete="matAutocomplete"
+                                    autoActiveFirstOption
+                                    (optionSelected)="
+                                        onMeasurementSelected(
                                             sourceConfig,
-                                            $event.value
+                                            $event
                                         )
                                     "
                                 >
                                     @for (
-                                        measurement of availableMeasurements;
-                                        track measurement
+                                        measurement of filteredMeasurements;
+                                        track measurement.elementId
                                     ) {
                                         <mat-option
                                             [value]="measurement.measureName"
@@ -112,7 +139,18 @@
                                             }}</span>
                                         </mat-option>
                                     }
-                                </mat-select>
+                                    @if (
+                                        filteredMeasurements.length === 0 &&
+                                        hasActiveMeasurementSearch()
+                                    ) {
+                                        <mat-option disabled>
+                                            {{
+                                                'No datasets match your search.'
+                                                    | translate
+                                            }}
+                                        </mat-option>
+                                    }
+                                </mat-autocomplete>
                             </mat-form-field>
                         }
                     </sp-split-section>
@@ -313,6 +351,14 @@
                                                         >
                                                         </sp-aggregate-configuration>
                                                     }
+                                                    <sp-fill-configuration
+                                                        class="mt-10"
+                                                        [queryConfig]="
+                                                            sourceConfig.queryConfig
+                                                        "
+                                                        [widgetId]="widgetId"
+                                                    >
+                                                    </sp-fill-configuration>
                                                 </div>
                                             }
                                         </div>
@@ -364,6 +410,11 @@
                                 #groupSelectionPanel
                                 [sourceConfig]="sourceConfig"
                             ></sp-group-selection-panel>
+                            <sp-result-label-configuration
+                                [sourceConfig]="sourceConfig"
+                                [sourceIndex]="0"
+                            >
+                            </sp-result-label-configuration>
                             <sp-order-selection-panel
                                 [sourceConfig]="sourceConfig"
                             >

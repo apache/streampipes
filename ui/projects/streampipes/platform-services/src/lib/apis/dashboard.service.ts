@@ -25,6 +25,10 @@ import {
     Dashboard,
 } from '../model/dashboard/dashboard.model';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
+import {
+    DashboardSummaryDto,
+    ResourceSummaryDto,
+} from '../model/resource/resource-summary.model';
 
 @Injectable({
     providedIn: 'root',
@@ -35,6 +39,12 @@ export class DashboardService {
 
     getDashboards(): Observable<Dashboard[]> {
         return this.sharedDatalakeRestService.getDashboards(this.dashboardUrl);
+    }
+
+    getDashboardSummary(): Observable<ResourceSummaryDto<DashboardSummaryDto>> {
+        return this.http.get<ResourceSummaryDto<DashboardSummaryDto>>(
+            `${this.dashboardUrl}/summary`,
+        );
     }
 
     getDashboard(dashboardId: string): Observable<Dashboard> {
@@ -68,6 +78,10 @@ export class DashboardService {
             this.dashboardUrl,
             dashboard,
         );
+    }
+
+    deleteDashboardById(elementId: string): Observable<any> {
+        return this.http.delete(`${this.dashboardUrl}/${elementId}`);
     }
 
     saveDashboard(dashboard: Dashboard): Observable<any> {

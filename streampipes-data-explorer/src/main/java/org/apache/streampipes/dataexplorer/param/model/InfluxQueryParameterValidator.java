@@ -26,6 +26,7 @@ final class InfluxQueryParameterValidator {
 
   private static final Pattern SAFE_TIME_INTERVAL = Pattern.compile("^\\d+(ms|s|m|h|d|w)$");
   private static final Pattern SAFE_IDENTIFIER = Pattern.compile("^[^\\s,;()\"']+$");
+  private static final Pattern NUMERIC_FILL = Pattern.compile("^-?\\d+(\\.\\d+)?$");
 
   private InfluxQueryParameterValidator() {
   }
@@ -46,5 +47,26 @@ final class InfluxQueryParameterValidator {
     }
 
     return identifier;
+  }
+
+  static Object requireValidFill(String fill) {
+    if (fill == null || fill.isBlank()) {
+      return "none";
+    }
+
+    String normalized = fill.trim().toLowerCase();
+
+    if (normalized.equals("none")
+        || normalized.equals("null")
+        || normalized.equals("previous")
+        || normalized.equals("linear")) {
+      return normalized;
+    }
+
+    if (NUMERIC_FILL.matcher(normalized).matches()) {
+      return Double.parseDouble(normalized);
+    }
+
+    throw new IllegalArgumentException("Invalid fill parameter: " + fill);
   }
 }

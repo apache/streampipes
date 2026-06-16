@@ -29,11 +29,8 @@ describe('Test chart data download dialog', () => {
             'json_array',
         );
 
-        ChartUtils.addDataViewAndTableWidget(
-            dataViewName,
-            PrepareTestDataUtils.dataName,
-        );
-        ChartUtils.saveDataViewConfiguration(false, false);
+        ChartUtils.addDataViewAndTableWidget(PrepareTestDataUtils.dataName);
+        ChartUtils.saveDataViewConfiguration(false, false, dataViewName);
     });
 
     beforeEach('Setup Test', () => {

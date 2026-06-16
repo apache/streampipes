@@ -63,10 +63,18 @@ export class TrafficLightWidgetComponent
 
     activeClass = 'red';
     displayed_value: string;
+    currentValue?: number;
+    widgetWidth = 0;
+    widgetHeight = 0;
+    trafficLightShellWidth = 88;
+    trafficLightValueFontSize = 28;
 
     ngOnInit(): void {
         super.ngOnInit();
+        this.widgetWidth = this.initialSize.width;
+        this.widgetHeight = this.initialSize.height;
         this.updateSettings();
+        this.updateTrafficLightMetrics();
     }
 
     updateSettings(): void {
@@ -84,7 +92,7 @@ export class TrafficLightWidgetComponent
 
     getTrafficLightColor(): void {
         const value = this.row[0][this.fieldIndex];
-        this.displayed_value = value.toFixed(2);
+        this.currentValue = value;
 
         if (this.isInOkRange(value)) {
             this.activeClass = 'green';
@@ -93,6 +101,8 @@ export class TrafficLightWidgetComponent
         } else {
             this.activeClass = 'red';
         }
+
+        this.updateTrafficLightMetrics();
     }
 
     exceedsThreshold(value) {
@@ -159,7 +169,11 @@ export class TrafficLightWidgetComponent
         }
     }
 
-    onResize(_width: number, _heigth: number) {}
+    onResize(width: number, height: number) {
+        this.widgetWidth = width;
+        this.widgetHeight = height;
+        this.updateTrafficLightMetrics();
+    }
 
     handleUpdatedFields(
         addedFields: DataExplorerField[],
@@ -181,5 +195,79 @@ export class TrafficLightWidgetComponent
         this.selectedFieldToObserve = updatedFields[0];
         this.fieldToObserve();
         this.refreshView();
+    }
+
+    private updateTrafficLightMetrics(): void {
+        const availableWidth = this.widgetWidth > 0 ? this.widgetWidth : 280;
+        const availableHeight = this.widgetHeight > 0 ? this.widgetHeight : 320;
+        const reservedValueHeight = this.selectedToShowValue
+            ? Math.max(36, availableHeight * 0.12)
+            : 0;
+        const usableHeight = Math.max(
+            availableHeight - reservedValueHeight,
+            120,
+        );
+        const maxWidthByHeight = usableHeight / 3.25;
+        const preferredWidth = availableWidth * 0.4;
+        const maxShellWidth = Math.min(
+            Math.max(availableWidth * 0.55, 140),
+            220,
+        );
+        let shellWidth = this.clamp(
+            Math.min(preferredWidth, maxWidthByHeight),
+            72,
+            maxShellWidth,
+        );
+
+        const valueText = this.formatDisplayedValue(this.currentValue);
+        const desiredFontSize = this.clamp(
+            Math.round(shellWidth * 0.34),
+            18,
+            42,
+        );
+        const estimatedRequiredWidth =
+            valueText.length * desiredFontSize * 0.58 + 2 * 12;
+
+        shellWidth = Math.max(
+            shellWidth,
+            Math.min(estimatedRequiredWidth, maxShellWidth),
+        );
+        shellWidth = Math.min(
+            shellWidth,
+            availableWidth * 0.82,
+            maxWidthByHeight,
+            maxShellWidth,
+        );
+
+        this.trafficLightShellWidth = Math.round(shellWidth);
+        this.displayed_value = this.formatDisplayedValue(this.currentValue);
+        this.trafficLightValueFontSize = this.computeValueFontSize(
+            this.trafficLightShellWidth,
+            this.displayed_value,
+        );
+    }
+
+    private computeValueFontSize(width: number, value: string): number {
+        if (!value) {
+            return 28;
+        }
+
+        return this.clamp(
+            Math.floor((width - 24) / Math.max(value.length * 0.58, 1)),
+            12,
+            42,
+        );
+    }
+
+    private formatDisplayedValue(value: number | undefined): string {
+        if (value === undefined || value === null || Number.isNaN(value)) {
+            return '';
+        }
+
+        return value.toFixed(2);
+    }
+
+    private clamp(value: number, min: number, max: number): number {
+        return Math.max(min, Math.min(max, value));
     }
 }

@@ -21,6 +21,10 @@ import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
 import { SpAssetModel } from '../model/gen/streampipes-model';
+import {
+    AssetSummaryDto,
+    ResourceSummaryDto,
+} from '../model/resource/resource-summary.model';
 
 @Injectable({
     providedIn: 'root',
@@ -35,6 +39,12 @@ export class AssetManagementService {
 
     getAllAssets(): Observable<SpAssetModel[]> {
         return this.http.get<SpAssetModel[]>(this.assetBasePath);
+    }
+
+    getAssetSummary(): Observable<ResourceSummaryDto<AssetSummaryDto>> {
+        return this.http.get<ResourceSummaryDto<AssetSummaryDto>>(
+            `${this.assetBasePath}/summary`,
+        );
     }
 
     getAsset(assetId: string): Observable<SpAssetModel> {

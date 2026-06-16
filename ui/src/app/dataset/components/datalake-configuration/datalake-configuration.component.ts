@@ -39,12 +39,11 @@ import {
 } from '@angular/material/table';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
-    ChartService,
-    DataLakeMeasure,
     DatalakeRestService,
+    DataLakeMeasure,
+    DatasetSummaryDto,
     ExportProviderService,
     ExportProviderSettings,
-    RetentionLog,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -143,7 +142,6 @@ export class DatalakeConfigurationComponent
     spTable!: SpTableComponent<DataLakeConfigurationEntry>;
 
     private datalakeRestService = inject(DatalakeRestService);
-    private dataViewDataExplorerService = inject(ChartService);
     private dialogService = inject(DialogService);
     private breadcrumbService = inject(SpBreadcrumbService);
     private exportProviderRestService = inject(ExportProviderService);
@@ -227,7 +225,7 @@ export class DatalakeConfigurationComponent
         this.assetFilter$?.unsubscribe();
     }
 
-    loadAvailableExportProvider() {
+    loadAvailableExportProvider(): void {
         this.availableExportProvider = [];
         this.exportProviderRestService
             .getAllExportProviders()
@@ -237,50 +235,23 @@ export class DatalakeConfigurationComponent
             });
     }
 
-    loadAvailableMeasurements() {
+    loadAvailableMeasurements(): void {
         this.availableMeasurements = [];
-        // get all available measurements that are stored in the data lake
         this.datalakeRestService
-            .getAllMeasurementSeries()
-            .subscribe(allMeasurements => {
-                // get all measurements that are still used in pipelines
-                this.dataViewDataExplorerService
-                    .getAllPersistedDataStreams()
-                    .subscribe(inUseMeasurements => {
-                        allMeasurements.forEach(measurement => {
-                            const entry = new DataLakeConfigurationEntry();
-                            entry.elementId = measurement.elementId;
-                            entry.name = measurement.measureName;
-                            entry.eventsLatest = -1;
-                            entry.eventsTotal = -1;
-                            if (measurement?.retentionTime != null) {
-                                entry.retention = measurement.retentionTime;
-                            }
-                            inUseMeasurements.forEach(inUseMeasurement => {
-                                if (
-                                    inUseMeasurement.measureName ===
-                                    measurement.measureName
-                                ) {
-                                    entry.pipelines.push(
-                                        inUseMeasurement.pipelineName,
-                                    );
-                                    if (inUseMeasurement.pipelineIsRunning) {
-                                        entry.remove = false;
-                                    }
-                                }
-                            });
-                            this.availableMeasurements.push(entry);
-                        });
+            .getMeasurementSummary()
+            .subscribe(datasetSummary => {
+                this.availableMeasurements = datasetSummary.resources.map(
+                    measurement => this.toConfigurationEntry(measurement),
+                );
 
-                        this.availableMeasurements.sort((a, b) =>
-                            a.name.localeCompare(b.name),
-                        );
-                        this.applyMeasurementFilters(this.currentFilterIds);
-                    });
+                this.availableMeasurements.sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                );
+                this.applyMeasurementFilters(this.currentFilterIds);
             });
     }
 
-    applyMeasurementFilters(elementIds: Set<string>) {
+    applyMeasurementFilters(elementIds: Set<string>): void {
         this.currentFilterIds = elementIds;
         if (elementIds === undefined) {
             this.filteredMeasurements = [];
@@ -317,7 +288,7 @@ export class DatalakeConfigurationComponent
         }
     }
 
-    createExportProvider(provider: ExportProviderSettings | null) {
+    createExportProvider(provider: ExportProviderSettings | null): void {
         const dialogRef: DialogRef<ExportProviderComponent> =
             this.dialogService.open(ExportProviderComponent, {
                 panelType: PanelType.SLIDE_IN_PANEL,
@@ -333,7 +304,7 @@ export class DatalakeConfigurationComponent
         });
     }
 
-    cleanDatalakeIndex(measurementIndex: string) {
+    cleanDatalakeIndex(measurementIndex: string): void {
         const dialogRef: DialogRef<DeleteDatalakeIndexComponent> =
             this.dialogService.open(DeleteDatalakeIndexComponent, {
                 panelType: PanelType.STANDARD_PANEL,
@@ -352,7 +323,7 @@ export class DatalakeConfigurationComponent
         });
     }
 
-    deleteDatalakeIndex(measurementIndex: string) {
+    deleteDatalakeIndex(measurementIndex: string): void {
         const dialogRef: DialogRef<DeleteDatalakeIndexComponent> =
             this.dialogService.open(DeleteDatalakeIndexComponent, {
                 panelType: PanelType.STANDARD_PANEL,
@@ -371,7 +342,7 @@ export class DatalakeConfigurationComponent
         });
     }
 
-    deleteExportProvider(providerId: string) {
+    deleteExportProvider(providerId: string): void {
         const dialogRef: DialogRef<DeleteExportProviderComponent> =
             this.dialogService.open(DeleteExportProviderComponent, {
                 panelType: PanelType.STANDARD_PANEL,
@@ -388,7 +359,7 @@ export class DatalakeConfigurationComponent
             }
         });
     }
-    testExportProvider(providerId: string) {
+    testExportProvider(providerId: string): void {
         const dialogRef: DialogRef<ExportProviderConnectionTestComponent> =
             this.dialogService.open(ExportProviderConnectionTestComponent, {
                 panelType: PanelType.STANDARD_PANEL,
@@ -408,7 +379,7 @@ export class DatalakeConfigurationComponent
         });
     }
 
-    openDownloadDialog(measurementName: string) {
+    openDownloadDialog(measurementName: string): void {
         this.dialogService.open(DataDownloadDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: this.translateService.instant('Download data'),
@@ -421,7 +392,7 @@ export class DatalakeConfigurationComponent
         });
     }
 
-    openRetentionDialog(measurementId: string) {
+    openRetentionDialog(measurementId: string): void {
         const dialogRef: DialogRef<DataRetentionDialogComponent> =
             this.dialogService.open(DataRetentionDialogComponent, {
                 panelType: PanelType.SLIDE_IN_PANEL,
@@ -444,37 +415,25 @@ export class DatalakeConfigurationComponent
         });
     }
 
-    openRetentionLog(retentionLog: RetentionLog[]) {
-        const dialogRef: DialogRef<DataRetentionLogDialogComponent> =
-            this.dialogService.open(DataRetentionLogDialogComponent, {
-                panelType: PanelType.STANDARD_PANEL,
-                title: this.translateService.instant('Retention Log'),
-                width: '100vw',
-                data: {
-                    retentionLog: retentionLog,
-                },
-            });
-
-        dialogRef.afterClosed().subscribe(data => {
-            if (data) {
-                setTimeout(() => {
-                    this.loadAvailableMeasurements();
-                }, 1000);
-            }
+    openRetentionLog(measurementId: string): void {
+        this.datalakeRestService.getMeasurement(measurementId).subscribe({
+            next: measurement => {
+                this.openRetentionLogDialog(measurement);
+            },
         });
     }
 
-    onPageChange(event: any) {
+    onPageChange(event: any): void {
         this.pageIndex = event.pageIndex;
         this.pageSize = event.pageSize;
         //this.receiveMeasurementSizes(this.pageIndex);
     }
 
-    receiveTotalMeasurementSize(entry: DataLakeConfigurationEntry) {
+    receiveTotalMeasurementSize(entry: DataLakeConfigurationEntry): void {
         this.queryEntryCounts([entry.name], 'eventsTotal');
     }
 
-    receiveMeasurementSizes(pageIndex: number) {
+    receiveMeasurementSizes(pageIndex: number): void {
         const start = pageIndex * this.pageSize;
         const end = start + this.pageSize;
         const measurements = this.filteredMeasurements
@@ -485,7 +444,7 @@ export class DatalakeConfigurationComponent
             this.queryEntryCounts(measurements, 'eventsLatest', 7);
         }
     }
-    showPermissionsDialog(element: DataLakeMeasure) {
+    showPermissionsDialog(element: DataLakeConfigurationEntry): void {
         this.dialogService.open(ObjectPermissionDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: this.translateService.instant('Manage permissions'),
@@ -500,7 +459,7 @@ export class DatalakeConfigurationComponent
         });
     }
 
-    openCsvImportDialog() {
+    openCsvImportDialog(): void {
         const dialogRef: DialogRef<CsvImportDialogComponent> =
             this.dialogService.open(CsvImportDialogComponent, {
                 panelType: PanelType.SLIDE_IN_PANEL,
@@ -550,6 +509,45 @@ export class DatalakeConfigurationComponent
         this.availableMeasurements.forEach(m => {
             if (measurements.includes(m.name)) {
                 m[loadingField] = status;
+            }
+        });
+    }
+
+    private toConfigurationEntry(
+        measurement: DatasetSummaryDto,
+    ): DataLakeConfigurationEntry {
+        const entry = new DataLakeConfigurationEntry();
+        entry.elementId = measurement.elementId;
+        entry.name = measurement.measureName;
+        entry.measureName = measurement.measureName;
+        entry.pipelines = measurement.pipelines;
+        entry.retentionConfigured = measurement.retentionConfigured;
+        entry.lastExport = measurement.lastExport;
+        entry.lastRetentionStatus = measurement.lastRetentionStatus;
+        entry.remove = measurement.removable;
+        entry.eventsLatest = -1;
+        entry.eventsTotal = -1;
+        return entry;
+    }
+
+    private openRetentionLogDialog(measurement: DataLakeMeasure): void {
+        const dialogRef: DialogRef<DataRetentionLogDialogComponent> =
+            this.dialogService.open(DataRetentionLogDialogComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translateService.instant('Retention Log'),
+                width: '100vw',
+                data: {
+                    retentionLog:
+                        measurement.retentionTime?.retentionExportConfig
+                            ?.retentionLog ?? [],
+                },
+            });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                setTimeout(() => {
+                    this.loadAvailableMeasurements();
+                }, 1000);
             }
         });
     }

@@ -55,7 +55,7 @@ export class StatusComponent implements OnInit {
         zip(this.statusBox.dataFns).subscribe(res => {
             let totalLength = 0;
             res.forEach(response => {
-                totalLength += response.length;
+                totalLength += response.totalCount;
             });
 
             this.resourceCount = totalLength;

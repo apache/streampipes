@@ -1,5 +1,3 @@
-import { RetentionTimeConfig } from '@streampipes/platform-services';
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,8 +15,10 @@ import { RetentionTimeConfig } from '@streampipes/platform-services';
  * limitations under the License.
  *
  */
+
 export class DataLakeConfigurationEntry {
     public name: string;
+    public measureName: string;
     public pipelines: string[] = [];
     public eventsTotal = 0;
     public eventsLatest = 0;
@@ -26,7 +26,9 @@ export class DataLakeConfigurationEntry {
     public eventsLatestLoading = false;
     public remove = true;
     public elementId: string;
-    public retention: RetentionTimeConfig;
+    public retentionConfigured = false;
+    public lastExport: string | null = null;
+    public lastRetentionStatus: boolean | null = null;
 
     constructor() {}
 }

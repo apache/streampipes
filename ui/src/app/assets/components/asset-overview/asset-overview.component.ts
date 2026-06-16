@@ -26,6 +26,7 @@ import {
     MatTableDataSource,
 } from '@angular/material/table';
 import {
+    AssetSummaryDto,
     AssetManagementService,
     SpAssetModel,
 } from '@streampipes/platform-services';
@@ -99,16 +100,16 @@ export class SpAssetOverviewComponent implements OnInit {
     private dialog = inject(MatDialog);
     private translateService = inject(TranslateService);
 
-    existingAssets: SpAssetModel[] = [];
-    filteredAssets: SpAssetModel[] = [];
+    existingAssets: AssetSummaryDto[] = [];
+    filteredAssets: AssetSummaryDto[] = [];
 
     displayedColumns: string[] = ['assetName', 'actions'];
 
     @ViewChild(MatSort)
     sort: MatSort;
 
-    dataSource: MatTableDataSource<SpAssetModel> =
-        new MatTableDataSource<SpAssetModel>();
+    dataSource: MatTableDataSource<AssetSummaryDto> =
+        new MatTableDataSource<AssetSummaryDto>();
 
     hasWritePrivilege = false;
 
@@ -153,8 +154,8 @@ export class SpAssetOverviewComponent implements OnInit {
     }
 
     loadAssets(): void {
-        this.assetService.getAllAssets().subscribe(result => {
-            this.existingAssets = (result as SpAssetModel[]).sort((a, b) =>
+        this.assetService.getAssetSummary().subscribe(result => {
+            this.existingAssets = result.resources.sort((a, b) =>
                 a.assetName.localeCompare(b.assetName),
             );
             this.applyAssetFilters(this.currentFilterIds);
@@ -210,12 +211,12 @@ export class SpAssetOverviewComponent implements OnInit {
         });
     }
 
-    goToDetailsView(asset: SpAssetModel, editMode = false) {
+    goToDetailsView(asset: AssetSummaryDto, editMode = false) {
         const mode = editMode && this.hasWritePrivilege ? 'edit' : 'view';
         this.router.navigate(['assets', 'details', asset.elementId, mode]);
     }
 
-    deleteAsset(asset: SpAssetModel) {
+    deleteAsset(asset: AssetSummaryDto) {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
@@ -239,7 +240,7 @@ export class SpAssetOverviewComponent implements OnInit {
         });
     }
 
-    openPermissionsDialog(asset: SpAssetModel) {
+    openPermissionsDialog(asset: AssetSummaryDto) {
         this.dialogService.open(ObjectPermissionDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: this.translateService.instant('Manage permissions'),

@@ -133,8 +133,8 @@ describe('Test adapter updates with data lake schema changes', () => {
     }
 
     function addTableChart(measurementName: string) {
-        ChartUtils.addDataViewAndTableWidget(chartName, measurementName, true);
-        ChartUtils.saveDataViewConfiguration(false, false);
+        ChartUtils.addDataViewAndTableWidget(measurementName, true);
+        ChartUtils.saveDataViewConfiguration(false, false, chartName);
         ChartUtils.checkAmount(1);
     }
 

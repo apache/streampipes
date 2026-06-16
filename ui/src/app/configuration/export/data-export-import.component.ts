@@ -118,6 +118,10 @@ export class SpDataExportImportComponent implements OnInit {
             data: {},
         });
 
-        dialogRef.afterClosed().subscribe(() => {});
+        dialogRef.afterClosed().subscribe(result => {
+            if (result === 'import') {
+                this.loadAssets();
+            }
+        });
     }
 }
