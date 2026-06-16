@@ -90,7 +90,16 @@
                                                 @if (column === 'time') {
                                                     {{ 'Time' | translate }}
                                                 } @else {
-                                                    {{ headerLabel(column) }}
+                                                    <span
+                                                        [attr.data-cy]="
+                                                            'data-explorer-table-header-' +
+                                                            column
+                                                        "
+                                                    >
+                                                        {{
+                                                            headerLabel(column)
+                                                        }}
+                                                    </span>
                                                 }
                                             </span>
                                             <mat-icon class="sort-icon">

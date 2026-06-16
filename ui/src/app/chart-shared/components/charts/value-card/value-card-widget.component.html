@@ -50,13 +50,19 @@
             @if (titleText || descriptionText) {
                 <div class="value-card-copy" fxLayout="column">
                     @if (titleText) {
-                        <div class="value-card-title">
+                        <div
+                            class="value-card-title"
+                            data-cy="value-card-title"
+                        >
                             {{ titleText }}
                         </div>
                     }
 
                     @if (descriptionText) {
-                        <div class="value-card-description">
+                        <div
+                            class="value-card-description"
+                            data-cy="value-card-description"
+                        >
                             {{ descriptionText }}
                         </div>
                     }
@@ -64,7 +70,10 @@
             }
 
             @if (showTimestamp) {
-                <div class="value-card-timestamp">
+                <div
+                    class="value-card-timestamp"
+                    data-cy="value-card-timestamp"
+                >
                     {{ latestTimestampLabel }}
                 </div>
             }
@@ -75,11 +84,20 @@
                     [style.--value-card-list-columns]="valueListColumns"
                 >
                     @for (card of valueCards; track trackCard($index, card)) {
-                        <section class="value-card-item">
-                            <div class="value-card-item-label">
+                        <section
+                            class="value-card-item"
+                            data-cy="value-card-item"
+                        >
+                            <div
+                                class="value-card-item-label"
+                                data-cy="value-card-item-label"
+                            >
                                 {{ card.label }}
                             </div>
-                            <div class="value-card-item-value">
+                            <div
+                                class="value-card-item-value"
+                                data-cy="value-card-item-value"
+                            >
                                 {{ card.value }}
                             </div>
                         </section>

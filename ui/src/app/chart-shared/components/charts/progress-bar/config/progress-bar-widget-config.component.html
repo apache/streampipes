@@ -23,19 +23,22 @@
 >
     <sp-split-section [level]="3" [title]="'Values' | translate">
         <sp-form-field [level]="3" [label]="'Current value field' | translate">
-            <sp-select-single-property-config
-                [availableProperties]="availableNumericFields"
-                [selectedProperty]="
-                    currentlyConfiguredWidget.visualizationConfig
-                        .currentValueField
-                "
-                (changeSelectedProperty)="setCurrentValueField($event)"
-            >
-            </sp-select-single-property-config>
+            <div data-cy="data-explorer-progress-current-field">
+                <sp-select-single-property-config
+                    [availableProperties]="availableNumericFields"
+                    [selectedProperty]="
+                        currentlyConfiguredWidget.visualizationConfig
+                            .currentValueField
+                    "
+                    (changeSelectedProperty)="setCurrentValueField($event)"
+                >
+                </sp-select-single-property-config>
+            </div>
         </sp-form-field>
 
         <sp-form-field [level]="3" [label]="'Target source' | translate">
             <mat-radio-group
+                data-cy="data-explorer-progress-target-source"
                 [ngModel]="
                     currentlyConfiguredWidget.visualizationConfig.targetSource
                 "
@@ -55,20 +58,23 @@
             'field'
         ) {
             <sp-form-field [level]="3" [label]="'Target field' | translate">
-                <sp-select-single-property-config
-                    [availableProperties]="availableNumericFields"
-                    [selectedProperty]="
-                        currentlyConfiguredWidget.visualizationConfig
-                            .targetField
-                    "
-                    (changeSelectedProperty)="setTargetField($event)"
-                >
-                </sp-select-single-property-config>
+                <div data-cy="data-explorer-progress-target-field">
+                    <sp-select-single-property-config
+                        [availableProperties]="availableNumericFields"
+                        [selectedProperty]="
+                            currentlyConfiguredWidget.visualizationConfig
+                                .targetField
+                        "
+                        (changeSelectedProperty)="setTargetField($event)"
+                    >
+                    </sp-select-single-property-config>
+                </div>
             </sp-form-field>
         } @else {
             <sp-form-field [level]="3" [label]="'Target value' | translate">
                 <mat-form-field fxFlex="100">
                     <input
+                        data-cy="data-explorer-progress-target-value"
                         matInput
                         type="number"
                         [ngModel]="
@@ -85,6 +91,7 @@
     <sp-split-section [level]="3" [title]="'Behavior' | translate">
         <sp-form-field [level]="3" [label]="'Display mode' | translate">
             <mat-radio-group
+                data-cy="data-explorer-progress-display-mode"
                 [ngModel]="
                     currentlyConfiguredWidget.visualizationConfig.displayMode
                 "
@@ -103,6 +110,7 @@
         </sp-form-field>
 
         <mat-checkbox
+            data-cy="data-explorer-progress-show-label"
             [checked]="currentlyConfiguredWidget.visualizationConfig.showLabel"
             (change)="setShowLabel($event.checked)"
         >
@@ -110,6 +118,7 @@
         </mat-checkbox>
 
         <mat-checkbox
+            data-cy="data-explorer-progress-invert"
             [checked]="
                 currentlyConfiguredWidget.visualizationConfig.invertProgress
             "
@@ -119,6 +128,7 @@
         </mat-checkbox>
 
         <mat-checkbox
+            data-cy="data-explorer-progress-clamp"
             [checked]="
                 currentlyConfiguredWidget.visualizationConfig.clampProgress
             "
@@ -132,6 +142,7 @@
         <sp-form-field [level]="3" [label]="'Title' | translate">
             <mat-form-field fxFlex="100">
                 <input
+                    data-cy="data-explorer-progress-title-input"
                     matInput
                     type="text"
                     [(ngModel)]="
@@ -145,6 +156,7 @@
         <sp-form-field [level]="3" [label]="'Description' | translate">
             <mat-form-field fxFlex="100">
                 <textarea
+                    data-cy="data-explorer-progress-description-input"
                     matInput
                     rows="3"
                     [(ngModel)]="
