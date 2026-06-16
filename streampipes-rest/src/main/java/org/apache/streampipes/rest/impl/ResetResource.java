@@ -26,12 +26,15 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.ResetManagement;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +43,8 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/v2/reset")
+@Conditional(ResetEndpointEnabledCondition.class)
+@PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ResetResource extends AbstractAuthGuardedRestResource {
 
   private final WorkerRestClient workerRestClient;

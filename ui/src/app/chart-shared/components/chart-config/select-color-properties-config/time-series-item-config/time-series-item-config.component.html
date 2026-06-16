@@ -91,10 +91,7 @@
                         class="w-100"
                     >
                         <input
-                            [(ngModel)]="
-                                currentlyConfiguredWidget.visualizationConfig
-                                    .displayName[getFieldKey(field)]
-                            "
+                            [ngModel]="getDisplayName(field)"
                             matInput
                             (input)="
                                 onDisplayNameChange($event.target.value, field)

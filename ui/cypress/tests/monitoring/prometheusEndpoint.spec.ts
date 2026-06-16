@@ -40,7 +40,9 @@ describe('Prometheus actuator endpoint', () => {
                 auth,
             }).then(response => {
                 expect(response.status).to.eq(200);
-                expect(response.body).to.contain('# HELP');
+                expect(response.body).to.contain(
+                    'sp_core_pipeline_count_total',
+                );
                 expect(response.body).to.not.contain('No static resource');
             });
         });

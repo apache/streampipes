@@ -31,6 +31,7 @@ import {
 import { WidgetSize } from '../../../models/dataset.model';
 import { EchartsBasicOptionsGeneratorService } from '../../../echarts-renderer/echarts-basic-options-generator.service';
 import { SpFieldUpdateService } from '../../../services/field-update.service';
+import { ResultLabelService } from '../../../services/result-label.service';
 
 @Injectable({ providedIn: 'root' })
 export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetModel> {
@@ -38,10 +39,11 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
     protected echartsBaseOptionsGenerator = inject(
         EchartsBasicOptionsGeneratorService,
     );
+    protected resultLabelService = inject(ResultLabelService);
 
     makeSeriesItem(
         seriesName: string,
-        fieldName: string,
+        selectedField: DataExplorerField,
         value: number,
         decimals: number | undefined,
         widgetConfig: GaugeWidgetModel,
@@ -51,9 +53,14 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
         const visConfig = widgetConfig.visualizationConfig;
         const clamp = this.getSizeClamp(widgetSize);
         const useThresholdColors = !!visConfig.enableThresholdColors;
-        const displayName = this.makeDisplayName(
-            visConfig.displayName,
-            fieldName,
+        const displayName = this.resultLabelService.resolveLabel(
+            widgetConfig.dataConfig.sourceConfigs[selectedField.sourceIndex]
+                .queryConfig,
+            selectedField,
+            this.makeDisplayName(
+                visConfig.displayName,
+                selectedField.fullDbName,
+            ),
         );
 
         const series: GaugeSeriesOption = {
@@ -172,7 +179,7 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
             },
             series: this.makeSeriesItem(
                 '',
-                selectedField.fullDbName,
+                selectedField,
                 data,
                 decimals,
                 widgetConfig,

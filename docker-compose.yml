@@ -37,6 +37,7 @@ services:
     environment:
       - SP_PRIORITIZED_PROTOCOL=nats
       - SP_SETUP_PROMETHEUS_ENDPOINT=true
+      - SP_RESET_ENDPOINT_ENABLED=true
     depends_on:
       - couchdb
     volumes:

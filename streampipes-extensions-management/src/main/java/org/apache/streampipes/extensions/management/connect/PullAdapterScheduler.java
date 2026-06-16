@@ -26,7 +26,6 @@ import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -48,7 +47,7 @@ public class PullAdapterScheduler {
     final Runnable task = () -> {
       try {
         pullAdapter.pullData();
-      } catch (ExecutionException | InterruptedException | TimeoutException | CompletionException e) {
+      } catch (ExecutionException | InterruptedException | TimeoutException | RuntimeException e) {
         LOG.error("Error while pulling data: {}", e.getMessage());
         SpMonitoringManager.INSTANCE.addErrorMessage(
             adapterElementId,
