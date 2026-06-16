@@ -102,6 +102,8 @@ public interface Environment {
 
   StringEnvironmentVariable getOAuthRedirectUri();
 
+  BooleanEnvironmentVariable getResetEndpointEnabled();
+
   List<OAuthConfiguration> getOAuthConfigurations();
 
   // Messaging
