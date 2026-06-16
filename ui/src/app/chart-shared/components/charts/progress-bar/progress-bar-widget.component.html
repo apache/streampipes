@@ -50,13 +50,19 @@
             @if (titleText || descriptionText) {
                 <div class="progress-copy" fxLayout="column">
                     @if (titleText) {
-                        <div class="progress-title">
+                        <div
+                            class="progress-title"
+                            data-cy="progress-bar-title"
+                        >
                             {{ titleText }}
                         </div>
                     }
 
                     @if (descriptionText) {
-                        <div class="progress-description">
+                        <div
+                            class="progress-description"
+                            data-cy="progress-bar-description"
+                        >
                             {{ descriptionText }}
                         </div>
                     }
@@ -68,18 +74,24 @@
                 fxLayout="row"
                 fxLayoutAlign="space-between center"
             >
-                <span class="progress-status">{{
+                <span class="progress-status" data-cy="progress-bar-status">{{
                     progressView.statusLabel
                 }}</span>
                 @if (showLabel) {
-                    <span class="progress-percent">{{
-                        progressView.percentLabel
-                    }}</span>
+                    <span
+                        class="progress-percent"
+                        data-cy="progress-bar-percent"
+                        >{{ progressView.percentLabel }}</span
+                    >
                 }
             </div>
 
-            <div class="progress-track">
-                <div class="progress-fill" [style.width]="progressWidth"></div>
+            <div class="progress-track" data-cy="progress-bar-track">
+                <div
+                    class="progress-fill"
+                    data-cy="progress-bar-fill"
+                    [style.width]="progressWidth"
+                ></div>
             </div>
 
             @if (showLabel) {
@@ -90,7 +102,10 @@
                         dataExplorerWidget.visualizationConfig.displayMode ===
                             'percent-and-value'
                     ) {
-                        <div class="progress-primary-label">
+                        <div
+                            class="progress-primary-label"
+                            data-cy="progress-bar-primary-label"
+                        >
                             {{ progressView.percentLabel }}
                         </div>
                     }
@@ -101,7 +116,10 @@
                         dataExplorerWidget.visualizationConfig.displayMode ===
                             'percent-and-value'
                     ) {
-                        <div class="progress-secondary-label">
+                        <div
+                            class="progress-secondary-label"
+                            data-cy="progress-bar-secondary-label"
+                        >
                             {{ progressView.valueLabel }}
                         </div>
                     }
