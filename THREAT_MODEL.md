@@ -229,7 +229,7 @@ Grouped in waves; answer inline. Each promotes an *(inferred)* tag to
     non-finding? (Feeds §9.)
 
 **Wave 4 — meta**
-13. StreamPipes has a root `AGENTS.md` but no `SECURITY.md`/`THREAT_MODEL.md`;
-    this PR adds them and appends a `## Security` section to the existing
-    `AGENTS.md` wiring `AGENTS.md → SECURITY.md → THREAT_MODEL.md`. Confirm this
-    in-repo model is canonical, and who owns revisions.
+13. StreamPipes ships a root `AGENTS.md`, `SECURITY.md`, and `THREAT_MODEL.md`,
+    with a `## Security` section in `AGENTS.md` wiring
+    `AGENTS.md → SECURITY.md → THREAT_MODEL.md`. Confirm this in-repo model is
+    canonical, and who owns revisions.
