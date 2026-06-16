@@ -17,12 +17,10 @@
  */
 
 import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
-import { ChartBtns } from '../../../support/utils/chart/ChartBtns';
-import { ChartWidgetTableUtils } from '../../../support/utils/chart/ChartWidgetTableUtils';
-import { ChartWidget } from '../../../support/model/ChartWidget';
 import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
+import { ChartBtns } from '../../../support/utils/chart/ChartBtns';
 
-describe('Test Table View in Charts', () => {
+describe('Test Value Card View in Charts', () => {
     beforeEach('Setup Test', () => {
         ChartUtils.initDataLakeTests();
     });
@@ -30,27 +28,27 @@ describe('Test Table View in Charts', () => {
     it('Perform Test', () => {
         ChartUtils.addDataViewAndWidget(
             PrepareTestDataUtils.dataName,
-            ChartWidget.TABLE,
+            'value-card',
         );
 
-        // Check if table is displayed correctly
-        ChartWidgetTableUtils.checkAmountOfRows(10);
-    });
-
-    it('Renames table field labels', () => {
-        ChartUtils.addDataViewAndWidget(
-            PrepareTestDataUtils.dataName,
-            ChartWidget.TABLE,
+        ChartUtils.openVisualizationConfig();
+        ChartBtns.valueCardShowTimestampCheckbox()
+            .check({ force: true })
+            .should('be.checked');
+        ChartBtns.valueCardTitleInput().type('Current Snapshot');
+        ChartBtns.valueCardDescriptionInput().type(
+            'First returned values from the data view.',
         );
 
-        ChartUtils.selectDataConfig();
-        ChartBtns.resultLabelInput('randomnumber')
-            .clear()
-            .type('Random Number Label');
-
-        ChartWidgetTableUtils.checkHeaderLabel(
-            'randomnumber',
-            'Random Number Label',
+        ChartBtns.valueCardWidget().should('be.visible');
+        ChartBtns.valueCardTitle().should('contain.text', 'Current Snapshot');
+        ChartBtns.valueCardDescription().should(
+            'contain.text',
+            'First returned values from the data view.',
         );
+        ChartBtns.valueCardTimestamp().should('be.visible');
+        ChartBtns.valueCardItems().should('have.length.greaterThan', 0);
+        ChartBtns.valueCardItemLabels().first().should('not.be.empty');
+        ChartBtns.valueCardItemValues().first().should('not.be.empty');
     });
 });
