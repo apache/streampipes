@@ -1121,7 +1121,7 @@
   "To": "Bis",
   "To delete a label, please remove the label from all assets": "Um ein Label zu löschen, entfernen Sie es bitte aus allen Assets",
   "To delete a label, please remove the label from all assets.": "Um ein Label zu löschen, entfernen Sie es bitte aus allen Assets.",
-  "To delete a site, please remove the site from all assets": "Um eine Website zu löschen, entfernen Sie diese bitte aus allen Assets",
+  "To delete a site, please remove the site from all assets": "Um einen Standort zu löschen, entfernen Sie diese bitte aus allen Assets",
   "To delete a site, please remove the site from all assets.": "Um einen Standort zu löschen, entfernen Sie den Standort bitte von allen Assets.",
   "To enable the map view, a map provider needs to be configured. Admins can configure map providers under Settings -> Sites.": "Um die Kartenansicht zu aktivieren, ist ein konfigurierter Kartenanbieter erforderlich. Administratoren können Kartenanbieter unter Einstellungen → Standorte verwalten.",
   "Tooltip": "Tooltip",
