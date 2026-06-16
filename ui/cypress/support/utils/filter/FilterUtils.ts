@@ -19,8 +19,13 @@
 import { FilterBtns } from './FilterBtns';
 
 export class FilterUtils {
+    private static openFilterMenu() {
+        FilterBtns.filterBtn().should('be.enabled').click();
+        FilterBtns.applyFiltersBtn().should('be.visible');
+    }
+
     public static clearFilter() {
-        FilterBtns.filterBtn().click();
+        this.openFilterMenu();
         FilterBtns.resetFiltersBtn().click();
     }
 
@@ -41,7 +46,7 @@ export class FilterUtils {
     }
 
     public static filterAssets(assetNames: string[]) {
-        FilterBtns.filterBtn().click();
+        this.openFilterMenu();
         FilterBtns.filtersDeselectAssets().click();
         FilterBtns.filtersAssetSelect().click();
         assetNames.forEach(assetName => {
@@ -54,7 +59,7 @@ export class FilterUtils {
     }
 
     public static filterSites(siteNames: string[]) {
-        FilterBtns.filterBtn().click();
+        this.openFilterMenu();
         FilterBtns.filtersDeselectSites().click();
         FilterBtns.filtersSitesSelect().click();
 
@@ -68,7 +73,7 @@ export class FilterUtils {
     }
 
     public static filterLabels(siteNames: string[]) {
-        FilterBtns.filterBtn().click();
+        this.openFilterMenu();
         FilterBtns.filtersDeselectLabels().click();
         FilterBtns.filtersLabelsSelect().click();
 
@@ -82,7 +87,7 @@ export class FilterUtils {
     }
 
     public static filterTypes(typeNames: string[]) {
-        FilterBtns.filterBtn().click();
+        this.openFilterMenu();
         FilterBtns.filtersDeselectTypes().click();
         FilterBtns.filtersTypesSelect().click();
 
