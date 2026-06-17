@@ -17,6 +17,7 @@
  */
 
 import {
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     Input,
@@ -26,15 +27,8 @@ import {
 } from '@angular/core';
 import { ChartSummaryDto } from '@streampipes/platform-services';
 import { ChartRegistry } from '../../../../../../chart-shared/registry/chart-registry.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
 import { FeatureCardService } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -42,16 +36,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-chart-preview',
     templateUrl: './chart-preview.component.html',
     styleUrls: ['./chart-preview.component.scss'],
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
-        MatIcon,
-        MatIconButton,
-        MatTooltip,
-        TranslatePipe,
-    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [MatIcon, MatIconButton, TranslatePipe],
 })
 export class ChartPreviewComponent implements OnInit {
     private widgetRegistryService = inject(ChartRegistry);
@@ -62,6 +48,7 @@ export class ChartPreviewComponent implements OnInit {
 
     widgetTypeLabel = '';
     widgetTypeIcon = 'insert_chart';
+    dataCyId = '';
 
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter<string>();
@@ -72,6 +59,7 @@ export class ChartPreviewComponent implements OnInit {
         );
         this.widgetTypeLabel = template?.label ?? this.chart.widgetType;
         this.widgetTypeIcon = template?.icon ?? 'insert_chart';
+        this.dataCyId = `add-data-view-btn-${this.chart.name.replaceAll(' ', '')}`;
     }
 
     addChart(): void {

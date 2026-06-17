@@ -17,7 +17,12 @@
  */
 
 .chart-selection-shell {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
     height: 100%;
+    min-height: 0;
+    overflow: hidden;
     padding: 6px 6px 8px;
     background: linear-gradient(
         180deg,
@@ -27,6 +32,7 @@
 }
 
 .chart-selection-toolbar {
+    flex: 0 0 auto;
     position: sticky;
     top: 0;
     z-index: 2;
@@ -64,7 +70,28 @@
 }
 
 .chart-selection-results {
-    padding-top: 2px;
+    flex: 1 1 0;
+    min-height: 0;
+    padding-top: 0;
+}
+
+.chart-selection-viewport {
+    box-sizing: border-box;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.chart-selection-item {
+    box-sizing: border-box;
+    width: 100%;
+    height: 132px;
+    padding: 0 0 6px;
+}
+
+.chart-selection-viewport ::ng-deep .cdk-virtual-scroll-content-wrapper {
+    width: 100%;
+    max-width: 100%;
 }
 
 .chart-selection-empty {

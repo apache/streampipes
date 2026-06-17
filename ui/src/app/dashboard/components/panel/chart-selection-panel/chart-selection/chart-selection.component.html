@@ -100,20 +100,27 @@
     </div>
 
     @if (charts.length > 0 && filteredCharts.length > 0) {
-        <div
+        <cdk-virtual-scroll-viewport
             fxFlexFill
-            fxLayout="column"
-            fxLayoutGap="8px"
-            class="chart-selection-results"
+            class="chart-selection-results chart-selection-viewport"
+            [itemSize]="chartItemSize"
+            [minBufferPx]="chartItemSize * 4"
+            [maxBufferPx]="chartItemSize * 8"
         >
-            @for (chart of filteredCharts; track chart.elementId) {
+            <div
+                *cdkVirtualFor="
+                    let chart of filteredCharts;
+                    trackBy: trackByChartId
+                "
+                class="chart-selection-item"
+            >
                 <sp-chart-preview
                     [chart]="chart"
                     (addChartEmitter)="addChartEmitter.emit($event)"
                 >
                 </sp-chart-preview>
-            }
-        </div>
+            </div>
+        </cdk-virtual-scroll-viewport>
     } @else if (charts.length === 0) {
         <div fxLayoutAlign="center center" fxLayout="column" fxFlex="100">
             <span class="no-widget-hint">{{

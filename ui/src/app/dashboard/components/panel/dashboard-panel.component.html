@@ -75,17 +75,23 @@
                         position="end"
                         class="designer-panel"
                     >
-                        <div fxLayout="column" fxFlex="100">
+                        <div
+                            fxLayout="column"
+                            fxFlex="100"
+                            style="min-height: 0; overflow: hidden"
+                        >
                             @if (editMode) {
                                 <div
                                     fxFlex="100"
                                     class="designer-panel-content"
                                     fxLayout="column"
+                                    style="min-height: 0"
                                 >
                                     <div
                                         fxFlex="100"
                                         fxLayout="column"
                                         class="no-overflow"
+                                        style="min-height: 0"
                                     >
                                         <mat-tab-group
                                             color="accent"
@@ -99,7 +105,9 @@
                                                 data-cy="designer-panel-data-config"
                                                 [label]="'Charts' | translate"
                                             >
-                                                <div class="scroll-tab-content">
+                                                <div
+                                                    class="scroll-tab-content chart-selection-tab-content"
+                                                >
                                                     <sp-chart-selection
                                                         (addChartEmitter)="
                                                             addChartToDashboard(
