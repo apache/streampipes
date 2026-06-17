@@ -16,7 +16,15 @@
  *
  */
 
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    inject,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { ChartService, ChartSummaryDto } from '@streampipes/platform-services';
 import { AuthService } from '../../../../../services/auth.service';
 import { UserPrivilege } from '../../../../../core/auth/user-privilege.enum';
@@ -39,12 +47,19 @@ import {
     MatSuffix,
 } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
+import {
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualForOf,
+    CdkVirtualScrollViewport,
+} from '@angular/cdk/scrolling';
 
 @Component({
     selector: 'sp-chart-selection',
     templateUrl: './chart-selection.component.html',
     styleUrls: ['./chart-selection.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FlexDirective,
         FlexFillDirective,
@@ -59,8 +74,12 @@ import { MatTooltip } from '@angular/material/tooltip';
         MatPrefix,
         MatSuffix,
         MatInput,
+        MatProgressSpinner,
         TranslatePipe,
         MatTooltip,
+        CdkVirtualScrollViewport,
+        CdkFixedSizeVirtualScroll,
+        CdkVirtualForOf,
     ],
 })
 export class ChartSelectionComponent implements OnInit {
@@ -68,6 +87,7 @@ export class ChartSelectionComponent implements OnInit {
     private authService = inject(AuthService);
     private chartRegistryService = inject(ChartRegistry);
     private chartRoutingService = inject(ChartRoutingService);
+    private cdr = inject(ChangeDetectorRef);
 
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter();
@@ -76,6 +96,7 @@ export class ChartSelectionComponent implements OnInit {
     filteredCharts: ChartSummaryDto[] = [];
     searchTerm = '';
     isRefreshing = false;
+    readonly chartItemSize = 132;
 
     hasChartWritePrivileges: boolean = false;
 
@@ -93,18 +114,22 @@ export class ChartSelectionComponent implements OnInit {
 
     refreshCharts(): void {
         this.isRefreshing = true;
+        this.cdr.markForCheck();
         this.dataViewService.getChartSummary().subscribe({
             next: chartSummary => {
                 this.charts = chartSummary.resources.sort((a, b) =>
                     a.name.localeCompare(b.name),
                 );
                 this.applySearch();
+                this.cdr.markForCheck();
             },
             complete: () => {
                 this.isRefreshing = false;
+                this.cdr.markForCheck();
             },
             error: () => {
                 this.isRefreshing = false;
+                this.cdr.markForCheck();
             },
         });
     }
@@ -112,15 +137,21 @@ export class ChartSelectionComponent implements OnInit {
     onSearchTermChanged(value: string): void {
         this.searchTerm = value;
         this.applySearch();
+        this.cdr.markForCheck();
     }
 
     clearSearch(): void {
         this.searchTerm = '';
         this.applySearch();
+        this.cdr.markForCheck();
     }
 
     hasActiveSearch(): boolean {
         return this.searchTerm.trim().length > 0;
+    }
+
+    trackByChartId(index: number, chart: ChartSummaryDto): string {
+        return chart.elementId;
     }
 
     private applySearch(): void {

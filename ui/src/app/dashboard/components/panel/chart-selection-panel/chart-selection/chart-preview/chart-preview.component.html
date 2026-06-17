@@ -17,48 +17,27 @@
   -->
 
 <div
-    fxLayout="row"
-    fxLayoutAlign="space-between center"
-    fxLayoutGap="12px"
     class="data-view-preview-outer"
-    [attr.data-cy]="'add-data-view-btn-' + chart.name.replaceAll(' ', '')"
+    [attr.data-cy]="dataCyId"
+    [attr.title]="chart.name"
     (click)="addChart()"
 >
-    <div
-        fxLayout="row"
-        fxLayoutAlign="start center"
-        fxLayoutGap="12px"
-        fxFlex
-        class="chart-preview-main"
-    >
-        <div
-            class="chart-preview-icon-shell"
-            fxLayout="row"
-            fxLayoutAlign="center center"
-            [matTooltip]="widgetTypeLabel"
-        >
+    <div class="chart-preview-header">
+        <div class="chart-preview-icon-shell" [attr.title]="widgetTypeLabel">
             <mat-icon>{{ widgetTypeIcon }}</mat-icon>
         </div>
 
-        <div fxFlex fxLayout="column" class="chart-preview-copy">
-            <div
-                fxLayout="row"
-                fxLayoutAlign="start center"
-                fxLayoutGap="8px"
-                class="chart-preview-title-row"
-                [matTooltip]="chart.name"
-            >
-                <h5 fxFlex class="chart-preview-title">{{ chart.name }}</h5>
+        <div class="chart-preview-copy">
+            <div class="chart-preview-title-row">
+                <h5 class="chart-preview-title">{{ chart.name }}</h5>
             </div>
 
-            <div
-                fxLayout="row"
-                fxLayoutAlign="start center"
-                fxLayoutGap="12px"
-                class="chart-preview-meta"
-            >
+            <div class="chart-preview-meta">
                 @if (chart.datasetName) {
-                    <span class="chart-preview-meta-item chart-preview-dataset">
+                    <span
+                        class="chart-preview-meta-item chart-preview-dataset"
+                        [attr.title]="chart.datasetName"
+                    >
                         {{ chart.datasetName }}
                     </span>
                 }
@@ -66,26 +45,18 @@
         </div>
     </div>
 
-    <div
-        fxLayout="row"
-        fxLayoutAlign="end center"
-        fxLayoutGap="4px"
-        class="chart-preview-actions"
-    >
+    <div class="chart-preview-actions">
         <button
             mat-icon-button
             type="button"
-            [matTooltip]="'Preview chart' | translate"
+            [attr.aria-label]="'Preview chart' | translate"
+            [attr.title]="'Preview chart' | translate"
             (click)="openPreview($event)"
             data-cy="chart-preview-feature-card"
         >
             <mat-icon>visibility</mat-icon>
         </button>
-        <div
-            class="chart-preview-add-indicator"
-            fxLayout="row"
-            fxLayoutAlign="center center"
-        >
+        <div class="chart-preview-add-indicator">
             <mat-icon>add</mat-icon>
         </div>
     </div>

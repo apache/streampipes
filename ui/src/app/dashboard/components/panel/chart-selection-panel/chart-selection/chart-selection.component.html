@@ -99,21 +99,44 @@
         </mat-form-field>
     </div>
 
-    @if (charts.length > 0 && filteredCharts.length > 0) {
+    @if (isRefreshing) {
         <div
-            fxFlexFill
+            fxFlex="100"
             fxLayout="column"
-            fxLayoutGap="8px"
-            class="chart-selection-results"
+            fxLayoutAlign="center center"
+            fxLayoutGap="12px"
+            class="chart-selection-loading"
         >
-            @for (chart of filteredCharts; track chart.elementId) {
+            <mat-progress-spinner
+                mode="indeterminate"
+                diameter="36"
+            ></mat-progress-spinner>
+            <span class="chart-selection-loading-text">{{
+                'Loading charts...' | translate
+            }}</span>
+        </div>
+    } @else if (charts.length > 0 && filteredCharts.length > 0) {
+        <cdk-virtual-scroll-viewport
+            fxFlexFill
+            class="chart-selection-results chart-selection-viewport"
+            [itemSize]="chartItemSize"
+            [minBufferPx]="chartItemSize * 4"
+            [maxBufferPx]="chartItemSize * 8"
+        >
+            <div
+                *cdkVirtualFor="
+                    let chart of filteredCharts;
+                    trackBy: trackByChartId
+                "
+                class="chart-selection-item"
+            >
                 <sp-chart-preview
                     [chart]="chart"
                     (addChartEmitter)="addChartEmitter.emit($event)"
                 >
                 </sp-chart-preview>
-            }
-        </div>
+            </div>
+        </cdk-virtual-scroll-viewport>
     } @else if (charts.length === 0) {
         <div fxLayoutAlign="center center" fxLayout="column" fxFlex="100">
             <span class="no-widget-hint">{{

@@ -514,9 +514,16 @@ export class SpTableComponent<T>
             return;
         }
 
-        this.dataSource.filter = value.trim().toLocaleLowerCase();
-        this.paginator?.firstPage();
-        this.refreshRenderedRows();
+        const normalizedFilter = value.trim().toLocaleLowerCase();
+        if (this.dataSource.filter === normalizedFilter) {
+            return;
+        }
+
+        if (this.paginator && this.paginator.pageIndex !== 0) {
+            this.paginator.pageIndex = 0;
+        }
+
+        this.dataSource.filter = normalizedFilter;
     }
 
     clearNameSearch() {

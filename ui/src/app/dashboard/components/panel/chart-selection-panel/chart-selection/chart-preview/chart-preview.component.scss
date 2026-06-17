@@ -17,6 +17,10 @@
  */
 
 .data-view-preview-outer {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
     min-height: 72px;
     border: 1px solid color-mix(in srgb, var(--color-bg-3) 68%, transparent);
     border-radius: 14px;
@@ -41,7 +45,6 @@
     );
     background: color-mix(in srgb, var(--color-bg-1) 86%, white 14%);
     box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-    transform: translateY(-1px);
     cursor: pointer;
 }
 
@@ -50,6 +53,9 @@ mat-icon {
 }
 
 .chart-preview-icon-shell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 40px;
     min-width: 40px;
     height: 40px;
@@ -63,11 +69,23 @@ mat-icon {
 }
 
 .chart-preview-main {
+    display: contents;
+}
+
+.chart-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     min-width: 0;
+    overflow: hidden;
 }
 
 .chart-preview-copy {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
     min-width: 0;
+    overflow: hidden;
 }
 
 .chart-preview-title-row {
@@ -88,13 +106,16 @@ mat-icon {
 
 .chart-preview-meta {
     min-width: 0;
+    display: block;
     width: 100%;
+    overflow: hidden;
     margin-top: 2px;
     color: var(--color-paragraph);
     font-size: var(--font-size-sm);
 }
 
 .chart-preview-meta-item {
+    display: block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -113,10 +134,19 @@ mat-icon {
 }
 
 .chart-preview-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
     flex-shrink: 0;
+    width: 100%;
+    margin-left: 0;
 }
 
 .chart-preview-add-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 28px;
     height: 28px;
     border-radius: 50%;
