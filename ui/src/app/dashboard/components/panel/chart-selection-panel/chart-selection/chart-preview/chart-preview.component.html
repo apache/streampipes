@@ -18,27 +18,30 @@
 
 <div
     class="data-view-preview-outer"
-    [attr.data-cy]="dataCyId"
-    [attr.title]="chart.name"
+    [attr.data-cy]="chartItem.dataCyId"
+    [attr.title]="chartItem.chart.name"
     (click)="addChart()"
 >
     <div class="chart-preview-header">
-        <div class="chart-preview-icon-shell" [attr.title]="widgetTypeLabel">
-            <mat-icon>{{ widgetTypeIcon }}</mat-icon>
+        <div
+            class="chart-preview-icon-shell"
+            [attr.title]="chartItem.widgetTypeLabel"
+        >
+            <mat-icon>{{ chartItem.widgetTypeIcon }}</mat-icon>
         </div>
 
         <div class="chart-preview-copy">
             <div class="chart-preview-title-row">
-                <h5 class="chart-preview-title">{{ chart.name }}</h5>
+                <h5 class="chart-preview-title">{{ chartItem.chart.name }}</h5>
             </div>
 
             <div class="chart-preview-meta">
-                @if (chart.datasetName) {
+                @if (chartItem.chart.datasetName) {
                     <span
                         class="chart-preview-meta-item chart-preview-dataset"
-                        [attr.title]="chart.datasetName"
+                        [attr.title]="chartItem.chart.datasetName"
                     >
-                        {{ chart.datasetName }}
+                        {{ chartItem.chart.datasetName }}
                     </span>
                 }
             </div>

@@ -30,8 +30,8 @@
         >
             <div fxLayout="column" class="chart-selection-heading">
                 <span class="chart-selection-caption">
-                    {{ filteredCharts.length }}
-                    @if (filteredCharts.length === 1) {
+                    {{ filteredChartItems.length }}
+                    @if (filteredChartItems.length === 1) {
                         {{ 'chart available' | translate }}
                     } @else {
                         {{ 'charts available' | translate }}
@@ -81,11 +81,10 @@
             <input
                 [placeholder]="'Search charts' | translate"
                 matInput
-                [value]="searchTerm"
-                (input)="onSearchTermChanged($any($event.target).value)"
+                [formControl]="searchControl"
                 data-cy="chart-selection-search"
             />
-            @if (hasActiveSearch()) {
+            @if (hasActiveSearch) {
                 <button
                     mat-icon-button
                     matSuffix
@@ -115,7 +114,7 @@
                 'Loading charts...' | translate
             }}</span>
         </div>
-    } @else if (charts.length > 0 && filteredCharts.length > 0) {
+    } @else if (charts.length > 0 && filteredChartItems.length > 0) {
         <cdk-virtual-scroll-viewport
             fxFlexFill
             class="chart-selection-results chart-selection-viewport"
@@ -125,13 +124,13 @@
         >
             <div
                 *cdkVirtualFor="
-                    let chart of filteredCharts;
+                    let chartItem of filteredChartItems;
                     trackBy: trackByChartId
                 "
                 class="chart-selection-item"
             >
                 <sp-chart-preview
-                    [chart]="chart"
+                    [chartItem]="chartItem"
                     (addChartEmitter)="addChartEmitter.emit($event)"
                 >
                 </sp-chart-preview>
