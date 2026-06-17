@@ -65,10 +65,24 @@ import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ChartRegistry } from '../../../../chart-shared/registry/chart-registry.service';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 type ManageableChart = DataExplorerWidgetModel & {
     name: string;
     description: string;
+};
+
+type ChartOverviewRow = ChartSummaryDto & {
+    chartTypeIcon: string;
+    chartTypeName: string;
+    createdAtLabel: string;
+    lastModifiedLabel: string;
+    showLegacyWarning: boolean;
+    showRequiresAttentionWarning: boolean;
+    showDataCyId: string;
+    editDataCyId: string;
+    manageDataCyId: string;
+    deleteDataCyId: string;
 };
 
 @Component({
@@ -93,6 +107,7 @@ type ManageableChart = DataExplorerWidgetModel & {
         MatMenuItem,
         MatIcon,
         MatTooltip,
+        MatProgressSpinner,
         TranslatePipe,
     ],
 })
@@ -101,9 +116,14 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
     hasDataExplorerWritePrivileges: boolean;
 
     @ViewChild(MatSort)
-    sort: MatSort;
+    set sort(sort: MatSort | undefined) {
+        this._sort = sort;
+        if (sort) {
+            this.dataSource.sort = sort;
+        }
+    }
 
-    dataSource = new MatTableDataSource<ChartSummaryDto>();
+    dataSource = new MatTableDataSource<ChartOverviewRow>();
     displayedColumns: string[] = [
         'name',
         'chartType',
@@ -116,8 +136,13 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
         resourceLinkType: 'chart',
         resourceIdKey: 'elementId',
     };
-    charts: ChartSummaryDto[] = [];
-    filteredCharts: ChartSummaryDto[] = [];
+    readonly nameSearchConfig = {
+        enabled: true,
+        placeholder: 'Search charts',
+    };
+    isLoading = false;
+    charts: ChartOverviewRow[] = [];
+    filteredCharts: ChartOverviewRow[] = [];
 
     private dataViewService = inject(ChartService);
     private dialog = inject(MatDialog);
@@ -130,6 +155,7 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
 
     assetFilter$: Subscription;
     currentFilterIds = new Set<string>();
+    private _sort?: MatSort;
     private chartTypeMetadata = new Map<
         string,
         { icon: string; label: string }
@@ -159,11 +185,20 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
     }
 
     getCharts(): void {
-        this.dataViewService.getChartSummary().subscribe(chartSummary => {
-            this.charts = chartSummary.resources.sort((a, b) =>
-                a.name.localeCompare(b.name),
-            );
-            this.applyChartFilters(this.currentFilterIds);
+        this.isLoading = true;
+        this.dataViewService.getChartSummary().subscribe({
+            next: chartSummary => {
+                this.charts = chartSummary.resources
+                    .map(chart => this.toChartOverviewRow(chart))
+                    .sort((a, b) => a.name.localeCompare(b.name));
+                this.applyChartFilters(this.currentFilterIds);
+            },
+            complete: () => {
+                this.isLoading = false;
+            },
+            error: () => {
+                this.isLoading = false;
+            },
         });
     }
 
@@ -281,28 +316,10 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
                 elementIds.has(a.elementId),
             );
         }
-        this.dataSource.sort = this.sort;
+        if (this._sort) {
+            this.dataSource.sort = this._sort;
+        }
         this.dataSource.data = this.filteredCharts;
-    }
-
-    getChartTypeIcon(chart: ChartSummaryDto): string {
-        return this.getChartTypeMetadata(chart.widgetType).icon;
-    }
-
-    getChartTypeName(chart: ChartSummaryDto): string {
-        return this.getChartTypeMetadata(chart.widgetType).label;
-    }
-
-    formatDate(timestamp?: number): string {
-        return this.dateFormatService.formatDate(timestamp);
-    }
-
-    isLegacyMultiSourceChart(chart: ChartSummaryDto): boolean {
-        return chart.multiSourceChart;
-    }
-
-    requiresAttention(chart: ChartSummaryDto): boolean {
-        return chart?.healthStatus === 'REQUIRES_ATTENTION';
     }
 
     private withChart(
@@ -332,5 +349,33 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
         };
         this.chartTypeMetadata.set(widgetType, metadata);
         return metadata;
+    }
+
+    private toChartOverviewRow(chart: ChartSummaryDto): ChartOverviewRow {
+        const typeMetadata = this.getChartTypeMetadata(chart.widgetType);
+        const sanitizedName = chart.name.replaceAll(' ', '');
+
+        return {
+            ...chart,
+            chartTypeIcon: typeMetadata.icon,
+            chartTypeName: typeMetadata.label,
+            createdAtLabel:
+                chart.createdAtEpochMs !== null
+                    ? this.dateFormatService.formatDate(chart.createdAtEpochMs)
+                    : '–',
+            lastModifiedLabel:
+                chart.lastModifiedEpochMs !== null
+                    ? this.dateFormatService.formatDate(
+                          chart.lastModifiedEpochMs,
+                      )
+                    : '–',
+            showLegacyWarning: !!chart.multiSourceChart,
+            showRequiresAttentionWarning:
+                chart.healthStatus === 'REQUIRES_ATTENTION',
+            showDataCyId: `show-data-view-${sanitizedName}`,
+            editDataCyId: `edit-data-view-${sanitizedName}`,
+            manageDataCyId: `open-manage-permissions-${sanitizedName}`,
+            deleteDataCyId: `delete-data-view-${chart.name}`,
+        };
     }
 }

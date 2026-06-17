@@ -47,6 +47,7 @@ import {
     MatSuffix,
 } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
 import {
     CdkFixedSizeVirtualScroll,
@@ -73,6 +74,7 @@ import {
         MatPrefix,
         MatSuffix,
         MatInput,
+        MatProgressSpinner,
         TranslatePipe,
         MatTooltip,
         CdkVirtualScrollViewport,

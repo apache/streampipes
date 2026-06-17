@@ -94,6 +94,15 @@
     max-width: 100%;
 }
 
+.chart-selection-loading {
+    text-align: center;
+}
+
+.chart-selection-loading-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-paragraph);
+}
+
 .chart-selection-empty {
     min-height: 220px;
     text-align: center;

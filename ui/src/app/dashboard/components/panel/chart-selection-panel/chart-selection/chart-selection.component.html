@@ -99,7 +99,23 @@
         </mat-form-field>
     </div>
 
-    @if (charts.length > 0 && filteredCharts.length > 0) {
+    @if (isRefreshing) {
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+            fxLayoutGap="12px"
+            class="chart-selection-loading"
+        >
+            <mat-progress-spinner
+                mode="indeterminate"
+                diameter="36"
+            ></mat-progress-spinner>
+            <span class="chart-selection-loading-text">{{
+                'Loading charts...' | translate
+            }}</span>
+        </div>
+    } @else if (charts.length > 0 && filteredCharts.length > 0) {
         <cdk-virtual-scroll-viewport
             fxFlexFill
             class="chart-selection-results chart-selection-viewport"

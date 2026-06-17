@@ -35,3 +35,16 @@
 .mr-10 {
     margin-right: 10px;
 }
+
+.chart-overview-loading {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.chart-overview-loading-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-paragraph);
+}
