@@ -20,12 +20,15 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DestroyRef,
     EventEmitter,
     inject,
     OnInit,
     Output,
 } from '@angular/core';
 import { ChartService, ChartSummaryDto } from '@streampipes/platform-services';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../../../services/auth.service';
 import { UserPrivilege } from '../../../../../core/auth/user-privilege.enum';
 import { ChartRegistry } from '../../../../../chart-shared/registry/chart-registry.service';
@@ -54,6 +57,8 @@ import {
     CdkVirtualForOf,
     CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
+import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
+import { ChartSelectionItem } from './chart-selection.model';
 
 @Component({
     selector: 'sp-chart-selection',
@@ -80,6 +85,7 @@ import {
         CdkVirtualScrollViewport,
         CdkFixedSizeVirtualScroll,
         CdkVirtualForOf,
+        ReactiveFormsModule,
     ],
 })
 export class ChartSelectionComponent implements OnInit {
@@ -88,14 +94,18 @@ export class ChartSelectionComponent implements OnInit {
     private chartRegistryService = inject(ChartRegistry);
     private chartRoutingService = inject(ChartRoutingService);
     private cdr = inject(ChangeDetectorRef);
+    private destroyRef = inject(DestroyRef);
 
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter();
 
     charts: ChartSummaryDto[] = [];
-    filteredCharts: ChartSummaryDto[] = [];
+    chartItems: ChartSelectionItem[] = [];
+    filteredChartItems: ChartSelectionItem[] = [];
     searchTerm = '';
+    searchControl = new FormControl('', { nonNullable: true });
     isRefreshing = false;
+    hasActiveSearch = false;
     readonly chartItemSize = 132;
 
     hasChartWritePrivileges: boolean = false;
@@ -106,6 +116,16 @@ export class ChartSelectionComponent implements OnInit {
         );
 
         this.refreshCharts();
+
+        this.searchControl.valueChanges
+            .pipe(
+                debounceTime(150),
+                distinctUntilChanged(),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(value => {
+                this.setSearchTerm(value);
+            });
     }
 
     navigateToDataViewCreation(): void {
@@ -115,62 +135,81 @@ export class ChartSelectionComponent implements OnInit {
     refreshCharts(): void {
         this.isRefreshing = true;
         this.cdr.markForCheck();
-        this.dataViewService.getChartSummary().subscribe({
-            next: chartSummary => {
-                this.charts = chartSummary.resources.sort((a, b) =>
-                    a.name.localeCompare(b.name),
-                );
-                this.applySearch();
-                this.cdr.markForCheck();
-            },
-            complete: () => {
-                this.isRefreshing = false;
-                this.cdr.markForCheck();
-            },
-            error: () => {
-                this.isRefreshing = false;
-                this.cdr.markForCheck();
-            },
-        });
-    }
-
-    onSearchTermChanged(value: string): void {
-        this.searchTerm = value;
-        this.applySearch();
-        this.cdr.markForCheck();
+        this.dataViewService
+            .getChartSummary()
+            .pipe(
+                finalize(() => {
+                    this.isRefreshing = false;
+                    this.cdr.markForCheck();
+                }),
+            )
+            .subscribe({
+                next: chartSummary => {
+                    this.charts = [...chartSummary.resources].sort((a, b) =>
+                        a.name.localeCompare(b.name),
+                    );
+                    this.chartItems = this.charts.map(chart =>
+                        this.toChartSelectionItem(chart),
+                    );
+                    this.applySearch();
+                    this.cdr.markForCheck();
+                },
+                error: () => {
+                    this.charts = [];
+                    this.chartItems = [];
+                    this.filteredChartItems = [];
+                },
+            });
     }
 
     clearSearch(): void {
-        this.searchTerm = '';
+        this.searchControl.setValue('', { emitEvent: false });
+        this.setSearchTerm('');
+    }
+
+    trackByChartId(index: number, item: ChartSelectionItem): string {
+        return item.chart.elementId;
+    }
+
+    private setSearchTerm(value: string): void {
+        this.searchTerm = value;
+        this.hasActiveSearch = this.searchTerm.trim().length > 0;
         this.applySearch();
         this.cdr.markForCheck();
     }
 
-    hasActiveSearch(): boolean {
-        return this.searchTerm.trim().length > 0;
-    }
+    private toChartSelectionItem(chart: ChartSummaryDto): ChartSelectionItem {
+        const template = this.chartRegistryService.getRegisteredChartSummary(
+            chart.widgetType,
+        );
+        const widgetTypeLabel = template?.label ?? chart.widgetType;
 
-    trackByChartId(index: number, chart: ChartSummaryDto): string {
-        return chart.elementId;
+        return {
+            chart,
+            widgetTypeLabel,
+            widgetTypeIcon: template?.icon ?? 'insert_chart',
+            dataCyId: `add-data-view-btn-${chart.name.replaceAll(' ', '')}`,
+            searchText: [
+                chart.name,
+                chart.datasetName,
+                chart.widgetType,
+                widgetTypeLabel,
+            ]
+                .filter((value): value is string => !!value)
+                .join(' ')
+                .toLowerCase(),
+        };
     }
 
     private applySearch(): void {
         const query = this.searchTerm.trim().toLowerCase();
         if (!query) {
-            this.filteredCharts = this.charts;
+            this.filteredChartItems = this.chartItems;
             return;
         }
 
-        this.filteredCharts = this.charts.filter(chart =>
-            [
-                chart.name,
-                chart.datasetName,
-                chart.widgetType,
-                this.chartRegistryService.getChartTemplate(chart.widgetType)
-                    ?.label,
-            ]
-                .filter((value): value is string => !!value)
-                .some(value => value.toLowerCase().includes(query)),
+        this.filteredChartItems = this.chartItems.filter(item =>
+            item.searchText.includes(query),
         );
     }
 }

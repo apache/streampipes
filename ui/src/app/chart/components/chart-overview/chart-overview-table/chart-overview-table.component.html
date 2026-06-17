@@ -20,28 +20,38 @@
     <sp-basic-header-title-component
         [title]="'Charts' | translate"
     ></sp-basic-header-title-component>
-    @if (isLoading) {
+    @if (isLoading && !hasLoadedCharts) {
         <div
+            fxLayout="column"
             fxFlex="100"
-            fxLayout="row"
             fxLayoutAlign="center center"
-            class="chart-overview-loading"
+            fxLayoutGap="12px"
         >
+            <mat-progress-spinner
+                mode="indeterminate"
+                diameter="40"
+            ></mat-progress-spinner>
+            <span class="chart-overview-loading-text">{{
+                'Loading' | translate
+            }}</span>
+        </div>
+    } @else {
+        @if (isLoading) {
             <div
-                fxLayout="column"
-                fxLayoutAlign="center center"
-                fxLayoutGap="12px"
+                fxLayout="row"
+                fxLayoutAlign="end center"
+                fxLayoutGap="8px"
+                class="p-2"
             >
                 <mat-progress-spinner
                     mode="indeterminate"
-                    diameter="40"
+                    diameter="18"
                 ></mat-progress-spinner>
                 <span class="chart-overview-loading-text">{{
                     'Loading' | translate
                 }}</span>
             </div>
-        </div>
-    } @else {
+        }
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
             <sp-table
                 fxFlex="100"

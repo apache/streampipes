@@ -16,27 +16,12 @@
  *
  */
 
-.mat-mdc-header-cell {
-    font-weight: bold;
-}
+import { ChartSummaryDto } from '@streampipes/platform-services';
 
-.w-100 {
-    width: 100%;
-}
-
-.p-2 {
-    padding: 2px;
-}
-
-.m-20 {
-    margin: 20px;
-}
-
-.mr-10 {
-    margin-right: 10px;
-}
-
-.chart-overview-loading-text {
-    font-size: var(--font-size-sm);
-    color: var(--color-paragraph);
+export interface ChartSelectionItem {
+    chart: ChartSummaryDto;
+    widgetTypeLabel: string;
+    widgetTypeIcon: string;
+    dataCyId: string;
+    searchText: string;
 }
