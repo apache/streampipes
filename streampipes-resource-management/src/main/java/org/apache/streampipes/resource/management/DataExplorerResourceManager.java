@@ -22,6 +22,7 @@ import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardSummaryDto;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -36,10 +37,20 @@ public class DataExplorerResourceManager extends CrudResourceManager<DashboardMo
   private final IDataExplorerWidgetStorage widgetStorage;
   private final IDataLakeMeasureStorage dataLakeMeasureStorage;
 
-  public DataExplorerResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage(), DashboardModel.class);
-    this.widgetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerWidgetStorage();
-    this.dataLakeMeasureStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
+  public DataExplorerResourceManager(IDataExplorerWidgetStorage widgetStorage) {
+    this(
+        StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage(),
+        widgetStorage,
+        StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage()
+    );
+  }
+
+  private DataExplorerResourceManager(IDataExplorerDashboardStorage dashboardStorage,
+                                      IDataExplorerWidgetStorage widgetStorage,
+                                      IDataLakeMeasureStorage dataLakeMeasureStorage) {
+    super(dashboardStorage, DashboardModel.class);
+    this.widgetStorage = widgetStorage;
+    this.dataLakeMeasureStorage = dataLakeMeasureStorage;
   }
 
   public ResourceSummaryDto<DashboardSummaryDto> getSummary(Authentication auth) {

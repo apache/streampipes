@@ -21,7 +21,9 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.export.DataLakeExportManager;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +37,21 @@ import java.util.List;
 @Configuration
 public class DataLakeScheduler implements SchedulingConfigurer {
 
-    private static final DataLakeExportManager dataLakeExportManager = new DataLakeExportManager();
-    private static final Logger LOG = LoggerFactory.getLogger(DataLakeExportManager.class);
+    private final DataLakeExportManager dataLakeExportManager;
+    private static final Logger LOG = LoggerFactory.getLogger(DataLakeScheduler.class);
 
-    private final IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher()
+  private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
+
+    public DataLakeScheduler(IDataExplorerWidgetStorage chartStorage) {
+        var chartSchemaUpdateCoordinator = new ChartSchemaUpdateCoordinator(chartStorage);
+        dataExplorerSchemaManagement = new DataExplorerDispatcher()
             .getDataExplorerManager()
-            .getSchemaManagement();
+            .getSchemaManagement(chartSchemaUpdateCoordinator);
+        this.dataLakeExportManager = new DataLakeExportManager(
+            dataExplorerSchemaManagement,
+            new DataExplorerDispatcher().getDataExplorerManager()
+                .getQueryManagement(dataExplorerSchemaManagement));
+    }
 
     public void cleanupMeasurements() {
         LOG.info("Retention CRON Job triggered.");

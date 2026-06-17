@@ -20,13 +20,13 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
-import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.PrincipalType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.ResetManagement;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -47,30 +47,30 @@ import java.util.ArrayList;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ResetResource extends AbstractAuthGuardedRestResource {
 
-  private final WorkerRestClient workerRestClient;
-  private final IExtensionsServiceStorage extensionsServiceStorage;
-  private final ExtensionServiceRequestManager requestManager;
+  private final ResetManagement resetManagement;
 
   public ResetResource(WorkerRestClient workerRestClient,
-                       ExtensionServiceRequestManager requestManager) {
-    this.workerRestClient = workerRestClient;
-    this.extensionsServiceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
-    this.requestManager = requestManager;
+                       ExtensionServiceRequestManager requestManager,
+                       IDataExplorerWidgetStorage widgetStorage) {
+    IExtensionsServiceStorage extensionsServiceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
+    this.resetManagement = new ResetManagement(
+        widgetStorage, workerRestClient, extensionsServiceStorage, requestManager
+    );
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Resets StreamPipes instance")
   public ResponseEntity<SuccessMessage> reset() {
-    ResetManagement.reset(getAuthenticatedUsername(), workerRestClient, extensionsServiceStorage, requestManager);
+    resetManagement.reset(getAuthenticatedUsername());
     var userStorage = getUserStorage();
 
 
     // Delete all users other than current user (admin) and their resources
-    var allUsers = new ArrayList<Principal>(userStorage.getAllUsers());
+    var allUsers = new ArrayList<>(userStorage.getAllUsers());
     for (var user : allUsers) {
       if (user.getPrincipalType() == PrincipalType.USER_ACCOUNT
           && !user.getPrincipalId().equals(getAuthenticatedUserSid())) {
-        ResetManagement.reset(user.getUsername(), workerRestClient, extensionsServiceStorage, requestManager);
+        resetManagement.reset(user.getUsername());
         userStorage.deleteUser(user.getPrincipalId());
       }
     }

@@ -19,6 +19,7 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
@@ -34,12 +35,12 @@ public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
   final IDataExplorerSchemaManagement dataLakeMeasureManagement;
   private final IDataLakeMeasureStorage dataLakeMeasureStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
+  protected final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
-  
-
-  public AbstractDataLakeResource() {
+  public AbstractDataLakeResource(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
+    this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
     this.dataLakeMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
-        .getSchemaManagement();
+        .getSchemaManagement(chartSchemaUpdateCoordinator);
   }
 
   /**

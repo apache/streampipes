@@ -29,6 +29,7 @@ import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -43,11 +44,14 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   private static final Logger LOG = LoggerFactory.getLogger(PreviewImportGenerator.class);
   private final AssetExportConfiguration importConfig;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  private final IDataExplorerWidgetStorage chartStorage;
 
-  public PreviewImportGenerator(ExtensionServiceRequestManager extensionServiceRequestManager) {
+  public PreviewImportGenerator(ExtensionServiceRequestManager extensionServiceRequestManager,
+                                IDataExplorerWidgetStorage chartStorage) {
     super();
     this.importConfig = new AssetExportConfiguration();
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.chartStorage = chartStorage;
 
   }
 
@@ -85,7 +89,7 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   protected void handleChart(String document, String dataViewId) throws JsonProcessingException {
     addExportItem(
         dataViewId,
-        new ChartResolver().readDocument(document).getBaseAppearanceConfig().get("widgetTitle").toString(),
+        new ChartResolver(chartStorage).readDocument(document).getBaseAppearanceConfig().get("widgetTitle").toString(),
         importConfig::addDataView
     );
   }

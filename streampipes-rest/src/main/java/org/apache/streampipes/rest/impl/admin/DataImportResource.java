@@ -23,6 +23,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +45,12 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataImportResource.class);
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  private final IDataExplorerWidgetStorage chartStorage;
 
-  public DataImportResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
+  public DataImportResource(ExtensionServiceRequestManager extensionServiceRequestManager,
+                            IDataExplorerWidgetStorage chartStorage) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.chartStorage = chartStorage;
   }
 
   @PostMapping(
@@ -55,7 +59,7 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AssetExportConfiguration> getImportPreview(@RequestPart("file_upload") MultipartFile fileDetail)
       throws IOException {
-    var importConfig = ImportManager.getImportPreview(fileDetail.getInputStream(), extensionServiceRequestManager);
+    var importConfig = ImportManager.getImportPreview(fileDetail.getInputStream(), extensionServiceRequestManager, chartStorage);
     return ok(importConfig);
   }
 
@@ -69,7 +73,8 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
           fileDetail.getInputStream(),
           exportConfiguration,
           getAuthenticatedUserSid(),
-          extensionServiceRequestManager
+          extensionServiceRequestManager,
+          chartStorage
       );
       return ok();
     } catch (IOException e) {

@@ -19,6 +19,7 @@
 package org.apache.streampipes.dataexplorer.api;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public interface IDataExplorerManager {
 
   IDataExplorerQueryManagement getQueryManagement(IDataExplorerSchemaManagement dataExplorerSchemaManagement);
 
-  IDataExplorerSchemaManagement getSchemaManagement();
+  IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator);
 
   default ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure) {
     return getTimeseriesStorage(measure, false);

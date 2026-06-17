@@ -39,11 +39,18 @@ import org.apache.streampipes.service.core.migrations.v099.RemoveInternalNotific
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class AvailableMigrations {
+
+  private final IDataExplorerWidgetStorage chartStorage;
+
+  public AvailableMigrations(IDataExplorerWidgetStorage chartStorage) {
+    this.chartStorage = chartStorage;
+  }
 
   public List<Migration> getAvailableMigrations() {
     return Arrays.asList(
@@ -51,7 +58,7 @@ public class AvailableMigrations {
         new ModifyAssetLinkTypesMigration(),
         new AddDataLakeMeasureViewMigration(),
         new AddDefaultExportProviderMigration(),
-        new FixImportedPermissionsMigration(),
+        new FixImportedPermissionsMigration(chartStorage),
         new AddAssetManagementViewMigration(),
         new MoveAssetContentMigration(),
         new CreateAssetPermissionMigration(),

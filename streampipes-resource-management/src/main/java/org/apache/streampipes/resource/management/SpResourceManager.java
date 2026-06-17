@@ -33,10 +33,6 @@ public class SpResourceManager {
     return new AdapterDescriptionResourceManager();
   }
 
-  public DataExplorerResourceManager manageDataExplorer() {
-    return new DataExplorerResourceManager();
-  }
-
   public DataExplorerWidgetResourceManager manageDataExplorerWidget(DataExplorerResourceManager dashboardManager,
                                                                     IDataExplorerWidgetStorage db) {
     return new DataExplorerWidgetResourceManager(dashboardManager, db);

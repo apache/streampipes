@@ -31,6 +31,7 @@ import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -51,11 +52,14 @@ public class AssetLinkResolver {
   private final String assetId;
   private final ObjectMapper mapper;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  private final IDataExplorerWidgetStorage chartStorage;
 
   public AssetLinkResolver(String assetId,
-                           ExtensionServiceRequestManager extensionServiceRequestManager) {
+                           ExtensionServiceRequestManager extensionServiceRequestManager,
+                           IDataExplorerWidgetStorage chartStorage) {
     this.assetId = assetId;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.chartStorage = chartStorage;
     this.mapper = JacksonSerializer.getObjectMapper(Map.of(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
       SerializationFeature.INDENT_OUTPUT, false 
@@ -72,7 +76,8 @@ public class AssetLinkResolver {
       exportConfig.setAssetName(asset.getAssetName());
       exportConfig.setAdapters(new AdapterResolver(extensionServiceRequestManager)
           .resolve(getLinks(assetLinks, ResolvableAssetLinks.ADAPTER)));
-      exportConfig.setDataViews(new ChartResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.CHART)));
+      exportConfig.setDataViews(new ChartResolver(chartStorage)
+          .resolve(getLinks(assetLinks, ResolvableAssetLinks.CHART)));
       exportConfig.setDashboards(new DashboardResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DASHBOARD)));
       exportConfig.setDataSources(
           new DataSourceResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_SOURCE)));

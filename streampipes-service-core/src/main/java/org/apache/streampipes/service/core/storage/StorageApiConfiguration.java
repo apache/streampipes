@@ -18,7 +18,9 @@
 
 package org.apache.streampipes.service.core.storage;
 
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
+import org.apache.streampipes.storage.couchdb.impl.explorer.DataExplorerWidgetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.function.FunctionStateStorageImpl;
 
 import org.springframework.context.annotation.Bean;
@@ -30,5 +32,10 @@ public class StorageApiConfiguration {
   @Bean
   public IFunctionStateStorage functionStateStorage() {
     return new FunctionStateStorageImpl();
+  }
+
+  @Bean
+  public IDataExplorerWidgetStorage dataExplorerWidgetStorage() {
+    return new DataExplorerWidgetStorageImpl();
   }
 }

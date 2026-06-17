@@ -23,6 +23,7 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.export.DataLakeExportManager;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.RetentionTimeConfig;
@@ -32,6 +33,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -93,18 +95,14 @@ public class DataLakeResource extends AbstractDataLakeResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
-  private static DataLakeExportManager dataLakeExportManager = new DataLakeExportManager();
+  private final DataLakeExportManager dataLakeExportManager;
 
-  public DataLakeResource() {
-    super();
+  public DataLakeResource(IDataExplorerWidgetStorage chartStorage) {
+    super(new ChartSchemaUpdateCoordinator(chartStorage));
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(this.dataLakeMeasureManagement);
-  }
-
-  public DataLakeResource(IDataExplorerQueryManagement dataExplorerQueryManagement) {
-    super();
-    this.dataExplorerQueryManagement = dataExplorerQueryManagement;
+    this.dataLakeExportManager = new DataLakeExportManager(this.dataLakeMeasureManagement, dataExplorerQueryManagement);
   }
 
   @DeleteMapping(path = "/measurements/{measurementName}")

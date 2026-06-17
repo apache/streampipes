@@ -21,6 +21,7 @@ package org.apache.streampipes.rest.impl.datalake;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.SpQueryResult;
@@ -49,22 +50,19 @@ import java.util.Map;
 public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResource {
 
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
-  private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
   private final IDataExplorerDashboardStorage dashboardStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage();
   private final IDataExplorerWidgetStorage dataExplorerWidgetStorage;
   private final IPermissionStorage permissionStorage;
 
-  public KioskDashboardDataLakeResource() {
-    this.dataExplorerSchemaManagement = new DataExplorerDispatcher()
+  public KioskDashboardDataLakeResource(IDataExplorerWidgetStorage dataExplorerWidgetStorage) {
+    IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
-        .getSchemaManagement();
+        .getSchemaManagement(new ChartSchemaUpdateCoordinator(dataExplorerWidgetStorage));
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
-        .getQueryManagement(this.dataExplorerSchemaManagement);
-    this.dataExplorerWidgetStorage = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getDataExplorerWidgetStorage();
+        .getQueryManagement(dataExplorerSchemaManagement);
+    this.dataExplorerWidgetStorage = dataExplorerWidgetStorage;
     this.permissionStorage = getNoSqlStorage().getPermissionStorage();
   }
 

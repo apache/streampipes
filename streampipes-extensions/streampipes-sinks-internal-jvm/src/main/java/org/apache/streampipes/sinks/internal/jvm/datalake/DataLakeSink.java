@@ -166,8 +166,9 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
 
   private RetentionTimeConfig getRetentionTime(String measureName, IStreamPipesClient client){
 
+    // TODO
     IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher().getDataExplorerManager()
-        .getSchemaManagement();
+        .getSchemaManagement(null);
 
     var originalMeasure = dataExplorerSchemaManagement.getExistingMeasureByName(measureName);
 

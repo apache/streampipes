@@ -19,11 +19,13 @@
 package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DatasetSummaryDto;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.DataLakeMeasureResourceManager;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -49,8 +51,8 @@ import java.util.Objects;
 @RequestMapping("/api/v4/datalake/measure")
 public class DataLakeMeasureResource extends AbstractDataLakeResource {
 
-  public DataLakeMeasureResource() {
-    super();
+  public DataLakeMeasureResource(IDataExplorerWidgetStorage chartStorage) {
+    super(new ChartSchemaUpdateCoordinator(chartStorage));
   }
 
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)

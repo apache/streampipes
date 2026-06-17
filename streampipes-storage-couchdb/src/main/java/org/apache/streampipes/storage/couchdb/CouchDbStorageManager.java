@@ -136,11 +136,6 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IDataExplorerWidgetStorage getDataExplorerWidgetStorage() {
-    return new DataExplorerWidgetStorageImpl();
-  }
-
-  @Override
   public IPipelineElementTemplateStorage getPipelineElementTemplateStorage() {
     return new PipelineElementTemplateStorageImpl();
   }

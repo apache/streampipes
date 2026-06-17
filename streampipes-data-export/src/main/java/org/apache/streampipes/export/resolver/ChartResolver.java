@@ -22,6 +22,7 @@ import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -30,9 +31,15 @@ import java.util.Map;
 
 public class ChartResolver extends AbstractResolver<DataExplorerWidgetModel> {
 
+  private final IDataExplorerWidgetStorage chartStorage;
+
+  public ChartResolver(IDataExplorerWidgetStorage chartStorage) {
+    this.chartStorage = chartStorage;
+  }
+
   @Override
   public DataExplorerWidgetModel findDocument(String resourceId) {
-    return getNoSqlStore().getDataExplorerWidgetStorage().getElementById(resourceId);
+    return chartStorage.getElementById(resourceId);
   }
 
   @Override
@@ -58,7 +65,7 @@ public class ChartResolver extends AbstractResolver<DataExplorerWidgetModel> {
 
   @Override
   public void writeDocument(String document, AssetExportConfiguration config) throws JsonProcessingException {
-    getNoSqlStore().getDataExplorerWidgetStorage().persist(deserializeDocument(document));
+    chartStorage.persist(deserializeDocument(document));
   }
 
   @Override
@@ -70,7 +77,7 @@ public class ChartResolver extends AbstractResolver<DataExplorerWidgetModel> {
   public void deleteDocument(String document) throws JsonProcessingException {
     var chart = readDocument(document);
     var resourceId = chart.getElementId();
-    getNoSqlStore().getDataExplorerWidgetStorage().deleteElementById(resourceId);
+    chartStorage.deleteElementById(resourceId);
   }
 
 }

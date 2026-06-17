@@ -21,6 +21,7 @@ package org.apache.streampipes.export;
 import org.apache.streampipes.export.generator.ExportPackageGenerator;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.export.ExportConfiguration;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,11 +30,13 @@ import java.util.stream.Collectors;
 public class ExportManager {
 
   public static ExportConfiguration getExportPreview(List<String> selectedAssetIds,
-                                                     ExtensionServiceRequestManager extensionServiceRequestManager) {
+                                                     ExtensionServiceRequestManager extensionServiceRequestManager,
+                                                     IDataExplorerWidgetStorage chartStorage) {
     var exportConfig = new ExportConfiguration();
     var assetExportConfigurations = selectedAssetIds
         .stream()
-        .map(assetId -> new AssetLinkResolver(assetId, extensionServiceRequestManager).resolveResources())
+        .map(assetId -> new AssetLinkResolver(assetId, extensionServiceRequestManager, chartStorage)
+            .resolveResources())
         .collect(Collectors.toList());
 
     exportConfig.setAssetExportConfiguration(assetExportConfigurations);
@@ -42,9 +45,10 @@ public class ExportManager {
   }
 
   public static byte[] getExportPackage(ExportConfiguration exportConfiguration,
-                                        ExtensionServiceRequestManager extensionServiceRequestManager)
-      throws IOException {
-    return new ExportPackageGenerator(exportConfiguration, extensionServiceRequestManager).generateExportPackage();
+                                        ExtensionServiceRequestManager extensionServiceRequestManager,
+                                        IDataExplorerWidgetStorage chartStorage) throws IOException {
+    return new ExportPackageGenerator(exportConfiguration, extensionServiceRequestManager, chartStorage)
+        .generateExportPackage();
   }
 
 }

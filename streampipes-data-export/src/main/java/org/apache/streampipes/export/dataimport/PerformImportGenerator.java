@@ -40,6 +40,7 @@ import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -57,14 +58,17 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   private final Set<PermissionInfo> permissionsToStore = new HashSet<>();
   private final String ownerSid;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  private final IDataExplorerWidgetStorage chartStorage;
 
   public PerformImportGenerator(AssetExportConfiguration config,
                                 String ownerSid,
-                                ExtensionServiceRequestManager extensionServiceRequestManager) {
+                                ExtensionServiceRequestManager extensionServiceRequestManager,
+                                IDataExplorerWidgetStorage chartStorage) {
     this.config = config;
     this.storage = StorageDispatcher.INSTANCE.getNoSqlStore();
     this.ownerSid = ownerSid;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.chartStorage = chartStorage;
   }
 
   @Override
@@ -93,8 +97,9 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleChart(String document, String chartId) throws JsonProcessingException {
     if (shouldStore(chartId, config.getDataViews())) {
-      writeDocument(document, new ChartResolver());
-      var chart = new ChartResolver().deserializeDocument(document);
+      var chartResolver = new ChartResolver(chartStorage);
+      writeDocument(document, chartResolver);
+      var chart = chartResolver.deserializeDocument(document);
       permissionsToStore.add(new PermissionInfo(chart.getElementId(), DataExplorerWidgetModel.class));
     }
   }

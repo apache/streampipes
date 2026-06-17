@@ -24,7 +24,6 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.export.objectstorage.ExportProviderFactory;
 import org.apache.streampipes.dataexplorer.export.objectstorage.IObjectStorage;
-import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.model.configuration.ProviderType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -49,13 +48,14 @@ public class DataLakeExportManager {
     private static final Logger LOG = LoggerFactory.getLogger(DataLakeExportManager.class);
     private static final Environment env = Environments.getEnvironment();
 
-    private final IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher()
-            .getDataExplorerManager()
-            .getSchemaManagement();
+    private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
+    private final IDataExplorerQueryManagement dataExplorerQueryManagement;
 
-    private final IDataExplorerQueryManagement dataExplorerQueryManagement = new DataExplorerDispatcher()
-            .getDataExplorerManager()
-            .getQueryManagement(this.dataExplorerSchemaManagement);
+    public DataLakeExportManager(IDataExplorerSchemaManagement dataLakeSchemaManagement,
+                                 IDataExplorerQueryManagement dataLakeQueryManagement) {
+        this.dataExplorerSchemaManagement = dataLakeSchemaManagement;
+        this.dataExplorerQueryManagement = dataLakeQueryManagement;
+    }
 
     private String savePath = "";
 

@@ -24,6 +24,7 @@ import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.manager.pipeline.update.MeasurementUpdateManagement;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.storage.PipelineStorageService;
@@ -46,6 +47,7 @@ import org.apache.streampipes.resource.management.PipelineResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.exception.SpNotificationException;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.google.gson.JsonSyntaxException;
@@ -89,14 +91,19 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   private final CompactPipelineManagement compactPipelineManagement;
   private final ExtensionServiceRequestManager requestManager;
   private final MeasurementUpdateManagement measurementUpdateManagement;
+  private final IDataExplorerWidgetStorage chartStorage;
 
-  public PipelineResource(ExtensionServiceRequestManager requestManager) {
+  public PipelineResource(ExtensionServiceRequestManager requestManager,
+                          IDataExplorerWidgetStorage chartStorage) {
     this.compactPipelineManagement = new CompactPipelineManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage(),
         requestManager
     );
     this.requestManager = requestManager;
-    this.measurementUpdateManagement = new MeasurementUpdateManagement();
+    this.chartStorage = chartStorage;
+    this.measurementUpdateManagement = new MeasurementUpdateManagement(
+        new ChartSchemaUpdateCoordinator(chartStorage)
+    );
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

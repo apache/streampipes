@@ -28,6 +28,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,10 +51,10 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
 
   private final DataExplorerWidgetResourceManager resourceManager;
 
-  public DataLakeWidgetResource() {
+  public DataLakeWidgetResource(IDataExplorerWidgetStorage dataExplorerWidgetStorage) {
     this.resourceManager = new SpResourceManager().manageDataExplorerWidget(
-        new DataExplorerResourceManager(),
-        getNoSqlStorage().getDataExplorerWidgetStorage()
+        new DataExplorerResourceManager(dataExplorerWidgetStorage),
+        dataExplorerWidgetStorage
     );
   }
 

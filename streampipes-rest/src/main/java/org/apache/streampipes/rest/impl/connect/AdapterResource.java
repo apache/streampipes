@@ -26,6 +26,7 @@ import org.apache.streampipes.connect.management.management.CompactAdapterManage
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -45,6 +46,7 @@ import org.apache.streampipes.rest.event.AdapterDeletedEvent;
 import org.apache.streampipes.rest.event.AdapterUpdatedEvent;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -79,16 +81,19 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   private static final Logger LOG = LoggerFactory.getLogger(AdapterResource.class);
   private final ExtensionServiceRequestManager requestManager;
   private final ApplicationEventPublisher eventPublisher;
+  private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
   public AdapterResource(WorkerRestClient workerRestClient,
-                         ExtensionServiceRequestManager requestManager) {
-    this(workerRestClient, requestManager, null);
+                         ExtensionServiceRequestManager requestManager,
+                         IDataExplorerWidgetStorage chartStorage) {
+    this(workerRestClient, requestManager, null, chartStorage);
   }
 
   @Autowired
   public AdapterResource(WorkerRestClient workerRestClient,
                          ExtensionServiceRequestManager requestManager,
-                         ApplicationEventPublisher eventPublisher) {
+                         ApplicationEventPublisher eventPublisher,
+                         IDataExplorerWidgetStorage chartStorage) {
     super(() -> new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
             .getAdapterInstanceStorage(),
@@ -100,6 +105,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         requestManager));
     this.requestManager = requestManager;
     this.eventPublisher = eventPublisher;
+    this.chartSchemaUpdateCoordinator = new ChartSchemaUpdateCoordinator(chartStorage);
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -136,7 +142,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#adapterDescription.correspondingDataStreamElementId, 'WRITE')")
   public ResponseEntity<? extends Message> updateAdapter(@RequestBody AdapterDescription adapterDescription) {
-    var updateManager = new AdapterUpdateManagement(managementService, requestManager);
+    var updateManager = new AdapterUpdateManagement(managementService, requestManager, chartSchemaUpdateCoordinator);
     try {
       updateManager.updateAdapter(adapterDescription);
       publishEvent(new AdapterUpdatedEvent(adapterDescription));
@@ -152,7 +158,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public ResponseEntity<List<PipelineUpdateInfo>> performPipelineMigrationPreflight(
       @RequestBody AdapterDescription adapterDescription) {
-    var updateManager = new AdapterUpdateManagement(managementService, requestManager);
+    var updateManager = new AdapterUpdateManagement(managementService, requestManager, chartSchemaUpdateCoordinator);
     var migrations = updateManager.checkPipelineMigrations(adapterDescription);
 
     return ok(migrations);

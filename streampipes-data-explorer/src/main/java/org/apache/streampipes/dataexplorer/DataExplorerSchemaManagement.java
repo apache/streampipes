@@ -44,11 +44,6 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
   public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage,
-                                      DataLakePermissionManager permissionManager) {
-    this(dataLakeStorage, permissionManager, new ChartSchemaUpdateCoordinator());
-  }
-
-  DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage,
                                DataLakePermissionManager permissionManager,
                                ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.dataLakeStorage = dataLakeStorage;

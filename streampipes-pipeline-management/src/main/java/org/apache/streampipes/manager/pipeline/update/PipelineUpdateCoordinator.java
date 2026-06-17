@@ -52,11 +52,7 @@ public class PipelineUpdateCoordinator {
   private final ExtensionServiceRequestManager requestManager;
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
-  public PipelineUpdateCoordinator(ExtensionServiceRequestManager requestManager) {
-    this(requestManager, new ChartSchemaUpdateCoordinator());
-  }
-
-  PipelineUpdateCoordinator(ExtensionServiceRequestManager requestManager,
+  public PipelineUpdateCoordinator(ExtensionServiceRequestManager requestManager,
                             ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.requestManager = requestManager;
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;

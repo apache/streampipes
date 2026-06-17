@@ -36,11 +36,7 @@ public class MeasurementUpdateManagement {
 
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
-  public MeasurementUpdateManagement() {
-    this(new ChartSchemaUpdateCoordinator());
-  }
-
-  MeasurementUpdateManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
+  public MeasurementUpdateManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
   }
 

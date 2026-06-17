@@ -22,6 +22,7 @@ import org.apache.streampipes.export.dataimport.PerformImportGenerator;
 import org.apache.streampipes.export.dataimport.PreviewImportGenerator;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,15 +30,18 @@ import java.io.InputStream;
 public class ImportManager {
 
   public static AssetExportConfiguration getImportPreview(InputStream packageZipStream,
-                                                          ExtensionServiceRequestManager extensionServiceRequestManager)
+                                                          ExtensionServiceRequestManager extensionServiceRequestManager,
+                                                          IDataExplorerWidgetStorage chartStorage)
       throws IOException {
-    return new PreviewImportGenerator(extensionServiceRequestManager).generate(packageZipStream);
+    return new PreviewImportGenerator(extensionServiceRequestManager, chartStorage).generate(packageZipStream);
   }
 
   public static void performImport(InputStream packageZipStream,
                                    AssetExportConfiguration exportConfiguration,
                                    String ownerSid,
-                                   ExtensionServiceRequestManager extensionServiceRequestManager) throws IOException {
-    new PerformImportGenerator(exportConfiguration, ownerSid, extensionServiceRequestManager).generate(packageZipStream);
+                                   ExtensionServiceRequestManager extensionServiceRequestManager,
+                                   IDataExplorerWidgetStorage chartStorage) throws IOException {
+    new PerformImportGenerator(exportConfiguration, ownerSid, extensionServiceRequestManager, chartStorage)
+        .generate(packageZipStream);
   }
 }

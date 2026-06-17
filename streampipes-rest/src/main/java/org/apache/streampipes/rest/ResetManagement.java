@@ -29,12 +29,14 @@ import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.UserResourceManager;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -51,6 +53,23 @@ public class ResetManagement {
   // dependency between this package and streampipes-pipeline-management
   // See in issue [STREAMPIPES-405]
 
+  private final IDataExplorerWidgetStorage widgetStorage;
+  private final WorkerRestClient workerRestClient;
+  private final IExtensionsServiceStorage extensionsServiceStorage;
+  private final ExtensionServiceRequestManager requestManager;
+  private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
+
+  public ResetManagement(IDataExplorerWidgetStorage widgetStorage,
+                         WorkerRestClient workerRestClient,
+                         IExtensionsServiceStorage extensionsServiceStorage,
+                         ExtensionServiceRequestManager requestManager) {
+    this.widgetStorage = widgetStorage;
+    this.workerRestClient = workerRestClient;
+    this.extensionsServiceStorage = extensionsServiceStorage;
+    this.requestManager = requestManager;
+    this.chartSchemaUpdateCoordinator = new ChartSchemaUpdateCoordinator(widgetStorage);
+  }
+
   private static final Logger logger = LoggerFactory.getLogger(ResetManagement.class);
 
   /**
@@ -59,10 +78,7 @@ public class ResetManagement {
    *
    * @param username of the user to delte the resources
    */
-  public static void reset(String username,
-                           WorkerRestClient workerRestClient,
-                           IExtensionsServiceStorage extensionsServiceStorage,
-                           ExtensionServiceRequestManager requestManager) {
+  public void reset(String username) {
     logger.info("Start resetting the system");
 
     setHideTutorialToFalse(username);
@@ -77,7 +93,7 @@ public class ResetManagement {
 
     removeAllDataInDataLake();
 
-    removeAllDataViewWidgets();
+    removeAllDataViewWidgets(widgetStorage);
 
     removeAllDataViews();
 
@@ -90,16 +106,16 @@ public class ResetManagement {
     logger.info("Resetting the system was completed");
   }
 
-  private static void setHideTutorialToFalse(String username) {
+  private void setHideTutorialToFalse(String username) {
     UserResourceManager.setHideTutorial(username, true);
   }
 
-  private static void clearPipelineAssemblyCache(String username) {
+  private void clearPipelineAssemblyCache(String username) {
     PipelineCacheManager.removeCachedPipeline(username);
     PipelineCanvasMetadataCacheManager.removeCanvasMetadataFromCache(username);
   }
 
-  private static void stopAndDeleteAllPipelines(ExtensionServiceRequestManager requestManager) {
+  private void stopAndDeleteAllPipelines(ExtensionServiceRequestManager requestManager) {
     List<Pipeline> allPipelines = PipelineManager.getAllPipelines();
     allPipelines.forEach(pipeline -> {
       PipelineManager.stopPipeline(pipeline.getPipelineId(), true, requestManager);
@@ -107,7 +123,7 @@ public class ResetManagement {
     });
   }
 
-  private static void stopAndDeleteAllAdapters(WorkerRestClient workerRestClient,
+  private void stopAndDeleteAllAdapters(WorkerRestClient workerRestClient,
                                                IExtensionsServiceStorage extensionsServiceStorage,
                                                ExtensionServiceRequestManager requestManager) {
     AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(
@@ -131,16 +147,16 @@ public class ResetManagement {
     });
   }
 
-  private static void deleteAllFiles() {
+  private void deleteAllFiles() {
     var fileManager = new FileManager();
     List<FileMetadata> allFiles = fileManager.getAllFiles();
     allFiles.forEach(fileMetadata -> fileManager.deleteFile(fileMetadata.getFileId()));
   }
 
-  private static void removeAllDataInDataLake() {
+  private void removeAllDataInDataLake() {
     var dataLakeMeasureManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
-        .getSchemaManagement();
+        .getSchemaManagement(chartSchemaUpdateCoordinator);
     var dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(dataLakeMeasureManagement);
@@ -154,15 +170,12 @@ public class ResetManagement {
     });
   }
 
-  private static void removeAllDataViewWidgets() {
-    var widgetStorage =
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getDataExplorerWidgetStorage();
+  private void removeAllDataViewWidgets(IDataExplorerWidgetStorage widgetStorage) {
     widgetStorage.findAll()
                  .forEach(widget -> widgetStorage.deleteElementById(widget.getElementId()));
   }
 
-  private static void removeAllDataViews() {
+  private void removeAllDataViews() {
     var dataLakeDashboardStorage =
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getDataExplorerDashboardStorage();
@@ -170,7 +183,7 @@ public class ResetManagement {
                             .forEach(dashboard -> dataLakeDashboardStorage.deleteElementById(dashboard.getElementId()));
   }
 
-  private static void removeAllAssets(String username) {
+  private void removeAllAssets(String username) {
     IGenericStorage genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
                                                                .getGenericStorage();
     try {
@@ -182,7 +195,7 @@ public class ResetManagement {
     }
   }
 
-  private static void removeAllPipelineTemplates() {
+  private void removeAllPipelineTemplates() {
     var pipelineElementTemplateStorage = StorageDispatcher
         .INSTANCE
         .getNoSqlStore()
@@ -194,7 +207,7 @@ public class ResetManagement {
 
   }
 
-  private static void clearGenericStorage() {
+  private void clearGenericStorage() {
     var appDocTypesToDelete = List.of(
         "asset-management",
         "asset-sites",

@@ -59,6 +59,7 @@ import org.apache.streampipes.service.core.migrations.AvailableMigrations;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
@@ -113,6 +114,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   @Autowired
   private WorkerRestClient workerRestClient;
+
+  @Autowired
+  protected IDataExplorerWidgetStorage chartStorage;
 
   private final IExtensionsServiceStorage extensionsServiceStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
@@ -237,7 +241,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   }
 
   protected List<Migration> getMigrations() {
-    return new AvailableMigrations().getAvailableMigrations();
+    return new AvailableMigrations(chartStorage).getAvailableMigrations();
   }
 
   private boolean isConfigured() {

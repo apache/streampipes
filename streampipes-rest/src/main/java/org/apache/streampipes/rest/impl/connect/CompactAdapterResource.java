@@ -30,6 +30,7 @@ import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
@@ -37,6 +38,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
@@ -62,7 +64,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
   private final ExtensionServiceRequestManager requestManager;
 
   public CompactAdapterResource(WorkerRestClient workerRestClient,
-                                ExtensionServiceRequestManager requestManager) {
+                                ExtensionServiceRequestManager requestManager,
+                                IDataExplorerWidgetStorage chartStorage) {
     super(() -> new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getAdapterInstanceStorage(),
@@ -81,7 +84,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     this.compactAdapterManagement = new CompactAdapterManagement(
         new AdapterGenerationSteps(guessManagement).getGenerators()
     );
-    this.adapterUpdateManagement = new AdapterUpdateManagement(managementService, requestManager);
+    var chartCoordinator = new ChartSchemaUpdateCoordinator(chartStorage);
+    this.adapterUpdateManagement = new AdapterUpdateManagement(managementService, requestManager, chartCoordinator);
   }
 
   @PostMapping(

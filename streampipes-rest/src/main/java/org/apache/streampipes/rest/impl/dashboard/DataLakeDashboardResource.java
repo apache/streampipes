@@ -25,6 +25,7 @@ import org.apache.streampipes.model.dashboard.DashboardSummaryDto;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.DataExplorerResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.http.CacheControl;
@@ -51,9 +52,11 @@ import java.util.Objects;
 public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
 
   private final IPermissionStorage permissionStorage;
+  private final IDataExplorerWidgetStorage chartStorage;
 
-  public DataLakeDashboardResource() {
+  public DataLakeDashboardResource(IDataExplorerWidgetStorage chartStorage) {
     this.permissionStorage = getNoSqlStorage().getPermissionStorage();
+    this.chartStorage = chartStorage;
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -119,7 +122,7 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
 
 
   private DataExplorerResourceManager getResourceManager() {
-    return getSpResourceManager().manageDataExplorer();
+    return new DataExplorerResourceManager(chartStorage);
   }
 
   public boolean hasReadAuthority() {

@@ -20,6 +20,7 @@ package org.apache.streampipes.service.core.migrations.v0980;
 
 import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.service.core.migrations.Migration;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -34,6 +35,12 @@ import java.util.List;
  * This breaks the link between resources and their permissions after import.
  */
 public class FixImportedPermissionsMigration implements Migration {
+
+  private final IDataExplorerWidgetStorage chartStorage;
+
+  public FixImportedPermissionsMigration(IDataExplorerWidgetStorage chartStorage) {
+    this.chartStorage = chartStorage;
+  }
 
   private static final Logger LOG = LoggerFactory.getLogger(FixImportedPermissionsMigration.class);
 
@@ -65,10 +72,7 @@ public class FixImportedPermissionsMigration implements Migration {
 
   private void migrateChartsPermissions() {
     LOG.debug("Start migrate permissions for charts");
-    var dataExplorerWidgetStorage = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getDataExplorerWidgetStorage();
-    var charts = dataExplorerWidgetStorage.findAll();
+    var charts = chartStorage.findAll();
     migrateResourcePermissions(charts);
     LOG.debug("Finished migrate permissions for charts");
   }

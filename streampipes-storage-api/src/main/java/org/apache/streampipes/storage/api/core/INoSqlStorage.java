@@ -19,7 +19,6 @@ package org.apache.streampipes.storage.api.core;
 
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
@@ -68,8 +67,6 @@ public interface INoSqlStorage {
   IFileMetadataStorage getFileMetadataStorage();
 
   IDataExplorerDashboardStorage getDataExplorerDashboardStorage();
-
-  IDataExplorerWidgetStorage getDataExplorerWidgetStorage();
 
   IPipelineElementTemplateStorage getPipelineElementTemplateStorage();
 

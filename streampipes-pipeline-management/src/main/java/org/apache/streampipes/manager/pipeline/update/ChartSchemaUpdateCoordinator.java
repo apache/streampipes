@@ -27,7 +27,6 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,11 +55,7 @@ public class ChartSchemaUpdateCoordinator {
   private final IDataExplorerWidgetStorage widgetStorage;
   private final ObjectMapper objectMapper;
 
-  public ChartSchemaUpdateCoordinator() {
-    this(StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerWidgetStorage());
-  }
-
-  ChartSchemaUpdateCoordinator(IDataExplorerWidgetStorage widgetStorage) {
+  public ChartSchemaUpdateCoordinator(IDataExplorerWidgetStorage widgetStorage) {
     this.widgetStorage = widgetStorage;
     this.objectMapper = JacksonSerializer.getObjectMapper();
   }

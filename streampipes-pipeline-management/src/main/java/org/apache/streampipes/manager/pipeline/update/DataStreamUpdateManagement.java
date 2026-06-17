@@ -31,9 +31,10 @@ public class DataStreamUpdateManagement {
   private final DataStreamResourceManager dataStreamResourceManager;
   private final PipelineUpdateCoordinator pipelineUpdateCoordinator;
 
-  public DataStreamUpdateManagement(ExtensionServiceRequestManager requestManager) {
+  public DataStreamUpdateManagement(ExtensionServiceRequestManager requestManager,
+                                    ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.dataStreamResourceManager = new SpResourceManager().manageDataStreams();
-    this.pipelineUpdateCoordinator = new PipelineUpdateCoordinator(requestManager);
+    this.pipelineUpdateCoordinator = new PipelineUpdateCoordinator(requestManager, chartSchemaUpdateCoordinator);
   }
 
   public void updateDataStream(SpDataStream dataStream) {

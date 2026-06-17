@@ -35,6 +35,7 @@ import org.apache.streampipes.model.export.ExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -57,12 +58,15 @@ public class ExportPackageGenerator {
 
   private final ExportConfiguration exportConfiguration;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
-  private ObjectMapper defaultMapper;
+  private final ObjectMapper defaultMapper;
+  private final IDataExplorerWidgetStorage chartStorage;
 
   public ExportPackageGenerator(ExportConfiguration exportConfiguration,
-                                ExtensionServiceRequestManager extensionServiceRequestManager) {
+                                ExtensionServiceRequestManager extensionServiceRequestManager,
+                                IDataExplorerWidgetStorage chartStorage) {
     this.exportConfiguration = exportConfiguration;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.chartStorage = chartStorage;
     this.defaultMapper = JacksonSerializer.getObjectMapper(Map.of(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
       SerializationFeature.INDENT_OUTPUT, false 
@@ -107,14 +111,14 @@ public class ExportPackageGenerator {
             new DashboardResolver(),
             manifest::addDashboard);
         var charts = resolver.getCharts(item.getResourceId());
-        var chartResolver = new ChartResolver();
+        var chartResolver = new ChartResolver(chartStorage);
         charts.forEach(widgetId -> addDoc(builder, widgetId, chartResolver, manifest::addDataViewWidget));
       });
 
       config.getDataViews().forEach(item -> {
         addDoc(builder,
             item,
-            new ChartResolver(),
+            new ChartResolver(chartStorage),
             manifest::addDataView);
       });
 
