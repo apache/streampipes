@@ -41,65 +41,63 @@
             </div>
 
             @if (schemaRows.length > 0) {
-                <table
-                    mat-table
-                    [dataSource]="schemaRows"
-                    class="w-100"
-                    data-cy="dataset-details-schema-table"
-                >
-                    <ng-container matColumnDef="runtimeName">
-                        <th mat-header-cell *matHeaderCellDef>
-                            {{ 'Runtime Name' | translate }}
-                        </th>
-                        <td mat-cell *matCellDef="let row">
-                            {{ row.runtimeName }}
-                        </td>
-                    </ng-container>
+                <div data-cy="dataset-details-schema-table">
+                    <table mat-table [dataSource]="schemaRows" class="w-100">
+                        <ng-container matColumnDef="runtimeName">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <strong>{{
+                                    'Runtime Name' | translate
+                                }}</strong>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <div class="runtime-name-row">
+                                    <div class="runtime-name">
+                                        {{ row.runtimeName }}
+                                    </div>
+                                    <sp-property-scope-badge
+                                        [propertyScope]="row.propertyScope"
+                                    />
+                                </div>
+                            </td>
+                        </ng-container>
 
-                    <ng-container matColumnDef="label">
-                        <th mat-header-cell *matHeaderCellDef>
-                            {{ 'Field Name' | translate }}
-                        </th>
-                        <td mat-cell *matCellDef="let row">
-                            {{ row.label }}
-                        </td>
-                    </ng-container>
+                        <ng-container matColumnDef="label">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <strong>{{ 'Field Name' | translate }}</strong>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{ row.label }}
+                            </td>
+                        </ng-container>
 
-                    <ng-container matColumnDef="dataType">
-                        <th mat-header-cell *matHeaderCellDef>
-                            {{ 'Data type' | translate }}
-                        </th>
-                        <td mat-cell *matCellDef="let row">
-                            {{ row.dataType }}
-                        </td>
-                    </ng-container>
+                        <ng-container matColumnDef="dataType">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <strong>{{ 'Data type' | translate }}</strong>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <div class="value">{{ row.dataType }}</div>
+                            </td>
+                        </ng-container>
 
-                    <ng-container matColumnDef="propertyScope">
-                        <th mat-header-cell *matHeaderCellDef>
-                            {{ 'Property scope' | translate }}
-                        </th>
-                        <td mat-cell *matCellDef="let row">
-                            <sp-property-scope-badge
-                                [propertyScope]="row.propertyScope"
-                            />
-                        </td>
-                    </ng-container>
+                        <ng-container matColumnDef="description">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <strong>{{ 'Description' | translate }}</strong>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{ row.description }}
+                            </td>
+                        </ng-container>
 
-                    <ng-container matColumnDef="description">
-                        <th mat-header-cell *matHeaderCellDef>
-                            {{ 'Description' | translate }}
-                        </th>
-                        <td mat-cell *matCellDef="let row">
-                            {{ row.description }}
-                        </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="schemaColumns"></tr>
-                    <tr
-                        mat-row
-                        *matRowDef="let row; columns: schemaColumns"
-                    ></tr>
-                </table>
+                        <tr
+                            mat-header-row
+                            *matHeaderRowDef="schemaColumns"
+                        ></tr>
+                        <tr
+                            mat-row
+                            *matRowDef="let row; columns: schemaColumns"
+                        ></tr>
+                    </table>
+                </div>
             } @else {
                 <div class="empty-state">
                     {{ 'No event schema available.' | translate }}

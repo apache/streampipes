@@ -85,13 +85,7 @@ export class DatasetDetailsSchemaComponent
     private pipelineElementSchemaService = inject(PipelineElementSchemaService);
 
     schemaRows: SchemaRow[] = [];
-    schemaColumns = [
-        'runtimeName',
-        'label',
-        'dataType',
-        'propertyScope',
-        'description',
-    ];
+    schemaColumns = ['runtimeName', 'label', 'dataType', 'description'];
 
     ngOnInit(): void {
         super.onInit();
@@ -108,17 +102,28 @@ export class DatasetDetailsSchemaComponent
     }
 
     private makeSchemaRows(): SchemaRow[] {
-        return (this.dataset.eventSchema?.eventProperties ?? []).map(
-            property => ({
-                runtimeName: property.runtimeName || 'n/a',
-                label: property.label || 'n/a',
-                dataType:
-                    this.pipelineElementSchemaService.getFriendlyRuntimeType(
-                        property,
-                    ),
-                propertyScope: property.propertyScope,
-                description: property.description || 'n/a',
-            }),
-        );
+        const eventProperties = this.dataset.eventSchema?.eventProperties ?? [];
+        const schemaRows = eventProperties.map(property => ({
+            runtimeName: property.runtimeName || 'n/a',
+            label: property.label || 'n/a',
+            dataType:
+                this.pipelineElementSchemaService.getFriendlyRuntimeType(
+                    property,
+                ),
+            propertyScope: property.propertyScope,
+            description: property.description || 'n/a',
+        }));
+
+        return [this.makeTimestampRow(), ...schemaRows];
+    }
+
+    private makeTimestampRow(): SchemaRow {
+        return {
+            runtimeName: this.dataset.timestampField || 'time',
+            label: 'time',
+            dataType: 'Timestamp',
+            propertyScope: 'HEADER_PROPERTY',
+            description: 'Dataset internal timestamp field',
+        };
     }
 }

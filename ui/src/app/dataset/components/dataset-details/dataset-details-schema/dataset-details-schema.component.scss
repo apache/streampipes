@@ -22,6 +22,29 @@
     background: var(--color-bg-1);
 }
 
+.runtime-name-row {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.runtime-name {
+    font-weight: bold;
+    border-radius: 3px;
+    padding: 3px 5px;
+    background: var(--color-bg-3);
+    display: inline-flex;
+}
+
+.mat-mdc-row:nth-child(even) {
+    background: var(--color-bg-1);
+}
+
+.value {
+    border-radius: 3px;
+    padding: 3px 5px;
+}
+
 td,
 th {
     white-space: nowrap;
