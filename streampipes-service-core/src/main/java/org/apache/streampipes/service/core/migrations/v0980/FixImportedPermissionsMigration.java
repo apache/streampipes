@@ -37,16 +37,15 @@ import java.util.List;
 public class FixImportedPermissionsMigration implements Migration {
 
   private final IDataExplorerWidgetStorage chartStorage;
+  private final IPermissionStorage permissionStorage;
 
-  public FixImportedPermissionsMigration(IDataExplorerWidgetStorage chartStorage) {
+  public FixImportedPermissionsMigration(IDataExplorerWidgetStorage chartStorage,
+                                         IPermissionStorage permissionStorage) {
     this.chartStorage = chartStorage;
+    this.permissionStorage = permissionStorage;
   }
 
   private static final Logger LOG = LoggerFactory.getLogger(FixImportedPermissionsMigration.class);
-
-  private final IPermissionStorage permissionStorage =
-      StorageDispatcher.INSTANCE.getNoSqlStore()
-                                .getPermissionStorage();
 
   @Override
   public boolean shouldExecute() {

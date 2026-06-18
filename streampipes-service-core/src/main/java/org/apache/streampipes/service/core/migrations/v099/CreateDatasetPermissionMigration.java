@@ -45,11 +45,11 @@ public class CreateDatasetPermissionMigration implements Migration {
   private static final String DB_MEASUREMENT = "db_measurement";
 
 
-  public CreateDatasetPermissionMigration() {
+  public CreateDatasetPermissionMigration(IPermissionStorage permissionStorage) {
     this.dataLakeStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
     this.pipelineStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
-    this.permissionStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
-    this.permissionResourceManager = new PermissionResourceManager();
+    this.permissionStorage = permissionStorage;
+    this.permissionResourceManager = new PermissionResourceManager(permissionStorage);
   }
 
   @Override

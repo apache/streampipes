@@ -27,11 +27,12 @@ import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -52,18 +53,21 @@ public class AssetLinkResolver {
   private final String assetId;
   private final ObjectMapper mapper;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
-  private final IDataExplorerWidgetStorage chartStorage;
+  private final PipelineManager pipelineManager;
+  private final SpResourceManager resourceManager;
 
   public AssetLinkResolver(String assetId,
                            ExtensionServiceRequestManager extensionServiceRequestManager,
-                           IDataExplorerWidgetStorage chartStorage) {
+                           SpResourceManager resourceManager,
+                           PipelineManager pipelineManager) {
     this.assetId = assetId;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
-    this.chartStorage = chartStorage;
     this.mapper = JacksonSerializer.getObjectMapper(Map.of(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
       SerializationFeature.INDENT_OUTPUT, false 
     ));
+    this.pipelineManager = pipelineManager;
+    this.resourceManager = resourceManager;
   }
 
   public AssetExportConfiguration resolveResources() {
@@ -74,14 +78,17 @@ public class AssetLinkResolver {
       var exportConfig = new AssetExportConfiguration();
       exportConfig.setAssetId(this.assetId);
       exportConfig.setAssetName(asset.getAssetName());
-      exportConfig.setAdapters(new AdapterResolver(extensionServiceRequestManager)
+      exportConfig.setAdapters(new AdapterResolver(
+          extensionServiceRequestManager,
+          resourceManager
+      )
           .resolve(getLinks(assetLinks, ResolvableAssetLinks.ADAPTER)));
-      exportConfig.setDataViews(new ChartResolver(chartStorage)
+      exportConfig.setDataViews(new ChartResolver(resourceManager)
           .resolve(getLinks(assetLinks, ResolvableAssetLinks.CHART)));
       exportConfig.setDashboards(new DashboardResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DASHBOARD)));
       exportConfig.setDataSources(
           new DataSourceResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_SOURCE)));
-      exportConfig.setPipelines(new PipelineResolver(extensionServiceRequestManager)
+      exportConfig.setPipelines(new PipelineResolver(extensionServiceRequestManager, pipelineManager)
           .resolve(getLinks(assetLinks, ResolvableAssetLinks.PIPELINE)));
       exportConfig.setDataLakeMeasures(
           new MeasurementResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.MEASUREMENT)));

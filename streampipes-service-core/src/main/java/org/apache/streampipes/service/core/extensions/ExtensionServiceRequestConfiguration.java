@@ -22,6 +22,9 @@ import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManager;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
+import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +85,14 @@ public class ExtensionServiceRequestConfiguration {
   }
 
   @Bean
-  public WorkerRestClient workerRestClient(ExtensionServiceRequestManager extensionServiceRequestManager) {
-    return new WorkerRestClient(extensionServiceRequestManager);
+  public SpResourceManager spResourceManager(IPermissionStorage permissionStorage,
+                                             IDataExplorerWidgetStorage chartStorage) {
+    return new SpResourceManager(permissionStorage, chartStorage);
+  }
+
+  @Bean
+  public WorkerRestClient workerRestClient(ExtensionServiceRequestManager extensionServiceRequestManager,
+                                           SpResourceManager resourceManager) {
+    return new WorkerRestClient(extensionServiceRequestManager, resourceManager);
   }
 }

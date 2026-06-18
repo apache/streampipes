@@ -24,7 +24,7 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DatasetSummaryDto;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
-import org.apache.streampipes.resource.management.DataLakeMeasureResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,14 +51,18 @@ import java.util.Objects;
 @RequestMapping("/api/v4/datalake/measure")
 public class DataLakeMeasureResource extends AbstractDataLakeResource {
 
-  public DataLakeMeasureResource(IDataExplorerWidgetStorage chartStorage) {
+  private final SpResourceManager resourceManager;
+
+  public DataLakeMeasureResource(IDataExplorerWidgetStorage chartStorage,
+                                 SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage));
+    this.resourceManager = resourceManager;
   }
 
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
   public ResourceSummaryDto<DatasetSummaryDto> getDatasetSummary() {
-    return getResourceManager().getSummary(getAuthentication());
+    return resourceManager.manageDataLakeMeasures().getSummary(getAuthentication());
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -149,9 +153,4 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
       return badRequest(e.getMessage());
     }
   }
-
-  private DataLakeMeasureResourceManager getResourceManager() {
-    return getSpResourceManager().manageDataLakeMeasures();
-  }
-
 }

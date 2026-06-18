@@ -38,6 +38,7 @@ import org.apache.streampipes.model.pipeline.PipelineModificationResult;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
@@ -71,7 +72,10 @@ class PipelineUpdateCoordinatorTest {
   void updatePipelines_ShouldRestartRunningPipelinesForDataStreamUpdates() {
     var requestManager = mock(ExtensionServiceRequestManager.class);
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
-    var coordinator = new PipelineUpdateCoordinator(requestManager, chartSchemaUpdateCoordinator);
+    var resourceManager = mock(SpResourceManager.class);
+    var pipelineManager = mock(PipelineManager.class);
+    var coordinator = new PipelineUpdateCoordinator(
+        requestManager, resourceManager, chartSchemaUpdateCoordinator, pipelineManager);
     var dataStream = makeDataStream("stream-1", "Updated stream");
     var affectedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Old stream");
     var storedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Old stream");

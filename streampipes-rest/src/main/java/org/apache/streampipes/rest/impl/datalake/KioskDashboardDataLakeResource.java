@@ -55,7 +55,8 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
   private final IDataExplorerWidgetStorage dataExplorerWidgetStorage;
   private final IPermissionStorage permissionStorage;
 
-  public KioskDashboardDataLakeResource(IDataExplorerWidgetStorage dataExplorerWidgetStorage) {
+  public KioskDashboardDataLakeResource(IDataExplorerWidgetStorage dataExplorerWidgetStorage,
+                                        IPermissionStorage permissionStorage) {
     IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getSchemaManagement(new ChartSchemaUpdateCoordinator(dataExplorerWidgetStorage));
@@ -63,7 +64,7 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
         .getDataExplorerManager()
         .getQueryManagement(dataExplorerSchemaManagement);
     this.dataExplorerWidgetStorage = dataExplorerWidgetStorage;
-    this.permissionStorage = getNoSqlStorage().getPermissionStorage();
+    this.permissionStorage = permissionStorage;
   }
 
   @PostMapping(path = "/{dashboardId}/{widgetId}/data",

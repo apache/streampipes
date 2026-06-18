@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.influx.DataExplorerManagerInflux;
 import org.apache.streampipes.dataexplorer.iotdb.DataExplorerManagerIotDb;
-import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 
 public class DataExplorerDispatcher {
 

@@ -20,8 +20,9 @@ package org.apache.streampipes.export;
 
 import org.apache.streampipes.export.generator.ExportPackageGenerator;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.ExportConfiguration;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,11 +32,13 @@ public class ExportManager {
 
   public static ExportConfiguration getExportPreview(List<String> selectedAssetIds,
                                                      ExtensionServiceRequestManager extensionServiceRequestManager,
-                                                     IDataExplorerWidgetStorage chartStorage) {
+                                                     SpResourceManager resourceManager,
+                                                     PipelineManager pipelineManager) {
     var exportConfig = new ExportConfiguration();
     var assetExportConfigurations = selectedAssetIds
         .stream()
-        .map(assetId -> new AssetLinkResolver(assetId, extensionServiceRequestManager, chartStorage)
+        .map(assetId -> new AssetLinkResolver(
+            assetId, extensionServiceRequestManager, resourceManager, pipelineManager)
             .resolveResources())
         .collect(Collectors.toList());
 
@@ -46,8 +49,10 @@ public class ExportManager {
 
   public static byte[] getExportPackage(ExportConfiguration exportConfiguration,
                                         ExtensionServiceRequestManager extensionServiceRequestManager,
-                                        IDataExplorerWidgetStorage chartStorage) throws IOException {
-    return new ExportPackageGenerator(exportConfiguration, extensionServiceRequestManager, chartStorage)
+                                        SpResourceManager resourceManager,
+                                        PipelineManager pipelineManager) throws IOException {
+    return new ExportPackageGenerator(
+        exportConfiguration, extensionServiceRequestManager, resourceManager, pipelineManager)
         .generateExportPackage();
   }
 

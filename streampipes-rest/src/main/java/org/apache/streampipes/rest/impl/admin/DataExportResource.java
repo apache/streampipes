@@ -20,10 +20,11 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.export.ExportManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.ExportConfiguration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,12 +43,15 @@ import java.util.List;
 public class DataExportResource extends AbstractAuthGuardedRestResource {
 
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
-  private final IDataExplorerWidgetStorage chartStorage;
+  private final PipelineManager pipelineManager;
+  private final SpResourceManager resourceManager;
 
   public DataExportResource(ExtensionServiceRequestManager extensionServiceRequestManager,
-                            IDataExplorerWidgetStorage chartStorage) {
+                            SpResourceManager resourceManager) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
-    this.chartStorage = chartStorage;
+    this.pipelineManager = new PipelineManager(getNoSqlStorage().getPipelineStorageAPI(), resourceManager);
+    this.resourceManager = resourceManager;
+
   }
 
   @PostMapping(
@@ -55,7 +59,8 @@ public class DataExportResource extends AbstractAuthGuardedRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ExportConfiguration> getExportPreview(@RequestBody List<String> selectedAssetIds) {
-    var exportConfig = ExportManager.getExportPreview(selectedAssetIds, extensionServiceRequestManager, chartStorage);
+    var exportConfig = ExportManager.getExportPreview(
+        selectedAssetIds, extensionServiceRequestManager, resourceManager, pipelineManager);
     return ok(exportConfig);
   }
 
@@ -65,7 +70,11 @@ public class DataExportResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   public ResponseEntity<byte[]> download(@RequestBody ExportConfiguration exportConfiguration) throws IOException {
     var applicationPackage = ExportManager
-        .getExportPackage(exportConfiguration, extensionServiceRequestManager, chartStorage);
+        .getExportPackage(
+            exportConfiguration,
+            extensionServiceRequestManager,
+            resourceManager,
+            pipelineManager);
     return ok(applicationPackage);
   }
 

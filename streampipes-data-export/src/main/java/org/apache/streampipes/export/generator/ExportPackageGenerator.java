@@ -30,12 +30,13 @@ import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.file.FileManager;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -59,14 +60,17 @@ public class ExportPackageGenerator {
   private final ExportConfiguration exportConfiguration;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final ObjectMapper defaultMapper;
-  private final IDataExplorerWidgetStorage chartStorage;
+  private final PipelineManager pipelineManager;
+  private final SpResourceManager resourceManager;
 
   public ExportPackageGenerator(ExportConfiguration exportConfiguration,
                                 ExtensionServiceRequestManager extensionServiceRequestManager,
-                                IDataExplorerWidgetStorage chartStorage) {
+                                SpResourceManager resourceManager,
+                                PipelineManager pipelineManager) {
     this.exportConfiguration = exportConfiguration;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
-    this.chartStorage = chartStorage;
+    this.pipelineManager = pipelineManager;
+    this.resourceManager = resourceManager;
     this.defaultMapper = JacksonSerializer.getObjectMapper(Map.of(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
       SerializationFeature.INDENT_OUTPUT, false 
@@ -86,7 +90,7 @@ public class ExportPackageGenerator {
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {
       config.getAdapters().forEach(item -> addDoc(builder,
           item,
-          new AdapterResolver(extensionServiceRequestManager),
+          new AdapterResolver(extensionServiceRequestManager, resourceManager),
           manifest::addAdapter));
 
       config.getDataSources().forEach(item -> addDoc(builder,
@@ -101,7 +105,7 @@ public class ExportPackageGenerator {
 
       config.getPipelines().forEach(item -> addDoc(builder,
           item,
-          new PipelineResolver(extensionServiceRequestManager),
+          new PipelineResolver(extensionServiceRequestManager, pipelineManager),
           manifest::addPipeline));
 
       config.getDashboards().forEach(item -> {
@@ -111,14 +115,14 @@ public class ExportPackageGenerator {
             new DashboardResolver(),
             manifest::addDashboard);
         var charts = resolver.getCharts(item.getResourceId());
-        var chartResolver = new ChartResolver(chartStorage);
+        var chartResolver = new ChartResolver(resourceManager);
         charts.forEach(widgetId -> addDoc(builder, widgetId, chartResolver, manifest::addDataViewWidget));
       });
 
       config.getDataViews().forEach(item -> {
         addDoc(builder,
             item,
-            new ChartResolver(chartStorage),
+            new ChartResolver(resourceManager),
             manifest::addDataView);
       });
 

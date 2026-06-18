@@ -34,11 +34,14 @@ public class RemoveDuplicatedAssetPermissions implements Migration {
 
   private static final Logger LOG = LoggerFactory.getLogger(RemoveDuplicatedAssetPermissions.class);
 
-  private final IPermissionStorage permissionStorage =
-      StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
+  private final IPermissionStorage permissionStorage;
 
   private final IAssetStorage assetStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
+
+  public RemoveDuplicatedAssetPermissions(IPermissionStorage permissionStorage) {
+    this.permissionStorage = permissionStorage;
+  }
 
   @Override
   public boolean shouldExecute() {

@@ -30,6 +30,7 @@ import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.file.FileHandler;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.dashboard.DashboardModel;
@@ -38,9 +39,8 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -58,17 +58,20 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   private final Set<PermissionInfo> permissionsToStore = new HashSet<>();
   private final String ownerSid;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
-  private final IDataExplorerWidgetStorage chartStorage;
+  private final PipelineManager pipelineManager;
+  private final SpResourceManager resourceManager;
 
   public PerformImportGenerator(AssetExportConfiguration config,
                                 String ownerSid,
                                 ExtensionServiceRequestManager extensionServiceRequestManager,
-                                IDataExplorerWidgetStorage chartStorage) {
+                                SpResourceManager resourceManager,
+                                PipelineManager pipelineManager) {
     this.config = config;
     this.storage = StorageDispatcher.INSTANCE.getNoSqlStore();
     this.ownerSid = ownerSid;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
-    this.chartStorage = chartStorage;
+    this.resourceManager = resourceManager;
+    this.pipelineManager = pipelineManager;
   }
 
   @Override
@@ -89,7 +92,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleAdapter(String document, String adapterId) throws JsonProcessingException {
     if (shouldStore(adapterId, config.getAdapters())) {
-      writeDocument(document, new AdapterResolver(extensionServiceRequestManager));
+      writeDocument(document, new AdapterResolver(extensionServiceRequestManager, resourceManager));
       // adapters do not have permissions associated
     }
   }
@@ -97,7 +100,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleChart(String document, String chartId) throws JsonProcessingException {
     if (shouldStore(chartId, config.getDataViews())) {
-      var chartResolver = new ChartResolver(chartStorage);
+      var chartResolver = new ChartResolver(resourceManager);
       writeDocument(document, chartResolver);
       var chart = chartResolver.deserializeDocument(document);
       permissionsToStore.add(new PermissionInfo(chart.getElementId(), DataExplorerWidgetModel.class));
@@ -125,7 +128,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handlePipeline(String document, String pipelineId) throws JsonProcessingException {
     if (shouldStore(pipelineId, config.getPipelines())) {
-      writeDocument(document, new PipelineResolver(extensionServiceRequestManager));
+      writeDocument(document, new PipelineResolver(extensionServiceRequestManager, pipelineManager));
       permissionsToStore.add(new PermissionInfo(pipelineId, Pipeline.class));
     }
   }
@@ -172,9 +175,8 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
 
   @Override
   protected void afterResourcesCreated() {
-    var resourceManager = new PermissionResourceManager();
     this.permissionsToStore
-        .forEach(info -> resourceManager.createDefault(
+        .forEach(info -> resourceManager.managePermissions().createDefault(
             info.getInstanceId(),
             info.getInstanceClass(),
             this.ownerSid,

@@ -59,21 +59,21 @@ public class PostStartupTask implements Runnable {
   private final WorkerAdministrationManagement workerAdministrationManagement;
   private final PostStartupRecovery postStartupRecovery;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  private final SpResourceManager resourceManager;
 
   private final INoSqlStorage storage = StorageDispatcher.INSTANCE.getNoSqlStore();
 
   public PostStartupTask(IPipelineStorage pipelineStorage,
                          ExtensionServiceRequestManager extensionServiceRequestManager,
-                         WorkerRestClient workerRestClient) {
+                         WorkerRestClient workerRestClient,
+                         SpResourceManager resourceManager) {
     this.pipelineStorage = pipelineStorage;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.executorService = Executors.newSingleThreadScheduledExecutor();
-    var resourceManager = new SpResourceManager();
+    this.resourceManager = resourceManager;
     this.workerAdministrationManagement = new WorkerAdministrationManagement(
         storage.getAdapterDescriptionStorage(),
-        storage.getPermissionStorage(),
-        resourceManager.manageUsers(),
-        resourceManager.managePermissions(),
+        resourceManager,
         extensionServiceRequestManager);
     this.postStartupRecovery = new PostStartupRecovery(
         new ExtensionHealthCheck(
@@ -82,8 +82,7 @@ public class PostStartupTask implements Runnable {
                 StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
                 new AdapterMasterManagement(
                     StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
-                    new SpResourceManager().manageAdapters(),
-                    new SpResourceManager().manageDataStreams(),
+                    resourceManager,
                     AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
                     workerRestClient,
                     StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
@@ -91,14 +90,15 @@ public class PostStartupTask implements Runnable {
                 )
             ),
             StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
-            extensionServiceRequestManager
+            extensionServiceRequestManager,
+            resourceManager
         )
     );
   }
 
   @Override
   public void run() {
-    new ServiceHealthCheck(storage.getExtensionsServiceStorage(), extensionServiceRequestManager).run();
+    new ServiceHealthCheck(storage.getExtensionsServiceStorage(), extensionServiceRequestManager, resourceManager).run();
     performAdapterAssetUpdate();
     startAllPreviouslyStoppedPipelines();
     runHealthCheckOnce();
@@ -152,7 +152,8 @@ public class PostStartupTask implements Runnable {
   }
 
   private void startPipeline(Pipeline pipeline, boolean restartOnReboot) {
-    PipelineOperationStatus status = new PipelineExecutor(pipeline, extensionServiceRequestManager).startPipeline();
+    PipelineOperationStatus status = new PipelineExecutor(pipeline, extensionServiceRequestManager, resourceManager)
+        .startPipeline();
     if (status.isSuccess()) {
       LOG.info("Pipeline {} successfully restarted", status.getPipelineName());
       Pipeline storedPipeline = getPipelineStorage().getElementById(pipeline.getPipelineId());

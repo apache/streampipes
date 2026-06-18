@@ -24,6 +24,7 @@ import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardSummaryDto;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.DataExplorerResourceManager;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
@@ -53,36 +54,42 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
 
   private final IPermissionStorage permissionStorage;
   private final IDataExplorerWidgetStorage chartStorage;
+  private final DataExplorerResourceManager dashboardResourceManager;
 
-  public DataLakeDashboardResource(IDataExplorerWidgetStorage chartStorage) {
-    this.permissionStorage = getNoSqlStorage().getPermissionStorage();
+  public DataLakeDashboardResource(IDataExplorerWidgetStorage chartStorage,
+                                   IPermissionStorage permissionStorage) {
+    this.permissionStorage = permissionStorage;
     this.chartStorage = chartStorage;
+    this.dashboardResourceManager = new DataExplorerResourceManager(
+        chartStorage,
+        new PermissionResourceManager(permissionStorage)
+    );
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
   @PostFilter("hasPermission(filterObject.couchDbId, 'READ')")
   public List<DashboardModel> getAllDashboards() {
-    return getResourceManager().findAll();
+    return dashboardResourceManager.findAll();
   }
 
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
   public ResourceSummaryDto<DashboardSummaryDto> getDashboardSummary() {
-    return getResourceManager().getSummary(getAuthentication());
+    return dashboardResourceManager.getSummary(getAuthentication());
   }
 
   @GetMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority() and hasPermission(#dashboardId, 'READ')")
   public DashboardModel getDashboard(@PathVariable("dashboardId") String dashboardId) {
-    return getResourceManager().find(dashboardId);
+    return dashboardResourceManager.find(dashboardId);
   }
 
   @GetMapping(path = "/{dashboardId}/composite", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthorityOrAnonymous(#dashboardId) and hasPermission(#dashboardId, 'READ')")
   public ResponseEntity<?> getCompositeDashboardModel(@PathVariable("dashboardId") String dashboardId,
                                                       @RequestHeader(value = "If-None-Match", required = false) String ifNoneMatch) {
-    var dashboard = getResourceManager().getCompositeDashboard(dashboardId);
+    var dashboard = dashboardResourceManager.getCompositeDashboard(dashboardId);
     var currentEtag = "\"" + dashboard.getRevisionHash() + "\"";
     if (Objects.nonNull(ifNoneMatch)) {
       if (currentEtag.equals(ifNoneMatch)) {
@@ -102,27 +109,22 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
   @PutMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardModel.couchDbId, 'WRITE')")
   public ResponseEntity<DashboardModel> modifyDashboard(@RequestBody DashboardModel dashboardModel) {
-    getResourceManager().update(dashboardModel);
-    return ok(getResourceManager().find(dashboardModel.getElementId()));
+    dashboardResourceManager.update(dashboardModel);
+    return ok(dashboardResourceManager.find(dashboardModel.getElementId()));
   }
 
   @DeleteMapping(path = "/{dashboardId}")
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardId, 'WRITE')")
   public ResponseEntity<Void> deleteDashboard(@PathVariable("dashboardId") String dashboardId) {
-    getResourceManager().delete(dashboardId);
+    dashboardResourceManager.delete(dashboardId);
     return ok();
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<DashboardModel> createDashboard(@RequestBody DashboardModel dashboardModel) {
-    var response = getResourceManager().create(dashboardModel, getAuthenticatedUserSid());
+    var response = dashboardResourceManager.create(dashboardModel, getAuthenticatedUserSid());
     return ok(response);
-  }
-
-
-  private DataExplorerResourceManager getResourceManager() {
-    return new DataExplorerResourceManager(chartStorage);
   }
 
   public boolean hasReadAuthority() {

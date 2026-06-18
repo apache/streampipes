@@ -31,6 +31,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -50,9 +51,12 @@ public abstract class AbstractMigrationManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(AbstractMigrationManager.class);
   protected final ExtensionServiceRequestManager requestManager;
+  protected final SpResourceManager resourceManager;
 
-  protected AbstractMigrationManager(ExtensionServiceRequestManager requestManager) {
+  protected AbstractMigrationManager(ExtensionServiceRequestManager requestManager,
+                                     SpResourceManager resourceManager) {
     this.requestManager = requestManager;
+    this.resourceManager = resourceManager;
   }
 
   /**
@@ -151,9 +155,10 @@ public abstract class AbstractMigrationManager {
 
     try {
       var entityPayload = requestManager
-          .request(ExtensionServiceRequests.descriptionUpdate(requestTarget))
+          .request(ExtensionServiceRequests.descriptionUpdate(requestTarget, resourceManager))
           .responseBody();
-      var updateResult = new TypeExtractor(entityPayload, requestManager).getTypeVerifier().verifyAndUpdate();
+      var updateResult = new TypeExtractor(entityPayload, requestManager, resourceManager.managePermissions())
+          .getTypeVerifier().verifyAndUpdate();
       if (!updateResult.isSuccess()) {
         LOG.error(
             "Updating the pipeline element description failed: {}",

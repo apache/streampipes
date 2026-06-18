@@ -33,7 +33,8 @@ public class DataStreamResourceManagerTest {
   @Test
   public void update() {
     IDataStreamStorage storage = mock(IDataStreamStorage.class);
-    DataStreamResourceManager dataStreamResourceManager = new DataStreamResourceManager(storage);
+    PermissionResourceManager permissionResourceManager = mock(PermissionResourceManager.class);
+    DataStreamResourceManager dataStreamResourceManager = new DataStreamResourceManager(storage, permissionResourceManager);
     dataStreamResourceManager.update(new SpDataStream());
 
     verify(storage, times(1)).updateElement(any());

@@ -18,8 +18,35 @@
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class SpResourceManager {
+
+  private final IPermissionStorage permissionStorage;
+  private final IDataExplorerWidgetStorage chartStorage;
+
+  public SpResourceManager(IPermissionStorage permissionStorage,
+                           IDataExplorerWidgetStorage chartStorage) {
+    this.permissionStorage = permissionStorage;
+    this.chartStorage = chartStorage;
+  }
+
+  public AdapterDescriptionResourceManager manageAdapterDescriptions() {
+    return new AdapterDescriptionResourceManager(managePermissions());
+  }
+
+  public DataSinkResourceManager manageDataSinks() {
+    return new DataSinkResourceManager(managePermissions());
+  }
+
+  public DataProcessorResourceManager manageDataProcessors() {
+    return new DataProcessorResourceManager(managePermissions());
+  }
+
+  public DataStreamResourceManager manageDataStreams() {
+    return new DataStreamResourceManager(managePermissions());
+  }
 
   public AssetResourceManager manageAssets() {
     return new AssetResourceManager();
@@ -29,37 +56,26 @@ public class SpResourceManager {
     return new AdapterResourceManager();
   }
 
-  public AdapterDescriptionResourceManager manageAdapterDescriptions() {
-    return new AdapterDescriptionResourceManager();
-  }
-
-  public DataExplorerWidgetResourceManager manageDataExplorerWidget(DataExplorerResourceManager dashboardManager,
-                                                                    IDataExplorerWidgetStorage db) {
-    return new DataExplorerWidgetResourceManager(dashboardManager, db);
-  }
-
-  public DataProcessorResourceManager manageDataProcessors() {
-    return new DataProcessorResourceManager();
-  }
-
-  public DataSinkResourceManager manageDataSinks() {
-    return new DataSinkResourceManager();
-  }
-
-  public DataStreamResourceManager manageDataStreams() {
-    return new DataStreamResourceManager();
-  }
-
   public DataLakeMeasureResourceManager manageDataLakeMeasures() {
     return new DataLakeMeasureResourceManager();
   }
 
-  public PipelineResourceManager managePipelines() {
-    return new PipelineResourceManager();
+  public PermissionResourceManager managePermissions() {
+    return new PermissionResourceManager(permissionStorage);
   }
 
-  public PermissionResourceManager managePermissions() {
-    return new PermissionResourceManager();
+  public DataExplorerResourceManager manageDashboards() {
+    return new DataExplorerResourceManager(chartStorage, managePermissions());
+  }
+
+  public DataExplorerWidgetResourceManager manageCharts() {
+    return new DataExplorerWidgetResourceManager(manageDashboards(), chartStorage,  managePermissions());
+  }
+
+  public PipelineResourceManager managePipelines() {
+    return new PipelineResourceManager(
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(), managePermissions()
+    );
   }
 
   public UserResourceManager manageUsers() {

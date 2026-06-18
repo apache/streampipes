@@ -40,6 +40,7 @@ import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivile
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,9 +48,12 @@ import java.util.List;
 public class AvailableMigrations {
 
   private final IDataExplorerWidgetStorage chartStorage;
+  private final IPermissionStorage permissionStorage;
 
-  public AvailableMigrations(IDataExplorerWidgetStorage chartStorage) {
+  public AvailableMigrations(IDataExplorerWidgetStorage chartStorage,
+                             IPermissionStorage permissionStorage) {
     this.chartStorage = chartStorage;
+    this.permissionStorage = permissionStorage;
   }
 
   public List<Migration> getAvailableMigrations() {
@@ -58,18 +62,18 @@ public class AvailableMigrations {
         new ModifyAssetLinkTypesMigration(),
         new AddDataLakeMeasureViewMigration(),
         new AddDefaultExportProviderMigration(),
-        new FixImportedPermissionsMigration(chartStorage),
+        new FixImportedPermissionsMigration(chartStorage, permissionStorage),
         new AddAssetManagementViewMigration(),
         new MoveAssetContentMigration(),
-        new CreateAssetPermissionMigration(),
-        new CreateDatasetPermissionMigration(),
+        new CreateAssetPermissionMigration(permissionStorage),
+        new CreateDatasetPermissionMigration(permissionStorage),
         new RemoveObsoletePrivilegesMigration(),
         new UniqueDashboardIdMigration(),
         new AddScriptTemplateViewMigration(),
         new ComputeCertificateThumbprintMigration(),
         new MigrateAdaptersToUseScript(),
         new ModifyAssetLinkIconMigration(),
-        new RemoveDuplicatedAssetPermissions(),
+        new RemoveDuplicatedAssetPermissions(permissionStorage),
         new AddFunctionStateViewMigration(),
         new AddRefreshTokenViewsMigration(),
         new RemoveAssetUserRoleMigration(),

@@ -37,18 +37,21 @@ public class DataExplorerResourceManager extends CrudResourceManager<DashboardMo
   private final IDataExplorerWidgetStorage widgetStorage;
   private final IDataLakeMeasureStorage dataLakeMeasureStorage;
 
-  public DataExplorerResourceManager(IDataExplorerWidgetStorage widgetStorage) {
+  public DataExplorerResourceManager(IDataExplorerWidgetStorage widgetStorage,
+                                     PermissionResourceManager permissionResourceManager) {
     this(
         StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage(),
         widgetStorage,
-        StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage()
+        StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage(),
+        permissionResourceManager
     );
   }
 
   private DataExplorerResourceManager(IDataExplorerDashboardStorage dashboardStorage,
                                       IDataExplorerWidgetStorage widgetStorage,
-                                      IDataLakeMeasureStorage dataLakeMeasureStorage) {
-    super(dashboardStorage, DashboardModel.class);
+                                      IDataLakeMeasureStorage dataLakeMeasureStorage,
+                                      PermissionResourceManager permissionResourceManager) {
+    super(dashboardStorage, DashboardModel.class, permissionResourceManager);
     this.widgetStorage = widgetStorage;
     this.dataLakeMeasureStorage = dataLakeMeasureStorage;
   }

@@ -23,6 +23,7 @@ import org.apache.streampipes.manager.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +43,9 @@ public class PipelineMonitoring extends AbstractMonitoringResource {
 
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
 
-  public PipelineMonitoring(ExtensionServiceRequestManager extensionServiceRequestManager) {
-    super(extensionServiceRequestManager);
+  public PipelineMonitoring(ExtensionServiceRequestManager extensionServiceRequestManager,
+                            SpResourceManager resourceManager) {
+    super(extensionServiceRequestManager, resourceManager);
     this.extensionServiceRequestManager = extensionServiceRequestManager;
   }
 
@@ -68,7 +70,7 @@ public class PipelineMonitoring extends AbstractMonitoringResource {
       @RequestParam(value = "forceUpdate", required = false, defaultValue = "false") boolean forceUpdate
   ) {
     if (forceUpdate) {
-      new ExtensionsServiceLogExecutor(extensionServiceRequestManager).triggerUpdate();
+      new ExtensionsServiceLogExecutor(extensionServiceRequestManager, resourceManager).triggerUpdate();
     }
     return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipelineId));
   }

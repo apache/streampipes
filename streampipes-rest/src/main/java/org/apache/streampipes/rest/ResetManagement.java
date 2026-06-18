@@ -36,7 +36,6 @@ import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.UserResourceManager;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -53,21 +52,25 @@ public class ResetManagement {
   // dependency between this package and streampipes-pipeline-management
   // See in issue [STREAMPIPES-405]
 
-  private final IDataExplorerWidgetStorage widgetStorage;
   private final WorkerRestClient workerRestClient;
   private final IExtensionsServiceStorage extensionsServiceStorage;
   private final ExtensionServiceRequestManager requestManager;
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
+  private final PipelineManager pipelineManager;
+  private final SpResourceManager resourceManager;
 
-  public ResetManagement(IDataExplorerWidgetStorage widgetStorage,
-                         WorkerRestClient workerRestClient,
+  public ResetManagement(WorkerRestClient workerRestClient,
                          IExtensionsServiceStorage extensionsServiceStorage,
-                         ExtensionServiceRequestManager requestManager) {
-    this.widgetStorage = widgetStorage;
+                         ExtensionServiceRequestManager requestManager,
+                         PipelineManager pipelineManager,
+                         SpResourceManager resourceManager,
+                         ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.workerRestClient = workerRestClient;
     this.extensionsServiceStorage = extensionsServiceStorage;
     this.requestManager = requestManager;
-    this.chartSchemaUpdateCoordinator = new ChartSchemaUpdateCoordinator(widgetStorage);
+    this.pipelineManager = pipelineManager;
+    this.resourceManager = resourceManager;
+    this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
   }
 
   private static final Logger logger = LoggerFactory.getLogger(ResetManagement.class);
@@ -93,7 +96,7 @@ public class ResetManagement {
 
     removeAllDataInDataLake();
 
-    removeAllDataViewWidgets(widgetStorage);
+    removeAllDataViewWidgets();
 
     removeAllDataViews();
 
@@ -116,10 +119,10 @@ public class ResetManagement {
   }
 
   private void stopAndDeleteAllPipelines(ExtensionServiceRequestManager requestManager) {
-    List<Pipeline> allPipelines = PipelineManager.getAllPipelines();
+    List<Pipeline> allPipelines = pipelineManager.getAllPipelines();
     allPipelines.forEach(pipeline -> {
-      PipelineManager.stopPipeline(pipeline.getPipelineId(), true, requestManager);
-      PipelineManager.deletePipeline(pipeline.getPipelineId());
+      pipelineManager.stopPipeline(pipeline.getPipelineId(), true, requestManager);
+      pipelineManager.deletePipeline(pipeline.getPipelineId());
     });
   }
 
@@ -129,8 +132,7 @@ public class ResetManagement {
     AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getAdapterInstanceStorage(),
-        new SpResourceManager().manageAdapters(),
-        new SpResourceManager().manageDataStreams(),
+        resourceManager,
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
         workerRestClient,
         extensionsServiceStorage,
@@ -170,9 +172,10 @@ public class ResetManagement {
     });
   }
 
-  private void removeAllDataViewWidgets(IDataExplorerWidgetStorage widgetStorage) {
-    widgetStorage.findAll()
-                 .forEach(widget -> widgetStorage.deleteElementById(widget.getElementId()));
+  private void removeAllDataViewWidgets() {
+    resourceManager.manageCharts().findAll()
+                 .forEach(widget ->
+                     resourceManager.manageCharts().getDb().deleteElementById(widget.getElementId()));
   }
 
   private void removeAllDataViews() {

@@ -24,6 +24,7 @@ import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
@@ -47,14 +48,12 @@ public class WorkerAdministrationManagement {
 
   public WorkerAdministrationManagement(
       IAdapterStorage adapterDescriptionStorage,
-      IPermissionStorage permissionStorage,
-      UserResourceManager userResourceManager,
-      PermissionResourceManager permissionResourceManager,
+      SpResourceManager resourceManager,
       ExtensionServiceRequestManager requestManager) {
     this.adapterDescriptionStorage = adapterDescriptionStorage;
-    this.userResourceManager = userResourceManager;
-    this.permissionStorage = permissionStorage;
-    this.permissionResourceManager = permissionResourceManager;
+    this.userResourceManager = resourceManager.manageUsers();
+    this.permissionStorage = resourceManager.managePermissions().getDb();
+    this.permissionResourceManager = resourceManager.managePermissions();
     this.requestManager = requestManager;
   }
 

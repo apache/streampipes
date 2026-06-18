@@ -31,6 +31,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
@@ -52,9 +53,12 @@ public class ExtensionsServiceLogExecutor implements Runnable {
   private static final PipelineFlowStats pipelineFlowStats = new PipelineFlowStats();
 
   private final ExtensionServiceRequestManager extensionRequestManager;
+  private final SpResourceManager resourceManager;
 
-  public ExtensionsServiceLogExecutor(ExtensionServiceRequestManager extensionRequestManager) {
+  public ExtensionsServiceLogExecutor(ExtensionServiceRequestManager extensionRequestManager,
+                                      SpResourceManager resourceManager) {
     this.extensionRequestManager = Objects.requireNonNull(extensionRequestManager);
+    this.resourceManager = resourceManager;
   }
 
   public void run() {
@@ -68,7 +72,7 @@ public class ExtensionsServiceLogExecutor implements Runnable {
     serviceEndpoints.forEach(serviceEndpoint -> {
       try {
         var target = ExtensionServiceRequestTargets.serviceHealth(serviceEndpoint, LOG_PATH);
-        var response = extensionRequestManager.request(ExtensionServiceRequests.serviceHealth(target));
+        var response = extensionRequestManager.request(ExtensionServiceRequests.serviceHealth(target, resourceManager));
 
         if (!response.isSuccess()) {
           LOG.info("Could not fetch log info from endpoint {} (status {})",

@@ -18,11 +18,9 @@
 
 package org.apache.streampipes.manager.pipeline.update;
 
-import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
-import org.apache.streampipes.resource.management.SpResourceManager;
 
 import java.util.List;
 
@@ -31,10 +29,10 @@ public class DataStreamUpdateManagement {
   private final DataStreamResourceManager dataStreamResourceManager;
   private final PipelineUpdateCoordinator pipelineUpdateCoordinator;
 
-  public DataStreamUpdateManagement(ExtensionServiceRequestManager requestManager,
-                                    ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
-    this.dataStreamResourceManager = new SpResourceManager().manageDataStreams();
-    this.pipelineUpdateCoordinator = new PipelineUpdateCoordinator(requestManager, chartSchemaUpdateCoordinator);
+  public DataStreamUpdateManagement(PipelineUpdateCoordinator pipelineUpdateCoordinator,
+                                    DataStreamResourceManager dataStreamResourceManager) {
+    this.dataStreamResourceManager = dataStreamResourceManager;
+    this.pipelineUpdateCoordinator = pipelineUpdateCoordinator;
   }
 
   public void updateDataStream(SpDataStream dataStream) {

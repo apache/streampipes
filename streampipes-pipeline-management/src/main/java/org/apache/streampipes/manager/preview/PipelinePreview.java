@@ -31,6 +31,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.preview.PipelinePreviewModel;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +49,12 @@ import java.util.stream.Collectors;
 public class PipelinePreview {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelinePreview.class);
+
+  private final SpResourceManager resourceManager;
+
+  public PipelinePreview(SpResourceManager resourceManager) {
+    this.resourceManager = resourceManager;
+  }
 
   public PipelinePreviewModel initiatePreview(Pipeline pipeline,
                                               ExtensionServiceRequestManager requestManager) {
@@ -146,7 +153,7 @@ public class PipelinePreview {
         var service = findSelectedService(g);
         g.setSelectedEndpointUrl(service.getServiceUrl());
         g.setSelectedServiceId(service.getSvcId());
-        new InvokeExtensionRequest(requestManager).execute(g, null);
+        new InvokeExtensionRequest(requestManager, resourceManager).execute(g, null);
       } catch (NoServiceEndpointsAvailableException e) {
         LOG.warn("No endpoint found for pipeline element {}", g.getAppId());
       }
@@ -156,7 +163,7 @@ public class PipelinePreview {
   private void detachGraphs(List<InvocableStreamPipesEntity> graphs,
                             ExtensionServiceRequestManager requestManager) {
     graphs.forEach(g -> {
-      new DetachExtensionRequest(requestManager).execute(g, null);
+      new DetachExtensionRequest(requestManager, resourceManager).execute(g, null);
     });
   }
 

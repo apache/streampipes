@@ -34,10 +34,10 @@ public class CreateAssetPermissionMigration implements Migration {
   private final PermissionResourceManager permissionResourceManager;
 
 
-  public CreateAssetPermissionMigration() {
+  public CreateAssetPermissionMigration(IPermissionStorage permissionStorage) {
     this.assetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
-    this.permissionStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
-    this.permissionResourceManager = new PermissionResourceManager();
+    this.permissionStorage = permissionStorage;
+    this.permissionResourceManager = new PermissionResourceManager(permissionStorage);
   }
 
   @Override

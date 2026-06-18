@@ -24,11 +24,12 @@ import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.DataExplorerResourceManager;
 import org.apache.streampipes.resource.management.DataExplorerWidgetResourceManager;
-import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,10 +52,13 @@ public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
 
   private final DataExplorerWidgetResourceManager resourceManager;
 
-  public DataLakeWidgetResource(IDataExplorerWidgetStorage dataExplorerWidgetStorage) {
-    this.resourceManager = new SpResourceManager().manageDataExplorerWidget(
-        new DataExplorerResourceManager(dataExplorerWidgetStorage),
-        dataExplorerWidgetStorage
+  public DataLakeWidgetResource(IDataExplorerWidgetStorage chartStorage,
+                                IPermissionStorage permissionStorage) {
+    var permissionResourceManager = new PermissionResourceManager(permissionStorage);
+    this.resourceManager = new DataExplorerWidgetResourceManager(
+        new DataExplorerResourceManager(chartStorage, permissionResourceManager),
+        chartStorage,
+        permissionResourceManager
     );
   }
 

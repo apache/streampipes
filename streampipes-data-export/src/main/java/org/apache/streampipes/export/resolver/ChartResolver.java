@@ -21,8 +21,9 @@ package org.apache.streampipes.export.resolver;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -31,10 +32,10 @@ import java.util.Map;
 
 public class ChartResolver extends AbstractResolver<DataExplorerWidgetModel> {
 
-  private final IDataExplorerWidgetStorage chartStorage;
+  private final CRUDStorage<DataExplorerWidgetModel> chartStorage;
 
-  public ChartResolver(IDataExplorerWidgetStorage chartStorage) {
-    this.chartStorage = chartStorage;
+  public ChartResolver(SpResourceManager resourceManager) {
+    this.chartStorage = resourceManager.manageCharts().getDb();
   }
 
   @Override

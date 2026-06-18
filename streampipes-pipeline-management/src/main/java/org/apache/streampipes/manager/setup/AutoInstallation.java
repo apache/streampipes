@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.client.setup.InitialSettings;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +41,13 @@ public class AutoInstallation implements BackgroundTaskNotifier {
   private final AtomicInteger errorCount = new AtomicInteger();
   private int numberOfBackgroundSteps = 0;
   private int executedBackgroundSteps = 0;
+  private final SpResourceManager resourceManager;
 
-  public AutoInstallation(ExtensionServiceRequestManager extensionServiceRequestManager) {
+  public AutoInstallation(ExtensionServiceRequestManager extensionServiceRequestManager,
+                          SpResourceManager resourceManager) {
     this.env = Environments.getEnvironment();
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.resourceManager = resourceManager;
   }
 
   public void startAutoInstallation() {
@@ -53,7 +57,8 @@ public class AutoInstallation implements BackgroundTaskNotifier {
     List<Runnable> backgroundSteps = InstallationConfiguration.getBackgroundInstallationSteps(
         settings,
         this,
-        extensionServiceRequestManager
+        extensionServiceRequestManager,
+        resourceManager
     );
     numberOfBackgroundSteps = backgroundSteps.size();
 

@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.client.setup.InitialSettings;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
@@ -44,12 +45,14 @@ public class InstallationConfiguration {
 
   public static List<Runnable> getBackgroundInstallationSteps(InitialSettings settings,
                                                               BackgroundTaskNotifier callback,
-                                                              ExtensionServiceRequestManager extensionServiceRequestManager) {
+                                                              ExtensionServiceRequestManager extensionServiceRequestManager,
+                                                              SpResourceManager resourceManager) {
     return List.of(new ExtensionsInstallationTask(
         settings,
         StorageDispatcher.INSTANCE.getNoSqlStore(),
         callback,
-        extensionServiceRequestManager
+        extensionServiceRequestManager,
+        resourceManager
     ));
   }
 }

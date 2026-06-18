@@ -22,14 +22,16 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import java.util.List;
 
 public class DetachPipelineElementSubmitter extends BasePipelineElementSubmitter {
 
   public DetachPipelineElementSubmitter(Pipeline pipeline,
-                                        ExtensionServiceRequestManager requestManager) {
-    super(pipeline, requestManager);
+                                        ExtensionServiceRequestManager requestManager,
+                                        SpResourceManager resourceManager) {
+    super(pipeline, requestManager, resourceManager);
   }
 
   @Override

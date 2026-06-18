@@ -28,6 +28,7 @@ import org.apache.streampipes.manager.migration.PipelineElementMigrationManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
@@ -77,11 +78,14 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
   );
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final WorkerRestClient workerRestClient;
+  private final SpResourceManager resourceManager;
 
   public MigrationResource(ExtensionServiceRequestManager extensionServiceRequestManager,
-                           WorkerRestClient workerRestClient) {
+                           WorkerRestClient workerRestClient,
+                           SpResourceManager resourceManager) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.workerRestClient = workerRestClient;
+    this.resourceManager = resourceManager;
   }
 
   @PostMapping(path = "{serviceId}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -133,13 +137,15 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
                 adapterStorage,
                 adapterDescriptionStorage,
                 workerRestClient,
-                extensionServiceRequestManager)
+                extensionServiceRequestManager,
+                resourceManager)
               .handleMigrations(extensionsServiceConfig, adapterMigrations);
             new PipelineElementMigrationManager(
                 pipelineStorage,
                 dataProcessorStorage,
                 dataSinkStorage,
-                extensionServiceRequestManager)
+                extensionServiceRequestManager,
+                resourceManager)
                 .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
           }
         }

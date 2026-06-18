@@ -20,14 +20,15 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineSummaryDto;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import org.springframework.security.core.Authentication;
 
 public class PipelineResourceManager extends CrudResourceManager<Pipeline> {
 
-  public PipelineResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(), Pipeline.class);
+  public PipelineResourceManager(IPipelineStorage pipelineStorage,
+                                 PermissionResourceManager permissionResourceManager) {
+    super(pipelineStorage, Pipeline.class, permissionResourceManager);
   }
 
   public ResourceSummaryDto<PipelineSummaryDto> getSummary(Authentication auth) {

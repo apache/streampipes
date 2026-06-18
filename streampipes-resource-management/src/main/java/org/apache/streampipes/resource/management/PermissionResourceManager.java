@@ -35,6 +35,10 @@ public class PermissionResourceManager extends AbstractResourceManager<IPermissi
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage());
   }
 
+  public PermissionResourceManager(IPermissionStorage permissionStorage) {
+    super(permissionStorage);
+  }
+
   public List<Permission> findAll() {
     return db.findAll();
   }

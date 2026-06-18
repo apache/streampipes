@@ -26,6 +26,7 @@ import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
@@ -45,13 +46,19 @@ public class CompactPipelineResource extends AbstractAuthGuardedRestResource {
 
   private final CompactPipelineManagement compactPipelineManagement;
   private final ExtensionServiceRequestManager requestManager;
+  private final PipelineManager pipelineManager;
 
-  public CompactPipelineResource(ExtensionServiceRequestManager requestManager) {
+  public CompactPipelineResource(ExtensionServiceRequestManager requestManager,
+                                 SpResourceManager resourceManager) {
     this.compactPipelineManagement = new CompactPipelineManagement(
         getPipelineElementStorage(),
         requestManager
     );
     this.requestManager = requestManager;
+    this.pipelineManager = new PipelineManager(
+        getPipelineStorage(),
+        resourceManager
+    );
   }
 
   @PostMapping(
@@ -68,10 +75,10 @@ public class CompactPipelineResource extends AbstractAuthGuardedRestResource {
 
     var pipelineGenerationResult = compactPipelineManagement.makePipeline(compactPipeline);
     if (pipelineGenerationResult.allPipelineElementsValid()) {
-      String pipelineId = PipelineManager.addPipeline(getAuthenticatedUserSid(), pipelineGenerationResult.pipeline());
+      String pipelineId = pipelineManager.addPipeline(getAuthenticatedUserSid(), pipelineGenerationResult.pipeline());
       if (compactPipeline.createOptions().start()) {
         try {
-          PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId, requestManager);
+          PipelineOperationStatus status = pipelineManager.startPipeline(pipelineId, requestManager);
           return ok(status);
         } catch (Exception e) {
           return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));

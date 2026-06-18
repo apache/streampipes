@@ -22,7 +22,6 @@ import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.SuccessMessage;
-import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
@@ -80,9 +79,5 @@ public class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected ResponseEntity unauthorized() {
     return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).build();
-  }
-
-  protected SpResourceManager getSpResourceManager() {
-    return new SpResourceManager();
   }
 }

@@ -26,6 +26,7 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -50,8 +51,9 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
   private final IAdapterStorage adapterStorage;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
 
-  public AdapterMonitoringResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
-    super(extensionServiceRequestManager);
+  public AdapterMonitoringResource(ExtensionServiceRequestManager extensionServiceRequestManager,
+                                   SpResourceManager resourceManager) {
+    super(extensionServiceRequestManager, resourceManager);
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
   }
@@ -96,7 +98,7 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
   public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfos(
       @RequestParam(value = "filter") List<String> elementIds
   ) {
-    new ExtensionsServiceLogExecutor(extensionServiceRequestManager).triggerUpdate();
+    new ExtensionsServiceLogExecutor(extensionServiceRequestManager, resourceManager).triggerUpdate();
     var filteredElementIds = elementIds.stream()
         .map(adapterStorage::getElementById)
         .filter(a -> checkAdapterPermission(a, "READ"))

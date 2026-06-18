@@ -34,8 +34,9 @@ public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataE
   private final DataExplorerResourceManager dashboardManager;
 
   public DataExplorerWidgetResourceManager(DataExplorerResourceManager dashboardManager,
-                                           IDataExplorerWidgetStorage db) {
-    super(db, DataExplorerWidgetModel.class);
+                                           IDataExplorerWidgetStorage db,
+                                           PermissionResourceManager permissionResourceManager) {
+    super(db, DataExplorerWidgetModel.class, permissionResourceManager);
     this.dashboardManager = dashboardManager;
   }
 

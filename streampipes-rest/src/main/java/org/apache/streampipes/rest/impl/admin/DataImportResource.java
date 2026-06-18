@@ -20,10 +20,11 @@ package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.export.ImportManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,12 +46,14 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataImportResource.class);
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
-  private final IDataExplorerWidgetStorage chartStorage;
+  private final PipelineManager pipelineManager;
+  private final SpResourceManager resourceManager;
 
   public DataImportResource(ExtensionServiceRequestManager extensionServiceRequestManager,
-                            IDataExplorerWidgetStorage chartStorage) {
+                            SpResourceManager resourceManager) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
-    this.chartStorage = chartStorage;
+    this.pipelineManager = new PipelineManager(getPipelineStorage(), resourceManager);
+    this.resourceManager = resourceManager;
   }
 
   @PostMapping(
@@ -59,7 +62,12 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AssetExportConfiguration> getImportPreview(@RequestPart("file_upload") MultipartFile fileDetail)
       throws IOException {
-    var importConfig = ImportManager.getImportPreview(fileDetail.getInputStream(), extensionServiceRequestManager, chartStorage);
+    var importConfig = ImportManager.getImportPreview(
+        fileDetail.getInputStream(),
+        extensionServiceRequestManager,
+        resourceManager,
+        pipelineManager
+    );
     return ok(importConfig);
   }
 
@@ -74,7 +82,8 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
           exportConfiguration,
           getAuthenticatedUserSid(),
           extensionServiceRequestManager,
-          chartStorage
+          resourceManager,
+          pipelineManager
       );
       return ok();
     } catch (IOException e) {

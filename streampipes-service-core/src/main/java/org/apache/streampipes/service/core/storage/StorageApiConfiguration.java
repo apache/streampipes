@@ -20,13 +20,18 @@ package org.apache.streampipes.service.core.storage;
 
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.couchdb.impl.explorer.DataExplorerWidgetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.function.FunctionStateStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
 
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@EnableCaching
 public class StorageApiConfiguration {
 
   @Bean
@@ -35,7 +40,15 @@ public class StorageApiConfiguration {
   }
 
   @Bean
-  public IDataExplorerWidgetStorage dataExplorerWidgetStorage() {
-    return new DataExplorerWidgetStorageImpl();
+  public IDataExplorerWidgetStorage dataExplorerWidgetStorage(CacheManager cacheManager) {
+    return new CachedDataExplorerWidgetStorage(
+        new DataExplorerWidgetStorageImpl(),
+        cacheManager
+    );
+  }
+
+  @Bean
+  public IPermissionStorage permissionStorage() {
+    return new PermissionStorageImpl("users/permissions");
   }
 }

@@ -38,9 +38,12 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterResolver.class);
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  private final SpResourceManager resourceManager;
 
-  public AdapterResolver(ExtensionServiceRequestManager extensionServiceRequestManager) {
+  public AdapterResolver(ExtensionServiceRequestManager extensionServiceRequestManager,
+                         SpResourceManager resourceManager) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.resourceManager = resourceManager;
   }
 
   @Override
@@ -94,10 +97,9 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
         try {
           new AdapterMasterManagement(
               getNoSqlStore().getAdapterInstanceStorage(),
-              new SpResourceManager().manageAdapters(),
-              new SpResourceManager().manageDataStreams(),
+              resourceManager,
               AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
-              new WorkerRestClient(extensionServiceRequestManager),
+              new WorkerRestClient(extensionServiceRequestManager, resourceManager),
               getNoSqlStore().getExtensionsServiceStorage(),
               extensionServiceRequestManager
           ).stopStreamAdapter(resourceId, true);

@@ -43,11 +43,15 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.pipeline.PipelineSummaryDto;
 import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
-import org.apache.streampipes.resource.management.PipelineResourceManager;
+import org.apache.streampipes.resource.management.DataProcessorResourceManager;
+import org.apache.streampipes.resource.management.DataSinkResourceManager;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.exception.SpNotificationException;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.google.gson.JsonSyntaxException;
@@ -91,19 +95,28 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   private final CompactPipelineManagement compactPipelineManagement;
   private final ExtensionServiceRequestManager requestManager;
   private final MeasurementUpdateManagement measurementUpdateManagement;
-  private final IDataExplorerWidgetStorage chartStorage;
+  private final PipelineManager pipelineManager;
+  private final DataProcessorResourceManager dataProcessorResourceManager;
+  private final DataSinkResourceManager dataSinkResourceManager;
+  private final SpResourceManager resourceManager;
 
   public PipelineResource(ExtensionServiceRequestManager requestManager,
+                          SpResourceManager resourceManager,
                           IDataExplorerWidgetStorage chartStorage) {
+    this.resourceManager = resourceManager;
     this.compactPipelineManagement = new CompactPipelineManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage(),
         requestManager
     );
     this.requestManager = requestManager;
-    this.chartStorage = chartStorage;
     this.measurementUpdateManagement = new MeasurementUpdateManagement(
         new ChartSchemaUpdateCoordinator(chartStorage)
     );
+    PermissionResourceManager permissionResourceManager = resourceManager.managePermissions();
+    IPipelineStorage pipelineStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
+    this.pipelineManager = new PipelineManager(pipelineStorage, resourceManager);
+    this.dataProcessorResourceManager = new DataProcessorResourceManager(permissionResourceManager);
+    this.dataSinkResourceManager = new DataSinkResourceManager(permissionResourceManager);
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -116,13 +129,13 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasReadAuthority()")
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
   public List<Pipeline> get() {
-    return PipelineManager.getAllPipelines();
+    return pipelineManager.getAllPipelines();
   }
 
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
   public ResourceSummaryDto<PipelineSummaryDto> getPipelineSummary() {
-    return new PipelineResourceManager().getSummary(getAuthentication());
+    return resourceManager.managePipelines().getSummary(getAuthentication());
   }
 
 
@@ -141,7 +154,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Delete a pipeline with a given id", tags = {"Pipeline"})
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public Message delete(@PathVariable("pipelineId") String pipelineId) {
-    PipelineManager.deletePipeline(pipelineId);
+    pipelineManager.deletePipeline(pipelineId);
     return Notifications.success("Pipeline deleted");
   }
 
@@ -149,12 +162,12 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Get a specific pipeline with the given id", tags = {"Pipeline"})
   @PreAuthorize("this.hasReadAuthority() and hasPermission(#pipelineId, 'READ')")
   public ResponseEntity<Pipeline> getElement(@PathVariable("pipelineId") String pipelineId) {
-    Pipeline foundPipeline = PipelineManager.getPipeline(pipelineId);
+    Pipeline foundPipeline = pipelineManager.getPipeline(pipelineId);
 
     if (foundPipeline == null) {
       throw new ResponseStatusException(NOT_FOUND, "Pipeline with " + pipelineId + " not found.");
     } else {
-      return ok(PipelineManager.getPipeline(pipelineId));
+      return ok(pipelineManager.getPipeline(pipelineId));
     }
   }
 
@@ -163,7 +176,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public ResponseEntity<?> start(@PathVariable("pipelineId") String pipelineId) {
     try {
-      PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId, requestManager);
+      PipelineOperationStatus status = pipelineManager.startPipeline(pipelineId, requestManager);
 
       return ok(status);
     } catch (Exception e) {
@@ -178,7 +191,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<?> stop(@PathVariable("pipelineId") String pipelineId,
                                 @RequestParam(value = "forceStop", defaultValue = "false") boolean forceStop) {
     try {
-      PipelineOperationStatus status = PipelineManager.stopPipeline(pipelineId, forceStop, requestManager);
+      PipelineOperationStatus status = pipelineManager.stopPipeline(pipelineId, forceStop, requestManager);
       return ok(status);
     } catch (Exception e) {
       LOG.error(e.getMessage());
@@ -194,7 +207,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<SuccessMessage> addPipeline(@RequestBody Pipeline pipeline) {
 
-    String pipelineId = PipelineManager.addPipeline(getAuthenticatedUserSid(), pipeline);
+    String pipelineId = pipelineManager.addPipeline(getAuthenticatedUserSid(), pipeline);
     SuccessMessage message = Notifications.success("Pipeline stored");
     message.addNotification(new Notification("id", pipelineId));
     return ok(message);
@@ -232,7 +245,9 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public PipelineElementRecommendationMessage recommend(@RequestBody Pipeline pipeline,
                                                         @PathVariable("recId") String baseRecElement) {
     try {
-      return new ElementRecommender(pipeline, baseRecElement, requestManager).findRecommendedElements();
+      return new ElementRecommender(
+          pipeline, baseRecElement, requestManager, dataProcessorResourceManager, dataSinkResourceManager
+      ).findRecommendedElements();
     } catch (JsonSyntaxException e) {
       throw new SpNotificationException(
           HttpStatus.BAD_REQUEST,
@@ -277,7 +292,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Update an existing pipeline", tags = {"Pipeline"})
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public ResponseEntity<SuccessMessage> updatePipeline(@PathVariable("pipelineId") String pipelineId,
-                                                          @RequestBody Pipeline pipeline) {
+                                                       @RequestBody Pipeline pipeline) {
     Pipeline storedPipeline = getPipelineStorage().getElementById(pipelineId);
     if (!storedPipeline.isRunning()) {
       storedPipeline.setStreams(pipeline.getStreams());
@@ -301,12 +316,12 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
       path = "/contains/{elementId}")
   @Operation(summary = "Returns all pipelines that contain the element with the elementId", tags = {
       "Pipeline"}, responses = {@ApiResponse(content = {
-        @Content(mediaType = "application/json",
+      @Content(mediaType = "application/json",
           array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))})})
   @PreAuthorize("this.hasReadAuthority()")
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
   public List<Pipeline> getPipelinesContainingElement(@PathVariable("elementId") String elementId) {
-    return PipelineManager.getPipelinesContainingElements(elementId);
+    return pipelineManager.getPipelinesContainingElements(elementId);
   }
 
   /**

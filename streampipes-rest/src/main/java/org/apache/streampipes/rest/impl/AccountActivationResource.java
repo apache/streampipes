@@ -18,6 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 
@@ -33,12 +34,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v2/activate-account")
 public class AccountActivationResource extends AbstractAuthGuardedRestResource {
 
+  private final SpResourceManager resourceManager;
+
+  public AccountActivationResource(SpResourceManager resourceManager) {
+    this.resourceManager = resourceManager;
+  }
+
   @GetMapping(
       path = "{recoveryCode}",
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> activateUserAccount(@PathVariable("recoveryCode") String recoveryCode) {
     try {
-      getSpResourceManager().manageUsers().activateAccount(recoveryCode);
+      resourceManager.manageUsers().activateAccount(recoveryCode);
       return ok();
     } catch (UserNotFoundException e) {
       throw new SpMessageException(HttpStatus.BAD_REQUEST, e);

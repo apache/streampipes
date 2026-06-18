@@ -20,9 +20,12 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.client.user.PrincipalType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.ResetManagement;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -51,10 +54,19 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
 
   public ResetResource(WorkerRestClient workerRestClient,
                        ExtensionServiceRequestManager requestManager,
-                       IDataExplorerWidgetStorage widgetStorage) {
+                       SpResourceManager resourceManager) {
     IExtensionsServiceStorage extensionsServiceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
+    var pipelineManager = new PipelineManager(
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(),
+        resourceManager
+    );
     this.resetManagement = new ResetManagement(
-        widgetStorage, workerRestClient, extensionsServiceStorage, requestManager
+        workerRestClient,
+        extensionsServiceStorage,
+        requestManager,
+        pipelineManager,
+        resourceManager,
+        new ChartSchemaUpdateCoordinator((IDataExplorerWidgetStorage) resourceManager.manageCharts().getDb())
     );
   }
 
