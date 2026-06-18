@@ -177,11 +177,9 @@ public class ResetManagement {
   }
 
   private void removeAllDataViews() {
-    var dataLakeDashboardStorage =
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getDataExplorerDashboardStorage();
-    dataLakeDashboardStorage.findAll()
-                            .forEach(dashboard -> dataLakeDashboardStorage.deleteElementById(dashboard.getElementId()));
+    resourceManager.manageDashboards().findAll()
+                            .forEach(dashboard ->
+                                resourceManager.manageDashboards().getDb().deleteElementById(dashboard.getElementId()));
   }
 
   private void removeAllAssets(String username) {

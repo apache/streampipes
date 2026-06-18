@@ -20,7 +20,8 @@ package org.apache.streampipes.service.core.migrations.v0980;
 
 import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
+import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -36,12 +37,15 @@ import java.util.List;
  */
 public class FixImportedPermissionsMigration implements Migration {
 
-  private final IDataExplorerWidgetStorage chartStorage;
+  private final IChartStorage chartStorage;
   private final IPermissionStorage permissionStorage;
+  private final IDashboardStorage dashboardStorage;
 
-  public FixImportedPermissionsMigration(IDataExplorerWidgetStorage chartStorage,
+  public FixImportedPermissionsMigration(IChartStorage chartStorage,
+                                         IDashboardStorage dashboardStorage,
                                          IPermissionStorage permissionStorage) {
     this.chartStorage = chartStorage;
+    this.dashboardStorage = dashboardStorage;
     this.permissionStorage = permissionStorage;
   }
 
@@ -61,10 +65,7 @@ public class FixImportedPermissionsMigration implements Migration {
 
   private void migrateDashboardPermissions() {
     LOG.debug("Start migrate permissions for dashboards");
-    var dataExplorerDashboardStorage = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getDataExplorerDashboardStorage();
-    var dashboards = dataExplorerDashboardStorage.findAll();
+    var dashboards = dashboardStorage.findAll();
     migrateResourcePermissions(dashboards);
     LOG.debug("Finished migrate permissions for dashboards");
   }

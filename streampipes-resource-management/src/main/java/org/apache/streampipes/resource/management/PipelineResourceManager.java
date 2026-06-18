@@ -24,7 +24,7 @@ import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import org.springframework.security.core.Authentication;
 
-public class PipelineResourceManager extends CrudResourceManager<Pipeline> {
+public class PipelineResourceManager extends CrudResourceManager<Pipeline, IPipelineStorage> {
 
   public PipelineResourceManager(IPipelineStorage pipelineStorage,
                                  PermissionResourceManager permissionResourceManager) {

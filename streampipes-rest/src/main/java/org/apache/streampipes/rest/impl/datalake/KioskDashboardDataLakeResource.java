@@ -29,10 +29,9 @@ import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
+import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,12 +50,11 @@ import java.util.Map;
 public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResource {
 
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
-  private final IDataExplorerDashboardStorage dashboardStorage =
-      StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage();
-  private final IDataExplorerWidgetStorage dataExplorerWidgetStorage;
+  private final IDashboardStorage dashboardStorage;
+  private final IChartStorage dataExplorerWidgetStorage;
   private final IPermissionStorage permissionStorage;
 
-  public KioskDashboardDataLakeResource(IDataExplorerWidgetStorage dataExplorerWidgetStorage,
+  public KioskDashboardDataLakeResource(IChartStorage dataExplorerWidgetStorage,
                                         SpResourceManager resourceManager) {
     IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
@@ -64,6 +62,7 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
             new ChartSchemaUpdateCoordinator(dataExplorerWidgetStorage),
             resourceManager.managePermissions().getDb()
         );
+    this.dashboardStorage = resourceManager.manageDashboards().getDb();
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(dataExplorerSchemaManagement);

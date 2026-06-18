@@ -29,7 +29,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.ResetManagement;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -66,7 +66,7 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
         requestManager,
         pipelineManager,
         resourceManager,
-        new ChartSchemaUpdateCoordinator((IDataExplorerWidgetStorage) resourceManager.manageCharts().getDb())
+        new ChartSchemaUpdateCoordinator((IChartStorage) resourceManager.manageCharts().getDb())
     );
   }
 

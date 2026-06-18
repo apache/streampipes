@@ -26,7 +26,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,10 +52,10 @@ public class ChartSchemaUpdateCoordinator {
   private static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {
   };
 
-  private final IDataExplorerWidgetStorage widgetStorage;
+  private final IChartStorage widgetStorage;
   private final ObjectMapper objectMapper;
 
-  public ChartSchemaUpdateCoordinator(IDataExplorerWidgetStorage widgetStorage) {
+  public ChartSchemaUpdateCoordinator(IChartStorage widgetStorage) {
     this.widgetStorage = widgetStorage;
     this.objectMapper = JacksonSerializer.getObjectMapper();
   }

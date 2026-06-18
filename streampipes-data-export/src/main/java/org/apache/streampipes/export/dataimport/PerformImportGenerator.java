@@ -110,8 +110,9 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleDashboard(String document, String dashboardId) throws JsonProcessingException {
     if (shouldStore(dashboardId, config.getDashboards())) {
-      writeDocument(document, new DashboardResolver());
-      var dashboard = new DashboardResolver().deserializeDocument(document);
+      var dashboardResourceManager = resourceManager.manageDashboards();
+      writeDocument(document, new DashboardResolver(dashboardResourceManager));
+      var dashboard = new DashboardResolver(dashboardResourceManager).deserializeDocument(document);
       permissionsToStore.add(new PermissionInfo(dashboard.getElementId(), DashboardModel.class));
     }
   }

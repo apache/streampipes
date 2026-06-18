@@ -101,7 +101,9 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
 
   @Override
   protected void handleDashboard(String document, String dashboardId) throws JsonProcessingException {
-    addExportItem(dashboardId, new DashboardResolver().readDocument(document).getName(), importConfig::addDashboard);
+    addExportItem(dashboardId, new DashboardResolver(
+        resourceManager.manageDashboards()
+    ).readDocument(document).getName(), importConfig::addDashboard);
   }
 
   @Override

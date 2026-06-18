@@ -19,12 +19,16 @@
 package org.apache.streampipes.service.core.storage;
 
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
+import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
+import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.explorer.DataExplorerWidgetStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.explorer.ChartStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.explorer.DashboardStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.function.FunctionStateStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.AssetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
 
 import org.springframework.cache.CacheManager;
@@ -42,9 +46,9 @@ public class StorageApiConfiguration {
   }
 
   @Bean
-  public IDataExplorerWidgetStorage dataExplorerWidgetStorage(CacheManager cacheManager) {
-    return new CachedDataExplorerWidgetStorage(
-        new DataExplorerWidgetStorageImpl(),
+  public IChartStorage chartStorage(CacheManager cacheManager) {
+    return new CachedChartStorage(
+        new ChartStorageImpl(),
         cacheManager
     );
   }
@@ -63,5 +67,18 @@ public class StorageApiConfiguration {
         new AdapterInstanceStorageImpl(),
         cacheManager
     );
+  }
+
+  @Bean
+  public IDashboardStorage dashboardStorage(CacheManager cacheManager) {
+    return new CachedDashboardStorage(
+        new DashboardStorageImpl(),
+        cacheManager
+    );
+  }
+
+  @Bean
+  public IAssetStorage assetStorage() {
+    return new AssetStorageImpl();
   }
 }

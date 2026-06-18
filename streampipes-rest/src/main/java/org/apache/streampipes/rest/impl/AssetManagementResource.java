@@ -22,14 +22,10 @@ import org.apache.streampipes.model.assets.AssetSummaryDto;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
-import org.apache.streampipes.resource.management.CrudResourceManager;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.AssetResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.system.IAssetStorage;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -52,15 +48,12 @@ import java.util.List;
 @RequestMapping("/api/v2/assets")
 public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
-  private final CrudResourceManager<SpAssetModel> assetResourceManager;
+  private final AssetResourceManager assetResourceManager;
   private final SpResourceManager resourceManager;
 
-  public AssetManagementResource(IPermissionStorage permissionStorage,
-                                 SpResourceManager resourceManager) {
-    IAssetStorage assetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
+  public AssetManagementResource(SpResourceManager resourceManager) {
     this.resourceManager = resourceManager;
-    var permissionResourceManager = new PermissionResourceManager(permissionStorage);
-    this.assetResourceManager = new CrudResourceManager<>(assetStorage, SpAssetModel.class, permissionResourceManager);
+    this.assetResourceManager = resourceManager.manageAssets();
   }
 
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)

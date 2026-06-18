@@ -41,7 +41,9 @@ import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivile
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
+import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.Arrays;
@@ -49,14 +51,18 @@ import java.util.List;
 
 public class AvailableMigrations {
 
-  private final IDataExplorerWidgetStorage chartStorage;
+  private final IChartStorage chartStorage;
   private final IPermissionStorage permissionStorage;
   private final IAdapterStorage adapterStorage;
+  private final IDashboardStorage dashboardStorage;
+  private final IAssetStorage assetStorage;
 
   public AvailableMigrations(SpResourceManager resourceManager) {
-    this.chartStorage = (IDataExplorerWidgetStorage) resourceManager.manageCharts().getDb();
+    this.chartStorage = resourceManager.manageCharts().getDb();
     this.permissionStorage = resourceManager.managePermissions().getDb();
     this.adapterStorage = resourceManager.manageAdapters().getDb();
+    this.dashboardStorage = resourceManager.manageDashboards().getDb();
+    this.assetStorage = resourceManager.manageAssets().getDb();
   }
 
   public List<Migration> getAvailableMigrations() {
@@ -65,18 +71,18 @@ public class AvailableMigrations {
         new ModifyAssetLinkTypesMigration(),
         new AddDataLakeMeasureViewMigration(),
         new AddDefaultExportProviderMigration(),
-        new FixImportedPermissionsMigration(chartStorage, permissionStorage),
+        new FixImportedPermissionsMigration(chartStorage, dashboardStorage, permissionStorage),
         new AddAssetManagementViewMigration(),
         new MoveAssetContentMigration(),
-        new CreateAssetPermissionMigration(permissionStorage),
+        new CreateAssetPermissionMigration(permissionStorage, assetStorage),
         new CreateDatasetPermissionMigration(permissionStorage),
         new RemoveObsoletePrivilegesMigration(),
-        new UniqueDashboardIdMigration(),
+        new UniqueDashboardIdMigration(dashboardStorage),
         new AddScriptTemplateViewMigration(),
         new ComputeCertificateThumbprintMigration(),
         new MigrateAdaptersToUseScript(adapterStorage),
         new ModifyAssetLinkIconMigration(),
-        new RemoveDuplicatedAssetPermissions(permissionStorage),
+        new RemoveDuplicatedAssetPermissions(permissionStorage, assetStorage),
         new AddFunctionStateViewMigration(),
         new AddRefreshTokenViewsMigration(),
         new RemoveAssetUserRoleMigration(),

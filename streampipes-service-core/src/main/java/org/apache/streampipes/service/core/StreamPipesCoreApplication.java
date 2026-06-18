@@ -59,7 +59,7 @@ import org.apache.streampipes.service.core.migrations.AvailableMigrations;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
@@ -117,7 +117,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   private WorkerRestClient workerRestClient;
 
   @Autowired
-  protected IDataExplorerWidgetStorage chartStorage;
+  protected IChartStorage chartStorage;
 
   @Autowired
   protected IPermissionStorage permissionStorage;

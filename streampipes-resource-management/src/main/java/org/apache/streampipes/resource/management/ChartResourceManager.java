@@ -21,7 +21,7 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.datalake.ChartSummaryDto;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import org.springframework.security.core.Authentication;
 
@@ -29,13 +29,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class DataExplorerWidgetResourceManager extends CrudResourceManager<DataExplorerWidgetModel> {
+public class ChartResourceManager
+    extends CrudResourceManager<DataExplorerWidgetModel, IChartStorage> {
 
-  private final DataExplorerResourceManager dashboardManager;
+  private final DashboardResourceManager dashboardManager;
 
-  public DataExplorerWidgetResourceManager(DataExplorerResourceManager dashboardManager,
-                                           IDataExplorerWidgetStorage db,
-                                           PermissionResourceManager permissionResourceManager) {
+  public ChartResourceManager(DashboardResourceManager dashboardManager,
+                              IChartStorage db,
+                              PermissionResourceManager permissionResourceManager) {
     super(db, DataExplorerWidgetModel.class, permissionResourceManager);
     this.dashboardManager = dashboardManager;
   }

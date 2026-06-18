@@ -23,16 +23,16 @@ import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.security.core.Authentication;
 
-public class AssetResourceManager extends AbstractResourceManager<IAssetStorage> {
+public class AssetResourceManager extends CrudResourceManager<SpAssetModel, IAssetStorage> {
 
   private final SpPermissionEvaluator permissionEvaluator;
 
-  public AssetResourceManager(PermissionResourceManager permissionResourceManager) {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage());
+  public AssetResourceManager(IAssetStorage assetStorage,
+                              PermissionResourceManager permissionResourceManager) {
+    super(assetStorage, SpAssetModel.class, permissionResourceManager);
     this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
   }
 

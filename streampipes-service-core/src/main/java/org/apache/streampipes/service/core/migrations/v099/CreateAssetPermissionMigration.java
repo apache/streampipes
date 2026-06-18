@@ -23,7 +23,6 @@ import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
 
@@ -34,8 +33,9 @@ public class CreateAssetPermissionMigration implements Migration {
   private final PermissionResourceManager permissionResourceManager;
 
 
-  public CreateAssetPermissionMigration(IPermissionStorage permissionStorage) {
-    this.assetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
+  public CreateAssetPermissionMigration(IPermissionStorage permissionStorage,
+                                        IAssetStorage assetStorage) {
+    this.assetStorage = assetStorage;
     this.permissionStorage = permissionStorage;
     this.permissionResourceManager = new PermissionResourceManager(permissionStorage);
   }

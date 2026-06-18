@@ -24,7 +24,7 @@ import org.apache.streampipes.export.DataLakeExportManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,7 @@ public class DataLakeScheduler implements SchedulingConfigurer {
 
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
 
-    public DataLakeScheduler(IDataExplorerWidgetStorage chartStorage,
+    public DataLakeScheduler(IChartStorage chartStorage,
                              SpResourceManager resourceManager) {
         var chartSchemaUpdateCoordinator = new ChartSchemaUpdateCoordinator(chartStorage);
         dataExplorerSchemaManagement = new DataExplorerDispatcher()

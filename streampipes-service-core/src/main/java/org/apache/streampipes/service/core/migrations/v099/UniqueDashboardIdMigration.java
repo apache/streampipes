@@ -19,8 +19,7 @@
 package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -29,11 +28,11 @@ import java.util.Objects;
 
 public class UniqueDashboardIdMigration implements Migration {
 
-  private final IDataExplorerDashboardStorage dashboardStorage;
+  private final IDashboardStorage dashboardStorage;
   private static final String Prefix = "sp:dataexplorerwidgetmodel";
 
-  public UniqueDashboardIdMigration() {
-    this.dashboardStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage();
+  public UniqueDashboardIdMigration(IDashboardStorage dashboardStorage) {
+    this.dashboardStorage = dashboardStorage;
   }
 
   @Override

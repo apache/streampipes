@@ -50,7 +50,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.exception.SpNotificationException;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -102,7 +102,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   public PipelineResource(ExtensionServiceRequestManager requestManager,
                           SpResourceManager resourceManager,
-                          IDataExplorerWidgetStorage chartStorage) {
+                          IChartStorage chartStorage) {
     this.resourceManager = resourceManager;
     this.compactPipelineManagement = new CompactPipelineManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage(),

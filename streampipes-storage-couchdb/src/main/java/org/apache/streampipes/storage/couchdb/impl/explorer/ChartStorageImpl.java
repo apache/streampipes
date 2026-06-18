@@ -15,10 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.api.explorer;
+package org.apache.streampipes.storage.couchdb.impl.explorer;
 
-import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.storage.api.core.CRUDStorage;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
+import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public interface IDataExplorerDashboardStorage extends CRUDStorage<DashboardModel> {
+public class ChartStorageImpl extends DefaultCrudStorage<DataExplorerWidgetModel>
+    implements IChartStorage {
+
+  public ChartStorageImpl() {
+    super(
+        () -> Utils.getCouchDbGsonClient("dataexplorerwidget"),
+        DataExplorerWidgetModel.class
+    );
+  }
 }

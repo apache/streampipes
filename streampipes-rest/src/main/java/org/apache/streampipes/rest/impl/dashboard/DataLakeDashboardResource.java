@@ -23,10 +23,9 @@ import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardSummaryDto;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
-import org.apache.streampipes.resource.management.DataExplorerResourceManager;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.DashboardResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.http.CacheControl;
@@ -53,17 +52,11 @@ import java.util.Objects;
 public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
 
   private final IPermissionStorage permissionStorage;
-  private final IDataExplorerWidgetStorage chartStorage;
-  private final DataExplorerResourceManager dashboardResourceManager;
+  private final DashboardResourceManager dashboardResourceManager;
 
-  public DataLakeDashboardResource(IDataExplorerWidgetStorage chartStorage,
-                                   IPermissionStorage permissionStorage) {
-    this.permissionStorage = permissionStorage;
-    this.chartStorage = chartStorage;
-    this.dashboardResourceManager = new DataExplorerResourceManager(
-        chartStorage,
-        new PermissionResourceManager(permissionStorage)
-    );
+  public DataLakeDashboardResource(SpResourceManager resourceManager) {
+    this.permissionStorage = resourceManager.managePermissions().getDb();
+    this.dashboardResourceManager = resourceManager.manageDashboards();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

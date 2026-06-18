@@ -20,7 +20,7 @@ package org.apache.streampipes.service.core.storage;
 import org.apache.streampipes.model.Tuple2;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -33,29 +33,29 @@ import org.springframework.cache.CacheManager;
 import java.util.List;
 import java.util.Objects;
 
-public class CachedDataExplorerWidgetStorage implements IDataExplorerWidgetStorage {
+public class CachedChartStorage implements IChartStorage {
 
   static final String CACHE_NAME = "dataExplorerWidgets";
   static final String FIND_ALL_CACHE_NAME = "dataExplorerWidgetsAll";
 
-  private static final Logger LOG = LoggerFactory.getLogger(CachedDataExplorerWidgetStorage.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CachedChartStorage.class);
   private static final String FIND_ALL_CACHE_KEY = "all";
   private static final TypeReference<List<DataExplorerWidgetModel>> WIDGET_LIST_TYPE = new TypeReference<>() {
   };
 
-  private final IDataExplorerWidgetStorage delegate;
+  private final IChartStorage delegate;
   private final Cache cache;
   private final Cache findAllCache;
   private final ObjectMapper objectMapper;
 
-  public CachedDataExplorerWidgetStorage(IDataExplorerWidgetStorage delegate,
-                                         CacheManager cacheManager) {
+  public CachedChartStorage(IChartStorage delegate,
+                            CacheManager cacheManager) {
     this(delegate, cacheManager, JacksonSerializer.getObjectMapper());
   }
 
-  CachedDataExplorerWidgetStorage(IDataExplorerWidgetStorage delegate,
-                                  CacheManager cacheManager,
-                                  ObjectMapper objectMapper) {
+  CachedChartStorage(IChartStorage delegate,
+                     CacheManager cacheManager,
+                     ObjectMapper objectMapper) {
     this.delegate = delegate;
     this.cache = Objects.requireNonNull(cacheManager.getCache(CACHE_NAME));
     this.findAllCache = Objects.requireNonNull(cacheManager.getCache(FIND_ALL_CACHE_NAME));

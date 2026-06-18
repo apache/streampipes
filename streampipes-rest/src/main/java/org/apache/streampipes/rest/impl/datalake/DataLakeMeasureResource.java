@@ -25,7 +25,7 @@ import org.apache.streampipes.model.datalake.DatasetSummaryDto;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -53,7 +53,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
 
   private final SpResourceManager resourceManager;
 
-  public DataLakeMeasureResource(IDataExplorerWidgetStorage chartStorage,
+  public DataLakeMeasureResource(IChartStorage chartStorage,
                                  SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
     this.resourceManager = resourceManager;

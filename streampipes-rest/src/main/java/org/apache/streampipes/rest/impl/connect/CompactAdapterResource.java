@@ -40,7 +40,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
@@ -91,7 +91,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     var pipelineUpdateCoordinator = new PipelineUpdateCoordinator(
         requestManager,
         resourceManager,
-        new ChartSchemaUpdateCoordinator((IDataExplorerWidgetStorage) resourceManager.manageCharts().getDb()),
+        new ChartSchemaUpdateCoordinator((IChartStorage) resourceManager.manageCharts().getDb()),
         pipelineManager
     );
     this.adapterUpdateManagement = new AdapterUpdateManagement(

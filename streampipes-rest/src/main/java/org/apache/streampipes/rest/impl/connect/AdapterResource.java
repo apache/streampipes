@@ -46,7 +46,7 @@ import org.apache.streampipes.rest.event.AdapterDeletedEvent;
 import org.apache.streampipes.rest.event.AdapterUpdatedEvent;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -114,7 +114,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     this.pipelineUpdateCoordinator = new PipelineUpdateCoordinator(
         requestManager,
         resourceManager,
-        new ChartSchemaUpdateCoordinator((IDataExplorerWidgetStorage) resourceManager.manageCharts().getDb()),
+        new ChartSchemaUpdateCoordinator((IChartStorage) resourceManager.manageCharts().getDb()),
         pipelineManager
     );
   }

@@ -87,6 +87,8 @@ public class ExportPackageGenerator {
         .map(AssetExportConfiguration::getAssetId)
         .collect(Collectors.toList()), manifest);
 
+    var dashboardResourceManager = resourceManager.manageDashboards();
+
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {
       config.getAdapters().forEach(item -> addDoc(builder,
           item,
@@ -109,10 +111,10 @@ public class ExportPackageGenerator {
           manifest::addPipeline));
 
       config.getDashboards().forEach(item -> {
-        var resolver = new DashboardResolver();
+        var resolver = new DashboardResolver(dashboardResourceManager);
         addDoc(builder,
             item,
-            new DashboardResolver(),
+            new DashboardResolver(dashboardResourceManager),
             manifest::addDashboard);
         var charts = resolver.getCharts(item.getResourceId());
         var chartResolver = new ChartResolver(resourceManager);

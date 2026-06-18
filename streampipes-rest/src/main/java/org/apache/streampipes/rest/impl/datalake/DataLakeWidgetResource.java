@@ -22,14 +22,11 @@ import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.datalake.ChartSummaryDto;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
-import org.apache.streampipes.resource.management.DataExplorerResourceManager;
-import org.apache.streampipes.resource.management.DataExplorerWidgetResourceManager;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.ChartResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,16 +47,10 @@ import java.util.List;
 @RequestMapping("/api/v3/datalake/dashboard/widgets")
 public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
 
-  private final DataExplorerWidgetResourceManager resourceManager;
+  private final ChartResourceManager resourceManager;
 
-  public DataLakeWidgetResource(IDataExplorerWidgetStorage chartStorage,
-                                IPermissionStorage permissionStorage) {
-    var permissionResourceManager = new PermissionResourceManager(permissionStorage);
-    this.resourceManager = new DataExplorerWidgetResourceManager(
-        new DataExplorerResourceManager(chartStorage, permissionResourceManager),
-        chartStorage,
-        permissionResourceManager
-    );
+  public DataLakeWidgetResource(SpResourceManager resourceManager) {
+    this.resourceManager = resourceManager.manageCharts();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

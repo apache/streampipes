@@ -34,7 +34,7 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.event.DataStreamDeletedEvent;
 import org.apache.streampipes.rest.event.DataStreamUpdatedEvent;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import org.apache.http.client.HttpResponseException;
 import org.springframework.context.ApplicationEventPublisher;
@@ -63,7 +63,7 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
 
   public DataStreamResource(ExtensionServiceRequestManager requestManager,
                             ApplicationEventPublisher eventPublisher,
-                            IDataExplorerWidgetStorage chartStorage,
+                            IChartStorage chartStorage,
                             SpResourceManager resourceManager) {
     var pipelineUpdateCoordinator = new PipelineUpdateCoordinator(
         requestManager,

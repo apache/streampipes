@@ -22,8 +22,8 @@ import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardSummaryDto;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
+import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -32,25 +32,26 @@ import org.springframework.security.core.Authentication;
 import java.util.List;
 import java.util.Map;
 
-public class DataExplorerResourceManager extends CrudResourceManager<DashboardModel> {
+public class DashboardResourceManager extends CrudResourceManager<DashboardModel, IDashboardStorage> {
 
-  private final IDataExplorerWidgetStorage widgetStorage;
+  private final IChartStorage widgetStorage;
   private final IDataLakeMeasureStorage dataLakeMeasureStorage;
 
-  public DataExplorerResourceManager(IDataExplorerWidgetStorage widgetStorage,
-                                     PermissionResourceManager permissionResourceManager) {
+  public DashboardResourceManager(IDashboardStorage dashboardStorage,
+                                  IChartStorage widgetStorage,
+                                  PermissionResourceManager permissionResourceManager) {
     this(
-        StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage(),
+        dashboardStorage,
         widgetStorage,
         StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage(),
         permissionResourceManager
     );
   }
 
-  private DataExplorerResourceManager(IDataExplorerDashboardStorage dashboardStorage,
-                                      IDataExplorerWidgetStorage widgetStorage,
-                                      IDataLakeMeasureStorage dataLakeMeasureStorage,
-                                      PermissionResourceManager permissionResourceManager) {
+  private DashboardResourceManager(IDashboardStorage dashboardStorage,
+                                   IChartStorage widgetStorage,
+                                   IDataLakeMeasureStorage dataLakeMeasureStorage,
+                                   PermissionResourceManager permissionResourceManager) {
     super(dashboardStorage, DashboardModel.class, permissionResourceManager);
     this.widgetStorage = widgetStorage;
     this.dataLakeMeasureStorage = dataLakeMeasureStorage;

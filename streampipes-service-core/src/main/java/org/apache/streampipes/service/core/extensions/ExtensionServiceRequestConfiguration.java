@@ -24,7 +24,9 @@ import org.apache.streampipes.manager.execution.HttpExtensionServiceRequestManag
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
+import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.slf4j.Logger;
@@ -87,9 +89,11 @@ public class ExtensionServiceRequestConfiguration {
 
   @Bean
   public SpResourceManager spResourceManager(IPermissionStorage permissionStorage,
-                                             IDataExplorerWidgetStorage chartStorage,
-                                             IAdapterStorage adapterStorage) {
-    return new SpResourceManager(permissionStorage, chartStorage, adapterStorage);
+                                             IChartStorage chartStorage,
+                                             IAdapterStorage adapterStorage,
+                                             IDashboardStorage dashboardStorage,
+                                             IAssetStorage assetStorage) {
+    return new SpResourceManager(permissionStorage, chartStorage, adapterStorage, assetStorage, dashboardStorage);
   }
 
   @Bean

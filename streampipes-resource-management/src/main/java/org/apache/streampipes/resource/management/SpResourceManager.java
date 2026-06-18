@@ -18,22 +18,30 @@
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
+import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class SpResourceManager {
 
   private final IPermissionStorage permissionStorage;
-  private final IDataExplorerWidgetStorage chartStorage;
+  private final IChartStorage chartStorage;
   private final IAdapterStorage adapterStorage;
+  private final IAssetStorage assetStorage;
+  private final IDashboardStorage dashboardStorage;
 
   public SpResourceManager(IPermissionStorage permissionStorage,
-                           IDataExplorerWidgetStorage chartStorage,
-                           IAdapterStorage adapterStorage) {
+                           IChartStorage chartStorage,
+                           IAdapterStorage adapterStorage,
+                           IAssetStorage assetStorage,
+                           IDashboardStorage dashboardStorage) {
     this.permissionStorage = permissionStorage;
     this.chartStorage = chartStorage;
     this.adapterStorage = adapterStorage;
+    this.assetStorage = assetStorage;
+    this.dashboardStorage = dashboardStorage;
   }
 
   public AdapterDescriptionResourceManager manageAdapterDescriptions() {
@@ -53,7 +61,7 @@ public class SpResourceManager {
   }
 
   public AssetResourceManager manageAssets() {
-    return new AssetResourceManager(managePermissions());
+    return new AssetResourceManager(assetStorage, managePermissions());
   }
 
   public AdapterResourceManager manageAdapters() {
@@ -69,12 +77,12 @@ public class SpResourceManager {
     return new PermissionResourceManager(permissionStorage);
   }
 
-  public DataExplorerResourceManager manageDashboards() {
-    return new DataExplorerResourceManager(chartStorage, managePermissions());
+  public DashboardResourceManager manageDashboards() {
+    return new DashboardResourceManager(dashboardStorage, chartStorage, managePermissions());
   }
 
-  public DataExplorerWidgetResourceManager manageCharts() {
-    return new DataExplorerWidgetResourceManager(manageDashboards(), chartStorage,  managePermissions());
+  public ChartResourceManager manageCharts() {
+    return new ChartResourceManager(manageDashboards(), chartStorage,  managePermissions());
   }
 
   public PipelineResourceManager managePipelines() {

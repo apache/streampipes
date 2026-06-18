@@ -85,7 +85,9 @@ public class AssetLinkResolver {
           .resolve(getLinks(assetLinks, ResolvableAssetLinks.ADAPTER)));
       exportConfig.setDataViews(new ChartResolver(resourceManager)
           .resolve(getLinks(assetLinks, ResolvableAssetLinks.CHART)));
-      exportConfig.setDashboards(new DashboardResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DASHBOARD)));
+      exportConfig.setDashboards(new DashboardResolver(
+          resourceManager.manageDashboards()
+      ).resolve(getLinks(assetLinks, ResolvableAssetLinks.DASHBOARD)));
       exportConfig.setDataSources(
           new DataSourceResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_SOURCE)));
       exportConfig.setPipelines(new PipelineResolver(extensionServiceRequestManager, pipelineManager)

@@ -19,7 +19,7 @@ package org.apache.streampipes.service.core.storage;
 
 import org.apache.streampipes.model.Tuple2;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,21 +35,21 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class CachedDataExplorerWidgetStorageTest {
+class CachedChartStorageTest {
 
   private static final String WIDGET_ID = "widget-id";
 
-  private IDataExplorerWidgetStorage delegate;
-  private CachedDataExplorerWidgetStorage storage;
+  private IChartStorage delegate;
+  private CachedChartStorage storage;
 
   @BeforeEach
   void setUp() {
-    delegate = mock(IDataExplorerWidgetStorage.class);
+    delegate = mock(IChartStorage.class);
     var cacheManager = new ConcurrentMapCacheManager(
-        CachedDataExplorerWidgetStorage.CACHE_NAME,
-        CachedDataExplorerWidgetStorage.FIND_ALL_CACHE_NAME
+        CachedChartStorage.CACHE_NAME,
+        CachedChartStorage.FIND_ALL_CACHE_NAME
     );
-    storage = new CachedDataExplorerWidgetStorage(delegate, cacheManager);
+    storage = new CachedChartStorage(delegate, cacheManager);
   }
 
   @Test
