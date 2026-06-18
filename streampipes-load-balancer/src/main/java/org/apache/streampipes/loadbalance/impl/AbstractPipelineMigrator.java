@@ -21,6 +21,7 @@ import org.apache.streampipes.loadbalance.PipelineMigrator;
 import org.apache.streampipes.loadbalance.ResourceUnitMigration;
 import org.apache.streampipes.loadbalance.ServiceLoadCalculator;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,12 @@ import java.util.PriorityQueue;
 public abstract class AbstractPipelineMigrator implements PipelineMigrator {
 
   private static final Logger logger = LoggerFactory.getLogger(AbstractPipelineMigrator.class);
+
+  protected SpResourceManager resourceManager;
+
+  public AbstractPipelineMigrator(SpResourceManager resourceManager) {
+    this.resourceManager = resourceManager;
+  }
 
   /**
    * Container for service load queues
@@ -75,6 +82,7 @@ public abstract class AbstractPipelineMigrator implements PipelineMigrator {
 
   /**
    * Calculate load for all services and organize into priority queues
+   *
    * @param services List of service registrations
    * @return Service load queues
    */
@@ -90,26 +98,29 @@ public abstract class AbstractPipelineMigrator implements PipelineMigrator {
 
   /**
    * Perform migration from source to target service
+   *
    * @param source Source service with its load
    * @param target Target service with its load
    */
   protected void executeMigration(Map.Entry<SpServiceRegistration, Float> source,
-                                 Map.Entry<SpServiceRegistration, Float> target) {
+                                  Map.Entry<SpServiceRegistration, Float> target) {
     logger.info("Migrating from service {} (load: {}) to {} (load: {})",
-               source.getKey().getSvcId(), source.getValue(),
-               target.getKey().getSvcId(), target.getValue());
+        source.getKey().getSvcId(), source.getValue(),
+        target.getKey().getSvcId(), target.getValue());
 
     ResourceUnitMigration.migration(
-      source.getKey(), source.getValue(),
-      target.getKey(), target.getValue()
+        source.getKey(), source.getValue(),
+        target.getKey(), target.getValue(),
+        resourceManager
     );
 
   }
 
   /**
    * Perform migration between high-load and low-load services
-   * @param maxLoadQueue Queue sorted by load (highest first)
-   * @param minLoadQueue Queue sorted by load (lowest first)
+   *
+   * @param maxLoadQueue  Queue sorted by load (highest first)
+   * @param minLoadQueue  Queue sorted by load (lowest first)
    * @param totalServices Total number of services
    * @param maxMigrations Maximum number of migrations to perform
    */
@@ -142,6 +153,7 @@ public abstract class AbstractPipelineMigrator implements PipelineMigrator {
 
   /**
    * Perform unlimited migrations between queues
+   *
    * @param maxLoadQueue Queue sorted by load (highest first)
    * @param minLoadQueue Queue sorted by load (lowest first)
    */
@@ -164,13 +176,14 @@ public abstract class AbstractPipelineMigrator implements PipelineMigrator {
 
   /**
    * Check if migration should be performed
+   *
    * @param services List of services
    * @return true if migration should proceed
    */
   protected boolean shouldMigrate(List<SpServiceRegistration> services) {
     if (services == null || services.size() <= 1) {
       logger.debug("Skipping migration: insufficient services (count: {})",
-                  services == null ? 0 : services.size());
+          services == null ? 0 : services.size());
       return false;
     }
     return true;
@@ -178,6 +191,7 @@ public abstract class AbstractPipelineMigrator implements PipelineMigrator {
 
   /**
    * Calculate average load
+   *
    * @param loadValues List of load values
    * @return Average load
    */
@@ -187,8 +201,9 @@ public abstract class AbstractPipelineMigrator implements PipelineMigrator {
 
   /**
    * Calculate variance of load values
+   *
    * @param loadValues List of load values
-   * @param average Average value
+   * @param average    Average value
    * @return Variance
    */
   protected float calculateVariance(List<Float> loadValues, float average) {

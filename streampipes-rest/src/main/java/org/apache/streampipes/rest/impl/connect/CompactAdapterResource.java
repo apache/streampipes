@@ -70,8 +70,6 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
                                 ExtensionServiceRequestManager requestManager,
                                 SpResourceManager resourceManager) {
     super(() -> new AdapterMasterManagement(
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getAdapterInstanceStorage(),
         resourceManager,
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
         workerRestClient,

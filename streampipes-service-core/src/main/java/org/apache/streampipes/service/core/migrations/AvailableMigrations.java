@@ -19,6 +19,7 @@
 
 package org.apache.streampipes.service.core.migrations;
 
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.service.core.migrations.v0980.AddDataLakeMeasureViewMigration;
 import org.apache.streampipes.service.core.migrations.v0980.AddDefaultExportProviderMigration;
 import org.apache.streampipes.service.core.migrations.v0980.FixImportedPermissionsMigration;
@@ -39,6 +40,7 @@ import org.apache.streampipes.service.core.migrations.v099.RemoveInternalNotific
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
@@ -49,11 +51,12 @@ public class AvailableMigrations {
 
   private final IDataExplorerWidgetStorage chartStorage;
   private final IPermissionStorage permissionStorage;
+  private final IAdapterStorage adapterStorage;
 
-  public AvailableMigrations(IDataExplorerWidgetStorage chartStorage,
-                             IPermissionStorage permissionStorage) {
-    this.chartStorage = chartStorage;
-    this.permissionStorage = permissionStorage;
+  public AvailableMigrations(SpResourceManager resourceManager) {
+    this.chartStorage = (IDataExplorerWidgetStorage) resourceManager.manageCharts().getDb();
+    this.permissionStorage = resourceManager.managePermissions().getDb();
+    this.adapterStorage = resourceManager.manageAdapters().getDb();
   }
 
   public List<Migration> getAvailableMigrations() {
@@ -71,7 +74,7 @@ public class AvailableMigrations {
         new UniqueDashboardIdMigration(),
         new AddScriptTemplateViewMigration(),
         new ComputeCertificateThumbprintMigration(),
-        new MigrateAdaptersToUseScript(),
+        new MigrateAdaptersToUseScript(adapterStorage),
         new ModifyAssetLinkIconMigration(),
         new RemoveDuplicatedAssetPermissions(permissionStorage),
         new AddFunctionStateViewMigration(),

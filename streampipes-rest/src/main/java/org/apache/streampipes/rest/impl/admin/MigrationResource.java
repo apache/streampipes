@@ -66,7 +66,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
   private final IExtensionsServiceStorage extensionsServiceStorage =
       getNoSqlStorage().getExtensionsServiceStorage();
   private final IAdapterStorage adapterDescriptionStorage = getNoSqlStorage().getAdapterDescriptionStorage();
-  private final IAdapterStorage adapterStorage = getNoSqlStorage().getAdapterInstanceStorage();
+  private final IAdapterStorage adapterStorage;
 
   private final IDataProcessorStorage dataProcessorStorage = getNoSqlStorage().getDataProcessorStorage();
 
@@ -86,6 +86,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.workerRestClient = workerRestClient;
     this.resourceManager = resourceManager;
+    this.adapterStorage = resourceManager.manageAdapters().getDb();
   }
 
   @PostMapping(path = "{serviceId}", consumes = MediaType.APPLICATION_JSON_VALUE)

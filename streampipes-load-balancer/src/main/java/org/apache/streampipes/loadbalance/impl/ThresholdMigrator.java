@@ -19,6 +19,7 @@ package org.apache.streampipes.loadbalance.impl;
 
 import org.apache.streampipes.loadbalance.LoadBalancerConfig;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,10 @@ public class ThresholdMigrator extends AbstractPipelineMigrator {
 
   private static final Logger logger = LoggerFactory.getLogger(ThresholdMigrator.class);
   private static final float LOAD_DIFFERENCE_THRESHOLD = 20.0f;
+
+  public ThresholdMigrator(SpResourceManager resourceManager) {
+    super(resourceManager);
+  }
 
   @Override
   public void doLoadShedding(List<SpServiceRegistration> services) {

@@ -185,7 +185,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     });
 
     if (env.getLoadManagerEnable().getValueOrDefault()) {
-      LoadManager.initialize();
+      LoadManager.initialize(resourceManager);
     }
     if (!isConfigured()) {
       CoreInitialInstallationProgress.INSTANCE.triggerInitiallyInstallingMode();
@@ -217,10 +217,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
             new ExtensionHealthCheck(
                 new ResourceProvider(
                     StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(),
-                    StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+                    resourceManager.manageAdapters().getDb(),
                     new AdapterMasterManagement(
-                        StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
-                        new SpResourceManager(permissionStorage, chartStorage),
+                        resourceManager,
                         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
                         workerRestClient,
                         extensionsServiceStorage,
@@ -252,7 +251,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   }
 
   protected List<Migration> getMigrations() {
-    return new AvailableMigrations(chartStorage, permissionStorage).getAvailableMigrations();
+    return new AvailableMigrations(resourceManager).getAvailableMigrations();
   }
 
   private boolean isConfigured() {
@@ -269,7 +268,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       LOG.info("Starting installation procedure");
       new AutoInstallation(
           extensionServiceRequestManager,
-          new SpResourceManager(permissionStorage, chartStorage)
+          resourceManager
       ).startAutoInstallation();
     } catch (InterruptedException e) {
       LOG.error("Ooops, something went wrong during the installation", e);

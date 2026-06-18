@@ -98,8 +98,6 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
                          ApplicationEventPublisher eventPublisher,
                          SpResourceManager resourceManager) {
     super(() -> new AdapterMasterManagement(
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-            .getAdapterInstanceStorage(),
         resourceManager,
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
         workerRestClient,

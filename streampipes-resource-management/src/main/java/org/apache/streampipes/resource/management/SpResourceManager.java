@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.resource.management;
 
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -25,11 +26,14 @@ public class SpResourceManager {
 
   private final IPermissionStorage permissionStorage;
   private final IDataExplorerWidgetStorage chartStorage;
+  private final IAdapterStorage adapterStorage;
 
   public SpResourceManager(IPermissionStorage permissionStorage,
-                           IDataExplorerWidgetStorage chartStorage) {
+                           IDataExplorerWidgetStorage chartStorage,
+                           IAdapterStorage adapterStorage) {
     this.permissionStorage = permissionStorage;
     this.chartStorage = chartStorage;
+    this.adapterStorage = adapterStorage;
   }
 
   public AdapterDescriptionResourceManager manageAdapterDescriptions() {
@@ -53,7 +57,8 @@ public class SpResourceManager {
   }
 
   public AdapterResourceManager manageAdapters() {
-    return new AdapterResourceManager(managePermissions());
+    var certificateStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getCertificateStorage();
+    return new AdapterResourceManager(adapterStorage, certificateStorage, managePermissions());
   }
 
   public DataLakeMeasureResourceManager manageDataLakeMeasures() {

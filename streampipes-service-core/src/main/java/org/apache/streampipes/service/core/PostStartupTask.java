@@ -79,9 +79,8 @@ public class PostStartupTask implements Runnable {
         new ExtensionHealthCheck(
             new ResourceProvider(
                 StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(),
-                StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
+                resourceManager.manageAdapters().getDb(),
                 new AdapterMasterManagement(
-                    StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage(),
                     resourceManager,
                     AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
                     workerRestClient,

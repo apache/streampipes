@@ -130,8 +130,6 @@ public class ResetManagement {
                                          IExtensionsServiceStorage extensionsServiceStorage,
                                          ExtensionServiceRequestManager requestManager) {
     AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getAdapterInstanceStorage(),
         resourceManager,
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
         workerRestClient,

@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.service.core.storage;
 
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.DataExplorerWidgetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.function.FunctionStateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
@@ -51,6 +53,14 @@ public class StorageApiConfiguration {
   public IPermissionStorage permissionStorage(CacheManager cacheManager) {
     return new CachedPermissionStorage(
         new PermissionStorageImpl("users/permissions"),
+        cacheManager
+    );
+  }
+
+  @Bean
+  public IAdapterStorage adapterStorage(CacheManager cacheManager) {
+    return new CachedAdapterStorage(
+        new AdapterInstanceStorageImpl(),
         cacheManager
     );
   }

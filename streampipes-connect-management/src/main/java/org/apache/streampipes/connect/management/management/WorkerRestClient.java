@@ -36,7 +36,6 @@ import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
@@ -231,7 +230,7 @@ public class WorkerRestClient {
   }
 
   private IAdapterStorage getAdapterStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
+    return resourceManager.manageAdapters().getDb();
   }
 
   private ObjectMapper getSerializer() {

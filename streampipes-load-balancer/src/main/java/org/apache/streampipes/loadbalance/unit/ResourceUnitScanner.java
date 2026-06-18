@@ -24,6 +24,7 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
@@ -80,7 +81,8 @@ public class ResourceUnitScanner {
    * @param service Service registration
    * @return Service resource units containing partitioned pipeline and adapter units
    */
-  public static ServiceResourceUnits scanAndPartitionService(SpServiceRegistration service) {
+  public static ServiceResourceUnits scanAndPartitionService(SpServiceRegistration service,
+                                                             SpResourceManager resourceManager) {
     logger.info("Scanning and partitioning service {}", service.getSvcId());
 
     // Scan and partition pipeline elements
@@ -89,7 +91,7 @@ public class ResourceUnitScanner {
 
     // Scan and create adapter units
     List<PipelineElementPartitioner.AdapterResourceUnitWithServices> adapterUnits =
-        scanAndCreateAdapter(service);
+        scanAndCreateAdapter(service, resourceManager);
 
     logger.info("Service {} has {} pipeline units and {} adapter units", service.getSvcId(),
                 pipelineUnits.size(), adapterUnits.size());
@@ -193,10 +195,11 @@ public class ResourceUnitScanner {
    * @param service Service registration
    * @return List of adapter resource units
    */
-  private static List<LoadBalanceResourceUnit<AdapterDescription>> scanAndCreateAdapterUnits(SpServiceRegistration service) {
+  private static List<LoadBalanceResourceUnit<AdapterDescription>>
+  scanAndCreateAdapterUnits(SpServiceRegistration service, SpResourceManager resourceManager) {
 
     String serviceUrl = service.getServiceUrl();
-    var adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
+    var adapterStorage = resourceManager.manageAdapters().getDb();
     List<AdapterDescription> allAdapters = adapterStorage.findAll();
 
     // Find adapters running on this service
@@ -229,10 +232,12 @@ public class ResourceUnitScanner {
    * @param service Service registration
    * @return List of adapter resource units
    */
-  private static List<PipelineElementPartitioner.AdapterResourceUnitWithServices> scanAndCreateAdapter(SpServiceRegistration service) {
+  private static List<PipelineElementPartitioner.AdapterResourceUnitWithServices>
+  scanAndCreateAdapter(SpServiceRegistration service,
+                       SpResourceManager resourceManager) {
 
     String serviceUrl = service.getServiceUrl();
-    var adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
+    var adapterStorage = resourceManager.manageAdapters().getDb();
     List<AdapterDescription> allAdapters = adapterStorage.findAll();
 
     // Find adapters running on this service
@@ -304,8 +309,9 @@ public class ResourceUnitScanner {
    * @param service Service registration
    * @return List of adapter resource units for this service
    */
-  public static List<LoadBalanceResourceUnit<AdapterDescription>> findAdapterUnitsForService(SpServiceRegistration service) {
-    return scanAndCreateAdapterUnits(service);
+  public static List<LoadBalanceResourceUnit<AdapterDescription>>
+  findAdapterUnitsForService(SpServiceRegistration service, SpResourceManager resourceManager) {
+    return scanAndCreateAdapterUnits(service, resourceManager);
   }
 
   /**
@@ -328,12 +334,18 @@ public class ResourceUnitScanner {
    * @param sourceServices Services to scan for adapter units
    * @return Map of service ID to list of adapter resource units
    */
-  public static Map<String, List<LoadBalanceResourceUnit<AdapterDescription>>> findAllAdapterUnitsForMigration(List<SpServiceRegistration> sourceServices) {
+  public static Map<String, List<LoadBalanceResourceUnit<AdapterDescription>>> findAllAdapterUnitsForMigration(
+      List<SpServiceRegistration> sourceServices,
+      SpResourceManager resourceManager) {
 
     logger.info("Scanning adapter units for {} services", sourceServices.size());
 
     return sourceServices.stream().collect(Collectors
-        .toMap(SpServiceRegistration::getSvcId, ResourceUnitScanner::findAdapterUnitsForService));
+        .toMap(SpServiceRegistration::getSvcId, serviceRegistration ->
+            ResourceUnitScanner.findAdapterUnitsForService(
+                serviceRegistration,
+                resourceManager
+            )));
   }
 
   /**

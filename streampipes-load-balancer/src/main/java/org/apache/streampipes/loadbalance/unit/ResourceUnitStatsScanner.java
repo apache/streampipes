@@ -28,6 +28,7 @@ import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnitStats;
 import org.apache.streampipes.model.monitoring.MessageCounter;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
@@ -53,7 +54,8 @@ public class ResourceUnitStatsScanner {
    * @param service Service registration
    * @return List of resource unit statistics
    */
-  public static List<LoadBalanceResourceUnitStats> generateStatsForService(SpServiceRegistration service) {
+  public static List<LoadBalanceResourceUnitStats> generateStatsForService(SpServiceRegistration service,
+                                                                           SpResourceManager resourceManager) {
     if (service == null) {
       return new ArrayList<>();
     }
@@ -74,7 +76,7 @@ public class ResourceUnitStatsScanner {
 
     // Generate stats for adapters
     List<LoadBalanceResourceUnit<AdapterDescription>> adapterUnits =
-        ResourceUnitScanner.findAdapterUnitsForService(service);
+        ResourceUnitScanner.findAdapterUnitsForService(service, resourceManager);
 
     for (LoadBalanceResourceUnit<AdapterDescription> unit : adapterUnits) {
       LoadBalanceResourceUnitStats<AdapterDescription> stats = generateStatsForAdapterUnit(unit);
@@ -199,12 +201,15 @@ public class ResourceUnitStatsScanner {
    * @param services List of services
    * @return Map of service ID to list of statistics
    */
-  public static Map<String, List<LoadBalanceResourceUnitStats>> generateStatsForServices(List<SpServiceRegistration> services) {
+  public static Map<String, List<LoadBalanceResourceUnitStats>> generateStatsForServices(List<SpServiceRegistration> services,
+                                                                                         SpResourceManager resourceManager) {
 
     logger.info("Generating statistics for {} services", services.size());
 
     return services.stream().collect(java.util.stream.Collectors
-        .toMap(SpServiceRegistration::getSvcId, ResourceUnitStatsScanner::generateStatsForService));
+        .toMap(SpServiceRegistration::getSvcId,
+            serviceRegistration ->
+                ResourceUnitStatsScanner.generateStatsForService(serviceRegistration, resourceManager)));
   }
 
   /**
@@ -231,7 +236,7 @@ public class ResourceUnitStatsScanner {
    * Collect load balancer metrics for all services using database queries This is more efficient
    * than scanning resource units
    */
-  public static void collectAllLoadBalancerMetrics() {
+  public static void collectAllLoadBalancerMetrics(SpResourceManager resourceManager) {
     try {
       LoadBalancerStats stats = LoadManager.getLoadBalancerStats();
       if (stats == null) {
@@ -253,7 +258,7 @@ public class ResourceUnitStatsScanner {
       for (SpServiceRegistration service : services) {
         try {
           // Count adapters for this service using database query
-          int adapterCount = countAdaptersForService(service);
+          int adapterCount = countAdaptersForService(service, resourceManager);
 
           // Count pipelines for this service using database query
           int pipelineCount = countPipelinesForService(service);
@@ -278,11 +283,11 @@ public class ResourceUnitStatsScanner {
   /**
    * Count adapters running on a specific service using database query
    */
-  private static int countAdaptersForService(SpServiceRegistration service) {
+  private static int countAdaptersForService(SpServiceRegistration service,
+                                             SpResourceManager resourceManager) {
     try {
       String serviceUrl = service.getServiceUrl();
-      var adapterStorage =
-          StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
+      var adapterStorage = resourceManager.manageAdapters().getDb();
       List<AdapterDescription> allAdapters = adapterStorage.findAll();
 
       return (int) allAdapters.stream()

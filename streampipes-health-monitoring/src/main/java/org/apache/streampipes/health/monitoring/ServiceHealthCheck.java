@@ -68,7 +68,7 @@ public class ServiceHealthCheck implements Runnable {
       registeredServices.forEach(this::checkServiceHealth);
       
       if (env.getLoadManagerEnable().getValueOrDefault()) {
-        LoadManager.migrateForHealthCheck(needDeletedServices);
+        LoadManager.migrateForHealthCheck(needDeletedServices, resourceManager);
       }
     } catch (Exception e) {
       LOG.error("Error while checking service health", e);

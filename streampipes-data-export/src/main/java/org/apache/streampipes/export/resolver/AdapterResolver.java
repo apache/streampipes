@@ -29,6 +29,7 @@ import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
@@ -39,16 +40,18 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
   private static final Logger LOG = LoggerFactory.getLogger(AdapterResolver.class);
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final SpResourceManager resourceManager;
+  private final IAdapterStorage adapterStorage;
 
   public AdapterResolver(ExtensionServiceRequestManager extensionServiceRequestManager,
                          SpResourceManager resourceManager) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.resourceManager = resourceManager;
+    this.adapterStorage = resourceManager.manageAdapters().getDb();
   }
 
   @Override
   public AdapterDescription findDocument(String resourceId) {
-    return getNoSqlStore().getAdapterInstanceStorage().getElementById(resourceId);
+    return adapterStorage.getElementById(resourceId);
   }
 
   @Override
@@ -79,7 +82,7 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
       overrideProtocol(adapterDescription.getEventGrounding());
     }
     SecretProvider.getEncryptionService().apply(adapterDescription);
-    getNoSqlStore().getAdapterInstanceStorage().persist(adapterDescription);
+    adapterStorage.persist(adapterDescription);
   }
 
   @Override
@@ -91,12 +94,11 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
   public void deleteDocument(String document) throws JsonProcessingException {
     var adapter = deserializeDocument(document);
     var resourceId = adapter.getElementId();
-    var existingAdapter = getNoSqlStore().getAdapterInstanceStorage().getElementById(resourceId);
+    var existingAdapter = adapterStorage.getElementById(resourceId);
     if (existingAdapter != null) {
       if (existingAdapter.isRunning()) {
         try {
           new AdapterMasterManagement(
-              getNoSqlStore().getAdapterInstanceStorage(),
               resourceManager,
               AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
               new WorkerRestClient(extensionServiceRequestManager, resourceManager),
@@ -107,7 +109,7 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
           LOG.warn("Error when stopping adapter with id {} and name {}", resourceId, existingAdapter.getName());
         }
       }
-      getNoSqlStore().getAdapterInstanceStorage().deleteElementById(resourceId);
+      adapterStorage.deleteElementById(resourceId);
     }
   }
 
