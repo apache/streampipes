@@ -1,0 +1,110 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<sp-basic-nav-tabs
+    [spNavigationItems]="tabs"
+    [activeLink]="'schema'"
+    [showBackLink]="true"
+    [backLinkTarget]="['datasets']"
+>
+    @if (datasetNotFound) {
+        <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
+            {{ 'The desired dataset was not found!' | translate }}
+        </div>
+    } @else if (dataset) {
+        <div fxLayout="column" fxFlex="100">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <sp-basic-header-title-component
+                    [title]="dataset.measureName + ' - Event schema'"
+                ></sp-basic-header-title-component>
+                <span fxFlex></span>
+                <sp-element-id
+                    fxLayoutAlign="end start"
+                    [value]="dataset.elementId"
+                >
+                </sp-element-id>
+            </div>
+
+            @if (schemaRows.length > 0) {
+                <table
+                    mat-table
+                    [dataSource]="schemaRows"
+                    class="w-100"
+                    data-cy="dataset-details-schema-table"
+                >
+                    <ng-container matColumnDef="runtimeName">
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{ 'Runtime Name' | translate }}
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{ row.runtimeName }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="label">
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{ 'Field Name' | translate }}
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{ row.label }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dataType">
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{ 'Data type' | translate }}
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{ row.dataType }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="propertyScope">
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{ 'Property scope' | translate }}
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <sp-property-scope-badge
+                                [propertyScope]="row.propertyScope"
+                            />
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="description">
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{ 'Description' | translate }}
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            {{ row.description }}
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="schemaColumns"></tr>
+                    <tr
+                        mat-row
+                        *matRowDef="let row; columns: schemaColumns"
+                    ></tr>
+                </table>
+            } @else {
+                <div class="empty-state">
+                    {{ 'No event schema available.' | translate }}
+                </div>
+            }
+        </div>
+    }
+</sp-basic-nav-tabs>

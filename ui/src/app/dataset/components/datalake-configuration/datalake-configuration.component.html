@@ -67,6 +67,8 @@
                 }"
                 [assetContextConfig]="assetContextConfig"
                 [showActionsMenu]="true"
+                [rowsClickable]="true"
+                (rowClicked)="openDatasetDetails($event.elementId)"
                 matSort
                 data-cy="datalake-settings"
             >
@@ -274,6 +276,14 @@
                 </ng-container>
 
                 <ng-template spTableActions let-element>
+                    <button
+                        mat-menu-item
+                        data-cy="dataset-details-menu-link"
+                        (click)="openDatasetDetails(element.elementId)"
+                    >
+                        <mat-icon>visibility</mat-icon>
+                        <span>{{ 'Show' | translate }}</span>
+                    </button>
                     <button
                         mat-menu-item
                         data-cy="datalake-download-btn"
