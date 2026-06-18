@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,7 +16,12 @@
  *
  */
 
-.chart-selection-tab-content {
-    height: 100%;
-    overflow-y: hidden;
+import { ChartSummaryDto } from '@streampipes/platform-services';
+
+export interface ChartSelectionItem {
+    chart: ChartSummaryDto;
+    widgetTypeLabel: string;
+    widgetTypeIcon: string;
+    dataCyId: string;
+    searchText: string;
 }

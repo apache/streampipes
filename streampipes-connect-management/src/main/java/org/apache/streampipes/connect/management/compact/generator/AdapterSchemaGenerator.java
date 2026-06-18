@@ -54,6 +54,8 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
       adapterDescription.getTransformationConfig()
                         .setScript(compactAdapter.transformationConfig()
                                                  .getScript());
+      adapterDescription.getTransformationConfig()
+                        .setScriptActive(compactAdapter.transformationConfig().isScriptActive());
     }
 
     var sampleData = guessManagement.getSampleData(adapterDescription);

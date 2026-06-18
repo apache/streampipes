@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Output,
+} from '@angular/core';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import {
     FlexDirective,
@@ -42,6 +47,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         ChartSelectionComponent,
         TranslatePipe,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartSelectionPanelComponent {
     @Output()
