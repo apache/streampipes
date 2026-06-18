@@ -158,7 +158,7 @@ public class ResetManagement {
   private void removeAllDataInDataLake() {
     var dataLakeMeasureManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
-        .getSchemaManagement(chartSchemaUpdateCoordinator);
+        .getSchemaManagement(chartSchemaUpdateCoordinator, resourceManager.managePermissions().getDb());
     var dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(dataLakeMeasureManagement);

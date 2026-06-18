@@ -23,6 +23,7 @@ import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.export.DataLakeExportManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 
 import org.slf4j.Logger;
@@ -42,11 +43,12 @@ public class DataLakeScheduler implements SchedulingConfigurer {
 
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
 
-    public DataLakeScheduler(IDataExplorerWidgetStorage chartStorage) {
+    public DataLakeScheduler(IDataExplorerWidgetStorage chartStorage,
+                             SpResourceManager resourceManager) {
         var chartSchemaUpdateCoordinator = new ChartSchemaUpdateCoordinator(chartStorage);
         dataExplorerSchemaManagement = new DataExplorerDispatcher()
             .getDataExplorerManager()
-            .getSchemaManagement(chartSchemaUpdateCoordinator);
+            .getSchemaManagement(chartSchemaUpdateCoordinator, resourceManager.managePermissions().getDb());
         this.dataLakeExportManager = new DataLakeExportManager(
             dataExplorerSchemaManagement,
             new DataExplorerDispatcher().getDataExplorerManager()

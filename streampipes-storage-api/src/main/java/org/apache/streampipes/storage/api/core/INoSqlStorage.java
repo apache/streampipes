@@ -38,7 +38,6 @@ import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
@@ -73,8 +72,6 @@ public interface INoSqlStorage {
   IPipelineCanvasMetadataStorage getPipelineCanvasMetadataStorage();
 
   IPipelineElementDescriptionStorage getPipelineElementDescriptionStorage();
-
-  IPermissionStorage getPermissionStorage();
 
   IDataProcessorStorage getDataProcessorStorage();
 

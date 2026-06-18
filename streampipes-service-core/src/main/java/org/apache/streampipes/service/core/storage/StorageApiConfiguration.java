@@ -48,7 +48,10 @@ public class StorageApiConfiguration {
   }
 
   @Bean
-  public IPermissionStorage permissionStorage() {
-    return new PermissionStorageImpl("users/permissions");
+  public IPermissionStorage permissionStorage(CacheManager cacheManager) {
+    return new CachedPermissionStorage(
+        new PermissionStorageImpl("users/permissions"),
+        cacheManager
+    );
   }
 }

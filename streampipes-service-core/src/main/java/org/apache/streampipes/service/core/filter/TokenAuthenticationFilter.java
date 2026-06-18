@@ -23,6 +23,7 @@ import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
@@ -61,6 +62,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider tokenProvider;
   private final IUserStorage userStorage;
+  private final IPermissionStorage permissionStorage;
 
   private final List<String> supportedBasicAuthPaths = List.of(
       "/actuator/prometheus"
@@ -70,9 +72,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
   private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
 
-  public TokenAuthenticationFilter() {
+  public TokenAuthenticationFilter(IPermissionStorage permissionStorage) {
     this.tokenProvider = new JwtTokenProvider();
     this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
+    this.permissionStorage = permissionStorage;
   }
 
   @Override
@@ -155,8 +158,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
   }
 
   private PrincipalUserDetails<?> makeDetails(Principal user) {
-    return user instanceof UserAccount ? new UserAccountDetails((UserAccount) user) :
-        new ServiceAccountDetails((ServiceAccount) user);
+    return user instanceof UserAccount ? new UserAccountDetails((UserAccount) user, permissionStorage) :
+        new ServiceAccountDetails((ServiceAccount) user, permissionStorage);
   }
 
   private boolean isAdminUser(PrincipalUserDetails<?> userDetails) {

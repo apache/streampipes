@@ -40,7 +40,6 @@ import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
@@ -69,7 +68,6 @@ import org.apache.streampipes.storage.couchdb.impl.system.GenericStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ImageStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RefreshTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
@@ -146,11 +144,6 @@ public class CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IPipelineElementDescriptionStorage getPipelineElementDescriptionStorage() {
     return new PipelineElementDescriptionStorageImpl();
-  }
-
-  @Override
-  public IPermissionStorage getPermissionStorage() {
-    return new PermissionStorageImpl("users/permissions");
   }
 
   @Override

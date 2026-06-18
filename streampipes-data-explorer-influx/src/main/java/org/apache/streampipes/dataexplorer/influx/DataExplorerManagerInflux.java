@@ -32,6 +32,7 @@ import org.apache.streampipes.dataexplorer.influx.sanitize.DataLakeMeasurementSa
 import org.apache.streampipes.manager.permission.DataLakePermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
@@ -57,12 +58,13 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   }
 
   @Override
-  public IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
+  public IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
+                                                           IPermissionStorage permissionStorage) {
     return new DataExplorerSchemaManagement(StorageDispatcher.INSTANCE
         .getNoSqlStore()
         .getDataLakeStorage(),
         new DataLakePermissionManager(
-            StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage()
+            permissionStorage
         ),
         chartSchemaUpdateCoordinator
     );

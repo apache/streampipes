@@ -37,7 +37,7 @@ public class CrudResourceManager<T extends Storable>
                              PermissionResourceManager permissionResourceManager) {
     super(db);
     this.elementClass = elementClass;
-    this.permissionEvaluator = new SpPermissionEvaluator();
+    this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
     this.permissionResourceManager = permissionResourceManager;
   }
 

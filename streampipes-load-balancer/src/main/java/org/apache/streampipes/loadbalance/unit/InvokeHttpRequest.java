@@ -23,6 +23,7 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 
@@ -121,7 +122,7 @@ public class InvokeHttpRequest{
   }
 
   private static String getOwnerSid(String resourceId) {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage().getUserPermissionsForObject(resourceId)
+    return new PermissionStorageImpl("users/permissions").getUserPermissionsForObject(resourceId)
             .stream()
             .findFirst()
             .map(Permission::getOwnerSid)

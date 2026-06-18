@@ -36,17 +36,18 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
   private final SpPermissionEvaluator permissionEvaluator;
 
   public AdapterResourceManager(IAdapterStorage adapterStorage,
-                                ICertificateStorage certificateStorage) {
+                                ICertificateStorage certificateStorage,
+                                PermissionResourceManager permissionResourceManager) {
     super(adapterStorage);
     this.certificateStorage = certificateStorage;
-    this.permissionEvaluator = new SpPermissionEvaluator();
+    this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
   }
 
-  public AdapterResourceManager() {
+  public AdapterResourceManager(PermissionResourceManager permissionResourceManager) {
     super(StorageDispatcher.INSTANCE.getNoSqlStore()
                                     .getAdapterInstanceStorage());
     this.certificateStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getCertificateStorage();
-    this.permissionEvaluator = new SpPermissionEvaluator();
+    this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
   }
 
   public ResourceSummaryDto<AdapterSummaryDto> getSummary(Authentication auth) {

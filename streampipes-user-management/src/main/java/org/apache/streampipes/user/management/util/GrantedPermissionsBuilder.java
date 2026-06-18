@@ -18,7 +18,7 @@
 package org.apache.streampipes.user.management.util;
 
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -26,18 +26,18 @@ import java.util.Set;
 public class GrantedPermissionsBuilder {
 
   private final Principal principal;
+  private final IPermissionStorage permissionStorage;
 
-  public GrantedPermissionsBuilder(Principal principal) {
+  public GrantedPermissionsBuilder(Principal principal,
+                                   IPermissionStorage permissionStorage) {
     this.principal = principal;
+    this.permissionStorage = permissionStorage;
   }
 
   public Set<String> buildAllPermissions() {
     Set<String> sids = extractSids();
 
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getPermissionStorage()
+    return permissionStorage
         .getObjectPermissions(new ArrayList<>(sids));
   }
 

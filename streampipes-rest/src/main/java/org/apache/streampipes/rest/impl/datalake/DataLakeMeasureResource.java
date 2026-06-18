@@ -55,7 +55,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
 
   public DataLakeMeasureResource(IDataExplorerWidgetStorage chartStorage,
                                  SpResourceManager resourceManager) {
-    super(new ChartSchemaUpdateCoordinator(chartStorage));
+    super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
     this.resourceManager = resourceManager;
   }
 

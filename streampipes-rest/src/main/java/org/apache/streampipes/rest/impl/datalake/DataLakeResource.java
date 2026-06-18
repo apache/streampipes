@@ -31,6 +31,7 @@ import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
@@ -97,8 +98,9 @@ public class DataLakeResource extends AbstractDataLakeResource {
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final DataLakeExportManager dataLakeExportManager;
 
-  public DataLakeResource(IDataExplorerWidgetStorage chartStorage) {
-    super(new ChartSchemaUpdateCoordinator(chartStorage));
+  public DataLakeResource(IDataExplorerWidgetStorage chartStorage,
+                          SpResourceManager resourceManager) {
+    super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(this.dataLakeMeasureManagement);

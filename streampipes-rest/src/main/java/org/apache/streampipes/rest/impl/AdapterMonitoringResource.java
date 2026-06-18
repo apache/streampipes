@@ -130,7 +130,7 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
    */
   private boolean checkAdapterPermission(AdapterDescription adapterDescription,
                                          String permission) {
-    var spPermissionEvaluator = new SpPermissionEvaluator();
+    var spPermissionEvaluator = new SpPermissionEvaluator(resourceManager.managePermissions().getDb());
     var authentication = SecurityContextHolder.getContext()
         .getAuthentication();
     return spPermissionEvaluator.hasPermission(

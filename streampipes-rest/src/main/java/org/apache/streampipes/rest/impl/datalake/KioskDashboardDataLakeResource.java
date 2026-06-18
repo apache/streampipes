@@ -27,6 +27,7 @@ import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
@@ -56,15 +57,18 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
   private final IPermissionStorage permissionStorage;
 
   public KioskDashboardDataLakeResource(IDataExplorerWidgetStorage dataExplorerWidgetStorage,
-                                        IPermissionStorage permissionStorage) {
+                                        SpResourceManager resourceManager) {
     IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
-        .getSchemaManagement(new ChartSchemaUpdateCoordinator(dataExplorerWidgetStorage));
+        .getSchemaManagement(
+            new ChartSchemaUpdateCoordinator(dataExplorerWidgetStorage),
+            resourceManager.managePermissions().getDb()
+        );
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(dataExplorerSchemaManagement);
     this.dataExplorerWidgetStorage = dataExplorerWidgetStorage;
-    this.permissionStorage = permissionStorage;
+    this.permissionStorage = resourceManager.managePermissions().getDb();
   }
 
   @PostMapping(path = "/{dashboardId}/{widgetId}/data",

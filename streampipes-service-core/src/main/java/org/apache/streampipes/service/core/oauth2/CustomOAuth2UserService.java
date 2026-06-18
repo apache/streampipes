@@ -19,6 +19,7 @@
 package org.apache.streampipes.service.core.oauth2;
 
 import org.apache.streampipes.rest.security.OAuth2AuthenticationProcessingException;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -32,13 +33,19 @@ import java.util.HashMap;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
+  private final IPermissionStorage permissionStorage;
+
+  public CustomOAuth2UserService(IPermissionStorage permissionStorage) {
+    this.permissionStorage = permissionStorage;
+  }
+
   @Override
   public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
     OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
     try {
       var attributes = new HashMap<>(oAuth2User.getAttributes());
       var provider = oAuth2UserRequest.getClientRegistration().getRegistrationId();
-      return new UserService().processUserRegistration(provider, attributes);
+      return new UserService(permissionStorage).processUserRegistration(provider, attributes);
     } catch (AuthenticationException e) {
       throw e;
     } catch (Exception e) {

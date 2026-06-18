@@ -78,8 +78,7 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
     W existing = find(pipelineElement.getElementId());
     if (existing == null) {
       this.db.persist(pipelineElement);
-      new PermissionResourceManager()
-          .createDefault(pipelineElement.getElementId(), SpDataStream.class, principalSid, false);
+      permissionResourceManager.createDefault(pipelineElement.getElementId(), SpDataStream.class, principalSid, false);
     } else {
       throw new IllegalArgumentException("This pipeline element already exists");
     }

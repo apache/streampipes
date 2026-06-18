@@ -21,6 +21,7 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
@@ -36,11 +37,14 @@ public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
   private final IDataLakeMeasureStorage dataLakeMeasureStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
   protected final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
+  private final SpResourceManager resourceManager;
 
-  public AbstractDataLakeResource(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
+  public AbstractDataLakeResource(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
+                                  SpResourceManager resourceManager) {
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
+    this.resourceManager = resourceManager;
     this.dataLakeMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
-        .getSchemaManagement(chartSchemaUpdateCoordinator);
+        .getSchemaManagement(chartSchemaUpdateCoordinator, resourceManager.managePermissions().getDb());
   }
 
   /**
@@ -72,7 +76,7 @@ public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
 
     var measure = dataLakeMeasureStorage.getByMeasureName(measurementName);
     if (Objects.nonNull(measure)) {
-      var spPermissionEvaluator = new SpPermissionEvaluator();
+      var spPermissionEvaluator = new SpPermissionEvaluator(resourceManager.managePermissions().getDb());
       var authentication = SecurityContextHolder.getContext()
           .getAuthentication();
       return spPermissionEvaluator.hasPermission(

@@ -21,7 +21,6 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionBuilder;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 
@@ -30,10 +29,6 @@ public class PermissionResourceManager extends AbstractResourceManager<IPermissi
   private final List<String> readAnonymousAllowedClasses = List.of(
       DashboardModel.class.getCanonicalName()
   );
-
-  public PermissionResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage());
-  }
 
   public PermissionResourceManager(IPermissionStorage permissionStorage) {
     super(permissionStorage);

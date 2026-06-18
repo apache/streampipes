@@ -49,15 +49,15 @@ public class SpResourceManager {
   }
 
   public AssetResourceManager manageAssets() {
-    return new AssetResourceManager();
+    return new AssetResourceManager(managePermissions());
   }
 
   public AdapterResourceManager manageAdapters() {
-    return new AdapterResourceManager();
+    return new AdapterResourceManager(managePermissions());
   }
 
   public DataLakeMeasureResourceManager manageDataLakeMeasures() {
-    return new DataLakeMeasureResourceManager();
+    return new DataLakeMeasureResourceManager(managePermissions());
   }
 
   public PermissionResourceManager managePermissions() {

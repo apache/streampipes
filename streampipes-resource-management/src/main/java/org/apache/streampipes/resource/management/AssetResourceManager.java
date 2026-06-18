@@ -31,9 +31,9 @@ public class AssetResourceManager extends AbstractResourceManager<IAssetStorage>
 
   private final SpPermissionEvaluator permissionEvaluator;
 
-  public AssetResourceManager() {
+  public AssetResourceManager(PermissionResourceManager permissionResourceManager) {
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage());
-    this.permissionEvaluator = new SpPermissionEvaluator();
+    this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
   }
 
   public ResourceSummaryDto<AssetSummaryDto> getSummary(Authentication auth) {
