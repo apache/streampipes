@@ -22,7 +22,6 @@ import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.TimeSeriesStore;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
@@ -166,18 +165,17 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
 
   private RetentionTimeConfig getRetentionTime(String measureName, IStreamPipesClient client){
 
-    // TODO
-    IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher().getDataExplorerManager()
-        .getSchemaManagement(null);
+    try {
+      var originalMeasure = client.dataLakeMeasureApi().getByDatasetName(measureName);
+      RetentionTimeConfig retentionTime = null;
 
-    var originalMeasure = dataExplorerSchemaManagement.getExistingMeasureByName(measureName);
-
-    RetentionTimeConfig retentionTime = null;
-
-    if (originalMeasure.isPresent()){
-      retentionTime = originalMeasure.get().getRetentionTime();
+      if (originalMeasure.isPresent()) {
+        retentionTime = originalMeasure.get().getRetentionTime();
+      }
+      return retentionTime;
+    } catch (Exception e) {
+      return null;
     }
-  return retentionTime;
   }
 
   /**

@@ -43,7 +43,8 @@ public class AdapterResourceManagerTest {
   @BeforeEach
   void setUp() {
     storage = mock(IAdapterStorage.class);
-    adapterResourceManager = new AdapterResourceManager(storage, null, null);
+    PermissionResourceManager permissionResourceManager = mock(PermissionResourceManager.class);
+    adapterResourceManager = new AdapterResourceManager(storage, null, permissionResourceManager);
   }
 
   @Test

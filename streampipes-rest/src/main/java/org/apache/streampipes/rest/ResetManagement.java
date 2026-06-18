@@ -127,8 +127,8 @@ public class ResetManagement {
   }
 
   private void stopAndDeleteAllAdapters(WorkerRestClient workerRestClient,
-                                               IExtensionsServiceStorage extensionsServiceStorage,
-                                               ExtensionServiceRequestManager requestManager) {
+                                         IExtensionsServiceStorage extensionsServiceStorage,
+                                         ExtensionServiceRequestManager requestManager) {
     AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(
         StorageDispatcher.INSTANCE.getNoSqlStore()
                                   .getAdapterInstanceStorage(),
