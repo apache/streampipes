@@ -52,17 +52,15 @@
                     class="event-limit-select"
                 >
                     <mat-label>{{ 'Events' | translate }}</mat-label>
-                    <mat-select
+                    <input
+                        matInput
+                        type="number"
+                        min="1"
+                        max="1000"
                         [(ngModel)]="eventLimit"
-                        (selectionChange)="loadLatestEvents()"
+                        (change)="onEventLimitChange(eventLimit)"
                         data-cy="dataset-details-event-limit"
-                    >
-                        @for (option of eventLimitOptions; track option) {
-                            <mat-option [value]="option">
-                                {{ option }}
-                            </mat-option>
-                        }
-                    </mat-select>
+                    />
                 </mat-form-field>
             </div>
 
@@ -83,29 +81,9 @@
                         fxLayout="column"
                         data-cy="dataset-details-events-preview"
                     >
-                        <div
-                            class="preview-header"
-                            fxLayout="row"
-                            fxLayoutAlign="space-between center"
-                        >
-                            <div class="preview-title" fxFlex>
-                                {{ 'Latest events' | translate }}
-                            </div>
-                            <div
-                                class="preview-header-actions"
-                                fxLayout="row"
-                                fxLayoutAlign="end center"
-                            >
-                                <div class="preview-meta">
-                                    {{ totalRows }} {{ 'rows' | translate }}
-                                </div>
-                            </div>
-                        </div>
-
                         @if (rows.length > 0 && columns.length > 0) {
                             <div
                                 class="preview-table-scroll"
-                                fxFlex
                                 data-cy="dataset-details-events-table-scroll"
                             >
                                 <table

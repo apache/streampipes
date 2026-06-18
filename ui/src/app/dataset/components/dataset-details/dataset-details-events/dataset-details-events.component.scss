@@ -29,16 +29,12 @@
 }
 
 .events-preview-section {
-    flex: 1 1 auto;
-    min-height: 0;
+    align-items: stretch;
 }
 
 .preview-shell {
     display: flex;
-    flex: 1 1 auto;
-    min-height: 0;
     box-sizing: border-box;
-    border-top: 1px solid var(--color-bg-2);
     border-radius: 0;
     background: var(--color-bg-0);
     overflow: hidden;
@@ -49,34 +45,8 @@
     flex: 0 0 auto;
 }
 
-.preview-header {
-    gap: var(--space-sm);
-    padding: var(--padding-panel-header-y) var(--padding-panel-header-x);
-    border-bottom: 1px solid var(--color-tab-border);
-    background: var(--color-panel-header-accent);
-    min-height: var(--size-panel-header-compact);
-    box-sizing: border-box;
-}
-
-.preview-title {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--line-height-normal);
-}
-
-.preview-header-actions {
-    gap: var(--space-2xs);
-}
-
-.preview-meta {
-    font-size: var(--font-size-xs);
-    color: var(--color-secondary-text);
-    white-space: nowrap;
-}
-
 .preview-table-scroll {
-    flex: 1 1 auto;
-    min-height: 0;
+    max-height: calc(100vh - 300px);
     overflow: auto;
 }
 

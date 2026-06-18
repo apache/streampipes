@@ -35,7 +35,7 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatOption, MatSelect } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { catchError, finalize, of } from 'rxjs';
@@ -61,8 +61,7 @@ type PreviewRow = Record<string, unknown>;
         MatProgressSpinner,
         MatFormField,
         MatLabel,
-        MatSelect,
-        MatOption,
+        MatInput,
         FormsModule,
         TranslatePipe,
     ],
@@ -75,7 +74,6 @@ export class DatasetDetailsEventsComponent
     private datePipe = new DatePipe('en-US');
 
     eventLimit = 10;
-    eventLimitOptions = [10, 25, 50];
     columns: string[] = [];
     rows: PreviewRow[] = [];
     totalRows = 0;
@@ -119,6 +117,11 @@ export class DatasetDetailsEventsComponent
                 }),
             )
             .subscribe(result => this.applyPreviewResult(result));
+    }
+
+    onEventLimitChange(value: number): void {
+        this.eventLimit = Math.min(Math.max(Number(value) || 1, 1), 1000);
+        this.loadLatestEvents();
     }
 
     navigateToCreateChart(): void {
