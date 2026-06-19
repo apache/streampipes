@@ -25,7 +25,6 @@ import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.security.core.Authentication;
 
@@ -38,17 +37,6 @@ public class DashboardResourceManager extends CrudResourceManager<DashboardModel
   private final IDataLakeMeasureStorage dataLakeMeasureStorage;
 
   public DashboardResourceManager(IDashboardStorage dashboardStorage,
-                                  IChartStorage widgetStorage,
-                                  PermissionResourceManager permissionResourceManager) {
-    this(
-        dashboardStorage,
-        widgetStorage,
-        StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage(),
-        permissionResourceManager
-    );
-  }
-
-  private DashboardResourceManager(IDashboardStorage dashboardStorage,
                                    IChartStorage widgetStorage,
                                    IDataLakeMeasureStorage dataLakeMeasureStorage,
                                    PermissionResourceManager permissionResourceManager) {

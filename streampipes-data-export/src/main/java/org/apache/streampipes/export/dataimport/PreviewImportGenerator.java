@@ -31,6 +31,7 @@ import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -47,6 +48,7 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final PipelineManager pipelineManager;
   private final SpResourceManager resourceManager;
+  private final IDataLakeMeasureStorage datasetStorage;
 
   public PreviewImportGenerator(ExtensionServiceRequestManager extensionServiceRequestManager,
                                 SpResourceManager resourceManager,
@@ -56,6 +58,7 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.pipelineManager = pipelineManager;
     this.resourceManager = resourceManager;
+    this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
 
   }
 
@@ -120,7 +123,7 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
 
   @Override
   protected void handleDataLakeMeasure(String document, String measurementId) throws JsonProcessingException {
-    addExportItem(measurementId, new MeasurementResolver().readDocument(document).getMeasureName(),
+    addExportItem(measurementId, new MeasurementResolver(datasetStorage).readDocument(document).getMeasureName(),
         importConfig::addDataLakeMeasure);
   }
 

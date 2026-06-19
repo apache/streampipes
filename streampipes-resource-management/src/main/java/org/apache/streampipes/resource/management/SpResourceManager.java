@@ -20,6 +20,7 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
@@ -33,19 +34,22 @@ public class SpResourceManager {
   private final IAssetStorage assetStorage;
   private final IDashboardStorage dashboardStorage;
   private final IPipelineStorage pipelineStorage;
+  private final IDataLakeMeasureStorage datasetStorage;
 
   public SpResourceManager(IPermissionStorage permissionStorage,
                            IChartStorage chartStorage,
                            IAdapterStorage adapterStorage,
                            IAssetStorage assetStorage,
                            IDashboardStorage dashboardStorage,
-                           IPipelineStorage pipelineStorage) {
+                           IPipelineStorage pipelineStorage,
+                           IDataLakeMeasureStorage datasetStorage) {
     this.permissionStorage = permissionStorage;
     this.chartStorage = chartStorage;
     this.adapterStorage = adapterStorage;
     this.assetStorage = assetStorage;
     this.dashboardStorage = dashboardStorage;
     this.pipelineStorage = pipelineStorage;
+    this.datasetStorage = datasetStorage;
   }
 
   public AdapterDescriptionResourceManager manageAdapterDescriptions() {
@@ -74,7 +78,7 @@ public class SpResourceManager {
   }
 
   public DataLakeMeasureResourceManager manageDataLakeMeasures() {
-    return new DataLakeMeasureResourceManager(pipelineStorage, managePermissions());
+    return new DataLakeMeasureResourceManager(datasetStorage, pipelineStorage, managePermissions());
   }
 
   public PermissionResourceManager managePermissions() {
@@ -82,7 +86,7 @@ public class SpResourceManager {
   }
 
   public DashboardResourceManager manageDashboards() {
-    return new DashboardResourceManager(dashboardStorage, chartStorage, managePermissions());
+    return new DashboardResourceManager(dashboardStorage, chartStorage, datasetStorage, managePermissions());
   }
 
   public ChartResourceManager manageCharts() {

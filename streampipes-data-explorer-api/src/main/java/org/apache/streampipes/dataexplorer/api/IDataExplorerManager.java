@@ -21,6 +21,7 @@ package org.apache.streampipes.dataexplorer.api;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.List;
@@ -44,7 +45,8 @@ public interface IDataExplorerManager {
   IDataExplorerQueryManagement getQueryManagement(IDataExplorerSchemaManagement dataExplorerSchemaManagement);
 
   IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
-                                                    IPermissionStorage permissionStorage);
+                                                    IPermissionStorage permissionStorage,
+                                                    IDataLakeMeasureStorage datasetStorage);
 
   default ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure) {
     return getTimeseriesStorage(measure, false);

@@ -18,7 +18,6 @@
 package org.apache.streampipes.storage.api.core;
 
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
@@ -26,7 +25,6 @@ import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineCanvasMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
-import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceConfigurationStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
@@ -53,11 +51,7 @@ public interface INoSqlStorage {
 
   IUserGroupStorage getUserGroupStorage();
 
-  IPipelineStorage getPipelineStorageAPI();
-
   IUserStorage getUserStorageAPI();
-
-  IDataLakeMeasureStorage getDataLakeStorage();
 
   IFileMetadataStorage getFileMetadataStorage();
 

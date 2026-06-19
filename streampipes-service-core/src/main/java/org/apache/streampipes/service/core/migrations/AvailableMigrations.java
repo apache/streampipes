@@ -43,6 +43,7 @@ import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdapte
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
@@ -58,6 +59,7 @@ public class AvailableMigrations {
   private final IDashboardStorage dashboardStorage;
   private final IAssetStorage assetStorage;
   private final IPipelineStorage pipelineStorage;
+  private final IDataLakeMeasureStorage datasetStorage;
 
   public AvailableMigrations(SpResourceManager resourceManager) {
     this.chartStorage = resourceManager.manageCharts().getDb();
@@ -66,6 +68,7 @@ public class AvailableMigrations {
     this.dashboardStorage = resourceManager.manageDashboards().getDb();
     this.assetStorage = resourceManager.manageAssets().getDb();
     this.pipelineStorage = resourceManager.managePipelines().getDb();
+    this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
   }
 
   public List<Migration> getAvailableMigrations() {
@@ -78,7 +81,7 @@ public class AvailableMigrations {
         new AddAssetManagementViewMigration(),
         new MoveAssetContentMigration(),
         new CreateAssetPermissionMigration(permissionStorage, assetStorage),
-        new CreateDatasetPermissionMigration(permissionStorage, pipelineStorage),
+        new CreateDatasetPermissionMigration(permissionStorage, pipelineStorage, datasetStorage),
         new RemoveObsoletePrivilegesMigration(),
         new UniqueDashboardIdMigration(dashboardStorage),
         new AddScriptTemplateViewMigration(),

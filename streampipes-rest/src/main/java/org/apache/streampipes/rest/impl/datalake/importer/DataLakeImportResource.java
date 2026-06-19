@@ -52,7 +52,10 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
   public DataLakeImportResource(IChartStorage chartStorage,
                                 SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
-    this.importService = new CsvDataLakeImportService(getDataLakeMeasureManagement());
+    this.importService = new CsvDataLakeImportService(
+        getDataLakeMeasureManagement(),
+        resourceManager.manageDataLakeMeasures().getDb()
+    );
   }
 
   /**

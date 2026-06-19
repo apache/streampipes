@@ -17,10 +17,8 @@
  */
 package org.apache.streampipes.storage.couchdb;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
@@ -28,7 +26,6 @@ import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineCanvasMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
-import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceConfigurationStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
@@ -45,7 +42,6 @@ import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterDescriptionStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.explorer.DataLakeMeasureStorage;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.CompactPipelineTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.DataProcessorStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.DataSinkStorageImpl;
@@ -53,7 +49,6 @@ import org.apache.streampipes.storage.couchdb.impl.pipeline.DataStreamStorageImp
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineCanvasMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementTemplateStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.CertificateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceConfigurationStorageImpl;
@@ -69,7 +64,6 @@ import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserActivationTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class CouchDbStorageManager implements INoSqlStorage {
 
@@ -94,21 +88,8 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IPipelineStorage getPipelineStorageAPI() {
-    return new PipelineStorageImpl();
-  }
-
-  @Override
   public IUserStorage getUserStorageAPI() {
     return new UserStorage();
-  }
-
-  @Override
-  public IDataLakeMeasureStorage getDataLakeStorage() {
-    return new DataLakeMeasureStorage(
-        () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
-        DataLakeMeasure.class
-    );
   }
 
   @Override

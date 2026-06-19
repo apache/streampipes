@@ -25,7 +25,6 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -34,8 +33,7 @@ import java.util.Objects;
 public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
 
   final IDataExplorerSchemaManagement dataLakeMeasureManagement;
-  private final IDataLakeMeasureStorage dataLakeMeasureStorage =
-      StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
+  private final IDataLakeMeasureStorage dataLakeMeasureStorage;
   protected final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
   private final SpResourceManager resourceManager;
 
@@ -43,8 +41,12 @@ public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
                                   SpResourceManager resourceManager) {
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
     this.resourceManager = resourceManager;
+    this.dataLakeMeasureStorage = resourceManager.manageDataLakeMeasures().getDb();
     this.dataLakeMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
-        .getSchemaManagement(chartSchemaUpdateCoordinator, resourceManager.managePermissions().getDb());
+        .getSchemaManagement(
+            chartSchemaUpdateCoordinator,
+            resourceManager.managePermissions().getDb(),
+            resourceManager.manageDataLakeMeasures().getDb());
   }
 
   /**

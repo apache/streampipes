@@ -48,7 +48,10 @@ public class DataLakeScheduler implements SchedulingConfigurer {
         var chartSchemaUpdateCoordinator = new ChartSchemaUpdateCoordinator(chartStorage);
         dataExplorerSchemaManagement = new DataExplorerDispatcher()
             .getDataExplorerManager()
-            .getSchemaManagement(chartSchemaUpdateCoordinator, resourceManager.managePermissions().getDb());
+            .getSchemaManagement(
+                chartSchemaUpdateCoordinator,
+                resourceManager.managePermissions().getDb(),
+                resourceManager.manageDataLakeMeasures().getDb());
         this.dataLakeExportManager = new DataLakeExportManager(
             dataExplorerSchemaManagement,
             new DataExplorerDispatcher().getDataExplorerManager()

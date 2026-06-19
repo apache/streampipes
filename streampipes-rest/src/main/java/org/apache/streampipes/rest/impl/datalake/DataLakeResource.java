@@ -35,6 +35,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -97,10 +98,12 @@ public class DataLakeResource extends AbstractDataLakeResource {
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final DataLakeExportManager dataLakeExportManager;
+  private final IDataLakeMeasureStorage datasetStorage;
 
   public DataLakeResource(IChartStorage chartStorage,
                           SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
+    this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(this.dataLakeMeasureManagement);
@@ -293,7 +296,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
       @PathVariable String measurementID,
       @RequestBody SpQueryResult queryResult,
       @Parameter(in = ParameterIn.QUERY, description = "should not identical schemas be stored") @RequestParam(value = "ignoreSchemaMismatch", required = false) boolean ignoreSchemaMismatch) {
-    var dataWriter = new DataLakeDataWriter(ignoreSchemaMismatch);
+    var dataWriter = new DataLakeDataWriter(ignoreSchemaMismatch, datasetStorage);
     try {
       dataWriter.writeData(measurementID, queryResult);
     } catch (SpRuntimeException e) {

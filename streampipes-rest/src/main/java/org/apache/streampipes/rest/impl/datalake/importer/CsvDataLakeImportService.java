@@ -33,6 +33,7 @@ import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
 import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.rest.impl.datalake.DataLakeDataWriter;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,10 +60,11 @@ public class CsvDataLakeImportService {
   private final CsvImportValidationService validationService;
   private final IDataExplorerSchemaManagement schemaManagement;
 
-  public CsvDataLakeImportService(IDataExplorerSchemaManagement schemaManagement) {
+  public CsvDataLakeImportService(IDataExplorerSchemaManagement schemaManagement,
+                                  IDataLakeMeasureStorage datasetStorage) {
     this(
         schemaManagement,
-        new DataLakeDataWriter(false, true),
+        new DataLakeDataWriter(false, true, datasetStorage),
         new CsvImportUploadStorage(),
         new CsvImportParser());
   }

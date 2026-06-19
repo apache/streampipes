@@ -41,6 +41,7 @@ import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -60,6 +61,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final PipelineManager pipelineManager;
   private final SpResourceManager resourceManager;
+  private final IDataLakeMeasureStorage datasetStorage;
 
   public PerformImportGenerator(AssetExportConfiguration config,
                                 String ownerSid,
@@ -72,6 +74,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.resourceManager = resourceManager;
     this.pipelineManager = pipelineManager;
+    this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
   }
 
   @Override
@@ -138,7 +141,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleDataLakeMeasure(String document, String dataLakeMeasureId) throws JsonProcessingException {
     if (shouldStore(dataLakeMeasureId, config.getDataLakeMeasures())) {
-      writeDocument(document, new MeasurementResolver());
+      writeDocument(document, new MeasurementResolver(datasetStorage));
       permissionsToStore.add(new PermissionInfo(dataLakeMeasureId, DataLakeMeasure.class));
     }
   }

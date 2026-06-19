@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.service.core.storage;
 
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
@@ -28,10 +30,12 @@ import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.ChartStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.DashboardStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.explorer.DataLakeMeasureStorage;
 import org.apache.streampipes.storage.couchdb.impl.function.FunctionStateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.AssetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -87,5 +91,13 @@ public class StorageApiConfiguration {
   @Bean
   public IPipelineStorage pipelineStorage() {
     return new PipelineStorageImpl();
+  }
+
+  @Bean
+  public IDataLakeMeasureStorage datasetStorage() {
+    return new DataLakeMeasureStorage(
+        () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
+        DataLakeMeasure.class
+    );
   }
 }

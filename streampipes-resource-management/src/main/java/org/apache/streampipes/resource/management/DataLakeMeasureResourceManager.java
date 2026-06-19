@@ -28,7 +28,6 @@ import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.security.core.Authentication;
 
@@ -46,9 +45,10 @@ public class DataLakeMeasureResourceManager extends AbstractResourceManager<IDat
   private final IPipelineStorage pipelineStorage;
   private final SpPermissionEvaluator permissionEvaluator;
 
-  public DataLakeMeasureResourceManager(IPipelineStorage pipelineStorage,
+  public DataLakeMeasureResourceManager(IDataLakeMeasureStorage datasetStorage,
+                                        IPipelineStorage pipelineStorage,
                                         PermissionResourceManager permissionResourceManager) {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage());
+    super(datasetStorage);
     this.pipelineStorage = pipelineStorage;
     this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
   }

@@ -31,8 +31,8 @@ import org.apache.streampipes.dataexplorer.iotdb.sanitize.DataLakeMeasurementSan
 import org.apache.streampipes.manager.permission.DataLakePermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 
@@ -55,10 +55,10 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
 
   @Override
   public IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
-                                                           IPermissionStorage permissionStorage) {
-    return new DataExplorerSchemaManagement(StorageDispatcher.INSTANCE
-                                                             .getNoSqlStore()
-                                                             .getDataLakeStorage(),
+                                                           IPermissionStorage permissionStorage,
+                                                           IDataLakeMeasureStorage datasetStorage) {
+    return new DataExplorerSchemaManagement(
+        datasetStorage,
         new DataLakePermissionManager(permissionStorage),
         chartSchemaUpdateCoordinator
     );
