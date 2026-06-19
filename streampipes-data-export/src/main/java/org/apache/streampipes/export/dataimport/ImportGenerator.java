@@ -24,6 +24,7 @@ import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -39,6 +40,9 @@ import java.util.Map;
 public abstract class ImportGenerator<T> {
 
   private static final Logger LOG = LoggerFactory.getLogger(ImportGenerator.class);
+  private static final String LABELS_APP_DOC_TYPE = "sp-labels";
+  private static final String SITES_APP_DOC_TYPE = "asset-sites";
+  private static final String APP_DOC_TYPE_FIELD = "appDocType";
 
   protected ObjectMapper defaultMapper;
 
@@ -120,7 +124,7 @@ public abstract class ImportGenerator<T> {
 
     for (String documentId : manifest.getGenericStorageDocuments()) {
       try {
-        handleGenericStorageDocument(asString(previewFiles.get(documentId)), documentId);
+        handleGenericStorageDocumentByType(asString(previewFiles.get(documentId)), documentId);
       } catch (DocumentConflictException e) {
         LOG.warn("Skipping import of generic storage doc {} (already present with the same id)", documentId);
       }
@@ -158,6 +162,12 @@ public abstract class ImportGenerator<T> {
   protected abstract void handleFile(String document, String fileMetadataId, Map<String, byte[]> zipContent)
       throws IOException;
 
+  protected abstract void handleLabel(String document, String labelId)
+      throws JsonProcessingException;
+
+  protected abstract void handleSite(String document, String siteId)
+      throws JsonProcessingException;
+
   protected abstract void handleGenericStorageDocument(String document, String dataLakeMeasureId)
       throws JsonProcessingException;
 
@@ -165,4 +175,17 @@ public abstract class ImportGenerator<T> {
 
   protected abstract void afterResourcesCreated();
 
+  private void handleGenericStorageDocumentByType(String document, String documentId) throws JsonProcessingException {
+    Map<String, Object> genericStorageDocument = this.defaultMapper.readValue(document, new TypeReference<>() {
+    });
+    var appDocType = genericStorageDocument.get(APP_DOC_TYPE_FIELD);
+
+    if (LABELS_APP_DOC_TYPE.equals(appDocType)) {
+      handleLabel(document, documentId);
+    } else if (SITES_APP_DOC_TYPE.equals(appDocType)) {
+      handleSite(document, documentId);
+    } else {
+      handleGenericStorageDocument(document, documentId);
+    }
+  }
 }

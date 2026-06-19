@@ -28,8 +28,15 @@ import {
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
+    AssetConstants,
     AssetManagementService,
+    AssetSiteDesc,
+    ExportItem,
+    GenericStorageService,
+    LabelsService,
     SpAsset,
+    SpAssetModel,
+    SpLabel,
 } from '@streampipes/platform-services';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { SpDataExportDialogComponent } from './export-dialog/data-export-dialog.component';
@@ -41,6 +48,13 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
+import { forkJoin, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+interface AssetReferenceExportItems {
+    referencedLabels: ExportItem[];
+    referencedSites: ExportItem[];
+}
 
 @Component({
     selector: 'sp-data-export-import',
@@ -60,13 +74,15 @@ import { MatButton } from '@angular/material/button';
 export class SpDataExportImportComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private assetManagementService = inject(AssetManagementService);
+    private genericStorageService = inject(GenericStorageService);
+    private labelsService = inject(LabelsService);
     private dialogService = inject(DialogService);
     private tabService = inject(SpConfigurationTabsService);
     private translateService = inject(TranslateService);
 
     tabs: SpNavigationItem[] = [];
 
-    assets: SpAsset[];
+    assets: SpAssetModel[] = [];
     selectedAssets: string[] = [];
 
     ngOnInit(): void {
@@ -98,12 +114,24 @@ export class SpDataExportImportComponent implements OnInit {
     }
 
     openExportDialog(): void {
+        this.getReferencedAssetDocuments().subscribe(
+            referencedAssetDocuments => {
+                this.openExportPreviewDialog(referencedAssetDocuments);
+            },
+        );
+    }
+
+    openExportPreviewDialog(
+        referencedAssetDocuments: AssetReferenceExportItems,
+    ): void {
         const dialogRef = this.dialogService.open(SpDataExportDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: this.translateService.instant('Export resources'),
             width: '50vw',
             data: {
                 selectedAssets: this.selectedAssets,
+                referencedLabels: referencedAssetDocuments.referencedLabels,
+                referencedSites: referencedAssetDocuments.referencedSites,
             },
         });
 
@@ -123,5 +151,71 @@ export class SpDataExportImportComponent implements OnInit {
                 this.loadAssets();
             }
         });
+    }
+
+    private getReferencedAssetDocuments(): Observable<AssetReferenceExportItems> {
+        return forkJoin({
+            assets: this.assetManagementService.getAllAssets(),
+            labels: this.labelsService.getAllLabels(),
+            sites: this.genericStorageService.getAllDocuments(
+                AssetConstants.ASSET_SITES_APP_DOC_NAME,
+            ),
+        }).pipe(
+            map(({ assets, labels, sites }) =>
+                this.toReferencedAssetDocuments(
+                    assets.filter(asset =>
+                        this.selectedAssets.includes(asset.elementId),
+                    ),
+                    labels,
+                    sites as AssetSiteDesc[],
+                ),
+            ),
+        );
+    }
+
+    private toReferencedAssetDocuments(
+        assets: SpAssetModel[],
+        labels: SpLabel[],
+        sites: AssetSiteDesc[],
+    ): AssetReferenceExportItems {
+        const labelIds = new Set<string>();
+        const siteIds = new Set<string>();
+
+        assets.forEach(asset =>
+            this.collectAssetReferences(asset, labelIds, siteIds),
+        );
+
+        return {
+            referencedLabels: labels
+                .filter(label => label._id && labelIds.has(label._id))
+                .map(label => ({
+                    resourceId: label._id!,
+                    label: label.label,
+                    selected: true,
+                })),
+            referencedSites: sites
+                .filter(site => site._id && siteIds.has(site._id))
+                .map(site => ({
+                    resourceId: site._id,
+                    label: site.label,
+                    selected: true,
+                })),
+        };
+    }
+
+    private collectAssetReferences(
+        asset: SpAsset,
+        labelIds: Set<string>,
+        siteIds: Set<string>,
+    ): void {
+        asset.labelIds?.forEach(labelId => labelIds.add(labelId));
+
+        if (asset.assetSite?.siteId) {
+            siteIds.add(asset.assetSite.siteId);
+        }
+
+        asset.assets?.forEach(subAsset =>
+            this.collectAssetReferences(subAsset, labelIds, siteIds),
+        );
     }
 }

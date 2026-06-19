@@ -165,6 +165,8 @@ export class SpDataImportDialogComponent {
         this.toggleAllItems(this.importConfiguration.dashboards, select);
         this.toggleAllItems(this.importConfiguration.dataViews, select);
         this.toggleAllItems(this.importConfiguration.dataLakeMeasures, select);
+        this.toggleAllItems(this.importConfiguration.labels, select);
+        this.toggleAllItems(this.importConfiguration.sites, select);
         this.toggleAllItems(
             this.importConfiguration.genericStorageDocuments,
             select,
@@ -173,6 +175,6 @@ export class SpDataImportDialogComponent {
     }
 
     private toggleAllItems(exportItem: ExportItem[], select: boolean): void {
-        exportItem.forEach(e => (e.selected = select));
+        exportItem?.forEach(e => (e.selected = select));
     }
 }
