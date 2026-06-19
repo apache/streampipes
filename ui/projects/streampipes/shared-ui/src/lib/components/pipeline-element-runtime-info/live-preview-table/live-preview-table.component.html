@@ -45,6 +45,15 @@
                 </td>
             </ng-container>
 
+            <ng-container matColumnDef="dataType">
+                <th mat-header-cell *matHeaderCellDef>
+                    <strong>{{ 'Data Type' | translate }}</strong>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element.dataType }}
+                </td>
+            </ng-container>
+
             <ng-container matColumnDef="description">
                 <th mat-header-cell *matHeaderCellDef>
                     <strong>{{ 'Description' | translate }}</strong>
