@@ -46,7 +46,22 @@
                             <mat-tree-node
                                 *matTreeNodeDef="let node"
                                 matTreeNodeToggle
-                                class="tree-leaf"
+                                class="tree-leaf tree-row"
+                                cdkDropList
+                                [id]="getDropTargetId(node)"
+                                [cdkDropListData]="getChildAssets(node)"
+                                [cdkDropListConnectedTo]="dropTargetIds"
+                                [cdkDropListDisabled]="!editMode"
+                                [cdkDropListEnterPredicate]="canEnterDropList"
+                                [cdkDropListSortingDisabled]="true"
+                                [class.drop-target-active]="
+                                    activeDropTargetAssetId === node.assetId
+                                "
+                                (cdkDropListEntered)="markDropTarget(node)"
+                                (cdkDropListExited)="clearDropTarget(node)"
+                                (cdkDropListDropped)="
+                                    dropAssetIntoParent($event, node)
+                                "
                             >
                                 <div
                                     class="asset-node"
@@ -57,8 +72,34 @@
                                         'select-asset-' + node.assetName
                                     "
                                     (click)="selectNode(node, false)"
+                                    cdkDrag
+                                    [cdkDragData]="node"
+                                    [cdkDragDisabled]="!editMode"
+                                    cdkDragLockAxis="y"
+                                    cdkDragBoundary=".tree-wrapper"
                                 >
                                     <div class="node-main">
+                                        @if (editMode) {
+                                            <button
+                                                mat-icon-button
+                                                type="button"
+                                                class="node-drag-handle"
+                                                cdkDragHandle
+                                                [matTooltip]="
+                                                    'Reorder asset' | translate
+                                                "
+                                                [attr.aria-label]="
+                                                    'Reorder asset' | translate
+                                                "
+                                                (click)="
+                                                    $event.stopPropagation()
+                                                "
+                                            >
+                                                <mat-icon
+                                                    >drag_indicator</mat-icon
+                                                >
+                                            </button>
+                                        }
                                         <mat-icon
                                             class="node-icon"
                                             [class.node-icon-selected]="
@@ -92,14 +133,20 @@
                                                     'add-asset-' +
                                                     node.assetName
                                                 "
-                                                (click)="addAsset(node)"
+                                                (click)="
+                                                    addAsset(node);
+                                                    $event.stopPropagation()
+                                                "
                                                 color="accent"
                                             >
                                                 <mat-icon>add</mat-icon>
                                             </button>
                                             <button
                                                 mat-icon-button
-                                                (click)="deleteAsset(node)"
+                                                (click)="
+                                                    deleteAsset(node);
+                                                    $event.stopPropagation()
+                                                "
                                                 color="accent"
                                             >
                                                 <mat-icon>delete</mat-icon>
@@ -112,7 +159,26 @@
                             <mat-nested-tree-node
                                 *matTreeNodeDef="let node; when: hasChild"
                             >
-                                <div class="mat-tree-node">
+                                <div
+                                    class="mat-tree-node tree-row"
+                                    cdkDropList
+                                    [id]="getDropTargetId(node)"
+                                    [cdkDropListData]="getChildAssets(node)"
+                                    [cdkDropListConnectedTo]="dropTargetIds"
+                                    [cdkDropListDisabled]="!editMode"
+                                    [cdkDropListEnterPredicate]="
+                                        canEnterDropList
+                                    "
+                                    [cdkDropListSortingDisabled]="true"
+                                    [class.drop-target-active]="
+                                        activeDropTargetAssetId === node.assetId
+                                    "
+                                    (cdkDropListEntered)="markDropTarget(node)"
+                                    (cdkDropListExited)="clearDropTarget(node)"
+                                    (cdkDropListDropped)="
+                                        dropAssetIntoParent($event, node)
+                                    "
+                                >
                                     <button
                                         mat-icon-button
                                         matTreeNodeToggle
@@ -134,12 +200,44 @@
                                     </button>
                                     <div
                                         class="asset-node"
-                                        [class.root-node]="
-                                            node.assetId === assetModel.assetId
+                                        [class.root-node]="isRootNode(node)"
+                                        (click)="
+                                            selectNode(node, isRootNode(node))
                                         "
-                                        (click)="selectNode(node, true)"
+                                        cdkDrag
+                                        [cdkDragData]="node"
+                                        [cdkDragDisabled]="
+                                            !editMode || isRootNode(node)
+                                        "
+                                        cdkDragLockAxis="y"
+                                        cdkDragBoundary=".tree-wrapper"
                                     >
                                         <div class="node-main">
+                                            @if (
+                                                editMode && !isRootNode(node)
+                                            ) {
+                                                <button
+                                                    mat-icon-button
+                                                    type="button"
+                                                    class="node-drag-handle"
+                                                    cdkDragHandle
+                                                    [matTooltip]="
+                                                        'Reorder asset'
+                                                            | translate
+                                                    "
+                                                    [attr.aria-label]="
+                                                        'Reorder asset'
+                                                            | translate
+                                                    "
+                                                    (click)="
+                                                        $event.stopPropagation()
+                                                    "
+                                                >
+                                                    <mat-icon
+                                                        >drag_indicator</mat-icon
+                                                    >
+                                                </button>
+                                            }
                                             <mat-icon
                                                 class="node-icon"
                                                 [class.node-icon-selected]="
@@ -147,7 +245,12 @@
                                                     selectedAsset.assetId
                                                 "
                                             >
-                                                account_tree
+                                                {{
+                                                    isRootNode(node) ||
+                                                    node.assets?.length
+                                                        ? 'account_tree'
+                                                        : 'device_hub'
+                                                }}
                                             </mat-icon>
                                             <div class="node-text">
                                                 <div
@@ -159,11 +262,11 @@
                                                 >
                                                     {{ node.assetName }}
                                                 </div>
+                                                <div class="node-meta">
+                                                    {{ node.assetDescription }}
+                                                </div>
                                             </div>
-                                            @if (
-                                                node.assetId ===
-                                                assetModel.assetId
-                                            ) {
+                                            @if (isRootNode(node)) {
                                                 <span class="badge">Root</span>
                                             }
                                         </div>
@@ -171,7 +274,10 @@
                                             <div class="node-actions">
                                                 <button
                                                     mat-icon-button
-                                                    (click)="addAsset(node)"
+                                                    (click)="
+                                                        addAsset(node);
+                                                        $event.stopPropagation()
+                                                    "
                                                     [attr.data-cy]="
                                                         'add-asset-' +
                                                         node.assetName
@@ -180,6 +286,20 @@
                                                 >
                                                     <mat-icon>add</mat-icon>
                                                 </button>
+                                                @if (!node.assets?.length) {
+                                                    <button
+                                                        mat-icon-button
+                                                        (click)="
+                                                            deleteAsset(node);
+                                                            $event.stopPropagation()
+                                                        "
+                                                        color="accent"
+                                                    >
+                                                        <mat-icon
+                                                            >delete</mat-icon
+                                                        >
+                                                    </button>
+                                                }
                                             </div>
                                         }
                                     </div>
