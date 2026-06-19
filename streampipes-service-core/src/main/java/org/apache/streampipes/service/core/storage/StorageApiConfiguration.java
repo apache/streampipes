@@ -37,6 +37,7 @@ import org.apache.streampipes.storage.couchdb.impl.system.AssetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +47,28 @@ import org.springframework.context.annotation.Configuration;
 @EnableCaching
 public class StorageApiConfiguration {
 
+  private final boolean chartCacheEnabled;
+  private final boolean permissionCacheEnabled;
+  private final boolean adapterCacheEnabled;
+  private final boolean dashboardCacheEnabled;
+  private final boolean pipelineCacheEnabled;
+  private final boolean dataLakeMeasureCacheEnabled;
+
+  public StorageApiConfiguration(
+      @Value("${streampipes.storage.cache.data-explorer-widgets.enabled:true}") boolean chartCacheEnabled,
+      @Value("${streampipes.storage.cache.permissions.enabled:true}") boolean permissionCacheEnabled,
+      @Value("${streampipes.storage.cache.adapters.enabled:true}") boolean adapterCacheEnabled,
+      @Value("${streampipes.storage.cache.dashboards.enabled:true}") boolean dashboardCacheEnabled,
+      @Value("${streampipes.storage.cache.pipelines.enabled:true}") boolean pipelineCacheEnabled,
+      @Value("${streampipes.storage.cache.data-lake-measures.enabled:true}") boolean dataLakeMeasureCacheEnabled) {
+    this.chartCacheEnabled = chartCacheEnabled;
+    this.permissionCacheEnabled = permissionCacheEnabled;
+    this.adapterCacheEnabled = adapterCacheEnabled;
+    this.dashboardCacheEnabled = dashboardCacheEnabled;
+    this.pipelineCacheEnabled = pipelineCacheEnabled;
+    this.dataLakeMeasureCacheEnabled = dataLakeMeasureCacheEnabled;
+  }
+
   @Bean
   public IFunctionStateStorage functionStateStorage() {
     return new FunctionStateStorageImpl();
@@ -53,34 +76,26 @@ public class StorageApiConfiguration {
 
   @Bean
   public IChartStorage chartStorage(CacheManager cacheManager) {
-    return new CachedChartStorage(
-        new ChartStorageImpl(),
-        cacheManager
-    );
+    IChartStorage delegate = new ChartStorageImpl();
+    return chartCacheEnabled ? new CachedChartStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IPermissionStorage permissionStorage(CacheManager cacheManager) {
-    return new CachedPermissionStorage(
-        new PermissionStorageImpl("users/permissions"),
-        cacheManager
-    );
+    IPermissionStorage delegate = new PermissionStorageImpl("users/permissions");
+    return permissionCacheEnabled ? new CachedPermissionStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IAdapterStorage adapterStorage(CacheManager cacheManager) {
-    return new CachedAdapterStorage(
-        new AdapterInstanceStorageImpl(),
-        cacheManager
-    );
+    IAdapterStorage delegate = new AdapterInstanceStorageImpl();
+    return adapterCacheEnabled ? new CachedAdapterStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IDashboardStorage dashboardStorage(CacheManager cacheManager) {
-    return new CachedDashboardStorage(
-        new DashboardStorageImpl(),
-        cacheManager
-    );
+    IDashboardStorage delegate = new DashboardStorageImpl();
+    return dashboardCacheEnabled ? new CachedDashboardStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
@@ -90,20 +105,16 @@ public class StorageApiConfiguration {
 
   @Bean
   public IPipelineStorage pipelineStorage(CacheManager cacheManager) {
-    return new CachedPipelineStorage(
-        new PipelineStorageImpl(),
-        cacheManager
-    );
+    IPipelineStorage delegate = new PipelineStorageImpl();
+    return pipelineCacheEnabled ? new CachedPipelineStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
   public IDataLakeMeasureStorage datasetStorage(CacheManager cacheManager) {
-    return new CachedDataLakeMeasureStorage(
-        new DataLakeMeasureStorage(
-            () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
-            DataLakeMeasure.class
-        ),
-        cacheManager
+    IDataLakeMeasureStorage delegate = new DataLakeMeasureStorage(
+        () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
+        DataLakeMeasure.class
     );
+    return dataLakeMeasureCacheEnabled ? new CachedDataLakeMeasureStorage(delegate, cacheManager) : delegate;
   }
 }
