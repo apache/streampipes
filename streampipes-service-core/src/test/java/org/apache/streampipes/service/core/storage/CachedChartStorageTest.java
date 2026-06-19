@@ -45,10 +45,7 @@ class CachedChartStorageTest {
   @BeforeEach
   void setUp() {
     delegate = mock(IChartStorage.class);
-    var cacheManager = new ConcurrentMapCacheManager(
-        CachedChartStorage.CACHE_NAME,
-        CachedChartStorage.FIND_ALL_CACHE_NAME
-    );
+    var cacheManager = new ConcurrentMapCacheManager(CachedChartStorage.CACHE_NAME);
     storage = new CachedChartStorage(delegate, cacheManager);
   }
 

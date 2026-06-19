@@ -17,27 +17,40 @@
  */
 package org.apache.streampipes.service.core.storage;
 
-import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cache.CacheManager;
 
-public class CachedDashboardStorage
-    extends AbstractCachedCrudStorage<DashboardModel, IDashboardStorage>
-    implements IDashboardStorage {
+import java.util.List;
 
-  static final String CACHE_NAME = "dashboards";
+public class CachedPipelineStorage
+    extends AbstractCachedCrudStorage<Pipeline, IPipelineStorage>
+    implements IPipelineStorage {
 
-  public CachedDashboardStorage(IDashboardStorage delegate,
-                                CacheManager cacheManager) {
+  static final String CACHE_NAME = "pipelines";
+
+  private static final String ADAPTER_ID_KEY_PREFIX = "adapter:";
+
+  public CachedPipelineStorage(IPipelineStorage delegate,
+                               CacheManager cacheManager) {
     this(delegate, cacheManager, JacksonSerializer.getObjectMapper());
   }
 
-  CachedDashboardStorage(IDashboardStorage delegate,
-                         CacheManager cacheManager,
-                         ObjectMapper objectMapper) {
-    super(delegate, cacheManager, CACHE_NAME, objectMapper, DashboardModel.class);
+  CachedPipelineStorage(IPipelineStorage delegate,
+                        CacheManager cacheManager,
+                        ObjectMapper objectMapper) {
+    super(delegate, cacheManager, CACHE_NAME, objectMapper, Pipeline.class);
+  }
+
+  @Override
+  public List<String> getPipelinesUsingAdapter(String adapterId) {
+    return getOrLoad(
+        key(ADAPTER_ID_KEY_PREFIX, adapterId),
+        listType(String.class),
+        () -> delegate.getPipelinesUsingAdapter(adapterId)
+    );
   }
 }

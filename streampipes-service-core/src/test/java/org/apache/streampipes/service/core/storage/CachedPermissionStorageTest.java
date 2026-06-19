@@ -46,12 +46,7 @@ class CachedPermissionStorageTest {
   @BeforeEach
   void setUp() {
     delegate = mock(IPermissionStorage.class);
-    var cacheManager = new ConcurrentMapCacheManager(
-        CachedPermissionStorage.CACHE_NAME,
-        CachedPermissionStorage.FIND_ALL_CACHE_NAME,
-        CachedPermissionStorage.BY_OBJECT_CACHE_NAME,
-        CachedPermissionStorage.BY_PRINCIPALS_CACHE_NAME
-    );
+    var cacheManager = new ConcurrentMapCacheManager(CachedPermissionStorage.CACHE_NAME);
     storage = new CachedPermissionStorage(delegate, cacheManager);
   }
 

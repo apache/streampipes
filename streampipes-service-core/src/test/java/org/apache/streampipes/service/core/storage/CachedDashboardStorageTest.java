@@ -43,10 +43,7 @@ class CachedDashboardStorageTest {
   @BeforeEach
   void setUp() {
     delegate = mock(IDashboardStorage.class);
-    var cacheManager = new ConcurrentMapCacheManager(
-        CachedDashboardStorage.CACHE_NAME,
-        CachedDashboardStorage.FIND_ALL_CACHE_NAME
-    );
+    var cacheManager = new ConcurrentMapCacheManager(CachedDashboardStorage.CACHE_NAME);
     storage = new CachedDashboardStorage(delegate, cacheManager);
   }
 

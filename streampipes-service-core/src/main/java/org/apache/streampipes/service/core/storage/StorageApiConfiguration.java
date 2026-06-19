@@ -89,15 +89,21 @@ public class StorageApiConfiguration {
   }
 
   @Bean
-  public IPipelineStorage pipelineStorage() {
-    return new PipelineStorageImpl();
+  public IPipelineStorage pipelineStorage(CacheManager cacheManager) {
+    return new CachedPipelineStorage(
+        new PipelineStorageImpl(),
+        cacheManager
+    );
   }
 
   @Bean
-  public IDataLakeMeasureStorage datasetStorage() {
-    return new DataLakeMeasureStorage(
-        () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
-        DataLakeMeasure.class
+  public IDataLakeMeasureStorage datasetStorage(CacheManager cacheManager) {
+    return new CachedDataLakeMeasureStorage(
+        new DataLakeMeasureStorage(
+            () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
+            DataLakeMeasure.class
+        ),
+        cacheManager
     );
   }
 }

@@ -44,11 +44,7 @@ class CachedAdapterStorageTest {
   @BeforeEach
   void setUp() {
     delegate = mock(IAdapterStorage.class);
-    var cacheManager = new ConcurrentMapCacheManager(
-        CachedAdapterStorage.CACHE_NAME,
-        CachedAdapterStorage.FIND_ALL_CACHE_NAME,
-        CachedAdapterStorage.BY_APP_ID_CACHE_NAME
-    );
+    var cacheManager = new ConcurrentMapCacheManager(CachedAdapterStorage.CACHE_NAME);
     storage = new CachedAdapterStorage(delegate, cacheManager);
   }
 

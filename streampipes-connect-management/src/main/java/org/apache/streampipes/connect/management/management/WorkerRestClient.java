@@ -35,7 +35,6 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
@@ -71,7 +70,7 @@ public class WorkerRestClient {
   public void stopStreamAdapter(SpServiceRegistration service,
                                 AdapterDescription adapterStreamDescription) throws AdapterException {
     var requestTarget = ExtensionServiceRequestTargets.adapterStop(service);
-    var ad = getAdapterDescriptionById(new AdapterInstanceStorageImpl(), adapterStreamDescription.getElementId());
+    var ad = getAdapterDescriptionById(resourceManager.manageAdapters().getDb(), adapterStreamDescription.getElementId());
 
     stopAdapter(requestTarget, ad);
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
@@ -198,7 +197,8 @@ public class WorkerRestClient {
   }
 
 
-  private AdapterDescription getAdapterDescriptionById(AdapterInstanceStorageImpl adapterStorage, String id) {
+  private AdapterDescription getAdapterDescriptionById(IAdapterStorage adapterStorage,
+                                                       String id) {
     AdapterDescription adapterDescription = null;
     List<AdapterDescription> allAdapters = adapterStorage.findAll();
     for (AdapterDescription a : allAdapters) {
