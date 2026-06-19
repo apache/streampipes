@@ -25,7 +25,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +87,7 @@ public class ResourceUnitScanner {
 
     // Scan and partition pipeline elements
     List<PipelineElementPartitioner.PartitionResult> pipelineUnits =
-        scanAndPartitionPipeline(service);
+        scanAndPartitionPipeline(service, resourceManager.managePipelines().getDb());
 
     // Scan and create adapter units
     List<PipelineElementPartitioner.AdapterResourceUnitWithServices> adapterUnits =
@@ -105,10 +105,12 @@ public class ResourceUnitScanner {
    * @param service Service registration
    * @return List of partitioned resource units
    */
-  private static List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> scanAndPartitionPipelineElements(SpServiceRegistration service) {
+  private static List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> scanAndPartitionPipelineElements(
+      SpServiceRegistration service,
+      IPipelineStorage pipelineStorage) {
 
     String serviceUrl = service.getServiceUrl();
-    List<Pipeline> allPipelines = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
+    List<Pipeline> allPipelines = pipelineStorage.findAll();
 
     List<Pipeline> relevantPipelines = allPipelines.stream()
         .filter(pipeline -> pipeline.isRunning() && pipelineUsesService(pipeline, serviceUrl))
@@ -154,10 +156,12 @@ public class ResourceUnitScanner {
    * @param service Service registration
    * @return List of partitioned resource units
    */
-  private static List<PipelineElementPartitioner.PartitionResult> scanAndPartitionPipeline(SpServiceRegistration service) {
+  private static List<PipelineElementPartitioner.PartitionResult> scanAndPartitionPipeline(
+      SpServiceRegistration service,
+      IPipelineStorage pipelineStorage) {
 
     String serviceUrl = service.getServiceUrl();
-    List<Pipeline> allPipelines = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
+    List<Pipeline> allPipelines = pipelineStorage.findAll();
 
     List<Pipeline> relevantPipelines = allPipelines.stream()
         .filter(pipeline -> pipeline.isRunning() && pipelineUsesService(pipeline, serviceUrl))
@@ -299,8 +303,10 @@ public class ResourceUnitScanner {
    * @param service Service registration
    * @return List of resource units for this service
    */
-  public static List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> findResourceUnitsForService(SpServiceRegistration service) {
-    return scanAndPartitionPipelineElements(service);
+  public static List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> findResourceUnitsForService(
+      SpServiceRegistration service,
+      IPipelineStorage pipelineStorage) {
+    return scanAndPartitionPipelineElements(service, pipelineStorage);
   }
 
   /**
@@ -320,12 +326,15 @@ public class ResourceUnitScanner {
    * @param sourceServices Services to scan for resource units
    * @return Map of service ID to list of resource units
    */
-  public static Map<String, List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>>> findAllResourceUnitsForMigration(List<SpServiceRegistration> sourceServices) {
+  public static Map<String, List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>>>
+  findAllResourceUnitsForMigration(List<SpServiceRegistration> sourceServices,
+                                   SpResourceManager resourceManager) {
 
     logger.info("Scanning resource units for {} services", sourceServices.size());
-
+    var pipelineStorage = resourceManager.managePipelines().getDb();
     return sourceServices.stream().collect(Collectors
-        .toMap(SpServiceRegistration::getSvcId, ResourceUnitScanner::findResourceUnitsForService));
+        .toMap(SpServiceRegistration::getSvcId, svcreg ->
+            ResourceUnitScanner.findResourceUnitsForService(svcreg, pipelineStorage)));
   }
 
   /**

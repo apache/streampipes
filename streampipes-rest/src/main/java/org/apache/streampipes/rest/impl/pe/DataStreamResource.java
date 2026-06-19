@@ -69,7 +69,7 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
         requestManager,
         resourceManager,
         new ChartSchemaUpdateCoordinator(chartStorage),
-        new PipelineManager(getPipelineStorage(), resourceManager)
+        new PipelineManager(resourceManager)
     );
     this.dataStreamResourceManager = resourceManager.manageDataStreams();
     this.dataStreamUpdateManagement = new DataStreamUpdateManagement(

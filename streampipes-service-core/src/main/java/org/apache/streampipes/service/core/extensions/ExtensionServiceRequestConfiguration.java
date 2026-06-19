@@ -26,6 +26,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
@@ -92,8 +93,16 @@ public class ExtensionServiceRequestConfiguration {
                                              IChartStorage chartStorage,
                                              IAdapterStorage adapterStorage,
                                              IDashboardStorage dashboardStorage,
-                                             IAssetStorage assetStorage) {
-    return new SpResourceManager(permissionStorage, chartStorage, adapterStorage, assetStorage, dashboardStorage);
+                                             IAssetStorage assetStorage,
+                                             IPipelineStorage pipelineStorage) {
+    return new SpResourceManager(
+        permissionStorage,
+        chartStorage,
+        adapterStorage,
+        assetStorage,
+        dashboardStorage,
+        pipelineStorage
+    );
   }
 
   @Bean

@@ -20,6 +20,7 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -31,17 +32,20 @@ public class SpResourceManager {
   private final IAdapterStorage adapterStorage;
   private final IAssetStorage assetStorage;
   private final IDashboardStorage dashboardStorage;
+  private final IPipelineStorage pipelineStorage;
 
   public SpResourceManager(IPermissionStorage permissionStorage,
                            IChartStorage chartStorage,
                            IAdapterStorage adapterStorage,
                            IAssetStorage assetStorage,
-                           IDashboardStorage dashboardStorage) {
+                           IDashboardStorage dashboardStorage,
+                           IPipelineStorage pipelineStorage) {
     this.permissionStorage = permissionStorage;
     this.chartStorage = chartStorage;
     this.adapterStorage = adapterStorage;
     this.assetStorage = assetStorage;
     this.dashboardStorage = dashboardStorage;
+    this.pipelineStorage = pipelineStorage;
   }
 
   public AdapterDescriptionResourceManager manageAdapterDescriptions() {
@@ -70,7 +74,7 @@ public class SpResourceManager {
   }
 
   public DataLakeMeasureResourceManager manageDataLakeMeasures() {
-    return new DataLakeMeasureResourceManager(managePermissions());
+    return new DataLakeMeasureResourceManager(pipelineStorage, managePermissions());
   }
 
   public PermissionResourceManager managePermissions() {
@@ -86,8 +90,7 @@ public class SpResourceManager {
   }
 
   public PipelineResourceManager managePipelines() {
-    return new PipelineResourceManager(
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(), managePermissions()
+    return new PipelineResourceManager(pipelineStorage, managePermissions()
     );
   }
 

@@ -113,7 +113,8 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
 
   @Override
   protected void handlePipeline(String document, String pipelineId) throws JsonProcessingException {
-    addExportItem(pipelineId, new PipelineResolver(extensionServiceRequestManager, pipelineManager)
+    addExportItem(pipelineId,
+        new PipelineResolver(extensionServiceRequestManager, pipelineManager, resourceManager.managePipelines())
         .readDocument(document).getName(), importConfig::addPipeline);
   }
 

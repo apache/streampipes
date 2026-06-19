@@ -43,6 +43,7 @@ import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdapte
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
@@ -56,6 +57,7 @@ public class AvailableMigrations {
   private final IAdapterStorage adapterStorage;
   private final IDashboardStorage dashboardStorage;
   private final IAssetStorage assetStorage;
+  private final IPipelineStorage pipelineStorage;
 
   public AvailableMigrations(SpResourceManager resourceManager) {
     this.chartStorage = resourceManager.manageCharts().getDb();
@@ -63,6 +65,7 @@ public class AvailableMigrations {
     this.adapterStorage = resourceManager.manageAdapters().getDb();
     this.dashboardStorage = resourceManager.manageDashboards().getDb();
     this.assetStorage = resourceManager.manageAssets().getDb();
+    this.pipelineStorage = resourceManager.managePipelines().getDb();
   }
 
   public List<Migration> getAvailableMigrations() {
@@ -75,7 +78,7 @@ public class AvailableMigrations {
         new AddAssetManagementViewMigration(),
         new MoveAssetContentMigration(),
         new CreateAssetPermissionMigration(permissionStorage, assetStorage),
-        new CreateDatasetPermissionMigration(permissionStorage),
+        new CreateDatasetPermissionMigration(permissionStorage, pipelineStorage),
         new RemoveObsoletePrivilegesMigration(),
         new UniqueDashboardIdMigration(dashboardStorage),
         new AddScriptTemplateViewMigration(),
@@ -86,7 +89,7 @@ public class AvailableMigrations {
         new AddFunctionStateViewMigration(),
         new AddRefreshTokenViewsMigration(),
         new RemoveAssetUserRoleMigration(),
-        new RemoveInternalNotificationSinkMigration()
+        new RemoveInternalNotificationSinkMigration(pipelineStorage)
     );
   }
 }

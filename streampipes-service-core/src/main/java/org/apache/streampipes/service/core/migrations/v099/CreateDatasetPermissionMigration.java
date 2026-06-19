@@ -25,6 +25,7 @@ import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -45,9 +46,10 @@ public class CreateDatasetPermissionMigration implements Migration {
   private static final String DB_MEASUREMENT = "db_measurement";
 
 
-  public CreateDatasetPermissionMigration(IPermissionStorage permissionStorage) {
+  public CreateDatasetPermissionMigration(IPermissionStorage permissionStorage,
+                                          IPipelineStorage pipelineStorage) {
     this.dataLakeStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
-    this.pipelineStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
+    this.pipelineStorage = pipelineStorage;
     this.permissionStorage = permissionStorage;
     this.permissionResourceManager = new PermissionResourceManager(permissionStorage);
   }

@@ -23,6 +23,7 @@ import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.resource.management.PipelineResourceManager;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,11 +35,14 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
 
   private final ExtensionServiceRequestManager requestManager;
   private final PipelineManager pipelineManager;
+  private PipelineResourceManager resourceManager;
 
   public PipelineResolver(ExtensionServiceRequestManager requestManager,
-                          PipelineManager pipelineManager) {
+                          PipelineManager pipelineManager,
+                          PipelineResourceManager resourceManager) {
     this.requestManager = requestManager;
     this.pipelineManager = pipelineManager;
+    this.resourceManager = resourceManager;
   }
 
   @Override
@@ -90,7 +94,7 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
 
     }
     SecretProvider.getEncryptionService().apply(pipeline);
-    getNoSqlStore().getPipelineStorageAPI().persist(pipeline);
+    resourceManager.getDb().persist(pipeline);
   }
 
   @Override
@@ -107,7 +111,7 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
       if (storedPipeline.isRunning()) {
         pipelineManager.stopPipeline(resourceId, true, requestManager);
       }
-      getNoSqlStore().getPipelineStorageAPI().deleteElementById(resourceId);
+      resourceManager.getDb().deleteElementById(resourceId);
     }
   }
 }

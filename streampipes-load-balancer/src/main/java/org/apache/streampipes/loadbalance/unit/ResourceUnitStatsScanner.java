@@ -29,7 +29,7 @@ import org.apache.streampipes.model.monitoring.MessageCounter;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
 import org.slf4j.Logger;
@@ -66,7 +66,7 @@ public class ResourceUnitStatsScanner {
 
     // Generate stats for pipeline elements (sinks and processors)
     List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> pipelineUnits =
-        ResourceUnitScanner.findResourceUnitsForService(service);
+        ResourceUnitScanner.findResourceUnitsForService(service, resourceManager.managePipelines().getDb());
 
     for (LoadBalanceResourceUnit<InvocableStreamPipesEntity> unit : pipelineUnits) {
       LoadBalanceResourceUnitStats<InvocableStreamPipesEntity> stats =
@@ -261,7 +261,7 @@ public class ResourceUnitStatsScanner {
           int adapterCount = countAdaptersForService(service, resourceManager);
 
           // Count pipelines for this service using database query
-          int pipelineCount = countPipelinesForService(service);
+          int pipelineCount = countPipelinesForService(service, resourceManager.managePipelines().getDb());
 
           // Update metrics
           stats.updateAllMetrics(service.getSvcId(), adapterCount, pipelineCount);
@@ -305,10 +305,11 @@ public class ResourceUnitStatsScanner {
   /**
    * Count pipelines running on a specific service using database query
    */
-  private static int countPipelinesForService(SpServiceRegistration service) {
+  private static int countPipelinesForService(SpServiceRegistration service,
+                                              IPipelineStorage pipelineStorage) {
     try {
       String serviceUrl = service.getServiceUrl();
-      List<Pipeline> allPipelines =  StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().findAll();
+      List<Pipeline> allPipelines =  pipelineStorage.findAll();
 
       return (int) allPipelines.stream()
           .filter(pipeline -> pipeline.isRunning() && pipelineUsesService(pipeline, serviceUrl))

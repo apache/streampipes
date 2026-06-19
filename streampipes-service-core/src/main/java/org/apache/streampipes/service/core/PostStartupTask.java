@@ -78,7 +78,7 @@ public class PostStartupTask implements Runnable {
     this.postStartupRecovery = new PostStartupRecovery(
         new ExtensionHealthCheck(
             new ResourceProvider(
-                StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(),
+                resourceManager.managePipelines().getDb(),
                 resourceManager.manageAdapters().getDb(),
                 new AdapterMasterManagement(
                     resourceManager,
@@ -197,6 +197,6 @@ public class PostStartupTask implements Runnable {
   }
 
   private IPipelineStorage getPipelineStorage() {
-    return storage.getPipelineStorageAPI();
+    return resourceManager.managePipelines().getDb();
   }
 }

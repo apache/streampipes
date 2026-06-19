@@ -56,7 +56,6 @@ public class CompactPipelineResource extends AbstractAuthGuardedRestResource {
     );
     this.requestManager = requestManager;
     this.pipelineManager = new PipelineManager(
-        getPipelineStorage(),
         resourceManager
     );
   }

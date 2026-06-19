@@ -51,7 +51,6 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.exception.SpNotificationException;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
-import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.google.gson.JsonSyntaxException;
@@ -110,11 +109,11 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     );
     this.requestManager = requestManager;
     this.measurementUpdateManagement = new MeasurementUpdateManagement(
+        resourceManager.managePipelines().getDb(),
         new ChartSchemaUpdateCoordinator(chartStorage)
     );
     PermissionResourceManager permissionResourceManager = resourceManager.managePermissions();
-    IPipelineStorage pipelineStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
-    this.pipelineManager = new PipelineManager(pipelineStorage, resourceManager);
+    this.pipelineManager = new PipelineManager(resourceManager);
     this.dataProcessorResourceManager = new DataProcessorResourceManager(permissionResourceManager);
     this.dataSinkResourceManager = new DataSinkResourceManager(permissionResourceManager);
   }
@@ -293,7 +292,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public ResponseEntity<SuccessMessage> updatePipeline(@PathVariable("pipelineId") String pipelineId,
                                                        @RequestBody Pipeline pipeline) {
-    Pipeline storedPipeline = getPipelineStorage().getElementById(pipelineId);
+    Pipeline storedPipeline = resourceManager.managePipelines().getDb().getElementById(pipelineId);
     if (!storedPipeline.isRunning()) {
       storedPipeline.setStreams(pipeline.getStreams());
       storedPipeline.setSepas(pipeline.getSepas());
@@ -305,7 +304,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     storedPipeline.setHealthStatus(pipeline.getHealthStatus());
     storedPipeline.setPipelineNotifications(pipeline.getPipelineNotifications());
     storedPipeline.setValid(pipeline.isValid());
-    new PipelineStorageService(storedPipeline).updatePipeline();
+    new PipelineStorageService(resourceManager.managePipelines().getDb(), storedPipeline).updatePipeline();
     SuccessMessage message = Notifications.success("Pipeline modified");
     message.addNotification(new Notification("id", pipelineId));
     return ok(message);

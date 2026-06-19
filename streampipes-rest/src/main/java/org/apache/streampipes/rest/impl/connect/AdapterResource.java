@@ -46,7 +46,6 @@ import org.apache.streampipes.rest.event.AdapterDeletedEvent;
 import org.apache.streampipes.rest.event.AdapterUpdatedEvent;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
-import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -108,13 +107,12 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     this.eventPublisher = eventPublisher;
     this.permissionResourceManager = resourceManager.managePermissions();
     this.pipelineManager = new PipelineManager(
-        getPipelineStorage(),
         resourceManager
     );
     this.pipelineUpdateCoordinator = new PipelineUpdateCoordinator(
         requestManager,
         resourceManager,
-        new ChartSchemaUpdateCoordinator((IChartStorage) resourceManager.manageCharts().getDb()),
+        new ChartSchemaUpdateCoordinator(resourceManager.manageCharts().getDb()),
         pipelineManager
     );
   }
@@ -269,8 +267,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
       var adapter = getAdapterDescription(elementId);
       if (checkAdapterPermission(adapter, "WRITE")) {
         List<String> pipelinesUsingAdapter = getPipelinesUsingAdapter(elementId);
-        IPipelineStorage pipelineStorageAPI = StorageDispatcher.INSTANCE.getNoSqlStore()
-            .getPipelineStorageAPI();
+        IPipelineStorage pipelineStorageAPI = resourceManager.managePipelines().getDb();
 
         if (pipelinesUsingAdapter.isEmpty()) {
           try {
@@ -377,8 +374,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   }
 
   private List<String> getPipelinesUsingAdapter(String adapterId) {
-    return StorageDispatcher.INSTANCE.getNoSqlStore()
-        .getPipelineStorageAPI()
+    return resourceManager.managePipelines().getDb()
         .getPipelinesUsingAdapter(adapterId);
   }
 

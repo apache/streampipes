@@ -52,7 +52,7 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
   public DataImportResource(ExtensionServiceRequestManager extensionServiceRequestManager,
                             SpResourceManager resourceManager) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
-    this.pipelineManager = new PipelineManager(getPipelineStorage(), resourceManager);
+    this.pipelineManager = new PipelineManager(resourceManager);
     this.resourceManager = resourceManager;
   }
 

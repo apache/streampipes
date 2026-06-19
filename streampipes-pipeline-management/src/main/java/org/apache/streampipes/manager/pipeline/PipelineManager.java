@@ -44,9 +44,8 @@ public class PipelineManager {
   private final SpResourceManager resourceManager;
   private final IPipelineStorage pipelineStorage;
 
-  public PipelineManager(IPipelineStorage pipelineStorage,
-                         SpResourceManager resourceManager) {
-    this.pipelineStorage = pipelineStorage;
+  public PipelineManager(SpResourceManager resourceManager) {
+    this.pipelineStorage = resourceManager.managePipelines().getDb();
     this.resourceManager = resourceManager;
   }
 
@@ -85,7 +84,7 @@ public class PipelineManager {
         ? UUIDGenerator.generateUuid()
         : pipeline.getPipelineId();
     preparePipelineBasics(principalSid, pipeline, pipelineId);
-    new PipelineStorageService(pipeline).addPipeline();
+    new PipelineStorageService(pipelineStorage, pipeline).addPipeline();
 
     Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
     resourceManager.managePermissions().create(permission);

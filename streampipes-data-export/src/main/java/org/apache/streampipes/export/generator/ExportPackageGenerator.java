@@ -88,6 +88,7 @@ public class ExportPackageGenerator {
         .collect(Collectors.toList()), manifest);
 
     var dashboardResourceManager = resourceManager.manageDashboards();
+    var pipelineResourceManager = resourceManager.managePipelines();
 
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {
       config.getAdapters().forEach(item -> addDoc(builder,
@@ -107,7 +108,7 @@ public class ExportPackageGenerator {
 
       config.getPipelines().forEach(item -> addDoc(builder,
           item,
-          new PipelineResolver(extensionServiceRequestManager, pipelineManager),
+          new PipelineResolver(extensionServiceRequestManager, pipelineManager, pipelineResourceManager),
           manifest::addPipeline));
 
       config.getDashboards().forEach(item -> {

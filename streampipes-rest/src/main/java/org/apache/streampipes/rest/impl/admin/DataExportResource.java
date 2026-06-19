@@ -49,7 +49,7 @@ public class DataExportResource extends AbstractAuthGuardedRestResource {
   public DataExportResource(ExtensionServiceRequestManager extensionServiceRequestManager,
                             SpResourceManager resourceManager) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
-    this.pipelineManager = new PipelineManager(getNoSqlStorage().getPipelineStorageAPI(), resourceManager);
+    this.pipelineManager = new PipelineManager(resourceManager);
     this.resourceManager = resourceManager;
 
   }

@@ -47,7 +47,7 @@ public class PipelineExecutionTaskFactory {
         new SubmitRequestTask(new InvokePipelineElementSubmitter(pipeline, requestManager, resourceManager)),
         new SecretEncryptionTask(SecretProvider.getEncryptionService()),
         new AfterInvocationTask(PipelineStatusMessageType.PIPELINE_STARTED),
-        new StorePipelineStatusTask(true, false)
+        new StorePipelineStatusTask(resourceManager, true, false)
     );
   }
 
@@ -58,7 +58,7 @@ public class PipelineExecutionTaskFactory {
     return List.of(
         new SubmitRequestTask(new DetachPipelineElementSubmitter(pipeline, requestManager, resourceManager)),
         new AfterInvocationTask(PipelineStatusMessageType.PIPELINE_STOPPED),
-        new StorePipelineStatusTask(false, forceStop)
+        new StorePipelineStatusTask(resourceManager, false, forceStop)
     );
   }
 }

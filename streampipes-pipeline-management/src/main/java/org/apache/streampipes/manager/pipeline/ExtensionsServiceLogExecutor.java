@@ -99,7 +99,9 @@ public class ExtensionsServiceLogExecutor implements Runnable {
 
   private void updatePipelineFlow() {
     pipelineFlowStats.clear();
-    ExtensionsLogProvider.INSTANCE.getMetricsGroupedByPipeline().forEach((pipelineId, data) -> {
+    var pipelineStorage = resourceManager.managePipelines().getDb();
+    ExtensionsLogProvider.INSTANCE.getMetricsGroupedByPipeline(pipelineStorage)
+        .forEach((pipelineId, data) -> {
       data.forEach((k, v) -> {
         // Total "in" count
         long dataCountIn = v.getMessagesIn()

@@ -46,9 +46,10 @@ public class DataLakeMeasureResourceManager extends AbstractResourceManager<IDat
   private final IPipelineStorage pipelineStorage;
   private final SpPermissionEvaluator permissionEvaluator;
 
-  public DataLakeMeasureResourceManager(PermissionResourceManager permissionResourceManager) {
+  public DataLakeMeasureResourceManager(IPipelineStorage pipelineStorage,
+                                        PermissionResourceManager permissionResourceManager) {
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage());
-    this.pipelineStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
+    this.pipelineStorage = pipelineStorage;
     this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
   }
 

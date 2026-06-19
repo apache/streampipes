@@ -30,7 +30,7 @@ import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnitStats;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,8 @@ public class ResourceUnitMigration {
    */
   public static void migrationForHealth(LoadBalanceResourceUnit<InvocableStreamPipesEntity> resourceUnit,
                                         SpServiceRegistration targetService,
-                                        SpServiceRegistration sourceService) {
+                                        SpServiceRegistration sourceService,
+                                        IPipelineStorage pipelineStorage) {
 
     logger.info("Migrating pipeline resource unit {} to service {} for health recovery",
                 resourceUnit.getId(), targetService.getSvcId());
@@ -71,7 +72,7 @@ public class ResourceUnitMigration {
       }
 
       // Update pipeline in storage with new endpoints
-      updatePipelineEndpoints(resourceUnit);
+      updatePipelineEndpoints(resourceUnit, pipelineStorage);
 
       logger.info("Successfully migrated pipeline resource unit {} to service {}",
                   resourceUnit.getId(), targetService.getSvcId());
@@ -133,9 +134,9 @@ public class ResourceUnitMigration {
    *
    * @param resourceUnit Resource unit with updated elements
    */
-  private static void updatePipelineEndpoints(LoadBalanceResourceUnit<InvocableStreamPipesEntity> resourceUnit) {
-    Pipeline pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI()
-        .getElementById(resourceUnit.getPipelineId());
+  private static void updatePipelineEndpoints(LoadBalanceResourceUnit<InvocableStreamPipesEntity> resourceUnit,
+                                              IPipelineStorage pipelineStorage) {
+    Pipeline pipeline = pipelineStorage.getElementById(resourceUnit.getPipelineId());
 
     if (pipeline == null) {
       logger.warn("Pipeline {} not found in storage", resourceUnit.getPipelineId());
@@ -157,7 +158,7 @@ public class ResourceUnitMigration {
     }
 
     // Save updated pipeline
-    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(pipeline);
+    pipelineStorage.updateElement(pipeline);
 
     logger.debug("Updated pipeline {} endpoints in storage", pipeline.getPipelineId());
   }
@@ -272,6 +273,7 @@ public class ResourceUnitMigration {
 
     double transferredAmount = 0;
     int migratedCount = 0;
+    var pipelineStorage = resourceManager.managePipelines().getDb();
 
     // Iterate through stats (sorted by event rate)
     for (LoadBalanceResourceUnitStats stats : sourceStats) {
@@ -294,7 +296,7 @@ public class ResourceUnitMigration {
         if (isAdapter) {
           migrateAdapterForHealth(matchingUnit, targetService, sourceService, resourceManager);
         } else {
-          migrationForHealth(matchingUnit, targetService, sourceService);
+          migrationForHealth(matchingUnit, targetService, sourceService, pipelineStorage);
         }
         transferredAmount += stats.getEventRateOut() + stats.getEventRateIn();
         migratedCount++;

@@ -34,7 +34,7 @@ import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +54,7 @@ public class PipelineUpdateCoordinator {
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
   private final PipelineManager pipelineManager;
   private final SpResourceManager resourceManager;
+  private final IPipelineStorage pipelineStorage;
 
   public PipelineUpdateCoordinator(ExtensionServiceRequestManager requestManager,
                                    SpResourceManager resourceManager,
@@ -63,6 +64,7 @@ public class PipelineUpdateCoordinator {
     this.resourceManager = resourceManager;
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
     this.pipelineManager = pipelineManager;
+    this.pipelineStorage = resourceManager.managePipelines().getDb();
   }
 
   public void updatePipelines(SpDataStream dataStream) {
@@ -136,7 +138,7 @@ public class PipelineUpdateCoordinator {
           modifiedPipeline.setValid(false);
         }
 
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(modifiedPipeline);
+        pipelineStorage.updateElement(modifiedPipeline);
 
         if (shouldRestartPipeline && canAutoMigrate) {
           new PipelineExecutor(

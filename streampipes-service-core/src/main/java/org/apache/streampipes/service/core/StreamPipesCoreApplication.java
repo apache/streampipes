@@ -216,7 +216,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                 resourceManager),
             new ExtensionHealthCheck(
                 new ResourceProvider(
-                    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(),
+                    resourceManager.managePipelines().getDb(),
                     resourceManager.manageAdapters().getDb(),
                     new AdapterMasterManagement(
                         resourceManager,
@@ -286,11 +286,11 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
     pipelinesToStop.forEach(pipeline -> {
       pipeline.setRestartOnSystemReboot(true);
-      StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(pipeline);
+      resourceManager.managePipelines().getDb().updateElement(pipeline);
     });
 
     LOG.info("Gracefully stopping all running pipelines...");
-    var pipelineManager = new PipelineManager(getPipelineStorage(), resourceManager);
+    var pipelineManager = new PipelineManager(resourceManager);
     List<PipelineOperationStatus> status = pipelineManager.stopAllPipelines(true, extensionServiceRequestManager);
     status.forEach(s -> {
       if (s.isSuccess()) {
@@ -310,7 +310,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   }
 
   private IPipelineStorage getPipelineStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
+    return resourceManager.managePipelines().getDb();
   }
 
   @Override
