@@ -22,6 +22,7 @@ import { SpViewAssetComponent } from './components/asset-details/view-asset/view
 import { SpAssetDetailsComponent } from './components/asset-details/edit-asset/asset-details.component';
 import { UserPrivilege } from '../core/auth/user-privilege.enum';
 import { PageAuthGuard } from '../core/auth/guards/page-auth.can-activate.guard';
+import { ChartPanelCanDeactivateGuard } from '../chart-shared/services/chart-panel-can-deactivate-guard.service';
 
 export const ASSET_ROUTES: Routes = [
     {
@@ -47,6 +48,7 @@ export const ASSET_ROUTES: Routes = [
                     privileges: [UserPrivilege.PRIVILEGE_WRITE_ASSETS],
                 },
                 canActivate: [PageAuthGuard],
+                canDeactivate: [ChartPanelCanDeactivateGuard],
             },
         ],
     },
