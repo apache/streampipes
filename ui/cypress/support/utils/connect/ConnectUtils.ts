@@ -451,6 +451,8 @@ export class ConnectUtils {
         ConnectBtns.startAdapter().should('not.be.disabled');
 
         ConnectBtns.startAdapter().click();
+        ConnectBtns.stopAdapter().should('be.visible');
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
 
         ConnectUtils.validateEventsInPreview(adapterName, amountOfProperties);
     }

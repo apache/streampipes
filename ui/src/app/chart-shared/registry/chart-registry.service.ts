@@ -82,6 +82,8 @@ export class ChartRegistry {
     private translateService = inject(TranslateService);
 
     chartTypes: IWidget<any>[] = [];
+    registeredChartSummary: Record<string, { icon: string; label: string }> =
+        {};
 
     constructor() {
         this.chartTypes = [
@@ -303,10 +305,22 @@ export class ChartRegistry {
                 ),
             },
         ];
+        this.makeChartSummary();
+    }
+
+    private makeChartSummary() {
+        this.registeredChartSummary = {};
+        this.chartTypes.forEach(c => {
+            this.registeredChartSummary[c.id] = {
+                label: c.label,
+                icon: c.icon,
+            };
+        });
     }
 
     registerChart(chart: IWidget<any>): void {
         this.chartTypes.push(chart);
+        this.makeChartSummary();
     }
 
     getAvailableChartTemplates(): IWidget<any>[] {
@@ -323,6 +337,13 @@ export class ChartRegistry {
     getChartType(chartId: string) {
         // for backwards compatibility in v0.95.0, we return either the ID or the new ID based on the alias
         return this.getChartTemplate(chartId).id;
+    }
+
+    getRegisteredChartSummary(chartId: string): {
+        icon: string;
+        label: string;
+    } {
+        return this.registeredChartSummary[chartId];
     }
 
     private findBackwardsCompatibleChart(chartId: string): IWidget<any> {

@@ -17,6 +17,8 @@
  */
 
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     inject,
     Input,
@@ -53,7 +55,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ChartRoutingService } from '../../../../chart-shared/services/chart-routing.service';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
     FlexDirective,
@@ -110,6 +112,7 @@ type ChartOverviewRow = ChartSummaryDto & {
         MatProgressSpinner,
         TranslatePipe,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartOverviewTableComponent implements OnInit, OnDestroy {
     @Input()
@@ -117,7 +120,6 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
 
     @ViewChild(MatSort)
     set sort(sort: MatSort | undefined) {
-        this._sort = sort;
         if (sort) {
             this.dataSource.sort = sort;
         }
@@ -141,6 +143,7 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
         placeholder: 'Search charts',
     };
     isLoading = false;
+    hasLoadedCharts = false;
     charts: ChartOverviewRow[] = [];
     filteredCharts: ChartOverviewRow[] = [];
 
@@ -152,10 +155,10 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
     private routingService = inject(ChartRoutingService);
     private assetFilterService = inject(SpAssetBrowserService);
     private chartRegistryService = inject(ChartRegistry);
+    private cdr = inject(ChangeDetectorRef);
 
     assetFilter$: Subscription;
-    currentFilterIds = new Set<string>();
-    private _sort?: MatSort;
+    currentFilterIds?: Set<string>;
     private chartTypeMetadata = new Map<
         string,
         { icon: string; label: string }
@@ -167,6 +170,7 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
                 this.currentFilterIds = filter?.activeElementIds;
                 this.applyChartFilters(this.currentFilterIds);
+                this.cdr.markForCheck();
             });
 
         this.dataSource.sortingDataAccessor = (chart, column) => {
@@ -186,20 +190,29 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
 
     getCharts(): void {
         this.isLoading = true;
-        this.dataViewService.getChartSummary().subscribe({
-            next: chartSummary => {
-                this.charts = chartSummary.resources
-                    .map(chart => this.toChartOverviewRow(chart))
-                    .sort((a, b) => a.name.localeCompare(b.name));
-                this.applyChartFilters(this.currentFilterIds);
-            },
-            complete: () => {
-                this.isLoading = false;
-            },
-            error: () => {
-                this.isLoading = false;
-            },
-        });
+        this.cdr.markForCheck();
+        this.dataViewService
+            .getChartSummary()
+            .pipe(
+                finalize(() => {
+                    this.isLoading = false;
+                    this.cdr.markForCheck();
+                }),
+            )
+            .subscribe({
+                next: chartSummary => {
+                    this.charts = chartSummary.resources
+                        .map(chart => this.toChartOverviewRow(chart))
+                        .sort((a, b) => a.name.localeCompare(b.name));
+                    this.hasLoadedCharts = true;
+                    this.applyChartFilters(this.currentFilterIds);
+                    this.cdr.markForCheck();
+                },
+                error: () => {
+                    this.hasLoadedCharts = true;
+                    this.cdr.markForCheck();
+                },
+            });
     }
 
     ngOnDestroy(): void {
@@ -306,7 +319,7 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
         });
     }
 
-    applyChartFilters(elementIds: Set<string>): void {
+    applyChartFilters(elementIds?: Set<string>): void {
         if (elementIds === undefined) {
             this.filteredCharts = [];
         } else if (elementIds.size === 0) {
@@ -315,9 +328,6 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
             this.filteredCharts = this.charts.filter(a =>
                 elementIds.has(a.elementId),
             );
-        }
-        if (this._sort) {
-            this.dataSource.sort = this._sort;
         }
         this.dataSource.data = this.filteredCharts;
     }
@@ -342,7 +352,8 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
             return cached;
         }
 
-        const template = this.chartRegistryService.getChartTemplate(widgetType);
+        const template =
+            this.chartRegistryService.getRegisteredChartSummary(widgetType);
         const metadata = {
             icon: template?.icon ?? 'insert_chart',
             label: template?.label ?? widgetType,
