@@ -94,7 +94,11 @@
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>
                         {{ '# Events (7d)' | translate }}
                     </th>
-                    <td mat-cell *matCellDef="let configurationEntry">
+                    <td
+                        mat-cell
+                        data-cy="datalake-number-of-events-latest"
+                        *matCellDef="let configurationEntry"
+                    >
                         @if (configurationEntry.eventsLatestLoading) {
                             <mat-spinner
                                 [diameter]="20"
@@ -139,6 +143,7 @@
                                     <sp-label
                                         tone="neutral"
                                         class="cursor-pointer"
+                                        data-cy="datalake-total-count-button"
                                         minWidth="100px"
                                         [labelText]="
                                             configurationEntry.eventsTotal
@@ -148,7 +153,8 @@
                                         (click)="
                                             receiveTotalMeasurementSize(
                                                 configurationEntry
-                                            )
+                                            );
+                                            $event.stopPropagation()
                                         "
                                     >
                                     </sp-label>
@@ -165,7 +171,8 @@
                                         (click)="
                                             receiveTotalMeasurementSize(
                                                 configurationEntry
-                                            )
+                                            );
+                                            $event.stopPropagation()
                                         "
                                     >
                                     </sp-label>
@@ -199,7 +206,8 @@
                                         (click)="
                                             openRetentionDialog(
                                                 configurationEntry.elementId
-                                            )
+                                            );
+                                            $event.stopPropagation()
                                         "
                                     >
                                         <i

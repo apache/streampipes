@@ -51,7 +51,13 @@
                             </th>
                             <td mat-cell *matCellDef="let row">
                                 <div class="runtime-name-row">
-                                    <div class="runtime-name">
+                                    <div
+                                        class="runtime-name"
+                                        [attr.data-cy]="
+                                            'dataset-details-schema-field-' +
+                                            row.runtimeName
+                                        "
+                                    >
                                         {{ row.runtimeName }}
                                     </div>
                                     <sp-property-scope-badge
@@ -75,7 +81,15 @@
                                 <strong>{{ 'Data type' | translate }}</strong>
                             </th>
                             <td mat-cell *matCellDef="let row">
-                                <div class="value">{{ row.dataType }}</div>
+                                <div
+                                    class="value"
+                                    [attr.data-cy]="
+                                        'dataset-details-schema-type-' +
+                                        row.runtimeName
+                                    "
+                                >
+                                    {{ row.dataType }}
+                                </div>
                             </td>
                         </ng-container>
 

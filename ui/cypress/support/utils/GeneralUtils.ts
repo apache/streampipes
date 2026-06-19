@@ -18,7 +18,7 @@
 
 export class GeneralUtils {
     public static tab(identifier: string) {
-        return cy.dataCy(`tab-${identifier}`).click();
+        return cy.get(`[data-cy="tab-${identifier}"]`).click();
     }
 
     public static openMenuForRow(rowText: string) {
