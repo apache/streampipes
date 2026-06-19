@@ -38,9 +38,9 @@ import org.apache.streampipes.model.pipeline.PipelineModificationResult;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.resource.management.PipelineResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
-import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.vocabulary.XSD;
 
 import org.junit.jupiter.api.Test;
@@ -71,15 +71,15 @@ class PipelineUpdateCoordinatorTest {
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
     var resourceManager = mock(SpResourceManager.class);
     var pipelineManager = mock(PipelineManager.class);
-    var coordinator = new PipelineUpdateCoordinator(
-        requestManager, resourceManager, chartSchemaUpdateCoordinator, pipelineManager);
+    var pipelineStorage = mock(IPipelineStorage.class);
+    var coordinator = makeCoordinator(
+        requestManager, resourceManager, chartSchemaUpdateCoordinator, pipelineManager, pipelineStorage);
     var dataStream = makeDataStream("stream-1", "Updated stream");
     var affectedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Old stream");
     var storedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Old stream");
     var modifiedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Updated stream");
 
     var modificationMessage = new PipelineModificationMessage(List.of(validModification("sepa-1")));
-    var pipelineStorage = mock(IPipelineStorage.class);
     var verifiedPipelines = new ArrayList<Pipeline>();
     when(pipelineManager.getPipelinesContainingElements("stream-1")).thenReturn(List.of(affectedPipeline));
     when(pipelineManager.getPipeline("pipeline-1")).thenReturn(storedPipeline, modifiedPipeline);
@@ -91,9 +91,6 @@ class PipelineUpdateCoordinatorTest {
                when(mock.makeModifiedPipeline(modificationMessage))
                    .thenReturn(new PipelineModificationResult(modifiedPipeline, List.of()));
              });
-         MockedConstruction<CouchDbStorageManager> storageManagerConstruction =
-             mockConstruction(CouchDbStorageManager.class, (mock, context) ->
-                 when(mock.getPipelineStorageAPI()).thenReturn(pipelineStorage));
          MockedConstruction<PipelineExecutor> executorConstruction =
              mockConstruction(PipelineExecutor.class)) {
 
@@ -107,7 +104,6 @@ class PipelineUpdateCoordinatorTest {
       assertEquals(2, executorConstruction.constructed().size());
       verify(executorConstruction.constructed().get(0)).stopPipeline(true);
       verify(executorConstruction.constructed().get(1)).startPipeline();
-      assertEquals(1, storageManagerConstruction.constructed().size());
       verify(pipelineStorage).updateElement(modifiedPipeline);
       verifyNoInteractions(chartSchemaUpdateCoordinator);
     }
@@ -119,8 +115,9 @@ class PipelineUpdateCoordinatorTest {
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
     var resourceManager = mock(SpResourceManager.class);
     var pipelineManager = mock(PipelineManager.class);
-    var coordinator = new PipelineUpdateCoordinator(
-        requestManager, resourceManager, chartSchemaUpdateCoordinator, pipelineManager);
+    var pipelineStorage = mock(IPipelineStorage.class);
+    var coordinator = makeCoordinator(
+        requestManager, resourceManager, chartSchemaUpdateCoordinator, pipelineManager, pipelineStorage);
     var adapterDescription = makeAdapter("stream-1", "Updated adapter");
     var storedPipeline = makePipeline("pipeline-1", "Pipeline", false, "stream-1", "Old stream");
     var modifiedPipeline = makePipeline("pipeline-1", "Pipeline", false, "stream-1", "Updated adapter");
@@ -128,7 +125,6 @@ class PipelineUpdateCoordinatorTest {
 
     var warning = PipelineElementValidationInfo.error("Schema mismatch");
     var modificationMessage = new PipelineModificationMessage(List.of(invalidModification("sepa-1", warning)));
-    var pipelineStorage = mock(IPipelineStorage.class);
     var verifiedPipelines = new ArrayList<Pipeline>();
     when(pipelineManager.getPipelinesContainingElements("stream-1")).thenReturn(List.of(storedPipeline));
     when(pipelineManager.getPipeline("pipeline-1")).thenReturn(storedPipeline);
@@ -140,9 +136,6 @@ class PipelineUpdateCoordinatorTest {
                when(mock.makeModifiedPipeline(modificationMessage))
                    .thenReturn(new PipelineModificationResult(modifiedPipeline, List.of()));
              });
-         MockedConstruction<CouchDbStorageManager> storageManagerConstruction =
-             mockConstruction(CouchDbStorageManager.class, (mock, context) ->
-                 when(mock.getPipelineStorageAPI()).thenReturn(pipelineStorage));
          MockedConstruction<PipelineExecutor> executorConstruction =
              mockConstruction(PipelineExecutor.class)) {
 
@@ -154,7 +147,6 @@ class PipelineUpdateCoordinatorTest {
       assertSame(adapterDescription.getEventSchema(), updatedPipeline.getStreams().get(0).getEventSchema());
 
       assertEquals(0, executorConstruction.constructed().size());
-      assertEquals(1, storageManagerConstruction.constructed().size());
       var pipelineCaptor = ArgumentCaptor.forClass(Pipeline.class);
       verify(pipelineStorage).updateElement(pipelineCaptor.capture());
       assertEquals(PipelineHealthStatus.REQUIRES_ATTENTION, pipelineCaptor.getValue().getHealthStatus());
@@ -170,8 +162,9 @@ class PipelineUpdateCoordinatorTest {
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
     var resourceManager = mock(SpResourceManager.class);
     var pipelineManager = mock(PipelineManager.class);
-    var coordinator = new PipelineUpdateCoordinator(
-        requestManager, resourceManager, chartSchemaUpdateCoordinator, pipelineManager);
+    var pipelineStorage = mock(IPipelineStorage.class);
+    var coordinator = makeCoordinator(
+        requestManager, resourceManager, chartSchemaUpdateCoordinator, pipelineManager, pipelineStorage);
     var adapterDescription = makeAdapter("stream-1", "Updated adapter");
     adapterDescription.getDataStream().setEventSchema(makeSchema(makeMeasurementProperty("temperature", XSD.STRING)));
 
@@ -183,7 +176,6 @@ class PipelineUpdateCoordinatorTest {
     var measurementUpdateInfo = PipelineElementValidationInfo.info(
         measurementUpdateRequiredMessage());
     var modificationMessage = new PipelineModificationMessage(List.of(validModification("sepa-1", measurementUpdateInfo)));
-    var pipelineStorage = mock(IPipelineStorage.class);
     when(pipelineManager.getPipelinesContainingElements("stream-1")).thenReturn(List.of(storedPipeline));
     when(pipelineManager.getPipeline("pipeline-1")).thenReturn(storedPipeline);
 
@@ -193,17 +185,12 @@ class PipelineUpdateCoordinatorTest {
                when(mock.makeModifiedPipeline(modificationMessage))
                    .thenReturn(new PipelineModificationResult(modifiedPipeline, List.of()));
              });
-         MockedConstruction<CouchDbStorageManager> storageManagerConstruction =
-             mockConstruction(CouchDbStorageManager.class, (mock, context) ->
-                 when(mock.getPipelineStorageAPI()).thenReturn(pipelineStorage));
          MockedConstruction<PipelineExecutor> executorConstruction =
              mockConstruction(PipelineExecutor.class)) {
 
       coordinator.updatePipelines(adapterDescription);
 
       assertEquals(1, verificationHandlerConstruction.constructed().size());
-      assertEquals(1, storageManagerConstruction.constructed().size());
-
       var pipelineCaptor = ArgumentCaptor.forClass(Pipeline.class);
       verify(pipelineStorage).updateElement(pipelineCaptor.capture());
       assertEquals(PipelineHealthStatus.HANDLE_MEASUREMENT_UPDATE, pipelineCaptor.getValue().getHealthStatus());
@@ -220,8 +207,13 @@ class PipelineUpdateCoordinatorTest {
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
     var resourceManager = mock(SpResourceManager.class);
     var pipelineManager = mock(PipelineManager.class);
-    var coordinator = new PipelineUpdateCoordinator(
-        requestManager, resourceManager, chartSchemaUpdateCoordinator, pipelineManager);
+    var coordinator = makeCoordinator(
+        requestManager,
+        resourceManager,
+        chartSchemaUpdateCoordinator,
+        pipelineManager,
+        mock(IPipelineStorage.class)
+    );
     var dataStream = makeDataStream("stream-1", "Updated stream");
     var pipeline = makePipeline("pipeline-1", "Pipeline", false, "stream-1", "Old stream");
     var modificationMessage = new PipelineModificationMessage(List.of(validModification("sepa-1")));
@@ -260,8 +252,13 @@ class PipelineUpdateCoordinatorTest {
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
     var resourceManager = mock(SpResourceManager.class);
     var pipelineManager = mock(PipelineManager.class);
-    var coordinator = new PipelineUpdateCoordinator(
-        requestManager, resourceManager, chartSchemaUpdateCoordinator, pipelineManager);
+    var coordinator = makeCoordinator(
+        requestManager,
+        resourceManager,
+        chartSchemaUpdateCoordinator,
+        pipelineManager,
+        mock(IPipelineStorage.class)
+    );
     var adapterDescription = makeAdapter("stream-1", "Updated adapter");
     var pipeline = makePipeline("pipeline-1", "Pipeline", false, "stream-1", "Old stream");
     pipeline.setSepas(List.of(makeSepa("sepa-1", "Processor")));
@@ -299,8 +296,13 @@ class PipelineUpdateCoordinatorTest {
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
     var resourceManager = mock(SpResourceManager.class);
     var pipelineManager = mock(PipelineManager.class);
-    var coordinator = new PipelineUpdateCoordinator(
-        requestManager, resourceManager, chartSchemaUpdateCoordinator, pipelineManager);
+    var coordinator = makeCoordinator(
+        requestManager,
+        resourceManager,
+        chartSchemaUpdateCoordinator,
+        pipelineManager,
+        mock(IPipelineStorage.class)
+    );
     var adapterDescription = makeAdapter("stream-1", "Updated adapter");
     adapterDescription.getDataStream().setEventSchema(makeSchema(makeMeasurementProperty("temperature", XSD.STRING)));
 
@@ -326,6 +328,22 @@ class PipelineUpdateCoordinatorTest {
       assertEquals(1, result.size());
       assertFalse(result.get(0).isCanAutoMigrate());
     }
+  }
+
+  private PipelineUpdateCoordinator makeCoordinator(ExtensionServiceRequestManager requestManager,
+                                                    SpResourceManager resourceManager,
+                                                    ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
+                                                    PipelineManager pipelineManager,
+                                                    IPipelineStorage pipelineStorage) {
+    var pipelineResourceManager = mock(PipelineResourceManager.class);
+    when(resourceManager.managePipelines()).thenReturn(pipelineResourceManager);
+    when(pipelineResourceManager.getDb()).thenReturn(pipelineStorage);
+    return new PipelineUpdateCoordinator(
+        requestManager,
+        resourceManager,
+        chartSchemaUpdateCoordinator,
+        pipelineManager
+    );
   }
 
   private SpDataStream makeDataStream(String elementId, String name) {
