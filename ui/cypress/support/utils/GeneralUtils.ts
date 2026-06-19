@@ -28,21 +28,25 @@ export class GeneralUtils {
             timeout: 10000,
         })
             .scrollIntoView()
+            .should('be.visible')
             .within(() => {
-                cy.dataCy('more-options').click({ force: true });
+                cy.dataCy('more-options')
+                    .should('be.visible')
+                    .and('not.be.disabled')
+                    .click({ force: true });
             });
 
-        GeneralUtils.visibleMaterialMenu().should('exist');
+        GeneralUtils.visibleMaterialMenu().should('be.visible');
     }
 
     public static closeVisibleMaterialMenu() {
         cy.get('body').type('{esc}', { force: true });
-        cy.get('.cdk-overlay-container .mat-mdc-menu-panel:visible').should(
-            'not.exist',
-        );
+        GeneralUtils.visibleMaterialMenu().should('not.exist');
     }
 
     public static visibleMaterialMenu() {
-        return cy.get('.cdk-overlay-container .mat-mdc-menu-panel:visible');
+        return cy.get(
+            '.cdk-overlay-container .mat-mdc-menu-panel, .cdk-overlay-container .mat-menu-panel',
+        );
     }
 }
