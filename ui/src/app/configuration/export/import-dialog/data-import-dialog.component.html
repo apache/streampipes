@@ -140,6 +140,14 @@
                     [exportItems]="importConfiguration.pipelines"
                     [sectionTitle]="'Pipelines' | translate"
                 ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="importConfiguration.labels"
+                    [sectionTitle]="'Labels' | translate"
+                ></sp-data-export-item>
+                <sp-data-export-item
+                    [exportItems]="importConfiguration.sites"
+                    [sectionTitle]="'Sites' | translate"
+                ></sp-data-export-item>
                 <sp-generic-storage-items
                     [exportItems]="importConfiguration.genericStorageDocuments"
                     [importMode]="true"

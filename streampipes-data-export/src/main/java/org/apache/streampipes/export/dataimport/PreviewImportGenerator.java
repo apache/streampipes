@@ -41,6 +41,8 @@ import java.util.function.Consumer;
 public class PreviewImportGenerator extends ImportGenerator<AssetExportConfiguration> {
 
   private static final Logger LOG = LoggerFactory.getLogger(PreviewImportGenerator.class);
+  private static final String LABEL_FIELD = "label";
+
   private final AssetExportConfiguration importConfig;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
 
@@ -121,7 +123,19 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   }
 
   @Override
-  protected void handleGenericStorageDocument(String document, String genericDocId) throws JsonProcessingException {
+  protected void handleLabel(String document, String labelId) throws JsonProcessingException {
+    addExportItem(labelId, getGenericStorageDocumentLabel(document, labelId),
+        importConfig::addLabel);
+  }
+
+  @Override
+  protected void handleSite(String document, String siteId) throws JsonProcessingException {
+    addExportItem(siteId, getGenericStorageDocumentLabel(document, siteId),
+        importConfig::addSite);
+  }
+
+  @Override
+  protected void handleGenericStorageDocument(String document, String genericDocId) {
     addExportItem(genericDocId, genericDocId, importConfig::addGenericStorageDocument);
   }
 
@@ -132,5 +146,11 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
 
   @Override
   protected void afterResourcesCreated() {
+  }
+
+  private String getGenericStorageDocumentLabel(String document, String genericDocId) throws JsonProcessingException {
+    Map<String, Object> genericStorageDocument = this.defaultMapper.readValue(document, new TypeReference<>() {
+    });
+    return String.valueOf(genericStorageDocument.getOrDefault(LABEL_FIELD, genericDocId));
   }
 }

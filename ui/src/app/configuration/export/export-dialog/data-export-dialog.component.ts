@@ -19,7 +19,10 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
-import { ExportConfiguration } from '@streampipes/platform-services';
+import {
+    ExportConfiguration,
+    ExportItem,
+} from '@streampipes/platform-services';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -55,6 +58,12 @@ export class SpDataExportDialogComponent implements OnInit {
     @Input()
     selectedAssets: string[];
 
+    @Input()
+    referencedLabels: ExportItem[] = [];
+
+    @Input()
+    referencedSites: ExportItem[] = [];
+
     preview: ExportConfiguration;
     exportInProgress = false;
 
@@ -72,6 +81,7 @@ export class SpDataExportDialogComponent implements OnInit {
 
     generateDownloadPackage(): void {
         this.exportInProgress = true;
+        this.addReferencedAssetDocuments(this.preview);
         this.dataExportService.triggerExport(this.preview).subscribe(result => {
             this.downloadFile(result);
         });
@@ -91,5 +101,34 @@ export class SpDataExportDialogComponent implements OnInit {
 
         window.URL.revokeObjectURL(url);
         this.dialogRef.close();
+    }
+
+    private addReferencedAssetDocuments(preview: ExportConfiguration): void {
+        const firstAssetExportConfig = preview.assetExportConfiguration?.[0];
+
+        if (firstAssetExportConfig) {
+            firstAssetExportConfig.labels = this.mergeExportItems(
+                firstAssetExportConfig.labels,
+                this.referencedLabels,
+            );
+            firstAssetExportConfig.sites = this.mergeExportItems(
+                firstAssetExportConfig.sites,
+                this.referencedSites,
+            );
+        }
+    }
+
+    private mergeExportItems(
+        existingItems: ExportItem[] = [],
+        newItems: ExportItem[],
+    ): ExportItem[] {
+        const existingItemIds = new Set(
+            existingItems.map(item => item.resourceId),
+        );
+        const missingItems = newItems.filter(
+            item => !existingItemIds.has(item.resourceId),
+        );
+
+        return [...existingItems, ...missingItems];
     }
 }

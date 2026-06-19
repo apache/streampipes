@@ -73,6 +73,6 @@ export class LivePreviewTableComponent implements OnInit {
     ngOnInit() {
         this.displayedColumns = this.compact
             ? ['runtimeName', 'value']
-            : ['runtimeName', 'label', 'description', 'value'];
+            : ['runtimeName', 'label', 'dataType', 'description', 'value'];
     }
 }
