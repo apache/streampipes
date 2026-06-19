@@ -27,6 +27,7 @@ import { Injectable } from '@angular/core';
 import { TimeSeriesChartWidgetModel } from './model/time-series-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-renderer';
+import { ResultLabelService } from '../../../services/result-label.service';
 import {
     GeneratedDataset,
     TagValue,
@@ -44,6 +45,10 @@ import type { FieldUpdateInfo } from '../../../models/field-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSeriesChartWidgetModel> {
+    constructor(private resultLabelService: ResultLabelService) {
+        super();
+    }
+
     applyOptions(
         generatedDataset: GeneratedDataset,
         options: EChartsOption,
@@ -71,10 +76,16 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                     const rawDatasetDimensions = dataset.rawDataset.dimensions;
                     const groupIndex = i - dataset.meta.preparedDataStartIndex;
                     const tag = dataset.tagValues[groupIndex];
-                    const displayName =
+                    const legacyDisplayName =
                         widgetConfig.visualizationConfig.displayName[
                             field.fullDbName + field.sourceIndex
                         ];
+                    const displayName = this.resultLabelService.resolveLabel(
+                        widgetConfig.dataConfig.sourceConfigs[field.sourceIndex]
+                            .queryConfig,
+                        field,
+                        legacyDisplayName,
+                    );
                     const mappedGroupLabel = this.colorizationService.findLabel(
                         widgetConfig.visualizationConfig,
                         field,

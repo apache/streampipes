@@ -17,6 +17,7 @@
  */
 
 import { ChartUtils } from '../../../support/utils/chart/ChartUtils';
+import { ChartBtns } from '../../../support/utils/chart/ChartBtns';
 import { ChartWidgetTableUtils } from '../../../support/utils/chart/ChartWidgetTableUtils';
 import { ChartWidget } from '../../../support/model/ChartWidget';
 import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtils';
@@ -34,5 +35,22 @@ describe('Test Table View in Charts', () => {
 
         // Check if table is displayed correctly
         ChartWidgetTableUtils.checkAmountOfRows(10);
+    });
+
+    it('Renames table field labels', () => {
+        ChartUtils.addDataViewAndWidget(
+            PrepareTestDataUtils.dataName,
+            ChartWidget.TABLE,
+        );
+
+        ChartUtils.selectDataConfig();
+        ChartBtns.resultLabelInput('randomnumber')
+            .clear()
+            .type('Random Number Label');
+
+        ChartWidgetTableUtils.checkHeaderLabel(
+            'randomnumber',
+            'Random Number Label',
+        );
     });
 });

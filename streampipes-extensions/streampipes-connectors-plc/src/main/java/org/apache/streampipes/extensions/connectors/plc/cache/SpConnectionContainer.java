@@ -50,6 +50,7 @@ public class SpConnectionContainer {
   private PlcConnection connection;
   private SpLeasedPlcConnection leasedConnection;
   private Timer idleTimer;
+  private boolean closed;
 
   public SpConnectionContainer(PlcConnectionManager connectionManager, String connectionUrl,
                                Duration maxLeaseTime, Duration maxIdleTime,
@@ -62,9 +63,12 @@ public class SpConnectionContainer {
     this.queue = new LinkedList<>();
     this.connection = null;
     this.leasedConnection = null;
+    this.closed = false;
   }
 
   public synchronized void close() {
+    closed = true;
+
     // Close all waiting clients exceptionally.
     queue.forEach(plcConnectionCompletableFuture ->
         plcConnectionCompletableFuture.completeExceptionally(new PlcConnectionManagerClosedException()));
@@ -99,6 +103,11 @@ public class SpConnectionContainer {
 
   public synchronized Future<PlcConnection> lease() {
     CompletableFuture<PlcConnection> connectionFuture = new CompletableFuture<>();
+
+    if (closed) {
+      connectionFuture.completeExceptionally(new PlcConnectionManagerClosedException());
+      return connectionFuture;
+    }
 
     // Try to get a new connection, if we haven't got one yet.
     if (connection == null) {
@@ -147,6 +156,14 @@ public class SpConnectionContainer {
       throw new PlcRuntimeException("Error trying to return lease from invalid connection");
     }
 
+    if (closed) {
+      leasedConnection = null;
+      connection = null;
+      queue.forEach(future -> future.completeExceptionally(new PlcConnectionManagerClosedException()));
+      queue.clear();
+      return;
+    }
+
     // If something happened while using the connection, invalidate this one and create a new connection.
     if (invalidateConnection) {
       // Close the old connection.
@@ -180,14 +197,7 @@ public class SpConnectionContainer {
       idleTimer.schedule(new TimerTask() {
         @Override
         public void run() {
-          if (connection != null) {
-            try {
-              connection.close();
-            } catch (Exception e) {
-              // Ignore ...
-            }
-          }
-          closeConnectionHandler.apply(connectionUrl);
+          closeIdleConnection();
         }
       }, maxIdleTime.toMillis());
       return;
@@ -206,6 +216,29 @@ public class SpConnectionContainer {
     CompletableFuture<PlcConnection> leaseFuture = queue.poll();
     if (leaseFuture != null) {
       leaseFuture.complete(leasedConnection);
+    }
+  }
+
+  private void closeIdleConnection() {
+    PlcConnection connectionToClose;
+    synchronized (this) {
+      if (closed || leasedConnection != null || connection == null) {
+        return;
+      }
+
+      closed = true;
+      connectionToClose = connection;
+      connection = null;
+      idleTimer = null;
+      queue.forEach(future -> future.completeExceptionally(new PlcConnectionManagerClosedException()));
+      queue.clear();
+    }
+
+    closeConnectionHandler.apply(connectionUrl);
+    try {
+      connectionToClose.close();
+    } catch (Exception e) {
+      // Ignore ...
     }
   }
 
@@ -232,4 +265,3 @@ public class SpConnectionContainer {
 
 
 }
-

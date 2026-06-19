@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.connectors.plc.adapter;
 
+import org.apache.streampipes.extensions.connectors.plc.cache.SpCachedPlcConnectionManager;
 import org.apache.streampipes.extensions.connectors.plc.cache.SpConnectionContainer;
 import org.apache.streampipes.extensions.connectors.plc.cache.SpLeasedPlcConnection;
 
@@ -34,12 +35,16 @@ import org.apache.plc4x.java.api.messages.PlcWriteRequest;
 import org.apache.plc4x.java.api.metadata.PlcConnectionMetadata;
 import org.apache.plc4x.java.api.model.PlcTag;
 import org.apache.plc4x.java.api.value.PlcValue;
+import org.apache.plc4x.java.utils.cache.exceptions.PlcConnectionManagerClosedException;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,6 +52,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ConnectionContainerReproTest {
 
@@ -134,6 +140,27 @@ class ConnectionContainerReproTest {
     // implement other methods as no-ops if your interface requires them
   }
 
+  static class BlockingCloseConnection extends DummyConnection {
+    private final CountDownLatch closeStarted;
+    private final CountDownLatch releaseClose;
+
+    BlockingCloseConnection(CountDownLatch closeStarted,
+                            CountDownLatch releaseClose) {
+      this.closeStarted = closeStarted;
+      this.releaseClose = releaseClose;
+    }
+
+    @Override
+    public void close() {
+      closeStarted.countDown();
+      try {
+        releaseClose.await(5, TimeUnit.SECONDS);
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
+    }
+  }
+
   @Test
   void recoversAfterFailedReconnectAndServesNewLeases() throws Exception {
     FlakyManager mgr = new FlakyManager();
@@ -165,5 +192,148 @@ class ConnectionContainerReproTest {
     cc.returnConnection((SpLeasedPlcConnection) lease2, false);
     PlcConnection lease3 = cc.lease().get(500, TimeUnit.MILLISECONDS);
     assertNotNull(lease3);
+  }
+
+  @Test
+  void removingSlowConnectionDoesNotBlockLeasesForOtherUrls() throws Exception {
+    var closeStarted = new CountDownLatch(1);
+    var releaseClose = new CountDownLatch(1);
+    PlcConnectionManager manager = new PlcConnectionManager() {
+      @Override
+      public PlcConnection getConnection(String url) {
+        if ("mock://slow".equals(url)) {
+          return new BlockingCloseConnection(closeStarted, releaseClose);
+        }
+        return new DummyConnection();
+      }
+
+      @Override
+      public PlcConnection getConnection(String url,
+                                         PlcAuthentication authentication) {
+        return null;
+      }
+    };
+
+    var cachedConnectionManager = new SpCachedPlcConnectionManager(
+        manager,
+        Duration.ofSeconds(30),
+        Duration.ofSeconds(30),
+        Duration.ofSeconds(30)
+    );
+
+    cachedConnectionManager.getConnection("mock://slow");
+
+    ExecutorService removeExecutor = Executors.newSingleThreadExecutor();
+    ExecutorService leaseExecutor = Executors.newSingleThreadExecutor();
+    try {
+      Future<?> removeFuture = removeExecutor.submit(
+          () -> cachedConnectionManager.removeCachedConnection("mock://slow"));
+      assertTrue(closeStarted.await(500, TimeUnit.MILLISECONDS));
+
+      Future<PlcConnection> otherLease = leaseExecutor.submit(
+          () -> cachedConnectionManager.getConnection("mock://other"));
+      assertNotNull(otherLease.get(500, TimeUnit.MILLISECONDS));
+
+      releaseClose.countDown();
+      removeFuture.get(500, TimeUnit.MILLISECONDS);
+    } finally {
+      releaseClose.countDown();
+      removeExecutor.shutdownNow();
+      leaseExecutor.shutdownNow();
+    }
+  }
+
+  @Test
+  void doesNotLeaseConnectionWhileIdleConnectionIsClosing() throws Exception {
+    var closeStarted = new CountDownLatch(1);
+    var releaseClose = new CountDownLatch(1);
+    var removeCalled = new CountDownLatch(1);
+    PlcConnectionManager manager = new PlcConnectionManager() {
+      @Override
+      public PlcConnection getConnection(String url) {
+        return new BlockingCloseConnection(closeStarted, releaseClose);
+      }
+
+      @Override
+      public PlcConnection getConnection(String url,
+                                         PlcAuthentication authentication) {
+        return null;
+      }
+    };
+    var connectionContainer = new SpConnectionContainer(
+        manager,
+        "mock://idle",
+        Duration.ofSeconds(30),
+        Duration.ofMillis(10),
+        url -> {
+          removeCalled.countDown();
+          return null;
+        }
+    );
+
+    SpLeasedPlcConnection lease =
+        (SpLeasedPlcConnection) connectionContainer.lease().get(500, TimeUnit.MILLISECONDS);
+    connectionContainer.returnConnection(lease, false);
+
+    try {
+      assertTrue(closeStarted.await(500, TimeUnit.MILLISECONDS));
+
+      ExecutionException exception = assertThrows(
+          ExecutionException.class,
+          () -> connectionContainer.lease().get(500, TimeUnit.MILLISECONDS)
+      );
+      assertTrue(exception.getCause() instanceof PlcConnectionManagerClosedException);
+
+      releaseClose.countDown();
+      assertTrue(removeCalled.await(500, TimeUnit.MILLISECONDS));
+    } finally {
+      releaseClose.countDown();
+    }
+  }
+
+  @Test
+  void idleCloseDoesNotRemoveReplacementContainer() throws Exception {
+    var closeStarted = new CountDownLatch(1);
+    var releaseClose = new CountDownLatch(1);
+    var connectionAttempts = new AtomicInteger();
+    PlcConnectionManager manager = new PlcConnectionManager() {
+      @Override
+      public PlcConnection getConnection(String url) {
+        if (connectionAttempts.incrementAndGet() == 1) {
+          return new BlockingCloseConnection(closeStarted, releaseClose);
+        }
+        return new DummyConnection();
+      }
+
+      @Override
+      public PlcConnection getConnection(String url,
+                                         PlcAuthentication authentication) {
+        return null;
+      }
+    };
+
+    var cachedConnectionManager = new SpCachedPlcConnectionManager(
+        manager,
+        Duration.ofSeconds(30),
+        Duration.ofSeconds(30),
+        Duration.ofMillis(10)
+    );
+    PlcConnection firstLease = cachedConnectionManager.getConnection("mock://idle");
+    firstLease.close();
+
+    try {
+      assertTrue(closeStarted.await(500, TimeUnit.MILLISECONDS));
+
+      PlcConnection replacementLease = cachedConnectionManager.getConnection("mock://idle");
+      assertNotNull(replacementLease);
+      assertTrue(cachedConnectionManager.getCachedConnections().contains("mock://idle"));
+
+      releaseClose.countDown();
+      assertTrue(cachedConnectionManager.getCachedConnections().contains("mock://idle"));
+      replacementLease.close();
+    } finally {
+      releaseClose.countDown();
+      cachedConnectionManager.removeCachedConnection("mock://idle");
+    }
   }
 }

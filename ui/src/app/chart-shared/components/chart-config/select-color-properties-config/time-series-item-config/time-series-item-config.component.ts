@@ -41,6 +41,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ColorMappingOptionsConfigComponent } from '../../color-mapping-options-config/color-mapping-options-config.component';
 import { LayoutDirective } from '@ngbracket/ngx-layout';
+import { ResultLabelService } from '../../../../services/result-label.service';
 
 @Component({
     selector: 'sp-time-series-item-config',
@@ -68,6 +69,8 @@ import { LayoutDirective } from '@ngbracket/ngx-layout';
     ],
 })
 export class SpTimeseriesItemConfigComponent {
+    constructor(private resultLabelService: ResultLabelService) {}
+
     @Input()
     field: DataExplorerField;
 
@@ -124,14 +127,31 @@ export class SpTimeseriesItemConfigComponent {
     }
 
     onDisplayNameChange(searchValue: string, field: DataExplorerField): void {
-        this.currentlyConfiguredWidget.visualizationConfig.displayName[
-            field.fullDbName + field.sourceIndex.toString()
-        ] = searchValue;
+        this.resultLabelService.setOverride(
+            this.currentlyConfiguredWidget.dataConfig.sourceConfigs[
+                field.sourceIndex
+            ].queryConfig,
+            field,
+            searchValue,
+            field.fullDbName,
+        );
         this.viewRefreshEmitter.emit();
     }
 
     getFieldKey(field: DataExplorerField): string {
         return field.fullDbName + field.sourceIndex.toString();
+    }
+
+    getDisplayName(field: DataExplorerField): string {
+        return this.resultLabelService.resolveLabel(
+            this.currentlyConfiguredWidget.dataConfig.sourceConfigs[
+                field.sourceIndex
+            ].queryConfig,
+            field,
+            this.currentlyConfiguredWidget.visualizationConfig.displayName[
+                this.getFieldKey(field)
+            ],
+        );
     }
 
     hasGrouping(field: DataExplorerField): boolean {

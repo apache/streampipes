@@ -193,6 +193,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public BooleanEnvironmentVariable getResetEndpointEnabled() {
+    return new BooleanEnvironmentVariable(Envs.SP_RESET_ENDPOINT_ENABLED);
+  }
+
+  @Override
   public List<OAuthConfiguration> getOAuthConfigurations() {
     return new OAuthConfigurationParser().parse(System.getenv());
   }

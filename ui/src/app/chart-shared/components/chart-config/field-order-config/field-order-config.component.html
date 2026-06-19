@@ -1,0 +1,90 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-split-section [level]="3" [title]="sectionTitle | translate">
+    <div
+        fxLayout="column"
+        class="selected-field-list"
+        cdkDropList
+        [cdkDropListData]="selectedFields"
+        (cdkDropListDropped)="dropSelectedField($event)"
+    >
+        @for (field of selectedFields; track fieldKey(field); let i = $index) {
+            <div
+                class="selected-field-row"
+                fxLayout="row"
+                fxLayoutAlign="space-between center"
+                cdkDrag
+            >
+                <div
+                    class="selected-field-main"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                >
+                    <button
+                        mat-icon-button
+                        type="button"
+                        class="selected-field-drag-handle"
+                        cdkDragHandle
+                        [attr.aria-label]="
+                            'Reorder ' + field.runtimeName | translate
+                        "
+                    >
+                        <mat-icon>drag_indicator</mat-icon>
+                    </button>
+                    <div class="selected-field-label">
+                        {{ selectedFieldLabel(field) }}
+                    </div>
+                </div>
+                <div
+                    class="selected-field-actions"
+                    fxLayout="row"
+                    fxLayoutAlign="end center"
+                >
+                    <button
+                        mat-icon-button
+                        type="button"
+                        [disabled]="!canMoveSelectedFieldUp(i)"
+                        [attr.aria-label]="
+                            'Move ' + field.runtimeName + ' up' | translate
+                        "
+                        (click)="moveSelectedField(i, -1)"
+                    >
+                        <mat-icon>arrow_upward</mat-icon>
+                    </button>
+                    <button
+                        mat-icon-button
+                        type="button"
+                        [disabled]="!canMoveSelectedFieldDown(i)"
+                        [attr.aria-label]="
+                            'Move ' + field.runtimeName + ' down' | translate
+                        "
+                        (click)="moveSelectedField(i, 1)"
+                    >
+                        <mat-icon>arrow_downward</mat-icon>
+                    </button>
+                </div>
+            </div>
+        } @empty {
+            <sp-alert-banner
+                type="info"
+                [title]="emptyMessage | translate"
+            ></sp-alert-banner>
+        }
+    </div>
+</sp-split-section>

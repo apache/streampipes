@@ -75,7 +75,12 @@ import {
     MatSuffix,
 } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { Subscription } from 'rxjs';
+import {
+    debounceTime,
+    distinctUntilChanged,
+    Subject,
+    Subscription,
+} from 'rxjs';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { SpAssetBrowserService } from '../asset-browser/asset-browser.service';
 import { SpLabelComponent } from '../sp-label/sp-label.component';
@@ -207,6 +212,7 @@ export class SpTableComponent<T>
     viewMode: SpTableGroupViewMode = 'list';
     groupBy: SpTableGroupingMode = 'asset';
     groupedSections: SpTableGroupedSection<T>[] = [];
+    renderedGroupedRows: SpTableRenderedRow<T>[] = [];
 
     readonly selection = new SelectionModel<T>(true, []);
 
@@ -216,6 +222,8 @@ export class SpTableComponent<T>
     private assetContextService = inject(SpTableAssetContextService);
     private renderedDataSubscription?: Subscription;
     private assetDataSubscription?: Subscription;
+    private nameSearchSubscription?: Subscription;
+    private nameSearchInput$ = new Subject<string>();
     private viewInitialized = false;
     private defaultFilterPredicates = new WeakMap<
         MatTableDataSource<T>,
@@ -241,6 +249,9 @@ export class SpTableComponent<T>
                 this.applyAssetContextSortingAccessor();
                 this.refreshRenderedRows();
             });
+        this.nameSearchSubscription = this.nameSearchInput$
+            .pipe(debounceTime(150), distinctUntilChanged())
+            .subscribe(value => this.applyNameSearchFilter(value));
         this.updateCompactLayout();
     }
 
@@ -300,6 +311,7 @@ export class SpTableComponent<T>
     ngOnDestroy() {
         this.renderedDataSubscription?.unsubscribe();
         this.assetDataSubscription?.unsubscribe();
+        this.nameSearchSubscription?.unsubscribe();
     }
 
     @HostListener('window:resize')
@@ -357,16 +369,7 @@ export class SpTableComponent<T>
 
     get renderedDataSource(): MatTableDataSource<T> | SpTableRenderedRow<T>[] {
         return this.viewMode === 'grouped'
-            ? this.groupedSections.flatMap(section => [
-                  {
-                      __spGroupHeader: true as const,
-                      id: section.id,
-                      title: section.title,
-                      color: section.color,
-                      count: section.count,
-                  },
-                  ...section.rows,
-              ])
+            ? this.renderedGroupedRows
             : this.dataSource;
     }
 
@@ -510,13 +513,29 @@ export class SpTableComponent<T>
 
     onNameSearchInput(value: string) {
         this.nameSearchTerm = value;
+        this.nameSearchInput$.next(value);
+    }
+
+    private applyNameSearchFilter(value: string) {
         if (!this.dataSource) {
             return;
         }
 
-        this.dataSource.filter = value.trim().toLocaleLowerCase();
-        this.paginator?.firstPage();
-        this.refreshRenderedRows();
+        if (!this.shouldShowNameSearch) {
+            this.dataSource.filter = '';
+            return;
+        }
+
+        const normalizedFilter = value.trim().toLocaleLowerCase();
+        if (this.dataSource.filter === normalizedFilter) {
+            return;
+        }
+
+        if (this.paginator && this.paginator.pageIndex !== 0) {
+            this.paginator.pageIndex = 0;
+        }
+
+        this.dataSource.filter = normalizedFilter;
     }
 
     clearNameSearch() {
@@ -723,6 +742,7 @@ export class SpTableComponent<T>
     private rebuildGroupedSections(rows: T[]) {
         if (!this.assetContextConfig || this.viewMode !== 'grouped') {
             this.groupedSections = [];
+            this.renderedGroupedRows = [];
             return;
         }
 
@@ -749,6 +769,16 @@ export class SpTableComponent<T>
                 ...group,
                 rows: [...group.rows],
             }));
+        this.renderedGroupedRows = this.groupedSections.flatMap(section => [
+            {
+                __spGroupHeader: true as const,
+                id: section.id,
+                title: section.title,
+                color: section.color,
+                count: section.count,
+            },
+            ...section.rows,
+        ]);
     }
 
     private resolveGroups(

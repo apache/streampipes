@@ -61,6 +61,12 @@ import { StatusWidgetConfigComponent } from '../components/charts/status/config/
 import { StatusWidgetComponent } from '../components/charts/status/status-widget.component';
 import { IndicatorWidgetComponent } from '../components/charts/indicator/indicator-widget.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ValueCardWidgetComponent } from '../components/charts/value-card/value-card-widget.component';
+import { ValueCardWidgetConfigComponent } from '../components/charts/value-card/config/value-card-widget-config.component';
+import { ValueCardWidgetAppearanceConfigComponent } from '../components/charts/value-card/appearance-config/value-card-appearance-config.component';
+import { ProgressBarWidgetComponent } from '../components/charts/progress-bar/progress-bar-widget.component';
+import { ProgressBarWidgetConfigComponent } from '../components/charts/progress-bar/config/progress-bar-widget-config.component';
+import { ProgressBarWidgetAppearanceConfigComponent } from '../components/charts/progress-bar/appearance-config/progress-bar-appearance-config.component';
 
 @Injectable({ providedIn: 'root' })
 export class ChartRegistry {
@@ -76,6 +82,8 @@ export class ChartRegistry {
     private translateService = inject(TranslateService);
 
     chartTypes: IWidget<any>[] = [];
+    registeredChartSummary: Record<string, { icon: string; label: string }> =
+        {};
 
     constructor() {
         this.chartTypes = [
@@ -186,6 +194,30 @@ export class ChartRegistry {
                 description: this.translateService.instant('Display an image'),
             },
             {
+                id: 'value-card',
+                label: this.translateService.instant('Value Card'),
+                widgetAppearanceConfigurationComponent:
+                    ValueCardWidgetAppearanceConfigComponent,
+                widgetConfigurationComponent: ValueCardWidgetConfigComponent,
+                widgetComponent: ValueCardWidgetComponent,
+                icon: 'view_agenda',
+                description: this.translateService.instant(
+                    'Display the latest values of multiple selected fields in a single card',
+                ),
+            },
+            {
+                id: 'progress-bar',
+                label: this.translateService.instant('Progress Bar'),
+                widgetAppearanceConfigurationComponent:
+                    ProgressBarWidgetAppearanceConfigComponent,
+                widgetConfigurationComponent: ProgressBarWidgetConfigComponent,
+                widgetComponent: ProgressBarWidgetComponent,
+                icon: 'linear_scale',
+                description: this.translateService.instant(
+                    'Display the progress of a numeric value against a target',
+                ),
+            },
+            {
                 id: 'indicator-chart',
                 label: this.translateService.instant('Indicator'),
                 widgetAppearanceConfigurationComponent:
@@ -273,10 +305,22 @@ export class ChartRegistry {
                 ),
             },
         ];
+        this.makeChartSummary();
+    }
+
+    private makeChartSummary() {
+        this.registeredChartSummary = {};
+        this.chartTypes.forEach(c => {
+            this.registeredChartSummary[c.id] = {
+                label: c.label,
+                icon: c.icon,
+            };
+        });
     }
 
     registerChart(chart: IWidget<any>): void {
         this.chartTypes.push(chart);
+        this.makeChartSummary();
     }
 
     getAvailableChartTemplates(): IWidget<any>[] {
@@ -293,6 +337,13 @@ export class ChartRegistry {
     getChartType(chartId: string) {
         // for backwards compatibility in v0.95.0, we return either the ID or the new ID based on the alias
         return this.getChartTemplate(chartId).id;
+    }
+
+    getRegisteredChartSummary(chartId: string): {
+        icon: string;
+        label: string;
+    } {
+        return this.registeredChartSummary[chartId];
     }
 
     private findBackwardsCompatibleChart(chartId: string): IWidget<any> {
