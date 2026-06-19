@@ -18,6 +18,7 @@
 
 import { Component, inject } from '@angular/core';
 import {
+    ConfirmDialogAction,
     ConfirmDialogComponent,
     DialogService,
     ObjectManageDialogComponent,
@@ -27,7 +28,11 @@ import {
     SpAssetBrowserService,
     SpBasicViewComponent,
 } from '@streampipes/shared-ui';
-import { Router } from '@angular/router';
+import {
+    ActivatedRouteSnapshot,
+    Router,
+    RouterStateSnapshot,
+} from '@angular/router';
 import { BaseAssetDetailsDirective } from '../base-asset-details.directive';
 import { SpAssetSelectionPanelComponent } from './asset-selection-panel/asset-selection-panel.component';
 import {
@@ -41,11 +46,13 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import {
-    SpAssetModel,
     PermissionsService,
+    SpAssetModel,
 } from '@streampipes/platform-services';
 import { MatDialog } from '@angular/material/dialog';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, from, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { SupportsUnsavedChangeDialog } from '../../../../chart-shared/models/dataview-dashboard.model';
 
 type ManageableAsset = SpAssetModel & {
     name: string;
@@ -71,7 +78,10 @@ type ManageableAsset = SpAssetModel & {
         TranslatePipe,
     ],
 })
-export class SpAssetDetailsComponent extends BaseAssetDetailsDirective {
+export class SpAssetDetailsComponent
+    extends BaseAssetDetailsDirective
+    implements SupportsUnsavedChangeDialog
+{
     private router = inject(Router);
     private assetBrowserService = inject(SpAssetBrowserService);
     private dialog = inject(MatDialog);
@@ -80,13 +90,14 @@ export class SpAssetDetailsComponent extends BaseAssetDetailsDirective {
     private permissionsService = inject(PermissionsService);
 
     private pendingManageAssetResult?: ObjectManageDialogResult<ManageableAsset>;
+    private originalAsset: SpAssetModel;
 
     async saveAsset() {
-        this.cleanupEmpty();
-        await firstValueFrom(this.assetService.updateAsset(this.asset));
-        await this.savePendingManageAssetChanges();
+        await this.saveAssetChanges();
         this.assetBrowserService.refreshBrowserAssetData();
-        this.router.navigate(['assets']);
+        this.router.navigate(['assets'], {
+            state: { omitConfirm: true },
+        });
     }
 
     cleanupEmpty(): void {
@@ -153,13 +164,62 @@ export class SpAssetDetailsComponent extends BaseAssetDetailsDirective {
                     .deleteAsset(this.asset.elementId)
                     .subscribe(() => {
                         this.assetBrowserService.refreshBrowserAssetData();
-                        this.router.navigate(['assets']);
+                        this.router.navigate(['assets'], {
+                            state: { omitConfirm: true },
+                        });
                     });
             }
         });
     }
 
-    onAssetAvailable() {}
+    confirmLeaveDialog(
+        _route: ActivatedRouteSnapshot,
+        _state: RouterStateSnapshot,
+    ): Observable<boolean> {
+        if (this.setShouldShowConfirm()) {
+            const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+                width: '500px',
+                data: {
+                    title: this.translateService.instant('Save changes?'),
+                    subtitle: this.translateService.instant(
+                        'Update all changes to asset or discard current changes.',
+                    ),
+                    neutralTitle: this.translateService.instant('Keep editing'),
+                    cancelTitle:
+                        this.translateService.instant('Discard changes'),
+                    confirmTitle: this.translateService.instant('Update'),
+                },
+            });
+            return dialogRef.afterClosed().pipe(
+                switchMap((dialogResult: ConfirmDialogAction | undefined) => {
+                    if (dialogResult === 'confirm') {
+                        return from(this.saveAssetChanges()).pipe(
+                            map(() => true),
+                        );
+                    }
+
+                    if (dialogResult === 'cancel') {
+                        return of(true);
+                    }
+
+                    return of(false);
+                }),
+            );
+        } else {
+            return of(true);
+        }
+    }
+
+    setShouldShowConfirm(): boolean {
+        return (
+            this.pendingManageAssetResult !== undefined ||
+            this.hasAssetChanged()
+        );
+    }
+
+    onAssetAvailable() {
+        this.originalAsset = this.cloneAsset(this.asset);
+    }
 
     private makeManageableAsset(asset: SpAssetModel): ManageableAsset {
         return {
@@ -178,6 +238,13 @@ export class SpAssetDetailsComponent extends BaseAssetDetailsDirective {
         };
     }
 
+    private async saveAssetChanges(): Promise<void> {
+        this.cleanupEmpty();
+        await firstValueFrom(this.assetService.updateAsset(this.asset));
+        await this.savePendingManageAssetChanges();
+        this.originalAsset = this.cloneAsset(this.asset);
+    }
+
     private async savePendingManageAssetChanges(): Promise<void> {
         const result = this.pendingManageAssetResult;
         if (!result) {
@@ -191,5 +258,20 @@ export class SpAssetDetailsComponent extends BaseAssetDetailsDirective {
         }
 
         this.pendingManageAssetResult = undefined;
+    }
+
+    private hasAssetChanged(): boolean {
+        if (!this.originalAsset || !this.asset) {
+            return false;
+        }
+
+        return (
+            JSON.stringify(this.originalAsset) !==
+            JSON.stringify(this.cloneAsset(this.asset))
+        );
+    }
+
+    private cloneAsset(asset: SpAssetModel): SpAssetModel {
+        return JSON.parse(JSON.stringify(asset));
     }
 }
