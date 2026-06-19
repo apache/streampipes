@@ -23,24 +23,24 @@ import {
     RouterStateSnapshot,
     UrlTree,
 } from '@angular/router';
-import { LoginService } from '../../../login/services/login.service';
+import { LoginSettingsService } from '../../../login/services/login-settings.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class RegistrationAllowedCanActivateGuard {
     private router = inject(Router);
-    private loginService = inject(LoginService);
+    private loginSettingsService = inject(LoginSettingsService);
 
     canActivate(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
+        _route: ActivatedRouteSnapshot,
+        _state: RouterStateSnapshot,
     ):
         | Observable<boolean | UrlTree>
         | Promise<boolean | UrlTree>
         | boolean
         | UrlTree {
-        return this.loginService.fetchLoginSettings().pipe(
+        return this.loginSettingsService.getSettings().pipe(
             map(config => {
                 return config.allowSelfRegistration
                     ? true

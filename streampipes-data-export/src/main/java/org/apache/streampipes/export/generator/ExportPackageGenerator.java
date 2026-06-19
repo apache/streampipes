@@ -129,6 +129,14 @@ public class ExportPackageGenerator {
             exportedGenericStorageDocumentIds);
       });
 
+      config.getLabels().forEach(item -> {
+        addDoc(builder, item, new GenericStorageDocumentResolver(), manifest::addGenericStorageDocument);
+      });
+
+      config.getSites().forEach(item -> {
+        addDoc(builder, item, new GenericStorageDocumentResolver(), manifest::addGenericStorageDocument);
+      });
+
       config.getFiles().forEach(item -> {
         if (item.isSelected()) {
           var fileResolver = new FileResolver();

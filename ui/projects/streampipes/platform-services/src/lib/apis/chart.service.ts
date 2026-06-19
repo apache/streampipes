@@ -25,6 +25,10 @@ import {
     DataLakeMeasure,
 } from '../model/gen/streampipes-model';
 import { TranslateService } from '@ngx-translate/core';
+import {
+    ChartSummaryDto,
+    ResourceSummaryDto,
+} from '../model/resource/resource-summary.model';
 
 @Injectable({
     providedIn: 'root',
@@ -34,9 +38,15 @@ export class ChartService {
     private translateService = inject(TranslateService);
 
     getAllCharts(): Observable<DataExplorerWidgetModel[]> {
-        return this.http
-            .get(this.dashboardWidgetUrl)
-            .pipe(map(res => res as DataExplorerWidgetModel[]));
+        return this.http.get<DataExplorerWidgetModel[]>(
+            this.dashboardWidgetUrl,
+        );
+    }
+
+    getChartSummary(): Observable<ResourceSummaryDto<ChartSummaryDto>> {
+        return this.http.get<ResourceSummaryDto<ChartSummaryDto>>(
+            `${this.dashboardWidgetUrl}/summary`,
+        );
     }
 
     getChart(widgetId: string): Observable<DataExplorerWidgetModel> {

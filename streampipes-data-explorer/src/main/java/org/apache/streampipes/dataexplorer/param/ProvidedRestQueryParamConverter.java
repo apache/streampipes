@@ -78,7 +78,7 @@ public class ProvidedRestQueryParamConverter {
     if (params.has(SupportedRestQueryParams.QP_TIME_INTERVAL)) {
       String timeInterval = params.getAsString(SupportedRestQueryParams.QP_TIME_INTERVAL);
       queryParameters.withGroupByTimeParams(GroupByTimeClauseParams.from(timeInterval));
-      queryParameters.withFillParams(FillClauseParams.from());
+      queryParameters.withFillParams(FillClauseParams.from(params.getAsString(SupportedRestQueryParams.QP_FILL)));
     }
 
     if (params.has(SupportedRestQueryParams.QP_GROUP_BY)) {

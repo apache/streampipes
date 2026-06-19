@@ -130,9 +130,9 @@ describe('Test User Roles for Dashboards', () => {
             delimiter: ',',
             timestampColumn: 'timestamp',
         });
-        addChart('chart1');
+        addChart('chart1', false);
         cy.wait(1000);
-        addChart('chart2');
+        addChart('chart2', false);
 
         ChartUtils.createNewDashboard(dashboardName);
 
@@ -199,8 +199,8 @@ describe('Test User Roles for Dashboards', () => {
         ChartUtils.checkAmountOfDashboards(0);
     }
 
-    function addChart(chartName: string) {
-        ChartUtils.addDataViewAndTableWidget(chartName, datasetName, true);
-        ChartUtils.saveDataViewConfiguration();
+    function addChart(chartName: string, saveConfig: boolean = true) {
+        ChartUtils.addDataViewAndTableWidget(datasetName, true);
+        ChartUtils.saveDataViewConfiguration(false, saveConfig, chartName);
     }
 });

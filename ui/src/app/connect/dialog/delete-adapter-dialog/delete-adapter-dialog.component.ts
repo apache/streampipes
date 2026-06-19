@@ -19,6 +19,7 @@
 import { Component, Input, inject } from '@angular/core';
 import {
     AdapterDescription,
+    AdapterSummaryDto,
     AdapterService,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
@@ -52,7 +53,7 @@ export class DeleteAdapterDialogComponent {
     private dataMarketplaceService = inject(AdapterService);
 
     @Input()
-    adapter: AdapterDescription;
+    adapter: AdapterDescription | AdapterSummaryDto;
 
     isInProgress = false;
     currentStatus: any;
@@ -71,9 +72,12 @@ export class DeleteAdapterDialogComponent {
         this.deleteAssociatedPipelines = deleteAssociatedPipelines;
 
         this.dataMarketplaceService
-            .deleteAdapter(this.adapter, deleteAssociatedPipelines)
+            .deleteAdapterById(
+                this.adapter.elementId,
+                deleteAssociatedPipelines,
+            )
             .subscribe(
-                data => {
+                _data => {
                     this.close(true);
                 },
                 error => {

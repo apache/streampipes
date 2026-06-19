@@ -21,6 +21,8 @@ package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.model.dashboard.DashboardSummaryDto;
+import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.DataExplorerResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
@@ -59,6 +61,12 @@ public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
   @PostFilter("hasPermission(filterObject.couchDbId, 'READ')")
   public List<DashboardModel> getAllDashboards() {
     return getResourceManager().findAll();
+  }
+
+  @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResourceSummaryDto<DashboardSummaryDto> getDashboardSummary() {
+    return getResourceManager().getSummary(getAuthentication());
   }
 
   @GetMapping(path = "/{dashboardId}", produces = MediaType.APPLICATION_JSON_VALUE)

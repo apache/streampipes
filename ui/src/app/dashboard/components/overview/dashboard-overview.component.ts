@@ -17,7 +17,6 @@
  */
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import {
     CurrentUserService,
     SpBasicViewComponent,
@@ -26,10 +25,8 @@ import {
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { SpDashboardRoutes } from '../../dashboard.breadcrumb';
-import { Dashboard } from '@streampipes/platform-services';
-import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { DashboardOverviewTableComponent } from './dashboard-overview-table/dashboard-overview-table.component';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { MatButton } from '@angular/material/button';
 import {
@@ -37,6 +34,7 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
+import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
 
 @Component({
     selector: 'sp-dashboard-overview',
@@ -59,12 +57,10 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
     @ViewChild(DashboardOverviewTableComponent)
     dashboardOverview: DashboardOverviewTableComponent;
 
-    public dialog = inject(MatDialog);
-    private dataExplorerDashboardService = inject(DataExplorerDashboardService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
     private breadcrumbService = inject(SpBreadcrumbService);
-    private translateService = inject(TranslateService);
+    private routingService = inject(ChartRoutingService);
 
     private user$: Subscription;
 
@@ -72,7 +68,7 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpDashboardRoutes.BASE),
         );
-        this.user$ = this.currentUserService.user$.subscribe(user => {
+        this.user$ = this.currentUserService.user$.subscribe(_user => {
             this.hasDashboardWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DASHBOARD,
             );
@@ -80,40 +76,7 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
     }
 
     openNewDashboardDialog() {
-        const dataViewDashboard: Dashboard = {
-            dashboardGeneralSettings: {
-                chartOverrides: {
-                    hideToolbox: false,
-                },
-            },
-            widgets: [],
-            name: '',
-            dashboardLiveSettings: {
-                refreshModeActive: false,
-                refreshIntervalInSeconds: 10,
-                label: this.translateService.instant('Off'),
-            },
-            metadata: {
-                createdAtEpochMs: Date.now(),
-                lastModifiedEpochMs: Date.now(),
-            },
-            gridColumns: 12,
-        };
-        dataViewDashboard.dashboardGeneralSettings.gridRowHeightPx = 90;
-
-        this.openDashboardModificationDialog(true, dataViewDashboard);
-    }
-
-    openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
-        const dialogRef =
-            this.dataExplorerDashboardService.openDashboardModificationDialog(
-                createMode,
-                dashboard,
-            );
-
-        dialogRef.afterClosed().subscribe(() => {
-            this.dashboardOverview.getDashboards();
-        });
+        this.routingService.navigateToDashboard(true, 'create');
     }
 
     ngOnDestroy() {

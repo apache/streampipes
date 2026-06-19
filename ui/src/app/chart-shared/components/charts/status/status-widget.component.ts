@@ -150,7 +150,7 @@ export class StatusWidgetComponent
         }
     }
 
-    onResize(width: number, heigth: number): void {}
+    onResize(_width: number, _heigth: number): void {}
 
     handleUpdatedFields(
         addedFields: DataExplorerField[],

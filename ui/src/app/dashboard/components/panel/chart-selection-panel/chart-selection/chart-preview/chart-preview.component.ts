@@ -17,49 +17,44 @@
  */
 
 import {
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     Input,
-    OnInit,
     Output,
     inject,
 } from '@angular/core';
-import { DataExplorerWidgetModel } from '@streampipes/platform-services';
-import { ChartRegistry } from '../../../../../../chart-shared/registry/chart-registry.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { FeatureCardService } from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
+import { ChartSelectionItem } from '../chart-selection.model';
 
 @Component({
     selector: 'sp-chart-preview',
     templateUrl: './chart-preview.component.html',
     styleUrls: ['./chart-preview.component.scss'],
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
-        MatIcon,
-    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [MatIcon, MatIconButton, TranslatePipe],
 })
-export class ChartPreviewComponent implements OnInit {
-    private widgetRegistryService = inject(ChartRegistry);
+export class ChartPreviewComponent {
+    private featureCardService = inject(FeatureCardService);
 
     @Input()
-    chart: DataExplorerWidgetModel;
-
-    widgetTypeLabel: string;
+    chartItem!: ChartSelectionItem;
 
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter<string>();
 
-    ngOnInit() {
-        this.widgetTypeLabel = this.widgetRegistryService.getChartTemplate(
-            this.chart.widgetType,
-        ).label;
+    addChart(): void {
+        this.addChartEmitter.emit(this.chartItem.chart.elementId);
+    }
+
+    openPreview(event: MouseEvent): void {
+        event.stopPropagation();
+        this.featureCardService.openFeatureCard(
+            'chart',
+            this.chartItem.chart.elementId,
+        );
     }
 }

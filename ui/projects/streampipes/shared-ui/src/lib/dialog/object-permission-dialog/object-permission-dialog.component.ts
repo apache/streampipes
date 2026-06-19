@@ -178,7 +178,7 @@ export class ObjectPermissionDialogComponent implements OnInit {
                 this.permissionDenied = false;
                 this.loading = false;
             },
-            error => {
+            _error => {
                 this.permissionDenied = true;
                 this.loading = false;
             },
@@ -276,7 +276,7 @@ export class ObjectPermissionDialogComponent implements OnInit {
             );
         this.permissionsService
             .updatePermission(this.permission)
-            .subscribe(result => {
+            .subscribe(_result => {
                 this.dialogRef.close(true);
             });
     }

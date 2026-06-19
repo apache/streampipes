@@ -26,7 +26,11 @@ export class ChartBtns {
     }
 
     public static saveDataViewBtn() {
-        return cy.dataCy('save-data-view');
+        return cy.dataCy('sp-manage-save');
+    }
+
+    public static manageChartButton(title) {
+        return cy.dataCy('open-manage-permissions-' + title);
     }
 
     public static saveDashboardBtn() {
@@ -34,14 +38,7 @@ export class ChartBtns {
     }
 
     public static discardDashboard() {
-        return cy.dataCy('discard-dashboard-btn');
-    }
-
-    public static saveChartsToAssetBtn() {
-        return cy
-            .dataCy('add-to-Asset-data-view-btn', { timeout: 10000 })
-            .should('exist')
-            .click();
+        return cy.dataCy('save-data-explorer-go-back-to-overview');
     }
 
     public static deleteDashboardBtn(dashboardName) {
@@ -77,7 +74,7 @@ export class ChartBtns {
     }
 
     public static editDashboardSettingsBtn(dashboardName) {
-        return cy.dataCy('edit-dashboard-settings-' + dashboardName);
+        return cy.dataCy('open-manage-permissions-' + dashboardName);
     }
 
     public static openNewDataViewBtn() {
@@ -96,14 +93,34 @@ export class ChartBtns {
         return cy.dataCy('add-to-Asset-data-view-btn');
     }
 
+    public static chartOptionsBtn() {
+        return cy.dataCy('options-chart');
+    }
+
+    public static manageChartBtn() {
+        return cy.dataCy('manage-chart-btn');
+    }
+
     public static confirmAssetSelectionBtn() {
         return cy
             .dataCy('asset-dialog-confirm-delete', { timeout: 10000 })
             .click();
     }
 
+    public static chartAssetDialogCheckbox() {
+        return cy
+            .dataCy('sp-show-chart-asset-checkbox')
+            .find('input[type="checkbox"]');
+    }
+
+    public static objectManageAssetCheckbox() {
+        return cy
+            .dataCy('sp-show-asset-checkbox')
+            .find('input[type="checkbox"]');
+    }
+
     public static editDataViewButton(dataViewName: string) {
-        return cy.dataCy('edit-data-view-' + dataViewName.replaceAll(' ', ''));
+        return cy.dataCy('edit-data-view-' + dataViewName.replace(/ /g, ''));
     }
 
     public static chartSyncProblemIcon() {
@@ -135,7 +152,7 @@ export class ChartBtns {
     }
 
     public static discardDataExplorerWidgetBtn() {
-        return cy.dataCy('discard-data-explorer-widget-btn');
+        return cy.dataCy('save-data-explorer-go-back-to-overview');
     }
 
     public static chartDataPreview() {
@@ -196,8 +213,114 @@ export class ChartBtns {
             .find('input[type="checkbox"]');
     }
 
+    public static valueCardWidget() {
+        return cy.dataCy('value-card-widget');
+    }
+
+    public static valueCardTitleInput() {
+        return cy.dataCy('data-explorer-value-card-title-input');
+    }
+
+    public static valueCardDescriptionInput() {
+        return cy.dataCy('data-explorer-value-card-description-input');
+    }
+
+    public static valueCardShowTimestampCheckbox() {
+        return cy
+            .dataCy('data-explorer-value-card-show-timestamp')
+            .find('input[type="checkbox"]');
+    }
+
+    public static valueCardTitle() {
+        return cy.dataCy('value-card-title');
+    }
+
+    public static valueCardDescription() {
+        return cy.dataCy('value-card-description');
+    }
+
+    public static valueCardTimestamp() {
+        return cy.dataCy('value-card-timestamp');
+    }
+
+    public static valueCardItems() {
+        return cy.dataCy('value-card-item', {}, true);
+    }
+
+    public static valueCardItemLabels() {
+        return cy.dataCy('value-card-item-label', {}, true);
+    }
+
+    public static valueCardItemValues() {
+        return cy.dataCy('value-card-item-value', {}, true);
+    }
+
+    public static progressBarWidget() {
+        return cy.dataCy('progress-bar-widget');
+    }
+
+    public static progressBarTitleInput() {
+        return cy.dataCy('data-explorer-progress-title-input');
+    }
+
+    public static progressBarDescriptionInput() {
+        return cy.dataCy('data-explorer-progress-description-input');
+    }
+
+    public static progressBarTargetSource() {
+        return cy.dataCy('data-explorer-progress-target-source');
+    }
+
+    public static progressBarTargetValueInput() {
+        return cy.dataCy('data-explorer-progress-target-value');
+    }
+
+    public static progressBarDisplayMode() {
+        return cy.dataCy('data-explorer-progress-display-mode');
+    }
+
+    public static progressBarInvertCheckbox() {
+        return cy
+            .dataCy('data-explorer-progress-invert')
+            .find('input[type="checkbox"]');
+    }
+
+    public static progressBarShowLabelCheckbox() {
+        return cy
+            .dataCy('data-explorer-progress-show-label')
+            .find('input[type="checkbox"]');
+    }
+
+    public static progressBarTitle() {
+        return cy.dataCy('progress-bar-title');
+    }
+
+    public static progressBarDescription() {
+        return cy.dataCy('progress-bar-description');
+    }
+
+    public static progressBarStatus() {
+        return cy.dataCy('progress-bar-status');
+    }
+
+    public static progressBarPercent() {
+        return cy.dataCy('progress-bar-percent');
+    }
+
+    public static progressBarFill() {
+        return cy.dataCy('progress-bar-fill');
+    }
+
+    public static progressBarPrimaryLabel() {
+        return cy.dataCy('progress-bar-primary-label');
+    }
+
+    public static progressBarSecondaryLabel() {
+        return cy.dataCy('progress-bar-secondary-label');
+    }
+
     public static addNewWidgetBtn() {
-        return cy.dataCy('add-new-widget');
+        return cy.dataCy('add-new-widget', { timeout: 10000 });
     }
 
     public static dataLakeTruncateBtn() {
@@ -286,6 +409,16 @@ export class ChartBtns {
 
     public static dataExplorerTablePaginator() {
         return cy.dataCy('data-explorer-table-paginator');
+    }
+
+    public static resultLabelInput(fieldName: string) {
+        return cy.get(
+            `[data-cy="data-explorer-result-label-input-${fieldName}"]`,
+        );
+    }
+
+    public static tableHeader(fieldName: string) {
+        return cy.get(`[data-cy="data-explorer-table-header-${fieldName}"]`);
     }
 
     public static matOptionByText(text: string | RegExp) {

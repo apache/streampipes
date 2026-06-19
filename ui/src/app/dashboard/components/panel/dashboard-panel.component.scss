@@ -45,6 +45,27 @@
 
 .designer-panel {
     width: 350px;
+    overflow: hidden;
+}
+
+.chart-selection-tab-content {
+    height: 100%;
+    overflow-y: hidden;
+}
+
+.designer-panel ::ng-deep .mat-drawer-inner-container {
+    overflow: hidden;
+}
+
+.designer-panel ::ng-deep .mat-mdc-tab-body-wrapper,
+.designer-panel ::ng-deep .mat-mdc-tab-body,
+.designer-panel ::ng-deep .mat-mdc-tab-body-content {
+    height: 100%;
+    min-height: 0;
+}
+
+.designer-panel ::ng-deep .mat-mdc-tab-body-content {
+    overflow: hidden;
 }
 
 .panel-toggle-button {
@@ -62,4 +83,8 @@
 
 .edit-menu-btn {
     margin-right: 5px;
+}
+
+.view-radio-button {
+    margin: 5px;
 }

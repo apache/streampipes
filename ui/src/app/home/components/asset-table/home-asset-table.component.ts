@@ -109,7 +109,7 @@ export class HomeAssetTableComponent implements OnInit, OnChanges {
         };
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(_changes: SimpleChanges) {
         this.dataSource.data = this.assets;
         setTimeout(() => {
             this.dataSource.sort = this.sort;

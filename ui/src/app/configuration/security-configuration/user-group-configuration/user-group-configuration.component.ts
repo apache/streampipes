@@ -109,9 +109,11 @@ export class SecurityUserGroupConfigComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result === 'confirm') {
-                this.userGroupService.deleteGroup(group).subscribe(response => {
-                    this.loadAllGroups();
-                });
+                this.userGroupService
+                    .deleteGroup(group)
+                    .subscribe(_response => {
+                        this.loadAllGroups();
+                    });
             }
         });
     }

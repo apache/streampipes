@@ -206,12 +206,23 @@ export class ConnectUtils {
     }
 
     public static finishEventSchemaConfiguration() {
-        ConnectBtns.configureSchemaNextBtn().click();
+        ConnectBtns.configureSchemaNextBtn().should('not.be.disabled').click();
     }
 
     public static finishConfigureFieldsConfiguration() {
         ConnectUtils.eventSchemaWithFieldsShouldBeVisible();
-        ConnectBtns.configureFieldsNextBtn().click();
+        ConnectBtns.configureFieldsNextBtn().should('not.be.disabled').click();
+    }
+
+    public static refreshEventSchema() {
+        ConnectBtns.refreshSchemaBtn().click();
+        ConnectBtns.configureFieldsNextBtn().should('not.be.disabled');
+    }
+
+    public static stopAdapterAndWaitForStateTransition() {
+        ConnectBtns.stopAdapter().should('be.visible').click();
+        ConnectBtns.startAdapter().should('be.visible');
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
     }
 
     public static eventSchemaWithFieldsShouldBeVisible() {
@@ -341,6 +352,9 @@ export class ConnectUtils {
 
     public static closeAdapterPreview() {
         cy.dataCy('close-adapter-started-dialog-button').click();
+        cy.dataCy('all-adapters-table', { timeout: 10000 }).should(
+            'be.visible',
+        );
     }
 
     public static deleteAdapter(adapterName: string) {
@@ -437,6 +451,8 @@ export class ConnectUtils {
         ConnectBtns.startAdapter().should('not.be.disabled');
 
         ConnectBtns.startAdapter().click();
+        ConnectBtns.stopAdapter().should('be.visible');
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
 
         ConnectUtils.validateEventsInPreview(adapterName, amountOfProperties);
     }

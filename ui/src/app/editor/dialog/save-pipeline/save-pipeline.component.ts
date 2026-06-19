@@ -370,7 +370,7 @@ export class SavePipelineComponent implements OnInit {
         this.showPipelineOperationStatus(status, pipelineAction);
     }
 
-    onFailure(msg?: any) {
+    onFailure(_msg?: any) {
         this.operationCompleted = true;
         this.operationSuccess = false;
         if (this.statusIndicators.length > 0) {

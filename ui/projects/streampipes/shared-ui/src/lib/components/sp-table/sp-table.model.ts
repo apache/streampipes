@@ -36,6 +36,12 @@ export interface SpTableAssetContextConfig {
     hideBelowWidth?: number;
 }
 
+export interface SpTableNameSearchConfig<T = Record<string, unknown>> {
+    enabled: boolean;
+    placeholder?: string;
+    searchKey?: Array<keyof T>;
+}
+
 export class SpTableAssetContextValue {
     id: string;
     label: string;

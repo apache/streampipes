@@ -17,34 +17,50 @@
   -->
 
 <div
-    fxLayout="row"
     class="data-view-preview-outer"
-    [attr.data-cy]="
-        'add-data-view-btn-' +
-        chart.baseAppearanceConfig.widgetTitle.replaceAll(' ', '')
-    "
-    (click)="addChartEmitter.emit(chart.elementId)"
+    [attr.data-cy]="chartItem.dataCyId"
+    [attr.title]="chartItem.chart.name"
+    (click)="addChart()"
 >
-    <div fxFlex fxLayout="column">
-        <h5>{{ chart.baseAppearanceConfig.widgetTitle }}</h5>
-        <div fxLayout="row" fxLayoutGap="15px" class="text-sm">
-            <span fxLayoutAlign="start center"
-                ><mat-icon color="primary">insert_chart</mat-icon></span
-            >
-            <span fxFlex fxLayoutAlign="start center">{{
-                widgetTypeLabel
-            }}</span>
+    <div class="chart-preview-header">
+        <div
+            class="chart-preview-icon-shell"
+            [attr.title]="chartItem.widgetTypeLabel"
+        >
+            <mat-icon>{{ chartItem.widgetTypeIcon }}</mat-icon>
         </div>
-        <div fxLayout="row" fxLayoutGap="15px" class="text-sm">
-            <span fxLayoutAlign="start center"
-                ><mat-icon color="primary">folder</mat-icon></span
-            >
-            <span fxFlex fxLayoutAlign="start center">{{
-                chart.dataConfig.sourceConfigs[0].measureName
-            }}</span>
+
+        <div class="chart-preview-copy">
+            <div class="chart-preview-title-row">
+                <h5 class="chart-preview-title">{{ chartItem.chart.name }}</h5>
+            </div>
+
+            <div class="chart-preview-meta">
+                @if (chartItem.chart.datasetName) {
+                    <span
+                        class="chart-preview-meta-item chart-preview-dataset"
+                        [attr.title]="chartItem.chart.datasetName"
+                    >
+                        {{ chartItem.chart.datasetName }}
+                    </span>
+                }
+            </div>
         </div>
     </div>
-    <div fxLayoutAlign="end center">
-        <i class="material-icons">add</i>
+
+    <div class="chart-preview-actions">
+        <button
+            mat-icon-button
+            type="button"
+            [attr.aria-label]="'Preview chart' | translate"
+            [attr.title]="'Preview chart' | translate"
+            (click)="openPreview($event)"
+            data-cy="chart-preview-feature-card"
+        >
+            <mat-icon>visibility</mat-icon>
+        </button>
+        <div class="chart-preview-add-indicator">
+            <mat-icon>add</mat-icon>
+        </div>
     </div>
 </div>

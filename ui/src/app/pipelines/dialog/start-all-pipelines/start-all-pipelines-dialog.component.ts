@@ -18,7 +18,10 @@
 
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
-import { Pipeline, PipelineService } from '@streampipes/platform-services';
+import {
+    PipelineService,
+    PipelineSummaryDto,
+} from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
@@ -31,12 +34,12 @@ import { MatButton } from '@angular/material/button';
 })
 export class StartAllPipelinesDialogComponent implements OnInit {
     @Input()
-    pipelines: Pipeline[];
+    pipelines: PipelineSummaryDto[];
 
     @Input()
     forceStop = false;
 
-    pipelinesToModify: Pipeline[];
+    pipelinesToModify: PipelineSummaryDto[];
     installationStatus: any;
     installationFinished: boolean;
     page: string;
@@ -93,7 +96,7 @@ export class StartAllPipelinesDialogComponent implements OnInit {
         });
     }
 
-    initiateInstallation(pipeline, index) {
+    initiateInstallation(pipeline: PipelineSummaryDto, index) {
         this.installationRunning = true;
         this.installationStatus.push({
             name: pipeline.name,
@@ -107,16 +110,16 @@ export class StartAllPipelinesDialogComponent implements OnInit {
         }
     }
 
-    startPipeline(pipeline, index) {
+    startPipeline(pipeline: PipelineSummaryDto, index) {
         this.pipelineService
-            .startPipeline(pipeline._id)
+            .startPipeline(pipeline.elementId)
             .subscribe(
                 data => {
                     this.installationStatus[index].status = data.success
                         ? this.successStr
                         : this.errorStr;
                 },
-                data => {
+                _data => {
                     this.installationStatus[index].status = this.errorStr;
                 },
             )
@@ -134,16 +137,16 @@ export class StartAllPipelinesDialogComponent implements OnInit {
             });
     }
 
-    stopPipeline(pipeline, index) {
+    stopPipeline(pipeline: PipelineSummaryDto, index) {
         this.pipelineService
-            .stopPipeline(pipeline._id, this.forceStop)
+            .stopPipeline(pipeline.elementId, this.forceStop)
             .subscribe(
                 data => {
                     this.installationStatus[index].status = data.success
                         ? this.successStr
                         : this.errorStr;
                 },
-                data => {
+                _data => {
                     this.installationStatus[index].status = this.errorStr;
                 },
             )

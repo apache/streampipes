@@ -206,7 +206,7 @@ export class EditorAutocompletionService {
     }
 
     private createJavaScriptContextCompletions(
-        monaco: typeof monacoType,
+        _monaco: typeof monacoType,
     ): JavaScriptCompletionTemplate[] {
         return [
             {

@@ -20,6 +20,7 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.model.util.ElementIdGenerator;
+import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 import java.util.List;
@@ -28,11 +29,13 @@ public class CrudResourceManager<T extends Storable>
     extends AbstractResourceManager<CRUDStorage<T>> {
 
   private final Class<T> elementClass;
+  protected final SpPermissionEvaluator permissionEvaluator;
 
   public CrudResourceManager(CRUDStorage<T> db,
                              Class<T> elementClass) {
     super(db);
     this.elementClass = elementClass;
+    this.permissionEvaluator = new SpPermissionEvaluator();
   }
 
   public List<T> findAll() {

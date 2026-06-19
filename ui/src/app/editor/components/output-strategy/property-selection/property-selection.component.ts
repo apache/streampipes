@@ -73,7 +73,7 @@ export class PropertySelectionComponent implements OnInit {
         this.outputStrategy.selectedPropertyKeys.push(runtimeId);
         // This is needed to trigger update of scope
         this.outputStrategy.selectedPropertyKeys =
-            this.outputStrategy.selectedPropertyKeys.filter(el => true);
+            this.outputStrategy.selectedPropertyKeys.filter(_el => true);
     }
 
     remove(runtimeId) {

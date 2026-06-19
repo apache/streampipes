@@ -32,6 +32,7 @@ import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { ResultLabelService } from '../../../../services/result-label.service';
 
 @Component({
     selector: 'sp-data-explorer-gauge-widget-config',
@@ -53,9 +54,58 @@ export class GaugeWidgetConfigComponent extends BaseWidgetConfig<
     GaugeWidgetModel,
     GaugeVisConfig
 > {
+    constructor(private resultLabelService: ResultLabelService) {
+        super();
+    }
+
     setSelectedProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
             field;
+        this.currentlyConfiguredWidget.visualizationConfig.displayName =
+            this.resultLabelService.getOverride(
+                this.currentlyConfiguredWidget.dataConfig.sourceConfigs[
+                    field.sourceIndex
+                ].queryConfig,
+                field,
+            ) ??
+            field.runtimeName ??
+            field.fullDbName;
+        this.triggerViewRefresh();
+    }
+
+    getDisplayName(): string {
+        const selectedProperty =
+            this.currentlyConfiguredWidget.visualizationConfig.selectedProperty;
+
+        if (!selectedProperty) {
+            return '';
+        }
+
+        return this.resultLabelService.resolveLabel(
+            this.currentlyConfiguredWidget.dataConfig.sourceConfigs[
+                selectedProperty.sourceIndex
+            ].queryConfig,
+            selectedProperty,
+            this.currentlyConfiguredWidget.visualizationConfig.displayName,
+        );
+    }
+
+    onDisplayNameChange(label: string): void {
+        const selectedProperty =
+            this.currentlyConfiguredWidget.visualizationConfig.selectedProperty;
+
+        if (!selectedProperty) {
+            return;
+        }
+
+        this.resultLabelService.setOverride(
+            this.currentlyConfiguredWidget.dataConfig.sourceConfigs[
+                selectedProperty.sourceIndex
+            ].queryConfig,
+            selectedProperty,
+            label,
+            selectedProperty.fullDbName,
+        );
         this.triggerViewRefresh();
     }
 
@@ -65,15 +115,11 @@ export class GaugeWidgetConfigComponent extends BaseWidgetConfig<
             this.fieldProvider.numericFields,
             () => this.fieldProvider.numericFields[0],
         );
-        const defaultDisplayName =
-            config.selectedProperty?.runtimeName ||
-            config.selectedProperty?.fullDbName ||
-            '';
         if (typeof config.displayName !== 'string') {
-            config.displayName = defaultDisplayName;
-        }
-        if (!config.displayName?.trim()) {
-            config.displayName = defaultDisplayName;
+            config.displayName =
+                config.selectedProperty?.runtimeName ||
+                config.selectedProperty?.fullDbName ||
+                '';
         }
         config.min ??= 0;
         config.max ??= 100;

@@ -69,7 +69,7 @@ export class PipelineElementDiscoveryComponent implements OnInit {
 
     ngOnInit() {
         this.currentElements.sort((a, b) => a.name.localeCompare(b.name));
-        this.currentElements.forEach(pe => {
+        this.currentElements.forEach(_pe => {
             this.styles.push(this.makeStandardStyle());
         });
     }

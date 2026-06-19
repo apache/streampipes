@@ -60,7 +60,9 @@ type ExportSectionKey =
     | 'dataSources'
     | 'dataLakeMeasures'
     | 'files'
-    | 'pipelines';
+    | 'pipelines'
+    | 'labels'
+    | 'sites';
 
 @Component({
     selector: 'sp-data-export-dialog',
@@ -92,6 +94,12 @@ export class SpDataExportDialogComponent implements OnInit {
     @Input()
     selectedAssets: string[];
 
+    @Input()
+    referencedLabels: Record<string, ExportItem[]> = {};
+
+    @Input()
+    referencedSites: Record<string, ExportItem[]> = {};
+
     exportSections = [
         { key: 'adapters', title: 'Adapters' },
         { key: 'dashboards', title: 'Dashboards' },
@@ -100,6 +108,8 @@ export class SpDataExportDialogComponent implements OnInit {
         { key: 'dataLakeMeasures', title: 'Data Lake Storage' },
         { key: 'files', title: 'Files' },
         { key: 'pipelines', title: 'Pipelines' },
+        { key: 'labels', title: 'Labels' },
+        { key: 'sites', title: 'Sites' },
     ] as const;
 
     preview: ExportConfiguration;
@@ -113,6 +123,7 @@ export class SpDataExportDialogComponent implements OnInit {
             .getExportPreview(this.selectedAssets)
             .subscribe(preview => {
                 this.preview = preview;
+                this.addReferencedAssetDocuments(this.preview);
                 this.sortPreviewItems();
                 this.initializeSectionAssets();
                 this.initializeExportAllSelections();
@@ -287,5 +298,32 @@ export class SpDataExportDialogComponent implements OnInit {
         assetConfig: SectionAssetConfiguration,
     ): string {
         return `${key}::${assetConfig.assetId}`;
+    }
+
+    private addReferencedAssetDocuments(preview: ExportConfiguration): void {
+        preview.assetExportConfiguration?.forEach(assetExportConfig => {
+            assetExportConfig.labels = this.mergeExportItems(
+                assetExportConfig.labels,
+                this.referencedLabels[assetExportConfig.assetId] ?? [],
+            );
+            assetExportConfig.sites = this.mergeExportItems(
+                assetExportConfig.sites,
+                this.referencedSites[assetExportConfig.assetId] ?? [],
+            );
+        });
+    }
+
+    private mergeExportItems(
+        existingItems: ExportItem[] = [],
+        newItems: ExportItem[],
+    ): ExportItem[] {
+        const existingItemIds = new Set(
+            existingItems.map(item => item.resourceId),
+        );
+        const missingItems = newItems.filter(
+            item => !existingItemIds.has(item.resourceId),
+        );
+
+        return [...existingItems, ...missingItems];
     }
 }

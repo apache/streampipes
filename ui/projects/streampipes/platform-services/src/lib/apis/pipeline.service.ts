@@ -31,6 +31,10 @@ import {
     PipelineStatusMessage,
 } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
+import {
+    PipelineSummaryDto,
+    ResourceSummaryDto,
+} from '../model/resource/resource-summary.model';
 
 @Injectable({
     providedIn: 'root',
@@ -124,6 +128,12 @@ export class PipelineService {
             map(response => {
                 return (response as any[]).map(p => Pipeline.fromData(p));
             }),
+        );
+    }
+
+    getPipelineSummary(): Observable<ResourceSummaryDto<PipelineSummaryDto>> {
+        return this.http.get<ResourceSummaryDto<PipelineSummaryDto>>(
+            `${this.apiBasePath}/pipelines/summary`,
         );
     }
 

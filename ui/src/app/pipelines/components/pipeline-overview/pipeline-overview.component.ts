@@ -16,7 +16,7 @@
  *
  */
 
-import { Pipeline } from '@streampipes/platform-services';
+import { PipelineSummaryDto } from '@streampipes/platform-services';
 import {
     Component,
     EventEmitter,
@@ -45,11 +45,11 @@ import {
     DialogRef,
     DialogService,
     PanelType,
+    SpTableActionsDirective,
     SpTableAssetContextConfig,
+    SpTableComponent,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
-    SpTableActionsDirective,
-    SpTableComponent,
 } from '@streampipes/shared-ui';
 import { Subscription } from 'rxjs';
 import {
@@ -92,7 +92,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class PipelineOverviewComponent implements OnInit, OnDestroy {
-    _pipelines: Pipeline[];
+    _pipelines: PipelineSummaryDto[];
 
     @Output()
     refreshPipelinesEmitter: EventEmitter<boolean> =
@@ -107,7 +107,8 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
         'actions',
     ];
 
-    dataSource: MatTableDataSource<Pipeline> = new MatTableDataSource();
+    dataSource: MatTableDataSource<PipelineSummaryDto> =
+        new MatTableDataSource();
     @ViewChild(MatSort) sort: MatSort;
 
     starting = false;
@@ -147,7 +148,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    openPipelineNotificationsDialog(pipeline: Pipeline) {
+    openPipelineNotificationsDialog(pipeline: PipelineSummaryDto) {
         this.pipelineOperationsService.showPipelineNotificationsDialog(
             pipeline,
             this.refreshPipelinesEmitter,
@@ -159,7 +160,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     }
 
     @Input()
-    set pipelines(pipelines: Pipeline[]) {
+    set pipelines(pipelines: PipelineSummaryDto[]) {
         this._pipelines = pipelines;
         this.addPipelinesToTable();
     }
@@ -180,7 +181,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     }
 
     startStopSelectedPipelines(
-        selectedPipelines: Pipeline[],
+        selectedPipelines: PipelineSummaryDto[],
         action: boolean,
         forceStop = false,
     ) {
@@ -212,7 +213,7 @@ export class PipelineOverviewComponent implements OnInit, OnDestroy {
     }
 
     executeSelectedPipelineAction(
-        event: SpTableMultiActionExecuteEvent<Pipeline>,
+        event: SpTableMultiActionExecuteEvent<PipelineSummaryDto>,
     ) {
         if (
             !this.hasPipelineWritePrivileges ||

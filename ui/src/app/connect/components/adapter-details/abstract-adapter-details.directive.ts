@@ -45,7 +45,7 @@ export abstract class SpAbstractAdapterDetailsDirective {
     adapterNotFound = false;
 
     onInit(): void {
-        this.currentUserService.user$.subscribe(user => {
+        this.currentUserService.user$.subscribe(_user => {
             const elementId = this.activatedRoute.snapshot.params.elementId;
             if (elementId) {
                 this.tabs = new SpAdapterDetailsTabs().getTabs(elementId);

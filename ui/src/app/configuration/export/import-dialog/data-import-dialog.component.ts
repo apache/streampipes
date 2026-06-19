@@ -20,6 +20,7 @@ import { Component, inject } from '@angular/core';
 import {
     DialogRef,
     SpAlertBannerComponent,
+    SpAssetBrowserService,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
@@ -82,6 +83,7 @@ export class SpDataImportDialogComponent {
     private dialogRef =
         inject<DialogRef<SpDataImportDialogComponent>>(DialogRef);
     private dataExportService = inject(DataExportService);
+    private assetBrowserService = inject(SpAssetBrowserService);
 
     private translateService = inject(TranslateService);
     currentImportStep = 0;
@@ -124,7 +126,7 @@ export class SpDataImportDialogComponent {
                             this.currentImportStep++;
                         }
                     },
-                    error => {
+                    _error => {
                         this.uploadError = true;
                     },
                 );
@@ -135,8 +137,9 @@ export class SpDataImportDialogComponent {
         this.currentImportStep = 2;
         this.dataExportService
             .triggerImport(this.selectedUploadFile, this.importConfiguration)
-            .subscribe(result => {
-                this.dialogRef.close();
+            .subscribe(_result => {
+                this.assetBrowserService.refreshBrowserAssetData();
+                this.dialogRef.close('import');
             });
     }
 
@@ -162,6 +165,8 @@ export class SpDataImportDialogComponent {
         this.toggleAllItems(this.importConfiguration.dashboards, select);
         this.toggleAllItems(this.importConfiguration.dataViews, select);
         this.toggleAllItems(this.importConfiguration.dataLakeMeasures, select);
+        this.toggleAllItems(this.importConfiguration.labels, select);
+        this.toggleAllItems(this.importConfiguration.sites, select);
         this.toggleAllItems(
             this.importConfiguration.genericStorageDocuments,
             select,
@@ -170,6 +175,6 @@ export class SpDataImportDialogComponent {
     }
 
     private toggleAllItems(exportItem: ExportItem[], select: boolean): void {
-        exportItem.forEach(e => (e.selected = select));
+        exportItem?.forEach(e => (e.selected = select));
     }
 }

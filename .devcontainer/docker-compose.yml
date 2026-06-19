@@ -1,0 +1,118 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: ${COMPOSE_PROJECT_NAME:-streampipes-dev}
+
+services:
+  workspace:
+    # Builds the base devcontainer image with Cypress/Electron runtime libraries
+    # such as libglib, GTK, NSS and Xvfb for running UI smoke tests.
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sleep infinity
+    init: true
+    volumes:
+      - ..:/workspaces/streampipes:cached
+      - maven-cache:/home/vscode/.m2
+      - npm-cache:/home/vscode/.npm
+      - ui-node-modules:/workspaces/streampipes/ui/node_modules
+      - core-home:/home/vscode/.streampipes
+    environment:
+      SP_BACKEND_HOST: localhost
+      SP_CORE_HOST: localhost
+      SP_CORE_PORT: "8030"
+      SP_COUCHDB_HOST: couchdb
+      SP_COUCHDB_PORT: "5984"
+      SP_TS_STORAGE_HOST: influxdb
+      SP_TS_STORAGE_PORT: "8086"
+      SP_INFLUX_HOST: influxdb
+      SP_INFLUX_PORT: "8086"
+      SP_NATS_HOST: nats
+      SP_NATS_PORT: "4222"
+      SP_PRIORITIZED_PROTOCOL: nats
+      SP_CORE_EXTENSION_TRANSPORT_MODE: nats
+      SP_EXTENSION_TRANSPORT_MODE: nats
+      SP_EXTENSION_REQUEST_TOPIC_PREFIX: sp.extensions.request
+      SP_RESET_ENDPOINT_ENABLED: "true"
+      # Keep StreamPipes debug mode disabled in the devcontainer. When enabled,
+      # StreamPipes rewrites broker hostnames to localhost, but NATS runs as the
+      # sibling Compose service "nats" and must be reached via nats:4222.
+      SP_DEBUG: "false"
+    ports:
+      - "${SP_CORE_PORT:-8030}:8030"
+      - "${SP_EXTENSIONS_IIOT_PORT:-8090}:8090"
+      - "${SP_UI_PORT:-8082}:8082"
+      - "${SP_CORE_DEBUG_PORT:-5005}:5005"
+      - "${SP_EXTENSIONS_IIOT_DEBUG_PORT:-5006}:5006"
+    depends_on:
+      - couchdb
+      - influxdb
+      - nats
+    networks:
+      - spnet
+
+  couchdb:
+    image: couchdb:3.3.1
+    environment:
+      COUCHDB_USER: admin
+      COUCHDB_PASSWORD: admin
+    volumes:
+      - couchdb:/opt/couchdb/data
+    ports:
+      - "${SP_COUCHDB_PORT:-5984}:5984"
+    networks:
+      - spnet
+
+  influxdb:
+    image: influxdb:2.6
+    environment:
+      INFLUXDB_DATA_ENGINE: tsm1
+      INFLUXDB_REPORTING_DISABLED: "false"
+      INFLUXDB_ADMIN_ENABLED: "true"
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: sp-admin
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: sp-admin
+      DOCKER_INFLUXDB_INIT_ORG: sp
+      DOCKER_INFLUXDB_INIT_BUCKET: sp
+      DOCKER_INFLUXDB_INIT_MODE: ${SP_INFLUX_INIT_MODE:-setup}
+    volumes:
+      - influxdb:/var/lib/influxdb
+      - influxdb2:/var/lib/influxdb2
+    ports:
+      - "${SP_TS_STORAGE_PORT:-8086}:8086"
+    networks:
+      - spnet
+
+  nats:
+    image: nats
+    command: ["-m", "8222"]
+    ports:
+      - "${SP_NATS_PORT:-4222}:4222"
+      - "${SP_NATS_MONITORING_PORT:-8222}:8222"
+    networks:
+      - spnet
+
+volumes:
+  couchdb:
+  influxdb:
+  influxdb2:
+  maven-cache:
+  npm-cache:
+  ui-node-modules:
+  core-home:
+
+networks:
+  spnet:

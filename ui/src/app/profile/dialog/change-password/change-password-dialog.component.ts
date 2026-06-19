@@ -18,12 +18,16 @@
 
 import {
     Component,
+    inject,
     Input,
     OnInit,
     ViewEncapsulation,
-    inject,
 } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    FormFieldComponent,
+    SpAlertBannerComponent,
+} from '@streampipes/shared-ui';
 import {
     AbstractControl,
     FormsModule,
@@ -41,10 +45,11 @@ import {
     UserService,
 } from '@streampipes/platform-services';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
-import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-change-password-dialog',
@@ -57,11 +62,12 @@ import { MatDivider } from '@angular/material/divider';
         FormsModule,
         ReactiveFormsModule,
         MatFormField,
-        MatLabel,
         MatInput,
-        MatError,
         MatButton,
         MatDivider,
+        FormFieldComponent,
+        TranslatePipe,
+        SpAlertBannerComponent,
     ],
 })
 export class ChangePasswordDialogComponent implements OnInit {
@@ -116,7 +122,7 @@ export class ChangePasswordDialogComponent implements OnInit {
             existingPassword: this.existingPw,
         };
         this.userService.updatePassword(this.user, req).subscribe(
-            response => {
+            _response => {
                 this.close(true);
             },
             error => {

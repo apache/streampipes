@@ -39,8 +39,7 @@ echarts.registerTransform(RoundValuesTransform);
 echarts.registerTransform(MapTransform);
 echarts.registerTransform(PieAggregateTransform);
 
-// required
-import * as $ from 'jquery';
+import 'jquery';
 
 bootstrapApplication(AppComponent, {
     ...appConfig,

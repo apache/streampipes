@@ -31,11 +31,11 @@
                                 'Do you really want to delete pipeline'
                                     | translate
                             }}
-                            {{ pipeline.name }}?
+                            {{ name }}?
                         </h4></b
                     >
                     <b>
-                        @if (pipeline.running) {
+                        @if (running) {
                             <h4>
                                 {{
                                     'This pipeline is still running.'
@@ -55,7 +55,7 @@
                     fxLayoutAlign="center center"
                     fxLayout="column"
                 >
-                    @if (!pipeline.running) {
+                    @if (!running) {
                         <button
                             mat-button
                             mat-flat-button
@@ -65,7 +65,7 @@
                             {{ 'Delete pipeline' | translate }}
                         </button>
                     }
-                    @if (pipeline.running) {
+                    @if (running) {
                         <button
                             mat-button
                             mat-flat-button

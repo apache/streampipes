@@ -77,7 +77,7 @@ export class StaticSecretInputComponent
         );
     }
 
-    onStatusChange(status: any) {}
+    onStatusChange(_status: any) {}
 
     onValueChange(value: any) {
         this.staticProperty.value = value;

@@ -42,16 +42,6 @@ describe('Test asset filters', () => {
     const adapter3 = 'adapter-3_0';
     const adapter3_1 = 'adapter-3_1';
     const adapter3_2 = 'adapter-3_2';
-    const pipeline1 = 'Persist ' + adapter1;
-    const pipeline1_1 = 'Persist ' + adapter1_1;
-    const pipeline1_2 = 'Persist ' + adapter1_2;
-    const pipeline2 = 'Persist ' + adapter2;
-    const pipeline2_1 = 'Persist ' + adapter2_1;
-    const pipeline2_2 = 'Persist ' + adapter2_2;
-    const pipeline3 = 'Persist ' + adapter3;
-    const pipeline3_1 = 'Persist ' + adapter3_1;
-    const pipeline3_2 = 'Persist ' + adapter3_2;
-
     const asset1 = AssetBuilder.create('asset-1_0')
         .addLabel(label1)
         .setSite(site1)
@@ -107,8 +97,6 @@ describe('Test asset filters', () => {
         .build();
 
     beforeEach('Setup Test', () => {
-        const assetResourceFixtureDirectory = 'assetResources';
-
         cy.initStreamPipesTest();
         prepareLabels();
         prepareSites();

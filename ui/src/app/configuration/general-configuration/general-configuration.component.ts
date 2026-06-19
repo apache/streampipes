@@ -315,7 +315,7 @@ export class GeneralConfigurationComponent implements OnInit {
 
         this.generalConfigService
             .updateGeneralConfig(this.generalConfig)
-            .subscribe(result => {
+            .subscribe(_result => {
                 this.loadConfig();
             });
     }

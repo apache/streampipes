@@ -73,6 +73,10 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                     label: ep.label || 'n/a',
                     description: ep.description || 'n/a',
                     runtimeName: ep.runtimeName,
+                    dataType:
+                        this.pipelineELementSchemaService.getFriendlyRuntimeType(
+                            ep,
+                        ),
                     propertyScope: ep.propertyScope,
                     value: undefined,
                     isTimestamp:
@@ -105,7 +109,7 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                             r.value = json[r.runtimeName];
                             r.valueChanged = r.value !== previousValue;
                         });
-                    } catch (error) {
+                    } catch (_error) {
                         this.runtimeDataError = true;
                         this.runtimeData = [];
                     }

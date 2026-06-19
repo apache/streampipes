@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import {
@@ -35,6 +35,7 @@ import {
     KeyboardShortcutService,
     PanelType,
     ShortcutRegistration,
+    SpBasicViewComponent,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../pipelines/pipelines.breadcrumb';
@@ -45,7 +46,6 @@ import { PipelinePreviewComponent } from './components/preview/pipeline-preview.
 import { HttpContext } from '@angular/common/http';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 import { PipelineCodeDialogComponent } from './dialogs/pipeline-code/pipeline-code-dialog.component';
-import { SpBasicViewComponent } from '@streampipes/shared-ui';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -113,7 +113,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
             { key: 'e', action: () => this.onShortcutEdit() },
         ]);
 
-        this.currentUser$ = this.currentUserService.user$.subscribe(user => {
+        this.currentUser$ = this.currentUserService.user$.subscribe(_user => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
             );
@@ -145,7 +145,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
                         }
                         return response;
                     }),
-                    catchError(error => {
+                    catchError(_error => {
                         this.pipelineAvailable = false;
                         return of(new PipelineCanvasMetadata());
                     }),
@@ -277,7 +277,9 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
 
     deletePipeline(): void {
         this.pipelineOperationsService.showDeleteDialog(
-            this.pipeline,
+            this.pipeline._id,
+            this.pipeline.name,
+            this.pipeline.running,
             null,
             () => this.router.navigate(['pipelines']),
         );

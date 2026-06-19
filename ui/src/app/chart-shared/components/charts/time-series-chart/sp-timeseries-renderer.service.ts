@@ -27,7 +27,12 @@ import { Injectable } from '@angular/core';
 import { TimeSeriesChartWidgetModel } from './model/time-series-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpBaseEchartsRenderer } from '../../../echarts-renderer/base-echarts-renderer';
-import { GeneratedDataset, WidgetSize } from '../../../models/dataset.model';
+import { ResultLabelService } from '../../../services/result-label.service';
+import {
+    GeneratedDataset,
+    TagValue,
+    WidgetSize,
+} from '../../../models/dataset.model';
 import {
     AxisConfig,
     WidgetBaseAppearanceConfig,
@@ -40,6 +45,10 @@ import type { FieldUpdateInfo } from '../../../models/field-update.model';
 
 @Injectable({ providedIn: 'root' })
 export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSeriesChartWidgetModel> {
+    constructor(private resultLabelService: ResultLabelService) {
+        super();
+    }
+
     applyOptions(
         generatedDataset: GeneratedDataset,
         options: EChartsOption,
@@ -67,16 +76,28 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                     const rawDatasetDimensions = dataset.rawDataset.dimensions;
                     const groupIndex = i - dataset.meta.preparedDataStartIndex;
                     const tag = dataset.tagValues[groupIndex];
-                    const displayName =
+                    const legacyDisplayName =
                         widgetConfig.visualizationConfig.displayName[
                             field.fullDbName + field.sourceIndex
                         ];
+                    const displayName = this.resultLabelService.resolveLabel(
+                        widgetConfig.dataConfig.sourceConfigs[field.sourceIndex]
+                            .queryConfig,
+                        field,
+                        legacyDisplayName,
+                    );
+                    const mappedGroupLabel = this.colorizationService.findLabel(
+                        widgetConfig.visualizationConfig,
+                        field,
+                        tag,
+                    );
                     const seriesName =
                         dataset.groupedDatasets.length > 0
-                            ? this.echartsUtilsService.toTagString(
+                            ? (mappedGroupLabel ??
+                              this.echartsUtilsService.toTagString(
                                   tag,
                                   displayName,
-                              )
+                              ))
                             : displayName;
                     const fieldIndex = rawDatasetDimensions.indexOf(
                         field.fullDbName,
@@ -85,10 +106,10 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
                         this.makeSeries(
                             widgetConfig,
                             i,
-                            groupIndex,
                             field,
                             fieldIndex,
                             seriesName,
+                            tag,
                         ),
                     );
                 }
@@ -136,19 +157,19 @@ export class SpTimeseriesRendererService extends SpBaseEchartsRenderer<TimeSerie
     makeSeries(
         widgetConfig: TimeSeriesChartWidgetModel,
         datasetIndex: number,
-        groupIndex: number,
         field: DataExplorerField,
         fieldIndex: number,
         seriesName: string,
+        tag?: TagValue,
     ): SeriesOption {
         const seriesType = this.makeSeriesType(
             widgetConfig.visualizationConfig.displayType,
             field,
         );
         const color = this.colorizationService.makeColor(
-            widgetConfig.visualizationConfig.chosenColor,
+            widgetConfig.visualizationConfig,
             field,
-            groupIndex,
+            tag,
         );
 
         const series = {
