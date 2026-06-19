@@ -59,12 +59,10 @@ import org.apache.streampipes.service.core.migrations.AvailableMigrations;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
-import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -111,16 +109,10 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   private IFunctionStateStorage functionStateStorage;
 
   @Autowired
-  private ExtensionServiceRequestManager extensionServiceRequestManager;
+  protected ExtensionServiceRequestManager extensionServiceRequestManager;
 
   @Autowired
   private WorkerRestClient workerRestClient;
-
-  @Autowired
-  protected IChartStorage chartStorage;
-
-  @Autowired
-  protected IPermissionStorage permissionStorage;
 
   @Autowired
   protected SpResourceManager resourceManager;
