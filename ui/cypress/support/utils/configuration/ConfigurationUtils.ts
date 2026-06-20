@@ -55,8 +55,10 @@ export class ConfigurationUtils {
         });
     }
 
-    public static deleteLabel() {
+    public static deleteLabel(labelName: string) {
         cy.dataCy('delete-label-button').click();
+        cy.dataCy('confirm-delete').should('be.visible').click();
+        cy.contains('[data-cy="label-text"]', labelName).should('not.exist');
         cy.dataCy('no-table-entries').should('be.visible');
     }
 }
