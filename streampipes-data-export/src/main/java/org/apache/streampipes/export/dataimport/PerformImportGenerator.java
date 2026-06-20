@@ -159,6 +159,20 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   }
 
   @Override
+  protected void handleLabel(String document, String labelId) throws JsonProcessingException {
+    if (shouldStore(labelId, config.getLabels())) {
+      writeDocument(document, new GenericStorageDocumentResolver());
+    }
+  }
+
+  @Override
+  protected void handleSite(String document, String siteId) throws JsonProcessingException {
+    if (shouldStore(siteId, config.getSites())) {
+      writeDocument(document, new GenericStorageDocumentResolver());
+    }
+  }
+
+  @Override
   protected void handleGenericStorageDocument(String document, String documentId) throws JsonProcessingException {
     if (shouldStore(documentId, config.getGenericStorageDocuments())) {
       writeDocument(document, new GenericStorageDocumentResolver());

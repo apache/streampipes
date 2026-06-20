@@ -48,8 +48,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -80,6 +82,7 @@ public class ExportPackageGenerator {
   public byte[] generateExportPackage() throws IOException {
     ZipFileBuilder builder = ZipFileBuilder.create();
     var manifest = new StreamPipesApplicationPackage();
+    Set<String> exportedGenericStorageDocumentIds = new HashSet<>();
 
     addAssets(builder, exportConfiguration
         .getAssetExportConfiguration()
@@ -131,6 +134,18 @@ public class ExportPackageGenerator {
       });
 
       config.getGenericStorageDocuments().forEach(item -> {
+        addGenericStorageDocument(builder,
+            item,
+            new GenericStorageDocumentResolver(),
+            manifest::addGenericStorageDocument,
+            exportedGenericStorageDocumentIds);
+      });
+
+      config.getLabels().forEach(item -> {
+        addDoc(builder, item, new GenericStorageDocumentResolver(), manifest::addGenericStorageDocument);
+      });
+
+      config.getSites().forEach(item -> {
         addDoc(builder, item, new GenericStorageDocumentResolver(), manifest::addGenericStorageDocument);
       });
 
@@ -147,6 +162,17 @@ public class ExportPackageGenerator {
         }
       });
     });
+
+    if (exportConfiguration.getGenericStorageAppDocTypes() != null) {
+      exportConfiguration.getGenericStorageAppDocTypes().forEach(item -> {
+        if (item.isSelected()) {
+          addGenericStorageDocumentsByType(builder,
+              item.getResourceId(),
+              manifest::addGenericStorageDocument,
+              exportedGenericStorageDocumentIds);
+        }
+      });
+    }
 
     builder.addManifest(defaultMapper.writeValueAsString(manifest));
 
@@ -178,6 +204,36 @@ public class ExportPackageGenerator {
           exportItem.getResourceId(),
           resolver.getClass().getCanonicalName(),
           e);
+    }
+  }
+
+  private void addGenericStorageDocumentsByType(ZipFileBuilder builder,
+                                                String appDocType,
+                                                Consumer<String> function,
+                                                Set<String> exportedGenericStorageDocumentIds) {
+    var resolver = new GenericStorageDocumentResolver();
+
+    try {
+      StorageDispatcher.INSTANCE.getNoSqlStore()
+          .getGenericStorage()
+          .findAll(appDocType)
+          .forEach(document -> addGenericStorageDocument(builder,
+              resolver.convert(document),
+              resolver,
+              function,
+              exportedGenericStorageDocumentIds));
+    } catch (IOException e) {
+      LOG.warn("Could not load generic storage documents for appDocType {}", appDocType, e);
+    }
+  }
+
+  private void addGenericStorageDocument(ZipFileBuilder builder,
+                                         ExportItem exportItem,
+                                         AbstractResolver<?> resolver,
+                                         Consumer<String> function,
+                                         Set<String> exportedGenericStorageDocumentIds) {
+    if (exportedGenericStorageDocumentIds.add(exportItem.getResourceId())) {
+      addDoc(builder, exportItem, resolver, function);
     }
   }
 

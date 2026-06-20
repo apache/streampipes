@@ -34,6 +34,8 @@ public class AssetExportConfiguration {
   private Set<ExportItem> dataSources;
   private Set<ExportItem> pipelines;
   private Set<ExportItem> files;
+  private Set<ExportItem> labels;
+  private Set<ExportItem> sites;
   private Set<ExportItem> genericStorageDocuments;
 
   private boolean overrideBrokerSettings;
@@ -48,6 +50,8 @@ public class AssetExportConfiguration {
     this.pipelines = new HashSet<>();
     this.files = new HashSet<>();
     this.assets = new HashSet<>();
+    this.labels = new HashSet<>();
+    this.sites = new HashSet<>();
     this.genericStorageDocuments = new HashSet<>();
   }
 
@@ -141,6 +145,30 @@ public class AssetExportConfiguration {
 
   public void addFile(ExportItem item) {
     this.files.add(item);
+  }
+
+  public Set<ExportItem> getLabels() {
+    return labels;
+  }
+
+  public void setLabels(Set<ExportItem> labels) {
+    this.labels = labels;
+  }
+
+  public void addLabel(ExportItem label) {
+    this.labels.add(label);
+  }
+
+  public Set<ExportItem> getSites() {
+    return sites;
+  }
+
+  public void setSites(Set<ExportItem> sites) {
+    this.sites = sites;
+  }
+
+  public void addSite(ExportItem site) {
+    this.sites.add(site);
   }
 
   public String getAssetName() {

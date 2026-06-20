@@ -572,9 +572,11 @@ export class AssetExportConfiguration {
     dataViews: ExportItem[];
     files: ExportItem[];
     genericStorageDocuments: ExportItem[];
+    labels: ExportItem[];
     overrideBrokerSettings: boolean;
     overwriteExistingDocuments: boolean;
     pipelines: ExportItem[];
+    sites: ExportItem[];
 
     static fromData(
         data: AssetExportConfiguration,
@@ -606,11 +608,13 @@ export class AssetExportConfiguration {
         instance.genericStorageDocuments = __getCopyArrayFn(
             ExportItem.fromData,
         )(data.genericStorageDocuments);
+        instance.labels = __getCopyArrayFn(ExportItem.fromData)(data.labels);
         instance.overrideBrokerSettings = data.overrideBrokerSettings;
         instance.overwriteExistingDocuments = data.overwriteExistingDocuments;
         instance.pipelines = __getCopyArrayFn(ExportItem.fromData)(
             data.pipelines,
         );
+        instance.sites = __getCopyArrayFn(ExportItem.fromData)(data.sites);
         return instance;
     }
 }
@@ -1989,6 +1993,7 @@ export class ExportConfig {
 
 export class ExportConfiguration {
     assetExportConfiguration: AssetExportConfiguration[];
+    genericStorageAppDocTypes: ExportItem[];
 
     static fromData(
         data: ExportConfiguration,
@@ -2001,6 +2006,9 @@ export class ExportConfiguration {
         instance.assetExportConfiguration = __getCopyArrayFn(
             AssetExportConfiguration.fromData,
         )(data.assetExportConfiguration);
+        instance.genericStorageAppDocTypes = __getCopyArrayFn(
+            ExportItem.fromData,
+        )(data.genericStorageAppDocTypes);
         return instance;
     }
 }

@@ -20,6 +20,7 @@ export interface RuntimeInfo {
     label: string;
     description: string;
     runtimeName: string;
+    dataType: string;
     propertyScope?: string;
     value: any;
     isImage: boolean;

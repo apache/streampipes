@@ -34,7 +34,8 @@ import {
     ConfirmDialogComponent,
     CurrentUserService,
     DialogService,
-    ObjectPermissionDialogComponent,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
     PanelType,
     SpAssetBrowserService,
     SpBasicHeaderTitleComponent,
@@ -61,6 +62,11 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
+
+type ManageableAsset = SpAssetModel & {
+    name: string;
+    description: string;
+};
 
 @Component({
     selector: 'sp-asset-overview',
@@ -240,18 +246,58 @@ export class SpAssetOverviewComponent implements OnInit {
         });
     }
 
-    openPermissionsDialog(asset: AssetSummaryDto) {
-        this.dialogService.open(ObjectPermissionDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: this.translateService.instant('Manage permissions'),
-            width: '70vw',
-            data: {
-                objectInstanceId: asset.elementId,
-                headerTitle:
-                    this.translateService.instant(
-                        'Manage permissions for asset ',
-                    ) + asset.assetName,
-            },
+    showManageDialog(assetSummary: AssetSummaryDto) {
+        this.assetService.getAsset(assetSummary.elementId).subscribe(asset => {
+            const resource: ManageableAsset = {
+                ...asset,
+                name: asset.assetName,
+                description: asset.assetDescription,
+            };
+            const resourceConfig: ObjectManageDialogResourceConfig<ManageableAsset> =
+                {
+                    resourceLabel: 'Asset',
+                    nameLabel: 'Asset name',
+                    descriptionLabel: 'Asset description',
+                    nameProperty: 'name',
+                    showResourceFields: this.hasWritePrivilege,
+                    showAssetLinking: false,
+                    saveResource: this.hasWritePrivilege
+                        ? resource => {
+                              const { name, description, ...assetToSave } =
+                                  resource;
+                              return this.assetService.updateAsset({
+                                  ...assetToSave,
+                                  assetName: name,
+                                  assetDescription: description,
+                              });
+                          }
+                        : undefined,
+                };
+
+            const dialogRef = this.dialogService.open(
+                ObjectManageDialogComponent,
+                {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translateService.instant('Manage'),
+                    width: '50vw',
+                    data: {
+                        objectInstanceId: resource.elementId,
+                        resource,
+                        saveMode: 'immediate',
+                        resourceConfig,
+                        headerTitle:
+                            this.translateService.instant('Manage Asset ') +
+                            resource.assetName,
+                    },
+                },
+            );
+
+            dialogRef.afterClosed().subscribe(refresh => {
+                if (refresh) {
+                    this.loadAssets();
+                    this.assetBrowserService.refreshBrowserAssetData();
+                }
+            });
         });
     }
 }

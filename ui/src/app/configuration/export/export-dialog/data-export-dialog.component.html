@@ -20,49 +20,186 @@
     <div class="sp-dialog-content">
         @if (preview && !exportInProgress) {
             <div fxFlex="100" fxLayout="column" class="p-15">
-                @for (
-                    config of preview.assetExportConfiguration;
-                    track config
-                ) {
-                    <div>
-                        <h4>
-                            {{ 'Exported items {{assetName}}' | translate:{
-                            assetName : config.assetName} }}
-                        </h4>
-                        <sp-data-export-item
-                            [exportItems]="config.adapters"
-                            [sectionTitle]="'Adapters' | translate"
-                        ></sp-data-export-item>
-                        <sp-data-export-item
-                            [exportItems]="config.dashboards"
-                            [sectionTitle]="'Dashboards' | translate"
-                        ></sp-data-export-item>
-                        <sp-data-export-item
-                            [exportItems]="config.dataViews"
-                            [sectionTitle]="'Charts' | translate"
-                        ></sp-data-export-item>
-                        <sp-data-export-item
-                            [exportItems]="config.dataSources"
-                            [sectionTitle]="'Data Streams' | translate"
-                        ></sp-data-export-item>
-                        <sp-data-export-item
-                            [exportItems]="config.dataLakeMeasures"
-                            [sectionTitle]="'Data Lake Storage' | translate"
-                        ></sp-data-export-item>
-                        <sp-data-export-item
-                            [exportItems]="config.files"
-                            [sectionTitle]="'Files' | translate"
-                        ></sp-data-export-item>
-                        <sp-data-export-item
-                            [exportItems]="config.pipelines"
-                            [sectionTitle]="'Pipelines' | translate"
-                        ></sp-data-export-item>
-                        <sp-generic-storage-items
-                            [exportItems]="config.genericStorageDocuments"
-                        >
-                        </sp-generic-storage-items>
-                    </div>
+                @for (section of exportSections; track section.key) {
+                    <sp-split-section
+                        [level]="3"
+                        [title]="section.title | translate"
+                    >
+                        @if (getAssetsForSection(section.key).length > 0) {
+                            @for (
+                                assetConfig of getAssetsForSection(section.key);
+                                track assetConfig.assetId
+                            ) {
+                                <div
+                                    fxLayout="row"
+                                    fxLayoutAlign="space-between center"
+                                >
+                                    <h5>
+                                        {{ assetConfig.assetName }}
+                                    </h5>
+                                    <mat-slide-toggle
+                                        color="accent"
+                                        [checked]="
+                                            isExportAllSelected(
+                                                section.key,
+                                                assetConfig
+                                            )
+                                        "
+                                        (change)="
+                                            changeExportAllSelection(
+                                                section.key,
+                                                assetConfig,
+                                                $event
+                                            )
+                                        "
+                                    >
+                                        {{ 'Export all documents' | translate }}
+                                    </mat-slide-toggle>
+                                </div>
+                                @if (
+                                    !isExportAllSelected(
+                                        section.key,
+                                        assetConfig
+                                    )
+                                ) {
+                                    <div
+                                        fxLayout="row"
+                                        fxLayoutGap="10px"
+                                        class="mb-5"
+                                    >
+                                        <button
+                                            mat-button
+                                            mat-flat-button
+                                            color="accent"
+                                            class="small-button"
+                                            (click)="
+                                                selectAllItemsForAsset(
+                                                    section.key,
+                                                    assetConfig,
+                                                    true
+                                                )
+                                            "
+                                        >
+                                            {{ 'Select all' | translate }}
+                                        </button>
+                                        <button
+                                            mat-button
+                                            mat-flat-button
+                                            class="small-button mat-basic"
+                                            (click)="
+                                                selectAllItemsForAsset(
+                                                    section.key,
+                                                    assetConfig,
+                                                    false
+                                                )
+                                            "
+                                        >
+                                            {{ 'Select none' | translate }}
+                                        </button>
+                                    </div>
+                                    <mat-form-field
+                                        appearance="outline"
+                                        class="form-field mt-md"
+                                    >
+                                        <mat-select
+                                            multiple
+                                            [ngModel]="
+                                                getSelectedItemResourceIds(
+                                                    section.key,
+                                                    assetConfig
+                                                )
+                                            "
+                                            (ngModelChange)="
+                                                updateSelectedItems(
+                                                    section.key,
+                                                    assetConfig,
+                                                    $event
+                                                )
+                                            "
+                                        >
+                                            @for (
+                                                exportItem of assetConfig.items;
+                                                track exportItem.resourceId
+                                            ) {
+                                                <mat-option
+                                                    [value]="
+                                                        exportItem.resourceId
+                                                    "
+                                                >
+                                                    {{ exportItem.label }}
+                                                </mat-option>
+                                            }
+                                        </mat-select>
+                                    </mat-form-field>
+                                }
+                            }
+                        } @else {
+                            <sp-alert-banner
+                                type="info"
+                                [title]="'No linked resources' | translate"
+                                [description]="
+                                    'Only linked resources are part of the application package.'
+                                        | translate
+                                "
+                            ></sp-alert-banner>
+                        }
+                    </sp-split-section>
                 }
+                <sp-split-section
+                    [level]="3"
+                    [title]="'Additional exports' | translate"
+                    [subtitle]="
+                        'Selecting a document type will export all documents of this type'
+                            | translate
+                    "
+                >
+                    @if (getGenericStorageAppDocTypes().length > 0) {
+                        <div section-actions fxLayout="row" fxLayoutGap="10px">
+                            <button
+                                mat-button
+                                mat-flat-button
+                                color="accent"
+                                class="small-button"
+                                (click)="
+                                    selectAllItems(
+                                        getGenericStorageAppDocTypes(),
+                                        true
+                                    )
+                                "
+                            >
+                                {{ 'Select all' | translate }}
+                            </button>
+                            <button
+                                mat-button
+                                mat-flat-button
+                                class="small-button mat-basic"
+                                (click)="
+                                    selectAllItems(
+                                        getGenericStorageAppDocTypes(),
+                                        false
+                                    )
+                                "
+                            >
+                                {{ 'Select none' | translate }}
+                            </button>
+                        </div>
+                        <div fxLayout="column" class="mt-md">
+                            @for (
+                                exportItem of getGenericStorageAppDocTypes();
+                                track exportItem.resourceId
+                            ) {
+                                <mat-checkbox
+                                    [checked]="exportItem.selected"
+                                    (change)="changeItem($event, exportItem)"
+                                >
+                                    {{ exportItem.label }}
+                                </mat-checkbox>
+                            }
+                        </div>
+                    } @else {
+                        <span>{{ 'No linked resources' | translate }}</span>
+                    }
+                </sp-split-section>
             </div>
         }
         @if (exportInProgress) {
