@@ -58,7 +58,7 @@ describe('Test configuration of sites', () => {
             .first()
             .should('have.text', ' Area B ');
 
-        cy.dataCy(SiteUtils.BUTTON_DELETE_SITE + '-My_modified_Site').click();
+        SiteUtils.deleteSite(newSite);
         cy.dataCy(SiteUtils.LABEL_TABLE_NAME).should('have.length', 0);
     });
 });

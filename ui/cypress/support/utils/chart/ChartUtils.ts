@@ -288,7 +288,11 @@ export class ChartUtils {
                 this.getFutureDate(),
             );
         }
-        ChartBtns.addDataViewBtn(dataViewName).click();
+
+        ChartBtns.refreshChartSelectionBtn().should('not.be.disabled');
+        ChartBtns.addDataViewBtn(dataViewName)
+            .should('be.visible')
+            .click('bottom', { scrollBehavior: false });
     }
 
     public static createAndEditDataView() {

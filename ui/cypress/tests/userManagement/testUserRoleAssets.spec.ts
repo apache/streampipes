@@ -20,10 +20,9 @@ import { UserRole } from '../../../src/app/core/auth/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 import { User } from '../../support/model/User';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
-import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { AssetBuilder } from '../../support/builder/AssetBuilder';
 
-describe('Test User Roles for Dashboards', () => {
+describe('Test User Roles for Assets', () => {
     const assetName = 'test-asset';
     let assetUser1: User;
     let assetAdmin1: User;
@@ -61,7 +60,7 @@ describe('Test User Roles for Dashboards', () => {
     it('Make asset public', () => {
         setup();
 
-        PermissionUtils.markElementAsPublic(assetName);
+        AssetUtils.markAsPublic(assetName);
 
         assetIsVisibleAndEditableCanChangePermissions(UserUtils.adminUser);
 
@@ -73,7 +72,7 @@ describe('Test User Roles for Dashboards', () => {
     it('Share asset with other user and change ownership', () => {
         setup();
 
-        PermissionUtils.authorizeUser(assetName, assetAdmin2.email);
+        AssetUtils.authorizeUser(assetName, assetAdmin2.email);
 
         assetIsVisibleAndEditableCanChangePermissions(UserUtils.adminUser);
 
@@ -83,7 +82,7 @@ describe('Test User Roles for Dashboards', () => {
 
         UserUtils.switchUser(assetAdmin1);
         AssetUtils.goToAssets();
-        PermissionUtils.changeOwnership(assetName, assetAdmin2.email);
+        AssetUtils.changeOwnership(assetName, assetAdmin2.email);
 
         assetIsNotVisible(assetAdmin1);
 
@@ -101,7 +100,7 @@ describe('Test User Roles for Dashboards', () => {
 
         setup();
 
-        PermissionUtils.authorizeGroup(assetName, assetAdminGroup);
+        AssetUtils.authorizeGroup(assetName, assetAdminGroup);
 
         assetIsVisibleAndEditableCanChangePermissions(UserUtils.adminUser);
 
@@ -122,7 +121,7 @@ describe('Test User Roles for Dashboards', () => {
         AssetUtils.checkAmountOfAssets(1);
         AssetUtils.checkAssetCanBeEdited(assetName);
 
-        PermissionUtils.validateUserCanChangePermissions(assetName);
+        AssetUtils.validateUserCanChangePermissions(assetName);
     }
 
     function assetIsVisibleAndEditableCannotChangePermissions(user: User) {
@@ -130,7 +129,7 @@ describe('Test User Roles for Dashboards', () => {
         AssetUtils.checkAmountOfAssets(1);
         AssetUtils.checkAssetCanBeEdited(assetName);
 
-        PermissionUtils.validateUserCanNotChangePermissions(assetName);
+        AssetUtils.validateUserCanNotChangePermissions(assetName);
     }
 
     function assetIsVisibleButNotEditable(user: User) {
@@ -138,7 +137,7 @@ describe('Test User Roles for Dashboards', () => {
         AssetUtils.checkAmountOfAssets(1);
         AssetUtils.checkAssetCanNotBeEdited(assetName);
 
-        PermissionUtils.validateUserCanNotChangePermissions(assetName);
+        AssetUtils.validateUserCanNotChangePermissions(assetName);
     }
 
     function assetIsNotVisible(user: User) {

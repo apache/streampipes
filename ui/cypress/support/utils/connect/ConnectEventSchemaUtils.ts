@@ -41,9 +41,16 @@ export class ConnectEventSchemaUtils {
         propertyName: string,
         propertyScope: string,
     ) {
-        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 }).click();
+        ConnectBtns.configureFieldsEventPreviewResult().should('be.visible');
+        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 })
+            .should('be.visible')
+            .click();
 
-        cy.dataCy(propertyScope + '-property-scope-value').click();
+        cy.dataCy(propertyScope + '-property-scope-value', {
+            timeout: 10000,
+        })
+            .should('be.visible')
+            .click();
     }
 
     public static addTimestampProperty() {

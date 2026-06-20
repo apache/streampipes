@@ -22,4 +22,8 @@ export class SharedUtils {
     public static confirmDialogVisible() {
         SharedBtns.confirmDialog().should('be.visible');
     }
+
+    public static confirmDialogClosed() {
+        SharedBtns.confirmDialog().should('not.exist');
+    }
 }
