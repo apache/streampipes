@@ -51,7 +51,7 @@
         <commons-collections.version>3.2.2</commons-collections.version>
         <commoms-collection4.version>4.4</commoms-collection4.version>
         <commons-compress.version>1.27.1</commons-compress.version>
-        <commons-configuration2.version>2.14.0</commons-configuration2.version>
+        <commons-configuration2.version>2.15.1</commons-configuration2.version>
         <commons-csv.version>1.14.1</commons-csv.version>
         <commons-io.version>2.21.0</commons-io.version>
         <commons-jexl.version>3.4.0</commons-jexl.version>
