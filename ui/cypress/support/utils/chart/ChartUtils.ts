@@ -802,13 +802,10 @@ export class ChartUtils {
     }
 
     public static waitForCountingResults() {
-        cy.dataCy('datalake-total-count-button').click();
-        cy.dataCy('datalake-number-of-events-spinner', {
-            timeout: 10000,
-        }).should('exist');
-        cy.dataCy('datalake-number-of-events-spinner', {
-            timeout: 10000,
-        }).should('not.exist');
+        ChartBtns.datalakeTotalCountBtn().should('be.visible').click();
+        ChartBtns.datalakeTotalCountBtn().should('not.exist');
+        ChartBtns.datalakeNumberOfEventsSpinner().should('not.exist');
+        ChartBtns.datalakeNumberEvents().should('be.visible');
     }
 
     public static getDatalakeNumberOfEvents(): Cypress.Chainable<string> {
