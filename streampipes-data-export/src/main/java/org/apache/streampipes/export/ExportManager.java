@@ -20,7 +20,10 @@ package org.apache.streampipes.export;
 
 import org.apache.streampipes.export.generator.ExportPackageGenerator;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.export.ExportConfiguration;
+import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,8 +38,10 @@ public class ExportManager {
         .stream()
         .map(assetId -> new AssetLinkResolver(assetId, extensionServiceRequestManager).resolveResources())
         .collect(Collectors.toList());
+    var genericStorageAppDocTypes = getGenericStorageAppDocTypes();
 
     exportConfig.setAssetExportConfiguration(assetExportConfigurations);
+    exportConfig.setGenericStorageAppDocTypes(genericStorageAppDocTypes);
 
     return exportConfig;
   }
@@ -45,6 +50,20 @@ public class ExportManager {
                                         ExtensionServiceRequestManager extensionServiceRequestManager)
       throws IOException {
     return new ExportPackageGenerator(exportConfiguration, extensionServiceRequestManager).generateExportPackage();
+  }
+
+  private static List<ExportItem> getGenericStorageAppDocTypes() {
+    try {
+      return StorageDispatcher.INSTANCE.getNoSqlStore()
+          .getGenericStorage()
+          .getAllAppDocTypes()
+          .stream()
+          .filter(appDocType -> !SpAssetModel.APP_DOC_TYPE.equals(appDocType))
+          .map(appDocType -> new ExportItem(appDocType, appDocType, false))
+          .collect(Collectors.toList());
+    } catch (IOException e) {
+        return List.of();
+    }
   }
 
 }
