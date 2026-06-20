@@ -377,7 +377,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
     }
     try {
       var client = connectedClient.getClient();
-      var response = client.readValues(0, TimestampsToReturn.Neither, Collections.singletonList(SERVER_STATE_NODE))
+      var response = client.readValuesAsync(0, TimestampsToReturn.Neither, Collections.singletonList(SERVER_STATE_NODE))
           .get(HEALTH_CHECK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
       if (response == null || response.isEmpty()) {
         return attemptReconnectAndReport("OPC-UA server did not respond - empty response from server state node");
@@ -387,7 +387,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
         return attemptReconnectAndReport("OPC-UA server returned bad status: " + statusCode);
       }
       if (!opcUaAdapterConfig.inPullMode()) {
-        var subscriptions = client.getSubscriptionManager().getSubscriptions();
+        var subscriptions = client.getSubscriptions();
         if (subscriptions.isEmpty()) {
           return attemptReconnectAndReport("OPC-UA subscriptions are not active");
         }
