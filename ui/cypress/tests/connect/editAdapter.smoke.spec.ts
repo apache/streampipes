@@ -105,6 +105,7 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.finishEventSchemaConfiguration();
         SharedUtils.confirmDialogVisible();
         SharedBtns.confirmDialogConfirmBtn().click();
+        SharedUtils.confirmDialogClosed();
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
 
         storeAndStartEditedAdapter();
