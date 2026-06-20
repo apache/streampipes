@@ -28,9 +28,11 @@ import java.util.List;
 public class ExportConfiguration {
 
   private List<AssetExportConfiguration> assetExportConfiguration;
+  private List<ExportItem> genericStorageAppDocTypes;
 
   public ExportConfiguration() {
     this.assetExportConfiguration = new ArrayList<>();
+    this.genericStorageAppDocTypes = new ArrayList<>();
   }
 
   public List<AssetExportConfiguration> getAssetExportConfiguration() {
@@ -39,5 +41,17 @@ public class ExportConfiguration {
 
   public void setAssetExportConfiguration(List<AssetExportConfiguration> assetExportConfiguration) {
     this.assetExportConfiguration = assetExportConfiguration;
+  }
+
+  public List<ExportItem> getGenericStorageAppDocTypes() {
+    return genericStorageAppDocTypes;
+  }
+
+  public void setGenericStorageAppDocTypes(List<ExportItem> genericStorageAppDocTypes) {
+    this.genericStorageAppDocTypes = genericStorageAppDocTypes;
+  }
+
+  public void addGenericStorageAppDocType(ExportItem exportItem) {
+    this.genericStorageAppDocTypes.add(exportItem);
   }
 }

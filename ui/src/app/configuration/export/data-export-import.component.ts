@@ -46,14 +46,15 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 interface AssetReferenceExportItems {
-    referencedLabels: ExportItem[];
-    referencedSites: ExportItem[];
+    referencedLabels: Record<string, ExportItem[]>;
+    referencedSites: Record<string, ExportItem[]>;
 }
 
 @Component({
@@ -65,6 +66,7 @@ interface AssetReferenceExportItems {
         LayoutDirective,
         FlexDirective,
         LayoutAlignDirective,
+        LayoutGapDirective,
         SplitSectionComponent,
         MatCheckbox,
         MatButton,
@@ -111,6 +113,16 @@ export class SpDataExportImportComponent implements OnInit {
         } else {
             this.selectedAssets.splice(this.selectedAssets.indexOf(assetId), 1);
         }
+    }
+
+    selectAllAssets(select: boolean): void {
+        this.selectedAssets = select
+            ? this.assets.map(asset => asset.elementId)
+            : [];
+    }
+
+    isSelected(assetId: string): boolean {
+        return this.selectedAssets.includes(assetId);
     }
 
     openExportDialog(): void {
@@ -178,29 +190,39 @@ export class SpDataExportImportComponent implements OnInit {
         labels: SpLabel[],
         sites: AssetSiteDesc[],
     ): AssetReferenceExportItems {
-        const labelIds = new Set<string>();
-        const siteIds = new Set<string>();
-
-        assets.forEach(asset =>
-            this.collectAssetReferences(asset, labelIds, siteIds),
+        const labelsById = new Map(
+            labels.filter(label => label._id).map(label => [label._id!, label]),
         );
+        const sitesById = new Map(
+            sites.filter(site => site._id).map(site => [site._id, site]),
+        );
+        const referencedLabels: Record<string, ExportItem[]> = {};
+        const referencedSites: Record<string, ExportItem[]> = {};
 
-        return {
-            referencedLabels: labels
-                .filter(label => label._id && labelIds.has(label._id))
+        assets.forEach(asset => {
+            const labelIds = new Set<string>();
+            const siteIds = new Set<string>();
+            this.collectAssetReferences(asset, labelIds, siteIds);
+
+            referencedLabels[asset.elementId] = [...labelIds]
+                .map(labelId => labelsById.get(labelId))
+                .filter((label): label is SpLabel => label !== undefined)
                 .map(label => ({
                     resourceId: label._id!,
                     label: label.label,
                     selected: true,
-                })),
-            referencedSites: sites
-                .filter(site => site._id && siteIds.has(site._id))
+                }));
+            referencedSites[asset.elementId] = [...siteIds]
+                .map(siteId => sitesById.get(siteId))
+                .filter((site): site is AssetSiteDesc => site !== undefined)
                 .map(site => ({
                     resourceId: site._id,
                     label: site.label,
                     selected: true,
-                })),
-        };
+                }));
+        });
+
+        return { referencedLabels, referencedSites };
     }
 
     private collectAssetReferences(
