@@ -32,6 +32,6 @@ describe('Add and Delete Label', () => {
 
         ConfigurationUtils.checkLabel(labelName);
 
-        ConfigurationUtils.deleteLabel();
+        ConfigurationUtils.deleteLabel(labelName);
     });
 });
