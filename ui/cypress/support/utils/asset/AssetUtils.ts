@@ -22,6 +22,7 @@ import { GeneralUtils } from '../GeneralUtils';
 import { Asset } from '../../model/Asset';
 import { Isa95Type } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { AssetBuilder } from '../../builder/AssetBuilder';
+import { PermissionUtils } from '../user/PermissionUtils';
 
 export class AssetUtils {
     public static goToAssets() {
@@ -128,6 +129,41 @@ export class AssetUtils {
     public static checkAssetCanNotBeEdited(assetName: string) {
         GeneralUtils.openMenuForRow(assetName);
         AssetBtns.editAssetBtn(assetName).should('not.exist');
+    }
+
+    public static openManageAsset(assetName: string) {
+        GeneralUtils.openMenuForRow(assetName);
+        AssetBtns.manageAssetBtn(assetName).should('be.visible').click();
+    }
+
+    public static changeOwnership(assetName: string, email: string) {
+        AssetUtils.openManageAsset(assetName);
+        PermissionUtils.changeOwnershipInManageDialog(email);
+    }
+
+    public static markAsPublic(assetName: string) {
+        AssetUtils.openManageAsset(assetName);
+        PermissionUtils.markElementAsPublicInManageDialog();
+    }
+
+    public static authorizeUser(assetName: string, email: string) {
+        AssetUtils.openManageAsset(assetName);
+        PermissionUtils.authorizeUserInManageDialog(email);
+    }
+
+    public static authorizeGroup(assetName: string, groupName: string) {
+        AssetUtils.openManageAsset(assetName);
+        PermissionUtils.authorizeGroupInManageDialog(groupName);
+    }
+
+    public static validateUserCanChangePermissions(assetName: string) {
+        AssetUtils.openManageAsset(assetName);
+        PermissionUtils.validateUserCanChangePermissionsInManageDialog();
+    }
+
+    public static validateUserCanNotChangePermissions(assetName: string) {
+        AssetUtils.openManageAsset(assetName);
+        PermissionUtils.validateUserCanNotChangePermissionsInManageDialog();
     }
 
     public static checkAmountOfAssetsGreaterThan(amount: number) {
