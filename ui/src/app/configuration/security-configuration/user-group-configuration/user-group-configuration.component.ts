@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Group, UserGroupService } from '@streampipes/platform-services';
 import {
     MatCell,
@@ -68,16 +68,14 @@ import { MatTooltip } from '@angular/material/tooltip';
     ],
 })
 export class SecurityUserGroupConfigComponent implements OnInit {
+    private userGroupService = inject(UserGroupService);
+    private dialogService = inject(DialogService);
+    private dialog = inject(MatDialog);
+    private translateService = inject(TranslateService);
+
     dataSource: MatTableDataSource<Group>;
 
     displayedColumns: string[] = ['groupName', 'groupId', 'edit'];
-
-    constructor(
-        private userGroupService: UserGroupService,
-        private dialogService: DialogService,
-        private dialog: MatDialog,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.loadAllGroups();
@@ -111,9 +109,11 @@ export class SecurityUserGroupConfigComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result === 'confirm') {
-                this.userGroupService.deleteGroup(group).subscribe(response => {
-                    this.loadAllGroups();
-                });
+                this.userGroupService
+                    .deleteGroup(group)
+                    .subscribe(_response => {
+                        this.loadAllGroups();
+                    });
             }
         });
     }

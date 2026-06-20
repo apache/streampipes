@@ -28,6 +28,7 @@ describe('Test Time Order in Charts', () => {
     });
 
     it('Perform Test with ascending and descending order', () => {
+        const chartName = 'Time order chart';
         const startDate = new Date('2022-04-01T00:00:00Z');
         const endDate = new Date('2022-07-01T23:59:59Z');
 
@@ -51,8 +52,9 @@ describe('Test Time Order in Charts', () => {
         });
 
         // Save and leave view, edit view again and check ascending order
-        ChartUtils.saveDataViewConfiguration();
-        ChartUtils.editDataView('New chart');
+        ChartUtils.selectAppearanceConfig();
+        ChartUtils.saveDataViewConfiguration(false, false, chartName);
+        ChartUtils.editDataView(chartName);
         ChartUtils.clickOrderBy('ascending');
         ChartUtils.openVisualizationConfig();
         ChartUtils.selectVisualizationType(ChartWidget.TABLE);

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     FlexDirective,
@@ -47,6 +47,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class SpBasicViewComponent {
+    private router = inject(Router);
+
     @Input()
     padding = false;
 
@@ -61,8 +63,6 @@ export class SpBasicViewComponent {
 
     @Input()
     margin = '10px';
-
-    constructor(private router: Router) {}
 
     navigateBack() {
         this.router.navigate(this.backLinkTarget);

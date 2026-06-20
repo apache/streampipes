@@ -17,7 +17,7 @@
  */
 
 import { RestApi } from './rest-api.service';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, of, timer } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {
@@ -38,15 +38,17 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+    private restApi = inject(RestApi);
+    private tokenStorage = inject(JwtTokenStorageService);
+    private currentUserService = inject(CurrentUserService);
+    private router = inject(Router);
+    private loginService = inject(LoginService);
+
     private refreshInFlight$?: Observable<boolean>;
 
-    constructor(
-        private restApi: RestApi,
-        private tokenStorage: JwtTokenStorageService,
-        private currentUserService: CurrentUserService,
-        private router: Router,
-        private loginService: LoginService,
-    ) {
+    constructor() {
+        const tokenStorage = this.tokenStorage;
+
         if (this.authenticated() && tokenStorage.getUser()) {
             this.currentUserService.authToken$.next(tokenStorage.getToken());
             this.currentUserService.user$.next(tokenStorage.getUser());
@@ -124,7 +126,7 @@ export class AuthService {
                         observer.next(false);
                     }
                 },
-                error => {
+                _error => {
                     observer.error();
                 },
             ),

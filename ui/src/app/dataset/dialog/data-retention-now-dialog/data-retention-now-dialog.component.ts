@@ -65,7 +65,7 @@ export class DataRetentionNowDialogComponent implements OnInit {
             .runCleanupNow(this.measurementIndex)
             .pipe(finalize(() => (this.isInProgress = false)))
             .subscribe(
-                data => {
+                _data => {
                     this.isError = false;
                     this.currentStatus = this.translateService.instant(
                         'Sync was successful.',

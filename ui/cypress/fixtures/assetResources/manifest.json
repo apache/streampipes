@@ -1,0 +1,77 @@
+{
+  "requiredProcessorAppIds": [],
+  "requiredDataSinkAppIds": [],
+  "requiredAdapterAppIds": [],
+  "assets": [
+    "kYthZXBMdSgTdihClTJyLbIG",
+    "liqIcmkADqnKDRlfaF43HFDZ",
+    "KsOpTyZgEzT6UpedeiofblZw"
+  ],
+  "adapters": [
+    "spadapterdescriptionBdZLYE",
+    "spadapterdescriptionZnFhKP",
+    "spadapterdescriptionLRYUMD",
+    "spadapterdescriptionHQnIjw",
+    "spadapterdescriptionhpoLJw",
+    "spadapterdescriptionDoKerB",
+    "spadapterdescriptionEvSmOc",
+    "spadapterdescriptionYhoGMR",
+    "spadapterdescriptionjvrJRa"
+  ],
+  "dashboards": [
+    "spdashboardmodelEWbseB",
+    "spdashboardmodelbOpOkq",
+    "spdashboardmodelRaxUZu",
+    "spdashboardmodelKbQunt",
+    "spdashboardmodelujvPqM",
+    "spdashboardmodelJKDStZ",
+    "spdashboardmodelgeRBrk",
+    "spdashboardmodelKMNvrM",
+    "spdashboardmodelJptgDU"
+  ],
+  "dashboardWidgets": [],
+  "dataViews": [],
+  "dataViewWidgets": [],
+  "dataLakeMeasures": [
+    "1b666c03-c0a2-44e1-b1ef-9b5eeec62475",
+    "d60cf304-69bb-441a-ace4-abcadda0184d",
+    "66cc0705-8816-4b31-86a2-1bcc9e8e2a7d",
+    "d4e104af-a98c-43b0-8bd3-b5df467d1e89",
+    "8be10578-81f9-46f7-8c1c-b13a21d6297d",
+    "af5313b9-7cf9-4b7e-b73a-802d3d6782a3",
+    "cb1aba54-b132-4952-b868-b41c04e335e4",
+    "f462bdbe-3746-4045-9c61-04255454a1a2",
+    "a70ea850-1a11-46a5-af43-e157948863f4"
+  ],
+  "dataSources": [
+    "spspdatastreamiQYJDi",
+    "spspdatastreamkcOONH",
+    "spspdatastreamydxexG",
+    "spspdatastreamshyiYp",
+    "spspdatastreamShPLfn",
+    "spspdatastreamGfKHOr",
+    "spspdatastreamlUxdpQ",
+    "spspdatastreamfuRSBb",
+    "spspdatastreamPjKtIn"
+  ],
+  "pipelines": [
+    "persist-adapter-1_2_asset-1_0asset-1_2-0u13l8",
+    "persist-adapter-1_0_asset-1_0-rq4f7m",
+    "persist-adapter-2_0_asset-2_0-ggaqfv",
+    "persist-adapter-3_2_asset-3_0asset-3_2-h7itcn",
+    "persist-adapter-2_1_asset-2_0asset-2_1-daygw6",
+    "persist-adapter-3_0_asset-3_0-1iuopi",
+    "persist-adapter-2_2_asset-2_0asset-2_2-ajm2kf",
+    "persist-adapter-1_1_asset-1_0asset-1_1-98vfeq",
+    "persist-adapter-3_1_asset-3_0asset-3_1-0ijrde"
+  ],
+  "files": [],
+  "genericStorageDocuments": [
+    "e06d0ce24467785614676b465100fc0b",
+    "e06d0ce24467785614676b4651010165",
+    "e06d0ce24467785614676b465100f7c7",
+    "e06d0ce24467785614676b465100e949",
+    "e06d0ce24467785614676b4651010b49",
+    "e06d0ce24467785614676b465100fabc"
+  ]
+}

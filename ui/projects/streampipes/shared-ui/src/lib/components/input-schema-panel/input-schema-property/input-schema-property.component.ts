@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { EventPropertyUnion } from '@streampipes/platform-services';
 import { PipelineElementSchemaService } from '../../../services/pipeline-element-schema.service';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -27,14 +27,12 @@ import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
     imports: [LayoutDirective, FlexDirective],
 })
 export class InputSchemaPropertyComponent implements OnInit {
+    private pipelineElementSchemaService = inject(PipelineElementSchemaService);
+
     @Input()
     property: EventPropertyUnion;
 
     runtimeType: string;
-
-    constructor(
-        private pipelineElementSchemaService: PipelineElementSchemaService,
-    ) {}
 
     ngOnInit() {
         this.runtimeType =

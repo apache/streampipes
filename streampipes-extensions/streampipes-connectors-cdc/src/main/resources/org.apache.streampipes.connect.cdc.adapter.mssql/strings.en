@@ -1,0 +1,47 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+
+org.apache.streampipes.connect.cdc.adapter.mssql.title=Microsoft SQL Server CDC
+org.apache.streampipes.connect.cdc.adapter.mssql.description=Captures newly inserted rows from a CDC-enabled Microsoft SQL Server table
+
+host.title=Host
+host.description=SQL Server hostname or IP address
+
+port.title=Port
+port.description=SQL Server TCP port
+
+database.title=Database
+database.description=Name of the CDC-enabled SQL Server database
+
+username.title=Username
+username.description=SQL Server user name
+
+password.title=Password
+password.description=SQL Server password
+
+encrypt.title=Encrypt Connection
+encrypt.description=Use TLS when connecting to SQL Server
+
+trust-server-certificate.title=Trust Server Certificate
+trust-server-certificate.description=Trust the SQL Server certificate without validating its chain
+
+timezone.title=Timezone
+timezone.description=Timezone to assume for SQL Server DATETIME and DATETIME2 values without timezone information, for example Europe/Berlin. Defaults to UTC.
+
+table.title=Table
+table.description=Select a CDC-enabled table from the configured database

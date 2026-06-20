@@ -41,9 +41,16 @@ export class ConnectEventSchemaUtils {
         propertyName: string,
         propertyScope: string,
     ) {
-        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 }).click();
+        ConnectBtns.configureFieldsEventPreviewResult().should('be.visible');
+        cy.dataCy('property-scope-' + propertyName, { timeout: 10000 })
+            .should('be.visible')
+            .click();
 
-        cy.dataCy(propertyScope + '-property-scope-value').click();
+        cy.dataCy(propertyScope + '-property-scope-value', {
+            timeout: 10000,
+        })
+            .should('be.visible')
+            .click();
     }
 
     public static addTimestampProperty() {
@@ -53,11 +60,13 @@ export class ConnectEventSchemaUtils {
     }
 
     private static addTimestampFieldToScript() {
-        ConnectBtns.configureSchemaScriptEditor()
-            .type('{backspace}'.repeat(22)) // 2. Delete the "  out.collect(event);\n}" part
-            .type(
-                '  event.timestamp = new Date().getTime();{enter}return out.collect(event);{enter}}',
-            );
+        const fullScript =
+            'function transform(event, out, ctx) {\n' +
+            '  utils.addTimestamp(event);\n' +
+            '  return out.collect(event);\n' +
+            '}';
+
+        ConnectBtns.setConfigureSchemaScriptEditorValue(fullScript);
     }
 
     public static unitTransformation(

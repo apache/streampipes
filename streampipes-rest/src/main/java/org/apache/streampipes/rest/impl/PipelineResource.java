@@ -24,9 +24,11 @@ import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
+import org.apache.streampipes.manager.pipeline.update.MeasurementUpdateManagement;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
+import org.apache.streampipes.model.datalake.MeasurementUpdateInfo;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
@@ -37,7 +39,10 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.model.pipeline.PipelineSummaryDto;
 import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
+import org.apache.streampipes.model.resource.ResourceSummaryDto;
+import org.apache.streampipes.resource.management.PipelineResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.exception.SpNotificationException;
@@ -83,6 +88,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   private final CompactPipelineManagement compactPipelineManagement;
   private final ExtensionServiceRequestManager requestManager;
+  private final MeasurementUpdateManagement measurementUpdateManagement;
 
   public PipelineResource(ExtensionServiceRequestManager requestManager) {
     this.compactPipelineManagement = new CompactPipelineManagement(
@@ -90,6 +96,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
         requestManager
     );
     this.requestManager = requestManager;
+    this.measurementUpdateManagement = new MeasurementUpdateManagement();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -104,6 +111,13 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   public List<Pipeline> get() {
     return PipelineManager.getAllPipelines();
   }
+
+  @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResourceSummaryDto<PipelineSummaryDto> getPipelineSummary() {
+    return new PipelineResourceManager().getSummary(getAuthentication());
+  }
+
 
   @GetMapping(
       path = "{pipelineId}/status",
@@ -187,6 +201,18 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<CompactPipeline> convertToCompactPipeline(@RequestBody Pipeline pipeline) {
     return ok(compactPipelineManagement.convertPipeline(pipeline));
+  }
+
+  @PutMapping(
+      path = "/{pipelineId}/pipeline-migration-preflight",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Check migration warnings for an existing pipeline update", tags = {"Pipeline"})
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
+  public ResponseEntity<List<MeasurementUpdateInfo>> performPipelineMigrationPreflight(
+      @PathVariable("pipelineId") String pipelineId,
+      @RequestBody Pipeline pipeline) {
+    return ok(measurementUpdateManagement.checkPipelineMigrations(pipelineId, pipeline));
   }
 
   @PostMapping(

@@ -66,4 +66,17 @@ export class SiteUtils {
     public static openEditSiteDialog() {
         cy.dataCy(SiteUtils.BUTTON_EDIT_SITE).first().click();
     }
+
+    public static deleteSite(siteName: string) {
+        const siteSelectorName = siteName.replaceAll(' ', '_');
+
+        cy.dataCy(
+            `${SiteUtils.BUTTON_DELETE_SITE}-${siteSelectorName}`,
+        ).click();
+        cy.dataCy('confirm-delete').should('be.visible').click();
+        cy.contains(
+            `[data-cy="${SiteUtils.LABEL_TABLE_NAME}"]`,
+            siteName,
+        ).should('not.exist');
+    }
 }

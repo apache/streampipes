@@ -17,7 +17,7 @@
  */
 
 import { JsplumbBridge } from './jsplumb-bridge.service';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
     InvocablePipelineElementUnion,
     PipelineElementConfig,
@@ -37,13 +37,11 @@ import { IdGeneratorService } from '../../core-services/id-generator/id-generato
 
 @Injectable({ providedIn: 'root' })
 export class JsplumbService {
-    idCounter = 0;
+    private jsplumbFactory = inject(JsplumbFactoryService);
+    private jsplumbEndpointService = inject(JsplumbEndpointService);
+    private idGeneratorService = inject(IdGeneratorService);
 
-    constructor(
-        private jsplumbFactory: JsplumbFactoryService,
-        private jsplumbEndpointService: JsplumbEndpointService,
-        private idGeneratorService: IdGeneratorService,
-    ) {}
+    idCounter = 0;
 
     isFullyConnected(
         pipelineElementConfig: PipelineElementConfig,

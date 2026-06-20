@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import {
     MatNestedTreeNode,
@@ -38,6 +45,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { LayoutAlignDirective } from '@ngbracket/ngx-layout/flex';
+import { SpAlertBannerComponent } from '../alert-banner/alert-banner.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-asset-link-configuration',
@@ -53,9 +62,13 @@ import { LayoutAlignDirective } from '@ngbracket/ngx-layout/flex';
         LayoutAlignDirective,
         MatTreeNodeOutlet,
         MatTreeNode,
+        SpAlertBannerComponent,
+        TranslatePipe,
     ],
 })
 export class AssetLinkConfigurationComponent implements OnInit {
+    private assetService = inject(AssetManagementService);
+
     @Input() linkageData: LinkageData[] = [];
     @Input() stepper: MatStepper;
     @Input() isEdit: boolean;
@@ -79,7 +92,7 @@ export class AssetLinkConfigurationComponent implements OnInit {
     deselectedAssets: SpAssetTreeNode[] = [];
     originalAssets: SpAssetTreeNode[] = [];
 
-    constructor(private assetService: AssetManagementService) {
+    constructor() {
         this.treeControl = new NestedTreeControl<SpAssetTreeNode>(
             node => node.assets,
         );

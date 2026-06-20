@@ -19,14 +19,16 @@
 package org.apache.streampipes.extensions.connectors.opcua.utils;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.security.CompositeCertificateValidator;
 import org.apache.streampipes.model.opcua.CertificateUsage;
 
 import org.eclipse.milo.opcua.stack.core.UaException;
+import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ExecutionException;
+import java.util.Optional;
 
 public class OpcUaCertificateUtils {
 
@@ -44,7 +46,7 @@ public class OpcUaCertificateUtils {
     return getCoreCertificatePath() + "/trusted";
   }
 
-  public static boolean isCertificateException(ExecutionException e) {
+  public static boolean isCertificateException(UaException e) {
     Throwable cause = e.getCause();
 
     if (cause instanceof UaException uaException) {
@@ -70,15 +72,41 @@ public class OpcUaCertificateUtils {
     return containsRejectedStatusCode;
   }
 
-  public static String makeExceptionMessage(ExecutionException e) {
-    StringBuilder message = new StringBuilder(
-        "The provided certificate could not be trusted. Administrators can accept this certificate in the settings. "
-    );
-    Throwable cause = e.getCause();
-    if (cause != null) {
-      message.append("Reason: ").append(cause.getMessage());
+  public static String makeExceptionMessage(UaException e,
+                                            OpcUaConfig config) {
+    UaException certificateException = extractCertificateException(e).orElse(e);
+    String reason = certificateException.getMessage();
+
+    if (config != null && config.isServerCertificateRejectedByClient()) {
+      return "The OPC UA server certificate is not yet trusted by StreamPipes. "
+          + "Administrators can accept this certificate in the settings. "
+          + "Reason: " + reason;
     }
-    return message.toString();
+
+    if (config != null && config.isServerCertificateValidated()) {
+      return "The OPC UA server rejected the StreamPipes client certificate. "
+          + "Add the StreamPipes client certificate to the server's trusted certificate store and retry. "
+          + "Reason: " + reason;
+    }
+
+    return "A certificate-related OPC UA security error occurred. "
+        + "If the server certificate is pending in StreamPipes, administrators can accept it in the settings. "
+        + "If the server requires trusted client certificates, add the StreamPipes client certificate to the server's trusted certificate store. "
+        + "Reason: " + reason;
+  }
+
+  private static Optional<UaException> extractCertificateException(UaException e) {
+    if (isRejectedStatusCode(e.getStatusCode())) {
+      return Optional.of(e);
+    }
+
+    return UaException.extract(e.getCause())
+        .filter(uaException -> isRejectedStatusCode(uaException.getStatusCode()));
+  }
+
+  private static boolean isRejectedStatusCode(StatusCode statusCode) {
+    return statusCode != null
+        && CompositeCertificateValidator.REJECTED_STATUS_CODES.contains(statusCode.getValue());
   }
 
   public static void sendUsageToCore(String thumbprint,

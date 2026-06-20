@@ -19,10 +19,14 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.dashboard.CompositeDashboardModel;
 import org.apache.streampipes.model.dashboard.DashboardModel;
+import org.apache.streampipes.model.dashboard.DashboardSummaryDto;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.Map;
@@ -36,6 +40,21 @@ public class DataExplorerResourceManager extends CrudResourceManager<DashboardMo
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage(), DashboardModel.class);
     this.widgetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerWidgetStorage();
     this.dataLakeMeasureStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
+  }
+
+  public ResourceSummaryDto<DashboardSummaryDto> getSummary(Authentication auth) {
+    var dashboards = findAll()
+        .stream()
+        .filter(dashboard -> permissionEvaluator.hasPermission(auth, dashboard.getElementId(), "READ"))
+        .map(dashboard -> new DashboardSummaryDto(
+            dashboard.getElementId(),
+            getDashboardName(dashboard),
+            getDashboardDescription(dashboard),
+            getCreatedAt(dashboard),
+            getLastModified(dashboard)))
+        .toList();
+
+    return new ResourceSummaryDto<>(dashboards, dashboards.size());
   }
 
   public CompositeDashboardModel getCompositeDashboard(String dashboardId) {
@@ -56,5 +75,31 @@ public class DataExplorerResourceManager extends CrudResourceManager<DashboardMo
         .filter(String.class::isInstance)
         .map(String.class::cast)
         .toList();
+  }
+
+  private String getDashboardName(DashboardModel dashboard) {
+    if (dashboard == null) {
+      return null;
+    }
+
+    return dashboard.getName() != null ? dashboard.getName() : dashboard.getElementId();
+  }
+
+  private String getDashboardDescription(DashboardModel dashboard) {
+    return dashboard != null && dashboard.getDescription() != null
+        ? dashboard.getDescription()
+        : "";
+  }
+
+  private Long getCreatedAt(DashboardModel dashboard) {
+    return dashboard != null && dashboard.getMetadata() != null
+        ? dashboard.getMetadata().getCreatedAtEpochMs()
+        : null;
+  }
+
+  private Long getLastModified(DashboardModel dashboard) {
+    return dashboard != null && dashboard.getMetadata() != null
+        ? dashboard.getMetadata().getLastModifiedEpochMs()
+        : null;
   }
 }

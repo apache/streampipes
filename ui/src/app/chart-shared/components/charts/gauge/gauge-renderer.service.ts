@@ -17,7 +17,7 @@
  */
 
 import { inject, Injectable } from '@angular/core';
-import { GaugeWidgetModel } from './model/gauge-widget.model';
+import { GaugeVisConfig, GaugeWidgetModel } from './model/gauge-widget.model';
 import { EChartsOption, GaugeSeriesOption } from 'echarts';
 import { FieldUpdateInfo } from '../../../models/field-update.model';
 import {
@@ -31,6 +31,7 @@ import {
 import { WidgetSize } from '../../../models/dataset.model';
 import { EchartsBasicOptionsGeneratorService } from '../../../echarts-renderer/echarts-basic-options-generator.service';
 import { SpFieldUpdateService } from '../../../services/field-update.service';
+import { ResultLabelService } from '../../../services/result-label.service';
 
 @Injectable({ providedIn: 'root' })
 export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetModel> {
@@ -38,25 +39,43 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
     protected echartsBaseOptionsGenerator = inject(
         EchartsBasicOptionsGeneratorService,
     );
+    protected resultLabelService = inject(ResultLabelService);
 
     makeSeriesItem(
         seriesName: string,
-        fieldName: string,
+        selectedField: DataExplorerField,
         value: number,
+        decimals: number | undefined,
         widgetConfig: GaugeWidgetModel,
         widgetSize: WidgetSize,
         gaugeLayout: GaugeLayout,
     ): GaugeSeriesOption {
         const visConfig = widgetConfig.visualizationConfig;
-        const minDimension = Math.min(widgetSize.width, widgetSize.height);
-        const clamp = Math.min(Math.max(minDimension / 320, 0.7), 1.4);
-        return {
+        const clamp = this.getSizeClamp(widgetSize);
+        const useThresholdColors = !!visConfig.enableThresholdColors;
+        const displayName = this.resultLabelService.resolveLabel(
+            widgetConfig.dataConfig.sourceConfigs[selectedField.sourceIndex]
+                .queryConfig,
+            selectedField,
+            this.makeDisplayName(
+                visConfig.displayName,
+                selectedField.fullDbName,
+            ),
+        );
+
+        const series: GaugeSeriesOption = {
             name: seriesName,
             type: 'gauge',
             center: ['50%', gaugeLayout.centerY],
             radius: gaugeLayout.radius,
+            startAngle: this.toFiniteNumber(visConfig.startAngle, 225),
+            endAngle: this.toFiniteNumber(visConfig.endAngle, -45),
+            splitNumber: this.normalizeSplitNumber(visConfig.splitNumber),
+            pointer: {
+                show: visConfig.showPointer,
+            },
             progress: {
-                show: true,
+                show: !useThresholdColors,
             },
             axisLabel: {
                 fontSize: 10 * clamp,
@@ -64,7 +83,8 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
             detail: {
                 show: true,
                 valueAnimation: false,
-                formatter: '{value}',
+                formatter: (currentValue: number) =>
+                    this.formatNumber(currentValue, decimals),
                 fontSize: 14 * clamp,
                 offsetCenter: [0, gaugeLayout.detailOffsetY],
             },
@@ -73,10 +93,26 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
             data: [
                 {
                     value: value,
-                    name: visConfig.displayName ?? fieldName,
+                    name: displayName,
                 },
             ],
         };
+
+        if (useThresholdColors) {
+            series.axisLine = {
+                lineStyle: {
+                    color: this.makeThresholdSegments(visConfig),
+                },
+            };
+            series.pointer = {
+                ...series.pointer,
+                itemStyle: {
+                    color: 'auto',
+                },
+            };
+        }
+
+        return series;
     }
 
     getSelectedField(widgetConfig: GaugeWidgetModel): DataExplorerField {
@@ -102,13 +138,19 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
             widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig,
             {},
         );
+        const appearanceConfig =
+            widgetConfig.baseAppearanceConfig as WidgetEchartsAppearanceConfig;
+        const decimals = this.normalizeDecimals(
+            appearanceConfig.numberFormat?.decimals,
+        );
         const selectedField = this.getSelectedField(widgetConfig);
         const sourceIndex = selectedField.sourceIndex;
         const dataSeries = queryResult[sourceIndex].allDataSeries[0];
         const columnIndex = dataSeries.headers.indexOf(
             selectedField.fullDbName,
         );
-        const data = parseFloat(dataSeries.rows[0][columnIndex].toFixed(2));
+        const value = Number(dataSeries.rows[0][columnIndex]);
+        const data = Number.isFinite(value) ? value : 0;
         const legend =
             !Array.isArray(option.legend) && option.legend ? option.legend : {};
         const toolbox =
@@ -137,8 +179,9 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
             },
             series: this.makeSeriesItem(
                 '',
-                selectedField.fullDbName,
+                selectedField,
                 data,
+                decimals,
                 widgetConfig,
                 widgetSize,
                 gaugeLayout,
@@ -146,6 +189,27 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
         });
 
         return option;
+    }
+
+    private formatNumber(value: number, decimals?: number): string {
+        if (decimals === undefined) {
+            return String(value);
+        }
+
+        return value.toFixed(decimals);
+    }
+
+    private normalizeDecimals(decimals: unknown): number | undefined {
+        if (decimals === null || decimals === undefined || decimals === '') {
+            return undefined;
+        }
+
+        const parsedValue = Number(decimals);
+        if (!Number.isFinite(parsedValue)) {
+            return undefined;
+        }
+
+        return Math.min(10, Math.max(0, Math.round(parsedValue)));
     }
 
     private makeGaugeLayout(
@@ -178,6 +242,93 @@ export class SpGaugeRendererService implements SpEchartsRenderer<GaugeWidgetMode
             radius,
             detailOffsetY,
         };
+    }
+
+    private makeThresholdSegments(
+        visConfig: GaugeVisConfig,
+    ): Array<[number, string]> {
+        const normalizedThresholds = this.normalizeThresholds(visConfig);
+        const lowRatio =
+            (normalizedThresholds.low - normalizedThresholds.min) /
+            normalizedThresholds.range;
+        const highRatio =
+            (normalizedThresholds.high - normalizedThresholds.min) /
+            normalizedThresholds.range;
+
+        return [
+            [this.clamp(lowRatio, 0, 1), this.getLowColor(visConfig)],
+            [this.clamp(highRatio, 0, 1), this.getMediumColor(visConfig)],
+            [1, this.getHighColor(visConfig)],
+        ];
+    }
+
+    private normalizeThresholds(visConfig: GaugeVisConfig): {
+        min: number;
+        max: number;
+        range: number;
+        low: number;
+        high: number;
+    } {
+        const min = this.toFiniteNumber(visConfig.min, 0);
+        const configMax = this.toFiniteNumber(visConfig.max, min + 1);
+        const max = configMax > min ? configMax : min + 1;
+        const range = max - min;
+
+        const lowDefault = min + range * 0.6;
+        const highDefault = min + range * 0.8;
+
+        const low = this.clamp(
+            this.toFiniteNumber(visConfig.thresholdLow, lowDefault),
+            min,
+            max,
+        );
+        const high = this.clamp(
+            this.toFiniteNumber(visConfig.thresholdHigh, highDefault),
+            min,
+            max,
+        );
+
+        return low <= high
+            ? { min, max, range, low, high }
+            : { min, max, range, low: high, high: low };
+    }
+
+    private normalizeSplitNumber(splitNumber: number): number {
+        return Math.max(1, Math.round(this.toFiniteNumber(splitNumber, 10)));
+    }
+
+    private getSizeClamp(widgetSize: WidgetSize): number {
+        const minDimension = Math.min(widgetSize.width, widgetSize.height);
+        return Math.min(Math.max(minDimension / 320, 0.7), 1.4);
+    }
+
+    private clamp(value: number, min: number, max: number): number {
+        return Math.min(max, Math.max(min, value));
+    }
+
+    private toFiniteNumber(value: unknown, fallback: number): number {
+        const parsedValue = Number(value);
+        return Number.isFinite(parsedValue) ? parsedValue : fallback;
+    }
+
+    private getLowColor(visConfig: GaugeVisConfig): string {
+        return visConfig.thresholdColorLow || '#91cc75';
+    }
+
+    private getMediumColor(visConfig: GaugeVisConfig): string {
+        return visConfig.thresholdColorMedium || '#fac858';
+    }
+
+    private getHighColor(visConfig: GaugeVisConfig): string {
+        return visConfig.thresholdColorHigh || '#ee6666';
+    }
+
+    private makeDisplayName(displayName: unknown, fallback: string): string {
+        if (typeof displayName === 'string') {
+            return displayName;
+        }
+
+        return fallback;
     }
 }
 

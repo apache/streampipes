@@ -72,6 +72,9 @@ export class DashboardToolbarComponent {
     hasDashboardWritePrivileges: boolean;
 
     @Input()
+    createMode: boolean;
+
+    @Input()
     timeSettings: TimeSettings;
 
     @Output()
@@ -85,6 +88,9 @@ export class DashboardToolbarComponent {
 
     @Output()
     deleteDashboardEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
+    manageDashboardEmitter: EventEmitter<void> = new EventEmitter();
 
     @Output()
     triggerEditModeEmitter: EventEmitter<void> = new EventEmitter<void>();

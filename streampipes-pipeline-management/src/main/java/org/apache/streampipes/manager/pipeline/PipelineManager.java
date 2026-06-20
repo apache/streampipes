@@ -26,9 +26,9 @@ import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.resource.management.CrudResourceManager;
-import org.apache.streampipes.resource.management.NotificationsResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -129,7 +129,6 @@ public class PipelineManager {
     var pipeline = getPipeline(pipelineId);
     if (Objects.nonNull(pipeline)) {
       pipelineCrudResourceManager.delete(pipelineId);
-      new NotificationsResourceManager().deleteNotificationsForPipeline(pipeline);
     }
   }
 
@@ -183,6 +182,7 @@ public class PipelineManager {
   ) {
     pipeline.setPipelineId(pipelineId);
     pipeline.setRunning(false);
+    pipeline.setHealthStatus(PipelineHealthStatus.OK);
     pipeline.setCreatedByUser(username);
     pipeline.setCreatedAt(new Date().getTime());
     pipeline.getSepas()

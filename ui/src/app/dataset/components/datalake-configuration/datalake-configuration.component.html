@@ -1,20 +1,20 @@
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
-  ~ contributor license agreements.  See the NOTICE file distributed with
-  ~ this work for additional information regarding copyright ownership.
-  ~ The ASF licenses this file to You under the Apache License, Version 2.0
-  ~ (the "License"); you may not use this file except in compliance with
-  ~ the License.  You may obtain a copy of the License at
-  ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  ~
-  -->
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
 
 <sp-basic-view [showBackLink]="false" [padding]="true">
     <div fxLayout="column" fxLayoutAlign="start start">
@@ -28,15 +28,16 @@
                 [title]="'Datasets' | translate"
             ></sp-basic-header-title-component>
             <span fxFlex></span>
-            <button
-                *ngIf="writeAccess"
-                color="accent"
-                mat-flat-button
-                data-cy="open-csv-import-dialog"
-                (click)="openCsvImportDialog()"
-            >
-                {{ 'Import CSV' | translate }}
-            </button>
+            @if (writeAccess) {
+                <button
+                    color="accent"
+                    mat-flat-button
+                    data-cy="open-csv-import-dialog"
+                    (click)="openCsvImportDialog()"
+                >
+                    {{ 'Import CSV' | translate }}
+                </button>
+            }
             <button
                 color="accent"
                 mat-icon-button
@@ -60,6 +61,11 @@
                 featureCardId="measurement"
                 [dataSource]="dataSource"
                 [columns]="displayedColumns"
+                [nameSearchConfig]="{
+                    enabled: true,
+                    placeholder: 'Search datasets',
+                }"
+                [assetContextConfig]="assetContextConfig"
                 [showActionsMenu]="true"
                 matSort
                 data-cy="datalake-settings"
@@ -197,9 +203,9 @@
                                         <i
                                             class="material-icons"
                                             [ngStyle]="{
-                                                color: configurationEntry?.retention
+                                                color: configurationEntry.retentionConfigured
                                                     ? 'var(--color-success)'
-                                                    : 'var(--color-neutral',
+                                                    : 'var(--color-neutral)',
                                             }"
                                             >history</i
                                         >
@@ -224,19 +230,15 @@
                                 fxLayout="row"
                                 fxLayoutAlign="start center"
                             >
-                                @if (configurationEntry?.retention) {
+                                @if (configurationEntry.retentionConfigured) {
                                     <button
                                         color="accent"
                                         mat-icon-button
                                         [matTooltip]="
                                             ('Open Retention Log' | translate) +
-                                            (configurationEntry?.retention
-                                                ?.retentionExportConfig
-                                                ?.lastExport
+                                            (configurationEntry.lastExport
                                                 ? ' • ' +
-                                                  (configurationEntry.retention
-                                                      .retentionExportConfig
-                                                      .lastExport
+                                                  (configurationEntry.lastExport
                                                       | date
                                                           : 'yyyy-MM-dd HH:mm:ss')
                                                 : '')
@@ -245,9 +247,7 @@
                                         matTooltipPosition="above"
                                         (click)="
                                             openRetentionLog(
-                                                configurationEntry?.retention
-                                                    .retentionExportConfig
-                                                    .retentionLog
+                                                configurationEntry.elementId
                                             )
                                         "
                                     >
@@ -255,22 +255,12 @@
                                             class="material-icons"
                                             [ngStyle]="{
                                                 color:
-                                                    configurationEntry
-                                                        ?.retention
-                                                        ?.retentionExportConfig
-                                                        ?.retentionLog
-                                                        ?.length &&
-                                                    configurationEntry.retention
-                                                        .retentionExportConfig
-                                                        .retentionLog[
-                                                        configurationEntry
-                                                            .retention
-                                                            .retentionExportConfig
-                                                            .retentionLog
-                                                            .length - 1
-                                                    ].status
-                                                        ? 'green'
-                                                        : 'red',
+                                                    configurationEntry.lastRetentionStatus ===
+                                                    null
+                                                        ? 'var(--color-neutral)'
+                                                        : configurationEntry.lastRetentionStatus
+                                                          ? 'green'
+                                                          : 'red',
                                             }"
                                             >list_alt</i
                                         >
@@ -403,33 +393,36 @@
                         {{ 'Edit' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let configurationEntry">
-                        <div *ngIf="configurationEntry.providerId !== 'FOLDER'">
-                            <div fxLayout="row">
-                                <span
-                                    fxFlex
-                                    fxFlexOrder="3"
-                                    fxLayout="row"
-                                    fxLayoutAlign="start center"
-                                >
-                                    <button
-                                        color="accent"
-                                        mat-icon-button
-                                        matTooltip="{{
-                                            'Edit Export Provider' | translate
-                                        }}"
-                                        matTooltipPosition="above"
-                                        data-cy="exportProvider-edit-btn"
-                                        (click)="
-                                            createExportProvider(
-                                                configurationEntry
-                                            )
-                                        "
+                        @if (configurationEntry.providerId !== 'FOLDER') {
+                            <div>
+                                <div fxLayout="row">
+                                    <span
+                                        fxFlex
+                                        fxFlexOrder="3"
+                                        fxLayout="row"
+                                        fxLayoutAlign="start center"
                                     >
-                                        <i class="material-icons">edit</i>
-                                    </button>
-                                </span>
+                                        <button
+                                            color="accent"
+                                            mat-icon-button
+                                            matTooltip="{{
+                                                'Edit Export Provider'
+                                                    | translate
+                                            }}"
+                                            matTooltipPosition="above"
+                                            data-cy="exportProvider-edit-btn"
+                                            (click)="
+                                                createExportProvider(
+                                                    configurationEntry
+                                                )
+                                            "
+                                        >
+                                            <i class="material-icons">edit</i>
+                                        </button>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </td>
                 </ng-container>
 
@@ -438,34 +431,36 @@
                         {{ 'Remove' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let configurationEntry">
-                        <div *ngIf="configurationEntry.providerId !== 'FOLDER'">
-                            <div fxLayout="row">
-                                <span
-                                    fxFlex
-                                    fxFlexOrder="3"
-                                    fxLayout="row"
-                                    fxLayoutAlign="start center"
-                                >
-                                    <button
-                                        color="accent"
-                                        mat-icon-button
-                                        matTooltip="{{
-                                            'Remove export provider configuration'
-                                                | translate
-                                        }}"
-                                        data-cy="exportProvider-delete-btn"
-                                        matTooltipPosition="above"
-                                        (click)="
-                                            deleteExportProvider(
-                                                configurationEntry.providerId
-                                            )
-                                        "
+                        @if (configurationEntry.providerId !== 'FOLDER') {
+                            <div>
+                                <div fxLayout="row">
+                                    <span
+                                        fxFlex
+                                        fxFlexOrder="3"
+                                        fxLayout="row"
+                                        fxLayoutAlign="start center"
                                     >
-                                        <i class="material-icons">delete</i>
-                                    </button>
-                                </span>
+                                        <button
+                                            color="accent"
+                                            mat-icon-button
+                                            matTooltip="{{
+                                                'Remove export provider configuration'
+                                                    | translate
+                                            }}"
+                                            data-cy="exportProvider-delete-btn"
+                                            matTooltipPosition="above"
+                                            (click)="
+                                                deleteExportProvider(
+                                                    configurationEntry.providerId
+                                                )
+                                            "
+                                        >
+                                            <i class="material-icons">delete</i>
+                                        </button>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </td>
                 </ng-container>
 
@@ -515,14 +510,13 @@
                 ></tr>
             </table>
 
-            <div
-                *ngIf="
-                    !availableExportProvider ||
-                    availableExportProvider.length === 0
-                "
-            >
-                <h5>{{ 'no stored export providers' | translate }}</h5>
-            </div>
+            @if (
+                !availableExportProvider || availableExportProvider.length === 0
+            ) {
+                <div>
+                    <h5>{{ 'no stored export providers' | translate }}</h5>
+                </div>
+            }
         }
     </div>
 </sp-basic-view>

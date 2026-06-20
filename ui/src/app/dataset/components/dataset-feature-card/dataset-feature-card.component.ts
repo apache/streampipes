@@ -22,6 +22,7 @@ import {
     DateFormatService,
     FeatureCardHeaderComponent,
     FeatureCardMetaSectionComponent,
+    PropertyScopeBadgeComponent,
     SpLabelComponent,
 } from '@streampipes/shared-ui';
 import {
@@ -29,6 +30,7 @@ import {
     AssetLinkType,
     DataLakeMeasure,
     DatalakeRestService,
+    EventPropertyUnion,
     GenericStorageService,
     SpQueryResult,
 } from '@streampipes/platform-services';
@@ -54,6 +56,7 @@ import {
         MatIcon,
         FeatureCardHeaderComponent,
         FeatureCardMetaSectionComponent,
+        PropertyScopeBadgeComponent,
         SpLabelComponent,
     ],
 })
@@ -68,7 +71,7 @@ export class DatasetFeatureCardComponent implements OnInit {
     assetLinkType: AssetLinkType;
     dataPreview: SpQueryResult;
     lastEventTs: number | undefined;
-    previewRow: unknown[] = [];
+    previewRows: PreviewRow[] = [];
 
     private datalakeRestService = inject(DatalakeRestService);
     private genericStorageService = inject(GenericStorageService);
@@ -102,10 +105,13 @@ export class DatasetFeatureCardComponent implements OnInit {
             .subscribe(res => {
                 this.dataPreview = res;
                 if (res.total > 0) {
-                    this.previewRow = res.allDataSeries?.[0]?.rows?.[0] ?? [];
-                    this.lastEventTs = Number(this.previewRow[0]);
+                    const previewRow = res.allDataSeries?.[0]?.rows?.[0] ?? [];
+                    this.lastEventTs = Number(previewRow[0]);
+                    this.previewRows = res.headers.map((header, index) =>
+                        this.toPreviewRow(header, previewRow[index]),
+                    );
                 } else {
-                    this.previewRow = [];
+                    this.previewRows = [];
                     this.lastEventTs = undefined;
                 }
             });
@@ -139,5 +145,28 @@ export class DatasetFeatureCardComponent implements OnInit {
         return 'time' === header;
     }
 
+    private toPreviewRow(header: string, value: unknown): PreviewRow {
+        const eventProperty = this.findEventProperty(header);
+
+        return {
+            header,
+            propertyScope: eventProperty?.propertyScope,
+            value: this.formatPreviewValue(header, value),
+        };
+    }
+
+    private findEventProperty(header: string): EventPropertyUnion | undefined {
+        return this.dataset.eventSchema.eventProperties.find(
+            property =>
+                property.runtimeName.toLowerCase() === header.toLowerCase(),
+        );
+    }
+
     navigateToChartView(): void {}
+}
+
+interface PreviewRow {
+    header: string;
+    propertyScope?: string;
+    value: string;
 }

@@ -27,6 +27,23 @@ export interface PieChartVisConfig extends DataExplorerVisConfig {
     selectedProperty: DataExplorerField;
     roundingValue: number;
     selectedRadius: number;
+    startAngle: number;
+    clockwise: boolean;
+    minAngle: number;
+    labelMode:
+        | 'name'
+        | 'value'
+        | 'percent'
+        | 'name_percent'
+        | 'name_value'
+        | 'name_value_percent';
+    labelPosition: 'inside' | 'outside';
+    labelAlignTo: 'none' | 'labelLine' | 'edge';
+    avoidLabelOverlap: boolean;
+    showLabelLine: boolean;
+    topNEnabled: boolean;
+    topN: number;
+    othersLabel: string;
     showCustomColorMappingPieChart: boolean;
     isSelectedPropertyBoolean: boolean;
     colorMappingsPieChart: { value: string; label: string; color: string }[];

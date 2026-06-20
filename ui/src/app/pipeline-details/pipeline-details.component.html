@@ -31,6 +31,8 @@
             (autoRefreshChange)="autoRefresh = $event"
             (reloadMetricsEmitter)="triggerReload()"
             (openCodeDialogEmitter)="openPipelineAsCodeDialog()"
+            (editPipelineEmitter)="editPipeline()"
+            (deletePipelineEmitter)="deletePipeline()"
         >
         </sp-pipeline-details-toolbar>
     </div>

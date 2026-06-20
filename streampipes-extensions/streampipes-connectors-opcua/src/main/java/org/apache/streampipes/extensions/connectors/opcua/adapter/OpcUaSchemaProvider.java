@@ -69,10 +69,8 @@ public class OpcUaSchemaProvider {
       var nodeIds = selectedNodes.stream()
           .map(node -> node.nodeInfo().getNodeId())
           .collect(Collectors.toList());
-      var response = connectedClient.getClient()
+      var returnValues = connectedClient.getClient()
           .readValues(0, TimestampsToReturn.Both, nodeIds);
-
-      var returnValues = response.get();
       makeEventPreview(connectedClient.getClient(), selectedNodes, eventPreview, fieldStatusInfos, returnValues);
 
 

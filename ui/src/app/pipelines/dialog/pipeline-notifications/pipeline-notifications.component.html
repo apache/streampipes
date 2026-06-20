@@ -18,30 +18,38 @@
 
 <div class="sp-dialog-container" fxLayout="column">
     <div class="sp-dialog-content p-15" fxFlex="100" fxLayout="column">
-        <div class="info-message">
-            {{
-                'Pipeline health monitoring discovered the following issues:'
-                    | translate
-            }}
-        </div>
-        <div class="log-message" fxFlex="100" fxLayout="column">
-            @for (
-                notification of pipeline.pipelineNotifications;
-                track notification
-            ) {
-                <span class="text-xs">
-                    {{ notification }}
-                </span>
-                <br />
-            }
-        </div>
+        @if (pipeline) {
+            <div class="info-message">
+                {{
+                    'Pipeline health monitoring discovered the following issues:'
+                        | translate
+                }}
+            </div>
+            <div class="log-message" fxFlex="100" fxLayout="column">
+                @for (
+                    notification of pipeline.pipelineNotifications;
+                    track notification
+                ) {
+                    <span class="text-xs" data-cy="pipeline-notification">
+                        {{ notification }}
+                    </span>
+                    <br />
+                }
+            </div>
+        } @else {
+            <div fxFlex="100" fxLayout="column" fxLayoutAlign="start center">
+                <mat-spinner [diameter]="20"></mat-spinner>
+            </div>
+        }
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
         <button
+            [disabled]="!pipeline"
             mat-button
             mat-flat-button
             color="accent"
+            data-cy="acknowledge-pipeline-notification-btn"
             (click)="acknowledgeAndClose()"
         >
             {{ 'Acknowledge' | translate }}

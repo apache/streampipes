@@ -28,10 +28,12 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 import * as fs from 'fs';
+import { rm } from 'fs';
+import {
+    importFixtureDirectory,
+    ImportFixtureDirectoryOptions,
+} from '../support/general/importFixtureDirectory';
 import { ProcessorTest } from '../support/model/ProcessorTest';
-
-// tslint:disable-next-line:no-var-requires
-const { rmdir } = require('fs');
 
 function readProcessingElements(): ProcessorTest[] {
     const result: ProcessorTest[] = [];
@@ -81,17 +83,13 @@ module.exports = (on, config) => {
             console.log('deleting folder %s', folderName);
             return new Promise((resolve, reject) => {
                 if (fs.existsSync(folderName)) {
-                    rmdir(
-                        folderName,
-                        { maxRetries: 10, recursive: true },
-                        err => {
-                            if (err) {
-                                console.error(err);
-                                return reject(err);
-                            }
-                            resolve(null);
-                        },
-                    );
+                    rm(folderName, { maxRetries: 10, recursive: true }, err => {
+                        if (err) {
+                            console.error(err);
+                            return reject(err);
+                        }
+                        resolve(null);
+                    });
                 } else {
                     console.log(
                         'download folder %s does not exist',
@@ -100,6 +98,9 @@ module.exports = (on, config) => {
                     resolve(null);
                 }
             });
+        },
+        importFixtureDirectory(options: ImportFixtureDirectoryOptions) {
+            return importFixtureDirectory(config.projectRoot, options);
         },
     });
 

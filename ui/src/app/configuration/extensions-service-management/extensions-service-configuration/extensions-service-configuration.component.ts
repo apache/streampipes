@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import {
     MatCell,
@@ -90,6 +90,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class SpExtensionsServiceConfigurationComponent {
+    private configurationService = inject(ConfigurationService);
+
     displayedColumns: string[] = ['group', 'name', 'action'];
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     dataSource = new MatTableDataSource<SpServiceConfiguration>();
@@ -97,7 +99,7 @@ export class SpExtensionsServiceConfigurationComponent {
     expandedElement: any;
     serviceConfiguration: SpServiceConfiguration[];
 
-    constructor(private configurationService: ConfigurationService) {
+    constructor() {
         this.getConfigurationServices();
     }
 

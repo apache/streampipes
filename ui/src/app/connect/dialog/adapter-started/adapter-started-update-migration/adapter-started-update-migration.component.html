@@ -16,53 +16,140 @@
 ~
 -->
 
-<div fxLayout="column" fxLayoutAlign="start center">
-    @if (adapterPipelineUpdateInfos.length > 1) {
-        <h4>
-            {{ 'This adapter is used by' | translate }}
-            {{ adapterPipelineUpdateInfos.length }}
-            {{ 'pipeline' | translate }}.
-        </h4>
-    } @else {
-        {{ 'This adapter is used by' | translate }}
-        {{ adapterPipelineUpdateInfos.length }} {{ 'pipelines' | translate }}. ‚
+<div class="migration-view" fxLayout="column" fxLayoutAlign="start stretch">
+    @if (adapterPipelineUpdateInfos.length > 0) {
+        <div class="migration-summary" fxLayout="column" fxLayoutGap="4px">
+            @if (adapterPipelineUpdateInfos.length > 1) {
+                <h4>
+                    {{ 'This adapter is used by' | translate }}
+                    {{ adapterPipelineUpdateInfos.length }}
+                    {{ 'pipelines' | translate }}.
+                </h4>
+            } @else {
+                <h4>
+                    {{ 'This adapter is used by' | translate }}
+                    {{ adapterPipelineUpdateInfos.length }}
+                    {{ 'pipeline' | translate }}.
+                </h4>
+            }
+        </div>
+        <div class="migration-infos" fxLayout="column" fxLayoutGap="12px">
+            @for (updateInfo of adapterPipelineUpdateInfos; track updateInfo) {
+                <div
+                    class="pipeline-update-info"
+                    data-cy="sp-connect-adapter-edit-warning"
+                >
+                    @if (updateInfo.canAutoMigrate) {
+                        <div
+                            class="pipeline-status"
+                            fxLayoutAlign="start center"
+                        >
+                            <mat-icon class="status-icon status-icon-ok">
+                                check_circle
+                            </mat-icon>
+                            <div>
+                                <div class="pipeline-title">
+                                    {{ 'Pipeline' | translate }}
+                                    <b>{{ updateInfo.pipelineName }}</b>
+                                </div>
+                                <div class="pipeline-description">
+                                    {{
+                                        'This pipeline will be automatically migrated.'
+                                            | translate
+                                    }}
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (!updateInfo.canAutoMigrate) {
+                        <div
+                            class="pipeline-status"
+                            fxLayoutAlign="start center"
+                            data-cy="adapter-manual-pipeline-migration-warning"
+                        >
+                            <mat-icon class="status-icon status-icon-warning">
+                                warning
+                            </mat-icon>
+                            <div>
+                                <div class="pipeline-title">
+                                    {{ 'Pipeline' | translate }}
+                                    <b>{{ updateInfo.pipelineName }}</b>
+                                </div>
+                                <div class="pipeline-description">
+                                    {{
+                                        'This pipeline will be stopped and needs manual review.'
+                                            | translate
+                                    }}
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (updateInfo.chartSchemaUpdateInfos?.length > 0) {
+                        <div class="affected-charts" fxLayout="column">
+                            <div
+                                class="affected-charts-title"
+                                fxLayoutAlign="start center"
+                            >
+                                <mat-icon class="affected-charts-icon">
+                                    query_stats
+                                </mat-icon>
+                                {{ 'Affected charts' | translate }}
+                            </div>
+                            @for (
+                                chartUpdateInfo of updateInfo.chartSchemaUpdateInfos;
+                                track chartUpdateInfo
+                            ) {
+                                <div
+                                    class="affected-chart"
+                                    data-cy="sp-connect-adapter-chart-edit-warning"
+                                >
+                                    <div
+                                        class="affected-chart-title"
+                                        fxLayoutAlign="start center"
+                                    >
+                                        <mat-icon class="chart-warning-icon">
+                                            warning
+                                        </mat-icon>
+                                        <span>
+                                            {{ 'Chart' | translate }}
+                                            <b>{{
+                                                chartUpdateInfo.chartTitle
+                                            }}</b>
+                                            {{
+                                                'needs manual review after this update.'
+                                                    | translate
+                                            }}
+                                        </span>
+                                    </div>
+                                    @if (
+                                        chartUpdateInfo.affectedFields?.length >
+                                        0
+                                    ) {
+                                        <div class="affected-fields">
+                                            <span class="affected-fields-label">
+                                                {{
+                                                    'Deleted fields'
+                                                        | translate
+                                                }}:
+                                            </span>
+                                            <span>
+                                                {{
+                                                    getAffectedFieldsText(
+                                                        chartUpdateInfo.affectedFields
+                                                    )
+                                                }}
+                                            </span>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
     }
-    <div class="migration-infos">
-        @for (updateInfo of adapterPipelineUpdateInfos; track updateInfo) {
-            <div data-cy="sp-connect-adapter-edit-warning">
-                @if (updateInfo.canAutoMigrate) {
-                    <div fxLayoutAlign="start center">
-                        <i class="material-icons">check</i>&nbsp;{{
-                            'Pipeline' | translate
-                        }}&nbsp;<b>{{ updateInfo.pipelineName }}</b
-                        >&nbsp;{{
-                            'will be automatically migrated' | translate
-                        }}.
-                    </div>
-                }
-                @if (!updateInfo.canAutoMigrate) {
-                    <div fxLayoutAlign="start center">
-                        <i class="material-icons">warning</i>
-                        &nbsp;{{ 'Pipeline' | translate }}&nbsp;<b>{{
-                            updateInfo.pipelineName
-                        }}</b
-                        >&nbsp;{{
-                            'will be stopped and needs manual review'
-                                | translate
-                        }}.
-                    </div>
-                }
-            </div>
-        }
-    </div>
-    <div class="migration-infos" fxLayoutAlign="start center">
-        <i class="material-icons">warning</i>
-        {{
-            'Please check and possibly modify existing dashboards and data views afterwards.'
-                | translate
-        }}
-    </div>
-    <div>
+    <div class="migration-actions">
         <button
             mat-button
             mat-flat-button

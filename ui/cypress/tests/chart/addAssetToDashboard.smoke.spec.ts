@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-import { AssetBtns } from '../../support/utils/asset/AssetBtns';
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { AssetBuilder } from '../../support/builder/AssetBuilder';
@@ -71,6 +70,7 @@ describe('Test add Assets To Dashboard', () => {
             name,
             assetNameList,
         );
+        ChartUtils.goToDashboard();
         ChartUtils.editDashboardSettings(name);
         ChartUtils.renameDashboard('NEW');
         const assetNameList2 = [assetName2, assetName3];

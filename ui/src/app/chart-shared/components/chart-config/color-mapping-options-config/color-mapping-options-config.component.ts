@@ -24,6 +24,7 @@ import {
     OnInit,
     Output,
     SimpleChanges,
+    inject,
 } from '@angular/core';
 import { ColorMappingService } from '../../../services/color-mapping.service';
 import { DataExplorerField } from '@streampipes/platform-services';
@@ -67,11 +68,15 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
+    private colorMappingService = inject(ColorMappingService);
+
     @Input() colorMapping: { value: string; label: string; color: string }[];
 
-    @Input() selectedProperty: DataExplorerField;
+    @Input() selectedProperty?: DataExplorerField;
 
     @Input() showCustomColorMapping: boolean;
+
+    @Input() showToggle = true;
 
     @Output()
     viewRefreshEmitter: EventEmitter<void> = new EventEmitter<void>();
@@ -85,8 +90,6 @@ export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
 
     protected isSelectedPropertyBoolean: boolean;
     private wasPreviousFieldBoolean: boolean;
-
-    constructor(private colorMappingService: ColorMappingService) {}
 
     ngOnInit(): void {
         this.isSelectedPropertyBoolean = this.isBooleanPropertySelected();
@@ -169,7 +172,7 @@ export class ColorMappingOptionsConfigComponent implements OnInit, OnChanges {
     }
 
     isBooleanPropertySelected(): boolean {
-        return this.selectedProperty.fieldCharacteristics.binary;
+        return this.selectedProperty?.fieldCharacteristics.binary ?? false;
     }
 
     setCustomColorMapping(showCustomColorMapping: boolean) {

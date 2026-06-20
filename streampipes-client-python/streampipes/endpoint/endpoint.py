@@ -214,7 +214,8 @@ class APIEndpoint(Endpoint):
 
         response = self._make_request(request_method=self._parent_client.request_session.get, url=query_url)
 
-        return self._container_cls._resource_cls()(**response.json())
+        resource_cls = self._container_cls._resource_cls()
+        return resource_cls.model_validate(response.json())
 
     def post(self, resource: Resource) -> None:
         """Allows to post a resource to the StreamPipes API.
@@ -232,6 +233,34 @@ class APIEndpoint(Endpoint):
         self._make_request(
             request_method=self._parent_client.request_session.post,
             url=f"{self.build_url()}",
+            data=json.dumps(resource.to_dict(use_source_names=True)),
+            headers={"Content-type": "application/json"},
+        )
+
+    def put(self, resource: Resource, identifier: Optional[str] = None) -> None:
+        """Allows to update a resource in the StreamPipes API.
+
+        Parameters
+        ----------
+        resource: Resource
+            The resource to be updated.
+        identifier: Optional[str]
+            Optional resource identifier used in the endpoint path. If omitted,
+            the method tries to read `element_id` from the given resource.
+
+        Returns
+        -------
+        None
+        """
+
+        resource_identifier = identifier or getattr(resource, "element_id", None)
+
+        if not resource_identifier:
+            raise ValueError("Updating a resource requires an identifier or a resource with an element_id.")
+
+        self._make_request(
+            request_method=self._parent_client.request_session.put,
+            url=f"{self.build_url()}/{resource_identifier}",
             data=json.dumps(resource.to_dict(use_source_names=True)),
             headers={"Content-type": "application/json"},
         )

@@ -16,7 +16,6 @@
  *
  */
 
-import { CommonModule } from '@angular/common';
 import { Component, computed, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
@@ -37,7 +36,6 @@ import {
     templateUrl: './csv-import-preview-table.component.html',
     styleUrls: ['./csv-import-preview-table.component.scss'],
     imports: [
-        CommonModule,
         FormsModule,
         MatFormField,
         MatInput,
@@ -49,6 +47,7 @@ import {
 })
 export class CsvImportPreviewTableComponent {
     readonly hasPreview = input(false);
+    readonly isExisting = input('NEW');
     readonly previewRows = input<string[][]>([]);
     readonly columnModels = input<CsvImportColumnModel[]>([]);
     readonly timestampFormat = input('');

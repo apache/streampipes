@@ -68,6 +68,18 @@ public class ProvidedQueryParameterBuilder {
     return this;
   }
 
+  public ProvidedQueryParameterBuilder withTimeInterval(String timeInterval) {
+    this.queryParams.put(SupportedRestQueryParams.QP_TIME_INTERVAL, timeInterval);
+
+    return this;
+  }
+
+  public ProvidedQueryParameterBuilder withFill(String fill) {
+    this.queryParams.put(SupportedRestQueryParams.QP_FILL, fill);
+
+    return this;
+  }
+
   public ProvidedQueryParameterBuilder withFilter(String filter) {
     this.queryParams.put(SupportedRestQueryParams.QP_FILTER, filter);
 

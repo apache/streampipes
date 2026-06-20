@@ -35,4 +35,40 @@ public class ExceptionMessageExtractor {
       return e.getMessage();
     }
   }
+
+  public static String getDescription(Throwable throwable) {
+    var rootCause = rootCause(throwable);
+
+    if (rootCause instanceof UaException uaException) {
+      return getDescription(uaException);
+    }
+
+    var message = rootCause.getMessage();
+    if (message == null || message.isBlank()) {
+      return rootCause.getClass().getSimpleName();
+    }
+
+    if (message.contains("Connection refused")) {
+      return message.substring(message.indexOf("Connection refused"));
+    }
+
+    if (message.contains("Unknown host")) {
+      return message.substring(message.indexOf("Unknown host"));
+    }
+
+    int lastColonIndex = message.lastIndexOf(": ");
+    if (lastColonIndex >= 0 && lastColonIndex + 2 < message.length()) {
+      return message.substring(lastColonIndex + 2);
+    }
+
+    return message;
+  }
+
+  private static Throwable rootCause(Throwable throwable) {
+    Throwable current = throwable;
+    while (current.getCause() != null && current.getCause() != current) {
+      current = current.getCause();
+    }
+    return current;
+  }
 }

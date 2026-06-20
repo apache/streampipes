@@ -23,18 +23,17 @@ import {
     RouterStateSnapshot,
     UrlTree,
 } from '@angular/router';
+import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 
 export abstract class BaseConfiguredCanActivateGuard implements CanActivate {
-    constructor(
-        protected router: Router,
-        protected authService: AuthService,
-    ) {}
+    protected router = inject(Router);
+    protected authService = inject(AuthService);
 
     canActivate(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
+        _route: ActivatedRouteSnapshot,
+        _state: RouterStateSnapshot,
     ):
         | Observable<boolean | UrlTree>
         | Promise<boolean | UrlTree>
@@ -49,7 +48,7 @@ export abstract class BaseConfiguredCanActivateGuard implements CanActivate {
                         resolve(this.onIsConfigured());
                     }
                 },
-                error => {
+                _error => {
                     const url = this.router.parseUrl('startup');
                     resolve(url);
                 },

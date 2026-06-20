@@ -21,27 +21,19 @@ package org.apache.streampipes.extensions.connectors.opcua.client;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
-import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
-import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
-import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscriptionManager;
-import org.eclipse.milo.opcua.stack.core.AttributeId;
-import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
+import org.eclipse.milo.opcua.sdk.client.subscriptions.MonitoredItemServiceOperationResult;
+import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaMonitoredItem;
+import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaSubscription;
+import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
-import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
-import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.MonitoringMode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
-import org.eclipse.milo.opcua.stack.core.types.structured.MonitoredItemCreateRequest;
-import org.eclipse.milo.opcua.stack.core.types.structured.MonitoringParameters;
-import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 
@@ -49,7 +41,6 @@ public class ConnectedOpcUaClient {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConnectedOpcUaClient.class);
   private final OpcUaClient client;
-  private static final AtomicLong clientHandles = new AtomicLong(1L);
 
   public ConnectedOpcUaClient(OpcUaClient client) {
     this.client = client;
@@ -63,9 +54,52 @@ public class ConnectedOpcUaClient {
    */
   public void createListSubscription(List<NodeId> nodes,
                                      OpcUaAdapter opcUaAdapter) throws Exception {
-    client.getSubscriptionManager().addSubscriptionListener(new UaSubscriptionManager.SubscriptionListener() {
+    initSubscription(nodes, opcUaAdapter);
+  }
+
+
+  public void initSubscription(List<NodeId> nodes,
+                               OpcUaAdapter opcUaAdapter) throws Exception {
+    var subscription = getOpcUaSubscription(nodes, opcUaAdapter);
+
+    for (NodeId node : nodes) {
+      var value = this.client.readValue(0, TimestampsToReturn.Both, node);
+      if (value == null || value.getValue().getValue() == null) {
+        LOG.error("Node has no value");
+      }
+    }
+
+    List<OpcUaMonitoredItem> items = new ArrayList<>();
+    for (NodeId node : nodes) {
+      var item = OpcUaMonitoredItem.newDataItem(node);
+      item.setSamplingInterval(1000.0);
+      item.setQueueSize(uint(10));
+      item.setDiscardOldest(true);
+      item.setDataValueListener(opcUaAdapter::onSubscriptionValue);
+      items.add(item);
+    }
+
+    subscription.addMonitoredItems(items);
+    List<MonitoredItemServiceOperationResult> results = subscription.createMonitoredItems();
+
+    for (MonitoredItemServiceOperationResult result : results) {
+      var monitoredItem = result.monitoredItem();
+      NodeId tagId = monitoredItem.getReadValueId().getNodeId();
+      if (result.isGood()) {
+        LOG.info("item created for nodeId={}", tagId);
+      } else {
+        var statusCode = result.operationResult().orElse(result.serviceResult());
+        LOG.error("failed to create item for {} {}", tagId, statusCode);
+      }
+    }
+  }
+
+  private @NonNull OpcUaSubscription getOpcUaSubscription(List<NodeId> nodes,
+                                                          OpcUaAdapter opcUaAdapter) throws UaException {
+    OpcUaSubscription subscription = createManagedSubscription();
+    subscription.setSubscriptionListener(new OpcUaSubscription.SubscriptionListener() {
       @Override
-      public void onSubscriptionTransferFailed(UaSubscription subscription, StatusCode statusCode) {
+      public void onTransferFailed(OpcUaSubscription subscription, StatusCode statusCode) {
         LOG.warn("Transfer for subscriptionId={} failed: {}", subscription.getSubscriptionId(), statusCode);
         try {
           initSubscription(nodes, opcUaAdapter);
@@ -74,70 +108,13 @@ public class ConnectedOpcUaClient {
         }
       }
     });
-
-    initSubscription(nodes, opcUaAdapter);
+    return subscription;
   }
 
-
-  public void initSubscription(List<NodeId> nodes,
-                               OpcUaAdapter opcUaAdapter) throws Exception {
-    /*
-     * create a subscription @ 1000ms
-     */
-    UaSubscription subscription = this.client.getSubscriptionManager().createSubscription(1000.0).get();
-
-    List<CompletableFuture<DataValue>> values = new ArrayList<>();
-
-    for (NodeId node : nodes) {
-      values.add(this.client.readValue(0, TimestampsToReturn.Both, node));
-    }
-
-    for (CompletableFuture<DataValue> value : values) {
-      if (value.get().getValue().toString().contains("null")) {
-        LOG.error("Node has no value");
-      }
-    }
-
-
-    List<ReadValueId> readValues = new ArrayList<>();
-    // Read a specific value attribute
-    for (NodeId node : nodes) {
-      readValues.add(new ReadValueId(node, AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE));
-    }
-
-    List<MonitoredItemCreateRequest> requests = new ArrayList<>();
-
-    for (ReadValueId readValue : readValues) {
-      // important: client handle must be unique per item
-      UInteger clientHandle = uint(clientHandles.getAndIncrement());
-
-      MonitoringParameters parameters = new MonitoringParameters(
-          clientHandle,
-          1000.0,     // sampling interval
-          null,      // filter, null means use default
-          uint(10),   // queue size
-          true         // discard oldest
-      );
-
-      requests.add(new MonitoredItemCreateRequest(readValue, MonitoringMode.Reporting, parameters));
-    }
-
-    UaSubscription.ItemCreationCallback onItemCreated =
-        (item, i) -> item.setValueConsumer(opcUaAdapter::onSubscriptionValue);
-    List<UaMonitoredItem> items = subscription.createMonitoredItems(
-        TimestampsToReturn.Both,
-        requests,
-        onItemCreated
-    ).get();
-
-    for (UaMonitoredItem item : items) {
-      NodeId tagId = item.getReadValueId().getNodeId();
-      if (item.getStatusCode().isGood()) {
-        LOG.info("item created for nodeId=" + tagId);
-      } else {
-        LOG.error("failed to create item for " + item.getReadValueId().getNodeId() + item.getStatusCode());
-      }
-    }
+  private OpcUaSubscription createManagedSubscription() throws UaException {
+    var subscription = new OpcUaSubscription(this.client, 1000.0);
+    subscription.create();
+    return subscription;
   }
 
   /***
@@ -149,6 +126,10 @@ public class ConnectedOpcUaClient {
   }
 
   public void disconnect() {
-    client.disconnect();
+    try {
+      client.disconnect();
+    } catch (UaException e) {
+      LOG.warn("Disconnect failed", e);
+    }
   }
 }

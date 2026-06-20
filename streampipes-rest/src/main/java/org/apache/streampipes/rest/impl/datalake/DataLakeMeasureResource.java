@@ -20,6 +20,10 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetSummaryDto;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
+import org.apache.streampipes.model.resource.ResourceSummaryDto;
+import org.apache.streampipes.resource.management.DataLakeMeasureResourceManager;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -49,14 +53,24 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
     super();
   }
 
+  @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResourceSummaryDto<DatasetSummaryDto> getDatasetSummary() {
+    return getResourceManager().getSummary(getAuthentication());
+  }
+
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<DataLakeMeasure> addDataLake(@RequestBody DataLakeMeasure dataLakeMeasure) {
-    DataLakeMeasure result = this.dataLakeMeasureManagement.createOrUpdateMeasurement(
-        dataLakeMeasure,
-        getAuthenticatedUserSid()
-    );
-    return ok(result);
+  public ResponseEntity<?> addDataLake(@RequestBody DataLakeMeasure dataLakeMeasure) {
+    try {
+      DataLakeMeasure result = this.dataLakeMeasureManagement.createOrUpdateMeasurement(
+          dataLakeMeasure,
+          getAuthenticatedUserSid()
+      );
+      return ok(result);
+    } catch (RuntimeException e) {
+      return badRequest(SpLogMessage.from(e));
+    }
   }
 
   /**
@@ -132,6 +146,10 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());
     }
+  }
+
+  private DataLakeMeasureResourceManager getResourceManager() {
+    return getSpResourceManager().manageDataLakeMeasures();
   }
 
 }

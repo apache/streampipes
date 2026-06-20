@@ -16,21 +16,23 @@
 ~
 -->
 <div fxLayout="column" fxLayoutGap="10px">
-    <div
-        fxLayout="row"
-        fxLayoutGap="10px"
-        fxLayoutAlign="start center"
-        fxFlex="1"
-        class="checkbox-container"
-    >
-        <mat-checkbox
-            color="accent"
-            [(ngModel)]="showCustomColorMapping"
-            (ngModelChange)="setCustomColorMapping($event)"
+    @if (showToggle) {
+        <div
+            fxLayout="row"
+            fxLayoutGap="10px"
+            fxLayoutAlign="start center"
+            fxFlex="1"
+            class="checkbox-container"
         >
-        </mat-checkbox>
-        <small>{{ 'Add custom color mapping' | translate }}</small>
-    </div>
+            <mat-checkbox
+                color="accent"
+                [(ngModel)]="showCustomColorMapping"
+                (ngModelChange)="setCustomColorMapping($event)"
+            >
+            </mat-checkbox>
+            <small>{{ 'Add custom color mapping' | translate }}</small>
+        </div>
+    }
 
     @if (!isSelectedPropertyBoolean && showCustomColorMapping) {
         <div>

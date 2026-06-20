@@ -22,6 +22,7 @@ import {
     Input,
     OnDestroy,
     OnInit,
+    inject,
 } from '@angular/core';
 import {
     LivePreviewService,
@@ -41,6 +42,10 @@ import { LivePreviewErrorComponent } from './live-preview-error/live-preview-err
     imports: [LivePreviewTableComponent, LivePreviewErrorComponent],
 })
 export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
+    private restService = inject(PipelineElementRuntimeInfoService);
+    private livePreviewService = inject(LivePreviewService);
+    private pipelineELementSchemaService = inject(PipelineElementSchemaService);
+
     @Input()
     streamDescription: SpDataStream;
 
@@ -56,12 +61,6 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
     runtimeDataError = false;
     runtimeSub: Subscription;
 
-    constructor(
-        private restService: PipelineElementRuntimeInfoService,
-        private livePreviewService: LivePreviewService,
-        private pipelineELementSchemaService: PipelineElementSchemaService,
-    ) {}
-
     ngOnInit(): void {
         this.runtimeInfo = this.makeRuntimeInfo();
         this.getLatestRuntimeInfo();
@@ -73,11 +72,12 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                 return {
                     label: ep.label || 'n/a',
                     description: ep.description || 'n/a',
-                    runtimeType:
+                    runtimeName: ep.runtimeName,
+                    dataType:
                         this.pipelineELementSchemaService.getFriendlyRuntimeType(
                             ep,
                         ),
-                    runtimeName: ep.runtimeName,
+                    propertyScope: ep.propertyScope,
                     value: undefined,
                     isTimestamp:
                         this.pipelineELementSchemaService.isTimestamp(ep),
@@ -109,7 +109,7 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
                             r.value = json[r.runtimeName];
                             r.valueChanged = r.value !== previousValue;
                         });
-                    } catch (error) {
+                    } catch (_error) {
                         this.runtimeDataError = true;
                         this.runtimeData = [];
                     }

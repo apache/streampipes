@@ -1,3 +1,4 @@
+import { provideZoneChangeDetection } from '@angular/core';
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -29,14 +30,18 @@ import { ValueDistributionTransform } from './app/core-ui/echarts-transform/valu
 import { HistogramTransform } from './app/core-ui/echarts-transform/histogram.transform';
 import { RoundValuesTransform } from './app/core-ui/echarts-transform/round-values.transform';
 import { MapTransform } from './app/core-ui/echarts-transform/map.transform';
+import { PieAggregateTransform } from './app/core-ui/echarts-transform/pie-aggregate.transform';
 
 echarts.registerTransform(transform.aggregate);
 echarts.registerTransform(ValueDistributionTransform);
 echarts.registerTransform(HistogramTransform);
 echarts.registerTransform(RoundValuesTransform);
 echarts.registerTransform(MapTransform);
+echarts.registerTransform(PieAggregateTransform);
 
-// required
-import * as $ from 'jquery';
+import 'jquery';
 
-bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
+bootstrapApplication(AppComponent, {
+    ...appConfig,
+    providers: [provideZoneChangeDetection(), ...appConfig.providers],
+}).catch(err => console.error(err));

@@ -24,7 +24,10 @@ import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.commons.exceptions.SpHttpErrorStatusCode;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -109,7 +112,7 @@ public abstract class HttpRequest<K, V, T> {
           case HttpStatus.SC_NOT_FOUND ->
               throw new SpHttpErrorStatusCode(" 404 - The requested resource could not be found.",
                       HttpStatus.SC_NOT_FOUND);
-          default -> throw new SpHttpErrorStatusCode(status.getStatusCode() + " - " + status.getReasonPhrase(),
+          default -> throw new SpHttpErrorStatusCode(makeErrorMessage(status, response.getEntity()),
               status.getStatusCode());
         }
       }
@@ -117,6 +120,38 @@ public abstract class HttpRequest<K, V, T> {
       throw new SpRuntimeException(
           "Could not connect to the StreamPipes API - please check that StreamPipes is available", e);
     }
+  }
+
+  private String makeErrorMessage(StatusLine status,
+                                  HttpEntity entity) throws IOException {
+    String message;
+    if (!status.getReasonPhrase().isBlank()) {
+      message = status.getReasonPhrase();
+    } else {
+      String body = entity != null ? entityAsString(entity) : "";
+      message = extractErrorMessage(body);
+    }
+    return status.getStatusCode() + " - " + message;
+  }
+
+  private String extractErrorMessage(String responseBody) {
+    try {
+      JsonNode jsonNode = JacksonSerializer.getObjectMapper().readTree(responseBody);
+
+      if (jsonNode.isTextual()) {
+        return jsonNode.asText();
+      } else if (jsonNode.hasNonNull("cause")) {
+        return jsonNode.get("cause").asText();
+      } else if (jsonNode.hasNonNull("title")) {
+        return jsonNode.get("title").asText();
+      } else if (jsonNode.hasNonNull("detail")) {
+        return jsonNode.get("detail").asText();
+      }
+    } catch (JsonProcessingException e) {
+      return responseBody;
+    }
+
+    return responseBody;
   }
 
   public void writeToFile(String fileLocation) throws SpRuntimeException {

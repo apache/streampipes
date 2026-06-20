@@ -1,0 +1,73 @@
+{
+  "name": "Apache StreamPipes Dev",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "workspace",
+  "workspaceFolder": "/workspaces/streampipes",
+  "runServices": [
+    "workspace",
+    "couchdb",
+    "influxdb",
+    "nats"
+  ],
+  "shutdownAction": "stopCompose",
+  "remoteUser": "vscode",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "25",
+      "installMaven": true
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-spring-boot-dashboard",
+        "redhat.vscode-xml",
+        "angular.ng-template",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "java.configuration.updateBuildConfiguration": "automatic",
+        "java.compile.nullAnalysis.mode": "automatic",
+        "typescript.tsdk": "ui/node_modules/typescript/lib"
+      }
+    }
+  },
+  "forwardPorts": [
+    8030,
+    8090,
+    8082,
+    5984,
+    8086,
+    4222,
+    8222
+  ],
+  "portsAttributes": {
+    "8030": {
+      "label": "StreamPipes Core"
+    },
+    "8090": {
+      "label": "StreamPipes IIoT Extensions"
+    },
+    "8082": {
+      "label": "StreamPipes UI"
+    },
+    "5984": {
+      "label": "CouchDB"
+    },
+    "8086": {
+      "label": "InfluxDB"
+    },
+    "4222": {
+      "label": "NATS"
+    },
+    "8222": {
+      "label": "NATS Monitoring"
+    }
+  },
+  "postCreateCommand": "sudo chown -R vscode:vscode /home/vscode/.m2 /home/vscode/.npm /home/vscode/.streampipes /workspaces/streampipes/ui/node_modules && mvn -version && node --version && npm --version"
+}

@@ -31,7 +31,9 @@
                 >
             }
             @if (!pipelineOperationStatus()?.success) {
-                <mat-icon style="color: red">error</mat-icon>
+                <mat-icon data-cy="sp-pipeline-started-error" style="color: red"
+                    >error</mat-icon
+                >
             }
             <span>&nbsp;{{ pipelineOperationStatus()?.title }}.</span>
         </div>

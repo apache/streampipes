@@ -40,13 +40,12 @@ import {
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
     selector: 'sp-chart-view-toolbar',
@@ -57,13 +56,14 @@ import { TranslatePipe } from '@ngx-translate/core';
         FlexDirective,
         LayoutAlignDirective,
         LayoutGapDirective,
-        MatFormField,
-        MatInput,
         FormsModule,
         MatButton,
         MatTooltip,
         MatIcon,
         MatIconButton,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
         TimeRangeSelectorComponent,
         TranslatePipe,
     ],
@@ -75,10 +75,16 @@ export class ChartViewToolbarComponent implements OnInit {
     editMode = true;
 
     @Input()
+    createMode = false;
+
+    @Input()
     timeSettings: TimeSettings;
 
     @Input()
     configuredWidget: DataExplorerWidgetModel;
+
+    @Input()
+    hasDataExplorerWritePrivileges: boolean;
 
     timeRangeVisible = true;
 
@@ -90,6 +96,12 @@ export class ChartViewToolbarComponent implements OnInit {
 
     @Output()
     discardDataViewEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
+    manageChartEmitter: EventEmitter<void> = new EventEmitter();
+
+    @Output()
+    deleteChartEmitter: EventEmitter<void> = new EventEmitter();
 
     @Output()
     updateDateRangeEmitter: EventEmitter<TimeSettings> = new EventEmitter();

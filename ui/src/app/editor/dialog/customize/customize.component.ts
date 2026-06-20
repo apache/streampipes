@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import {
     InvocablePipelineElementUnion,
@@ -94,6 +95,17 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class CustomizeComponent implements OnInit, AfterViewInit {
+    private dialogRef = inject<DialogRef<CustomizeComponent>>(DialogRef);
+    private jsPlumbService = inject(JsplumbService);
+    private shepherdService = inject(ShepherdService);
+    private fb = inject(UntypedFormBuilder);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private pipelineElementTemplateService = inject(
+        PipelineElementTemplateService,
+    );
+    private pipelineStyleService = inject(PipelineStyleService);
+    private staticPropertyUtils = inject(StaticPropertyUtilService);
+
     @Input()
     pipelineElement: PipelineElementConfig;
 
@@ -122,17 +134,6 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
     templateConfigs: Map<string, any>[] = [];
     completedConfigurations: ConfigurationInfo[] = [];
 
-    constructor(
-        private dialogRef: DialogRef<CustomizeComponent>,
-        private jsPlumbService: JsplumbService,
-        private shepherdService: ShepherdService,
-        private fb: UntypedFormBuilder,
-        private changeDetectorRef: ChangeDetectorRef,
-        private pipelineElementTemplateService: PipelineElementTemplateService,
-        private pipelineStyleService: PipelineStyleService,
-        private staticPropertyUtils: StaticPropertyUtilService,
-    ) {}
-
     ngOnInit(): void {
         this.originalDialogWidth = this.dialogRef.currentConfig().width;
         this.cachedPipelineElement = this.jsPlumbService.clone(
@@ -153,9 +154,9 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
 
         this.parentForm = this.fb.group({});
 
-        this.parentForm.valueChanges.subscribe(v => {});
+        this.parentForm.valueChanges.subscribe(_v => {});
 
-        this.parentForm.statusChanges.subscribe(status => {
+        this.parentForm.statusChanges.subscribe(_status => {
             this.formValid = this.viewInitialized && this.parentForm.valid;
         });
         if (this.shepherdService.isTourActive()) {
@@ -233,7 +234,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
         this.template.templateConfigs = this.convert(this.templateConfigs);
         this.pipelineElementTemplateService
             .storePipelineElementTemplate(this.template)
-            .subscribe(result => {
+            .subscribe(_result => {
                 this.loadPipelineElementTemplates();
                 this.templateMode = false;
             });

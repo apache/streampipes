@@ -35,6 +35,8 @@
         <module>streampipes-connect-adapters-iiot</module>
 
         <module>streampipes-connectors-camel</module>
+        <module>streampipes-connectors-cdc</module>
+        <module>streampipes-connectors-filewatcher</module>
         <module>streampipes-connectors-influx</module>
         <module>streampipes-connectors-kafka</module>
         <module>streampipes-connectors-mqtt</module>
@@ -80,7 +82,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

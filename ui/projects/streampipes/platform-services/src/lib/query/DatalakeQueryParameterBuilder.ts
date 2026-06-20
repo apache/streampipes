@@ -80,6 +80,12 @@ export class DatalakeQueryParameterBuilder {
         return this;
     }
 
+    public withFill(fill: string | number): DatalakeQueryParameterBuilder {
+        this.queryParams.fill = fill;
+
+        return this;
+    }
+
     public withGrouping(groupBy: FieldConfig[]): DatalakeQueryParameterBuilder {
         const groupByRuntimeNames = groupBy.map(
             property => property.runtimeName,

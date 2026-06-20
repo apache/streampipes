@@ -22,9 +22,7 @@ import {
     TimeSeriesChartVisConfig,
     TimeSeriesChartWidgetModel,
 } from '../model/time-series-chart-widget.model';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
 import { SelectColorPropertiesConfigComponent } from '../../../chart-config/select-color-properties-config/select-color-properties-config.component';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
@@ -50,13 +48,6 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
     TimeSeriesChartWidgetModel,
     TimeSeriesChartVisConfig
 > {
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
-        super(widgetConfigurationService, fieldService);
-    }
-
     presetColors: string[] = [
         '#39B54A',
         '#1B1464',
@@ -93,6 +84,12 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
             this.currentlyConfiguredWidget.visualizationConfig.displayType;
         const currentAxis =
             this.currentlyConfiguredWidget.visualizationConfig.chosenAxis;
+        const currentGroupedColorMode =
+            this.currentlyConfiguredWidget.visualizationConfig
+                .groupedColorMode ?? {};
+        const currentGroupedColorMappings =
+            this.currentlyConfiguredWidget.visualizationConfig
+                .groupedColorMappings ?? {};
 
         const lenBefore = Object.keys(currentAxis).length;
 
@@ -103,6 +100,8 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
                 currentNames[name] = field.fullDbName;
                 currentTypes[name] = 'lines';
                 currentAxis[name] = 'left';
+                currentGroupedColorMode[name] = 'stable_palette';
+                currentGroupedColorMappings[name] = [];
             }
         });
 
@@ -114,6 +113,10 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
             currentTypes;
         this.currentlyConfiguredWidget.visualizationConfig.chosenAxis =
             currentAxis;
+        this.currentlyConfiguredWidget.visualizationConfig.groupedColorMode =
+            currentGroupedColorMode;
+        this.currentlyConfiguredWidget.visualizationConfig.groupedColorMappings =
+            currentGroupedColorMappings;
 
         this.triggerViewRefresh();
     }
@@ -149,6 +152,16 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
             this.numericPlusBooleanFields,
             () => 'left',
         );
+        config.groupedColorMode = this.getConfigOrDefault(
+            config.groupedColorMode,
+            this.numericPlusBooleanFields,
+            () => 'stable_palette',
+        );
+        config.groupedColorMappings = this.getConfigOrDefault(
+            config.groupedColorMappings,
+            this.numericPlusBooleanFields,
+            () => [],
+        );
 
         config.yKeys = [];
         config.selectedTimeSeriesChartProperties =
@@ -174,11 +187,11 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
         };
     }
 
-    private getConfigOrDefault(
-        config: Record<string, any>,
+    private getConfigOrDefault<T>(
+        config: Record<string, T>,
         availableFields: DataExplorerField[],
-        getDefaultValue: (field: DataExplorerField, index: number) => string,
-    ) {
+        getDefaultValue: (field: DataExplorerField, index: number) => T,
+    ): Record<string, T> {
         const fieldKeys = availableFields.map(
             f => f.fullDbName + f.sourceIndex,
         );

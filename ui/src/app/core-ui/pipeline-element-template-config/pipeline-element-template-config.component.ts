@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     PipelineElementTemplate,
     PipelineElementTemplateService,
@@ -63,6 +63,10 @@ import { PipelineElementTemplatePipe } from './pipeline-element-template.pipe';
     ],
 })
 export class PipelineElementTemplateConfigComponent implements OnInit {
+    private pipelineElementTemplateService = inject(
+        PipelineElementTemplateService,
+    );
+
     @Input()
     template: PipelineElementTemplate;
 
@@ -76,10 +80,6 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
     staticProperties: StaticPropertyUnion[];
 
     existingTemplates: PipelineElementTemplate[] = [];
-
-    constructor(
-        private pipelineElementTemplateService: PipelineElementTemplateService,
-    ) {}
 
     ngOnInit(): void {
         this.loadTemplates();
@@ -102,6 +102,6 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
     deleteTemplate(templateId: string) {
         this.pipelineElementTemplateService
             .deletePipelineElementTemplate(templateId)
-            .subscribe(result => this.loadTemplates());
+            .subscribe(_result => this.loadTemplates());
     }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { ChartFieldProviderService } from '../../../../../../chart-shared/services/chart-field-provider.service';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import {
@@ -44,12 +44,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class GroupSelectionPanelComponent implements OnInit {
-    @Input() sourceConfig: SourceConfig;
+    private fieldProvider = inject(ChartFieldProviderService);
+    private widgetConfigService = inject(ChartConfigurationService);
 
-    constructor(
-        private fieldProvider: ChartFieldProviderService,
-        private widgetConfigService: ChartConfigurationService,
-    ) {}
+    @Input() sourceConfig: SourceConfig;
 
     ngOnInit() {
         const groupByFields = this.sourceConfig.queryConfig.groupBy;

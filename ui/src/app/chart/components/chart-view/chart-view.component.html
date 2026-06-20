@@ -28,12 +28,18 @@
             <sp-chart-view-toolbar
                 [timeSettings]="timeSettings"
                 [editMode]="editMode"
+                [createMode]="createMode"
                 [configuredWidget]="dataView"
+                [hasDataExplorerWritePrivileges]="
+                    hasDataExplorerWritePrivileges
+                "
                 (downloadFileEmitter)="downloadDataAsFile()"
                 (updateDateRangeEmitter)="updateDateRange($event)"
                 (saveDataViewEmitter)="saveDataView()"
                 (discardDataViewEmitter)="discardChanges()"
                 (addToAssetEmitter)="addAssetDialog()"
+                (manageChartEmitter)="manageChart()"
+                (deleteChartEmitter)="deleteChart()"
                 fxFlex="100"
             >
             </sp-chart-view-toolbar>
@@ -44,6 +50,33 @@
                     {{ 'The desired chart was not found!' | translate }}
                 </div>
             } @else {
+                @if (legacyMultiSourceChart) {
+                    <div class="p-10">
+                        <sp-alert-banner
+                            type="warning"
+                            icon="warning"
+                            [title]="'Legacy multi-source chart' | translate"
+                            [description]="
+                                'This chart uses multiple data sources and cannot be edited in this release. Please migrate it manually before making changes.'
+                                    | translate
+                            "
+                        >
+                        </sp-alert-banner>
+                    </div>
+                }
+                @if (showRequiresAttentionWarning) {
+                    <div
+                        class="p-10"
+                        data-cy="chart-requires-attention-warning"
+                    >
+                        <sp-alert-banner
+                            type="warning"
+                            icon="warning"
+                            [title]="'Chart requires attention' | translate"
+                            [description]="requiresAttentionDescription"
+                        ></sp-alert-banner>
+                    </div>
+                }
                 <mat-drawer-container
                     fxFlex="100"
                     fxLayout="column"

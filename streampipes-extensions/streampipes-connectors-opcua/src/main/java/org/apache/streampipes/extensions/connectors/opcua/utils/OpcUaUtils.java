@@ -22,14 +22,19 @@ import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaNodeBrowser;
+import org.apache.streampipes.extensions.connectors.opcua.alarms.OpcUaEventFieldProvider;
+import org.apache.streampipes.extensions.connectors.opcua.alarms.OpcUaEventTypeBrowser;
+import org.apache.streampipes.extensions.connectors.opcua.alarms.OpcUaNotifierBrowser;
 import org.apache.streampipes.extensions.connectors.opcua.client.OpcUaClientProvider;
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
 import org.apache.streampipes.extensions.connectors.opcua.config.SharedUserConfiguration;
 import org.apache.streampipes.extensions.connectors.opcua.config.SpOpcUaConfigExtractor;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 
-import org.eclipse.milo.opcua.sdk.client.api.UaClient;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
@@ -100,21 +105,23 @@ public class OpcUaUtils {
 
       return config;
     } catch (UaException e) {
-        throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e), e);
-    } catch (ExecutionException | InterruptedException | URISyntaxException e) {
-      if (e instanceof ExecutionException && OpcUaCertificateUtils.isCertificateException((ExecutionException) e)) {
+      if (OpcUaCertificateUtils.isCertificateException(e)) {
         throw new SpConfigurationException(
-            OpcUaCertificateUtils.makeExceptionMessage((ExecutionException) e)
+            OpcUaCertificateUtils.makeExceptionMessage(e, opcUaConfig)
         );
-      } else {
-        throw new SpConfigurationException("Could not connect to the OPC UA server with the provided settings", e);
       }
+      throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e));
+    } catch (ExecutionException | InterruptedException | URISyntaxException e) {
+      if (e instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
+      throw makeConnectionException(opcUaConfig, e);
     } finally {
       clientProvider.releaseClient(opcUaConfig);
     }
   }
 
-  public static List<String> filterMissingNodes(UaClient opcUaClient,
+  public static List<String> filterMissingNodes(OpcUaClient opcUaClient,
                                                 List<String> selectedNodes) {
     return selectedNodes.stream().filter(selectedNode -> {
       try {
@@ -126,5 +133,205 @@ public class OpcUaUtils {
         return false;
       }
     }).toList();
+  }
+
+  public static RuntimeResolvableTreeInputStaticProperty resolveNotifierTreeConfig(
+      OpcUaClientProvider clientProvider,
+      String internalName,
+      IStaticPropertyExtractor parameterExtractor
+  )
+      throws SpConfigurationException {
+    var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    var config = parameterExtractor.getStaticPropertyByName(
+        internalName,
+        RuntimeResolvableTreeInputStaticProperty.class
+    );
+
+    try {
+      parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
+      parameterExtractor.selectedSingleValueInternalName(SharedUserConfiguration.SECURITY_MODE, String.class);
+      parameterExtractor.selectedSingleValue(SharedUserConfiguration.SECURITY_POLICY, String.class);
+    } catch (NullPointerException nullPointerException) {
+      return config;
+    }
+
+    var opcUaConfig = SpOpcUaConfigExtractor.extractConnectionConfig(parameterExtractor, new OpcUaConfig(), client);
+
+    try {
+      var connectedClient = clientProvider.getClient(opcUaConfig);
+      var nodeBrowser = new OpcUaNotifierBrowser(connectedClient.getClient());
+      var nodes = nodeBrowser.buildNodeTreeFromOrigin(config.getNextBaseNodeToResolve());
+      if (Objects.isNull(config.getNextBaseNodeToResolve())) {
+        config.setNodes(nodes);
+      } else {
+        config.setLatestFetchedNodes(nodes);
+      }
+
+      if (!config.getSelectedNodesInternalNames().isEmpty()) {
+        config.setSelectedNodesInternalNames(
+            filterExistingNodes(connectedClient.getClient(), config.getSelectedNodesInternalNames(), config.isMultiSelection())
+        );
+      }
+
+      return config;
+    } catch (UaException e) {
+      if (OpcUaCertificateUtils.isCertificateException(e)) {
+        throw new SpConfigurationException(
+            OpcUaCertificateUtils.makeExceptionMessage(e, opcUaConfig)
+        );
+      }
+      throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e));
+    } catch (ExecutionException | InterruptedException | URISyntaxException e) {
+      if (e instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
+      throw makeConnectionException(opcUaConfig, e);
+    } finally {
+      clientProvider.releaseClient(opcUaConfig);
+    }
+  }
+
+  public static RuntimeResolvableTreeInputStaticProperty resolveEventTypeTreeConfig(
+      OpcUaClientProvider clientProvider,
+      String internalName,
+      IStaticPropertyExtractor parameterExtractor
+  ) throws SpConfigurationException {
+    var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    var config = parameterExtractor.getStaticPropertyByName(
+        internalName,
+        RuntimeResolvableTreeInputStaticProperty.class
+    );
+
+    try {
+      parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
+      parameterExtractor.selectedSingleValueInternalName(SharedUserConfiguration.SECURITY_MODE, String.class);
+      parameterExtractor.selectedSingleValue(SharedUserConfiguration.SECURITY_POLICY, String.class);
+    } catch (NullPointerException nullPointerException) {
+      return config;
+    }
+
+    var opcUaConfig = SpOpcUaConfigExtractor.extractConnectionConfig(parameterExtractor, new OpcUaConfig(), client);
+
+    try {
+      var connectedClient = clientProvider.getClient(opcUaConfig);
+      var typeBrowser = new OpcUaEventTypeBrowser(connectedClient.getClient());
+      var nodes = typeBrowser.buildNodeTreeFromOrigin(config.getNextBaseNodeToResolve());
+      if (Objects.isNull(config.getNextBaseNodeToResolve())) {
+        config.setNodes(nodes);
+      } else {
+        config.setLatestFetchedNodes(nodes);
+      }
+
+      if (!config.getSelectedNodesInternalNames().isEmpty()) {
+        config.setSelectedNodesInternalNames(
+            filterExistingNodes(connectedClient.getClient(), config.getSelectedNodesInternalNames(), config.isMultiSelection())
+        );
+      }
+
+      return config;
+    } catch (UaException e) {
+      if (OpcUaCertificateUtils.isCertificateException(e)) {
+        throw new SpConfigurationException(
+            OpcUaCertificateUtils.makeExceptionMessage(e, opcUaConfig)
+        );
+      }
+      throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e));
+    } catch (ExecutionException | InterruptedException | URISyntaxException e) {
+      if (e instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
+      throw makeConnectionException(opcUaConfig, e);
+    } finally {
+      clientProvider.releaseClient(opcUaConfig);
+    }
+  }
+
+  public static RuntimeResolvableAnyStaticProperty resolveEventFieldConfig(
+      OpcUaClientProvider clientProvider,
+      String internalName,
+      IStaticPropertyExtractor parameterExtractor
+  ) throws SpConfigurationException {
+    var client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    var config = parameterExtractor.getStaticPropertyByName(
+        internalName,
+        RuntimeResolvableAnyStaticProperty.class
+    );
+
+    try {
+      parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
+      parameterExtractor.selectedSingleValueInternalName(SharedUserConfiguration.SECURITY_MODE, String.class);
+      parameterExtractor.selectedSingleValue(SharedUserConfiguration.SECURITY_POLICY, String.class);
+    } catch (NullPointerException nullPointerException) {
+      return config;
+    }
+
+    var selectedEventTypes = parameterExtractor.selectedTreeNodesInternalNames(
+        org.apache.streampipes.extensions.connectors.opcua.alarms.OpcUaAlarmConfiguration.EVENT_TYPE,
+        String.class
+    );
+    if (selectedEventTypes.isEmpty()) {
+      config.setOptions(List.of());
+      return config;
+    }
+
+    var opcUaConfig = SpOpcUaConfigExtractor.extractConnectionConfig(parameterExtractor, new OpcUaConfig(), client);
+
+    try {
+      var connectedClient = clientProvider.getClient(opcUaConfig);
+      var fieldProvider = new OpcUaEventFieldProvider(connectedClient.getClient());
+      config.setOptions(fieldProvider.buildAdditionalFieldOptions(selectedEventTypes.get(0), config.getOptions()));
+      return config;
+    } catch (UaException e) {
+      if (OpcUaCertificateUtils.isCertificateException(e)) {
+        throw new SpConfigurationException(
+            OpcUaCertificateUtils.makeExceptionMessage(e, opcUaConfig)
+        );
+      }
+      throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e));
+    } catch (ExecutionException | InterruptedException | URISyntaxException e) {
+      if (e instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
+      throw makeConnectionException(opcUaConfig, e);
+    } finally {
+      clientProvider.releaseClient(opcUaConfig);
+    }
+  }
+
+  private static SpConfigurationException makeConnectionException(OpcUaConfig opcUaConfig,
+                                                                  Throwable throwable) {
+    String detail = ExceptionMessageExtractor.getDescription(throwable);
+    String serverUrl = opcUaConfig.getOpcServerURL();
+
+    if (detail == null || detail.isBlank()) {
+      return new SpConfigurationException(
+          "Could not connect to the OPC UA server at " + serverUrl + "."
+      );
+    }
+
+    return new SpConfigurationException(
+        "Could not connect to the OPC UA server at " + serverUrl + ": " + detail
+    );
+  }
+
+  private static List<String> filterExistingNodes(OpcUaClient opcUaClient,
+                                                  List<String> selectedNodes,
+                                                  boolean multiSelection) {
+    var filtered = selectedNodes.stream()
+        .filter(selectedNode -> {
+          try {
+            opcUaClient.getAddressSpace().getNode(NodeId.parse(selectedNode));
+            return true;
+          } catch (UaException e) {
+            return false;
+          }
+        })
+        .toList();
+
+    if (!multiSelection && !filtered.isEmpty()) {
+      return List.of(filtered.get(0));
+    }
+
+    return filtered;
   }
 }

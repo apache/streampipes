@@ -37,23 +37,35 @@
             >
             </sp-asset-browser-filter-labels>
             <mat-divider></mat-divider>
-            <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
                 <button
-                    data-cy="reset-filters-btn"
-                    mat-flat-button
-                    class="mat-basic"
-                    (click)="resetFilters()"
-                >
-                    {{ 'Reset filters' | translate }}
-                </button>
-                <button
-                    data-cy="apply-filters-btn"
-                    mat-flat-button
+                    mat-icon-button
+                    data-cy="refresh-assets-btn"
+                    matTooltip="{{ 'Refresh assets' | translate }}"
+                    matTooltipPosition="below"
                     color="accent"
-                    (click)="applyFilters()"
+                    (click)="refreshAssets()"
                 >
-                    {{ 'Apply' | translate }}
+                    <i class="material-icons"> refresh </i>
                 </button>
+                <div fxLayout="row" fxLayoutGap="10px">
+                    <button
+                        data-cy="reset-filters-btn"
+                        mat-flat-button
+                        class="mat-basic"
+                        (click)="resetFilters()"
+                    >
+                        {{ 'Reset filters' | translate }}
+                    </button>
+                    <button
+                        data-cy="apply-filters-btn"
+                        mat-flat-button
+                        color="accent"
+                        (click)="applyFilters()"
+                    >
+                        {{ 'Apply' | translate }}
+                    </button>
+                </div>
             </div>
         </div>
     </div>

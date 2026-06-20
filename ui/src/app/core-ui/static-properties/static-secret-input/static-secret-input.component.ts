@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -48,9 +48,7 @@ export class StaticSecretInputComponent
     extends AbstractValidatedStaticPropertyRenderer<SecretStaticProperty>
     implements OnInit
 {
-    constructor(public staticPropertyUtil: StaticPropertyUtilService) {
-        super();
-    }
+    staticPropertyUtil = inject(StaticPropertyUtilService);
 
     ngOnInit() {
         this.addValidator(this.staticProperty.value, this.collectValidators());
@@ -79,7 +77,7 @@ export class StaticSecretInputComponent
         );
     }
 
-    onStatusChange(status: any) {}
+    onStatusChange(_status: any) {}
 
     onValueChange(value: any) {
         this.staticProperty.value = value;

@@ -38,10 +38,9 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.goToConnect();
 
         // stop adapter
-        ConnectBtns.stopAdapter().click();
+        ConnectUtils.stopAdapterAndWaitForStateTransition();
 
         // click edit adapter
-        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
         ConnectBtns.openActionsMenu('simulator');
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
@@ -65,8 +64,7 @@ describe('Test Edit Adapter', () => {
         SharedUtils.confirmDialogVisible();
         SharedBtns.confirmDialogConfirmBtn().click();
 
-        cy.wait(1000);
-        ConnectBtns.refreshSchemaBtn().click();
+        ConnectUtils.refreshEventSchema();
         ConnectUtils.finishConfigureFieldsConfiguration();
 
         ConnectBtns.adapterNameInput().clear().type(newAdapterName);
@@ -91,7 +89,7 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.goToConnect();
 
         // stop adapter and edit adapter
-        ConnectBtns.stopAdapter().click();
+        ConnectUtils.stopAdapterAndWaitForStateTransition();
         ConnectBtns.openActionsMenu('simulator');
         ConnectBtns.editAdapter().click();
 
@@ -100,15 +98,14 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.replaceAdapterScript(
             '  event.density = event.density * 2;\n' +
-                '  out.collect(event);\n' +
-                '}',
+                '  out.collect(event);\n',
         );
         ConnectBtns.configureSchemaRunScriptBtn().click();
-        cy.wait(1000);
 
-        ConnectBtns.configureSchemaNextBtn().click();
+        ConnectUtils.finishEventSchemaConfiguration();
         SharedUtils.confirmDialogVisible();
         SharedBtns.confirmDialogConfirmBtn().click();
+        SharedUtils.confirmDialogClosed();
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
 
         storeAndStartEditedAdapter();

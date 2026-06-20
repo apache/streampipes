@@ -57,6 +57,8 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     ],
 })
 export class AddToCollectionComponent {
+    private staticPropertyUtil = inject(StaticPropertyUtilService);
+
     translateService = inject(TranslateService);
 
     @Input()
@@ -74,8 +76,6 @@ export class AddToCollectionComponent {
 
     public hasError = false;
     public errorMessage = this.translateService.instant('This is a test');
-
-    constructor(private staticPropertyUtil: StaticPropertyUtilService) {}
 
     add() {
         const clone = this.staticPropertyUtil.clone(
@@ -102,7 +102,7 @@ export class AddToCollectionComponent {
         const fileReader = new FileReader();
         this.fileName = target.files[0].name;
 
-        fileReader.onload = e => {
+        fileReader.onload = _e => {
             this.parseCsv(fileReader.result).subscribe(res => {
                 res.pop();
                 res.forEach((row, i) => {

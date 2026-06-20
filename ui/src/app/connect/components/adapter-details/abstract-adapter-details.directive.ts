@@ -28,26 +28,24 @@ import {
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SpAdapterDetailsTabs } from './adapter-details-tabs';
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { catchError, of } from 'rxjs';
 
 @Directive()
 export abstract class SpAbstractAdapterDetailsDirective {
+    protected currentUserService = inject(CurrentUserService);
+    protected activatedRoute = inject(ActivatedRoute);
+    protected adapterService = inject(AdapterService);
+    protected adapterMonitoringService = inject(AdapterMonitoringService);
+    protected breadcrumbService = inject(SpBreadcrumbService);
+
     currentAdapterId: string;
     tabs: SpNavigationItem[] = [];
     adapter: AdapterDescription;
     adapterNotFound = false;
 
-    constructor(
-        protected currentUserService: CurrentUserService,
-        protected activatedRoute: ActivatedRoute,
-        protected adapterService: AdapterService,
-        protected adapterMonitoringService: AdapterMonitoringService,
-        protected breadcrumbService: SpBreadcrumbService,
-    ) {}
-
     onInit(): void {
-        this.currentUserService.user$.subscribe(user => {
+        this.currentUserService.user$.subscribe(_user => {
             const elementId = this.activatedRoute.snapshot.params.elementId;
             if (elementId) {
                 this.tabs = new SpAdapterDetailsTabs().getTabs(elementId);

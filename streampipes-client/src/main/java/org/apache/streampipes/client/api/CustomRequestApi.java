@@ -19,6 +19,7 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import java.util.List;
 import java.util.Map;
@@ -30,16 +31,25 @@ public class CustomRequestApi extends AbstractClientApi implements ICustomReques
   }
 
   @Override
+  @ExposedToScripts
   public <T> void sendPost(String apiPath, T payload) {
     post(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload);
   }
 
   @Override
+  @ExposedToScripts
+  public Object sendPostJson(String apiPath, Object payload) {
+    return post(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload, Object.class);
+  }
+
+  @Override
+  @ExposedToScripts
   public <T> T sendGet(String apiPath, Class<T> responseClass) {
     return getSingle(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), responseClass);
   }
 
   @Override
+  @ExposedToScripts
   public <T> T sendGet(String apiPath, Map<String, String> queryParameters, Class<T> responseClass) {
     return getSingle(
         StreamPipesApiPath.fromStreamPipesBasePath(apiPath)
@@ -48,6 +58,46 @@ public class CustomRequestApi extends AbstractClientApi implements ICustomReques
   }
 
   @Override
+  @ExposedToScripts
+  public Object sendGetJson(String apiPath) {
+    return getSingle(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), Object.class);
+  }
+
+  @Override
+  @ExposedToScripts
+  public Object sendGetJson(String apiPath, Map<String, String> queryParameters) {
+    return getSingle(
+        StreamPipesApiPath.fromStreamPipesBasePath(apiPath)
+            .withQueryParameters(queryParameters),
+        Object.class);
+  }
+
+  @Override
+  @ExposedToScripts
+  public <T> void sendPut(String apiPath, T payload) {
+    put(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload);
+  }
+
+  @Override
+  @ExposedToScripts
+  public Object sendPutJson(String apiPath, Object payload) {
+    return put(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload, Object.class);
+  }
+
+  @Override
+  @ExposedToScripts
+  public void sendDelete(String apiPath) {
+    delete(StreamPipesApiPath.fromStreamPipesBasePath(apiPath));
+  }
+
+  @Override
+  @ExposedToScripts
+  public Object sendDeleteJson(String apiPath) {
+    return delete(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), Object.class);
+  }
+
+  @Override
+  @ExposedToScripts
   public <T> List<T> getList(String apiPath, Class<T> responseClass) {
     return getList(
         StreamPipesApiPath.fromStreamPipesBasePath(apiPath), responseClass

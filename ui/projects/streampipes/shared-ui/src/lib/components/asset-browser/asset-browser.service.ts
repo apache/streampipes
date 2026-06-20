@@ -37,6 +37,9 @@ import { LocalStorageService } from '../../services/local-storage-settings.servi
 
 @Injectable({ providedIn: 'root' })
 export class SpAssetBrowserService {
+    private static readonly ASSET_DATA_REFRESH_KEY =
+        'asset-browser-data-refresh';
+
     assetData$ = new BehaviorSubject<AssetBrowserData>(undefined);
     filter$ = new BehaviorSubject<AssetFilter>(undefined);
     currentAssetFilter$ = new BehaviorSubject<FilterResult>({
@@ -50,8 +53,10 @@ export class SpAssetBrowserService {
     private genericStorageService = inject(GenericStorageService);
     private typeService = inject(Isa95TypeService);
     private assetService = inject(AssetManagementService);
+    private localStorageService = inject(LocalStorageService);
 
     constructor() {
+        this.listenForDataRefresh();
         this.loadAssetData();
     }
 
@@ -84,6 +89,16 @@ export class SpAssetBrowserService {
             this.assetData$.next(this.loadedAssetData);
             this.reloadFilters();
         });
+    }
+
+    refreshBrowserAssetData(): void {
+        this.loadAssetData();
+        this.localStorageService.set(
+            SpAssetBrowserService.ASSET_DATA_REFRESH_KEY,
+            {
+                updatedAt: Date.now(),
+            },
+        );
     }
 
     private reloadFilters(): void {
@@ -258,7 +273,6 @@ export class SpAssetBrowserService {
     private filterLabels(
         asset: SpAsset,
         selectedLabels: SpLabel[],
-        recursionStep: boolean = false,
         previousMatchesSelf: boolean = false,
     ): SpAsset | null {
         const labelIds = asset.labelIds || [];
@@ -287,7 +301,7 @@ export class SpAssetBrowserService {
             filteredChildren = asset.assets
                 .map(child => ({ ...child }))
                 .map(child =>
-                    this.filterLabels(child, selectedLabels, true, matchesSelf),
+                    this.filterLabels(child, selectedLabels, matchesSelf),
                 )
                 .filter(child => child !== null)
                 .map(child => child as SpAsset);
@@ -328,5 +342,21 @@ export class SpAssetBrowserService {
         return asset.assetLinks
             .filter(a => a.linkType === filteredLinkType)
             .map(a => a.resourceId);
+    }
+
+    private listenForDataRefresh(): void {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        window.addEventListener('storage', event => {
+            if (
+                event.key ===
+                    `sp-${SpAssetBrowserService.ASSET_DATA_REFRESH_KEY}` &&
+                event.newValue !== null
+            ) {
+                this.loadAssetData();
+            }
+        });
     }
 }

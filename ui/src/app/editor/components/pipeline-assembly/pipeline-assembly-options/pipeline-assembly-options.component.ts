@@ -22,6 +22,7 @@ import {
     Input,
     Output,
     ViewChild,
+    inject,
 } from '@angular/core';
 import { JsplumbBridge } from '../../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../../services/pipeline-positioning.service';
@@ -69,6 +70,12 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class PipelineAssemblyOptionsComponent {
+    editorService = inject(EditorService);
+    pipelineValidationService = inject(PipelineValidationService);
+    private pipelinePositioningService = inject(PipelinePositioningService);
+    private dialog = inject(MatDialog);
+    private dialogService = inject(DialogService);
+
     @Input()
     jsplumbBridge: JsplumbBridge;
 
@@ -99,14 +106,6 @@ export class PipelineAssemblyOptionsComponent {
 
     @ViewChild('assemblyOptionsPipelineCacheComponent')
     assemblyOptionsCacheComponent: PipelineAssemblyOptionsPipelineCacheComponent;
-
-    constructor(
-        public editorService: EditorService,
-        public pipelineValidationService: PipelineValidationService,
-        private pipelinePositioningService: PipelinePositioningService,
-        private dialog: MatDialog,
-        private dialogService: DialogService,
-    ) {}
 
     autoLayout() {
         this.pipelinePositioningService.layoutGraph(
@@ -144,7 +143,7 @@ export class PipelineAssemblyOptionsComponent {
         });
     }
 
-    showClearAssemblyConfirmDialog(event: any) {
+    showClearAssemblyConfirmDialog(_event: any) {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {

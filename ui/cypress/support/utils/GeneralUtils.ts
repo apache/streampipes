@@ -22,18 +22,31 @@ export class GeneralUtils {
     }
 
     public static openMenuForRow(rowText: string) {
-        cy.contains('[role="row"], tr, mat-row', rowText) // be flexible on row element
+        GeneralUtils.closeVisibleMaterialMenu();
+
+        cy.contains('[role="row"], tr, mat-row', rowText, {
+            timeout: 10000,
+        })
             .scrollIntoView()
+            .should('be.visible')
             .within(() => {
-                // Hover the trigger to open the menu
-                cy.dataCy('more-options').trigger('mouseenter', {
-                    force: true,
-                });
+                cy.dataCy('more-options')
+                    .should('be.visible')
+                    .and('not.be.disabled')
+                    .click({ force: true });
             });
 
-        // Wait for the CDK overlay panel to become visible
-        cy.get('.cdk-overlay-container .mat-mdc-menu-panel:visible').should(
-            'exist',
+        GeneralUtils.visibleMaterialMenu().should('be.visible');
+    }
+
+    public static closeVisibleMaterialMenu() {
+        cy.get('body').type('{esc}', { force: true });
+        GeneralUtils.visibleMaterialMenu().should('not.exist');
+    }
+
+    public static visibleMaterialMenu() {
+        return cy.get(
+            '.cdk-overlay-container .mat-mdc-menu-panel, .cdk-overlay-container .mat-menu-panel',
         );
     }
 }

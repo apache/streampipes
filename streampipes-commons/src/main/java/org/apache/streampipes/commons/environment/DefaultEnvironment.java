@@ -193,6 +193,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public BooleanEnvironmentVariable getResetEndpointEnabled() {
+    return new BooleanEnvironmentVariable(Envs.SP_RESET_ENDPOINT_ENABLED);
+  }
+
+  @Override
   public List<OAuthConfiguration> getOAuthConfigurations() {
     return new OAuthConfigurationParser().parse(System.getenv());
   }
@@ -425,6 +430,11 @@ public class DefaultEnvironment implements Environment {
   @Override
   public IntEnvironmentVariable getPlc4xMaxLeaseTimeMs() {
     return new IntEnvironmentVariable(Envs.SP_PLC4X_CONN_MAX_LEASE_TIME_MS);
+  }
+
+  @Override
+  public IntEnvironmentVariable getMsSqlCdcPollIntervalMs() {
+    return new IntEnvironmentVariable(Envs.SP_CDC_MSSQL_POLL_INTERVAL_MS);
   }
 
   @Override

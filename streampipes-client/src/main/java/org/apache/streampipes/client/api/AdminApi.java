@@ -24,6 +24,7 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.function.FunctionDefinition;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import java.util.List;
 import java.util.Map;
@@ -36,21 +37,25 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
   }
 
   @Override
+  @ExposedToScripts
   public void registerService(SpServiceRegistration serviceRegistration) {
     post(getExtensionsServiceRegistrationPath(), serviceRegistration);
   }
 
   @Override
+  @ExposedToScripts
   public void deregisterService(String serviceId) {
     post(getExtensionsServiceRegistrationPath().addToPath(serviceId));
   }
 
   @Override
+  @ExposedToScripts
   public void registerServiceConfiguration(SpServiceConfiguration serviceConfiguration) {
     post(getExtensionsServiceConfigurationPath(), serviceConfiguration);
   }
 
   @Override
+  @ExposedToScripts
   public SpServiceConfiguration getServiceConfiguration(String serviceGroup) {
     var opt = getSingleOpt(
         getExtensionsServiceConfigurationPath().addToPath(serviceGroup), SpServiceConfiguration.class);
@@ -59,25 +64,35 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
   }
 
   @Override
+  @ExposedToScripts
   public void registerFunctions(List<FunctionDefinition> functions) {
     post(getFunctionsPath(), functions);
   }
 
   @Override
+  @ExposedToScripts
   public void deregisterFunction(String functionId) {
     delete(getDeleteFunctionPath(functionId), SuccessMessage.class);
   }
 
   @Override
+  @ExposedToScripts
   public Optional<Map<String, Object>> getFunctionState(String functionId) {
     return getSingleOpt(getFunctionStatePath(functionId), Map.class)
         .map(state -> (Map<String, Object>) state);
   }
 
   @Override
+  @ExposedToScripts
   public void persistFunctionState(String functionId,
                                    Map<String, Object> state) {
     put(getFunctionStatePath(functionId), state);
+  }
+
+  @Override
+  @ExposedToScripts
+  public void deleteFunctionState(String functionId)  {
+    delete(getFunctionStatePath(functionId), SuccessMessage.class);
   }
 
   /**
@@ -85,6 +100,7 @@ public class AdminApi extends AbstractClientApi implements IAdminApi {
    * @param migrationConfigs list of migration configs to be registered
    */
   @Override
+  @ExposedToScripts
   public void registerMigrations(List<ModelMigratorConfig> migrationConfigs, String serviceId) {
     post(getMigrationPath().addToPath(serviceId), migrationConfigs);
   }

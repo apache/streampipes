@@ -16,19 +16,15 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import {
-    CurrentUserService,
     PipelineElementRuntimeInfoComponent,
     SpBasicHeaderTitleComponent,
     SpBasicNavTabsComponent,
-    SpBreadcrumbService,
+    SpElementIdComponent,
 } from '@streampipes/shared-ui';
-import { ActivatedRoute } from '@angular/router';
 import {
-    AdapterMonitoringService,
-    AdapterService,
     PipelineElementService,
     SpDataStream,
 } from '@streampipes/platform-services';
@@ -50,6 +46,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutAlignDirective,
         SpBasicHeaderTitleComponent,
         PipelineElementRuntimeInfoComponent,
+        SpElementIdComponent,
         TranslatePipe,
     ],
 })
@@ -57,24 +54,9 @@ export class AdapterDetailsDataComponent
     extends SpAbstractAdapterDetailsDirective
     implements OnInit
 {
-    stream: SpDataStream;
+    private pipelineElementService = inject(PipelineElementService);
 
-    constructor(
-        currentUserService: CurrentUserService,
-        activatedRoute: ActivatedRoute,
-        adapterService: AdapterService,
-        adapterMonitoringService: AdapterMonitoringService,
-        breadcrumbService: SpBreadcrumbService,
-        private pipelineElementService: PipelineElementService,
-    ) {
-        super(
-            currentUserService,
-            activatedRoute,
-            adapterService,
-            adapterMonitoringService,
-            breadcrumbService,
-        );
-    }
+    stream: SpDataStream;
 
     ngOnInit(): void {
         super.onInit();

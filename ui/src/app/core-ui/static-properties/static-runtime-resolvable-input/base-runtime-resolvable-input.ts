@@ -32,11 +32,15 @@ import {
 } from '@streampipes/platform-services';
 import { RuntimeResolvableService } from './runtime-resolvable.service';
 import { Observable } from 'rxjs';
-import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+import {
+    Directive,
+    Input,
+    OnChanges,
+    SimpleChanges,
+    inject,
+} from '@angular/core';
 
 @Directive()
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class BaseRuntimeResolvableInput<
     T extends
         | RuntimeResolvableAnyStaticProperty
@@ -47,16 +51,15 @@ export abstract class BaseRuntimeResolvableInput<
     extends AbstractStaticPropertyRenderer<T>
     implements OnChanges
 {
+    protected runtimeResolvableService = inject(RuntimeResolvableService);
+
     @Input() deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     showOptions = false;
     loading = false;
     error = false;
     errorMessage: SpLogMessage;
-
-    constructor(private runtimeResolvableService: RuntimeResolvableService) {
-        super();
-    }
+    private lastDependencyRevisionKey: string;
 
     onInit() {}
 
@@ -121,16 +124,33 @@ export abstract class BaseRuntimeResolvableInput<
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['completedConfigurations']) {
+        if (
+            changes['completedConfigurations'] &&
+            this.staticProperty.dependsOn?.length > 0
+        ) {
+            const dependencyRevisionKey = this.makeDependencyRevisionKey();
             if (
+                dependencyRevisionKey !== this.lastDependencyRevisionKey &&
                 this.staticPropertyUtils.allDependenciesSatisfied(
                     this.staticProperty.dependsOn,
                     this.completedConfigurations,
                 )
             ) {
+                this.lastDependencyRevisionKey = dependencyRevisionKey;
                 this.loadOptionsFromRestApi();
             }
         }
+    }
+
+    private makeDependencyRevisionKey(): string {
+        return this.staticProperty.dependsOn
+            .map(dependency => {
+                const completedConfig = this.completedConfigurations.find(
+                    config => config.staticPropertyInternalName === dependency,
+                );
+                return `${dependency}:${completedConfig?.revision ?? 0}`;
+            })
+            .join('|');
     }
 
     abstract parse(staticProperty: StaticPropertyUnion): T;

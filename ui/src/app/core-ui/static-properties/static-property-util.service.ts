@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
     AnyStaticProperty,
     CodeInputStaticProperty,
@@ -41,7 +41,7 @@ import { ConfigurationInfo } from '../../connect/model/ConfigurationInfo';
 
 @Injectable({ providedIn: 'root' })
 export class StaticPropertyUtilService {
-    constructor(private idGeneratorService: IdGeneratorService) {}
+    private idGeneratorService = inject(IdGeneratorService);
 
     public initializeCompletedConfigurations(
         configs: StaticProperty[],
@@ -77,11 +77,13 @@ export class StaticPropertyUtilService {
         completedConfig: ConfigurationInfo,
         completedConfigs: ConfigurationInfo[],
     ) {
-        completedConfigs.find(
+        const existingConfig = completedConfigs.find(
             c =>
                 c.staticPropertyInternalName ===
                 completedConfig.staticPropertyInternalName,
-        ).configured = completedConfig.configured;
+        );
+        existingConfig.configured = completedConfig.configured;
+        existingConfig.revision = (existingConfig.revision ?? 0) + 1;
     }
 
     public clone(val: StaticProperty) {

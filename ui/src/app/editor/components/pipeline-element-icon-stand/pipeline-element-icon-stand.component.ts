@@ -16,7 +16,7 @@
  *
  */
 
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, inject } from '@angular/core';
 import {
     PeCategory,
     PipelineElementType,
@@ -78,6 +78,9 @@ import { PipelineElementTypeFilterPipe } from '../../services/pipeline-element-t
 export class PipelineElementIconStandComponent
     implements OnInit, AfterViewInit
 {
+    private editorService = inject(EditorService);
+    private router = inject(Router);
+
     availableTypes = [
         {
             title: 'Data Streams',
@@ -113,11 +116,6 @@ export class PipelineElementIconStandComponent
         label: 'Uncategorized',
         description: '',
     };
-
-    constructor(
-        private editorService: EditorService,
-        private router: Router,
-    ) {}
 
     ngOnInit(): void {
         this.loadOptions();
@@ -194,7 +192,7 @@ export class PipelineElementIconStandComponent
                     ui.helper.appendTo('#content');
                     $('#outerAssemblyArea').css('border', '2px dashed #39b54a');
                 },
-                stop(el, ui) {
+                stop(_el, _ui) {
                     $('#outerAssemblyArea').css('border', '0');
                 },
             });

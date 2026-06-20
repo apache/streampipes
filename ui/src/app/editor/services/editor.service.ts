@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpContext, HttpEvent } from '@angular/common/http';
 import {
     DataProcessorInvocation,
@@ -47,19 +47,17 @@ import { TopicsComponent } from '../../core-ui/topics/topics.component';
 
 @Injectable({ providedIn: 'root' })
 export class EditorService {
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
+    private dialogService = inject(DialogService);
+    private pipelineService = inject(PipelineService);
+
     private pipelineElementConfigured = new Subject<string>();
 
     public pipelineElementConfigured$ =
         this.pipelineElementConfigured.asObservable();
 
     pipelineAssemblyEmpty = true;
-
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-        private dialogService: DialogService,
-        private pipelineService: PipelineService,
-    ) {}
 
     get apiBasePath() {
         return this.platformServicesCommons.apiBasePath;

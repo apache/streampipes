@@ -18,8 +18,6 @@
 
 import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { GaugeVisConfig, GaugeWidgetModel } from '../model/gauge-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
@@ -33,6 +31,8 @@ import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { ResultLabelService } from '../../../../services/result-label.service';
 
 @Component({
     selector: 'sp-data-explorer-gauge-widget-config',
@@ -45,6 +45,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatFormField,
         FlexDirective,
         MatInput,
+        MatCheckbox,
         FormsModule,
         TranslatePipe,
     ],
@@ -53,16 +54,58 @@ export class GaugeWidgetConfigComponent extends BaseWidgetConfig<
     GaugeWidgetModel,
     GaugeVisConfig
 > {
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
-        super(widgetConfigurationService, fieldService);
+    constructor(private resultLabelService: ResultLabelService) {
+        super();
     }
 
     setSelectedProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
             field;
+        this.currentlyConfiguredWidget.visualizationConfig.displayName =
+            this.resultLabelService.getOverride(
+                this.currentlyConfiguredWidget.dataConfig.sourceConfigs[
+                    field.sourceIndex
+                ].queryConfig,
+                field,
+            ) ??
+            field.runtimeName ??
+            field.fullDbName;
+        this.triggerViewRefresh();
+    }
+
+    getDisplayName(): string {
+        const selectedProperty =
+            this.currentlyConfiguredWidget.visualizationConfig.selectedProperty;
+
+        if (!selectedProperty) {
+            return '';
+        }
+
+        return this.resultLabelService.resolveLabel(
+            this.currentlyConfiguredWidget.dataConfig.sourceConfigs[
+                selectedProperty.sourceIndex
+            ].queryConfig,
+            selectedProperty,
+            this.currentlyConfiguredWidget.visualizationConfig.displayName,
+        );
+    }
+
+    onDisplayNameChange(label: string): void {
+        const selectedProperty =
+            this.currentlyConfiguredWidget.visualizationConfig.selectedProperty;
+
+        if (!selectedProperty) {
+            return;
+        }
+
+        this.resultLabelService.setOverride(
+            this.currentlyConfiguredWidget.dataConfig.sourceConfigs[
+                selectedProperty.sourceIndex
+            ].queryConfig,
+            selectedProperty,
+            label,
+            selectedProperty.fullDbName,
+        );
         this.triggerViewRefresh();
     }
 
@@ -72,8 +115,26 @@ export class GaugeWidgetConfigComponent extends BaseWidgetConfig<
             this.fieldProvider.numericFields,
             () => this.fieldProvider.numericFields[0],
         );
+        if (typeof config.displayName !== 'string') {
+            config.displayName =
+                config.selectedProperty?.runtimeName ||
+                config.selectedProperty?.fullDbName ||
+                '';
+        }
         config.min ??= 0;
         config.max ??= 100;
+        config.startAngle ??= 225;
+        config.endAngle ??= -45;
+        config.splitNumber ??= 10;
+        config.showPointer ??= true;
+        config.enableThresholdColors ??= false;
+        config.thresholdColorLow ??= '#91cc75';
+        config.thresholdColorMedium ??= '#fac858';
+        config.thresholdColorHigh ??= '#ee6666';
+
+        const range = Math.max(1, config.max - config.min);
+        config.thresholdLow ??= config.min + range * 0.6;
+        config.thresholdHigh ??= config.min + range * 0.8;
     }
 
     protected requiredFieldsForChartPresent(): boolean {

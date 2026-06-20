@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
 import {
@@ -44,6 +44,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     ],
 })
 export class ServiceConfigsBooleanComponent {
+    configService = inject(ConfigurationService);
+
     @Input() configuration: ConfigItem;
-    constructor(public configService: ConfigurationService) {}
 }

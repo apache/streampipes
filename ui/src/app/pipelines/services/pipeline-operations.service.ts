@@ -16,13 +16,13 @@
  *
  */
 
-import { EventEmitter, Injectable } from '@angular/core';
-import { Pipeline } from '@streampipes/platform-services';
+import { EventEmitter, inject, Injectable } from '@angular/core';
+import { PipelineSummaryDto } from '@streampipes/platform-services';
 import {
-    PanelType,
-    DialogService,
     DialogRef,
+    DialogService,
     ObjectPermissionDialogComponent,
+    PanelType,
 } from '@streampipes/shared-ui';
 import { PipelineStatusDialogComponent } from '../dialog/pipeline-status/pipeline-status-dialog.component';
 import { DeletePipelineDialogComponent } from '../dialog/delete-pipeline/delete-pipeline-dialog.component';
@@ -32,13 +32,11 @@ import { PipelineNotificationsComponent } from '../dialog/pipeline-notifications
 
 @Injectable({ providedIn: 'root' })
 export class PipelineOperationsService {
+    private dialogService = inject(DialogService);
+    private router = inject(Router);
+
     starting: any;
     stopping: any;
-
-    constructor(
-        private dialogService: DialogService,
-        private router: Router,
-    ) {}
 
     startPipeline(
         pipelineId: string,
@@ -86,7 +84,7 @@ export class PipelineOperationsService {
         toggleAction: string,
         toggleRunningOperation?,
     ) {
-        dialogRef.afterClosed().subscribe(msg => {
+        dialogRef.afterClosed().subscribe(_msg => {
             refreshPipelinesEmitter.emit(true);
             if (toggleRunningOperation) {
                 toggleRunningOperation(toggleAction);
@@ -95,7 +93,9 @@ export class PipelineOperationsService {
     }
 
     showDeleteDialog(
-        pipeline: Pipeline,
+        elementId: string,
+        name: string,
+        running: boolean,
         refreshPipelinesEmitter: EventEmitter<boolean>,
         switchToPipelineView?: any,
     ) {
@@ -105,7 +105,9 @@ export class PipelineOperationsService {
                 title: 'Delete Pipeline',
                 width: '70vw',
                 data: {
-                    pipeline: pipeline,
+                    elementId,
+                    name,
+                    running,
                 },
             });
 
@@ -136,7 +138,7 @@ export class PipelineOperationsService {
     }
 
     showPipelineNotificationsDialog(
-        pipeline: Pipeline,
+        pipelineSummary: PipelineSummaryDto,
         refreshPipelinesEmitter: EventEmitter<boolean>,
     ) {
         const dialogRef: DialogRef<PipelineNotificationsComponent> =
@@ -145,17 +147,17 @@ export class PipelineOperationsService {
                 title: 'Pipeline Notifications',
                 width: '70vw',
                 data: {
-                    pipeline: pipeline,
+                    pipelineSummary: pipelineSummary,
                 },
             });
 
-        dialogRef.afterClosed().subscribe(close => {
+        dialogRef.afterClosed().subscribe(_close => {
             refreshPipelinesEmitter.emit(true);
         });
     }
 
     showPermissionsDialog(
-        pipeline: Pipeline,
+        pipelineSummary: PipelineSummaryDto,
         refreshPipelinesEmitter: EventEmitter<boolean>,
     ) {
         const dialogRef = this.dialogService.open(
@@ -165,9 +167,10 @@ export class PipelineOperationsService {
                 title: 'Manage permissions',
                 width: '70vw',
                 data: {
-                    objectInstanceId: pipeline._id,
+                    objectInstanceId: pipelineSummary.elementId,
                     headerTitle:
-                        'Manage permissions for pipeline ' + pipeline.name,
+                        'Manage permissions for pipeline ' +
+                        pipelineSummary.name,
                 },
             },
         );

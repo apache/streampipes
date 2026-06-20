@@ -30,6 +30,8 @@ import {
     Output,
     SimpleChanges,
     ViewChild,
+    inject,
+    NgZone,
 } from '@angular/core';
 import {
     ClientDashboardItem,
@@ -72,6 +74,7 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -90,6 +93,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
+        LayoutGapDirective,
         MatIconButton,
         MatIcon,
         FormsModule,
@@ -109,6 +113,18 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class ChartContainerComponent
     implements OnInit, OnDestroy, OnChanges, AfterViewInit
 {
+    private chartRegistryService = inject(ChartRegistry);
+    private dashboardService = inject(ChartSharedService);
+    private componentFactoryResolver = inject(ComponentFactoryResolver);
+    private widgetTypeService = inject(ChartTypeService);
+    private authService = inject(AuthService);
+    private currentUserService = inject(CurrentUserService);
+    private timeSelectionService = inject(TimeSelectionService);
+    private nameChangeService = inject(NameChangeService);
+    private el = inject<ElementRef<HTMLDivElement>>(ElementRef);
+    private resizeService = inject(ResizeService);
+    private ngZone = inject(NgZone);
+
     @ViewChild('menuTrigger') menu: MatMenuTrigger;
     @ViewChild('timeSelectorMenu')
     timeSelectorMenu: TimeRangeSelectorMenuComponent;
@@ -194,19 +210,6 @@ export class ChartContainerComponent
 
     @ViewChild(ChartDirective, { static: true }) widgetHost!: ChartDirective;
 
-    constructor(
-        private chartRegistryService: ChartRegistry,
-        private dashboardService: ChartSharedService,
-        private componentFactoryResolver: ComponentFactoryResolver,
-        private widgetTypeService: ChartTypeService,
-        private authService: AuthService,
-        private currentUserService: CurrentUserService,
-        private timeSelectionService: TimeSelectionService,
-        private nameChangeService: NameChangeService,
-        private el: ElementRef<HTMLDivElement>,
-        private resizeService: ResizeService,
-    ) {}
-
     resizeObserver: ResizeObserver;
     resizeTimeout: any;
 
@@ -220,10 +223,12 @@ export class ChartContainerComponent
                 const { width, height } =
                     entries[entries.length - 1].contentRect;
 
-                this.resizeService.notify({
-                    width,
-                    height,
-                    widgetId: this.dashboardItem?.id || undefined,
+                this.ngZone.run(() => {
+                    this.resizeService.notify({
+                        width,
+                        height,
+                        widgetId: this.dashboardItem?.id || undefined,
+                    });
                 });
             }, 100);
         });
@@ -235,13 +240,25 @@ export class ChartContainerComponent
             this.componentRef.instance.widgetIndex =
                 changes.widgetIndex.currentValue;
         }
+        if (changes.dashboardChartOverrides && this.componentRef?.instance) {
+            this.componentRef.instance.dashboardChartOverrides =
+                changes.dashboardChartOverrides.currentValue;
+            (this.componentRef.instance as any).refreshView?.();
+        }
+        if (
+            (changes.globalTimeEnabled || changes.timeSettings) &&
+            this.componentRef?.instance
+        ) {
+            this.componentRef.instance.timeSettings = this.getTimeSettings();
+            (this.componentRef.instance as any).updateData?.();
+        }
     }
 
     ngOnInit(): void {
         this.quickSelections ??=
             this.timeSelectionService.defaultQuickTimeSelections;
         this.labels ??= this.timeSelectionService.defaultLabels;
-        this.auth$ = this.currentUserService.user$.subscribe(user => {
+        this.auth$ = this.currentUserService.user$.subscribe(_user => {
             this.hasDataExplorerWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW,
             );
@@ -306,11 +323,19 @@ export class ChartContainerComponent
     }
 
     chooseWidget(widgetTypeId: string) {
-        if (widgetTypeId != undefined) {
+        if (widgetTypeId != undefined && !this.showRequiresAttentionMessage) {
             const widgetToDisplay =
                 this.chartRegistryService.getChartTemplate(widgetTypeId);
             this.loadComponent(widgetToDisplay.widgetComponent);
         }
+    }
+
+    get showRequiresAttentionMessage(): boolean {
+        return (
+            !this.dataViewMode &&
+            !!this.dashboardItem &&
+            this.configuredWidget?.healthStatus === 'REQUIRES_ATTENTION'
+        );
     }
 
     loadComponent(widgetToDisplay) {
@@ -354,7 +379,7 @@ export class ChartContainerComponent
         this.componentRef.instance.dashboardChartOverrides =
             this.dashboardChartOverrides;
         const remove$ =
-            this.componentRef.instance.removeWidgetCallback.subscribe(ev =>
+            this.componentRef.instance.removeWidgetCallback.subscribe(_ev =>
                 this.removeWidget(),
             );
         const timer$ = this.componentRef.instance.timerCallback.subscribe(ev =>
@@ -372,7 +397,7 @@ export class ChartContainerComponent
             results => this.queryResultsEmitter.emit(results),
         );
 
-        this.componentRef.onDestroy(destroy => {
+        this.componentRef.onDestroy(_destroy => {
             this.componentRef.instance.cleanupSubscriptions();
             remove$?.unsubscribe();
             timer$?.unsubscribe();

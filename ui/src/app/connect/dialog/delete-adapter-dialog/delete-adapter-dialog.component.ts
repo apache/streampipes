@@ -16,9 +16,10 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import {
     AdapterDescription,
+    AdapterSummaryDto,
     AdapterService,
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
@@ -47,8 +48,12 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class DeleteAdapterDialogComponent {
+    private dialogRef =
+        inject<DialogRef<DeleteAdapterDialogComponent>>(DialogRef);
+    private dataMarketplaceService = inject(AdapterService);
+
     @Input()
-    adapter: AdapterDescription;
+    adapter: AdapterDescription | AdapterSummaryDto;
 
     isInProgress = false;
     currentStatus: any;
@@ -56,11 +61,6 @@ export class DeleteAdapterDialogComponent {
     deleteAssociatedPipelines = false;
     namesOfPipelinesUsingAdapter = '';
     namesOfPipelinesNotOwnedByUser = '';
-
-    constructor(
-        private dialogRef: DialogRef<DeleteAdapterDialogComponent>,
-        private dataMarketplaceService: AdapterService,
-    ) {}
 
     close(refreshAdapters: boolean) {
         this.dialogRef.close(refreshAdapters);
@@ -72,9 +72,12 @@ export class DeleteAdapterDialogComponent {
         this.deleteAssociatedPipelines = deleteAssociatedPipelines;
 
         this.dataMarketplaceService
-            .deleteAdapter(this.adapter, deleteAssociatedPipelines)
+            .deleteAdapterById(
+                this.adapter.elementId,
+                deleteAssociatedPipelines,
+            )
             .subscribe(
-                data => {
+                _data => {
                     this.close(true);
                 },
                 error => {

@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SelectQueryParamsTest {
 
@@ -186,7 +187,7 @@ public class SelectQueryParamsTest {
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
-        + " time > 1000000) GROUP BY sensorId;", query);
+        + " time > 1000000) GROUP BY \"sensorId\";", query);
   }
 
   @Test
@@ -203,7 +204,142 @@ public class SelectQueryParamsTest {
     String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
-        + " time > 1000000) GROUP BY sensorId,sensorId2;", query);
+        + " time > 1000000) GROUP BY \"sensorId\",\"sensorId2\";", query);
+  }
+
+  @Test
+  public void testGroupByTime() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1h")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(none);", query);
+  }
+
+  @Test
+  public void testGroupByTimeAndTags() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1ms")
+        .withGroupBy(List.of("sensorId"))
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT value FROM \"abc\" GROUP BY time(1ms),\"sensorId\" fill(none);", query);
+  }
+
+  @Test
+  public void testGroupByTimeWithPreviousFill() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1h")
+        .withFill("previous")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(previous);", query);
+  }
+
+  @Test
+  public void testGroupByTimeWithLinearFill() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1h")
+        .withFill("linear")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(linear);", query);
+  }
+
+  @Test
+  public void testGroupByTimeWithNullFill() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1h")
+        .withFill("null")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(null);", query);
+  }
+
+  @Test
+  public void testGroupByTimeWithNumericFill() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1h")
+        .withFill("12.5")
+        .build();
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(12.5);", query);
+  }
+
+  @Test
+  public void testGroupByTimeRejectsUnsafeInterval() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1h); SHOW MEASUREMENTS --")
+        .build();
+
+    assertThrows(IllegalArgumentException.class,
+        () -> ProvidedRestQueryParamConverter.getSelectQueryParams(params));
+  }
+
+  @Test
+  public void testGroupByTimeRejectsUnsafeFill() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withTimeInterval("1h")
+        .withFill("previous); DROP MEASUREMENT foo --")
+        .build();
+
+    assertThrows(IllegalArgumentException.class,
+        () -> ProvidedRestQueryParamConverter.getSelectQueryParams(params));
+  }
+
+  @Test
+  public void testGroupByRejectsUnsafeIdentifier() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withGroupBy(List.of("sensorId;SHOW"))
+        .build();
+
+    assertThrows(IllegalArgumentException.class,
+        () -> ProvidedRestQueryParamConverter.getSelectQueryParams(params));
+  }
+
+  @Test
+  public void testGroupByTimeAndTagsRejectUnsafeInterval() {
+    var params = ProvidedQueryParameterBuilder.create("abc")
+        .withSimpleColumns(List.of("value"))
+        .withGroupBy(List.of("sensorId"))
+        .withTimeInterval("1h) INVALID_TOKEN --")
+        .build();
+
+    assertThrows(IllegalArgumentException.class,
+        () -> ProvidedRestQueryParamConverter.getSelectQueryParams(params));
   }
 
   @Test

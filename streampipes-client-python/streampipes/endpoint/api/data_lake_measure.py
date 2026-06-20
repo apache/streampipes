@@ -25,7 +25,7 @@ from math import ceil
 from typing import Any, Dict, List, Literal, Optional, Tuple, Type
 
 from pandas import DataFrame
-from pydantic.v1 import BaseModel, Extra, Field, StrictInt, ValidationError, validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, ValidationError, field_validator
 
 from streampipes.endpoint.endpoint import APIEndpoint
 from streampipes.model.container import DataLakeMeasures
@@ -79,23 +79,19 @@ class MeasurementGetQueryConfig(BaseModel):
 
     _regex_comma_separated_string = r"^[0-9a-zA-Z\_]+(,[0-9a-zA-Z\_]+)*$"
 
-    class Config:
-        """Pydantic Config class"""
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
-        extra = Extra.forbid
-        allow_population_by_field_name = True
-
-    columns: Optional[str] = Field(regex=_regex_comma_separated_string)
-    end_date: Optional[StrictInt] = Field(alias="endDate")
+    columns: Optional[str] = Field(default=None, pattern=_regex_comma_separated_string)
+    end_date: Optional[StrictInt] = Field(default=None, alias="endDate")
     limit: Optional[int] = Field(ge=1, default=1000)
-    offset: Optional[int] = Field(ge=0)
-    order: Optional[Literal["ASC", "DESC"]]
-    page_no: Optional[int] = Field(alias="page", ge=1)
-    start_date: Optional[StrictInt] = Field(alias="startDate")
+    offset: Optional[int] = Field(default=None, ge=0)
+    order: Optional[Literal["ASC", "DESC"]] = None
+    page_no: Optional[int] = Field(default=None, alias="page", ge=1)
+    start_date: Optional[StrictInt] = Field(default=None, alias="startDate")
 
-    @validator("columns", pre=True)
+    @field_validator("columns", mode="before")
     @classmethod
-    def _convert_to_comma_separated_string(cls, value: Optional[List[str]]) -> Optional[str]:
+    def _convert_to_comma_separated_string(cls, value: Any) -> Optional[str]:
         """Pydantic validator to convert a list to a comma separated string.
         This is necessary for the StreamPipes API.
 
@@ -124,11 +120,15 @@ class MeasurementGetQueryConfig(BaseModel):
             raise StreamPipesQueryValidationError(
                 f"The provided value for either `columns`" f"is an empty list: '{value}'."
             )
+        if not all(isinstance(item, str) for item in value):
+            raise StreamPipesQueryValidationError(
+                f"The provided value for either `columns`" f"contains non-string values: '{value}'."
+            )
         return ",".join(value)
 
-    @validator("end_date", "start_date", pre=True)
+    @field_validator("end_date", "start_date", mode="before")
     @classmethod
-    def _convert_datetime(cls, dt: datetime) -> int:
+    def _convert_datetime(cls, dt: Any) -> int:
         """Pydantic validator to convert datetime object to unix timestamp.
 
         The StreamPipes API expects datetime related parameters to be passed as unix timestamp.
@@ -155,7 +155,7 @@ class MeasurementGetQueryConfig(BaseModel):
 
         """
 
-        if not isinstance(dt, datetime) or dt is None:
+        if dt is None or not isinstance(dt, datetime):
             raise StreamPipesQueryValidationError(
                 f"The passed value for either `start_date` or `end_date` " f"is not a datetime object: '{dt}'."
             )
@@ -186,7 +186,7 @@ class MeasurementGetQueryConfig(BaseModel):
         # create dictionary representation of the config that meets the following expectations:
         # - query parameter should comply to the parameter names of the StreamPipes API (`by_alias`)
         # - query params should only be present if they are different from None (`exclude_none`)
-        query_param_dict = self.dict(by_alias=True, exclude_none=True)
+        query_param_dict = self.model_dump(by_alias=True, exclude_none=True)
 
         # create query string that complies to HTTP syntax (?param1=value1&param2=value2&...)
         query_param_string = f"?{'&'.join([f'{k}={v}' for k, v in query_param_dict.items()])}"
@@ -300,7 +300,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
             validated config that can be used to construct the query
         """
         try:
-            config = MeasurementGetQueryConfig.parse_obj(query_params)
+            config = MeasurementGetQueryConfig.model_validate(query_params)
         except ValidationError as ve:
             raise StreamPipesQueryValidationError(
                 f"\nOops, there seems to be a problem with your provided query options. "

@@ -30,6 +30,10 @@ import { map } from 'rxjs/operators';
 import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 import {
+    DatasetSummaryDto,
+    ResourceSummaryDto,
+} from '../model/resource/resource-summary.model';
+import {
     CsvImportPreviewRequest,
     CsvImportPreviewResult,
     CsvImportRequest,
@@ -85,15 +89,23 @@ export class DatalakeRestService {
         );
     }
 
+    getMeasurementSummary(): Observable<ResourceSummaryDto<DatasetSummaryDto>> {
+        return this.http.get<ResourceSummaryDto<DatasetSummaryDto>>(
+            `${this.dataLakeMeasureUrl}/summary`,
+        );
+    }
+
     getMeasurement(id: string): Observable<DataLakeMeasure> {
         return this.http
             .get(`${this.dataLakeMeasureUrl}/${id}`)
             .pipe(map(res => res as DataLakeMeasure));
     }
 
-    getMeasurementByName(name: String): Observable<DataLakeMeasure> {
+    getMeasurementByName(name: string): Observable<DataLakeMeasure> {
         return this.http
-            .get(`${this.dataLakeMeasureUrl}/byName/${name}`)
+            .get(
+                `${this.dataLakeMeasureUrl}/byName/${encodeURIComponent(name)}`,
+            )
             .pipe(map(res => res as DataLakeMeasure));
     }
 
@@ -121,7 +133,8 @@ export class DatalakeRestService {
             emptyQueryResult.total = 0;
             return of(emptyQueryResult);
         } else {
-            const url = this.dataLakeUrl + '/measurements/' + index;
+            const url =
+                this.dataLakeUrl + '/measurements/' + encodeURIComponent(index);
             return this.http.get<SpQueryResult>(url, {
                 params: queryParams as unknown as HttpParams,
                 context,
@@ -140,7 +153,7 @@ export class DatalakeRestService {
                 .get(
                     this.dataLakeUrl +
                         '/measurements/' +
-                        index +
+                        encodeURIComponent(index) +
                         '/tags?fields=' +
                         fieldNames.toString(),
                 )
@@ -178,7 +191,7 @@ export class DatalakeRestService {
     }
 
     cleanup(index: string, config: any) {
-        const url = `${this.dataLakeUrl}/${index}/cleanup`;
+        const url = `${this.dataLakeUrl}/${encodeURIComponent(index)}/cleanup`;
         const request = new HttpRequest('POST', url, config, {
             headers: new HttpHeaders({ 'Content-Type': 'application/json' }), // optional if already handled globally
         });
@@ -195,25 +208,29 @@ export class DatalakeRestService {
             .set('startDate', startTime.toString())
             .set('endDate', endTime.toString());
         return this.http.delete<void>(
-            `${this.dataLakeUrl}/measurements/${measurementName}`,
+            `${this.dataLakeUrl}/measurements/${encodeURIComponent(measurementName)}`,
             { params },
         );
     }
 
     deleteCleanup(index: string) {
-        const url = `${this.dataLakeUrl}/${index}/cleanup`;
+        const url = `${this.dataLakeUrl}/${encodeURIComponent(index)}/cleanup`;
         return this.http.delete(url);
     }
 
     runCleanupNow(index: string) {
-        const url = `${this.dataLakeUrl}/${index}/runSyncNow`;
+        const url = `${this.dataLakeUrl}/${encodeURIComponent(index)}/runSyncNow`;
         const request = new HttpRequest('POST', url, {});
 
         return this.http.request(request);
     }
 
     buildDownloadRequest(index: string, queryParams: any) {
-        const url = this.dataLakeUrl + '/measurements/' + index + '/download';
+        const url =
+            this.dataLakeUrl +
+            '/measurements/' +
+            encodeURIComponent(index) +
+            '/download';
         const request = new HttpRequest('GET', url, {
             reportProgress: true,
             responseType: 'blob',
@@ -226,10 +243,10 @@ export class DatalakeRestService {
     store(
         measureName: string,
         spQueryResult: SpQueryResult,
-        ignoreSchemaMismatch = true,
+        _ignoreSchemaMismatch = true,
     ): Observable<void> {
         return this.http.post<void>(
-            `${this.dataLakeUrl}/measurements/${measureName}`,
+            `${this.dataLakeUrl}/measurements/${encodeURIComponent(measureName)}`,
             spQueryResult,
             {},
         );
@@ -240,7 +257,8 @@ export class DatalakeRestService {
     }
 
     removeData(index: string) {
-        const url = this.dataLakeUrl + '/measurements/' + index;
+        const url =
+            this.dataLakeUrl + '/measurements/' + encodeURIComponent(index);
 
         return this.http.delete(url);
     }
@@ -285,7 +303,11 @@ export class DatalakeRestService {
     }
 
     dropSingleMeasurementSeries(index: string) {
-        const url = this.dataLakeUrl + '/measurements/' + index + '/drop';
+        const url =
+            this.dataLakeUrl +
+            '/measurements/' +
+            encodeURIComponent(index) +
+            '/drop';
         return this.http.delete(url);
     }
 

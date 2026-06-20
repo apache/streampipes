@@ -80,6 +80,9 @@ export class StaticFileInputComponent
     extends AbstractValidatedStaticPropertyRenderer<FileStaticProperty>
     implements OnInit
 {
+    private filesService = inject(FilesService);
+    dialog = inject(MatDialog);
+
     public chooseExistingFileControl = new UntypedFormControl();
 
     translateService = inject(TranslateService);
@@ -99,13 +102,6 @@ export class StaticFileInputComponent
     selectedFile: FileMetadata;
 
     filesLoaded = false;
-
-    constructor(
-        private filesService: FilesService,
-        public dialog: MatDialog,
-    ) {
-        super();
-    }
 
     ngOnInit() {
         this.fetchFileMetadata(this.staticProperty.locationPath);
@@ -203,7 +199,7 @@ export class StaticFileInputComponent
                                     this.fetchFileMetadata(filename);
                                 }
                             },
-                            error => {},
+                            _error => {},
                         );
                 } else {
                     this.openRenameDialog();
@@ -223,7 +219,7 @@ export class StaticFileInputComponent
         return fileMetadata ? fileMetadata.filename : '';
     }
 
-    onStatusChange(status: any) {}
+    onStatusChange(_status: any) {}
 
     onValueChange(value: any) {
         this.staticProperty.locationPath = value.filename;

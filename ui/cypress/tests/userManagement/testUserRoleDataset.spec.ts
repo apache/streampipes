@@ -25,6 +25,7 @@ import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
+import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 
 describe('Test Dataset Permissions', () => {
     const datasetName = 'simulator';
@@ -104,9 +105,6 @@ describe('Test Dataset Permissions', () => {
             'chartUser1@streampipes.apache.org',
         );
 
-        // I am not quite sure why this is needed, but without it the test fails
-        cy.dataCy('confirm-delete', { timeout: 10000 }).click();
-
         UserUtils.switchUser(chartUser1);
 
         ChartUtils.checkAmountOfCharts(1);
@@ -154,6 +152,8 @@ describe('Test Dataset Permissions', () => {
 
         ChartBtns.discardDashboard().click();
 
+        SharedBtns.confirmDialogCancelBtn().click();
+
         assertDatasetIsNotVisible(dashboardAdmin1);
 
         authUserOnDataset('dashboardAdmin1@streampipes.apache.org');
@@ -170,10 +170,12 @@ describe('Test Dataset Permissions', () => {
         ChartBtns.openNewDataViewBtn().click();
         if (!available) {
             cy.get('sp-alert-banner').should('be.visible');
+            ChartBtns.discardDataExplorerWidgetBtn().click();
         } else {
-            ChartUtils.assertSelectDataSet(datasetName);
-            ChartUtils.addDataViewAndTableWidget('test', datasetName, true);
-            ChartUtils.saveDataViewConfiguration();
+            ChartUtils.selectDataSet(datasetName);
+            ChartBtns.discardDataExplorerWidgetBtn().click();
+            ChartUtils.addDataViewAndTableWidget(datasetName, true);
+            ChartUtils.saveDataViewConfiguration(false, false, 'test');
         }
     }
 

@@ -16,20 +16,9 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { DialogRef, SplitSectionComponent } from '@streampipes/shared-ui';
-import {
-    AdapterService,
-    AssetLink,
-    AssetLinkType,
-    ChartService,
-    DashboardService,
-    DatalakeRestService,
-    FilesService,
-    GenericStorageService,
-    PipelineElementService,
-    PipelineService,
-} from '@streampipes/platform-services';
+import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
 import {
     FlexDirective,
@@ -59,6 +48,9 @@ export class SpManageAssetLinksDialogComponent
     extends BaseAssetLinksDirective
     implements OnInit
 {
+    private dialogRef =
+        inject<DialogRef<SpManageAssetLinksDialogComponent>>(DialogRef);
+
     @Input()
     assetLinks: AssetLink[];
 
@@ -73,29 +65,6 @@ export class SpManageAssetLinksDialogComponent
     filenameFunction = el => el.filename;
     measureNameFunction = el => el.measureName;
     widgetNameFunction = el => el.baseAppearanceConfig.widgetTitle;
-
-    constructor(
-        private dialogRef: DialogRef<SpManageAssetLinksDialogComponent>,
-        protected genericStorageService: GenericStorageService,
-        protected pipelineService: PipelineService,
-        protected chartService: ChartService,
-        protected dashboardService: DashboardService,
-        protected dataLakeService: DatalakeRestService,
-        protected pipelineElementService: PipelineElementService,
-        protected adapterService: AdapterService,
-        protected filesService: FilesService,
-    ) {
-        super(
-            genericStorageService,
-            pipelineService,
-            chartService,
-            dashboardService,
-            dataLakeService,
-            pipelineElementService,
-            adapterService,
-            filesService,
-        );
-    }
 
     ngOnInit(): void {
         super.onInit();

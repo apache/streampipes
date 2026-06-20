@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -99,6 +99,14 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class GeneralConfigurationComponent implements OnInit {
+    private fb = inject(UntypedFormBuilder);
+    private generalConfigService = inject(GeneralConfigService);
+    private mailConfigService = inject(MailConfigService);
+    private availableRolesService = inject(AvailableRolesService);
+    private appConstants = inject(AppConstants);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private tabService = inject(SpConfigurationTabsService);
+
     tabs: SpNavigationItem[] = [];
 
     parentForm: UntypedFormGroup;
@@ -108,16 +116,6 @@ export class GeneralConfigurationComponent implements OnInit {
     mailConfig: EmailConfig;
 
     availableRoles$: Observable<Role[]>;
-
-    constructor(
-        private fb: UntypedFormBuilder,
-        private generalConfigService: GeneralConfigService,
-        private mailConfigService: MailConfigService,
-        private availableRolesService: AvailableRolesService,
-        private appConstants: AppConstants,
-        private breadcrumbService: SpBreadcrumbService,
-        private tabService: SpConfigurationTabsService,
-    ) {}
 
     ngOnInit(): void {
         this.tabs = this.tabService.getTabs();
@@ -317,7 +315,7 @@ export class GeneralConfigurationComponent implements OnInit {
 
         this.generalConfigService
             .updateGeneralConfig(this.generalConfig)
-            .subscribe(result => {
+            .subscribe(_result => {
                 this.loadConfig();
             });
     }

@@ -18,17 +18,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
-import { ActivatedRoute } from '@angular/router';
-import {
-    AdapterMonitoringService,
-    AdapterService,
-    SpMetricsEntry,
-} from '@streampipes/platform-services';
-import {
-    CurrentUserService,
-    SpBasicNavTabsComponent,
-    SpBreadcrumbService,
-} from '@streampipes/shared-ui';
+import { SpMetricsEntry } from '@streampipes/platform-services';
+import { SpBasicNavTabsComponent } from '@streampipes/shared-ui';
 import { SpConnectRoutes } from '../../../connect.breadcrumb';
 import {
     FlexDirective,
@@ -60,22 +51,6 @@ export class SpAdapterDetailsMetricsComponent
     implements OnInit
 {
     adapterMetrics: SpMetricsEntry;
-
-    constructor(
-        currentUserService: CurrentUserService,
-        activatedRoute: ActivatedRoute,
-        adapterService: AdapterService,
-        adapterMonitoringService: AdapterMonitoringService,
-        breadcrumbService: SpBreadcrumbService,
-    ) {
-        super(
-            currentUserService,
-            activatedRoute,
-            adapterService,
-            adapterMonitoringService,
-            breadcrumbService,
-        );
-    }
 
     ngOnInit(): void {
         super.onInit();

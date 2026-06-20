@@ -22,6 +22,11 @@
         background: configuredWidget.baseAppearanceConfig.backgroundColor,
         color: configuredWidget.baseAppearanceConfig.textColor,
         height: '100%',
+        border: !dataViewMode
+            ? (dashboardChartOverrides?.borderThickness || 0) +
+              'px solid var(--color-bg-2)'
+            : 'none',
+        boxSizing: 'border-box',
     }"
     [attr.data-cy]="
         'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle
@@ -59,6 +64,8 @@
                                 type="text"
                                 [(ngModel)]="tempName"
                                 class="name-input"
+                                (keydown.enter)="saveName()"
+                                (keydown.escape)="cancelEditingName()"
                             />
 
                             <button mat-icon-button (click)="saveName()">
@@ -205,8 +212,34 @@
         </div>
     }
     <div fxLayout="column" class="widget-content p-0 ml-0 mr-0 h-100 mw-100">
+        @if (showRequiresAttentionMessage) {
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayoutAlign="center center"
+                fxLayoutGap="10px"
+            >
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <i class="material-icons warning-icon">sync_problem</i>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="center center">
+                    <div class="default-text text-xl">
+                        {{
+                            'Chart requires attention because the dataset schema changed'
+                                | translate
+                        }}
+                    </div>
+                    <div class="default-text text-md">
+                        {{
+                            'Open the chart editor to review and save the chart'
+                                | translate
+                        }}
+                    </div>
+                </div>
+            </div>
+        }
         <ng-template spWidgetHost class="h-100 p-0"></ng-template>
-        @if (errorMessage) {
+        @if (!showRequiresAttentionMessage && errorMessage) {
             <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
                 <sp-exception-message
                     [message]="errorMessage"

@@ -105,6 +105,7 @@
                                                 )
                                             "
                                             data-cy="csv-import-column-type"
+                                            [disabled]="isExisting() !== 'NEW'"
                                         >
                                             <mat-option value="STRING">
                                                 STRING
@@ -134,6 +135,7 @@
                                             )
                                         "
                                         data-cy="csv-import-column-scope"
+                                        [disabled]="isExisting() !== 'NEW'"
                                     >
                                         <mat-option
                                             value="TIMESTAMP"

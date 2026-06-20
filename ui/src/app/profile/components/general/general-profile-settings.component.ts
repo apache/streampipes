@@ -16,13 +16,9 @@
  *
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ProfileService } from '../../profile.service';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { BasicProfileSettings } from '../basic-profile-settings';
-import { AppConstants } from '../../../services/app.constants';
-import { AuthService } from '../../../services/auth.service';
 import {
-    CurrentUserService,
     DialogRef,
     DialogService,
     FormFieldComponent,
@@ -72,6 +68,9 @@ export class GeneralProfileSettingsComponent
     extends BasicProfileSettings
     implements OnInit, OnDestroy
 {
+    private dialogService = inject(DialogService);
+    private router = inject(Router);
+
     darkMode = false;
     originalDarkMode = false;
     darkModeChanged = false;
@@ -83,17 +82,6 @@ export class GeneralProfileSettingsComponent
         { label: 'Deutsch', id: 'de' },
         { label: 'Polski', id: 'pl' },
     ];
-
-    constructor(
-        authService: AuthService,
-        profileService: ProfileService,
-        appConstants: AppConstants,
-        currentUserService: CurrentUserService,
-        private dialogService: DialogService,
-        private router: Router,
-    ) {
-        super(profileService, appConstants, currentUserService, authService);
-    }
 
     ngOnInit(): void {
         this.currentUserService.darkMode$.subscribe(
@@ -110,6 +98,7 @@ export class GeneralProfileSettingsComponent
 
     changeModePreview(value: boolean) {
         this.currentUserService.darkMode$.next(value);
+        this.updateAppearanceMode();
     }
 
     onUserDataReceived() {
@@ -122,7 +111,7 @@ export class GeneralProfileSettingsComponent
     updateAppearanceMode() {
         this.profileService
             .updateAppearanceMode(this.userData.username, this.darkMode)
-            .subscribe(response => {
+            .subscribe(_response => {
                 this.darkModeChanged = true;
             });
     }

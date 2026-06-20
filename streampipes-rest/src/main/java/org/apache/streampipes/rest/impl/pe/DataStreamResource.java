@@ -18,15 +18,21 @@
 
 package org.apache.streampipes.rest.impl.pe;
 
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.pipeline.update.DataStreamUpdateManagement;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.event.DataStreamDeletedEvent;
+import org.apache.streampipes.rest.event.DataStreamUpdatedEvent;
 import org.apache.streampipes.rest.security.AuthConstants;
 
 import org.apache.http.client.HttpResponseException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
@@ -46,6 +52,15 @@ import java.util.List;
 @RequestMapping("/api/v2/streams")
 public class DataStreamResource extends AbstractAuthGuardedRestResource {
 
+  private final DataStreamUpdateManagement dataStreamUpdateManagement;
+  private final ApplicationEventPublisher eventPublisher;
+
+  public DataStreamResource(ExtensionServiceRequestManager requestManager,
+                            ApplicationEventPublisher eventPublisher) {
+    this.dataStreamUpdateManagement = new DataStreamUpdateManagement(requestManager);
+    this.eventPublisher = eventPublisher;
+  }
+
   @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.elementId, 'READ')")
@@ -63,6 +78,7 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   @DeleteMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
   public ResponseEntity<Message> delete(@PathVariable("elementId") String elementId) {
+    publishEvent(new DataStreamDeletedEvent(elementId));
     getDataStreamResourceManager().delete(elementId);
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
@@ -85,9 +101,21 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
       throw new HttpResponseException(400,
           "Element ID in path variable does not match element ID in request body");
     } else {
-      getDataStreamResourceManager().update(updatedElement);
+      dataStreamUpdateManagement.updateDataStream(updatedElement);
+      publishEvent(new DataStreamUpdatedEvent(updatedElement));
       return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
     }
+  }
+
+  @PutMapping(
+      path = "/pipeline-migration-preflight",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
+  public ResponseEntity<List<PipelineUpdateInfo>> performPipelineMigrationPreflight(
+      @RequestBody SpDataStream updatedElement) {
+    return ok(dataStreamUpdateManagement.checkPipelineMigrations(updatedElement));
   }
 
   @PostMapping(
@@ -106,6 +134,12 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
 
   private DataStreamResourceManager getDataStreamResourceManager() {
     return getSpResourceManager().manageDataStreams();
+  }
+
+  private void publishEvent(Object event) {
+    if (eventPublisher != null) {
+      eventPublisher.publishEvent(event);
+    }
   }
 
 }

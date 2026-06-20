@@ -17,6 +17,8 @@
  */
 
 declare global {
+    interface Window {}
+
     namespace Cypress {
         interface Chainable {
             removeDownloadDirectory: typeof removeDownloadDirectory;

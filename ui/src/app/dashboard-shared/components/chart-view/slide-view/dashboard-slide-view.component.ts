@@ -74,14 +74,16 @@ export class DashboardSlideViewComponent
     }
 
     onWidgetsAvailable(): void {
-        this.selectWidget(0, this.dashboard.widgets[0].dataViewElementId);
+        if (this.dashboard.widgets.length > 0) {
+            this.selectWidget(0, this.dashboard.widgets[0].dataViewElementId);
+        }
     }
 
     isGridView(): boolean {
         return false;
     }
 
-    selectNewWidget(widgetId: string): void {
-        this.selectWidget(this.dashboard.widgets.length - 1, widgetId);
+    selectNewWidget(dataViewElementId: string): void {
+        this.selectWidget(this.dashboard.widgets.length - 1, dataViewElementId);
     }
 }

@@ -16,14 +16,21 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    HostListener,
+    inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { BaseRuntimeResolvableInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-input';
 import {
     RuntimeResolvableTreeInputStaticProperty,
     StaticPropertyUnion,
     TreeInputNode,
 } from '@streampipes/platform-services';
-import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -33,14 +40,20 @@ import { StaticTreeInputServiceService } from './static-tree-input-service.servi
 import { StaticTreeInputBrowseNodesComponent } from './static-tree-input-browse-nodes/static-tree-input-browse-nodes.component';
 import {
     FlexDirective,
+    LayoutAlignDirective,
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
+import { CdkDrag, CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { StaticTreeInputButtonMenuComponent } from './static-tree-input-button-menu/static-tree-input-button-menu.component';
 import { SpExceptionMessageComponent } from '@streampipes/shared-ui';
 import { StaticTreeInputNodeDetailsComponent } from './static-tree-input-node-details/static-tree-input-node-details.component';
 import { StaticTreeInputSelectedNodesComponent } from './static-tree-input-selected-nodes/static-tree-input-selected-nodes.component';
 import { StaticTreeInputTextEditorComponent } from './static-tree-input-text-editor/static-tree-input-text-editor.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-static-runtime-resolvable-tree-input',
@@ -48,12 +61,18 @@ import { StaticTreeInputTextEditorComponent } from './static-tree-input-text-edi
     styleUrls: ['./static-runtime-resolvable-tree-input.component.scss'],
     imports: [
         FlexDirective,
+        LayoutAlignDirective,
         LayoutDirective,
         FormsModule,
         ReactiveFormsModule,
         StaticTreeInputButtonMenuComponent,
         SpExceptionMessageComponent,
         LayoutGapDirective,
+        CdkDrag,
+        MatIconButton,
+        MatIcon,
+        MatTooltip,
+        TranslatePipe,
         StaticTreeInputBrowseNodesComponent,
         StaticTreeInputNodeDetailsComponent,
         StaticTreeInputSelectedNodesComponent,
@@ -62,8 +81,13 @@ import { StaticTreeInputTextEditorComponent } from './static-tree-input-text-edi
 })
 export class StaticRuntimeResolvableTreeInputComponent
     extends BaseRuntimeResolvableInput<RuntimeResolvableTreeInputStaticProperty>
-    implements OnInit
+    implements OnInit, OnDestroy
 {
+    private staticTreeInputServiceService = inject(
+        StaticTreeInputServiceService,
+    );
+    private host = inject(ElementRef<HTMLElement>);
+
     nodeDetails: TreeInputNode;
 
     editorMode: 'tree' | 'text' = 'tree';
@@ -73,16 +97,19 @@ export class StaticRuntimeResolvableTreeInputComponent
     // should not be stored in the static property object
     latestFetchedNodes = [];
     nodes = [];
+    treeFullscreen = false;
+    browsePanelWidth = 50;
+    isResizingPanels = false;
+    private readonly minPanelWidthPercent = 30;
+    private readonly maxPanelWidthPercent = 70;
 
     @ViewChild('staticTreeInputBrowseNodesComponent')
     private staticTreeInputBrowseNodesComponent: StaticTreeInputBrowseNodesComponent;
 
-    constructor(
-        runtimeResolvableService: RuntimeResolvableService,
-        private staticTreeInputServiceService: StaticTreeInputServiceService,
-    ) {
-        super(runtimeResolvableService);
-    }
+    @ViewChild('treeWorkspace')
+    private treeWorkspace: ElementRef<HTMLDivElement>;
+
+    private placeholderNode?: Comment;
 
     ngOnInit(): void {
         // if a node is selected it is assumed the adapter was opened in edit mode
@@ -120,6 +147,10 @@ export class StaticRuntimeResolvableTreeInputComponent
         staticProperty: StaticPropertyUnion,
     ): RuntimeResolvableTreeInputStaticProperty {
         return staticProperty as RuntimeResolvableTreeInputStaticProperty;
+    }
+
+    ngOnDestroy(): void {
+        this.restoreHostPosition();
     }
 
     afterOptionsLoaded(
@@ -200,7 +231,128 @@ export class StaticRuntimeResolvableTreeInputComponent
 
         if (mode === 'tree') {
             this.resetStaticPropertyStateAndReload();
+        } else {
+            this.closeTreeFullscreen();
         }
+    }
+
+    toggleTreeFullscreen() {
+        if (this.treeFullscreen) {
+            this.closeTreeFullscreen();
+        } else {
+            this.detachHostToOverlay();
+            this.treeFullscreen = true;
+        }
+    }
+
+    onPanelResizeStarted() {
+        this.isResizingPanels = true;
+    }
+
+    onPanelResizeMoved(event: CdkDragMove) {
+        const workspaceElement = this.treeWorkspace?.nativeElement;
+
+        if (!workspaceElement) {
+            return;
+        }
+
+        const rect = workspaceElement.getBoundingClientRect();
+        const relativeLeft = event.pointerPosition.x - rect.left;
+        const widthPercent = (relativeLeft / rect.width) * 100;
+
+        this.browsePanelWidth = Math.min(
+            Math.max(widthPercent, this.minPanelWidthPercent),
+            this.maxPanelWidthPercent,
+        );
+
+        event.source.element.nativeElement.style.transform = 'none';
+    }
+
+    onPanelResizeEnded(event: CdkDragEnd) {
+        this.isResizingPanels = false;
+        event.source.element.nativeElement.style.transform = 'none';
+    }
+
+    @HostListener('window:resize')
+    onWindowResize() {
+        if (this.treeFullscreen) {
+            this.updateDetachedHostBounds();
+        }
+    }
+
+    @HostListener('window:keydown.escape')
+    onEscapePressed() {
+        if (this.treeFullscreen) {
+            this.closeTreeFullscreen();
+        }
+    }
+
+    private closeTreeFullscreen() {
+        this.treeFullscreen = false;
+        this.restoreHostPosition();
+    }
+
+    private detachHostToOverlay() {
+        const hostEl = this.host.nativeElement;
+
+        if (this.placeholderNode || hostEl.parentNode === document.body) {
+            this.updateDetachedHostBounds();
+            return;
+        }
+
+        const parent = hostEl.parentNode;
+
+        if (!parent) {
+            return;
+        }
+
+        this.placeholderNode = document.createComment(
+            'sp-static-tree-input-placeholder',
+        );
+        parent.insertBefore(this.placeholderNode, hostEl);
+        document.body.appendChild(hostEl);
+        hostEl.classList.add('tree-detached-host');
+        this.updateDetachedHostBounds();
+    }
+
+    private restoreHostPosition() {
+        const hostEl = this.host.nativeElement;
+
+        if (this.placeholderNode?.parentNode) {
+            this.placeholderNode.parentNode.insertBefore(
+                hostEl,
+                this.placeholderNode,
+            );
+            this.placeholderNode.parentNode.removeChild(this.placeholderNode);
+        }
+
+        this.placeholderNode = undefined;
+        hostEl.classList.remove('tree-detached-host');
+        hostEl.style.removeProperty('--tree-overlay-top');
+        hostEl.style.removeProperty('--tree-overlay-left');
+        hostEl.style.removeProperty('--tree-overlay-width');
+        hostEl.style.removeProperty('--tree-overlay-height');
+    }
+
+    private updateDetachedHostBounds() {
+        const hostEl = this.host.nativeElement;
+        const mainSection = document.querySelector(
+            '.main-section',
+        ) as HTMLElement | null;
+        const targetRect =
+            mainSection?.getBoundingClientRect() ??
+            document.documentElement.getBoundingClientRect();
+
+        hostEl.style.setProperty('--tree-overlay-top', `${targetRect.top}px`);
+        hostEl.style.setProperty('--tree-overlay-left', `${targetRect.left}px`);
+        hostEl.style.setProperty(
+            '--tree-overlay-width',
+            `${targetRect.width}px`,
+        );
+        hostEl.style.setProperty(
+            '--tree-overlay-height',
+            `${targetRect.height}px`,
+        );
     }
 
     /**

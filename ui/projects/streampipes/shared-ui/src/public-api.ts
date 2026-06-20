@@ -20,6 +20,10 @@ export * from './lib/dialog/base-dialog/base-dialog.model';
 export * from './lib/dialog/base-dialog/base-dialog.service';
 export * from './lib/dialog/base-dialog/dialog-ref';
 export * from './lib/dialog/data-download-dialog/data-download-dialog.component';
+export * from './lib/dialog/data-download-dialog/model/export-config.model';
+export * from './lib/dialog/data-download-dialog/model/format-export-config.model';
+export * from './lib/dialog/data-download-dialog/model/data-export-config.model';
+export * from './lib/dialog/data-download-dialog/services/file-name.service';
 export * from './lib/dialog/card-dialog/card-dialog.component';
 
 export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
@@ -28,6 +32,8 @@ export * from './lib/dialog/panel-dialog/panel-dialog.component';
 export * from './lib/dialog/standard-dialog/standard-dialog.component';
 export * from './lib/dialog/pipeline-element-help/pipeline-element-help.component';
 export * from './lib/dialog/object-permission-dialog/object-permission-dialog.component';
+export * from './lib/dialog/object-manage-dialog/object-manage-dialog.component';
+export * from './lib/dialog/object-manage-dialog/model/object-manage-model.model';
 
 export * from './lib/components/asset-browser/asset-browser-toolbar/asset-browser-toolbar.component';
 export * from './lib/components/basic-header-title/header-title.component';
@@ -36,9 +42,12 @@ export * from './lib/components/basic-field-description/basic-field-description.
 export * from './lib/components/basic-view/basic-view.component';
 export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
 export * from './lib/components/date-input/date-input.component';
+export * from './lib/components/element-id/element-id.component';
 export * from './lib/components/form-field/form-field.component';
 export * from './lib/components/form-label/form-label.component';
+export * from './lib/components/property-scope-badge/property-scope-badge.component';
 export * from './lib/components/split-section/split-section.component';
+export * from './lib/components/split-button/split-button.component';
 export * from './lib/components/sp-exception-message/sp-exception-message.component';
 export * from './lib/components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
 export * from './lib/components/sp-exception-message/exception-details/exception-details.component';
@@ -81,6 +90,7 @@ export * from './lib/services/date-format.service';
 export * from './lib/services/pipeline-element-schema.service';
 export * from './lib/services/asset-configuration.service';
 export * from './lib/services/local-storage-settings.service';
+export * from './lib/services/keyboard-shortcut.service';
 export * from './lib/components/sp-table/sp-paginator/sp-paginator.service';
 export * from './lib/components/feature-card-host/feature-card.service';
 

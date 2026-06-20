@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { SpNavigationItem } from '../../models/sp-navigation.model';
 import {
@@ -52,6 +52,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class SpBasicNavTabsComponent {
+    private router = inject(Router);
+
     @Input()
     spNavigationItems: SpNavigationItem[];
 
@@ -66,8 +68,6 @@ export class SpBasicNavTabsComponent {
 
     @Input()
     padding = '10px';
-
-    constructor(private router: Router) {}
 
     navigateTo(spNavigationItem: SpNavigationItem) {
         this.router.navigate(spNavigationItem.itemLink);

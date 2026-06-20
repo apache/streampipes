@@ -31,12 +31,9 @@ import {
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { UserRole } from '../core/auth/user-role.enum';
-import { MissingElementsForTutorialComponent } from '../editor/dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
 import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
 import { ShepherdService } from '../services/tour/shepherd.service';
 import {
-    AdapterDescription,
-    AdapterService,
     AssetConstants,
     AssetLinkType,
     AssetManagementService,
@@ -44,12 +41,10 @@ import {
     GenericStorageService,
     LocationConfig,
     LocationConfigService,
-    NamedStreamPipesEntity,
-    PipelineElementService,
     SpAssetModel,
     UserInfo,
 } from '@streampipes/platform-services';
-import { forkJoin, Subscription, zip } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { StatusBox } from './models/home.model';
 import {
     FlexDirective,
@@ -92,23 +87,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     serviceLinks = [];
     showStatus = false;
 
-    availablePipelineElements: NamedStreamPipesEntity[] = [];
-    availableAdapters: AdapterDescription[] = [];
-
     statusBoxes: StatusBox[] = [];
     locationConfig: LocationConfig;
     assets: SpAssetModel[] = [];
     filteredAssets: SpAssetModel[] = [];
     sites: Record<string, AssetSiteDesc> = {};
     assetLinkTypes: Record<string, AssetLinkType> = {};
-
-    requiredAdapterForTutorialAppId: any =
-        'org.apache.streampipes.connect.iiot.adapters.simulator.machine';
-    requiredProcessorForTutorialAppId: any =
-        'org.apache.streampipes.processors.filters.jvm.numericalfilter';
-    requiredSinkForTutorialAppId: any =
-        'org.apache.streampipes.sinks.internal.jvm.datalake';
-    missingElementsForTutorial: any = [];
 
     isTutorialOpen = false;
     currentUser: UserInfo;
@@ -122,8 +106,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     private breadcrumbService = inject(SpBreadcrumbService);
     private dialogService = inject(DialogService);
     private shepherdService = inject(ShepherdService);
-    private pipelineElementService = inject(PipelineElementService);
-    private adapterService = inject(AdapterService);
     private genericStorageService = inject(GenericStorageService);
     private locationService = inject(LocationConfigService);
     private assetService = inject(AssetManagementService);
@@ -175,8 +157,10 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.contentLoaded = true;
             this.showStatus = true;
         });
-        if (isAdmin) {
-            this.loadResources();
+        console.log(isAdmin);
+        console.log(this.currentUser.showTutorial);
+        if (isAdmin && this.currentUser.showTutorial) {
+            this.checkForTutorial();
         }
         this.breadcrumbService.updateBreadcrumb([]);
     }
@@ -187,127 +171,41 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     sortAssetLinks(assets: SpAssetModel[]) {
         assets.forEach(asset => {
-            asset.assetLinks = [...asset.assetLinks].sort((a, b) => {
-                const typeCompare = a.linkType.localeCompare(b.linkType);
+            asset.assetLinks = [...(asset.assetLinks ?? [])].sort((a, b) => {
+                const leftType = a.linkType ?? '';
+                const rightType = b.linkType ?? '';
+                const typeCompare = leftType.localeCompare(rightType);
                 if (typeCompare !== 0) {
                     return typeCompare;
                 }
 
-                return a.linkLabel.localeCompare(b.linkLabel);
+                return (a.linkLabel ?? '').localeCompare(b.linkLabel ?? '');
             });
         });
     }
 
     checkForTutorial() {
-        if (this.currentUser.showTutorial) {
-            if (this.requiredPipelineElementsForTourPresent()) {
-                this.isTutorialOpen = true;
-                const dialogRef = this.dialogService.open(
-                    WelcomeTourComponent,
-                    {
-                        panelType: PanelType.STANDARD_PANEL,
-                        title: 'Welcome to ' + this.appConstants.APP_NAME,
-                        data: {
-                            userInfo: this.currentUser,
-                        },
-                    },
-                );
-                dialogRef.afterClosed().subscribe(startTutorial => {
-                    if (startTutorial) {
-                        this.startTutorial();
-                    }
-                });
+        this.isTutorialOpen = true;
+        const dialogRef = this.dialogService.open(WelcomeTourComponent, {
+            panelType: PanelType.STANDARD_PANEL,
+            title: 'Welcome to ' + this.appConstants.APP_NAME,
+            data: {
+                userInfo: this.currentUser,
+            },
+        });
+        dialogRef.afterClosed().subscribe(startTutorial => {
+            if (startTutorial) {
+                this.startTutorial();
+            } else {
+                this.isTutorialOpen = false;
             }
-        }
+        });
     }
 
     startTutorial() {
-        if (this.requiredPipelineElementsForTourPresent()) {
-            this.router.navigate(['connect']).then(() => {
-                this.shepherdService.startAdapterTour();
-            });
-        } else {
-            this.missingElementsForTutorial = [];
-            if (!this.requiredAdapterForTutorialAppId()) {
-                this.missingElementsForTutorial.push({
-                    name: 'Machine Data Simulator',
-                    appId: this.requiredAdapterForTutorialAppId,
-                });
-            }
-            if (!this.requiredProcessorForTourPresent()) {
-                this.missingElementsForTutorial.push({
-                    name: 'Numerical Filter',
-                    appId: this.requiredProcessorForTutorialAppId,
-                });
-            }
-            if (!this.requiredSinkForTourPresent()) {
-                this.missingElementsForTutorial.push({
-                    name: 'Dashboard Sink',
-                    appId: this.requiredSinkForTutorialAppId,
-                });
-            }
-
-            this.dialogService.open(MissingElementsForTutorialComponent, {
-                panelType: PanelType.STANDARD_PANEL,
-                title: 'Tutorial requires pipeline elements',
-                data: {
-                    missingElementsForTutorial: this.missingElementsForTutorial,
-                },
-            });
-        }
-    }
-
-    requiredPipelineElementsForTourPresent() {
-        return (
-            this.requiredAdapterForTourPresent() &&
-            this.requiredProcessorForTourPresent() &&
-            this.requiredSinkForTourPresent()
-        );
-    }
-
-    requiredAdapterForTourPresent() {
-        return this.requiredPeForTourPresent(
-            this.availableAdapters,
-            this.requiredAdapterForTutorialAppId,
-        );
-    }
-
-    requiredProcessorForTourPresent() {
-        return this.requiredPeForTourPresent(
-            this.availablePipelineElements,
-            this.requiredProcessorForTutorialAppId,
-        );
-    }
-
-    requiredSinkForTourPresent() {
-        return this.requiredPeForTourPresent(
-            this.availablePipelineElements,
-            this.requiredSinkForTutorialAppId,
-        );
-    }
-
-    requiredPeForTourPresent(list: NamedStreamPipesEntity[], appId: string) {
-        return (
-            list &&
-            list.some(el => {
-                return el.appId === appId;
-            })
-        );
-    }
-
-    loadResources(): void {
-        zip(
-            this.adapterService.getAdapterDescriptions(),
-            this.pipelineElementService.getDataStreams(),
-            this.pipelineElementService.getDataProcessors(),
-            this.pipelineElementService.getDataSinks(),
-        ).subscribe(res => {
-            this.availableAdapters = res[0];
-            this.availablePipelineElements = this.availablePipelineElements
-                .concat(...res[1])
-                .concat(...res[2])
-                .concat(...res[3]);
-            this.checkForTutorial();
+        this.router.navigate(['connect']).then(() => {
+            this.shepherdService.startAdapterTour();
+            this.isTutorialOpen = false;
         });
     }
 

@@ -19,6 +19,7 @@
 import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { AssetBuilder } from '../../support/builder/AssetBuilder';
+import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 
 describe('Creates a new adapter with a linked asset', () => {
     const assetName1 = 'TestAsset1';
@@ -47,6 +48,7 @@ describe('Creates a new adapter with a linked asset', () => {
 
     it('Edit Assets during Chart generation', () => {
         ChartUtils.createDataViewWithAssets([assetName1, assetName2]);
+
         AssetUtils.checkAmountOfAssets(3);
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
@@ -55,12 +57,11 @@ describe('Creates a new adapter with a linked asset', () => {
         // Go To Chart and Edit
         ChartUtils.goToDatalake();
         cy.wait(1000);
-        ChartUtils.editDataView('NewWidget');
+        ChartUtils.manageDataView('NewWidget');
         ChartUtils.renameWidget('Rename');
-        ChartUtils.addChartsToAsset([assetName1, assetName3]);
-        ChartUtils.saveDataViewConfiguration();
-        //Neceassary for Background Task to finish
-        cy.wait(500);
+        ChartUtils.addDashboardToAsset([assetName1, assetName3]);
+        ChartBtns.saveDataViewBtn().click();
+        ChartBtns.openNewDataViewBtn().should('be.visible');
 
         AssetUtils.checkAmountOfAssets(3);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);

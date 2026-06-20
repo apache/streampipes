@@ -21,6 +21,7 @@ package org.apache.streampipes.client.api;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +41,7 @@ public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeR
   }
 
   @Override
+  @ExposedToScripts
   public void delete(String measurementID, Long startDate, Long endDate) {
 
     Map<String, String> queryParams = new HashMap<>();
@@ -54,6 +56,7 @@ public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeR
   }
 
   @Override
+  @ExposedToScripts
   public void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch) {
     Map<String, String> queryParams = new HashMap<>();
     queryParams.put("ignoreSchemaMismatch", String.valueOf(ignoreSchemaMismatch));
@@ -61,6 +64,7 @@ public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeR
   }
 
   @Override
+  @ExposedToScripts
   public SpQueryResult get(String measurementID, Map<String, String> queryParams) {
     return getSingle(getBaseResourcePath().addToPath(measurementID).withQueryParameters(queryParams),
         SpQueryResult.class);

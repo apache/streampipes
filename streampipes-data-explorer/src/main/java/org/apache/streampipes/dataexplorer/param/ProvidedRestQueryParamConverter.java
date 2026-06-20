@@ -77,14 +77,8 @@ public class ProvidedRestQueryParamConverter {
 
     if (params.has(SupportedRestQueryParams.QP_TIME_INTERVAL)) {
       String timeInterval = params.getAsString(SupportedRestQueryParams.QP_TIME_INTERVAL);
-      if (!params.has(SupportedRestQueryParams.QP_GROUP_BY)) {
-        queryParameters.withGroupByTimeParams(GroupByTimeClauseParams.from(timeInterval));
-      } else {
-        params.update(SupportedRestQueryParams.QP_GROUP_BY,
-                      params.getAsString(SupportedRestQueryParams.QP_GROUP_BY) + ",time(" + timeInterval + ")");
-      }
-
-      queryParameters.withFillParams(FillClauseParams.from());
+      queryParameters.withGroupByTimeParams(GroupByTimeClauseParams.from(timeInterval));
+      queryParameters.withFillParams(FillClauseParams.from(params.getAsString(SupportedRestQueryParams.QP_FILL)));
     }
 
     if (params.has(SupportedRestQueryParams.QP_GROUP_BY)) {

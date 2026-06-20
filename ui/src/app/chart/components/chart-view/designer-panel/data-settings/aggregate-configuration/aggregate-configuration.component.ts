@@ -49,6 +49,8 @@ import { FormsModule } from '@angular/forms';
     ],
 })
 export class AggregateConfigurationComponent {
+    private widgetConfigService = inject(ChartConfigurationService);
+
     @Input() queryConfig: QueryConfig;
     @Input() widgetId: string;
 
@@ -63,14 +65,10 @@ export class AggregateConfigurationComponent {
         { value: 'w', label: this.translateService.instant('Week') },
     ];
 
-    constructor(private widgetConfigService: ChartConfigurationService) {}
-
     triggerDataRefresh() {
-        if (this.widgetId) {
-            this.widgetConfigService.notify({
-                refreshData: true,
-                refreshView: true,
-            });
-        }
+        this.widgetConfigService.notify({
+            refreshData: true,
+            refreshView: true,
+        });
     }
 }

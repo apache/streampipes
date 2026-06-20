@@ -44,7 +44,8 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
   @Override
   public void apply(
       AdapterDescription adapterDescription,
-      CompactAdapter compactAdapter
+      CompactAdapter compactAdapter,
+      String userId
   )
       throws WorkerAdapterException, NoServiceEndpointsAvailableException, IOException, AdapterException {
 
@@ -53,6 +54,8 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
       adapterDescription.getTransformationConfig()
                         .setScript(compactAdapter.transformationConfig()
                                                  .getScript());
+      adapterDescription.getTransformationConfig()
+                        .setScriptActive(compactAdapter.transformationConfig().isScriptActive());
     }
 
     var sampleData = guessManagement.getSampleData(adapterDescription);
@@ -62,7 +65,7 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
     setDefaultScriptIfNotSet(adapterDescription);
     setDefaultScriptLanguageIfNotSet(adapterDescription);
 
-    guessManagement.transformSampleData(adapterDescription);
+    guessManagement.transformSampleData(adapterDescription, userId);
 
     var eventSchema = guessManagement.guessSchema(adapterDescription);
     if (eventSchema != null) {

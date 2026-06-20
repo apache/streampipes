@@ -18,9 +18,7 @@
 
 import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { TableVisConfig, TableWidgetModel } from '../model/table-widget.model';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
 import { SelectMultiplePropertiesConfigComponent } from '../../../chart-config/select-multiple-properties-config/select-multiple-properties-config.component';
@@ -41,6 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { ColorPickerDirective } from 'ngx-color-picker';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { FieldOrderConfigComponent } from '../../../chart-config/field-order-config/field-order-config.component';
 
 @Component({
     selector: 'sp-data-explorer-table-widget-config',
@@ -60,6 +59,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
         LayoutDirective,
         LayoutAlignDirective,
         MatCheckbox,
+        FieldOrderConfigComponent,
         TranslatePipe,
         FormFieldComponent,
         SpAlertBannerComponent,
@@ -80,13 +80,6 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         '#9333EA',
     ];
 
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
-        super(widgetConfigurationService, fieldService);
-    }
-
     onFilterChange(searchValue: string): void {
         this.currentlyConfiguredWidget.visualizationConfig.searchValue =
             searchValue.trim().toLowerCase();
@@ -94,6 +87,12 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
     }
 
     setSelectedColumn(selectedColumns: DataExplorerField[]) {
+        this.currentlyConfiguredWidget.visualizationConfig.selectedColumns =
+            this.mergeSelectedColumnOrder(selectedColumns);
+        this.triggerViewRefresh();
+    }
+
+    setSelectedColumnOrder(selectedColumns: DataExplorerField[]): void {
         this.currentlyConfiguredWidget.visualizationConfig.selectedColumns =
             selectedColumns;
         this.triggerViewRefresh();
@@ -108,6 +107,12 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
 
     setPageSize(pageSize: number): void {
         this.currentlyConfiguredWidget.visualizationConfig.pageSize = pageSize;
+        this.triggerViewRefresh();
+    }
+
+    setStickyHeaders(stickyHeaders: boolean): void {
+        this.currentlyConfiguredWidget.visualizationConfig.stickyHeaders =
+            stickyHeaders;
         this.triggerViewRefresh();
     }
 
@@ -190,6 +195,7 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
         config.highlightedColumnColors ??= {};
         this.syncHighlightColorMap();
         config.pageSize ??= 20;
+        config.stickyHeaders ??= true;
         config.searchValue ??= '';
     }
 
@@ -232,5 +238,32 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<
 
     fieldTypeLabel(field: DataExplorerField): string {
         return field.fieldCharacteristics.binary ? 'Boolean' : 'Numeric';
+    }
+
+    private mergeSelectedColumnOrder(
+        nextSelectedColumns: DataExplorerField[],
+    ): DataExplorerField[] {
+        const currentSelectedColumns =
+            this.currentlyConfiguredWidget.visualizationConfig
+                .selectedColumns ?? [];
+
+        const retainedColumns = currentSelectedColumns.filter(currentField =>
+            nextSelectedColumns.some(nextField =>
+                this.isSameField(currentField, nextField),
+            ),
+        );
+
+        const newlyAddedColumns = nextSelectedColumns.filter(
+            nextField =>
+                !currentSelectedColumns.some(currentField =>
+                    this.isSameField(currentField, nextField),
+                ),
+        );
+
+        return [...retainedColumns, ...newlyAddedColumns];
+    }
+
+    private isSameField(a: DataExplorerField, b: DataExplorerField): boolean {
+        return a.fullDbName === b.fullDbName && a.sourceIndex === b.sourceIndex;
     }
 }

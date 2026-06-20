@@ -18,12 +18,10 @@
 
 import { Component } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import {
     StatusVisConfig,
     StatusWidgetModel,
 } from '../model/status-widget.model';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
 import {
@@ -63,13 +61,6 @@ export class StatusWidgetConfigComponent extends BaseWidgetConfig<
     StatusWidgetModel,
     StatusVisConfig
 > {
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
-        super(widgetConfigurationService, fieldService);
-    }
-
     selectDataType(selectedDataType: string): void {
         this.currentlyConfiguredWidget.visualizationConfig.selectedDataType =
             selectedDataType;

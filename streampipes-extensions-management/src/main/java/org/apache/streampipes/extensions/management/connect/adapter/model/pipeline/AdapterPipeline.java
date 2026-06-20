@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.management.connect.adapter.model.pipeline;
 
 import org.apache.streampipes.connect.shared.preprocessing.elements.ScriptTransformationPipelineElement;
+import org.apache.streampipes.connect.transformer.api.Context;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.TransformationConfig;
@@ -38,13 +39,15 @@ public class AdapterPipeline implements IAdapterPipeline {
 
   public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements,
                          TransformationConfig transformationConfig,
+                         Context scriptContext,
                          EventSchema resultingEventSchema) {
     this.pipelineElements = pipelineElements;
     this.resultingEventSchema = resultingEventSchema;
     if (transformationConfig.isScriptActive()) {
       var transformation = new ScriptTransformationPipelineElement(
-         transformationConfig.getLanguage(),
-          transformationConfig.getScript()
+          transformationConfig.getLanguage(),
+          transformationConfig.getScript(),
+          scriptContext
       );
       processingFn = transformation::process;
     } else {
@@ -55,8 +58,9 @@ public class AdapterPipeline implements IAdapterPipeline {
   public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements,
                          TransformationConfig transformationConfig,
                          IAdapterPipelineElement pipelineSink,
+                         Context scriptContext,
                          EventSchema resultingEventSchema) {
-    this(pipelineElements, transformationConfig, resultingEventSchema);
+    this(pipelineElements, transformationConfig, scriptContext, resultingEventSchema);
     this.pipelineSink = pipelineSink;
   }
 

@@ -22,7 +22,6 @@ import {
     RuntimeResolvableOneOfStaticProperty,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
-import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
 import {
     FormsModule,
@@ -56,10 +55,6 @@ export class StaticRuntimeResolvableOneOfInputComponent
     extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableOneOfStaticProperty>
     implements OnInit, OnChanges
 {
-    constructor(runtimeResolvableService: RuntimeResolvableService) {
-        super(runtimeResolvableService);
-    }
-
     ngOnInit() {
         super.onInit();
         this.parentForm.addControl(
@@ -84,6 +79,7 @@ export class StaticRuntimeResolvableOneOfInputComponent
             }
         }
         this.staticProperty.options = staticProperty.options;
+        this.performValidation();
     }
 
     isOptionSelected(): boolean {

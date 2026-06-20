@@ -16,11 +16,12 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { LabelsService, SpLabel } from '@streampipes/platform-services';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import {
+    ConfirmDialogComponent,
     SpBasicNavTabsComponent,
     SpBreadcrumbService,
     SpLabelComponent,
@@ -46,7 +47,8 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { SpEditLabelComponent } from './edit-label/edit-label.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'sp-label-configuration',
@@ -76,10 +78,16 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class SpLabelConfigurationComponent implements OnInit {
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private labelsService = inject(LabelsService);
+    private tabService = inject(SpConfigurationTabsService);
+    private dialog = inject(MatDialog);
+    private translateService = inject(TranslateService);
+
     tabs: SpNavigationItem[] = [];
 
     allLabels: SpLabel[] = [];
-    createLabelMode = false;
+    readonly createLabelMode = signal(false);
 
     dataSource: MatTableDataSource<SpLabel> = new MatTableDataSource<SpLabel>();
 
@@ -87,15 +95,9 @@ export class SpLabelConfigurationComponent implements OnInit {
     sort: MatSort;
 
     displayedColumns = ['name', 'description', 'actions'];
-    labelsinUse = [];
+    labelsinUse: string[] = [];
 
-    editedLabels: string[] = [];
-
-    constructor(
-        private breadcrumbService: SpBreadcrumbService,
-        private labelsService: LabelsService,
-        private tabService: SpConfigurationTabsService,
-    ) {}
+    readonly editedLabels = signal<string[]>([]);
 
     ngOnInit(): void {
         this.tabs = this.tabService.getTabs();
@@ -120,7 +122,10 @@ export class SpLabelConfigurationComponent implements OnInit {
     }
 
     saveLabel(label: SpLabel): void {
-        this.labelsService.addLabel(label).subscribe(() => this.reloadLabels());
+        this.labelsService.addLabel(label).subscribe(() => {
+            this.createLabelMode.set(false);
+            this.reloadLabels();
+        });
     }
 
     updateLabel(label: SpLabel): void {
@@ -131,16 +136,67 @@ export class SpLabelConfigurationComponent implements OnInit {
     }
 
     deleteLabel(label: SpLabel): void {
-        this.labelsService.deleteLabel(label._id, label._rev).subscribe(() => {
-            this.reloadLabels();
+        this.labelsService.getLabelsInUse().subscribe(labelsInUse => {
+            this.labelsinUse = labelsInUse;
+
+            if (labelsInUse.includes(label._id)) {
+                this.showLabelInUseWarning();
+            } else {
+                this.showDeleteLabelDialog(label);
+            }
+        });
+    }
+
+    showLabelInUseWarning(): void {
+        this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            data: {
+                title: this.translateService.instant('Label is still in use'),
+                subtitle: this.translateService.instant(
+                    'To delete a label, please remove the label from all assets.',
+                ),
+                confirmTitle: this.translateService.instant('Ok'),
+            },
+        });
+    }
+
+    showDeleteLabelDialog(label: SpLabel): void {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            data: {
+                title: this.translateService.instant(
+                    'Are you sure you want to delete this label?',
+                ),
+                subtitle: this.translateService.instant(
+                    'This action cannot be reversed!',
+                ),
+                cancelTitle: this.translateService.instant('Cancel'),
+                confirmTitle: this.translateService.instant('Delete label'),
+            },
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result === 'confirm') {
+                this.labelsService
+                    .deleteLabel(label._id, label._rev)
+                    .subscribe(() => {
+                        this.reloadLabels();
+                    });
+            }
         });
     }
 
     removeEditedLabel(labelId: string): void {
-        this.editedLabels.splice(this.editedLabels.indexOf(labelId), 1);
+        this.editedLabels.update(labels => labels.filter(id => id !== labelId));
     }
 
     isEditMode(labelId: string): boolean {
-        return this.editedLabels.find(l => l === labelId) !== undefined;
+        return this.editedLabels().includes(labelId);
+    }
+
+    addEditedLabel(labelId: string): void {
+        this.editedLabels.update(labels =>
+            labels.includes(labelId) ? labels : [...labels, labelId],
+        );
     }
 }

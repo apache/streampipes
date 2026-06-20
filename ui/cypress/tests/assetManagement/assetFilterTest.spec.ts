@@ -16,112 +16,48 @@
  *
  */
 
-import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
-import { ChartUtils } from '../../support/utils/chart/ChartUtils';
-import { AssetBuilder } from '../../support/builder/AssetBuilder';
-import { ConfigurationUtils } from '../../support/utils/configuration/ConfigurationUtils';
-import { SiteUtils } from '../../support/utils/configuration/SiteUtils';
 import { FilterUtils } from '../../support/utils/filter/FilterUtils';
+import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
+import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
+import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
+import { AssetUtils } from '../../support/utils/asset/AssetUtils';
 
 describe('Test asset filters', () => {
-    const label1 = 'label1';
-    const label2 = 'label2';
-    const label3 = 'label3';
-
-    const site1 = 'site1';
-    const site2 = 'site2';
-    const site3 = 'site3';
-
-    const asset1 = AssetBuilder.create('asset-1_0')
-        .addLabel(label1)
-        .setSite(site1)
-        .setAssetType('PRODUCTION_LINE')
-        .addSubAsset(
-            AssetBuilder.create('asset-1_1')
-                .addLabel(label2)
-                .setAssetType('WORK_CELL')
-                .build(),
-        )
-        .addSubAsset(
-            AssetBuilder.create('asset-1_2')
-                .addLabel(label3)
-                .setAssetType('WORK_CELL')
-                .build(),
-        )
-        .build();
-
-    const asset2 = AssetBuilder.create('asset-2_0')
-        .addLabel(label1)
-        .setSite(site2)
-        .setAssetType('PRODUCTION_LINE')
-        .addSubAsset(
-            AssetBuilder.create('asset-2_1')
-                .addLabel(label2)
-                .setAssetType('WORK_CELL')
-                .build(),
-        )
-        .addSubAsset(
-            AssetBuilder.create('asset-2_2')
-                .addLabel(label3)
-                .setAssetType('WORK_CELL')
-                .build(),
-        )
-        .build();
-
-    const asset3 = AssetBuilder.create('asset-3_0')
-        .addLabel(label1)
-        .setSite(site3)
-        .setAssetType('PRODUCTION_LINE')
-        .addSubAsset(
-            AssetBuilder.create('asset-3_1')
-                .addLabel(label2)
-                .setAssetType('WORK_CELL')
-                .build(),
-        )
-        .addSubAsset(
-            AssetBuilder.create('asset-3_2')
-                .addLabel(label3)
-                .setAssetType('WORK_CELL')
-                .build(),
-        )
-        .build();
+    const adapter1 = 'adapter-1_0';
+    const adapter1_1 = 'adapter-1_1';
+    const adapter1_2 = 'adapter-1_2';
+    const adapter2 = 'adapter-2_0';
+    const adapter2_1 = 'adapter-2_1';
+    const adapter2_2 = 'adapter-2_2';
+    const adapter3_1 = 'adapter-3_1';
+    const adapter3_2 = 'adapter-3_2';
+    const pipeline1 = 'Persist ' + adapter1;
+    const pipeline1_1 = 'Persist ' + adapter1_1;
+    const pipeline1_2 = 'Persist ' + adapter1_2;
+    const pipeline2 = 'Persist ' + adapter2;
+    const pipeline2_1 = 'Persist ' + adapter2_1;
+    const pipeline2_2 = 'Persist ' + adapter2_2;
+    const pipeline3_1 = 'Persist ' + adapter3_1;
+    const pipeline3_2 = 'Persist ' + adapter3_2;
 
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        prepareLabels();
-        prepareSites();
-        prepareAssets();
-        prepareDashboards();
-        DashboardUtils.goToDashboard();
-        DashboardUtils.checkAmountOfDashboards(9);
-        DashboardUtils.checkInList([
-            'dashboard-1_0',
-            'dashboard-1_1',
-            'dashboard-1_2',
-            'dashboard-2_0',
-            'dashboard-2_1',
-            'dashboard-2_2',
-            'dashboard-3_0',
-            'dashboard-3_1',
-            'dashboard-3_2',
-        ]);
-
+        cy.importAssetResources();
         // This is currently required because the assets are only loaded on page load
         cy.reload();
     });
 
-    it('Perform Test', () => {
+    it('Filter Dashboards', () => {
+        DashboardUtils.goToDashboard();
         // Select one asset
         FilterUtils.clearFilter();
         FilterUtils.filterAssets(['asset-1_0']);
-
         DashboardUtils.checkInList([
             'dashboard-1_0',
             'dashboard-1_1',
             'dashboard-1_2',
         ]);
-
         // Select asset 1 & asset 2
         FilterUtils.clearFilter();
         FilterUtils.filterAssets(['asset-1_0', 'asset-2_0']);
@@ -133,7 +69,6 @@ describe('Test asset filters', () => {
             'dashboard-2_1',
             'dashboard-2_2',
         ]);
-
         // Select site 1
         FilterUtils.clearFilter();
         FilterUtils.filterSites(['site1']);
@@ -142,7 +77,6 @@ describe('Test asset filters', () => {
             'dashboard-1_1',
             'dashboard-1_2',
         ]);
-
         // Select site 1 & site 2
         FilterUtils.clearFilter();
         FilterUtils.filterSites(['site1', 'site2']);
@@ -154,7 +88,6 @@ describe('Test asset filters', () => {
             'dashboard-2_1',
             'dashboard-2_2',
         ]);
-
         // Select label 3
         FilterUtils.clearFilter();
         FilterUtils.filterLabels(['label3']);
@@ -164,11 +97,9 @@ describe('Test asset filters', () => {
             'dashboard-2_2',
             'dashboard-3_2',
         ]);
-
         // Select label 2 & 3
         FilterUtils.clearFilter();
         FilterUtils.filterLabels(['label2', 'label3']);
-
         DashboardUtils.checkInList([
             'dashboard-1_1',
             'dashboard-1_2',
@@ -177,20 +108,16 @@ describe('Test asset filters', () => {
             'dashboard-3_1',
             'dashboard-3_2',
         ]);
-
         // Select type PRODUCTION_LINE
         FilterUtils.clearFilter();
         FilterUtils.filterTypes(['PRODUCTION_LINE']);
-
         DashboardUtils.checkInList([
             'dashboard-1_0',
             'dashboard-2_0',
             'dashboard-3_0',
         ]);
-
         FilterUtils.clearFilter();
         FilterUtils.filterTypes(['WORK_CELL']);
-
         DashboardUtils.checkInList([
             'dashboard-1_1',
             'dashboard-1_2',
@@ -199,13 +126,11 @@ describe('Test asset filters', () => {
             'dashboard-3_1',
             'dashboard-3_2',
         ]);
-
         // Select asset 1 & site 1 & label 2
         FilterUtils.clearFilter();
         FilterUtils.filterAssets(['asset-1_0']);
         FilterUtils.filterSites(['site1']);
         FilterUtils.filterLabels(['label2']);
-
         DashboardUtils.checkInList(['dashboard-1_1']);
 
         AssetUtils.goToAssets();
@@ -227,56 +152,249 @@ describe('Test asset filters', () => {
         AssetUtils.checkAmountOfAssets(1);
     });
 
-    function prepareAssets() {
-        AssetUtils.goToAssets();
-        AssetUtils.addAndSaveAsset(asset1);
-        AssetUtils.addAndSaveAsset(asset2);
-        AssetUtils.addAndSaveAsset(asset3);
-    }
+    it('Filter adapters', () => {
+        ConnectUtils.goToConnect();
+        //Select one asset
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0']);
+        checkTableResources('all-adapters-table', [
+            adapter1,
+            adapter1_1,
+            adapter1_2,
+        ]);
+        // Select asset 1 & asset 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0', 'asset-2_0']);
+        checkTableResources('all-adapters-table', [
+            adapter1,
+            adapter1_1,
+            adapter1_2,
+            adapter2,
+            adapter2_1,
+            adapter2_2,
+        ]);
+        //Select one label
+        FilterUtils.clearFilter();
+        FilterUtils.filterLabels(['label3']);
+        checkTableResources('all-adapters-table', [
+            adapter1_2,
+            adapter2_2,
+            adapter3_2,
+        ]);
+        //Select label 2 & 3
+        FilterUtils.clearFilter();
+        FilterUtils.filterLabels(['label2', 'label3']);
+        checkTableResources('all-adapters-table', [
+            adapter1_1,
+            adapter1_2,
+            adapter2_1,
+            adapter2_2,
+            adapter3_1,
+            adapter3_2,
+        ]);
+        //Select  one site
+        FilterUtils.clearFilter();
+        FilterUtils.filterSites(['site1']);
+        checkTableResources('all-adapters-table', [
+            adapter1,
+            adapter1_1,
+            adapter1_2,
+        ]);
+        //Select site 1 &  site 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterSites(['site1', 'site2']);
+        checkTableResources('all-adapters-table', [
+            adapter1,
+            adapter1_1,
+            adapter1_2,
+            adapter2,
+            adapter2_1,
+            adapter2_2,
+        ]);
+        //Select one type
+        FilterUtils.clearFilter();
+        FilterUtils.filterTypes(['WORK_CELL']);
+        checkTableResources('all-adapters-table', [
+            adapter1_1,
+            adapter1_2,
+            adapter2_1,
+            adapter2_2,
+            adapter3_1,
+            adapter3_2,
+        ]);
+        // Select asset 1 & site 1 & label 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0']);
+        FilterUtils.filterSites(['site1']);
+        FilterUtils.filterLabels(['label2']);
+        checkTableResources('all-adapters-table', [adapter1_1]);
+    });
 
-    function prepareDashboards() {
-        ChartUtils.createNewDashboardWithAssetLinks('dashboard-1_0', [
-            'asset-1_0',
+    it('Filters pipelines', () => {
+        PipelineUtils.goToPipelines();
+        //select one asset
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0']);
+        checkTableResources('all-pipelines-table', [
+            pipeline1,
+            pipeline1_1,
+            pipeline1_2,
         ]);
-        ChartUtils.createNewDashboardWithAssetLinks('dashboard-1_1', [
-            'asset-1_0.asset-1_1',
+        // Select asset 1 & asset 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0', 'asset-2_0']);
+        checkTableResources('all-pipelines-table', [
+            pipeline1,
+            pipeline1_1,
+            pipeline1_2,
+            pipeline2,
+            pipeline2_1,
+            pipeline2_2,
         ]);
-        ChartUtils.createNewDashboardWithAssetLinks('dashboard-1_2', [
-            'asset-1_0.asset-1_2',
+        //select ine label
+        FilterUtils.clearFilter();
+        FilterUtils.filterLabels(['label3']);
+        checkTableResources('all-pipelines-table', [
+            pipeline1_2,
+            pipeline2_2,
+            pipeline3_2,
+        ]);
+        //Select label 2 & 3
+        FilterUtils.clearFilter();
+        FilterUtils.filterLabels(['label2', 'label3']);
+        checkTableResources('all-pipelines-table', [
+            pipeline1_1,
+            pipeline1_2,
+            pipeline2_1,
+            pipeline2_2,
+            pipeline3_1,
+            pipeline3_2,
+        ]);
+        //Select  one site
+        FilterUtils.clearFilter();
+        FilterUtils.filterSites(['site1']);
+        checkTableResources('all-pipelines-table', [
+            pipeline1,
+            pipeline1_1,
+            pipeline1_2,
+        ]);
+        //Select site 1 &  site 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterSites(['site1', 'site2']);
+        checkTableResources('all-pipelines-table', [
+            pipeline1,
+            pipeline1_1,
+            pipeline1_2,
+            pipeline2,
+            pipeline2_1,
+            pipeline2_2,
+        ]);
+        //select one type
+        FilterUtils.clearFilter();
+        FilterUtils.filterTypes(['WORK_CELL']);
+        checkTableResources('all-pipelines-table', [
+            pipeline1_1,
+            pipeline1_2,
+            pipeline2_1,
+            pipeline2_2,
+            pipeline3_1,
+            pipeline3_2,
+        ]);
+        // Select asset 1 & site 1 & label 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0']);
+        FilterUtils.filterSites(['site1']);
+        FilterUtils.filterLabels(['label2']);
+        checkTableResources('all-pipelines-table', [pipeline1_1]);
+    });
+
+    it('Filters datasets', () => {
+        DatasetUtils.goToDatasets();
+        //sekect one asset
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0']);
+        checkTableResources('datalake-settings', [
+            adapter1,
+            adapter1_1,
+            adapter1_2,
+        ]);
+        // Select asset 1 & asset 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0', 'asset-2_0']);
+        checkTableResources('datalake-settings', [
+            adapter1,
+            adapter1_1,
+            adapter1_2,
+            adapter2,
+            adapter2_1,
+            adapter2_2,
+        ]);
+        //select one label
+        FilterUtils.clearFilter();
+        FilterUtils.filterLabels(['label3']);
+        checkTableResources('datalake-settings', [
+            adapter1_2,
+            adapter2_2,
+            adapter3_2,
+        ]);
+        //Select label 2 & 3
+        FilterUtils.clearFilter();
+        FilterUtils.filterLabels(['label2', 'label3']);
+        checkTableResources('datalake-settings', [
+            adapter1_1,
+            adapter1_2,
+            adapter2_1,
+            adapter2_2,
+            adapter3_1,
+            adapter3_2,
+        ]);
+        //Select site 1
+        FilterUtils.clearFilter();
+        FilterUtils.filterSites(['site1']);
+        checkTableResources('datalake-settings', [
+            adapter1,
+            adapter1_1,
+            adapter1_2,
         ]);
 
-        ChartUtils.createNewDashboardWithAssetLinks('dashboard-2_0', [
-            'asset-2_0',
+        FilterUtils.clearFilter();
+        FilterUtils.filterSites(['site1', 'site2']);
+        checkTableResources('datalake-settings', [
+            adapter1,
+            adapter1_1,
+            adapter1_2,
+            adapter2,
+            adapter2_1,
+            adapter2_2,
         ]);
-        ChartUtils.createNewDashboardWithAssetLinks('dashboard-2_1', [
-            'asset-2_0.asset-2_1',
-        ]);
-        ChartUtils.createNewDashboardWithAssetLinks('dashboard-2_2', [
-            'asset-2_0.asset-2_2',
+        //select one type
+        FilterUtils.clearFilter();
+        FilterUtils.filterTypes(['WORK_CELL']);
+        checkTableResources('datalake-settings', [
+            adapter1_1,
+            adapter1_2,
+            adapter2_1,
+            adapter2_2,
+            adapter3_1,
+            adapter3_2,
         ]);
 
-        ChartUtils.createNewDashboardWithAssetLinks('dashboard-3_0', [
-            'asset-3_0',
-        ]);
-        ChartUtils.createNewDashboardWithAssetLinks('dashboard-3_1', [
-            'asset-3_0.asset-3_1',
-        ]);
-        ChartUtils.createNewDashboardWithAssetLinks('dashboard-3_2', [
-            'asset-3_0.asset-3_2',
-        ]);
-    }
+        // Select asset 1 & site 1 & label 2
+        FilterUtils.clearFilter();
+        FilterUtils.filterAssets(['asset-1_0']);
+        FilterUtils.filterSites(['site1']);
+        FilterUtils.filterLabels(['label2']);
+        checkTableResources('datalake-settings', [adapter1_1]);
+    });
 
-    function prepareLabels() {
-        ConfigurationUtils.goToLabelConfiguration();
-        ConfigurationUtils.addNewLabel(label1);
-        ConfigurationUtils.addNewLabel(label2);
-        ConfigurationUtils.addNewLabel(label3);
-    }
-
-    function prepareSites() {
-        ConfigurationUtils.goToSitesConfiguration();
-        SiteUtils.createNewSite(site1);
-        SiteUtils.createNewSite(site2);
-        SiteUtils.createNewSite(site3);
+    function checkTableResources(tableDataCy: string, resources: string[]) {
+        cy.get(`[data-cy="${tableDataCy}"] tbody tr`, {
+            timeout: 10000,
+        }).should('have.length', resources.length);
+        resources.forEach(resource => {
+            cy.get(`[data-cy="${tableDataCy}"]`)
+                .contains(resource)
+                .should('exist');
+        });
     }
 });

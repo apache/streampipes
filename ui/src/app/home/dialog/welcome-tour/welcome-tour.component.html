@@ -24,12 +24,6 @@
                 ><h3>Thank you for using {{ appConstants.APP_NAME }}.</h3></b
             >
         </div>
-        <div>
-            <img
-                src="assets/img/sp-pipeline-white-small.png"
-                style="margin-left: auto; margin-right: auto; display: block"
-            />
-        </div>
         <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <b
@@ -40,15 +34,38 @@
                     If you are using {{ appConstants.APP_NAME }} for the first
                     time, we recommend taking the interactive tour!
                 </p>
+                @if (loadingTutorialResources) {
+                    <div
+                        class="tutorial-status"
+                        fxLayout="row"
+                        fxLayoutAlign="center center"
+                        fxLayoutGap="10px"
+                    >
+                        <mat-spinner [diameter]="20"></mat-spinner>
+                        <span>Checking tutorial pipeline elements...</span>
+                    </div>
+                }
+                @if (showMissingElementsHint) {
+                    <sp-alert-banner
+                        type="info"
+                        title="Missing Elements for Tutorial"
+                        description="The tutorial needs additional pipeline elements.
+                      Install the missing extensions (Settings -> Extensions) and reopen the tour."
+                    >
+                    </sp-alert-banner>
+                }
             </div>
-            <button
-                mat-button
-                mat-flat-button
-                color="accent"
-                (click)="close(true)"
-            >
-                Start Tour
-            </button>
+            @if (!loadingTutorialResources && !showMissingElementsHint) {
+                <button
+                    mat-button
+                    mat-flat-button
+                    color="accent"
+                    [disabled]="loadingTutorialResources"
+                    (click)="startTutorial()"
+                >
+                    Start Tour
+                </button>
+            }
         </div>
     </div>
     <mat-divider></mat-divider>

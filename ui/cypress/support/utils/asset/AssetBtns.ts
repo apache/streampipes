@@ -63,6 +63,10 @@ export class AssetBtns {
         return cy.dataCy('edit-asset-' + assetName, { timeout: 10000 });
     }
 
+    public static manageAssetBtn(assetName: string) {
+        return cy.dataCy('open-manage-' + assetName, { timeout: 10000 });
+    }
+
     public static deleteAssetBtn(assetName: string) {
         return cy.dataCy('delete-asset-' + assetName, { timeout: 10000 });
     }

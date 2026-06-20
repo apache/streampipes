@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    inject,
+} from '@angular/core';
 import {
     EventPropertyUnion,
     FieldConfig,
@@ -54,6 +61,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class FieldSelectionPanelComponent implements OnInit {
+    private fieldProvider = inject(ChartFieldProviderService);
+    private widgetConfigService = inject(ChartConfigurationService);
+
     MAX_INITIAL_FIELDS = 3;
 
     @Input() sourceConfig: SourceConfig;
@@ -62,11 +72,6 @@ export class FieldSelectionPanelComponent implements OnInit {
     initialFieldSelectionEvent: EventEmitter<void> = new EventEmitter();
 
     expandFields = false;
-
-    constructor(
-        private fieldProvider: ChartFieldProviderService,
-        private widgetConfigService: ChartConfigurationService,
-    ) {}
 
     ngOnInit() {
         this.applyDefaultFields();

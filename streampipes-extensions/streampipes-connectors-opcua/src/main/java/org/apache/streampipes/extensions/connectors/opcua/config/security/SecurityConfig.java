@@ -25,8 +25,8 @@ import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaCertificateUtils;
 import org.apache.streampipes.model.opcua.Certificate;
 
-import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
-import org.eclipse.milo.opcua.stack.core.security.DefaultTrustListManager;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClientConfigBuilder;
+import org.eclipse.milo.opcua.stack.core.security.FileBasedTrustListManager;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.MessageSecurityMode;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
@@ -61,7 +61,7 @@ public class SecurityConfig {
                                       List<EndpointDescription> endpoints,
                                       OpcUaClientConfigBuilder builder)
       throws SpConfigurationException, URISyntaxException {
-    String host = config.getOpcServerURL().split("://")[1].split(":")[0];
+    URI configuredServerUri = new URI(config.getOpcServerURL()).parseServerAuthority();
 
     EndpointDescription tmpEndpoint = endpoints
         .stream()
@@ -77,13 +77,13 @@ public class SecurityConfig {
             )
         );
 
-    tmpEndpoint = updateEndpointUrl(tmpEndpoint, host);
+    tmpEndpoint = updateEndpointUrl(tmpEndpoint, configuredServerUri);
 
     if (securityMode != MessageSecurityMode.None) {
       try {
         var env = Environments.getEnvironment();
         var securityDir = Paths.get(env.getOpcUaSecurityDir().getValueOrDefault());
-        var trustListManager = new DefaultTrustListManager(securityDir.resolve("pki").toFile());
+        var trustListManager = FileBasedTrustListManager.createAndInitialize(securityDir.resolve("pki"));
 
         var loadedCerts = new AtomicReference<>(fetchTrustedCertsFromRest());
 
@@ -102,8 +102,8 @@ public class SecurityConfig {
         builder.setCertificateValidator(compositeValidator);
       } catch (Exception e) {
         throw new SpConfigurationException(
-            "Failed to load keystore - check that all required environment variables "
-                + "are defined and the keystore exists",
+            "Failed to initialize OPC UA client security material - check that all required environment variables "
+                + "are defined and the security directory is writable",
             e
         );
       }
@@ -112,12 +112,14 @@ public class SecurityConfig {
     builder.setEndpoint(tmpEndpoint);
   }
 
-  private EndpointDescription updateEndpointUrl(EndpointDescription original,
-                                                String hostname) throws URISyntaxException {
+  EndpointDescription updateEndpointUrl(EndpointDescription original,
+                                        URI configuredServerUri) throws URISyntaxException {
 
     URI uri = new URI(original.getEndpointUrl()).parseServerAuthority();
 
-    String endpointUrl = String.format("%s://%s:%s%s", uri.getScheme(), hostname, uri.getPort(), uri.getPath());
+    String hostname = configuredServerUri.getHost() != null ? configuredServerUri.getHost() : uri.getHost();
+    int port = configuredServerUri.getPort() != -1 ? configuredServerUri.getPort() : uri.getPort();
+    String endpointUrl = String.format("%s://%s:%s%s", uri.getScheme(), hostname, port, uri.getPath());
 
     return new EndpointDescription(
         endpointUrl,

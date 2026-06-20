@@ -30,6 +30,7 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    inject,
 } from '@angular/core';
 import {
     InvocablePipelineElementUnion,
@@ -54,7 +55,9 @@ import { CustomizeComponent } from '../../dialog/customize/customize.component';
 import {
     ConfirmDialogComponent,
     DialogService,
+    KeyboardShortcutService,
     PanelType,
+    ShortcutRegistration,
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../services/editor.service';
 import { MatchingErrorComponent } from '../../dialog/matching-error/matching-error.component';
@@ -94,6 +97,20 @@ import { EnabledPipelineElementFilter } from '../../filter/enabled-pipeline-elem
     ],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
+    private jsplumbService = inject(JsplumbService);
+    private pipelineEditorService = inject(PipelineEditorService);
+    private jsplumbFactoryService = inject(JsplumbFactoryService);
+    private objectProvider = inject(ObjectProvider);
+    private editorService = inject(EditorService);
+    private idGeneratorService = inject(IdGeneratorService);
+    private shepherdService = inject(ShepherdService);
+    private pipelineStyleService = inject(PipelineStyleService);
+    private pipelineValidationService = inject(PipelineValidationService);
+    private dialogService = inject(DialogService);
+    private dialog = inject(MatDialog);
+    private ngZone = inject(NgZone);
+    private shortcutService = inject(KeyboardShortcutService);
+
     @Input()
     pipelineValid: boolean;
 
@@ -132,21 +149,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
     pipelinePreview: PipelinePreviewModel;
 
     shouldOpenCustomizeSettings = false;
+    private shortcutReg: ShortcutRegistration;
 
-    constructor(
-        private jsplumbService: JsplumbService,
-        private pipelineEditorService: PipelineEditorService,
-        private jsplumbFactoryService: JsplumbFactoryService,
-        private objectProvider: ObjectProvider,
-        private editorService: EditorService,
-        private idGeneratorService: IdGeneratorService,
-        private shepherdService: ShepherdService,
-        private pipelineStyleService: PipelineStyleService,
-        private pipelineValidationService: PipelineValidationService,
-        private dialogService: DialogService,
-        private dialog: MatDialog,
-        private ngZone: NgZone,
-    ) {
+    constructor() {
         this.currentPipelineModel = new Pipeline();
         this.idCounter = 0;
 
@@ -158,6 +163,16 @@ export class PipelineComponent implements OnInit, OnDestroy {
             this.readonly,
         );
         if (!this.readonly) {
+            this.shortcutReg = this.shortcutService.register('pipeline', [
+                {
+                    key: 'Delete',
+                    action: () => this.deleteSelectedElement(),
+                },
+                {
+                    key: 'Backspace',
+                    action: () => this.deleteSelectedElement(),
+                },
+            ]);
             this.initAssembly();
             this.initPlumb();
         }
@@ -191,8 +206,21 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.shortcutReg?.unregister();
         this.deletePreviewEmitter.emit(false);
         this.jsplumbFactoryService.destroy();
+    }
+
+    private deleteSelectedElement(): void {
+        if (!this.currentMouseOverElement) {
+            return;
+        }
+        const el = this.rawPipelineModel.find(
+            pe => pe.payload.dom === this.currentMouseOverElement,
+        );
+        if (el) {
+            this.handleDeleteOption(el);
+        }
     }
 
     @HostListener('window:beforeunload')

@@ -1,0 +1,161 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<div class="sp-dialog-container">
+    <div
+        class="sp-dialog-content p-md"
+        data-cy="measurement-update-dialog"
+        fxLayout="column"
+        fxLayoutGap="var(--space-lg)"
+    >
+        <div fxLayout="column" fxLayoutGap="var(--space-xs)">
+            @if (pipeline?.pipelineNotifications?.length > 0) {
+                <div
+                    class="measurement-update-notifications mt-sm"
+                    fxLayout="column"
+                    fxLayoutGap="0.75rem"
+                >
+                    @for (
+                        notification of pipeline.pipelineNotifications;
+                        track notification
+                    ) {
+                        <sp-alert-banner
+                            type="warning"
+                            title="Pipeline Notification"
+                            [description]="notification"
+                        ></sp-alert-banner>
+                    }
+                </div>
+            }
+            <p class="measurement-update-description">
+                {{
+                    'A measurement field changed to a data type that conflicts with existing data. This needs manual adjustments. You can handle this error by following one of the given instructions:'
+                        | translate
+                }}
+            </p>
+        </div>
+
+        <div
+            class="measurement-update-options"
+            fxLayout="column"
+            fxLayoutGap="0.75rem"
+        >
+            <div
+                class="measurement-update-option"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="0.75rem"
+            >
+                <mat-icon>add_chart</mat-icon>
+                <span
+                    class="measurement-update-option-text"
+                    fxLayout="column"
+                    fxLayoutGap="0.5rem"
+                >
+                    <span class="font-bold">
+                        {{ 'Save in a new data lake' | translate }}
+                    </span>
+                    <span class="text-small">
+                        {{
+                            'Change the identifier of the "Data Lake" by opening the pipeline element configuration to save the data in a new "Data Lake".'
+                                | translate
+                        }}
+                    </span>
+                </span>
+            </div>
+            <div
+                class="measurement-update-option"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="0.75rem"
+            >
+                <mat-icon>drive_file_rename_outline</mat-icon>
+                <span
+                    class="measurement-update-option-text"
+                    fxLayout="column"
+                    fxLayoutGap="0.5rem"
+                >
+                    <span class="font-bold">
+                        {{ 'Rename the changed fields' | translate }}
+                    </span>
+                    <span class="text-small">
+                        {{
+                            'Rename the fields with changed data types by using the "Field Renamer" data processor'
+                                | translate
+                        }}
+                    </span>
+                </span>
+            </div>
+            <div
+                class="measurement-update-option"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="0.75rem"
+            >
+                <mat-icon>delete_forever</mat-icon>
+                <span
+                    class="measurement-update-option-text"
+                    fxLayout="column"
+                    fxLayoutGap="0.5rem"
+                >
+                    <span class="font-bold">
+                        {{ 'Delete historical data' | translate }}
+                    </span>
+                    <span class="text-small">
+                        {{
+                            'Delete the dataset entirely. All historical data is lost!'
+                                | translate
+                        }}
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div
+        class="sp-dialog-actions actions-align-right"
+        fxLayout="row"
+        fxLayoutAlign="end center"
+        fxLayoutGap="0.5rem"
+    >
+        <button
+            mat-flat-button
+            class="mat-basic"
+            data-cy="close-measurement-update-btn"
+            (click)="close()"
+        >
+            {{ 'Close' | translate }}
+        </button>
+        <button
+            mat-flat-button
+            color="accent"
+            data-cy="edit-pipeline-btn"
+            (click)="close('edit-pipeline')"
+        >
+            {{ 'Edit pipeline' | translate }}
+        </button>
+        <button
+            mat-flat-button
+            color="accent"
+            data-cy="manage-datasets-btn"
+            (click)="close('manage-datasets')"
+        >
+            {{ 'Manage datasets' | translate }}
+        </button>
+    </div>
+</div>

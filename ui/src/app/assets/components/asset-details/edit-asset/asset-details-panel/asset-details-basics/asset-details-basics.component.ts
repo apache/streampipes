@@ -24,6 +24,7 @@ import {
     OnInit,
     Output,
     SimpleChanges,
+    inject,
 } from '@angular/core';
 import {
     AssetSiteDesc,
@@ -68,6 +69,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
+    private isa95TypeService = inject(Isa95TypeService);
+
     @Input()
     asset: SpAsset;
 
@@ -87,8 +90,6 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
     reloadSites: EventEmitter<void> = new EventEmitter();
 
     isa95Types: Isa95TypeDesc[] = [];
-
-    constructor(private isa95TypeService: Isa95TypeService) {}
 
     ngOnInit() {
         this.isa95Types = this.isa95TypeService.getTypeDescriptions();

@@ -33,6 +33,7 @@ import {
 } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { PropertyScopeBadgeComponent } from '../../property-scope-badge/property-scope-badge.component';
 
 @Component({
     selector: 'sp-live-preview-table',
@@ -51,6 +52,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatRow,
         DatePipe,
         TranslatePipe,
+        PropertyScopeBadgeComponent,
     ],
 })
 export class LivePreviewTableComponent implements OnInit {
@@ -71,6 +73,6 @@ export class LivePreviewTableComponent implements OnInit {
     ngOnInit() {
         this.displayedColumns = this.compact
             ? ['runtimeName', 'value']
-            : ['runtimeName', 'label', 'description', 'runtimeType', 'value'];
+            : ['runtimeName', 'label', 'dataType', 'description', 'value'];
     }
 }

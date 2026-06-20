@@ -19,49 +19,30 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
-import org.apache.streampipes.manager.execution.PipelineExecutor;
-import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
-import org.apache.streampipes.manager.pipeline.PipelineManager;
+import org.apache.streampipes.manager.pipeline.update.PipelineUpdateCoordinator;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
-import org.apache.streampipes.model.message.PipelineModificationMessage;
-import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
-import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 
 public class AdapterUpdateManagement {
-
-  private static final Logger LOG = LoggerFactory.getLogger(AdapterUpdateManagement.class);
 
   private final AdapterMasterManagement adapterMasterManagement;
   private final AdapterResourceManager adapterResourceManager;
   private final DataStreamResourceManager dataStreamResourceManager;
-  private final ExtensionServiceRequestManager requestManager;
-  private static final PipelinesStats pipelinesStats = new PipelinesStats();
+  private final PipelineUpdateCoordinator pipelineUpdateCoordinator;
 
   public AdapterUpdateManagement(AdapterMasterManagement adapterMasterManagement,
                                  ExtensionServiceRequestManager requestManager) {
     this.adapterMasterManagement = adapterMasterManagement;
     this.adapterResourceManager = new SpResourceManager().manageAdapters();
     this.dataStreamResourceManager = new SpResourceManager().manageDataStreams();
-    this.requestManager = requestManager;
+    this.pipelineUpdateCoordinator = new PipelineUpdateCoordinator(requestManager);
   }
 
   public void updateAdapter(AdapterDescription ad)
@@ -77,36 +58,7 @@ public class AdapterUpdateManagement {
     // update data source in database
     this.updateDataSource(ad);
 
-    // update pipelines
-    var affectedPipelines = PipelineManager.getPipelinesContainingElements(ad.getCorrespondingDataStreamElementId());
-
-    affectedPipelines.forEach(p -> {
-      var shouldRestartPipeline = p.isRunning();
-      if (shouldRestartPipeline) {
-        new PipelineExecutor(p, requestManager).stopPipeline(true);
-      }
-      var storedPipeline = PipelineManager.getPipeline(p.getPipelineId());
-      var pipeline = applyUpdatedDataStream(storedPipeline, ad);
-      try {
-        var modificationMessage = new PipelineVerificationHandlerV2(pipeline, requestManager).verifyPipeline();
-        var updateInfo = makeUpdateInfo(modificationMessage, pipeline);
-        var modifiedPipeline = new PipelineVerificationHandlerV2(pipeline, requestManager)
-            .makeModifiedPipeline().pipeline();
-        var canAutoMigrate = canAutoMigrate(modificationMessage);
-        if (!canAutoMigrate) {
-          modifiedPipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
-          pipelinesStats.updatePipelineHealthState(modifiedPipeline.getElementId(), modifiedPipeline.getName(),modifiedPipeline.getHealthStatus().toString());
-          modifiedPipeline.setPipelineNotifications(toNotification(updateInfo));
-          modifiedPipeline.setValid(false);
-        }
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(modifiedPipeline);
-        if (shouldRestartPipeline && canAutoMigrate) {
-          new PipelineExecutor(PipelineManager.getPipeline(p.getPipelineId()), requestManager).startPipeline();
-        }
-      } catch (Exception e) {
-        LOG.error("Could not update pipeline {}", pipeline.getName(), e);
-      }
-    });
+    pipelineUpdateCoordinator.updatePipelines(ad);
 
     if (shouldRestart) {
       this.adapterMasterManagement.startStreamAdapter(ad.getElementId());
@@ -114,95 +66,7 @@ public class AdapterUpdateManagement {
   }
 
   public List<PipelineUpdateInfo> checkPipelineMigrations(AdapterDescription adapterDescription) {
-    var affectedPipelines = PipelineManager
-        .getPipelinesContainingElements(adapterDescription.getCorrespondingDataStreamElementId());
-    var updateInfos = new ArrayList<PipelineUpdateInfo>();
-
-    affectedPipelines.forEach(pipeline -> {
-      var updatedPipeline = applyUpdatedDataStream(pipeline, adapterDescription);
-      try {
-        var modificationMessage = new PipelineVerificationHandlerV2(updatedPipeline, requestManager).verifyPipeline();
-        var updateInfo = makeUpdateInfo(modificationMessage, updatedPipeline);
-        updateInfos.add(updateInfo);
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    });
-
-    return updateInfos;
-  }
-
-  private PipelineUpdateInfo makeUpdateInfo(PipelineModificationMessage modificationMessage,
-                                            Pipeline pipeline) {
-    var updateInfo = new PipelineUpdateInfo();
-    updateInfo.setPipelineId(pipeline.getPipelineId());
-    updateInfo.setPipelineName(pipeline.getName());
-    updateInfo.setCanAutoMigrate(canAutoMigrate(modificationMessage));
-    updateInfo.setValidationInfos(extractModificationWarnings(pipeline, modificationMessage));
-    return updateInfo;
-  }
-
-  private boolean canAutoMigrate(PipelineModificationMessage modificationMessage) {
-    return modificationMessage
-        .getPipelineModifications()
-        .stream()
-        .allMatch(m -> m.isPipelineElementValid() && m.getValidationInfos().isEmpty());
-  }
-
-  private List<String> toNotification(PipelineUpdateInfo updateInfo) {
-    var notifications = new ArrayList<String>();
-    updateInfo.getValidationInfos().keySet().forEach((k) -> {
-      var msg =  updateInfo
-          .getValidationInfos()
-          .get(k)
-          .stream()
-          .map(PipelineElementValidationInfo::getMessage)
-          .toList()
-          .toString();
-      notifications.add(String.format("Adapter modification: %s: %s", k, msg));
-    });
-    return notifications;
-  }
-
-  private Map<String, List<PipelineElementValidationInfo>> extractModificationWarnings(
-      Pipeline pipeline,
-      PipelineModificationMessage modificationMessage) {
-    var infos = new HashMap<String, List<PipelineElementValidationInfo>>();
-    modificationMessage
-        .getPipelineModifications()
-        .stream()
-        .filter(v -> !v.getValidationInfos().isEmpty())
-        .forEach(m -> infos.put(getPipelineElementName(pipeline, m.getElementId()), m.getValidationInfos()));
-
-    return infos;
-  }
-
-  private String getPipelineElementName(Pipeline pipeline,
-                                        String elementId) {
-    return Stream
-        .concat(pipeline.getSepas().stream(), pipeline.getActions().stream())
-        .filter(p -> p.getElementId().equals(elementId))
-        .findFirst()
-        .map(NamedStreamPipesEntity::getName)
-        .orElse(elementId);
-  }
-
-  private Pipeline applyUpdatedDataStream(Pipeline originalPipeline,
-                                          AdapterDescription updatedAdapter) {
-    var updatedStreams = originalPipeline
-        .getStreams()
-        .stream()
-        .peek(s -> {
-          if (s.getElementId().equals(updatedAdapter.getCorrespondingDataStreamElementId())) {
-            s.setEventSchema(updatedAdapter.getEventSchema());
-            s.setName(updatedAdapter.getName());
-          }
-        })
-        .toList();
-
-    originalPipeline.setStreams(updatedStreams);
-
-    return originalPipeline;
+    return pipelineUpdateCoordinator.checkPipelineMigrations(adapterDescription);
   }
 
   private void updateDataSource(AdapterDescription ad) {

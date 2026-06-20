@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { PipelineElementUnion } from '../../../../editor/model/editor.model';
 import { SpLogEntry } from '@streampipes/platform-services';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
@@ -47,6 +47,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class PipelineElementDetailsRowComponent {
+    private dialogService = inject(DialogService);
+
     @Input()
     pipelineElement: PipelineElementUnion;
 
@@ -55,8 +57,6 @@ export class PipelineElementDetailsRowComponent {
 
     @Input()
     logInfo: SpLogEntry[] = [];
-
-    constructor(private dialogService: DialogService) {}
 
     openLogsDialog(): void {
         this.dialogService.open(PipelineLogsDialogComponent, {

@@ -16,8 +16,8 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import {
     Pipeline,
@@ -32,7 +32,10 @@ import { PipelineElementUnion } from '../editor/model/editor.model';
 import {
     CurrentUserService,
     DialogService,
+    KeyboardShortcutService,
     PanelType,
+    ShortcutRegistration,
+    SpBasicViewComponent,
     SpBreadcrumbService,
 } from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../pipelines/pipelines.breadcrumb';
@@ -43,7 +46,6 @@ import { PipelinePreviewComponent } from './components/preview/pipeline-preview.
 import { HttpContext } from '@angular/common/http';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 import { PipelineCodeDialogComponent } from './dialogs/pipeline-code/pipeline-code-dialog.component';
-import { SpBasicViewComponent } from '@streampipes/shared-ui';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -52,6 +54,9 @@ import {
 import { PipelineDetailsToolbarComponent } from './components/pipeline-details-toolbar/pipeline-details-toolbar.component';
 import { PipelineDetailsExpansionPanelComponent } from './components/pipeline-details-expansion-panel/pipeline-details-expansion-panel.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { PipelineOperationsService } from '../pipelines/services/pipeline-operations.service';
+import { MeasurementUpdateDialogComponent } from '../pipelines/dialog/measurement-update/measurement-update-dialog.component';
+import { MeasurementUpdateAction } from '../pipelines/model/pipeline-model';
 
 @Component({
     selector: 'sp-pipeline-details-overview-component',
@@ -69,6 +74,18 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
+    private activatedRoute = inject(ActivatedRoute);
+    private pipelineService = inject(PipelineService);
+    private pipelineCanvasService = inject(PipelineCanvasMetadataService);
+    private authService = inject(AuthService);
+    private currentUserService = inject(CurrentUserService);
+    private breadcrumbService = inject(SpBreadcrumbService);
+    private pipelineMonitoringService = inject(PipelineMonitoringService);
+    private dialogService = inject(DialogService);
+    private router = inject(Router);
+    private pipelineOperationsService = inject(PipelineOperationsService);
+    private shortcutService = inject(KeyboardShortcutService);
+
     hasPipelineWritePrivileges = false;
 
     currentPipelineId: string;
@@ -86,23 +103,17 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
 
     currentUser$: Subscription;
     autoRefresh$: Subscription;
+    private shortcutReg: ShortcutRegistration;
 
     @ViewChild('pipelinePreviewComponent')
     pipelinePreviewComponent: PipelinePreviewComponent;
 
-    constructor(
-        private activatedRoute: ActivatedRoute,
-        private pipelineService: PipelineService,
-        private pipelineCanvasService: PipelineCanvasMetadataService,
-        private authService: AuthService,
-        private currentUserService: CurrentUserService,
-        private breadcrumbService: SpBreadcrumbService,
-        private pipelineMonitoringService: PipelineMonitoringService,
-        private dialogService: DialogService,
-    ) {}
-
     ngOnInit(): void {
-        this.currentUser$ = this.currentUserService.user$.subscribe(user => {
+        this.shortcutReg = this.shortcutService.register('pipeline-details', [
+            { key: 'e', action: () => this.onShortcutEdit() },
+        ]);
+
+        this.currentUser$ = this.currentUserService.user$.subscribe(_user => {
             this.hasPipelineWritePrivileges = this.authService.hasRole(
                 UserPrivilege.PRIVILEGE_WRITE_PIPELINE,
             );
@@ -134,7 +145,7 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
                         }
                         return response;
                     }),
-                    catchError(error => {
+                    catchError(_error => {
                         this.pipelineAvailable = false;
                         return of(new PipelineCanvasMetadata());
                     }),
@@ -162,6 +173,37 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
             { label: this.pipeline.name },
             { label: 'Overview' },
         ]);
+        if (this.pipeline.healthStatus === 'HANDLE_MEASUREMENT_UPDATE') {
+            this.openMeasurementUpdateDialogIfRequired();
+        }
+    }
+
+    openMeasurementUpdateDialogIfRequired(): void {
+        const dialogRef = this.dialogService.open(
+            MeasurementUpdateDialogComponent,
+            {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'Measurement update required',
+                width: '50vw',
+                data: {
+                    pipeline: this.pipeline,
+                },
+            },
+        );
+
+        dialogRef.afterClosed().subscribe(action => {
+            this.handleMeasurementUpdateAction(action);
+        });
+    }
+
+    handleMeasurementUpdateAction(action?: MeasurementUpdateAction): void {
+        if (action === 'edit-pipeline') {
+            this.pipelineOperationsService.showPipelineInEditor(
+                this.pipeline._id,
+            );
+        } else if (action === 'manage-datasets') {
+            this.router.navigate(['datasets']);
+        }
     }
 
     setupAutoRefresh(): void {
@@ -229,7 +271,28 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
+    editPipeline(): void {
+        this.pipelineOperationsService.showPipelineInEditor(this.pipeline._id);
+    }
+
+    deletePipeline(): void {
+        this.pipelineOperationsService.showDeleteDialog(
+            this.pipeline._id,
+            this.pipeline.name,
+            this.pipeline.running,
+            null,
+            () => this.router.navigate(['pipelines']),
+        );
+    }
+
+    private onShortcutEdit(): void {
+        if (this.hasPipelineWritePrivileges) {
+            this.editPipeline();
+        }
+    }
+
     ngOnDestroy() {
+        this.shortcutReg?.unregister();
         this.currentUser$?.unsubscribe();
         this.autoRefresh$?.unsubscribe();
     }

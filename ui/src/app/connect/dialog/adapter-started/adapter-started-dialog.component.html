@@ -65,7 +65,19 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions actions-align-right">
+    <div class="sp-dialog-actions actions-align-right" fxLayoutGap="10px">
+        @if (
+            adapterUpdatePreflight && editMode && !adapterInstalled && !loading
+        ) {
+            <button
+                class="mat-basic"
+                mat-flat-button
+                data-cy="keep-editing-adapter-started-dialog-button"
+                (click)="onKeepEditing()"
+            >
+                {{ 'Keep editing' | translate }}
+            </button>
+        }
         <button
             id="confirm_adapter_started_button"
             class="mat-basic"

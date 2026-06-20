@@ -31,6 +31,14 @@
         "
     >
     </sp-select-properties-config>
+    <sp-field-order-config
+        [sectionTitle]="'Column Order'"
+        [selectedFields]="
+            currentlyConfiguredWidget.visualizationConfig.selectedColumns
+        "
+        (selectedFieldsChange)="setSelectedColumnOrder($event)"
+    >
+    </sp-field-order-config>
     <sp-split-section [level]="3" [title]="'Settings' | translate">
         <sp-form-field [level]="3" [label]="'Filter' | translate">
             <mat-form-field fxFlex="100">
@@ -59,6 +67,16 @@
                     }
                 </mat-select>
             </mat-form-field>
+        </sp-form-field>
+        <sp-form-field [level]="3" [label]="'Sticky headers' | translate">
+            <mat-checkbox
+                [checked]="
+                    currentlyConfiguredWidget.visualizationConfig.stickyHeaders
+                "
+                (change)="setStickyHeaders($event.checked)"
+            >
+                {{ 'Keep table header visible while scrolling' | translate }}
+            </mat-checkbox>
         </sp-form-field>
     </sp-split-section>
     <sp-split-section [level]="3" [title]="'Value Highlighting' | translate">

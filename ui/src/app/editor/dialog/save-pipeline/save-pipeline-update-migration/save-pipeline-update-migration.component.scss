@@ -1,0 +1,115 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+.migration-view {
+    width: min(100%, 760px);
+    margin: 0 auto;
+}
+
+.migration-summary {
+    text-align: center;
+    margin-bottom: var(--space-md);
+}
+
+.pipeline-description {
+    color: var(--color-secondary-text);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+}
+
+.migration-infos {
+    margin-bottom: var(--space-lg);
+}
+
+.pipeline-update-info {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 6px;
+    padding: var(--space-md);
+    margin-bottom: var(--space-xs);
+    background: var(--color-bg-0);
+}
+
+.pipeline-status {
+    gap: var(--space-sm);
+}
+
+.pipeline-title,
+.affected-charts-title {
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-normal);
+}
+
+.affected-charts-title {
+    gap: var(--space-xs);
+    font-weight: var(--font-weight-bold);
+}
+
+.status-icon {
+    flex: 0 0 auto;
+}
+
+.warning-icon {
+    color: var(--color-warning);
+}
+
+.error-icon {
+    color: var(--color-error);
+}
+
+.validation-infos,
+.affected-charts {
+    margin-top: var(--space-md);
+    gap: var(--space-sm);
+}
+
+.validation-info,
+.affected-chart {
+    padding: var(--space-md);
+    border: 1px solid var(--color-border-subtle);
+    border-left: 3px solid var(--color-warning);
+    border-radius: 6px;
+    background: var(--color-bg-0);
+}
+
+.validation-info-error {
+    border-left-color: var(--color-error);
+}
+
+.validation-info-title,
+.affected-chart-title {
+    gap: var(--space-xs);
+}
+
+.validation-info-message,
+.affected-fields {
+    margin-top: var(--space-xs);
+    padding-left: calc(24px + var(--space-xs));
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+}
+
+.affected-fields {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+.migration-actions {
+    text-align: center;
+}

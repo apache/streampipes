@@ -20,18 +20,50 @@
     <div class="sp-dialog-content p-15" fxLayout="column">
         <div fxLayout="row" fxFlex="100">
             <div fxLayout="column" fxFlex>
-                <h4>{{ pipelineElement.name }}</h4>
+                <div fxLayout="row wrap" fxLayoutAlign="start center">
+                    <h4 class="element-title">{{ pipelineElement.name }}</h4>
+                    @if (assetContext) {
+                        <div
+                            class="asset-context ml-sm"
+                            fxLayout="row"
+                            fxLayoutAlign="start center"
+                        >
+                            <div
+                                class="asset-context-boxes"
+                                fxLayout="row wrap"
+                                fxLayoutAlign="start center"
+                                fxLayoutGap="var(--space-md)"
+                            >
+                                @for (
+                                    asset of assetContext.assets;
+                                    track asset.id
+                                ) {
+                                    <sp-label
+                                        size="small"
+                                        tone="neutral"
+                                        variant="soft"
+                                        [labelText]="asset.label"
+                                        [matTooltip]="asset.tooltip"
+                                    >
+                                    </sp-label>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
                 <small>
                     {{ pipelineElement.description }}
                 </small>
             </div>
-            <div class="element-id" fxLayoutAlign="end start">
-                <span>ID</span>&nbsp;<b>{{
+            <sp-element-id
+                fxLayoutAlign="end start"
+                [value]="
                     isDataStream
                         ? pipelineElement.elementId
                         : pipelineElement.appId
-                }}</b>
-            </div>
+                "
+            >
+            </sp-element-id>
         </div>
         <mat-tab-group
             color="accent"

@@ -23,7 +23,7 @@ import {
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { NgIf } from '@angular/common';
+
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
 
@@ -35,7 +35,6 @@ import { MatButton, MatIconButton } from '@angular/material/button';
         LayoutDirective,
         LayoutAlignDirective,
         LayoutGapDirective,
-        NgIf,
         FlexDirective,
         MatIcon,
         MatButton,
@@ -49,6 +48,6 @@ export class FeatureCardHeaderComponent {
     @Input() icon: string;
     @Input() iconColor: string;
     @Input() detailsLink: string[];
-    @Output() close: EventEmitter<void> = new EventEmitter();
-    @Output() onDetailsClick: EventEmitter<void> = new EventEmitter();
+    @Output() closeClick: EventEmitter<void> = new EventEmitter();
+    @Output() detailsClick: EventEmitter<void> = new EventEmitter();
 }

@@ -21,8 +21,7 @@ import {StreampipesComponent} from "./core/components/streampipes/streampipes.co
 import {AuthCanActivateChildrenGuard} from "./core/auth/guards/auth.can-activate-children.guard";
 import {ConfiguredCanActivateGuard} from "./core/setup/guards/configured.can-activate.guard";
 import {StartupComponent} from "./login/components/startup/startup.component";
-import {InfoComponent} from "./info/info.component";
-import {NotificationsComponent} from "./notifications/notifications.component";
+import {HelpComponent} from "./help/help.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {ApidocsComponent} from "./apidocs/apidocs.component";
 import { PageName } from './core/navigation/page-name.enum';
@@ -72,8 +71,7 @@ export const routes: Routes = [
         loadChildren: () => import('{{{routesPath}}}').then(m => m.{{{routesName}}})
       },
       {{/modulesActive}}
-      { path: 'notifications', component: NotificationsComponent },
-      { path: 'info', component: InfoComponent },
+      { path: 'help', component: HelpComponent },
       { path: 'profile', component: ProfileComponent},
     ], canActivateChild: [AuthCanActivateChildrenGuard, PageAuthGuard, TermsCanActivateChildrenGuard] }
 ];

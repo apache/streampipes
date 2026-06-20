@@ -35,11 +35,16 @@ export class ConfigurationUtils {
 
     public static addNewLabel(name: string, description: string = '') {
         cy.dataCy('new-label-button').click();
-        cy.dataCy('label-name').clear().type(name);
+        cy.dataCy('label-name')
+            .should('be.visible')
+            .and('not.be.disabled')
+            .clear()
+            .type(name);
         if (description !== '') {
             cy.dataCy('label-description').type(description);
         }
         cy.dataCy('save-label-button').click();
+        cy.dataCy('label-name').should('not.exist');
     }
 
     public static checkLabel(labelName: string) {
@@ -50,8 +55,10 @@ export class ConfigurationUtils {
         });
     }
 
-    public static deleteLabel() {
+    public static deleteLabel(labelName: string) {
         cy.dataCy('delete-label-button').click();
+        cy.dataCy('confirm-delete').should('be.visible').click();
+        cy.contains('[data-cy="label-text"]', labelName).should('not.exist');
         cy.dataCy('no-table-entries').should('be.visible');
     }
 }

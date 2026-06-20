@@ -17,7 +17,10 @@
   -->
 
 <div fxLayout="column">
-    @if (shouldShowGroupingControls && !showSelectionCheckboxes) {
+    @if (
+        (shouldShowGroupingControls || shouldShowNameSearch) &&
+        !showSelectionCheckboxes
+    ) {
         <div
             class="grouping-toolbar grouping-toolbar--standalone"
             fxLayout="row wrap"
@@ -31,8 +34,14 @@
                 fxLayoutAlign="end center"
                 fxLayoutGap="12px"
             >
-                <ng-container *ngTemplateOutlet="groupingControls">
-                </ng-container>
+                @if (shouldShowNameSearch) {
+                    <ng-container *ngTemplateOutlet="nameSearchField">
+                    </ng-container>
+                }
+                @if (shouldShowGroupingControls) {
+                    <ng-container *ngTemplateOutlet="groupingControls">
+                    </ng-container>
+                }
             </div>
         </div>
     }
@@ -148,19 +157,51 @@
                 }
             </div>
 
-            @if (shouldShowGroupingControls) {
+            @if (shouldShowGroupingControls || shouldShowNameSearch) {
                 <div
                     class="selection-toolbar__right"
-                    fxLayout="row"
+                    fxLayout="row wrap"
                     fxLayoutAlign="end center"
                     fxLayoutGap="8px"
                 >
-                    <ng-container *ngTemplateOutlet="groupingControls">
-                    </ng-container>
+                    @if (shouldShowNameSearch) {
+                        <ng-container *ngTemplateOutlet="nameSearchField">
+                        </ng-container>
+                    }
+                    @if (shouldShowGroupingControls) {
+                        <ng-container *ngTemplateOutlet="groupingControls">
+                        </ng-container>
+                    }
                 </div>
             }
         </div>
     }
+
+    <ng-template #nameSearchField>
+        <mat-form-field class="form-field-small table-search-field">
+            <mat-icon matPrefix>search</mat-icon>
+            <input
+                matInput
+                [placeholder]="
+                    nameSearchConfig?.placeholder ?? ('Search' | translate)
+                "
+                [value]="nameSearchTerm"
+                (input)="onNameSearchInput($any($event.target).value)"
+            />
+            @if (nameSearchTerm) {
+                <button
+                    mat-icon-button
+                    matSuffix
+                    type="button"
+                    class="table-search-field__clear"
+                    [attr.aria-label]="'Clear search' | translate"
+                    (click)="clearNameSearch()"
+                >
+                    <mat-icon>close</mat-icon>
+                </button>
+            }
+        </mat-form-field>
+    </ng-template>
 
     <ng-template #groupingControls>
         @if (viewMode === 'grouped') {
@@ -347,7 +388,7 @@
         <mat-paginator
             #paginator
             [pageSize]="pageSize()"
-            [pageSizeOptions]="[5, 10, 20, 50]"
+            [pageSizeOptions]="[5, 10, 20, 50, 100, 500]"
             [hidePageSize]="false"
             [showFirstLastButtons]="true"
             (page)="onPage($event)"
@@ -367,35 +408,22 @@
                 <mat-icon>preview</mat-icon>
             </button>
         }
-        <div
+        <button
+            mat-icon-button
             [matMenuTriggerFor]="menu"
-            #menuTrigger="matMenuTrigger"
-            (mouseenter)="mouseEnter(menuTrigger)"
-            (mouseleave)="mouseLeave(menuTrigger)"
+            (click)="$event.stopPropagation()"
+            [attr.data-cy]="'more-options'"
         >
-            <button
-                mat-icon-button
-                [matMenuTriggerFor]="menu"
-                #menuTrigger="matMenuTrigger"
-                (click)="$event.stopPropagation()"
-                [attr.data-cy]="'more-options'"
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <ng-container
+                *ngTemplateOutlet="
+                    actionsTemplate;
+                    context: { $implicit: element }
+                "
             >
-                <mat-icon>more_vert</mat-icon>
-            </button>
-        </div>
-        <mat-menu #menu="matMenu" [hasBackdrop]="false">
-            <div
-                (mouseenter)="mouseEnter(menuTrigger)"
-                (mouseleave)="mouseLeave(menuTrigger)"
-            >
-                <ng-container
-                    *ngTemplateOutlet="
-                        actionsTemplate;
-                        context: { $implicit: element }
-                    "
-                >
-                </ng-container>
-            </div>
+            </ng-container>
         </mat-menu>
     </div>
 </ng-template>

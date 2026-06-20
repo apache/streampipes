@@ -22,7 +22,6 @@ import {
     RuntimeResolvableAnyStaticProperty,
     StaticPropertyUnion,
 } from '@streampipes/platform-services';
-import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import {
@@ -59,10 +58,6 @@ export class StaticRuntimeResolvableAnyInputComponent
     implements OnInit
 {
     selectedOptions: Option[] = [];
-
-    constructor(runtimeResolvableService: RuntimeResolvableService) {
-        super(runtimeResolvableService);
-    }
 
     ngOnInit() {
         super.onInit();

@@ -1,0 +1,100 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.connect.iiot.adapters.opcua-alarms.title=OPC UA Events
+org.apache.streampipes.connect.iiot.adapters.opcua-alarms.description=Receives read-only OPC UA event notifications, including alarms and conditions
+
+OPC_HOST_OR_URL.title=OPC Server
+OPC_HOST_OR_URL.description=
+
+OPC_URL.title=URL
+OPC_URL.description=
+
+OPC_HOST.title=Host/Port
+OPC_HOST.description=
+
+OPC_SERVER_URL.title=URL
+OPC_SERVER_URL.description=Example: opc.tcp://test-server.com:4840
+
+OPC_SERVER_HOST.title=Host
+OPC_SERVER_HOST.description=Example: test-server.com, opc.tcp://test-server.com
+
+OPC_SERVER_PORT.title=Port
+OPC_SERVER_PORT.description=Example: 4840
+
+securityMode.title=Security Mode
+securityMode.description=The OPC-UA security mode
+
+securityPolicy.title=Security Policy
+securityPolicy.description=The OPC-UA security policy. Choose "None" if security mode is "None"
+
+userAuthentication.title=User Authentication
+userAuthentication.description=Choose an authentication method for the user
+
+anonymous.title=Anonymous
+anonymous.description=
+
+USERNAME_GROUP.title=Username & Password
+USERNAME_GROUP.description=
+
+USERNAME.title=Username
+USERNAME.description=
+
+PASSWORD.title=Password
+PASSWORD.description=
+
+x509Group.title=X.509 Certificate
+x509Group.description=
+
+x509PrivateKeyPem.title=Private Key PEM
+x509PrivateKeyPem.description=Private key in PEM format
+
+x509PublicKeyPem.title=Certificate PEM
+x509PublicKeyPem.description=Public key in PEM format
+
+alarm-source-scope.title=Where should events come from?
+alarm-source-scope.description=Choose whether to subscribe to the whole server or a specific area or machine.
+
+whole-server.title=Whole server
+whole-server.description=Receive events from the complete OPC UA server.
+
+specific-area-or-machine.title=Specific area or machine
+specific-area-or-machine.description=Receive events from one event-capable area or machine only.
+
+notifier-node.title=Area or machine
+notifier-node.description=Select the event-capable area or machine that should be monitored.
+
+event-type.title=Event type
+event-type.description=Select the OPC UA event type to subscribe to. The selected event type drives the server-side OfType filter and the available additional fields.
+
+additional-fields.title=Additional fields
+additional-fields.description=Select optional fields derived from the selected event type. After changing the event type, reload this field list. Some servers may stop delivering events if too many optional fields are selected.
+
+alarm-filter-mode.title=Which events should be included?
+alarm-filter-mode.description=Choose whether to receive all matching events or only events from sources whose names match a text filter.
+
+all-alarms.title=All events
+all-alarms.description=Receive all matching events from the selected source scope.
+
+source-name-contains.title=Only events whose source name contains text
+source-name-contains.description=Filter events by a substring match on the OPC UA SourceName field.
+
+source-name-filter.title=Source name contains
+source-name-filter.description=Example: Pump, Boiler_A, Line 3
+
+minimum-severity.title=Minimum severity
+minimum-severity.description=Only events with at least the selected severity are emitted.

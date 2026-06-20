@@ -16,43 +16,45 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DataExplorerWidgetModel } from '@streampipes/platform-services';
-import { ChartRegistry } from '../../../../../../chart-shared/registry/chart-registry.service';
 import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    inject,
+} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { FeatureCardService } from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
+import { ChartSelectionItem } from '../chart-selection.model';
 
 @Component({
     selector: 'sp-chart-preview',
     templateUrl: './chart-preview.component.html',
     styleUrls: ['./chart-preview.component.scss'],
-    imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutGapDirective,
-        LayoutAlignDirective,
-        MatIcon,
-    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [MatIcon, MatIconButton, TranslatePipe],
 })
-export class ChartPreviewComponent implements OnInit {
-    @Input()
-    chart: DataExplorerWidgetModel;
+export class ChartPreviewComponent {
+    private featureCardService = inject(FeatureCardService);
 
-    widgetTypeLabel: string;
+    @Input()
+    chartItem!: ChartSelectionItem;
 
     @Output()
     addChartEmitter: EventEmitter<string> = new EventEmitter<string>();
 
-    constructor(private widgetRegistryService: ChartRegistry) {}
+    addChart(): void {
+        this.addChartEmitter.emit(this.chartItem.chart.elementId);
+    }
 
-    ngOnInit() {
-        this.widgetTypeLabel = this.widgetRegistryService.getChartTemplate(
-            this.chart.widgetType,
-        ).label;
+    openPreview(event: MouseEvent): void {
+        event.stopPropagation();
+        this.featureCardService.openFeatureCard(
+            'chart',
+            this.chartItem.chart.elementId,
+        );
     }
 }

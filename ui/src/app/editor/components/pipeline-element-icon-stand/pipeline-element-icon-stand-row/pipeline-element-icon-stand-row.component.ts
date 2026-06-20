@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
 import {
     PipelineElementType,
     PipelineElementUnion,
@@ -31,8 +31,17 @@ import {
 import { MatTooltip } from '@angular/material/tooltip';
 import { NgClass } from '@angular/common';
 import { ClassDirective } from '@ngbracket/ngx-layout/extended';
-import { PipelineElementComponent } from '@streampipes/shared-ui';
+import {
+    PipelineElementComponent,
+    SpLabelComponent,
+    SpAssetBrowserService,
+    SpTableAssetContextService,
+} from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SpDataStream } from '@streampipes/platform-services';
+import { SpTableResolvedAssetContext } from '@streampipes/shared-ui';
+import { map } from 'rxjs';
 
 @Component({
     selector: 'sp-pe-icon-stand-row',
@@ -45,11 +54,17 @@ import { MatButton } from '@angular/material/button';
         NgClass,
         ClassDirective,
         PipelineElementComponent,
+        SpLabelComponent,
         LayoutAlignDirective,
         MatButton,
     ],
 })
 export class PipelineElementIconStandRowComponent implements OnInit {
+    private editorService = inject(EditorService);
+    private assetBrowserService = inject(SpAssetBrowserService);
+    private assetContextService = inject(SpTableAssetContextService);
+    private destroyRef = inject(DestroyRef);
+
     @Input()
     element: PipelineElementUnion;
 
@@ -57,8 +72,7 @@ export class PipelineElementIconStandRowComponent implements OnInit {
     cypressName: string;
 
     currentMouseOver = false;
-
-    constructor(private editorService: EditorService) {}
+    assetContext?: SpTableResolvedAssetContext;
 
     ngOnInit(): void {
         const activeType = PipelineElementTypeUtils.fromClassName(
@@ -66,13 +80,27 @@ export class PipelineElementIconStandRowComponent implements OnInit {
         );
         this.activeCssClass = this.makeActiveCssClass(activeType);
         this.cypressName = this.element.name.toLowerCase().replace(' ', '_');
+
+        if (this.element instanceof SpDataStream) {
+            this.assetBrowserService.assetData$
+                .pipe(
+                    map(assetData =>
+                        this.assetContextService.resolveDataStreamAssetContext(
+                            assetData,
+                            this.element as SpDataStream,
+                        ),
+                    ),
+                    takeUntilDestroyed(this.destroyRef),
+                )
+                .subscribe(assetContext => (this.assetContext = assetContext));
+        }
     }
 
     makeActiveCssClass(elementType: PipelineElementType): string {
         return PipelineElementTypeUtils.toCssShortHand(elementType);
     }
 
-    updateMouseOver(e: string) {
+    updateMouseOver(_e: string) {
         this.currentMouseOver = !this.currentMouseOver;
     }
 

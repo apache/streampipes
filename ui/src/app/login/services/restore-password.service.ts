@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
@@ -24,10 +24,8 @@ import { RegistrationModel } from '../components/register/registration.model';
 
 @Injectable({ providedIn: 'root' })
 export class RestorePasswordService {
-    constructor(
-        private http: HttpClient,
-        private platformServicesCommons: PlatformServicesCommons,
-    ) {}
+    private http = inject(HttpClient);
+    private platformServicesCommons = inject(PlatformServicesCommons);
 
     checkRecoveryCode(recoveryCode: string): Observable<any> {
         return this.http.get(

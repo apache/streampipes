@@ -102,6 +102,8 @@ public interface Environment {
 
   StringEnvironmentVariable getOAuthRedirectUri();
 
+  BooleanEnvironmentVariable getResetEndpointEnabled();
+
   List<OAuthConfiguration> getOAuthConfigurations();
 
   // Messaging
@@ -201,6 +203,8 @@ public interface Environment {
   IntEnvironmentVariable getPlc4xMaxWaitTimeMs();
 
   IntEnvironmentVariable getPlc4xMaxLeaseTimeMs();
+
+  IntEnvironmentVariable getMsSqlCdcPollIntervalMs();
 
   BooleanEnvironmentVariable getFileLoggingEnabled();
 

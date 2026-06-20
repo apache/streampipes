@@ -23,6 +23,7 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    inject,
 } from '@angular/core';
 import { AssetBrowserData, AssetFilter } from '../../asset-browser.model';
 import { Subscription } from 'rxjs';
@@ -37,8 +38,9 @@ import { AssetBrowserFilterTypeComponent } from './asset-browser-filter-type/ass
 import { AssetBrowserFilterSitesComponent } from './asset-browser-filter-sites/asset-browser-filter-sites.component';
 import { AssetBrowserFilterLabelsComponent } from './asset-browser-filter-labels/asset-browser-filter-labels.component';
 import { MatDivider } from '@angular/material/divider';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'sp-asset-browser-filter',
@@ -55,9 +57,13 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutAlignDirective,
         MatButton,
         TranslatePipe,
+        MatIconButton,
+        MatTooltip,
     ],
 })
 export class AssetBrowserFilterComponent implements OnInit, OnDestroy {
+    private assetBrowserService = inject(SpAssetBrowserService);
+
     @Input()
     assetBrowserData: AssetBrowserData;
 
@@ -67,8 +73,6 @@ export class AssetBrowserFilterComponent implements OnInit, OnDestroy {
 
     @Output()
     closeMenu: EventEmitter<void> = new EventEmitter();
-
-    constructor(private assetBrowserService: SpAssetBrowserService) {}
 
     ngOnInit() {
         this.filter$ = this.assetBrowserService.filter$.subscribe(
@@ -86,6 +90,10 @@ export class AssetBrowserFilterComponent implements OnInit, OnDestroy {
     resetFilters(): void {
         this.assetBrowserService.resetFilters();
         this.closeMenu.emit();
+    }
+
+    refreshAssets(): void {
+        this.assetBrowserService.loadAssetData();
     }
 
     ngOnDestroy() {

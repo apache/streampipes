@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import {
     CompactPipeline,
     Pipeline,
@@ -42,15 +42,14 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class PipelineCodeDialogComponent implements OnInit {
+    private pipelineService = inject(PipelineService);
+    private dialogRef =
+        inject<DialogRef<PipelineCodeDialogComponent>>(DialogRef);
+
     @Input()
     pipeline: Pipeline;
 
     compactPipeline: CompactPipeline;
-
-    constructor(
-        private pipelineService: PipelineService,
-        private dialogRef: DialogRef<PipelineCodeDialogComponent>,
-    ) {}
 
     ngOnInit() {
         this.pipelineService

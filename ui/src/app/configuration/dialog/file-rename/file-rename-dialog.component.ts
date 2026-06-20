@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DialogRef } from '@angular/cdk/dialog';
 import { MAT_DIALOG_DATA, MatDialogClose } from '@angular/material/dialog';
 import {
@@ -49,10 +49,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class FileRenameDialogComponent {
-    constructor(
-        private dialogRef: DialogRef<FileRenameDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public fileName: string,
-    ) {}
+    private dialogRef = inject<DialogRef<FileRenameDialogComponent>>(DialogRef);
+    fileName = inject(MAT_DIALOG_DATA);
 
     cancel() {
         this.dialogRef.close();

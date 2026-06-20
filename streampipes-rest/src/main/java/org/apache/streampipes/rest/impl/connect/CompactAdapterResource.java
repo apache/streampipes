@@ -30,11 +30,13 @@ import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
+import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
@@ -94,8 +96,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
       @RequestBody CompactAdapter compactAdapter
   ) throws Exception {
 
-    var adapterDescription = compactAdapterManagement.convertToAdapterDescription(compactAdapter);
     var principalSid = getAuthenticatedUserSid();
+    var adapterDescription = convertToAdapterDescription(compactAdapter, principalSid);
 
     var adapterId = adapterDescription.getElementId();
 
@@ -152,7 +154,12 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
 
     var existingAdapter = managementService.getAdapter(elementId);
     if (existingAdapter != null) {
-      var adapterDescription = compactAdapterManagement.convertToAdapterDescription(compactAdapter, existingAdapter);
+      var principalSid = getAuthenticatedUserSid();
+      var adapterDescription = convertToAdapterDescription(
+          compactAdapter,
+          existingAdapter,
+          principalSid
+      );
 
       try {
         adapterUpdateManagement.updateAdapter(adapterDescription);
@@ -164,6 +171,29 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
       return ok(Notifications.success(adapterDescription.getElementId()));
     } else {
       throw new BadRequestException(String.format("Adapter with id %s not found", elementId));
+    }
+  }
+
+  private AdapterDescription convertToAdapterDescription(
+      CompactAdapter compactAdapter,
+      String principalSid
+  ) throws Exception {
+    try {
+      return compactAdapterManagement.convertToAdapterDescription(compactAdapter, principalSid);
+    } catch (AdapterException e) {
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
+    }
+  }
+
+  private AdapterDescription convertToAdapterDescription(
+      CompactAdapter compactAdapter,
+      AdapterDescription existingAdapter,
+      String principalSid
+  ) throws Exception {
+    try {
+      return compactAdapterManagement.convertToAdapterDescription(compactAdapter, existingAdapter, principalSid);
+    } catch (AdapterException e) {
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
     }
   }
 }

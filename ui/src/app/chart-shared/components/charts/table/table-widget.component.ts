@@ -17,7 +17,20 @@
  */
 
 import { DatePipe, NgClass, NgStyle } from '@angular/common';
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import {
+    CdkDrag,
+    CdkDragDrop,
+    CdkDragHandle,
+    CdkDropList,
+    moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import {
+    Component,
+    ElementRef,
+    HostListener,
+    ViewChild,
+    inject,
+} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -32,6 +45,8 @@ import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { NoDataInDateRangeComponent } from '../base/no-data/no-data-in-date-range.component';
 import { TooMuchDataComponent } from '../base/too-much-data/too-much-data.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { WidgetNumberAppearanceConfig } from '../../../models/dataview-dashboard.model';
+import { ResultLabelService } from '../../../services/result-label.service';
 
 type SortDirection = 'asc' | 'desc' | '';
 
@@ -91,6 +106,9 @@ const TIMESTAMP_MASK = 'yyyy-mm-dd HH:mm:ss.SSS';
         FlexDirective,
         NgStyle,
         NgClass,
+        CdkDropList,
+        CdkDrag,
+        CdkDragHandle,
         NoDataInDateRangeComponent,
         TooMuchDataComponent,
         MatPaginator,
@@ -102,6 +120,9 @@ const TIMESTAMP_MASK = 'yyyy-mm-dd HH:mm:ss.SSS';
     ],
 })
 export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableWidgetModel> {
+    private elRef = inject(ElementRef);
+    private resultLabelService = inject(ResultLabelService);
+
     private static readonly DEFAULT_PAGE_SIZE = 20;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -128,10 +149,6 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     selectedAdvancedType = '';
     dropdownStyle: Record<string, string> = {};
     filterListScrollEnd = true;
-
-    constructor(private elRef: ElementRef) {
-        super();
-    }
 
     @HostListener('document:click', ['$event'])
     onDocumentClick(event: MouseEvent): void {
@@ -236,6 +253,41 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
             this.sortDirection = '';
             this.sortColumn = '';
         }
+        this.applyTableState(false);
+    }
+
+    dropSelectedColumn(event: CdkDragDrop<string[]>): void {
+        const reorderedColumnNames = this.getReorderableColumnNames();
+        const draggedColumn = event.item.data as string | undefined;
+
+        if (!draggedColumn || reorderedColumnNames.length <= 1) {
+            return;
+        }
+
+        const previousIndex = reorderedColumnNames.indexOf(draggedColumn);
+        const currentIndex = this.toReorderableColumnIndex(event.currentIndex);
+
+        if (previousIndex < 0 || previousIndex === currentIndex) {
+            return;
+        }
+
+        moveItemInArray(reorderedColumnNames, previousIndex, currentIndex);
+
+        const selectedColumnsByName = new Map(
+            (
+                this.dataExplorerWidget.visualizationConfig.selectedColumns ??
+                []
+            ).map(column => [column.fullDbName, column]),
+        );
+
+        const selectedColumns = reorderedColumnNames
+            .map(columnName => selectedColumnsByName.get(columnName))
+            .filter(column => !!column);
+
+        this.dataExplorerWidget.visualizationConfig.selectedColumns =
+            selectedColumns;
+        this.closeFilter();
+        this.regenerateColumnNames();
         this.applyTableState(false);
     }
 
@@ -510,6 +562,32 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     onFilterDropdownClick = (event: MouseEvent): void =>
         event.stopPropagation();
 
+    @HostListener('document:keydown', ['$event'])
+    handleGlobalKeydown(event: KeyboardEvent): void {
+        if (!this.openFilterColumn) {
+            return;
+        }
+
+        const key = event.key.toLowerCase();
+        const ctrl = event.ctrlKey || event.metaKey;
+
+        if (key === 'escape') {
+            this.closeFilter();
+            event.preventDefault();
+            event.stopPropagation();
+        } else if (ctrl && key === 'f') {
+            const input = this.elRef.nativeElement.querySelector(
+                '.column-filter-search',
+            );
+            if (input) {
+                input.focus();
+                input.select();
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }
+    }
+
     onTimestampInput(field: 'value' | 'value2', event: Event): void {
         const input = event.target as HTMLInputElement;
         const digits = input.value.replace(/\D/g, '').slice(0, 17);
@@ -757,8 +835,54 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
             this.dataExplorerWidget.visualizationConfig.highlightedColumns ?? []
         ).find(f => f.fullDbName === column);
 
-    headerLabel = (column: string): string =>
-        column === 'time' ? 'Time' : column;
+    isReorderableColumn(column: string): boolean {
+        return !!(
+            this.dataExplorerWidget.visualizationConfig.selectedColumns ?? []
+        ).find(f => f.fullDbName === column);
+    }
+
+    getReorderableColumnNames(): string[] {
+        return (
+            this.dataExplorerWidget.visualizationConfig.selectedColumns ?? []
+        ).map(column => column.fullDbName);
+    }
+
+    private toReorderableColumnIndex(dropIndex: number): number {
+        const reorderableColumnNames = this.getReorderableColumnNames();
+        if (reorderableColumnNames.length === 0) {
+            return 0;
+        }
+
+        const firstReorderableIndex = this.columnNames.findIndex(column =>
+            this.isReorderableColumn(column),
+        );
+        const normalizedIndex = Math.max(
+            firstReorderableIndex,
+            Math.min(
+                dropIndex,
+                firstReorderableIndex + reorderableColumnNames.length - 1,
+            ),
+        );
+
+        return Math.max(0, normalizedIndex - firstReorderableIndex);
+    }
+
+    headerLabel = (column: string): string => {
+        if (column === 'time') {
+            return 'Time';
+        }
+
+        const field = this.getFieldByColumnName(column);
+        if (!field) {
+            return column;
+        }
+
+        return this.resultLabelService.resolveLabel(
+            this.dataExplorerWidget.dataConfig.sourceConfigs[field.sourceIndex]
+                .queryConfig,
+            field,
+        );
+    };
 
     formatCellValue(column: string, value: unknown): unknown {
         if (column === 'time') {
@@ -780,6 +904,14 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         }
 
         return value ?? '';
+    }
+
+    formatDisplayCellValue(column: string, value: unknown): unknown {
+        if (this.isNumericColumn(column)) {
+            return this.formatNumericValue(value);
+        }
+
+        return this.formatCellValue(column, value);
     }
 
     getCellStyle(row: TableRow, column: string): Record<string, string> {
@@ -808,12 +940,44 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
             {};
         this.dataExplorerWidget.visualizationConfig.pageSize ??=
             TableWidgetComponent.DEFAULT_PAGE_SIZE;
+        this.dataExplorerWidget.visualizationConfig.stickyHeaders ??= true;
 
         this.pageSize = this.pageSizeOptions.includes(
             this.dataExplorerWidget.visualizationConfig.pageSize,
         )
             ? this.dataExplorerWidget.visualizationConfig.pageSize
             : TableWidgetComponent.DEFAULT_PAGE_SIZE;
+    }
+
+    private formatNumericValue(value: unknown): unknown {
+        const numericValue = this.toNumber(value);
+        if (numericValue === undefined) {
+            return this.formatCellValue('', value);
+        }
+
+        const decimals = this.getDecimals();
+        return decimals === undefined
+            ? String(numericValue)
+            : numericValue.toFixed(decimals);
+    }
+
+    private getDecimals(): number | undefined {
+        const appearanceConfig = this.dataExplorerWidget
+            .baseAppearanceConfig as WidgetNumberAppearanceConfig;
+        return this.normalizeDecimals(appearanceConfig?.numberFormat?.decimals);
+    }
+
+    private normalizeDecimals(decimals: unknown): number | undefined {
+        if (decimals === null || decimals === undefined || decimals === '') {
+            return undefined;
+        }
+
+        const parsedValue = Number(decimals);
+        if (!Number.isFinite(parsedValue)) {
+            return undefined;
+        }
+
+        return Math.min(10, Math.max(0, Math.round(parsedValue)));
     }
 
     private applyTableState(resetPageIndex: boolean): void {
@@ -1053,6 +1217,44 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         return stats.max === stats.min
             ? 0.5
             : (n - stats.min) / (stats.max - stats.min);
+    }
+
+    private getFieldByColumnName(
+        column: string,
+    ): DataExplorerField | undefined {
+        const selectedField = (
+            this.dataExplorerWidget.visualizationConfig.selectedColumns ?? []
+        ).find(f => f.fullDbName === column);
+
+        if (selectedField) {
+            return selectedField;
+        }
+
+        for (const [
+            sourceIndex,
+            sourceConfig,
+        ] of this.dataExplorerWidget.dataConfig.sourceConfigs.entries()) {
+            const groupedField = sourceConfig.queryConfig.groupBy
+                ?.filter(groupBy => groupBy.selected)
+                .find(groupBy => groupBy.runtimeName === column);
+
+            if (groupedField) {
+                return {
+                    runtimeName: groupedField.runtimeName,
+                    measure: sourceConfig.measureName,
+                    fullDbName: groupedField.runtimeName,
+                    sourceIndex,
+                    fieldCharacteristics: {
+                        dimension: true,
+                        numeric: false,
+                        binary: false,
+                        semanticTypes: [],
+                    },
+                };
+            }
+        }
+
+        return undefined;
     }
 
     private toNumber(value: unknown): number | undefined {

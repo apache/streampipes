@@ -36,6 +36,8 @@ services:
     image: streampipes_backend:release-validation
     environment:
       - SP_PRIORITIZED_PROTOCOL=nats
+      - SP_SETUP_PROMETHEUS_ENDPOINT=true
+      - SP_RESET_ENDPOINT_ENABLED=true
     depends_on:
       - couchdb
     volumes:
@@ -114,9 +116,8 @@ services:
       spnet:
 
   opcua:
-    image: mcr.microsoft.com/iotedge/opc-plc:2.12.37
+    image: digitalpetri/opc-ua-demo-server:latest
     logging: *default-logging
-    command: --ut=true
     networks:
       spnet:
 

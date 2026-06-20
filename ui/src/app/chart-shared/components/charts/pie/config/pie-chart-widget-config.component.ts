@@ -23,8 +23,6 @@ import {
     PieChartWidgetModel,
 } from '../model/pie-chart-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
-import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
-import { ChartFieldProviderService } from '../../../../services/chart-field-provider.service';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
 import {
     FormFieldComponent,
@@ -32,11 +30,13 @@ import {
 } from '@streampipes/shared-ui';
 import { SelectSinglePropertyConfigComponent } from '../../../chart-config/select-single-property-config/select-single-property-config.component';
 import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatSlider, MatSliderThumb } from '@angular/material/slider';
 import { FormsModule } from '@angular/forms';
 import { ColorMappingOptionsConfigComponent } from '../../../chart-config/color-mapping-options-config/color-mapping-options-config.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
     selector: 'sp-pie-chart-widget-config',
@@ -47,10 +47,12 @@ import { TranslatePipe } from '@ngx-translate/core';
         SelectSinglePropertyConfigComponent,
         FormFieldComponent,
         MatFormField,
+        MatInput,
         MatSelect,
         MatOption,
         MatSlider,
         MatSliderThumb,
+        MatCheckbox,
         FormsModule,
         ColorMappingOptionsConfigComponent,
         TranslatePipe,
@@ -60,13 +62,6 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
     PieChartWidgetModel,
     PieChartVisConfig
 > {
-    constructor(
-        widgetConfigurationService: ChartConfigurationService,
-        fieldService: ChartFieldProviderService,
-    ) {
-        super(widgetConfigurationService, fieldService);
-    }
-
     setSelectedProperty(field: DataExplorerField) {
         this.currentlyConfiguredWidget.visualizationConfig.selectedProperty =
             field;
@@ -81,6 +76,19 @@ export class SpPieChartWidgetConfigComponent extends BaseWidgetConfig<
         );
         config.roundingValue ??= 0.1;
         config.selectedRadius ??= 0;
+        config.startAngle ??= 90;
+        config.clockwise ??= true;
+        config.minAngle ??= 0;
+        config.labelMode ??= 'name_percent';
+        config.labelPosition ??= 'outside';
+        config.labelAlignTo ??= 'edge';
+        config.avoidLabelOverlap ??= true;
+        config.showLabelLine ??= true;
+        config.topNEnabled ??= false;
+        config.topN ??= 10;
+        config.othersLabel ??= 'Others';
+        config.colorMappingsPieChart ??= [];
+        config.showCustomColorMappingPieChart ??= false;
     }
 
     updateRoundingValue(selectedType: number) {

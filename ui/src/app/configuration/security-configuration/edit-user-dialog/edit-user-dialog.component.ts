@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ViewEncapsulation,
+    inject,
+} from '@angular/core';
 import {
     CurrentUserService,
     DialogRef,
@@ -83,6 +89,17 @@ import { AsyncPipe } from '@angular/common';
     ],
 })
 export class EditUserDialogComponent implements OnInit {
+    private dialogRef = inject<DialogRef<EditUserDialogComponent>>(DialogRef);
+    private availableRolesService = inject(AvailableRolesService);
+    private fb = inject(UntypedFormBuilder);
+    private userService = inject(UserService);
+    private userGroupService = inject(UserGroupService);
+    private currentUserService = inject(CurrentUserService);
+    private authService = inject(AuthService);
+    private router = inject(Router);
+    private mailConfigService = inject(MailConfigService);
+    private translateService = inject(TranslateService);
+
     @Input()
     user: any;
 
@@ -104,19 +121,6 @@ export class EditUserDialogComponent implements OnInit {
     emailChanged = false;
     emailConfigured = false;
     formAvailable = false;
-
-    constructor(
-        private dialogRef: DialogRef<EditUserDialogComponent>,
-        private availableRolesService: AvailableRolesService,
-        private fb: UntypedFormBuilder,
-        private userService: UserService,
-        private userGroupService: UserGroupService,
-        private currentUserService: CurrentUserService,
-        private authService: AuthService,
-        private router: Router,
-        private mailConfigService: MailConfigService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit(): void {
         this.initRoleFilter();

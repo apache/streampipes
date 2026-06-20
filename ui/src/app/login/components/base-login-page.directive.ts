@@ -18,6 +18,7 @@
 
 import { Directive, inject, OnInit } from '@angular/core';
 import { LoginService } from '../services/login.service';
+import { LoginSettingsService } from '../services/login-settings.service';
 import { LoginModel } from './login/login.model';
 
 @Directive()
@@ -26,9 +27,10 @@ export abstract class BaseLoginPageDirective implements OnInit {
     protected configReady = false;
 
     protected loginService = inject(LoginService);
+    protected loginSettingsService = inject(LoginSettingsService);
 
     ngOnInit(): void {
-        this.loginService.fetchLoginSettings().subscribe(result => {
+        this.loginSettingsService.getSettings().subscribe(result => {
             this.loginSettings = result;
             this.configReady = true;
             this.onSettingsAvailable();

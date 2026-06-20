@@ -133,7 +133,7 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
                     }
                     setTimeout(() => this.createRefreshListener(), 5000);
                 },
-                error: err => {
+                error: _err => {
                     setTimeout(() => this.createRefreshListener(), 5000);
                 },
             });

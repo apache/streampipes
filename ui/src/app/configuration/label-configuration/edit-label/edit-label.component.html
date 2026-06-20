@@ -19,7 +19,7 @@
 <div
     fxLayout="column"
     class="form-field-small mt-10"
-    [ngClass]="editMode ? '' : 'create-label'"
+    [ngClass]="editMode() ? '' : 'create-label'"
 >
     <div
         fxLayout="row"
@@ -27,14 +27,14 @@
         fxLayoutGap="10px"
         fxLayoutAlign="start center"
     >
-        @if (label && showPreview) {
+        @if (showPreview()) {
             <sp-form-field [level]="3" label="" class="mt-xs">
                 <sp-label
                     variant="solid"
                     size="medium"
                     shape="pill"
-                    [labelText]="label.label"
-                    [color]="label.color"
+                    [labelText]="draftLabel().label"
+                    [color]="draftLabel().color"
                 ></sp-label>
             </sp-form-field>
         }
@@ -42,7 +42,8 @@
             <mat-form-field color="accent" appearance="outline">
                 <input
                     matInput
-                    [(ngModel)]="label.label"
+                    [ngModel]="draftLabel().label"
+                    (ngModelChange)="updateLabelName($event)"
                     data-cy="label-name"
                 />
             </mat-form-field>
@@ -51,16 +52,18 @@
             <mat-form-field color="accent" appearance="outline">
                 <input
                     matInput
-                    [(ngModel)]="label.description"
+                    [ngModel]="draftLabel().description"
+                    (ngModelChange)="updateDescription($event)"
                     data-cy="label-description"
                 />
             </mat-form-field>
         </sp-form-field>
         <sp-form-field [level]="3" [label]="'Color' | translate">
             <input
-                [(colorPicker)]="label.color"
+                [colorPicker]="draftLabel().color"
+                (colorPickerChange)="updateColor($event)"
                 [cpPosition]="'bottom'"
-                [style.background]="label.color"
+                [style.background]="draftLabel().color"
             />
         </sp-form-field>
         <div fxFlex fxLayoutAlign="end center">

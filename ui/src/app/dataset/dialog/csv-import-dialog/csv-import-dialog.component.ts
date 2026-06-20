@@ -16,7 +16,6 @@
  *
  */
 
-import { CommonModule } from '@angular/common';
 import {
     Component,
     computed,
@@ -74,7 +73,6 @@ import { CsvImportUploadStateComponent } from './csv-import-upload-state/csv-imp
     templateUrl: './csv-import-dialog.component.html',
     styleUrls: ['./csv-import-dialog.component.scss'],
     imports: [
-        CommonModule,
         FormsModule,
         ReactiveFormsModule,
         MatButton,
@@ -580,8 +578,14 @@ export class CsvImportDialogComponent {
             'org.apache.streampipes.model.schema.EventPropertyPrimitive';
         property.runtimeName = column.runtimeName;
         property.runtimeType = this.toRuntimeType(initialType);
-        property.propertyScope = 'MEASUREMENT_PROPERTY';
-        property.semanticType = undefined;
+
+        if (column.propertyScope && this.targetMode() === 'EXISTING') {
+            property.propertyScope = column.propertyScope;
+            property.semanticType = column.semanticType;
+        } else {
+            property.propertyScope = 'MEASUREMENT_PROPERTY';
+            property.semanticType = undefined;
+        }
         property.label = column.label || '';
         property.description = column.description || '';
         property.additionalMetadata = {};
@@ -589,9 +593,9 @@ export class CsvImportDialogComponent {
         return {
             column: {
                 ...column,
+                propertyScope: column.propertyScope ?? 'MEASUREMENT_PROPERTY',
                 runtimeType: initialType,
-                propertyScope: 'MEASUREMENT_PROPERTY',
-                semanticType: undefined,
+                semanticType: column.semanticType || undefined,
             },
             eventProperty: property,
         };

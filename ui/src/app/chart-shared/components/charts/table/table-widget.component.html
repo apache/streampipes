@@ -42,17 +42,40 @@
     @if (showData) {
         <div class="analytics-table-shell" fxLayout="column" fxFlex>
             <div class="analytics-table-scroll" fxFlex>
-                <table data-cy="data-explorer-table" class="analytics-table">
+                <table
+                    data-cy="data-explorer-table"
+                    class="analytics-table"
+                    [ngClass]="{
+                        'sticky-headers':
+                            dataExplorerWidget.visualizationConfig
+                                .stickyHeaders,
+                    }"
+                >
                     <thead>
-                        <tr>
+                        <tr
+                            cdkDropList
+                            cdkDropListOrientation="horizontal"
+                            [cdkDropListDisabled]="!editMode"
+                            [cdkDropListData]="getReorderableColumnNames()"
+                            (cdkDropListDropped)="dropSelectedColumn($event)"
+                        >
                             @for (
                                 column of columnNames;
                                 track trackColumn($index, column)
                             ) {
                                 <th
+                                    cdkDrag
+                                    cdkDragLockAxis="x"
+                                    [cdkDragData]="column"
+                                    [cdkDragDisabled]="
+                                        !editMode ||
+                                        !isReorderableColumn(column)
+                                    "
                                     [ngClass]="{
                                         'time-column': column === 'time',
                                         'numeric-cell': isNumericColumn(column),
+                                        'reorderable-column':
+                                            isReorderableColumn(column),
                                         'highlighted-column':
                                             isHighlightedColumn(column),
                                     }"
@@ -67,7 +90,16 @@
                                                 @if (column === 'time') {
                                                     {{ 'Time' | translate }}
                                                 } @else {
-                                                    {{ headerLabel(column) }}
+                                                    <span
+                                                        [attr.data-cy]="
+                                                            'data-explorer-table-header-' +
+                                                            column
+                                                        "
+                                                    >
+                                                        {{
+                                                            headerLabel(column)
+                                                        }}
+                                                    </span>
                                                 }
                                             </span>
                                             <mat-icon class="sort-icon">
@@ -100,6 +132,30 @@
                                                 filter_list
                                             </mat-icon>
                                         </button>
+                                        @if (
+                                            editMode &&
+                                            isReorderableColumn(column)
+                                        ) {
+                                            <button
+                                                type="button"
+                                                class="column-drag-trigger"
+                                                cdkDragHandle
+                                                [attr.aria-label]="
+                                                    'Reorder ' +
+                                                        headerLabel(column)
+                                                        | translate
+                                                "
+                                                (click)="
+                                                    $event.stopPropagation()
+                                                "
+                                            >
+                                                <mat-icon
+                                                    class="column-drag-icon"
+                                                >
+                                                    drag_indicator
+                                                </mat-icon>
+                                            </button>
+                                        }
                                     </div>
                                 </th>
                             }
@@ -143,7 +199,7 @@
                                                 }}
                                             } @else {
                                                 {{
-                                                    formatCellValue(
+                                                    formatDisplayCellValue(
                                                         column,
                                                         row[column]
                                                     )

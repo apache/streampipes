@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
@@ -28,12 +28,21 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { PipelineElementRuntimeInfoComponent } from '../../components/pipeline-element-runtime-info/pipeline-element-runtime-info.component';
 import { PipelineElementDocumentationComponent } from '../../components/pipeline-element-documentation/pipeline-element-documentation.component';
+import { SpElementIdComponent } from '../../components/element-id/element-id.component';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SpLabelComponent } from '../../components/sp-label/sp-label.component';
+import { SpAssetBrowserService } from '../../components/asset-browser/asset-browser.service';
+import { SpTableAssetContextService } from '../../components/sp-table/sp-asset-context/sp-table-asset-context.service';
+import { SpTableResolvedAssetContext } from '../../components/sp-table/sp-table.model';
+import { MatTooltip } from '@angular/material/tooltip';
+import { map } from 'rxjs';
 
 @Component({
     selector: 'sp-pipeline-element-help',
@@ -43,16 +52,26 @@ import { MatButton } from '@angular/material/button';
         LayoutDirective,
         FlexDirective,
         LayoutAlignDirective,
+        LayoutGapDirective,
         MatTabGroup,
         MatTab,
         PipelineElementRuntimeInfoComponent,
         PipelineElementDocumentationComponent,
+        SpElementIdComponent,
         MatDivider,
         MatButton,
+        MatTooltip,
+        SpLabelComponent,
         TranslatePipe,
     ],
 })
 export class PipelineElementHelpComponent implements OnInit {
+    private dialogRef =
+        inject<DialogRef<PipelineElementHelpComponent>>(DialogRef);
+    private assetBrowserService = inject(SpAssetBrowserService);
+    private assetContextService = inject(SpTableAssetContextService);
+    private destroyRef = inject(DestroyRef);
+
     selectedTabIndex = 0;
 
     translateService = inject(TranslateService);
@@ -71,13 +90,23 @@ export class PipelineElementHelpComponent implements OnInit {
         | DataSinkInvocation;
 
     isDataStream: boolean;
-
-    constructor(private dialogRef: DialogRef<PipelineElementHelpComponent>) {}
+    assetContext?: SpTableResolvedAssetContext;
 
     ngOnInit() {
         if (this.pipelineElement instanceof SpDataStream) {
             this.tabs = this.availableTabs;
             this.isDataStream = true;
+            this.assetBrowserService.assetData$
+                .pipe(
+                    map(assetData =>
+                        this.assetContextService.resolveDataStreamAssetContext(
+                            assetData,
+                            this.pipelineElement as SpDataStream,
+                        ),
+                    ),
+                    takeUntilDestroyed(this.destroyRef),
+                )
+                .subscribe(assetContext => (this.assetContext = assetContext));
         } else {
             this.tabs.push(this.availableTabs[1]);
             this.selectedTabIndex = 1;

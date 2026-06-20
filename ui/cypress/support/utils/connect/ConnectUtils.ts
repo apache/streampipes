@@ -27,6 +27,10 @@ import { PipelineUtils } from '../pipeline/PipelineUtils';
 import { GeneralUtils } from '../GeneralUtils';
 
 export class ConnectUtils {
+    private static readonly TRANSFORMATION_SCRIPT_PREFIX =
+        'function transform(event, out, ctx) {\n';
+    private static readonly TRANSFORMATION_SCRIPT_SUFFIX = '\n}';
+
     public static goToConnect() {
         cy.visit('#/connect');
         cy.dataCy('connect-create-new-adapter-button').should('be.visible');
@@ -202,12 +206,23 @@ export class ConnectUtils {
     }
 
     public static finishEventSchemaConfiguration() {
-        ConnectBtns.configureSchemaNextBtn().click();
+        ConnectBtns.configureSchemaNextBtn().should('not.be.disabled').click();
     }
 
     public static finishConfigureFieldsConfiguration() {
         ConnectUtils.eventSchemaWithFieldsShouldBeVisible();
-        ConnectBtns.configureFieldsNextBtn().click();
+        ConnectBtns.configureFieldsNextBtn().should('not.be.disabled').click();
+    }
+
+    public static refreshEventSchema() {
+        ConnectBtns.refreshSchemaBtn().click();
+        ConnectBtns.configureFieldsNextBtn().should('not.be.disabled');
+    }
+
+    public static stopAdapterAndWaitForStateTransition() {
+        ConnectBtns.stopAdapter().should('be.visible').click();
+        ConnectBtns.startAdapter().should('be.visible');
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
     }
 
     public static eventSchemaWithFieldsShouldBeVisible() {
@@ -275,10 +290,7 @@ export class ConnectUtils {
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
 
         assetNameList.forEach(assetName => {
-            cy.get('mat-tree.asset-tree')
-                .find('.mat-tree-node')
-                .contains(assetName)
-                .click();
+            this.selectAssetTreeNode(assetName);
         });
     }
 
@@ -286,16 +298,63 @@ export class ConnectUtils {
         cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
 
         assetNameList.forEach(assetName => {
-            console.log(assetName);
-            cy.get('mat-tree.asset-tree')
-                .find('.mat-tree-node')
-                .contains(assetName)
-                .click();
+            this.selectAssetTreeNode(assetName);
+        });
+    }
+
+    private static selectAssetTreeNode(assetName: string) {
+        const assetHierarchy = assetName.split('.');
+        const lastElement = assetHierarchy[assetHierarchy.length - 1];
+        const firstElements = assetHierarchy.slice(0, -1);
+
+        firstElements.forEach(el => {
+            cy.get('body').then($body => {
+                const toggleSelector = `[data-cy="toggle-${el}"]`;
+
+                if ($body.find(toggleSelector).length > 0) {
+                    cy.dataCy(`toggle-${el}`).click();
+                } else {
+                    cy.get('mat-tree.asset-tree')
+                        .find('.mat-tree-node')
+                        .contains(el)
+                        .click();
+                }
+            });
+        });
+
+        if (firstElements.length === 0) {
+            this.expandCollapsedAssetTreeNodes();
+        }
+
+        cy.get('mat-tree.asset-tree')
+            .find('.mat-tree-node')
+            .contains(lastElement)
+            .click();
+    }
+    private static expandCollapsedAssetTreeNodes() {
+        cy.get('mat-tree.asset-tree').then($tree => {
+            const collapsedToggles = $tree
+                .find('[data-cy^="toggle-"]')
+                .toArray()
+                .filter(
+                    toggle => toggle.getAttribute('aria-expanded') === 'false',
+                );
+
+            if (collapsedToggles.length === 0) {
+                return;
+            }
+
+            cy.wrap(collapsedToggles).each(toggle => {
+                cy.wrap(toggle).click();
+            });
         });
     }
 
     public static closeAdapterPreview() {
         cy.dataCy('close-adapter-started-dialog-button').click();
+        cy.dataCy('all-adapters-table', { timeout: 10000 }).should(
+            'be.visible',
+        );
     }
 
     public static deleteAdapter(adapterName: string) {
@@ -392,6 +451,8 @@ export class ConnectUtils {
         ConnectBtns.startAdapter().should('not.be.disabled');
 
         ConnectBtns.startAdapter().click();
+        ConnectBtns.stopAdapter().should('be.visible');
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
 
         ConnectUtils.validateEventsInPreview(adapterName, amountOfProperties);
     }
@@ -409,9 +470,19 @@ export class ConnectUtils {
             'out.collect(event);',
         );
 
-        ConnectBtns.configureSchemaScriptEditor()
-            .type('{backspace}'.repeat(22)) // 2. Delete the "  out.collect(event);\n}" part
-            .type(script);
+        const scriptWithPrefix = script.startsWith(
+            ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX,
+        )
+            ? script
+            : `${ConnectUtils.TRANSFORMATION_SCRIPT_PREFIX}${script}${ConnectUtils.TRANSFORMATION_SCRIPT_SUFFIX}`;
+
+        ConnectBtns.setConfigureSchemaScriptEditorValue(scriptWithPrefix);
+
+        ConnectBtns.configureSchemaScriptEditor().should(
+            'contain.text',
+            'out.collect(event);',
+        );
+        ConnectBtns.configureSchemaScriptEditor().should('contain.text', '}');
     }
 
     public static uploadSampleEvent(samplePayload: string) {
@@ -473,6 +544,21 @@ export class ConnectUtils {
         );
     }
 
+    public static restartAdapter(adapterName: string, waitTime = 2000) {
+        cy.wait(waitTime);
+
+        ConnectUtils.goToConnect();
+        ConnectBtns.stopAdapter().click();
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
+
+        cy.wait(waitTime);
+
+        ConnectBtns.startAdapter().click();
+        ConnectBtns.adapterOperationInProgressSpinner().should('not.exist');
+
+        cy.wait(waitTime);
+    }
+
     /**
      * Validates the event schema for an adapter by checking the amount of properties
      * and the runtime names of the event properties
@@ -501,6 +587,7 @@ export class ConnectUtils {
         waitTime = 1000,
     ) {
         ConnectUtils.startAdapter(adapterConfiguration, true);
+        ConnectUtils.restartAdapter(adapterConfiguration.adapterName, waitTime);
 
         // Wait till data is stored
         cy.wait(waitTime);

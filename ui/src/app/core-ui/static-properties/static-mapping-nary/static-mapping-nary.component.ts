@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { StaticMappingComponent } from '../static-mapping/static-mapping';
 import { MappingPropertyNary } from '@streampipes/platform-services';
 import { DisplayRecommendedPipe } from '../filter/display-recommended.pipe';
@@ -49,9 +49,7 @@ export class StaticMappingNaryComponent
     extends StaticMappingComponent<MappingPropertyNary>
     implements OnInit
 {
-    constructor(private displayRecommendedPipe: DisplayRecommendedPipe) {
-        super();
-    }
+    private displayRecommendedPipe = inject(DisplayRecommendedPipe);
 
     ngOnInit() {
         this.extractPossibleSelections();
@@ -75,7 +73,7 @@ export class StaticMappingNaryComponent
         }
     }
 
-    selectOption(property: any, $event) {
+    selectOption(property: any) {
         if (property['checked']) {
             this.addProperty(property);
         } else {
@@ -125,9 +123,9 @@ export class StaticMappingNaryComponent
         });
     }
 
-    onStatusChange(status: any) {}
+    onStatusChange(_status: any) {}
 
-    onValueChange(value: any) {
+    onValueChange(_value: any) {
         this.applyCompletedConfiguration();
     }
 }

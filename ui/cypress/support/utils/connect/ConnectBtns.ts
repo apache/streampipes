@@ -72,6 +72,22 @@ export class ConnectBtns {
         return cy.dataCy('btn-update-adapter-migrate-pipelines');
     }
 
+    public static adapterEditWarning() {
+        return cy.dataCy('sp-connect-adapter-edit-warning', { timeout: 10000 });
+    }
+
+    public static adapterManualPipelineMigrationWarning() {
+        return cy.dataCy('adapter-manual-pipeline-migration-warning', {
+            timeout: 10000,
+        });
+    }
+
+    public static adapterChartEditWarning() {
+        return cy.dataCy('sp-connect-adapter-chart-edit-warning', {
+            timeout: 10000,
+        });
+    }
+
     public static nextBtn() {
         return cy.get('button').contains('Next').parent();
     }
@@ -214,6 +230,37 @@ export class ConnectBtns {
                 timeout: 10000,
             })
             .find('.view-lines');
+    }
+
+    public static configureSchemaScriptEditorTextarea() {
+        return cy
+            .dataCy('configure-schema-script-editor', {
+                timeout: 10000,
+            })
+            .find('.monaco-editor .native-edit-context');
+    }
+
+    public static setConfigureSchemaScriptEditorValue(script: string) {
+        return cy
+            .dataCy('configure-schema-script-editor', {
+                timeout: 10000,
+            })
+            .find('.monaco-editor')
+            .then($editor => {
+                const dataUri = $editor[0]?.getAttribute('data-uri');
+
+                cy.window().then(win => {
+                    const monaco = (win as any).monaco;
+                    const model = monaco?.editor
+                        ?.getModels()
+                        .find(
+                            (currentModel: any) =>
+                                currentModel.uri.toString() === dataUri,
+                        );
+
+                    model.setValue(script);
+                });
+            });
     }
 
     public static configureSchemaRunScriptBtn() {

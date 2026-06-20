@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import {
     AssetConstants,
     AssetSiteDesc,
@@ -33,6 +33,7 @@ import {
 } from '@angular/material/table';
 import { ManageSiteDialogComponent } from '../../dialog/manage-site/manage-site-dialog.component';
 import {
+    ConfirmDialogComponent,
     DialogService,
     PanelType,
     SplitSectionComponent,
@@ -47,6 +48,14 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
+
+interface AssetWithSite {
+    assetSite?: {
+        siteId?: string;
+    };
+    assets?: AssetWithSite[];
+}
 
 @Component({
     selector: 'sp-site-area-configuration',
@@ -71,6 +80,11 @@ import { MatTooltip } from '@angular/material/tooltip';
     ],
 })
 export class SiteAreaConfigurationComponent implements OnInit {
+    private genericStorageService = inject(GenericStorageService);
+    private dialogService = inject(DialogService);
+    private translateService = inject(TranslateService);
+    private dialog = inject(MatDialog);
+
     @Input()
     locationConfig: LocationConfig;
 
@@ -78,17 +92,11 @@ export class SiteAreaConfigurationComponent implements OnInit {
     dataSource: MatTableDataSource<AssetSiteDesc> =
         new MatTableDataSource<AssetSiteDesc>();
 
-    allUsedSiteIds = [];
+    allUsedSiteIds: string[] = [];
 
     @ViewChild(MatSort)
     sort: MatSort;
     displayedColumns = ['name', 'areas', 'actions'];
-
-    constructor(
-        private genericStorageService: GenericStorageService,
-        private dialogService: DialogService,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit() {
         this.loadSites();
@@ -123,15 +131,71 @@ export class SiteAreaConfigurationComponent implements OnInit {
             });
     }
 
-    extractSiteIds(assets) {
+    extractSiteIds(assets: AssetWithSite[]): string[] {
         const allSiteIds = new Set<string>();
 
-        assets.forEach(asset => allSiteIds.add(asset.assetSite.siteId));
+        const extractSiteFromAsset = (asset: AssetWithSite) => {
+            if (asset.assetSite?.siteId) {
+                allSiteIds.add(asset.assetSite.siteId);
+            }
+            asset.assets?.forEach(subAsset => extractSiteFromAsset(subAsset));
+        };
+
+        assets.forEach(asset => extractSiteFromAsset(asset));
 
         return Array.from(allSiteIds);
     }
 
     deleteSite(site: AssetSiteDesc): void {
+        this.genericStorageService
+            .getAllDocuments(AssetConstants.ASSET_APP_DOC_NAME)
+            .subscribe(res => {
+                this.allUsedSiteIds = this.extractSiteIds(res);
+
+                if (this.allUsedSiteIds.includes(site._id)) {
+                    this.showSiteInUseWarning();
+                } else {
+                    this.showDeleteSiteDialog(site);
+                }
+            });
+    }
+
+    showSiteInUseWarning(): void {
+        this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            data: {
+                title: this.translateService.instant('Site is still in use'),
+                subtitle: this.translateService.instant(
+                    'To delete a site, please remove the site from all assets.',
+                ),
+                confirmTitle: this.translateService.instant('Ok'),
+            },
+        });
+    }
+
+    showDeleteSiteDialog(site: AssetSiteDesc): void {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            data: {
+                title: this.translateService.instant(
+                    'Are you sure you want to delete this site?',
+                ),
+                subtitle: this.translateService.instant(
+                    'This action cannot be reversed!',
+                ),
+                cancelTitle: this.translateService.instant('Cancel'),
+                confirmTitle: this.translateService.instant('Delete site'),
+            },
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result === 'confirm') {
+                this.deleteSiteDocument(site);
+            }
+        });
+    }
+
+    deleteSiteDocument(site: AssetSiteDesc): void {
         this.genericStorageService
             .deleteDocument(
                 AssetConstants.ASSET_SITES_APP_DOC_NAME,

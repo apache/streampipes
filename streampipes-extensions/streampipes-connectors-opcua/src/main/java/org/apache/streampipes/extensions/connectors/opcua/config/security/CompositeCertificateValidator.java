@@ -25,25 +25,27 @@ import org.apache.streampipes.model.opcua.CertificateBuilder;
 import org.apache.streampipes.model.opcua.CertificateState;
 import org.apache.streampipes.model.opcua.CertificateUtils;
 
-import org.eclipse.milo.opcua.stack.client.security.ClientCertificateValidator;
 import org.eclipse.milo.opcua.stack.core.StatusCodes;
 import org.eclipse.milo.opcua.stack.core.UaException;
+import org.eclipse.milo.opcua.stack.core.security.CertificateValidator;
 import org.eclipse.milo.opcua.stack.core.security.TrustListManager;
 import org.eclipse.milo.opcua.stack.core.util.validation.CertificateValidationUtil;
 import org.eclipse.milo.opcua.stack.core.util.validation.ValidationCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.PKIXCertPathBuilderResult;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class CompositeCertificateValidator implements ClientCertificateValidator {
+public class CompositeCertificateValidator implements CertificateValidator {
 
   private static final Logger LOG = LoggerFactory.getLogger(CompositeCertificateValidator.class);
 
@@ -74,8 +76,7 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
     this.streamPipesClient = streamPipesClient;
   }
 
-  @Override
-  public void validateCertificateChain(List<X509Certificate> certificateChain) throws UaException {
+  private void validateCertificateChain(List<X509Certificate> certificateChain) throws UaException {
     PKIXCertPathBuilderResult certPathResult;
 
     X509Certificate peer = getEndEntity(certificateChain);
@@ -103,6 +104,9 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
         ValidationCheck.NO_OPTIONAL_CHECKS,
         false
     );
+
+    opcUaConfig.setServerCertificateRejectedByClient(false);
+    opcUaConfig.setServerCertificateValidated(true);
 
     if (opcUaConfig.getAssociatedResourceId() != null) {
       try {
@@ -132,36 +136,65 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
     validateCertificateChain(certificateChain);
 
     X509Certificate certificate = certificateChain.get(0);
+    String effectiveApplicationUri = resolveApplicationUri(certificate, applicationUri);
 
-    try {
-      CertificateValidationUtil.checkApplicationUri(certificate, applicationUri);
-    } catch (UaException e) {
+    if (effectiveApplicationUri == null) {
       if (validationChecks.contains(ValidationCheck.APPLICATION_URI)) {
-        throw e;
+        throw new UaException(
+            StatusCodes.Bad_CertificateUriInvalid,
+            "Cannot validate server certificate ApplicationUri: endpoint and certificate URI are both missing"
+        );
       } else {
         LOG.warn(
-            "check suppressed: certificate failed application uri check: {} != {}",
-            applicationUri, CertificateValidationUtil.getSubjectAltNameUri(certificate)
+            "check suppressed: server endpoint does not provide an application uri and certificate has no URI SAN"
         );
+      }
+    } else {
+      try {
+        CertificateValidationUtil.checkApplicationUri(certificate, effectiveApplicationUri);
+      } catch (UaException e) {
+        if (validationChecks.contains(ValidationCheck.APPLICATION_URI)) {
+          throw e;
+        } else {
+          LOG.warn(
+              "check suppressed: certificate failed application uri check: {} != {}",
+              effectiveApplicationUri, CertificateValidationUtil.getSubjectAltNameUri(certificate)
+          );
+        }
       }
     }
 
-    try {
-      CertificateValidationUtil.checkHostnameOrIpAddress(certificate, validHostNames);
-    } catch (UaException e) {
+    String[] effectiveHostNames = resolveValidHostNames(validHostNames);
+
+    if (effectiveHostNames.length == 0) {
       if (validationChecks.contains(ValidationCheck.HOSTNAME)) {
-        throw e;
-      } else {
-        LOG.warn(
-            "check suppressed: certificate failed hostname check: {}",
-            certificate.getSubjectX500Principal().getName()
+        throw new UaException(
+            StatusCodes.Bad_CertificateHostNameInvalid,
+            "Cannot validate server certificate host name: endpoint host is unavailable"
         );
+      } else {
+        LOG.warn("check suppressed: no endpoint host available for hostname validation");
+      }
+    } else {
+      try {
+        CertificateValidationUtil.checkHostnameOrIpAddress(certificate, effectiveHostNames);
+      } catch (UaException e) {
+        if (validationChecks.contains(ValidationCheck.HOSTNAME)) {
+          throw e;
+        } else {
+          LOG.warn(
+              "check suppressed: certificate failed hostname check: {}",
+              certificate.getSubjectX500Principal().getName()
+          );
+        }
       }
     }
   }
 
   private void sendToCore(X509Certificate cert) {
     try {
+      opcUaConfig.setServerCertificateValidated(false);
+      opcUaConfig.setServerCertificateRejectedByClient(true);
       var certificate = CertificateBuilder.fromX509(cert, CertificateState.REJECTED);
       opcUaConfig.setCertificateThumbprint(certificate.getThumbprint());
       streamPipesClient.customRequest().sendPost(OpcUaCertificateUtils.getCoreCertificatePath(), certificate);
@@ -172,5 +205,44 @@ public class CompositeCertificateValidator implements ClientCertificateValidator
 
   private boolean isCertificateRejected(long statusCode) {
     return REJECTED_STATUS_CODES.contains(statusCode);
+  }
+
+  private String resolveApplicationUri(X509Certificate certificate, String applicationUri) throws UaException {
+    if (applicationUri != null && !applicationUri.isBlank()) {
+      return applicationUri;
+    }
+
+    String certificateUri = CertificateValidationUtil.getSubjectAltNameUri(certificate);
+    if (certificateUri != null && !certificateUri.isBlank()) {
+      LOG.debug("Server endpoint applicationUri is missing, falling back to certificate URI SAN {}", certificateUri);
+      return certificateUri;
+    }
+
+    return null;
+  }
+
+  private String[] resolveValidHostNames(String... validHostNames) {
+    if (validHostNames != null) {
+      String[] sanitizedHostNames = Arrays.stream(validHostNames)
+          .filter(hostName -> hostName != null && !hostName.isBlank())
+          .toArray(String[]::new);
+
+      if (sanitizedHostNames.length > 0) {
+        return sanitizedHostNames;
+      }
+    }
+
+    try {
+      URI endpointUri = new URI(opcUaConfig.getOpcServerURL());
+      String endpointHost = endpointUri.getHost();
+      if (endpointHost != null && !endpointHost.isBlank()) {
+        LOG.debug("Server endpoint hostnames are missing, falling back to configured OPC UA host {}", endpointHost);
+        return new String[]{endpointHost};
+      }
+    } catch (Exception e) {
+      LOG.debug("Could not derive endpoint host from OPC UA URL {}", opcUaConfig.getOpcServerURL(), e);
+    }
+
+    return new String[0];
   }
 }

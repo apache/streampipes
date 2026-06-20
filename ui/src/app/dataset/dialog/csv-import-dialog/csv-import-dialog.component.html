@@ -16,8 +16,8 @@
   ~
   -->
 
-<div class="sp-dialog-container csv-import-shell">
-    <div class="sp-dialog-content p-15 csv-import-content">
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
         @if (topMessages().length > 0) {
             <div class="message-box" data-cy="csv-import-messages">
                 @for (message of topMessages(); track message.message) {
@@ -229,6 +229,7 @@
                 >
                     <sp-csv-import-preview-table
                         [hasPreview]="hasPreview()"
+                        [isExisting]="targetMode()"
                         [previewRows]="previewRows()"
                         [columnModels]="columnModels()"
                         [timestampFormat]="timestampFormat()"

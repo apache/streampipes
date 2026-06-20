@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FileMetadata, FilesService } from '@streampipes/platform-services';
 import {
     MatCell,
@@ -65,18 +65,16 @@ import { DatePipe } from '@angular/common';
     ],
 })
 export class FileOverviewComponent implements OnInit {
+    private filesService = inject(FilesService);
+    private dialog = inject(MatDialog);
+    private translateService = inject(TranslateService);
+
     displayedColumns: string[] = ['filename', 'filetype', 'uploaded', 'action'];
 
     dataSource: MatTableDataSource<FileMetadata> = new MatTableDataSource();
     filesAvailable = false;
 
     private fileTypeColors: { [key: string]: string } = {};
-
-    constructor(
-        private filesService: FilesService,
-        private dialog: MatDialog,
-        private translateService: TranslateService,
-    ) {}
 
     ngOnInit() {
         this.refreshFiles();
@@ -108,7 +106,7 @@ export class FileOverviewComponent implements OnInit {
             if (ev === 'confirm') {
                 this.filesService
                     .deleteFile(fileMetadata.fileId)
-                    .subscribe(response => {
+                    .subscribe(_response => {
                         this.refreshFiles();
                     });
             }

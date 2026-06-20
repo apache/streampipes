@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { SpLogEntry } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -39,10 +39,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class PipelineLogsDialogComponent {
+    private dialogRef =
+        inject<DialogRef<PipelineLogsDialogComponent>>(DialogRef);
+
     @Input()
     logInfo: SpLogEntry[] = [];
-
-    constructor(private dialogRef: DialogRef<PipelineLogsDialogComponent>) {}
 
     close() {
         this.dialogRef.close();

@@ -38,6 +38,8 @@ import { DatePipe } from '@angular/common';
     ],
 })
 export class SpExceptionMessageComponent {
+    private dialogService = inject(DialogService);
+
     translateService = inject(TranslateService);
 
     @Input()
@@ -51,8 +53,6 @@ export class SpExceptionMessageComponent {
 
     @Input()
     messageTimestamp: number;
-
-    constructor(private dialogService: DialogService) {}
 
     openDetailsDialog() {
         this.dialogService.open(SpExceptionDetailsDialogComponent, {

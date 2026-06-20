@@ -39,7 +39,7 @@ export class PipelineUtils {
 
     public static addPipelineWithAssetLinks(
         pipelineInput: PipelineInput,
-        assetNameList: String[],
+        assetNameList: string[],
     ) {
         PipelineUtils.goToPipelineEditor();
 
@@ -256,5 +256,10 @@ export class PipelineUtils {
         cy.dataCy('all-pipelines-table', { timeout: 10000 })
             .find('tr')
             .should('have.length', expectedCount + 1);
+    }
+
+    public static pipelineElementUpdateCompleted() {
+        PipelineBtns.savingPipelineModification().should('be.visible');
+        PipelineBtns.savingPipelineModification().should('not.exist');
     }
 }

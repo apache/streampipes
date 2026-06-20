@@ -17,7 +17,7 @@
  */
 
 import { AuthService } from '../../../services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppConstants } from '../../../services/app.constants';
 import {
@@ -39,16 +39,14 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     ],
 })
 export class StartupComponent implements OnInit {
+    private authService = inject(AuthService);
+    private router = inject(Router);
+    appConstants = inject(AppConstants);
+
     progress = 0;
     currentStep = 0;
     maxLoadingTimeInSeconds = 100;
     loadingIntervalInSeconds = 1;
-
-    constructor(
-        private authService: AuthService,
-        private router: Router,
-        public appConstants: AppConstants,
-    ) {}
 
     ngOnInit() {
         this.checkStatus();

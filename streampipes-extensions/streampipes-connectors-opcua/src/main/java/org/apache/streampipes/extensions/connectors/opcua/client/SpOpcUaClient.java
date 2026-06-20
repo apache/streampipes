@@ -23,10 +23,10 @@ import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.extensions.connectors.opcua.config.MiloOpcUaConfigurationProvider;
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
 
-import org.eclipse.milo.opcua.binaryschema.GenericBsdParser;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
-import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
-import org.eclipse.milo.opcua.sdk.client.dtd.DataTypeDictionarySessionInitializer;
+import org.eclipse.milo.opcua.sdk.client.OpcUaClientConfig;
+import org.eclipse.milo.opcua.sdk.client.dtd.LegacyDataTypeManagerInitializer;
+import org.eclipse.milo.opcua.sdk.client.typetree.DataTypeManagerFactory;
 import org.eclipse.milo.opcua.stack.core.UaException;
 
 import java.net.URISyntaxException;
@@ -52,12 +52,18 @@ public class SpOpcUaClient<T extends OpcUaConfig> {
       throws UaException, ExecutionException, InterruptedException, SpConfigurationException, URISyntaxException {
     OpcUaClientConfig clientConfig = new MiloOpcUaConfigurationProvider().makeClientConfig(spOpcConfig);
     var client = OpcUaClient.create(clientConfig);
-    client.addSessionInitializer(new DataTypeDictionarySessionInitializer(new GenericBsdParser()));
+    var legacyInitializer = new LegacyDataTypeManagerInitializer(client);
+    var defaultInitializer = new DataTypeManagerFactory.DefaultInitializer();
+    client.setDynamicDataTypeManagerFactory(DataTypeManagerFactory.eager((namespaceTable, dataTypeTree, dataTypeManager) -> {
+      // Register legacy BSD codecs first and let modern DataTypeDefinition codecs override when available.
+      legacyInitializer.initialize(namespaceTable, dataTypeTree, dataTypeManager);
+      defaultInitializer.initialize(namespaceTable, dataTypeTree, dataTypeManager);
+    }));
     try {
-      client.connect().get();
+      client.connect();
       return new ConnectedOpcUaClient(client);
     } catch (Exception e) {
-      client.disconnect().get();
+      client.disconnect();
       throw e;
     }
   }
