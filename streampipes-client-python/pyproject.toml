@@ -74,7 +74,7 @@ isort = "8.0.1"
 mypy = "2.1.0"
 ruff = "0.15.8"
 pre-commit = "4.6.0"
-pytest = "9.0.3"
+pytest = "9.1.0"
 pytest-cov = "7.1.0"
 pyupgrade = "3.21.1"
 
