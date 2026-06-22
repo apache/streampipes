@@ -81,8 +81,15 @@ export class ChartBtns {
         return cy.dataCy('open-new-data-view', { timeout: 10000 });
     }
 
-    public static addDataViewBtn(dataViewName) {
-        return cy.dataCy('add-data-view-btn-' + dataViewName);
+    public static addDataViewBtn(dataViewName: string) {
+        return cy.dataCy(
+            'add-data-view-btn-' + dataViewName.replaceAll(' ', ''),
+            { timeout: 10000 },
+        );
+    }
+
+    public static refreshChartSelectionBtn() {
+        return cy.dataCy('refresh-chart-button');
     }
 
     public static newDashboardDialogBtn() {

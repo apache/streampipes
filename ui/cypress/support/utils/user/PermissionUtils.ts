@@ -46,10 +46,21 @@ export class PermissionUtils {
         PermissionUtils.save();
     }
 
+    public static changeOwnershipInManageDialog(email: string) {
+        cy.dataCy('owner-select').click();
+        cy.get(`[data-cy="owner-option-${email}"]`, { timeout: 10000 }).click();
+        PermissionUtils.saveManageDialog();
+    }
+
     public static markElementAsPublic(resourceName: string) {
         PermissionUtils.openManagePermissions(resourceName);
         StaticPropertyUtils.clickCheckbox('permission-public-element');
         PermissionUtils.save();
+    }
+
+    public static markElementAsPublicInManageDialog() {
+        StaticPropertyUtils.clickCheckbox('permission-public-element');
+        PermissionUtils.saveManageDialog();
     }
 
     public static authorizeUser(resourceName: string, email: string) {
@@ -61,12 +72,34 @@ export class PermissionUtils {
         PermissionUtils.save();
     }
 
+    public static authorizeUserInManageDialog(email: string) {
+        cy.dataCy('authorized-user').type(email);
+        cy.get(`[data-cy="user-option-${email}"]`).click();
+
+        PermissionUtils.saveManageDialog();
+    }
+
     public static authorizeGroup(resourceName: string, groupName: string) {
         PermissionUtils.openManagePermissions(resourceName);
         cy.dataCy('authorized-group').type(groupName);
         cy.get(`[data-cy="group-option-${groupName}"]`).click();
 
         PermissionUtils.save();
+    }
+
+    public static authorizeGroupInManageDialog(groupName: string) {
+        cy.dataCy('authorized-group').type(groupName);
+        cy.get(`[data-cy="group-option-${groupName}"]`).click();
+
+        PermissionUtils.saveManageDialog();
+    }
+
+    public static saveManageDialog() {
+        cy.dataCy('sp-manage-save').should('be.visible').click();
+    }
+
+    public static cancelManageDialog() {
+        cy.dataCy('sp-manage-cancel').should('be.visible').click();
     }
 
     public static save() {
@@ -123,5 +156,15 @@ export class PermissionUtils {
         PermissionUtils.openManagePermissions(resourceName);
         cy.dataCy('permission-public-element').should('exist');
         PermissionUtils.cancel();
+    }
+
+    public static validateUserCanChangePermissionsInManageDialog() {
+        cy.dataCy('permission-public-element').should('exist');
+        PermissionUtils.cancelManageDialog();
+    }
+
+    public static validateUserCanNotChangePermissionsInManageDialog() {
+        cy.dataCy('warning-permissions-managed-by-owner').should('exist');
+        PermissionUtils.cancelManageDialog();
     }
 }

@@ -117,11 +117,11 @@
                         }
                         <button
                             mat-menu-item
-                            data-cy="open-manage-permissions"
-                            (click)="openPermissionsDialog(element)"
+                            [attr.data-cy]="'open-manage-' + element.assetName"
+                            (click)="showManageDialog(element)"
                         >
-                            <mat-icon>share</mat-icon>
-                            <span>{{ 'Manage permissions' | translate }}</span>
+                            <mat-icon>settings</mat-icon>
+                            <span>{{ 'Manage' | translate }}</span>
                         </button>
 
                         @if (hasWritePrivilege) {

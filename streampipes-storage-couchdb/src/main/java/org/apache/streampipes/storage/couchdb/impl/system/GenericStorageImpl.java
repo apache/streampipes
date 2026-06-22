@@ -36,6 +36,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class GenericStorageImpl implements IGenericStorage {
 
@@ -53,6 +55,31 @@ public class GenericStorageImpl implements IGenericStorage {
     this.mapper = JacksonSerializer.getObjectMapper();
     this.mapper
         .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+  }
+
+  @Override
+  public List<String> getAllAppDocTypes() throws IOException {
+    String query = getDatabaseRoute() + "/_design/appDocType/_view/appDocType";
+    Map<String, Object> queryResult = this.queryDocuments(query);
+
+    List<Map<String, Object>> rows = (List<Map<String, Object>>) queryResult.get("rows");
+
+    return rows.stream()
+        .filter(row -> !String.valueOf(row.get(ID)).startsWith("_design"))
+        .map(row -> row.get("key"))
+        .map(key -> {
+          if (key instanceof List<?> keyList && !keyList.isEmpty()) {
+            return keyList.get(0);
+          }
+
+          return key;
+        })
+        .filter(Objects::nonNull)
+        .map(Object::toString)
+        .filter(appDocType -> !appDocType.isBlank())
+        .distinct()
+        .sorted()
+        .collect(Collectors.toList());
   }
 
   @Override

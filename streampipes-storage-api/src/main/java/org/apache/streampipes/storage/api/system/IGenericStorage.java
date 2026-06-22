@@ -26,6 +26,8 @@ import java.util.Map;
 
 public interface IGenericStorage {
 
+  List<String> getAllAppDocTypes() throws IOException;
+
   List<Map<String, Object>> findAll(String type) throws IOException;
 
   List<Map<String, Object>> find(String appDocType, Map<String, Object> query) throws IOException;
