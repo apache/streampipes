@@ -17,6 +17,7 @@
  */
 
 import { PermissionUtils } from '../user/PermissionUtils';
+import { GeneralUtils } from '../GeneralUtils';
 import { DatasetBtns } from './DatasetBtns';
 
 export class DatasetUtils {
@@ -148,6 +149,66 @@ export class DatasetUtils {
             .contains('preview')
             .parent('button')
             .click();
+    }
+
+    public static openDatasetDetails(datasetName: string) {
+        DatasetUtils.goToDatasets();
+        DatasetUtils.waitForTotalEvents(datasetName);
+        DatasetBtns.datasetRow(datasetName).click();
+        cy.url().should('include', '#/datasets/');
+    }
+
+    public static waitForTotalEvents(datasetName: string, attempts = 30) {
+        DatasetBtns.datasetTotalCountButton(datasetName).click({
+            force: true,
+        });
+        DatasetBtns.datasetTotalCountCell(datasetName)
+            .find('[data-cy="datalake-number-of-events-spinner"]')
+            .should('not.exist');
+        DatasetBtns.datasetTotalCountCell(datasetName).then($cell => {
+            const eventCount = DatasetUtils.parseEventCount($cell.text());
+
+            if (eventCount > 0) {
+                expect(eventCount).to.be.greaterThan(0);
+            } else if (attempts > 0) {
+                cy.wait(1000);
+                DatasetUtils.waitForTotalEvents(datasetName, attempts - 1);
+            } else {
+                expect(eventCount).to.be.greaterThan(0);
+            }
+        });
+    }
+
+    private static parseEventCount(text: string) {
+        return Number(text.trim().replace(/[^\d.-]/g, ''));
+    }
+
+    public static openLatestEventsTab() {
+        GeneralUtils.tab('Latest events');
+    }
+
+    public static setLatestEventsLimit(limit: number) {
+        DatasetBtns.datasetDetailsEventLimit().clear().type(`${limit}`);
+        DatasetBtns.datasetDetailsEventLimit().blur();
+    }
+
+    public static expectSchemaField(runtimeName: string, expectedType: string) {
+        DatasetBtns.datasetDetailsSchemaField(runtimeName).should('be.visible');
+        DatasetBtns.datasetDetailsSchemaType(runtimeName).should(
+            'contain.text',
+            expectedType,
+        );
+    }
+
+    public static expectLatestEventsForColumn(columnName: string) {
+        DatasetBtns.datasetDetailsEventsTable().should('be.visible');
+        DatasetBtns.datasetDetailsEventCell(columnName)
+            .should('exist')
+            .and('have.length.at.least', 1);
+    }
+
+    public static createChartFromDatasetDetails() {
+        DatasetBtns.datasetDetailsCreateChart().click();
     }
 
     public static expectDatasetPreviewDoesNotContainKey(key: string) {
