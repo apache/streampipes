@@ -24,6 +24,7 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import {
     MatCell,
     MatCellDef,
@@ -148,6 +149,7 @@ export class DatalakeConfigurationComponent
     private translateService = inject(TranslateService);
     private currentUserService = inject(CurrentUserService);
     private assetFilterService = inject(SpAssetBrowserService);
+    private router = inject(Router);
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
@@ -390,6 +392,10 @@ export class DatalakeConfigurationComponent
                 },
             },
         });
+    }
+
+    openDatasetDetails(elementId: string): void {
+        this.router.navigate(['datasets', elementId]);
     }
 
     openRetentionDialog(measurementId: string): void {

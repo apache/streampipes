@@ -17,6 +17,7 @@
  */
 
 import { Component, inject, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FlexFillDirective } from '@ngbracket/ngx-layout';
 import {
     DateFormatService,
@@ -76,6 +77,7 @@ export class DatasetFeatureCardComponent implements OnInit {
     private datalakeRestService = inject(DatalakeRestService);
     private genericStorageService = inject(GenericStorageService);
     private dateFormatService = inject(DateFormatService);
+    private router = inject(Router);
 
     ngOnInit() {
         forkJoin([
@@ -162,7 +164,9 @@ export class DatasetFeatureCardComponent implements OnInit {
         );
     }
 
-    navigateToChartView(): void {}
+    navigateToChartView(): void {
+        this.router.navigate(['datasets', this.resourceId, 'schema']);
+    }
 }
 
 interface PreviewRow {
