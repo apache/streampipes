@@ -123,10 +123,12 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
     }
 
     addAsset(node: SpAsset) {
-        this.getChildAssets(node).push(this.makeNewAsset());
+        const newAsset = this.makeNewAsset();
+        this.getChildAssets(node).push(newAsset);
         this.dataSource.data = [this.assetModel];
         this.treeControl.dataNodes = [this.assetModel];
         this.rerenderTree();
+        this.expandToAsset(newAsset.assetId);
     }
 
     rerenderTree(): void {
