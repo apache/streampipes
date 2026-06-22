@@ -23,8 +23,10 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
+import org.apache.streampipes.manager.util.AuthTokenUtils;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,8 +39,9 @@ public class InvokeExtensionRequest extends PipelineElementExtensionRequest {
 
   private static final Logger LOG = LoggerFactory.getLogger(InvokeExtensionRequest.class);
 
-  public InvokeExtensionRequest(ExtensionServiceRequestManager requestManager) {
-    super(requestManager);
+  public InvokeExtensionRequest(ExtensionServiceRequestManager requestManager,
+                                SpResourceManager resourceManager) {
+    super(requestManager, resourceManager);
   }
 
   @Override
@@ -52,8 +55,10 @@ public class InvokeExtensionRequest extends PipelineElementExtensionRequest {
         provider,
         pipelineElement.getAppId()
     );
+    var authToken = AuthTokenUtils.getAuthToken(pipelineId, resourceManager);
     return requestManager().request(
-        ExtensionServiceRequests.pipelineElementInvocation(requestTarget, pipelineId, toJson(pipelineElement))
+        ExtensionServiceRequests
+            .pipelineElementInvocation(requestTarget, toJson(pipelineElement), authToken)
     );
   }
 

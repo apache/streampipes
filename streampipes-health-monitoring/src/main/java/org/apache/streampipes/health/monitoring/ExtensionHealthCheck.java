@@ -21,6 +21,7 @@ package org.apache.streampipes.health.monitoring;
 import org.apache.streampipes.health.monitoring.model.HealthCheckData;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.health.ExtensionInstanceHealth;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import org.slf4j.Logger;
@@ -35,13 +36,16 @@ public class ExtensionHealthCheck implements Runnable {
   private final ResourceProvider resourceProvider;
   private final ExtensionServiceRequestManager extensionRequestManager;
   private final IExtensionsServiceStorage extensionsServiceStorage;
+  private final SpResourceManager resourceManager;
 
   public ExtensionHealthCheck(ResourceProvider resourceProvider,
                               IExtensionsServiceStorage extensionsServiceStorage,
-                              ExtensionServiceRequestManager extensionRequestManager) {
+                              ExtensionServiceRequestManager extensionRequestManager,
+                              SpResourceManager resourceManager) {
     this.resourceProvider = resourceProvider;
     this.extensionsServiceStorage = extensionsServiceStorage;
     this.extensionRequestManager = extensionRequestManager;
+    this.resourceManager = resourceManager;
   }
 
   @Override
@@ -54,12 +58,13 @@ public class ExtensionHealthCheck implements Runnable {
       activeCoreInstances.keySet().forEach(serviceId -> {
         activeExtensionInstances.put(
             serviceId,
-            new ExtensionInstanceAvailabilityCheck(extensionsServiceStorage, serviceId, extensionRequestManager).checkRunningInstances()
-        );
+            new ExtensionInstanceAvailabilityCheck(
+                extensionsServiceStorage, serviceId, extensionRequestManager, resourceManager
+            ).checkRunningInstances());
       });
 
       var healthCheckData = new HealthCheckData(resourceProvider, activeResources, activeCoreInstances, activeExtensionInstances);
-      new PipelineHealthCheck(healthCheckData, extensionRequestManager).runCheck();
+      new PipelineHealthCheck(healthCheckData, extensionRequestManager, resourceProvider, resourceManager).runCheck();
       new AdapterHealthCheck(healthCheckData).runCheck();
     } catch (Exception e) {
       LOG.warn("An unhandled error occurred while running health check.", e);

@@ -23,6 +23,7 @@ import org.apache.streampipes.model.dashboard.DashboardItem;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.resource.management.DashboardResourceManager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -32,9 +33,15 @@ import java.util.stream.Collectors;
 
 public class DashboardResolver extends AbstractResolver<DashboardModel> {
 
+  private final DashboardResourceManager resourceManager;
+
+  public DashboardResolver(DashboardResourceManager resourceManager) {
+    this.resourceManager = resourceManager;
+  }
+
   @Override
   public DashboardModel findDocument(String resourceId) {
-    return getNoSqlStore().getDataExplorerDashboardStorage().getElementById(resourceId);
+    return resourceManager.getDb().getElementById(resourceId);
   }
 
   @Override
@@ -60,7 +67,7 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
 
   @Override
   public void writeDocument(String document, AssetExportConfiguration config) throws JsonProcessingException {
-    getNoSqlStore().getDataExplorerDashboardStorage().persist(deserializeDocument(document));
+    resourceManager.getDb().persist(deserializeDocument(document));
   }
 
   @Override
@@ -72,7 +79,7 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
   public void deleteDocument(String document) throws JsonProcessingException {
     var dashboard = readDocument(document);
     var resourceId = dashboard.getElementId();
-    getNoSqlStore().getDataExplorerDashboardStorage().deleteElementById(resourceId);
+    resourceManager.getDb().deleteElementById(resourceId);
   }
 
   public List<String> getCharts(String resourceId) {

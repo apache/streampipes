@@ -31,7 +31,8 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.model.pipeline.PipelineModification;
-import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.resource.management.DataProcessorResourceManager;
+import org.apache.streampipes.resource.management.DataSinkResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -51,14 +52,20 @@ public class ElementRecommender {
   private final String baseRecDomId;
   private final PipelineElementRecommendationMessage recommendationMessage;
   private final ExtensionServiceRequestManager requestManager;
+  private final DataProcessorResourceManager dataProcessorResourceManager;
+  private final DataSinkResourceManager dataSinkResourceManager;
 
   public ElementRecommender(Pipeline partialPipeline,
                             String baseRecDomId,
-                            ExtensionServiceRequestManager requestManager) {
+                            ExtensionServiceRequestManager requestManager,
+                            DataProcessorResourceManager dataProcessorResourceManager,
+                            DataSinkResourceManager dataSinkResourceManager) {
     this.pipeline = partialPipeline;
     this.baseRecDomId = baseRecDomId;
     this.requestManager = requestManager;
     this.recommendationMessage = new PipelineElementRecommendationMessage();
+    this.dataProcessorResourceManager = dataProcessorResourceManager;
+    this.dataSinkResourceManager = dataSinkResourceManager;
   }
 
   public PipelineElementRecommendationMessage findRecommendedElements() throws NoSuitableSepasAvailableException {
@@ -88,7 +95,7 @@ public class ElementRecommender {
   }
 
   private List<ConsumableStreamPipesEntity> getAllDataProcessors() {
-    List<String> userObjects = new SpResourceManager().manageDataProcessors().findAllIdsOnly();
+    List<String> userObjects = dataProcessorResourceManager.findAllIdsOnly();
     return getNoSqlStore()
         .getAllDataProcessors()
         .stream()
@@ -99,7 +106,7 @@ public class ElementRecommender {
 
 
   private List<ConsumableStreamPipesEntity> getAllDataSinks() {
-    List<String> userObjects = new SpResourceManager().manageDataSinks().findAllIdsOnly();
+    List<String> userObjects = dataSinkResourceManager.findAllIdsOnly();
     return getNoSqlStore()
         .getAllDataSinks()
         .stream()

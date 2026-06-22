@@ -22,12 +22,10 @@ import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.SuccessMessage;
-import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
-import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -40,16 +38,8 @@ public class AbstractRestResource extends AbstractSharedRestInterface {
     return getNoSqlStorage().getSpCoreConfigurationStorage();
   }
 
-  protected IPipelineElementDescriptionStorage getPipelineElementRdfStorage() {
-    return getPipelineElementStorage();
-  }
-
   protected IPipelineElementDescriptionStorage getPipelineElementStorage() {
     return getNoSqlStorage().getPipelineElementDescriptionStorage();
-  }
-
-  protected IPipelineStorage getPipelineStorage() {
-    return getNoSqlStorage().getPipelineStorageAPI();
   }
 
   protected IUserStorage getUserStorage() {
@@ -80,9 +70,5 @@ public class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected ResponseEntity unauthorized() {
     return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).build();
-  }
-
-  protected SpResourceManager getSpResourceManager() {
-    return new SpResourceManager();
   }
 }

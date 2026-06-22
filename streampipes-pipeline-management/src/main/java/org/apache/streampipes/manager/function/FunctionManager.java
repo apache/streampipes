@@ -24,6 +24,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.function.FunctionState;
 import org.apache.streampipes.model.function.FunctionsShutdownResponse;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -38,9 +39,12 @@ public class FunctionManager {
   private static final Logger LOG = LoggerFactory.getLogger(FunctionManager.class);
 
   private final ExtensionServiceRequestManager requestManager;
+  private final SpResourceManager resourceManager;
 
-  public FunctionManager(ExtensionServiceRequestManager requestManager) {
+  public FunctionManager(ExtensionServiceRequestManager requestManager,
+                         SpResourceManager resourceManager) {
     this.requestManager = requestManager;
+    this.resourceManager = resourceManager;
   }
 
   public void stopAllFunctionsAndPersistState(IFunctionStateStorage functionStateStorage) {
@@ -60,7 +64,7 @@ public class FunctionManager {
 
     try {
       LOG.info("Triggering function stop at {}", requestTarget.baseUrl());
-      var response = requestManager.request(ExtensionServiceRequests.functionStop(requestTarget));
+      var response = requestManager.request(ExtensionServiceRequests.functionStop(requestTarget, resourceManager));
       int statusCode = response.statusCode();
 
       if (statusCode >= 200 && statusCode < 300) {

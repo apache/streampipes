@@ -26,7 +26,6 @@ import org.apache.streampipes.resource.management.permission.SpPermissionEvaluat
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.security.core.Authentication;
 
@@ -36,17 +35,11 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
   private final SpPermissionEvaluator permissionEvaluator;
 
   public AdapterResourceManager(IAdapterStorage adapterStorage,
-                                ICertificateStorage certificateStorage) {
+                                ICertificateStorage certificateStorage,
+                                PermissionResourceManager permissionResourceManager) {
     super(adapterStorage);
     this.certificateStorage = certificateStorage;
-    this.permissionEvaluator = new SpPermissionEvaluator();
-  }
-
-  public AdapterResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore()
-                                    .getAdapterInstanceStorage());
-    this.certificateStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getCertificateStorage();
-    this.permissionEvaluator = new SpPermissionEvaluator();
+    this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
   }
 
   public ResourceSummaryDto<AdapterSummaryDto> getSummary(Authentication auth) {

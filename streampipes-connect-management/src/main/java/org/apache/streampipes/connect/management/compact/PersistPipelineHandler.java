@@ -45,14 +45,17 @@ import static org.apache.streampipes.manager.template.instances.PersistDataLakeP
 public class PersistPipelineHandler {
 
   private final ICompactPipelineTemplateStorage templateStorage;
-  private final CompactPipelineManagement pipelineManagement;
+  private final CompactPipelineManagement compactPipelineManagement;
+  private final PipelineManager pipelineManager;
   private final String authenticatedUserSid;
 
   public PersistPipelineHandler(ICompactPipelineTemplateStorage templateStorage,
-                                CompactPipelineManagement pipelineManagement,
+                                CompactPipelineManagement compactPipelineManagement,
+                                PipelineManager pipelineManager,
                                 String authenticatedUserSid) {
     this.templateStorage = templateStorage;
-    this.pipelineManagement = pipelineManagement;
+    this.compactPipelineManagement = compactPipelineManagement;
+    this.pipelineManager = pipelineManager;
     this.authenticatedUserSid = authenticatedUserSid;
   }
 
@@ -67,11 +70,11 @@ public class PersistPipelineHandler {
           makeTemplateConfig(adapterDescription, template.getPipeline()),
           new CreateOptions(false, true)
       );
-      var pipelineGenerationResult = pipelineManagement.makePipeline(compactPipeline);
+      var pipelineGenerationResult = compactPipelineManagement.makePipeline(compactPipeline);
       if (pipelineGenerationResult.allPipelineElementsValid()) {
-        String pipelineId = PipelineManager.addPipeline(authenticatedUserSid, pipelineGenerationResult.pipeline());
+        String pipelineId = pipelineManager.addPipeline(authenticatedUserSid, pipelineGenerationResult.pipeline());
         if (compactPipeline.createOptions().start()) {
-          return PipelineManager.startPipeline(pipelineId, requestManager);
+          return pipelineManager.startPipeline(pipelineId, requestManager);
         }
       }
     }

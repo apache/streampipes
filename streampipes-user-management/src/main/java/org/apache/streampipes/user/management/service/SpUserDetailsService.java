@@ -20,6 +20,7 @@ package org.apache.streampipes.user.management.service;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.model.ServiceAccountDetails;
 import org.apache.streampipes.user.management.model.UserAccountDetails;
@@ -30,10 +31,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class SpUserDetailsService implements UserDetailsService {
 
+  private final IPermissionStorage permissionStorage;
+
+  public SpUserDetailsService(IPermissionStorage permissionStorage) {
+    this.permissionStorage = permissionStorage;
+  }
+
   @Override
   public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
     Principal user = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().getUser(s);
-    return user instanceof UserAccount ? new UserAccountDetails((UserAccount) user) :
-        new ServiceAccountDetails((ServiceAccount) user);
+    return user instanceof UserAccount ? new UserAccountDetails((UserAccount) user, permissionStorage) :
+        new ServiceAccountDetails((ServiceAccount) user, permissionStorage);
   }
 }

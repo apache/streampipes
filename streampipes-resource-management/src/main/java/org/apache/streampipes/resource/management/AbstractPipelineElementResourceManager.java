@@ -29,8 +29,12 @@ import java.util.stream.Collectors;
 public abstract class AbstractPipelineElementResourceManager<T extends CRUDStorage<W>,
     W extends NamedStreamPipesEntity, X> extends AbstractResourceManager<T> {
 
-  public AbstractPipelineElementResourceManager(T db) {
+  protected final PermissionResourceManager permissionResourceManager;
+
+  public AbstractPipelineElementResourceManager(T db,
+                                                PermissionResourceManager permissionResourceManager) {
     super(db);
+    this.permissionResourceManager = permissionResourceManager;
   }
 
   public List<W> findAll() {
@@ -74,17 +78,15 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
     W existing = find(pipelineElement.getElementId());
     if (existing == null) {
       this.db.persist(pipelineElement);
-      new PermissionResourceManager()
-          .createDefault(pipelineElement.getElementId(), SpDataStream.class, principalSid, false);
+      permissionResourceManager.createDefault(pipelineElement.getElementId(), SpDataStream.class, principalSid, false);
     } else {
       throw new IllegalArgumentException("This pipeline element already exists");
     }
   }
 
   private void deleteAssetsAndPermissions(W description) {
-    SpResourceManager manager = new SpResourceManager();
-    List<Permission> permissions = manager.managePermissions().findForObjectId(description.getElementId());
-    permissions.forEach(permission -> manager.managePermissions().delete(permission));
+    List<Permission> permissions = permissionResourceManager.findForObjectId(description.getElementId());
+    permissions.forEach(permissionResourceManager::delete);
   }
 
   protected abstract X toInvocation(W description);

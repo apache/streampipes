@@ -22,6 +22,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.execution.task.PipelineExecutionTask;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import java.util.List;
 
@@ -29,19 +30,23 @@ public class PipelineExecutor {
 
   private final Pipeline pipeline;
   private final ExtensionServiceRequestManager requestManager;
+  private final SpResourceManager resourceManager;
 
   public PipelineExecutor(Pipeline pipeline,
-                          ExtensionServiceRequestManager requestManager) {
+                          ExtensionServiceRequestManager requestManager,
+                          SpResourceManager resourceManager) {
     this.pipeline = pipeline;
     this.requestManager = requestManager;
+    this.resourceManager = resourceManager;
   }
 
   public PipelineOperationStatus startPipeline() {
-    return executeOperation(PipelineExecutionTaskFactory.makeStartPipelineTasks(pipeline, requestManager));
+    return executeOperation(PipelineExecutionTaskFactory.makeStartPipelineTasks(pipeline, requestManager, resourceManager));
   }
 
   public PipelineOperationStatus stopPipeline(boolean forceStop) {
-    return executeOperation(PipelineExecutionTaskFactory.makeStopPipelineTasks(pipeline, forceStop, requestManager));
+    return executeOperation(PipelineExecutionTaskFactory
+        .makeStopPipelineTasks(pipeline, forceStop, requestManager, resourceManager));
   }
 
   private PipelineOperationStatus executeOperation(List<PipelineExecutionTask> executionTasks) {

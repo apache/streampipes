@@ -19,6 +19,7 @@ package org.apache.streampipes.loadbalance.impl;
 
 import org.apache.streampipes.loadbalance.LoadBalancerConfig;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,10 @@ public class TransferMigrator extends AbstractPipelineMigrator {
 
   private static final Logger logger = LoggerFactory.getLogger(TransferMigrator.class);
   private static final float MIN_LOAD_DIFFERENCE = 10.0f;
+
+  public TransferMigrator(SpResourceManager resourceManager) {
+    super(resourceManager);
+  }
 
   @Override
   public void doLoadShedding(List<SpServiceRegistration> services) {

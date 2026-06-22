@@ -30,10 +30,12 @@ import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.file.FileManager;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -59,12 +61,18 @@ public class ExportPackageGenerator {
 
   private final ExportConfiguration exportConfiguration;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
-  private ObjectMapper defaultMapper;
+  private final ObjectMapper defaultMapper;
+  private final PipelineManager pipelineManager;
+  private final SpResourceManager resourceManager;
 
   public ExportPackageGenerator(ExportConfiguration exportConfiguration,
-                                ExtensionServiceRequestManager extensionServiceRequestManager) {
+                                ExtensionServiceRequestManager extensionServiceRequestManager,
+                                SpResourceManager resourceManager,
+                                PipelineManager pipelineManager) {
     this.exportConfiguration = exportConfiguration;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.pipelineManager = pipelineManager;
+    this.resourceManager = resourceManager;
     this.defaultMapper = JacksonSerializer.getObjectMapper(Map.of(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
       SerializationFeature.INDENT_OUTPUT, false 
@@ -82,10 +90,14 @@ public class ExportPackageGenerator {
         .map(AssetExportConfiguration::getAssetId)
         .collect(Collectors.toList()), manifest);
 
+    var dashboardResourceManager = resourceManager.manageDashboards();
+    var pipelineResourceManager = resourceManager.managePipelines();
+    var datasetResourceManager = resourceManager.manageDataLakeMeasures();
+
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {
       config.getAdapters().forEach(item -> addDoc(builder,
           item,
-          new AdapterResolver(extensionServiceRequestManager),
+          new AdapterResolver(extensionServiceRequestManager, resourceManager),
           manifest::addAdapter));
 
       config.getDataSources().forEach(item -> addDoc(builder,
@@ -95,29 +107,29 @@ public class ExportPackageGenerator {
 
       config.getDataLakeMeasures().forEach(item -> addDoc(builder,
           item,
-          new MeasurementResolver(),
+          new MeasurementResolver(datasetResourceManager.getDb()),
           manifest::addDataLakeMeasure));
 
       config.getPipelines().forEach(item -> addDoc(builder,
           item,
-          new PipelineResolver(extensionServiceRequestManager),
+          new PipelineResolver(extensionServiceRequestManager, pipelineManager, pipelineResourceManager),
           manifest::addPipeline));
 
       config.getDashboards().forEach(item -> {
-        var resolver = new DashboardResolver();
+        var resolver = new DashboardResolver(dashboardResourceManager);
         addDoc(builder,
             item,
-            new DashboardResolver(),
+            new DashboardResolver(dashboardResourceManager),
             manifest::addDashboard);
         var charts = resolver.getCharts(item.getResourceId());
-        var chartResolver = new ChartResolver();
+        var chartResolver = new ChartResolver(resourceManager);
         charts.forEach(widgetId -> addDoc(builder, widgetId, chartResolver, manifest::addDataViewWidget));
       });
 
       config.getDataViews().forEach(item -> {
         addDoc(builder,
             item,
-            new ChartResolver(),
+            new ChartResolver(resourceManager),
             manifest::addDataView);
       });
 

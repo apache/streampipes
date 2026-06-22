@@ -20,6 +20,8 @@ package org.apache.streampipes.service.core.migrations.v0980;
 
 import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.service.core.migrations.Migration;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
+import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -35,11 +37,19 @@ import java.util.List;
  */
 public class FixImportedPermissionsMigration implements Migration {
 
-  private static final Logger LOG = LoggerFactory.getLogger(FixImportedPermissionsMigration.class);
+  private final IChartStorage chartStorage;
+  private final IPermissionStorage permissionStorage;
+  private final IDashboardStorage dashboardStorage;
 
-  private final IPermissionStorage permissionStorage =
-      StorageDispatcher.INSTANCE.getNoSqlStore()
-                                .getPermissionStorage();
+  public FixImportedPermissionsMigration(IChartStorage chartStorage,
+                                         IDashboardStorage dashboardStorage,
+                                         IPermissionStorage permissionStorage) {
+    this.chartStorage = chartStorage;
+    this.dashboardStorage = dashboardStorage;
+    this.permissionStorage = permissionStorage;
+  }
+
+  private static final Logger LOG = LoggerFactory.getLogger(FixImportedPermissionsMigration.class);
 
   @Override
   public boolean shouldExecute() {
@@ -55,20 +65,14 @@ public class FixImportedPermissionsMigration implements Migration {
 
   private void migrateDashboardPermissions() {
     LOG.debug("Start migrate permissions for dashboards");
-    var dataExplorerDashboardStorage = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getDataExplorerDashboardStorage();
-    var dashboards = dataExplorerDashboardStorage.findAll();
+    var dashboards = dashboardStorage.findAll();
     migrateResourcePermissions(dashboards);
     LOG.debug("Finished migrate permissions for dashboards");
   }
 
   private void migrateChartsPermissions() {
     LOG.debug("Start migrate permissions for charts");
-    var dataExplorerWidgetStorage = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getDataExplorerWidgetStorage();
-    var charts = dataExplorerWidgetStorage.findAll();
+    var charts = chartStorage.findAll();
     migrateResourcePermissions(charts);
     LOG.debug("Finished migrate permissions for charts");
   }

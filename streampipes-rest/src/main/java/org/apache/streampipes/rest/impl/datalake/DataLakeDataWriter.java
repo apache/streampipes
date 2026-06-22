@@ -27,7 +27,7 @@ import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,18 +41,23 @@ public class DataLakeDataWriter {
 
   private final boolean ignoreSchemaMismatch;
   private final boolean allowMissingFields;
+  private final IDataLakeMeasureStorage datasetStorage;
 
-  public DataLakeDataWriter(boolean ignoreSchemaMismatch) {
-    this(ignoreSchemaMismatch, false);
+  public DataLakeDataWriter(boolean ignoreSchemaMismatch,
+                            IDataLakeMeasureStorage datasetStorage) {
+    this(ignoreSchemaMismatch, false, datasetStorage);
   }
 
-  public DataLakeDataWriter(boolean ignoreSchemaMismatch, boolean allowMissingFields) {
+  public DataLakeDataWriter(boolean ignoreSchemaMismatch,
+                            boolean allowMissingFields,
+                            IDataLakeMeasureStorage datasetStorage) {
     this.ignoreSchemaMismatch = ignoreSchemaMismatch;
     this.allowMissingFields = allowMissingFields;
+    this.datasetStorage = datasetStorage;
   }
 
   public void writeData(String measureName, SpQueryResult queryResult) {
-    var measure = StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage().getByMeasureName(measureName);
+    var measure = datasetStorage.getByMeasureName(measureName);
     if (measure == null) {
       throw new SpRuntimeException("Measure \"" + measureName + "\" not found");
     }

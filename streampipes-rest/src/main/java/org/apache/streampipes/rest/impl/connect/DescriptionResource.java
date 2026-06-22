@@ -28,6 +28,7 @@ import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointG
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
@@ -52,8 +53,9 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   private static final Logger LOG = LoggerFactory.getLogger(DescriptionResource.class);
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
 
-  public DescriptionResource(WorkerRestClient workerRestClient) {
-    super(() -> new DescriptionManagement(workerRestClient));
+  public DescriptionResource(WorkerRestClient workerRestClient,
+                             SpResourceManager resourceManager) {
+    super(() -> new DescriptionManagement(workerRestClient, resourceManager.manageAdapters()));
     endpointGenerator = new ExtensionsServiceEndpointGenerator();
   }
 

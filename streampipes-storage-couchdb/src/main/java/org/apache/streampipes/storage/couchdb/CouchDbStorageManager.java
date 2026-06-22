@@ -17,12 +17,8 @@
  */
 package org.apache.streampipes.storage.couchdb;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
@@ -30,8 +26,6 @@ import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineCanvasMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
-import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
-import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceConfigurationStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
@@ -41,7 +35,6 @@ import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
@@ -49,10 +42,6 @@ import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterDescriptionStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.explorer.DataExplorerDashboardStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.explorer.DataExplorerWidgetStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.explorer.DataLakeMeasureStorage;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.CompactPipelineTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.DataProcessorStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.DataSinkStorageImpl;
@@ -60,8 +49,6 @@ import org.apache.streampipes.storage.couchdb.impl.pipeline.DataStreamStorageImp
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineCanvasMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementTemplateStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.system.AssetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.CertificateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceConfigurationStorageImpl;
@@ -71,14 +58,12 @@ import org.apache.streampipes.storage.couchdb.impl.system.GenericStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ImageStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RefreshTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserActivationTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 public class CouchDbStorageManager implements INoSqlStorage {
 
@@ -93,11 +78,6 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IAdapterStorage getAdapterInstanceStorage() {
-    return new AdapterInstanceStorageImpl();
-  }
-
-  @Override
   public IImageStorage getImageStorage() {
     return new ImageStorageImpl();
   }
@@ -108,36 +88,13 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IPipelineStorage getPipelineStorageAPI() {
-    return new PipelineStorageImpl();
-  }
-
-  @Override
   public IUserStorage getUserStorageAPI() {
     return new UserStorage();
   }
 
   @Override
-  public IDataLakeMeasureStorage getDataLakeStorage() {
-    return new DataLakeMeasureStorage(
-        () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
-        DataLakeMeasure.class
-    );
-  }
-
-  @Override
   public IFileMetadataStorage getFileMetadataStorage() {
     return new FileMetadataStorageImpl();
-  }
-
-  @Override
-  public IDataExplorerDashboardStorage getDataExplorerDashboardStorage() {
-    return new DataExplorerDashboardStorageImpl();
-  }
-
-  @Override
-  public IDataExplorerWidgetStorage getDataExplorerWidgetStorage() {
-    return new DataExplorerWidgetStorageImpl();
   }
 
   @Override
@@ -153,11 +110,6 @@ public class CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IPipelineElementDescriptionStorage getPipelineElementDescriptionStorage() {
     return new PipelineElementDescriptionStorageImpl();
-  }
-
-  @Override
-  public IPermissionStorage getPermissionStorage() {
-    return new PermissionStorageImpl("users/permissions");
   }
 
   @Override
@@ -223,11 +175,6 @@ public class CouchDbStorageManager implements INoSqlStorage {
   @Override
   public ICertificateStorage getCertificateStorage() {
     return new CertificateStorageImpl();
-  }
-
-  @Override
-  public IAssetStorage getAssetStorage() {
-    return new AssetStorageImpl();
   }
 
   @Override

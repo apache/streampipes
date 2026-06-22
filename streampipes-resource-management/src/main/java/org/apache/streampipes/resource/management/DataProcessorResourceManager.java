@@ -25,8 +25,8 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 public class DataProcessorResourceManager extends
     AbstractPipelineElementResourceManager<IDataProcessorStorage, DataProcessorDescription, DataProcessorInvocation> {
 
-  public DataProcessorResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataProcessorStorage());
+  public DataProcessorResourceManager(PermissionResourceManager permissionResourceManager) {
+    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataProcessorStorage(), permissionResourceManager);
   }
 
   @Override

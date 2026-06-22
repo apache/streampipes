@@ -25,6 +25,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarg
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +37,9 @@ public class DetachExtensionRequest extends PipelineElementExtensionRequest {
 
   private static final Logger LOG = LoggerFactory.getLogger(DetachExtensionRequest.class);
 
-  public DetachExtensionRequest(ExtensionServiceRequestManager requestManager) {
-    super(requestManager);
+  public DetachExtensionRequest(ExtensionServiceRequestManager requestManager,
+                                SpResourceManager resourceManager) {
+    super(requestManager, resourceManager);
   }
 
   @Override
@@ -54,7 +56,7 @@ public class DetachExtensionRequest extends PipelineElementExtensionRequest {
         instanceId
     );
     return requestManager().request(
-        ExtensionServiceRequests.pipelineElementDetach(requestTarget, pipelineId)
+        ExtensionServiceRequests.pipelineElementDetach(requestTarget, pipelineId, resourceManager)
     );
   }
 

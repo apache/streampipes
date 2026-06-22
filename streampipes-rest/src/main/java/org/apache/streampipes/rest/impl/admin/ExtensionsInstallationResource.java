@@ -29,6 +29,12 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.resource.management.AdapterDescriptionResourceManager;
+import org.apache.streampipes.resource.management.DataProcessorResourceManager;
+import org.apache.streampipes.resource.management.DataSinkResourceManager;
+import org.apache.streampipes.resource.management.DataStreamResourceManager;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
@@ -54,9 +60,21 @@ import java.util.Set;
 public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResource {
 
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  private final DataSinkResourceManager dataSinkResourceManager;
+  private final DataProcessorResourceManager dataProcessorResourceManager;
+  private final AdapterDescriptionResourceManager adapterDescriptionResourceManager;
+  private final DataStreamResourceManager dataStreamResourceManager;
+  private final SpResourceManager resourceManager;
 
-  public ExtensionsInstallationResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
+  public ExtensionsInstallationResource(ExtensionServiceRequestManager extensionServiceRequestManager,
+                                        SpResourceManager resourceManager) {
+    this.resourceManager = resourceManager;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    PermissionResourceManager permissionResourceManager = resourceManager.managePermissions();
+    this.dataSinkResourceManager = resourceManager.manageDataSinks();
+    this.dataProcessorResourceManager = resourceManager.manageDataProcessors();
+    this.adapterDescriptionResourceManager = resourceManager.manageAdapterDescriptions();
+    this.dataStreamResourceManager = resourceManager.manageDataStreams();
   }
 
   @PostMapping(
@@ -65,7 +83,7 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
   public ResponseEntity<Message> addElement(@RequestBody ExtensionItemInstallationRequest installationReq) {
     try {
       var service = findSupportedService(installationReq);
-      return ok(new ExtensionItemInstaller(service, extensionServiceRequestManager)
+      return ok(new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager)
           .installExtension(installationReq, getAuthenticatedUserSid()));
     } catch (IOException | SepaParseException | NoServiceEndpointsAvailableException e) {
       return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
@@ -78,7 +96,7 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
   public ResponseEntity<Message> updateElement(@RequestBody ExtensionItemInstallationRequest installationReq) {
     try {
       var service = findSupportedService(installationReq);
-      return ok(new ExtensionItemInstaller(service, extensionServiceRequestManager)
+      return ok(new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager)
           .updateExtension(installationReq));
     } catch (IOException | SepaParseException | NoServiceEndpointsAvailableException e) {
       return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR, e.getMessage()));
@@ -88,21 +106,20 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
   @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Message> deleteElement(@PathVariable("id") String elementId) {
     IPipelineElementDescriptionStorage requestor = getPipelineElementStorage();
-    var resourceManager = getSpResourceManager();
     String appId;
     try {
       if (requestor.existsDataProcessor(elementId)) {
         appId = requestor.getDataProcessorById(elementId).getAppId();
-        resourceManager.manageDataProcessors().delete(elementId);
+        dataProcessorResourceManager.delete(elementId);
       } else if (requestor.existsDataStream(elementId)) {
         appId = requestor.getDataStreamById(elementId).getAppId();
-        resourceManager.manageDataStreams().delete(elementId);
+        dataStreamResourceManager.delete(elementId);
       } else if (requestor.existsDataSink(elementId)) {
         appId = requestor.getDataSinkById(elementId).getAppId();
-        resourceManager.manageDataSinks().delete(elementId);
+        dataSinkResourceManager.delete(elementId);
       } else if (requestor.existsAdapterDescription(elementId)) {
         appId = requestor.getAdapterById(elementId).getAppId();
-        resourceManager.manageAdapterDescriptions().delete(elementId);
+        adapterDescriptionResourceManager.delete(elementId);
       } else {
         return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
             NotificationType.STORAGE_ERROR.description()));

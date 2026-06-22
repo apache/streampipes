@@ -18,6 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.client.user.UserRegistrationData;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import org.springframework.http.MediaType;
@@ -36,10 +37,16 @@ import java.security.spec.InvalidKeySpecException;
 @RequestMapping("/api/v2/restore-password")
 public class RestorePasswordResource extends AbstractRestResource {
 
+  private final SpResourceManager resourceManager;
+
+  public RestorePasswordResource(SpResourceManager resourceManager) {
+    this.resourceManager = resourceManager;
+  }
+
   @GetMapping(path = "{recoveryCode}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> checkTokenValidity(@PathVariable("recoveryCode") String recoveryCode) {
     try {
-      getSpResourceManager().manageUsers().checkPasswordRecoveryCode(recoveryCode);
+      resourceManager.manageUsers().checkPasswordRecoveryCode(recoveryCode);
       return ok();
     } catch (IllegalArgumentException e) {
       return badRequest();
@@ -54,7 +61,7 @@ public class RestorePasswordResource extends AbstractRestResource {
                                              @RequestBody UserRegistrationData userRegistrationData
   ) {
     try {
-      getSpResourceManager().manageUsers().changePassword(recoveryCode, userRegistrationData);
+      resourceManager.manageUsers().changePassword(recoveryCode, userRegistrationData);
       return ok();
     } catch (IllegalArgumentException e) {
       return badRequest();
