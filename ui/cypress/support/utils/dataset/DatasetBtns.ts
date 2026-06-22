@@ -111,6 +111,40 @@ export class DatasetBtns {
         });
     }
 
+    public static datasetDetailsSchemaTable() {
+        return cy.dataCy('dataset-details-schema-table', { timeout: 10000 });
+    }
+
+    public static datasetDetailsSchemaField(runtimeName: string) {
+        return cy.dataCy(`dataset-details-schema-field-${runtimeName}`, {
+            timeout: 10000,
+        });
+    }
+
+    public static datasetDetailsSchemaType(runtimeName: string) {
+        return cy.dataCy(`dataset-details-schema-type-${runtimeName}`, {
+            timeout: 10000,
+        });
+    }
+
+    public static datasetDetailsEventLimit() {
+        return cy.dataCy('dataset-details-event-limit', { timeout: 10000 });
+    }
+
+    public static datasetDetailsEventsTable() {
+        return cy.dataCy('dataset-details-events-table', { timeout: 30000 });
+    }
+
+    public static datasetDetailsEventCell(columnName: string) {
+        return cy.dataCy(`dataset-details-event-cell-${columnName}`, {
+            timeout: 30000,
+        });
+    }
+
+    public static datasetDetailsCreateChart() {
+        return cy.dataCy('dataset-details-create-chart', { timeout: 10000 });
+    }
+
     public static datasetTotalCountCell(name: string) {
         return this.datasetRow(name).find(
             '[data-cy="datalake-number-of-events"]',
