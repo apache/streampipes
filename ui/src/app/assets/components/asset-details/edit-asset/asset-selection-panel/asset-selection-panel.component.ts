@@ -53,6 +53,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 const HOVER_EXPAND_DELAY_MS = 500;
 
@@ -79,6 +80,9 @@ const HOVER_EXPAND_DELAY_MS = 500;
         CdkDrag,
         CdkDragHandle,
         MatTooltip,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
     ],
 })
 export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
@@ -140,6 +144,26 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
     deleteAsset(node: SpAsset) {
         this.removeAssetWithId(this.assetModel.assets, node.assetId);
         this.rerenderTree();
+    }
+
+    moveAsset(node: SpAsset, offset: number): void {
+        const move = this.getAssetMove(node, offset);
+        if (!move) {
+            return;
+        }
+
+        const [movedAsset] = move.siblingAssets.splice(move.sourceIndex, 1);
+        move.siblingAssets.splice(move.targetIndex, 0, movedAsset);
+        this.rerenderTree();
+        this.expandToAsset(node.assetId);
+    }
+
+    canMoveAssetUp(node: SpAsset): boolean {
+        return this.canMoveAsset(node, -1);
+    }
+
+    canMoveAssetDown(node: SpAsset): boolean {
+        return this.canMoveAsset(node, 1);
     }
 
     dropAssetIntoParent(
@@ -219,6 +243,10 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
 
     isRootNode(node: SpAsset): boolean {
         return node.assetId === this.assetModel.assetId;
+    }
+
+    canDeleteAsset(node: SpAsset): boolean {
+        return !this.isRootNode(node) && !node.assets?.length;
     }
 
     removeAssetWithId(assets: SpAsset[], id: string) {
@@ -306,6 +334,28 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
         return this.getAllAssets(this.assetModel).find(
             node => this.getDropTargetId(node) === dropListId,
         );
+    }
+
+    private canMoveAsset(node: SpAsset, offset: number): boolean {
+        return !!this.getAssetMove(node, offset);
+    }
+
+    private getAssetMove(node: SpAsset, offset: number) {
+        const siblingAssets = this.findParentAssets(node.assetId);
+        const sourceIndex = siblingAssets?.findIndex(
+            asset => asset.assetId === node.assetId,
+        );
+        const targetIndex =
+            sourceIndex !== undefined ? sourceIndex + offset : -1;
+
+        return !this.isRootNode(node) &&
+            siblingAssets &&
+            sourceIndex !== undefined &&
+            sourceIndex >= 0 &&
+            targetIndex >= 0 &&
+            targetIndex < siblingAssets.length
+            ? { siblingAssets, sourceIndex, targetIndex }
+            : undefined;
     }
 
     private scheduleHoverExpand(node: SpAsset): void {

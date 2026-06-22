@@ -127,30 +127,125 @@
                                     </div>
                                     @if (editMode) {
                                         <div class="node-actions">
-                                            <button
-                                                mat-icon-button
-                                                [attr.data-cy]="
-                                                    'add-asset-' +
-                                                    node.assetName
-                                                "
-                                                (click)="
-                                                    addAsset(node);
-                                                    $event.stopPropagation()
-                                                "
-                                                color="accent"
-                                            >
-                                                <mat-icon>add</mat-icon>
-                                            </button>
-                                            <button
-                                                mat-icon-button
-                                                (click)="
-                                                    deleteAsset(node);
-                                                    $event.stopPropagation()
-                                                "
-                                                color="accent"
-                                            >
-                                                <mat-icon>delete</mat-icon>
-                                            </button>
+                                            @if (!isRootNode(node)) {
+                                                <button
+                                                    mat-icon-button
+                                                    type="button"
+                                                    [disabled]="
+                                                        !canMoveAssetUp(node)
+                                                    "
+                                                    [matTooltip]="
+                                                        'Move asset up'
+                                                            | translate
+                                                    "
+                                                    [attr.aria-label]="
+                                                        'Move asset up'
+                                                            | translate
+                                                    "
+                                                    (click)="
+                                                        moveAsset(node, -1);
+                                                        $event.stopPropagation()
+                                                    "
+                                                >
+                                                    <mat-icon
+                                                        >arrow_upward</mat-icon
+                                                    >
+                                                </button>
+                                                <button
+                                                    mat-icon-button
+                                                    type="button"
+                                                    [disabled]="
+                                                        !canMoveAssetDown(node)
+                                                    "
+                                                    [matTooltip]="
+                                                        'Move asset down'
+                                                            | translate
+                                                    "
+                                                    [attr.aria-label]="
+                                                        'Move asset down'
+                                                            | translate
+                                                    "
+                                                    (click)="
+                                                        moveAsset(node, 1);
+                                                        $event.stopPropagation()
+                                                    "
+                                                >
+                                                    <mat-icon
+                                                        >arrow_downward</mat-icon
+                                                    >
+                                                </button>
+                                            }
+                                            @if (canDeleteAsset(node)) {
+                                                <button
+                                                    mat-icon-button
+                                                    type="button"
+                                                    [matMenuTriggerFor]="
+                                                        assetMenu
+                                                    "
+                                                    [matTooltip]="
+                                                        'More options'
+                                                            | translate
+                                                    "
+                                                    [attr.aria-label]="
+                                                        'More options'
+                                                            | translate
+                                                    "
+                                                    (click)="
+                                                        $event.stopPropagation()
+                                                    "
+                                                >
+                                                    <mat-icon
+                                                        >more_vert</mat-icon
+                                                    >
+                                                </button>
+                                                <mat-menu #assetMenu="matMenu">
+                                                    <button
+                                                        mat-menu-item
+                                                        [attr.data-cy]="
+                                                            'add-asset-' +
+                                                            node.assetName
+                                                        "
+                                                        (click)="
+                                                            addAsset(node);
+                                                            $event.stopPropagation()
+                                                        "
+                                                    >
+                                                        <mat-icon>add</mat-icon>
+                                                        <span>{{
+                                                            'Add' | translate
+                                                        }}</span>
+                                                    </button>
+                                                    <button
+                                                        mat-menu-item
+                                                        (click)="
+                                                            deleteAsset(node);
+                                                            $event.stopPropagation()
+                                                        "
+                                                    >
+                                                        <mat-icon
+                                                            >delete</mat-icon
+                                                        >
+                                                        <span>{{
+                                                            'Delete' | translate
+                                                        }}</span>
+                                                    </button>
+                                                </mat-menu>
+                                            } @else {
+                                                <button
+                                                    mat-icon-button
+                                                    [attr.data-cy]="
+                                                        'add-asset-' +
+                                                        node.assetName
+                                                    "
+                                                    (click)="
+                                                        addAsset(node);
+                                                        $event.stopPropagation()
+                                                    "
+                                                    color="accent"
+                                                >
+                                                    <mat-icon>add</mat-icon>
+                                                </button>
+                                            }
                                         </div>
                                     }
                                 </div>
@@ -272,32 +367,135 @@
                                         </div>
                                         @if (editMode) {
                                             <div class="node-actions">
-                                                <button
-                                                    mat-icon-button
-                                                    (click)="
-                                                        addAsset(node);
-                                                        $event.stopPropagation()
-                                                    "
-                                                    [attr.data-cy]="
-                                                        'add-asset-' +
-                                                        node.assetName
-                                                    "
-                                                    color="accent"
-                                                >
-                                                    <mat-icon>add</mat-icon>
-                                                </button>
-                                                @if (!node.assets?.length) {
+                                                @if (!isRootNode(node)) {
+                                                    <button
+                                                        mat-icon-button
+                                                        type="button"
+                                                        [disabled]="
+                                                            !canMoveAssetUp(
+                                                                node
+                                                            )
+                                                        "
+                                                        [matTooltip]="
+                                                            'Move asset up'
+                                                                | translate
+                                                        "
+                                                        [attr.aria-label]="
+                                                            'Move asset up'
+                                                                | translate
+                                                        "
+                                                        (click)="
+                                                            moveAsset(node, -1);
+                                                            $event.stopPropagation()
+                                                        "
+                                                    >
+                                                        <mat-icon
+                                                            >arrow_upward</mat-icon
+                                                        >
+                                                    </button>
+                                                    <button
+                                                        mat-icon-button
+                                                        type="button"
+                                                        [disabled]="
+                                                            !canMoveAssetDown(
+                                                                node
+                                                            )
+                                                        "
+                                                        [matTooltip]="
+                                                            'Move asset down'
+                                                                | translate
+                                                        "
+                                                        [attr.aria-label]="
+                                                            'Move asset down'
+                                                                | translate
+                                                        "
+                                                        (click)="
+                                                            moveAsset(node, 1);
+                                                            $event.stopPropagation()
+                                                        "
+                                                    >
+                                                        <mat-icon
+                                                            >arrow_downward</mat-icon
+                                                        >
+                                                    </button>
+                                                }
+                                                @if (canDeleteAsset(node)) {
+                                                    <button
+                                                        mat-icon-button
+                                                        type="button"
+                                                        [matMenuTriggerFor]="
+                                                            assetMenu
+                                                        "
+                                                        [matTooltip]="
+                                                            'More options'
+                                                                | translate
+                                                        "
+                                                        [attr.aria-label]="
+                                                            'More options'
+                                                                | translate
+                                                        "
+                                                        (click)="
+                                                            $event.stopPropagation()
+                                                        "
+                                                    >
+                                                        <mat-icon
+                                                            >more_vert</mat-icon
+                                                        >
+                                                    </button>
+                                                    <mat-menu
+                                                        #assetMenu="matMenu"
+                                                    >
+                                                        <button
+                                                            mat-menu-item
+                                                            (click)="
+                                                                addAsset(node);
+                                                                $event.stopPropagation()
+                                                            "
+                                                            [attr.data-cy]="
+                                                                'add-asset-' +
+                                                                node.assetName
+                                                            "
+                                                        >
+                                                            <mat-icon
+                                                                >add</mat-icon
+                                                            >
+                                                            <span>{{
+                                                                'Add'
+                                                                    | translate
+                                                            }}</span>
+                                                        </button>
+                                                        <button
+                                                            mat-menu-item
+                                                            (click)="
+                                                                deleteAsset(
+                                                                    node
+                                                                );
+                                                                $event.stopPropagation()
+                                                            "
+                                                        >
+                                                            <mat-icon
+                                                                >delete</mat-icon
+                                                            >
+                                                            <span>{{
+                                                                'Delete'
+                                                                    | translate
+                                                            }}</span>
+                                                        </button>
+                                                    </mat-menu>
+                                                } @else {
                                                     <button
                                                         mat-icon-button
                                                         (click)="
-                                                            deleteAsset(node);
+                                                            addAsset(node);
                                                             $event.stopPropagation()
+                                                        "
+                                                        [attr.data-cy]="
+                                                            'add-asset-' +
+                                                            node.assetName
                                                         "
                                                         color="accent"
                                                     >
-                                                        <mat-icon
-                                                            >delete</mat-icon
-                                                        >
+                                                        <mat-icon>add</mat-icon>
                                                     </button>
                                                 }
                                             </div>
