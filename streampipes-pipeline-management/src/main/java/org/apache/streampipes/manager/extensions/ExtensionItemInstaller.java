@@ -26,6 +26,7 @@ import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.io.IOException;
@@ -34,24 +35,29 @@ public class ExtensionItemInstaller {
 
   private final ExtensionServiceRequestManager requestManager;
   private final SpServiceRegistration service;
+  private final SpResourceManager resourceManager;
 
   public ExtensionItemInstaller(SpServiceRegistration service,
-                                ExtensionServiceRequestManager requestManager) {
+                                ExtensionServiceRequestManager requestManager,
+                                SpResourceManager resourceManager) {
     this.requestManager = requestManager;
     this.service = service;
+    this.resourceManager = resourceManager;
   }
 
   public Message installExtension(ExtensionItemInstallationRequest req,
                                   String principalSid) throws IOException, SepaParseException {
     var requestTarget = getDescriptionRequestTarget(req);
     var description = fetchDescription(requestTarget);
-    return new TypeExtractor(description, requestManager).getTypeVerifier().verifyAndAdd(principalSid, req.publicElement());
+    return new TypeExtractor(description, requestManager,
+        resourceManager.managePermissions()).getTypeVerifier().verifyAndAdd(principalSid, req.publicElement());
   }
 
   public Message updateExtension(ExtensionItemInstallationRequest req) throws IOException, SepaParseException {
     var requestTarget = getDescriptionRequestTarget(req);
     var description = fetchDescription(requestTarget);
-    return new TypeExtractor(description, requestManager).getTypeVerifier().verifyAndUpdate();
+    return new TypeExtractor(description, requestManager,
+        resourceManager.managePermissions()).getTypeVerifier().verifyAndUpdate();
   }
 
   private ExtensionServiceRequestTarget getDescriptionRequestTarget(ExtensionItemInstallationRequest req) {
@@ -63,6 +69,8 @@ public class ExtensionItemInstaller {
   }
 
   private String fetchDescription(ExtensionServiceRequestTarget requestTarget) throws IOException {
-    return requestManager.request(ExtensionServiceRequests.extensionDescription(requestTarget)).responseBody();
+    return requestManager.request(
+        ExtensionServiceRequests.extensionDescription(requestTarget, resourceManager)
+    ).responseBody();
   }
 }

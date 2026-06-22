@@ -22,7 +22,6 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 
 import org.springframework.security.access.PermissionEvaluator;
@@ -40,8 +39,8 @@ public class SpPermissionEvaluator implements PermissionEvaluator {
 
   private final IPermissionStorage permissionStorage;
 
-  public SpPermissionEvaluator() {
-    this.permissionStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
+  public SpPermissionEvaluator(IPermissionStorage permissionStorage) {
+    this.permissionStorage = permissionStorage;
   }
 
   /**

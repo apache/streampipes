@@ -26,7 +26,7 @@ import org.apache.streampipes.model.datalake.MeasurementUpdateInfo;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,20 +35,17 @@ import java.util.stream.Collectors;
 public class MeasurementUpdateManagement {
 
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
+  private final IPipelineStorage pipelineStorage;
 
-  public MeasurementUpdateManagement() {
-    this(new ChartSchemaUpdateCoordinator());
-  }
-
-  MeasurementUpdateManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
+  public MeasurementUpdateManagement(IPipelineStorage pipelineStorage,
+                                     ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
+    this.pipelineStorage = pipelineStorage;
   }
 
   public List<MeasurementUpdateInfo> checkPipelineMigrations(String pipelineId,
                                                              Pipeline updatedPipeline) {
-    var storedPipeline = StorageDispatcher.INSTANCE.getNoSqlStore()
-        .getPipelineStorageAPI()
-        .getElementById(pipelineId);
+    var storedPipeline = pipelineStorage.getElementById(pipelineId);
 
     return checkPipelineMigrations(storedPipeline, updatedPipeline);
   }

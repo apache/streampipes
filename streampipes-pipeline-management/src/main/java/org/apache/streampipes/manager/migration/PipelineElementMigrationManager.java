@@ -33,6 +33,7 @@ import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
@@ -59,8 +60,9 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
   public PipelineElementMigrationManager(IPipelineStorage pipelineStorage,
                                          IDataProcessorStorage dataProcessorStorage,
                                          IDataSinkStorage dataSinkStorage,
-                                         ExtensionServiceRequestManager extensionServiceRequestManager) {
-    super(extensionServiceRequestManager);
+                                         ExtensionServiceRequestManager extensionServiceRequestManager,
+                                         SpResourceManager resourceManager) {
+    super(extensionServiceRequestManager, resourceManager);
     this.pipelineStorage = pipelineStorage;
     this.dataProcessorStorage = dataProcessorStorage;
     this.dataSinkStorage = dataSinkStorage;
@@ -181,7 +183,7 @@ public class PipelineElementMigrationManager extends AbstractMigrationManager im
 
 
   public void stopPipeline(Pipeline pipeline) {
-    var pipelineExecutor = new PipelineExecutor(pipeline, requestManager);
+    var pipelineExecutor = new PipelineExecutor(pipeline, requestManager, resourceManager);
     var pipelineStopResult = pipelineExecutor.stopPipeline(true);
 
     if (pipelineStopResult.isSuccess()) {

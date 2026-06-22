@@ -25,4 +25,7 @@ public class AbstractResourceManager<T> {
     this.db = db;
   }
 
+  public T getDb() {
+    return db;
+  }
 }

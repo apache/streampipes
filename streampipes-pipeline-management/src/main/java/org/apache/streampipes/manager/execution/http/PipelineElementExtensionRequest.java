@@ -23,6 +23,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.google.gson.JsonSyntaxException;
@@ -32,9 +33,12 @@ import java.io.IOException;
 public abstract class PipelineElementExtensionRequest {
 
   private final ExtensionServiceRequestManager requestManager;
+  protected final SpResourceManager resourceManager;
 
-  public PipelineElementExtensionRequest(ExtensionServiceRequestManager requestManager) {
+  public PipelineElementExtensionRequest(ExtensionServiceRequestManager requestManager,
+                                         SpResourceManager resourceManager) {
     this.requestManager = requestManager;
+    this.resourceManager = resourceManager;
   }
 
   public PipelineElementStatus execute(InvocableStreamPipesEntity pipelineElement,

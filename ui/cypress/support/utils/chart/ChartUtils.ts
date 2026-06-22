@@ -805,22 +805,16 @@ export class ChartUtils {
         return currentDate;
     }
 
-    public static waitForCountingResults() {
-        cy.dataCy('datalake-total-count-button').click();
-        cy.dataCy('datalake-number-of-events-spinner', {
-            timeout: 10000,
-        }).should('exist');
-        cy.dataCy('datalake-number-of-events-spinner', {
-            timeout: 10000,
-        }).should('not.exist');
-    }
+    public static getDatalakeNumberOfEvents(): Cypress.Chainable<number> {
+        ChartBtns.datalakeTotalCountBtn().should('be.visible').click();
+        ChartBtns.datalakeTotalCountBtn().should('not.exist');
+        ChartBtns.datalakeNumberOfEventsSpinner().should('not.exist');
 
-    public static getDatalakeNumberOfEvents(): Cypress.Chainable<string> {
         return cy
             .dataCy('datalake-number-of-events', { timeout: 10000 })
             .should('be.visible')
             .invoke('text')
-            .then(text => text.trim());
+            .then(text => Number(text.replaceAll(',', '').trim()));
     }
 
     public static checkRowsDashboardTable(amount: number) {

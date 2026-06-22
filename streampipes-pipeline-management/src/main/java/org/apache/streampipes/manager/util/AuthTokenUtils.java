@@ -20,7 +20,9 @@ package org.apache.streampipes.manager.util;
 
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 
 import org.springframework.security.core.Authentication;
@@ -33,22 +35,22 @@ public class AuthTokenUtils {
     return makeBearerToken(new JwtTokenProvider().createToken(auth));
   }
 
-  public static String getAuthToken(String resourceId) {
+  public static String getAuthToken(String resourceId,
+                                    SpResourceManager resourceManager) {
     if (SecurityContextHolder.getContext().getAuthentication() != null) {
-      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      return makeBearerToken(new JwtTokenProvider().createToken(auth));
+        return getAuthTokenForCurrentUser();
     } else {
       if (resourceId != null) {
-        String ownerSid = getOwnerSid(resourceId);
-        return getAuthTokenForUser(ownerSid);
+        String ownerSid = getOwnerSid(resourceId, resourceManager.managePermissions());
+        return getAuthTokenForUser(ownerSid, resourceManager.manageUsers());
       } else {
         throw new IllegalArgumentException("No authenticated user found to associate with request");
       }
     }
   }
 
-  public static String getAuthTokenForUser(String ownerSid) {
-    Principal correspondingUser = new SpResourceManager().manageUsers().getPrincipalById(ownerSid);
+  public static String getAuthTokenForUser(String ownerSid, UserResourceManager userResourceManager) {
+    Principal correspondingUser = userResourceManager.getPrincipalById(ownerSid);
     return getAuthTokenForUser(correspondingUser);
   }
 
@@ -60,10 +62,8 @@ public class AuthTokenUtils {
     return "Bearer " + token;
   }
 
-  private static String getOwnerSid(String resourceId) {
-    return new SpResourceManager()
-        .managePermissions()
-        .findForObjectId(resourceId)
+  private static String getOwnerSid(String resourceId, PermissionResourceManager permissionResourceManager) {
+    return permissionResourceManager.findForObjectId(resourceId)
         .stream()
         .findFirst()
         .map(Permission::getOwnerSid)

@@ -23,6 +23,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +36,14 @@ public class InvokePipelineElementSubmitter extends BasePipelineElementSubmitter
   private static final Logger LOG = LoggerFactory.getLogger(InvokePipelineElementSubmitter.class);
 
   public InvokePipelineElementSubmitter(Pipeline pipeline,
-                                        ExtensionServiceRequestManager requestManager) {
-    super(pipeline, requestManager);
+                                        ExtensionServiceRequestManager requestManager,
+                                        SpResourceManager resourceManager) {
+    super(pipeline, requestManager, resourceManager);
   }
 
   @Override
   protected PipelineElementStatus submitElement(InvocableStreamPipesEntity pipelineElement) {
-    return new InvokeExtensionRequest(requestManager).execute(pipelineElement, this.pipelineId);
+    return new InvokeExtensionRequest(requestManager, resourceManager).execute(pipelineElement, this.pipelineId);
   }
 
   @Override

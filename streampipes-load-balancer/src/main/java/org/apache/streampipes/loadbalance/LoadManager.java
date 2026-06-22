@@ -32,6 +32,7 @@ import org.apache.streampipes.loadbalance.unit.ResourceUnitScanner;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +55,7 @@ public class LoadManager {
   /**
    * Initialize the load balancer with configuration from environment.
    */
-  public static void initialize() {
+  public static void initialize(SpResourceManager resourceManager) {
     if (!environment.getLoadManagerEnable().getValueOrDefault()) {
       return;
     }
@@ -86,13 +87,13 @@ public class LoadManager {
     }
 
     if (environment.getMigrator().getValueOrDefault().equals("TransferMigrator")) {
-      migrator = new TransferMigrator();
+      migrator = new TransferMigrator(resourceManager);
     } else if (environment.getMigrator().getValueOrDefault().equals("OverloadMigrator")) {
-      migrator = new OverloadMigrator();
+      migrator = new OverloadMigrator(resourceManager);
     } else {
-      migrator = new ThresholdMigrator();
+      migrator = new ThresholdMigrator(resourceManager);
     }
-    LoadManager.loadBalancer = new ExtensibleLoadManager(selector, migrator);
+    LoadManager.loadBalancer = new ExtensibleLoadManager(selector, migrator, resourceManager);
 
     LoadManager.lock = new ReentrantReadWriteLock();
 
@@ -164,7 +165,9 @@ public class LoadManager {
     }
   }
 
-  public static void migrateForHealthCheck(List<SpServiceRegistration> needDeletedServices) {
+  public static void migrateForHealthCheck(List<SpServiceRegistration> needDeletedServices,
+                                           SpResourceManager resourceManager) {
+    var pipelineStorage = resourceManager.managePipelines().getDb();
     if (!environment.getLoadManagerEnable().getValueOrDefault() || loadBalancer == null) {
       return;
     }
@@ -175,7 +178,7 @@ public class LoadManager {
       try {
         for (SpServiceRegistration service : needDeletedServices) {
           ResourceUnitScanner.ServiceResourceUnits serviceResourceUnits =
-              ResourceUnitScanner.scanAndPartitionService(service);
+              ResourceUnitScanner.scanAndPartitionService(service, resourceManager);
           List<PipelineElementPartitioner.PartitionResult> resourceUnits =
               serviceResourceUnits.getPipelineUnits();
 
@@ -198,7 +201,7 @@ public class LoadManager {
                                          loadBalanceResourceUnit.getLabels());
               if (targetService != null) {
                 ResourceUnitMigration.migrationForHealth(loadBalanceResourceUnit, targetService,
-                                                         service);
+                                                         service, pipelineStorage);
               }
             }
           }
@@ -213,7 +216,7 @@ public class LoadManager {
             if (targetService != null) {
               // Migrate resource unit to a healthy service
               ResourceUnitMigration.migrateAdapterForHealth(resourceUnit.getResourceUnit(),
-                                                            targetService, service);
+                                                            targetService, service, resourceManager);
             }
           }
         }

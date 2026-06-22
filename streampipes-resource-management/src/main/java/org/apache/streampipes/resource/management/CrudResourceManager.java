@@ -25,17 +25,20 @@ import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 import java.util.List;
 
-public class CrudResourceManager<T extends Storable>
-    extends AbstractResourceManager<CRUDStorage<T>> {
+public class CrudResourceManager<T extends Storable, SeT extends CRUDStorage<T>>
+    extends AbstractResourceManager<SeT> {
 
   private final Class<T> elementClass;
   protected final SpPermissionEvaluator permissionEvaluator;
+  protected final PermissionResourceManager permissionResourceManager;
 
-  public CrudResourceManager(CRUDStorage<T> db,
-                             Class<T> elementClass) {
+  public CrudResourceManager(SeT db,
+                             Class<T> elementClass,
+                             PermissionResourceManager permissionResourceManager) {
     super(db);
     this.elementClass = elementClass;
-    this.permissionEvaluator = new SpPermissionEvaluator();
+    this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
+    this.permissionResourceManager = permissionResourceManager;
   }
 
   public List<T> findAll() {
@@ -57,7 +60,7 @@ public class CrudResourceManager<T extends Storable>
       element.setElementId(ElementIdGenerator.makeElementId(elementClass));
     }
     db.persist(element);
-    new PermissionResourceManager().createDefault(element.getElementId(), elementClass, principalSid,
+    permissionResourceManager.createDefault(element.getElementId(), elementClass, principalSid,
         false);
     return find(element.getElementId());
   }
@@ -67,8 +70,7 @@ public class CrudResourceManager<T extends Storable>
   }
 
   private void deletePermissions(String elementId) {
-    PermissionResourceManager manager = new PermissionResourceManager();
-    List<Permission> permissions = manager.findForObjectId(elementId);
-    permissions.forEach(manager::delete);
+    List<Permission> permissions = permissionResourceManager.findForObjectId(elementId);
+    permissions.forEach(permissionResourceManager::delete);
   }
 }

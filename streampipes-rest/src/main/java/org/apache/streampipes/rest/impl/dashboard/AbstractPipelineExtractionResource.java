@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl.dashboard;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public abstract class AbstractPipelineExtractionResource<T> extends AbstractRestResource {
+
+  private SpResourceManager resourceManager;
+
+  public AbstractPipelineExtractionResource(SpResourceManager resourceManager) {
+    this.resourceManager = resourceManager;
+  }
 
   protected ResponseEntity<?> getPipelineByIdAndFieldValue(String appId,
                                                         String pipelineId,
@@ -45,7 +52,7 @@ public abstract class AbstractPipelineExtractionResource<T> extends AbstractRest
   }
 
   protected List<T> extract(List<T> target, String appId) {
-    getPipelineStorage()
+    resourceManager.managePipelines().getDb()
         .findAll()
         .forEach(pipeline -> {
           List<DataSinkInvocation> sinks = extractSink(pipeline, appId);

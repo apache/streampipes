@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -31,9 +32,12 @@ import java.util.Optional;
 public class DescriptionManagement {
 
   private final WorkerRestClient workerRestClient;
+  private final AdapterResourceManager adapterResourceManager;
 
-  public DescriptionManagement(WorkerRestClient workerRestClient) {
+  public DescriptionManagement(WorkerRestClient workerRestClient,
+                               AdapterResourceManager adapterResourceManager) {
     this.workerRestClient = workerRestClient;
+    this.adapterResourceManager = adapterResourceManager;
   }
 
   public List<AdapterDescription> getAdapters() {
@@ -73,7 +77,7 @@ public class DescriptionManagement {
   }
 
   private boolean isAdapterUsed(AdapterDescription adapter) {
-    var allAdapters = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage().findAll();
+    var allAdapters = adapterResourceManager.getDb().findAll();
 
     return allAdapters
         .stream()

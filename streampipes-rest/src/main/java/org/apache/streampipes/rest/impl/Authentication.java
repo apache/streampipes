@@ -30,6 +30,7 @@ import org.apache.streampipes.model.configuration.GeneralConfig;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -72,9 +73,12 @@ public class Authentication extends AbstractRestResource {
   private static final long MIN_REFRESH_COOKIE_SECONDS = 1;
 
   AuthenticationManager authenticationManager;
+  private final SpResourceManager resourceManager;
 
-  public Authentication(AuthenticationManager authenticationManager) {
+  public Authentication(AuthenticationManager authenticationManager,
+                        SpResourceManager resourceManager) {
     this.authenticationManager = authenticationManager;
+    this.resourceManager = resourceManager;
   }
 
   @PostMapping(
@@ -169,7 +173,7 @@ public class Authentication extends AbstractRestResource {
         config.getDefaultUserRoles()
     );
     try {
-      getSpResourceManager().manageUsers().registerUser(enrichedUserRegistrationData);
+      resourceManager.manageUsers().registerUser(enrichedUserRegistrationData);
       return ok(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
     } catch (UsernameAlreadyTakenException e) {
       throw new SpMessageException(
@@ -187,7 +191,7 @@ public class Authentication extends AbstractRestResource {
       produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> sendPasswordRecoveryLink(@PathVariable("username") String username) {
     try {
-      getSpResourceManager().manageUsers().sendPasswordRecoveryLink(username);
+      resourceManager.manageUsers().sendPasswordRecoveryLink(username);
       return ok(new SuccessMessage(NotificationType.PASSWORD_RECOVERY_LINK_SENT.uiNotification()));
     } catch (UserNotFoundException e) {
       return ok();
@@ -229,7 +233,7 @@ public class Authentication extends AbstractRestResource {
         setRefreshCookie(request, response, issuedRefreshToken);
       }
       ((UserAccount) principal).setLastLoginAtMillis(System.currentTimeMillis());
-      getSpResourceManager().manageUsers().updateUser(principal);
+      resourceManager.manageUsers().updateUser(principal);
       return ok(tokenResp);
     } else {
       throw new BadCredentialsException("Could not create auth token");

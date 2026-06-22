@@ -27,7 +27,6 @@ import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,13 +47,6 @@ public class MigrateAdaptersToUseScript implements Migration {
   // Constructor-based Injection
   public MigrateAdaptersToUseScript(IAdapterStorage adapterStorage) {
     this.adapterStorage = adapterStorage;
-  }
-
-  // Use a default constructor if the migration framework requires it,
-  // but point it to the singleton here.
-  public MigrateAdaptersToUseScript() {
-    this(StorageDispatcher.INSTANCE.getNoSqlStore()
-                                   .getAdapterInstanceStorage());
   }
 
   @Override

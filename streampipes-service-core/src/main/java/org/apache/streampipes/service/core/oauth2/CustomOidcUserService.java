@@ -21,6 +21,7 @@ package org.apache.streampipes.service.core.oauth2;
 
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.rest.security.OAuth2AuthenticationProcessingException;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
@@ -34,7 +35,10 @@ import java.util.Objects;
 @Service
 public class CustomOidcUserService extends OidcUserService {
 
-  public CustomOidcUserService() {
+  private final IPermissionStorage permissionStorage;
+
+  public CustomOidcUserService(IPermissionStorage permissionStorage) {
+    this.permissionStorage = permissionStorage;
     var env = Environments.getEnvironment();
     this.setRetrieveUserInfo(req -> {
       var config = env.getOAuthConfigurations()
@@ -52,7 +56,7 @@ public class CustomOidcUserService extends OidcUserService {
     OidcUser oidcUser = super.loadUser(userRequest);
     try {
       var provider = userRequest.getClientRegistration().getRegistrationId();
-      return new UserService().processUserRegistration(
+      return new UserService(permissionStorage).processUserRegistration(
           provider,
           oidcUser.getAttributes(),
           oidcUser.getIdToken(),

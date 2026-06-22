@@ -18,12 +18,14 @@
 package org.apache.streampipes.user.management.model;
 
 import org.apache.streampipes.model.client.user.ServiceAccount;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 public class ServiceAccountDetails extends PrincipalUserDetails<ServiceAccount> {
 
 
-  public ServiceAccountDetails(ServiceAccount details) {
-    super(details);
+  public ServiceAccountDetails(ServiceAccount details,
+                               IPermissionStorage permissionStorage) {
+    super(details, permissionStorage);
   }
 
   @Override

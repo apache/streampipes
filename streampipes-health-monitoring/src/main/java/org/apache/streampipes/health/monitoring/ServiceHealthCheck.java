@@ -27,6 +27,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarg
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import org.apache.http.HttpStatus;
@@ -46,13 +47,16 @@ public class ServiceHealthCheck implements Runnable {
   private final int maxUnhealthyDurationBeforeRemovalMs;
 
   private final List<SpServiceRegistration> needDeletedServices = new ArrayList<>();
+  private final SpResourceManager resourceManager;
 
   public ServiceHealthCheck(IExtensionsServiceStorage storage,
-                            ExtensionServiceRequestManager extensionRequestManager) {
+                            ExtensionServiceRequestManager extensionRequestManager,
+                            SpResourceManager resourceManager) {
     this.extensionRequestManager = extensionRequestManager;
     this.serviceRegistrationManager = new ServiceRegistrationManager(storage);
     this.maxUnhealthyDurationBeforeRemovalMs = Environments.getEnvironment()
         .getUnhealthyTimeBeforeServiceDeletionInMillis().getValueOrDefault();
+    this.resourceManager = resourceManager;
   }
 
   @Override
@@ -64,7 +68,7 @@ public class ServiceHealthCheck implements Runnable {
       registeredServices.forEach(this::checkServiceHealth);
       
       if (env.getLoadManagerEnable().getValueOrDefault()) {
-        LoadManager.migrateForHealthCheck(needDeletedServices);
+        LoadManager.migrateForHealthCheck(needDeletedServices, resourceManager);
       }
     } catch (Exception e) {
       LOG.error("Error while checking service health", e);
@@ -77,7 +81,9 @@ public class ServiceHealthCheck implements Runnable {
     var requestTarget = makeHealthCheckRequestTarget(service);
 
     try {
-      var response = extensionRequestManager.request(ExtensionServiceRequests.serviceHealth(requestTarget));
+      var response = extensionRequestManager.request(
+          ExtensionServiceRequests.serviceHealth(requestTarget, resourceManager)
+      );
       if (response.statusCode() != HttpStatus.SC_OK) {
         processUnhealthyService(service);
       } else {

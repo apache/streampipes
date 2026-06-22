@@ -19,6 +19,7 @@
 
 package org.apache.streampipes.service.core.migrations;
 
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.service.core.migrations.v0980.AddDataLakeMeasureViewMigration;
 import org.apache.streampipes.service.core.migrations.v0980.AddDefaultExportProviderMigration;
 import org.apache.streampipes.service.core.migrations.v0980.FixImportedPermissionsMigration;
@@ -39,11 +40,36 @@ import org.apache.streampipes.service.core.migrations.v099.RemoveInternalNotific
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
+import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
+import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class AvailableMigrations {
+
+  private final IChartStorage chartStorage;
+  private final IPermissionStorage permissionStorage;
+  private final IAdapterStorage adapterStorage;
+  private final IDashboardStorage dashboardStorage;
+  private final IAssetStorage assetStorage;
+  private final IPipelineStorage pipelineStorage;
+  private final IDataLakeMeasureStorage datasetStorage;
+
+  public AvailableMigrations(SpResourceManager resourceManager) {
+    this.chartStorage = resourceManager.manageCharts().getDb();
+    this.permissionStorage = resourceManager.managePermissions().getDb();
+    this.adapterStorage = resourceManager.manageAdapters().getDb();
+    this.dashboardStorage = resourceManager.manageDashboards().getDb();
+    this.assetStorage = resourceManager.manageAssets().getDb();
+    this.pipelineStorage = resourceManager.managePipelines().getDb();
+    this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
+  }
 
   public List<Migration> getAvailableMigrations() {
     return Arrays.asList(
@@ -51,22 +77,22 @@ public class AvailableMigrations {
         new ModifyAssetLinkTypesMigration(),
         new AddDataLakeMeasureViewMigration(),
         new AddDefaultExportProviderMigration(),
-        new FixImportedPermissionsMigration(),
+        new FixImportedPermissionsMigration(chartStorage, dashboardStorage, permissionStorage),
         new AddAssetManagementViewMigration(),
         new MoveAssetContentMigration(),
-        new CreateAssetPermissionMigration(),
-        new CreateDatasetPermissionMigration(),
+        new CreateAssetPermissionMigration(permissionStorage, assetStorage),
+        new CreateDatasetPermissionMigration(permissionStorage, pipelineStorage, datasetStorage),
         new RemoveObsoletePrivilegesMigration(),
-        new UniqueDashboardIdMigration(),
+        new UniqueDashboardIdMigration(dashboardStorage),
         new AddScriptTemplateViewMigration(),
         new ComputeCertificateThumbprintMigration(),
-        new MigrateAdaptersToUseScript(),
+        new MigrateAdaptersToUseScript(adapterStorage),
         new ModifyAssetLinkIconMigration(),
-        new RemoveDuplicatedAssetPermissions(),
+        new RemoveDuplicatedAssetPermissions(permissionStorage, assetStorage),
         new AddFunctionStateViewMigration(),
         new AddRefreshTokenViewsMigration(),
         new RemoveAssetUserRoleMigration(),
-        new RemoveInternalNotificationSinkMigration()
+        new RemoveInternalNotificationSinkMigration(pipelineStorage)
     );
   }
 }

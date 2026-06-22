@@ -24,6 +24,7 @@ import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpoi
 import org.apache.streampipes.manager.extensions.ExtensionItemInstaller;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.io.IOException;
@@ -34,14 +35,17 @@ public class PipelineElementInstallationStep extends InstallationStep {
   private final ExtensionItemDescription extensionItem;
   private final String principalSid;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  private final SpResourceManager resourceManager;
 
 
   public PipelineElementInstallationStep(ExtensionItemDescription extensionItem,
                                          String principalSid,
-                                         ExtensionServiceRequestManager extensionServiceRequestManager) {
+                                         ExtensionServiceRequestManager extensionServiceRequestManager,
+                                         SpResourceManager resourceManager) {
     this.extensionItem = extensionItem;
     this.principalSid = principalSid;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.resourceManager = resourceManager;
   }
 
   @Override
@@ -53,7 +57,7 @@ public class PipelineElementInstallationStep extends InstallationStep {
           SpServiceUrlProvider.valueOf(installationReq.serviceTagPrefix().name()),
           Set.of()
       );
-      new ExtensionItemInstaller(service, extensionServiceRequestManager)
+      new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager)
           .installExtension(installationReq, principalSid);
       logSuccess(getTitle());
     } catch (SepaParseException | IOException | NoServiceEndpointsAvailableException e) {

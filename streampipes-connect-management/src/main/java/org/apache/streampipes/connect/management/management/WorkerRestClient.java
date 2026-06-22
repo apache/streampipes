@@ -31,11 +31,10 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
@@ -52,9 +51,12 @@ public class WorkerRestClient {
 
   private static final Logger LOG = LoggerFactory.getLogger(WorkerRestClient.class);
   private final ExtensionServiceRequestManager requestManager;
+  private final SpResourceManager resourceManager;
 
-  public WorkerRestClient(ExtensionServiceRequestManager requestManager) {
+  public WorkerRestClient(ExtensionServiceRequestManager requestManager,
+                          SpResourceManager resourceManager) {
     this.requestManager = requestManager;
+    this.resourceManager = resourceManager;
   }
 
   public void invokeStreamAdapter(SpServiceRegistration service,
@@ -68,7 +70,7 @@ public class WorkerRestClient {
   public void stopStreamAdapter(SpServiceRegistration service,
                                 AdapterDescription adapterStreamDescription) throws AdapterException {
     var requestTarget = ExtensionServiceRequestTargets.adapterStop(service);
-    var ad = getAdapterDescriptionById(new AdapterInstanceStorageImpl(), adapterStreamDescription.getElementId());
+    var ad = getAdapterDescriptionById(resourceManager.manageAdapters().getDb(), adapterStreamDescription.getElementId());
 
     stopAdapter(requestTarget, ad);
     updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
@@ -95,7 +97,7 @@ public class WorkerRestClient {
       String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
       var response =
-          triggerPost(requestTarget, ad.getCorrespondingDataStreamElementId(), adapterDescription);
+          triggerPost(requestTarget, ad.getCorrespondingDataStreamElementId(), adapterDescription, resourceManager);
       var responseString = response.responseBody();
 
       if (response.statusCode() != HttpStatus.SC_OK) {
@@ -118,9 +120,10 @@ public class WorkerRestClient {
 
   private ExtensionServiceOperationResult triggerPost(ExtensionServiceRequestTarget requestTarget,
                                                       String elementId,
-                                                      String payload) throws IOException {
+                                                      String payload,
+                                                      SpResourceManager resourceManager) throws IOException {
     return requestManager.request(
-        ExtensionServiceRequests.adapterStateChange(requestTarget, elementId, payload)
+        ExtensionServiceRequests.adapterStateChange(requestTarget, elementId, payload, resourceManager)
     );
   }
 
@@ -194,7 +197,8 @@ public class WorkerRestClient {
   }
 
 
-  private AdapterDescription getAdapterDescriptionById(AdapterInstanceStorageImpl adapterStorage, String id) {
+  private AdapterDescription getAdapterDescriptionById(IAdapterStorage adapterStorage,
+                                                       String id) {
     AdapterDescription adapterDescription = null;
     List<AdapterDescription> allAdapters = adapterStorage.findAll();
     for (AdapterDescription a : allAdapters) {
@@ -226,7 +230,7 @@ public class WorkerRestClient {
   }
 
   private IAdapterStorage getAdapterStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
+    return resourceManager.manageAdapters().getDb();
   }
 
   private ObjectMapper getSerializer() {

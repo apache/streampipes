@@ -27,9 +27,11 @@ import org.apache.streampipes.export.resolver.FileResolver;
 import org.apache.streampipes.export.resolver.MeasurementResolver;
 import org.apache.streampipes.export.resolver.PipelineResolver;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -51,15 +53,21 @@ public class AssetLinkResolver {
   private final String assetId;
   private final ObjectMapper mapper;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  private final PipelineManager pipelineManager;
+  private final SpResourceManager resourceManager;
 
   public AssetLinkResolver(String assetId,
-                           ExtensionServiceRequestManager extensionServiceRequestManager) {
+                           ExtensionServiceRequestManager extensionServiceRequestManager,
+                           SpResourceManager resourceManager,
+                           PipelineManager pipelineManager) {
     this.assetId = assetId;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.mapper = JacksonSerializer.getObjectMapper(Map.of(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
       SerializationFeature.INDENT_OUTPUT, false 
     ));
+    this.pipelineManager = pipelineManager;
+    this.resourceManager = resourceManager;
   }
 
   public AssetExportConfiguration resolveResources() {
@@ -70,16 +78,26 @@ public class AssetLinkResolver {
       var exportConfig = new AssetExportConfiguration();
       exportConfig.setAssetId(this.assetId);
       exportConfig.setAssetName(asset.getAssetName());
-      exportConfig.setAdapters(new AdapterResolver(extensionServiceRequestManager)
+      exportConfig.setAdapters(new AdapterResolver(
+          extensionServiceRequestManager,
+          resourceManager
+      )
           .resolve(getLinks(assetLinks, ResolvableAssetLinks.ADAPTER)));
-      exportConfig.setDataViews(new ChartResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.CHART)));
-      exportConfig.setDashboards(new DashboardResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DASHBOARD)));
+      exportConfig.setDataViews(new ChartResolver(resourceManager)
+          .resolve(getLinks(assetLinks, ResolvableAssetLinks.CHART)));
+      exportConfig.setDashboards(new DashboardResolver(
+          resourceManager.manageDashboards()
+      ).resolve(getLinks(assetLinks, ResolvableAssetLinks.DASHBOARD)));
       exportConfig.setDataSources(
           new DataSourceResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_SOURCE)));
-      exportConfig.setPipelines(new PipelineResolver(extensionServiceRequestManager)
-          .resolve(getLinks(assetLinks, ResolvableAssetLinks.PIPELINE)));
+      exportConfig.setPipelines(
+          new PipelineResolver(extensionServiceRequestManager, pipelineManager, resourceManager.managePipelines())
+          .resolve(getLinks(assetLinks, ResolvableAssetLinks.PIPELINE))
+      );
       exportConfig.setDataLakeMeasures(
-          new MeasurementResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.MEASUREMENT)));
+          new MeasurementResolver(
+              resourceManager.manageDataLakeMeasures().getDb()
+          ).resolve(getLinks(assetLinks, ResolvableAssetLinks.MEASUREMENT)));
       exportConfig.setFiles(new FileResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.FILE)));
 
       return exportConfig;

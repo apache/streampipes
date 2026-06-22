@@ -55,8 +55,8 @@ public class RemoveInternalNotificationSinkMigration implements Migration {
     this.dataSinkStorage = dataSinkStorage;
   }
 
-  public RemoveInternalNotificationSinkMigration() {
-    this(StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI(),
+  public RemoveInternalNotificationSinkMigration(IPipelineStorage pipelineStorage) {
+    this(pipelineStorage,
         StorageDispatcher.INSTANCE.getNoSqlStore().getDataSinkStorage());
   }
 

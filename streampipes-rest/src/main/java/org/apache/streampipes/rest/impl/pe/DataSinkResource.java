@@ -24,8 +24,10 @@ import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.DataSinkResourceManager;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,24 +45,32 @@ import java.util.List;
 @RequestMapping("/api/v2/actions")
 public class DataSinkResource extends AbstractAuthGuardedRestResource {
 
+  private final DataSinkResourceManager dataSinkResourceManager;
+
+  public DataSinkResource(IPermissionStorage permissionStorage) {
+    this.dataSinkResourceManager = new DataSinkResourceManager(
+        new PermissionResourceManager(permissionStorage)
+    );
+  }
+
   @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.elementId, 'READ')")
   public List<DataSinkDescription> getAvailable() {
-    return getDataSinkResourceManager().findAll();
+    return dataSinkResourceManager.findAll();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.belongsTo, 'READ')")
   public List<DataSinkInvocation> getOwn() {
-    return getDataSinkResourceManager().findAllAsInvocation();
+    return dataSinkResourceManager.findAllAsInvocation();
   }
 
   @DeleteMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
   public ResponseEntity<Message> removeOwn(@PathVariable("elementId") String elementId) {
-    getDataSinkResourceManager().delete(elementId);
+    dataSinkResourceManager.delete(elementId);
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
 
@@ -68,13 +78,9 @@ public class DataSinkResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
   public ResponseEntity<?> getElement(@PathVariable("elementId") String elementId) {
     try {
-      return ok(getDataSinkResourceManager().findAsInvocation(elementId));
+      return ok(dataSinkResourceManager.findAsInvocation(elementId));
     } catch (IllegalArgumentException e) {
       return notFound(SpLogMessage.from(e));
     }
-  }
-
-  private DataSinkResourceManager getDataSinkResourceManager() {
-    return getSpResourceManager().manageDataSinks();
   }
 }

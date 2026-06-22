@@ -23,6 +23,7 @@ import org.apache.streampipes.manager.runtime.DataStreamRuntimeInfoProvider;
 import org.apache.streampipes.manager.runtime.RateLimitedRuntimeInfoProvider;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.preview.PipelinePreviewModel;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 
@@ -43,9 +44,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
 
   private final ExtensionServiceRequestManager requestManager;
+  private final SpResourceManager resourceManager;
 
-  public PipelinePreviewResource(ExtensionServiceRequestManager requestManager) {
+  public PipelinePreviewResource(ExtensionServiceRequestManager requestManager,
+                                 SpResourceManager resourceManager) {
     this.requestManager = requestManager;
+    this.resourceManager = resourceManager;
   }
 
   @PostMapping(
@@ -53,7 +57,7 @@ public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<PipelinePreviewModel> requestPipelinePreview(@RequestBody Pipeline pipeline) {
-    PipelinePreviewModel previewModel = new PipelinePreview().initiatePreview(pipeline, requestManager);
+    PipelinePreviewModel previewModel = new PipelinePreview(resourceManager).initiatePreview(pipeline, requestManager);
 
     return ok(previewModel);
   }
@@ -67,11 +71,11 @@ public class PipelinePreviewResource extends AbstractAuthGuardedRestResource {
     try {
       // deactivate nginx proxy buffering for better performance of streaming output
       response.addHeader("X-Accel-Buffering", "no");
-      var spDataStreams = new PipelinePreview().getPipelineElementPreviewStreams(previewId);
+      var spDataStreams = new PipelinePreview(resourceManager).getPipelineElementPreviewStreams(previewId);
       var runtimeInfoFetcher = new DataStreamRuntimeInfoProvider(spDataStreams);
       var runtimeInfoProvider = new RateLimitedRuntimeInfoProvider(
           runtimeInfoFetcher,
-          () -> new PipelinePreview().deletePreview(previewId, requestManager)
+          () -> new PipelinePreview(resourceManager).deletePreview(previewId, requestManager)
       );
       return runtimeInfoProvider::streamOutput;
     } catch (IllegalArgumentException e) {

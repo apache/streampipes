@@ -20,7 +20,6 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
-import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 import { SharedUtils } from '../../support/utils/shared/SharedUtils';
 import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
@@ -112,23 +111,13 @@ describe('Test Edit Adapter', () => {
 
         // Validate that the data is further persisted in the database by checking if the amount of events in the data lake changes
         ChartUtils.goToDatalakeConfiguration();
+        ChartUtils.getDatalakeNumberOfEvents().then(initialValue => {
+            cy.wait(3000);
+            ChartUtils.goToDatalakeConfiguration();
 
-        ChartUtils.waitForCountingResults();
-
-        let initialValue;
-
-        ChartUtils.getDatalakeNumberOfEvents().then(value => {
-            initialValue = value;
-        });
-
-        cy.wait(3000);
-
-        ChartBtns.refreshDataLakeMeasures().click();
-
-        ChartUtils.waitForCountingResults();
-
-        ChartUtils.getDatalakeNumberOfEvents().then(newValue => {
-            expect(newValue).not.equal(initialValue);
+            ChartUtils.getDatalakeNumberOfEvents().then(newValue => {
+                expect(newValue).to.be.greaterThan(initialValue);
+            });
         });
     });
 

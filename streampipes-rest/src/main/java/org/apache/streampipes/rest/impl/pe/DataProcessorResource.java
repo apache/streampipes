@@ -24,8 +24,10 @@ import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.DataProcessorResourceManager;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,24 +45,32 @@ import java.util.List;
 @RequestMapping("/api/v2/sepas")
 public class DataProcessorResource extends AbstractAuthGuardedRestResource {
 
+  private final DataProcessorResourceManager dataProcessorResourceManager;
+
+  public DataProcessorResource(IPermissionStorage permissionStorage) {
+    this.dataProcessorResourceManager = new DataProcessorResourceManager(
+        new PermissionResourceManager(permissionStorage)
+    );
+  }
+
   @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.elementId, 'READ')")
   public List<DataProcessorDescription> getAvailable() {
-    return getDataProcessorResourceManager().findAll();
+    return dataProcessorResourceManager.findAll();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.belongsTo, 'READ')")
   public List<DataProcessorInvocation> getOwn() {
-    return getDataProcessorResourceManager().findAllAsInvocation();
+    return dataProcessorResourceManager.findAllAsInvocation();
   }
 
   @DeleteMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
   public ResponseEntity<Message> removeOwn(@PathVariable("elementId") String elementId) {
-    getDataProcessorResourceManager().delete(elementId);
+    dataProcessorResourceManager.delete(elementId);
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
 
@@ -68,14 +78,9 @@ public class DataProcessorResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
   public ResponseEntity<?> getElement(@PathVariable("elementId") String elementId) {
     try {
-      return ok(getDataProcessorResourceManager().findAsInvocation(elementId));
+      return ok(dataProcessorResourceManager.findAsInvocation(elementId));
     } catch (IllegalArgumentException e) {
       return notFound(SpLogMessage.from(e));
     }
   }
-
-  private DataProcessorResourceManager getDataProcessorResourceManager() {
-    return getSpResourceManager().manageDataProcessors();
-  }
-
 }

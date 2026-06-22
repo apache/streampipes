@@ -50,7 +50,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateDataStream() throws SepaParseException {
-    var message = new TypeExtractor(payload(SpDataStream.class), storageApi, requestManager)
+    var message = new TypeExtractor(payload(SpDataStream.class), storageApi, requestManager, null)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -60,7 +60,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateDataProcessor() throws SepaParseException {
-    var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi, requestManager)
+    var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi, requestManager, null)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -70,7 +70,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateDataSink() throws SepaParseException {
-    var message = new TypeExtractor(payload(DataSinkDescription.class), storageApi, requestManager)
+    var message = new TypeExtractor(payload(DataSinkDescription.class), storageApi, requestManager, null)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -80,7 +80,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateAdapter() throws SepaParseException {
-    var message = new TypeExtractor(payload(AdapterDescription.class), storageApi, requestManager)
+    var message = new TypeExtractor(payload(AdapterDescription.class), storageApi, requestManager, null)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -90,7 +90,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateWithoutNameOrIcon_onlyContainsStorageSuccessNotification() throws SepaParseException {
-    var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi, requestManager)
+    var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi, requestManager, null)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -103,7 +103,7 @@ public class TypeExtractorTest {
     assertThrows(
         SepaParseException.class,
         () -> new TypeExtractor(
-            "{\"name\":\"test\"}", storageApi, requestManager).getTypeVerifier()
+            "{\"name\":\"test\"}", storageApi, requestManager, null).getTypeVerifier()
     );
   }
 

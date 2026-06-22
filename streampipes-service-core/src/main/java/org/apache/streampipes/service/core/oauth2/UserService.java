@@ -26,6 +26,7 @@ import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.rest.security.OAuth2AuthenticationProcessingException;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
@@ -53,14 +54,16 @@ public class UserService {
   private final Environment env;
   private List<Role> allRoles;
   private List<Group> allGroups;
+  private final IPermissionStorage permissionStorage;
 
-  public UserService() {
+  public UserService(IPermissionStorage permissionStorage) {
     this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
     this.roleStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getRoleStorage();
     this.groupStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserGroupStorage();
     this.allGroups = this.groupStorage.findAll();
     this.allRoles = this.roleStorage.findAll();
     this.env = Environments.getEnvironment();
+    this.permissionStorage = permissionStorage;
   }
 
   public OidcUserAccountDetails processUserRegistration(String registrationId,
@@ -103,7 +106,7 @@ public class UserService {
       }
 
       user = (UserAccount) userStorage.getUserById(principalId);
-      return OidcUserAccountDetails.create(user, attributes, idToken, userInfo);
+      return OidcUserAccountDetails.create(user, attributes, idToken, userInfo, permissionStorage);
     } else {
       throw new OAuth2AuthenticationProcessingException(
           String.format("No config found for provider %s", registrationId)

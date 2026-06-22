@@ -23,8 +23,9 @@ import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
-import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -39,18 +40,19 @@ public class AdapterMasterManagementTest {
 
   @Test
   public void getAdapter_FailNull() {
-    var adapterStorage = mock(AdapterInstanceStorageImpl.class);
-    var resourceManager = mock(AdapterResourceManager.class);
+    var adapterStorage = mock(IAdapterStorage.class);
+    var adapterResourceManager = mock(AdapterResourceManager.class);
+    var resourceManager = mock(SpResourceManager.class);
     var workerRestClient = mock(WorkerRestClient.class);
     var serviceStorage = mock(IExtensionsServiceStorage.class);
     var requestManager = mock(ExtensionServiceRequestManager.class);
-    when(adapterStorage.findAll()).thenReturn(null);
+    when(resourceManager.manageAdapters()).thenReturn(adapterResourceManager);
+    when(adapterResourceManager.getDb()).thenReturn(adapterStorage);
+    when(adapterStorage.getElementById("id2")).thenReturn(null);
 
     var adapterMasterManagement =
         new AdapterMasterManagement(
-            adapterStorage,
             resourceManager,
-            null,
             AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
             workerRestClient,
             serviceStorage,
@@ -62,19 +64,19 @@ public class AdapterMasterManagementTest {
 
   @Test
   public void getAdapter_Fail() {
-    var adapterDescriptions = List.of(new AdapterDescription());
-    var adapterStorage = mock(AdapterInstanceStorageImpl.class);
-    var resourceManager = mock(AdapterResourceManager.class);
+    var adapterStorage = mock(IAdapterStorage.class);
+    var adapterResourceManager = mock(AdapterResourceManager.class);
+    var resourceManager = mock(SpResourceManager.class);
     var workerRestClient = mock(WorkerRestClient.class);
     var serviceStorage = mock(IExtensionsServiceStorage.class);
     var requestManager = mock(ExtensionServiceRequestManager.class);
-    when(adapterStorage.findAll()).thenReturn(adapterDescriptions);
+    when(resourceManager.manageAdapters()).thenReturn(adapterResourceManager);
+    when(adapterResourceManager.getDb()).thenReturn(adapterStorage);
+    when(adapterStorage.getElementById("id2")).thenReturn(null);
 
     var adapterMasterManagement =
         new AdapterMasterManagement(
-            adapterStorage,
             resourceManager,
-            null,
             AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
             workerRestClient,
             serviceStorage,
@@ -87,18 +89,19 @@ public class AdapterMasterManagementTest {
   @Test
   public void getAllAdapters_Success() {
     var adapterDescriptions = List.of(new AdapterDescription());
-    var adapterStorage = mock(AdapterInstanceStorageImpl.class);
-    var resourceManager = mock(AdapterResourceManager.class);
+    var adapterStorage = mock(IAdapterStorage.class);
+    var adapterResourceManager = mock(AdapterResourceManager.class);
+    var resourceManager = mock(SpResourceManager.class);
     var workerRestClient = mock(WorkerRestClient.class);
     var serviceStorage = mock(IExtensionsServiceStorage.class);
     var requestManager = mock(ExtensionServiceRequestManager.class);
+    when(resourceManager.manageAdapters()).thenReturn(adapterResourceManager);
+    when(adapterResourceManager.getDb()).thenReturn(adapterStorage);
     when(adapterStorage.findAll()).thenReturn(adapterDescriptions);
 
     AdapterMasterManagement adapterMasterManagement =
         new AdapterMasterManagement(
-            adapterStorage,
             resourceManager,
-            null,
             AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
             workerRestClient,
             serviceStorage,

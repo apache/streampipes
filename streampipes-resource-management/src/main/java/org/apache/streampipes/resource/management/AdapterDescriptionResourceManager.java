@@ -25,8 +25,8 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 public class AdapterDescriptionResourceManager
     extends AbstractPipelineElementResourceManager<IAdapterStorage, AdapterDescription, AdapterDescription> {
 
-  public AdapterDescriptionResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage());
+  public AdapterDescriptionResourceManager(PermissionResourceManager permissionResourceManager) {
+    super(StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage(), permissionResourceManager);
   }
 
   @Override

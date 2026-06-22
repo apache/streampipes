@@ -27,6 +27,7 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -49,20 +50,24 @@ public class TypeExtractor {
   private final String extensionElementDescription;
   private final IPipelineElementDescriptionStorage storageApi;
   private final ExtensionServiceRequestManager requestManager;
+  private final PermissionResourceManager permissionResourceManager;
 
   public TypeExtractor(String extensionElementDescription,
-                       ExtensionServiceRequestManager requestManager) {
-    this(extensionElementDescription, defaultStorageApi(), requestManager);
+                       ExtensionServiceRequestManager requestManager,
+                       PermissionResourceManager permissionResourceManager) {
+    this(extensionElementDescription, defaultStorageApi(), requestManager, permissionResourceManager);
   }
 
   public TypeExtractor(
       String extensionElementDescription,
       IPipelineElementDescriptionStorage storageApi,
-      ExtensionServiceRequestManager requestManager
+      ExtensionServiceRequestManager requestManager,
+      PermissionResourceManager permissionResourceManager
   ) {
     this.extensionElementDescription = extensionElementDescription;
     this.storageApi = storageApi;
     this.requestManager = requestManager;
+    this.permissionResourceManager = permissionResourceManager;
   }
 
   public ElementVerifier<?> getTypeVerifier() throws SepaParseException {
@@ -134,7 +139,8 @@ public class TypeExtractor {
         storeOperation,
         updateOperation,
         serviceUrlProvider,
-        requestManager
+        requestManager,
+        permissionResourceManager
     );
   }
 

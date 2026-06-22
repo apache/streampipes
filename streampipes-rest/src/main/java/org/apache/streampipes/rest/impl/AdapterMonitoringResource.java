@@ -26,9 +26,8 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
-import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,13 +46,12 @@ import java.util.Map;
 @RequestMapping("/api/v2/adapter-monitoring")
 public class AdapterMonitoringResource extends AbstractMonitoringResource {
 
-  private final IAdapterStorage adapterStorage;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
 
-  public AdapterMonitoringResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
-    super(extensionServiceRequestManager);
+  public AdapterMonitoringResource(ExtensionServiceRequestManager extensionServiceRequestManager,
+                                   SpResourceManager resourceManager) {
+    super(extensionServiceRequestManager, resourceManager);
     this.extensionServiceRequestManager = extensionServiceRequestManager;
-    this.adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
   }
 
   @GetMapping(
@@ -96,9 +94,9 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
   public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfos(
       @RequestParam(value = "filter") List<String> elementIds
   ) {
-    new ExtensionsServiceLogExecutor(extensionServiceRequestManager).triggerUpdate();
+    new ExtensionsServiceLogExecutor(extensionServiceRequestManager, resourceManager).triggerUpdate();
     var filteredElementIds = elementIds.stream()
-        .map(adapterStorage::getElementById)
+        .map(a -> resourceManager.manageAdapters().getDb().getElementById(a))
         .filter(a -> checkAdapterPermission(a, "READ"))
         .map(NamedStreamPipesEntity::getElementId)
         .toList();
@@ -120,7 +118,7 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
   }
 
   public AdapterDescription getAdapter(String elementId) {
-    return adapterStorage.getElementById(elementId);
+    return resourceManager.manageAdapters().getDb().getElementById(elementId);
   }
 
   /**
@@ -128,7 +126,7 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
    */
   private boolean checkAdapterPermission(AdapterDescription adapterDescription,
                                          String permission) {
-    var spPermissionEvaluator = new SpPermissionEvaluator();
+    var spPermissionEvaluator = new SpPermissionEvaluator(resourceManager.managePermissions().getDb());
     var authentication = SecurityContextHolder.getContext()
         .getAuthentication();
     return spPermissionEvaluator.hasPermission(

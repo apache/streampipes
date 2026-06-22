@@ -33,7 +33,8 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,15 +52,19 @@ public class PipelineUpdateCoordinator {
 
   private final ExtensionServiceRequestManager requestManager;
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
+  private final PipelineManager pipelineManager;
+  private final SpResourceManager resourceManager;
+  private final IPipelineStorage pipelineStorage;
 
-  public PipelineUpdateCoordinator(ExtensionServiceRequestManager requestManager) {
-    this(requestManager, new ChartSchemaUpdateCoordinator());
-  }
-
-  PipelineUpdateCoordinator(ExtensionServiceRequestManager requestManager,
-                            ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
+  public PipelineUpdateCoordinator(ExtensionServiceRequestManager requestManager,
+                                   SpResourceManager resourceManager,
+                                   ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
+                                   PipelineManager pipelineManager) {
     this.requestManager = requestManager;
+    this.resourceManager = resourceManager;
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
+    this.pipelineManager = pipelineManager;
+    this.pipelineStorage = resourceManager.managePipelines().getDb();
   }
 
   public void updatePipelines(SpDataStream dataStream) {
@@ -100,15 +105,15 @@ public class PipelineUpdateCoordinator {
                                String updatedStreamName,
                                EventSchema updatedEventSchema,
                                String notificationType) {
-    var affectedPipelines = PipelineManager.getPipelinesContainingElements(affectedElementId);
+    var affectedPipelines = pipelineManager.getPipelinesContainingElements(affectedElementId);
 
     affectedPipelines.forEach(pipeline -> {
       var shouldRestartPipeline = pipeline.isRunning();
       if (shouldRestartPipeline) {
-        new PipelineExecutor(pipeline, requestManager).stopPipeline(true);
+        new PipelineExecutor(pipeline, requestManager, resourceManager).stopPipeline(true);
       }
 
-      var storedPipeline = PipelineManager.getPipeline(pipeline.getPipelineId());
+      var storedPipeline = pipelineManager.getPipeline(pipeline.getPipelineId());
       var updatedPipeline = updatePipeline(storedPipeline, affectedElementId, updatedStreamName, updatedEventSchema);
 
       try {
@@ -133,10 +138,12 @@ public class PipelineUpdateCoordinator {
           modifiedPipeline.setValid(false);
         }
 
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(modifiedPipeline);
+        pipelineStorage.updateElement(modifiedPipeline);
 
         if (shouldRestartPipeline && canAutoMigrate) {
-          new PipelineExecutor(PipelineManager.getPipeline(pipeline.getPipelineId()), requestManager).startPipeline();
+          new PipelineExecutor(
+              pipelineManager.getPipeline(pipeline.getPipelineId()), requestManager, resourceManager
+          ).startPipeline();
         }
       } catch (Exception e) {
         LOG.error("Could not update pipeline {}", updatedPipeline.getName(), e);
@@ -147,7 +154,7 @@ public class PipelineUpdateCoordinator {
   private List<PipelineUpdateInfo> checkPipelineMigrations(String affectedElementId,
                                                            String updatedStreamName,
                                                            EventSchema updatedEventSchema) {
-    var affectedPipelines = PipelineManager.getPipelinesContainingElements(affectedElementId);
+    var affectedPipelines = pipelineManager.getPipelinesContainingElements(affectedElementId);
     var pipelineUpdateInfos = new ArrayList<PipelineUpdateInfo>();
 
     affectedPipelines.forEach(pipeline -> {
