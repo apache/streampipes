@@ -805,29 +805,16 @@ export class ChartUtils {
         return currentDate;
     }
 
-    public static waitForCountingResults() {
-        cy.intercept(
-            'GET',
-            '**/streampipes-backend/api/v4/datalake/measure/count*',
-        ).as('datalakeTotalCount');
-
+    public static getDatalakeNumberOfEvents(): Cypress.Chainable<number> {
         ChartBtns.datalakeTotalCountBtn().should('be.visible').click();
-
-        cy.wait('@datalakeTotalCount', { timeout: 30000 })
-            .its('response.statusCode')
-            .should('eq', 200);
-
-        ChartBtns.datalakeNumberOfEventsSpinner().should('not.exist');
         ChartBtns.datalakeTotalCountBtn().should('not.exist');
-        ChartBtns.datalakeNumberEvents().should('be.visible');
-    }
+        ChartBtns.datalakeNumberOfEventsSpinner().should('not.exist');
 
-    public static getDatalakeNumberOfEvents(): Cypress.Chainable<string> {
         return cy
             .dataCy('datalake-number-of-events', { timeout: 10000 })
             .should('be.visible')
             .invoke('text')
-            .then(text => text.trim());
+            .then(text => Number(text.replaceAll(',', '').trim()));
     }
 
     public static checkRowsDashboardTable(amount: number) {
