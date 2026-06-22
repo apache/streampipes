@@ -347,17 +347,23 @@ export class ChartBtns {
     }
 
     public static datalakeNumberEvents() {
-        return cy.dataCy('datalake-number-of-events', { timeout: 10000 });
+        return cy.dataCy('datalake-number-of-events', { timeout: 30000 });
     }
 
     public static datalakeTotalCountBtn() {
         return cy.dataCy('datalake-total-count-button', { timeout: 10000 });
     }
 
-    public static datalakeNumberOfEventsSpinner() {
-        return cy.dataCy('datalake-number-of-events-spinner', {
-            timeout: 30000,
-        });
+    public static datalakeTotalCountValue() {
+        return cy.dataCy('datalake-total-count-value', { timeout: 30000 });
+    }
+
+    public static datalakeTotalCountControl() {
+        return cy.get(
+            '[data-cy="datalake-total-count-button"], ' +
+                '[data-cy="datalake-total-count-value"]',
+            { timeout: 30000 },
+        );
     }
 
     public static dashboardAssetCheckboxBtn() {

@@ -115,9 +115,7 @@ describe('Test Edit Adapter', () => {
             cy.wait(3000);
             ChartUtils.goToDatalakeConfiguration();
 
-            ChartUtils.getDatalakeNumberOfEvents().then(newValue => {
-                expect(newValue).to.be.greaterThan(initialValue);
-            });
+            ChartUtils.getDatalakeNumberOfEvents(initialValue);
         });
     });
 
