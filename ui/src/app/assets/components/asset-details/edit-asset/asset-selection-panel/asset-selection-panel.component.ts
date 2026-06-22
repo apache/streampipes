@@ -301,10 +301,9 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
     }
 
     private findAssetByDropListId(dropListId: string): SpAsset | undefined {
-        const dropTarget = this.getAllAssets(this.assetModel).find(
+        return this.getAllAssets(this.assetModel).find(
             node => this.getDropTargetId(node) === dropListId,
         );
-        return dropTarget;
     }
 
     private scheduleHoverExpand(node: SpAsset): void {
