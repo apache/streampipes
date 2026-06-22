@@ -806,9 +806,19 @@ export class ChartUtils {
     }
 
     public static waitForCountingResults() {
+        cy.intercept(
+            'GET',
+            '**/streampipes-backend/api/v4/datalake/measure/count*',
+        ).as('datalakeTotalCount');
+
         ChartBtns.datalakeTotalCountBtn().should('be.visible').click();
-        ChartBtns.datalakeTotalCountBtn().should('not.exist');
+
+        cy.wait('@datalakeTotalCount', { timeout: 30000 })
+            .its('response.statusCode')
+            .should('eq', 200);
+
         ChartBtns.datalakeNumberOfEventsSpinner().should('not.exist');
+        ChartBtns.datalakeTotalCountBtn().should('not.exist');
         ChartBtns.datalakeNumberEvents().should('be.visible');
     }
 
