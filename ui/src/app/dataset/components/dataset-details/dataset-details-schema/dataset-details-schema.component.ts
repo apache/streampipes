@@ -119,11 +119,16 @@ export class DatasetDetailsSchemaComponent
 
     private makeTimestampRow(): SchemaRow {
         return {
-            runtimeName: this.dataset.timestampField || 'time',
-            label: 'time',
+            runtimeName: this.getTimestampFieldName(),
+            label: 'n/a',
             dataType: 'Timestamp',
             propertyScope: 'HEADER_PROPERTY',
-            description: 'Dataset internal timestamp field',
+            description:
+                'Timestamp field used for storing and querying this dataset',
         };
+    }
+
+    private getTimestampFieldName(): string {
+        return this.dataset.timestampField?.split('::').pop() || 'time';
     }
 }
