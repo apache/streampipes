@@ -17,28 +17,31 @@
  */
 
 .light {
-    background-color: rgba(0, 0, 0, 0.3);
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--status-light-color);
     border-radius: 50%;
-    width: 15px;
-    height: 15px;
+    background-color: color-mix(
+        in srgb,
+        var(--status-light-color) 65%,
+        transparent
+    );
+    box-shadow: 0 0 0 3px
+        color-mix(in srgb, var(--status-light-color) 15%, transparent);
 }
 
 .light-red {
-    background-color: var(--color-error);
-    box-shadow: 0 0 5px 2px var(--color-error);
+    --status-light-color: var(--color-error);
 }
 
 .light-yellow {
-    background-color: var(--color-warning);
-    box-shadow: 0 0 5px 2px var(--color-warning);
+    --status-light-color: var(--color-warning);
 }
 
 .light-green {
-    background-color: var(--color-success);
-    box-shadow: 0 0 5px 2px var(--color-success);
+    --status-light-color: var(--color-success);
 }
 
 .light-neutral {
-    background-color: var(--color-neutral);
-    box-shadow: 0 0 2px 1px var(--color-neutral);
+    --status-light-color: var(--color-neutral);
 }
