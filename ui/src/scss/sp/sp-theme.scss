@@ -66,6 +66,33 @@ html {
         )
     );
 
+    @include mat.table-overrides(
+        (
+            background-color: var(--mat-sys-surface),
+            header-headline-color: var(--mat-sys-on-surface),
+            header-headline-weight: var(--font-weight-semibold),
+            row-item-label-text-color: var(--mat-sys-on-surface),
+            row-item-outline-color: color-mix(
+                    in srgb,
+                    var(--mat-sys-on-surface) 10%,
+                    transparent
+                ),
+        )
+    );
+
+    @include mat.paginator-overrides(
+        (
+            container-background-color: transparent,
+            container-text-color: var(--mat-sys-on-surface-variant),
+            enabled-icon-color: var(--color-primary),
+            container-size: 2.5rem,
+            form-field-container-height: 1.875rem,
+            form-field-container-vertical-padding: 0,
+            page-size-select-touch-target-height: 1.875rem,
+            select-trigger-text-size: var(--font-size-sm),
+        )
+    );
+
     &.dark-mode {
         @include mat.theme-overrides(
             (
