@@ -97,8 +97,8 @@ public class ContinuousPlcRequestReader
     }
 
     LOG.error(
-        "Error while reading from PLC with connection string {}. Setting adapter to idle for {} attempts. {} ",
-        settings.connectionString(), idlePullsBeforeNextAttempt, problem
+        "Error while reading from PLC with connection string {}, adapter {}. Setting adapter to idle for {} attempts. {} ",
+        settings.connectionString(), adapterName, idlePullsBeforeNextAttempt, problem
     );
 
     handleFailingPlcRead();
