@@ -266,6 +266,45 @@ class ConnectionContainerReproTest {
   }
 
   @Test
+  void doesNotEagerlyReplaceInvalidConnectionWithoutWaitingClient() throws Exception {
+    var firstConnection = new MutableConnection(true);
+    var secondConnection = new MutableConnection(true);
+    var managerCalls = new AtomicInteger();
+    PlcConnectionManager manager = new PlcConnectionManager() {
+      @Override
+      public PlcConnection getConnection(String url) {
+        return managerCalls.incrementAndGet() == 1 ? firstConnection : secondConnection;
+      }
+
+      @Override
+      public PlcConnection getConnection(String url,
+                                         PlcAuthentication authentication) {
+        return null;
+      }
+    };
+    var connectionContainer = new SpConnectionContainer(
+        manager,
+        "mock://plc",
+        Duration.ofSeconds(30),
+        Duration.ofSeconds(30),
+        url -> null
+    );
+
+    SpLeasedPlcConnection firstLease =
+        (SpLeasedPlcConnection) connectionContainer.lease().get(500, TimeUnit.MILLISECONDS);
+    connectionContainer.returnConnection(firstLease, true);
+
+    assertEquals(1, managerCalls.get());
+    assertEquals(1, firstConnection.closeCalls());
+
+    SpLeasedPlcConnection secondLease =
+        (SpLeasedPlcConnection) connectionContainer.lease().get(500, TimeUnit.MILLISECONDS);
+    assertEquals(2, managerCalls.get());
+    connectionContainer.returnConnection(secondLease, false);
+    connectionContainer.close();
+  }
+
+  @Test
   void removingSlowConnectionDoesNotBlockLeasesForOtherUrls() throws Exception {
     var closeStarted = new CountDownLatch(1);
     var releaseClose = new CountDownLatch(1);

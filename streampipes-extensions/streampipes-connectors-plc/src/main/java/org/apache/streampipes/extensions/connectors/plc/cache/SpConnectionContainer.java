@@ -169,27 +169,23 @@ public class SpConnectionContainer {
       return;
     }
 
-    // If something happened while using the connection, invalidate this one and create a new connection.
+    // If something happened while using the connection, invalidate it.
     if (invalidateConnection) {
       // Close the old connection.
-      try {
-        connection.close();
-      } catch (Exception e) {
-        // We're ignoring this as we have no idea, what state the connection is in.
-        // Nevertheless, it is polite to say something in logs about this situation.
-        LOGGER.warn("Exception while closing connection", e);
-      }
+      closeConnection(connection);
+      connection = null;
 
-      // Try to get a new connection.
-      try {
-        connection = connectionManager.getConnection(connectionUrl);
-      } catch (PlcConnectionException e) {
-        // If something goes wrong, close all waiting futures exceptionally.
-        LOGGER.warn("Can't get connection for {} complete queue items exceptionally", connectionUrl, e);
-        queue.forEach(future -> future.completeExceptionally(e));
-        queue.clear();
-        leasedConnection = null;
-        connection = null;
+      // Only reconnect immediately when another client is waiting for the connection.
+      if (!queue.isEmpty()) {
+        try {
+          connection = connectionManager.getConnection(connectionUrl);
+        } catch (PlcConnectionException e) {
+          // If something goes wrong, close all waiting futures exceptionally.
+          LOGGER.warn("Can't get connection for {} complete queue items exceptionally", connectionUrl, e);
+          queue.forEach(future -> future.completeExceptionally(e));
+          queue.clear();
+          leasedConnection = null;
+        }
       }
     }
 
@@ -197,14 +193,16 @@ public class SpConnectionContainer {
     if (queue.isEmpty()) {
       leasedConnection = null;
 
-      // Start a timer to invalidate this connection if it's idle for too long.
-      idleTimer = new Timer("CC-Idle-Timer-" + Thread.currentThread().getId());
-      idleTimer.schedule(new TimerTask() {
-        @Override
-        public void run() {
-          closeIdleConnection();
-        }
-      }, maxIdleTime.toMillis());
+      if (connection != null) {
+        // Start a timer to invalidate this connection if it's idle for too long.
+        idleTimer = new Timer("CC-Idle-Timer-" + Thread.currentThread().getId());
+        idleTimer.schedule(new TimerTask() {
+          @Override
+          public void run() {
+            closeIdleConnection();
+          }
+        }, maxIdleTime.toMillis());
+      }
       return;
     }
 
