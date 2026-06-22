@@ -19,7 +19,6 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.update.PipelineUpdateCoordinator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -38,11 +37,12 @@ public class AdapterUpdateManagement {
   private final PipelineUpdateCoordinator pipelineUpdateCoordinator;
 
   public AdapterUpdateManagement(AdapterMasterManagement adapterMasterManagement,
-                                 ExtensionServiceRequestManager requestManager) {
+                                 PipelineUpdateCoordinator pipelineUpdateCoordinator,
+                                 SpResourceManager resourceManager) {
     this.adapterMasterManagement = adapterMasterManagement;
-    this.adapterResourceManager = new SpResourceManager().manageAdapters();
-    this.dataStreamResourceManager = new SpResourceManager().manageDataStreams();
-    this.pipelineUpdateCoordinator = new PipelineUpdateCoordinator(requestManager);
+    this.adapterResourceManager = resourceManager.manageAdapters();
+    this.dataStreamResourceManager = resourceManager.manageDataStreams();
+    this.pipelineUpdateCoordinator = pipelineUpdateCoordinator;
   }
 
   public void updateAdapter(AdapterDescription ad)

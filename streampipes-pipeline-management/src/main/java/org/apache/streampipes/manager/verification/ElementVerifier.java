@@ -28,7 +28,7 @@ import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.SuccessMessage;
-import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
@@ -51,24 +51,30 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   protected T elementDescription;
 
   protected final IPipelineElementDescriptionStorage storageApi;
+  private final PermissionResourceManager permissionResourceManager;
 
   public ElementVerifier(
       String graphData,
       Class<T> elementClass,
-      IPipelineElementDescriptionStorage storageApi
+      IPipelineElementDescriptionStorage storageApi,
+      PermissionResourceManager permissionResourceManager
   ) {
     this.elementClass = elementClass;
     this.graphData = graphData;
     this.storageApi = storageApi;
     this.shouldTransform = true;
+    this.permissionResourceManager = permissionResourceManager;
   }
 
-  public ElementVerifier(T elementDescription, IPipelineElementDescriptionStorage storageApi) {
+  public ElementVerifier(T elementDescription,
+                         IPipelineElementDescriptionStorage storageApi,
+                         PermissionResourceManager permissionResourceManager) {
     this.elementDescription = elementDescription;
     this.storageApi = storageApi;
     this.graphData = null;
     this.elementClass = null;
     this.shouldTransform = false;
+    this.permissionResourceManager = permissionResourceManager;
   }
 
   protected abstract StorageState store();
@@ -177,7 +183,6 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   }
 
   protected void storeNewObjectPermission(Permission permission) {
-    new SpResourceManager().managePermissions()
-                           .create(permission);
+    permissionResourceManager.create(permission);
   }
 }

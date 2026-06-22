@@ -22,7 +22,7 @@ import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum   ExtensionsLogProvider {
+public enum ExtensionsLogProvider {
 
   INSTANCE;
 
@@ -72,8 +72,9 @@ public enum   ExtensionsLogProvider {
     return getInfosForPipeline(allLogInfos, pipeline);
   }
 
-  public Map<String, List<SpLogEntry>> getLogInfosForPipeline(String pipelineId) {
-    var pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getElementById(pipelineId);
+  public Map<String, List<SpLogEntry>> getLogInfosForPipeline(IPipelineStorage pipelineStorage,
+                                                              String pipelineId) {
+    var pipeline = pipelineStorage.getElementById(pipelineId);
 
     return getLogInfosForPipeline(pipeline);
   }
@@ -95,8 +96,9 @@ public enum   ExtensionsLogProvider {
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 
-  public Map<String, SpMetricsEntry> getMetricInfosForPipeline(String pipelineId) {
-    var pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getElementById(pipelineId);
+  public Map<String, SpMetricsEntry> getMetricInfosForPipeline(IPipelineStorage pipelineStorage,
+                                                               String pipelineId) {
+    var pipeline = pipelineStorage.getElementById(pipelineId);
 
     return getInfosForPipeline(allMetricsInfos, pipeline);
   }
@@ -137,16 +139,15 @@ public enum   ExtensionsLogProvider {
   }
 
 
-  public Map<String, Map<String, SpMetricsEntry>> getMetricsGroupedByPipeline() {
+  public Map<String, Map<String, SpMetricsEntry>> getMetricsGroupedByPipeline(IPipelineStorage pipelineStorage) {
 
-    var allPipelines = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getPipelineStorageAPI().findAll();
+    var allPipelines = pipelineStorage.findAll();
 
     Map<String, Map<String, SpMetricsEntry>> result = new HashMap<>();
 
     for (Pipeline pipeline : allPipelines) {
-        var metrics = ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipeline.getPipelineId());
+        var metrics =
+            ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipelineStorage, pipeline.getPipelineId());
         result.put(pipeline.getElementId(), metrics);
     }
 

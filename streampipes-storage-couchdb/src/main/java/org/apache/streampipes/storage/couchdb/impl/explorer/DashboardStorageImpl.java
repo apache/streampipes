@@ -18,14 +18,14 @@
 package org.apache.streampipes.storage.couchdb.impl.explorer;
 
 import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerDashboardStorage;
+import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
-public class DataExplorerDashboardStorageImpl extends DefaultCrudStorage<DashboardModel>
-    implements IDataExplorerDashboardStorage {
+public class DashboardStorageImpl extends DefaultCrudStorage<DashboardModel>
+    implements IDashboardStorage {
 
-  public DataExplorerDashboardStorageImpl() {
+  public DashboardStorageImpl() {
     super(
         () -> Utils.getCouchDbGsonClient("dataexplorerdashboard"),
         DashboardModel.class

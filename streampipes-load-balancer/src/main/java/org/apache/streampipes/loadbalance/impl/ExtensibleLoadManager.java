@@ -23,6 +23,7 @@ import org.apache.streampipes.loadbalance.PipelineMigrator;
 import org.apache.streampipes.loadbalance.unit.ResourceUnitStatsScanner;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -33,11 +34,14 @@ public class ExtensibleLoadManager implements LoadBalancer {
     ExtensionServiceSelector selector;
 
   PipelineMigrator migrator;
+  private final SpResourceManager resourceManager;
 
   public ExtensibleLoadManager(ExtensionServiceSelector selector,
-                               PipelineMigrator pipelineMigrator) {
+                               PipelineMigrator pipelineMigrator,
+                               SpResourceManager resourceManager) {
     this.selector = selector;
     this.migrator = pipelineMigrator;
+    this.resourceManager = resourceManager;
   }
 
   @Override
@@ -52,7 +56,7 @@ public class ExtensibleLoadManager implements LoadBalancer {
             .toList();
 
     // Collect load balancer metrics for all services using optimized database queries
-    ResourceUnitStatsScanner.collectAllLoadBalancerMetrics();
+    ResourceUnitStatsScanner.collectAllLoadBalancerMetrics(resourceManager);
 
     // Perform load shedding
     migrator.doLoadShedding(services);

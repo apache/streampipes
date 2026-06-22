@@ -98,10 +98,4 @@ export class AssetBtns {
     public static updateAssetLinksBtn() {
         return cy.dataCy('assets-update-links-button', { timeout: 10000 });
     }
-
-    public static goBackToOverviewBtn() {
-        return cy.dataCy('save-data-explorer-go-back-to-overview', {
-            timeout: 10000,
-        });
-    }
 }

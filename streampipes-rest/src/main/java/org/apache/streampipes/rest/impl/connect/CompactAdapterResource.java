@@ -29,7 +29,10 @@ import org.apache.streampipes.connect.management.management.GuessManagement;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
+import org.apache.streampipes.manager.pipeline.update.PipelineUpdateCoordinator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
@@ -60,14 +63,13 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
   private final CompactAdapterManagement compactAdapterManagement;
   private final AdapterUpdateManagement adapterUpdateManagement;
   private final ExtensionServiceRequestManager requestManager;
+  private final PipelineManager pipelineManager;
 
   public CompactAdapterResource(WorkerRestClient workerRestClient,
-                                ExtensionServiceRequestManager requestManager) {
+                                ExtensionServiceRequestManager requestManager,
+                                SpResourceManager resourceManager) {
     super(() -> new AdapterMasterManagement(
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getAdapterInstanceStorage(),
-        new SpResourceManager().manageAdapters(),
-        new SpResourceManager().manageDataStreams(),
+        resourceManager,
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
         workerRestClient,
         StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
@@ -81,7 +83,19 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     this.compactAdapterManagement = new CompactAdapterManagement(
         new AdapterGenerationSteps(guessManagement).getGenerators()
     );
-    this.adapterUpdateManagement = new AdapterUpdateManagement(managementService, requestManager);
+    this.pipelineManager = new PipelineManager(
+        resourceManager
+    );
+    var pipelineUpdateCoordinator = new PipelineUpdateCoordinator(
+        requestManager,
+        resourceManager,
+        new ChartSchemaUpdateCoordinator(resourceManager.manageCharts().getDb()),
+        pipelineManager
+    );
+    this.adapterUpdateManagement = new AdapterUpdateManagement(
+        managementService,
+        pipelineUpdateCoordinator,
+        resourceManager);
   }
 
   @PostMapping(
@@ -123,6 +137,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
                   getNoSqlStorage().getPipelineElementDescriptionStorage(),
                   requestManager
               ),
+              pipelineManager,
               getAuthenticatedUserSid()
           ).createAndStartPersistPipeline(storedAdapter, requestManager);
         }

@@ -23,6 +23,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import java.util.List;
 
@@ -33,13 +34,16 @@ public abstract class BasePipelineElementSubmitter {
 
   protected final PipelineOperationStatus status;
   protected final ExtensionServiceRequestManager requestManager;
+  protected final SpResourceManager resourceManager;
 
   public BasePipelineElementSubmitter(Pipeline pipeline,
-                                      ExtensionServiceRequestManager requestManager) {
+                                      ExtensionServiceRequestManager requestManager,
+                                      SpResourceManager resourceManager) {
     this.pipelineId = pipeline.getPipelineId();
     this.pipelineName = pipeline.getName();
     this.status = new PipelineOperationStatus(pipelineId, pipelineName);
     this.requestManager = requestManager;
+    this.resourceManager = resourceManager;
   }
 
   public PipelineOperationStatus submit(List<InvocableStreamPipesEntity> processorsAndSinks) {
@@ -67,7 +71,7 @@ public abstract class BasePipelineElementSubmitter {
   }
 
   protected PipelineElementStatus performDetach(InvocableStreamPipesEntity pipelineElement) {
-    return new DetachExtensionRequest(requestManager).execute(pipelineElement, this.pipelineId);
+    return new DetachExtensionRequest(requestManager, resourceManager).execute(pipelineElement, this.pipelineId);
   }
 
   protected abstract PipelineElementStatus submitElement(InvocableStreamPipesEntity pipelineElement);

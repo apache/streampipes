@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.ExtensionsServiceLogExecutor;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import org.springframework.http.ResponseEntity;
@@ -28,14 +29,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 public abstract class AbstractMonitoringResource extends AbstractAuthGuardedRestResource {
 
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  protected final SpResourceManager resourceManager;
 
-  protected AbstractMonitoringResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
+  protected AbstractMonitoringResource(ExtensionServiceRequestManager extensionServiceRequestManager,
+                                       SpResourceManager resourceManager) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.resourceManager = resourceManager;
   }
 
   @GetMapping
   public ResponseEntity<Void> triggerMonitoringUpdate() {
-    new ExtensionsServiceLogExecutor(extensionServiceRequestManager).triggerUpdate();
+    new ExtensionsServiceLogExecutor(extensionServiceRequestManager, resourceManager).triggerUpdate();
     return ok();
   }
 }

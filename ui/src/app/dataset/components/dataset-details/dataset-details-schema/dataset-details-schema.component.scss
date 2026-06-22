@@ -15,20 +15,37 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.couchdb.impl.explorer;
 
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
-import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
+.empty-state {
+    padding: var(--space-md);
+    border: 1px solid var(--color-bg-3);
+    background: var(--color-bg-1);
+}
 
-public class DataExplorerWidgetStorageImpl extends DefaultCrudStorage<DataExplorerWidgetModel>
-    implements IDataExplorerWidgetStorage {
+.runtime-name-row {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
 
-  public DataExplorerWidgetStorageImpl() {
-    super(
-        () -> Utils.getCouchDbGsonClient("dataexplorerwidget"),
-        DataExplorerWidgetModel.class
-    );
-  }
+.runtime-name {
+    font-weight: bold;
+    border-radius: 3px;
+    padding: 3px 5px;
+    background: var(--color-bg-3);
+    display: inline-flex;
+}
+
+.mat-mdc-row:nth-child(even) {
+    background: var(--color-bg-1);
+}
+
+.value {
+    border-radius: 3px;
+    padding: 3px 5px;
+}
+
+td,
+th {
+    white-space: nowrap;
 }

@@ -30,12 +30,17 @@ import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.influx.sanitize.DataLakeMeasurementSanitizerInflux;
 import org.apache.streampipes.manager.permission.DataLakePermissionManager;
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.List;
 
 public class DataExplorerManagerInflux implements IDataExplorerManager {
+
+  public DataExplorerManagerInflux() {
+  }
 
   @Override
   public IDataLakeMeasurementCounter getMeasurementCounter(
@@ -53,13 +58,15 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   }
 
   @Override
-  public IDataExplorerSchemaManagement getSchemaManagement() {
-    return new DataExplorerSchemaManagement(StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getDataLakeStorage(),
+  public IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
+                                                           IPermissionStorage permissionStorage,
+                                                           IDataLakeMeasureStorage datasetStorage) {
+    return new DataExplorerSchemaManagement(
+        datasetStorage,
         new DataLakePermissionManager(
-            StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage()
-        )
+            permissionStorage
+        ),
+        chartSchemaUpdateCoordinator
     );
   }
 

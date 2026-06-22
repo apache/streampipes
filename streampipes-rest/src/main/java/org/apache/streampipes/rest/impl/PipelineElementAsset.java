@@ -19,6 +19,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
 import org.apache.streampipes.manager.assets.AssetManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -38,6 +39,12 @@ import java.io.IOException;
 public class PipelineElementAsset extends AbstractRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementAsset.class);
+
+  private final SpResourceManager resourceManager;
+
+  public PipelineElementAsset(SpResourceManager resourceManager) {
+    this.resourceManager = resourceManager;
+  }
 
   @GetMapping(path = "/{appId}/assets/icon")
   public ResponseEntity<?> getIconAsset(@PathVariable("appId") String appId) {
@@ -62,9 +69,9 @@ public class PipelineElementAsset extends AbstractRestResource {
             .getNoSqlStore()
             .getDataStreamStorage()
             .getDataStreamByAppId(appId);
-        var adapterDescription = StorageDispatcher.INSTANCE
-            .getNoSqlStore()
-            .getAdapterInstanceStorage()
+        var adapterDescription = resourceManager
+            .manageAdapters()
+            .getDb()
             .getElementById(dataStream.getCorrespondingAdapterId());
         appId = adapterDescription.getAppId();
       }

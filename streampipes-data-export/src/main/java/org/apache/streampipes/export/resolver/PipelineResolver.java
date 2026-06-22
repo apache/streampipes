@@ -23,6 +23,7 @@ import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.resource.management.PipelineResourceManager;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,14 +34,20 @@ import java.util.stream.Collectors;
 public class PipelineResolver extends AbstractResolver<Pipeline> {
 
   private final ExtensionServiceRequestManager requestManager;
+  private final PipelineManager pipelineManager;
+  private PipelineResourceManager resourceManager;
 
-  public PipelineResolver(ExtensionServiceRequestManager requestManager) {
+  public PipelineResolver(ExtensionServiceRequestManager requestManager,
+                          PipelineManager pipelineManager,
+                          PipelineResourceManager resourceManager) {
     this.requestManager = requestManager;
+    this.pipelineManager = pipelineManager;
+    this.resourceManager = resourceManager;
   }
 
   @Override
   public Pipeline findDocument(String resourceId) {
-    return getNoSqlStore().getPipelineStorageAPI().getElementById(resourceId);
+    return pipelineManager.getPipeline(resourceId);
   }
 
   @Override
@@ -87,7 +94,7 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
 
     }
     SecretProvider.getEncryptionService().apply(pipeline);
-    getNoSqlStore().getPipelineStorageAPI().persist(pipeline);
+    resourceManager.getDb().persist(pipeline);
   }
 
   @Override
@@ -99,12 +106,12 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
   public void deleteDocument(String document) throws JsonProcessingException {
     var pipeline = readDocument(document);
     var resourceId = pipeline.getElementId();
-    var storedPipeline = PipelineManager.getPipeline(resourceId);
+    var storedPipeline = pipelineManager.getPipeline(resourceId);
     if (storedPipeline != null) {
       if (storedPipeline.isRunning()) {
-        PipelineManager.stopPipeline(resourceId, true, requestManager);
+        pipelineManager.stopPipeline(resourceId, true, requestManager);
       }
-      getNoSqlStore().getPipelineStorageAPI().deleteElementById(resourceId);
+      resourceManager.getDb().deleteElementById(resourceId);
     }
   }
 }

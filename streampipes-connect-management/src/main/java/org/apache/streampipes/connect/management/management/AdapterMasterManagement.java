@@ -30,8 +30,7 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
-import org.apache.streampipes.resource.management.DataStreamResourceManager;
-import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
@@ -50,32 +49,29 @@ public class AdapterMasterManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
-  private final IAdapterStorage adapterInstanceStorage;
   private final IExtensionsServiceStorage extensionsServiceStorage;
   private final AdapterMetrics adapterMetrics;
-  private final AdapterResourceManager adapterResourceManager;
 
-  private final DataStreamResourceManager dataStreamResourceManager;
   private final WorkerRestClient workerRestClient;
   private final ExtensionServiceRequestManager requestManager;
+  private final SpResourceManager resourceManager;
+  private final AdapterResourceManager adapterResourceManager;
 
-  public AdapterMasterManagement(IAdapterStorage adapterInstanceStorage,
-                                 AdapterResourceManager adapterResourceManager,
-                                 DataStreamResourceManager dataStreamResourceManager,
+  public AdapterMasterManagement(SpResourceManager resourceManager,
                                  AdapterMetrics adapterMetrics,
                                  WorkerRestClient workerRestClient,
                                  IExtensionsServiceStorage extensionsServiceStorage,
                                  ExtensionServiceRequestManager requestManager) {
-    this.adapterInstanceStorage = adapterInstanceStorage;
     this.extensionsServiceStorage = extensionsServiceStorage;
     this.adapterMetrics = adapterMetrics;
-    this.adapterResourceManager = adapterResourceManager;
-    this.dataStreamResourceManager = dataStreamResourceManager;
+    this.resourceManager = resourceManager;
+    this.adapterResourceManager = resourceManager.manageAdapters();
     this.workerRestClient = workerRestClient;
     this.requestManager = requestManager;
   }
 
-  public void addAdapter(AdapterDescription adapterDescription, String adapterId,
+  public void addAdapter(AdapterDescription adapterDescription,
+                         String adapterId,
                          String principalSid)
       throws AdapterException {
 
@@ -89,7 +85,7 @@ public class AdapterMasterManagement {
     var eventGrounding = GroundingUtils.createEventGrounding();
     adapterDescription.setEventGrounding(eventGrounding);
 
-    this.adapterResourceManager.encryptAndCreate(adapterDescription);
+    adapterResourceManager.encryptAndCreate(adapterDescription);
 
     // Stream is only created if the adpater is successfully stored
     createDataStreamForAdapter(adapterDescription, adapterId, dataStreamElementId, principalSid);
@@ -106,7 +102,7 @@ public class AdapterMasterManagement {
   }
 
   public AdapterDescription getAdapter(String elementId) throws AdapterException {
-    AdapterDescription adapter = adapterInstanceStorage.getElementById(elementId);
+    AdapterDescription adapter = adapterResourceManager.getDb().getElementById(elementId);
     if (adapter == null) {
       throw new AdapterException("Adapter with ID " + elementId + " not found");
     }
@@ -129,14 +125,14 @@ public class AdapterMasterManagement {
         LOG.info("Could not stop adapter: " + elementId, e);
       }
 
-      AdapterDescription adapter = adapterInstanceStorage.getElementById(elementId);
+      AdapterDescription adapter = adapterResourceManager.getDb().getElementById(elementId);
       // Delete adapter
       adapterResourceManager.delete(elementId);
       ExtensionsLogProvider.INSTANCE.remove(elementId);
       LOG.info("Successfully deleted adapter: " + elementId);
 
       // Delete data stream
-      this.dataStreamResourceManager.delete(adapter.getCorrespondingDataStreamElementId());
+      this.resourceManager.manageDataStreams().delete(adapter.getCorrespondingDataStreamElementId());
       LOG.info("Successfully deleted data stream: "
           + adapter.getCorrespondingDataStreamElementId());
     } finally {
@@ -145,12 +141,12 @@ public class AdapterMasterManagement {
   }
 
   public List<AdapterDescription> getAllAdapterInstances() {
-    return adapterInstanceStorage.findAll();
+    return adapterResourceManager.getDb().findAll();
   }
 
   public void stopStreamAdapter(String elementId, boolean forceStop) throws AdapterException {
     LoadManager.tryLockForAdapter();
-    AdapterDescription ad = adapterInstanceStorage.getElementById(elementId);
+    AdapterDescription ad = adapterResourceManager.getDb().getElementById(elementId);
     try {
       try {
         var service = extensionsServiceStorage.findAll().stream()
@@ -169,7 +165,7 @@ public class AdapterMasterManagement {
         } else {
           ad.setRunning(false);
           ad.setSelectedEndpointUrl(null);
-          adapterInstanceStorage.updateElement(ad);
+          adapterResourceManager.getDb().updateElement(ad);
         }
       }
       ExtensionsLogProvider.INSTANCE.reset(elementId);
@@ -189,7 +185,7 @@ public class AdapterMasterManagement {
   public void startStreamAdapter(String elementId) throws AdapterException {
     LoadManager.tryLockForAdapter();
     try {
-      var ad = adapterInstanceStorage.getElementById(elementId);
+      var ad = adapterResourceManager.getDb().getElementById(elementId);
 
       try {
         // Find endpoint to start adapter on
@@ -200,7 +196,7 @@ public class AdapterMasterManagement {
         // Update selected endpoint URL of adapter
         ad.setSelectedEndpointUrl(service.getServiceUrl());
         ad.setSelectedServiceId(service.getSvcId());
-        adapterInstanceStorage.updateElement(ad);
+        adapterResourceManager.getDb().updateElement(ad);
 
         // Invoke adapter instance
         workerRestClient.invokeStreamAdapter(service, elementId);
@@ -228,7 +224,8 @@ public class AdapterMasterManagement {
         storageApi::storeDataStream,
         storageApi::update,
         SpServiceUrlProvider.DATA_STREAM,
-        requestManager
+        requestManager,
+        resourceManager.managePermissions()
     );
     verifier.verifyAndAdd(principalSid, false);
   }

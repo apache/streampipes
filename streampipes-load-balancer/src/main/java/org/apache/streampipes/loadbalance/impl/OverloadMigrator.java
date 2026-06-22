@@ -19,6 +19,7 @@ package org.apache.streampipes.loadbalance.impl;
 
 import org.apache.streampipes.loadbalance.LoadBalancerConfig;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,10 @@ import java.util.Queue;
 public class OverloadMigrator extends AbstractPipelineMigrator {
 
   private static final Logger logger = LoggerFactory.getLogger(OverloadMigrator.class);
+
+  public OverloadMigrator(SpResourceManager resourceManager) {
+    super(resourceManager);
+  }
 
   @Override
   public void doLoadShedding(List<SpServiceRegistration> services) {

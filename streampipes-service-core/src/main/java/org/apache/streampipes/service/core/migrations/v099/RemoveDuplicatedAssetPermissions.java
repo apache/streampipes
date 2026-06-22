@@ -22,7 +22,6 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +33,14 @@ public class RemoveDuplicatedAssetPermissions implements Migration {
 
   private static final Logger LOG = LoggerFactory.getLogger(RemoveDuplicatedAssetPermissions.class);
 
-  private final IPermissionStorage permissionStorage =
-      StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
+  private final IPermissionStorage permissionStorage;
+  private final IAssetStorage assetStorage;
 
-  private final IAssetStorage assetStorage =
-      StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
+  public RemoveDuplicatedAssetPermissions(IPermissionStorage permissionStorage,
+                                          IAssetStorage assetStorage) {
+    this.permissionStorage = permissionStorage;
+    this.assetStorage = assetStorage;
+  }
 
   @Override
   public boolean shouldExecute() {

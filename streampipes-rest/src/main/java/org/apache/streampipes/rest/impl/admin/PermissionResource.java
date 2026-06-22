@@ -18,7 +18,9 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Permission;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,10 +39,16 @@ import java.util.Objects;
 @RequestMapping("/api/v2/admin/permissions")
 public class PermissionResource extends AbstractAuthGuardedRestResource {
 
+  private final PermissionResourceManager permissionResourceManager;
+
+  public PermissionResource(IPermissionStorage permissionStorage) {
+    this.permissionResourceManager = new PermissionResourceManager(permissionStorage);
+  }
+
   @GetMapping(path = "objects/{objectInstanceId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<Permission> getPermissionForObject(@PathVariable("objectInstanceId") String objectInstanceId) {
     var principalId = getAuthenticatedUserSid();
-    var permission = getSpResourceManager().managePermissions().findForObjectId(objectInstanceId);
+    var permission = permissionResourceManager.findForObjectId(objectInstanceId);
     if (isAdminOrOwner(principalId, permission)) {
       return permission;
     } else {
@@ -52,12 +60,12 @@ public class PermissionResource extends AbstractAuthGuardedRestResource {
   public void updatePermission(@PathVariable("permissionId") String permissionId,
                                @RequestBody Permission permission) {
     var principalId = getAuthenticatedUserSid();
-    var existingPermission = getSpResourceManager().managePermissions().findForObjectId(permission.getObjectInstanceId());
+    var existingPermission = permissionResourceManager.findForObjectId(permission.getObjectInstanceId());
     if (
         permissionId.equals(permission.getPermissionId())
             && isObjectInstanceCorrect(existingPermission, permission)
             && isAdminOrOwner(principalId, existingPermission)) {
-      getSpResourceManager().managePermissions().update(permission);
+      permissionResourceManager.update(permission);
     } else {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only admins or owners can update permissions");
     }

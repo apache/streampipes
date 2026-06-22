@@ -25,7 +25,7 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,20 +33,22 @@ import java.util.stream.Collectors;
 public class PipelineStorageService {
 
   private final Pipeline pipeline;
+  private final IPipelineStorage pipelineStorage;
 
-
-  public PipelineStorageService(Pipeline pipeline) {
+  public PipelineStorageService(IPipelineStorage pipelineStorage,
+                                Pipeline pipeline) {
     this.pipeline = pipeline;
+    this.pipelineStorage = pipelineStorage;
   }
 
   public void updatePipeline() {
     preparePipeline();
-    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(pipeline);
+    pipelineStorage.updateElement(pipeline);
   }
 
   public void addPipeline() {
     preparePipeline();
-    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().persist(pipeline);
+    pipelineStorage.persist(pipeline);
   }
 
   private void preparePipeline() {

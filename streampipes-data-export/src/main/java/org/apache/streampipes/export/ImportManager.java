@@ -21,7 +21,9 @@ package org.apache.streampipes.export;
 import org.apache.streampipes.export.dataimport.PerformImportGenerator;
 import org.apache.streampipes.export.dataimport.PreviewImportGenerator;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,15 +31,27 @@ import java.io.InputStream;
 public class ImportManager {
 
   public static AssetExportConfiguration getImportPreview(InputStream packageZipStream,
-                                                          ExtensionServiceRequestManager extensionServiceRequestManager)
+                                                          ExtensionServiceRequestManager extensionServiceRequestManager,
+                                                          SpResourceManager resourceManager,
+                                                          PipelineManager pipelineManager)
       throws IOException {
-    return new PreviewImportGenerator(extensionServiceRequestManager).generate(packageZipStream);
+    return new PreviewImportGenerator(extensionServiceRequestManager, resourceManager, pipelineManager)
+        .generate(packageZipStream);
   }
 
   public static void performImport(InputStream packageZipStream,
                                    AssetExportConfiguration exportConfiguration,
                                    String ownerSid,
-                                   ExtensionServiceRequestManager extensionServiceRequestManager) throws IOException {
-    new PerformImportGenerator(exportConfiguration, ownerSid, extensionServiceRequestManager).generate(packageZipStream);
+                                   ExtensionServiceRequestManager extensionServiceRequestManager,
+                                   SpResourceManager resourceManager,
+                                   PipelineManager pipelineManager) throws IOException {
+    new PerformImportGenerator(
+        exportConfiguration,
+        ownerSid,
+        extensionServiceRequestManager,
+        resourceManager,
+        pipelineManager
+    )
+        .generate(packageZipStream);
   }
 }

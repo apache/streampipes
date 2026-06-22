@@ -18,6 +18,8 @@
 
 import { Routes } from '@angular/router';
 import { DatalakeConfigurationComponent } from './components/datalake-configuration/datalake-configuration.component';
+import { DatasetDetailsSchemaComponent } from './components/dataset-details/dataset-details-schema/dataset-details-schema.component';
+import { DatasetDetailsEventsComponent } from './components/dataset-details/dataset-details-events/dataset-details-events.component';
 
 export const DATASET_ROUTES: Routes = [
     {
@@ -25,7 +27,26 @@ export const DATASET_ROUTES: Routes = [
         children: [
             {
                 path: '',
+                pathMatch: 'full',
                 component: DatalakeConfigurationComponent,
+            },
+            {
+                path: ':elementId',
+                children: [
+                    {
+                        path: '',
+                        pathMatch: 'full',
+                        redirectTo: 'schema',
+                    },
+                    {
+                        path: 'schema',
+                        component: DatasetDetailsSchemaComponent,
+                    },
+                    {
+                        path: 'events',
+                        component: DatasetDetailsEventsComponent,
+                    },
+                ],
             },
         ],
     },

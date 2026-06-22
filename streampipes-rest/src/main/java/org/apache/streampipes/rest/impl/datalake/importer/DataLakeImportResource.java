@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.datalake.importer;
 
+import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
@@ -25,7 +26,9 @@ import org.apache.streampipes.model.datalake.importer.CsvImportResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.impl.datalake.AbstractDataLakeResource;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,9 +49,13 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
 
   private final CsvDataLakeImportService importService;
 
-  public DataLakeImportResource() {
-    super();
-    this.importService = new CsvDataLakeImportService(getDataLakeMeasureManagement());
+  public DataLakeImportResource(IChartStorage chartStorage,
+                                SpResourceManager resourceManager) {
+    super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
+    this.importService = new CsvDataLakeImportService(
+        getDataLakeMeasureManagement(),
+        resourceManager.manageDataLakeMeasures().getDb()
+    );
   }
 
   /**

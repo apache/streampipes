@@ -30,6 +30,7 @@ import org.apache.streampipes.manager.execution.task.SubmitRequestTask;
 import org.apache.streampipes.manager.execution.task.UpdateGroupIdTask;
 import org.apache.streampipes.model.message.PipelineStatusMessageType;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 
 import java.util.List;
@@ -37,25 +38,27 @@ import java.util.List;
 public class PipelineExecutionTaskFactory {
 
   public static List<PipelineExecutionTask> makeStartPipelineTasks(Pipeline pipeline,
-                                                                   ExtensionServiceRequestManager requestManager) {
+                                                                   ExtensionServiceRequestManager requestManager,
+                                                                   SpResourceManager resourceManager) {
     return List.of(
         new UpdateGroupIdTask(),
         new SecretEncryptionTask(SecretProvider.getDecryptionService()),
         new DiscoverEndpointsTask(),
-        new SubmitRequestTask(new InvokePipelineElementSubmitter(pipeline, requestManager)),
+        new SubmitRequestTask(new InvokePipelineElementSubmitter(pipeline, requestManager, resourceManager)),
         new SecretEncryptionTask(SecretProvider.getEncryptionService()),
         new AfterInvocationTask(PipelineStatusMessageType.PIPELINE_STARTED),
-        new StorePipelineStatusTask(true, false)
+        new StorePipelineStatusTask(resourceManager, true, false)
     );
   }
 
   public static List<PipelineExecutionTask> makeStopPipelineTasks(Pipeline pipeline,
                                                                   boolean forceStop,
-                                                                  ExtensionServiceRequestManager requestManager) {
+                                                                  ExtensionServiceRequestManager requestManager,
+                                                                  SpResourceManager resourceManager) {
     return List.of(
-        new SubmitRequestTask(new DetachPipelineElementSubmitter(pipeline, requestManager)),
+        new SubmitRequestTask(new DetachPipelineElementSubmitter(pipeline, requestManager, resourceManager)),
         new AfterInvocationTask(PipelineStatusMessageType.PIPELINE_STOPPED),
-        new StorePipelineStatusTask(false, forceStop)
+        new StorePipelineStatusTask(resourceManager, false, forceStop)
     );
   }
 }

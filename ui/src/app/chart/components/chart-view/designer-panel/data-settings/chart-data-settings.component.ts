@@ -34,7 +34,7 @@ import {
     SourceConfig,
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../../core-model/base/Tuple2';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ChartConfigurationService } from '../../../../../chart-shared/services/chart-configuration.service';
 import { FieldSelectionPanelComponent } from './field-selection-panel/field-selection-panel.component';
 import { GroupSelectionPanelComponent } from './group-selection-panel/group-selection-panel.component';
@@ -133,6 +133,7 @@ export class ChartDataSettingsComponent implements OnInit {
     private fieldProviderService = inject(ChartFieldProviderService);
     private widgetTypeService = inject(ChartTypeService);
     private router = inject(Router);
+    private route = inject(ActivatedRoute);
 
     @Input() dataConfig: DataExplorerDataConfig;
     @Input() dataLakeMeasure: DataLakeMeasure;
@@ -205,6 +206,18 @@ export class ChartDataSettingsComponent implements OnInit {
     findDefaultConfig(): {
         measureName: string | undefined;
     } {
+        const measureNameFromQueryParams =
+            this.route.snapshot.queryParams.measureName;
+        const matchingMeasurement = this.availableMeasurements.find(
+            measurement =>
+                measurement.measureName === measureNameFromQueryParams,
+        );
+        if (matchingMeasurement) {
+            return {
+                measureName: matchingMeasurement.measureName,
+            };
+        }
+
         if (this.availableMeasurements.length > 0) {
             return {
                 measureName: this.availableMeasurements[0].measureName,

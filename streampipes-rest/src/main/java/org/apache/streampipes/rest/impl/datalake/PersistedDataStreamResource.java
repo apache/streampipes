@@ -21,6 +21,7 @@ import org.apache.streampipes.dataexplorer.influx.sanitize.MeasureNameSanitizer;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.impl.dashboard.AbstractPipelineExtractionResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 
@@ -42,6 +43,10 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
 
   private static final String DataLakeAppId = "org.apache.streampipes.sinks.internal.jvm.datalake";
   private static final String MeasureFieldInternalName = "db_measurement";
+
+  public PersistedDataStreamResource(SpResourceManager resourceManager) {
+    super(resourceManager);
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_DATASET_PRIVILEGE)

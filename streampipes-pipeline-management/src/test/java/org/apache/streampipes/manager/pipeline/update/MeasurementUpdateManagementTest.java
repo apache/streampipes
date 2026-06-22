@@ -25,6 +25,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.vocabulary.XSD;
 
 import org.junit.jupiter.api.Test;
@@ -47,7 +48,8 @@ class MeasurementUpdateManagementTest {
   @Test
   void checkPipelineMigrations_ShouldReturnEmptyListWhenNoWarningsExist() {
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
-    var management = new MeasurementUpdateManagement(chartSchemaUpdateCoordinator);
+    var pipelineStorage = mock(IPipelineStorage.class);
+    var management = new MeasurementUpdateManagement(pipelineStorage, chartSchemaUpdateCoordinator);
     var storedPipeline = makePipeline(makeDataLakeSink(makeSchema(property("temperature", XSD.INTEGER))));
     var updatedPipeline = makePipeline(makeDataLakeSink(makeSchema(property("temperature", XSD.LONG))));
     when(chartSchemaUpdateCoordinator.checkChartMigrations(Collections.singleton(any()), any())).thenReturn(List.of());
@@ -60,7 +62,8 @@ class MeasurementUpdateManagementTest {
   @Test
   void checkPipelineMigrations_ShouldReturnWarningForCriticalMeasurementFieldChange() {
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
-    var management = new MeasurementUpdateManagement(chartSchemaUpdateCoordinator);
+    var pipelineStorage = mock(IPipelineStorage.class);
+    var management = new MeasurementUpdateManagement(pipelineStorage, chartSchemaUpdateCoordinator);
     var storedPipeline = makePipeline(makeDataLakeSink(makeSchema(property("temperature", XSD.INTEGER))));
     var updatedPipeline = makePipeline(makeDataLakeSink(makeSchema(property("temperature", XSD.STRING))));
     when(chartSchemaUpdateCoordinator.checkChartMigrations(Collections.singleton(any()), any())).thenReturn(List.of());
@@ -75,7 +78,8 @@ class MeasurementUpdateManagementTest {
   @Test
   void checkPipelineMigrations_ShouldReturnWarningForAffectedCharts() {
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
-    var management = new MeasurementUpdateManagement(chartSchemaUpdateCoordinator);
+    var pipelineStorage = mock(IPipelineStorage.class);
+    var management = new MeasurementUpdateManagement(pipelineStorage, chartSchemaUpdateCoordinator);
     var storedPipeline = makePipeline(makeDataLakeSink(makeSchema(property("temperature", XSD.INTEGER))));
     var updatedPipeline = makePipeline(makeDataLakeSink(makeSchema()));
     var chartSchemaUpdateInfo = new ChartSchemaUpdateInfo();

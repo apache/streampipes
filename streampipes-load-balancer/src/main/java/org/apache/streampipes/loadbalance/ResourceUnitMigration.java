@@ -29,7 +29,8 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnitStats;
 import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,8 @@ public class ResourceUnitMigration {
    */
   public static void migrationForHealth(LoadBalanceResourceUnit<InvocableStreamPipesEntity> resourceUnit,
                                         SpServiceRegistration targetService,
-                                        SpServiceRegistration sourceService) {
+                                        SpServiceRegistration sourceService,
+                                        IPipelineStorage pipelineStorage) {
 
     logger.info("Migrating pipeline resource unit {} to service {} for health recovery",
                 resourceUnit.getId(), targetService.getSvcId());
@@ -70,7 +72,7 @@ public class ResourceUnitMigration {
       }
 
       // Update pipeline in storage with new endpoints
-      updatePipelineEndpoints(resourceUnit);
+      updatePipelineEndpoints(resourceUnit, pipelineStorage);
 
       logger.info("Successfully migrated pipeline resource unit {} to service {}",
                   resourceUnit.getId(), targetService.getSvcId());
@@ -92,7 +94,8 @@ public class ResourceUnitMigration {
    */
   public static void migrateAdapterForHealth(LoadBalanceResourceUnit<AdapterDescription> resourceUnit,
                                              SpServiceRegistration targetService,
-                                             SpServiceRegistration sourceService) {
+                                             SpServiceRegistration sourceService,
+                                             SpResourceManager resourceManager) {
 
     logger.info("Migrating adapter resource unit {} to service {} for health recovery",
                 resourceUnit.getId(), targetService.getSvcId());
@@ -111,8 +114,7 @@ public class ResourceUnitMigration {
         adapter.setSelectedEndpointUrl(newEndpointUrl);
 
         // Update adapter in storage
-        StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage()
-            .updateElement(adapter);
+        resourceManager.manageAdapters().getDb().updateElement(adapter);
 
         logger.debug("Successfully updated adapter {} in storage", adapter.getElementId());
       }
@@ -132,9 +134,9 @@ public class ResourceUnitMigration {
    *
    * @param resourceUnit Resource unit with updated elements
    */
-  private static void updatePipelineEndpoints(LoadBalanceResourceUnit<InvocableStreamPipesEntity> resourceUnit) {
-    Pipeline pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI()
-        .getElementById(resourceUnit.getPipelineId());
+  private static void updatePipelineEndpoints(LoadBalanceResourceUnit<InvocableStreamPipesEntity> resourceUnit,
+                                              IPipelineStorage pipelineStorage) {
+    Pipeline pipeline = pipelineStorage.getElementById(resourceUnit.getPipelineId());
 
     if (pipeline == null) {
       logger.warn("Pipeline {} not found in storage", resourceUnit.getPipelineId());
@@ -156,7 +158,7 @@ public class ResourceUnitMigration {
     }
 
     // Save updated pipeline
-    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().updateElement(pipeline);
+    pipelineStorage.updateElement(pipeline);
 
     logger.debug("Updated pipeline {} endpoints in storage", pipeline.getPipelineId());
   }
@@ -191,16 +193,17 @@ public class ResourceUnitMigration {
    * @param targetLoad Current load of target service
    */
   public static void migration(SpServiceRegistration sourceService, double sourceLoad,
-                               SpServiceRegistration targetService, double targetLoad) {
+                               SpServiceRegistration targetService, double targetLoad,
+                               SpResourceManager resourceManager) {
 
     logger.info("Starting migration from service {} (load: {}%) to service {} (load: {}%)",
                 sourceService.getSvcId(), sourceLoad, targetService.getSvcId(), targetLoad);
 
     // Generate statistics for both services (on-demand, no cache)
     List<LoadBalanceResourceUnitStats> sourceStats =
-        ResourceUnitStatsScanner.generateStatsForService(sourceService);
+        ResourceUnitStatsScanner.generateStatsForService(sourceService, resourceManager);
     List<LoadBalanceResourceUnitStats> targetStats =
-        ResourceUnitStatsScanner.generateStatsForService(targetService);
+        ResourceUnitStatsScanner.generateStatsForService(targetService, resourceManager);
 
     if (sourceStats.isEmpty()) {
       logger.info("No resource units found on source service {}", sourceService.getSvcId());
@@ -219,7 +222,7 @@ public class ResourceUnitMigration {
 
     // Migrate units until we reach the transfer target
     int migratedCount =
-        migrateUnitsToTarget(sourceStats, targetService, sourceService, transferTarget);
+        migrateUnitsToTarget(sourceStats, targetService, sourceService, transferTarget, resourceManager);
 
     // Note: Migration metrics are reported by individual migration methods to avoid double counting
   }
@@ -265,10 +268,12 @@ public class ResourceUnitMigration {
   private static int migrateUnitsToTarget(List<LoadBalanceResourceUnitStats> sourceStats,
                                           SpServiceRegistration targetService,
                                           SpServiceRegistration sourceService,
-                                          double transferTarget) {
+                                          double transferTarget,
+                                          SpResourceManager resourceManager) {
 
     double transferredAmount = 0;
     int migratedCount = 0;
+    var pipelineStorage = resourceManager.managePipelines().getDb();
 
     // Iterate through stats (sorted by event rate)
     for (LoadBalanceResourceUnitStats stats : sourceStats) {
@@ -289,9 +294,9 @@ public class ResourceUnitMigration {
       // Migrate the unit
       try {
         if (isAdapter) {
-          migrateAdapterForHealth(matchingUnit, targetService, sourceService);
+          migrateAdapterForHealth(matchingUnit, targetService, sourceService, resourceManager);
         } else {
-          migrationForHealth(matchingUnit, targetService, sourceService);
+          migrationForHealth(matchingUnit, targetService, sourceService, pipelineStorage);
         }
         transferredAmount += stats.getEventRateOut() + stats.getEventRateIn();
         migratedCount++;

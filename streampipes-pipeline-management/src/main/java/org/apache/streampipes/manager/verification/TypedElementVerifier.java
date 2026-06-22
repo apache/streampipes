@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -45,9 +46,10 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
       Consumer<T> storeOperation,
       Consumer<T> updateOperation,
       SpServiceUrlProvider serviceUrlProvider,
-      ExtensionServiceRequestManager requestManager
+      ExtensionServiceRequestManager requestManager,
+      PermissionResourceManager permissionResourceManager
   ) {
-    super(graphData, elementClass, storageApi);
+    super(graphData, elementClass, storageApi, permissionResourceManager);
     this.existsChecker = existsChecker;
     this.storeOperation = storeOperation;
     this.updateOperation = updateOperation;
@@ -62,9 +64,10 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
       Consumer<T> storeOperation,
       Consumer<T> updateOperation,
       SpServiceUrlProvider serviceUrlProvider,
-      ExtensionServiceRequestManager requestManager
+      ExtensionServiceRequestManager requestManager,
+      PermissionResourceManager permissionResourceManager
   ) {
-    super(elementDescription, storageApi);
+    super(elementDescription, storageApi, permissionResourceManager);
     this.existsChecker = existsChecker;
     this.storeOperation = storeOperation;
     this.updateOperation = updateOperation;

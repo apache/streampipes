@@ -24,12 +24,13 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 public class DataStreamResourceManager
     extends AbstractPipelineElementResourceManager<IDataStreamStorage, SpDataStream, SpDataStream> {
 
-  public DataStreamResourceManager(IDataStreamStorage db) {
-    super(db);
+  public DataStreamResourceManager(IDataStreamStorage db,
+                                   PermissionResourceManager permissionResourceManager) {
+    super(db, permissionResourceManager);
   }
 
-  public DataStreamResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataStreamStorage());
+  public DataStreamResourceManager(PermissionResourceManager permissionResourceManager) {
+    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataStreamStorage(), permissionResourceManager);
   }
 
   @Override

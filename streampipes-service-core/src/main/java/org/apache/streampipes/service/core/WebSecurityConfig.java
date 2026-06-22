@@ -30,6 +30,7 @@ import org.apache.streampipes.service.core.oauth2.OAuth2AccessTokenResponseConve
 import org.apache.streampipes.service.core.oauth2.OAuth2AuthenticationFailureHandler;
 import org.apache.streampipes.service.core.oauth2.OAuth2AuthenticationSuccessHandler;
 import org.apache.streampipes.service.core.oauth2.OAuthEnabledCondition;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.user.management.service.SpUserDetailsService;
 
 import org.slf4j.Logger;
@@ -95,10 +96,14 @@ public class WebSecurityConfig {
   @Autowired
   private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
-  public WebSecurityConfig(StreamPipesPasswordEncoder passwordEncoder) {
+  private final IPermissionStorage permissionStorage;
+
+  public WebSecurityConfig(StreamPipesPasswordEncoder passwordEncoder,
+                           IPermissionStorage permissionStorage) {
     this.passwordEncoder = passwordEncoder;
-    this.userDetailsService = new SpUserDetailsService();
+    this.userDetailsService = new SpUserDetailsService(permissionStorage);
     this.env = Environments.getEnvironment();
+    this.permissionStorage = permissionStorage;
   }
 
   @Autowired
@@ -153,7 +158,7 @@ public class WebSecurityConfig {
   }
 
   public TokenAuthenticationFilter tokenAuthenticationFilter() {
-    return new TokenAuthenticationFilter();
+    return new TokenAuthenticationFilter(permissionStorage);
   }
 
   @Bean(BeanIds.USER_DETAILS_SERVICE)

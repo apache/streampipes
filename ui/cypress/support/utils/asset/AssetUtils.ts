@@ -30,10 +30,6 @@ export class AssetUtils {
         cy.dataCy('asset-title').should('be.visible');
     }
 
-    public static goBackToOverview() {
-        AssetBtns.goBackToOverviewBtn().click();
-    }
-
     public static addAndSaveAsset(asset: Asset) {
         AssetUtils.addNewAsset(asset);
 
@@ -214,7 +210,11 @@ export class AssetUtils {
 
         AssetUtils.checkAmountOfLinkedResources(2);
         AssetBtns.saveAssetBtn().click();
-        AssetUtils.goBackToOverview();
+        cy.location('hash', { timeout: 10000 }).should(
+            'include',
+            '/assets/overview',
+        );
+        AssetBtns.createAssetBtn().should('be.visible');
     }
 
     public static deleteAsset(assetName: string) {

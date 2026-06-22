@@ -46,30 +46,36 @@ public final class ExtensionServiceRequests {
     return ExtensionServiceRequest.delete(target, authToken);
   }
 
-  public static ExtensionServiceRequest containerProvidedOptions(ExtensionServiceRequestTarget target, String payload) {
-    return post(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
+  public static ExtensionServiceRequest containerProvidedOptions(ExtensionServiceRequestTarget target,
+                                                                 String payload,
+                                                                 String authToken) {
+    return post(target, payload, authToken);
   }
 
   public static ExtensionServiceRequest migration(ExtensionServiceRequestTarget target, String payload) {
     return post(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
   }
 
-  public static ExtensionServiceRequest descriptionUpdate(ExtensionServiceRequestTarget target) {
-    return get(target, serviceAdminToken());
+  public static ExtensionServiceRequest descriptionUpdate(ExtensionServiceRequestTarget target,
+                                                          SpResourceManager resourceManager) {
+    return get(target, serviceAdminToken(resourceManager));
   }
 
-  public static ExtensionServiceRequest extensionDescription(ExtensionServiceRequestTarget target) {
-    return get(target, serviceAdminToken());
+  public static ExtensionServiceRequest extensionDescription(ExtensionServiceRequestTarget target,
+                                                             SpResourceManager resourceManager) {
+    return get(target, serviceAdminToken(resourceManager));
   }
 
-  public static ExtensionServiceRequest functionStop(ExtensionServiceRequestTarget target) {
-    return post(target, null, serviceAdminToken());
+  public static ExtensionServiceRequest functionStop(ExtensionServiceRequestTarget target,
+                                                     SpResourceManager resourceManager) {
+    return post(target, null, serviceAdminToken(resourceManager));
   }
 
   public static ExtensionServiceRequest adapterStateChange(ExtensionServiceRequestTarget target,
                                                            String elementId,
-                                                           String payload) {
-    return post(target, payload, AuthTokenUtils.getAuthToken(elementId));
+                                                           String payload,
+                                                           SpResourceManager resourceManager) {
+    return post(target, payload, AuthTokenUtils.getAuthToken(elementId, resourceManager));
   }
 
   public static ExtensionServiceRequest runtimeOptions(ExtensionServiceRequestTarget target, String payload) {
@@ -80,27 +86,31 @@ public final class ExtensionServiceRequests {
     return post(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
   }
 
-  public static ExtensionServiceRequest extensionInstanceHealth(ExtensionServiceRequestTarget target) {
-    return get(target, serviceAdminToken());
+  public static ExtensionServiceRequest extensionInstanceHealth(ExtensionServiceRequestTarget target,
+                                                                SpResourceManager resourceManager) {
+    return get(target, serviceAdminToken(resourceManager));
   }
 
-  public static ExtensionServiceRequest serviceHealth(ExtensionServiceRequestTarget target) {
-    return get(target, serviceAdminToken());
+  public static ExtensionServiceRequest serviceHealth(ExtensionServiceRequestTarget target,
+                                                      SpResourceManager resourceManager) {
+    return get(target, serviceAdminToken(resourceManager));
   }
 
-  public static ExtensionServiceRequest serviceLoad(ExtensionServiceRequestTarget target) {
-    return get(target, serviceAdminToken());
+  public static ExtensionServiceRequest serviceLoad(ExtensionServiceRequestTarget target,
+                                                    SpResourceManager resourceManager) {
+    return get(target, serviceAdminToken(resourceManager));
   }
 
   public static ExtensionServiceRequest pipelineElementInvocation(ExtensionServiceRequestTarget target,
-                                                                  String pipelineId,
-                                                                  String payload) {
-    return post(target, payload, AuthTokenUtils.getAuthToken(pipelineId));
+                                                                  String payload,
+                                                                  String authToken) {
+    return post(target, payload, authToken);
   }
 
   public static ExtensionServiceRequest pipelineElementDetach(ExtensionServiceRequestTarget target,
-                                                              String pipelineId) {
-    return delete(target, AuthTokenUtils.getAuthToken(pipelineId));
+                                                              String pipelineId,
+                                                              SpResourceManager resourceManager) {
+    return delete(target, AuthTokenUtils.getAuthToken(pipelineId, resourceManager));
   }
 
   public static ExtensionServiceRequest pipelineElementAssets(ExtensionServiceRequestTarget target) {
@@ -127,7 +137,9 @@ public final class ExtensionServiceRequests {
     return post(target, payload, null);
   }
 
-  private static String serviceAdminToken() {
-    return AuthTokenUtils.getAuthTokenForUser(new SpResourceManager().manageUsers().getServiceAdmin().getPrincipalId());
+  private static String serviceAdminToken(SpResourceManager resourceManager) {
+    return AuthTokenUtils.getAuthTokenForUser(
+        resourceManager.manageUsers().getServiceAdmin().getPrincipalId(),
+        resourceManager.manageUsers());
   }
 }

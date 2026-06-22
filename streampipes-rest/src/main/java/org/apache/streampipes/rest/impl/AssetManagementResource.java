@@ -23,11 +23,9 @@ import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.AssetResourceManager;
-import org.apache.streampipes.resource.management.CrudResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.api.system.IAssetStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,37 +48,38 @@ import java.util.List;
 @RequestMapping("/api/v2/assets")
 public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
-  private final CrudResourceManager<SpAssetModel> resourceManager;
+  private final AssetResourceManager assetResourceManager;
+  private final SpResourceManager resourceManager;
 
-  public AssetManagementResource() {
-    IAssetStorage assetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAssetStorage();
-    this.resourceManager = new CrudResourceManager<>(assetStorage, SpAssetModel.class);
+  public AssetManagementResource(SpResourceManager resourceManager) {
+    this.resourceManager = resourceManager;
+    this.assetResourceManager = resourceManager.manageAssets();
   }
 
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_AUTHENTICATED)
   public ResourceSummaryDto<AssetSummaryDto> getAssetSummary() {
-    return getResourceManager().getSummary(getAuthentication());
+    return resourceManager.manageAssets().getSummary(getAuthentication());
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_AUTHENTICATED)
   @PostFilter("hasPermission(filterObject.elementId, 'READ')")
   public List<SpAssetModel> getAll() {
-    return resourceManager.findAll();
+    return assetResourceManager.findAll();
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
   public ResponseEntity<?> create(@RequestBody SpAssetModel asset) {
-    resourceManager.create(asset, getAuthenticatedUserSid());
+    assetResourceManager.create(asset, getAuthenticatedUserSid());
     return ok();
   }
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_AUTHENTICATED + " and hasPermission(#elementId, 'READ')")
   public ResponseEntity<SpAssetModel> getAsset(@PathVariable("id") String elementId) {
-      var obj = resourceManager.find(elementId);
+      var obj = assetResourceManager.find(elementId);
       if (obj != null) {
         return ok(obj);
       } else {
@@ -93,8 +92,8 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<SpAssetModel> update(@PathVariable("id") String elementId,
       @RequestBody SpAssetModel asset) {
     if (elementId.equals(asset.getElementId())) {
-      resourceManager.update(asset);
-      return ok(resourceManager.find(elementId));
+      assetResourceManager.update(asset);
+      return ok(assetResourceManager.find(elementId));
     } else {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN);
     }
@@ -103,7 +102,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE + " and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<Void> delete(@PathVariable("id") String elementId) {
-    resourceManager.delete(elementId);
+    assetResourceManager.delete(elementId);
     return ok();
   }
 
@@ -112,9 +111,5 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
    */
   public boolean hasWriteAuthority() {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ASSETS_VALUE);
-  }
-
-  private AssetResourceManager getResourceManager() {
-    return getSpResourceManager().manageAssets();
   }
 }

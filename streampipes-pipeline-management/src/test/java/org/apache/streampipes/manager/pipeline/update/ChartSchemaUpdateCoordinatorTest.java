@@ -28,7 +28,7 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.explorer.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.vocabulary.XSD;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -118,7 +118,7 @@ class ChartSchemaUpdateCoordinatorTest {
 
   @Test
   void updateCharts_ShouldUpdateMeasureSchemaWhenOnlyUnreferencedFieldWasRemoved() {
-    var widgetStorage = mock(IDataExplorerWidgetStorage.class);
+    var widgetStorage = mock(IChartStorage.class);
     var coordinator = new ChartSchemaUpdateCoordinator(widgetStorage);
     var widget = makeWidget(selectedField("temperature"), unselectedField("humidity"));
     var pipeline = makePipeline(MEASURE_NAME);
@@ -135,7 +135,7 @@ class ChartSchemaUpdateCoordinatorTest {
 
   @Test
   void updateCharts_ShouldMarkWidgetAsRequiresAttentionWhenReferencedFieldWasRemoved() {
-    var widgetStorage = mock(IDataExplorerWidgetStorage.class);
+    var widgetStorage = mock(IChartStorage.class);
     var coordinator = new ChartSchemaUpdateCoordinator(widgetStorage);
     var widget = makeWidget(selectedField("temperature"));
     var pipeline = makePipeline(MEASURE_NAME);
@@ -154,7 +154,7 @@ class ChartSchemaUpdateCoordinatorTest {
 
   @Test
   void updateCharts_ShouldUpdateAllMatchingSourceConfigs() {
-    var widgetStorage = mock(IDataExplorerWidgetStorage.class);
+    var widgetStorage = mock(IChartStorage.class);
     var coordinator = new ChartSchemaUpdateCoordinator(widgetStorage);
     var widget = makeWidget(MEASURE_NAME, selectedField("temperature"));
     var secondSourceConfig = new HashMap<String, Object>();
@@ -180,7 +180,7 @@ class ChartSchemaUpdateCoordinatorTest {
 
   @Test
   void updateCharts_ShouldOnlyCheckWidgetsWithMatchingMeasureName() {
-    var widgetStorage = mock(IDataExplorerWidgetStorage.class);
+    var widgetStorage = mock(IChartStorage.class);
     var coordinator = new ChartSchemaUpdateCoordinator(widgetStorage);
     var unrelatedWidget = makeWidget("other-measure", selectedField("temperature"));
     var pipeline = makePipeline(MEASURE_NAME);
@@ -192,7 +192,7 @@ class ChartSchemaUpdateCoordinatorTest {
   }
 
   private ChartSchemaUpdateCoordinator makeCoordinator() {
-    return new ChartSchemaUpdateCoordinator(mock(IDataExplorerWidgetStorage.class));
+    return new ChartSchemaUpdateCoordinator(mock(IChartStorage.class));
   }
 
   private DataExplorerWidgetModel makeWidget(Map<String, Object>... fieldConfigs) {

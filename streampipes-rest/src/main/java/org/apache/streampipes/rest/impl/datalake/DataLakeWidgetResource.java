@@ -22,8 +22,7 @@ import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.datalake.ChartSummaryDto;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
-import org.apache.streampipes.resource.management.DataExplorerResourceManager;
-import org.apache.streampipes.resource.management.DataExplorerWidgetResourceManager;
+import org.apache.streampipes.resource.management.ChartResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -48,13 +47,10 @@ import java.util.List;
 @RequestMapping("/api/v3/datalake/dashboard/widgets")
 public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
 
-  private final DataExplorerWidgetResourceManager resourceManager;
+  private final ChartResourceManager resourceManager;
 
-  public DataLakeWidgetResource() {
-    this.resourceManager = new SpResourceManager().manageDataExplorerWidget(
-        new DataExplorerResourceManager(),
-        getNoSqlStorage().getDataExplorerWidgetStorage()
-    );
+  public DataLakeWidgetResource(SpResourceManager resourceManager) {
+    this.resourceManager = resourceManager.manageCharts();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
