@@ -26,7 +26,6 @@ import org.apache.streampipes.model.connect.adapter.HealthCheckStatus;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,10 +69,13 @@ public class AdapterHealthResource extends AbstractAuthGuardedRestResource {
   private final IAdapterStorage adapterStorage;
   private final ObjectMapper objectMapper;
   private final HttpClient httpClient;
+  private final SpPermissionEvaluator permissionEvaluator;
 
-  public AdapterHealthResource() {
-    this.adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
+  public AdapterHealthResource(IAdapterStorage adapterStorage,
+                               SpPermissionEvaluator permissionEvaluator) {
+    this.adapterStorage = adapterStorage;
     this.objectMapper = new ObjectMapper();
+    this.permissionEvaluator = permissionEvaluator;
     this.httpClient = HttpClient.newBuilder()
         .connectTimeout(Duration.ofSeconds(10))
         .build();
@@ -122,7 +124,7 @@ public class AdapterHealthResource extends AbstractAuthGuardedRestResource {
           .GET();
 
       var token = AuthTokenUtils.getAuthTokenForCurrentUser();
-      if (token != null && !token.isBlank()) {
+      if (!token.isBlank()) {
         requestBuilder.header("Authorization", token);
       }
 
@@ -228,9 +230,8 @@ public class AdapterHealthResource extends AbstractAuthGuardedRestResource {
 
   private boolean checkAdapterPermission(AdapterDescription adapterDescription,
                                          String permission) {
-    var spPermissionEvaluator = new SpPermissionEvaluator();
     var authentication = SecurityContextHolder.getContext().getAuthentication();
-    return spPermissionEvaluator.hasPermission(
+    return permissionEvaluator.hasPermission(
         authentication,
         adapterDescription.getCorrespondingDataStreamElementId(),
         permission);
