@@ -31,7 +31,7 @@
     <artifactId>streampipes-connectors-cdc</artifactId>
 
     <properties>
-        <debezium.version>3.4.3.Final</debezium.version>
+        <debezium.version>3.5.2.Final</debezium.version>
     </properties>
 
     <dependencies>
