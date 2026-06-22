@@ -74,7 +74,7 @@ describe('Test Time Order in Charts', () => {
         });
 
         // Check if dialog window is showing after applying changes to time settings
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDatalake(false);
         ChartUtils.checkIfConfirmationDialogIsShowing();
     });
 });
