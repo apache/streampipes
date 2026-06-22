@@ -42,6 +42,7 @@ public class ContinuousPlcRequestReader
   private final IEventCollector collector;
   private int idlePullsBeforeNextAttempt = 0;
   private int currentIdlePulls = 0;
+  private final String adapterName;
 
   /**
    *  Failure and recovery strategy:
@@ -52,10 +53,12 @@ public class ContinuousPlcRequestReader
       PlcConnectionManager connectionManager,
       Plc4xConnectionSettings settings,
       PlcRequestProvider requestProvider,
-      IEventCollector collector
+      IEventCollector collector,
+      String adapterName
   ) {
     super(connectionManager, settings, requestProvider);
     this.collector = collector;
+    this.adapterName = adapterName;
   }
 
   @Override
@@ -75,7 +78,11 @@ public class ContinuousPlcRequestReader
             .get(5000, TimeUnit.MILLISECONDS);
         processPlcReadResponse(readResponse);
       } else {
-        LOG.error("Not connected to PLC with connection string {}", settings.connectionString());
+        LOG.error(
+            "Not connected to PLC with connection string {}, adapter {}",
+            settings.connectionString(),
+            adapterName
+        );
         handleFailingPlcRead();
       }
     } catch (Exception e) {
