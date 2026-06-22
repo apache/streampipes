@@ -805,14 +805,22 @@ export class ChartUtils {
         return currentDate;
     }
 
-    public static getDatalakeNumberOfEvents(): Cypress.Chainable<number> {
-        ChartBtns.datalakeTotalCountBtn().should('be.visible').click();
-        ChartBtns.datalakeTotalCountBtn().should('not.exist');
-        ChartBtns.datalakeNumberOfEventsSpinner().should('not.exist');
-
-        return cy
-            .dataCy('datalake-number-of-events', { timeout: 10000 })
+    public static getDatalakeNumberOfEvents(
+        greaterThan?: number,
+    ): Cypress.Chainable<number> {
+        return ChartBtns.datalakeTotalCountControl()
             .should('be.visible')
+            .click()
+            .then(() => ChartBtns.datalakeTotalCountValue())
+            .should('be.visible')
+            .should($value => {
+                const count = Number($value.text().replaceAll(',', '').trim());
+
+                expect(Number.isNaN(count)).to.equal(false);
+                if (greaterThan !== undefined) {
+                    expect(count).to.be.greaterThan(greaterThan);
+                }
+            })
             .invoke('text')
             .then(text => Number(text.replaceAll(',', '').trim()));
     }
