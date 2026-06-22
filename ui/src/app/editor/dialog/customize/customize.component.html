@@ -171,13 +171,12 @@
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
         @if (!templateMode) {
-            <div fxLayout="row">
+            <div fxLayout="row" fxLayoutGap="10px" fxFlex="100">
                 <button
                     mat-button
                     mat-flat-button
                     color="accent"
                     (click)="save()"
-                    style="margin-right: 10px"
                     [disabled]="!formValid"
                     data-cy="sp-element-configuration-save"
                 >
@@ -197,7 +196,7 @@
                 <button
                     mat-button
                     mat-flat-button
-                    color="accent"
+                    class="mat-basic"
                     [disabled]="!formValid"
                     data-cy="create-template"
                     (click)="triggerTemplateMode()"
@@ -208,13 +207,12 @@
             </div>
         }
         @if (templateMode) {
-            <div fxLayout="row">
+            <div fxLayout="row" fxLayoutGap="10px">
                 <button
                     mat-button
                     mat-flat-button
                     color="accent"
                     (click)="saveTemplate()"
-                    style="margin-right: 10px"
                     [disabled]="!formValid"
                     data-cy="save-template"
                 >

@@ -93,6 +93,19 @@ html {
         )
     );
 
+    @include mat.dialog-overrides(
+        (
+            container-color: var(--mat-sys-surface),
+            container-shape: var(--radius-md),
+            container-elevation-shadow: var(--shadow-overlay),
+            subhead-color: var(--mat-sys-on-surface),
+            subhead-weight: var(--font-weight-semibold),
+            supporting-text-color: var(--mat-sys-on-surface-variant),
+            actions-padding: var(--space-sm) var(--space-lg),
+            content-padding: var(--space-lg),
+        )
+    );
+
     &.dark-mode {
         @include mat.theme-overrides(
             (
