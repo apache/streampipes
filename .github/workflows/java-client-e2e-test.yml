@@ -37,7 +37,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.2.0
         with:
           distribution: 'temurin'
           java-version: '17'
