@@ -56,7 +56,8 @@ public class DataLakeScheduler implements SchedulingConfigurer {
             dataExplorerSchemaManagement,
             new DataExplorerDispatcher().getDataExplorerManager()
                 .getQueryManagement(dataExplorerSchemaManagement),
-            resourceManager.getCoreConfigurationStorage());
+            resourceManager.getCoreConfigurationStorage(),
+            resourceManager.getFileMetadataStorage());
     }
 
     public void cleanupMeasurements() {

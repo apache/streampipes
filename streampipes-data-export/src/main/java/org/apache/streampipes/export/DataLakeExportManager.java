@@ -21,6 +21,7 @@ import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.export.objectstorage.ExportProviderFactory;
 import org.apache.streampipes.dataexplorer.export.objectstorage.IObjectStorage;
@@ -30,6 +31,7 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.RetentionAction;
 import org.apache.streampipes.model.datalake.RetentionLog;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.slf4j.Logger;
@@ -51,13 +53,16 @@ public class DataLakeExportManager {
     private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
     private final IDataExplorerQueryManagement dataExplorerQueryManagement;
     private final ISpCoreConfigurationStorage coreConfigurationStorage;
+    private final ConfiguredOutputWriterFactory outputWriterFactory;
 
     public DataLakeExportManager(IDataExplorerSchemaManagement dataLakeSchemaManagement,
                                  IDataExplorerQueryManagement dataLakeQueryManagement,
-                                 ISpCoreConfigurationStorage coreConfigurationStorage) {
+                                 ISpCoreConfigurationStorage coreConfigurationStorage,
+                                 IFileMetadataStorage fileMetadataStorage) {
         this.dataExplorerSchemaManagement = dataLakeSchemaManagement;
         this.dataExplorerQueryManagement = dataLakeQueryManagement;
         this.coreConfigurationStorage = coreConfigurationStorage;
+        this.outputWriterFactory = new ConfiguredOutputWriterFactory(fileMetadataStorage, coreConfigurationStorage);
     }
 
     private String savePath = "";
@@ -88,6 +93,7 @@ public class DataLakeExportManager {
         StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
                 sanitizedParams,
                 outputFormat,
+                outputWriterFactory,
                 "ignore".equals(
                         dataLakeMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig()
                                 .missingValueBehaviour()),

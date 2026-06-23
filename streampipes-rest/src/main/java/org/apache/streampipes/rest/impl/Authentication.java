@@ -78,11 +78,10 @@ public class Authentication extends AbstractRestResource {
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
 
   public Authentication(AuthenticationManager authenticationManager,
-                        SpResourceManager resourceManager,
-                        ISpCoreConfigurationStorage coreConfigurationStorage) {
+                        SpResourceManager resourceManager) {
     this.authenticationManager = authenticationManager;
     this.resourceManager = resourceManager;
-    this.coreConfigurationStorage = coreConfigurationStorage;
+    this.coreConfigurationStorage = resourceManager.getCoreConfigurationStorage();
   }
 
   @PostMapping(
@@ -167,7 +166,7 @@ public class Authentication extends AbstractRestResource {
   public synchronized ResponseEntity<SuccessMessage> doRegister(
       @RequestBody UserRegistrationData userRegistrationData
   ) {
-    GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
+    GeneralConfig config = coreConfigurationStorage.get().getGeneralConfig();
     if (!config.isAllowSelfRegistration()) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
@@ -208,7 +207,7 @@ public class Authentication extends AbstractRestResource {
       path = "settings",
       produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> getAuthSettings() {
-    GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
+    GeneralConfig config = coreConfigurationStorage.get().getGeneralConfig();
     var termsAcknowledgmentRequired = config.getUserAcknowledgment() != null
         && config.getUserAcknowledgment().required();
     Map<String, Object> response = new HashMap<>();

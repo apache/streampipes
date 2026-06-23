@@ -54,21 +54,21 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<EmailConfig> getMailConfiguration() {
-    return ok(getSpCoreConfigurationStorage().get().getEmailConfig());
+    return ok(configurationStorage.get().getEmailConfig());
   }
 
   @GetMapping(path = "templates", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<EmailTemplateConfig> getMailTemplates() {
-    return ok(getSpCoreConfigurationStorage().get().getEmailTemplateConfig());
+    return ok(configurationStorage.get().getEmailTemplateConfig());
   }
 
   @PutMapping(path = "templates", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> updateMailTemplate(@RequestBody EmailTemplateConfig templateConfig) {
-    var config = getSpCoreConfigurationStorage().get();
+    var config = configurationStorage.get();
     config.setEmailTemplateConfig(templateConfig);
-    getSpCoreConfigurationStorage().updateElement(config);
+    configurationStorage.updateElement(config);
     return ok();
   }
 
@@ -85,10 +85,9 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
       config.setSmtpPassword(SecretEncryptionManager.encrypt(config.getSmtpPassword()));
       config.setSmtpPassEncrypted(true);
     }
-    var storage = getSpCoreConfigurationStorage();
-    var cfg = storage.get();
+    var cfg = configurationStorage.get();
     cfg.setEmailConfig(config);
-    storage.updateElement(cfg);
+    configurationStorage.updateElement(cfg);
 
     return ok();
   }

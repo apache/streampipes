@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
+import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.export.DataLakeExportManager;
@@ -99,6 +100,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final DataLakeExportManager dataLakeExportManager;
   private final IDataLakeMeasureStorage datasetStorage;
+  private final ConfiguredOutputWriterFactory outputWriterFactory;
 
   public DataLakeResource(IChartStorage chartStorage,
                           SpResourceManager resourceManager) {
@@ -107,10 +109,14 @@ public class DataLakeResource extends AbstractDataLakeResource {
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(this.dataLakeMeasureManagement);
+    this.outputWriterFactory = new ConfiguredOutputWriterFactory(
+        resourceManager.getFileMetadataStorage(),
+        resourceManager.getCoreConfigurationStorage());
     this.dataLakeExportManager = new DataLakeExportManager(
         this.dataLakeMeasureManagement,
         dataExplorerQueryManagement,
-        resourceManager.getCoreConfigurationStorage());
+        resourceManager.getCoreConfigurationStorage(),
+        resourceManager.getFileMetadataStorage());
   }
 
   @DeleteMapping(path = "/measurements/{measurementName}")
@@ -275,6 +281,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
       StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
           sanitizedParams,
           outputFormat,
+          outputWriterFactory,
           isIgnoreMissingValues(missingValueBehaviour),
           output);
 

@@ -32,7 +32,6 @@ import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.api.system.IImageStorage;
-import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
@@ -50,7 +49,6 @@ import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineCanvasMetada
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.CertificateStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.system.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.FileMetadataStorageImpl;
@@ -150,11 +148,6 @@ public class CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IExtensionsServiceConfigurationStorage getExtensionsServiceConfigurationStorage() {
     return new ExtensionsServiceConfigurationStorageImpl();
-  }
-
-  @Override
-  public ISpCoreConfigurationStorage getSpCoreConfigurationStorage() {
-    return new CoreConfigurationStorageImpl();
   }
 
   @Override

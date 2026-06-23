@@ -20,7 +20,6 @@ package org.apache.streampipes.mail.utils;
 import org.apache.streampipes.commons.resources.Resources;
 import org.apache.streampipes.model.configuration.GeneralConfig;
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -39,9 +38,5 @@ public class MailUtils {
 
   public static String readResourceFileToString(String filename) throws IOException {
     return Resources.asString(filename, StandardCharsets.UTF_8);
-  }
-
-  public static SpCoreConfiguration getSpCoreConfiguration() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage().get();
   }
 }

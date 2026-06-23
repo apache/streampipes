@@ -29,6 +29,7 @@ import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
@@ -98,7 +99,8 @@ public class ExtensionServiceRequestConfiguration {
                                              IAssetStorage assetStorage,
                                              IPipelineStorage pipelineStorage,
                                              IDataLakeMeasureStorage datasetStorage,
-                                             ISpCoreConfigurationStorage coreConfigurationStorage) {
+                                             ISpCoreConfigurationStorage coreConfigurationStorage,
+                                             IFileMetadataStorage fileMetadataStorage) {
     return new SpResourceManager(
         permissionStorage,
         chartStorage,
@@ -107,7 +109,8 @@ public class ExtensionServiceRequestConfiguration {
         dashboardStorage,
         pipelineStorage,
         datasetStorage,
-        coreConfigurationStorage
+        coreConfigurationStorage,
+        fileMetadataStorage
     );
   }
 

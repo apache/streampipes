@@ -30,6 +30,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.utils.Utils;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.PasswordUtil;
@@ -59,6 +60,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v2/users")
 public class UserResource extends AbstractAuthGuardedRestResource {
+
+  private final ISpCoreConfigurationStorage configurationStorage;
+
+  public UserResource(ISpCoreConfigurationStorage configurationStorage) {
+    this.configurationStorage = configurationStorage;
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<ShortUserInfo>> listUsers(
@@ -166,7 +173,8 @@ public class UserResource extends AbstractAuthGuardedRestResource {
         } else {
           String generatedProperty = PasswordUtil.generateRandomPassword();
           encryptAndStore(userAccount, generatedProperty);
-          new MailSender().sendInitialPasswordMail(userAccount.getUsername(), generatedProperty);
+          new MailSender(configurationStorage.get())
+              .sendInitialPasswordMail(userAccount.getUsername(), generatedProperty);
         }
         return ok();
       } else {

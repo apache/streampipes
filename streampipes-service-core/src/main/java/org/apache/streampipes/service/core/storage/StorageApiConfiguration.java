@@ -26,6 +26,7 @@ import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
@@ -36,6 +37,7 @@ import org.apache.streampipes.storage.couchdb.impl.function.FunctionStateStorage
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.AssetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.CoreConfigurationStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
@@ -108,6 +110,11 @@ public class StorageApiConfiguration {
   @Bean
   public ISpCoreConfigurationStorage coreConfigurationStorage() {
     return new CoreConfigurationStorageImpl();
+  }
+
+  @Bean
+  public IFileMetadataStorage fileMetadataStorage() {
+    return new FileMetadataStorageImpl();
   }
 
   @Bean

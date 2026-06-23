@@ -23,6 +23,7 @@ import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -37,6 +38,7 @@ public class SpResourceManager {
   private final IPipelineStorage pipelineStorage;
   private final IDataLakeMeasureStorage datasetStorage;
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
+  private final IFileMetadataStorage fileMetadataStorage;
 
   public SpResourceManager(IPermissionStorage permissionStorage,
                            IChartStorage chartStorage,
@@ -45,7 +47,8 @@ public class SpResourceManager {
                            IDashboardStorage dashboardStorage,
                            IPipelineStorage pipelineStorage,
                            IDataLakeMeasureStorage datasetStorage,
-                           ISpCoreConfigurationStorage coreConfigurationStorage) {
+                           ISpCoreConfigurationStorage coreConfigurationStorage,
+                           IFileMetadataStorage fileMetadataStorage) {
     this.permissionStorage = permissionStorage;
     this.chartStorage = chartStorage;
     this.adapterStorage = adapterStorage;
@@ -54,6 +57,7 @@ public class SpResourceManager {
     this.pipelineStorage = pipelineStorage;
     this.datasetStorage = datasetStorage;
     this.coreConfigurationStorage = coreConfigurationStorage;
+    this.fileMetadataStorage = fileMetadataStorage;
   }
 
   public AdapterDescriptionResourceManager manageAdapterDescriptions() {
@@ -104,6 +108,10 @@ public class SpResourceManager {
 
   public ISpCoreConfigurationStorage getCoreConfigurationStorage() {
     return coreConfigurationStorage;
+  }
+
+  public IFileMetadataStorage getFileMetadataStorage() {
+    return fileMetadataStorage;
   }
 
   public UserResourceManager manageUsers() {

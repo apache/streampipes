@@ -22,6 +22,7 @@ import org.apache.streampipes.dataexplorer.QueryResultProvider;
 import org.apache.streampipes.dataexplorer.StreamedQueryResultProvider;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
@@ -58,10 +59,11 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
   @Override
   public void getDataAsStream(ProvidedRestQueryParams params,
                               OutputFormat format,
+                              ConfiguredOutputWriterFactory outputWriterFactory,
                               boolean ignoreMissingValues,
                               OutputStream outputStream) throws IOException {
 
-    new StreamedQueryResultProvider(params, format,
+    new StreamedQueryResultProvider(params, format, outputWriterFactory,
                                     this,
                                     new DataExplorerInfluxQueryExecutor(),
                                     dataExplorerSchemaManagement,
