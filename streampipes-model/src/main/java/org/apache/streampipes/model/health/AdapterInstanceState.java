@@ -18,9 +18,8 @@
 
 package org.apache.streampipes.model.health;
 
-import java.util.Map;
-import java.util.Set;
-
-public record ExtensionInstanceHealth(Map<String, AdapterInstanceState> adapterInstanceStates,
-                                      Set<String> runningPipelineElementInstanceIds) {
+public enum AdapterInstanceState {
+  RUNNING,
+  STARTING,
+  STOPPING
 }
