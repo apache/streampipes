@@ -42,9 +42,9 @@ import {
     FieldProvider,
     ObservableGenerator,
 } from '../../../models/dataview-dashboard.model';
-import { Observable, Subject, Subscription, zip } from 'rxjs';
+import { EMPTY, Observable, Subject, Subscription, zip } from 'rxjs';
 import { ChartFieldProviderService } from '../../../services/chart-field-provider.service';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, exhaustMap, finalize } from 'rxjs/operators';
 import { ChartRegistry } from '../../../registry/chart-registry.service';
 import { SpFieldUpdateService } from '../../../services/field-update.service';
 import {
@@ -123,6 +123,7 @@ export abstract class BaseDataExplorerWidgetDirective<
     requestQueue$: Subject<Observable<SpQueryResult>[]> = new Subject<
         Observable<SpQueryResult>[]
     >();
+    requestInProgress = false;
 
     protected widgetConfigurationService = inject(ChartConfigurationService);
     protected resizeService = inject(ResizeService);
@@ -142,14 +143,18 @@ export abstract class BaseDataExplorerWidgetDirective<
 
         this.requestQueue$
             .pipe(
-                switchMap(observables => {
+                exhaustMap(observables => {
+                    this.requestInProgress = true;
                     this.errorCallback.emit(undefined);
                     return zip(...observables).pipe(
                         catchError(err => {
                             this.timerCallback.emit(false);
                             this.errorCallback.emit(err.error);
                             this.dataReceivedCallback.emit([]);
-                            return [];
+                            return EMPTY;
+                        }),
+                        finalize(() => {
+                            this.requestInProgress = false;
                         }),
                     );
                 }),
@@ -254,6 +259,9 @@ export abstract class BaseDataExplorerWidgetDirective<
     }
 
     public updateData(includeTooMuchEventsParameter: boolean = true) {
+        if (this.requestInProgress) {
+            return;
+        }
         this.beforeDataFetched();
         this.loadData(includeTooMuchEventsParameter);
     }
