@@ -29,8 +29,20 @@ import { ConnectBtns } from '../connect/ConnectBtns';
 export class ChartUtils {
     public static ADAPTER_NAME = 'datalake_configuration';
 
-    public static goToDatalake() {
+    public static goToDatalake(discardUnsavedChanges: boolean = true) {
         cy.visit('#/chart');
+        if (!discardUnsavedChanges) {
+            return;
+        }
+        cy.location('hash', { timeout: 10000 }).then(hash => {
+            if (hash.startsWith('#/chart/')) {
+                SharedBtns.confirmDialogCancelBtn()
+                    .should('be.visible')
+                    .click();
+            }
+        });
+        cy.location('hash', { timeout: 10000 }).should('eq', '#/chart');
+        cy.get('sp-chart-overview', { timeout: 10000 }).should('be.visible');
     }
 
     public static goToDashboard() {
