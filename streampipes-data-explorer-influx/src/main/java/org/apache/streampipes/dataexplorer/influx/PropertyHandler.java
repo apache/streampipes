@@ -100,7 +100,13 @@ public class PropertyHandler {
       PrimitiveField primitiveField,
       String sanitizedRuntimeName
   ) {
-    point.tag(sanitizedRuntimeName, primitiveField.getAsString());
+    point.tag(sanitizedRuntimeName, escapeSpecialCharacters(primitiveField.getAsString()));
+  }
+
+  private String escapeSpecialCharacters(String value) {
+    return value
+        .replace("\r", "\\r")
+        .replace("\n", "\\n");
   }
 
   /**

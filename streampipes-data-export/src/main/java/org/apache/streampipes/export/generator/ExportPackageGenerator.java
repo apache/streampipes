@@ -123,7 +123,7 @@ public class ExportPackageGenerator {
             manifest::addDashboard);
         var charts = resolver.getCharts(item.getResourceId());
         var chartResolver = new ChartResolver(resourceManager);
-        charts.forEach(widgetId -> addDoc(builder, widgetId, chartResolver, manifest::addDataViewWidget));
+        charts.forEach(widgetId -> addDoc(builder, widgetId, chartResolver, manifest::addDataView));
       });
 
       config.getDataViews().forEach(item -> {
