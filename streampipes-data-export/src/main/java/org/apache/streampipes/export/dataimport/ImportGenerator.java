@@ -74,7 +74,7 @@ public abstract class ImportGenerator<T> {
       }
     }
 
-    for (String chartId : manifest.getDataViewWidgets()) {
+    for (String chartId : manifest.getDataViews()) {
       try {
         handleChart(asString(previewFiles.get(chartId)), chartId);
       } catch (DocumentConflictException e) {
