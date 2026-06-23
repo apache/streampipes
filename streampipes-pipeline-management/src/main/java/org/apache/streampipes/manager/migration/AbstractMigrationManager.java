@@ -94,7 +94,7 @@ public abstract class AbstractMigrationManager {
       String serializedRequest = JacksonSerializer.getObjectMapper().writeValueAsString(migrationRequest);
 
       var migrationResponse = requestManager.request(
-          ExtensionServiceRequests.migration(requestTarget, serializedRequest)
+          ExtensionServiceRequests.migration(requestTarget, serializedRequest, resourceManager)
       );
 
       TypeReference<MigrationResult<T>> typeReference = new TypeReference<>() {

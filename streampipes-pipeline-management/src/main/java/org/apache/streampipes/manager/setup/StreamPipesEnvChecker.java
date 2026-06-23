@@ -24,7 +24,7 @@ import org.apache.streampipes.model.configuration.DefaultSpCoreConfiguration;
 import org.apache.streampipes.model.configuration.JwtSigningMode;
 import org.apache.streampipes.model.configuration.LocalAuthConfig;
 import org.apache.streampipes.model.configuration.SpCoreConfiguration;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,26 +40,23 @@ public class StreamPipesEnvChecker {
   private SpCoreConfiguration coreConfig;
 
   private final Environment env;
+  private final ISpCoreConfigurationStorage coreConfigStorage;
 
-  public StreamPipesEnvChecker() {
+  public StreamPipesEnvChecker(ISpCoreConfigurationStorage coreConfigurationStorage) {
     this.env = Environments.getEnvironment();
+    this.coreConfigStorage = coreConfigurationStorage;
   }
 
   public void updateEnvironmentVariables() {
-    var configStorage = StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getSpCoreConfigurationStorage();
-
-    if (configStorage.exists()) {
-      this.coreConfig = configStorage.get();
+    if (coreConfigStorage.exists()) {
+      this.coreConfig = coreConfigStorage.get();
 
       LOG.info("Checking and updating environment variables...");
       var shouldUpdateJwtConfig = updateJwtSettings();
       var shouldUpdateDirectoryConfig = updateDirectorySettings();
 
       if (shouldUpdateJwtConfig || shouldUpdateDirectoryConfig) {
-        configStorage.updateElement(coreConfig);
+        coreConfigStorage.updateElement(coreConfig);
       }
     }
   }

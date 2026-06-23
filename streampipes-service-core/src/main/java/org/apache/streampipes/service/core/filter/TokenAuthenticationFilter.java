@@ -23,6 +23,7 @@ import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -72,8 +73,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
   private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
 
-  public TokenAuthenticationFilter(IPermissionStorage permissionStorage) {
-    this.tokenProvider = new JwtTokenProvider();
+  public TokenAuthenticationFilter(IPermissionStorage permissionStorage,
+                                   ISpCoreConfigurationStorage coreConfigurationStorage) {
+    this.tokenProvider = new JwtTokenProvider(coreConfigurationStorage);
     this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
     this.permissionStorage = permissionStorage;
   }

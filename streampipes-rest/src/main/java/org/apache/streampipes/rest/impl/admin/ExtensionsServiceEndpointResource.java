@@ -30,6 +30,7 @@ import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.springframework.http.HttpStatus;
@@ -52,9 +53,12 @@ import java.util.Set;
 public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestResource {
 
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
+  private final AssetManager assetManager;
 
-  public ExtensionsServiceEndpointResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
+  public ExtensionsServiceEndpointResource(ExtensionServiceRequestManager extensionServiceRequestManager,
+                                           ISpCoreConfigurationStorage coreConfigurationStorage) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.assetManager = new AssetManager(coreConfigurationStorage);
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -77,7 +81,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
 
   private byte[] getIconImage(ExtensionItemDescription extensionItemDescription) throws IOException {
     if (extensionItemDescription.isInstalled()) {
-      return AssetManager.getAssetIcon(extensionItemDescription.getAppId());
+      return assetManager.getAssetIcon(extensionItemDescription.getAppId());
     }
 
     if (extensionItemDescription.getServiceTagPrefix() == null) {

@@ -62,7 +62,6 @@ import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
-import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -98,12 +97,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());
-
-  private final ISpCoreConfigurationStorage coreConfigStorage =
-      StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage();
-
-  private final CoreServiceStatusManager coreStatusManager =
-      new CoreServiceStatusManager(coreConfigStorage);
 
   @Autowired
   private IFunctionStateStorage functionStateStorage;
@@ -160,7 +153,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     var executorService = Executors.newSingleThreadScheduledExecutor();
     var logCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-    new StreamPipesEnvChecker().updateEnvironmentVariables();
+    new StreamPipesEnvChecker(resourceManager.getCoreConfigurationStorage()).updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
     var env = Environments.getEnvironment();
 
@@ -179,6 +172,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     if (env.getLoadManagerEnable().getValueOrDefault()) {
       LoadManager.initialize(resourceManager);
     }
+
+    var coreConfigStorage = resourceManager.getCoreConfigurationStorage();
+    var coreStatusManager = new CoreServiceStatusManager(coreConfigStorage);
     if (!isConfigured()) {
       CoreInitialInstallationProgress.INSTANCE.triggerInitiallyInstallingMode();
       doInitialSetup(env.getInitialWaitTimeBeforeInstallationInMillis().getValueOrDefault());

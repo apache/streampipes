@@ -33,6 +33,7 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
@@ -74,11 +75,14 @@ public class Authentication extends AbstractRestResource {
 
   AuthenticationManager authenticationManager;
   private final SpResourceManager resourceManager;
+  private final ISpCoreConfigurationStorage coreConfigurationStorage;
 
   public Authentication(AuthenticationManager authenticationManager,
-                        SpResourceManager resourceManager) {
+                        SpResourceManager resourceManager,
+                        ISpCoreConfigurationStorage coreConfigurationStorage) {
     this.authenticationManager = authenticationManager;
     this.resourceManager = resourceManager;
+    this.coreConfigurationStorage = coreConfigurationStorage;
   }
 
   @PostMapping(
@@ -129,7 +133,7 @@ public class Authentication extends AbstractRestResource {
 
     setRefreshCookie(request, response, issuedRefreshToken);
 
-    String jwt = new JwtTokenProvider().createToken(userAccount);
+    String jwt = new JwtTokenProvider(coreConfigurationStorage).createToken(userAccount);
     return ok(new JwtAuthenticationResponse(jwt));
   }
 
@@ -241,7 +245,7 @@ public class Authentication extends AbstractRestResource {
   }
 
   private JwtAuthenticationResponse makeJwtResponse(org.springframework.security.core.Authentication auth) {
-    String jwt = new JwtTokenProvider().createToken(auth);
+    String jwt = new JwtTokenProvider(coreConfigurationStorage).createToken(auth);
     return new JwtAuthenticationResponse(jwt);
   }
 

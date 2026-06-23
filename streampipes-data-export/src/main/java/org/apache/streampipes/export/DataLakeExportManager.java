@@ -30,7 +30,7 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.RetentionAction;
 import org.apache.streampipes.model.datalake.RetentionLog;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,11 +50,14 @@ public class DataLakeExportManager {
 
     private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
     private final IDataExplorerQueryManagement dataExplorerQueryManagement;
+    private final ISpCoreConfigurationStorage coreConfigurationStorage;
 
     public DataLakeExportManager(IDataExplorerSchemaManagement dataLakeSchemaManagement,
-                                 IDataExplorerQueryManagement dataLakeQueryManagement) {
+                                 IDataExplorerQueryManagement dataLakeQueryManagement,
+                                 ISpCoreConfigurationStorage coreConfigurationStorage) {
         this.dataExplorerSchemaManagement = dataLakeSchemaManagement;
         this.dataExplorerQueryManagement = dataLakeQueryManagement;
+        this.coreConfigurationStorage = coreConfigurationStorage;
     }
 
     private String savePath = "";
@@ -94,9 +97,7 @@ public class DataLakeExportManager {
                 .getExportProviderId();
 
         // FInd Item in Document
-        List<ExportProviderSettings> exportProviders = StorageDispatcher.INSTANCE
-                .getNoSqlStore()
-                .getSpCoreConfigurationStorage()
+        List<ExportProviderSettings> exportProviders = coreConfigurationStorage
                 .get()
                 .getExportProviderSettings();
 

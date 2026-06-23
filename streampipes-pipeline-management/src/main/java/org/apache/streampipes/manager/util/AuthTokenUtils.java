@@ -23,6 +23,7 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.UserResourceManager;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 
 import org.springframework.security.core.Authentication;
@@ -30,15 +31,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthTokenUtils {
 
-  public static String getAuthTokenForCurrentUser() {
+  public static String getAuthTokenForCurrentUser(ISpCoreConfigurationStorage coreConfigurationStorage) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    return makeBearerToken(new JwtTokenProvider().createToken(auth));
+    return makeBearerToken(new JwtTokenProvider(coreConfigurationStorage).createToken(auth));
   }
 
   public static String getAuthToken(String resourceId,
                                     SpResourceManager resourceManager) {
     if (SecurityContextHolder.getContext().getAuthentication() != null) {
-        return getAuthTokenForCurrentUser();
+        return getAuthTokenForCurrentUser(resourceManager.getCoreConfigurationStorage());
     } else {
       if (resourceId != null) {
         String ownerSid = getOwnerSid(resourceId, resourceManager.managePermissions());

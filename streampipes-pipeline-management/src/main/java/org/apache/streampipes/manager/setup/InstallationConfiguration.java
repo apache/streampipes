@@ -28,10 +28,11 @@ import java.util.List;
 
 public class InstallationConfiguration {
 
-  public static List<InstallationStep> getInstallationSteps(InitialSettings settings) {
+  public static List<InstallationStep> getInstallationSteps(InitialSettings settings,
+                                                            SpResourceManager resourceManager) {
     List<InstallationStep> steps = new ArrayList<>();
 
-    steps.add(new SpCoreConfigurationStep());
+    steps.add(new SpCoreConfigurationStep(resourceManager.getCoreConfigurationStorage()));
     steps.add(new CouchDbInstallationStep());
     steps.add(new UserRegistrationInstallationStep(
         settings.getAdminEmail(),

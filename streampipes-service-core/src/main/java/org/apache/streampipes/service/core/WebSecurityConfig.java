@@ -30,6 +30,7 @@ import org.apache.streampipes.service.core.oauth2.OAuth2AccessTokenResponseConve
 import org.apache.streampipes.service.core.oauth2.OAuth2AuthenticationFailureHandler;
 import org.apache.streampipes.service.core.oauth2.OAuth2AuthenticationSuccessHandler;
 import org.apache.streampipes.service.core.oauth2.OAuthEnabledCondition;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.user.management.service.SpUserDetailsService;
 
@@ -121,7 +122,8 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) {
+  public SecurityFilterChain filterChain(HttpSecurity http,
+                                         ISpCoreConfigurationStorage coreConfigurationStorage) {
     http
         .cors(Customizer.withDefaults())
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -152,13 +154,13 @@ public class WebSecurityConfig {
       );
     }
 
-    http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(tokenAuthenticationFilter(coreConfigurationStorage), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
 
-  public TokenAuthenticationFilter tokenAuthenticationFilter() {
-    return new TokenAuthenticationFilter(permissionStorage);
+  public TokenAuthenticationFilter tokenAuthenticationFilter(ISpCoreConfigurationStorage coreConfigurationStorage) {
+    return new TokenAuthenticationFilter(permissionStorage, coreConfigurationStorage);
   }
 
   @Bean(BeanIds.USER_DETAILS_SERVICE)

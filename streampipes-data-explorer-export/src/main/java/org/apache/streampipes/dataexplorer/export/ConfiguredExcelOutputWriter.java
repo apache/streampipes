@@ -23,6 +23,7 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -38,6 +39,7 @@ import java.util.Objects;
 public class ConfiguredExcelOutputWriter extends ConfiguredOutputWriter {
 
   private final IFileMetadataStorage storage;
+  private final ISpCoreConfigurationStorage coreConfigurationStorage;
 
   private SXSSFWorkbook wb;
   private Sheet ws;
@@ -47,8 +49,10 @@ public class ConfiguredExcelOutputWriter extends ConfiguredOutputWriter {
   private DataLakeMeasure schema;
   private String headerColumnNameStrategy;
 
-  public ConfiguredExcelOutputWriter(IFileMetadataStorage fileMetadataStorage) {
+  public ConfiguredExcelOutputWriter(IFileMetadataStorage fileMetadataStorage,
+                                     ISpCoreConfigurationStorage coreConfigurationStorage) {
     this.storage = fileMetadataStorage;
+    this.coreConfigurationStorage = coreConfigurationStorage;
   }
 
   @Override
@@ -70,7 +74,8 @@ public class ConfiguredExcelOutputWriter extends ConfiguredOutputWriter {
     if (useTemplate && Objects.nonNull(templateId)) {
       var fileMetadata = storage.getElementById(templateId);
       if (fileMetadata != null) {
-        var path = new FileManager().getFile(fileMetadata.getFilename()).getAbsoluteFile().toPath();
+        var path = new FileManager(coreConfigurationStorage)
+            .getFile(fileMetadata.getFilename()).getAbsoluteFile().toPath();
         try (InputStream is = Files.newInputStream(path)) {
           XSSFWorkbook templateWorkbook = new XSSFWorkbook(is);
           wb = new SXSSFWorkbook(templateWorkbook);

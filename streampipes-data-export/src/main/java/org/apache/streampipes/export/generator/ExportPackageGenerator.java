@@ -155,7 +155,9 @@ public class ExportPackageGenerator {
           String filename = fileResolver.findDocument(item.getResourceId()).getFilename();
           addDoc(builder, item, new FileResolver(), manifest::addFile);
           try {
-            builder.addBinary(filename, Files.readAllBytes(new FileManager().getFile(filename).toPath()));
+            builder.addBinary(filename, Files.readAllBytes(
+                new FileManager(resourceManager.getCoreConfigurationStorage()).getFile(filename).toPath())
+            );
           } catch (IOException e) {
             LOG.warn("Could not add binary file to export package: {}", e.getMessage());
           }

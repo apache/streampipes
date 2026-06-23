@@ -21,7 +21,7 @@ import org.apache.streampipes.mail.template.generation.DefaultPlaceholders;
 import org.apache.streampipes.mail.template.generation.MailTemplateBuilder;
 import org.apache.streampipes.mail.template.part.BaseUrlPart;
 import org.apache.streampipes.mail.template.part.LogoPart;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.model.configuration.EmailTemplateConfig;
 
 import com.google.common.base.Charsets;
 
@@ -40,15 +40,11 @@ public abstract class AbstractMailTemplate {
 
   protected abstract void configureTemplate(MailTemplateBuilder builder);
 
-  public String generateTemplate() throws IOException {
+  public String generateTemplate(EmailTemplateConfig emailTemplateConfig) throws IOException {
     Map<String, String> placeholders = new HashMap<>();
     addPlaceholders(placeholders);
 
-    var template = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getSpCoreConfigurationStorage()
-        .get()
-        .getEmailTemplateConfig()
+    var template = emailTemplateConfig
         .getTemplate();
 
     var builder = MailTemplateBuilder.create(template)

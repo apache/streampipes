@@ -29,6 +29,7 @@ import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.slf4j.Logger;
@@ -96,7 +97,8 @@ public class ExtensionServiceRequestConfiguration {
                                              IDashboardStorage dashboardStorage,
                                              IAssetStorage assetStorage,
                                              IPipelineStorage pipelineStorage,
-                                             IDataLakeMeasureStorage datasetStorage) {
+                                             IDataLakeMeasureStorage datasetStorage,
+                                             ISpCoreConfigurationStorage coreConfigurationStorage) {
     return new SpResourceManager(
         permissionStorage,
         chartStorage,
@@ -104,7 +106,8 @@ public class ExtensionServiceRequestConfiguration {
         assetStorage,
         dashboardStorage,
         pipelineStorage,
-        datasetStorage
+        datasetStorage,
+        coreConfigurationStorage
     );
   }
 

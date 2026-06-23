@@ -27,14 +27,14 @@ import java.nio.charset.StandardCharsets;
 
 public class MailUtils {
 
-  public static String extractBaseUrl() {
-    GeneralConfig config = getSpCoreConfiguration().getGeneralConfig();
+  public static String extractBaseUrl(SpCoreConfiguration spCoreConfiguration) {
+    GeneralConfig config = spCoreConfiguration.getGeneralConfig();
 
     return config.getProtocol() + "://" + config.getHostname() + ":" + config.getPort();
   }
 
-  public static String extractAppName() {
-    return getSpCoreConfiguration().getGeneralConfig().getAppName();
+  public static String extractAppName(SpCoreConfiguration spCoreConfiguration) {
+    return spCoreConfiguration.getGeneralConfig().getAppName();
   }
 
   public static String readResourceFileToString(String filename) throws IOException {

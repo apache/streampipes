@@ -24,6 +24,7 @@ import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.mail.SpEmail;
 import org.apache.streampipes.model.opcua.Certificate;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -47,6 +48,12 @@ public class CertificateExpiryEmailScheduler implements SchedulingConfigurer {
   private static final Logger LOG = LoggerFactory.getLogger(CertificateExpiryEmailScheduler.class);
 
   private static final String SUBJECT = "Upcoming certificate expirations — action required";
+
+  private final ISpCoreConfigurationStorage coreConfigurationStorage;
+
+  public CertificateExpiryEmailScheduler(ISpCoreConfigurationStorage coreConfigurationStorage) {
+    this.coreConfigurationStorage = coreConfigurationStorage;
+  }
 
   public void checkForExpiringCertificates() {
 

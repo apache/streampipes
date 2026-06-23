@@ -23,6 +23,7 @@ import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -35,6 +36,7 @@ public class SpResourceManager {
   private final IDashboardStorage dashboardStorage;
   private final IPipelineStorage pipelineStorage;
   private final IDataLakeMeasureStorage datasetStorage;
+  private final ISpCoreConfigurationStorage coreConfigurationStorage;
 
   public SpResourceManager(IPermissionStorage permissionStorage,
                            IChartStorage chartStorage,
@@ -42,7 +44,8 @@ public class SpResourceManager {
                            IAssetStorage assetStorage,
                            IDashboardStorage dashboardStorage,
                            IPipelineStorage pipelineStorage,
-                           IDataLakeMeasureStorage datasetStorage) {
+                           IDataLakeMeasureStorage datasetStorage,
+                           ISpCoreConfigurationStorage coreConfigurationStorage) {
     this.permissionStorage = permissionStorage;
     this.chartStorage = chartStorage;
     this.adapterStorage = adapterStorage;
@@ -50,6 +53,7 @@ public class SpResourceManager {
     this.dashboardStorage = dashboardStorage;
     this.pipelineStorage = pipelineStorage;
     this.datasetStorage = datasetStorage;
+    this.coreConfigurationStorage = coreConfigurationStorage;
   }
 
   public AdapterDescriptionResourceManager manageAdapterDescriptions() {
@@ -96,6 +100,10 @@ public class SpResourceManager {
   public PipelineResourceManager managePipelines() {
     return new PipelineResourceManager(pipelineStorage, managePermissions()
     );
+  }
+
+  public ISpCoreConfigurationStorage getCoreConfigurationStorage() {
+    return coreConfigurationStorage;
   }
 
   public UserResourceManager manageUsers() {

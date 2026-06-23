@@ -52,8 +52,14 @@ public final class ExtensionServiceRequests {
     return post(target, payload, authToken);
   }
 
-  public static ExtensionServiceRequest migration(ExtensionServiceRequestTarget target, String payload) {
-    return post(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
+  public static ExtensionServiceRequest migration(ExtensionServiceRequestTarget target,
+                                                  String payload,
+                                                  SpResourceManager resourceManager) {
+    return post(
+        target,
+        payload,
+        AuthTokenUtils.getAuthTokenForCurrentUser(resourceManager.getCoreConfigurationStorage())
+    );
   }
 
   public static ExtensionServiceRequest descriptionUpdate(ExtensionServiceRequestTarget target,

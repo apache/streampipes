@@ -107,7 +107,10 @@ public class DataLakeResource extends AbstractDataLakeResource {
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(this.dataLakeMeasureManagement);
-    this.dataLakeExportManager = new DataLakeExportManager(this.dataLakeMeasureManagement, dataExplorerQueryManagement);
+    this.dataLakeExportManager = new DataLakeExportManager(
+        this.dataLakeMeasureManagement,
+        dataExplorerQueryManagement,
+        resourceManager.getCoreConfigurationStorage());
   }
 
   @DeleteMapping(path = "/measurements/{measurementName}")

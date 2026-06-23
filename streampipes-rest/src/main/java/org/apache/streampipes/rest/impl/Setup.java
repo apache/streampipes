@@ -22,7 +22,6 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.google.gson.JsonObject;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,8 +35,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v2/setup")
 public class Setup extends AbstractRestResource {
 
-  private final ISpCoreConfigurationStorage storage = StorageDispatcher
-      .INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage();
+  private final ISpCoreConfigurationStorage storage;
+
+  public Setup(ISpCoreConfigurationStorage storage) {
+    this.storage = storage;
+  }
 
   @GetMapping(path = "/configured", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Endpoint is used by UI to determine whether the core is running upon startup",

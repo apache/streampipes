@@ -46,6 +46,7 @@ import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.Arrays;
@@ -60,6 +61,7 @@ public class AvailableMigrations {
   private final IAssetStorage assetStorage;
   private final IPipelineStorage pipelineStorage;
   private final IDataLakeMeasureStorage datasetStorage;
+  private final ISpCoreConfigurationStorage coreConfigStorage;
 
   public AvailableMigrations(SpResourceManager resourceManager) {
     this.chartStorage = resourceManager.manageCharts().getDb();
@@ -69,6 +71,7 @@ public class AvailableMigrations {
     this.assetStorage = resourceManager.manageAssets().getDb();
     this.pipelineStorage = resourceManager.managePipelines().getDb();
     this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
+    this.coreConfigStorage = resourceManager.getCoreConfigurationStorage();
   }
 
   public List<Migration> getAvailableMigrations() {
@@ -76,7 +79,7 @@ public class AvailableMigrations {
         new ModifyAssetLinksMigration(),
         new ModifyAssetLinkTypesMigration(),
         new AddDataLakeMeasureViewMigration(),
-        new AddDefaultExportProviderMigration(),
+        new AddDefaultExportProviderMigration(coreConfigStorage),
         new FixImportedPermissionsMigration(chartStorage, dashboardStorage, permissionStorage),
         new AddAssetManagementViewMigration(),
         new MoveAssetContentMigration(),

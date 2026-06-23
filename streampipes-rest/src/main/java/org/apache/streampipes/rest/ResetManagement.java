@@ -148,7 +148,7 @@ public class ResetManagement {
   }
 
   private void deleteAllFiles() {
-    var fileManager = new FileManager();
+    var fileManager = new FileManager(resourceManager.getCoreConfigurationStorage());
     List<FileMetadata> allFiles = fileManager.getAllFiles();
     allFiles.forEach(fileMetadata -> fileManager.deleteFile(fileMetadata.getFileId()));
   }

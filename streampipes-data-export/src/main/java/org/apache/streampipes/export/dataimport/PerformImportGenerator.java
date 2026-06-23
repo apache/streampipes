@@ -155,7 +155,8 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
     writeDocument(document, resolver);
     byte[] file = zipContent.get(
         fileMetadata.getFilename().substring(0, fileMetadata.getFilename().lastIndexOf(".")));
-    new FileHandler().storeFile(fileMetadata.getFilename(), new ByteArrayInputStream(file));
+    new FileHandler(resourceManager.getCoreConfigurationStorage())
+        .storeFile(fileMetadata.getFilename(), new ByteArrayInputStream(file));
   }
 
   @Override

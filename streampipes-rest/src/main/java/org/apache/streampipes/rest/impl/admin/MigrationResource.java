@@ -73,9 +73,7 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
   private final IDataSinkStorage dataSinkStorage = getNoSqlStorage().getDataSinkStorage();
   private final IPipelineStorage pipelineStorage;
 
-  private final CoreServiceStatusManager coreServiceStatusManager = new CoreServiceStatusManager(
-      getNoSqlStorage().getSpCoreConfigurationStorage()
-  );
+  private final CoreServiceStatusManager coreServiceStatusManager;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final WorkerRestClient workerRestClient;
   private final SpResourceManager resourceManager;
@@ -88,6 +86,9 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
     this.resourceManager = resourceManager;
     this.adapterStorage = resourceManager.manageAdapters().getDb();
     this.pipelineStorage = resourceManager.managePipelines().getDb();
+    this.coreServiceStatusManager = new CoreServiceStatusManager(
+        resourceManager.getCoreConfigurationStorage()
+    );
   }
 
   @PostMapping(path = "{serviceId}", consumes = MediaType.APPLICATION_JSON_VALUE)
