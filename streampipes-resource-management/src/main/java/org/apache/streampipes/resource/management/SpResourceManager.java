@@ -107,6 +107,6 @@ public class SpResourceManager {
   }
 
   public UserResourceManager manageUsers() {
-    return new UserResourceManager();
+    return new UserResourceManager(coreConfigurationStorage);
   }
 }

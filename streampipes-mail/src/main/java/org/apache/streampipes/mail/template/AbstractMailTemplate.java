@@ -21,7 +21,7 @@ import org.apache.streampipes.mail.template.generation.DefaultPlaceholders;
 import org.apache.streampipes.mail.template.generation.MailTemplateBuilder;
 import org.apache.streampipes.mail.template.part.BaseUrlPart;
 import org.apache.streampipes.mail.template.part.LogoPart;
-import org.apache.streampipes.model.configuration.EmailTemplateConfig;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 
 import com.google.common.base.Charsets;
 
@@ -32,6 +32,12 @@ import java.util.Map;
 
 public abstract class AbstractMailTemplate {
 
+  protected final SpCoreConfiguration configuration;
+
+  public AbstractMailTemplate(SpCoreConfiguration configuration) {
+    this.configuration = configuration;
+  }
+
   protected abstract String getTitle();
 
   protected abstract String getPreHeader();
@@ -40,18 +46,18 @@ public abstract class AbstractMailTemplate {
 
   protected abstract void configureTemplate(MailTemplateBuilder builder);
 
-  public String generateTemplate(EmailTemplateConfig emailTemplateConfig) throws IOException {
+  public String generateTemplate() throws IOException {
     Map<String, String> placeholders = new HashMap<>();
     addPlaceholders(placeholders);
 
-    var template = emailTemplateConfig
+    var template = configuration.getEmailTemplateConfig()
         .getTemplate();
 
     var builder = MailTemplateBuilder.create(template)
         .withPlaceholder(DefaultPlaceholders.TITLE, getTitle())
         .withPlaceholder(DefaultPlaceholders.PREHEADER, getPreHeader())
-        .withPlaceholder(DefaultPlaceholders.LOGO, new LogoPart().generate())
-        .withPlaceholder(DefaultPlaceholders.BASE_URL, new BaseUrlPart().generate())
+        .withPlaceholder(DefaultPlaceholders.LOGO, new LogoPart().generate(configuration))
+        .withPlaceholder(DefaultPlaceholders.BASE_URL, new BaseUrlPart().generate(configuration))
         .withPlaceholders(placeholders);
 
     configureTemplate(builder);

@@ -129,13 +129,16 @@ public class WorkerRestClient {
 
   public RuntimeOptionsResponse getConfiguration(SpServiceRegistration service,
                                                  String appId,
-                                                 RuntimeOptionsRequest runtimeOptionsRequest)
+                                                 RuntimeOptionsRequest runtimeOptionsRequest,
+                                                 SpResourceManager resourceManager)
       throws AdapterException, SpConfigurationException {
 
     try {
       String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
       var requestTarget = ExtensionServiceRequestTargets.adapterRuntimeOptions(service, appId);
-      var response = requestManager.request(ExtensionServiceRequests.runtimeOptions(requestTarget, payload));
+      var response = requestManager.request(
+          ExtensionServiceRequests.runtimeOptions(requestTarget, payload, resourceManager)
+      );
       String responseString = response.responseBody();
 
       if (response.statusCode() == HttpStatus.SC_OK) {

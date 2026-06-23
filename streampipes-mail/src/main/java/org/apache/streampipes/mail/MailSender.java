@@ -42,7 +42,8 @@ public class MailSender extends AbstractMailer {
         .appendTextHTML(new CustomMailTemplate(
             mail.getSubject(),
             mail.getPreheader(),
-            mail.getMessage()).generateTemplate(spCoreConfiguration.getEmailTemplateConfig()))
+            mail.getMessage(),
+            spCoreConfiguration).generateTemplate())
         .buildEmail();
 
     deliverMail(email);
@@ -52,8 +53,8 @@ public class MailSender extends AbstractMailer {
                                         String activationCode) throws IOException {
     Email email = baseEmail()
         .withSubject(MailUtils.extractAppName(spCoreConfiguration) + " - Account Activation")
-        .appendTextHTML(new AccountActiviationMailTemplate(activationCode)
-            .generateTemplate(spCoreConfiguration.getEmailTemplateConfig()))
+        .appendTextHTML(new AccountActiviationMailTemplate(activationCode, spCoreConfiguration)
+            .generateTemplate())
         .to(recipientAddress)
         .buildEmail();
 
@@ -64,8 +65,8 @@ public class MailSender extends AbstractMailer {
                                        String recoveryCode) throws IOException {
     Email email = baseEmail()
         .withSubject(MailUtils.extractAppName(spCoreConfiguration) + " - Password Recovery")
-        .appendTextHTML(new PasswordRecoveryMailTemplate(recoveryCode)
-            .generateTemplate(spCoreConfiguration.getEmailTemplateConfig()))
+        .appendTextHTML(new PasswordRecoveryMailTemplate(recoveryCode, spCoreConfiguration)
+            .generateTemplate())
         .to(recipientAddress)
         .buildEmail();
 
@@ -76,8 +77,8 @@ public class MailSender extends AbstractMailer {
                                       String generatedProperty) throws IOException {
     Email email = baseEmail()
         .withSubject(MailUtils.extractAppName(spCoreConfiguration) + " - New Account")
-        .appendTextHTML(new InitialPasswordMailTemplate(generatedProperty)
-            .generateTemplate(spCoreConfiguration.getEmailTemplateConfig()))
+        .appendTextHTML(new InitialPasswordMailTemplate(generatedProperty, spCoreConfiguration)
+            .generateTemplate())
         .to(recipientAddress)
         .buildEmail();
 

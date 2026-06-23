@@ -121,7 +121,7 @@ public class CertificateExpiryEmailScheduler implements SchedulingConfigurer {
   private void sendEmail(List<String> recipients, String message) {
     var email = SpEmail.from(recipients, SUBJECT, message);
     try {
-      new MailSender().sendEmail(email);
+      new MailSender(coreConfigurationStorage.get()).sendEmail(email);
     } catch (IOException e) {
       LOG.error("Failed to send certificate expiry email to {}", recipients, e);
     }

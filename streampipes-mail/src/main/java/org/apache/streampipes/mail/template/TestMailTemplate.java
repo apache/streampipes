@@ -21,10 +21,15 @@ import org.apache.streampipes.mail.template.generation.DefaultPlaceholders;
 import org.apache.streampipes.mail.template.generation.MailTemplateBuilder;
 import org.apache.streampipes.mail.template.part.MailTemplatePart;
 import org.apache.streampipes.mail.utils.MailUtils;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 
 import java.util.Map;
 
 public class TestMailTemplate extends AbstractMailTemplate {
+
+  public TestMailTemplate(SpCoreConfiguration configuration) {
+    super(configuration);
+  }
 
   @Override
   protected String getTitle() {
@@ -33,7 +38,7 @@ public class TestMailTemplate extends AbstractMailTemplate {
 
   @Override
   protected String getPreHeader() {
-    return "Your " + MailUtils.extractAppName() + " mail configuration is working!";
+    return "Your " + MailUtils.extractAppName(configuration) + " mail configuration is working!";
   }
 
   @Override

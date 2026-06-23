@@ -24,6 +24,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import org.simplejavamail.MailException;
@@ -43,6 +44,12 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v2/admin/mail-config")
 public class EmailConfigurationResource extends AbstractAuthGuardedRestResource {
+
+  private final ISpCoreConfigurationStorage configurationStorage;
+
+  public EmailConfigurationResource(ISpCoreConfigurationStorage coreConfigurationStorage) {
+    this.configurationStorage = coreConfigurationStorage;
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
@@ -90,7 +97,8 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> sendTestMail(@RequestBody EmailConfig config) {
     try {
-      new MailTester().sendTestMail(config);
+      var coreConfiguration = configurationStorage.get();
+      new MailTester(coreConfiguration).sendTestMail(config);
       return ok();
     } catch (MailException | IllegalArgumentException | IOException e) {
       throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));

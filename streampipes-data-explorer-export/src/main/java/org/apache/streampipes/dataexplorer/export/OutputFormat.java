@@ -26,7 +26,9 @@ import java.util.function.Supplier;
 public enum OutputFormat {
   JSON(ConfiguredJsonOutputWriter::new),
   CSV(ConfiguredCsvOutputWriter::new),
-  XLSX(() -> new ConfiguredExcelOutputWriter(StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage()));
+  XLSX(() -> new ConfiguredExcelOutputWriter(
+      StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage())
+  );
 
   private final Supplier<ConfiguredOutputWriter> writerSupplier;
 

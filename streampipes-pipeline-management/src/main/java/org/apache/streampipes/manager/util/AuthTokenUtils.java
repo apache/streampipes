@@ -22,7 +22,6 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 
@@ -43,20 +42,22 @@ public class AuthTokenUtils {
     } else {
       if (resourceId != null) {
         String ownerSid = getOwnerSid(resourceId, resourceManager.managePermissions());
-        return getAuthTokenForUser(ownerSid, resourceManager.manageUsers());
+        return getAuthTokenForUser(ownerSid, resourceManager);
       } else {
         throw new IllegalArgumentException("No authenticated user found to associate with request");
       }
     }
   }
 
-  public static String getAuthTokenForUser(String ownerSid, UserResourceManager userResourceManager) {
-    Principal correspondingUser = userResourceManager.getPrincipalById(ownerSid);
-    return getAuthTokenForUser(correspondingUser);
+  public static String getAuthTokenForUser(String ownerSid,
+                                           SpResourceManager resourceManager) {
+    Principal correspondingUser = resourceManager.manageUsers().getPrincipalById(ownerSid);
+    return getAuthTokenForUser(correspondingUser, resourceManager.getCoreConfigurationStorage());
   }
 
-  public static String getAuthTokenForUser(Principal principal) {
-    return makeBearerToken(new JwtTokenProvider().createToken(principal));
+  public static String getAuthTokenForUser(Principal principal,
+                                           ISpCoreConfigurationStorage configurationStorage) {
+    return makeBearerToken(new JwtTokenProvider(configurationStorage).createToken(principal));
   }
 
   private static String makeBearerToken(String token) {

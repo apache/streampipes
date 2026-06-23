@@ -30,6 +30,7 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.client.user.UserRegistrationData;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
@@ -51,8 +52,11 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   private static final int RECOVERY_TOKEN_LENGTH = 40;
   private static final Logger LOG = LoggerFactory.getLogger(UserResourceManager.class);
 
-  public UserResourceManager() {
+  private final ISpCoreConfigurationStorage coreConfigurationStorage;
+
+  public UserResourceManager(ISpCoreConfigurationStorage coreConfigurationStorage) {
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI());
+    this.coreConfigurationStorage = coreConfigurationStorage;
   }
 
   public static void setHideTutorial(String username, boolean hideTutorial) {
@@ -147,7 +151,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
                                    String activationCode) throws IOException {
     UserActivationToken token = UserActivationToken.create(activationCode, username);
     getUserActivationTokenStorage().persist(token);
-    new MailSender().sendAccountActivationMail(username, activationCode);
+    new MailSender(coreConfigurationStorage.get()).sendAccountActivationMail(username, activationCode);
   }
 
   public void sendPasswordRecoveryLink(String username) throws UserNotFoundException, IOException {
@@ -155,7 +159,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     if (db.checkUserExists(username)) {
       String recoveryCode = TokenUtil.generateToken(RECOVERY_TOKEN_LENGTH);
       storeRecoveryCode(username, recoveryCode);
-      new MailSender().sendPasswordRecoveryMail(username, recoveryCode);
+      new MailSender(coreConfigurationStorage.get()).sendPasswordRecoveryMail(username, recoveryCode);
     }
   }
 

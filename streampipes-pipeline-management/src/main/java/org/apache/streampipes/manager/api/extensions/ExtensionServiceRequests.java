@@ -84,12 +84,24 @@ public final class ExtensionServiceRequests {
     return post(target, payload, AuthTokenUtils.getAuthToken(elementId, resourceManager));
   }
 
-  public static ExtensionServiceRequest runtimeOptions(ExtensionServiceRequestTarget target, String payload) {
-    return post(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
+  public static ExtensionServiceRequest runtimeOptions(ExtensionServiceRequestTarget target,
+                                                       String payload,
+                                                       SpResourceManager resourceManager) {
+    return post(
+        target,
+        payload,
+        AuthTokenUtils.getAuthTokenForCurrentUser(resourceManager.getCoreConfigurationStorage())
+    );
   }
 
-  public static ExtensionServiceRequest sampleData(ExtensionServiceRequestTarget target, String payload) {
-    return post(target, payload, AuthTokenUtils.getAuthTokenForCurrentUser());
+  public static ExtensionServiceRequest sampleData(ExtensionServiceRequestTarget target,
+                                                   String payload,
+                                                   SpResourceManager resourceManager) {
+    return post(
+        target,
+        payload,
+        AuthTokenUtils.getAuthTokenForCurrentUser(resourceManager.getCoreConfigurationStorage())
+    );
   }
 
   public static ExtensionServiceRequest extensionInstanceHealth(ExtensionServiceRequestTarget target,
@@ -146,6 +158,6 @@ public final class ExtensionServiceRequests {
   private static String serviceAdminToken(SpResourceManager resourceManager) {
     return AuthTokenUtils.getAuthTokenForUser(
         resourceManager.manageUsers().getServiceAdmin().getPrincipalId(),
-        resourceManager.manageUsers());
+        resourceManager);
   }
 }

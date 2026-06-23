@@ -22,14 +22,17 @@ import org.apache.streampipes.mail.template.generation.MailTemplateBuilder;
 import org.apache.streampipes.mail.template.part.LinkPart;
 import org.apache.streampipes.mail.template.part.MailTemplatePart;
 import org.apache.streampipes.mail.utils.MailUtils;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 
 import java.util.Map;
 
 public class InitialPasswordMailTemplate extends AbstractMailTemplate {
 
-  private String initialPassword;
+  private final String initialPassword;
 
-  public InitialPasswordMailTemplate(String initialPassword) {
+  public InitialPasswordMailTemplate(String initialPassword,
+                                     SpCoreConfiguration configuration) {
+    super(configuration);
     this.initialPassword = initialPassword;
   }
 
@@ -40,7 +43,7 @@ public class InitialPasswordMailTemplate extends AbstractMailTemplate {
 
   @Override
   protected String getPreHeader() {
-    return "A new account for " + MailUtils.extractAppName() + " has been created.";
+    return "A new account for " + MailUtils.extractAppName(configuration) + " has been created.";
   }
 
   @Override
@@ -60,6 +63,6 @@ public class InitialPasswordMailTemplate extends AbstractMailTemplate {
   }
 
   private String makeLink() {
-    return new LinkPart("/#/login").generate();
+    return new LinkPart("/#/login").generate(configuration);
   }
 }

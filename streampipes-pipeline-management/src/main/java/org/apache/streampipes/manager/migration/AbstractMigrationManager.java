@@ -157,7 +157,7 @@ public abstract class AbstractMigrationManager {
       var entityPayload = requestManager
           .request(ExtensionServiceRequests.descriptionUpdate(requestTarget, resourceManager))
           .responseBody();
-      var updateResult = new TypeExtractor(entityPayload, requestManager, resourceManager.managePermissions())
+      var updateResult = new TypeExtractor(entityPayload, requestManager, resourceManager)
           .getTypeVerifier().verifyAndUpdate();
       if (!updateResult.isSuccess()) {
         LOG.error(
