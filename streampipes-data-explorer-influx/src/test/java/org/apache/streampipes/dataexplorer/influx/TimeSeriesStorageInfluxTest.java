@@ -192,16 +192,17 @@ public class TimeSeriesStorageInfluxTest {
 
   @Test
   public void onEventWithStringSpecialCharacters() {
+    var value = "abc=;,\nquoted \"value\"\r\n";
+    var expected = getPointBuilderWithTimestamp()
+        .addField(FIELD_NAME, value)
+        .build();
+
     var actualPoint = testEventWithOneField(
         XSD.STRING,
-        "abc=;,\nquoted \"value\"\r\n"
+        value
     );
 
-    var lineProtocol = actualPoint.lineProtocol(TimeUnit.MILLISECONDS);
-
-    assertFalse(lineProtocol.contains("\n"));
-    assertFalse(lineProtocol.contains("\r"));
-    assertTrue(lineProtocol.contains("testId=\"abc=;,\\\\nquoted \\\"value\\\"\\\\r\\\\n\""));
+    assertEquals(expected, actualPoint);
   }
 
   @Test
