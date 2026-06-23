@@ -52,7 +52,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TimeSeriesStorageInfluxTest {
 
@@ -189,6 +191,20 @@ public class TimeSeriesStorageInfluxTest {
   }
 
   @Test
+  public void onEventWithStringSpecialCharacters() {
+    var actualPoint = testEventWithOneField(
+        XSD.STRING,
+        "abc=;,\nquoted \"value\"\r\n"
+    );
+
+    var lineProtocol = actualPoint.lineProtocol(TimeUnit.MILLISECONDS);
+
+    assertFalse(lineProtocol.contains("\n"));
+    assertFalse(lineProtocol.contains("\r"));
+    assertTrue(lineProtocol.contains("testId=\"abc=;,\\\\nquoted \\\"value\\\"\\\\r\\\\n\""));
+  }
+
+  @Test
   public void onEventReservedKeyWord() {
     // name is a reserved keyword
     var fieldName = "name";
@@ -247,6 +263,35 @@ public class TimeSeriesStorageInfluxTest {
     var actualPoint = executeOnEvent(influxStore, event);
 
     assertEquals(expected, actualPoint);
+  }
+
+  @Test
+  public void onEventWithTagSpecialCharacters() {
+    var eventSchema = getEventSchemaBuilderWithTimestamp()
+        .withEventProperty(
+            EventPropertyPrimitiveTestBuilder
+                .create()
+                .withRuntimeName(FIELD_NAME)
+                .withRuntimeType(XSD.STRING)
+                .build())
+        .withEventProperty(
+            EventPropertyPrimitiveTestBuilder
+                .create()
+                .withRuntimeName("id")
+                .withRuntimeType(XSD.STRING)
+                .withPropertyScope(PropertyScope.DIMENSION_PROPERTY)
+                .build())
+        .build();
+
+    var event = getEvent(eventSchema, Map.of(FIELD_NAME, "value", "id", "line\nbreak"));
+
+    var influxStore = getInfluxStore(eventSchema);
+
+    var actualPoint = executeOnEvent(influxStore, event);
+    var lineProtocol = actualPoint.lineProtocol(TimeUnit.MILLISECONDS);
+
+    assertFalse(lineProtocol.contains("\n"));
+    assertTrue(lineProtocol.contains(",id=line\\nbreak "));
   }
 
 
