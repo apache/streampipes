@@ -65,6 +65,9 @@ public class StorageApiConfiguration {
   private final boolean dashboardCacheEnabled;
   private final boolean pipelineCacheEnabled;
   private final boolean dataLakeMeasureCacheEnabled;
+  private final boolean roleCacheEnabled;
+  private final boolean userGroupCacheEnabled;
+  private final boolean privilegeCacheEnabled;
 
   public StorageApiConfiguration(
       @Value("${streampipes.storage.cache.data-explorer-widgets.enabled:true}") boolean chartCacheEnabled,
@@ -72,13 +75,19 @@ public class StorageApiConfiguration {
       @Value("${streampipes.storage.cache.adapters.enabled:true}") boolean adapterCacheEnabled,
       @Value("${streampipes.storage.cache.dashboards.enabled:true}") boolean dashboardCacheEnabled,
       @Value("${streampipes.storage.cache.pipelines.enabled:true}") boolean pipelineCacheEnabled,
-      @Value("${streampipes.storage.cache.data-lake-measures.enabled:true}") boolean dataLakeMeasureCacheEnabled) {
+      @Value("${streampipes.storage.cache.data-lake-measures.enabled:true}") boolean dataLakeMeasureCacheEnabled,
+      @Value("${streampipes.storage.cache.roles.enabled:true}") boolean roleCacheEnabled,
+      @Value("${streampipes.storage.cache.user-groups.enabled:true}") boolean userGroupCacheEnabled,
+      @Value("${streampipes.storage.cache.privileges.enabled:true}") boolean privilegeCacheEnabled) {
     this.chartCacheEnabled = chartCacheEnabled;
     this.permissionCacheEnabled = permissionCacheEnabled;
     this.adapterCacheEnabled = adapterCacheEnabled;
     this.dashboardCacheEnabled = dashboardCacheEnabled;
     this.pipelineCacheEnabled = pipelineCacheEnabled;
     this.dataLakeMeasureCacheEnabled = dataLakeMeasureCacheEnabled;
+    this.roleCacheEnabled = roleCacheEnabled;
+    this.userGroupCacheEnabled = userGroupCacheEnabled;
+    this.privilegeCacheEnabled = privilegeCacheEnabled;
   }
 
   @Bean
@@ -141,18 +150,21 @@ public class StorageApiConfiguration {
   }
 
   @Bean
-  public IRoleStorage roleStorage() {
-    return new RoleStorageImpl();
+  public IRoleStorage roleStorage(CacheManager cacheManager) {
+    IRoleStorage delegate = new RoleStorageImpl();
+    return roleCacheEnabled ? new CachedRoleStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
-  public IUserGroupStorage userGroupStorage() {
-    return new UserGroupStorageImpl();
+  public IUserGroupStorage userGroupStorage(CacheManager cacheManager) {
+    IUserGroupStorage delegate = new UserGroupStorageImpl();
+    return userGroupCacheEnabled ? new CachedUserGroupStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
-  public IPrivilegeStorage privilegeStorage() {
-    return new PrivilegeStorageImpl();
+  public IPrivilegeStorage privilegeStorage(CacheManager cacheManager) {
+    IPrivilegeStorage delegate = new PrivilegeStorageImpl();
+    return privilegeCacheEnabled ? new CachedPrivilegeStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
