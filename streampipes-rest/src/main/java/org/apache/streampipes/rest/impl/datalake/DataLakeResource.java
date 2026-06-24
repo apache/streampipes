@@ -219,11 +219,22 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @PostMapping(path = "/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<SpQueryResult>> getData(@RequestBody List<Map<String, String>> queryParams) {
-    //TODO
-    var results = queryParams
-        .stream()
-        .map(qp -> new ProvidedRestQueryParams(qp.get("measureName"), qp))
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResponseEntity<?> getData(@RequestBody List<Map<String, String>> queryParams) {
+    if (queryParams.stream().anyMatch(params -> !checkProvidedBatchQueryParams(params))) {
+      return badRequest();
+    }
+
+    var unauthorizedMeasureName = queryParams.stream()
+        .map(params -> params.get("measureName"))
+        .filter(measureName -> !checkPermissionByName(measureName, "READ"))
+        .findFirst();
+    if (unauthorizedMeasureName.isPresent()) {
+      return badRequest(String.format("No read permission for measurement %s", unauthorizedMeasureName.get()));
+    }
+
+    var results = queryParams.stream()
+        .map(params -> new ProvidedRestQueryParams(params.get("measureName"), params))
         .map(params -> this.dataExplorerQueryManagement.getData(params, true))
         .collect(Collectors.toList());
 
@@ -317,6 +328,12 @@ public class DataLakeResource extends AbstractDataLakeResource {
 
   private boolean checkProvidedQueryParams(Map<String, String> providedParams) {
     return SUPPORTED_PARAMS.containsAll(providedParams.keySet());
+  }
+
+  private boolean checkProvidedBatchQueryParams(Map<String, String> providedParams) {
+    return providedParams.containsKey("measureName")
+        && providedParams.keySet().stream()
+            .allMatch(param -> param.equals("measureName") || SUPPORTED_PARAMS.contains(param));
   }
 
   @PostMapping(path = "/{elementId}/cleanup", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

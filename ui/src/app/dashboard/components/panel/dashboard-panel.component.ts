@@ -185,7 +185,7 @@ export class DashboardPanelComponent
     private dataExplorerSharedService = inject(ChartSharedService);
 
     observableGenerator =
-        this.dataExplorerSharedService.defaultObservableGenerator();
+        this.dataExplorerSharedService.dashboardObservableGenerator();
 
     private pendingManageDashboardResult?: ObjectManageDialogResult<Dashboard>;
 
