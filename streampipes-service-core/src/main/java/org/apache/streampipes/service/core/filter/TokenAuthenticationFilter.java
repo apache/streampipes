@@ -23,8 +23,7 @@ import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
-import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
@@ -63,7 +62,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider tokenProvider;
   private final IUserStorage userStorage;
-  private final IPermissionStorage permissionStorage;
+  private final SpResourceManager resourceManager;
 
   private final List<String> supportedBasicAuthPaths = List.of(
       "/actuator/prometheus"
@@ -73,11 +72,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
   private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
 
-  public TokenAuthenticationFilter(IPermissionStorage permissionStorage,
-                                   ISpCoreConfigurationStorage coreConfigurationStorage) {
-    this.tokenProvider = new JwtTokenProvider(coreConfigurationStorage);
+  public TokenAuthenticationFilter(SpResourceManager resourceManager) {
+    this.tokenProvider = new JwtTokenProvider(
+        resourceManager.getCoreConfigurationStorage(),
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage()
+    );
     this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
-    this.permissionStorage = permissionStorage;
+    this.resourceManager = resourceManager;
   }
 
   @Override
@@ -160,8 +162,18 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
   }
 
   private PrincipalUserDetails<?> makeDetails(Principal user) {
-    return user instanceof UserAccount ? new UserAccountDetails((UserAccount) user, permissionStorage) :
-        new ServiceAccountDetails((ServiceAccount) user, permissionStorage);
+    return user instanceof UserAccount ? new UserAccountDetails(
+        (UserAccount) user,
+        resourceManager.managePermissions().getDb(),
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage()
+    ) :
+        new ServiceAccountDetails(
+            (ServiceAccount) user,
+            resourceManager.managePermissions().getDb(),
+            resourceManager.getRoleStorage(),
+            resourceManager.getUserGroupStorage()
+        );
   }
 
   private boolean isAdminUser(PrincipalUserDetails<?> userDetails) {

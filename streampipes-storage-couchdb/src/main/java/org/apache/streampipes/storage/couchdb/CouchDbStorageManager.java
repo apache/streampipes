@@ -36,9 +36,7 @@ import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateSt
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
-import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
-import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.CompactPipelineTemplateStorageImpl;
@@ -58,9 +56,7 @@ import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTe
 import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RefreshTokenStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserActivationTokenStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.user.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 
 public class CouchDbStorageManager implements INoSqlStorage {
@@ -78,11 +74,6 @@ public class CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IImageStorage getImageStorage() {
     return new ImageStorageImpl();
-  }
-
-  @Override
-  public IUserGroupStorage getUserGroupStorage() {
-    return new UserGroupStorageImpl();
   }
 
   @Override
@@ -148,11 +139,6 @@ public class CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IExtensionsServiceConfigurationStorage getExtensionsServiceConfigurationStorage() {
     return new ExtensionsServiceConfigurationStorageImpl();
-  }
-
-  @Override
-  public IRoleStorage getRoleStorage() {
-    return new RoleStorageImpl();
   }
 
   @Override

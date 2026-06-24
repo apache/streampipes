@@ -27,6 +27,8 @@ import org.apache.streampipes.security.jwt.JwtTokenGenerator;
 import org.apache.streampipes.security.jwt.JwtTokenUtils;
 import org.apache.streampipes.security.jwt.JwtTokenValidator;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.util.GrantedAuthoritiesBuilder;
 import org.apache.streampipes.user.management.util.UserInfoUtil;
@@ -53,9 +55,15 @@ public class JwtTokenProvider {
   private static final Logger LOG = LoggerFactory.getLogger(JwtTokenProvider.class);
   private Environment env;
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
+  private final IRoleStorage roleStorage;
+  private final IUserGroupStorage userGroupStorage;
 
-  public JwtTokenProvider(ISpCoreConfigurationStorage coreConfigurationStorage) {
+  public JwtTokenProvider(ISpCoreConfigurationStorage coreConfigurationStorage,
+                          IRoleStorage roleStorage,
+                          IUserGroupStorage userGroupStorage) {
     this.coreConfigurationStorage = coreConfigurationStorage;
+    this.roleStorage = roleStorage;
+    this.userGroupStorage = userGroupStorage;
 
     this.env = Environments.getEnvironment();
   }
@@ -73,7 +81,7 @@ public class JwtTokenProvider {
   }
 
   public String createToken(Principal userPrincipal) {
-    Set<String> roles = new GrantedAuthoritiesBuilder(userPrincipal).buildAllAuthorities();
+    Set<String> roles = new GrantedAuthoritiesBuilder(userPrincipal, roleStorage, userGroupStorage).buildAllAuthorities();
     return createToken(userPrincipal, roles);
   }
 

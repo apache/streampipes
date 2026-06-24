@@ -21,6 +21,7 @@ package org.apache.streampipes.service.core;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.service.base.security.UnauthorizedRequestEntryPoint;
 import org.apache.streampipes.service.core.filter.TokenAuthenticationFilter;
 import org.apache.streampipes.service.core.oauth2.CustomOAuth2UserService;
@@ -97,14 +98,17 @@ public class WebSecurityConfig {
   @Autowired
   private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
-  private final IPermissionStorage permissionStorage;
+  private final SpResourceManager resourceManager;
 
   public WebSecurityConfig(StreamPipesPasswordEncoder passwordEncoder,
-                           IPermissionStorage permissionStorage) {
+                           SpResourceManager resourceManager) {
     this.passwordEncoder = passwordEncoder;
-    this.userDetailsService = new SpUserDetailsService(permissionStorage);
+    this.userDetailsService = new SpUserDetailsService(
+        resourceManager.managePermissions().getDb(),
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage());
     this.env = Environments.getEnvironment();
-    this.permissionStorage = permissionStorage;
+    this.resourceManager = resourceManager;
   }
 
   @Autowired
@@ -154,13 +158,13 @@ public class WebSecurityConfig {
       );
     }
 
-    http.addFilterBefore(tokenAuthenticationFilter(coreConfigurationStorage), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
 
-  public TokenAuthenticationFilter tokenAuthenticationFilter(ISpCoreConfigurationStorage coreConfigurationStorage) {
-    return new TokenAuthenticationFilter(permissionStorage, coreConfigurationStorage);
+  public TokenAuthenticationFilter tokenAuthenticationFilter() {
+    return new TokenAuthenticationFilter(resourceManager);
   }
 
   @Bean(BeanIds.USER_DETAILS_SERVICE)

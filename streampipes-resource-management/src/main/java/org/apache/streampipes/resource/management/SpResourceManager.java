@@ -26,6 +26,8 @@ import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class SpResourceManager {
@@ -39,6 +41,8 @@ public class SpResourceManager {
   private final IDataLakeMeasureStorage datasetStorage;
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
   private final IFileMetadataStorage fileMetadataStorage;
+  private final IRoleStorage roleStorage;
+  private final IUserGroupStorage userGroupStorage;
 
   public SpResourceManager(IPermissionStorage permissionStorage,
                            IChartStorage chartStorage,
@@ -48,7 +52,9 @@ public class SpResourceManager {
                            IPipelineStorage pipelineStorage,
                            IDataLakeMeasureStorage datasetStorage,
                            ISpCoreConfigurationStorage coreConfigurationStorage,
-                           IFileMetadataStorage fileMetadataStorage) {
+                           IFileMetadataStorage fileMetadataStorage,
+                           IRoleStorage roleStorage,
+                           IUserGroupStorage userGroupStorage) {
     this.permissionStorage = permissionStorage;
     this.chartStorage = chartStorage;
     this.adapterStorage = adapterStorage;
@@ -58,6 +64,8 @@ public class SpResourceManager {
     this.datasetStorage = datasetStorage;
     this.coreConfigurationStorage = coreConfigurationStorage;
     this.fileMetadataStorage = fileMetadataStorage;
+    this.roleStorage = roleStorage;
+    this.userGroupStorage = userGroupStorage;
   }
 
   public AdapterDescriptionResourceManager manageAdapterDescriptions() {
@@ -112,6 +120,14 @@ public class SpResourceManager {
 
   public IFileMetadataStorage getFileMetadataStorage() {
     return fileMetadataStorage;
+  }
+
+  public IRoleStorage getRoleStorage() {
+    return roleStorage;
+  }
+
+  public IUserGroupStorage getUserGroupStorage() {
+    return userGroupStorage;
   }
 
   public UserResourceManager manageUsers() {

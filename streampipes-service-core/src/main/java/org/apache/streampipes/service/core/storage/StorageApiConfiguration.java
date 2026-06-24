@@ -29,6 +29,8 @@ import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.ChartStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.DashboardStorageImpl;
@@ -39,6 +41,8 @@ import org.apache.streampipes.storage.couchdb.impl.system.AssetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -130,5 +134,15 @@ public class StorageApiConfiguration {
         DataLakeMeasure.class
     );
     return dataLakeMeasureCacheEnabled ? new CachedDataLakeMeasureStorage(delegate, cacheManager) : delegate;
+  }
+
+  @Bean
+  public IRoleStorage roleStorage() {
+    return new RoleStorageImpl();
+  }
+
+  @Bean
+  public IUserGroupStorage userGroupStorage() {
+    return new UserGroupStorageImpl();
   }
 }

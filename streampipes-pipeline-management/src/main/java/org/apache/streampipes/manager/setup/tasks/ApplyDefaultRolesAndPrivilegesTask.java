@@ -39,15 +39,15 @@ public class ApplyDefaultRolesAndPrivilegesTask implements InstallationTask {
   private final IRoleStorage roleStorage;
   private final IPrivilegeStorage privilegeStorage;
 
-  public ApplyDefaultRolesAndPrivilegesTask() {
-    this.roleStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getRoleStorage();
+  public ApplyDefaultRolesAndPrivilegesTask(IRoleStorage roleStorage) {
+    this.roleStorage = roleStorage;
     this.privilegeStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPrivilegeStorage();
   }
 
   @Override
   public void execute() {
     LOG.info("Creating or updating default roles and privileges");
-    var defaultRoles = new RoleManager().makeDefaultRoles();
+    var defaultRoles = new RoleManager(roleStorage).makeDefaultRoles();
     var defaultPrivileges = new PrivilegeManager().makeDefaultPrivileges();
     updateDocs(roleStorage, defaultRoles);
     updateDocs(privilegeStorage, defaultPrivileges);

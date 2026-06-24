@@ -62,6 +62,7 @@ import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -109,6 +110,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   @Autowired
   protected SpResourceManager resourceManager;
+
+  @Autowired
+  protected IRoleStorage roleStorage;
 
   private final IExtensionsServiceStorage extensionsServiceStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
@@ -186,7 +190,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       new MigrationsHandler().performMigrations(getMigrations());
     }
 
-    new ApplyDefaultRolesAndPrivilegesTask().execute();
+    new ApplyDefaultRolesAndPrivilegesTask(roleStorage).execute();
     coreStatusManager.updateCoreStatus(SpCoreConfigurationStatus.READY);
 
     executorService.schedule(new PostStartupTask(

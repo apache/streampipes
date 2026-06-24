@@ -69,7 +69,7 @@ public class ResourceUnitMigration {
                      newEndpointUrl);
 
         new InvokeHttpRequest().execute(
-            element, newEndpointUrl, resourceUnit.getPipelineId(), resourceManager.getCoreConfigurationStorage());
+            element, newEndpointUrl, resourceUnit.getPipelineId(), resourceManager);
       }
 
       // Update pipeline in storage with new endpoints

@@ -35,9 +35,7 @@ import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateSt
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
-import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
-import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 
 public interface INoSqlStorage {
@@ -47,8 +45,6 @@ public interface INoSqlStorage {
   IAdapterStorage getAdapterDescriptionStorage();
 
   IImageStorage getImageStorage();
-
-  IUserGroupStorage getUserGroupStorage();
 
   IUserStorage getUserStorageAPI();
 
@@ -75,8 +71,6 @@ public interface INoSqlStorage {
   IExtensionsServiceStorage getExtensionsServiceStorage();
 
   IExtensionsServiceConfigurationStorage getExtensionsServiceConfigurationStorage();
-
-  IRoleStorage getRoleStorage();
 
   IPrivilegeStorage getPrivilegeStorage();
 

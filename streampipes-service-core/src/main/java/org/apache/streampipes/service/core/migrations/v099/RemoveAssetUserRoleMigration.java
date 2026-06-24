@@ -36,10 +36,11 @@ public class RemoveAssetUserRoleMigration implements Migration {
   private final IUserStorage userStorage;
   private final IUserGroupStorage userGroupStorage;
 
-  public RemoveAssetUserRoleMigration() {
-    this.roleStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getRoleStorage();
+  public RemoveAssetUserRoleMigration(IRoleStorage roleStorage,
+                                      IUserGroupStorage userGroupStorage) {
+    this.roleStorage = roleStorage;
     this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
-    this.userGroupStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserGroupStorage();
+    this.userGroupStorage = userGroupStorage;
   }
 
   @Override

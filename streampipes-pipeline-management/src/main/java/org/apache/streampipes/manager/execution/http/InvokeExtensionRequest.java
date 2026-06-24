@@ -23,7 +23,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
-import org.apache.streampipes.manager.util.AuthTokenUtils;
+import org.apache.streampipes.manager.util.AuthTokenProvider;
 import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -55,7 +55,7 @@ public class InvokeExtensionRequest extends PipelineElementExtensionRequest {
         provider,
         pipelineElement.getAppId()
     );
-    var authToken = AuthTokenUtils.getAuthToken(pipelineId, resourceManager);
+    var authToken = new AuthTokenProvider(resourceManager).getAuthToken(pipelineId);
     return requestManager().request(
         ExtensionServiceRequests
             .pipelineElementInvocation(requestTarget, toJson(pipelineElement), authToken)

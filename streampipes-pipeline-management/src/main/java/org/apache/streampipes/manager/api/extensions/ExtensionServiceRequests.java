@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.manager.api.extensions;
 
-import org.apache.streampipes.manager.util.AuthTokenUtils;
+import org.apache.streampipes.manager.util.AuthTokenProvider;
 import org.apache.streampipes.resource.management.SpResourceManager;
 
 public final class ExtensionServiceRequests {
@@ -58,7 +58,7 @@ public final class ExtensionServiceRequests {
     return post(
         target,
         payload,
-        AuthTokenUtils.getAuthTokenForCurrentUser(resourceManager.getCoreConfigurationStorage())
+        new AuthTokenProvider(resourceManager).getAuthTokenForCurrentUser()
     );
   }
 
@@ -81,7 +81,7 @@ public final class ExtensionServiceRequests {
                                                            String elementId,
                                                            String payload,
                                                            SpResourceManager resourceManager) {
-    return post(target, payload, AuthTokenUtils.getAuthToken(elementId, resourceManager));
+    return post(target, payload, new AuthTokenProvider(resourceManager).getAuthToken(elementId));
   }
 
   public static ExtensionServiceRequest runtimeOptions(ExtensionServiceRequestTarget target,
@@ -90,7 +90,7 @@ public final class ExtensionServiceRequests {
     return post(
         target,
         payload,
-        AuthTokenUtils.getAuthTokenForCurrentUser(resourceManager.getCoreConfigurationStorage())
+        new AuthTokenProvider(resourceManager).getAuthTokenForCurrentUser()
     );
   }
 
@@ -100,7 +100,7 @@ public final class ExtensionServiceRequests {
     return post(
         target,
         payload,
-        AuthTokenUtils.getAuthTokenForCurrentUser(resourceManager.getCoreConfigurationStorage())
+        new AuthTokenProvider(resourceManager).getAuthTokenForCurrentUser()
     );
   }
 
@@ -128,7 +128,7 @@ public final class ExtensionServiceRequests {
   public static ExtensionServiceRequest pipelineElementDetach(ExtensionServiceRequestTarget target,
                                                               String pipelineId,
                                                               SpResourceManager resourceManager) {
-    return delete(target, AuthTokenUtils.getAuthToken(pipelineId, resourceManager));
+    return delete(target, new AuthTokenProvider(resourceManager).getAuthToken(pipelineId));
   }
 
   public static ExtensionServiceRequest pipelineElementAssets(ExtensionServiceRequestTarget target) {
@@ -156,8 +156,8 @@ public final class ExtensionServiceRequests {
   }
 
   private static String serviceAdminToken(SpResourceManager resourceManager) {
-    return AuthTokenUtils.getAuthTokenForUser(
-        resourceManager.manageUsers().getServiceAdmin().getPrincipalId(),
-        resourceManager);
+    return new AuthTokenProvider(resourceManager).getAuthTokenForUser(
+        resourceManager.manageUsers().getServiceAdmin().getPrincipalId()
+    );
   }
 }

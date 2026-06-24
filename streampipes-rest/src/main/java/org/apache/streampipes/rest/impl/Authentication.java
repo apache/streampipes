@@ -132,7 +132,11 @@ public class Authentication extends AbstractRestResource {
 
     setRefreshCookie(request, response, issuedRefreshToken);
 
-    String jwt = new JwtTokenProvider(coreConfigurationStorage).createToken(userAccount);
+    String jwt = new JwtTokenProvider(
+        coreConfigurationStorage,
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage()
+    ).createToken(userAccount);
     return ok(new JwtAuthenticationResponse(jwt));
   }
 
@@ -244,7 +248,11 @@ public class Authentication extends AbstractRestResource {
   }
 
   private JwtAuthenticationResponse makeJwtResponse(org.springframework.security.core.Authentication auth) {
-    String jwt = new JwtTokenProvider(coreConfigurationStorage).createToken(auth);
+    String jwt = new JwtTokenProvider(
+        coreConfigurationStorage,
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage()
+    ).createToken(auth);
     return new JwtAuthenticationResponse(jwt);
   }
 

@@ -21,7 +21,6 @@ package org.apache.streampipes.service.core.oauth2;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
-import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -54,17 +53,14 @@ public class UserService {
   private final IRoleStorage roleStorage;
   private final IUserGroupStorage groupStorage;
   private final Environment env;
-  private List<Role> allRoles;
-  private List<Group> allGroups;
   private final IPermissionStorage permissionStorage;
   private final ISpCoreConfigurationStorage configurationStorage;
 
   public UserService(SpResourceManager resourceManager) {
     this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
-    this.roleStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getRoleStorage();
-    this.groupStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserGroupStorage();
-    this.allGroups = this.groupStorage.findAll();
-    this.allRoles = this.roleStorage.findAll();
+    this.roleStorage = resourceManager.getRoleStorage();
+    this.groupStorage = resourceManager.getUserGroupStorage();
+
     this.env = Environments.getEnvironment();
     this.permissionStorage = resourceManager.managePermissions().getDb();
     this.configurationStorage = resourceManager.getCoreConfigurationStorage();
@@ -110,7 +106,8 @@ public class UserService {
       }
 
       user = (UserAccount) userStorage.getUserById(principalId);
-      return OidcUserAccountDetails.create(user, attributes, idToken, userInfo, permissionStorage);
+      return OidcUserAccountDetails
+          .create(user, attributes, idToken, userInfo, permissionStorage, roleStorage, groupStorage);
     } else {
       throw new OAuth2AuthenticationProcessingException(
           String.format("No config found for provider %s", registrationId)
@@ -122,13 +119,13 @@ public class UserService {
                           OAuthConfiguration oAuthConfig,
                           Map<String, Object> attributes,
                           boolean newUser) {
+    var allRoles = roleStorage.findAll();
     if (oAuthConfig.getRoleAttributeName() != null) {
       Object rolesObject = attributes.get(oAuthConfig.getRoleAttributeName());
-
+      var allGroups = groupStorage.findAll();
       if (rolesObject instanceof List<?> rolesList) {
         Set<String> roles = extractRoleOrGroup("ROLE", rolesList);
         Set<String> groups = convertGroup(extractRoleOrGroup("GROUP", rolesList));
-
         allRoles.forEach(role -> {
           if (Objects.nonNull(role.getAlternateIds())) {
             role.getAlternateIds().forEach(a -> {
@@ -158,17 +155,18 @@ public class UserService {
             oAuthConfig.getRoleAttributeName(),
             Objects.nonNull(rolesObject) ? rolesObject.getClass().getName() : "null"
         );
-        applyDefaultRole(user, oAuthConfig.getDefaultRoles(), newUser);
+        applyDefaultRole(user, oAuthConfig.getDefaultRoles(), newUser, allRoles);
       }
     } else {
       LOG.warn("Applying default roles as no role attribute is configured");
-      applyDefaultRole(user, oAuthConfig.getDefaultRoles(), newUser);
+      applyDefaultRole(user, oAuthConfig.getDefaultRoles(), newUser, allRoles);
     }
   }
 
   private void applyDefaultRole(UserAccount user,
                                 Set<String> defaultRoles,
-                                boolean newUser) {
+                                boolean newUser,
+                                List<Role> allRoles) {
     if (newUser) {
       user.setRoles(
           defaultRoles
