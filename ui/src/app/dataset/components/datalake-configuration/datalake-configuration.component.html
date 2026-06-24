@@ -100,50 +100,52 @@
                         *matCellDef="let configurationEntry"
                         (click)="$event.stopPropagation()"
                     >
-                        @if (configurationEntry.eventsLatestLoading) {
-                            <mat-spinner
-                                [diameter]="20"
-                                fxLayoutAlign="center"
-                                color="accent"
-                                >{{ 'Loading' | translate }}
-                            </mat-spinner>
-                        } @else {
-                            @if (configurationEntry.eventsLatest > -1) {
-                                <sp-label
-                                    tone="neutral"
-                                    class="cursor-pointer"
-                                    data-cy="datalake-latest-count-value"
-                                    minWidth="100px"
-                                    [labelText]="
-                                        configurationEntry.eventsLatest | number
-                                    "
-                                    size="small"
-                                    (click)="
-                                        receiveLatestMeasurementSize(
-                                            configurationEntry
-                                        );
-                                        $event.stopPropagation()
-                                    "
-                                >
-                                </sp-label>
+                        <div class="count-cell-content">
+                            @if (configurationEntry.eventsLatestLoading) {
+                                <mat-spinner [diameter]="20" color="accent"
+                                    >{{ 'Loading' | translate }}
+                                </mat-spinner>
                             } @else {
-                                <sp-label
-                                    tone="neutral"
-                                    class="cursor-pointer"
-                                    data-cy="datalake-latest-count-button"
-                                    minWidth="100px"
-                                    [labelText]="'Click to load' | translate"
-                                    size="small"
-                                    (click)="
-                                        receiveLatestMeasurementSize(
-                                            configurationEntry
-                                        );
-                                        $event.stopPropagation()
-                                    "
-                                >
-                                </sp-label>
+                                @if (configurationEntry.eventsLatest > -1) {
+                                    <sp-label
+                                        tone="neutral"
+                                        class="cursor-pointer"
+                                        data-cy="datalake-latest-count-value"
+                                        minWidth="100px"
+                                        [labelText]="
+                                            configurationEntry.eventsLatest
+                                                | number
+                                        "
+                                        size="small"
+                                        (click)="
+                                            receiveLatestMeasurementSize(
+                                                configurationEntry
+                                            );
+                                            $event.stopPropagation()
+                                        "
+                                    >
+                                    </sp-label>
+                                } @else {
+                                    <sp-label
+                                        tone="neutral"
+                                        class="cursor-pointer"
+                                        data-cy="datalake-latest-count-button"
+                                        minWidth="100px"
+                                        [labelText]="
+                                            'Click to load' | translate
+                                        "
+                                        size="small"
+                                        (click)="
+                                            receiveLatestMeasurementSize(
+                                                configurationEntry
+                                            );
+                                            $event.stopPropagation()
+                                        "
+                                    >
+                                    </sp-label>
+                                }
                             }
-                        }
+                        </div>
                     </td>
                 </ng-container>
 
@@ -157,11 +159,10 @@
                         *matCellDef="let configurationEntry"
                         (click)="$event.stopPropagation()"
                     >
-                        <div fxLayout="row" fxLayoutAlign="start center">
+                        <div class="count-cell-content">
                             @if (configurationEntry.eventsTotalLoading) {
                                 <mat-spinner
                                     [diameter]="20"
-                                    fxLayoutAlign="center"
                                     color="accent"
                                     data-cy="datalake-number-of-events-spinner"
                                     >{{ 'Loading' | translate }}
