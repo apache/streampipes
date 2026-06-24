@@ -32,7 +32,6 @@ import org.apache.streampipes.service.core.oauth2.OAuth2AuthenticationFailureHan
 import org.apache.streampipes.service.core.oauth2.OAuth2AuthenticationSuccessHandler;
 import org.apache.streampipes.service.core.oauth2.OAuthEnabledCondition;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.user.management.service.SpUserDetailsService;
 
 import org.slf4j.Logger;
