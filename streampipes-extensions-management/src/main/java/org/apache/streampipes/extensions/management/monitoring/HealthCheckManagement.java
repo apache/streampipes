@@ -28,6 +28,8 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.health.AdapterInstanceState;
 import org.apache.streampipes.model.health.ExtensionInstanceHealth;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class HealthCheckManagement {
@@ -59,7 +61,20 @@ public class HealthCheckManagement {
   }
 
   public ExtensionInstanceHealth getExtensionInstanceHealth() {
-    var adapterInstanceStates = adapterManagement.getAllRunningAdapterInstances()
+    return new ExtensionInstanceHealth(
+        getAdapterInstanceStates(),
+        getRunningPipelineElementInstanceIds()
+    );
+  }
+
+  private Map<String, AdapterInstanceState> getAdapterInstanceStates() {
+    var adapterInstanceStates = getRunningAdapterInstanceStates();
+    setTransitioningAdapterInstanceStates(adapterInstanceStates);
+    return adapterInstanceStates;
+  }
+
+  private Map<String, AdapterInstanceState> getRunningAdapterInstanceStates() {
+    return adapterManagement.getAllRunningAdapterInstances()
         .stream()
         .map(NamedStreamPipesEntity::getElementId)
         .collect(Collectors.toMap(
@@ -67,16 +82,16 @@ public class HealthCheckManagement {
             adapterInstanceId -> AdapterInstanceState.RUNNING,
             (existingState, replacementState) -> existingState
         ));
-    adapterInstanceStates.putAll(adapterTransitionRegistry.getTransitioningAdapterInstanceStates());
+  }
 
-    var runningPipelineElementInstances = runningInstances.getRunningInstanceIds()
+  private void setTransitioningAdapterInstanceStates(Map<String, AdapterInstanceState> adapterInstanceStates) {
+    adapterInstanceStates.putAll(adapterTransitionRegistry.getTransitioningAdapterInstanceStates());
+  }
+
+  private Set<String> getRunningPipelineElementInstanceIds() {
+    return runningInstances.getRunningInstanceIds()
         .stream()
         .map(InstanceIdExtractor::extractId)
         .collect(Collectors.toSet());
-
-    return new ExtensionInstanceHealth(
-        adapterInstanceStates,
-        runningPipelineElementInstances
-    );
   }
 }
