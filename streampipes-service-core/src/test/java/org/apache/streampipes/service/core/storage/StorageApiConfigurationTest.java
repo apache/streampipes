@@ -20,8 +20,10 @@ package org.apache.streampipes.service.core.storage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.ChartStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
@@ -39,12 +41,14 @@ class StorageApiConfigurationTest {
       CachedDataLakeMeasureStorage.CACHE_NAME,
       CachedRoleStorage.CACHE_NAME,
       CachedUserGroupStorage.CACHE_NAME,
-      CachedPrivilegeStorage.CACHE_NAME
+      CachedPrivilegeStorage.CACHE_NAME,
+      CachedUserStorage.CACHE_NAME,
+      CachedSpCoreConfigurationStorage.CACHE_NAME
   );
 
   @Test
   void enablesStorageCaches() {
-    var configuration = new StorageApiConfiguration(true, true, true, true, true, true, true, true, true);
+    var configuration = new StorageApiConfiguration(true, true, true, true, true, true, true, true, true, true, true);
 
     assertInstanceOf(CachedChartStorage.class, configuration.chartStorage(cacheManager));
     assertInstanceOf(CachedPermissionStorage.class, configuration.permissionStorage(cacheManager));
@@ -55,11 +59,13 @@ class StorageApiConfigurationTest {
     assertInstanceOf(CachedRoleStorage.class, configuration.roleStorage(cacheManager));
     assertInstanceOf(CachedUserGroupStorage.class, configuration.userGroupStorage(cacheManager));
     assertInstanceOf(CachedPrivilegeStorage.class, configuration.privilegeStorage(cacheManager));
+    assertInstanceOf(CachedUserStorage.class, configuration.userStorage(cacheManager));
+    assertInstanceOf(CachedSpCoreConfigurationStorage.class, configuration.coreConfigurationStorage(cacheManager));
   }
 
   @Test
   void configuresStorageCachesIndependently() {
-    var configuration = new StorageApiConfiguration(false, true, false, true, false, true, false, true, false);
+    var configuration = new StorageApiConfiguration(false, true, false, true, false, true, false, true, false, false, false);
 
     assertInstanceOf(ChartStorageImpl.class, configuration.chartStorage(cacheManager));
     assertInstanceOf(CachedPermissionStorage.class, configuration.permissionStorage(cacheManager));
@@ -70,5 +76,7 @@ class StorageApiConfigurationTest {
     assertInstanceOf(RoleStorageImpl.class, configuration.roleStorage(cacheManager));
     assertInstanceOf(CachedUserGroupStorage.class, configuration.userGroupStorage(cacheManager));
     assertInstanceOf(PrivilegeStorageImpl.class, configuration.privilegeStorage(cacheManager));
+    assertInstanceOf(UserStorage.class, configuration.userStorage(cacheManager));
+    assertInstanceOf(CoreConfigurationStorageImpl.class, configuration.coreConfigurationStorage(cacheManager));
   }
 }

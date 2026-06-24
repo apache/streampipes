@@ -68,6 +68,8 @@ public class StorageApiConfiguration {
   private final boolean roleCacheEnabled;
   private final boolean userGroupCacheEnabled;
   private final boolean privilegeCacheEnabled;
+  private final boolean userCacheEnabled;
+  private final boolean coreConfigurationCacheEnabled;
 
   public StorageApiConfiguration(
       @Value("${streampipes.storage.cache.data-explorer-widgets.enabled:true}") boolean chartCacheEnabled,
@@ -78,7 +80,9 @@ public class StorageApiConfiguration {
       @Value("${streampipes.storage.cache.data-lake-measures.enabled:true}") boolean dataLakeMeasureCacheEnabled,
       @Value("${streampipes.storage.cache.roles.enabled:true}") boolean roleCacheEnabled,
       @Value("${streampipes.storage.cache.user-groups.enabled:true}") boolean userGroupCacheEnabled,
-      @Value("${streampipes.storage.cache.privileges.enabled:true}") boolean privilegeCacheEnabled) {
+      @Value("${streampipes.storage.cache.privileges.enabled:true}") boolean privilegeCacheEnabled,
+      @Value("${streampipes.storage.cache.users.enabled:true}") boolean userCacheEnabled,
+      @Value("${streampipes.storage.cache.core-configuration.enabled:true}") boolean coreConfigurationCacheEnabled) {
     this.chartCacheEnabled = chartCacheEnabled;
     this.permissionCacheEnabled = permissionCacheEnabled;
     this.adapterCacheEnabled = adapterCacheEnabled;
@@ -88,6 +92,8 @@ public class StorageApiConfiguration {
     this.roleCacheEnabled = roleCacheEnabled;
     this.userGroupCacheEnabled = userGroupCacheEnabled;
     this.privilegeCacheEnabled = privilegeCacheEnabled;
+    this.userCacheEnabled = userCacheEnabled;
+    this.coreConfigurationCacheEnabled = coreConfigurationCacheEnabled;
   }
 
   @Bean
@@ -125,8 +131,9 @@ public class StorageApiConfiguration {
   }
 
   @Bean
-  public ISpCoreConfigurationStorage coreConfigurationStorage() {
-    return new CoreConfigurationStorageImpl();
+  public ISpCoreConfigurationStorage coreConfigurationStorage(CacheManager cacheManager) {
+    ISpCoreConfigurationStorage delegate = new CoreConfigurationStorageImpl();
+    return coreConfigurationCacheEnabled ? new CachedSpCoreConfigurationStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean
@@ -168,7 +175,8 @@ public class StorageApiConfiguration {
   }
 
   @Bean
-  public IUserStorage userStorage() {
-    return new UserStorage();
+  public IUserStorage userStorage(CacheManager cacheManager) {
+    IUserStorage delegate = new UserStorage();
+    return userCacheEnabled ? new CachedUserStorage(delegate, cacheManager) : delegate;
   }
 }
