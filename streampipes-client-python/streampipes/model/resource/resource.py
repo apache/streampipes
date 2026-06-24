@@ -21,7 +21,6 @@ General and abstract implementation for a resource.
 A resource defines the data model that is used by a resource container (`model.container.resourceContainer`).
 """
 from abc import abstractmethod
-from typing import Dict
 
 from streampipes.model.common import BasicModel
 
@@ -41,7 +40,7 @@ class Resource(BasicModel):
     """
 
     @abstractmethod
-    def convert_to_pandas_representation(self) -> Dict:
+    def convert_to_pandas_representation(self) -> dict:
         """Returns a dictionary representation to be used when creating a pandas Dataframe.
 
         Returns
