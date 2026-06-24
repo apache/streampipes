@@ -16,26 +16,6 @@
  *
  */
 
-import { SpNavigationItem } from '@streampipes/shared-ui';
-
-export class SpDatasetDetailsTabs {
-    public getTabs(elementId: string): SpNavigationItem[] {
-        return [
-            {
-                itemId: 'schema',
-                itemTitle: 'Event schema',
-                itemLink: ['datasets', elementId, 'schema'],
-            },
-            {
-                itemId: 'metrics',
-                itemTitle: 'Metrics',
-                itemLink: ['datasets', elementId, 'metrics'],
-            },
-            {
-                itemId: 'events',
-                itemTitle: 'Latest events',
-                itemLink: ['datasets', elementId, 'events'],
-            },
-        ];
-    }
+.loading-state {
+    min-height: 3rem;
 }

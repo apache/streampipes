@@ -16,26 +16,14 @@
  *
  */
 
-import { SpNavigationItem } from '@streampipes/shared-ui';
+.chart-title {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+    text-align: center;
+}
 
-export class SpDatasetDetailsTabs {
-    public getTabs(elementId: string): SpNavigationItem[] {
-        return [
-            {
-                itemId: 'schema',
-                itemTitle: 'Event schema',
-                itemLink: ['datasets', elementId, 'schema'],
-            },
-            {
-                itemId: 'metrics',
-                itemTitle: 'Metrics',
-                itemLink: ['datasets', elementId, 'metrics'],
-            },
-            {
-                itemId: 'events',
-                itemTitle: 'Latest events',
-                itemLink: ['datasets', elementId, 'events'],
-            },
-        ];
-    }
+.daily-counts-chart {
+    height: 320px;
+    width: 100%;
 }
