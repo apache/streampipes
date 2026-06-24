@@ -23,6 +23,21 @@ import org.apache.streampipes.model.health.AdapterInstanceState;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Tracks adapter instances that are currently being started or stopped in an extension service.
+ *
+ * <p>The health check compares the adapters that should be running, according to core storage, with
+ * the adapters reported by each extension service. Starting and stopping are short transitional
+ * phases where an adapter can temporarily be absent from the regular running-adapter registry, even
+ * though the extension service is already handling the requested lifecycle operation.
+ *
+ * <p>This registry was introduced to make those transitional states visible to the health check.
+ * Without it, a health check that runs at the same time as an adapter stop can interpret the
+ * temporary absence as a crashed adapter and start it again. Reporting the adapter as
+ * {@link AdapterInstanceState#STARTING} or {@link AdapterInstanceState#STOPPING} prevents this
+ * recovery race while keeping the normal running-adapter registry focused on fully running
+ * instances.
+ */
 public class AdapterTransitionRegistry {
 
   public static final AdapterTransitionRegistry INSTANCE = new AdapterTransitionRegistry();
