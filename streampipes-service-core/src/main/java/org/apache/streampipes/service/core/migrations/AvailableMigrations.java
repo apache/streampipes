@@ -51,6 +51,7 @@ import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -68,6 +69,7 @@ public class AvailableMigrations {
   private final IRoleStorage roleStorage;
   private final IUserGroupStorage userGroupStorage;
   private final IPrivilegeStorage privilegeStorage;
+  private final IUserStorage userStorage;
 
   public AvailableMigrations(SpResourceManager resourceManager) {
     this.chartStorage = resourceManager.manageCharts().getDb();
@@ -81,6 +83,7 @@ public class AvailableMigrations {
     this.roleStorage = resourceManager.getRoleStorage();
     this.userGroupStorage = resourceManager.getUserGroupStorage();
     this.privilegeStorage = resourceManager.getPrivilegeStorage();
+    this.userStorage = resourceManager.manageUsers().getDb();
   }
 
   public List<Migration> getAvailableMigrations() {
@@ -103,7 +106,7 @@ public class AvailableMigrations {
         new RemoveDuplicatedAssetPermissions(permissionStorage, assetStorage),
         new AddFunctionStateViewMigration(),
         new AddRefreshTokenViewsMigration(),
-        new RemoveAssetUserRoleMigration(roleStorage, userGroupStorage),
+        new RemoveAssetUserRoleMigration(roleStorage, userGroupStorage, userStorage),
         new RemoveInternalNotificationSinkMigration(pipelineStorage)
     );
   }

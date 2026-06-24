@@ -35,6 +35,7 @@ import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,7 +107,8 @@ public class ExtensionServiceRequestConfiguration {
                                              IFileMetadataStorage fileMetadataStorage,
                                              IRoleStorage roleStorage,
                                              IUserGroupStorage userGroupStorage,
-                                             IPrivilegeStorage privilegeStorage) {
+                                             IPrivilegeStorage privilegeStorage,
+                                             IUserStorage userStorage) {
     return new SpResourceManager(
         permissionStorage,
         chartStorage,
@@ -119,7 +121,8 @@ public class ExtensionServiceRequestConfiguration {
         fileMetadataStorage,
         roleStorage,
         userGroupStorage,
-        privilegeStorage
+        privilegeStorage,
+        userStorage
     );
   }
 

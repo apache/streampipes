@@ -29,6 +29,7 @@ import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class SpResourceManager {
@@ -45,6 +46,7 @@ public class SpResourceManager {
   private final IRoleStorage roleStorage;
   private final IUserGroupStorage userGroupStorage;
   private final IPrivilegeStorage privilegeStorage;
+  private final IUserStorage userStorage;
 
   public SpResourceManager(IPermissionStorage permissionStorage,
                            IChartStorage chartStorage,
@@ -57,7 +59,8 @@ public class SpResourceManager {
                            IFileMetadataStorage fileMetadataStorage,
                            IRoleStorage roleStorage,
                            IUserGroupStorage userGroupStorage,
-                           IPrivilegeStorage privilegeStorage) {
+                           IPrivilegeStorage privilegeStorage,
+                           IUserStorage userStorage) {
     this.permissionStorage = permissionStorage;
     this.chartStorage = chartStorage;
     this.adapterStorage = adapterStorage;
@@ -70,6 +73,7 @@ public class SpResourceManager {
     this.roleStorage = roleStorage;
     this.userGroupStorage = userGroupStorage;
     this.privilegeStorage = privilegeStorage;
+    this.userStorage = userStorage;
   }
 
   public AdapterDescriptionResourceManager manageAdapterDescriptions() {
@@ -139,6 +143,6 @@ public class SpResourceManager {
   }
 
   public UserResourceManager manageUsers() {
-    return new UserResourceManager(coreConfigurationStorage);
+    return new UserResourceManager(userStorage, coreConfigurationStorage);
   }
 }

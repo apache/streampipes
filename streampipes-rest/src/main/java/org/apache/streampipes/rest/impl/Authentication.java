@@ -34,7 +34,6 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.service.RefreshTokenService;
@@ -120,9 +119,7 @@ public class Authentication extends AbstractRestResource {
       return unauthorized();
     }
 
-    var principal = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getUserStorageAPI()
+    var principal = resourceManager.manageUsers().getDb()
         .getUserById(issuedRefreshToken.principalId());
 
     if (!(principal instanceof UserAccount userAccount)) {
@@ -134,6 +131,7 @@ public class Authentication extends AbstractRestResource {
 
     String jwt = new JwtTokenProvider(
         coreConfigurationStorage,
+        resourceManager.manageUsers().getDb(),
         resourceManager.getRoleStorage(),
         resourceManager.getUserGroupStorage()
     ).createToken(userAccount);
@@ -250,6 +248,7 @@ public class Authentication extends AbstractRestResource {
   private JwtAuthenticationResponse makeJwtResponse(org.springframework.security.core.Authentication auth) {
     String jwt = new JwtTokenProvider(
         coreConfigurationStorage,
+        resourceManager.manageUsers().getDb(),
         resourceManager.getRoleStorage(),
         resourceManager.getUserGroupStorage()
     ).createToken(auth);

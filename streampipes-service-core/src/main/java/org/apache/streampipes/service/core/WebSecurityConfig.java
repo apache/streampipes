@@ -104,6 +104,7 @@ public class WebSecurityConfig {
                            SpResourceManager resourceManager) {
     this.passwordEncoder = passwordEncoder;
     this.userDetailsService = new SpUserDetailsService(
+        resourceManager.manageUsers().getDb(),
         resourceManager.managePermissions().getDb(),
         resourceManager.getRoleStorage(),
         resourceManager.getUserGroupStorage());

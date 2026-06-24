@@ -24,7 +24,6 @@ import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
 
@@ -37,10 +36,11 @@ public class RemoveAssetUserRoleMigration implements Migration {
   private final IUserGroupStorage userGroupStorage;
 
   public RemoveAssetUserRoleMigration(IRoleStorage roleStorage,
-                                      IUserGroupStorage userGroupStorage) {
+                                      IUserGroupStorage userGroupStorage,
+                                      IUserStorage userStorage) {
     this.roleStorage = roleStorage;
-    this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
     this.userGroupStorage = userGroupStorage;
+    this.userStorage = userStorage;
   }
 
   @Override

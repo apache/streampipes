@@ -54,20 +54,16 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
 
-  public UserResourceManager(ISpCoreConfigurationStorage coreConfigurationStorage) {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI());
+  public UserResourceManager(IUserStorage userStorage,
+                             ISpCoreConfigurationStorage coreConfigurationStorage) {
+    super(userStorage);
     this.coreConfigurationStorage = coreConfigurationStorage;
   }
 
-  public static void setHideTutorial(String username, boolean hideTutorial) {
-    IUserStorage userService = getUserStorage();
-    UserAccount user = userService.getUserAccount(username);
+  public void setHideTutorial(String username, boolean hideTutorial) {
+    UserAccount user = db.getUserAccount(username);
     user.setHideTutorial(hideTutorial);
-    userService.updateUser(user);
-  }
-
-  public static IUserStorage getUserStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
+    db.updateUser(user);
   }
 
   public Principal getPrincipalById(String principalId) {
@@ -82,8 +78,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
   public Principal getAdminUser() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore()
-        .getUserStorageAPI()
+    return db
         .getAllUserAccounts()
         .stream()
         .filter(u -> u.getRoles().contains(DefaultRole.ROLE_ADMIN.name()))

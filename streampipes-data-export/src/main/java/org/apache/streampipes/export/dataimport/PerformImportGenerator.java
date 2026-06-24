@@ -150,7 +150,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   protected void handleFile(String document,
                             String fileMetadataId,
                             Map<String, byte[]> zipContent) throws IOException {
-    var resolver = new FileResolver();
+    var resolver = new FileResolver(resourceManager.getFileMetadataStorage());
     var fileMetadata = resolver.readDocument(document);
     writeDocument(document, resolver);
     byte[] file = zipContent.get(

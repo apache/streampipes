@@ -29,6 +29,7 @@ import org.apache.streampipes.security.jwt.JwtTokenValidator;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.util.GrantedAuthoritiesBuilder;
 import org.apache.streampipes.user.management.util.UserInfoUtil;
@@ -57,10 +58,13 @@ public class JwtTokenProvider {
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
   private final IRoleStorage roleStorage;
   private final IUserGroupStorage userGroupStorage;
+  private final IUserStorage userStorage;
 
   public JwtTokenProvider(ISpCoreConfigurationStorage coreConfigurationStorage,
+                          IUserStorage userStorage,
                           IRoleStorage roleStorage,
                           IUserGroupStorage userGroupStorage) {
+    this.userStorage = userStorage;
     this.coreConfigurationStorage = coreConfigurationStorage;
     this.roleStorage = roleStorage;
     this.userGroupStorage = userGroupStorage;
@@ -112,11 +116,13 @@ public class JwtTokenProvider {
   }
 
   public String getUserIdFromToken(String token) {
-    return JwtTokenUtils.getUserIdFromToken(token, new SpKeyResolver(tokenSecret(), coreConfigurationStorage));
+    return JwtTokenUtils
+        .getUserIdFromToken(token, new SpKeyResolver(tokenSecret(), coreConfigurationStorage, userStorage));
   }
 
   public boolean validateJwtToken(String jwtToken) {
-    return JwtTokenValidator.validateJwtToken(jwtToken, new SpKeyResolver(tokenSecret(), coreConfigurationStorage));
+    return JwtTokenValidator
+        .validateJwtToken(jwtToken, new SpKeyResolver(tokenSecret(), coreConfigurationStorage, userStorage));
   }
 
   public boolean validateJwtToken(String tokenSecret,

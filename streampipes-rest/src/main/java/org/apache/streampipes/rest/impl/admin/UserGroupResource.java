@@ -23,6 +23,7 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,9 +45,12 @@ import java.util.List;
 public class UserGroupResource extends AbstractAuthGuardedRestResource {
 
   private final IUserGroupStorage userGroupStorage;
+  private final IUserStorage userStorage;
 
-  public UserGroupResource(IUserGroupStorage userGroupStorage) {
+  public UserGroupResource(IUserGroupStorage userGroupStorage,
+                           IUserStorage userStorage) {
     this.userGroupStorage = userGroupStorage;
+    this.userStorage = userStorage;
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -82,10 +86,10 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
       userGroupStorage.deleteElement(group);
 
       // TODO remove group from all users
-      getUserStorage().getAllUsers().forEach(user -> {
+      userStorage.getAllUsers().forEach(user -> {
         if (user.getGroups().contains(groupId)) {
           user.getGroups().remove(groupId);
-          getUserStorage().updateUser(user);
+          userStorage.updateUser(user);
         }
       });
       return ok();

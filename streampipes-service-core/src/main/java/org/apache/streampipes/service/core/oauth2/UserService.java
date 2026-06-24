@@ -24,14 +24,11 @@ import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.rest.security.OAuth2AuthenticationProcessingException;
-import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,16 +51,14 @@ public class UserService {
   private final IUserGroupStorage groupStorage;
   private final Environment env;
   private final IPermissionStorage permissionStorage;
-  private final ISpCoreConfigurationStorage configurationStorage;
 
   public UserService(SpResourceManager resourceManager) {
-    this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
     this.roleStorage = resourceManager.getRoleStorage();
     this.groupStorage = resourceManager.getUserGroupStorage();
+    this.userStorage = resourceManager.manageUsers().getDb();
 
     this.env = Environments.getEnvironment();
     this.permissionStorage = resourceManager.managePermissions().getDb();
-    this.configurationStorage = resourceManager.getCoreConfigurationStorage();
   }
 
   public OidcUserAccountDetails processUserRegistration(String registrationId,
@@ -102,7 +97,7 @@ public class UserService {
         user = toUserAccount(registrationId, principalId, email, fullName);
         user.setLastLoginAtMillis(System.currentTimeMillis());
         applyRoles(user, oAuthConfig, attributes, true);
-        new UserResourceManager(configurationStorage).storeUser(user);
+        userStorage.storeUser(user);
       }
 
       user = (UserAccount) userStorage.getUserById(principalId);

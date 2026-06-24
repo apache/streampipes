@@ -38,6 +38,7 @@ public class AuthTokenProvider {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     return makeBearerToken(new JwtTokenProvider(
         resourceManager.getCoreConfigurationStorage(),
+        resourceManager.manageUsers().getDb(),
         resourceManager.getRoleStorage(),
         resourceManager.getUserGroupStorage()
     ).createToken(auth));
@@ -64,6 +65,7 @@ public class AuthTokenProvider {
   public String getAuthTokenForUser(Principal principal) {
     return makeBearerToken(new JwtTokenProvider(
         resourceManager.getCoreConfigurationStorage(),
+        resourceManager.manageUsers().getDb(),
         resourceManager.getRoleStorage(),
         resourceManager.getUserGroupStorage()
     ).createToken(principal));

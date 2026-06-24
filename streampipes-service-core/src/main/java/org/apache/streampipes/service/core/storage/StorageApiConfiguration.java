@@ -32,6 +32,7 @@ import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.ChartStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.DashboardStorageImpl;
@@ -45,6 +46,7 @@ import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserGroupStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -151,5 +153,10 @@ public class StorageApiConfiguration {
   @Bean
   public IPrivilegeStorage privilegeStorage() {
     return new PrivilegeStorageImpl();
+  }
+
+  @Bean
+  public IUserStorage userStorage() {
+    return new UserStorage();
   }
 }

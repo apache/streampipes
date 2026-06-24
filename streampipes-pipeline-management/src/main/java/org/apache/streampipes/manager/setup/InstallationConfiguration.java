@@ -39,7 +39,8 @@ public class InstallationConfiguration {
         settings.getAdminPassword(),
         settings.getInitialServiceAccountName(),
         settings.getInitialServiceAccountSecret(),
-        settings.getInitialAdminUserSid()));
+        settings.getInitialAdminUserSid(),
+        resourceManager.manageUsers().getDb()));
 
     return steps;
   }

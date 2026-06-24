@@ -74,7 +74,7 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Resets StreamPipes instance")
   public ResponseEntity<SuccessMessage> reset() {
     resetManagement.reset(getAuthenticatedUsername());
-    var userStorage = getUserStorage();
+    var userStorage = resourceManager.manageUsers().getDb();
 
 
     // Delete all users other than current user (admin) and their resources

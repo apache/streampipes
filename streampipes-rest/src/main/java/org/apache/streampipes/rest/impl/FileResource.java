@@ -24,6 +24,7 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.sdk.helpers.Filetypes;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,8 +58,9 @@ public class FileResource extends AbstractAuthGuardedRestResource {
 
   private final FileManager fileManager;
 
-  public FileResource(ISpCoreConfigurationStorage coreConfigurationStorage) {
-    this.fileManager = new FileManager(coreConfigurationStorage);
+  public FileResource(ISpCoreConfigurationStorage coreConfigurationStorage,
+                      IFileMetadataStorage fileMetadataStorage) {
+    this.fileManager = new FileManager(coreConfigurationStorage, fileMetadataStorage);
   }
 
   @PostMapping(

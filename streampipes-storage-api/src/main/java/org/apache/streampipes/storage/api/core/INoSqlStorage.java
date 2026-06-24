@@ -28,14 +28,12 @@ import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStora
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceConfigurationStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
-import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
-import org.apache.streampipes.storage.api.user.IUserStorage;
 
 public interface INoSqlStorage {
 
@@ -44,10 +42,6 @@ public interface INoSqlStorage {
   IAdapterStorage getAdapterDescriptionStorage();
 
   IImageStorage getImageStorage();
-
-  IUserStorage getUserStorageAPI();
-
-  IFileMetadataStorage getFileMetadataStorage();
 
   IPipelineElementTemplateStorage getPipelineElementTemplateStorage();
 

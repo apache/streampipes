@@ -74,7 +74,7 @@ public class ConfiguredExcelOutputWriter extends ConfiguredOutputWriter {
     if (useTemplate && Objects.nonNull(templateId)) {
       var fileMetadata = storage.getElementById(templateId);
       if (fileMetadata != null) {
-        var path = new FileManager(coreConfigurationStorage)
+        var path = new FileManager(coreConfigurationStorage, storage)
             .getFile(fileMetadata.getFilename()).getAbsoluteFile().toPath();
         try (InputStream is = Files.newInputStream(path)) {
           XSSFWorkbook templateWorkbook = new XSSFWorkbook(is);

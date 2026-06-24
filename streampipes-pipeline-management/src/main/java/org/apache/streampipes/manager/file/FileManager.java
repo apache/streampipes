@@ -22,7 +22,6 @@ import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.apache.commons.io.input.BOMInputStream;
 
@@ -47,11 +46,9 @@ public class FileManager {
     this.fileHasher = fileHasher;
   }
 
-  public FileManager(ISpCoreConfigurationStorage coreConfigurationStorage) {
-    this.fileMetadataStorage = StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getFileMetadataStorage();
+  public FileManager(ISpCoreConfigurationStorage coreConfigurationStorage,
+                     IFileMetadataStorage fileMetadataStorage) {
+    this.fileMetadataStorage = fileMetadataStorage;
     this.fileHandler = new FileHandler(coreConfigurationStorage);
     this.fileHasher = new FileHasher();
   }

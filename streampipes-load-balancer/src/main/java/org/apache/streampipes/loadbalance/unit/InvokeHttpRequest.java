@@ -25,7 +25,6 @@ import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -103,6 +102,7 @@ public class InvokeHttpRequest{
       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
       return makeBearerToken(new JwtTokenProvider(
           configurationStorage,
+          resourceManager.manageUsers().getDb(),
           resourceManager.getRoleStorage(),
           resourceManager.getUserGroupStorage()
       ).createToken(auth));
@@ -118,7 +118,7 @@ public class InvokeHttpRequest{
 
   public static String getAuthTokenForUser(String ownerSid,
                                            SpResourceManager resourceManager) {
-    Principal correspondingUser = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().getUserById(ownerSid);
+    Principal correspondingUser = resourceManager.manageUsers().getDb().getUserById(ownerSid);
     return getAuthTokenForUser(correspondingUser, resourceManager);
   }
 
@@ -126,6 +126,7 @@ public class InvokeHttpRequest{
                                            SpResourceManager resourceManager) {
     return makeBearerToken(new JwtTokenProvider(
         resourceManager.getCoreConfigurationStorage(),
+        resourceManager.manageUsers().getDb(),
         resourceManager.getRoleStorage(),
         resourceManager.getUserGroupStorage()
     ).createToken(principal));
