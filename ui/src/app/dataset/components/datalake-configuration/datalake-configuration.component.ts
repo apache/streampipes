@@ -137,6 +137,8 @@ import { Subscription } from 'rxjs';
 export class DatalakeConfigurationComponent
     implements OnInit, AfterViewInit, OnDestroy
 {
+    private readonly maxAutomaticCountLoad = 50;
+
     paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(SpTableComponent)
@@ -439,6 +441,10 @@ export class DatalakeConfigurationComponent
         this.queryEntryCounts([entry.name], 'eventsTotal');
     }
 
+    receiveLatestMeasurementSize(entry: DataLakeConfigurationEntry): void {
+        this.queryEntryCounts([entry.name], 'eventsLatest', 7);
+    }
+
     receiveMeasurementSizes(pageIndex: number): void {
         const start = pageIndex * this.pageSize;
         const end = start + this.pageSize;
@@ -446,7 +452,10 @@ export class DatalakeConfigurationComponent
             .slice(start, end)
             .filter(m => m.eventsLatest === -1)
             .map(m => m.name);
-        if (measurements.length > 0) {
+        if (
+            measurements.length > 0 &&
+            measurements.length <= this.maxAutomaticCountLoad
+        ) {
             this.queryEntryCounts(measurements, 'eventsLatest', 7);
         }
     }

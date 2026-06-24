@@ -107,15 +107,41 @@
                                 >{{ 'Loading' | translate }}
                             </mat-spinner>
                         } @else {
-                            <sp-label
-                                tone="neutral"
-                                minWidth="100px"
-                                [labelText]="
-                                    configurationEntry.eventsLatest | number
-                                "
-                                size="small"
-                            >
-                            </sp-label>
+                            @if (configurationEntry.eventsLatest > -1) {
+                                <sp-label
+                                    tone="neutral"
+                                    class="cursor-pointer"
+                                    data-cy="datalake-latest-count-value"
+                                    minWidth="100px"
+                                    [labelText]="
+                                        configurationEntry.eventsLatest | number
+                                    "
+                                    size="small"
+                                    (click)="
+                                        receiveLatestMeasurementSize(
+                                            configurationEntry
+                                        );
+                                        $event.stopPropagation()
+                                    "
+                                >
+                                </sp-label>
+                            } @else {
+                                <sp-label
+                                    tone="neutral"
+                                    class="cursor-pointer"
+                                    data-cy="datalake-latest-count-button"
+                                    minWidth="100px"
+                                    [labelText]="'Click to load' | translate"
+                                    size="small"
+                                    (click)="
+                                        receiveLatestMeasurementSize(
+                                            configurationEntry
+                                        );
+                                        $event.stopPropagation()
+                                    "
+                                >
+                                </sp-label>
+                            }
                         }
                     </td>
                 </ng-container>
