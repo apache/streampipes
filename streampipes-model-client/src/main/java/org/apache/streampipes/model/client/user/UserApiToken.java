@@ -24,7 +24,6 @@ public class UserApiToken {
   private String tokenId;
   private String tokenName;
 
-  @JsonIgnore
   private String hashedToken;
 
   public UserApiToken() {
@@ -44,6 +43,7 @@ public class UserApiToken {
     this.tokenName = tokenName;
   }
 
+  @JsonIgnore
   public String getHashedToken() {
     return hashedToken;
   }

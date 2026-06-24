@@ -22,6 +22,8 @@ import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.user.management.util.TokenUtil;
 
+import java.util.Objects;
+
 public class TokenService {
 
   public RawUserApiToken createAndStoreNewToken(String email,
@@ -37,13 +39,15 @@ public class TokenService {
                                String hashedToken,
                                IUserStorage userStorage) {
     UserAccount userAccount = userStorage.getUserAccount(apiUser);
-    if (userAccount == null) {
+    if (userAccount == null || userAccount.getUserApiTokens() == null) {
       return false;
     } else {
       return userAccount
           .getUserApiTokens()
           .stream()
-          .anyMatch(t -> t.getHashedToken().equals(hashedToken));
+          .anyMatch(t -> hashedToken != null
+              && t != null
+              && Objects.equals(hashedToken, t.getHashedToken()));
     }
   }
 

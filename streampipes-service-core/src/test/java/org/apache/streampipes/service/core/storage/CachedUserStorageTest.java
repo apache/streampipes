@@ -19,8 +19,11 @@ package org.apache.streampipes.service.core.storage;
 
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.model.client.user.UserApiToken;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
@@ -40,6 +43,7 @@ class CachedUserStorageTest {
 
   private static final String USERNAME = "user";
   private static final String USER_ID = "user-id";
+  private static final String HASHED_TOKEN = "hashed-token";
   private static final String SERVICE_ACCOUNT_NAME = "service";
   private static final String SERVICE_ACCOUNT_ID = "service-id";
 
@@ -65,6 +69,43 @@ class CachedUserStorageTest {
     assertNotSame(firstResult, secondResult);
     assertEquals("Initial name", secondResult.getFullName());
     verify(delegate, times(1)).getUser(USERNAME);
+  }
+
+  @Test
+  void getUserAccountPreservesApiTokenHashInCache() throws JsonProcessingException {
+    var user = makeUser("User name");
+    user.setUserApiTokens(List.of(new UserApiToken("token-id", "token-name", HASHED_TOKEN)));
+    when(delegate.getUserAccount(USERNAME)).thenReturn(user);
+
+    var publicJson = JacksonSerializer.getObjectMapper().writeValueAsString(user);
+    var firstResult = storage.getUserAccount(USERNAME);
+    var secondResult = storage.getUserAccount(USERNAME);
+
+    assertEquals(HASHED_TOKEN, firstResult.getUserApiTokens().get(0).getHashedToken());
+    assertEquals(HASHED_TOKEN, secondResult.getUserApiTokens().get(0).getHashedToken());
+    assertEquals(false, publicJson.contains(HASHED_TOKEN));
+    verify(delegate, times(1)).getUserAccount(USERNAME);
+  }
+
+  @Test
+  void getUserAccountStoresApiTokenHashInCacheJson() throws JsonProcessingException {
+    var user = makeUser("User name");
+    user.setUserApiTokens(List.of(new UserApiToken("token-id", "token-name", HASHED_TOKEN)));
+    when(delegate.getUserAccount(USERNAME)).thenReturn(user);
+    var cacheManager = new ConcurrentMapCacheManager(CachedUserStorage.CACHE_NAME);
+    var storage = new CachedUserStorage(delegate, cacheManager);
+
+    var result = storage.getUserAccount(USERNAME);
+    var cachedJson = cacheManager
+        .getCache(CachedUserStorage.CACHE_NAME)
+        .get("user-account:username:user", String.class);
+    var cachedDocument = JacksonSerializer.getObjectMapper().readTree(cachedJson);
+
+    assertEquals(HASHED_TOKEN, result.getUserApiTokens().get(0).getHashedToken());
+    assertEquals(HASHED_TOKEN, cachedDocument.get("userApiTokens")
+                                             .get(0)
+                                             .get("hashedToken")
+                                             .asText());
   }
 
   @Test

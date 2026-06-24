@@ -20,9 +20,11 @@ package org.apache.streampipes.service.core.storage;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.model.client.user.UserApiToken;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -58,7 +60,7 @@ public class CachedUserStorage implements IUserStorage {
 
   public CachedUserStorage(IUserStorage delegate,
                            CacheManager cacheManager) {
-    this(delegate, cacheManager, JacksonSerializer.getObjectMapper());
+    this(delegate, cacheManager, makeCacheObjectMapper());
   }
 
   CachedUserStorage(IUserStorage delegate,
@@ -269,5 +271,17 @@ public class CachedUserStorage implements IUserStorage {
   private String key(String prefix,
                      String value) {
     return value == null ? null : prefix + value;
+  }
+
+  private static ObjectMapper makeCacheObjectMapper() {
+    var objectMapper = JacksonSerializer.getObjectMapper();
+    objectMapper.addMixIn(UserApiToken.class, CachedUserApiTokenMixin.class);
+    return objectMapper;
+  }
+
+  private abstract static class CachedUserApiTokenMixin {
+
+    @JsonIgnore(false)
+    abstract String getHashedToken();
   }
 }
