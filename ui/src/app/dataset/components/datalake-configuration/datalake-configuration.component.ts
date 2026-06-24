@@ -91,7 +91,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { DatePipe, DecimalPipe, NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -436,7 +436,7 @@ export class DatalakeConfigurationComponent
     }
 
     receiveTotalMeasurementSize(entry: DataLakeConfigurationEntry): void {
-        this.queryEntryCounts([entry.name], 'eventsTotal');
+        this.queryEntryCounts([entry], 'eventsTotal');
     }
 
     receiveMeasurementSizes(pageIndex: number): void {
@@ -444,8 +444,7 @@ export class DatalakeConfigurationComponent
         const end = start + this.pageSize;
         const measurements = this.filteredMeasurements
             .slice(start, end)
-            .filter(m => m.eventsLatest === -1)
-            .map(m => m.name);
+            .filter(m => m.eventsLatest === -1);
         if (measurements.length > 0) {
             this.queryEntryCounts(measurements, 'eventsLatest', 7);
         }
@@ -489,33 +488,34 @@ export class DatalakeConfigurationComponent
     }
 
     queryEntryCounts(
-        measurements: string[],
+        measurements: DataLakeConfigurationEntry[],
         targetField: string,
         daysBack = -1,
     ): void {
         this.applyLoadingStatus(measurements, targetField, true);
-        this.datalakeRestService
-            .getMeasurementEntryCounts(measurements, daysBack)
-            .subscribe(res => {
-                this.applyLoadingStatus(measurements, targetField, false);
-                this.availableMeasurements.forEach(m => {
-                    if (res[m.name] !== undefined) {
-                        m[targetField] = res[m.name];
-                    }
-                });
+        forkJoin(
+            measurements.map(measurement =>
+                this.datalakeRestService.getMeasurementEntryCount(
+                    measurement.elementId,
+                    daysBack,
+                ),
+            ),
+        ).subscribe(res => {
+            this.applyLoadingStatus(measurements, targetField, false);
+            measurements.forEach((measurement, index) => {
+                measurement[targetField] = res[index];
             });
+        });
     }
 
     applyLoadingStatus(
-        measurements: string[],
+        measurements: DataLakeConfigurationEntry[],
         targetField: string,
         status: boolean,
     ): void {
         const loadingField = targetField + 'Loading';
-        this.availableMeasurements.forEach(m => {
-            if (measurements.includes(m.name)) {
-                m[loadingField] = status;
-            }
+        measurements.forEach(measurement => {
+            measurement[loadingField] = status;
         });
     }
 
