@@ -48,6 +48,7 @@ import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 
@@ -66,6 +67,7 @@ public class AvailableMigrations {
   private final ISpCoreConfigurationStorage coreConfigStorage;
   private final IRoleStorage roleStorage;
   private final IUserGroupStorage userGroupStorage;
+  private final IPrivilegeStorage privilegeStorage;
 
   public AvailableMigrations(SpResourceManager resourceManager) {
     this.chartStorage = resourceManager.manageCharts().getDb();
@@ -78,6 +80,7 @@ public class AvailableMigrations {
     this.coreConfigStorage = resourceManager.getCoreConfigurationStorage();
     this.roleStorage = resourceManager.getRoleStorage();
     this.userGroupStorage = resourceManager.getUserGroupStorage();
+    this.privilegeStorage = resourceManager.getPrivilegeStorage();
   }
 
   public List<Migration> getAvailableMigrations() {
@@ -91,7 +94,7 @@ public class AvailableMigrations {
         new MoveAssetContentMigration(),
         new CreateAssetPermissionMigration(permissionStorage, assetStorage),
         new CreateDatasetPermissionMigration(permissionStorage, pipelineStorage, datasetStorage),
-        new RemoveObsoletePrivilegesMigration(),
+        new RemoveObsoletePrivilegesMigration(privilegeStorage),
         new UniqueDashboardIdMigration(dashboardStorage),
         new AddScriptTemplateViewMigration(),
         new ComputeCertificateThumbprintMigration(),

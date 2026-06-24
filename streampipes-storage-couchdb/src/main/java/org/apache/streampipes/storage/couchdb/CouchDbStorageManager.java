@@ -34,7 +34,6 @@ import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
-import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
@@ -54,7 +53,6 @@ import org.apache.streampipes.storage.couchdb.impl.system.GenericStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ImageStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RefreshTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserActivationTokenStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
@@ -139,11 +137,6 @@ public class CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IExtensionsServiceConfigurationStorage getExtensionsServiceConfigurationStorage() {
     return new ExtensionsServiceConfigurationStorageImpl();
-  }
-
-  @Override
-  public IPrivilegeStorage getPrivilegeStorage() {
-    return new PrivilegeStorageImpl();
   }
 
   @Override

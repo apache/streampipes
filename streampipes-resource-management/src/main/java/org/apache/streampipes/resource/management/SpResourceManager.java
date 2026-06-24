@@ -26,6 +26,7 @@ import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -43,6 +44,7 @@ public class SpResourceManager {
   private final IFileMetadataStorage fileMetadataStorage;
   private final IRoleStorage roleStorage;
   private final IUserGroupStorage userGroupStorage;
+  private final IPrivilegeStorage privilegeStorage;
 
   public SpResourceManager(IPermissionStorage permissionStorage,
                            IChartStorage chartStorage,
@@ -54,7 +56,8 @@ public class SpResourceManager {
                            ISpCoreConfigurationStorage coreConfigurationStorage,
                            IFileMetadataStorage fileMetadataStorage,
                            IRoleStorage roleStorage,
-                           IUserGroupStorage userGroupStorage) {
+                           IUserGroupStorage userGroupStorage,
+                           IPrivilegeStorage privilegeStorage) {
     this.permissionStorage = permissionStorage;
     this.chartStorage = chartStorage;
     this.adapterStorage = adapterStorage;
@@ -66,6 +69,7 @@ public class SpResourceManager {
     this.fileMetadataStorage = fileMetadataStorage;
     this.roleStorage = roleStorage;
     this.userGroupStorage = userGroupStorage;
+    this.privilegeStorage = privilegeStorage;
   }
 
   public AdapterDescriptionResourceManager manageAdapterDescriptions() {
@@ -128,6 +132,10 @@ public class SpResourceManager {
 
   public IUserGroupStorage getUserGroupStorage() {
     return userGroupStorage;
+  }
+
+  public IPrivilegeStorage getPrivilegeStorage() {
+    return privilegeStorage;
   }
 
   public UserResourceManager manageUsers() {

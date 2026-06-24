@@ -29,6 +29,7 @@ import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
@@ -41,6 +42,7 @@ import org.apache.streampipes.storage.couchdb.impl.system.AssetStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.CoreConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.FileMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
@@ -144,5 +146,10 @@ public class StorageApiConfiguration {
   @Bean
   public IUserGroupStorage userGroupStorage() {
     return new UserGroupStorageImpl();
+  }
+
+  @Bean
+  public IPrivilegeStorage privilegeStorage() {
+    return new PrivilegeStorageImpl();
   }
 }

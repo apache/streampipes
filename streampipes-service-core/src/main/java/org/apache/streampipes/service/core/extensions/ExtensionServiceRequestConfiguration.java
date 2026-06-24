@@ -32,6 +32,7 @@ import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 
@@ -104,7 +105,8 @@ public class ExtensionServiceRequestConfiguration {
                                              ISpCoreConfigurationStorage coreConfigurationStorage,
                                              IFileMetadataStorage fileMetadataStorage,
                                              IRoleStorage roleStorage,
-                                             IUserGroupStorage userGroupStorage) {
+                                             IUserGroupStorage userGroupStorage,
+                                             IPrivilegeStorage privilegeStorage) {
     return new SpResourceManager(
         permissionStorage,
         chartStorage,
@@ -116,7 +118,8 @@ public class ExtensionServiceRequestConfiguration {
         coreConfigurationStorage,
         fileMetadataStorage,
         roleStorage,
-        userGroupStorage
+        userGroupStorage,
+        privilegeStorage
     );
   }
 
