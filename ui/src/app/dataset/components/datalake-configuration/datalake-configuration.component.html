@@ -98,6 +98,7 @@
                         mat-cell
                         data-cy="datalake-number-of-events-latest"
                         *matCellDef="let configurationEntry"
+                        (click)="$event.stopPropagation()"
                     >
                         @if (configurationEntry.eventsLatestLoading) {
                             <mat-spinner
@@ -154,6 +155,7 @@
                         mat-cell
                         data-cy="datalake-number-of-events"
                         *matCellDef="let configurationEntry"
+                        (click)="$event.stopPropagation()"
                     >
                         <div fxLayout="row" fxLayoutAlign="start center">
                             @if (configurationEntry.eventsTotalLoading) {
