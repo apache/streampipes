@@ -86,11 +86,11 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { DatePipe, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
 import { catchError, of, Subscription } from 'rxjs';
-import { LastUpdatedFormatterService } from '../../../core-services/time-formatting/last-updated-formatter.service';
+import { DatalakeLastEventLabelComponent } from './datalake-last-event-label/datalake-last-event-label.component';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -122,12 +122,12 @@ import { LastUpdatedFormatterService } from '../../../core-services/time-formatt
         MatHeaderRow,
         MatRowDef,
         MatRow,
-        DatePipe,
         TranslatePipe,
         SpTableComponent,
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
         SpTableActionsDirective,
+        DatalakeLastEventLabelComponent,
     ],
 })
 export class DatalakeConfigurationComponent
@@ -146,8 +146,6 @@ export class DatalakeConfigurationComponent
     private currentUserService = inject(CurrentUserService);
     private assetFilterService = inject(SpAssetBrowserService);
     private router = inject(Router);
-    private lastUpdatedFormatterService = inject(LastUpdatedFormatterService);
-
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
     availableMeasurements: DataLakeConfigurationEntry[] = [];
@@ -501,13 +499,6 @@ export class DatalakeConfigurationComponent
         measurements.forEach(measurement => {
             measurement.lastEventLoading = status;
         });
-    }
-
-    formatLastEvent(lastEventAt: number | null): string {
-        return this.lastUpdatedFormatterService.formatLastUpdatedAt(
-            lastEventAt,
-            this.currentTime,
-        );
     }
 
     private toConfigurationEntry(
