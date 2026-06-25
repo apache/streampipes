@@ -32,7 +32,8 @@
             filled-label-text-tracking: -0.01em,
             outlined-label-text-tracking: -0.01em,
             text-label-text-tracking: -0.01em,
-            filled-hover-state-layer-opacity: 0.1,
+            filled-hover-state-layer-opacity: 0,
+            filled-pressed-state-layer-opacity: 0,
             outlined-hover-state-layer-opacity: 0.06,
             text-hover-state-layer-opacity: 0.06,
         )
@@ -152,34 +153,64 @@
         outline-offset: -2px;
     }
 
+    .mat-mdc-unelevated-button:not(.mat-basic):not(.btn-secondary):not(
+            .btn-secondary-outline
+        ):not(.btn-warn):hover:not(:disabled) {
+        --mat-button-filled-container-color: color-mix(
+            in srgb,
+            var(--color-primary) 88%,
+            white
+        );
+        background-color: var(--mat-button-filled-container-color);
+    }
+
+    .mat-mdc-unelevated-button:not(.mat-basic):not(.btn-secondary):not(
+            .btn-secondary-outline
+        ):not(.btn-warn):active:not(:disabled) {
+        --mat-button-filled-container-color: color-mix(
+            in srgb,
+            var(--color-primary) 82%,
+            white
+        );
+        background-color: var(--mat-button-filled-container-color);
+    }
+
     .btn-secondary,
     .mat-basic {
-        border: 1px solid var(--color-border-subtle);
+        border: 1px solid transparent;
 
         @include mat.button-overrides(
             (
-                filled-container-color: var(--color-surface-interactive),
-                filled-state-layer-color: var(--mat-sys-on-surface),
-                filled-hover-state-layer-opacity: 0.06,
-                filled-pressed-state-layer-opacity: 0.1,
-            )
-        );
-    }
-
-    .btn-secondary {
-        @include mat.button-overrides(
-            (
-                filled-label-text-color: var(--mat-sys-on-surface),
-            )
-        );
-    }
-
-    .mat-basic {
-        @include mat.button-overrides(
-            (
+                filled-container-color: color-mix(
+                        in srgb,
+                        var(--color-primary) 6%,
+                        var(--color-bg-0)
+                    ),
                 filled-label-text-color: var(--color-primary),
                 filled-state-layer-color: var(--color-primary),
+                filled-hover-state-layer-opacity: 0,
+                filled-pressed-state-layer-opacity: 0,
             )
+        );
+    }
+
+    .btn-secondary:hover:not(:disabled),
+    .mat-basic:hover:not(:disabled) {
+        border-color: transparent;
+        background: color-mix(
+            in srgb,
+            var(--color-primary) 10%,
+            var(--color-bg-0)
+        );
+    }
+
+    .btn-secondary:active:not(:disabled),
+    .mat-basic:active:not(:disabled) {
+        border-color: transparent;
+        background: color-mix(
+            in srgb,
+            var(--color-primary) 12%,
+            var(--color-bg-0)
         );
     }
 
