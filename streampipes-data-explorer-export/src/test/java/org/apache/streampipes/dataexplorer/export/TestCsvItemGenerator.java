@@ -22,6 +22,8 @@ import org.apache.streampipes.dataexplorer.export.item.CsvItemGenerator;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestCsvItemGenerator extends TestItemGenerator {
@@ -45,5 +47,37 @@ public class TestCsvItemGenerator extends TestItemGenerator {
     String result = writer.createItem(row, columns);
 
     assertEquals(ExpectedSemicolon, result);
+  }
+
+  @Test
+  public void testCsvItemWriterEscapesSpecialCharactersCommaSeparated() {
+    var writer = new CsvItemGenerator(",");
+    var row = Arrays.<Object>asList(
+        1668578077051L,
+        "abc=;,",
+        "quoted \"value\"",
+        "line\nbreak"
+    );
+    var columns = Arrays.asList("time", "string", "quoted", "multiline");
+
+    String result = writer.createItem(row, columns);
+
+    assertEquals("1668578077051,\"abc=;,\",\"quoted \"\"value\"\"\",\"line\nbreak\"", result);
+  }
+
+  @Test
+  public void testCsvItemWriterEscapesSpecialCharactersSemicolonSeparated() {
+    var writer = new CsvItemGenerator(";");
+    var row = Arrays.<Object>asList(
+        1668578077051L,
+        "abc=;,",
+        "quoted \"value\"",
+        "line\nbreak"
+    );
+    var columns = Arrays.asList("time", "string", "quoted", "multiline");
+
+    String result = writer.createItem(row, columns);
+
+    assertEquals("1668578077051;\"abc=;,\";\"quoted \"\"value\"\"\";\"line\nbreak\"", result);
   }
 }

@@ -16,39 +16,6 @@
  *
  */
 
-.h-100 {
-    height: 100%;
-}
-
-.standalone-outer {
-    background: var(--color-bg-1);
-    min-height: 100vh;
-}
-
-.dashboard-grid {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-}
-
-.standalone-toolbar {
-    height: 60px;
-    background: var(--color-bg-1);
-}
-
-.dashboard-title {
-    margin-left: 2rem;
-    font-size: 1.25rem;
-}
-
-.dashboard-description {
-    font-size: 1.25rem;
-    font-weight: normal;
-}
-
-.last-updated {
-    display: inline-flex;
-    margin-left: auto;
-    padding-left: 1rem;
-    white-space: nowrap;
+.loading-state {
+    min-height: 3rem;
 }

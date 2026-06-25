@@ -330,36 +330,6 @@ export class ChartBtns {
         return cy.dataCy('add-new-widget', { timeout: 10000 });
     }
 
-    public static dataLakeTruncateBtn() {
-        return cy.dataCy('datalake-truncate-btn');
-    }
-
-    public static dataLakeDeleteBtn() {
-        return cy.dataCy('datalake-delete-btn');
-    }
-
-    public static confirmDataLakeTruncateBtn() {
-        return cy.dataCy('confirm-truncate-data-btn', { timeout: 10000 });
-    }
-
-    public static confirmDataLakeDeleteBtn() {
-        return cy.dataCy('confirm-delete-data-btn', { timeout: 10000 });
-    }
-
-    public static datalakeNumberEvents() {
-        return cy.dataCy('datalake-number-of-events', { timeout: 10000 });
-    }
-
-    public static datalakeTotalCountBtn() {
-        return cy.dataCy('datalake-total-count-button', { timeout: 10000 });
-    }
-
-    public static datalakeNumberOfEventsSpinner() {
-        return cy.dataCy('datalake-number-of-events-spinner', {
-            timeout: 30000,
-        });
-    }
-
     public static dashboardAssetCheckboxBtn() {
         return cy.dataCy('sp-show-dashboard-asset-checkbox');
     }

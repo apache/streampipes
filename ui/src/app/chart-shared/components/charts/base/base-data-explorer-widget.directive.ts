@@ -42,9 +42,9 @@ import {
     FieldProvider,
     ObservableGenerator,
 } from '../../../models/dataview-dashboard.model';
-import { Observable, Subject, Subscription, zip } from 'rxjs';
+import { EMPTY, Observable, Subject, Subscription, zip } from 'rxjs';
 import { ChartFieldProviderService } from '../../../services/chart-field-provider.service';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, exhaustMap, finalize, switchMap } from 'rxjs/operators';
 import { ChartRegistry } from '../../../registry/chart-registry.service';
 import { SpFieldUpdateService } from '../../../services/field-update.service';
 import {
@@ -120,9 +120,14 @@ export abstract class BaseDataExplorerWidgetDirective<
     timeSelection$: Subscription;
     nameChange$: Subscription;
 
-    requestQueue$: Subject<Observable<SpQueryResult>[]> = new Subject<
+    viewModeRequestQueue$: Subject<Observable<SpQueryResult>[]> = new Subject<
         Observable<SpQueryResult>[]
     >();
+    latestRequestQueue$: Subject<Observable<SpQueryResult>[]> = new Subject<
+        Observable<SpQueryResult>[]
+    >();
+    requestQueueSubscriptions = new Subscription();
+    viewModeRequestInProgress = false;
 
     protected widgetConfigurationService = inject(ChartConfigurationService);
     protected resizeService = inject(ResizeService);
@@ -140,29 +145,7 @@ export abstract class BaseDataExplorerWidgetDirective<
         this.fieldProvider =
             this.fieldService.generateFieldLists(sourceConfigs);
 
-        this.requestQueue$
-            .pipe(
-                switchMap(observables => {
-                    this.errorCallback.emit(undefined);
-                    return zip(...observables).pipe(
-                        catchError(err => {
-                            this.timerCallback.emit(false);
-                            this.errorCallback.emit(err.error);
-                            this.dataReceivedCallback.emit([]);
-                            return [];
-                        }),
-                    );
-                }),
-            )
-            .subscribe(results => {
-                results.forEach(
-                    (result, index) => (result.sourceIndex = index),
-                );
-                this.timerCallback.emit(false);
-                setTimeout(() => {
-                    this.validateReceivedData(results);
-                });
-            });
+        this.initializeRequestQueues();
 
         this.widgetConfiguration$ =
             this.widgetConfigurationService.configurationChangedSubject.subscribe(
@@ -238,7 +221,9 @@ export abstract class BaseDataExplorerWidgetDirective<
         this.resize$?.unsubscribe();
         this.timeSelection$.unsubscribe();
         this.nameChange$.unsubscribe();
-        this.requestQueue$?.unsubscribe();
+        this.requestQueueSubscriptions.unsubscribe();
+        this.viewModeRequestQueue$?.unsubscribe();
+        this.latestRequestQueue$?.unsubscribe();
     }
 
     public setShownComponents(
@@ -254,15 +239,29 @@ export abstract class BaseDataExplorerWidgetDirective<
     }
 
     public updateData(includeTooMuchEventsParameter: boolean = true) {
+        if (
+            !this.shouldUseLatestRequestStrategy() &&
+            this.viewModeRequestInProgress
+        ) {
+            return;
+        }
         this.beforeDataFetched();
         this.loadData(includeTooMuchEventsParameter);
     }
 
     private loadData(includeTooMuchEventsParameter: boolean) {
+        const observables = this.makeDataRequest(includeTooMuchEventsParameter);
+        this.timerCallback.emit(true);
+        this.getRequestQueue().next(observables);
+    }
+
+    private makeDataRequest(
+        includeTooMuchEventsParameter: boolean,
+    ): Observable<SpQueryResult>[] {
         const returnCompleteResult =
             includeTooMuchEventsParameter &&
             !this.dataExplorerWidget.dataConfig.ignoreTooMuchDataWarning;
-        const observables = this.observableGenerator.generateObservables(
+        return this.observableGenerator.generateObservables(
             this.timeSettings.startTime,
             this.timeSettings.endTime,
             this.dataExplorerWidget.dataConfig as DataExplorerDataConfig,
@@ -271,8 +270,69 @@ export abstract class BaseDataExplorerWidgetDirective<
                 ? BaseDataExplorerWidgetDirective.TOO_MUCH_DATA_PARAMETER
                 : undefined,
         );
-        this.timerCallback.emit(true);
-        this.requestQueue$.next(observables);
+    }
+
+    private getRequestQueue(): Subject<Observable<SpQueryResult>[]> {
+        return this.shouldUseLatestRequestStrategy()
+            ? this.latestRequestQueue$
+            : this.viewModeRequestQueue$;
+    }
+
+    private shouldUseLatestRequestStrategy(): boolean {
+        return this.dataViewMode && this.editMode;
+    }
+
+    private initializeRequestQueues(): void {
+        this.requestQueueSubscriptions.add(
+            this.viewModeRequestQueue$
+                .pipe(
+                    exhaustMap(observables =>
+                        this.executeDataRequest(observables, true),
+                    ),
+                )
+                .subscribe(results => this.handleDataRequestResult(results)),
+        );
+
+        this.requestQueueSubscriptions.add(
+            this.latestRequestQueue$
+                .pipe(
+                    switchMap(observables =>
+                        this.executeDataRequest(observables, false),
+                    ),
+                )
+                .subscribe(results => this.handleDataRequestResult(results)),
+        );
+    }
+
+    private executeDataRequest(
+        observables: Observable<SpQueryResult>[],
+        trackViewModeRequest: boolean,
+    ): Observable<SpQueryResult[]> {
+        if (trackViewModeRequest) {
+            this.viewModeRequestInProgress = true;
+        }
+        this.errorCallback.emit(undefined);
+        return zip(...observables).pipe(
+            catchError(err => {
+                this.timerCallback.emit(false);
+                this.errorCallback.emit(err.error);
+                this.dataReceivedCallback.emit([]);
+                return EMPTY;
+            }),
+            finalize(() => {
+                if (trackViewModeRequest) {
+                    this.viewModeRequestInProgress = false;
+                }
+            }),
+        );
+    }
+
+    private handleDataRequestResult(results: SpQueryResult[]): void {
+        results.forEach((result, index) => (result.sourceIndex = index));
+        this.timerCallback.emit(false);
+        setTimeout(() => {
+            this.validateReceivedData(results);
+        });
     }
 
     validateReceivedData(spQueryResults: SpQueryResult[]) {

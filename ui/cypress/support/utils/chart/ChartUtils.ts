@@ -29,8 +29,20 @@ import { ConnectBtns } from '../connect/ConnectBtns';
 export class ChartUtils {
     public static ADAPTER_NAME = 'datalake_configuration';
 
-    public static goToDatalake() {
+    public static goToDatalake(discardUnsavedChanges: boolean = true) {
         cy.visit('#/chart');
+        if (!discardUnsavedChanges) {
+            return;
+        }
+        cy.location('hash', { timeout: 10000 }).then(hash => {
+            if (hash.startsWith('#/chart/')) {
+                SharedBtns.confirmDialogCancelBtn()
+                    .should('be.visible')
+                    .click();
+            }
+        });
+        cy.location('hash', { timeout: 10000 }).should('eq', '#/chart');
+        cy.get('sp-chart-overview', { timeout: 10000 }).should('be.visible');
     }
 
     public static goToDashboard() {
@@ -667,10 +679,6 @@ export class ChartUtils {
         cy.dataCy('data-explorer-select-data-set-create-btn').click();
     }
 
-    public static goToDatalakeConfiguration() {
-        cy.visit('#/datasets');
-    }
-
     public static checkResults(
         measurementName: string,
         fileRoute: string,
@@ -803,18 +811,6 @@ export class ChartUtils {
         currentDate.setMonth(currentDate.getMonth() + 1);
 
         return currentDate;
-    }
-
-    public static getDatalakeNumberOfEvents(): Cypress.Chainable<number> {
-        ChartBtns.datalakeTotalCountBtn().should('be.visible').click();
-        ChartBtns.datalakeTotalCountBtn().should('not.exist');
-        ChartBtns.datalakeNumberOfEventsSpinner().should('not.exist');
-
-        return cy
-            .dataCy('datalake-number-of-events', { timeout: 10000 })
-            .should('be.visible')
-            .invoke('text')
-            .then(text => Number(text.replaceAll(',', '').trim()));
     }
 
     public static checkRowsDashboardTable(amount: number) {

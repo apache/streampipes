@@ -49,14 +49,6 @@
             </button>
         </div>
         <div fxLayout="column" class="w-100" fxLayoutGap="10px">
-            <sp-alert-banner
-                type="info"
-                [title]="'Caution when loading total count' | translate"
-                [description]="
-                    'For large datasets, computing the total number of events can take a long time.'
-                "
-            >
-            </sp-alert-banner>
             <sp-table
                 featureCardId="measurement"
                 [dataSource]="dataSource"
@@ -90,16 +82,16 @@
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="eventsLatest">
+                <ng-container matColumnDef="lastEvent">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                        {{ '# Events (7d)' | translate }}
+                        {{ 'Last event' | translate }}
                     </th>
                     <td
                         mat-cell
-                        data-cy="datalake-number-of-events-latest"
+                        data-cy="datalake-last-event"
                         *matCellDef="let configurationEntry"
                     >
-                        @if (configurationEntry.eventsLatestLoading) {
+                        @if (configurationEntry.lastEventLoading) {
                             <mat-spinner
                                 [diameter]="20"
                                 fxLayoutAlign="center"
@@ -107,78 +99,8 @@
                                 >{{ 'Loading' | translate }}
                             </mat-spinner>
                         } @else {
-                            <sp-label
-                                tone="neutral"
-                                minWidth="100px"
-                                [labelText]="
-                                    configurationEntry.eventsLatest | number
-                                "
-                                size="small"
-                            >
-                            </sp-label>
+                            {{ formatLastEvent(configurationEntry.lastEvent) }}
                         }
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="eventsTotal">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                        {{ '# Events (total)' | translate }}
-                    </th>
-                    <td
-                        mat-cell
-                        data-cy="datalake-number-of-events"
-                        *matCellDef="let configurationEntry"
-                    >
-                        <div fxLayout="row" fxLayoutAlign="start center">
-                            @if (configurationEntry.eventsTotalLoading) {
-                                <mat-spinner
-                                    [diameter]="20"
-                                    fxLayoutAlign="center"
-                                    color="accent"
-                                    data-cy="datalake-number-of-events-spinner"
-                                    >{{ 'Loading' | translate }}
-                                </mat-spinner>
-                            } @else {
-                                @if (configurationEntry.eventsTotal > -1) {
-                                    <sp-label
-                                        tone="neutral"
-                                        class="cursor-pointer"
-                                        data-cy="datalake-total-count-button"
-                                        minWidth="100px"
-                                        [labelText]="
-                                            configurationEntry.eventsTotal
-                                                | number
-                                        "
-                                        size="small"
-                                        (click)="
-                                            receiveTotalMeasurementSize(
-                                                configurationEntry
-                                            );
-                                            $event.stopPropagation()
-                                        "
-                                    >
-                                    </sp-label>
-                                } @else {
-                                    <sp-label
-                                        tone="neutral"
-                                        class="cursor-pointer"
-                                        data-cy="datalake-total-count-button"
-                                        minWidth="100px"
-                                        [labelText]="
-                                            'Click to load' | translate
-                                        "
-                                        size="small"
-                                        (click)="
-                                            receiveTotalMeasurementSize(
-                                                configurationEntry
-                                            );
-                                            $event.stopPropagation()
-                                        "
-                                    >
-                                    </sp-label>
-                                }
-                            }
-                        </div>
                     </td>
                 </ng-container>
 

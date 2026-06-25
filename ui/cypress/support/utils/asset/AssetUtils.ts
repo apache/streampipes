@@ -25,6 +25,61 @@ import { AssetBuilder } from '../../builder/AssetBuilder';
 import { PermissionUtils } from '../user/PermissionUtils';
 
 export class AssetUtils {
+    public static waitForAssets(
+        assetNames: string[],
+        attemptsRemaining: number = 40,
+    ): Cypress.Chainable<void> {
+        return cy.then(() => {
+            const token = window.localStorage.getItem('auth-token');
+
+            if (!token) {
+                throw new Error(
+                    'Waiting for assets requires an auth token. Call cy.login() first.',
+                );
+            }
+
+            return cy
+                .request<{ assetName: string }[]>({
+                    method: 'GET',
+                    url: '/streampipes-backend/api/v2/assets',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                .then(response => {
+                    const availableAssetNames = response.body.map(
+                        asset => asset.assetName,
+                    );
+                    const allAssetsAvailable = assetNames.every(assetName =>
+                        availableAssetNames.includes(assetName),
+                    );
+
+                    if (allAssetsAvailable) {
+                        return;
+                    }
+
+                    if (attemptsRemaining === 0) {
+                        const missingAssetNames = assetNames.filter(
+                            assetName =>
+                                !availableAssetNames.includes(assetName),
+                        );
+                        throw new Error(
+                            `Assets did not become available: ${missingAssetNames.join(', ')}`,
+                        );
+                    }
+
+                    return cy
+                        .wait(250, { log: false })
+                        .then(() =>
+                            this.waitForAssets(
+                                assetNames,
+                                attemptsRemaining - 1,
+                            ),
+                        );
+                });
+        });
+    }
+
     public static goToAssets() {
         cy.visit('#/assets/overview');
         cy.dataCy('asset-title').should('be.visible');

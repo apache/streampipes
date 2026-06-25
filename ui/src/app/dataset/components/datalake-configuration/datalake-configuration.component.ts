@@ -57,11 +57,9 @@ import {
     ObjectPermissionDialogComponent,
     PanelType,
     SpAssetBrowserService,
-    SpAlertBannerComponent,
     SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBreadcrumbService,
-    SpLabelComponent,
     SpTableAssetContextConfig,
     SpTableActionsDirective,
     SpTableComponent,
@@ -88,10 +86,11 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { DatePipe, DecimalPipe, NgStyle } from '@angular/common';
+import { DatePipe, NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
-import { Subscription } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
+import { LastUpdatedFormatterService } from '../../../core-services/time-formatting/last-updated-formatter.service';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -123,14 +122,11 @@ import { Subscription } from 'rxjs';
         MatHeaderRow,
         MatRowDef,
         MatRow,
-        DecimalPipe,
         DatePipe,
         TranslatePipe,
-        SpLabelComponent,
         SpTableComponent,
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
-        SpAlertBannerComponent,
         SpTableActionsDirective,
     ],
 })
@@ -150,6 +146,7 @@ export class DatalakeConfigurationComponent
     private currentUserService = inject(CurrentUserService);
     private assetFilterService = inject(SpAssetBrowserService);
     private router = inject(Router);
+    private lastUpdatedFormatterService = inject(LastUpdatedFormatterService);
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
@@ -168,8 +165,7 @@ export class DatalakeConfigurationComponent
         'name',
         'assetContext',
         'pipeline',
-        'eventsLatest',
-        'eventsTotal',
+        'lastEvent',
         'retention',
         'actions',
     ];
@@ -190,6 +186,7 @@ export class DatalakeConfigurationComponent
     isAdmin = false;
     writeAccess = false;
     assetFilter$: Subscription;
+    currentTime = Date.now();
     currentFilterIds: Set<string> = new Set<string>();
 
     ngOnInit(): void {
@@ -219,7 +216,7 @@ export class DatalakeConfigurationComponent
         this.spTable.paginator.page.subscribe(event => {
             this.pageIndex = event.pageIndex;
             this.pageSize = event.pageSize;
-            this.receiveMeasurementSizes(this.pageIndex);
+            this.receiveLastEventTimes(this.pageIndex);
         });
     }
 
@@ -267,7 +264,7 @@ export class DatalakeConfigurationComponent
 
         this.dataSource.data = this.filteredMeasurements;
         this.updatePaginatorAfterFiltering();
-        this.receiveMeasurementSizes(this.pageIndex);
+        this.receiveLastEventTimes(this.pageIndex);
 
         setTimeout(() => {
             this.dataSource.paginator = this.paginator;
@@ -432,22 +429,16 @@ export class DatalakeConfigurationComponent
     onPageChange(event: any): void {
         this.pageIndex = event.pageIndex;
         this.pageSize = event.pageSize;
-        //this.receiveMeasurementSizes(this.pageIndex);
     }
 
-    receiveTotalMeasurementSize(entry: DataLakeConfigurationEntry): void {
-        this.queryEntryCounts([entry.name], 'eventsTotal');
-    }
-
-    receiveMeasurementSizes(pageIndex: number): void {
+    receiveLastEventTimes(pageIndex: number): void {
         const start = pageIndex * this.pageSize;
         const end = start + this.pageSize;
         const measurements = this.filteredMeasurements
             .slice(start, end)
-            .filter(m => m.eventsLatest === -1)
-            .map(m => m.name);
+            .filter(m => m.lastEvent === null);
         if (measurements.length > 0) {
-            this.queryEntryCounts(measurements, 'eventsLatest', 7);
+            this.queryLastEventTimes(measurements);
         }
     }
     showPermissionsDialog(element: DataLakeConfigurationEntry): void {
@@ -488,35 +479,35 @@ export class DatalakeConfigurationComponent
         });
     }
 
-    queryEntryCounts(
-        measurements: string[],
-        targetField: string,
-        daysBack = -1,
-    ): void {
-        this.applyLoadingStatus(measurements, targetField, true);
+    queryLastEventTimes(measurements: DataLakeConfigurationEntry[]): void {
+        this.applyLastEventLoadingStatus(measurements, true);
         this.datalakeRestService
-            .getMeasurementEntryCounts(measurements, daysBack)
-            .subscribe(res => {
-                this.applyLoadingStatus(measurements, targetField, false);
-                this.availableMeasurements.forEach(m => {
-                    if (res[m.name] !== undefined) {
-                        m[targetField] = res[m.name];
-                    }
+            .getLatestMeasurementEvents(
+                measurements.map(measurement => measurement.name),
+            )
+            .pipe(catchError(() => of({} as Record<string, number>)))
+            .subscribe(latestEvents => {
+                this.applyLastEventLoadingStatus(measurements, false);
+                measurements.forEach(measurement => {
+                    measurement.lastEvent = latestEvents[measurement.name] ?? 0;
                 });
             });
     }
 
-    applyLoadingStatus(
-        measurements: string[],
-        targetField: string,
+    applyLastEventLoadingStatus(
+        measurements: DataLakeConfigurationEntry[],
         status: boolean,
     ): void {
-        const loadingField = targetField + 'Loading';
-        this.availableMeasurements.forEach(m => {
-            if (measurements.includes(m.name)) {
-                m[loadingField] = status;
-            }
+        measurements.forEach(measurement => {
+            measurement.lastEventLoading = status;
         });
+    }
+
+    formatLastEvent(lastEventAt: number | null): string {
+        return this.lastUpdatedFormatterService.formatLastUpdatedAt(
+            lastEventAt,
+            this.currentTime,
+        );
     }
 
     private toConfigurationEntry(
@@ -531,8 +522,7 @@ export class DatalakeConfigurationComponent
         entry.lastExport = measurement.lastExport;
         entry.lastRetentionStatus = measurement.lastRetentionStatus;
         entry.remove = measurement.removable;
-        entry.eventsLatest = -1;
-        entry.eventsTotal = -1;
+        entry.lastEvent = null;
         return entry;
     }
 
