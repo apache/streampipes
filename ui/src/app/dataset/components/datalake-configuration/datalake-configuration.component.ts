@@ -45,6 +45,7 @@ import {
     DatasetSummaryDto,
     ExportProviderService,
     ExportProviderSettings,
+    SpQueryResult,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -57,11 +58,9 @@ import {
     ObjectPermissionDialogComponent,
     PanelType,
     SpAssetBrowserService,
-    SpAlertBannerComponent,
     SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBreadcrumbService,
-    SpLabelComponent,
     SpTableAssetContextConfig,
     SpTableActionsDirective,
     SpTableComponent,
@@ -88,10 +87,11 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { DatePipe, DecimalPipe, NgStyle } from '@angular/common';
+import { DatePipe, NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
-import { forkJoin, Subscription } from 'rxjs';
+import { catchError, forkJoin, map, of, Subscription } from 'rxjs';
+import { LastUpdatedFormatterService } from '../../../core-services/time-formatting/last-updated-formatter.service';
 
 @Component({
     selector: 'sp-datalake-configuration',
@@ -123,14 +123,11 @@ import { forkJoin, Subscription } from 'rxjs';
         MatHeaderRow,
         MatRowDef,
         MatRow,
-        DecimalPipe,
         DatePipe,
         TranslatePipe,
-        SpLabelComponent,
         SpTableComponent,
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
-        SpAlertBannerComponent,
         SpTableActionsDirective,
     ],
 })
@@ -150,6 +147,7 @@ export class DatalakeConfigurationComponent
     private currentUserService = inject(CurrentUserService);
     private assetFilterService = inject(SpAssetBrowserService);
     private router = inject(Router);
+    private lastUpdatedFormatterService = inject(LastUpdatedFormatterService);
 
     dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
         new MatTableDataSource([]);
@@ -168,8 +166,7 @@ export class DatalakeConfigurationComponent
         'name',
         'assetContext',
         'pipeline',
-        'eventsLatest',
-        'eventsTotal',
+        'lastEvent',
         'retention',
         'actions',
     ];
@@ -190,6 +187,7 @@ export class DatalakeConfigurationComponent
     isAdmin = false;
     writeAccess = false;
     assetFilter$: Subscription;
+    currentTime = Date.now();
     currentFilterIds: Set<string> = new Set<string>();
 
     ngOnInit(): void {
@@ -219,7 +217,7 @@ export class DatalakeConfigurationComponent
         this.spTable.paginator.page.subscribe(event => {
             this.pageIndex = event.pageIndex;
             this.pageSize = event.pageSize;
-            this.receiveMeasurementSizes(this.pageIndex);
+            this.receiveLastEventTimes(this.pageIndex);
         });
     }
 
@@ -267,7 +265,7 @@ export class DatalakeConfigurationComponent
 
         this.dataSource.data = this.filteredMeasurements;
         this.updatePaginatorAfterFiltering();
-        this.receiveMeasurementSizes(this.pageIndex);
+        this.receiveLastEventTimes(this.pageIndex);
 
         setTimeout(() => {
             this.dataSource.paginator = this.paginator;
@@ -432,21 +430,16 @@ export class DatalakeConfigurationComponent
     onPageChange(event: any): void {
         this.pageIndex = event.pageIndex;
         this.pageSize = event.pageSize;
-        //this.receiveMeasurementSizes(this.pageIndex);
     }
 
-    receiveTotalMeasurementSize(entry: DataLakeConfigurationEntry): void {
-        this.queryEntryCounts([entry], 'eventsTotal');
-    }
-
-    receiveMeasurementSizes(pageIndex: number): void {
+    receiveLastEventTimes(pageIndex: number): void {
         const start = pageIndex * this.pageSize;
         const end = start + this.pageSize;
         const measurements = this.filteredMeasurements
             .slice(start, end)
-            .filter(m => m.eventsLatest === -1);
+            .filter(m => m.lastEvent === null);
         if (measurements.length > 0) {
-            this.queryEntryCounts(measurements, 'eventsLatest', 7);
+            this.queryLastEventTimes(measurements);
         }
     }
     showPermissionsDialog(element: DataLakeConfigurationEntry): void {
@@ -487,36 +480,49 @@ export class DatalakeConfigurationComponent
         });
     }
 
-    queryEntryCounts(
-        measurements: DataLakeConfigurationEntry[],
-        targetField: string,
-        daysBack = -1,
-    ): void {
-        this.applyLoadingStatus(measurements, targetField, true);
+    queryLastEventTimes(measurements: DataLakeConfigurationEntry[]): void {
+        this.applyLastEventLoadingStatus(measurements, true);
         forkJoin(
             measurements.map(measurement =>
-                this.datalakeRestService.getMeasurementEntryCount(
-                    measurement.elementId,
-                    daysBack,
-                ),
+                this.datalakeRestService
+                    .getData(
+                        measurement.name,
+                        {
+                            endDate: Date.now(),
+                            startDate: 0,
+                            limit: 1,
+                            order: 'DESC',
+                            missingValueBehaviour: 'empty',
+                        },
+                        true,
+                    )
+                    .pipe(
+                        map(result => this.extractLastTimestamp(result)),
+                        catchError(() => of(0)),
+                    ),
             ),
         ).subscribe(res => {
-            this.applyLoadingStatus(measurements, targetField, false);
+            this.applyLastEventLoadingStatus(measurements, false);
             measurements.forEach((measurement, index) => {
-                measurement[targetField] = res[index];
+                measurement.lastEvent = res[index];
             });
         });
     }
 
-    applyLoadingStatus(
+    applyLastEventLoadingStatus(
         measurements: DataLakeConfigurationEntry[],
-        targetField: string,
         status: boolean,
     ): void {
-        const loadingField = targetField + 'Loading';
         measurements.forEach(measurement => {
-            measurement[loadingField] = status;
+            measurement.lastEventLoading = status;
         });
+    }
+
+    formatLastEvent(lastEventAt: number | null): string {
+        return this.lastUpdatedFormatterService.formatLastUpdatedAt(
+            lastEventAt,
+            this.currentTime,
+        );
     }
 
     private toConfigurationEntry(
@@ -531,9 +537,36 @@ export class DatalakeConfigurationComponent
         entry.lastExport = measurement.lastExport;
         entry.lastRetentionStatus = measurement.lastRetentionStatus;
         entry.remove = measurement.removable;
-        entry.eventsLatest = -1;
-        entry.eventsTotal = -1;
+        entry.lastEvent = null;
         return entry;
+    }
+
+    private extractLastTimestamp(result: SpQueryResult): number {
+        if (result?.lastTimestamp) {
+            return result.lastTimestamp;
+        }
+
+        const series = result?.allDataSeries?.find(
+            dataSeries => dataSeries.rows?.length > 0,
+        );
+        const row = series?.rows?.[0];
+        if (!row) {
+            return 0;
+        }
+
+        const headers = result.headers?.length
+            ? result.headers
+            : series.headers;
+        const timestampIndex = headers?.indexOf('time') ?? 0;
+        return this.toTimestamp(row[timestampIndex >= 0 ? timestampIndex : 0]);
+    }
+
+    private toTimestamp(value: unknown): number {
+        const timestamp =
+            typeof value === 'number'
+                ? value
+                : new Date(String(value)).getTime();
+        return Number.isNaN(timestamp) ? 0 : timestamp;
     }
 
     private openRetentionLogDialog(measurement: DataLakeMeasure): void {
