@@ -119,6 +119,18 @@ export class DatalakeRestService {
             .pipe(map(response => response as SpQueryResult[]));
     }
 
+    getLatestMeasurementEvents(
+        measurementNames: string[],
+    ): Observable<Record<string, number>> {
+        return this.http.post<Record<string, number>>(
+            `${this.dataLakeUrl}/measurements/latest-events`,
+            measurementNames,
+            {
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+            },
+        );
+    }
+
     getData(
         index: string,
         queryParams: DatalakeQueryParameters,

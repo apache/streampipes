@@ -45,7 +45,6 @@ import {
     DatasetSummaryDto,
     ExportProviderService,
     ExportProviderSettings,
-    SpQueryResult,
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -90,7 +89,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { DatePipe, NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
-import { catchError, forkJoin, map, of, Subscription } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
 import { LastUpdatedFormatterService } from '../../../core-services/time-formatting/last-updated-formatter.service';
 
 @Component({
@@ -482,31 +481,17 @@ export class DatalakeConfigurationComponent
 
     queryLastEventTimes(measurements: DataLakeConfigurationEntry[]): void {
         this.applyLastEventLoadingStatus(measurements, true);
-        forkJoin(
-            measurements.map(measurement =>
-                this.datalakeRestService
-                    .getData(
-                        measurement.name,
-                        {
-                            endDate: Date.now(),
-                            startDate: 0,
-                            limit: 1,
-                            order: 'DESC',
-                            missingValueBehaviour: 'empty',
-                        },
-                        true,
-                    )
-                    .pipe(
-                        map(result => this.extractLastTimestamp(result)),
-                        catchError(() => of(0)),
-                    ),
-            ),
-        ).subscribe(res => {
-            this.applyLastEventLoadingStatus(measurements, false);
-            measurements.forEach((measurement, index) => {
-                measurement.lastEvent = res[index];
+        this.datalakeRestService
+            .getLatestMeasurementEvents(
+                measurements.map(measurement => measurement.name),
+            )
+            .pipe(catchError(() => of({} as Record<string, number>)))
+            .subscribe(latestEvents => {
+                this.applyLastEventLoadingStatus(measurements, false);
+                measurements.forEach(measurement => {
+                    measurement.lastEvent = latestEvents[measurement.name] ?? 0;
+                });
             });
-        });
     }
 
     applyLastEventLoadingStatus(
@@ -539,34 +524,6 @@ export class DatalakeConfigurationComponent
         entry.remove = measurement.removable;
         entry.lastEvent = null;
         return entry;
-    }
-
-    private extractLastTimestamp(result: SpQueryResult): number {
-        if (result?.lastTimestamp) {
-            return result.lastTimestamp;
-        }
-
-        const series = result?.allDataSeries?.find(
-            dataSeries => dataSeries.rows?.length > 0,
-        );
-        const row = series?.rows?.[0];
-        if (!row) {
-            return 0;
-        }
-
-        const headers = result.headers?.length
-            ? result.headers
-            : series.headers;
-        const timestampIndex = headers?.indexOf('time') ?? 0;
-        return this.toTimestamp(row[timestampIndex >= 0 ? timestampIndex : 0]);
-    }
-
-    private toTimestamp(value: unknown): number {
-        const timestamp =
-            typeof value === 'number'
-                ? value
-                : new Date(String(value)).getTime();
-        return Number.isNaN(timestamp) ? 0 : timestamp;
     }
 
     private openRetentionLogDialog(measurement: DataLakeMeasure): void {
