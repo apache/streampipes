@@ -95,7 +95,7 @@ export class DatasetDetailsMetricsComponent
 
         forkJoin({
             totalEventCount: this.loadTotalEventCount(),
-            latestEventTimestamp: this.loadLatestEventTimestamp(now),
+            latestEventTimestamp: this.loadLatestEventTimestamp(),
             dailyEventCounts: this.loadDailyEventCounts(dayBuckets, now),
         })
             .pipe(
@@ -116,18 +116,11 @@ export class DatasetDetailsMetricsComponent
             .pipe(catchError(() => of(0)));
     }
 
-    private loadLatestEventTimestamp(now: Date): Observable<number> {
+    private loadLatestEventTimestamp(): Observable<number> {
         return this.datalakeRestService
-            .getData(this.dataset.measureName, {
-                endDate: now.getTime(),
-                startDate: 0,
-                limit: 1,
-                order: 'DESC',
-                missingValueBehaviour: 'empty',
-                columns: this.getRuntimeNames().toString(),
-            })
+            .getLatestMeasurementEvents([this.dataset.measureName])
             .pipe(
-                map(result => this.extractLatestTimestamp(result)),
+                map(result => result[this.dataset.measureName] ?? 0),
                 catchError(() => of(0)),
             );
     }
@@ -156,22 +149,6 @@ export class DatasetDetailsMetricsComponent
                 map(result => this.normalizeDailyCounts(result, dayBuckets)),
                 catchError(() => of(dayBuckets)),
             );
-    }
-
-    private extractLatestTimestamp(result: SpQueryResult): number {
-        const series = result?.allDataSeries?.find(
-            dataSeries => dataSeries.rows?.length > 0,
-        );
-        const row = series?.rows?.[0];
-        if (!row) {
-            return 0;
-        }
-
-        const headers = result.headers?.length
-            ? result.headers
-            : series.headers;
-        const timestampIndex = this.getHeaderIndex(headers, 'time', 0);
-        return this.toTimestamp(row[timestampIndex]);
     }
 
     private normalizeDailyCounts(
@@ -255,14 +232,6 @@ export class DatasetDetailsMetricsComponent
                 header => header === 'count' || header.startsWith('count_'),
             ) ?? -1;
         return countIndex >= 0 ? countIndex : Math.min(row.length - 1, 1);
-    }
-
-    private toTimestamp(value: unknown): number {
-        const timestamp =
-            typeof value === 'number'
-                ? value
-                : new Date(String(value)).getTime();
-        return Number.isNaN(timestamp) ? 0 : timestamp;
     }
 
     private toCount(value: unknown): number {
