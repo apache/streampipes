@@ -45,7 +45,8 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LastUpdatedFormatterService } from '../../../core-services/time-formatting/last-updated-formatter.service';
 
 @Component({
     selector: 'sp-dashboard-kiosk',
@@ -66,9 +67,9 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
     private destroyRef = inject(DestroyRef);
     private dashboardService = inject(DashboardService);
     private timeSelectionService = inject(TimeSelectionService);
-    private translateService = inject(TranslateService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
     private dataExplorerSharedService = inject(ChartSharedService);
+    private lastUpdatedFormatterService = inject(LastUpdatedFormatterService);
 
     observableGenerator: ObservableGenerator;
     dashboard: Dashboard;
@@ -188,53 +189,10 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
     }
 
     formatLastUpdatedAt(): string {
-        const exactTime = this.formatExactLastUpdatedAt();
-        const relativeTime = this.formatRelativeLastUpdatedAt();
-        return relativeTime ? `${relativeTime} (${exactTime})` : exactTime;
-    }
-
-    private formatExactLastUpdatedAt(): string {
-        return new Intl.DateTimeFormat(this.currentLocale, {
-            dateStyle: 'medium',
-            timeStyle: 'medium',
-        }).format(new Date(this.lastUpdatedAt));
-    }
-
-    private formatRelativeLastUpdatedAt(): string | undefined {
-        const ageInSeconds = Math.max(
-            0,
-            Math.round((this.currentTime - this.lastUpdatedAt) / 1000),
+        return this.lastUpdatedFormatterService.formatLastUpdatedAt(
+            this.lastUpdatedAt,
+            this.currentTime,
         );
-
-        if (ageInSeconds < 60) {
-            return this.relativeTimeFormatter.format(-ageInSeconds, 'second');
-        } else if (ageInSeconds < 3600) {
-            return this.relativeTimeFormatter.format(
-                -Math.floor(ageInSeconds / 60),
-                'minute',
-            );
-        } else if (ageInSeconds < 86400) {
-            return this.relativeTimeFormatter.format(
-                -Math.floor(ageInSeconds / 3600),
-                'hour',
-            );
-        }
-
-        return undefined;
-    }
-
-    private get currentLocale(): string {
-        return (
-            this.translateService.currentLang ||
-            this.translateService.defaultLang ||
-            'en'
-        );
-    }
-
-    private get relativeTimeFormatter(): Intl.RelativeTimeFormat {
-        return new Intl.RelativeTimeFormat(this.currentLocale, {
-            numeric: 'auto',
-        });
     }
 
     ngOnDestroy() {
