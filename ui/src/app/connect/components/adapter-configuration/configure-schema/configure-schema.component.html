@@ -16,6 +16,52 @@
 ~
 -->
 <div fxFlex="100" fxLayout="column">
+    @if (invalidFieldNames().length > 0) {
+        <sp-alert-banner
+            type="error"
+            [title]="'Invalid field names' | translate"
+            [description]="
+                'Field names containing comma (,), double quote (&quot;), or semicolon (;) are invalid and must be renamed before continuing.'
+                    | translate
+            "
+            data-cy="configure-schema-invalid-field-names"
+        >
+            <div class="mt-md">
+                @for (fieldName of invalidFieldNames(); track fieldName) {
+                    <div
+                        class="font-bold text-sm"
+                        data-cy="configure-schema-invalid-field-name"
+                    >
+                        {{ fieldName }}
+                    </div>
+                }
+            </div>
+        </sp-alert-banner>
+    }
+
+    @if (warningFieldNames().length > 0) {
+        <sp-alert-banner
+            type="warning"
+            [title]="'Field name recommendation' | translate"
+            [description]="
+                'It is recommended to use a consistent naming convention for field names without special characters, except - and _.'
+                    | translate
+            "
+            data-cy="configure-schema-warning-field-names"
+        >
+            <div class="mt-md">
+                @for (fieldName of warningFieldNames(); track fieldName) {
+                    <div
+                        class="font-bold text-sm"
+                        data-cy="configure-schema-warning-field-name"
+                    >
+                        {{ fieldName }}
+                    </div>
+                }
+            </div>
+        </sp-alert-banner>
+    }
+
     <div fxFlex="100" fxLayout="column">
         <sp-adapter-script-editor
             [scriptActive]="scriptActive()"
