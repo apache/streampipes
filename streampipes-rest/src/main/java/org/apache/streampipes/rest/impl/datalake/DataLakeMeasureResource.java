@@ -119,6 +119,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   )
   @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
+  @Deprecated(since = "0.99.0", forRemoval = true)
   public ResponseEntity<?> getDeprecatedEntryCountOfMeasurement() {
     return ResponseEntity
         .status(HttpStatus.GONE)
