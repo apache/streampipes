@@ -172,7 +172,7 @@ export class SpAssetDetailsComponent
             data: {
                 objectInstanceId: resource.elementId,
                 resource,
-                saveMode: this.isNewAsset ? 'immediate' : 'deferred',
+                saveMode: 'deferred',
                 createMode: this.isNewAsset,
                 resourceConfig,
                 headerTitle: this.isNewAsset
