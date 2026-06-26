@@ -23,6 +23,27 @@
         fxLayoutGap="8px"
         class="asset-link-table-toolbar"
     >
+        <button
+            mat-flat-button
+            class="mat-basic"
+            data-cy="asset-link-table-select-all"
+            [disabled]="!hasUnselectedFilteredResources()"
+            (click)="selectAll()"
+        >
+            <mat-icon>queue</mat-icon>
+            {{ 'Select all' | translate }}
+        </button>
+        <button
+            mat-flat-button
+            class="mat-basic"
+            data-cy="asset-link-table-deselect-all"
+            [disabled]="!hasSelectedFilteredResources()"
+            (click)="deselectAll()"
+        >
+            <mat-icon>filter_none</mat-icon>
+            {{ 'Deselect all' | translate }}
+        </button>
+
         <mat-form-field class="form-field-small asset-link-table-search">
             <mat-icon matPrefix>search</mat-icon>
             <input

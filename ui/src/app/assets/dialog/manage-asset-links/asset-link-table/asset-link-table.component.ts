@@ -45,7 +45,7 @@ import {
 } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { NgStyle } from '@angular/common';
 import {
     MatButtonToggle,
@@ -81,6 +81,7 @@ type AssetLinkViewMode = 'grouped' | 'list';
         LayoutGapDirective,
         MatButtonToggle,
         MatButtonToggleGroup,
+        MatButton,
         MatCell,
         MatCellDef,
         MatCheckbox,
@@ -163,6 +164,34 @@ export class AssetLinkTableComponent {
 
     updateSelection(checked: boolean, resource: AssetLinkResourceRow): void {
         this.selectionChange.emit({ checked, resource });
+    }
+
+    selectAll(): void {
+        this.filteredAndSortedResources
+            .filter(resource => !this.isResourceSelected(resource.resourceId))
+            .forEach(resource =>
+                this.selectionChange.emit({ checked: true, resource }),
+            );
+    }
+
+    deselectAll(): void {
+        this.filteredAndSortedResources
+            .filter(resource => this.isResourceSelected(resource.resourceId))
+            .forEach(resource =>
+                this.selectionChange.emit({ checked: false, resource }),
+            );
+    }
+
+    hasUnselectedFilteredResources(): boolean {
+        return this.filteredAndSortedResources.some(
+            resource => !this.isResourceSelected(resource.resourceId),
+        );
+    }
+
+    hasSelectedFilteredResources(): boolean {
+        return this.filteredAndSortedResources.some(resource =>
+            this.isResourceSelected(resource.resourceId),
+        );
     }
 
     updateSearch(searchTerm: string): void {
