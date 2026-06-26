@@ -19,7 +19,6 @@ __all__ = [
     "Version",
 ]
 
-from typing import Dict, Optional
 
 from pydantic import StrictStr, field_validator
 
@@ -35,13 +34,13 @@ class Version(Resource):
         version of the StreamPipes backend the client is connected to
     """
 
-    def convert_to_pandas_representation(self) -> Dict:
+    def convert_to_pandas_representation(self) -> dict:
         """Returns the dictionary representation of the version metadata
         to be used when creating a pandas Dataframe.
         """
         return self.to_dict(use_source_names=False)
 
-    backend_version: Optional[StrictStr] = None
+    backend_version: StrictStr | None = None
 
     @field_validator("backend_version", mode="before")
     @classmethod
