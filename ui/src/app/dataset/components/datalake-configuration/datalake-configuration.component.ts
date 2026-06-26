@@ -189,6 +189,18 @@ export class DatalakeConfigurationComponent
     currentTime = Date.now();
     currentFilterIds: Set<string> = new Set<string>();
 
+    constructor() {
+        this.dataSource.sortingDataAccessor = (configurationEntry, column) => {
+            if (column === 'pipeline') {
+                return configurationEntry.pipelines.join(', ');
+            } else if (column === 'lastEvent') {
+                return configurationEntry.lastEvent ?? 0;
+            }
+
+            return configurationEntry[column];
+        };
+    }
+
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('measurement');
         this.assetFilter$ =
