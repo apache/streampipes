@@ -59,8 +59,6 @@ As a ready-to-use platform, StreamPipes enables users to implement industrial Io
 
 ## Product Tour
 
-The repository already contains a few visuals. The gallery below uses them directly and reserves explicit slots for additional screenshots so the README can evolve without another structural rewrite.
-
 | Feature                                        | Preview                                                            |
 |------------------------------------------------|--------------------------------------------------------------------|
 | Connect data sources with a guided setup flow  | ![StreamPipes Connect](images/connect-create-opcua-browser.png)    |
