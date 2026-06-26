@@ -20,22 +20,23 @@
         <sp-alert-banner
             type="error"
             [title]="'Invalid field names' | translate"
-            [description]="
-                'Field names containing comma (,), double quote (&quot;), or semicolon (;) are invalid and must be renamed before continuing.'
-                    | translate
-            "
             data-cy="configure-schema-invalid-field-names"
         >
-            <div class="mt-md">
-                @for (fieldName of invalidFieldNames(); track fieldName) {
-                    <div
-                        class="font-bold text-sm"
-                        data-cy="configure-schema-invalid-field-name"
-                    >
-                        {{ fieldName }}
-                    </div>
-                }
+            <div class="field-name-message text-sm">
+                {{ 'Field names cannot contain' | translate }}
+                <span class="field-name-character">,</span>,
+                <span class="field-name-character">&quot;</span>,
+                <span class="field-name-character">;</span>.
+                {{ 'Rename these fields before continuing:' | translate }}
             </div>
+            @for (fieldName of invalidFieldNames(); track fieldName) {
+                <div
+                    class="font-bold text-sm"
+                    data-cy="configure-schema-invalid-field-name"
+                >
+                    {{ fieldName }}
+                </div>
+            }
         </sp-alert-banner>
     }
 
@@ -43,22 +44,25 @@
         <sp-alert-banner
             type="warning"
             [title]="'Field name recommendation' | translate"
-            [description]="
-                'It is recommended to use a consistent naming convention for field names without special characters, except - and _.'
-                    | translate
-            "
             data-cy="configure-schema-warning-field-names"
         >
-            <div class="mt-md">
-                @for (fieldName of warningFieldNames(); track fieldName) {
-                    <div
-                        class="font-bold text-sm"
-                        data-cy="configure-schema-warning-field-name"
-                    >
-                        {{ fieldName }}
-                    </div>
-                }
+            <div class="field-name-message text-sm">
+                {{
+                    'It is recommended to use a consistent naming convention for field names without special characters, except'
+                        | translate
+                }}
+                <span class="field-name-character">-</span>,
+                <span class="field-name-character">_</span>.
+                {{ 'These fields should be renamed:' | translate }}
             </div>
+            @for (fieldName of warningFieldNames(); track fieldName) {
+                <div
+                    class="font-bold text-sm"
+                    data-cy="configure-schema-warning-field-name"
+                >
+                    {{ fieldName }}
+                </div>
+            }
         </sp-alert-banner>
     }
 
