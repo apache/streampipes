@@ -65,6 +65,7 @@ interface AssetLinkGroupHeaderRow {
     icon: string;
     color: string;
     count: number;
+    collapsed: boolean;
 }
 
 type AssetLinkTableRow = AssetLinkResourceRow | AssetLinkGroupHeaderRow;
@@ -124,6 +125,7 @@ export class AssetLinkTableComponent {
     searchTerm = '';
     viewMode: AssetLinkViewMode = 'grouped';
     sort: Sort = { active: 'resourceName', direction: 'asc' };
+    collapsedGroupIds: Set<string> = new Set<string>();
 
     get renderedRows(): AssetLinkTableRow[] {
         const rows = this.filteredAndSortedResources;
@@ -153,8 +155,9 @@ export class AssetLinkTableComponent {
                     icon: this.getLinkType(groupRows[0])?.linkIcon ?? 'link',
                     color: this.getLinkTypeColor(groupRows[0]),
                     count: groupRows.length,
+                    collapsed: this.isGroupCollapsed(id),
                 },
-                ...groupRows,
+                ...(this.isGroupCollapsed(id) ? [] : groupRows),
             ]);
     }
 
@@ -204,6 +207,19 @@ export class AssetLinkTableComponent {
 
     updateViewMode(viewMode: AssetLinkViewMode): void {
         this.viewMode = viewMode;
+    }
+
+    toggleGroup(groupId: string): void {
+        if (this.collapsedGroupIds.has(groupId)) {
+            this.collapsedGroupIds.delete(groupId);
+        } else {
+            this.collapsedGroupIds.add(groupId);
+        }
+        this.collapsedGroupIds = new Set(this.collapsedGroupIds);
+    }
+
+    isGroupCollapsed(groupId: string): boolean {
+        return this.collapsedGroupIds.has(groupId);
     }
 
     updateSort(sort: Sort): void {

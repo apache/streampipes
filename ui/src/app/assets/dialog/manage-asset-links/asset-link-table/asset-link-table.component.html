@@ -160,6 +160,26 @@
                     fxLayoutGap="8px"
                     class="asset-link-table-group-header"
                 >
+                    <button
+                        mat-icon-button
+                        type="button"
+                        class="asset-link-table-group-toggle"
+                        [attr.aria-label]="
+                            (group.collapsed
+                                ? 'Expand group'
+                                : 'Collapse group'
+                            ) | translate
+                        "
+                        (click)="toggleGroup(group.id)"
+                    >
+                        <mat-icon>
+                            {{
+                                group.collapsed
+                                    ? 'chevron_right'
+                                    : 'expand_more'
+                            }}
+                        </mat-icon>
+                    </button>
                     <div
                         class="chip asset-link-table-group-chip"
                         [ngStyle]="{ color: group.color }"

@@ -18,23 +18,35 @@
 
 import { Directive, inject } from '@angular/core';
 import {
-    AdapterDescription,
     AdapterService,
     ChartService,
-    Dashboard,
     DashboardService,
-    DataExplorerWidgetModel,
-    DataLakeMeasure,
     DatalakeRestService,
     FileMetadata,
     FilesService,
     GenericStorageService,
-    Pipeline,
     PipelineElementService,
     PipelineService,
     SpDataStream,
 } from '@streampipes/platform-services';
 import { zip } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+interface AssetLinkNamedResource {
+    elementId: string;
+    name: string;
+}
+
+interface AssetLinkChartResource extends AssetLinkNamedResource {
+    baseAppearanceConfig: {
+        widgetTitle: string;
+    };
+}
+
+interface AssetLinkMeasurementResource {
+    elementId: string;
+    measureName: string;
+}
 
 @Directive()
 export abstract class BaseAssetLinksDirective {
@@ -48,12 +60,12 @@ export abstract class BaseAssetLinksDirective {
     protected filesService = inject(FilesService);
 
     // Resources
-    pipelines: Pipeline[];
-    charts: DataExplorerWidgetModel[];
-    dashboards: Dashboard[];
-    dataLakeMeasures: DataLakeMeasure[];
+    pipelines: AssetLinkNamedResource[];
+    charts: AssetLinkChartResource[];
+    dashboards: AssetLinkNamedResource[];
+    dataLakeMeasures: AssetLinkMeasurementResource[];
     dataSources: SpDataStream[];
-    adapters: AdapterDescription[];
+    adapters: AssetLinkNamedResource[];
     files: FileMetadata[];
 
     allResources: any[] = [];
@@ -64,13 +76,31 @@ export abstract class BaseAssetLinksDirective {
 
     getAllResources() {
         zip(
-            this.pipelineService.getPipelines(),
-            this.chartService.getAllCharts(),
-            this.dashboardService.getDashboards(),
+            this.pipelineService
+                .getPipelineSummary()
+                .pipe(map(summary => summary.resources)),
+            this.chartService.getChartSummary().pipe(
+                map(summary =>
+                    summary.resources.map(chart => ({
+                        elementId: chart.elementId,
+                        name: chart.name,
+                        baseAppearanceConfig: {
+                            widgetTitle: chart.name,
+                        },
+                    })),
+                ),
+            ),
+            this.dashboardService
+                .getDashboardSummary()
+                .pipe(map(summary => summary.resources)),
             this.pipelineElementService.getDataStreams(),
-            this.dataLakeService.getAllMeasurementSeries(),
+            this.dataLakeService
+                .getMeasurementSummary()
+                .pipe(map(summary => summary.resources)),
             this.filesService.getFileMetadata(),
-            this.adapterService.getAdapters(),
+            this.adapterService
+                .getAdapterSummary()
+                .pipe(map(summary => summary.resources)),
         ).subscribe(
             ([
                 pipelines,
