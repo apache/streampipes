@@ -93,6 +93,10 @@ export class SpAssetDetailsComponent
     private originalAsset: SpAssetModel;
 
     async saveAsset() {
+        if (this.isNewAsset && this.pendingManageAssetResult === undefined) {
+            this.openManageAssetDialog(true, this.isNewAsset);
+            return;
+        }
         await this.saveAssetChanges();
         this.assetBrowserService.refreshBrowserAssetData();
         this.router.navigate(['assets'], {
@@ -110,41 +114,17 @@ export class SpAssetDetailsComponent
     }
 
     manageAsset(): void {
-        const resource = this.makeManageableAsset(this.asset);
-        const resourceConfig: ObjectManageDialogResourceConfig<ManageableAsset> =
-            {
-                resourceLabel: 'Asset',
-                nameLabel: 'Asset name',
-                descriptionLabel: 'Asset description',
-                nameProperty: 'name',
-                showAssetLinking: false,
-            };
-        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: this.translateService.instant('Manage'),
-            width: '50vw',
-            data: {
-                objectInstanceId: resource.elementId,
-                resource,
-                saveMode: 'deferred',
-                resourceConfig,
-                headerTitle:
-                    this.translateService.instant('Manage Asset ') +
-                    resource.name,
-            },
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result && typeof result !== 'boolean') {
-                this.pendingManageAssetResult = result;
-                Object.assign(
-                    this.asset,
-                    this.makeAssetResource(result.resource),
-                );
-            }
-        });
+        this.openManageAssetDialog();
     }
 
     deleteAsset(): void {
+        if (this.isNewAsset) {
+            this.router.navigate(['assets'], {
+                state: { omitConfirm: true },
+            });
+            return;
+        }
+
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
@@ -168,6 +148,52 @@ export class SpAssetDetailsComponent
                             state: { omitConfirm: true },
                         });
                     });
+            }
+        });
+    }
+
+    private openManageAssetDialog(
+        saveAfterClose = false,
+        createMode = false,
+    ): void {
+        const resource = this.makeManageableAsset(this.asset);
+        const resourceConfig: ObjectManageDialogResourceConfig<ManageableAsset> =
+            {
+                resourceLabel: 'Asset',
+                nameLabel: 'Asset name',
+                descriptionLabel: 'Asset description',
+                nameProperty: 'name',
+                showAssetLinking: false,
+            };
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.isNewAsset
+                ? this.translateService.instant('New Asset')
+                : this.translateService.instant('Manage'),
+            width: '50vw',
+
+            data: {
+                objectInstanceId: resource.elementId,
+                resource,
+                saveMode: this.isNewAsset ? 'immediate' : 'deferred',
+                createMode: createMode,
+                resourceConfig,
+                headerTitle:
+                    this.translateService.instant('Manage Asset ') +
+                    (resource.name ?? ''),
+            },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && typeof result !== 'boolean') {
+                this.pendingManageAssetResult = result;
+                Object.assign(
+                    this.asset,
+                    this.makeAssetResource(result.resource),
+                );
+
+                if (saveAfterClose) {
+                    void this.saveAsset();
+                }
             }
         });
     }
@@ -240,7 +266,12 @@ export class SpAssetDetailsComponent
 
     private async saveAssetChanges(): Promise<void> {
         this.cleanupEmpty();
-        await firstValueFrom(this.assetService.updateAsset(this.asset));
+        if (this.isNewAsset) {
+            await firstValueFrom(this.assetService.createAsset(this.asset));
+            this.isNewAsset = false;
+        } else {
+            await firstValueFrom(this.assetService.updateAsset(this.asset));
+        }
         await this.savePendingManageAssetChanges();
         this.originalAsset = this.cloneAsset(this.asset);
     }
