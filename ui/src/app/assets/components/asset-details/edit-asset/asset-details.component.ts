@@ -178,9 +178,10 @@ export class SpAssetDetailsComponent
                 saveMode: this.isNewAsset ? 'immediate' : 'deferred',
                 createMode: createMode,
                 resourceConfig,
-                headerTitle:
-                    this.translateService.instant('Manage Asset ') +
-                    (resource.name ?? ''),
+                headerTitle: this.isNewAsset
+                    ? this.translateService.instant('New Asset')
+                    : this.translateService.instant('Manage Asset ') +
+                      (resource.name ?? ''),
             },
         });
         dialogRef.afterClosed().subscribe(result => {
