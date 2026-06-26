@@ -147,7 +147,6 @@ public class PipelineHealthCheck {
                   MAX_FAILED_ATTEMPTS);
             } else {
               recoveredInstances.add(instanceId);
-              HealthCheckUtils.addSuccessfulRestoreNotification(pipelineNotifications, pipelineElement);
               resetFailedAttempts(instanceId);
               LOG.info("Successfully restored pipeline element {} of pipeline {}",
                   pipelineElement.getName(), pipeline.getName());
@@ -161,7 +160,7 @@ public class PipelineHealthCheck {
           currentPipeline.setHealthStatus(PipelineHealthStatus.FAILURE);
           pipelinesStats.failedIncrease();
         } else if (!recoveredInstances.isEmpty()) {
-          currentPipeline.setHealthStatus(PipelineHealthStatus.REQUIRES_ATTENTION);
+          currentPipeline.setHealthStatus(PipelineHealthStatus.OK);
           pipelinesStats.attentionRequiredIncrease();
         }
         currentPipeline.setSepas(

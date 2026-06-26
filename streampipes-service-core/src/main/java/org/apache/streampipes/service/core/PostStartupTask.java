@@ -133,15 +133,13 @@ public class PostStartupTask implements Runnable {
       startPipeline(pipeline, false);
     });
 
-    LOG.info("Checking for gracefully shut down pipelines to be restarted...");
-
     List<Pipeline> pipelinesToRestart = allPipelines
         .stream()
         .filter(p -> !(p.isRunning()))
         .filter(Pipeline::isRestartOnSystemReboot)
         .toList();
 
-    LOG.info("Found {} pipelines that we are attempting to restart...", pipelinesToRestart.size());
+    LOG.info("Found {} pipelines that will be restarted", pipelinesToRestart.size());
 
     pipelinesToRestart.forEach(pipeline -> {
       startPipeline(pipeline, false);
@@ -162,7 +160,7 @@ public class PostStartupTask implements Runnable {
       storeFailedRestartAttempt(pipeline);
       int failedAttemptCount = failedPipelines.get(pipeline.getPipelineId());
       if (failedAttemptCount <= MAX_PIPELINE_START_RETRIES) {
-        LOG.error(
+        LOG.warn(
             "Pipeline {} could not be restarted - I'll try again in {} seconds ({}/{} failed attempts)",
             pipeline.getName(),
             WAIT_TIME_AFTER_FAILURE_IN_SECONDS,
@@ -172,7 +170,7 @@ public class PostStartupTask implements Runnable {
 
         schedulePipelineStart(pipeline, restartOnReboot);
       } else {
-        LOG.error(
+        LOG.warn(
             "Pipeline {} could not be restarted - are all pipeline element containers running?",
             status.getPipelineName()
         );

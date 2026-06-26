@@ -65,7 +65,7 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
     }
 
     // If we reach here, no service was found
-    LOG.error("Could not find any service endpoints for appId {}, serviceTag {}", appId,
+    LOG.warn("Could not find any service endpoints for appId {}, serviceTag {}", appId,
               spServiceUrlProvider.getServiceTag(appId).asString());
     throw new NoServiceEndpointsAvailableException(
         "Could not find any matching service endpoints - are all software components running?");
