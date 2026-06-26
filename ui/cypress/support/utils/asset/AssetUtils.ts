@@ -95,7 +95,6 @@ export class AssetUtils {
     public static addNewAsset(asset: Asset) {
         AssetBtns.createAssetBtn().click();
         AssetBtns.assetNameInput().clear().type(asset.name);
-        AssetBtns.createAssetPanelBtn().click();
 
         this.selectAssetType(asset.assetType);
         if (asset.site) {
@@ -265,6 +264,7 @@ export class AssetUtils {
 
         AssetUtils.checkAmountOfLinkedResources(2);
         AssetBtns.saveAssetBtn().click();
+        AssetBtns.createBtn().click();
         cy.location('hash', { timeout: 10000 }).should(
             'include',
             '/assets/overview',
