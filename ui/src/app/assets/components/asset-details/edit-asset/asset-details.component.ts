@@ -94,7 +94,7 @@ export class SpAssetDetailsComponent
 
     async saveAsset() {
         if (this.isNewAsset && this.pendingManageAssetResult === undefined) {
-            this.openManageAssetDialog(true, this.isNewAsset);
+            this.openManageAssetDialog(true);
             return;
         }
         await this.saveAssetChanges();
@@ -152,10 +152,7 @@ export class SpAssetDetailsComponent
         });
     }
 
-    private openManageAssetDialog(
-        saveAfterClose = false,
-        createMode = false,
-    ): void {
+    private openManageAssetDialog(saveAfterClose = false): void {
         const resource = this.makeManageableAsset(this.asset);
         const resourceConfig: ObjectManageDialogResourceConfig<ManageableAsset> =
             {
@@ -176,7 +173,7 @@ export class SpAssetDetailsComponent
                 objectInstanceId: resource.elementId,
                 resource,
                 saveMode: this.isNewAsset ? 'immediate' : 'deferred',
-                createMode: createMode,
+                createMode: this.isNewAsset,
                 resourceConfig,
                 headerTitle: this.isNewAsset
                     ? this.translateService.instant('New Asset')
