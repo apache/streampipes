@@ -31,22 +31,11 @@ import {
 } from '@streampipes/platform-services';
 import { zip } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-interface AssetLinkNamedResource {
-    elementId: string;
-    name: string;
-}
-
-interface AssetLinkChartResource extends AssetLinkNamedResource {
-    baseAppearanceConfig: {
-        widgetTitle: string;
-    };
-}
-
-interface AssetLinkMeasurementResource {
-    elementId: string;
-    measureName: string;
-}
+import {
+    AssetLinkChartResource,
+    AssetLinkMeasurementResource,
+    AssetLinkNamedResource,
+} from './base-asset-links.model';
 
 @Directive()
 export abstract class BaseAssetLinksDirective {
