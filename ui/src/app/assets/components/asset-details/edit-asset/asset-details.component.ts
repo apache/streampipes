@@ -51,7 +51,7 @@ import {
 } from '@streampipes/platform-services';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom, from, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { SupportsUnsavedChangeDialog } from '../../../../chart-shared/models/dataview-dashboard.model';
 
 type ManageableAsset = SpAssetModel & {
@@ -161,6 +161,21 @@ export class SpAssetDetailsComponent
                 descriptionLabel: 'Asset description',
                 nameProperty: 'name',
                 showAssetLinking: false,
+                saveResource: this.isNewAsset
+                    ? resource =>
+                          this.assetService
+                              .createAsset(this.makeAssetResource(resource))
+                              .pipe(
+                                  tap(savedAsset => {
+                                      Object.assign(
+                                          this.asset,
+                                          savedAsset ??
+                                              this.makeAssetResource(resource),
+                                      );
+                                      this.isNewAsset = false;
+                                  }),
+                              )
+                    : undefined,
             };
         const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
@@ -172,7 +187,7 @@ export class SpAssetDetailsComponent
             data: {
                 objectInstanceId: resource.elementId,
                 resource,
-                saveMode: 'deferred',
+                saveMode: this.isNewAsset ? 'immediate' : 'deferred',
                 createMode: this.isNewAsset,
                 resourceConfig,
                 headerTitle: this.isNewAsset
@@ -182,6 +197,14 @@ export class SpAssetDetailsComponent
             },
         });
         dialogRef.afterClosed().subscribe(result => {
+            if (saveAfterClose && result === true) {
+                this.assetBrowserService.refreshBrowserAssetData();
+                this.router.navigate(['assets'], {
+                    state: { omitConfirm: true },
+                });
+                return;
+            }
+
             if (result && typeof result !== 'boolean') {
                 this.pendingManageAssetResult = result;
                 Object.assign(
