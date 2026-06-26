@@ -44,10 +44,10 @@ import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -106,11 +106,6 @@ public class WebSecurityConfig {
     this.permissionStorage = permissionStorage;
   }
 
-  @Autowired
-  public void configureGlobal(AuthenticationManagerBuilder auth) {
-    auth.userDetailsService(userDetailsService).passwordEncoder(this.passwordEncoder.passwordEncoder());
-  }
-
   @Bean
   MethodSecurityExpressionHandler methodSecurityExpressionHandler(
       PermissionEvaluator permissionEvaluator
@@ -167,8 +162,10 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-    return authConfig.getAuthenticationManager();
+  public AuthenticationManager authenticationManager() {
+    var authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+    authenticationProvider.setPasswordEncoder(this.passwordEncoder.passwordEncoder());
+    return new ProviderManager(authenticationProvider);
   }
 
   @Bean
