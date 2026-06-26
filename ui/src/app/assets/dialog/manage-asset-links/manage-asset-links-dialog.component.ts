@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit, inject } from '@angular/core';
-import { DialogRef, SplitSectionComponent } from '@streampipes/shared-ui';
+import { DialogRef } from '@streampipes/shared-ui';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
 import {
@@ -26,9 +26,13 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
-import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDivider } from '@angular/material/divider';
 import { TranslatePipe } from '@ngx-translate/core';
+import {
+    AssetLinkResourceRow,
+    AssetLinkSelectionChange,
+} from './asset-link-table/asset-link-table.model';
+import { AssetLinkTableComponent } from './asset-link-table/asset-link-table.component';
 
 @Component({
     selector: 'sp-manage-asset-links-dialog-component',
@@ -36,11 +40,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         FlexDirective,
         LayoutDirective,
-        SplitSectionComponent,
         LayoutAlignDirective,
         MatButton,
-        MatCheckbox,
         MatDivider,
+        AssetLinkTableComponent,
         TranslatePipe,
     ],
 })
@@ -59,12 +62,7 @@ export class SpManageAssetLinksDialogComponent
 
     clonedAssetLinks: AssetLink[] = [];
 
-    elementIdFunction = el => el.elementId;
-    fileIdFunction = el => el.fileId;
-    nameFunction = el => el.name;
-    filenameFunction = el => el.filename;
-    measureNameFunction = el => el.measureName;
-    widgetNameFunction = el => el.baseAppearanceConfig.widgetTitle;
+    resourceRows: AssetLinkResourceRow[] = [];
 
     ngOnInit(): void {
         super.onInit();
@@ -73,6 +71,10 @@ export class SpManageAssetLinksDialogComponent
                 return { ...al };
             }),
         ];
+    }
+
+    get selectedResourceIds(): string[] {
+        return this.clonedAssetLinks.map(assetLink => assetLink.resourceId);
     }
 
     cancel(): void {
@@ -84,7 +86,66 @@ export class SpManageAssetLinksDialogComponent
         this.dialogRef.close(this.assetLinks);
     }
 
-    afterResourcesLoaded(): void {}
+    afterResourcesLoaded(): void {
+        this.resourceRows = [
+            ...this.adapters.map(adapter =>
+                this.makeResourceRow(
+                    adapter.elementId,
+                    adapter.name,
+                    'Adapter',
+                    'adapter',
+                ),
+            ),
+            ...this.charts.map(chart =>
+                this.makeResourceRow(
+                    chart.elementId,
+                    chart.baseAppearanceConfig.widgetTitle,
+                    'Chart',
+                    'chart',
+                ),
+            ),
+            ...this.dashboards.map(dashboard =>
+                this.makeResourceRow(
+                    dashboard.elementId,
+                    dashboard.name,
+                    'Dashboard',
+                    'dashboard',
+                ),
+            ),
+            ...this.dataLakeMeasures.map(measure =>
+                this.makeResourceRow(
+                    measure.elementId,
+                    measure.measureName,
+                    'Data Lake Storage',
+                    'measurement',
+                ),
+            ),
+            ...this.dataSources.map(source =>
+                this.makeResourceRow(
+                    source.elementId,
+                    source.name,
+                    'Data Stream',
+                    'data-source',
+                ),
+            ),
+            ...this.files.map(file =>
+                this.makeResourceRow(
+                    file.fileId,
+                    file.filename,
+                    'File',
+                    'file',
+                ),
+            ),
+            ...this.pipelines.map(pipeline =>
+                this.makeResourceRow(
+                    pipeline.elementId,
+                    pipeline.name,
+                    'Pipeline',
+                    'pipeline',
+                ),
+            ),
+        ];
+    }
 
     linkSelected(resourceId: string): boolean {
         return (
@@ -93,21 +154,27 @@ export class SpManageAssetLinksDialogComponent
         );
     }
 
-    selectLink(
-        checked: boolean,
-        resourceId: string,
-        label: string,
-        assetLinkType: string,
-    ): void {
-        if (checked) {
+    selectLink(event: AssetLinkSelectionChange): void {
+        const resource = event.resource;
+        if (event.checked) {
+            if (this.linkSelected(resource.resourceId)) {
+                return;
+            }
+
             this.clonedAssetLinks.push(
-                this.makeLink(resourceId, label, assetLinkType),
+                this.makeLink(
+                    resource.resourceId,
+                    resource.resourceName,
+                    resource.assetLinkType,
+                ),
             );
         } else {
             const index = this.clonedAssetLinks.findIndex(
-                al => al.resourceId === resourceId,
+                al => al.resourceId === resource.resourceId,
             );
-            this.clonedAssetLinks.splice(index, 1);
+            if (index > -1) {
+                this.clonedAssetLinks.splice(index, 1);
+            }
         }
     }
 
@@ -129,30 +196,17 @@ export class SpManageAssetLinksDialogComponent
         };
     }
 
-    selectAll(
-        elements: any[],
-        idFunction: any,
-        nameFunction: any,
+    private makeResourceRow(
+        resourceId: string,
+        resourceName: string,
+        resourceType: string,
         assetLinkType: string,
-    ): void {
-        elements.forEach(el => {
-            const id = idFunction(el);
-            const elementName = nameFunction(el);
-            if (!this.linkSelected(id)) {
-                this.selectLink(true, id, elementName, assetLinkType);
-            }
-        });
-    }
-
-    deselectAll(elements: any[], idFunction: any): void {
-        elements.forEach(el => {
-            const id = idFunction(el);
-            const index = this.clonedAssetLinks.findIndex(
-                al => al.resourceId === id,
-            );
-            if (index > -1) {
-                this.clonedAssetLinks.splice(index, 1);
-            }
-        });
+    ): AssetLinkResourceRow {
+        return {
+            resourceId,
+            resourceName,
+            resourceType,
+            assetLinkType,
+        };
     }
 }
