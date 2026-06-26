@@ -21,6 +21,7 @@ import {
     AssetLinkResourceRow,
     AssetLinkSelectionChange,
 } from './asset-link-table.model';
+import { AssetLinkType } from '@streampipes/platform-services';
 import {
     MatCell,
     MatCellDef,
@@ -45,6 +46,7 @@ import {
 import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
+import { NgStyle } from '@angular/common';
 import {
     MatButtonToggle,
     MatButtonToggleGroup,
@@ -60,6 +62,8 @@ interface AssetLinkGroupHeaderRow {
     groupHeader: true;
     id: string;
     title: string;
+    icon: string;
+    color: string;
     count: number;
 }
 
@@ -67,7 +71,7 @@ type AssetLinkTableRow = AssetLinkResourceRow | AssetLinkGroupHeaderRow;
 type AssetLinkViewMode = 'grouped' | 'list';
 
 @Component({
-    selector: 'sp-asset-link-table',
+    selector: 'sp-manage-asset-link-table',
     templateUrl: './asset-link-table.component.html',
     styleUrls: ['./asset-link-table.component.scss'],
     imports: [
@@ -97,6 +101,7 @@ type AssetLinkViewMode = 'grouped' | 'list';
         MatSortHeader,
         MatSuffix,
         MatTable,
+        NgStyle,
         TranslatePipe,
     ],
 })
@@ -107,10 +112,13 @@ export class AssetLinkTableComponent {
     @Input()
     selectedResourceIds: string[] = [];
 
+    @Input()
+    assetLinkTypes: AssetLinkType[] = [];
+
     @Output()
     selectionChange = new EventEmitter<AssetLinkSelectionChange>();
 
-    displayedColumns = ['selected', 'resourceName', 'resourceType'];
+    displayedColumns = ['selected', 'type', 'linkLabel'];
     groupHeaderColumns = ['groupHeader'];
     searchTerm = '';
     viewMode: AssetLinkViewMode = 'grouped';
@@ -138,7 +146,11 @@ export class AssetLinkTableComponent {
                 {
                     groupHeader: true as const,
                     id,
-                    title: groupRows[0].resourceType,
+                    title:
+                        this.getLinkType(groupRows[0])?.linkLabel ??
+                        groupRows[0].resourceType,
+                    icon: this.getLinkType(groupRows[0])?.linkIcon ?? 'link',
+                    color: this.getLinkTypeColor(groupRows[0]),
                     count: groupRows.length,
                 },
                 ...groupRows,
@@ -167,6 +179,16 @@ export class AssetLinkTableComponent {
 
     updateSort(sort: Sort): void {
         this.sort = sort;
+    }
+
+    getLinkType(resource: AssetLinkResourceRow): AssetLinkType | undefined {
+        return this.assetLinkTypes.find(
+            linkType => linkType.linkType === resource.assetLinkType,
+        );
+    }
+
+    getLinkTypeColor(resource: AssetLinkResourceRow): string {
+        return this.getLinkType(resource)?.linkColor ?? 'var(--color-primary)';
     }
 
     isGroupHeaderRow = (_: number, row: AssetLinkTableRow) =>
@@ -198,14 +220,28 @@ export class AssetLinkTableComponent {
             return left.resourceName.localeCompare(right.resourceName);
         }
 
-        const leftValue = left[this.sort.active as keyof AssetLinkResourceRow];
-        const rightValue =
-            right[this.sort.active as keyof AssetLinkResourceRow];
+        const leftValue = this.getSortValue(left, this.sort.active);
+        const rightValue = this.getSortValue(right, this.sort.active);
 
         return (
             String(leftValue ?? '').localeCompare(String(rightValue ?? '')) *
             direction
         );
+    }
+
+    private getSortValue(
+        row: AssetLinkResourceRow,
+        column: string,
+    ): string | undefined {
+        if (column === 'type') {
+            return row.resourceType;
+        }
+
+        if (column === 'linkLabel') {
+            return row.resourceName;
+        }
+
+        return row[column as keyof AssetLinkResourceRow];
     }
 
     private hasGroupHeaderMarker(

@@ -29,18 +29,32 @@
 }
 
 .asset-link-table-group-header {
-    background: var(--color-bg-2);
-    padding: 8px 12px;
+    background: var(--color-bg-1);
+    border-top: 1px solid var(--color-bg-2);
+    padding: 6px 16px;
 }
 
-.asset-link-table-group-title {
-    margin: 0;
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 10px;
     font-weight: 600;
+}
+
+.asset-link-table-group-chip {
+    padding-left: 0;
 }
 
 .asset-link-table-group-count {
     border-radius: 10px;
-    background: var(--color-bg-1);
+    background: var(--color-bg-2);
     padding: 1px 8px;
-    font-size: 12px;
+}
+
+.link-type-icon {
+    font-size: var(--font-size-md);
+    height: var(--font-size-md);
+    width: var(--font-size-md);
 }

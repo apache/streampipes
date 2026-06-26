@@ -60,6 +60,8 @@
     <table
         mat-table
         matSort
+        [matSortActive]="sort.active"
+        [matSortDirection]="sort.direction"
         class="sp-table"
         [dataSource]="renderedRows"
         [multiTemplateDataRows]="viewMode === 'grouped'"
@@ -81,21 +83,46 @@
             </td>
         </ng-container>
 
-        <ng-container matColumnDef="resourceName">
+        <ng-container matColumnDef="type">
             <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                {{ 'Resource name' | translate }}
+                {{ 'Type' | translate }}
             </th>
             <td mat-cell *matCellDef="let resource">
-                {{ resource.resourceName }}
+                <div
+                    fxLayout="column"
+                    fxLayoutAlign="start start"
+                    class="truncate"
+                >
+                    <div
+                        class="chip mt-sm mb-sm"
+                        [ngStyle]="{ color: getLinkTypeColor(resource) }"
+                    >
+                        <mat-icon class="link-type-icon">
+                            {{ getLinkType(resource)?.linkIcon || 'link' }}
+                        </mat-icon>
+                        <span class="text-sm">
+                            {{
+                                getLinkType(resource)?.linkLabel ||
+                                    resource.resourceType
+                            }}
+                        </span>
+                    </div>
+                </div>
             </td>
         </ng-container>
 
-        <ng-container matColumnDef="resourceType">
+        <ng-container matColumnDef="linkLabel">
             <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                {{ 'Resource type' | translate }}
+                {{ 'Name' | translate }}
             </th>
             <td mat-cell *matCellDef="let resource">
-                {{ resource.resourceType | translate }}
+                <div
+                    fxLayout="column"
+                    fxLayoutAlign="start start"
+                    class="truncate"
+                >
+                    <span>{{ resource.resourceName }}</span>
+                </div>
             </td>
         </ng-container>
 
@@ -112,10 +139,18 @@
                     fxLayoutGap="8px"
                     class="asset-link-table-group-header"
                 >
-                    <h4 class="asset-link-table-group-title">
-                        {{ group.title | translate }}
-                    </h4>
-                    <span class="asset-link-table-group-count">
+                    <div
+                        class="chip asset-link-table-group-chip"
+                        [ngStyle]="{ color: group.color }"
+                    >
+                        <mat-icon class="link-type-icon">
+                            {{ group.icon }}
+                        </mat-icon>
+                        <span class="text-sm">
+                            {{ group.title | translate }}
+                        </span>
+                    </div>
+                    <span class="asset-link-table-group-count text-sm">
                         {{ group.count }}
                     </span>
                 </div>

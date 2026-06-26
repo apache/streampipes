@@ -19,14 +19,15 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         @if (clonedAssetLinks) {
-            <sp-asset-link-table
+            <sp-manage-asset-link-table
                 fxFlex="100"
                 [resources]="resourceRows"
                 [selectedResourceIds]="selectedResourceIds"
+                [assetLinkTypes]="assetLinkTypes"
                 (selectionChange)="selectLink($event)"
                 data-cy="manage-asset-links-table"
             >
-            </sp-asset-link-table>
+            </sp-manage-asset-link-table>
         }
     </div>
     <mat-divider></mat-divider>
