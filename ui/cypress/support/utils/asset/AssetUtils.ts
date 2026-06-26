@@ -89,6 +89,8 @@ export class AssetUtils {
         AssetUtils.addNewAsset(asset);
 
         AssetBtns.saveAssetBtn().click();
+        AssetBtns.createBtn().click();
+
         AssetBtns.createAssetBtn().should('be.visible');
     }
 
