@@ -241,6 +241,39 @@ public class DataLakeResource extends AbstractDataLakeResource {
     return ok(results);
   }
 
+  @PostMapping(
+      path = "/measurements/latest-events",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  @Operation(summary = "Get the latest event timestamp for measurement series", tags = { "Data Lake" })
+  public ResponseEntity<?> getLatestEvents(@RequestBody List<String> measurementNames) {
+    if (measurementNames == null) {
+      return badRequest();
+    }
+
+    var distinctMeasurementNames = measurementNames.stream()
+        .distinct()
+        .toList();
+
+    var unauthorizedMeasureName = distinctMeasurementNames.stream()
+        .filter(measureName -> !checkPermissionByName(measureName, "READ"))
+        .findFirst();
+    if (unauthorizedMeasureName.isPresent()) {
+      return badRequest(
+          String.format("No read permission for measurement %s", unauthorizedMeasureName.get())
+      );
+    }
+
+    Map<String, Long> latestEvents = distinctMeasurementNames.stream()
+        .collect(Collectors.toMap(
+            measurementName -> measurementName,
+            this::getLatestEvent
+        ));
+
+    return ok(latestEvents);
+  }
+
   @GetMapping(path = "/measurements/{measurementID}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   @PreAuthorize("this.hasReadAuthority() and this.checkPermissionByName(#measurementID, 'READ')")
   @Operation(summary = "Download data from a single measurement series by a given id", tags = {
@@ -391,6 +424,25 @@ public class DataLakeResource extends AbstractDataLakeResource {
     rawParams.forEach((key, value) -> queryParamMap.put(key, String.join(",", value)));
 
     return new ProvidedRestQueryParams(measurementId, queryParamMap);
+  }
+
+  private Long getLatestEvent(String measurementName) {
+    Map<String, String> queryParams = Map.of(
+        QP_START_DATE, "0",
+        QP_END_DATE, String.valueOf(System.currentTimeMillis()),
+        QP_LIMIT, "1",
+        QP_ORDER, "DESC",
+        QP_MISSING_VALUE_BEHAVIOUR, "empty"
+    );
+
+    try {
+      return this.dataExplorerQueryManagement
+          .getData(new ProvidedRestQueryParams(measurementName, queryParams), true)
+          .getLastTimestamp();
+    } catch (RuntimeException e) {
+      LOG.warn("Could not get latest event for measurement {}", measurementName, e);
+      return 0L;
+    }
   }
 
   // Checks if the parameter for missing value behaviour is set

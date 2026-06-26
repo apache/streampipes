@@ -679,10 +679,6 @@ export class ChartUtils {
         cy.dataCy('data-explorer-select-data-set-create-btn').click();
     }
 
-    public static goToDatalakeConfiguration() {
-        cy.visit('#/datasets');
-    }
-
     public static checkResults(
         measurementName: string,
         fileRoute: string,
@@ -815,26 +811,6 @@ export class ChartUtils {
         currentDate.setMonth(currentDate.getMonth() + 1);
 
         return currentDate;
-    }
-
-    public static getDatalakeNumberOfEvents(
-        greaterThan?: number,
-    ): Cypress.Chainable<number> {
-        return ChartBtns.datalakeTotalCountControl()
-            .should('be.visible')
-            .click()
-            .then(() => ChartBtns.datalakeTotalCountValue())
-            .should('be.visible')
-            .should($value => {
-                const count = Number($value.text().replaceAll(',', '').trim());
-
-                expect(Number.isNaN(count)).to.equal(false);
-                if (greaterThan !== undefined) {
-                    expect(count).to.be.greaterThan(greaterThan);
-                }
-            })
-            .invoke('text')
-            .then(text => Number(text.replaceAll(',', '').trim()));
     }
 
     public static checkRowsDashboardTable(amount: number) {

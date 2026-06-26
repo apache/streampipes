@@ -17,9 +17,10 @@
  */
 
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
-import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
+import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
+import { DatasetBtns } from '../../support/utils/dataset/DatasetBtns';
 
 describe('Test Truncate data in datalake', () => {
     beforeEach('Setup Test', () => {
@@ -28,26 +29,18 @@ describe('Test Truncate data in datalake', () => {
     });
 
     it('Perform Test', () => {
-        ChartUtils.goToDatalakeConfiguration();
-        cy.dataCy('datalake-total-count-button').click();
+        DatasetUtils.goToDatalakeConfiguration();
 
-        // Check if amount of events is correct
-        ChartBtns.datalakeNumberEvents().should('be.visible').contains('10');
+        // Check if the last event is shown
+        DatasetUtils.expectDatasetNotEmpty(PrepareTestDataUtils.dataName);
 
         // Truncate data
         GeneralUtils.openMenuForRow(PrepareTestDataUtils.dataName);
-        ChartBtns.dataLakeTruncateBtn().should('be.visible').click();
-        ChartBtns.confirmDataLakeTruncateBtn().should('be.visible').click();
+        DatasetBtns.dataLakeTruncateBtn().should('be.visible').click();
+        DatasetBtns.confirmDataLakeTruncateBtn().should('be.visible').click();
 
-        cy.dataCy('datalake-total-count-button').click();
-
-        // Check if amount of events is zero. The should('have.text, '0') is required to check for text equality
-        ChartBtns.datalakeNumberEvents()
-            .should('be.visible')
-            .should($element => {
-                const text = $element.text().trim();
-                expect(text).to.equal('0');
-            });
+        // Check if there are no events left
+        DatasetUtils.expectDatasetEmpty(PrepareTestDataUtils.dataName);
     });
 });
 
@@ -58,18 +51,17 @@ describe('Delete data in datalake', () => {
     });
 
     it('Perform Test', () => {
-        ChartUtils.goToDatalakeConfiguration();
-        cy.dataCy('datalake-total-count-button').click();
+        DatasetUtils.goToDatalakeConfiguration();
 
-        // Check if amount of events is correct
-        ChartBtns.datalakeNumberEvents().should('be.visible').contains('10');
+        // Check if the last event is shown
+        DatasetUtils.expectDatasetNotEmpty(PrepareTestDataUtils.dataName);
 
         // Delete data
         GeneralUtils.openMenuForRow(PrepareTestDataUtils.dataName);
-        ChartBtns.dataLakeDeleteBtn().should('be.visible').click();
-        ChartBtns.confirmDataLakeDeleteBtn().should('be.visible').click();
+        DatasetBtns.dataLakeDeleteBtn().should('be.visible').click();
+        DatasetBtns.confirmDataLakeDeleteBtn().should('be.visible').click();
 
-        // Check if amount of events is zero
-        ChartBtns.datalakeNumberEvents().should('have.length', 0);
+        // Check if the dataset row is gone
+        DatasetUtils.expectDatasetDeleted(PrepareTestDataUtils.dataName);
     });
 });

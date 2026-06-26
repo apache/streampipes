@@ -19,10 +19,10 @@
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { AdapterBuilder } from '../../support/builder/AdapterBuilder';
-import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { SharedUtils } from '../../support/utils/shared/SharedUtils';
 import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 import { ConnectEventSchemaUtils } from '../../support/utils/connect/ConnectEventSchemaUtils';
+import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -109,13 +109,12 @@ describe('Test Edit Adapter', () => {
 
         storeAndStartEditedAdapter();
 
-        // Validate that the data is further persisted in the database by checking if the amount of events in the data lake changes
-        ChartUtils.goToDatalakeConfiguration();
-        ChartUtils.getDatalakeNumberOfEvents().then(initialValue => {
+        // Validate that the data is further persisted in the database by checking if the last event changes in the data lake
+        DatasetUtils.goToDatalakeConfiguration();
+        DatasetUtils.waitForDatasetNotEmpty().then(initialLastEvent => {
             cy.wait(3000);
-            ChartUtils.goToDatalakeConfiguration();
-
-            ChartUtils.getDatalakeNumberOfEvents(initialValue);
+            DatasetUtils.goToDatalakeConfiguration();
+            DatasetUtils.expectDatasetLastEventChanged(initialLastEvent);
         });
     });
 
