@@ -25,7 +25,6 @@ from __future__ import annotations
 
 import logging
 import sys
-from typing import Dict, Optional
 
 from requests import Session
 
@@ -120,7 +119,7 @@ class StreamPipesClient:
     def __init__(
         self,
         client_config: StreamPipesClientConfig,
-        logging_level: Optional[int] = logging.INFO,
+        logging_level: int | None = logging.INFO,
     ):
         # validate client config
         # `https_disabled` and `port` 443 is an invalid configuration
@@ -228,7 +227,7 @@ class StreamPipesClient:
         return cls(client_config=client_config, logging_level=logging_level)
 
     @property
-    def http_headers(self) -> Dict[str, str]:
+    def http_headers(self) -> dict[str, str]:
         """Returns the HTTP headers used for all requests.
 
         The HTTP headers are composed of the authentication headers supplied by the credential

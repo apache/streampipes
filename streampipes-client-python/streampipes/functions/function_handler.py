@@ -17,8 +17,8 @@
 import asyncio
 import json
 import logging
+from collections.abc import AsyncIterator
 from http import HTTPStatus
-from typing import AsyncIterator, Dict, List
 
 from requests import HTTPError
 
@@ -57,8 +57,8 @@ class FunctionHandler:
     def __init__(self, registration: Registration, client: StreamPipesClient) -> None:
         self.registration = registration
         self.client = client
-        self.stream_contexts: Dict[str, DataStreamContext] = {}
-        self.brokers: List[Broker] = []
+        self.stream_contexts: dict[str, DataStreamContext] = {}
+        self.brokers: list[Broker] = []
 
     def initializeFunctions(self) -> None:
         """Creates the context for every data stream and starts the event loop to manage the StreamPipes Functions.
@@ -116,8 +116,8 @@ class FunctionHandler:
         -------
         None
         """
-        messages: Dict[str, AsyncIterator] = dict()
-        contexts: Dict[str, FunctionContext] = dict()
+        messages: dict[str, AsyncIterator] = dict()
+        contexts: dict[str, FunctionContext] = dict()
 
         for stream_id in self.stream_contexts.keys():
             data_stream = self.stream_contexts[stream_id].schema

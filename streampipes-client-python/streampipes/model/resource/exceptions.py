@@ -15,7 +15,6 @@
 # limitations under the License.
 #
 
-from typing import Optional
 
 
 class StreamPipesUnsupportedDataSeries(Exception):
@@ -23,7 +22,7 @@ class StreamPipesUnsupportedDataSeries(Exception):
     cannot be parsed with the current implementation of the resource.
     """
 
-    def __init__(self, reason: Optional[str] = None):
+    def __init__(self, reason: str | None = None):
         super().__init__(
             "The Data Lake series returned by the API appears "
             "to have a structure that is not currently supported by the Python client."
