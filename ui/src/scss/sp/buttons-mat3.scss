@@ -228,16 +228,38 @@
     }
 
     .btn-warn {
-        border: 1px solid
-            color-mix(in srgb, var(--mat-sys-error) 24%, transparent);
+        border: 1px solid transparent;
 
         @include mat.button-overrides(
             (
-                filled-container-color: var(--mat-sys-error-container),
-                filled-label-text-color: var(--mat-sys-on-error-container),
+                filled-container-color: color-mix(
+                        in srgb,
+                        var(--mat-sys-error) 7%,
+                        var(--color-bg-0)
+                    ),
+                filled-label-text-color: var(--mat-sys-error),
                 filled-state-layer-color: var(--mat-sys-error),
-                filled-hover-state-layer-opacity: 0.08,
+                filled-hover-state-layer-opacity: 0,
+                filled-pressed-state-layer-opacity: 0,
             )
+        );
+    }
+
+    .btn-warn:hover:not(:disabled) {
+        border-color: transparent;
+        background: color-mix(
+            in srgb,
+            var(--mat-sys-error) 11%,
+            var(--color-bg-0)
+        );
+    }
+
+    .btn-warn:active:not(:disabled) {
+        border-color: transparent;
+        background: color-mix(
+            in srgb,
+            var(--mat-sys-error) 14%,
+            var(--color-bg-0)
         );
     }
 
