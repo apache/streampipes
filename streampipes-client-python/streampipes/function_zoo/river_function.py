@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Callable, Dict, List, Optional
+from collections.abc import Callable
+from typing import Any
 
 from streampipes.client.client import StreamPipesClient
 from streampipes.functions.broker.broker_handler import get_broker_description
@@ -59,9 +60,9 @@ class RiverFunction(StreamPipesFunction):
         function_definition: FunctionDefinition,
         model: Any,
         supervised: bool,
-        target_label: Optional[str],
+        target_label: str | None,
         on_start: Callable[[Any, FunctionContext], None],
-        on_event: Callable[[Any, Dict[str, Any], str], None],
+        on_event: Callable[[Any, dict[str, Any], str], None],
         on_stop: Callable[[Any], None],
     ) -> None:
         super().__init__(function_definition)
@@ -89,7 +90,7 @@ class RiverFunction(StreamPipesFunction):
         """
         self.on_start(self, context)
 
-    def onEvent(self, event: Dict[str, Any], streamId: str):
+    def onEvent(self, event: dict[str, Any], streamId: str):
         """Trains the model with the incoming events and sends the prediction back to StreamPipes.
 
         Parameters
@@ -159,14 +160,14 @@ class OnlineML:
     def __init__(
         self,
         client: StreamPipesClient,
-        stream_ids: List[str],
+        stream_ids: list[str],
         model: Any,
         output_stream_name: str = "Online ML Prediction",
         prediction_type: str = RuntimeType.STRING.value,
         supervised: bool = False,
-        target_label: Optional[str] = None,
+        target_label: str | None = None,
         on_start: Callable[[Any, FunctionContext], None] = lambda self, context: None,
-        on_event: Callable[[Any, Dict[str, Any], str], None] = lambda self, event, streamId: None,
+        on_event: Callable[[Any, dict[str, Any], str], None] = lambda self, event, streamId: None,
         on_stop: Callable[[Any], None] = lambda self: None,
     ):
         self.client = client

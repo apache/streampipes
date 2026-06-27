@@ -20,10 +20,8 @@ export class DataLakeConfigurationEntry {
     public name: string;
     public measureName: string;
     public pipelines: string[] = [];
-    public eventsTotal = 0;
-    public eventsLatest = 0;
-    public eventsTotalLoading = false;
-    public eventsLatestLoading = false;
+    public lastEvent: number | null = null;
+    public lastEventLoading = false;
     public remove = true;
     public elementId: string;
     public retentionConfigured = false;

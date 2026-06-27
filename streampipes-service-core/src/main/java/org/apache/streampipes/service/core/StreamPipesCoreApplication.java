@@ -227,7 +227,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
             )));
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();
-    LOG.info("Extensions logs will be fetched every {} milliseconds", logFetchInterval);
+    LOG.info("Extensions logs will be fetched every {} seconds", TimeUnit.MILLISECONDS.toSeconds(logFetchInterval));
     logCheckExecutorService.scheduleAtFixedRate(new ExtensionsServiceLogExecutor(
           extensionServiceRequestManager, resourceManager
         ),
@@ -238,8 +238,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   private void scheduleHealthChecks(int healthCheckIntervalInMillis, List<Runnable> checks) {
     var healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
     checks.forEach(check -> {
-      LOG.info("Health check {} configured to run every {} {}", check.getClass().getCanonicalName(),
-          healthCheckIntervalInMillis, TimeUnit.MILLISECONDS);
+      LOG.info("Health check {} configured to run every {} seconds", check.getClass().getSimpleName(),
+          TimeUnit.MILLISECONDS.toSeconds(healthCheckIntervalInMillis));
       healthCheckExecutorService.scheduleAtFixedRate(check, healthCheckIntervalInMillis,
           healthCheckIntervalInMillis,
           TimeUnit.MILLISECONDS);

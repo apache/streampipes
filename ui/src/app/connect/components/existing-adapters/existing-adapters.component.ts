@@ -158,6 +158,28 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     private adapterMonitoringService = inject(AdapterMonitoringService);
     private assetFilterService = inject(SpAssetBrowserService);
 
+    constructor() {
+        this.dataSource.sortingDataAccessor = (adapter, column) => {
+            if (column === 'status') {
+                return Number(adapter.running);
+            } else if (column === 'adapterBase') {
+                return adapter.appId;
+            } else if (column === 'lastModified') {
+                return adapter.createdAt;
+            } else if (column === 'messagesSent') {
+                return (
+                    this.adapterMetrics[adapter.elementId]?.messagesOut
+                        ?.counter ?? 0
+                );
+            } else if (column === 'lastMessage') {
+                return (
+                    this.adapterMetrics[adapter.elementId]?.lastTimestamp ?? 0
+                );
+            }
+            return adapter[column];
+        };
+    }
+
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('adapter');
         this.assetFilter$ =
@@ -176,14 +198,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                 this.tutorialActive = tutorialActive;
             },
         );
-        this.dataSource.sortingDataAccessor = (adapter, column) => {
-            if (column === 'status') {
-                return adapter.running;
-            } else if (column === 'lastModified') {
-                return adapter.createdAt;
-            }
-            return adapter[column];
-        };
     }
 
     startAdapter(adapter: AdapterSummaryDto): void {
@@ -295,6 +309,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             .getMetricsInfoForAdapters(filteredElementIds)
             .subscribe(metrics => {
                 this.adapterMetrics = metrics;
+                this.dataSource.data = [...this.filteredAdapters];
             });
     }
 
