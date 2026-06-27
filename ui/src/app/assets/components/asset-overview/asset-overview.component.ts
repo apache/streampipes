@@ -46,7 +46,6 @@ import {
 } from '@streampipes/shared-ui';
 import { SpAssetRoutes } from '../../assets.breadcrumb';
 import { Router } from '@angular/router';
-import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-asset-dialog.component';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { MatDialog } from '@angular/material/dialog';
@@ -196,25 +195,15 @@ export class SpAssetOverviewComponent implements OnInit {
             additionalData: {},
             labelIds: [],
         };
-        const dialogRef = this.dialogService.open(
-            SpCreateAssetDialogComponent,
+        this.router.navigate(
+            ['assets', 'details', assetModel.elementId, 'edit'],
             {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: this.translateService.instant('Create asset'),
-                width: '50vw',
-                data: {
-                    assetModel: assetModel,
+                state: {
+                    assetModel,
+                    isNewAsset: true,
                 },
             },
         );
-
-        dialogRef.afterClosed().subscribe(ev => {
-            if (ev) {
-                this.loadAssets();
-                this.assetBrowserService.refreshBrowserAssetData();
-                this.goToDetailsView(assetModel, true);
-            }
-        });
     }
 
     goToDetailsView(asset: AssetSummaryDto, editMode = false) {
