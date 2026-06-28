@@ -151,7 +151,7 @@ export class DatasetUtils {
             const lastEvent = $cell.text().trim();
 
             if (this.isDatasetNotEmptyValue(lastEvent)) {
-                return this.getComparableLastEventValueFromCell($cell);
+                return this.getComparableLastEventValueFromElement($cell[0]);
             } else if (attempts > 0) {
                 cy.wait(1000);
                 return DatasetUtils.waitForDatasetNotEmpty(
@@ -160,7 +160,7 @@ export class DatasetUtils {
                 );
             } else {
                 expect(this.isDatasetNotEmptyValue(lastEvent)).to.equal(true);
-                return this.getComparableLastEventValueFromCell($cell);
+                return this.getComparableLastEventValueFromElement($cell[0]);
             }
         });
     }
@@ -229,14 +229,14 @@ export class DatasetUtils {
         return exactTimeMatch?.[1] ?? trimmedValue;
     }
 
-    private static getComparableLastEventValueFromCell(
-        $cell: JQuery<HTMLElement>,
+    private static getComparableLastEventValueFromElement(
+        cell: HTMLElement,
     ): string {
         return (
-            $cell
-                .find('sp-datalake-last-event-label')
-                .attr('data-last-event-value') ??
-            this.getComparableLastEventValue($cell.text())
+            cell
+                .querySelector('sp-datalake-last-event-label')
+                ?.getAttribute('data-last-event-value') ??
+            this.getComparableLastEventValue(cell.textContent ?? '')
         );
     }
 
