@@ -21,6 +21,7 @@ package org.apache.streampipes.service.core;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.service.base.security.UnauthorizedRequestEntryPoint;
 import org.apache.streampipes.service.core.filter.TokenAuthenticationFilter;
 import org.apache.streampipes.service.core.oauth2.CustomOAuth2UserService;
@@ -30,7 +31,7 @@ import org.apache.streampipes.service.core.oauth2.OAuth2AccessTokenResponseConve
 import org.apache.streampipes.service.core.oauth2.OAuth2AuthenticationFailureHandler;
 import org.apache.streampipes.service.core.oauth2.OAuth2AuthenticationSuccessHandler;
 import org.apache.streampipes.service.core.oauth2.OAuthEnabledCondition;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.service.SpUserDetailsService;
 
 import org.slf4j.Logger;
@@ -96,14 +97,18 @@ public class WebSecurityConfig {
   @Autowired
   private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
-  private final IPermissionStorage permissionStorage;
+  private final SpResourceManager resourceManager;
 
   public WebSecurityConfig(StreamPipesPasswordEncoder passwordEncoder,
-                           IPermissionStorage permissionStorage) {
+                           SpResourceManager resourceManager) {
     this.passwordEncoder = passwordEncoder;
-    this.userDetailsService = new SpUserDetailsService(permissionStorage);
+    this.userDetailsService = new SpUserDetailsService(
+        resourceManager.manageUsers().getDb(),
+        resourceManager.managePermissions().getDb(),
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage());
     this.env = Environments.getEnvironment();
-    this.permissionStorage = permissionStorage;
+    this.resourceManager = resourceManager;
   }
 
   @Bean
@@ -116,7 +121,8 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) {
+  public SecurityFilterChain filterChain(HttpSecurity http,
+                                         ISpCoreConfigurationStorage coreConfigurationStorage) {
     http
         .cors(Customizer.withDefaults())
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -153,7 +159,7 @@ public class WebSecurityConfig {
   }
 
   public TokenAuthenticationFilter tokenAuthenticationFilter() {
-    return new TokenAuthenticationFilter(permissionStorage);
+    return new TokenAuthenticationFilter(resourceManager);
   }
 
   @Bean(BeanIds.USER_DETAILS_SERVICE)

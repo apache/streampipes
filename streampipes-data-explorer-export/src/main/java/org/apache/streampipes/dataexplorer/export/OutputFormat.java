@@ -18,25 +18,12 @@
 
 package org.apache.streampipes.dataexplorer.export;
 
-import org.apache.streampipes.storage.management.StorageDispatcher;
-
 import java.util.Arrays;
-import java.util.function.Supplier;
 
 public enum OutputFormat {
-  JSON(ConfiguredJsonOutputWriter::new),
-  CSV(ConfiguredCsvOutputWriter::new),
-  XLSX(() -> new ConfiguredExcelOutputWriter(StorageDispatcher.INSTANCE.getNoSqlStore().getFileMetadataStorage()));
-
-  private final Supplier<ConfiguredOutputWriter> writerSupplier;
-
-  OutputFormat(Supplier<ConfiguredOutputWriter> writerSupplier) {
-    this.writerSupplier = writerSupplier;
-  }
-
-  public ConfiguredOutputWriter getWriter() {
-    return writerSupplier.get();
-  }
+  JSON,
+  CSV,
+  XLSX;
 
   public static OutputFormat fromString(String desiredFormat) {
     return Arrays.stream(

@@ -20,6 +20,8 @@ package org.apache.streampipes.service.core.oauth2;
 
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.user.management.model.UserAccountDetails;
 
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -38,8 +40,10 @@ public class OidcUserAccountDetails extends UserAccountDetails implements OAuth2
   public OidcUserAccountDetails(UserAccount user,
                                 OidcIdToken idToken,
                                 OidcUserInfo userInfo,
-                                IPermissionStorage permissionStorage) {
-    super(user, permissionStorage);
+                                IPermissionStorage permissionStorage,
+                                IRoleStorage roleStorage,
+                                IUserGroupStorage userGroupStorage) {
+    super(user, permissionStorage, roleStorage, userGroupStorage);
     this.idToken = idToken;
     this.userInfo = userInfo;
   }
@@ -48,8 +52,12 @@ public class OidcUserAccountDetails extends UserAccountDetails implements OAuth2
                                               Map<String, Object> attributes,
                                               OidcIdToken idToken,
                                               OidcUserInfo userInfo,
-                                              IPermissionStorage permissionStorage) {
-    OidcUserAccountDetails localUser = new OidcUserAccountDetails(user, idToken, userInfo, permissionStorage);
+                                              IPermissionStorage permissionStorage,
+                                              IRoleStorage roleStorage,
+                                              IUserGroupStorage userGroupStorage) {
+    OidcUserAccountDetails localUser = new OidcUserAccountDetails(
+        user, idToken, userInfo, permissionStorage, roleStorage, userGroupStorage
+    );
     localUser.setAttributes(attributes);
     return localUser;
   }

@@ -93,6 +93,7 @@ public class ExportPackageGenerator {
     var dashboardResourceManager = resourceManager.manageDashboards();
     var pipelineResourceManager = resourceManager.managePipelines();
     var datasetResourceManager = resourceManager.manageDataLakeMeasures();
+    var fileMetadataStorage = resourceManager.getFileMetadataStorage();
 
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {
       config.getAdapters().forEach(item -> addDoc(builder,
@@ -151,11 +152,16 @@ public class ExportPackageGenerator {
 
       config.getFiles().forEach(item -> {
         if (item.isSelected()) {
-          var fileResolver = new FileResolver();
+          var fileResolver = new FileResolver(fileMetadataStorage);
           String filename = fileResolver.findDocument(item.getResourceId()).getFilename();
-          addDoc(builder, item, new FileResolver(), manifest::addFile);
+          addDoc(builder, item, new FileResolver(fileMetadataStorage), manifest::addFile);
           try {
-            builder.addBinary(filename, Files.readAllBytes(new FileManager().getFile(filename).toPath()));
+            builder.addBinary(filename, Files.readAllBytes(
+                new FileManager(
+                    resourceManager.getCoreConfigurationStorage(),
+                    resourceManager.getFileMetadataStorage()
+                ).getFile(filename).toPath())
+            );
           } catch (IOException e) {
             LOG.warn("Could not add binary file to export package: {}", e.getMessage());
           }

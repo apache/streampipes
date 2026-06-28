@@ -23,9 +23,8 @@ import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.user.IUserStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
@@ -62,7 +61,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider tokenProvider;
   private final IUserStorage userStorage;
-  private final IPermissionStorage permissionStorage;
+  private final SpResourceManager resourceManager;
 
   private final List<String> supportedBasicAuthPaths = List.of(
       "/actuator/prometheus"
@@ -72,10 +71,16 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
   private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
 
-  public TokenAuthenticationFilter(IPermissionStorage permissionStorage) {
-    this.tokenProvider = new JwtTokenProvider();
-    this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
-    this.permissionStorage = permissionStorage;
+  public TokenAuthenticationFilter(SpResourceManager resourceManager) {
+    var userStorage = resourceManager.manageUsers().getDb();
+    this.tokenProvider = new JwtTokenProvider(
+        resourceManager.getCoreConfigurationStorage(),
+        userStorage,
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage()
+    );
+    this.userStorage = userStorage;
+    this.resourceManager = resourceManager;
   }
 
   @Override
@@ -95,7 +100,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String apiUser = getApiUserFromRequest(request);
         if (StringUtils.hasText(apiKey) && StringUtils.hasText(apiUser)) {
           String hashedToken = TokenUtil.hashToken(apiKey);
-          boolean hasValidToken = new TokenService().hasValidToken(apiUser, hashedToken);
+          boolean hasValidToken = new TokenService().hasValidToken(apiUser, hashedToken, userStorage);
           if (hasValidToken) {
             applySuccessfulAuth(request, apiUser);
           }
@@ -110,7 +115,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             String[] splitCredentials = credentials.split(":");
             String username = splitCredentials[0];
             String passphrase = splitCredentials[1];
-            var principal = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().getUser(username);
+            var principal = userStorage.getUser(username);
             if (principal != null && checkCredentials(principal, passphrase)) {
               applySuccessfulAuth(request, username);
             }
@@ -158,8 +163,18 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
   }
 
   private PrincipalUserDetails<?> makeDetails(Principal user) {
-    return user instanceof UserAccount ? new UserAccountDetails((UserAccount) user, permissionStorage) :
-        new ServiceAccountDetails((ServiceAccount) user, permissionStorage);
+    return user instanceof UserAccount ? new UserAccountDetails(
+        (UserAccount) user,
+        resourceManager.managePermissions().getDb(),
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage()
+    ) :
+        new ServiceAccountDetails(
+            (ServiceAccount) user,
+            resourceManager.managePermissions().getDb(),
+            resourceManager.getRoleStorage(),
+            resourceManager.getUserGroupStorage()
+        );
   }
 
   private boolean isAdminUser(PrincipalUserDetails<?> userDetails) {

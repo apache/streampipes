@@ -20,50 +20,63 @@ package org.apache.streampipes.manager.util;
 
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class AuthTokenUtils {
+public class AuthTokenProvider {
 
-  public static String getAuthTokenForCurrentUser() {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    return makeBearerToken(new JwtTokenProvider().createToken(auth));
+  private final SpResourceManager resourceManager;
+
+  public AuthTokenProvider(SpResourceManager resourceManager) {
+    this.resourceManager = resourceManager;
   }
 
-  public static String getAuthToken(String resourceId,
-                                    SpResourceManager resourceManager) {
+  public String getAuthTokenForCurrentUser() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    return makeBearerToken(new JwtTokenProvider(
+        resourceManager.getCoreConfigurationStorage(),
+        resourceManager.manageUsers().getDb(),
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage()
+    ).createToken(auth));
+  }
+
+  public String getAuthToken(String resourceId) {
     if (SecurityContextHolder.getContext().getAuthentication() != null) {
         return getAuthTokenForCurrentUser();
     } else {
       if (resourceId != null) {
-        String ownerSid = getOwnerSid(resourceId, resourceManager.managePermissions());
-        return getAuthTokenForUser(ownerSid, resourceManager.manageUsers());
+        String ownerSid = getOwnerSid(resourceId);
+        return getAuthTokenForUser(ownerSid);
       } else {
         throw new IllegalArgumentException("No authenticated user found to associate with request");
       }
     }
   }
 
-  public static String getAuthTokenForUser(String ownerSid, UserResourceManager userResourceManager) {
-    Principal correspondingUser = userResourceManager.getPrincipalById(ownerSid);
+  public String getAuthTokenForUser(String ownerSid) {
+    Principal correspondingUser = resourceManager.manageUsers().getPrincipalById(ownerSid);
     return getAuthTokenForUser(correspondingUser);
   }
 
-  public static String getAuthTokenForUser(Principal principal) {
-    return makeBearerToken(new JwtTokenProvider().createToken(principal));
+  public String getAuthTokenForUser(Principal principal) {
+    return makeBearerToken(new JwtTokenProvider(
+        resourceManager.getCoreConfigurationStorage(),
+        resourceManager.manageUsers().getDb(),
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage()
+    ).createToken(principal));
   }
 
-  private static String makeBearerToken(String token) {
+  private String makeBearerToken(String token) {
     return "Bearer " + token;
   }
 
-  private static String getOwnerSid(String resourceId, PermissionResourceManager permissionResourceManager) {
-    return permissionResourceManager.findForObjectId(resourceId)
+  private String getOwnerSid(String resourceId) {
+    return resourceManager.managePermissions().findForObjectId(resourceId)
         .stream()
         .findFirst()
         .map(Permission::getOwnerSid)

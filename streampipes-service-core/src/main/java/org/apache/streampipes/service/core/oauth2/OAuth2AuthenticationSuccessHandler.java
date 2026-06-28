@@ -23,6 +23,10 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.service.core.oauth2.util.CookieUtils;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.service.RefreshTokenService;
@@ -58,8 +62,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
   @Autowired
   OAuth2AuthenticationSuccessHandler(HttpCookieOAuth2AuthorizationRequestRepository
-                                         httpCookieOAuth2AuthorizationRequestRepository) {
-    this.tokenProvider = new JwtTokenProvider();
+                                         httpCookieOAuth2AuthorizationRequestRepository,
+                                     ISpCoreConfigurationStorage coreConfigurationStorage,
+                                     IRoleStorage roleStorage,
+                                     IUserGroupStorage userGroupStorage,
+                                     IUserStorage userStorage) {
+    this.tokenProvider = new JwtTokenProvider(coreConfigurationStorage, userStorage, roleStorage, userGroupStorage);
     this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
     this.env = Environments.getEnvironment();
   }

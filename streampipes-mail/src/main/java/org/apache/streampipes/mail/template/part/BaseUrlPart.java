@@ -18,10 +18,12 @@
 package org.apache.streampipes.mail.template.part;
 
 import org.apache.streampipes.mail.utils.MailUtils;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 
 public class BaseUrlPart extends AbstractPart {
+
   @Override
-  public String generate() {
-    return MailUtils.extractBaseUrl();
+  public String generate(SpCoreConfiguration configuration) {
+    return MailUtils.extractBaseUrl(configuration);
   }
 }

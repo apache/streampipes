@@ -50,11 +50,13 @@ import java.util.ArrayList;
 public class ResetResource extends AbstractAuthGuardedRestResource {
 
   private final ResetManagement resetManagement;
+  private final SpResourceManager resourceManager;
 
   public ResetResource(WorkerRestClient workerRestClient,
                        ExtensionServiceRequestManager requestManager,
                        SpResourceManager resourceManager) {
     IExtensionsServiceStorage extensionsServiceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
+    this.resourceManager = resourceManager;
     var pipelineManager = new PipelineManager(
         resourceManager
     );
@@ -72,7 +74,7 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Resets StreamPipes instance")
   public ResponseEntity<SuccessMessage> reset() {
     resetManagement.reset(getAuthenticatedUsername());
-    var userStorage = getUserStorage();
+    var userStorage = resourceManager.manageUsers().getDb();
 
 
     // Delete all users other than current user (admin) and their resources
@@ -86,9 +88,9 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
     }
 
     // Delete all user Groups
-    var allUserGroups = getNoSqlStorage().getUserGroupStorage().findAll();
+    var allUserGroups = resourceManager.getUserGroupStorage().findAll();
     for (var group : allUserGroups) {
-      getNoSqlStorage().getUserGroupStorage().deleteElementById(group.getElementId());
+      resourceManager.getUserGroupStorage().deleteElementById(group.getElementId());
     }
 
     // Delete all connect script templates
