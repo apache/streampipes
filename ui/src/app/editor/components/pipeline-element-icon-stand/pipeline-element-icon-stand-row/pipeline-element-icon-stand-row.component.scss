@@ -81,36 +81,86 @@
 
 .draggable-pipeline-element {
     cursor: move;
+    display: grid;
+    grid-template-columns: 35px minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: var(--space-sm);
+    min-height: 2.5rem;
+    padding: var(--space-2xs) var(--space-sm);
+    border-radius: var(--radius-sm);
     z-index: 100;
+    transition:
+        background-color var(--motion-duration-fast)
+            var(--motion-easing-standard),
+        color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.draggable-pipeline-element:hover {
+    background: var(--color-surface-interactive-hover);
+}
+
+.pipeline-element-row-content {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--space-2xs);
 }
 
 .element-name {
     overflow: hidden;
     text-overflow: ellipsis;
-    display: inline-block;
     white-space: nowrap;
-    max-width: 170px;
 }
 
 .element-name-hover {
-    word-wrap: break-word;
     overflow-wrap: anywhere;
     word-break: break-word;
 }
 
+.element-name-label {
+    color: var(--mat-sys-on-surface);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.25;
+}
+
 .element-description {
-    font-weight: 300;
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--mat-sys-on-surface-variant);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+    line-height: 1.25;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.asset-labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
 }
 
 .help-button-stand {
     padding: 0;
     min-width: 0;
-    width: 20px;
-    height: 20px;
+    width: 1.5rem;
+    height: 1.5rem;
     flex-shrink: 0;
-    line-height: 20px;
-    border-radius: 0;
-    margin-right: 5px;
+    border-radius: var(--radius-xs);
+    color: var(--color-primary);
+    line-height: 1;
+}
+
+.help-button-stand:hover {
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.help-button-stand .mat-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    font-size: var(--font-size-lg);
+    line-height: 1;
 }
 
 .pe-container {

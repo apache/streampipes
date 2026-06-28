@@ -16,35 +16,31 @@
 ~
 -->
 <div
-    fxLayout="row"
     class="draggable-pipeline-element"
-    fxFlex="100"
     id="{{ element.appId || element.name.toLowerCase().replaceAll(' ', '_') }}"
     [attr.data-pe]="element.elementId"
     (mouseenter)="updateMouseOver(element.name)"
     (mouseleave)="updateMouseOver('')"
     data-cy="pipeline-element-icon-stand-row"
 >
-    <div fxFlex="50px">
-        <div
-            matTooltip="{{ element.name }}"
-            [matTooltipPosition]="'above'"
-            class="draggable-icon-editor tt"
-            [ngClass]="activeCssClass"
-        >
-            <span id="container" class="pe-container">
-                <sp-pipeline-element
-                    id="pe-icon-stand-{{ element.appId }}"
-                    [iconStandSize]="true"
-                    [attr.data-cy]="'sp-pipeline-element-' + cypressName"
-                    [pipelineElement]="element"
-                ></sp-pipeline-element>
-            </span>
-        </div>
+    <div
+        matTooltip="{{ element.name }}"
+        [matTooltipPosition]="'above'"
+        class="draggable-icon-editor tt"
+        [ngClass]="activeCssClass"
+    >
+        <span id="container" class="pe-container">
+            <sp-pipeline-element
+                id="pe-icon-stand-{{ element.appId }}"
+                [iconStandSize]="true"
+                [attr.data-cy]="'sp-pipeline-element-' + cypressName"
+                [pipelineElement]="element"
+            ></sp-pipeline-element>
+        </span>
     </div>
-    <div fxFlex fxLayoutAlign="start start" fxLayout="column">
+    <div class="pipeline-element-row-content">
         <div
-            class="font-bold"
+            class="element-name-label"
             [ngClass]="{
                 'element-name-hover': currentMouseOver,
                 'element-name': !currentMouseOver,
@@ -53,39 +49,35 @@
             {{ element.name }}
         </div>
         @if (currentMouseOver && assetContext) {
-            <div class="element-description" fxLayoutAlign="start start">
-                <div fxLayout="row wrap" fxLayoutGap="4px">
-                    @for (asset of assetContext.assets; track asset.id) {
-                        <sp-label
-                            size="small"
-                            tone="neutral"
-                            variant="soft"
-                            [labelText]="asset.label"
-                            [matTooltip]="asset.tooltip"
-                        >
-                        </sp-label>
-                    }
-                </div>
+            <div class="asset-labels">
+                @for (asset of assetContext.assets; track asset.id) {
+                    <sp-label
+                        size="small"
+                        tone="neutral"
+                        variant="soft"
+                        [labelText]="asset.label"
+                        [matTooltip]="asset.tooltip"
+                    >
+                    </sp-label>
+                }
             </div>
         }
         @if (currentMouseOver) {
-            <div class="element-description" fxLayoutAlign="start start">
-                <span class="text-xs">{{ element.description }}</span>
+            <div class="element-description">
+                {{ element.description }}
             </div>
         }
     </div>
     @if (currentMouseOver) {
-        <div fxLayoutAlign="end start">
-            <button
-                style="height: 20px"
-                mat-flat-button
-                color="accent"
-                class="help-button-stand"
-                data-cy="help-button-icon-stand"
-                (click)="openHelpDialog(element)"
-            >
-                ?
-            </button>
-        </div>
+        <button
+            mat-icon-button
+            class="help-button-stand"
+            data-cy="help-button-icon-stand"
+            [matTooltip]="'Help'"
+            [matTooltipPosition]="'above'"
+            (click)="openHelpDialog(element)"
+        >
+            <mat-icon>help</mat-icon>
+        </button>
     }
 </div>
