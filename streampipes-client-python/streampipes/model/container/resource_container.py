@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import json
 from abc import ABC, abstractmethod
-from typing import Dict, List, Type
 
 import pandas as pd
 from pydantic import ValidationError
@@ -131,7 +130,7 @@ class ResourceContainer(ABC):
 
     """
 
-    def __init__(self, resources: List[Resource]):
+    def __init__(self, resources: list[Resource]):
         self._resources = resources
 
     def __getitem__(self, position: int) -> Resource:
@@ -146,7 +145,7 @@ class ResourceContainer(ABC):
 
     @classmethod
     @abstractmethod
-    def _resource_cls(cls) -> Type[Resource]:
+    def _resource_cls(cls) -> type[Resource]:
         """Returns the class of the resource that are bundled.
 
         Returns
@@ -193,7 +192,7 @@ class ResourceContainer(ABC):
 
         return resource_container
 
-    def to_dicts(self, use_source_names: bool = False) -> List[Dict]:
+    def to_dicts(self, use_source_names: bool = False) -> list[dict]:
         """Returns the contained resources as list of dictionaries.
 
         Parameters
