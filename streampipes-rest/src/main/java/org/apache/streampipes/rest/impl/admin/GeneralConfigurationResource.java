@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl.admin;
 import org.apache.streampipes.model.configuration.GeneralConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -41,20 +42,25 @@ import java.util.Base64;
 @RequestMapping("/api/v2/admin/general-config")
 public class GeneralConfigurationResource extends AbstractAuthGuardedRestResource {
 
+  private final ISpCoreConfigurationStorage configurationStorage;
+
+  public GeneralConfigurationResource(ISpCoreConfigurationStorage configurationStorage) {
+    this.configurationStorage = configurationStorage;
+  }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public GeneralConfig getGeneralConfiguration() {
-    return getSpCoreConfigurationStorage().get().getGeneralConfig();
+    return configurationStorage.get().getGeneralConfig();
   }
 
   @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> updateGeneralConfiguration(@RequestBody GeneralConfig config) {
     config.setConfigured(true);
-    var storage = getSpCoreConfigurationStorage();
-    var cfg = storage.get();
+    var cfg = configurationStorage.get();
     cfg.setGeneralConfig(config);
-    storage.updateElement(cfg);
+    configurationStorage.updateElement(cfg);
 
     return ok();
   }

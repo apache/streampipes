@@ -20,6 +20,7 @@ package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
@@ -50,7 +51,11 @@ public class DataExplorerQueryManagementIotDb implements IDataExplorerQueryManag
   }
 
   @Override
-  public void getDataAsStream(ProvidedRestQueryParams params, OutputFormat format, boolean ignoreMissingValues, OutputStream outputStream) throws IOException {
+  public void getDataAsStream(ProvidedRestQueryParams params,
+                              OutputFormat format,
+                              ConfiguredOutputWriterFactory outputWriterFactory,
+                              boolean ignoreMissingValues,
+                              OutputStream outputStream) throws IOException {
 
   }
 

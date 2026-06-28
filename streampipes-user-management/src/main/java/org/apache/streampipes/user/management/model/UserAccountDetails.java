@@ -19,12 +19,16 @@ package org.apache.streampipes.user.management.model;
 
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 
 public class UserAccountDetails extends PrincipalUserDetails<UserAccount> {
 
   public UserAccountDetails(UserAccount details,
-                            IPermissionStorage permissionStorage) {
-    super(details, permissionStorage);
+                            IPermissionStorage permissionStorage,
+                            IRoleStorage roleStorage,
+                            IUserGroupStorage userGroupStorage) {
+    super(details, permissionStorage, roleStorage, userGroupStorage);
   }
 
   @Override

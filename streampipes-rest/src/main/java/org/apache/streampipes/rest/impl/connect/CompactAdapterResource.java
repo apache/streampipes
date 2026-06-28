@@ -77,7 +77,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     ));
     var guessManagement = new GuessManagement(
         new ExtensionsServiceEndpointGenerator(),
-        requestManager
+        requestManager,
+        resourceManager
     );
     this.requestManager = requestManager;
     this.compactAdapterManagement = new CompactAdapterManagement(

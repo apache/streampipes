@@ -27,6 +27,7 @@ import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpoi
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -49,11 +50,14 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<Void> {
 
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
   private final WorkerRestClient workerRestClient;
+  private final SpResourceManager resourceManager;
 
-  public RuntimeResolvableResource(WorkerRestClient workerRestClient) {
+  public RuntimeResolvableResource(WorkerRestClient workerRestClient,
+                                   SpResourceManager resourceManager) {
     super();
     this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
     this.workerRestClient = workerRestClient;
+    this.resourceManager = resourceManager;
   }
 
   @PostMapping(
@@ -71,7 +75,8 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<Void> {
           runtimeOptionsRequest.getDeploymentConfiguration().getDesiredServiceTags()
       );
       SecretProvider.getDecryptionService().applyConfig(runtimeOptionsRequest.getStaticProperties());
-      RuntimeOptionsResponse result = workerRestClient.getConfiguration(service, appId, runtimeOptionsRequest);
+      RuntimeOptionsResponse result = workerRestClient
+          .getConfiguration(service, appId, runtimeOptionsRequest, resourceManager);
 
       return ok(result);
     } catch (AdapterException | NoServiceEndpointsAvailableException e) {

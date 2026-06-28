@@ -41,15 +41,17 @@ public class PipelineElementAsset extends AbstractRestResource {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementAsset.class);
 
   private final SpResourceManager resourceManager;
+  private final AssetManager assetManager;
 
   public PipelineElementAsset(SpResourceManager resourceManager) {
     this.resourceManager = resourceManager;
+    this.assetManager = new AssetManager(resourceManager.getCoreConfigurationStorage());
   }
 
   @GetMapping(path = "/{appId}/assets/icon")
   public ResponseEntity<?> getIconAsset(@PathVariable("appId") String appId) {
     try {
-      byte[] icon = AssetManager.getAssetIcon(appId);
+      byte[] icon = assetManager.getAssetIcon(appId);
       return ResponseEntity.ok()
           .contentType(MediaType.parseMediaType(ImageMimeTypeDetector.detect(icon)))
           .body(icon);
@@ -75,7 +77,7 @@ public class PipelineElementAsset extends AbstractRestResource {
             .getElementById(dataStream.getCorrespondingAdapterId());
         appId = adapterDescription.getAppId();
       }
-      return ok(AssetManager.getAssetDocumentation(appId));
+      return ok(assetManager.getAssetDocumentation(appId));
     } catch (IOException e) {
       return fail();
     }
@@ -85,7 +87,7 @@ public class PipelineElementAsset extends AbstractRestResource {
   public ResponseEntity<?> getAsset(@PathVariable("appId") String appId, @PathVariable("assetName") String
       assetName) {
     try {
-      byte[] asset = AssetManager.getAsset(appId, assetName);
+      byte[] asset = assetManager.getAsset(appId, assetName);
       return ok(asset);
     } catch (IOException e) {
       LOG.error("Could not find asset {}", assetName);
