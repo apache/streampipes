@@ -15,14 +15,15 @@
 # limitations under the License.
 #
 import asyncio
-from typing import Any, AsyncGenerator, AsyncIterator, Dict, Tuple
+from collections.abc import AsyncGenerator, AsyncIterator
+from typing import Any
 
 
 class AsyncIterHandler:
     """Handles asynchronous iterators to get every message after another in parallel."""
 
     @staticmethod
-    async def anext(stream_id: str, message: AsyncIterator) -> Tuple[str, Any]:
+    async def anext(stream_id: str, message: AsyncIterator) -> tuple[str, Any]:
         """Gets the next message from an AsyncIterator.
 
         Parameters
@@ -43,7 +44,7 @@ class AsyncIterHandler:
             return "stop", None
 
     @staticmethod
-    async def combine_async_messages(messages: Dict[str, AsyncIterator]) -> AsyncGenerator:
+    async def combine_async_messages(messages: dict[str, AsyncIterator]) -> AsyncGenerator:
         """Continuously gets the next published message from multiple AsyncIterators in parallel.
 
         Parameters
