@@ -148,10 +148,12 @@ export class DatasetUtils {
     ): Cypress.Chainable<string> {
         this.refreshDataLakeMeasures();
         return this.getDatasetLastEventCell(datasetName).then($cell => {
-            const lastEvent = $cell.text().trim();
+            const lastEvent = this.getComparableLastEventValueFromElement(
+                $cell[0],
+            );
 
             if (this.isDatasetNotEmptyValue(lastEvent)) {
-                return this.getComparableLastEventValueFromElement($cell[0]);
+                return lastEvent;
             } else if (attempts > 0) {
                 cy.wait(1000);
                 return DatasetUtils.waitForDatasetNotEmpty(
@@ -160,7 +162,7 @@ export class DatasetUtils {
                 );
             } else {
                 expect(this.isDatasetNotEmptyValue(lastEvent)).to.equal(true);
-                return this.getComparableLastEventValueFromElement($cell[0]);
+                return lastEvent;
             }
         });
     }
