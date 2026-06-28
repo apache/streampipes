@@ -88,3 +88,13 @@
 .view-radio-button {
     margin: 5px;
 }
+
+.empty-dashboard-state {
+    color: var(--mat-sys-on-surface-variant);
+    text-align: center;
+}
+
+.empty-dashboard-state h4 {
+    color: inherit;
+    font-weight: var(--font-weight-medium);
+}

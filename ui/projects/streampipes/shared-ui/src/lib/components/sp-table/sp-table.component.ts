@@ -223,6 +223,8 @@ export class SpTableComponent<T>
     private renderedDataSubscription?: Subscription;
     private assetDataSubscription?: Subscription;
     private nameSearchSubscription?: Subscription;
+    private columnDefsSubscription?: Subscription;
+    private registeredColumnDefs = new Set<MatColumnDef>();
     private nameSearchInput$ = new Subject<string>();
     private viewInitialized = false;
     private defaultFilterPredicates = new WeakMap<
@@ -261,9 +263,11 @@ export class SpTableComponent<T>
     }
 
     ngAfterContentInit() {
-        this.columnDefs.forEach(columnDef =>
-            this.table.addColumnDef(columnDef),
-        );
+        this.syncColumnDefs();
+        this.columnDefsSubscription = this.columnDefs.changes.subscribe(() => {
+            this.syncColumnDefs();
+            this.table.renderRows();
+        });
         this.rowDefs.forEach(rowDef => this.table.addRowDef(rowDef));
         this.headerRowDefs.forEach(headerRowDef =>
             this.table.addHeaderRowDef(headerRowDef),
@@ -312,6 +316,7 @@ export class SpTableComponent<T>
         this.renderedDataSubscription?.unsubscribe();
         this.assetDataSubscription?.unsubscribe();
         this.nameSearchSubscription?.unsubscribe();
+        this.columnDefsSubscription?.unsubscribe();
     }
 
     @HostListener('window:resize')
@@ -559,6 +564,24 @@ export class SpTableComponent<T>
         this.renderedDataSubscription?.unsubscribe();
         this.renderedDataSubscription = this.dataSource.connect().subscribe({
             next: rows => this.updateRenderedState(rows ?? []),
+        });
+    }
+
+    private syncColumnDefs() {
+        const currentColumnDefs = new Set(this.columnDefs.toArray());
+
+        this.registeredColumnDefs.forEach(columnDef => {
+            if (!currentColumnDefs.has(columnDef)) {
+                this.table.removeColumnDef(columnDef);
+                this.registeredColumnDefs.delete(columnDef);
+            }
+        });
+
+        currentColumnDefs.forEach(columnDef => {
+            if (!this.registeredColumnDefs.has(columnDef)) {
+                this.table.addColumnDef(columnDef);
+                this.registeredColumnDefs.add(columnDef);
+            }
         });
     }
 
