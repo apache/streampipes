@@ -151,7 +151,7 @@ export class DatasetUtils {
             const lastEvent = $cell.text().trim();
 
             if (this.isDatasetNotEmptyValue(lastEvent)) {
-                return lastEvent;
+                return this.getComparableLastEventValueFromCell($cell);
             } else if (attempts > 0) {
                 cy.wait(1000);
                 return DatasetUtils.waitForDatasetNotEmpty(
@@ -160,7 +160,7 @@ export class DatasetUtils {
                 );
             } else {
                 expect(this.isDatasetNotEmptyValue(lastEvent)).to.equal(true);
-                return lastEvent;
+                return this.getComparableLastEventValueFromCell($cell);
             }
         });
     }
@@ -227,6 +227,17 @@ export class DatasetUtils {
         const trimmedValue = value.trim();
         const exactTimeMatch = trimmedValue.match(/\(([^()]*)\)$/);
         return exactTimeMatch?.[1] ?? trimmedValue;
+    }
+
+    private static getComparableLastEventValueFromCell(
+        $cell: JQuery<HTMLElement>,
+    ): string {
+        return (
+            $cell
+                .find('sp-datalake-last-event-label')
+                .attr('data-last-event-value') ??
+            this.getComparableLastEventValue($cell.text())
+        );
     }
 
     public static openLatestEventsTab() {

@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnChanges } from '@angular/core';
+import {
+    Component,
+    HostBinding,
+    inject,
+    Input,
+    OnChanges,
+} from '@angular/core';
 import { MatTooltip } from '@angular/material/tooltip';
 import { SpLabelComponent } from '@streampipes/shared-ui';
 import { LastUpdatedFormatterService } from '../../../../core-services/time-formatting/last-updated-formatter.service';
@@ -37,6 +43,11 @@ export class DatalakeLastEventLabelComponent implements OnChanges {
     displayValue = 'n/a';
     tooltipValue = '';
     usesRelativeTime = false;
+
+    @HostBinding('attr.data-last-event-value')
+    get lastEventValue(): string | null {
+        return this.lastEvent ? `${this.lastEvent}` : null;
+    }
 
     private lastUpdatedFormatterService = inject(LastUpdatedFormatterService);
 
