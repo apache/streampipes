@@ -80,6 +80,21 @@ PULL_MODE.description=
 SUBSCRIPTION_MODE.title=Subscription mode
 SUBSCRIPTION_MODE.description=
 
+subscription-mode-group.title=Subscription Settings
+subscription-mode-group.description=
+
+SUBSCRIPTION_PUBLISHING_INTERVAL.title=Publishing Interval
+SUBSCRIPTION_PUBLISHING_INTERVAL.description=Requested OPC UA subscription publishing interval, in milliseconds
+
+SUBSCRIPTION_SAMPLING_INTERVAL.title=Sampling Interval
+SUBSCRIPTION_SAMPLING_INTERVAL.description=Requested monitored item sampling interval, in milliseconds
+
+SUBSCRIPTION_QUEUE_SIZE.title=Queue Size
+SUBSCRIPTION_QUEUE_SIZE.description=Requested queue size for each monitored item
+
+SUBSCRIPTION_DISCARD_OLDEST.title=Queue Overflow Handling
+SUBSCRIPTION_DISCARD_OLDEST.description=Select which queued value is discarded when the monitored item queue is full
+
 incomplete-event-handling.title=Incomplete Events
 incomplete-event-handling.description=Select how events with missing values (e.g., due to bad status codes) are handled.
 
