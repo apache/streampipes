@@ -23,7 +23,6 @@ import org.apache.streampipes.connect.management.management.AdapterMasterManagem
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.connect.transformer.api.TransformationEngine;
 import org.apache.streampipes.connect.transformer.api.TransformationEngines;
-import org.apache.streampipes.connect.transformer.groovy.GroovyScriptEngine;
 import org.apache.streampipes.connect.transformer.js.GraalJsScriptEngine;
 import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
@@ -129,7 +128,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
             new SpMqttProtocolFactory(),
             new SpPulsarProtocolFactory()),
         List.of(
-            GroovyScriptEngine::new,
             GraalJsScriptEngine::new
         )
     );
