@@ -131,7 +131,7 @@ public class GuessManagement {
           throw new AdapterException("No samples available to transform");
         }
 
-      } catch (ScriptCompilationException | ScriptExecutionException e) {
+      } catch (ScriptCompilationException | ScriptExecutionException | IllegalArgumentException e) {
         throw new AdapterException(String.format("Could not execute script: %s", e.getMessage()));
       }
     }

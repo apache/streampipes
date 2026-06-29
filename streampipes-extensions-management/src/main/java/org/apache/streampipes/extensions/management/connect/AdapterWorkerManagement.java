@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.connect.transformer.api.TransformationEngines;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
@@ -58,6 +59,7 @@ public class AdapterWorkerManagement {
 
     if (adapter.isPresent()) {
       var newAdapterInstance = adapter.get().declareConfig().getSupplier().get();
+      validateScriptLanguage(adapterDescription);
       runningAdapterInstances.addAdapter(
           adapterDescription.getElementId(),
           newAdapterInstance,
@@ -100,6 +102,17 @@ public class AdapterWorkerManagement {
 
   private IAdapterRuntimeContext makeRuntimeContext(String adapterInstanceId) {
     return new AdapterContextGenerator().makeRuntimeContext(adapterInstanceId);
+  }
+
+  private void validateScriptLanguage(AdapterDescription adapterDescription) throws AdapterException {
+    var transformationConfig = adapterDescription.getTransformationConfig();
+    if (transformationConfig != null && transformationConfig.isScriptActive()) {
+      try {
+        TransformationEngines.INSTANCE.validateSupportedLanguage(transformationConfig.getLanguage());
+      } catch (IllegalArgumentException e) {
+        throw new AdapterException(e.getMessage(), e);
+      }
+    }
   }
 
   private void resetMonitoring(String elementId) {
