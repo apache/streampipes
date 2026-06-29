@@ -41,12 +41,14 @@ public class MonitoringManagement {
   public SpEndpointMonitoringInfo getMonitoringInfos() {
     try {
       var monitoringInfo = monitoringManager.getMonitoringInfo();
-      LOG.debug("Returning extension monitoring response: resourceCount={}, totalOutputCounter={}, "
-              + "latestOutputTimestamp={}, thread={}",
-          monitoringInfo.getMetricsInfos().size(),
-          totalOutputCounter(monitoringInfo),
-          latestOutputTimestamp(monitoringInfo),
-          Thread.currentThread().getName());
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Returning extension monitoring response: resourceCount={}, totalOutputCounter={}, "
+                + "latestOutputTimestamp={}, thread={}",
+            monitoringInfo.getMetricsInfos().size(),
+            totalOutputCounter(monitoringInfo),
+            latestOutputTimestamp(monitoringInfo),
+            Thread.currentThread().getName());
+      }
 
       return monitoringInfo;
     } finally {

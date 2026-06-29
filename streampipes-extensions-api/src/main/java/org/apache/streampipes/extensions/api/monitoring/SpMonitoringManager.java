@@ -95,12 +95,14 @@ public enum SpMonitoringManager {
 
   public SpEndpointMonitoringInfo getMonitoringInfo() {
     var logInfos = makeLogInfos();
-    LOG.debug("Providing extension monitoring snapshot: resourceCount={}, totalOutputCounter={}, "
-            + "latestOutputTimestamp={}, thread={}",
-        metricsInfos.size(),
-        totalOutputCounter(),
-        latestOutputTimestamp(),
-        Thread.currentThread().getName());
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Providing extension monitoring snapshot: resourceCount={}, totalOutputCounter={}, "
+              + "latestOutputTimestamp={}, thread={}",
+          metricsInfos.size(),
+          totalOutputCounter(),
+          latestOutputTimestamp(),
+          Thread.currentThread().getName());
+    }
 
     return new SpEndpointMonitoringInfo(logInfos, metricsInfos);
   }

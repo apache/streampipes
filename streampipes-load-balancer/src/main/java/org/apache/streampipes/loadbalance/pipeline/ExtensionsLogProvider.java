@@ -46,20 +46,24 @@ public enum ExtensionsLogProvider {
   private final Map<String, SpMetricsEntry> allMetricsInfos = new HashMap<>();
 
   public void addMonitoringInfos(SpEndpointMonitoringInfo monitoringInfo) {
-    LOG.debug("Updating core monitoring cache: incomingResourceCount={}, cachedResourceCountBefore={}, "
-            + "incomingTotalOutputCounter={}, incomingLatestOutputTimestamp={}, thread={}",
-        monitoringInfo.getMetricsInfos().size(),
-        allMetricsInfos.size(),
-        totalOutputCounter(monitoringInfo.getMetricsInfos()),
-        latestOutputTimestamp(monitoringInfo.getMetricsInfos()),
-        Thread.currentThread().getName());
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Updating core monitoring cache: incomingResourceCount={}, cachedResourceCountBefore={}, "
+              + "incomingTotalOutputCounter={}, incomingLatestOutputTimestamp={}, thread={}",
+          monitoringInfo.getMetricsInfos().size(),
+          allMetricsInfos.size(),
+          totalOutputCounter(monitoringInfo.getMetricsInfos()),
+          latestOutputTimestamp(monitoringInfo.getMetricsInfos()),
+          Thread.currentThread().getName());
+    }
 
     allMetricsInfos.putAll(monitoringInfo.getMetricsInfos());
-    LOG.debug("Updated core monitoring cache: cachedResourceCountAfter={}, cachedTotalOutputCounter={}, "
-            + "cachedLatestOutputTimestamp={}",
-        allMetricsInfos.size(),
-        totalOutputCounter(allMetricsInfos),
-        latestOutputTimestamp(allMetricsInfos));
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Updated core monitoring cache: cachedResourceCountAfter={}, cachedTotalOutputCounter={}, "
+              + "cachedLatestOutputTimestamp={}",
+          allMetricsInfos.size(),
+          totalOutputCounter(allMetricsInfos),
+          latestOutputTimestamp(allMetricsInfos));
+    }
 
     monitoringInfo.getLogInfos().forEach((key, value) -> {    
       if (!allLogInfos.containsKey(key)) {

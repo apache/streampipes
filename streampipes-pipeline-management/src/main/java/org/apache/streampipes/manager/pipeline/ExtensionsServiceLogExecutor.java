@@ -68,23 +68,29 @@ public class ExtensionsServiceLogExecutor implements Runnable {
 
   public void triggerUpdate() {
     List<SpServiceRegistration> serviceEndpoints = getActiveExtensionsEndpoints();
-    LOG.debug("Monitoring fetch triggered: serviceCount={}, thread={}",
-        serviceEndpoints.size(),
-        Thread.currentThread().getName());
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Monitoring fetch triggered: serviceCount={}, thread={}",
+          serviceEndpoints.size(),
+          Thread.currentThread().getName());
+    }
 
     serviceEndpoints.forEach(serviceEndpoint -> {
       try {
-        LOG.debug("Fetching monitoring info from extension service: serviceId={}, serviceUrl={}, thread={}",
-            serviceEndpoint.getSvcId(),
-            serviceEndpoint.getServiceUrl(),
-            Thread.currentThread().getName());
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Fetching monitoring info from extension service: serviceId={}, serviceUrl={}, thread={}",
+              serviceEndpoint.getSvcId(),
+              serviceEndpoint.getServiceUrl(),
+              Thread.currentThread().getName());
+        }
 
         var target = ExtensionServiceRequestTargets.serviceHealth(serviceEndpoint, LOG_PATH);
         var response = extensionRequestManager.request(ExtensionServiceRequests.serviceHealth(target, resourceManager));
-        LOG.debug("Monitoring fetch response from extension service: serviceId={}, status={}, success={}",
-            serviceEndpoint.getSvcId(),
-            response.statusCode(),
-            response.isSuccess());
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Monitoring fetch response from extension service: serviceId={}, status={}, success={}",
+              serviceEndpoint.getSvcId(),
+              response.statusCode(),
+              response.isSuccess());
+        }
 
         if (!response.isSuccess()) {
           LOG.info("Could not fetch log info from endpoint {} (status {})",
@@ -93,12 +99,14 @@ public class ExtensionsServiceLogExecutor implements Runnable {
         }
 
         SpEndpointMonitoringInfo monitoringInfo = parseLogResponse(response.responseBody());
-        LOG.debug("Fetched monitoring info from extension service: serviceId={}, resourceCount={}, "
-                + "totalOutputCounter={}, latestOutputTimestamp={}",
-            serviceEndpoint.getSvcId(),
-            monitoringInfo.getMetricsInfos().size(),
-            totalOutputCounter(monitoringInfo),
-            latestOutputTimestamp(monitoringInfo));
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Fetched monitoring info from extension service: serviceId={}, resourceCount={}, "
+                  + "totalOutputCounter={}, latestOutputTimestamp={}",
+              serviceEndpoint.getSvcId(),
+              monitoringInfo.getMetricsInfos().size(),
+              totalOutputCounter(monitoringInfo),
+              latestOutputTimestamp(monitoringInfo));
+        }
 
         ExtensionsLogProvider.INSTANCE.addMonitoringInfos(monitoringInfo);
       } catch (IOException e) {

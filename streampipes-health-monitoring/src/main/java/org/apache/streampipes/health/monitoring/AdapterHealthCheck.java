@@ -104,19 +104,24 @@ public class AdapterHealthCheck {
     var adapterMetrics = AdapterMetricsManager.getInstance().getAdapterMetrics();
     var totalEventsPublished = 0L;
     var latestEventTimestamp = 0L;
-    
+    var debugEnabled = LOG.isDebugEnabled();
+
     for (AdapterDescription adapterDescription : runningAdapterDescriptions) {
       var metricsEntry = updateTotalEventsPublished(adapterMetrics,
                                                     adapterDescription.getElementId(),
                                                     adapterDescription.getName());
-      totalEventsPublished += metricsEntry.getMessagesOut().getCounter();
-      latestEventTimestamp = Math.max(latestEventTimestamp, metricsEntry.getMessagesOut().getLastTimestamp());
+      if (debugEnabled) {
+        totalEventsPublished += metricsEntry.getMessagesOut().getCounter();
+        latestEventTimestamp = Math.max(latestEventTimestamp, metricsEntry.getMessagesOut().getLastTimestamp());
+      }
     }
-    
-    LOG.debug("Monitoring {} adapter instances, totalEventsPublished={}, latestEventTimestamp={}",
-        adapterMetrics.size(),
-        totalEventsPublished,
-        latestEventTimestamp);
+
+    if (debugEnabled) {
+      LOG.debug("Monitoring {} adapter instances, totalEventsPublished={}, latestEventTimestamp={}",
+          adapterMetrics.size(),
+          totalEventsPublished,
+          latestEventTimestamp);
+    }
   }
 
   private SpMetricsEntry updateTotalEventsPublished(
