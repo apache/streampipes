@@ -22,6 +22,9 @@ import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,8 @@ import java.util.Map;
 public enum SpMonitoringManager {
 
   INSTANCE;
+
+  private static final Logger LOG = LoggerFactory.getLogger(SpMonitoringManager.class);
 
   private final Map<String, FixedSizeList<SpLogEntry>> logInfos;
   private final Map<String, SpMetricsEntry> metricsInfos;
@@ -90,6 +95,13 @@ public enum SpMonitoringManager {
 
   public SpEndpointMonitoringInfo getMonitoringInfo() {
     var logInfos = makeLogInfos();
+    LOG.debug("Providing extension monitoring snapshot: resourceCount={}, totalOutputCounter={}, "
+            + "latestOutputTimestamp={}, thread={}",
+        metricsInfos.size(),
+        totalOutputCounter(),
+        latestOutputTimestamp(),
+        Thread.currentThread().getName());
+
     return new SpEndpointMonitoringInfo(logInfos, metricsInfos);
   }
 
@@ -118,6 +130,21 @@ public enum SpMonitoringManager {
 
   private void addMetricsObject(String resourceId) {
     this.metricsInfos.put(resourceId, new SpMetricsEntry());
+  }
+
+  private long totalOutputCounter() {
+    return metricsInfos.values()
+        .stream()
+        .mapToLong(metricsEntry -> metricsEntry.getMessagesOut().getCounter())
+        .sum();
+  }
+
+  private long latestOutputTimestamp() {
+    return metricsInfos.values()
+        .stream()
+        .mapToLong(metricsEntry -> metricsEntry.getMessagesOut().getLastTimestamp())
+        .max()
+        .orElse(0);
   }
 
 }

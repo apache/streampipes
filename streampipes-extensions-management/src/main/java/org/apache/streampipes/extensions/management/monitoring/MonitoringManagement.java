@@ -21,7 +21,12 @@ package org.apache.streampipes.extensions.management.monitoring;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MonitoringManagement {
+
+  private static final Logger LOG = LoggerFactory.getLogger(MonitoringManagement.class);
 
   private final SpMonitoringManager monitoringManager;
 
@@ -35,9 +40,34 @@ public class MonitoringManagement {
 
   public SpEndpointMonitoringInfo getMonitoringInfos() {
     try {
-      return monitoringManager.getMonitoringInfo();
+      var monitoringInfo = monitoringManager.getMonitoringInfo();
+      LOG.debug("Returning extension monitoring response: resourceCount={}, totalOutputCounter={}, "
+              + "latestOutputTimestamp={}, thread={}",
+          monitoringInfo.getMetricsInfos().size(),
+          totalOutputCounter(monitoringInfo),
+          latestOutputTimestamp(monitoringInfo),
+          Thread.currentThread().getName());
+
+      return monitoringInfo;
     } finally {
       monitoringManager.clearAllLogs();
     }
+  }
+
+  private long totalOutputCounter(SpEndpointMonitoringInfo monitoringInfo) {
+    return monitoringInfo.getMetricsInfos()
+        .values()
+        .stream()
+        .mapToLong(metricsEntry -> metricsEntry.getMessagesOut().getCounter())
+        .sum();
+  }
+
+  private long latestOutputTimestamp(SpEndpointMonitoringInfo monitoringInfo) {
+    return monitoringInfo.getMetricsInfos()
+        .values()
+        .stream()
+        .mapToLong(metricsEntry -> metricsEntry.getMessagesOut().getLastTimestamp())
+        .max()
+        .orElse(0);
   }
 }

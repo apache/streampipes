@@ -68,11 +68,23 @@ public class ExtensionsServiceLogExecutor implements Runnable {
 
   public void triggerUpdate() {
     List<SpServiceRegistration> serviceEndpoints = getActiveExtensionsEndpoints();
+    LOG.debug("Monitoring fetch triggered: serviceCount={}, thread={}",
+        serviceEndpoints.size(),
+        Thread.currentThread().getName());
 
     serviceEndpoints.forEach(serviceEndpoint -> {
       try {
+        LOG.debug("Fetching monitoring info from extension service: serviceId={}, serviceUrl={}, thread={}",
+            serviceEndpoint.getSvcId(),
+            serviceEndpoint.getServiceUrl(),
+            Thread.currentThread().getName());
+
         var target = ExtensionServiceRequestTargets.serviceHealth(serviceEndpoint, LOG_PATH);
         var response = extensionRequestManager.request(ExtensionServiceRequests.serviceHealth(target, resourceManager));
+        LOG.debug("Monitoring fetch response from extension service: serviceId={}, status={}, success={}",
+            serviceEndpoint.getSvcId(),
+            response.statusCode(),
+            response.isSuccess());
 
         if (!response.isSuccess()) {
           LOG.info("Could not fetch log info from endpoint {} (status {})",
@@ -81,9 +93,16 @@ public class ExtensionsServiceLogExecutor implements Runnable {
         }
 
         SpEndpointMonitoringInfo monitoringInfo = parseLogResponse(response.responseBody());
+        LOG.debug("Fetched monitoring info from extension service: serviceId={}, resourceCount={}, "
+                + "totalOutputCounter={}, latestOutputTimestamp={}",
+            serviceEndpoint.getSvcId(),
+            monitoringInfo.getMetricsInfos().size(),
+            totalOutputCounter(monitoringInfo),
+            latestOutputTimestamp(monitoringInfo));
+
         ExtensionsLogProvider.INSTANCE.addMonitoringInfos(monitoringInfo);
       } catch (IOException e) {
-        LOG.info("Could not fetch log info from endpoint {}", serviceEndpoint);
+        LOG.info("Could not fetch log info from endpoint {}", serviceEndpoint, e);
       }
     });
 
@@ -149,5 +168,22 @@ public class ExtensionsServiceLogExecutor implements Runnable {
   private SpEndpointMonitoringInfo parseLogResponse(String response)
       throws JsonProcessingException {
     return JacksonSerializer.getObjectMapper().readValue(response, SpEndpointMonitoringInfo.class);
+  }
+
+  private long totalOutputCounter(SpEndpointMonitoringInfo monitoringInfo) {
+    return monitoringInfo.getMetricsInfos()
+        .values()
+        .stream()
+        .mapToLong(metricsEntry -> metricsEntry.getMessagesOut().getCounter())
+        .sum();
+  }
+
+  private long latestOutputTimestamp(SpEndpointMonitoringInfo monitoringInfo) {
+    return monitoringInfo.getMetricsInfos()
+        .values()
+        .stream()
+        .mapToLong(metricsEntry -> metricsEntry.getMessagesOut().getLastTimestamp())
+        .max()
+        .orElse(0);
   }
 }
