@@ -34,7 +34,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Subscription, timer } from 'rxjs';
 import { catchError, exhaustMap, tap } from 'rxjs/operators';
-import { TimeSelectionService } from '@streampipes/shared-ui';
+import { SpLabelComponent, TimeSelectionService } from '@streampipes/shared-ui';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
 import { ObservableGenerator } from '../../../chart-shared/models/dataview-dashboard.model';
@@ -45,6 +45,8 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LastUpdatedFormatterService } from '../../../core-services/time-formatting/last-updated-formatter.service';
 
 @Component({
     selector: 'sp-dashboard-kiosk',
@@ -56,6 +58,8 @@ import {
         FlexDirective,
         LayoutAlignDirective,
         DashboardGridViewComponent,
+        SpLabelComponent,
+        TranslatePipe,
     ],
 })
 export class DashboardKioskComponent implements OnInit, OnDestroy {
@@ -65,13 +69,17 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
     private timeSelectionService = inject(TimeSelectionService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
     private dataExplorerSharedService = inject(ChartSharedService);
+    private lastUpdatedFormatterService = inject(LastUpdatedFormatterService);
 
     observableGenerator: ObservableGenerator;
     dashboard: Dashboard;
     widgets: DataExplorerWidgetModel[] = [];
     refresh$: Subscription;
     dashboardRefresh$: Subscription;
+    lastUpdatedClock$: Subscription;
     eTag: string;
+    lastUpdatedAt: number;
+    currentTime: number;
 
     ngOnInit() {
         const dashboardId = this.route.snapshot.params.dashboardId;
@@ -159,10 +167,37 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
             ts = timeSettings;
         }
         this.timeSelectionService.notify(ts);
+        this.markDataUpdated();
+    }
+
+    markDataUpdated(): void {
+        this.lastUpdatedAt = Date.now();
+        this.currentTime = this.lastUpdatedAt;
+        this.startLastUpdatedClock();
+    }
+
+    startLastUpdatedClock(): void {
+        if (this.lastUpdatedClock$) {
+            return;
+        }
+
+        this.lastUpdatedClock$ = timer(1000, 1000)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.currentTime = Date.now();
+            });
+    }
+
+    formatLastUpdatedAt(): string {
+        return this.lastUpdatedFormatterService.formatLastUpdatedAt(
+            this.lastUpdatedAt,
+            this.currentTime,
+        );
     }
 
     ngOnDestroy() {
         this.refresh$?.unsubscribe();
         this.dashboardRefresh$?.unsubscribe();
+        this.lastUpdatedClock$?.unsubscribe();
     }
 }

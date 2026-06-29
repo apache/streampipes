@@ -23,51 +23,47 @@
     width: 20px;
     border-radius: 50%;
     background-color: var(--color-primary);
-    color: rgba(255, 255, 255, 0.75);
-    box-shadow: 0 0 2px var(--color-primary);
+    color: var(--mat-sys-on-primary);
+    box-shadow: none;
     line-height: 1.2;
     text-align: center;
 }
 
 .editor-pe-info {
     position: absolute;
-    left: 0%;
-    top: 50%;
-    width: 106%;
-    padding: 50px 0 10px;
-    font-size: smaller;
+    left: 50%;
+    top: calc(100% + var(--space-2xs));
+    transform: translateX(-50%);
+    box-sizing: border-box;
+    min-width: 6.5rem;
+    max-width: 9rem;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.22;
     text-align: center;
-    box-shadow: 0 0 2px #555;
-    -webkit-animation: slidein 0.5s;
     overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-}
-
-@keyframes slidein {
-    0% {
-        top: 0;
-        border-top-left-radius: 50%;
-        border-top-right-radius: 50%;
-    }
-    100% {
-        top: 50%;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-    }
+    overflow-wrap: anywhere;
+    hyphens: auto;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    border: 1px solid transparent;
+    box-shadow: none;
 }
 
 .pe-info-action {
     background: var(--color-sink);
-    color: white;
+    color: #ffffff;
 }
 
 .pe-info-sepa {
     background: var(--color-processor);
-    color: white;
+    color: #ffffff;
 }
 
 .pe-info-stream {
     background: var(--color-data-source);
-    color: #343434;
+    color: #1f1f1f;
 }

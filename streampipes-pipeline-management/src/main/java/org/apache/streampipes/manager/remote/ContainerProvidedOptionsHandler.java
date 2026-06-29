@@ -24,9 +24,10 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarg
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
-import org.apache.streampipes.manager.util.AuthTokenUtils;
+import org.apache.streampipes.manager.util.AuthTokenProvider;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -38,9 +39,12 @@ import java.util.Set;
 public class ContainerProvidedOptionsHandler {
 
   private final ExtensionServiceRequestManager extensionRequestManager;
+  private final SpResourceManager resourceManager;
 
-  public ContainerProvidedOptionsHandler(ExtensionServiceRequestManager extensionRequestManager) {
+  public ContainerProvidedOptionsHandler(ExtensionServiceRequestManager extensionRequestManager,
+                                         SpResourceManager resourceManager) {
     this.extensionRequestManager = extensionRequestManager;
+    this.resourceManager = resourceManager;
   }
 
   public RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request) {
@@ -48,7 +52,7 @@ public class ContainerProvidedOptionsHandler {
     try {
       var payload = JacksonSerializer.getObjectMapper().writeValueAsString(request);
       var requestTarget = getEndpointRequestTarget(request.getAppId());
-      var authToken = AuthTokenUtils.getAuthTokenForCurrentUser();
+      var authToken = new AuthTokenProvider(resourceManager).getAuthTokenForCurrentUser();
       var response = extensionRequestManager.request(
           ExtensionServiceRequests.containerProvidedOptions(requestTarget, payload, authToken)
       );

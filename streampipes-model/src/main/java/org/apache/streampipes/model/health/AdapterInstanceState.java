@@ -16,17 +16,10 @@
  *
  */
 
-package org.apache.streampipes.connect.management.util;
+package org.apache.streampipes.model.health;
 
-import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
-
-public class Utils {
-
-  public static ISpCoreConfigurationStorage getCoreConfigStorage() {
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getSpCoreConfigurationStorage();
-  }
+public enum AdapterInstanceState {
+  RUNNING,
+  STARTING,
+  STOPPING
 }

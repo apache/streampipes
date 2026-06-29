@@ -22,9 +22,9 @@ import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -64,10 +64,11 @@ public class InvokeHttpRequest{
 
   public PipelineElementStatus execute(EndpointSelectable pipelineElement,
                                        String endpointUrl,
-                                       String pipelineId) {
+                                       String pipelineId,
+                                       SpResourceManager resourceManager) {
     try {
       Response httpResp = initRequest(pipelineElement, endpointUrl)
-              .addHeader("Authorization", getAuthToken(pipelineId))
+              .addHeader("Authorization", getAuthToken(pipelineId, resourceManager))
               .connectTimeout(10000)
               .execute();
       return handleResponse(httpResp, pipelineElement, endpointUrl);
@@ -94,27 +95,41 @@ public class InvokeHttpRequest{
             response.getOptionalMessage());
   }
 
-  public static String getAuthToken(String resourceId) {
+  public static String getAuthToken(String resourceId,
+                                    SpResourceManager resourceManager) {
+    var configurationStorage = resourceManager.getCoreConfigurationStorage();
     if (SecurityContextHolder.getContext().getAuthentication() != null) {
       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      return makeBearerToken(new JwtTokenProvider().createToken(auth));
+      return makeBearerToken(new JwtTokenProvider(
+          configurationStorage,
+          resourceManager.manageUsers().getDb(),
+          resourceManager.getRoleStorage(),
+          resourceManager.getUserGroupStorage()
+      ).createToken(auth));
     } else {
       if (resourceId != null) {
         String ownerSid = getOwnerSid(resourceId);
-        return getAuthTokenForUser(ownerSid);
+        return getAuthTokenForUser(ownerSid, resourceManager);
       } else {
         throw new IllegalArgumentException("No authenticated user found to associate with request");
       }
     }
   }
 
-  public static String getAuthTokenForUser(String ownerSid) {
-    Principal correspondingUser = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().getUserById(ownerSid);
-    return getAuthTokenForUser(correspondingUser);
+  public static String getAuthTokenForUser(String ownerSid,
+                                           SpResourceManager resourceManager) {
+    Principal correspondingUser = resourceManager.manageUsers().getDb().getUserById(ownerSid);
+    return getAuthTokenForUser(correspondingUser, resourceManager);
   }
 
-  public static String getAuthTokenForUser(Principal principal) {
-    return makeBearerToken(new JwtTokenProvider().createToken(principal));
+  public static String getAuthTokenForUser(Principal principal,
+                                           SpResourceManager resourceManager) {
+    return makeBearerToken(new JwtTokenProvider(
+        resourceManager.getCoreConfigurationStorage(),
+        resourceManager.manageUsers().getDb(),
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage()
+    ).createToken(principal));
   }
 
   private static String makeBearerToken(String token) {

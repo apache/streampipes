@@ -24,6 +24,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import org.simplejavamail.MailException;
@@ -44,24 +45,30 @@ import java.io.IOException;
 @RequestMapping("/api/v2/admin/mail-config")
 public class EmailConfigurationResource extends AbstractAuthGuardedRestResource {
 
+  private final ISpCoreConfigurationStorage configurationStorage;
+
+  public EmailConfigurationResource(ISpCoreConfigurationStorage coreConfigurationStorage) {
+    this.configurationStorage = coreConfigurationStorage;
+  }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<EmailConfig> getMailConfiguration() {
-    return ok(getSpCoreConfigurationStorage().get().getEmailConfig());
+    return ok(configurationStorage.get().getEmailConfig());
   }
 
   @GetMapping(path = "templates", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<EmailTemplateConfig> getMailTemplates() {
-    return ok(getSpCoreConfigurationStorage().get().getEmailTemplateConfig());
+    return ok(configurationStorage.get().getEmailTemplateConfig());
   }
 
   @PutMapping(path = "templates", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> updateMailTemplate(@RequestBody EmailTemplateConfig templateConfig) {
-    var config = getSpCoreConfigurationStorage().get();
+    var config = configurationStorage.get();
     config.setEmailTemplateConfig(templateConfig);
-    getSpCoreConfigurationStorage().updateElement(config);
+    configurationStorage.updateElement(config);
     return ok();
   }
 
@@ -78,10 +85,9 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
       config.setSmtpPassword(SecretEncryptionManager.encrypt(config.getSmtpPassword()));
       config.setSmtpPassEncrypted(true);
     }
-    var storage = getSpCoreConfigurationStorage();
-    var cfg = storage.get();
+    var cfg = configurationStorage.get();
     cfg.setEmailConfig(config);
-    storage.updateElement(cfg);
+    configurationStorage.updateElement(cfg);
 
     return ok();
   }
@@ -90,7 +96,8 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> sendTestMail(@RequestBody EmailConfig config) {
     try {
-      new MailTester().sendTestMail(config);
+      var coreConfiguration = configurationStorage.get();
+      new MailTester(coreConfiguration).sendTestMail(config);
       return ok();
     } catch (MailException | IllegalArgumentException | IOException e) {
       throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));

@@ -23,7 +23,6 @@ import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.authorization.PrivilegeManager;
 import org.apache.streampipes.user.management.authorization.RoleManager;
 
@@ -39,15 +38,16 @@ public class ApplyDefaultRolesAndPrivilegesTask implements InstallationTask {
   private final IRoleStorage roleStorage;
   private final IPrivilegeStorage privilegeStorage;
 
-  public ApplyDefaultRolesAndPrivilegesTask() {
-    this.roleStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getRoleStorage();
-    this.privilegeStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPrivilegeStorage();
+  public ApplyDefaultRolesAndPrivilegesTask(IRoleStorage roleStorage,
+                                            IPrivilegeStorage privilegeStorage) {
+    this.roleStorage = roleStorage;
+    this.privilegeStorage = privilegeStorage;
   }
 
   @Override
   public void execute() {
     LOG.info("Creating or updating default roles and privileges");
-    var defaultRoles = new RoleManager().makeDefaultRoles();
+    var defaultRoles = new RoleManager(roleStorage).makeDefaultRoles();
     var defaultPrivileges = new PrivilegeManager().makeDefaultPrivileges();
     updateDocs(roleStorage, defaultRoles);
     updateDocs(privilegeStorage, defaultPrivileges);

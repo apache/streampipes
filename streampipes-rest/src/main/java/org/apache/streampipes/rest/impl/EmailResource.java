@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.mail.MailSender;
 import org.apache.streampipes.model.mail.SpEmail;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +33,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v2/mail")
 public class EmailResource extends AbstractAuthGuardedRestResource {
 
+  private final ISpCoreConfigurationStorage configurationStorage;
+
+  public EmailResource(ISpCoreConfigurationStorage configurationStorage) {
+    this.configurationStorage = configurationStorage;
+  }
+
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> sendEmail(@RequestBody SpEmail email) {
-    if (getSpCoreConfigurationStorage().get().getEmailConfig().isEmailConfigured()) {
+    var configuration = configurationStorage.get();
+    if (configuration.getEmailConfig().isEmailConfigured()) {
       try {
-        new MailSender().sendEmail(email);
+        new MailSender(configuration).sendEmail(email);
         return ok();
       } catch (Exception e) {
         return badRequest(e);

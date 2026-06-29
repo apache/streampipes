@@ -27,6 +27,11 @@ export class SpDatasetDetailsTabs {
                 itemLink: ['datasets', elementId, 'schema'],
             },
             {
+                itemId: 'metrics',
+                itemTitle: 'Metrics',
+                itemLink: ['datasets', elementId, 'metrics'],
+            },
+            {
                 itemId: 'events',
                 itemTitle: 'Latest events',
                 itemLink: ['datasets', elementId, 'events'],

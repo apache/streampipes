@@ -25,7 +25,6 @@ from __future__ import annotations
 
 import os
 from abc import ABC, abstractmethod
-from typing import Dict, Optional
 
 __all__ = [
     "CredentialProvider",
@@ -41,7 +40,7 @@ class CredentialProvider(ABC):
     Must be inherited by all credential providers.
     """
 
-    def make_headers(self, http_headers: Optional[Dict[str, str]] = None) -> Dict[str, str]:
+    def make_headers(self, http_headers: dict[str, str] | None = None) -> dict[str, str]:
         """Creates the HTTP headers for the specific credential provider.
 
         Concrete authentication headers must be defined in the implementation of a credential provider.
@@ -68,7 +67,7 @@ class CredentialProvider(ABC):
 
     @property
     @abstractmethod
-    def _authentication_headers(self) -> Dict[str, str]:
+    def _authentication_headers(self) -> dict[str, str]:
         """Provides the HTTP headers used for the authentication with the concrete `CredentialProvider`.
 
         Returns
@@ -148,8 +147,8 @@ class StreamPipesApiKeyCredentials(CredentialProvider):
 
     def __init__(
         self,
-        username: Optional[str] = None,
-        api_key: Optional[str] = None,
+        username: str | None = None,
+        api_key: str | None = None,
     ):
         # if both parameters are passed we can add them directly to the instance
         if all({username, api_key}):
@@ -196,7 +195,7 @@ class StreamPipesApiKeyCredentials(CredentialProvider):
                     )
 
     @property
-    def _authentication_headers(self) -> Dict[str, str]:
+    def _authentication_headers(self) -> dict[str, str]:
         """Provides the HTTP headers used for the authentication with the API token.
 
         Returns
@@ -238,7 +237,7 @@ class StreamPipesTokenCredentials(CredentialProvider):
         self.jwt = jwt
 
     @property
-    def _authentication_headers(self) -> Dict[str, str]:
+    def _authentication_headers(self) -> dict[str, str]:
         """Provides the HTTP headers used for authentication with the JWT token.
 
         Returns

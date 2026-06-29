@@ -18,19 +18,15 @@
 package org.apache.streampipes.mail.template.part;
 
 import org.apache.streampipes.mail.utils.MailUtils;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 
 public class LogoPart extends AbstractPart {
 
   private static final String LOGO_PATH = "/assets/img/sp/logo.png";
 
-  private final String baseUrl;
-
-  public LogoPart() {
-    this.baseUrl = MailUtils.extractBaseUrl();
-  }
-
   @Override
-  public String generate() {
+  public String generate(SpCoreConfiguration configuration) {
+    var baseUrl = MailUtils.extractBaseUrl(configuration);
     return baseUrl + LOGO_PATH;
   }
 }

@@ -17,7 +17,9 @@
  */
 
 .footer {
-    margin-top: 20px;
+    margin-top: var(--space-lg);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--color-border-subtle);
 }
 
 .neutral-action-wrapper {

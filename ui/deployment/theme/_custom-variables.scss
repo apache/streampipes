@@ -22,7 +22,7 @@
     --color-primary: #1b1464;
     --color-primary-dark: #83a3de;
     --color-secondary: rgb(57, 181, 74);
-    --color-secondary-dark: #16cc39;
+    --color-secondary-dark: #7ac98a;
 
     --color-loading-bar: var(--color-primary);
     --color-primary-alt: rgb(59, 92, 149);
@@ -50,7 +50,31 @@
     --color-primary: var(--color-primary-dark);
     --color-secondary: var(--color-secondary-dark);
     --color-menubar-text-menu-group: #120c47;
-    --color-navigation-text: #121212;
+    --color-navigation-bg: #123b28;
+    --color-navigation-hover: #185236;
+    --color-navigation-selected: var(--color-secondary);
+    --color-navigation-bg-selected: color-mix(
+        in srgb,
+        var(--color-navigation-selected) 18%,
+        var(--color-navigation-bg)
+    );
+    --color-navigation-text: rgba(255, 255, 255, 0.9);
+    --color-navigation-link-text: rgba(255, 255, 255, 0.86);
+    --color-navigation-divider: rgba(255, 255, 255, 0.12);
+    --color-menubar-bg: var(--color-navigation-bg);
+    --color-menubar-bg-menu-item: transparent;
+    --color-menubar-bg-menu-item-hover: var(--color-navigation-hover);
+    --color-menubar-bg-menu-item-selected: var(--color-navigation-bg-selected);
+    --color-menubar-bg-menu-group-hover: color-mix(
+        in srgb,
+        var(--color-navigation-hover) 72%,
+        transparent
+    );
+    --color-menubar-bg-menu-group-selected: var(--color-navigation-bg-selected);
+    --color-menubar-text-menu-item: var(--color-navigation-link-text);
+    --color-menubar-text-menu-item-hover: var(--color-navigation-text);
+    --color-menubar-text-menu-group: rgba(255, 255, 255, 0.68);
+    --color-menubar-text-menu-group-hover: var(--color-navigation-text);
     --content-box-color: #404040;
 }
 

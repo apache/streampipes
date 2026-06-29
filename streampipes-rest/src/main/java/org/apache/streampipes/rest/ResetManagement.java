@@ -35,7 +35,6 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -110,7 +109,7 @@ public class ResetManagement {
   }
 
   private void setHideTutorialToFalse(String username) {
-    UserResourceManager.setHideTutorial(username, true);
+    resourceManager.manageUsers().setHideTutorial(username, true);
   }
 
   private void clearPipelineAssemblyCache(String username) {
@@ -148,7 +147,10 @@ public class ResetManagement {
   }
 
   private void deleteAllFiles() {
-    var fileManager = new FileManager();
+    var fileManager = new FileManager(
+        resourceManager.getCoreConfigurationStorage(),
+        resourceManager.getFileMetadataStorage()
+    );
     List<FileMetadata> allFiles = fileManager.getAllFiles();
     allFiles.forEach(fileMetadata -> fileManager.deleteFile(fileMetadata.getFileId()));
   }

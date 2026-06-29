@@ -18,8 +18,8 @@
 package org.apache.streampipes.mail;
 
 import org.apache.streampipes.mail.config.MailConfigurationBuilder;
-import org.apache.streampipes.mail.utils.MailUtils;
 import org.apache.streampipes.model.configuration.EmailConfig;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import org.simplejavamail.api.email.Email;
@@ -35,17 +35,22 @@ import java.util.stream.Collectors;
 
 public class AbstractMailer {
 
+  protected final SpCoreConfiguration spCoreConfiguration;
+
+  public AbstractMailer(SpCoreConfiguration configuration) {
+    this.spCoreConfiguration = configuration;
+  }
+
   protected Mailer getMailer() {
-    return getMailer(getEmailConfig());
+    return getMailer(getEmailConfig(spCoreConfiguration.getEmailConfig()));
   }
 
   protected Mailer getMailer(EmailConfig config) {
     return new MailConfigurationBuilder().buildMailerFromConfig(config);
   }
 
-  protected EmailConfig getEmailConfig() {
-    EmailConfig config = MailUtils.getSpCoreConfiguration().getEmailConfig();
-    return getDecryptedEmailConfig(config);
+  protected EmailConfig getEmailConfig(EmailConfig emailConfig) {
+    return getDecryptedEmailConfig(emailConfig);
   }
 
   protected EmailConfig getDecryptedEmailConfig(EmailConfig config) {
@@ -63,7 +68,10 @@ public class AbstractMailer {
   }
 
   protected void deliverMail(Email email) {
-    deliverMail(getEmailConfig(), email);
+    deliverMail(
+        getEmailConfig(spCoreConfiguration.getEmailConfig()),
+        email
+    );
   }
 
   protected void deliverMail(EmailConfig config, Email email) {
@@ -73,7 +81,9 @@ public class AbstractMailer {
   }
 
   protected EmailPopulatingBuilder baseEmail() {
-    return baseEmail(getEmailConfig());
+    return baseEmail(
+        getEmailConfig(spCoreConfiguration.getEmailConfig())
+    );
   }
 
   protected EmailPopulatingBuilder baseEmail(EmailConfig config) {

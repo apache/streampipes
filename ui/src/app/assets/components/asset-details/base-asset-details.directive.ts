@@ -27,7 +27,7 @@ import {
     SpAssetModel,
 } from '@streampipes/platform-services';
 import { ActivatedRoute } from '@angular/router';
-import { zip } from 'rxjs';
+import { of, zip } from 'rxjs';
 import { SpAssetRoutes } from '../../assets.breadcrumb';
 
 @Directive()
@@ -39,6 +39,7 @@ export abstract class BaseAssetDetailsDirective implements OnInit {
     rootNode = true;
 
     assetModelId: string;
+    protected isNewAsset = false;
 
     private breadcrumbService = inject(SpBreadcrumbService);
     protected route = inject(ActivatedRoute);
@@ -60,7 +61,10 @@ export abstract class BaseAssetDetailsDirective implements OnInit {
     }
 
     loadResources(): void {
-        const assetReq = this.assetService.getAsset(this.assetModelId);
+        const newAsset = this.getNewAssetFromNavigationState();
+        const assetReq = newAsset
+            ? of(newAsset)
+            : this.assetService.getAsset(this.assetModelId);
         const locationsReq = this.genericStorageService.getAllDocuments(
             AssetConstants.ASSET_SITES_APP_DOC_NAME,
         );
@@ -82,6 +86,12 @@ export abstract class BaseAssetDetailsDirective implements OnInit {
     }
 
     applySites(): void {
+        this.asset.assetSite ??= {
+            area: undefined,
+            siteId: undefined,
+            hasExactLocation: false,
+            location: undefined,
+        };
         if (!this.asset.assetSite.hasExactLocation) {
             const matchingSite = this.sites.find(
                 site => site._id === this.asset.assetSite.siteId,
@@ -98,4 +108,19 @@ export abstract class BaseAssetDetailsDirective implements OnInit {
     }
 
     abstract onAssetAvailable(): void;
+
+    private getNewAssetFromNavigationState(): SpAssetModel | undefined {
+        const state = history.state as {
+            assetModel?: SpAssetModel;
+            isNewAsset?: boolean;
+        };
+        if (
+            state?.isNewAsset &&
+            state.assetModel?.elementId === this.assetModelId
+        ) {
+            this.isNewAsset = true;
+            return state.assetModel;
+        }
+        return undefined;
+    }
 }

@@ -225,7 +225,7 @@ public class AdapterMasterManagement {
         storageApi::update,
         SpServiceUrlProvider.DATA_STREAM,
         requestManager,
-        resourceManager.managePermissions()
+        resourceManager
     );
     verifier.verifyAndAdd(principalSid, false);
   }

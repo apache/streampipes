@@ -45,7 +45,13 @@
                             (click)="saveAsset()"
                         >
                             <i class="material-icons">save</i
-                            ><span>&nbsp;{{ 'Save' | translate }}</span>
+                            ><span
+                                >&nbsp;{{
+                                    isNewAsset
+                                        ? ('Create' | translate)
+                                        : ('Save' | translate)
+                                }}</span
+                            >
                         </button>
                     </div>
                 </div>
