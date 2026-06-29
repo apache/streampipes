@@ -95,7 +95,12 @@
                     color="accent"
                     [checked]="isResourceSelected(resource.resourceId)"
                     [attr.data-cy]="
-                        'select-resource-checkbox-' + resource.resourceName
+                        'select-' +
+                        resource.resourceType
+                            .toLowerCase()
+                            .replace(/\s+/g, '-') +
+                        '-checkbox-' +
+                        resource.resourceName
                     "
                     (change)="updateSelection($event.checked, resource)"
                     (click)="$event.stopPropagation()"
