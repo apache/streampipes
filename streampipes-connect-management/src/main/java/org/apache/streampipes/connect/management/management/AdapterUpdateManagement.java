@@ -52,7 +52,7 @@ public class AdapterUpdateManagement {
     boolean shouldRestart = ad.isRunning();
 
     if (ad.isRunning()) {
-      this.adapterMasterManagement.stopStreamAdapter(ad.getElementId(), true);
+      this.adapterMasterManagement.stopAdapter(ad.getElementId(), true);
     }
 
     // update data source in database
@@ -61,7 +61,7 @@ public class AdapterUpdateManagement {
     pipelineUpdateCoordinator.updatePipelines(ad);
 
     if (shouldRestart) {
-      this.adapterMasterManagement.startStreamAdapter(ad.getElementId());
+      this.adapterMasterManagement.startAdapter(ad.getElementId());
     }
   }
 

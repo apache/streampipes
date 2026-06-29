@@ -104,7 +104,7 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
               new WorkerRestClient(extensionServiceRequestManager, resourceManager),
               getNoSqlStore().getExtensionsServiceStorage(),
               extensionServiceRequestManager
-          ).stopStreamAdapter(resourceId, true);
+          ).stopAdapter(resourceId, true);
         } catch (AdapterException e) {
           LOG.warn("Error when stopping adapter with id {} and name {}", resourceId, existingAdapter.getName());
         }

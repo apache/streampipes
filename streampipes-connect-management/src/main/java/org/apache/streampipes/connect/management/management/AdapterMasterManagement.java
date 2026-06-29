@@ -120,7 +120,7 @@ public class AdapterMasterManagement {
     try {
       // Stop stream adapter
       try {
-        stopStreamAdapter(elementId, true);
+        stopAdapter(elementId, true);
       } catch (AdapterException e) {
         LOG.info("Could not stop adapter: " + elementId, e);
       }
@@ -144,9 +144,12 @@ public class AdapterMasterManagement {
     return adapterResourceManager.getDb().findAll();
   }
 
-  public void stopStreamAdapter(String elementId, boolean forceStop) throws AdapterException {
+  public void stopAdapter(String elementId, boolean forceStop) throws AdapterException {
+    stopAdapter(getAdapter(elementId), forceStop);
+  }
+
+  public void stopAdapter(AdapterDescription ad, boolean forceStop) throws AdapterException {
     LoadManager.tryLockForAdapter();
-    AdapterDescription ad = adapterResourceManager.getDb().getElementById(elementId);
     try {
       try {
         var service = extensionsServiceStorage.findAll().stream()
@@ -154,11 +157,11 @@ public class AdapterMasterManagement {
               if (ad.getSelectedServiceId() != null) {
                 return svc.getSvcId().equals(ad.getSelectedServiceId());
               } else {
-               return svc.getServiceUrl().equals(ad.getSelectedEndpointUrl());
+                return svc.getServiceUrl().equals(ad.getSelectedEndpointUrl());
               }
             })
             .findFirst().orElseThrow(AdapterException::new);
-          workerRestClient.stopStreamAdapter(service, ad);
+        workerRestClient.stopAdapter(service, ad);
       } catch (AdapterException e) {
         if (!forceStop) {
           throw new AdapterException("Could not stop adapter", e);
@@ -168,7 +171,7 @@ public class AdapterMasterManagement {
           adapterResourceManager.getDb().updateElement(ad);
         }
       }
-      ExtensionsLogProvider.INSTANCE.reset(elementId);
+      ExtensionsLogProvider.INSTANCE.reset(ad.getElementId());
 
       // remove the adapter from the metrics manager so that
       // no metrics for this adapter are exposed anymore
@@ -182,11 +185,13 @@ public class AdapterMasterManagement {
     }
   }
 
-  public void startStreamAdapter(String elementId) throws AdapterException {
+  public void startAdapter(String elementId) throws AdapterException {
+    startAdapter(getAdapter(elementId));
+  }
+
+  public void startAdapter(AdapterDescription ad) throws AdapterException {
     LoadManager.tryLockForAdapter();
     try {
-      var ad = adapterResourceManager.getDb().getElementById(elementId);
-
       try {
         // Find endpoint to start adapter on
         var service = new ExtensionsServiceEndpointGenerator()
@@ -199,13 +204,13 @@ public class AdapterMasterManagement {
         adapterResourceManager.getDb().updateElement(ad);
 
         // Invoke adapter instance
-        workerRestClient.invokeStreamAdapter(service, elementId);
+        workerRestClient.invokeStreamAdapter(service, ad);
 
         // register the adapter at the metrics manager so that the AdapterHealthCheck
         // can send metrics
         adapterMetrics.register(ad.getElementId(), ad.getName());
 
-        LOG.info("Started adapter " + elementId + " on: " + ad.getSelectedServiceId());
+        LOG.info("Started adapter " + ad.getElementId() + " on: " + ad.getSelectedServiceId());
       } catch (NoServiceEndpointsAvailableException e) {
         throw new AdapterException("Could not start adapter due to unavailable service endpoint",
             e);
