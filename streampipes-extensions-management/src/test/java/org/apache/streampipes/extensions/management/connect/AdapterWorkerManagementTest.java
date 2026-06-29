@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
+import org.apache.streampipes.model.health.AdapterInstanceState;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -38,14 +40,25 @@ public class AdapterWorkerManagementTest {
     var adapterDescription = AdapterConfigurationBuilder
         .create("id", 0,  null)
         .build();
+    adapterDescription.setElementId("adapter-id");
+    var adapterTransitionRegistry = new AdapterTransitionRegistry();
 
     var declarerSingleton = mock(IDeclarersSingleton.class);
-    when(declarerSingleton.getAdapter(any())).thenReturn(Optional.empty());
+    when(declarerSingleton.getAdapter(any())).thenAnswer(invocation -> {
+      assertTrue(adapterTransitionRegistry
+          .getTransitioningAdapterInstanceStates()
+          .containsKey("adapter-id"));
+      assertTrue(adapterTransitionRegistry
+          .getTransitioningAdapterInstanceStates()
+          .containsValue(AdapterInstanceState.STARTING));
+      return Optional.empty();
+    });
 
     var adapterWorkerManagement = new AdapterWorkerManagement(
-        null, declarerSingleton);
+        null, declarerSingleton, adapterTransitionRegistry);
 
     assertThrows(AdapterException.class, () -> adapterWorkerManagement.invokeAdapter(adapterDescription));
+    assertTrue(adapterTransitionRegistry.getTransitioningAdapterInstanceStates().isEmpty());
 
   }
 }
