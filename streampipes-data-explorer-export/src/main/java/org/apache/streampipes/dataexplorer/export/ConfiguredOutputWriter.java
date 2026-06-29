@@ -32,16 +32,6 @@ public abstract class ConfiguredOutputWriter {
 
   private final DecimalFormat df = new DecimalFormat("#");
 
-  public static ConfiguredOutputWriter getConfiguredWriter(DataLakeMeasure schema,
-                                                           OutputFormat format,
-                                                           ProvidedRestQueryParams params,
-                                                           boolean ignoreMissingValues) {
-    var writer = format.getWriter();
-    writer.configure(schema, params, ignoreMissingValues);
-
-    return writer;
-  }
-
   protected String getHeaderName(DataLakeMeasure schema,
                                  String runtimeName,
                                  String headerColumnNameStrategy) {

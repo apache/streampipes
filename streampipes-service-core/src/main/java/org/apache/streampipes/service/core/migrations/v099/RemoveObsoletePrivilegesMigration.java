@@ -20,7 +20,6 @@ package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,8 +35,8 @@ public class RemoveObsoletePrivilegesMigration implements Migration {
       "PRIVILEGE_WRITE_DATA_EXPLORER_WIDGET"
   );
 
-  public RemoveObsoletePrivilegesMigration() {
-    this.privilegeStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getPrivilegeStorage();
+  public RemoveObsoletePrivilegesMigration(IPrivilegeStorage privilegeStorage) {
+    this.privilegeStorage = privilegeStorage;
   }
 
   @Override

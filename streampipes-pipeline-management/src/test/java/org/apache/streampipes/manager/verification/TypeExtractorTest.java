@@ -26,7 +26,10 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,20 +40,25 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class TypeExtractorTest {
 
   private IPipelineElementDescriptionStorage storageApi;
+  private SpResourceManager resourceManager;
   private final ExtensionServiceRequestManager requestManager = mock(ExtensionServiceRequestManager.class);
 
   @BeforeEach
   public void setUp() {
     storageApi = mock(IPipelineElementDescriptionStorage.class);
+    resourceManager = mock(SpResourceManager.class);
+    when(resourceManager.managePermissions()).thenReturn(mock(PermissionResourceManager.class));
+    when(resourceManager.getCoreConfigurationStorage()).thenReturn(mock(ISpCoreConfigurationStorage.class));
   }
 
   @Test
   public void verifyAndUpdateDataStream() throws SepaParseException {
-    var message = new TypeExtractor(payload(SpDataStream.class), storageApi, requestManager, null)
+    var message = new TypeExtractor(payload(SpDataStream.class), storageApi, requestManager, resourceManager)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -60,7 +68,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateDataProcessor() throws SepaParseException {
-    var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi, requestManager, null)
+    var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi, requestManager, resourceManager)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -70,7 +78,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateDataSink() throws SepaParseException {
-    var message = new TypeExtractor(payload(DataSinkDescription.class), storageApi, requestManager, null)
+    var message = new TypeExtractor(payload(DataSinkDescription.class), storageApi, requestManager, resourceManager)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -80,7 +88,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateAdapter() throws SepaParseException {
-    var message = new TypeExtractor(payload(AdapterDescription.class), storageApi, requestManager, null)
+    var message = new TypeExtractor(payload(AdapterDescription.class), storageApi, requestManager, resourceManager)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -90,7 +98,7 @@ public class TypeExtractorTest {
 
   @Test
   public void verifyAndUpdateWithoutNameOrIcon_onlyContainsStorageSuccessNotification() throws SepaParseException {
-    var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi, requestManager, null)
+    var message = new TypeExtractor(payload(DataProcessorDescription.class), storageApi, requestManager, resourceManager)
         .getTypeVerifier()
         .verifyAndUpdate();
 
@@ -103,7 +111,7 @@ public class TypeExtractorTest {
     assertThrows(
         SepaParseException.class,
         () -> new TypeExtractor(
-            "{\"name\":\"test\"}", storageApi, requestManager, null).getTypeVerifier()
+            "{\"name\":\"test\"}", storageApi, requestManager, resourceManager).getTypeVerifier()
     );
   }
 

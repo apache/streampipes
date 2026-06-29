@@ -36,6 +36,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
@@ -56,12 +57,15 @@ public class GuessManagement {
   private final ExtensionServiceRequestManager extensionRequestManager;
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
   private final ObjectMapper objectMapper;
+  private final SpResourceManager resourceManager;
 
   public GuessManagement(IExtensionsServiceEndpointGenerator endpointGenerator,
-                         ExtensionServiceRequestManager extensionRequestManager) {
+                         ExtensionServiceRequestManager extensionRequestManager,
+                         SpResourceManager resourceManager) {
     this.endpointGenerator = endpointGenerator;
     this.extensionRequestManager = extensionRequestManager;
     this.objectMapper = JacksonSerializer.getObjectMapper();
+    this.resourceManager = resourceManager;
   }
 
   public EventSchema guessSchema(AdapterDescription adapterDescription) {
@@ -88,7 +92,7 @@ public class GuessManagement {
     LOG.debug("Calling get sample data at service: {}", requestTarget.serviceId());
 
     var response = extensionRequestManager.request(
-        ExtensionServiceRequests.sampleData(requestTarget, adapterDescriptionString)
+        ExtensionServiceRequests.sampleData(requestTarget, adapterDescriptionString, resourceManager)
     );
     var responseString = response.responseBody();
 

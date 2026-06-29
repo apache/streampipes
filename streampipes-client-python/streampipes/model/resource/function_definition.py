@@ -19,7 +19,6 @@ __all__ = [
     "FunctionDefinition",
 ]
 
-from typing import Dict, List
 from uuid import uuid4
 
 from pydantic import Field, StrictInt, StrictStr
@@ -68,10 +67,10 @@ class FunctionDefinition(Resource):
     """
 
     function_id: FunctionId = Field(default_factory=FunctionId)
-    consumed_streams: List[str] = Field(default_factory=list)
-    output_data_streams: Dict[str, DataStream] = Field(default_factory=dict)
+    consumed_streams: list[str] = Field(default_factory=list)
+    output_data_streams: dict[str, DataStream] = Field(default_factory=dict)
 
-    def convert_to_pandas_representation(self) -> Dict:
+    def convert_to_pandas_representation(self) -> dict:
         """Returns the dictionary representation of a function definition
         to be used when creating a pandas Dataframe.
 
@@ -102,7 +101,7 @@ class FunctionDefinition(Resource):
         self.output_data_streams[data_stream.element_id] = data_stream
         return self
 
-    def get_output_data_streams(self) -> Dict[str, DataStream]:
+    def get_output_data_streams(self) -> dict[str, DataStream]:
         """Get the output data streams of the function.
 
         Returns
@@ -114,7 +113,7 @@ class FunctionDefinition(Resource):
 
         return self.output_data_streams
 
-    def get_output_stream_ids(self) -> List[str]:
+    def get_output_stream_ids(self) -> list[str]:
         """Get the stream ids of the output data streams.
 
         Returns

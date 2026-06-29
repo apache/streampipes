@@ -23,11 +23,13 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.configuration.JwtSigningMode;
 import org.apache.streampipes.model.configuration.LocalAuthConfig;
-import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 import org.apache.streampipes.security.jwt.JwtTokenGenerator;
 import org.apache.streampipes.security.jwt.JwtTokenUtils;
 import org.apache.streampipes.security.jwt.JwtTokenValidator;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.util.GrantedAuthoritiesBuilder;
 import org.apache.streampipes.user.management.util.UserInfoUtil;
@@ -52,15 +54,20 @@ public class JwtTokenProvider {
 
   public static final String CLAIM_USER = "user";
   private static final Logger LOG = LoggerFactory.getLogger(JwtTokenProvider.class);
-  private SpCoreConfiguration config;
   private Environment env;
+  private final ISpCoreConfigurationStorage coreConfigurationStorage;
+  private final IRoleStorage roleStorage;
+  private final IUserGroupStorage userGroupStorage;
+  private final IUserStorage userStorage;
 
-  public JwtTokenProvider() {
-    this.config =  StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getSpCoreConfigurationStorage()
-        .get();
+  public JwtTokenProvider(ISpCoreConfigurationStorage coreConfigurationStorage,
+                          IUserStorage userStorage,
+                          IRoleStorage roleStorage,
+                          IUserGroupStorage userGroupStorage) {
+    this.userStorage = userStorage;
+    this.coreConfigurationStorage = coreConfigurationStorage;
+    this.roleStorage = roleStorage;
+    this.userGroupStorage = userGroupStorage;
 
     this.env = Environments.getEnvironment();
   }
@@ -78,7 +85,7 @@ public class JwtTokenProvider {
   }
 
   public String createToken(Principal userPrincipal) {
-    Set<String> roles = new GrantedAuthoritiesBuilder(userPrincipal).buildAllAuthorities();
+    Set<String> roles = new GrantedAuthoritiesBuilder(userPrincipal, roleStorage, userGroupStorage).buildAllAuthorities();
     return createToken(userPrincipal, roles);
   }
 
@@ -109,11 +116,13 @@ public class JwtTokenProvider {
   }
 
   public String getUserIdFromToken(String token) {
-    return JwtTokenUtils.getUserIdFromToken(token, new SpKeyResolver(tokenSecret()));
+    return JwtTokenUtils
+        .getUserIdFromToken(token, new SpKeyResolver(tokenSecret(), coreConfigurationStorage, userStorage));
   }
 
   public boolean validateJwtToken(String jwtToken) {
-    return JwtTokenValidator.validateJwtToken(jwtToken, new SpKeyResolver(tokenSecret()));
+    return JwtTokenValidator
+        .validateJwtToken(jwtToken, new SpKeyResolver(tokenSecret(), coreConfigurationStorage, userStorage));
   }
 
   public boolean validateJwtToken(String tokenSecret,
@@ -130,7 +139,7 @@ public class JwtTokenProvider {
   }
 
   private LocalAuthConfig authConfig() {
-    return this.config.getLocalAuthConfig();
+    return this.coreConfigurationStorage.get().getLocalAuthConfig();
   }
 
   private Date makeExpirationDate() {

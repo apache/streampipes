@@ -22,6 +22,7 @@ import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import org.springframework.http.MediaType;
@@ -45,16 +46,22 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v2/admin/exportprovider-config")
 public class ExportProviderConfigurationResource extends AbstractAuthGuardedRestResource {
 
+  private final ISpCoreConfigurationStorage configurationStorage;
+
+  public ExportProviderConfigurationResource(ISpCoreConfigurationStorage configurationStorage) {
+    this.configurationStorage = configurationStorage;
+  }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<List<ExportProviderSettings>> getExportProviderConfiguration() {
-    return ok(getSpCoreConfigurationStorage().get().getExportProviderSettings());
+    return ok(configurationStorage.get().getExportProviderSettings());
   }
 
   @GetMapping(value = "/{providerId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<ExportProviderSettings> getExportProviderSettingById(@PathVariable String providerId) {
-    return getSpCoreConfigurationStorage().get().getExportProviderSettings().stream()
+    return configurationStorage.get().getExportProviderSettings().stream()
         .filter(setting -> setting.getProviderId().equalsIgnoreCase(providerId))
         .findFirst()
         .map(ResponseEntity::ok)
@@ -65,7 +72,7 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<?> testExportProviderSettingById(@PathVariable String providerId) {
     // Get Export Provider Settings
-    Optional<ExportProviderSettings> exportProviderSetting = getSpCoreConfigurationStorage().get()
+    Optional<ExportProviderSettings> exportProviderSetting = configurationStorage.get()
         .getExportProviderSettings().stream()
         .filter(setting -> setting.getProviderId().equalsIgnoreCase(providerId))
         .findFirst();
@@ -95,8 +102,7 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
       config.setSecretKey(SecretEncryptionManager.encrypt(config.getSecretKey()));
       config.setSecretEncrypted(true);
     }
-    var storage = getSpCoreConfigurationStorage();
-    var cfg = storage.get();
+    var cfg = configurationStorage.get();
 
     List<ExportProviderSettings> providerSettings = cfg.getExportProviderSettings();
     if (providerSettings == null) {
@@ -110,7 +116,7 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
     providerSettingsWithoutExisting.add(config);
 
     cfg.setExportProviderSettings(providerSettingsWithoutExisting);
-    storage.updateElement(cfg);
+    configurationStorage.updateElement(cfg);
 
     return ok();
   }
@@ -119,16 +125,15 @@ public class ExportProviderConfigurationResource extends AbstractAuthGuardedRest
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> deleteExportProviderConfiguration(@PathVariable String providerId) {
 
-    List<ExportProviderSettings> allProviders = getSpCoreConfigurationStorage().get().getExportProviderSettings();
+    List<ExportProviderSettings> allProviders = configurationStorage.get().getExportProviderSettings();
 
     List<ExportProviderSettings> filteredProviders = allProviders.stream()
         .filter(provider -> !provider.getProviderId().equals(providerId))
         .collect(Collectors.toList());
 
-    var storage = getSpCoreConfigurationStorage();
-    var cfg = storage.get();
+    var cfg = configurationStorage.get();
     cfg.setExportProviderSettings(filteredProviders);
-    storage.updateElement(cfg);
+    configurationStorage.updateElement(cfg);
     return ok();
   }
 

@@ -19,67 +19,266 @@
 @use '@angular/material' as mat;
 
 :root {
-    .mat-mdc-icon-button .mat-mdc-button-persistent-ripple {
-        border-radius: 6px;
-    }
     @include mat.button-overrides(
         (
-            filled-container-shape: 1.5rem,
-            outlined-outline-color: var(--mat-sys-outline),
+            filled-container-shape: var(--radius-sm),
+            outlined-container-shape: var(--radius-sm),
+            outlined-outline-color: var(--color-border-default),
             outlined-label-text-color: var(--mat-sys-on-surface),
-            filled-label-text-weight: 400,
+            text-container-shape: var(--radius-sm),
+            filled-label-text-weight: var(--font-weight-medium),
+            outlined-label-text-weight: var(--font-weight-medium),
+            text-label-text-weight: var(--font-weight-medium),
             filled-label-text-tracking: -0.01em,
             outlined-label-text-tracking: -0.01em,
-            text-container-shape: 6px,
             text-label-text-tracking: -0.01em,
-            filled-hover-state-layer-opacity: 0.2,
+            filled-hover-state-layer-opacity: 0,
+            filled-pressed-state-layer-opacity: 0,
+            outlined-hover-state-layer-opacity: 0.06,
+            text-hover-state-layer-opacity: 0.06,
         )
     );
 
-    .btn-secondary {
+    @include mat.icon-button-overrides(
+        (
+            container-shape: var(--radius-sm),
+            icon-color: var(--color-primary),
+            state-layer-color: var(--color-primary),
+            hover-state-layer-opacity: 0.06,
+            focus-state-layer-opacity: 0.06,
+            pressed-state-layer-opacity: 0.1,
+        )
+    );
+
+    @include mat.button-toggle-overrides(
+        (
+            shape: var(--radius-sm),
+            height: 1.875rem,
+            background-color: var(--color-surface-interactive),
+            text-color: var(--mat-sys-on-surface-variant),
+            divider-color: var(--color-border-subtle),
+            selected-state-background-color: var(--color-surface-selected),
+            selected-state-text-color: var(--mat-sys-primary),
+            state-layer-color: var(--mat-sys-on-surface),
+            hover-state-layer-opacity: 0.06,
+            focus-state-layer-opacity: 0.06,
+            label-text-weight: var(--font-weight-medium),
+            label-text-tracking: -0.01em,
+        )
+    );
+
+    .mat-mdc-icon-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        padding: 0;
+        color: var(--mat-icon-button-icon-color);
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: var(--radius-sm);
+        transition:
+            background-color var(--motion-duration-fast)
+                var(--motion-easing-standard),
+            border-color var(--motion-duration-fast)
+                var(--motion-easing-standard);
+    }
+
+    .mat-mdc-icon-button .mat-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        line-height: 1;
+    }
+
+    .mat-mdc-icon-button .mat-mdc-button-persistent-ripple {
+        border-radius: var(--radius-sm);
+    }
+
+    .mat-mdc-icon-button:hover:not(:disabled) {
+        background: color-mix(in srgb, currentColor 8%, transparent);
+        border-color: color-mix(in srgb, currentColor 14%, transparent);
+    }
+
+    .mat-mdc-icon-button:active:not(:disabled) {
+        background: color-mix(in srgb, currentColor 12%, transparent);
+        border-color: color-mix(in srgb, currentColor 20%, transparent);
+    }
+
+    .mat-mdc-icon-button[aria-pressed='true'],
+    .mat-mdc-icon-button.sp-navbar-icon-button-selected {
+        background: var(--color-surface-selected);
+        border-color: color-mix(
+            in srgb,
+            var(--mat-sys-primary) 18%,
+            transparent
+        );
+    }
+
+    .mat-mdc-icon-button:focus-visible {
+        outline: 2px solid var(--mat-sys-primary);
+        outline-offset: -2px;
+        box-shadow: none;
+    }
+
+    .mat-mdc-icon-button:disabled {
+        background: transparent;
+        border-color: transparent;
+    }
+
+    .mat-button-toggle-group {
+        border-color: var(--color-border-subtle);
+        border-radius: var(--radius-sm);
+        background: var(--color-surface-interactive);
+    }
+
+    .mat-button-toggle {
+        transition:
+            background-color var(--motion-duration-fast)
+                var(--motion-easing-standard),
+            color var(--motion-duration-fast) var(--motion-easing-standard);
+    }
+
+    .mat-button-toggle:hover:not(.mat-button-toggle-checked) {
+        background: var(--color-surface-interactive-hover);
+    }
+
+    .mat-button-toggle-checked:hover {
+        background: var(--color-surface-selected-hover);
+    }
+
+    .mat-button-toggle-button:focus-visible {
+        outline: 2px solid var(--mat-sys-primary);
+        outline-offset: -2px;
+    }
+
+    .mat-mdc-unelevated-button:not(.mat-basic):not(.btn-secondary):not(
+            .btn-secondary-outline
+        ):not(.btn-warn):hover:not(:disabled) {
+        --mat-button-filled-container-color: color-mix(
+            in srgb,
+            var(--color-primary) 88%,
+            white
+        );
+        background-color: var(--mat-button-filled-container-color);
+    }
+
+    .mat-mdc-unelevated-button:not(.mat-basic):not(.btn-secondary):not(
+            .btn-secondary-outline
+        ):not(.btn-warn):active:not(:disabled) {
+        --mat-button-filled-container-color: color-mix(
+            in srgb,
+            var(--color-primary) 82%,
+            white
+        );
+        background-color: var(--mat-button-filled-container-color);
+    }
+
+    .btn-secondary,
+    .mat-basic {
+        border: 1px solid transparent;
+
         @include mat.button-overrides(
             (
-                filled-container-color: var(--mat-sys-surface-container-high),
-                filled-label-text-color: var(--mat-sys-secondary),
-                text-hover-state-layer-opacity: 1,
-                filled-label-text-weight: 400,
+                filled-container-color: color-mix(
+                        in srgb,
+                        var(--color-primary) 6%,
+                        var(--color-bg-0)
+                    ),
+                filled-label-text-color: var(--color-primary),
+                filled-state-layer-color: var(--color-primary),
+                filled-hover-state-layer-opacity: 0,
+                filled-pressed-state-layer-opacity: 0,
             )
+        );
+    }
+
+    .btn-secondary:hover:not(:disabled),
+    .mat-basic:hover:not(:disabled) {
+        border-color: transparent;
+        background: color-mix(
+            in srgb,
+            var(--color-primary) 10%,
+            var(--color-bg-0)
+        );
+    }
+
+    .btn-secondary:active:not(:disabled),
+    .mat-basic:active:not(:disabled) {
+        border-color: transparent;
+        background: color-mix(
+            in srgb,
+            var(--color-primary) 12%,
+            var(--color-bg-0)
         );
     }
 
     .btn-secondary-outline {
-        border: 1px solid var(--color-primary);
-        @include mat.button-overrides(
-            (
-                filled-container-color: var(--mat-sys-surface-container-high),
-                filled-label-text-color: var(--mat-sys-primary),
-                text-hover-state-layer-opacity: 1,
-                filled-label-text-weight: 400,
-            )
-        );
-    }
+        border: 1px solid var(--color-border-default);
 
-    .mat-basic {
-        border: 1px solid var(--mat-sys-surface-container-high);
         @include mat.button-overrides(
             (
-                filled-container-color: var(--mat-sys-surface-container-high),
+                filled-container-color: transparent,
                 filled-label-text-color: var(--mat-sys-primary),
-                text-hover-state-layer-opacity: 1,
-                filled-label-text-weight: 400,
+                filled-state-layer-color: var(--mat-sys-primary),
+                filled-hover-state-layer-opacity: 0.06,
             )
         );
     }
 
     .btn-warn {
+        border: 1px solid transparent;
+
         @include mat.button-overrides(
             (
-                filled-container-color: var(--mat-sys-error-container),
-                filled-label-text-color: var(--mat-sys-on-error-container),
-                text-hover-state-layer-opacity: 1,
-                filled-label-text-weight: 400,
+                filled-container-color: color-mix(
+                        in srgb,
+                        var(--mat-sys-error) 7%,
+                        var(--color-bg-0)
+                    ),
+                filled-label-text-color: var(--mat-sys-error),
+                filled-state-layer-color: var(--mat-sys-error),
+                filled-hover-state-layer-opacity: 0,
+                filled-pressed-state-layer-opacity: 0,
             )
         );
+    }
+
+    .btn-warn:hover:not(:disabled) {
+        border-color: transparent;
+        background: color-mix(
+            in srgb,
+            var(--mat-sys-error) 11%,
+            var(--color-bg-0)
+        );
+    }
+
+    .btn-warn:active:not(:disabled) {
+        border-color: transparent;
+        background: color-mix(
+            in srgb,
+            var(--mat-sys-error) 14%,
+            var(--color-bg-0)
+        );
+    }
+
+    .mat-mdc-button-base {
+        transition:
+            background-color var(--motion-duration-fast)
+                var(--motion-easing-standard),
+            border-color var(--motion-duration-fast)
+                var(--motion-easing-standard),
+            box-shadow var(--motion-duration-fast) var(--motion-easing-standard);
+    }
+
+    .mat-mdc-button-base:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+    }
+
+    .mat-mdc-button-base[disabled] {
+        border-color: transparent;
     }
 
     .mdc-button.small-button {
@@ -101,8 +300,9 @@
         font-size: var(--font-size-sm);
         max-height: 75px;
         line-height: 25px;
-        background: white;
-        border: 1.5px solid var(--mat-sys-primary);
+        background: var(--mat-sys-surface);
+        border: 1px solid var(--color-border-default);
         color: var(--mat-sys-primary);
+        border-radius: var(--radius-sm);
     }
 }

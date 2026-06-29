@@ -16,17 +16,14 @@
  *
  */
 
-package org.apache.streampipes.connect.management.util;
+:host {
+    display: block;
+}
 
-import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+.simple-metrics {
+    gap: var(--space-md);
+}
 
-public class Utils {
-
-  public static ISpCoreConfigurationStorage getCoreConfigStorage() {
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getSpCoreConfigurationStorage();
-  }
+.simple-metrics__grid {
+    width: 100%;
 }

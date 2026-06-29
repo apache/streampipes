@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
+import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.export.DataLakeExportManager;
@@ -99,6 +100,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final DataLakeExportManager dataLakeExportManager;
   private final IDataLakeMeasureStorage datasetStorage;
+  private final ConfiguredOutputWriterFactory outputWriterFactory;
 
   public DataLakeResource(IChartStorage chartStorage,
                           SpResourceManager resourceManager) {
@@ -107,7 +109,14 @@ public class DataLakeResource extends AbstractDataLakeResource {
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(this.dataLakeMeasureManagement);
-    this.dataLakeExportManager = new DataLakeExportManager(this.dataLakeMeasureManagement, dataExplorerQueryManagement);
+    this.outputWriterFactory = new ConfiguredOutputWriterFactory(
+        resourceManager.getFileMetadataStorage(),
+        resourceManager.getCoreConfigurationStorage());
+    this.dataLakeExportManager = new DataLakeExportManager(
+        this.dataLakeMeasureManagement,
+        dataExplorerQueryManagement,
+        resourceManager.getCoreConfigurationStorage(),
+        resourceManager.getFileMetadataStorage());
   }
 
   @DeleteMapping(path = "/measurements/{measurementName}")
@@ -219,15 +228,59 @@ public class DataLakeResource extends AbstractDataLakeResource {
   }
 
   @PostMapping(path = "/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<SpQueryResult>> getData(@RequestBody List<Map<String, String>> queryParams) {
-    //TODO
-    var results = queryParams
-        .stream()
-        .map(qp -> new ProvidedRestQueryParams(qp.get("measureName"), qp))
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResponseEntity<?> getData(@RequestBody List<Map<String, String>> queryParams) {
+    if (queryParams.stream().anyMatch(params -> !checkProvidedBatchQueryParams(params))) {
+      return badRequest();
+    }
+
+    var unauthorizedMeasureName = queryParams.stream()
+        .map(params -> params.get("measureName"))
+        .filter(measureName -> !checkPermissionByName(measureName, "READ"))
+        .findFirst();
+    if (unauthorizedMeasureName.isPresent()) {
+      return badRequest(String.format("No read permission for measurement %s", unauthorizedMeasureName.get()));
+    }
+
+    var results = queryParams.stream()
+        .map(params -> new ProvidedRestQueryParams(params.get("measureName"), params))
         .map(params -> this.dataExplorerQueryManagement.getData(params, true))
         .collect(Collectors.toList());
 
     return ok(results);
+  }
+
+  @PostMapping(
+      path = "/measurements/latest-events",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  @Operation(summary = "Get the latest event timestamp for measurement series", tags = { "Data Lake" })
+  public ResponseEntity<?> getLatestEvents(@RequestBody List<String> measurementNames) {
+    if (measurementNames == null) {
+      return badRequest();
+    }
+
+    var distinctMeasurementNames = measurementNames.stream()
+        .distinct()
+        .toList();
+
+    var unauthorizedMeasureName = distinctMeasurementNames.stream()
+        .filter(measureName -> !checkPermissionByName(measureName, "READ"))
+        .findFirst();
+    if (unauthorizedMeasureName.isPresent()) {
+      return badRequest(
+          String.format("No read permission for measurement %s", unauthorizedMeasureName.get())
+      );
+    }
+
+    Map<String, Long> latestEvents = distinctMeasurementNames.stream()
+        .collect(Collectors.toMap(
+            measurementName -> measurementName,
+            this::getLatestEvent
+        ));
+
+    return ok(latestEvents);
   }
 
   @GetMapping(path = "/measurements/{measurementID}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
@@ -272,6 +325,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
       StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
           sanitizedParams,
           outputFormat,
+          outputWriterFactory,
           isIgnoreMissingValues(missingValueBehaviour),
           output);
 
@@ -317,6 +371,12 @@ public class DataLakeResource extends AbstractDataLakeResource {
 
   private boolean checkProvidedQueryParams(Map<String, String> providedParams) {
     return SUPPORTED_PARAMS.containsAll(providedParams.keySet());
+  }
+
+  private boolean checkProvidedBatchQueryParams(Map<String, String> providedParams) {
+    return providedParams.containsKey("measureName")
+        && providedParams.keySet().stream()
+            .allMatch(param -> param.equals("measureName") || SUPPORTED_PARAMS.contains(param));
   }
 
   @PostMapping(path = "/{elementId}/cleanup", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -374,6 +434,25 @@ public class DataLakeResource extends AbstractDataLakeResource {
     rawParams.forEach((key, value) -> queryParamMap.put(key, String.join(",", value)));
 
     return new ProvidedRestQueryParams(measurementId, queryParamMap);
+  }
+
+  private Long getLatestEvent(String measurementName) {
+    Map<String, String> queryParams = Map.of(
+        QP_START_DATE, "0",
+        QP_END_DATE, String.valueOf(System.currentTimeMillis()),
+        QP_LIMIT, "1",
+        QP_ORDER, "DESC",
+        QP_MISSING_VALUE_BEHAVIOUR, "empty"
+    );
+
+    try {
+      return this.dataExplorerQueryManagement
+          .getData(new ProvidedRestQueryParams(measurementName, queryParams), true)
+          .getLastTimestamp();
+    } catch (RuntimeException e) {
+      LOG.warn("Could not get latest event for measurement {}", measurementName, e);
+      return 0L;
+    }
   }
 
   // Checks if the parameter for missing value behaviour is set

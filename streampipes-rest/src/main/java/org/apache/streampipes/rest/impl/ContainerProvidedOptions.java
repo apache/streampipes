@@ -21,6 +21,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.remote.ContainerProvidedOptionsHandler;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import org.springframework.http.MediaType;
@@ -36,8 +37,11 @@ public class ContainerProvidedOptions extends AbstractRestResource {
 
   private final ContainerProvidedOptionsHandler containerProvidedOptionsHandler;
 
-  public ContainerProvidedOptions(ExtensionServiceRequestManager extensionServiceRequestManager) {
-    this.containerProvidedOptionsHandler = new ContainerProvidedOptionsHandler(extensionServiceRequestManager);
+  public ContainerProvidedOptions(ExtensionServiceRequestManager extensionServiceRequestManager,
+                                  SpResourceManager resourceManager) {
+    this.containerProvidedOptionsHandler = new ContainerProvidedOptionsHandler(
+        extensionServiceRequestManager, resourceManager
+    );
   }
 
   @PostMapping(

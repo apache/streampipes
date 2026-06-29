@@ -19,17 +19,25 @@
 .sp-dialog-container {
     display: grid;
     height: 100%;
-    grid-template-rows: auto 10px 60px;
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
 }
 
 .sp-dialog-content {
-    margin: 0px;
+    margin: 0;
     overflow-y: auto;
     flex: 1 1 auto;
 }
 
 .sp-dialog-actions {
-    padding: 10px;
+    min-height: 3.75rem;
+    padding: var(--space-sm) var(--space-lg);
+    border-top: 1px solid var(--color-border-subtle);
+    background: var(--mat-sys-surface);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
 }
 
 .actions-align-right {
@@ -37,5 +45,5 @@
 }
 
 .p-15 {
-    padding: 15px;
+    padding: var(--space-lg);
 }

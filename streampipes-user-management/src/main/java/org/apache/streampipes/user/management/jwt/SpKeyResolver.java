@@ -21,8 +21,8 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.security.jwt.KeyGenerator;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import io.jsonwebtoken.Claims;
@@ -35,10 +35,14 @@ public class SpKeyResolver implements SigningKeyResolver {
 
   private final String tokenSecret;
   private final IUserStorage userStorage;
+  private final ISpCoreConfigurationStorage coreConfigStorage;
 
-  public SpKeyResolver(String tokenSecret) {
+  public SpKeyResolver(String tokenSecret,
+                       ISpCoreConfigurationStorage coreConfigurationStorage,
+                       IUserStorage userStorage) {
     this.tokenSecret = tokenSecret;
-    this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
+    this.coreConfigStorage = coreConfigurationStorage;
+    this.userStorage = userStorage;
   }
 
   @Override
@@ -69,10 +73,7 @@ public class SpKeyResolver implements SigningKeyResolver {
   }
 
   public String getPublicKeyFromConfig() {
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getSpCoreConfigurationStorage()
+    return coreConfigStorage
         .get()
         .getLocalAuthConfig()
         .getPublicKey();

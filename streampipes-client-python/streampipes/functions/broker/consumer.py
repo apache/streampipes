@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 from abc import abstractmethod
-from typing import AsyncIterator
+from collections.abc import AsyncIterator
 
 from streampipes.functions.broker import Broker
 from streampipes.model.resource.data_stream import DataStream

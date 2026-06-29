@@ -22,6 +22,7 @@ import org.apache.streampipes.mail.template.generation.MailTemplateBuilder;
 import org.apache.streampipes.mail.template.part.LinkPart;
 import org.apache.streampipes.mail.template.part.MailTemplatePart;
 import org.apache.streampipes.mail.utils.MailUtils;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 
 import java.util.Map;
 
@@ -29,7 +30,9 @@ public class PasswordRecoveryMailTemplate extends AbstractMailTemplate {
 
   private final String recoveryCode;
 
-  public PasswordRecoveryMailTemplate(String recoveryCode) {
+  public PasswordRecoveryMailTemplate(String recoveryCode,
+                                      SpCoreConfiguration configuration) {
+    super(configuration);
     this.recoveryCode = recoveryCode;
   }
 
@@ -40,7 +43,7 @@ public class PasswordRecoveryMailTemplate extends AbstractMailTemplate {
 
   @Override
   protected String getPreHeader() {
-    return "Restore your " + MailUtils.extractAppName() + " password";
+    return "Restore your " + MailUtils.extractAppName(configuration) + " password";
   }
 
   @Override
@@ -60,6 +63,7 @@ public class PasswordRecoveryMailTemplate extends AbstractMailTemplate {
   }
 
   private String makeLink() {
-    return new LinkPart("/#/set-new-password?recoveryCode=" + encodeUrlPart(this.recoveryCode)).generate();
+    return new LinkPart("/#/set-new-password?recoveryCode=" + encodeUrlPart(this.recoveryCode))
+        .generate(configuration);
   }
 }

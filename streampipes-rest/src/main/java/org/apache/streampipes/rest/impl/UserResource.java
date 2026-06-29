@@ -30,6 +30,8 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.utils.Utils;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.PasswordUtil;
@@ -60,13 +62,20 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v2/users")
 public class UserResource extends AbstractAuthGuardedRestResource {
 
+  private final ISpCoreConfigurationStorage configurationStorage;
+  private final IUserStorage userStorage;
+
+  public UserResource(ISpCoreConfigurationStorage configurationStorage,
+                      IUserStorage userStorage) {
+    this.configurationStorage = configurationStorage;
+    this.userStorage = userStorage;
+  }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<ShortUserInfo>> listUsers(
       @RequestParam("includeServiceAccounts") boolean includeServiceAccounts
   ) {
-    var userStorage = getUserStorage();
-
-    var users = userStorage.getAllUserAccounts()
+       var users = userStorage.getAllUserAccounts()
         .stream()
         .map(u -> ShortUserInfo.create(
             u.getPrincipalId(),
@@ -131,7 +140,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     Principal principal = getPrincipalById(principalId);
 
     if (principal != null) {
-      getUserStorage().deleteUser(principalId);
+      userStorage.deleteUser(principalId);
       return ok();
     } else {
       return statusMessage(Notifications.error("User not found"));
@@ -144,7 +153,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     if (authenticatedUsername != null) {
       UserAccount user = getUser(authenticatedUsername);
       user.setDarkMode(darkMode);
-      getUserStorage().updateUser(user);
+      userStorage.updateUser(user);
 
       return ok(Notifications.success("Appearance updated"));
     } else {
@@ -159,14 +168,15 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<?> registerUser(@RequestBody UserAccount userAccount) {
     try {
-      if (getUserStorage().getUser(userAccount.getUsername()) == null) {
+      if (userStorage.getUser(userAccount.getUsername()) == null) {
         String property = userAccount.getPassword();
         if (property != null) {
           encryptAndStore(userAccount, property);
         } else {
           String generatedProperty = PasswordUtil.generateRandomPassword();
           encryptAndStore(userAccount, generatedProperty);
-          new MailSender().sendInitialPasswordMail(userAccount.getUsername(), generatedProperty);
+          new MailSender(configurationStorage.get())
+              .sendInitialPasswordMail(userAccount.getUsername(), generatedProperty);
         }
         return ok();
       } else {
@@ -183,10 +193,10 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<?> registerService(@RequestBody ServiceAccount serviceAccount) {
-    if (getUserStorage().getUser(serviceAccount.getUsername()) == null) {
+    if (userStorage.getUser(serviceAccount.getUsername()) == null) {
       serviceAccount.setClientSecret(SecretEncryptionManager.encrypt(serviceAccount.getClientSecret()));
       serviceAccount.setSecretEncrypted(true);
-      getUserStorage().storeUser(serviceAccount);
+      userStorage.storeUser(serviceAccount);
       return ok();
     } else {
       return badRequest(Notifications.error("This user ID already exists. Please choose another address."));
@@ -203,7 +213,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   ) {
     String authenticatedUserName = getAuthenticatedUsername();
     if (authenticatedUserName.equals(username)) {
-      RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(username, rawToken);
+      RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(username, rawToken, userStorage);
       return ok(generatedToken);
     } else {
       return statusMessage(Notifications.error("User not found"));
@@ -224,7 +234,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       if (isUserNameUnchanged(user, existingUser) || isUsernameAvailable(existingUser.getUsername())) {
         updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
         user.setRev(existingUser.getRev());
-        getUserStorage().updateUser(user);
+        userStorage.updateUser(user);
         return ok(Notifications.success("User updated"));
       } else {
         return badRequest(Notifications.error("Username is not available"));
@@ -251,7 +261,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
 
           if (isUsernameAvailable(user.getUsername())) {
             updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
-            getUserStorage().updateUser(existingUser);
+            userStorage.updateUser(existingUser);
             return ok();
           } else {
             return badRequest(Notifications.error("Username is not available"));
@@ -283,7 +293,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
         if (PasswordUtil.validatePassword(existingPw, existingUser.getPassword())) {
           String newEncryptedPw = PasswordUtil.encryptPassword(passwordRequest.newPassword());
           updateUser(existingUser, existingUser, isAdmin(), newEncryptedPw);
-          getUserStorage().updateUser(existingUser);
+          userStorage.updateUser(existingUser);
 
           return ok();
         } else {
@@ -316,7 +326,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
         user.setClientSecret(SecretEncryptionManager.encrypt(user.getClientSecret()));
         user.setSecretEncrypted(true);
       }
-      getUserStorage().updateUser(user);
+      userStorage.updateUser(user);
       return ok(Notifications.success("User updated"));
     } else {
       return statusMessage(Notifications.error("User not found"));
@@ -362,7 +372,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   }
 
   private boolean isUsernameAvailable(String username) {
-    return getUserStorage()
+    return userStorage
         .getAllUserAccounts()
         .stream()
         .noneMatch(u -> u.getUsername()
@@ -380,19 +390,19 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   ) throws NoSuchAlgorithmException, InvalidKeySpecException {
     String encryptedProperty = PasswordUtil.encryptPassword(property);
     userAccount.setPassword(encryptedProperty);
-    getUserStorage().storeUser(userAccount);
+    userStorage.storeUser(userAccount);
   }
 
   private UserAccount getUser(String username) {
-    return getUserStorage().getUserAccount(username);
+    return userStorage.getUserAccount(username);
   }
 
   private Principal getPrincipalByUsername(String username) {
-    return getUserStorage().getUser(username);
+    return userStorage.getUser(username);
   }
 
   private Principal getPrincipalById(String principalId) {
-    return getUserStorage().getUserById(principalId);
+    return userStorage.getUserById(principalId);
   }
 
   private void replacePermissions(Principal principal, Principal existingPrincipal) {

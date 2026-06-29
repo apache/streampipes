@@ -158,7 +158,14 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
       IAdapterRuntimeContext adapterRuntimeContext
   ) {
     var settings = getConfigurations(extractor.getStaticPropertyExtractor());
-    var plcRequestReader = new ContinuousPlcRequestReader(connectionManager, settings, requestProvider, collector);
+    var adapterName = extractor.getAdapterDescription().getName();
+    var plcRequestReader = new ContinuousPlcRequestReader(
+        connectionManager,
+        settings,
+        requestProvider,
+        collector,
+        adapterName
+    );
     this.pullAdapterScheduler = new PullAdapterScheduler();
     this.pullAdapterScheduler.schedule(
         plcRequestReader,

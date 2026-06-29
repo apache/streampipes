@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.file;
 
-import org.apache.streampipes.storage.management.StorageDispatcher;
+.chart-title {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+    text-align: center;
+}
 
-public class FileConstants {
-  public static final String FILES_BASE_DIR = StorageDispatcher
-      .INSTANCE
-      .getNoSqlStore()
-      .getSpCoreConfigurationStorage()
-      .get()
-      .getFilesDir();
-
+.daily-counts-chart {
+    height: 320px;
+    width: 100%;
 }

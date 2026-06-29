@@ -133,7 +133,8 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   protected void handleFile(String document,
                             String fileMetadataId,
                             Map<String, byte[]> zipContent) throws JsonProcessingException {
-    addExportItem(fileMetadataId, new FileResolver().readDocument(document).getFilename(),
+    addExportItem(fileMetadataId, new FileResolver(resourceManager.getFileMetadataStorage())
+            .readDocument(document).getFilename(),
         importConfig::addFile);
   }
 

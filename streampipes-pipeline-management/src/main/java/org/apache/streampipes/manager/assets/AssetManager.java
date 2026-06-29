@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.assets;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.apache.commons.io.FileUtils;
@@ -33,52 +34,58 @@ import java.nio.file.Paths;
 
 public class AssetManager {
 
-  public static byte[] getAssetIcon(String appId) throws IOException {
+  private final ISpCoreConfigurationStorage coreConfigurationStorage;
+
+  public AssetManager(ISpCoreConfigurationStorage coreConfigurationStorage) {
+    this.coreConfigurationStorage = coreConfigurationStorage;
+  }
+
+  public byte[] getAssetIcon(String appId) throws IOException {
     return Files.readAllBytes(Paths.get(getAssetIconPath(appId)));
   }
 
-  public static String getAssetDocumentation(String appId) throws IOException {
+  public String getAssetDocumentation(String appId) throws IOException {
     return new String(Files.readAllBytes(Paths.get(getAssetDocumentationPath(appId))));
   }
 
-  public static byte[] getAsset(String appId, String assetName) throws IOException {
+  public byte[] getAsset(String appId, String assetName) throws IOException {
     return Files.readAllBytes(Paths.get(getAssetPath(appId, assetName)));
   }
 
-  public static boolean existsAssetDir(String appId) {
+  public boolean existsAssetDir(String appId) {
     var directory = new File(getAssetDir(appId));
     return directory.exists() && directory.isDirectory();
   }
 
-  public static void storeAsset(SpServiceUrlProvider spServiceUrlProvider,
+  public void storeAsset(SpServiceUrlProvider spServiceUrlProvider,
                                 String appId,
                                 ExtensionServiceRequestManager requestManager) throws IOException, NoServiceEndpointsAvailableException {
     InputStream assetStream = new AssetFetcher(spServiceUrlProvider, appId, requestManager)
         .fetchPipelineElementAssets();
-    new AssetExtractor(assetStream, appId).extractAssetContents();
+    new AssetExtractor(assetStream, appId, coreConfigurationStorage).extractAssetContents();
   }
 
-  public static void deleteAsset(String appId) throws IOException {
+  public void deleteAsset(String appId) throws IOException {
     Path path = Paths.get(getAssetDir(appId));
     if (Files.exists(path)) {
       FileUtils.deleteDirectory(path.toFile());
     }
   }
 
-  private static String getAssetPath(String appId, String assetName) {
+  private String getAssetPath(String appId, String assetName) {
     return getAssetDir(appId) + File.separator + assetName;
   }
 
-  private static String getAssetIconPath(String appId) {
+  private String getAssetIconPath(String appId) {
     return getAssetDir(appId) + File.separator + GlobalStreamPipesConstants.STD_ICON_NAME;
   }
 
-  private static String getAssetDocumentationPath(String appId) {
+  private String getAssetDocumentationPath(String appId) {
     return getAssetDir(appId) + File.separator + GlobalStreamPipesConstants.STD_DOCUMENTATION_NAME;
   }
 
-  private static String getAssetDir(String appId) {
-    return AssetConstants.ASSET_BASE_DIR + File.separator + appId;
+  private String getAssetDir(String appId) {
+    return this.coreConfigurationStorage.get().getAssetDir() + File.separator + appId;
   }
 
 }
