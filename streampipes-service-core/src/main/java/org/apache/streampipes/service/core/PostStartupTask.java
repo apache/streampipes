@@ -23,8 +23,8 @@ import org.apache.streampipes.connect.management.management.AdapterMasterManagem
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
-import org.apache.streampipes.health.monitoring.PostStartupRecovery;
 import org.apache.streampipes.health.monitoring.HealthCheck;
+import org.apache.streampipes.health.monitoring.PostStartupRecovery;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
