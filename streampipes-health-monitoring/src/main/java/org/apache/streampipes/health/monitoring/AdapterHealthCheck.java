@@ -34,7 +34,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class AdapterHealthCheck {
+public class AdapterHealthCheck implements HealthCheck {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterHealthCheck.class);
 
@@ -51,6 +51,7 @@ public class AdapterHealthCheck {
    * running adapters (in line with
    * {@link PipelineHealthCheck}).
    */
+  @Override
   public void runCheck() {
     LOG.debug("Adapter health check started");
 

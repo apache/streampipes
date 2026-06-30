@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.health.monitoring;
 
-public interface RegisteredExtensionHealthCheck {
+public interface HealthCheck {
 
   void runCheck();
 }

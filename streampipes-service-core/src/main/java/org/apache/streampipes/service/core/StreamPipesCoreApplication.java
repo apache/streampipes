@@ -25,7 +25,7 @@ import org.apache.streampipes.connect.transformer.api.TransformationEngine;
 import org.apache.streampipes.connect.transformer.api.TransformationEngines;
 import org.apache.streampipes.connect.transformer.js.GraalJsScriptEngine;
 import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
-import org.apache.streampipes.health.monitoring.RegisteredExtensionHealthCheck;
+import org.apache.streampipes.health.monitoring.HealthCheck;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.loadbalance.LoadManager;
@@ -251,7 +251,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     return new AvailableMigrations(resourceManager).getAvailableMigrations();
   }
 
-  protected List<RegisteredExtensionHealthCheck> getRegisteredExtensionHealthChecks() {
+  protected List<HealthCheck> getRegisteredExtensionHealthChecks() {
     return List.of();
   }
 
