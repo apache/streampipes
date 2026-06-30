@@ -60,7 +60,6 @@
         <error-prone.version>2.10.0</error-prone.version>
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>25.0.2</graalvm.js.version>
-        <groovy.version>5.0.3</groovy.version>
         <grpc.version>1.80.0</grpc.version>
         <guava.version>33.5.0-jre</guava.version>
         <hadoop.version>3.4.1</hadoop.version>
@@ -458,11 +457,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-configuration2</artifactId>
                 <version>${commons-configuration2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.groovy</groupId>
-                <artifactId>groovy</artifactId>
-                <version>${groovy.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -934,7 +928,6 @@
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-standalone</module>
         <module>streampipes-connect-transformer-api</module>
-        <module>streampipes-connect-transformer-groovy</module>
         <module>streampipes-connect-transformer-js</module>
         <module>streampipes-health-monitoring</module>
     </modules>
