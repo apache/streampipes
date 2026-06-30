@@ -24,6 +24,7 @@ import org.apache.streampipes.connect.management.management.WorkerAdministration
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
 import org.apache.streampipes.health.monitoring.PostStartupRecovery;
+import org.apache.streampipes.health.monitoring.RegisteredExtensionHealthCheck;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
@@ -66,7 +67,8 @@ public class PostStartupTask implements Runnable {
   public PostStartupTask(IPipelineStorage pipelineStorage,
                          ExtensionServiceRequestManager extensionServiceRequestManager,
                          WorkerRestClient workerRestClient,
-                         SpResourceManager resourceManager) {
+                         SpResourceManager resourceManager,
+                         List<RegisteredExtensionHealthCheck> registeredHealthChecks) {
     this.pipelineStorage = pipelineStorage;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.executorService = Executors.newSingleThreadScheduledExecutor();
@@ -90,7 +92,8 @@ public class PostStartupTask implements Runnable {
             ),
             StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
             extensionServiceRequestManager,
-            resourceManager
+            resourceManager,
+            registeredHealthChecks
         )
     );
   }

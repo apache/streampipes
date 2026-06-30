@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class ExtensionHealthCheck implements Runnable {
 
@@ -37,15 +38,18 @@ public class ExtensionHealthCheck implements Runnable {
   private final ExtensionServiceRequestManager extensionRequestManager;
   private final IExtensionsServiceStorage extensionsServiceStorage;
   private final SpResourceManager resourceManager;
+  private final List<RegisteredExtensionHealthCheck> registeredHealthChecks;
 
   public ExtensionHealthCheck(ResourceProvider resourceProvider,
                               IExtensionsServiceStorage extensionsServiceStorage,
                               ExtensionServiceRequestManager extensionRequestManager,
-                              SpResourceManager resourceManager) {
+                              SpResourceManager resourceManager,
+                              List<RegisteredExtensionHealthCheck> registeredHealthChecks) {
     this.resourceProvider = resourceProvider;
     this.extensionsServiceStorage = extensionsServiceStorage;
     this.extensionRequestManager = extensionRequestManager;
     this.resourceManager = resourceManager;
+    this.registeredHealthChecks = registeredHealthChecks;
   }
 
   @Override
@@ -66,8 +70,20 @@ public class ExtensionHealthCheck implements Runnable {
       var healthCheckData = new HealthCheckData(resourceProvider, activeResources, activeCoreInstances, activeExtensionInstances);
       new PipelineHealthCheck(healthCheckData, extensionRequestManager, resourceProvider, resourceManager).runCheck();
       new AdapterHealthCheck(healthCheckData).runCheck();
+      runRegisteredHealthChecks();
     } catch (Exception e) {
       LOG.warn("An unhandled error occurred while running health check.", e);
     }
+  }
+
+  private void runRegisteredHealthChecks() {
+    registeredHealthChecks.forEach(healthCheck -> {
+      try {
+        healthCheck.runCheck();
+      } catch (Exception e) {
+        LOG.warn("An unhandled error occurred while running registered health check {}.",
+            healthCheck.getClass().getSimpleName(), e);
+      }
+    });
   }
 }
