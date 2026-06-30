@@ -17,7 +17,11 @@
  */
 
 import { Component, inject, Input } from '@angular/core';
-import { DialogRef, FormFieldComponent } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    FormFieldComponent,
+    SpAlertBannerComponent,
+} from '@streampipes/shared-ui';
 import { ConnectScriptTemplatesService } from '@streampipes/platform-services';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -35,6 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrl: './create-adapter-transformation-template-dialog.component.scss',
     imports: [
         FormFieldComponent,
+        SpAlertBannerComponent,
         MatFormField,
         MatInput,
         FormsModule,

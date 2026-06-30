@@ -23,11 +23,13 @@ import org.apache.streampipes.connect.transformer.api.TransformationEngines;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.model.connect.ScriptMetadata;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +42,7 @@ import java.util.List;
 public class TransformationScriptLanguageResource {
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public List<ScriptMetadata> getAll(@RequestBody AdapterDescription adapterDescription) throws
                                                                                          NoServiceEndpointsAvailableException {
     var languagesSupportedByCore = TransformationEngines.INSTANCE.getAvailableEngineMetadata();
