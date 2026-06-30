@@ -24,8 +24,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DatatypeUtils {
 
@@ -47,13 +46,13 @@ public class DatatypeUtils {
   public static Object convertValue(String adapterName,
                                     Object value,
                                     String targetDatatypeXsd) {
-    return convertValue(adapterName, value, targetDatatypeXsd, ConcurrentHashMap.newKeySet());
+    return convertValue(adapterName, value, targetDatatypeXsd, new AtomicBoolean(false));
   }
 
   public static Object convertValue(String adapterName,
                                     Object value,
                                     String targetDatatypeXsd,
-                                    Set<String> loggedConversionErrors) {
+                                    AtomicBoolean loggedConversionError) {
     if (value == null) {
       return null;
     }
@@ -77,7 +76,7 @@ public class DatatypeUtils {
     try {
       return convertString(String.valueOf(value), targetDatatypeXsd);
     } catch (NumberFormatException e) {
-      logConversionError(adapterName, value, targetDatatypeXsd, loggedConversionErrors);
+      logConversionError(adapterName, value, targetDatatypeXsd, loggedConversionError);
       return value;
     }
   }
@@ -85,9 +84,8 @@ public class DatatypeUtils {
   private static void logConversionError(String adapterName,
                                          Object value,
                                          String targetDatatypeXsd,
-                                         Set<String> loggedConversionErrors) {
-    var logKey = "%s:%s:%s".formatted(adapterName, targetDatatypeXsd, value);
-    if (loggedConversionErrors.add(logKey)) {
+                                         AtomicBoolean loggedConversionError) {
+    if (loggedConversionError.compareAndSet(false, true)) {
       LOG.warn(
           "Could not convert value '{}' to datatype '{}' for adapter '{}'. Further occurrences are logged at debug "
               + "level.",

@@ -23,15 +23,14 @@ import org.apache.streampipes.connect.shared.DatatypeUtils;
 import org.apache.streampipes.extensions.api.connect.TransformationRule;
 
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DatatypeTransformationRule implements TransformationRule {
 
   private final String eventKey;
   private String targetDatatypeXsd;
   private final String adapterName;
-  private final Set<String> loggedConversionErrors = ConcurrentHashMap.newKeySet();
+  private final AtomicBoolean loggedConversionError = new AtomicBoolean(false);
 
   public DatatypeTransformationRule(String adapterName,
                                     String eventKey,
@@ -52,6 +51,6 @@ public class DatatypeTransformationRule implements TransformationRule {
   }
 
   public Object transformDatatype(Object value) {
-    return DatatypeUtils.convertValue(adapterName, value, targetDatatypeXsd, loggedConversionErrors);
+    return DatatypeUtils.convertValue(adapterName, value, targetDatatypeXsd, loggedConversionError);
   }
 }
