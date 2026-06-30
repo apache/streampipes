@@ -201,7 +201,7 @@ public class AdapterMasterManagement {
         // Update selected endpoint URL of adapter
         ad.setSelectedEndpointUrl(service.getServiceUrl());
         ad.setSelectedServiceId(service.getSvcId());
-        adapterResourceManager.getDb().updateElement(ad);
+        ad = adapterResourceManager.getDb().updateElement(ad);
 
         // Invoke adapter instance
         workerRestClient.invokeStreamAdapter(service, ad);
