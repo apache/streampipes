@@ -24,7 +24,9 @@ import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpoi
 import org.apache.streampipes.model.connect.ScriptMetadata;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -36,31 +38,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/v2/connect/master/script-languages")
 public class TransformationScriptLanguageResource {
+
+  private final ISpServiceDiscovery serviceDiscovery;
+
+  public TransformationScriptLanguageResource() {
+    this(SpServiceDiscovery.getServiceDiscovery());
+  }
+
+  TransformationScriptLanguageResource(ISpServiceDiscovery serviceDiscovery) {
+    this.serviceDiscovery = serviceDiscovery;
+  }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public List<ScriptMetadata> getAll(@RequestBody AdapterDescription adapterDescription) throws
                                                                                          NoServiceEndpointsAvailableException {
     var languagesSupportedByCore = TransformationEngines.INSTANCE.getAvailableEngineMetadata();
-    var matchingServices = SpServiceDiscovery.getServiceDiscovery()
-                                             .getService(
-                                                 DefaultSpServiceTypes.EXT, true,
-                                                 ExtensionsServiceEndpointUtils.getDesiredServiceTags(
-                                                     adapterDescription.getAppId(),
-                                                     SpServiceUrlProvider.ADAPTER,
-                                                     adapterDescription.getDeploymentConfiguration()
-                                                                       .getDesiredServiceTags()
-                                                 )
-                                             );
+    var matchingServices = serviceDiscovery.getService(
+        DefaultSpServiceTypes.EXT, true,
+        ExtensionsServiceEndpointUtils.getDesiredServiceTags(
+            adapterDescription.getAppId(),
+            SpServiceUrlProvider.ADAPTER,
+            adapterDescription.getDeploymentConfiguration()
+                              .getDesiredServiceTags()
+        )
+    );
 
     if (!matchingServices.isEmpty()) {
-      return matchingServices.get(0)
-                             .getSupportedScriptLanguages()
-                             .stream()
+      return getSupportedScriptLanguages(matchingServices.get(0))
                              .filter(metadata -> languagesSupportedByCore
                                  .stream()
                                  .anyMatch(coreLanguage -> coreLanguage.language()
@@ -72,5 +82,12 @@ public class TransformationScriptLanguageResource {
           "Transformation capability unavailable: No service endpoints found supporting script languages.");
     }
 
+  }
+
+  private Stream<ScriptMetadata> getSupportedScriptLanguages(
+      SpServiceRegistration matchingService
+  ) {
+    var supportedScriptLanguages = matchingService.getSupportedScriptLanguages();
+    return supportedScriptLanguages == null ? Stream.empty() : supportedScriptLanguages.stream();
   }
 }
