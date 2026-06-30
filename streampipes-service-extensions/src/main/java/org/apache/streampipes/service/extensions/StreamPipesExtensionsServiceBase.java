@@ -22,7 +22,6 @@ import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.connect.transformer.api.TransformationEngine;
 import org.apache.streampipes.connect.transformer.api.TransformationEngines;
-import org.apache.streampipes.connect.transformer.groovy.GroovyScriptEngine;
 import org.apache.streampipes.connect.transformer.js.GraalJsScriptEngine;
 import org.apache.streampipes.extensions.api.limiter.SpRateLimiter;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
@@ -98,7 +97,6 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
       SpRateLimiter.INSTANCE.createRateLimiter();
 
       registerTransformationEngines(List.of(
-          GroovyScriptEngine::new,
           GraalJsScriptEngine::new
       ));
 

@@ -20,7 +20,6 @@ package org.apache.streampipes.extensions.management.connect.adapter;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.connect.transformer.api.Context;
-import org.apache.streampipes.connect.transformer.groovy.GroovyScriptContext;
 import org.apache.streampipes.connect.transformer.js.GraalJsScriptContext;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 
@@ -39,9 +38,6 @@ public class ScriptContextResolver {
     switch (language) {
       case "javascript" -> {
         return new GraalJsScriptContext(client);
-      }
-      case "groovy" -> {
-        return new GroovyScriptContext(client);
       }
       default -> throw new UnsupportedOperationException("Unsupported language: " + language);
     }

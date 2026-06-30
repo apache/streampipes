@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.service.core.minimal;
 
-import org.apache.streampipes.connect.transformer.groovy.GroovyScriptEngine;
 import org.apache.streampipes.connect.transformer.js.GraalJsScriptEngine;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
@@ -59,7 +58,6 @@ public class StreamPipesCoreApplicationMinimal extends StreamPipesCoreApplicatio
         new SpMqttProtocolFactory()
     ),
         List.of(
-            () -> new GroovyScriptEngine(),
             () -> new GraalJsScriptEngine()
         ));
   }
