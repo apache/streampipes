@@ -21,10 +21,12 @@ package org.apache.streampipes.rest.impl.pe;
 import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.manager.template.DataProcessorTemplateHandler;
 import org.apache.streampipes.manager.template.DataSinkTemplateHandler;
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +38,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +52,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/pipeline-element-templates")
-public class PipelineElementTemplateResource extends AbstractRestResource {
+public class PipelineElementTemplateResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all pipeline element templates",
@@ -61,6 +64,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
                          array = @ArraySchema(schema = @Schema(implementation = PipelineElementTemplate.class)))
                  })
              })
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<List<PipelineElementTemplate>> getAll(
       @Parameter(description = "Filter all templates by this appId")
       @RequestParam("appId") String appId
@@ -83,6 +87,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
                  }),
                  @ApiResponse(responseCode = "400", description = "Template with given id not found")
              })
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> getById(
       @Parameter(description = "The id of the pipeline element template", required = true)
       @PathVariable("id") String s
@@ -100,6 +105,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
              responses = {
                  @ApiResponse(responseCode = "200", description = "Template successfully stored")
              })
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<Void> create(
       @RequestBody(description = "The pipeline element template to be stored",
                    content = @Content(schema = @Schema(implementation = PipelineElementTemplate.class)))
@@ -120,6 +126,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
                  }, responseCode = "200", description = "Template successfully updated"),
                  @ApiResponse(responseCode = "400", description = "Template with given id not found")
              })
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> update(
       @Parameter(description = "The id of the pipeline element template", required = true)
       @PathVariable("id") String id,
@@ -165,6 +172,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
                          schema = @Schema(implementation = DataSinkInvocation.class))
                  }, responseCode = "200", description = "The configured data sink invocation model"),
              })
+  @PreAuthorize("this.hasWriteAuthorityPipeline()")
   public ResponseEntity<DataSinkInvocation> getPipelineElementForTemplate(
       @Parameter(description = "The id of the pipeline element template", required = true)
       @PathVariable("id") String id,
@@ -196,6 +204,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
                          schema = @Schema(implementation = DataProcessorInvocation.class))
                  }, responseCode = "200", description = "The configured data processor invocation model"),
              })
+  @PreAuthorize("this.hasWriteAuthorityPipeline()")
   public ResponseEntity<DataProcessorInvocation> getPipelineElementForTemplate(
       @Parameter(description = "The id of the pipeline element template", required = true)
       @PathVariable("id") String id,
@@ -227,6 +236,7 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
                          schema = @Schema(implementation = AdapterDescription.class))
                  }, responseCode = "200", description = "The configured adapter model"),
              })
+  @PreAuthorize("this.hasWriteAuthorityAdapter()")
   public ResponseEntity<AdapterDescription> getPipelineElementForTemplate(
       @Parameter(description = "The id of the pipeline element template", required = true)
       @PathVariable("id") String id,
@@ -245,5 +255,19 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
         new AdapterTemplateHandler(template, adapterDescription, Boolean.parseBoolean(overwriteNameAndDescription))
             .applyTemplateOnPipelineElement();
     return ok(desc);
+  }
+
+  public boolean hasWriteAuthority() {
+    return isAdminOrHasAnyAuthority(
+        DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE,
+        DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE);
+  }
+
+  public boolean hasWriteAuthorityPipeline() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE);
+  }
+
+  public boolean hasWriteAuthorityAdapter() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE);
   }
 }
