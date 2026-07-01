@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
@@ -40,6 +41,7 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
   protected final DataLakeMeasure measure;
   protected final List<EventProperty> allEventProperties;
   protected final Map<String, String> sanitizedRuntimeNames = new HashMap<>();
+  private final AtomicBoolean warnedNullFields = new AtomicBoolean(false);
 
   public TimeSeriesStorage(DataLakeMeasure measure) {
     this.measure = measure;
@@ -115,7 +117,26 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
         .collect(Collectors.toList());
 
     if (!nullFields.isEmpty()) {
-      LOG.warn("Ignored {} fields which had a value 'null': {}", nullFields.size(), String.join(", ", nullFields));
+      logNullFields(nullFields);
+    }
+  }
+
+  private void logNullFields(List<String> nullFields) {
+    var nullFieldsLogMessage = String.join(", ", nullFields);
+
+    if (warnedNullFields.compareAndSet(false, true)) {
+      LOG.warn(
+          "Ignored {} fields which had a value 'null': {}. Further occurrences for this measure are logged at "
+              + "debug level.",
+          nullFields.size(),
+          nullFieldsLogMessage
+      );
+    } else {
+      LOG.debug(
+          "Ignored {} fields which had a value 'null': {}",
+          nullFields.size(),
+          nullFieldsLogMessage
+      );
     }
   }
 

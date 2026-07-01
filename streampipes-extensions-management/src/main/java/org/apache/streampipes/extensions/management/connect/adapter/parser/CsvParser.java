@@ -50,6 +50,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 
 public class CsvParser implements IParser {
@@ -67,6 +68,7 @@ public class CsvParser implements IParser {
 
   private boolean header;
   private char delimiter;
+  private final AtomicBoolean loggedConversionError = new AtomicBoolean(false);
 
   public CsvParser() {
 
@@ -163,7 +165,7 @@ public class CsvParser implements IParser {
     var event = new HashMap<String, Object>();
     for (int i = 0; i < header.length; i++) {
       var runtimeType = DatatypeUtils.getXsdDatatype(values[i], preferFloat);
-      var convertedValue = DatatypeUtils.convertValue(values[i], runtimeType);
+      var convertedValue = DatatypeUtils.convertValue(ID, values[i], runtimeType, loggedConversionError);
       event.put(header[i], convertedValue);
     }
 
