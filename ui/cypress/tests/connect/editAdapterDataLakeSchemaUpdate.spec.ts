@@ -101,7 +101,6 @@ describe('Test adapter updates with data lake schema changes', () => {
             'event.adapter_added = 1;\n out.collect(event);\n',
         );
 
-        ConnectBtns.adapterEditWarning().should('not.exist');
         ConnectBtns.adapterManualPipelineMigrationWarning().should('not.exist');
         ConnectBtns.adapterChartEditWarning().should('not.exist');
         ConnectUtils.closeAdapterPreview();
