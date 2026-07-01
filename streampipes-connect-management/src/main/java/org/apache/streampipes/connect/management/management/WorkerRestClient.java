@@ -42,7 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * This client can be used to interact with the adapter workers executing the adapter instances
@@ -61,19 +60,23 @@ public class WorkerRestClient {
 
   public void invokeStreamAdapter(SpServiceRegistration service,
                                   String elementId) throws AdapterException {
-    var adapterStreamDescription = getAndDecryptAdapter(elementId);
-    var requestTarget = ExtensionServiceRequestTargets.adapterStart(service);
-    startAdapter(requestTarget, adapterStreamDescription);
-    updateStreamAdapterStatus(adapterStreamDescription.getElementId(), true);
+    invokeStreamAdapter(service, getAdapterStorage().getElementById(elementId));
   }
 
-  public void stopStreamAdapter(SpServiceRegistration service,
-                                AdapterDescription adapterStreamDescription) throws AdapterException {
-    var requestTarget = ExtensionServiceRequestTargets.adapterStop(service);
-    var ad = getAdapterDescriptionById(resourceManager.manageAdapters().getDb(), adapterStreamDescription.getElementId());
+  public void invokeStreamAdapter(SpServiceRegistration service,
+                                  AdapterDescription adapterStreamDescription) throws AdapterException {
+    var decryptedAdapterStreamDescription = cloneAndDecryptAdapter(adapterStreamDescription);
+    var requestTarget = ExtensionServiceRequestTargets.adapterStart(service);
+    startAdapter(requestTarget, decryptedAdapterStreamDescription);
+    updateStreamAdapterStatus(decryptedAdapterStreamDescription, true);
+  }
 
-    stopAdapter(requestTarget, ad);
-    updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
+  public void stopAdapter(SpServiceRegistration service,
+                          AdapterDescription adapterStreamDescription) throws AdapterException {
+    var decryptedAdapterStreamDescription = cloneAndDecryptAdapter(adapterStreamDescription);
+    var requestTarget = ExtensionServiceRequestTargets.adapterStop(service);
+    stopAdapter(requestTarget, decryptedAdapterStreamDescription);
+    updateStreamAdapterStatus(decryptedAdapterStreamDescription, false);
   }
 
   private void startAdapter(ExtensionServiceRequestTarget requestTarget,
@@ -200,22 +203,14 @@ public class WorkerRestClient {
   }
 
 
-  private AdapterDescription getAdapterDescriptionById(IAdapterStorage adapterStorage,
-                                                       String id) {
-    AdapterDescription adapterDescription = null;
-    List<AdapterDescription> allAdapters = adapterStorage.findAll();
-    for (AdapterDescription a : allAdapters) {
-      if (a.getElementId().endsWith(id)) {
-        adapterDescription = a;
-      }
-    }
-
-    return adapterDescription;
-  }
-
   private void updateStreamAdapterStatus(String adapterId,
                                          boolean running) {
     var adapter = getAndDecryptAdapter(adapterId);
+    updateStreamAdapterStatus(adapter, running);
+  }
+
+  private void updateStreamAdapterStatus(AdapterDescription adapter,
+                                         boolean running) {
     adapter.setRunning(running);
     encryptAndUpdateAdapter(adapter);
   }
@@ -230,6 +225,12 @@ public class WorkerRestClient {
     AdapterDescription adapter = getAdapterStorage().getElementById(adapterId);
     SecretProvider.getDecryptionService().apply(adapter);
     return adapter;
+  }
+
+  private AdapterDescription cloneAndDecryptAdapter(AdapterDescription adapter) {
+    AdapterDescription decryptedDescription = new Cloner().adapterDescription(adapter);
+    SecretProvider.getDecryptionService().apply(decryptedDescription);
+    return decryptedDescription;
   }
 
   private IAdapterStorage getAdapterStorage() {
