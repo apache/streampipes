@@ -27,12 +27,14 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,11 +59,13 @@ public class FunctionsResource extends AbstractAuthGuardedRestResource {
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Collection<FunctionDefinition>> getActiveFunctions() {
     return ok(FunctionRegistrationService.INSTANCE.getAllFunctions());
   }
 
   @GetMapping(path = "{functionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<FunctionDefinition> getFunction(@PathVariable("functionId") String functionId) {
     return ok(FunctionRegistrationService.INSTANCE.getFunction(functionId));
   }
@@ -70,23 +74,27 @@ public class FunctionsResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<SuccessMessage> registerFunctions(@RequestBody List<FunctionDefinition> functions) {
     functions.forEach(FunctionRegistrationService.INSTANCE::registerFunction);
     return ok(Notifications.success("Function successfully registered"));
   }
 
   @DeleteMapping(path = "{functionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<SuccessMessage> deregisterFunction(@PathVariable("functionId") String functionId) {
     FunctionRegistrationService.INSTANCE.deregisterFunction(functionId);
     return ok(Notifications.success("Function successfully deregistered"));
   }
 
   @GetMapping(path = "{functionId}/metrics", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<SpMetricsEntry> getFunctionMetrics(@PathVariable("functionId") String functionId) {
     return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForResource(functionId));
   }
 
   @GetMapping(path = "{functionId}/logs")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<List<SpLogEntry>> getFunctionLogs(@PathVariable("functionId") String functionId) {
     return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForResource(functionId));
   }
