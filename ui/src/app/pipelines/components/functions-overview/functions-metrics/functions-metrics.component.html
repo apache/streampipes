@@ -41,8 +41,8 @@
             ) {
                 <sp-simple-metrics
                     [elementName]="streamNames[messagesIn.key]"
-                    [lastPublishedLabel]="'Last consumed message' | translate"
-                    [statusValueLabel]="'Consumed messages' | translate"
+                    lastPublishedLabel="Last consumed message"
+                    statusValueLabel="Consumed messages"
                     [lastTimestamp]="messagesIn.value.lastTimestamp"
                     [statusValue]="messagesIn.value.counter"
                 >
