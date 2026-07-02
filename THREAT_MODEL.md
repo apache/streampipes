@@ -15,15 +15,7 @@
   limitations under the License.
 -->
 
-# Apache StreamPipes — Threat Model (v0 draft)
-
-> **Status:** v0 draft produced by the ASF Security team (Michael Scovetta
-> rubric, run with Claude Opus) for the Apache StreamPipes PMC to review,
-> correct, and own. Every non-trivial claim is provenance-tagged
-> *(documented)* / *(maintainer)* / *(inferred)*; the *(inferred)* tags are
-> hypotheses, each with a matching question in §11. Written against the `dev`
-> branch; revise on a new public-facing surface (a new REST surface, adapter
-> class, auth mechanism, or broker integration), not on internal refactors.
+# Apache StreamPipes — Threat Model
 
 ## §1 — Purpose and consumers
 
@@ -31,205 +23,365 @@ This document describes the **implicit security contract** between Apache
 StreamPipes and its downstream operators: what StreamPipes assumes about its
 environment, what it upholds, what it leaves to the operator, and which
 "syntactically possible" misuses fall outside the intended design. It serves
-the **integrator/operator** (which threats they own) and the **triager**
-(classifying a scanner/AI/CVE-style finding as valid, out of model, or
-disclaimed by design — cite the section).
+integrators/operators (which threats they own) and triagers (classifying a
+scanner/AI/CVE-style finding as valid, out of model, or disclaimed by design —
+cite the relevant section).
 
 ## §2 — What StreamPipes is
 
 Apache StreamPipes is an **open-source Industrial IoT data platform** for
-connecting industrial data sources, building real-time streaming pipelines,
-and exploring time-series data *(documented: README)*. In-scope component
-families *(documented: root `AGENTS.md` architecture boundaries; roles
-inferred — §11 Q1)*:
+connecting industrial data sources, building real-time streaming pipelines, and
+exploring time-series data. In-scope component families, based on architecture
+boundaries in the root `AGENTS.md`, are:
 
 | Component | Role | Primary surface |
 | --- | --- | --- |
-| **`streampipes-rest`** | the HTTP/REST front door — auth, user/resource management, pipeline + adapter control | network (the primary untrusted boundary) *(inferred — §11 Q1)* |
-| **`streampipes-service-core`** | bootstrapping, **security**, migrations, scheduling *(documented: AGENTS.md)* | in-process |
-| **`*-management` modules** | business/domain logic (pipelines, adapters, data lake) | in-process |
-| **Connect adapters (extensions)** | ingest data from **external** industrial sources (OPC-UA, MQTT, HTTP, files, DB, …) | the external-data ingestion boundary *(inferred — §11 Q2)* |
-| **Pipeline elements (processors/sinks)** | run processing logic over the event streams; deployable as extensions | in-process / extension-runtime code *(inferred — §11 Q2)* |
-| **Message broker + data lake** | event transport (Kafka/MQTT/NATS-class) and time-series persistence | intra-deployment infra *(inferred — §11 Q3)* |
-| **UI** (`ui/`) | browser client | client trust domain |
+| **`streampipes-rest`** | The primary HTTP/REST control-plane boundary: authentication, user/resource management, pipeline control, adapter control, and data-lake queries. The UI drives configuration through this control plane. It is not the external data-ingress path. | network control boundary |
+| **`streampipes-service-core`** | Bootstrapping, security, migrations, scheduling. | in-process |
+| **`*-management` modules** | Business/domain logic for pipelines, adapters, data lake, and related resources. | in-process |
+| **Connect source/input adapters (extensions)** | The external data-ingress path. Adapters connect to external sources (MQTT, Kafka, REST, OPC-UA, HTTP, files, databases, etc.), ingest raw data, normalize it into events, and publish those events onto the internal bus for downstream processing. | external-data ingestion boundary |
+| **Pipeline elements (processors/sinks)** | Processing and sink logic over event streams carried by the internal bus; deployable as extensions. | in-process / extension-runtime code |
+| **Internal message bus** | Internal event transport carrying adapter-normalized and processor-derived events between processing steps. External data enters through source/input adapters; the bus is not directly writable from outside the assumed deployment perimeter. | intra-deployment infrastructure |
+| **Data lake** | Time-series persistence and queryable event history. | intra-deployment infrastructure |
+| **UI** (`ui/`) | Browser client that drives configuration and visualization through the control plane. | client trust domain |
 
-StreamPipes is **not** a single hardened process: it is a multi-service
-deployment that depends on a message broker, a time-series/metadata store, and
-the external data sources its adapters connect to *(inferred — §11 Q3)*.
+StreamPipes is **not** a single hardened process. It is a multi-service
+deployment that depends on an internal message broker, a time-series/metadata
+store, extension-runtime services, and the external data sources its adapters
+connect to. Broker and datastore components are modeled as trusted dependencies
+inside an operator-controlled, network-isolated perimeter.
+
+## §2.1 — Assets protected by this model
+
+| Asset | Why it matters | Primary owner |
+| --- | --- | --- |
+| Admin accounts and privileged roles | Control over users, adapters, pipelines, and deployment-level configuration. | StreamPipes + operator |
+| User accounts, sessions, and access tokens | Access to control-plane APIs and permitted resources. | StreamPipes |
+| Initial admin password and client secret | Bootstrap credentials that can become global compromise if left at known defaults. | operator + StreamPipes defaults |
+| Adapter/source credentials | Access to industrial systems, databases, message brokers, and external APIs. | operator, protected by StreamPipes handling |
+| Pipeline definitions and adapter configurations | Determine what data is ingested, transformed, stored, and sent to sinks. | StreamPipes + operator |
+| Event and time-series data | May contain sensitive industrial telemetry or operational information. | operator, protected by StreamPipes access control |
+| Internal broker topics/messages | Internal transport for normalized and derived events. | operator infrastructure |
+| Extension artifacts and custom code | Execute in extension-runtime containers and may reach broker/datastore services. | operator |
+| Logs and error reports | Useful for debugging but must not expose credentials or sensitive payloads unnecessarily. | StreamPipes + operator |
 
 ## §3 — Adversaries in and out of scope
 
-**In scope** *(inferred — §11 Q4)*:
+**In scope**
 
 1. An **authenticated-but-limited UI/REST user** trying to act outside their
-   role/permissions (read other users' pipelines, escalate, reach the host).
+   role/permissions, such as reading other users' pipelines, modifying resources
+   they do not own, escalating privileges, or reaching host-level capabilities.
+   "Limited" is graduated: StreamPipes has a fine-grained role model
+   (`ROLE_PIPELINE_USER`, `ROLE_CONNECT_ADMIN`, `ROLE_DASHBOARD_USER`, etc.), not
+   only an admin/user split.
 2. A **network adversary** between the browser/clients and the REST layer, or
    between services, where transport security is not configured.
-3. A **malicious external data source** an adapter connects to, feeding
-   hostile payloads into the ingestion path (see §7 for the boundary).
+3. A **compromised or faulty operator-trusted source** feeding malformed,
+   oversized, schema-mismatched, or hostile *content* into an adapter ingestion
+   path. Sources are operator-provisioned, so this is a hostile-content
+   adversary, not an attacker who can introduce a new source. The robustness
+   StreamPipes-owned code guarantees against such content is defined in §5, §7,
+   and §10.
 
-**Out of scope** *(inferred — §11 Q5)*:
+**Out of scope**
 
-4. **An operator with host / container / broker / datastore access.** Anyone
+4. **An operator with host, container, broker, or datastore access.** Anyone
    controlling the deployment infrastructure is not an adversary StreamPipes
    defends against → `OUT-OF-MODEL: adversary-not-in-scope`.
-5. **A trusted admin** performing an authorized action (installing an
-   extension, registering an adapter, changing config). A new path to a
-   privilege already held is `OUT-OF-MODEL: equivalent-harm`.
-6. **Bugs in the infrastructure StreamPipes orchestrates** — the broker, the
-   datastore, the JVM, an upstream OPC-UA/MQTT library. Report upstream →
-   `OUT-OF-MODEL: unsupported-component`.
+5. **A trusted admin performing an authorized action**, such as installing an
+   extension, registering an adapter, changing configuration, or provisioning a
+   source. A new path to a privilege already held is
+   `OUT-OF-MODEL: equivalent-harm`.
+6. **Bugs in infrastructure StreamPipes orchestrates or depends on** — the
+   broker, datastore, JVM, or an upstream OPC-UA/MQTT/Kafka library. Report
+   upstream unless StreamPipes-owned code reaches the vulnerable path with
+   attacker-influenceable input → `OUT-OF-MODEL: unsupported-component`.
 
-## §4 — Trust boundaries
+## §4 — Trust boundaries and data flow
 
-- **Client (UI/API) → `streampipes-rest`** is the primary boundary: requests
-  are authenticated and authorized against the user/role model before acting
-  *(inferred — §11 Q6)*. Whether request bodies, pipeline/adapter definitions,
-  and configuration are treated as untrusted here is load-bearing for triage.
-- **Adapter → external data source** is a distinct boundary: the data an
-  adapter ingests is **attacker-influenceable** in a way the REST surface is
-  not, and the question is what StreamPipes guarantees about parsing/handling
-  hostile ingested data versus what it passes through to downstream pipeline
-  elements *(inferred — §11 Q2)*.
-- **Inter-service / broker** boundaries are assumed to run inside an
-  operator-controlled, network-isolated deployment perimeter *(inferred —
-  §11 Q3)*.
+StreamPipes has one primary control-plane boundary and one external data-ingress
+path. The internal bus sits behind the ingress path and is not directly
+attacker-writable under the assumed deployment architecture.
+
+```mermaid
+flowchart LR
+  Browser[Browser / UI] -->|REST / control-plane requests| REST[streampipes-rest]
+  REST --> Core[streampipes-service-core]
+  REST --> Mgmt[*-management modules]
+  REST --> Lake[Data lake queries]
+  External[External industrial source] -->|MQTT / Kafka / REST / OPC-UA / files / DB| Adapter[Source/input adapter]
+  Adapter -->|normalized events| Bus[Internal message bus]
+  Bus --> Processor[Processors]
+  Processor -->|derived events| Bus
+  Bus --> Sink[Sinks]
+  Bus --> Lake[Data lake]
+```
+
+- **Client (UI/API) → StreamPipes control plane** is the control boundary.
+  Requests are authenticated and authorized on two tiers — a role/privilege gate
+  plus a per-object ACL — before acting. Request bodies, pipeline definitions,
+  adapter definitions, and configuration crossing this boundary are treated as
+  untrusted and authorized per resource.
+
+- **External source → source/input adapter** is the external data-ingress path.
+  Adapters connect to external systems, ingest raw data, normalize it into
+  events, and publish those events internally. **Source provisioning is
+  operator/admin-only**; no in-scope lower-privileged adversary can introduce a
+  source. Data from configured sources remains untrusted content for
+  StreamPipes-owned parsers and transformations, but the semantic trustworthiness
+  of that data remains an operator/source concern.
+
+- **Internal bus + inter-service transport** run inside an operator-controlled,
+  network-isolated perimeter. Downstream processors may publish derived events
+  internally, but the bus is not directly writable from outside the assumed
+  deployment perimeter.
 
 ## §5 — What StreamPipes upholds (given §3/§4 assumptions)
 
-*(all inferred — §11 Q7)*
+- **Authentication** of UI/REST access before privileged actions. Authentication
+  is stateless and token-based (`TokenAuthenticationFilter`,
+  `SessionCreationPolicy.STATELESS`); form login and HTTP Basic are disabled;
+  OAuth2 login is optional. The default rule is `anyRequest().authenticated()`.
+  The only unauthenticated endpoints are a narrow, non-sensitive asset allowlist
+  for pipeline-element/adapter assets; no control or data endpoint is intended
+  to be unauthenticated by default.
 
-- **Authentication** of UI/REST sessions via the configured mechanism before
-  privileged actions.
-- **Authorization** of actions against the user/role/permission model, scoped
-  to the principal's owned/permitted resources.
-- **Memory safety on well-formed input** to the JVM's extent (StreamPipes is
-  primarily Java).
+- **Authorization** is two-tier and per-resource: a role/privilege gate
+  (`@PreAuthorize`) plus per-object ACL checks (`SpPermissionEvaluator`,
+  `@PostFilter` for list results). Non-admins are bounded to owned/permitted
+  resources; admins bypass the object ACL by design (§3 item 5). Precedence is:
+  anonymous-if-permitted → admin → per-object ACL.
+
+- **Parser and transformation safety for built-in ingestion paths.** Malformed
+  syntax or schema-mismatched input in built-in parsers is expected to fail the
+  affected event or adapter operation without compromising unrelated StreamPipes
+  resources. StreamPipes-owned parsing, schema-based transformation,
+  datatype/timestamp coercion, and event handling must not cause code execution,
+  secret disclosure, authorization bypass, corruption of unrelated resources, or
+  uncontrolled cross-adapter impact when reached by hostile external content.
+  This does not guarantee semantic correctness of source data, bounded cost for
+  every oversized payload shape, or robustness of custom extension parsers.
+  Resource bounding is covered separately in §7 and §10.
+
+- **Memory safety on well-formed input** to the JVM's extent. StreamPipes is
+  primarily Java; this is not a guarantee against all denial-of-service or
+  resource-exhaustion cases.
 
 ## §6 — What StreamPipes leaves to the operator
 
-*(inferred — §11 Q8)*
-
-- **Transport security (TLS)** on the REST endpoint, the broker, and the
-  datastore, and the security of those backing services themselves.
-- **Network isolation** of the broker, datastore, and extension-runtime
-  services from untrusted networks.
-- **Vetting the adapters/pipeline-elements installed.** Installing an
-  extension is deploying code into the runtime (see §7).
-- **Securing the external data sources** an adapter is pointed at, and the
-  credentials configured for them.
+- **Transport security (TLS)** on the REST endpoint, broker, datastore, and
+  inter-service transport, plus the security of those backing services.
+  StreamPipes makes no blanket wire-encryption guarantee by itself (§8).
+- **Network isolation** of the broker, datastore, and extension-runtime services
+  from untrusted networks (§3 item 4, §4).
+- **Vetting installed adapters and pipeline elements.** Installing a JAR
+  extension is deploying code into the runtime — code execution by design, not a
+  sandbox against the extension author (§7).
+- **Securing external data sources** and credentials configured for them. The
+  ingestion path has StreamPipes-owned parser/transformation safety expectations
+  (§5), but the trustworthiness, units, sensor correctness, and business meaning
+  of source data remain operator concerns (§7).
+- **Setting initial-admin and client-secret credentials** and hardening the
+  deployment beyond insecure convenience defaults (§8). Reports against exposed
+  shipped defaults are handled according to §9, not automatically dismissed.
 
 ## §7 — Properties StreamPipes does *not* uphold (by design)
 
-*(inferred — §11 Q9)*
+- **A sandbox around installed JAR extensions.** Adapters/processors/sinks are
+  deployed as separate container services (for example, `connect-adapters`),
+  which provides process/namespace isolation from the core and defense-in-depth
+  against a limited REST/UI user who cannot supply container code. This is **not**
+  a boundary against whoever builds and installs the extension: that code runs
+  inside the container with its privileges. The shipped compose applies no
+  `cap_drop`/`security_opt`/non-root `user`/`read_only` hardening and leaves the
+  broker/datastore reachable on the shared `spnet`. Installing an extension is
+  trusting that code. `BY-DESIGN: property-disclaimed`. Container hardening beyond
+  the default is an operator concern (§8).
 
-- **A sandbox around installed extensions** (custom adapters / processors /
-  sinks). Deploying a pipeline element is deploying code that runs with the
-  runtime's privileges — a feature, not a containment boundary.
-  `BY-DESIGN: property-disclaimed`.
-- **Protection against an operator who controls the deployment infra**
+- **Note — user-supplied JS transform scripts are sandboxed.** Unlike installed
+  JARs, the GraalJS transformer (`GraalJsScriptEngine`) runs user scripts under
+  `SandboxPolicy.CONSTRAINED` + `HostAccess.CONSTRAINED`, with
+  `allowHostClassLookup` disabled and host access limited to `@ExposedToScripts`
+  members. This is a containment boundary: arbitrary host-code execution from a
+  script is not intended, and a break of this sandbox is in-model and VALID.
+
+- **Protection against an operator who controls the deployment infrastructure**
   (§3 item 4).
-- **An assurance that arbitrary hostile data from an external source cannot
-  affect a pipeline's behavior.** Adapters ingest whatever the source sends;
-  whether StreamPipes claims any robustness guarantee on malformed/oversized
-  ingested data, versus treating it as the operator's-source-trust problem, is
-  the key §11 question (Q2).
-- **Resource fairness as a hard guarantee** — a high-rate source or expensive
-  pipeline can exhaust runtime resources; bounding it is an operator/config
-  concern *(inferred — §11 Q10)*.
+
+- **Semantic trust in external source data.** StreamPipes does not guarantee that
+  data from an external industrial source is truthful, physically plausible,
+  correctly timestamped, correctly typed, or safe for downstream operational
+  decisions. Source trust, units, sensor correctness, and business meaning are
+  operator concerns. This is distinct from parser/transformation safety (§5):
+  hostile content must not compromise StreamPipes-owned code, even though its
+  meaning is not vouched for.
+
+- **Absolute resource fairness across all inputs and pipeline logic.** A
+  byte-based, memory-coupled rate limiter (`SpRateLimiter`, default-on at
+  extension-service startup) throttles sustained ingress: each event costs
+  permits equal to its byte size, the permit budget is a percentage of JVM total
+  memory, and overload applies backpressure (`tryAcquire` with timeout). This is
+  intended to bound sustained high-rate/high-volume sources after metering. It
+  does **not** guarantee bounded processing for every single malformed or
+  oversized input, nor does it bound compute complexity inside an individual
+  pipeline element. For StreamPipes-owned built-in paths, single-event parsing or
+  processing exhaustion may be in-model (§10). For custom elements, pathological
+  compute or memory behavior is unvetted extension logic and an operator concern.
 
 ## §8 — Key configuration levers (load-bearing)
 
-*(all inferred — §11 Q11; confirm names + defaults)*
+| Lever | Real name / default | Why it matters |
+| --- | --- | --- |
+| Initial-admin / auth setup | `SP_INITIAL_ADMIN_EMAIL` (default `admin@streampipes.apache.org`), `SP_INITIAL_ADMIN_PASSWORD` (**default `admin`**), `SP_INITIAL_CLIENT_SECRET` (**default `my-apache-streampipes-secret-key-change-me`**). On first start, if the user DB does not exist, `AutoInstallation` provisions the admin from these env vars, falling back to defaults when unset. | Determines whether a fresh instance starts with known bootstrap credentials. Operators must replace these values for production. If StreamPipes allows production-reachable startup with known defaults and no prominent warning or forced rotation, that is a hardening gap rather than automatically `OUT-OF-MODEL`. |
+| Role / permission model | Two-tier: `@PreAuthorize` privilege + per-object ACL (`SpPermissionEvaluator`). Fine-grained roles (`ROLE_CONNECT_ADMIN`, `ROLE_PIPELINE_USER`, etc.). | Bounds non-admins to owned/permitted resources and determines which roles may configure adapters/pipelines. |
+| Auth on endpoints | `anyRequest().authenticated()`; unauthenticated allowlist = pipeline-element/adapter asset paths only. | No control/data endpoint is intended to be unauthenticated by default. |
+| Rate limiter | `SpRateLimiter`, default-on; permit budget = percentage of JVM memory, plus warmup and acquire-timeout env vars. | Bounds sustained ingress rate/volume after metering and applies backpressure. It is not a complete guarantee against single-event parsing exhaustion. |
+| Extension container hardening | Shipped compose: no `cap_drop`/`security_opt`/non-root `user`/`read_only`; extension services on shared `spnet`. | Container isolation exists, but default hardening is minimal. |
+| TLS on REST + broker + datastore | Operator-configured. | Determines whether sessions/events are protected on the wire. |
 
-| Lever | Why it matters |
-| --- | --- |
-| Authentication / initial-admin setup | decides whether the REST/UI front door is open and how the first admin is provisioned. |
-| Role / permission model | decides whether non-admin users are bounded to their own resources. |
-| TLS on REST + broker + datastore | decides whether sessions/events are on the wire in clear. |
-| Extension installation policy | decides who may deploy adapter/processor code into the runtime. |
+## §9 — Known non-findings and triage notes
 
-## §9 — Known non-findings (seed for scanner/AI triage)
-
-Confirm and extend *(inferred — §11 Q12)*:
-
-- **"A custom adapter / processor can run arbitrary code."** By design —
-  installing an extension is an authorized code deployment, not a sandbox
+- **"A custom adapter / processor JAR can run arbitrary code."** By design —
+  installing a JAR extension is an authorized code deployment, not a sandbox
   escape. `BY-DESIGN`.
-- **"An adapter accepts data from an untrusted external source."** That is the
-  intended function; in-model only if StreamPipes claims a parsing/handling
-  guarantee the report violates (§11 Q2). Otherwise the source's
-  trustworthiness is the operator's concern.
-- **"The default/initial admin or an unauthenticated endpoint is reachable."**
-  In-model only against the shipped default; an operator-loosened auth config
-  is `OUT-OF-MODEL: non-default-build` (confirm the shipped default in §11).
-- **Dependency-tail CVEs** (broker client, OPC-UA/MQTT library, a transitive
-  JAR) from an SCA scanner — triage upstream unless StreamPipes' own code
-  reaches the vulnerable path with untrusted input.
+
+- **"The JS transformer runs user script, therefore RCE."** Not by itself. The
+  GraalJS engine runs scripts under a constrained sandbox with host-class lookup
+  disabled and host access limited to `@ExposedToScripts`. In-model and VALID
+  only if the report demonstrates breaking that sandbox, escaping the constrained
+  policy, or abusing an exposed host surface in a way that violates the intended
+  containment boundary.
+
+- **"An adapter can be pointed at an internal URL (SSRF)."** Configuring an
+  adapter target requires the `WRITE_ADAPTER` privilege, held by
+  `ROLE_CONNECT_ADMIN`, not a plain user. A Connect Admin choosing where to
+  connect is an authorized action (§3 item 5) →
+  `OUT-OF-MODEL: equivalent-harm`. In-model and VALID only if a lower-privileged
+  role can set the target, or if an authorization bypass lets a user modify
+  another user's adapter configuration.
+
+- **"CSRF protection is disabled."** Not automatically a finding for the default
+  stateless token-auth model. A CSRF report is in-model only if StreamPipes
+  itself stores or sends authentication material in a browser-ambient way, such
+  as a cookie-bearing session, or if a shipped default creates such a condition.
+  An operator-created cookie/session wrapper is `OUT-OF-MODEL: non-default-build`.
+
+- **"An unauthenticated endpoint is reachable."** In-model only if it is outside
+  the shipped non-sensitive asset allowlist (`/sec|sepa|stream/*/assets/**`,
+  `/api/v1/worker/adapters/*/assets/**`) or if the endpoint exposes control,
+  data, credentials, secrets, or sensitive metadata. An operator-loosened auth
+  config is `OUT-OF-MODEL: non-default-build`.
+
+- **"The instance is reachable with admin/admin or the default client secret."**
+  A production-reachable fresh installation that accepts shipped bootstrap
+  credentials is **security-relevant** and should not be automatically routed to
+  `OUT-OF-MODEL: non-default-build`. It may be treated as operator
+  misconfiguration only when production installation clearly requires overriding
+  those values and StreamPipes prominently warns, blocks startup, generates
+  instance-unique values, or forces rotation before use. If those safeguards are
+  absent or weak, triage as a hardening gap or valid shipped-default issue.
+
+- **"A high-rate source OOM-crashes the extension service."** A report based
+  only on sustained high event rate is not sufficient if the default limiter
+  properly applies backpressure. A report is in-model if it shows that the
+  limiter is bypassed, disabled by default, ineffective on a built-in path, or
+  unable to prevent single-event parsing exhaustion.
+
+- **"A pathological pipeline element hangs or uses super-linear CPU."** The rate
+  limiter bounds sustained ingress bytes after metering, not arbitrary per-element
+  compute. For a built-in element, this may be a bug. For a custom element, it is
+  unvetted extension logic and an operator concern (§7).
+
+- **Dependency-tail CVEs** from an SCA scanner, such as in a Kafka/MQTT/OPC-UA
+  client or transitive JAR, are triaged upstream unless StreamPipes-owned code
+  reaches the vulnerable path with attacker-influenceable input. A raw
+  CVE-in-a-JAR report with no reachable path is not by itself a StreamPipes
+  finding.
 
 ## §10 — Triage dispositions
 
-Route every finding to **exactly one** disposition below and cite the
-justifying section named in parentheses.
+Route every finding to **exactly one** disposition below and cite the justifying
+section named in parentheses.
 
-A finding is **VALID** only when **all** hold: the violated property is one
-StreamPipes claims (**§5**), the attacker is in scope (**§3**), and the
-affected code is on an in-model surface (**§2/§4**) reached by untrusted input.
+A finding is **VALID** only when all of the following hold: the violated
+property is one StreamPipes claims (§5), the attacker is in scope (§3), and the
+affected code is on an in-model surface (§2/§4) reached by untrusted input.
 
 Otherwise route to exactly one of:
 
-- `OUT-OF-MODEL: adversary-not-in-scope` — the attacker is excluded by **§3**.
+- `OUT-OF-MODEL: adversary-not-in-scope` — the attacker is excluded by §3.
 - `OUT-OF-MODEL: equivalent-harm` — the attacker already holds equivalent
-  capability, so the property is not one StreamPipes upholds (**§7**).
-- `OUT-OF-MODEL: unsupported-component` — the affected surface is not a
-  modeled component (**§2**); e.g. broker, data lake, or other
-  perimeter-internal infrastructure.
-- `OUT-OF-MODEL: non-default-build` — the issue depends on a non-default
-  configuration lever (**§8**); e.g. operator-disabled TLS, loosened auth, or
-  an unvetted installed extension.
-- `BY-DESIGN: property-disclaimed` — the property is one StreamPipes
-  explicitly does not uphold (**§7**); e.g. installed-extension code execution.
+  capability, so the property is not one StreamPipes upholds (§7).
+- `OUT-OF-MODEL: unsupported-component` — the affected surface is not a modeled
+  component (§2); e.g. broker, data lake, JVM, or other perimeter-internal
+  infrastructure without a StreamPipes-owned reachable path.
+- `OUT-OF-MODEL: non-default-build` — the issue depends on an operator-created
+  or non-default configuration outside the shipped security model; e.g.
+  operator-disabled TLS, loosened auth rules, an operator-created cookie session,
+  exposed broker/datastore ports, or an unvetted installed extension.
+- `BY-DESIGN: property-disclaimed` — the property is one StreamPipes explicitly
+  does not uphold (§7); e.g. installed JAR extension code execution.
 
-## §11 — Open questions for the StreamPipes PMC
+Do not classify shipped-default bootstrap credentials as `non-default-build`
+merely because the operator failed to override them. Use §9's default-credential
+triage note.
 
-Grouped in waves; answer inline. Each promotes an *(inferred)* tag to
-*(maintainer)*.
+### Ingestion-boundary examples
 
-**Wave 1 — scope & intended use**
-1. Confirm the in-scope surface: `streampipes-rest` as the primary front door,
-   with the broker/datastore/extension-runtime as intra-deployment trusted
-   infra. Are the component roles in §2 right?
-2. **The ingestion boundary** — when an adapter connects to a hostile external
-   source, what (if anything) does StreamPipes guarantee about handling
-   malformed/oversized/hostile ingested data, versus treating source-trust as
-   the operator's problem? This is the highest-leverage question.
-3. Confirm the assumed deployment: multi-service, behind an operator-controlled
-   perimeter, with broker + datastore as trusted dependencies.
-4. Is the in-scope adversary set "limited REST/UI user + network MITM +
-   malicious external source"? Anything to add?
-5. Confirm operators with host/broker/datastore access, and trusted admins
-   doing authorized actions, are out of model.
+**VALID examples**
 
-**Wave 2 — boundaries, auth, extensions**
-6. At the client→REST boundary, are request bodies, pipeline/adapter
-   definitions, and config treated as untrusted and authorized per-resource?
-7. What properties does StreamPipes claim to uphold given valid input
-   (authn, per-resource authz, others)?
-8. Confirm the operator-owned list in §6.
-9. Are installed extensions (adapters/processors/sinks) code-execution by
-   design (not a sandbox), per §7?
+- A malformed JSON, XML, CSV, Avro, or timestamp payload crashes the adapter
+  service or causes an uncontrolled restart loop in StreamPipes-owned code.
+- A hostile timestamp string causes the adapter to stop emitting all events
+  instead of failing only the affected event or adapter operation.
+- A single oversized document exhausts memory/CPU during parsing, before the rate
+  limiter meters it, in StreamPipes-owned code.
+- A malformed adapter payload causes credentials, tokens, connection strings, or
+  secrets to be logged or returned via API.
+- A non-admin user can modify schema mappings, timestamp conversion, adapter
+  targets, or adapter configuration outside their permissions.
+- Hostile input reaches a StreamPipes-owned parser or transformation path and
+  triggers code execution, deserialization abuse, unauthorized file/network
+  access, or corruption of unrelated resources.
+- A built-in pipeline element has super-linear behavior reachable from hostile
+  source content and can be used to exhaust CPU or memory across unrelated
+  resources.
 
-**Wave 3 — defaults & non-findings**
-10. Is super-linear resource use / a hang on a high-rate source or pathological
-    pipeline a bug, or the operator's config concern?
-11. Confirm the real names + shipped defaults of the §8 levers — especially the
-    initial-admin/auth setup and whether any endpoint is unauthenticated by
-    default.
-12. What do scanners/fuzzers/researchers most often report that you consider a
-    non-finding? (Feeds §9.)
+**Normally OUT-OF-MODEL / data-quality examples**
 
-**Wave 4 — meta**
-13. StreamPipes ships a root `AGENTS.md`, `SECURITY.md`, and `THREAT_MODEL.md`,
-    with a `## Security` section in `AGENTS.md` wiring
-    `AGENTS.md → SECURITY.md → THREAT_MODEL.md`. Confirm this in-repo model is
-    canonical, and who owns revisions.
+- A sensor sends a false but well-formed temperature value.
+- A source sends a timestamp with the wrong timezone, and StreamPipes processes
+  it according to the configured parser.
+- An operator maps the wrong schema attribute to the timestamp field.
+- An admin intentionally installs a custom adapter, processor, script, or
+  extension that changes event semantics.
+- An operator exposes the broker, datastore, or extension runtime to an untrusted
+  network contrary to deployment assumptions.
+- A sustained high-rate source is throttled by `SpRateLimiter` rather than
+  crashing the service.
+
+## §11 — Seed threats
+
+The following seed threats are not an exhaustive vulnerability list. They are
+starting points for future review, regression tests, and triage.
+
+| ID | Category | Surface | Threat | In-scope when | Primary mitigation / expectation | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| T1 | Spoofing / Elevation of privilege | REST control plane | User acts as another user or escalates role. | Limited UI/REST user can bypass authn/authz. | Token auth, role gates, per-object ACL. | Modeled |
+| T2 | Tampering | Pipeline/adapter resources | User modifies another user's pipeline, adapter, schema mapping, or timestamp conversion. | Per-object ACL or privilege check can be bypassed. | `@PreAuthorize`, `SpPermissionEvaluator`, `@PostFilter`. | Modeled |
+| T3 | Information disclosure | Adapter/source configuration | Source credentials or client secrets are exposed via API, UI, logs, or error messages. | Reached by lower-privileged user or hostile input. | Secret redaction, ACL, safe error handling. | Modeled |
+| T4 | Denial of service | Built-in ingestion path | Malformed or oversized input crashes an adapter or causes uncontrolled restart/resource exhaustion. | Occurs in StreamPipes-owned parser/transformation/event-handling code. | Per-event failure, bounded parsing, rate limiting, safe errors. | Modeled |
+| T5 | Elevation of privilege | JS transformer | User script escapes GraalJS sandbox into host-code execution. | Script breaks intended constrained sandbox or exposed host surface. | Graal sandbox policy and narrow host exposure. | Modeled |
+| T6 | Elevation of privilege / SSRF-shaped authz issue | Adapter target configuration | Lower-privileged user points adapter at internal URL or modifies another user's target. | User lacks `WRITE_ADAPTER` or target resource permission. | Role gate and object ACL. | Modeled |
+| T7 | Information disclosure / Tampering | Internal bus/datastore | External actor reads/writes broker topics or datastore. | Only if exposed by shipped defaults or StreamPipes config; otherwise operator infra issue. | Network isolation, broker/datastore auth/TLS. | Operator/shared |
+| T8 | Spoofing / Elevation of privilege | Bootstrap credentials | Fresh production-reachable instance accepts known shipped defaults. | Defaults usable without forced rotation, generated secret, block, or prominent warning. | Require override, generate unique secret, warn/block/rotate. | Hardening gap / modeled |
+| T9 | Denial of service | Built-in pipeline element | Pathological built-in processor causes super-linear CPU/memory on hostile content. | Built-in StreamPipes element reachable by in-scope hostile content. | Complexity bounds, validation, tests. | Modeled |
+| T10 | Supply chain / Equivalent harm | Installed JAR extension | Custom extension executes arbitrary code. | Installed by trusted admin/operator. | Operator vetting; not a sandbox boundary. | By design |
+
+## §12 — Maintenance
+
+This threat model is owned by the Apache StreamPipes PMC. Review it when
+StreamPipes adds or changes a public-facing surface, adapter class,
+authentication mechanism, authorization model, extension mechanism, broker or
+datastore integration, default deployment mode, or bootstrap credential behavior.
