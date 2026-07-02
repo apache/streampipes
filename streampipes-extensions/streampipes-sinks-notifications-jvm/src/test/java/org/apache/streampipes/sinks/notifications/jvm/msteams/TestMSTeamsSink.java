@@ -32,7 +32,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,84 +46,151 @@ import static org.mockito.Mockito.when;
 
 public class TestMSTeamsSink {
 
-  @Test
-  public void createMessageFromSimpleContent() {
-    var messageContent = "This is test";
-    var sink = new MSTeamsSink();
+    @Test
+    public void createMessageFromSimpleContent() {
+        var sink = new MSTeamsSink();
 
-    assertEquals(MSTeamsSink.SIMPLE_MESSAGE_TEMPLATE.formatted(messageContent),
-                            sink.createMessageFromSimpleContent(messageContent));
-  }
+        var expectedTeamsMessage = """
+                {
+                  "type" : "message",
+                  "attachments" : [ {
+                    "contentType" : "application/vnd.microsoft.card.adaptive",
+                    "content" : {
+                      "$schema" : "http://adaptivecards.io/schemas/adaptive-card.json",
+                      "type" : "AdaptiveCard",
+                      "version" : "1.4",
+                      "body" : [ {
+                        "type" : "TextBlock",
+                        "text" : "This is test",
+                        "wrap" : true
+                      } ]
+                    }
+                  } ]
+                }""";
 
-  @Test
-  public void createMessageFromAdvancedContent() {
-    var messageContent = "{\"text\": \"Hi this is a message from Apache StreamPipes\"}";
+        var createdTeamsMessage = sink.createMessageFromSimpleContent("This is test");
 
-    var sink = new MSTeamsSink();
-    assertEquals(messageContent, sink.createMessageFromAdvancedContent(messageContent));
-  }
+        assertEquals(
+                expectedTeamsMessage.replace("\r\n", "\n"),
+                createdTeamsMessage.replace("\r\n", "\n")
+            );
+        }
 
-  @Test
-  public void createMessageFromAdvancedContentCheckException() {
-    var messageContent = "invalid-complex-input";
+    @Test
+    public void createMessageFromAdvancedContent() {
+        var messageContent = "{\"text\": \"Hi this is a message from Apache StreamPipes\"}";
 
-    var sink = new MSTeamsSink();
+        var sink = new MSTeamsSink();
+        assertEquals(messageContent, sink.createMessageFromAdvancedContent(messageContent));
+    }
 
-    assertThrows(SpRuntimeException.class, () -> sink.createMessageFromAdvancedContent(messageContent));
-  }
+    @Test
+    public void createMessageFromAdvancedContentCheckException() {
+        var messageContent = "invalid-complex-input";
 
-  @Test
-  public void sendPayloadToWebhook() throws IOException {
+        var sink = new MSTeamsSink();
 
-    var mockedClient = mock(CloseableHttpClient.class);
-    var mockedResponse = mock(CloseableHttpResponse.class);
-    var mockedStatusLine = mock(StatusLine.class);
-    var argumentCaptor = ArgumentCaptor.forClass(HttpPost.class);
+        assertThrows(SpRuntimeException.class, () -> sink.createMessageFromAdvancedContent(messageContent));
+    }
 
-    when(mockedStatusLine.getStatusCode()).thenReturn(HttpStatus.SC_OK);
-    when(mockedResponse.getStatusLine()).thenReturn(mockedStatusLine);
-    when(mockedClient.execute(any())).thenReturn(mockedResponse);
+    @Test
+    public void sendPayloadToWebhook() throws IOException, URISyntaxException {
 
-    var payload = "This is a test";
-    var webhook = "https://webhook.com";
-    var sink = new MSTeamsSink();
+        var mockedClient = mock(CloseableHttpClient.class);
+        var mockedResponse = mock(CloseableHttpResponse.class);
+        var mockedStatusLine = mock(StatusLine.class);
+        var argumentCaptor = ArgumentCaptor.forClass(HttpPost.class);
 
-    sink.sendPayloadToWebhook(mockedClient, payload, webhook);
-    verify(mockedClient, times(1)).execute(argumentCaptor.capture());
+        when(mockedStatusLine.getStatusCode()).thenReturn(HttpStatus.SC_OK);
+        when(mockedResponse.getStatusLine()).thenReturn(mockedStatusLine);
+        when(mockedClient.execute(any())).thenReturn(mockedResponse);
 
+        var payload = "This is a test";
+        var webhook = "https://webhook.com";
+        var sink = new MSTeamsSink();
 
-    var capturedPost = argumentCaptor.getValue();
+        sink.sendPayloadToWebhook(mockedClient, payload, new URI(webhook));
+        verify(mockedClient, times(1)).execute(argumentCaptor.capture());
 
-    Assertions.assertNotNull(capturedPost);
-    assertEquals(webhook,
-                            capturedPost.getURI().toString()
-    );
-    assertEquals(ContentType.APPLICATION_JSON.toString(),
-                            capturedPost.getEntity().getContentType().getValue());
-    assertEquals(payload, EntityUtils.toString(capturedPost.getEntity()));
-  }
+        var capturedPost = argumentCaptor.getValue();
 
-  @Test
-  public void sendPayloadToWebhookBadResponse() throws  IOException {
-    CloseableHttpClient mockedClient = mock(CloseableHttpClient.class);
-    var mockedResponse = mock(CloseableHttpResponse.class);
-    var mockedStatusLine = mock(StatusLine.class);
+        Assertions.assertNotNull(capturedPost);
+        assertEquals(webhook, capturedPost.getURI().toString());
+        assertEquals(ContentType.APPLICATION_JSON.toString(), capturedPost.getEntity().getContentType().getValue());
+        assertEquals(payload, EntityUtils.toString(capturedPost.getEntity()));
+    }
 
-    when(mockedStatusLine.getStatusCode()).thenReturn(HttpStatus.SC_BAD_REQUEST);
-    when(mockedResponse.getStatusLine()).thenReturn(mockedStatusLine);
-    when(mockedClient.execute(any())).thenReturn(mockedResponse);
+    @Test
+    public void sendPayloadToWebhookBadResponse() throws IOException {
+        CloseableHttpClient mockedClient = mock(CloseableHttpClient.class);
+        var mockedResponse = mock(CloseableHttpResponse.class);
+        var mockedStatusLine = mock(StatusLine.class);
 
-    var sink = new MSTeamsSink();
-    var payload = "<a>invalid</a>";
-    var url = "https://webhook.com";
+        when(mockedStatusLine.getStatusCode()).thenReturn(HttpStatus.SC_BAD_REQUEST);
+        when(mockedResponse.getStatusLine()).thenReturn(mockedStatusLine);
+        when(mockedClient.execute(any())).thenReturn(mockedResponse);
 
-    assertThrows(SpRuntimeException.class, () -> sink.sendPayloadToWebhook(mockedClient, payload, url));
-  }
+        var sink = new MSTeamsSink();
+        var payload = "<a>invalid</a>";
+        var url = "https://webhook.com";
 
-  @Test
-  public void validateWebhookUrl() {
-    var sink = new MSTeamsSink();
-    assertThrows(SpRuntimeException.class, () -> sink.validateWebhookUrl(""));
-    assertThrows(SpRuntimeException.class, () -> sink.validateWebhookUrl("some-string"));
-  }
+        assertThrows(SpRuntimeException.class, () -> sink.sendPayloadToWebhook(mockedClient, payload, new URI(url)));
+
+        // A 4xx (other than 429) is permanent: it must fail on the first attempt, no
+        // retries.
+        verify(mockedClient, times(1)).execute(any());
+    }
+
+    @Test
+    public void sendPayloadToWebhookRetriesOnServerErrorThenGivesUp() throws IOException {
+        var mockedClient = mock(CloseableHttpClient.class);
+        var mockedResponse = mock(CloseableHttpResponse.class);
+        var mockedStatusLine = mock(StatusLine.class);
+
+        // Every attempt returns a 500 -> transient, should be retried up to
+        // MAX_ATTEMPTS.
+        when(mockedStatusLine.getStatusCode()).thenReturn(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        when(mockedResponse.getStatusLine()).thenReturn(mockedStatusLine);
+        when(mockedClient.execute(any())).thenReturn(mockedResponse);
+
+        var sink = new MSTeamsSink();
+
+        assertThrows(SpRuntimeException.class,
+                () -> sink.sendPayloadToWebhook(mockedClient, "payload", new URI("https://webhook.com")));
+
+        // After exhausting all attempts the call must have been made MAX_ATTEMPTS
+        // times.
+        verify(mockedClient, times(3)).execute(any());
+    }
+
+    @Test
+    public void sendPayloadToWebhookRecoversAfterTransientFailure() throws IOException {
+        var mockedClient = mock(CloseableHttpClient.class);
+        var failResponse = mock(CloseableHttpResponse.class);
+        var failStatusLine = mock(StatusLine.class);
+        var okResponse = mock(CloseableHttpResponse.class);
+        var okStatusLine = mock(StatusLine.class);
+
+        when(failStatusLine.getStatusCode()).thenReturn(HttpStatus.SC_SERVICE_UNAVAILABLE);
+        when(failResponse.getStatusLine()).thenReturn(failStatusLine);
+        when(okStatusLine.getStatusCode()).thenReturn(HttpStatus.SC_OK);
+        when(okResponse.getStatusLine()).thenReturn(okStatusLine);
+
+        // First call fails with 503, second call succeeds.
+        when(mockedClient.execute(any())).thenReturn(failResponse).thenReturn(okResponse);
+
+        var sink = new MSTeamsSink();
+
+        assertDoesNotThrow(() -> sink.sendPayloadToWebhook(mockedClient, "payload", new URI("https://webhook.com")));
+
+        // One failed attempt + one successful retry = two executions, no third.
+        verify(mockedClient, times(2)).execute(any());
+    }
+
+    @Test
+    public void validateWebhookUrl() {
+        var sink = new MSTeamsSink();
+        assertThrows(SpRuntimeException.class, () -> sink.validateWebhookUrl(""));
+        assertThrows(SpRuntimeException.class, () -> sink.validateWebhookUrl("some-string"));
+    }
 }
