@@ -104,6 +104,8 @@ public interface Environment {
 
   BooleanEnvironmentVariable getResetEndpointEnabled();
 
+  BooleanEnvironmentVariable getFunctionStateEndpointsEnabled();
+
   List<OAuthConfiguration> getOAuthConfigurations();
 
   // Messaging
