@@ -32,13 +32,7 @@ import {
 import { Observable } from 'rxjs';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import {
-    MatChipGrid,
-    MatChipInput,
-    MatChipInputEvent,
-    MatChipRemove,
-    MatChipRow,
-} from '@angular/material/chips';
+import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { map, startWith } from 'rxjs/operators';
 import {
     MatAutocomplete,
@@ -51,7 +45,6 @@ import {
     MatRadioGroup,
 } from '@angular/material/radio';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatOption } from '@angular/material/select';
 import { AsyncPipe } from '@angular/common';
@@ -66,13 +59,8 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatRadioGroup,
         FormsModule,
         MatRadioButton,
-        MatFormField,
-        MatLabel,
-        MatChipGrid,
-        MatChipRow,
-        MatChipRemove,
+        MatChipsModule,
         MatIcon,
-        MatChipInput,
         MatAutocompleteTrigger,
         ReactiveFormsModule,
         MatAutocomplete,

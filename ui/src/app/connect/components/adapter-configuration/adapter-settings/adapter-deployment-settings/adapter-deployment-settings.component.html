@@ -36,8 +36,8 @@
 
     @if (deploymentMode === 'filter') {
         <div fxFlex="100" fxLayout="column" class="mt-10">
-            <mat-form-field color="accent">
-                <mat-label>Service Tags</mat-label>
+            <label>Service Tags</label>
+            <div>
                 <mat-chip-grid #chipGrid>
                     @for (
                         serviceTag of deploymentConfiguration.desiredServiceTags;
@@ -73,7 +73,7 @@
                         </mat-option>
                     }
                 </mat-autocomplete>
-            </mat-form-field>
+            </div>
         </div>
     }
 </div>
