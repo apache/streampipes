@@ -141,6 +141,8 @@ html {
 
     .mat-mdc-menu-panel {
         min-width: 10rem;
+        width: max-content;
+        max-width: min(22rem, calc(100vw - 2rem));
         border: 1px solid var(--color-border-subtle);
         overflow: hidden;
     }
@@ -155,6 +157,7 @@ html {
         box-sizing: border-box;
         border-radius: var(--radius-xs);
         margin: 0 var(--space-xs);
+        white-space: nowrap;
         transition:
             background-color var(--motion-duration-fast)
                 var(--motion-easing-standard),
@@ -170,6 +173,9 @@ html {
     }
 
     .mat-mdc-menu-item-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         line-height: 1.25rem;
     }
 
