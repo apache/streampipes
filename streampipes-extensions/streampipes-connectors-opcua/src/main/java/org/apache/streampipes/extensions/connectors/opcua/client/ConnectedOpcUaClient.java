@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.connectors.opcua.client;
 
 import org.apache.streampipes.extensions.connectors.opcua.adapter.OpcUaAdapter;
+import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaAdapterConfig;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.subscriptions.MonitoredItemServiceOperationResult;
@@ -27,7 +28,6 @@ import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaSubscription;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,32 +49,28 @@ public class ConnectedOpcUaClient {
   /***
    * Register subscriptions for given OPC UA nodes
    * @param nodes List of {@link org.eclipse.milo.opcua.stack.core.types.builtin.NodeId}
+   * @param config subscription configuration
    * @param opcUaAdapter current instance of {@link OpcUaAdapter}
    * @throws Exception
    */
   public void createListSubscription(List<NodeId> nodes,
+                                     OpcUaAdapterConfig config,
                                      OpcUaAdapter opcUaAdapter) throws Exception {
-    initSubscription(nodes, opcUaAdapter);
+    initSubscription(nodes, config, opcUaAdapter);
   }
 
 
   public void initSubscription(List<NodeId> nodes,
+                               OpcUaAdapterConfig config,
                                OpcUaAdapter opcUaAdapter) throws Exception {
-    var subscription = getOpcUaSubscription(nodes, opcUaAdapter);
-
-    for (NodeId node : nodes) {
-      var value = this.client.readValue(0, TimestampsToReturn.Both, node);
-      if (value == null || value.getValue().getValue() == null) {
-        LOG.error("Node has no value");
-      }
-    }
+    var subscription = getOpcUaSubscription(nodes, config, opcUaAdapter);
 
     List<OpcUaMonitoredItem> items = new ArrayList<>();
     for (NodeId node : nodes) {
       var item = OpcUaMonitoredItem.newDataItem(node);
-      item.setSamplingInterval(1000.0);
-      item.setQueueSize(uint(10));
-      item.setDiscardOldest(true);
+      item.setSamplingInterval((double) config.getSubscriptionSamplingIntervalMs());
+      item.setQueueSize(uint(config.getSubscriptionQueueSize()));
+      item.setDiscardOldest(config.isSubscriptionDiscardOldest());
       item.setDataValueListener(opcUaAdapter::onSubscriptionValue);
       items.add(item);
     }
@@ -95,14 +91,15 @@ public class ConnectedOpcUaClient {
   }
 
   private @NonNull OpcUaSubscription getOpcUaSubscription(List<NodeId> nodes,
+                                                          OpcUaAdapterConfig config,
                                                           OpcUaAdapter opcUaAdapter) throws UaException {
-    OpcUaSubscription subscription = createManagedSubscription();
+    OpcUaSubscription subscription = createManagedSubscription(config);
     subscription.setSubscriptionListener(new OpcUaSubscription.SubscriptionListener() {
       @Override
       public void onTransferFailed(OpcUaSubscription subscription, StatusCode statusCode) {
         LOG.warn("Transfer for subscriptionId={} failed: {}", subscription.getSubscriptionId(), statusCode);
         try {
-          initSubscription(nodes, opcUaAdapter);
+          initSubscription(nodes, config, opcUaAdapter);
         } catch (Exception e) {
           LOG.error("Re-creating the subscription failed", e);
         }
@@ -111,8 +108,8 @@ public class ConnectedOpcUaClient {
     return subscription;
   }
 
-  private OpcUaSubscription createManagedSubscription() throws UaException {
-    var subscription = new OpcUaSubscription(this.client, 1000.0);
+  private OpcUaSubscription createManagedSubscription(OpcUaAdapterConfig config) throws UaException {
+    var subscription = new OpcUaSubscription(this.client, (double) config.getSubscriptionPublishingIntervalMs());
     subscription.create();
     return subscription;
   }

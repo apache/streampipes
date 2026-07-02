@@ -182,6 +182,8 @@ public interface Environment {
 
   StringEnvironmentVariable getOpcUaKeystoreAlias();
 
+  BooleanEnvironmentVariable getOpcUaDisallowInsecureEndpoints();
+
   IntEnvironmentVariable getOpcUaMinPullIntervalMs();
 
   StringEnvironmentVariable getKeystoreFilename();
