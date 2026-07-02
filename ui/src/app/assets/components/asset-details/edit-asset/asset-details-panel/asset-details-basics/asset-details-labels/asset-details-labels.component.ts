@@ -31,13 +31,7 @@ import {
     SpAsset,
     SpLabel,
 } from '@streampipes/platform-services';
-import {
-    MatChipGrid,
-    MatChipInput,
-    MatChipInputEvent,
-    MatChipRemove,
-    MatChipRow,
-} from '@angular/material/chips';
+import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
@@ -61,7 +55,6 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField } from '@angular/material/form-field';
 import { AsyncPipe, NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatOption } from '@angular/material/select';
@@ -80,14 +73,10 @@ import { TranslatePipe } from '@ngx-translate/core';
         RouterLink,
         MatIconButton,
         MatIcon,
-        MatFormField,
-        MatChipGrid,
-        MatChipRow,
+        MatChipsModule,
         NgStyle,
         StyleDirective,
-        MatChipRemove,
         FormsModule,
-        MatChipInput,
         MatAutocompleteTrigger,
         ReactiveFormsModule,
         MatAutocomplete,

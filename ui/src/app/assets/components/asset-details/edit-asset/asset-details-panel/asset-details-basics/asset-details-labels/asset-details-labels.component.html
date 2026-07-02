@@ -44,8 +44,17 @@
                                 <mat-icon>refresh</mat-icon>
                             </button>
                         </div>
-                        <mat-form-field [disabled]="allLabels.length === 0">
-                            <mat-chip-grid #chipGrid aria-label="Labels">
+                        <div
+                            class="asset-label-chip-field"
+                            [class.asset-label-chip-field-disabled]="
+                                allLabels.length === 0
+                            "
+                        >
+                            <mat-chip-grid
+                                #chipGrid
+                                aria-label="Labels"
+                                [disabled]="allLabels.length === 0"
+                            >
                                 @for (label of labels; track label) {
                                     <mat-chip-row
                                         (removed)="remove(label)"
@@ -80,6 +89,7 @@
                                         : ('Click to add label' | translate)
                                 "
                                 data-cy="asset-label-input"
+                                class="asset-label-chip-input"
                                 #labelInput
                                 [formControl]="labelCtrl"
                                 [matChipInputFor]="chipGrid"
@@ -105,7 +115,7 @@
                                     >
                                 }
                             </mat-autocomplete>
-                        </mat-form-field>
+                        </div>
                     </sp-form-field>
                 }
             </div>
