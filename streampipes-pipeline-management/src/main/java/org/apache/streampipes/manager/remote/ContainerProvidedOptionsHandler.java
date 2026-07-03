@@ -18,6 +18,8 @@
 package org.apache.streampipes.manager.remote;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
@@ -32,6 +34,7 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.google.gson.JsonSyntaxException;
+import org.apache.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.Set;
@@ -47,7 +50,8 @@ public class ContainerProvidedOptionsHandler {
     this.resourceManager = resourceManager;
   }
 
-  public RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request) {
+  public RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request)
+      throws SpConfigurationException, SpRuntimeException {
 
     try {
       var payload = JacksonSerializer.getObjectMapper().writeValueAsString(request);
@@ -56,15 +60,32 @@ public class ContainerProvidedOptionsHandler {
       var response = extensionRequestManager.request(
           ExtensionServiceRequests.containerProvidedOptions(requestTarget, payload, authToken)
       );
-      return handleResponse(response.responseBody());
+
+      if (response.isSuccess()) {
+        return handleResponse(response.responseBody());
+      } else if (response.statusCode() == HttpStatus.SC_BAD_REQUEST) {
+        throw handleConfigurationError(response.responseBody());
+      } else {
+        throw new SpRuntimeException(
+            "Could not resolve runtime options, status code: " + response.statusCode());
+      }
+    } catch (SpConfigurationException | SpRuntimeException e) {
+      throw e;
     } catch (Exception e) {
-      e.printStackTrace();
-      return new RuntimeOptionsResponse();
+      throw new SpRuntimeException("Could not resolve runtime options", e);
     }
   }
 
   private RuntimeOptionsResponse handleResponse(String responseBody) throws JsonSyntaxException, IOException {
     return JacksonSerializer.getObjectMapper().readValue(responseBody, RuntimeOptionsResponse.class);
+  }
+
+  private SpConfigurationException handleConfigurationError(String responseBody) throws IOException {
+    var exception = JacksonSerializer
+        .getObjectMapper()
+        .readValue(responseBody, SpConfigurationException.class);
+
+    return new SpConfigurationException(exception.getMessage(), exception.getCause());
   }
 
   private ExtensionServiceRequestTarget getEndpointRequestTarget(String appId)
