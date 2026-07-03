@@ -21,13 +21,11 @@
 
 Please report suspected security vulnerabilities in Apache StreamPipes
 **privately** to the StreamPipes security list at
-`security@streampipes.apache.org`, following the
-[Apache Software Foundation security process](https://www.apache.org/security/).
+`security@streampipes.apache.org`, following the [Apache Software Foundation security process](https://www.apache.org/security/).
 Do **not** open public GitHub issues or pull requests for security reports — a
 private report lets the issue be investigated and fixed before disclosure.
 
 ## Threat Model
-
 A threat model for Apache StreamPipes is maintained in
 [THREAT_MODEL.md](THREAT_MODEL.md). It describes the trust boundaries (the REST
 front door, the external-data ingestion boundary at the adapters, the
@@ -38,5 +36,5 @@ vetting, source trust), and the recurring non-findings. Triagers of scanner,
 fuzzer, or AI-generated findings should route each through `THREAT_MODEL.md`
 §10.
 
-This file is **v0** and carries open questions for the StreamPipes PMC in
-`THREAT_MODEL.md` §11.
+This threat model is **v0**. See `THREAT_MODEL.md` for its current status and
+maintenance notes.
