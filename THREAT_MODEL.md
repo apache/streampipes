@@ -17,6 +17,8 @@
 
 # Apache StreamPipes — Threat Model
 
+Version: v0 
+
 ## §1 — Purpose and consumers
 
 This document describes the **implicit security contract** between Apache
@@ -310,9 +312,9 @@ Otherwise route to exactly one of:
 
 - `OUT-OF-MODEL: adversary-not-in-scope` — the attacker is excluded by §3.
 - `OUT-OF-MODEL: equivalent-harm` — the attacker already holds equivalent
-  capability, so the property is not one StreamPipes upholds (§7).
+  capability, so the property is not one StreamPipes upholds (§3 item 5).
 - `OUT-OF-MODEL: unsupported-component` — the affected surface is not a modeled
-  component (§2); e.g. broker, data lake, JVM, or other perimeter-internal
+  component (§2); e.g. broker, underlying datastore infrastructure, JVM, or other perimeter-internal
   infrastructure without a StreamPipes-owned reachable path.
 - `OUT-OF-MODEL: non-default-build` — the issue depends on an operator-created
   or non-default configuration outside the shipped security model; e.g.
