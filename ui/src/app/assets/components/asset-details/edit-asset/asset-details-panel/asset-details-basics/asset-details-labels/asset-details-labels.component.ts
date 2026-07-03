@@ -55,6 +55,7 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
+import { MatFormField } from '@angular/material/form-field';
 import { AsyncPipe, NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatOption } from '@angular/material/select';
@@ -73,6 +74,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         RouterLink,
         MatIconButton,
         MatIcon,
+        MatFormField,
         MatChipsModule,
         NgStyle,
         StyleDirective,
