@@ -31,13 +31,7 @@ import {
     SpAsset,
     SpLabel,
 } from '@streampipes/platform-services';
-import {
-    MatChipGrid,
-    MatChipInput,
-    MatChipInputEvent,
-    MatChipRemove,
-    MatChipRow,
-} from '@angular/material/chips';
+import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
@@ -81,13 +75,10 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatIconButton,
         MatIcon,
         MatFormField,
-        MatChipGrid,
-        MatChipRow,
+        MatChipsModule,
         NgStyle,
         StyleDirective,
-        MatChipRemove,
         FormsModule,
-        MatChipInput,
         MatAutocompleteTrigger,
         ReactiveFormsModule,
         MatAutocomplete,

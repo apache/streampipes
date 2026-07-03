@@ -17,10 +17,12 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.remote.ContainerProvidedOptionsHandler;
+import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
-import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
@@ -48,7 +50,13 @@ public class ContainerProvidedOptions extends AbstractRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
-  public ResponseEntity<RuntimeOptionsResponse> fetchRemoteOptions(@RequestBody RuntimeOptionsRequest request) {
-    return ok(containerProvidedOptionsHandler.fetchRemoteOptions(request));
+  public ResponseEntity<?> fetchRemoteOptions(@RequestBody RuntimeOptionsRequest request) {
+    try {
+      return ok(containerProvidedOptionsHandler.fetchRemoteOptions(request));
+    } catch (SpConfigurationException e) {
+      return badRequest(SpLogMessage.from(e));
+    } catch (SpRuntimeException e) {
+      return serverError(SpLogMessage.from(e));
+    }
   }
 }

@@ -16,10 +16,10 @@
  *
  */
 
-package org.apache.streampipes.connect.transformer.groovy;
+package org.apache.streampipes.model.health;
 
-import org.apache.streampipes.client.api.IStreamPipesClient;
-import org.apache.streampipes.connect.transformer.api.Context;
-
-public record GroovyScriptContext(IStreamPipesClient client) implements Context {
+public enum AdapterInstanceState {
+  RUNNING,
+  STARTING,
+  STOPPING
 }

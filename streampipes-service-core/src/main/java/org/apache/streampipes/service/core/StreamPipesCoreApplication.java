@@ -23,9 +23,9 @@ import org.apache.streampipes.connect.management.management.AdapterMasterManagem
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.connect.transformer.api.TransformationEngine;
 import org.apache.streampipes.connect.transformer.api.TransformationEngines;
-import org.apache.streampipes.connect.transformer.groovy.GroovyScriptEngine;
 import org.apache.streampipes.connect.transformer.js.GraalJsScriptEngine;
 import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
+import org.apache.streampipes.health.monitoring.HealthCheck;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.loadbalance.LoadManager;
@@ -129,7 +129,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
             new SpMqttProtocolFactory(),
             new SpPulsarProtocolFactory()),
         List.of(
-            GroovyScriptEngine::new,
             GraalJsScriptEngine::new
         )
     );
@@ -201,7 +200,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
             getPipelineStorage(),
             extensionServiceRequestManager,
             workerRestClient,
-            resourceManager),
+            resourceManager,
+            getRegisteredExtensionHealthChecks()),
         env.getInitialHealthCheckDelayInMillis().getValueOrDefault(),
         TimeUnit.MILLISECONDS);
 
@@ -223,7 +223,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                     )),
                 StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
                 extensionServiceRequestManager,
-                resourceManager
+                resourceManager,
+                getRegisteredExtensionHealthChecks()
             )));
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();
@@ -248,6 +249,10 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   protected List<Migration> getMigrations() {
     return new AvailableMigrations(resourceManager).getAvailableMigrations();
+  }
+
+  protected List<HealthCheck> getRegisteredExtensionHealthChecks() {
+    return List.of();
   }
 
   private boolean isConfigured() {

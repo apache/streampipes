@@ -23,16 +23,19 @@ import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.health.monitoring.model.HealthCheckData;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.health.AdapterInstanceState;
+import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class AdapterHealthCheck {
+public class AdapterHealthCheck implements HealthCheck {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterHealthCheck.class);
 
@@ -49,6 +52,7 @@ public class AdapterHealthCheck {
    * running adapters (in line with
    * {@link PipelineHealthCheck}).
    */
+  @Override
   public void runCheck() {
     LOG.debug("Adapter health check started");
 
@@ -67,6 +71,11 @@ public class AdapterHealthCheck {
                 .noneMatch(r -> r.getElementId().equals(entry.getElementId()))
             )
             .toList();
+        LOG.debug("Adapter monitoring candidates: runningAdapters={}, adaptersToRecover={}, "
+                + "adaptersToMonitor={}",
+            healthCheckData.activeResources().runningAdapters().size(),
+            allAdaptersToRecover.size(),
+            adaptersToMonitor.size());
 
         if (!adaptersToMonitor.isEmpty()) {
           updateMonitoringMetrics(adaptersToMonitor);
@@ -94,15 +103,32 @@ public class AdapterHealthCheck {
   protected void updateMonitoringMetrics(List<AdapterDescription> runningAdapterDescriptions) {
 
     var adapterMetrics = AdapterMetricsManager.getInstance().getAdapterMetrics();
-    runningAdapterDescriptions
-        .forEach(adapterDescription -> updateTotalEventsPublished(adapterMetrics,
-                                                                  adapterDescription.getElementId(),
-                                                                  adapterDescription.getName()));
-    LOG.debug("Monitoring {} adapter instances", adapterMetrics.size());
+    var totalEventsPublished = 0L;
+    var latestEventTimestamp = 0L;
+    var debugEnabled = LOG.isDebugEnabled();
+
+    for (AdapterDescription adapterDescription : runningAdapterDescriptions) {
+      var metricsEntry = updateTotalEventsPublished(adapterMetrics,
+                                                    adapterDescription.getElementId(),
+                                                    adapterDescription.getName());
+      if (debugEnabled) {
+        totalEventsPublished += metricsEntry.getMessagesOut().getCounter();
+        latestEventTimestamp = Math.max(latestEventTimestamp, metricsEntry.getMessagesOut().getLastTimestamp());
+      }
+    }
+
+    if (debugEnabled) {
+      LOG.debug("Monitoring {} adapter instances, totalEventsPublished={}, latestEventTimestamp={}",
+          adapterMetrics.size(),
+          totalEventsPublished,
+          latestEventTimestamp);
+    }
   }
 
-  private void updateTotalEventsPublished(AdapterMetrics adapterMetrics, String adapterId,
-                                          String adapterName) {
+  private SpMetricsEntry updateTotalEventsPublished(
+      AdapterMetrics adapterMetrics,
+      String adapterId,
+      String adapterName) {
 
     // Check if the adapter is already registered; if not, register it first.
     // This step is crucial, especially when the StreamPipes Core service is restarted,
@@ -112,8 +138,11 @@ public class AdapterHealthCheck {
       adapterMetrics.register(adapterId, adapterName);
     }
 
-    adapterMetrics.updateTotalEventsPublished(adapterId, adapterName, ExtensionsLogProvider.INSTANCE
-        .getMetricInfosForResource(adapterId).getMessagesOut().getCounter());
+    var metricsEntry = ExtensionsLogProvider.INSTANCE.getMetricInfosForResource(adapterId);
+    var counter = metricsEntry.getMessagesOut().getCounter();
+
+    adapterMetrics.updateTotalEventsPublished(adapterId, adapterName, counter);
+    return metricsEntry;
   }
 
 
@@ -128,20 +157,29 @@ public class AdapterHealthCheck {
    */
   public List<AdapterDescription> getAdaptersToRecover() {
 
-    var runningAdapterIds =
+    var adapterInstanceStates =
         healthCheckData.activeExtensionInstances()
             .values()
             .stream()
-            .flatMap(h -> h.runningAdapterInstanceIds().stream())
-            .collect(Collectors.toSet());
+            .flatMap(h -> adapterInstanceStates(h.adapterInstanceStates()).entrySet().stream())
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (existingState, replacementState) -> existingState
+            ));
 
     return healthCheckData.activeResources()
         .runningAdapters()
         .stream()
         .filter(Objects::nonNull)
         .filter(a -> a.getElementId() != null)
-        .filter(a -> !runningAdapterIds.contains(a.getElementId()))
+        .filter(a -> !adapterInstanceStates.containsKey(a.getElementId()))
         .toList();
+  }
+
+  private Map<String, AdapterInstanceState> adapterInstanceStates(
+      Map<String, AdapterInstanceState> adapterInstanceStates) {
+    return adapterInstanceStates == null ? Map.of() : adapterInstanceStates;
   }
 
   public void recoverAdapters(List<AdapterDescription> adaptersToRecover) {
@@ -150,7 +188,7 @@ public class AdapterHealthCheck {
       try {
         if (adapterDescription.isRunning()) {
           LOG.debug("Start recovering adapter {} ", adapterDescription.getElementId());
-          this.healthCheckData.resourceProvider().adapterMasterManagement().startStreamAdapter(adapterDescription.getElementId());
+          this.healthCheckData.resourceProvider().adapterMasterManagement().startAdapter(adapterDescription.getElementId());
           LOG.info("Adapter {} is recovered", adapterDescription.getElementId());
         }
       } catch (AdapterException e) {

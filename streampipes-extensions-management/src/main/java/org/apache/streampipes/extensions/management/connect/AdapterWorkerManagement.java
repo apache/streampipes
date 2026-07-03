@@ -19,6 +19,7 @@
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.connect.transformer.api.TransformationEngines;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
@@ -41,11 +42,14 @@ public class AdapterWorkerManagement {
 
   private final RunningAdapterInstances runningAdapterInstances;
   private final IDeclarersSingleton declarers;
+  private final AdapterTransitionRegistry adapterTransitionRegistry;
 
   public AdapterWorkerManagement(RunningAdapterInstances runningAdapterInstances,
-                                 IDeclarersSingleton declarers) {
+                                 IDeclarersSingleton declarers,
+                                 AdapterTransitionRegistry adapterTransitionRegistry) {
     this.runningAdapterInstances = runningAdapterInstances;
     this.declarers = declarers;
+    this.adapterTransitionRegistry = adapterTransitionRegistry;
   }
 
   public Collection<AdapterDescription> getAllRunningAdapterInstances() {
@@ -53,31 +57,37 @@ public class AdapterWorkerManagement {
   }
 
   public void invokeAdapter(AdapterDescription adapterDescription) throws AdapterException {
-    var adapter = declarers
-        .getAdapter(adapterDescription.getAppId());
+    adapterTransitionRegistry.registerStarting(adapterDescription.getElementId());
+    try {
+      var adapter = declarers
+          .getAdapter(adapterDescription.getAppId());
 
-    if (adapter.isPresent()) {
-      var newAdapterInstance = adapter.get().declareConfig().getSupplier().get();
-      runningAdapterInstances.addAdapter(
-          adapterDescription.getElementId(),
-          newAdapterInstance,
-          adapterDescription);
+      if (adapter.isPresent()) {
+        var newAdapterInstance = adapter.get().declareConfig().getSupplier().get();
+        validateScriptLanguage(adapterDescription);
+        runningAdapterInstances.addAdapter(
+            adapterDescription.getElementId(),
+            newAdapterInstance,
+            adapterDescription);
 
-      // This method allows adapters to modify the adapter description prior to invocation.
-      // It is particularly useful for adapters like FileReplayAdapter that need to manipulate timestamp values
-      // internally, bypassing the adapter preprocessing pipeline.
-      newAdapterInstance.preprocessAdapterDescription(adapterDescription);
+        // This method allows adapters to modify the adapter description prior to invocation.
+        // It is particularly useful for adapters like FileReplayAdapter that need to manipulate timestamp values
+        // internally, bypassing the adapter preprocessing pipeline.
+        newAdapterInstance.preprocessAdapterDescription(adapterDescription);
 
-      var registeredParsers = newAdapterInstance.declareConfig().getSupportedParsers();
-      var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
-      var runtimeContext = makeRuntimeContext(adapterDescription.getElementId());
-      var eventCollector = EventCollector.from(adapterDescription, runtimeContext);
+        var registeredParsers = newAdapterInstance.declareConfig().getSupportedParsers();
+        var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
+        var runtimeContext = makeRuntimeContext(adapterDescription.getElementId());
+        var eventCollector = EventCollector.from(adapterDescription, runtimeContext);
 
-      newAdapterInstance.onAdapterStarted(extractor, eventCollector, runtimeContext);
-    } else {
-      var errorMessage = "Adapter with id %s could not be found".formatted(adapterDescription.getAppId());
-      LOG.error(errorMessage);
-      throw new AdapterException(errorMessage);
+        newAdapterInstance.onAdapterStarted(extractor, eventCollector, runtimeContext);
+      } else {
+        var errorMessage = "Adapter with id %s could not be found".formatted(adapterDescription.getAppId());
+        LOG.error(errorMessage);
+        throw new AdapterException(errorMessage);
+      }
+    } finally {
+      adapterTransitionRegistry.deregisterStarting(adapterDescription.getElementId());
     }
   }
 
@@ -85,21 +95,37 @@ public class AdapterWorkerManagement {
 
     String elementId = adapterDescription.getElementId();
 
-    StreamPipesAdapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
+    adapterTransitionRegistry.registerStopping(elementId);
+    try {
+      StreamPipesAdapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
 
-    if (adapter != null) {
+      if (adapter != null) {
 
-      var registeredParsers = adapter.declareConfig().getSupportedParsers();
-      var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
-      var runtimeContext = makeRuntimeContext(elementId);
-      adapter.onAdapterStopped(extractor, runtimeContext);
+        var registeredParsers = adapter.declareConfig().getSupportedParsers();
+        var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
+        var runtimeContext = makeRuntimeContext(elementId);
+        adapter.onAdapterStopped(extractor, runtimeContext);
+      }
+
+      resetMonitoring(elementId);
+    } finally {
+      adapterTransitionRegistry.deregisterStopping(elementId);
     }
-
-    resetMonitoring(elementId);
   }
 
   private IAdapterRuntimeContext makeRuntimeContext(String adapterInstanceId) {
     return new AdapterContextGenerator().makeRuntimeContext(adapterInstanceId);
+  }
+
+  private void validateScriptLanguage(AdapterDescription adapterDescription) throws AdapterException {
+    var transformationConfig = adapterDescription.getTransformationConfig();
+    if (transformationConfig != null && transformationConfig.isScriptActive()) {
+      try {
+        TransformationEngines.INSTANCE.validateSupportedLanguage(transformationConfig.getLanguage());
+      } catch (IllegalArgumentException e) {
+        throw new AdapterException(e.getMessage(), e);
+      }
+    }
   }
 
   private void resetMonitoring(String elementId) {

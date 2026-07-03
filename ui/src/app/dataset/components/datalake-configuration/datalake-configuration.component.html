@@ -99,7 +99,11 @@
                                 >{{ 'Loading' | translate }}
                             </mat-spinner>
                         } @else {
-                            {{ formatLastEvent(configurationEntry.lastEvent) }}
+                            <sp-datalake-last-event-label
+                                [lastEvent]="configurationEntry.lastEvent"
+                                [currentTime]="currentTime"
+                            >
+                            </sp-datalake-last-event-label>
                         }
                     </td>
                 </ng-container>

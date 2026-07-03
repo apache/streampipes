@@ -20,10 +20,12 @@ package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.model.connect.ConnectTransformationScriptTemplate;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,12 +47,14 @@ public class TransformationScriptTemplateResource extends AbstractAuthGuardedRes
   @GetMapping(
       value = "{id}",
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
   public ConnectTransformationScriptTemplate findById(@PathVariable String id) {
 
     return templateStorage.getElementById(id);
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
   public List<ConnectTransformationScriptTemplate> getAll() {
     return templateStorage.findAll();
   }
@@ -59,6 +63,7 @@ public class TransformationScriptTemplateResource extends AbstractAuthGuardedRes
       value = "{id}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public ConnectTransformationScriptTemplate update(@PathVariable String id,
                                                     @RequestBody ConnectTransformationScriptTemplate scriptTemplate) {
     if (!id.equals(scriptTemplate.getElementId())) {
@@ -69,11 +74,13 @@ public class TransformationScriptTemplateResource extends AbstractAuthGuardedRes
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public void create(@RequestBody ConnectTransformationScriptTemplate scriptTemplate) {
     templateStorage.persist(scriptTemplate);
   }
 
   @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public void delete(@PathVariable String id) {
     var scriptTemplate = templateStorage.getElementById(id);
     if (scriptTemplate == null) {

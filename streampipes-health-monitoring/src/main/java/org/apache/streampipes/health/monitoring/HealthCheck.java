@@ -16,11 +16,9 @@
  *
  */
 
-package org.apache.streampipes.connect.transformer.groovy.sandbox.error;
+package org.apache.streampipes.health.monitoring;
 
-public final class SandboxViolationClassNotFoundException extends ClassNotFoundException {
+public interface HealthCheck {
 
-  public SandboxViolationClassNotFoundException(String message) {
-    super(message);
-  }
+  void runCheck();
 }

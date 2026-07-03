@@ -28,6 +28,8 @@ import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import org.simplejavamail.MailException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,11 +41,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.mail.MessagingException;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v2/admin/mail-config")
 public class EmailConfigurationResource extends AbstractAuthGuardedRestResource {
+
+  private static final Logger LOG = LoggerFactory.getLogger(EmailConfigurationResource.class);
 
   private final ISpCoreConfigurationStorage configurationStorage;
 
@@ -100,7 +111,52 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
       new MailTester(coreConfiguration).sendTestMail(config);
       return ok();
     } catch (MailException | IllegalArgumentException | IOException e) {
-      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
+      var mailExceptionDetails = getMailExceptionDetails(e);
+      LOG.warn("Unable to send test email. {}", mailExceptionDetails, e);
+      throw new SpMessageException(
+          HttpStatus.BAD_REQUEST,
+          Notifications.error(
+              "Unable to send test email",
+              "Please verify the SMTP server, port, transport strategy, credentials, proxy settings, "
+                  + "and recipient address. Server response: " + mailExceptionDetails));
+    }
+  }
+
+  private String getMailExceptionDetails(Exception e) {
+    return String.join(" Cause: ", extractExceptionMessages(e));
+  }
+
+  private List<String> extractExceptionMessages(Throwable throwable) {
+    var messages = new ArrayList<String>();
+    Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+    collectExceptionMessages(throwable, messages, visited);
+    return messages;
+  }
+
+  private void collectExceptionMessages(Throwable throwable,
+                                        List<String> messages,
+                                        Set<Throwable> visited) {
+    if (throwable == null || !visited.add(throwable)) {
+      return;
+    }
+
+    addExceptionMessage(throwable, messages);
+    collectExceptionMessages(throwable.getCause(), messages, visited);
+
+    if (throwable instanceof MessagingException messagingException) {
+      collectExceptionMessages(messagingException.getNextException(), messages, visited);
+    }
+  }
+
+  private void addExceptionMessage(Throwable throwable,
+                                   List<String> messages) {
+    var message = throwable.getMessage();
+    if (message == null || message.isBlank()) {
+      message = throwable.getClass().getSimpleName();
+    }
+
+    if (!messages.contains(message)) {
+      messages.add(message);
     }
   }
 }

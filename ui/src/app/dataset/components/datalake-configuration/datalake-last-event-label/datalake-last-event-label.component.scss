@@ -16,24 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.transformer.groovy.sandbox.ast;
-
-import org.codehaus.groovy.ast.ClassNode;
-import org.codehaus.groovy.classgen.GeneratorContext;
-import org.codehaus.groovy.control.CompilationFailedException;
-import org.codehaus.groovy.control.CompilePhase;
-import org.codehaus.groovy.control.SourceUnit;
-import org.codehaus.groovy.control.customizers.CompilationCustomizer;
-
-public final class AstChecksCompilationCustomizer extends CompilationCustomizer {
-
-  public AstChecksCompilationCustomizer() {
-    super(CompilePhase.SEMANTIC_ANALYSIS);
-  }
-
-  @Override
-  public void call(SourceUnit source, GeneratorContext context, ClassNode classNode)
-      throws CompilationFailedException {
-    new AstChecksVisitor(source).visitClass(classNode);
-  }
+:host {
+    display: inline-flex;
+    align-items: center;
 }

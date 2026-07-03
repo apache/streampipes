@@ -230,7 +230,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     try {
       var adapter = getAdapterDescription(elementId);
       if (checkAdapterPermission(adapter, "WRITE")) {
-        managementService.stopStreamAdapter(elementId, forceStop);
+        managementService.stopAdapter(adapter, forceStop);
         return ok(Notifications.success("Adapter stopped"));
       } else {
         return unauthorized();
@@ -247,7 +247,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     try {
       var adapterDescription = getAdapterDescription(elementId);
       if (checkAdapterPermission(adapterDescription, "WRITE")) {
-        managementService.startStreamAdapter(elementId);
+        managementService.startAdapter(adapterDescription);
         return ok(Notifications.success("Adapter started"));
       } else {
         return unauthorized();

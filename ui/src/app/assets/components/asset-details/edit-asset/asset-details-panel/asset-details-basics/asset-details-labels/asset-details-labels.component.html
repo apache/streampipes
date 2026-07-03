@@ -44,8 +44,17 @@
                                 <mat-icon>refresh</mat-icon>
                             </button>
                         </div>
-                        <mat-form-field [disabled]="allLabels.length === 0">
-                            <mat-chip-grid #chipGrid aria-label="Labels">
+                        <mat-form-field
+                            class="asset-label-chip-field"
+                            [class.asset-label-chip-field-disabled]="
+                                allLabels.length === 0
+                            "
+                        >
+                            <mat-chip-grid
+                                #chipGrid
+                                aria-label="Labels"
+                                [disabled]="allLabels.length === 0"
+                            >
                                 @for (label of labels; track label) {
                                     <mat-chip-row
                                         (removed)="remove(label)"
@@ -71,25 +80,26 @@
                                         </button>
                                     </mat-chip-row>
                                 }
+                                <input
+                                    [placeholder]="
+                                        allLabels.length === 0
+                                            ? ('No labels available - Click \'Manage Labels\''
+                                              | translate)
+                                            : ('Click to add label' | translate)
+                                    "
+                                    data-cy="asset-label-input"
+                                    class="asset-label-chip-input"
+                                    #labelInput
+                                    [formControl]="labelCtrl"
+                                    [matChipInputFor]="chipGrid"
+                                    [matAutocomplete]="auto"
+                                    [matChipInputSeparatorKeyCodes]="
+                                        separatorKeysCodes
+                                    "
+                                    (matChipInputTokenEnd)="add($event)"
+                                    [disabled]="allLabels.length === 0"
+                                />
                             </mat-chip-grid>
-                            <input
-                                [placeholder]="
-                                    allLabels.length === 0
-                                        ? ('No labels available - Click \'Manage Labels\''
-                                          | translate)
-                                        : ('Click to add label' | translate)
-                                "
-                                data-cy="asset-label-input"
-                                #labelInput
-                                [formControl]="labelCtrl"
-                                [matChipInputFor]="chipGrid"
-                                [matAutocomplete]="auto"
-                                [matChipInputSeparatorKeyCodes]="
-                                    separatorKeysCodes
-                                "
-                                (matChipInputTokenEnd)="add($event)"
-                                [disabled]="allLabels.length === 0"
-                            />
                             <mat-autocomplete
                                 #auto="matAutocomplete"
                                 (optionSelected)="selected($event)"

@@ -47,6 +47,10 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PASSWORD;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULLING_INTERVAL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_DISCARD_OLDEST;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_PUBLISHING_INTERVAL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_QUEUE_SIZE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_SAMPLING_INTERVAL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME_GROUP;
 
@@ -83,6 +87,34 @@ public class SpOpcUaConfigExtractor {
 
       config.setPullIntervalMilliSeconds(pullIntervalSeconds);
       config.setIncompleteEventStrategy(incompleteEventStrategy);
+    } else {
+      config.setSubscriptionPublishingIntervalMs(extractOptionalInteger(
+          extractor,
+          SUBSCRIPTION_PUBLISHING_INTERVAL.name(),
+          OpcUaAdapterConfig.DEFAULT_SUBSCRIPTION_PUBLISHING_INTERVAL_MS
+      ));
+      config.setSubscriptionSamplingIntervalMs(extractOptionalInteger(
+          extractor,
+          SUBSCRIPTION_SAMPLING_INTERVAL.name(),
+          OpcUaAdapterConfig.DEFAULT_SUBSCRIPTION_SAMPLING_INTERVAL_MS
+      ));
+      config.setSubscriptionQueueSize(extractOptionalInteger(
+          extractor,
+          SUBSCRIPTION_QUEUE_SIZE.name(),
+          OpcUaAdapterConfig.DEFAULT_SUBSCRIPTION_QUEUE_SIZE
+      ));
+      var discardOldest = extractOptionalSelectedInternalName(
+          extractor,
+          SUBSCRIPTION_DISCARD_OLDEST.name(),
+          String.valueOf(OpcUaAdapterConfig.DEFAULT_SUBSCRIPTION_DISCARD_OLDEST)
+      );
+      config.setSubscriptionDiscardOldest(Boolean.parseBoolean(discardOldest));
+      var incompleteEventStrategy = extractOptionalSelectedInternalName(
+          extractor,
+          SharedUserConfiguration.INCOMPLETE_EVENT_HANDLING_KEY,
+          SharedUserConfiguration.INCOMPLETE_OPTION_IGNORE
+      );
+      config.setIncompleteEventStrategy(incompleteEventStrategy);
     }
 
     var namingStrategySelection = extractor.selectedSingleValueInternalName(
@@ -92,6 +124,28 @@ public class SpOpcUaConfigExtractor {
     config.setNamingStrategy(namingStrategy);
 
     return config;
+  }
+
+  private static Integer extractOptionalInteger(IStaticPropertyExtractor extractor,
+                                                String internalName,
+                                                Integer defaultValue) {
+    try {
+      var value = extractor.singleValueParameter(internalName, Integer.class);
+      return value != null ? value : defaultValue;
+    } catch (RuntimeException e) {
+      return defaultValue;
+    }
+  }
+
+  private static String extractOptionalSelectedInternalName(IStaticPropertyExtractor extractor,
+                                                           String internalName,
+                                                           String defaultValue) {
+    try {
+      var value = extractor.selectedSingleValueInternalName(internalName, String.class);
+      return value != null ? value : defaultValue;
+    } catch (RuntimeException e) {
+      return defaultValue;
+    }
   }
 
   public static OpcUaConfig extractSinkConfig(IParameterExtractor extractor,

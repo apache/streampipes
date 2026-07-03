@@ -23,13 +23,9 @@
         (
             container-height: 2.5rem,
             container-vertical-padding: 0.5rem,
-            outlined-container-shape: 2px,
-            outlined-outline-color: var(--mat-sys-surface-container-highest),
-            outlined-hover-outline-color: color-mix(
-                    in srgb,
-                    var(--mat-sys-outline) 85%,
-                    #000 0%
-                ),
+            outlined-container-shape: var(--radius-sm),
+            outlined-outline-color: var(--color-border-subtle),
+            outlined-hover-outline-color: var(--color-border-strong),
             outlined-focus-outline-color: var(--mat-sys-primary),
             outlined-label-text-color: var(--mat-sys-on-surface-variant),
             outlined-caret-color: var(--mat-sys-primary),
@@ -41,4 +37,39 @@
                 ),
         )
     );
+
+    .mat-mdc-form-field {
+        transition: filter var(--motion-duration-fast)
+            var(--motion-easing-standard);
+    }
+
+    .mat-mdc-form-field .mdc-text-field--outlined {
+        background-color: var(--mat-sys-surface);
+        border-radius: var(--radius-sm);
+        transition:
+            background-color var(--motion-duration-fast)
+                var(--motion-easing-standard),
+            box-shadow var(--motion-duration-fast) var(--motion-easing-standard);
+    }
+
+    .mat-mdc-form-field:hover .mdc-text-field--outlined {
+        background-color: color-mix(
+            in srgb,
+            var(--mat-sys-primary) 3%,
+            var(--mat-sys-surface)
+        );
+    }
+
+    .mat-mdc-form-field:has(.mdc-text-field--focused)
+        .mdc-text-field--outlined {
+        background-color: var(--mat-sys-surface);
+    }
+
+    .mat-mdc-form-field.mat-form-field-disabled {
+        filter: saturate(0.7);
+    }
+
+    .mat-mdc-form-field.mat-form-field-disabled .mdc-text-field--outlined {
+        background-color: var(--mat-sys-surface-container);
+    }
 }

@@ -16,11 +16,14 @@
  *
  */
 
-package org.apache.streampipes.connect.transformer.groovy.sandbox.error;
+:host {
+    display: block;
+}
 
-public final class SandboxViolationException extends SecurityException {
+.simple-metrics {
+    gap: var(--space-md);
+}
 
-  public SandboxViolationException(String message) {
-    super(message);
-  }
+.simple-metrics__grid {
+    width: 100%;
 }

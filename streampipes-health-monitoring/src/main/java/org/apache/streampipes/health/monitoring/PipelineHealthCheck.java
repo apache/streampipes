@@ -48,7 +48,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
-public class PipelineHealthCheck {
+public class PipelineHealthCheck implements HealthCheck {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineHealthCheck.class);
   private static final int MAX_FAILED_ATTEMPTS = 10;
@@ -71,6 +71,7 @@ public class PipelineHealthCheck {
     this.resourceManager = resourceManager;
   }
 
+  @Override
   public void runCheck() {
     try {
       initPipelineMetrics();

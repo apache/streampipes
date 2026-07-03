@@ -36,44 +36,45 @@
 
     @if (deploymentMode === 'filter') {
         <div fxFlex="100" fxLayout="column" class="mt-10">
-            <mat-form-field color="accent">
-                <mat-label>Service Tags</mat-label>
-                <mat-chip-grid #chipGrid>
-                    @for (
-                        serviceTag of deploymentConfiguration.desiredServiceTags;
-                        track serviceTag
-                    ) {
-                        <mat-chip-row (removed)="remove(serviceTag.value)">
-                            {{ serviceTag.value }}
-                            <button matChipRemove>
-                                <mat-icon>cancel</mat-icon>
-                            </button>
-                        </mat-chip-row>
-                    }
-                </mat-chip-grid>
-                <input
-                    placeholder="Add service tag"
-                    #serviceTagInput
-                    [formControl]="serviceTagCtrl"
-                    [matChipInputFor]="chipGrid"
-                    [matAutocomplete]="auto"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (matChipInputTokenEnd)="add($event)"
-                />
-                <mat-autocomplete
-                    #auto="matAutocomplete"
-                    (optionSelected)="selected($event)"
-                >
-                    @for (
-                        serviceTag of filteredServiceTags | async;
-                        track serviceTag
-                    ) {
-                        <mat-option [value]="serviceTag">
-                            {{ serviceTag }}
-                        </mat-option>
-                    }
-                </mat-autocomplete>
-            </mat-form-field>
+            <sp-form-field [level]="3" label="Service Tags">
+                <mat-form-field color="accent">
+                    <mat-chip-grid #chipGrid>
+                        @for (
+                            serviceTag of deploymentConfiguration.desiredServiceTags;
+                            track serviceTag
+                        ) {
+                            <mat-chip-row (removed)="remove(serviceTag.value)">
+                                {{ serviceTag.value }}
+                                <button matChipRemove>
+                                    <mat-icon>cancel</mat-icon>
+                                </button>
+                            </mat-chip-row>
+                        }
+                        <input
+                            placeholder="Add service tag"
+                            #serviceTagInput
+                            [formControl]="serviceTagCtrl"
+                            [matChipInputFor]="chipGrid"
+                            [matAutocomplete]="auto"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            (matChipInputTokenEnd)="add($event)"
+                        />
+                    </mat-chip-grid>
+                    <mat-autocomplete
+                        #auto="matAutocomplete"
+                        (optionSelected)="selected($event)"
+                    >
+                        @for (
+                            serviceTag of filteredServiceTags | async;
+                            track serviceTag
+                        ) {
+                            <mat-option [value]="serviceTag">
+                                {{ serviceTag }}
+                            </mat-option>
+                        }
+                    </mat-autocomplete>
+                </mat-form-field>
+            </sp-form-field>
         </div>
     }
 </div>

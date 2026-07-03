@@ -144,7 +144,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
         }
         if (compactAdapter.createOptions()
                           .start()) {
-          managementService.startStreamAdapter(adapterId);
+          managementService.startAdapter(adapterId);
         }
       }
       return ok(Notifications.success(adapterId));
