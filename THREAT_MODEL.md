@@ -37,8 +37,6 @@ boundaries in the root `AGENTS.md`, are:
 | Component | Role | Primary surface |
 | --- | --- | --- |
 | **`streampipes-rest`** | The primary HTTP/REST control-plane boundary: authentication, user/resource management, pipeline control, adapter control, and data-lake queries. The UI drives configuration through this control plane. It is not the external data-ingress path. | network control boundary |
-| **`streampipes-service-core`** | Bootstrapping, security, migrations, scheduling. | in-process |
-| **`*-management` modules** | Business/domain logic for pipelines, adapters, data lake, and related resources. | in-process |
 | **Connect source/input adapters (extensions)** | The external data-ingress path. Adapters connect to external sources (MQTT, Kafka, REST, OPC-UA, HTTP, files, databases, etc.), ingest raw data, normalize it into events, and publish those events onto the internal bus for downstream processing. | external-data ingestion boundary |
 | **Pipeline elements (processors/sinks)** | Processing and sink logic over event streams carried by the internal bus; deployable as extensions. | in-process / extension-runtime code |
 | **Internal message bus** | Internal event transport carrying adapter-normalized and processor-derived events between processing steps. External data enters through source/input adapters; the bus is not directly writable from outside the assumed deployment perimeter. | intra-deployment infrastructure |
