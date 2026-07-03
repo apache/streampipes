@@ -45,19 +45,16 @@ upholds versus what it leaves to the operator.
 Read **[SECURITY.md](SECURITY.md)** for how to report (`security@streampipes.apache.org`).
 
 ### Key scoping facts (see THREAT_MODEL.md)
-- The **`streampipes-rest`** HTTP/REST layer is the primary untrusted boundary;
-  the broker, datastore, and extension-runtime services are assumed to run
-  inside an operator-controlled perimeter.
+- The **streampipes-rest** HTTP/REST layer is the primary control boundary; the external-data  ingestion boundary is at the adapters. The broker, datastore, and extension-runtime services are assumed to run inside an operator-controlled perimeter. 
 - **Installed extensions (custom adapters / processors / sinks) are
   code-execution by design**, not a sandbox.
 - An **adapter ingesting data from an external source** is the intended
   function; source trust and the handling guarantee for hostile ingested data
-  are spelled out in THREAT_MODEL.md (and are an open §11 question).
+  are spelled out in THREAT_MODEL.md.
 - Transport security (TLS), network isolation, and extension vetting are
   **operator** responsibilities, not engine invariants.
 
 ### Step 3 — Route the finding
 Route the finding to exactly one disposition in **THREAT_MODEL.md §10**
 (VALID, or one of the `OUT-OF-MODEL` / `BY-DESIGN` dispositions) and cite the
-section that justifies the call. This model is **v0** — open questions for the
-PMC are in §11.
+section that justifies the call. This model is **v0**.
