@@ -51,7 +51,7 @@ import {
 } from '@streampipes/platform-services';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom, from, Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { finalize, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { SupportsUnsavedChangeDialog } from '../../../../chart-shared/models/dataview-dashboard.model';
 
 type ManageableAsset = SpAssetModel & {
@@ -93,6 +93,7 @@ export class SpAssetDetailsComponent
     private originalAsset: SpAssetModel;
     private initialGeneratedAssetId?: string;
     private initialGeneratedElementId?: string;
+    private pendingConfirmLeaveDialog?: Observable<boolean>;
 
     async saveAsset() {
         if (this.isNewAsset && this.pendingManageAssetResult === undefined) {
@@ -225,38 +226,42 @@ export class SpAssetDetailsComponent
         _route: ActivatedRouteSnapshot,
         _state: RouterStateSnapshot,
     ): Observable<boolean> {
-        if (this.setShouldShowConfirm()) {
-            const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-                width: '500px',
-                data: {
-                    title: this.translateService.instant('Save changes?'),
-                    subtitle: this.translateService.instant(
-                        'Update all changes to asset or discard current changes.',
-                    ),
-                    neutralTitle: this.translateService.instant('Keep editing'),
-                    cancelTitle:
-                        this.translateService.instant('Discard changes'),
-                    confirmTitle: this.translateService.instant('Update'),
-                },
-            });
-            return dialogRef.afterClosed().pipe(
-                switchMap((dialogResult: ConfirmDialogAction | undefined) => {
-                    if (dialogResult === 'confirm') {
-                        return from(this.saveAssetChanges()).pipe(
-                            map(() => true),
-                        );
-                    }
-
-                    if (dialogResult === 'cancel') {
-                        return of(true);
-                    }
-
-                    return of(false);
-                }),
-            );
-        } else {
+        if (!this.setShouldShowConfirm()) {
             return of(true);
         }
+
+        if (this.pendingConfirmLeaveDialog) {
+            return this.pendingConfirmLeaveDialog;
+        }
+
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            data: {
+                title: this.translateService.instant('Save changes?'),
+                subtitle: this.translateService.instant(
+                    'Update all changes to asset or discard current changes.',
+                ),
+                neutralTitle: this.translateService.instant('Keep editing'),
+                cancelTitle: this.translateService.instant('Discard changes'),
+                confirmTitle: this.translateService.instant('Update'),
+            },
+        });
+        this.pendingConfirmLeaveDialog = dialogRef.afterClosed().pipe(
+            switchMap((dialogResult: ConfirmDialogAction | undefined) => {
+                if (dialogResult === 'confirm') {
+                    return from(this.saveAssetChanges()).pipe(map(() => true));
+                }
+
+                if (dialogResult === 'cancel') {
+                    return of(true);
+                }
+
+                return of(false);
+            }),
+            finalize(() => (this.pendingConfirmLeaveDialog = undefined)),
+            shareReplay({ bufferSize: 1, refCount: true }),
+        );
+        return this.pendingConfirmLeaveDialog;
     }
 
     setShouldShowConfirm(): boolean {
