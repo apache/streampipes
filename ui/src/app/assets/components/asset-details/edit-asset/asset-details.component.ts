@@ -93,10 +93,6 @@ export class SpAssetDetailsComponent
     private originalAsset: SpAssetModel;
 
     async saveAsset() {
-        if (this.isNewAsset && this.pendingManageAssetResult === undefined) {
-            this.openManageAssetDialog(true);
-            return;
-        }
         await this.saveAssetChanges();
         this.assetBrowserService.refreshBrowserAssetData();
         this.router.navigate(['assets'], {
