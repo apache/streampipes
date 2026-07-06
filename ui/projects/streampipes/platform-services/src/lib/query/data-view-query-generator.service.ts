@@ -26,7 +26,6 @@ import {
 import { SpQueryResult } from '../model/gen/streampipes-model';
 import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
 import { DatalakeQueryParameterBuilder } from './DatalakeQueryParameterBuilder';
-import { DashboardKioskRestService } from '../apis/dashboard-kiosk.service';
 import { DashboardDataRequestCoordinatorService } from './dashboard-data-request-coordinator.service';
 
 @Injectable({
@@ -34,7 +33,6 @@ import { DashboardDataRequestCoordinatorService } from './dashboard-data-request
 })
 export class DataViewQueryGeneratorService {
     protected dataLakeRestService = inject(DatalakeRestService);
-    protected dashboardKioskRestService = inject(DashboardKioskRestService);
     protected dashboardDataRequestCoordinator = inject(
         DashboardDataRequestCoordinatorService,
     );
@@ -58,32 +56,6 @@ export class DataViewQueryGeneratorService {
                 sourceConfig.measureName,
                 dataLakeConfiguration,
                 true,
-            );
-        });
-    }
-
-    generateObservablesForKioskMode(
-        startTime: number,
-        endTime: number,
-        dataConfig: DataExplorerDataConfig,
-        dashboardId: string,
-        widgetId: string,
-        maximumResultingEvents = -1,
-    ): Observable<SpQueryResult>[] {
-        return dataConfig.sourceConfigs.map(sourceConfig => {
-            const dataLakeConfiguration = this.generateQuery(
-                startTime,
-                endTime,
-                sourceConfig,
-                dataConfig.ignoreMissingValues,
-                maximumResultingEvents,
-                true,
-            );
-
-            return this.dashboardKioskRestService.getData(
-                dashboardId,
-                widgetId,
-                dataLakeConfiguration,
             );
         });
     }
