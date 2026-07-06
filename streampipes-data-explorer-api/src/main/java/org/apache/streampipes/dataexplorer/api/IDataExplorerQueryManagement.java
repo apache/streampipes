@@ -25,7 +25,15 @@ import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_END_DATE;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_LIMIT;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_ORDER;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_START_DATE;
 
 public interface IDataExplorerQueryManagement {
 
@@ -47,4 +55,27 @@ public interface IDataExplorerQueryManagement {
 
   Map<String, Object> getTagValues(String measurementId,
                                    String fields);
+
+  default Map<String, Long> getLatestTimestamps(List<String> measurementNames) {
+    Map<String, Long> latestTimestamps = new HashMap<>();
+    measurementNames.forEach(measurementName -> latestTimestamps.put(measurementName, getLatestTimestamp(
+        measurementName)));
+    return latestTimestamps;
+  }
+
+  private Long getLatestTimestamp(String measurementName) {
+    Map<String, String> queryParams = Map.of(
+        QP_START_DATE, "0",
+        QP_END_DATE, String.valueOf(System.currentTimeMillis()),
+        QP_LIMIT, "1",
+        QP_ORDER, "DESC",
+        QP_MISSING_VALUE_BEHAVIOUR, "empty"
+    );
+
+    try {
+      return getData(new ProvidedRestQueryParams(measurementName, queryParams), true).getLastTimestamp();
+    } catch (RuntimeException e) {
+      return 0L;
+    }
+  }
 }

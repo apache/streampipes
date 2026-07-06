@@ -274,11 +274,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
       );
     }
 
-    Map<String, Long> latestEvents = distinctMeasurementNames.stream()
-        .collect(Collectors.toMap(
-            measurementName -> measurementName,
-            this::getLatestEvent
-        ));
+    Map<String, Long> latestEvents = this.dataExplorerQueryManagement.getLatestTimestamps(distinctMeasurementNames);
 
     return ok(latestEvents);
   }
@@ -434,25 +430,6 @@ public class DataLakeResource extends AbstractDataLakeResource {
     rawParams.forEach((key, value) -> queryParamMap.put(key, String.join(",", value)));
 
     return new ProvidedRestQueryParams(measurementId, queryParamMap);
-  }
-
-  private Long getLatestEvent(String measurementName) {
-    Map<String, String> queryParams = Map.of(
-        QP_START_DATE, "0",
-        QP_END_DATE, String.valueOf(System.currentTimeMillis()),
-        QP_LIMIT, "1",
-        QP_ORDER, "DESC",
-        QP_MISSING_VALUE_BEHAVIOUR, "empty"
-    );
-
-    try {
-      return this.dataExplorerQueryManagement
-          .getData(new ProvidedRestQueryParams(measurementName, queryParams), true)
-          .getLastTimestamp();
-    } catch (RuntimeException e) {
-      LOG.warn("Could not get latest event for measurement {}", measurementName, e);
-      return 0L;
-    }
   }
 
   // Checks if the parameter for missing value behaviour is set

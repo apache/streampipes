@@ -21,16 +21,43 @@ package org.apache.streampipes.dataexplorer.influx;
 import org.apache.streampipes.dataexplorer.influx.utils.ProvidedQueryParameterBuilder;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_END_DATE;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_LIMIT;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_ORDER;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_START_DATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SelectQueryParamsTest {
+
+  @Test
+  public void testLatestEventTimestampQuery() {
+    var params = new ProvidedRestQueryParams(
+        "abc",
+        Map.of(
+            QP_START_DATE, "0",
+            QP_END_DATE, "100",
+            QP_LIMIT, "1",
+            QP_ORDER, "DESC",
+            QP_MISSING_VALUE_BEHAVIOUR, "empty"
+        )
+    );
+
+    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+
+    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+
+    assertEquals("SELECT * FROM \"abc\" WHERE (time < 100000000 AND time > 0) ORDER BY time DESC LIMIT 1;", query);
+  }
 
   @Test
   public void testWildcardTimeBoundQuery() {
