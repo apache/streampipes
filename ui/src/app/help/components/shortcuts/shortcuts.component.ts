@@ -30,7 +30,8 @@ interface ShortcutDefinition {
 
 const SHORTCUT_TRANSLATION_KEYS = {
     title: 'Shortcuts',
-    saveContext: "'Ctrl/Cmd + S' in chart/dashboard/pipeline edit view",
+    saveContext:
+        "'Ctrl/Cmd + S' in chart/dashboard/pipeline edit view or asset link dialog",
     saveDescription: 'Saves the current state',
     editContext: "'E' in dashboard/pipeline panel",
     editDescription: 'Enters edit mode.',

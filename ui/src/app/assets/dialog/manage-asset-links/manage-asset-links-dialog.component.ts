@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, HostListener, Input, OnInit, inject } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
@@ -84,6 +84,22 @@ export class SpManageAssetLinksDialogComponent
     store(): void {
         this.assetLinks = this.clonedAssetLinks;
         this.dialogRef.close(this.assetLinks);
+    }
+
+    @HostListener('document:keydown', ['$event'])
+    handleGlobalKeydown(event: KeyboardEvent): void {
+        const key = event.key.toLowerCase();
+        const ctrl = event.ctrlKey || event.metaKey;
+
+        if (key === 'escape') {
+            this.cancel();
+            event.preventDefault();
+            event.stopPropagation();
+        } else if (ctrl && key === 's') {
+            this.store();
+            event.preventDefault();
+            event.stopPropagation();
+        }
     }
 
     afterResourcesLoaded(): void {
