@@ -55,34 +55,36 @@
                         </button>
                     </div>
                 </div>
-                <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-                    <button
-                        mat-icon-button
-                        [matMenuTriggerFor]="optMenu"
-                        [attr.aria-label]="'Options' | translate"
-                        data-cy="options-asset"
-                    >
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #optMenu="matMenu">
+                @if (!isNewAsset) {
+                    <div fxFlex fxLayout="row" fxLayoutAlign="end center">
                         <button
-                            mat-menu-item
-                            (click)="manageAsset()"
-                            data-cy="manage-asset-btn"
+                            mat-icon-button
+                            [matMenuTriggerFor]="optMenu"
+                            [attr.aria-label]="'Options' | translate"
+                            data-cy="options-asset"
                         >
-                            <mat-icon>settings</mat-icon>
-                            <span>{{ 'Manage' | translate }}</span>
+                            <mat-icon>more_vert</mat-icon>
                         </button>
-                        <button
-                            mat-menu-item
-                            (click)="deleteAsset()"
-                            data-cy="delete-asset-btn"
-                        >
-                            <mat-icon>clear</mat-icon>
-                            <span>{{ 'Delete' | translate }}</span>
-                        </button>
-                    </mat-menu>
-                </div>
+                        <mat-menu #optMenu="matMenu">
+                            <button
+                                mat-menu-item
+                                (click)="manageAsset()"
+                                data-cy="manage-asset-btn"
+                            >
+                                <mat-icon>settings</mat-icon>
+                                <span>{{ 'Manage' | translate }}</span>
+                            </button>
+                            <button
+                                mat-menu-item
+                                (click)="deleteAsset()"
+                                data-cy="delete-asset-btn"
+                            >
+                                <mat-icon>clear</mat-icon>
+                                <span>{{ 'Delete' | translate }}</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                }
             </div>
             @if (asset) {
                 <div fxFlex="100" fxLayout="column" class="p-10">
