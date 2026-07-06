@@ -23,6 +23,7 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,15 +44,24 @@ import java.util.List;
 @RequestMapping("/api/v2/usergroups")
 public class UserGroupResource extends AbstractAuthGuardedRestResource {
 
+  private final IUserGroupStorage userGroupStorage;
+  private final IUserStorage userStorage;
+
+  public UserGroupResource(IUserGroupStorage userGroupStorage,
+                           IUserStorage userStorage) {
+    this.userGroupStorage = userGroupStorage;
+    this.userStorage = userStorage;
+  }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Group>> getAllUserGroups() {
-    return ok(getUserGroupStorage().findAll());
+    return ok(userGroupStorage.findAll());
   }
 
   @PostMapping
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> addUserGroup(@RequestBody Group group) {
-    getUserGroupStorage().persist(group);
+    userGroupStorage.persist(group);
     return ok();
   }
 
@@ -64,31 +74,27 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
           HttpStatus.BAD_REQUEST,
           Notifications.error("Wrong group id provided"));
     } else {
-      return ok(getUserGroupStorage().updateElement(group));
+      return ok(userGroupStorage.updateElement(group));
     }
   }
 
   @DeleteMapping(path = "{groupId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> deleteUserGroup(@PathVariable("groupId") String groupId) {
-    Group group = getUserGroupStorage().getElementById(groupId);
+    Group group = userGroupStorage.getElementById(groupId);
     if (group != null) {
-      getUserGroupStorage().deleteElement(group);
+      userGroupStorage.deleteElement(group);
 
       // TODO remove group from all users
-      getUserStorage().getAllUsers().forEach(user -> {
+      userStorage.getAllUsers().forEach(user -> {
         if (user.getGroups().contains(groupId)) {
           user.getGroups().remove(groupId);
-          getUserStorage().updateUser(user);
+          userStorage.updateUser(user);
         }
       });
       return ok();
     } else {
       return badRequest();
     }
-  }
-
-  private IUserGroupStorage getUserGroupStorage() {
-    return getNoSqlStorage().getUserGroupStorage();
   }
 }

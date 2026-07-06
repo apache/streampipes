@@ -20,10 +20,9 @@ sp-standard-dialog-container {
     width: 100%;
     background-color: var(--color-bg-0);
     color: var(--color-default-text);
-    border-radius: 5px;
-    -webkit-box-shadow: 0 10px 6px -6px #777;
-    -moz-box-shadow: 0 10px 6px -6px #777;
-    box-shadow: 0 10px 6px -6px #777;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-overlay);
+    overflow: hidden;
 }
 
 .standard-dialog-panel {
@@ -41,8 +40,10 @@ sp-standard-dialog-container {
     width: 100%;
     background: var(--color-secondary);
     align-items: center;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    border-bottom: 1px solid
+        color-mix(in srgb, var(--color-secondary) 78%, black);
+    border-top-left-radius: var(--radius-md);
+    border-top-right-radius: var(--radius-md);
 }
 
 .dialog-panel-content {
@@ -52,9 +53,18 @@ sp-standard-dialog-container {
 }
 
 .dialog-title {
-    padding: 5px 5px 5px 15px;
-    font-size: 20px;
-    color: white;
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-navigation-text);
+}
+
+.standard-dialog-panel-header .mat-mdc-icon-button {
+    color: var(--color-navigation-text);
+}
+
+.standard-dialog-panel-header .material-icons {
+    color: var(--color-navigation-text) !important;
 }
 
 #portal {

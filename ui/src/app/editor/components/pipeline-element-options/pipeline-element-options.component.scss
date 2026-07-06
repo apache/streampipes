@@ -18,49 +18,73 @@
 
 .options-button {
     cursor: pointer;
-    position: absolute;
-    height: 20px;
-    width: 20px;
-    border-radius: 20%;
-    box-shadow: 0 0 3px var(--color-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: var(--radius-xs);
+    box-shadow: none;
     text-align: center;
-    padding: 1px 1px;
-    background-color: var(--mat-sys-primary);
+    padding: 0;
+    background-color: transparent;
 }
 
 .mat-mdc-icon-button.options-icon-button {
-    width: 20px;
-    height: 20px;
-    line-height: 1.2;
-    border-radius: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    line-height: 1;
+    border-radius: var(--radius-xs);
     padding: 0;
-    color: var(--mat-sys-on-primary);
+    color: var(--color-primary);
+    transition:
+        background-color var(--motion-duration-fast)
+            var(--motion-easing-standard),
+        color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.mat-mdc-icon-button.options-icon-button:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .options-icon-size {
-    font-size: 1.08rem;
-    width: inherit;
-    height: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-lg);
+    width: 1.125rem;
+    height: 1.125rem;
+    line-height: 1;
 }
 
-.customize-button {
-    left: 2%;
-    top: -35%;
+.pipeline-element-action-bar {
+    position: absolute;
+    z-index: 50;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    padding: var(--space-2xs);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--mat-sys-surface);
 }
 
-.delete-button {
-    left: 73%;
-    top: -35%;
-    background-color: darkred;
-    box-shadow: 0 0 3px darkred;
+.pipeline-element-action-bar--top {
+    left: 50%;
+    top: -2.25rem;
+    transform: translateX(-50%);
 }
 
-.help-button {
-    left: 37.5%;
-    top: -35%;
+.delete-button .mat-mdc-icon-button.options-icon-button {
+    color: var(--color-error);
 }
 
-.possible-button {
-    left: 37.5%;
-    top: 80%;
+.delete-button .mat-mdc-icon-button.options-icon-button:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-error) 12%, transparent);
+}
+
+.possible-button .mat-mdc-icon-button.options-icon-button:disabled {
+    color: var(--mat-sys-on-surface-variant);
+    opacity: 0.5;
 }

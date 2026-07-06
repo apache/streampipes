@@ -104,7 +104,7 @@ public class OpcUaNodeBrowser {
       );
     }
 
-    LOG.info(
+    LOG.debug(
         "Using node of type {}",
         node.getNodeClass()
             .toString()

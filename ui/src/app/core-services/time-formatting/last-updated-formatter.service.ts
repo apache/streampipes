@@ -41,6 +41,28 @@ export class LastUpdatedFormatterService {
         return relativeTime ? `${relativeTime} (${exactTime})` : exactTime;
     }
 
+    public formatExactLastUpdatedAt(
+        updatedAt: number | null | undefined,
+        emptyLabel = 'n/a',
+    ): string {
+        if (!updatedAt) {
+            return emptyLabel;
+        }
+
+        return this.formatExactTime(updatedAt);
+    }
+
+    public formatRelativeLastUpdatedAt(
+        updatedAt: number | null | undefined,
+        currentTime = Date.now(),
+    ): string | undefined {
+        if (!updatedAt) {
+            return undefined;
+        }
+
+        return this.formatRelativeTime(updatedAt, currentTime);
+    }
+
     private formatExactTime(updatedAt: number): string {
         this.updateFormatters();
         return this.exactTimeFormatter.format(new Date(updatedAt));

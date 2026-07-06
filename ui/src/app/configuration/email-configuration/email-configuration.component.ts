@@ -16,6 +16,7 @@
  *
  */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject } from '@angular/core';
 import {
     FormsModule,
@@ -244,14 +245,33 @@ export class EmailConfigurationComponent implements OnInit {
             error => {
                 this.sendingTestMailInProgress = false;
                 this.sendingTestMailSuccess = false;
-                this.sendingEmailErrorMessage = this.translateService.instant(
-                    `Error: {{message}} with cause {{cause}}`,
-                    {
-                        message: error.error.localizedMessage,
-                        cause: error.error.cause.localizedMessage,
-                    },
-                );
+                this.sendingEmailErrorMessage =
+                    this.extractTestMailErrorMessage(error);
             },
+        );
+    }
+
+    private extractTestMailErrorMessage(error: HttpErrorResponse): string {
+        const notification = error.error?.notifications?.[0];
+        const message = [notification?.title, notification?.description]
+            .filter(
+                (messagePart, index, messageParts) =>
+                    messagePart && messageParts.indexOf(messagePart) === index,
+            )
+            .join('. ');
+        const cause =
+            notification?.additionalInformation ||
+            error.error?.localizedMessage ||
+            error.error?.cause?.localizedMessage;
+
+        if (message && cause && message !== cause) {
+            return `${message} ${cause}`;
+        }
+
+        return (
+            message ||
+            cause ||
+            this.translateService.instant('Could not send test email.')
         );
     }
 }

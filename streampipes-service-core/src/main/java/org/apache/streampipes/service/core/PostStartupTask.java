@@ -23,6 +23,7 @@ import org.apache.streampipes.connect.management.management.AdapterMasterManagem
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
+import org.apache.streampipes.health.monitoring.HealthCheck;
 import org.apache.streampipes.health.monitoring.PostStartupRecovery;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
@@ -66,7 +67,8 @@ public class PostStartupTask implements Runnable {
   public PostStartupTask(IPipelineStorage pipelineStorage,
                          ExtensionServiceRequestManager extensionServiceRequestManager,
                          WorkerRestClient workerRestClient,
-                         SpResourceManager resourceManager) {
+                         SpResourceManager resourceManager,
+                         List<HealthCheck> registeredHealthChecks) {
     this.pipelineStorage = pipelineStorage;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.executorService = Executors.newSingleThreadScheduledExecutor();
@@ -90,7 +92,8 @@ public class PostStartupTask implements Runnable {
             ),
             StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
             extensionServiceRequestManager,
-            resourceManager
+            resourceManager,
+            registeredHealthChecks
         )
     );
   }
@@ -133,15 +136,13 @@ public class PostStartupTask implements Runnable {
       startPipeline(pipeline, false);
     });
 
-    LOG.info("Checking for gracefully shut down pipelines to be restarted...");
-
     List<Pipeline> pipelinesToRestart = allPipelines
         .stream()
         .filter(p -> !(p.isRunning()))
         .filter(Pipeline::isRestartOnSystemReboot)
         .toList();
 
-    LOG.info("Found {} pipelines that we are attempting to restart...", pipelinesToRestart.size());
+    LOG.info("Found {} pipelines that will be restarted", pipelinesToRestart.size());
 
     pipelinesToRestart.forEach(pipeline -> {
       startPipeline(pipeline, false);
@@ -162,7 +163,7 @@ public class PostStartupTask implements Runnable {
       storeFailedRestartAttempt(pipeline);
       int failedAttemptCount = failedPipelines.get(pipeline.getPipelineId());
       if (failedAttemptCount <= MAX_PIPELINE_START_RETRIES) {
-        LOG.error(
+        LOG.warn(
             "Pipeline {} could not be restarted - I'll try again in {} seconds ({}/{} failed attempts)",
             pipeline.getName(),
             WAIT_TIME_AFTER_FAILURE_IN_SECONDS,
@@ -172,7 +173,7 @@ public class PostStartupTask implements Runnable {
 
         schedulePipelineStart(pipeline, restartOnReboot);
       } else {
-        LOG.error(
+        LOG.warn(
             "Pipeline {} could not be restarted - are all pipeline element containers running?",
             status.getPipelineName()
         );

@@ -26,8 +26,12 @@ import org.junit.jupiter.api.Test;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class DatatypeUtilsTest {
+
+  private static final String TEST_ADAPTER_NAME = "test-adapter";
 
   /**
    * The following tests ensure that timestamps represented as strings are correctly parsed.
@@ -38,86 +42,122 @@ public class DatatypeUtilsTest {
   @Test
   public void convertValue_StringToStringValue() {
     var inputValue = "testString";
-    var actualValue = DatatypeUtils.convertValue(inputValue, XSD.STRING.toString());
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, inputValue, XSD.STRING.toString());
 
     assertEquals(inputValue, actualValue);
   }
 
   @Test
+  public void convertValue_NullToStringValue() {
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, null, XSD.STRING.toString());
+
+    assertNull(actualValue);
+  }
+
+  @Test
+  public void convertValue_NullToNumericValue() {
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, null, XSD.DOUBLE.toString());
+
+    assertNull(actualValue);
+  }
+
+  @Test
   public void convertValue_StringToDoubleValue() {
-    var actualValue = DatatypeUtils.convertValue("1667904471000", XSD.DOUBLE.toString());
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, "1667904471000", XSD.DOUBLE.toString());
 
     assertEquals(1.667904471E12, actualValue);
   }
 
   @Test
+  public void convertValue_IntegerToDoubleValue() {
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, 123, XSD.DOUBLE.toString());
+
+    assertEquals(123.0d, actualValue);
+  }
+
+  @Test
   public void convertValue_StringToFloatValue() {
-    var actualValue = DatatypeUtils.convertValue("123.45", XSD.FLOAT.toString());
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, "123.45", XSD.FLOAT.toString());
 
     assertEquals(123.45f, actualValue);
   }
 
   @Test
   public void convertValue_StringToInteger() {
-    var actualValue = DatatypeUtils.convertValue("1623871500", XSD.INTEGER.toString());
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, "1623871500", XSD.INTEGER.toString());
 
     assertEquals(1623871500, actualValue);
   }
 
   @Test
   public void convertValue_StringToIntegerValue() {
-    var actualValue = DatatypeUtils.convertValue("123", XSD.INTEGER.toString());
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, "123", XSD.INTEGER.toString());
 
     assertEquals(123, actualValue);
   }
 
   @Test
   public void convertValue_StringToLongValue() {
-    var actualValue = DatatypeUtils.convertValue("1623871500000", XSD.LONG.toString());
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, "1623871500000", XSD.LONG.toString());
 
     assertEquals(1623871500000L, actualValue);
   }
 
   @Test
   public void convertValue_StringToBooleanTrueValue() {
-    var actualValue = DatatypeUtils.convertValue("true", XSD.BOOLEAN.toString());
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, "true", XSD.BOOLEAN.toString());
+
+    assertEquals(true, actualValue);
+  }
+
+  @Test
+  public void convertValue_BooleanToBooleanValue() {
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, true, XSD.BOOLEAN.toString());
 
     assertEquals(true, actualValue);
   }
 
   @Test
   public void convertValue_StringToBooleanFalseValue() {
-    var actualValue = DatatypeUtils.convertValue("false", XSD.BOOLEAN.toString());
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, "false", XSD.BOOLEAN.toString());
 
     assertEquals(false, actualValue);
   }
 
   @Test
   public void convertValue_FloatToIntegerValue_Rounding() {
-    var actualValue = DatatypeUtils.convertValue(123.45f, XSD.INTEGER.toString());
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, 123.45f, XSD.INTEGER.toString());
 
     assertEquals(123, actualValue);
   }
 
   @Test
   public void convertValue_DoubleToLongValue_Rounding1() {
-    var actualValue = DatatypeUtils.convertValue(1234567890.12345, XSD.LONG.toString());
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, 1234567890.12345, XSD.LONG.toString());
 
     assertEquals(1234567890L, actualValue);
   }
 
   @Test
   public void convertValue_DoubleToLongValue() {
-    var actualValue = DatatypeUtils.convertValue(1.667904471E12, XSD.LONG.toString());
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, 1.667904471E12, XSD.LONG.toString());
 
     assertEquals(1667904471000L, actualValue);
   }
 
   @Test
   public void convertValue_DoubleToLongValue_Rounding() {
-    var actualValue = DatatypeUtils.convertValue(1234567890.12345, XSD.LONG.toString());
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, 1234567890.12345, XSD.LONG.toString());
 
     assertEquals(1234567890L, actualValue);
+  }
+
+  @Test
+  public void convertValue_UnsupportedDatatypeReturnsOriginalValue() {
+    var inputValue = new Object();
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, inputValue, "unsupported");
+
+    assertSame(inputValue, actualValue);
   }
 
 
@@ -205,6 +245,13 @@ public class DatatypeUtilsTest {
   @Test
   public void getTypeClass_WithPrefereFloatingPointString() {
     var result = DatatypeUtils.getTypeClass(stringInputValue, true);
+
+    assertEquals(String.class, result);
+  }
+
+  @Test
+  public void getTypeClass_Null() {
+    var result = DatatypeUtils.getTypeClass(null, false);
 
     assertEquals(String.class, result);
   }

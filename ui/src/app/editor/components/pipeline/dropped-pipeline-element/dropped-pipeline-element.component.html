@@ -29,7 +29,7 @@
     @if (pipelineElementConfig.settings.loadingStatus) {
         <div class="pipeline-element-loading-container sp-fade-opacity"></div>
     }
-    @if (!readonly) {
+    @if (!readonly && pipelineElementConfig.settings.completed > 0) {
         <div
             class="pipeline-element-configuration-status {{
                 pipelineElementConfig.type === 'stream'

@@ -378,6 +378,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public BooleanEnvironmentVariable getOpcUaDisallowInsecureEndpoints() {
+    return new BooleanEnvironmentVariable(Envs.SP_OPCUA_DISALLOW_INSECURE_ENDPOINTS);
+  }
+
+  @Override
   public IntEnvironmentVariable getOpcUaMinPullIntervalMs() {
     return new IntEnvironmentVariable(Envs.SP_OPCUA_MIN_PULL_INTERVAL_MS);
   }

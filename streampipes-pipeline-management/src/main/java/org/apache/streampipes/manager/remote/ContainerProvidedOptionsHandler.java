@@ -18,19 +18,23 @@
 package org.apache.streampipes.manager.remote;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarget;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
-import org.apache.streampipes.manager.util.AuthTokenUtils;
+import org.apache.streampipes.manager.util.AuthTokenProvider;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.google.gson.JsonSyntaxException;
+import org.apache.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.Set;
@@ -38,29 +42,50 @@ import java.util.Set;
 public class ContainerProvidedOptionsHandler {
 
   private final ExtensionServiceRequestManager extensionRequestManager;
+  private final SpResourceManager resourceManager;
 
-  public ContainerProvidedOptionsHandler(ExtensionServiceRequestManager extensionRequestManager) {
+  public ContainerProvidedOptionsHandler(ExtensionServiceRequestManager extensionRequestManager,
+                                         SpResourceManager resourceManager) {
     this.extensionRequestManager = extensionRequestManager;
+    this.resourceManager = resourceManager;
   }
 
-  public RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request) {
+  public RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request)
+      throws SpConfigurationException, SpRuntimeException {
 
     try {
       var payload = JacksonSerializer.getObjectMapper().writeValueAsString(request);
       var requestTarget = getEndpointRequestTarget(request.getAppId());
-      var authToken = AuthTokenUtils.getAuthTokenForCurrentUser();
+      var authToken = new AuthTokenProvider(resourceManager).getAuthTokenForCurrentUser();
       var response = extensionRequestManager.request(
           ExtensionServiceRequests.containerProvidedOptions(requestTarget, payload, authToken)
       );
-      return handleResponse(response.responseBody());
+
+      if (response.isSuccess()) {
+        return handleResponse(response.responseBody());
+      } else if (response.statusCode() == HttpStatus.SC_BAD_REQUEST) {
+        throw handleConfigurationError(response.responseBody());
+      } else {
+        throw new SpRuntimeException(
+            "Could not resolve runtime options, status code: " + response.statusCode());
+      }
+    } catch (SpConfigurationException | SpRuntimeException e) {
+      throw e;
     } catch (Exception e) {
-      e.printStackTrace();
-      return new RuntimeOptionsResponse();
+      throw new SpRuntimeException("Could not resolve runtime options", e);
     }
   }
 
   private RuntimeOptionsResponse handleResponse(String responseBody) throws JsonSyntaxException, IOException {
     return JacksonSerializer.getObjectMapper().readValue(responseBody, RuntimeOptionsResponse.class);
+  }
+
+  private SpConfigurationException handleConfigurationError(String responseBody) throws IOException {
+    var exception = JacksonSerializer
+        .getObjectMapper()
+        .readValue(responseBody, SpConfigurationException.class);
+
+    return new SpConfigurationException(exception.getMessage(), exception.getCause());
   }
 
   private ExtensionServiceRequestTarget getEndpointRequestTarget(String appId)

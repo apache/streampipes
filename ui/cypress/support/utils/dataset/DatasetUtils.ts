@@ -148,7 +148,9 @@ export class DatasetUtils {
     ): Cypress.Chainable<string> {
         this.refreshDataLakeMeasures();
         return this.getDatasetLastEventCell(datasetName).then($cell => {
-            const lastEvent = $cell.text().trim();
+            const lastEvent = this.getComparableLastEventValueFromElements(
+                Array.from($cell),
+            );
 
             if (this.isDatasetNotEmptyValue(lastEvent)) {
                 return lastEvent;
@@ -201,11 +203,7 @@ export class DatasetUtils {
         previousLastEvent: string,
         datasetName?: string,
     ) {
-        this.waitForDatasetNotEmpty(datasetName).should(lastEvent => {
-            expect(this.getComparableLastEventValue(lastEvent)).not.to.equal(
-                this.getComparableLastEventValue(previousLastEvent),
-            );
-        });
+        this.waitForDatasetLastEventChanged(previousLastEvent, datasetName);
     }
 
     private static getDatasetLastEventCell(datasetName?: string) {
@@ -227,6 +225,62 @@ export class DatasetUtils {
         const trimmedValue = value.trim();
         const exactTimeMatch = trimmedValue.match(/\(([^()]*)\)$/);
         return exactTimeMatch?.[1] ?? trimmedValue;
+    }
+
+    private static waitForDatasetLastEventChanged(
+        previousLastEvent: string,
+        datasetName?: string,
+        attempts = 30,
+    ): Cypress.Chainable<string> {
+        const previousComparableValue =
+            this.getComparableLastEventValue(previousLastEvent);
+
+        this.refreshDataLakeMeasures();
+        return this.getDatasetLastEventCell(datasetName).then($cell => {
+            const lastEvent = this.getComparableLastEventValueFromElements(
+                Array.from($cell),
+            );
+            const lastEventChanged =
+                this.isDatasetNotEmptyValue(lastEvent) &&
+                this.getComparableLastEventValue(lastEvent) !==
+                    previousComparableValue;
+
+            if (lastEventChanged) {
+                return lastEvent;
+            } else if (attempts > 0) {
+                cy.wait(1000);
+                return this.waitForDatasetLastEventChanged(
+                    previousLastEvent,
+                    datasetName,
+                    attempts - 1,
+                );
+            } else {
+                expect(
+                    this.getComparableLastEventValue(lastEvent),
+                ).not.to.equal(previousComparableValue);
+                return lastEvent;
+            }
+        });
+    }
+
+    private static getComparableLastEventValueFromElements(
+        cells: HTMLElement[],
+    ): string {
+        const rawLastEventValue = cells
+            .flatMap(cell =>
+                Array.from(
+                    cell.querySelectorAll('sp-datalake-last-event-label'),
+                ),
+            )
+            .map(label => label.getAttribute('data-last-event-value'))
+            .find(value => value && this.isDatasetNotEmptyValue(value));
+
+        return (
+            rawLastEventValue ??
+            this.getComparableLastEventValue(
+                cells.map(cell => cell.textContent ?? '').join(' '),
+            )
+        );
     }
 
     public static openLatestEventsTab() {

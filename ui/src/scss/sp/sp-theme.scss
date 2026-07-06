@@ -66,12 +66,131 @@ html {
         )
     );
 
+    @include mat.table-overrides(
+        (
+            background-color: var(--mat-sys-surface),
+            header-headline-color: var(--mat-sys-on-surface),
+            header-headline-weight: var(--font-weight-semibold),
+            row-item-label-text-color: var(--mat-sys-on-surface),
+            row-item-outline-color: color-mix(
+                    in srgb,
+                    var(--mat-sys-on-surface) 10%,
+                    transparent
+                ),
+        )
+    );
+
+    @include mat.paginator-overrides(
+        (
+            container-background-color: transparent,
+            container-text-color: var(--mat-sys-on-surface-variant),
+            enabled-icon-color: var(--color-primary),
+            container-size: 2.5rem,
+            form-field-container-height: 1.875rem,
+            form-field-container-vertical-padding: 0,
+            page-size-select-touch-target-height: 1.875rem,
+            select-trigger-text-size: var(--font-size-sm),
+        )
+    );
+
+    @include mat.dialog-overrides(
+        (
+            container-color: var(--mat-sys-surface),
+            container-shape: var(--radius-md),
+            container-elevation-shadow: var(--shadow-overlay),
+            subhead-color: var(--mat-sys-on-surface),
+            subhead-weight: var(--font-weight-semibold),
+            supporting-text-color: var(--mat-sys-on-surface-variant),
+            actions-padding: var(--space-sm) var(--space-lg),
+            content-padding: var(--space-lg),
+        )
+    );
+
+    @include mat.menu-overrides(
+        (
+            container-color: var(--mat-sys-surface),
+            container-shape: var(--radius-sm),
+            container-elevation-shadow: var(--shadow-overlay),
+            divider-color: var(--color-border-subtle),
+            divider-bottom-spacing: var(--space-xs),
+            divider-top-spacing: var(--space-xs),
+            item-icon-size: 1.125rem,
+            item-spacing: var(--space-xs),
+            item-leading-spacing: var(--space-sm),
+            item-trailing-spacing: var(--space-sm),
+            item-with-icon-leading-spacing: var(--space-sm),
+            item-with-icon-trailing-spacing: var(--space-sm),
+            item-label-text-color: var(--mat-sys-on-surface),
+            item-icon-color: var(--color-primary),
+            item-hover-state-layer-color: color-mix(
+                    in srgb,
+                    var(--color-primary) 8%,
+                    transparent
+                ),
+            item-focus-state-layer-color: color-mix(
+                    in srgb,
+                    var(--color-primary) 10%,
+                    transparent
+                ),
+            item-label-text-size: var(--font-size-sm),
+            item-label-text-line-height: 1.25rem,
+            item-label-text-weight: var(--font-weight-medium),
+            item-label-text-tracking: -0.01em,
+        )
+    );
+
+    .mat-mdc-menu-panel {
+        min-width: 10rem;
+        width: max-content;
+        max-width: min(22rem, calc(100vw - 2rem));
+        border: 1px solid var(--color-border-subtle);
+        overflow: hidden;
+    }
+
+    .mat-mdc-menu-content {
+        padding: var(--space-xs) 0;
+    }
+
+    .mat-mdc-menu-item {
+        width: calc(100% - (var(--space-xs) + var(--space-xs)));
+        min-height: 2.25rem;
+        box-sizing: border-box;
+        border-radius: var(--radius-xs);
+        margin: 0 var(--space-xs);
+        white-space: nowrap;
+        transition:
+            background-color var(--motion-duration-fast)
+                var(--motion-easing-standard),
+            color var(--motion-duration-fast) var(--motion-easing-standard);
+    }
+
+    .mat-mdc-menu-item .mat-icon {
+        width: 1.125rem;
+        height: 1.125rem;
+        margin-right: var(--space-xs);
+        font-size: 1.125rem;
+        line-height: 1;
+    }
+
+    .mat-mdc-menu-item-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 1.25rem;
+    }
+
+    .mat-mdc-menu-item:hover:not([disabled]),
+    .mat-mdc-menu-item.cdk-focused:not([disabled]),
+    .mat-mdc-menu-item.mat-mdc-menu-item-highlighted:not([disabled]) {
+        color: var(--color-primary);
+    }
+
     &.dark-mode {
         @include mat.theme-overrides(
             (
                 primary: var(--color-primary),
                 secondary: var(--color-secondary),
-                on-primary: #fff,
+                on-primary: #121212,
                 primary-container: mat.get-theme-color(
                         mat3theme.$palettes,
                         primary,

@@ -24,6 +24,7 @@
     gap: 0.75rem;
     margin-bottom: 0.5rem;
     margin-top: 0.5rem;
+    border: 1px solid transparent;
 }
 
 .alert-icon {
@@ -51,6 +52,7 @@
 .alert-info {
     background-color: var(--color-info-bg);
     color: var(--color-info);
+    border-color: color-mix(in srgb, var(--color-info) 24%, transparent);
 }
 
 .alert-icon-info {
@@ -60,6 +62,7 @@
 .alert-warning {
     background-color: var(--color-warning-bg);
     color: var(--color-warning);
+    border-color: color-mix(in srgb, var(--color-warning) 24%, transparent);
 }
 .alert-icon-warning {
     color: var(--color-warning);
@@ -68,6 +71,7 @@
 .alert-error {
     background-color: var(--color-error-bg);
     color: var(--color-error);
+    border-color: color-mix(in srgb, var(--color-error) 24%, transparent);
 }
 .alert-icon-error {
     color: var(--color-error);
@@ -76,6 +80,7 @@
 .alert-success {
     background-color: var(--color-success-bg);
     color: var(--color-success);
+    border-color: color-mix(in srgb, var(--color-success) 24%, transparent);
 }
 
 .alert-icon-success {

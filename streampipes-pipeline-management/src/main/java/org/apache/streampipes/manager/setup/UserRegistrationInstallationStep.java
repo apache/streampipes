@@ -22,7 +22,7 @@ import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 
@@ -39,17 +39,20 @@ public class UserRegistrationInstallationStep extends InstallationStep {
   private final String initialServiceAccountSecret;
   private final String initialAdminUserSid;
   private final Set<String> roles;
+  private final IUserStorage userStorage;
 
   public UserRegistrationInstallationStep(String adminEmail,
                                           String adminPassword,
                                           String initialServiceAccountName,
                                           String initialServiceAccountSecret,
-                                          String initialAdminUserSid) {
+                                          String initialAdminUserSid,
+                                          IUserStorage userStorage) {
     this.adminEmail = adminEmail;
     this.adminPassword = adminPassword;
     this.initialServiceAccountName = initialServiceAccountName;
     this.initialServiceAccountSecret = initialServiceAccountSecret;
     this.initialAdminUserSid = initialAdminUserSid;
+    this.userStorage = userStorage;
     roles = new HashSet<>();
     roles.add(DefaultRole.ROLE_ADMIN.toString());
   }
@@ -82,7 +85,7 @@ public class UserRegistrationInstallationStep extends InstallationStep {
   }
 
   private void storePrincipal(Principal principal) {
-    StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().storeUser(principal);
+    userStorage.storeUser(principal);
   }
 
   @Override

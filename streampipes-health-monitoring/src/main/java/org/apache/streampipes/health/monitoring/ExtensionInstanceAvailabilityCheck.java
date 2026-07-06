@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 public class ExtensionInstanceAvailabilityCheck {
@@ -60,21 +61,21 @@ public class ExtensionInstanceAvailabilityCheck {
           .findFirst();
 
       if (service.isEmpty()) {
-        return new ExtensionInstanceHealth(Set.of(), Set.of());
+        return new ExtensionInstanceHealth(Map.of(), Set.of());
       } else {
         var response = extensionRequestManager.request(
             ExtensionServiceRequests
                 .extensionInstanceHealth(makeRequestTarget(service.get()), resourceManager)
         );
         if (response.statusCode() != 200) {
-          return new ExtensionInstanceHealth(Set.of(), Set.of());
+          return new ExtensionInstanceHealth(Map.of(), Set.of());
         }
         return deserialize(response.responseBody());
       }
 
     } catch (IOException e) {
       LOG.error("Extension service {} is unavailable", serviceId);
-      return new ExtensionInstanceHealth(Set.of(), Set.of());
+      return new ExtensionInstanceHealth(Map.of(), Set.of());
     }
   }
 

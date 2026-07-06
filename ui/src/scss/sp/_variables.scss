@@ -123,16 +123,60 @@
         var(--color-primary) 10%,
         var(--color-bg-0)
     );
-    --color-border-subtle: color-mix(
-        in srgb,
-        var(--color-bg-3) 72%,
-        transparent
-    );
     --color-panel-header-accent: color-mix(
         in srgb,
         var(--color-primary) 5%,
         var(--color-bg-0)
     );
+
+    // Semantic appearance tokens
+    --radius-xs: 0.25rem;
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-pill: 999px;
+
+    --color-border-subtle: color-mix(
+        in srgb,
+        var(--mat-sys-outline-variant) 72%,
+        transparent
+    );
+    --color-border-default: color-mix(
+        in srgb,
+        var(--mat-sys-outline) 58%,
+        transparent
+    );
+    --color-border-strong: color-mix(
+        in srgb,
+        var(--mat-sys-outline) 78%,
+        transparent
+    );
+
+    --color-surface-interactive: var(--mat-sys-surface-container-low);
+    --color-surface-interactive-hover: var(--mat-sys-surface-container);
+    --color-surface-interactive-active: var(--mat-sys-surface-container-high);
+    --color-surface-selected: color-mix(
+        in srgb,
+        var(--mat-sys-primary) 10%,
+        var(--mat-sys-surface)
+    );
+    --color-surface-selected-hover: color-mix(
+        in srgb,
+        var(--mat-sys-primary) 15%,
+        var(--mat-sys-surface)
+    );
+
+    --color-focus-ring: color-mix(
+        in srgb,
+        var(--mat-sys-primary) 38%,
+        transparent
+    );
+    --focus-ring: 0 0 0 3px var(--color-focus-ring);
+
+    --shadow-overlay: 0 12px 32px rgba(0, 0, 0, 0.16);
+    --motion-duration-fast: 120ms;
+    --motion-duration-standard: 180ms;
+    --motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
 }
 
 .dark-mode {
@@ -147,6 +191,11 @@
     --color-pe: #686868;
     --color-default-text: rgba(255, 255, 255, 0.87);
     --color-secondary-text: #aaa;
+
+    --color-info-bg: #0b1f3f;
+    --color-success-bg: #0f2f1f;
+    --color-warning-bg: #3a2704;
+    --color-error-bg: #3a1111;
 
     // only used for buttons
     --color-warn: #b36161;

@@ -23,9 +23,9 @@ import org.apache.streampipes.connect.management.management.AdapterMasterManagem
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.connect.transformer.api.TransformationEngine;
 import org.apache.streampipes.connect.transformer.api.TransformationEngines;
-import org.apache.streampipes.connect.transformer.groovy.GroovyScriptEngine;
 import org.apache.streampipes.connect.transformer.js.GraalJsScriptEngine;
 import org.apache.streampipes.health.monitoring.ExtensionHealthCheck;
+import org.apache.streampipes.health.monitoring.HealthCheck;
 import org.apache.streampipes.health.monitoring.ResourceProvider;
 import org.apache.streampipes.health.monitoring.ServiceHealthCheck;
 import org.apache.streampipes.loadbalance.LoadManager;
@@ -62,7 +62,8 @@ import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
-import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -99,12 +100,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   private static final Logger LOG =
       LoggerFactory.getLogger(StreamPipesCoreApplication.class.getCanonicalName());
 
-  private final ISpCoreConfigurationStorage coreConfigStorage =
-      StorageDispatcher.INSTANCE.getNoSqlStore().getSpCoreConfigurationStorage();
-
-  private final CoreServiceStatusManager coreStatusManager =
-      new CoreServiceStatusManager(coreConfigStorage);
-
   @Autowired
   private IFunctionStateStorage functionStateStorage;
 
@@ -117,6 +112,12 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   @Autowired
   protected SpResourceManager resourceManager;
 
+  @Autowired
+  protected IRoleStorage roleStorage;
+
+  @Autowired
+  protected IPrivilegeStorage privilegeStorage;
+
   private final IExtensionsServiceStorage extensionsServiceStorage =
       StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
 
@@ -128,7 +129,6 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
             new SpMqttProtocolFactory(),
             new SpPulsarProtocolFactory()),
         List.of(
-            GroovyScriptEngine::new,
             GraalJsScriptEngine::new
         )
     );
@@ -160,7 +160,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     var executorService = Executors.newSingleThreadScheduledExecutor();
     var logCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-    new StreamPipesEnvChecker().updateEnvironmentVariables();
+    new StreamPipesEnvChecker(resourceManager.getCoreConfigurationStorage()).updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
     var env = Environments.getEnvironment();
 
@@ -179,6 +179,9 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     if (env.getLoadManagerEnable().getValueOrDefault()) {
       LoadManager.initialize(resourceManager);
     }
+
+    var coreConfigStorage = resourceManager.getCoreConfigurationStorage();
+    var coreStatusManager = new CoreServiceStatusManager(coreConfigStorage);
     if (!isConfigured()) {
       CoreInitialInstallationProgress.INSTANCE.triggerInitiallyInstallingMode();
       doInitialSetup(env.getInitialWaitTimeBeforeInstallationInMillis().getValueOrDefault());
@@ -190,14 +193,15 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       new MigrationsHandler().performMigrations(getMigrations());
     }
 
-    new ApplyDefaultRolesAndPrivilegesTask().execute();
+    new ApplyDefaultRolesAndPrivilegesTask(roleStorage, privilegeStorage).execute();
     coreStatusManager.updateCoreStatus(SpCoreConfigurationStatus.READY);
 
     executorService.schedule(new PostStartupTask(
             getPipelineStorage(),
             extensionServiceRequestManager,
             workerRestClient,
-            resourceManager),
+            resourceManager,
+            getRegisteredExtensionHealthChecks()),
         env.getInitialHealthCheckDelayInMillis().getValueOrDefault(),
         TimeUnit.MILLISECONDS);
 
@@ -219,11 +223,12 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                     )),
                 StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
                 extensionServiceRequestManager,
-                resourceManager
+                resourceManager,
+                getRegisteredExtensionHealthChecks()
             )));
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();
-    LOG.info("Extensions logs will be fetched every {} milliseconds", logFetchInterval);
+    LOG.info("Extensions logs will be fetched every {} seconds", TimeUnit.MILLISECONDS.toSeconds(logFetchInterval));
     logCheckExecutorService.scheduleAtFixedRate(new ExtensionsServiceLogExecutor(
           extensionServiceRequestManager, resourceManager
         ),
@@ -234,8 +239,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   private void scheduleHealthChecks(int healthCheckIntervalInMillis, List<Runnable> checks) {
     var healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
     checks.forEach(check -> {
-      LOG.info("Health check {} configured to run every {} {}", check.getClass().getCanonicalName(),
-          healthCheckIntervalInMillis, TimeUnit.MILLISECONDS);
+      LOG.info("Health check {} configured to run every {} seconds", check.getClass().getSimpleName(),
+          TimeUnit.MILLISECONDS.toSeconds(healthCheckIntervalInMillis));
       healthCheckExecutorService.scheduleAtFixedRate(check, healthCheckIntervalInMillis,
           healthCheckIntervalInMillis,
           TimeUnit.MILLISECONDS);
@@ -244,6 +249,10 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   protected List<Migration> getMigrations() {
     return new AvailableMigrations(resourceManager).getAvailableMigrations();
+  }
+
+  protected List<HealthCheck> getRegisteredExtensionHealthChecks() {
+    return List.of();
   }
 
   private boolean isConfigured() {

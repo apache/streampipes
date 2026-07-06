@@ -36,7 +36,13 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_URL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULLING_INTERVAL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULL_MODE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_DISCARD_OLDEST;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_MODE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_PUBLISHING_INTERVAL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_QUEUE_SIZE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_SAMPLING_INTERVAL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -72,5 +78,47 @@ class SpOpcUaConfigExtractorTest {
     var config = SpOpcUaConfigExtractor.extractAdapterConfig(extractor, mock(IStreamPipesClient.class));
 
     assertEquals(List.of("ns=2;s=Demo.DataTypeTest.ExtensionObject"), config.getSelectedNodeNames());
+  }
+
+  @Test
+  void shouldExtractSubscriptionSettings() {
+    IStaticPropertyExtractor extractor = mock(IStaticPropertyExtractor.class);
+
+    when(extractor.selectedAlternativeInternalId(ADAPTER_TYPE.name()))
+        .thenReturn(SUBSCRIPTION_MODE.name());
+    when(extractor.selectedAlternativeInternalId(OPC_HOST_OR_URL.name()))
+        .thenReturn(OPC_URL.name());
+    when(extractor.selectedAlternativeInternalId(SharedUserConfiguration.USER_AUTHENTICATION))
+        .thenReturn(SharedUserConfiguration.USER_AUTHENTICATION_ANONYMOUS);
+    when(extractor.selectedTreeNodesInternalNames(AVAILABLE_NODES.name(), String.class))
+        .thenReturn(List.of("ns=2;s=Demo.Subscription.HighFrequencyCounter"));
+    when(extractor.selectedSingleValueInternalName(SharedUserConfiguration.SECURITY_MODE, String.class))
+        .thenReturn(MessageSecurityMode.None.name());
+    when(extractor.selectedSingleValue(SharedUserConfiguration.SECURITY_POLICY, String.class))
+        .thenReturn(SecurityPolicy.None.name());
+    when(extractor.singleValueParameter(OPC_SERVER_URL.name(), String.class))
+        .thenReturn("opc.tcp://localhost:4840/milo");
+    when(extractor.singleValueParameter(SUBSCRIPTION_PUBLISHING_INTERVAL.name(), Integer.class))
+        .thenReturn(250);
+    when(extractor.singleValueParameter(SUBSCRIPTION_SAMPLING_INTERVAL.name(), Integer.class))
+        .thenReturn(100);
+    when(extractor.singleValueParameter(SUBSCRIPTION_QUEUE_SIZE.name(), Integer.class))
+        .thenReturn(25);
+    when(extractor.selectedSingleValueInternalName(SUBSCRIPTION_DISCARD_OLDEST.name(), String.class))
+        .thenReturn(SharedUserConfiguration.SUBSCRIPTION_DISCARD_OLDEST_FALSE);
+    when(extractor.selectedSingleValueInternalName(
+        SharedUserConfiguration.INCOMPLETE_EVENT_HANDLING_KEY,
+        String.class
+    )).thenReturn(SharedUserConfiguration.INCOMPLETE_OPTION_SEND);
+    when(extractor.selectedSingleValueInternalName(OpcUaLabels.NAMING_STRATEGY.name(), String.class))
+        .thenReturn(OpcUaNamingStrategy.DISPLAY_NAME.name());
+
+    var config = SpOpcUaConfigExtractor.extractAdapterConfig(extractor, mock(IStreamPipesClient.class));
+
+    assertEquals(250, config.getSubscriptionPublishingIntervalMs());
+    assertEquals(100, config.getSubscriptionSamplingIntervalMs());
+    assertEquals(25, config.getSubscriptionQueueSize());
+    assertFalse(config.isSubscriptionDiscardOldest());
+    assertEquals(SharedUserConfiguration.INCOMPLETE_OPTION_SEND, config.getIncompleteEventStrategy());
   }
 }
