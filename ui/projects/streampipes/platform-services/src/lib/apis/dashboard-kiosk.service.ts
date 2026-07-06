@@ -36,18 +36,6 @@ export class DashboardKioskRestService {
     private http = inject(HttpClient);
     private platformServicesCommons = inject(PlatformServicesCommons);
 
-    getData(
-        dashboardId: string,
-        widgetId: string,
-        queryParams: DatalakeQueryParameters,
-    ): Observable<SpQueryResult> {
-        const context = new HttpContext().set(NGX_LOADING_BAR_IGNORED, true);
-        const url = `${this.dashboardKioskBasePath}/${dashboardId}/${widgetId}/data`;
-        return this.http.post<SpQueryResult>(url, queryParams, {
-            context,
-        });
-    }
-
     performMultiQuery(
         dashboardId: string,
         requests: DashboardKioskDataQuery[],

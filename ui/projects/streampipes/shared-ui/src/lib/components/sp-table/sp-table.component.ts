@@ -651,6 +651,9 @@ export class SpTableComponent<T>
         }
 
         if (this.viewInitialized) {
+            if (this.viewMode === 'grouped') {
+                this.table.dataSource = this.renderedGroupedRows;
+            }
             this.table.renderRows();
         }
     }

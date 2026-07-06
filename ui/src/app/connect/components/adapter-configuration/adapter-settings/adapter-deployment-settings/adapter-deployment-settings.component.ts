@@ -19,10 +19,10 @@
 import {
     Component,
     ElementRef,
+    inject,
     Input,
     OnInit,
     ViewChild,
-    inject,
 } from '@angular/core';
 import {
     ExtensionDeploymentConfiguration,
@@ -45,10 +45,12 @@ import {
     MatRadioGroup,
 } from '@angular/material/radio';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatFormField } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatOption } from '@angular/material/select';
 import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FormFieldComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-adapter-deployment-settings',
@@ -59,6 +61,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatRadioGroup,
         FormsModule,
         MatRadioButton,
+        MatFormField,
         MatChipsModule,
         MatIcon,
         MatAutocompleteTrigger,
@@ -67,6 +70,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatOption,
         AsyncPipe,
         TranslatePipe,
+        FormFieldComponent,
     ],
 })
 export class SpAdapterDeploymentSettingsComponent implements OnInit {

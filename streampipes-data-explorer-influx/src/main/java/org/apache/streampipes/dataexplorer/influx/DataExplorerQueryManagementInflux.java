@@ -30,12 +30,25 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.SpQueryStatus;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_END_DATE;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_LIMIT;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_ORDER;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_START_DATE;
 
 public class DataExplorerQueryManagementInflux implements IDataExplorerQueryManagement {
 
@@ -110,6 +123,81 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
   public Map<String, Object> getTagValues(String measurementId,
                                           String fields) {
     return new DataExplorerInfluxQueryExecutor().getTagValues(measurementId, fields);
+  }
+
+  @Override
+  public Map<String, Long> getLatestTimestamps(List<String> measurementNames) {
+    Map<String, Long> latestTimestamps = measurementNames.stream()
+        .collect(Collectors.toMap(
+            Function.identity(),
+            measurementName -> 0L,
+            (left, right) -> left
+        ));
+    var measurementFields = getLatestTimestampFields(measurementNames);
+
+    if (!measurementFields.isEmpty()) {
+      try {
+        var batchedLatestTimestamps = new DataExplorerInfluxQueryExecutor().getLatestTimestamps(measurementFields);
+        latestTimestamps.putAll(batchedLatestTimestamps);
+        measurementFields.keySet()
+            .stream()
+            .filter(measurementName -> !batchedLatestTimestamps.containsKey(measurementName))
+            .forEach(measurementName -> latestTimestamps.put(measurementName, getLatestTimestampFallback(measurementName)));
+      } catch (RuntimeException e) {
+        measurementFields.keySet()
+            .forEach(measurementName ->
+                latestTimestamps.put(measurementName, getLatestTimestampFallback(measurementName)));
+      }
+    }
+
+    measurementNames.stream()
+        .filter(measurementName -> !measurementFields.containsKey(measurementName))
+        .forEach(measurementName -> latestTimestamps.put(measurementName, getLatestTimestampFallback(measurementName)));
+
+    return latestTimestamps;
+  }
+
+  private Map<String, String> getLatestTimestampFields(List<String> measurementNames) {
+    Map<String, String> measurementFields = new HashMap<>();
+    Map<String, DataLakeMeasure> measuresByName = getAllMeasurements()
+        .stream()
+        .collect(Collectors.toMap(DataLakeMeasure::getMeasureName, Function.identity(), (left, right) -> left));
+
+    measurementNames.forEach(measurementName -> findLatestTimestampField(measuresByName.get(measurementName))
+        .ifPresent(field -> measurementFields.put(measurementName, field)));
+
+    return measurementFields;
+  }
+
+  private Optional<String> findLatestTimestampField(DataLakeMeasure measure) {
+    if (measure == null || measure.getEventSchema() == null || measure.getEventSchema().getEventProperties() == null) {
+      return Optional.empty();
+    }
+
+    return measure.getEventSchema()
+        .getEventProperties()
+        .stream()
+        .filter(Objects::nonNull)
+        .filter(EventPropertyPrimitive.class::isInstance)
+        .map(EventProperty::getRuntimeName)
+        .filter(Objects::nonNull)
+        .findFirst();
+  }
+
+  private Long getLatestTimestampFallback(String measurementName) {
+    Map<String, String> queryParams = Map.of(
+        QP_START_DATE, "0",
+        QP_END_DATE, String.valueOf(System.currentTimeMillis()),
+        QP_LIMIT, "1",
+        QP_ORDER, "DESC",
+        QP_MISSING_VALUE_BEHAVIOUR, "empty"
+    );
+
+    try {
+      return getData(new ProvidedRestQueryParams(measurementName, queryParams), true).getLastTimestamp();
+    } catch (RuntimeException e) {
+      return 0L;
+    }
   }
 
   private List<DataLakeMeasure> getAllMeasurements() {

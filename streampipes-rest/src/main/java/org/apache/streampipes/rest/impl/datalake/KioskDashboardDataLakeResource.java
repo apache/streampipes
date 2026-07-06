@@ -71,33 +71,6 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
     this.permissionStorage = resourceManager.managePermissions().getDb();
   }
 
-  @PostMapping(path = "/{dashboardId}/{widgetId}/data",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthorityOrAnonymous(#dashboardId) and hasPermission(#dashboardId, 'READ')")
-  public ResponseEntity<?> getData(@PathVariable("dashboardId") String dashboardId,
-                                   @PathVariable("widgetId") String widgetId,
-                                   @RequestBody Map<String, String> queryParams) {
-    var dashboard = dashboardStorage.getElementById(dashboardId);
-    if (dashboard.getWidgets().stream().noneMatch(w -> w.getDataViewElementId().equals(widgetId))) {
-      return badRequest(String.format("Widget with id %s not found in dashboard", widgetId));
-    }
-    var widget = dataExplorerWidgetStorage.getElementById(widgetId);
-    var measureName = queryParams.get("measureName");
-    if (!checkMeasureNameInWidget(widget, measureName)) {
-     return badRequest("Measure name not found in widget configuration");
-    } else {
-      ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(measureName, queryParams);
-      try {
-        SpQueryResult result =
-            this.dataExplorerQueryManagement.getData(sanitizedParams, true);
-        return ok(result);
-      } catch (RuntimeException e) {
-        return badRequest(SpLogMessage.from(e));
-      }
-    }
-  }
-
   @PostMapping(path = "/{dashboardId}/data",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)

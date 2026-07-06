@@ -89,7 +89,6 @@ export class AssetUtils {
         AssetUtils.addNewAsset(asset);
 
         AssetBtns.saveAssetBtn().click();
-        AssetBtns.createBtn().click();
 
         AssetBtns.createAssetBtn().should('be.visible');
     }
@@ -266,7 +265,6 @@ export class AssetUtils {
 
         AssetUtils.checkAmountOfLinkedResources(2);
         AssetBtns.saveAssetBtn().click();
-        AssetBtns.createBtn().click();
         cy.location('hash', { timeout: 10000 }).should(
             'include',
             '/assets/overview',

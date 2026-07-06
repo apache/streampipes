@@ -17,33 +17,68 @@
  */
 
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
+import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
 import { Inspector } from '../../support/utils/dashboard/Inspector';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 
-describe('Public dashboard links', () => {
-    const dashboardName = 'public-dashboard';
-    const chartName = 'public-dashboard-chart';
+const dashboardName = 'public-dashboard';
+const chartName = 'public-dashboard-chart';
+const tableColumns = ['time', 'randombool', 'randomnumber', 'randomtext'];
 
+describe('Public dashboard links', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
+        DataLakeSeedUtils.importCsvData({
+            headers: ['timestamp', 'randombool', 'randomnumber', 'randomtext'],
+            rows: kioskTableRows(),
+            measurementName: ChartUtils.ADAPTER_NAME,
+            timestampColumn: 'timestamp',
+            columnOverrides: {
+                randomtext: {
+                    propertyScope: 'DIMENSION_PROPERTY',
+                },
+            },
+        });
     });
 
-    it('allows anonymous users to view a dashboard with a chart', () => {
-        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
-        ChartUtils.saveDataViewConfiguration(false, false, chartName);
+    it('allows logged-out users to view all table columns in kiosk mode', () => {
+        createPublicDashboardWithTableChart();
 
-        ChartUtils.goToDashboard();
-        ChartUtils.createAndEditDashboard(dashboardName);
-        ChartUtils.addDataViewToDashboard(chartName, true);
-        ChartUtils.saveDashboardConfiguration();
-
-        PermissionUtils.markElementAsAnonymousPublic(dashboardName);
-        PermissionUtils.validateAnonymousPublicLinkIsEnabled(dashboardName);
-
-        Inspector.getDashboardIdByName(dashboardName).then(dashboardId => {
-            Inspector.openDashboardKioskAsAnonymous(dashboardId);
-            Inspector.validateDashboardKioskWithTableChart(dashboardName);
+        getDashboardId().then(dashboardId => {
+            cy.logout();
+            cy.location('hash', { timeout: 10000 }).should('eq', '#/login');
+            Inspector.openDashboardKioskAsLoggedOutUser(dashboardId);
+            Inspector.validateDashboardKioskWithTableChart(
+                dashboardName,
+                tableColumns,
+            );
         });
     });
 });
+
+function createPublicDashboardWithTableChart(): void {
+    ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
+    ChartUtils.saveDataViewConfiguration(false, false, chartName);
+
+    ChartUtils.goToDashboard();
+    ChartUtils.createAndEditDashboard(dashboardName);
+    ChartUtils.addDataViewToDashboard(chartName, true);
+    ChartUtils.saveDashboardConfiguration();
+
+    PermissionUtils.markElementAsAnonymousPublic(dashboardName);
+    PermissionUtils.validateAnonymousPublicLinkIsEnabled(dashboardName);
+}
+
+function getDashboardId() {
+    return Inspector.getDashboardIdByName(dashboardName);
+}
+
+function kioskTableRows(): string[][] {
+    const baseTimestamp = Date.now() - 60_000;
+
+    return [
+        [baseTimestamp.toString(), 'true', '62.0', 'c'],
+        [(baseTimestamp + 1_000).toString(), 'false', '46.0', 'a'],
+        [(baseTimestamp + 2_000).toString(), 'true', '41.0', 'b'],
+    ];
+}
