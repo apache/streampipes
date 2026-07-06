@@ -16,7 +16,15 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Input,
+    Output,
+    ViewChild,
+} from '@angular/core';
 import {
     AssetLinkResourceRow,
     AssetLinkSelectionChange,
@@ -108,6 +116,9 @@ type AssetLinkViewMode = 'grouped' | 'list';
     ],
 })
 export class AssetLinkTableComponent {
+    @ViewChild('searchInput')
+    searchInput?: ElementRef<HTMLInputElement>;
+
     @Input()
     resources: AssetLinkResourceRow[] = [];
 
@@ -205,6 +216,18 @@ export class AssetLinkTableComponent {
         this.searchTerm = '';
     }
 
+    @HostListener('document:keydown', ['$event'])
+    handleGlobalKeydown(event: KeyboardEvent): void {
+        const key = event.key.toLowerCase();
+        const ctrl = event.ctrlKey || event.metaKey;
+
+        if (ctrl && key === 'f') {
+            this.focusSearchInput();
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+
     updateViewMode(viewMode: AssetLinkViewMode): void {
         this.viewMode = viewMode;
     }
@@ -293,5 +316,10 @@ export class AssetLinkTableComponent {
         row: AssetLinkTableRow,
     ): row is AssetLinkGroupHeaderRow {
         return !!(row as AssetLinkGroupHeaderRow).groupHeader;
+    }
+
+    private focusSearchInput(): void {
+        this.searchInput?.nativeElement.focus();
+        this.searchInput?.nativeElement.select();
     }
 }
