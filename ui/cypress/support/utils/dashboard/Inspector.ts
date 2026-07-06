@@ -42,7 +42,22 @@ export class Inspector {
         cy.visit(`#/dashboard-kiosk/${dashboardId}`);
     }
 
-    public static validateDashboardKioskWithTableChart(dashboardName: string) {
+    public static openDashboardKioskAsLoggedOutUser(dashboardId: string) {
+        cy.clearLocalStorage();
+        cy.clearCookies();
+        cy.visit(`#/dashboard-kiosk/${dashboardId}`, {
+            onBeforeLoad: win => {
+                win.localStorage.clear();
+                win.sessionStorage.clear();
+                expect(win.localStorage.getItem('auth-token')).to.equal(null);
+            },
+        });
+    }
+
+    public static validateDashboardKioskWithTableChart(
+        dashboardName: string,
+        expectedColumns: string[] = [],
+    ) {
         cy.contains('.dashboard-title', dashboardName, {
             timeout: 10000,
         }).should('be.visible');
@@ -56,5 +71,24 @@ export class Inspector {
         )
             .filter(':visible')
             .should('have.length.at.least', 1);
+
+        expectedColumns.forEach(column => {
+            if (column === 'time') {
+                cy.dataCy('data-explorer-table-row-timestamp', {
+                    timeout: 10000,
+                })
+                    .filter(':visible')
+                    .should('have.length.at.least', 1);
+            } else {
+                cy.dataCy(`data-explorer-table-header-${column}`, {
+                    timeout: 10000,
+                }).should('be.visible');
+                cy.dataCy(`data-explorer-table-row-${column}`, {
+                    timeout: 10000,
+                })
+                    .filter(':visible')
+                    .should('have.length.at.least', 1);
+            }
+        });
     }
 }
