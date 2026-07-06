@@ -81,6 +81,9 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
     editMode: boolean;
 
     @Input()
+    isNewAsset: boolean;
+
+    @Input()
     rootNode: boolean;
 
     @Input()
