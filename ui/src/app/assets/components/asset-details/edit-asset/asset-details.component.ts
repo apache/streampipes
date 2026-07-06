@@ -91,6 +91,8 @@ export class SpAssetDetailsComponent
 
     private pendingManageAssetResult?: ObjectManageDialogResult<ManageableAsset>;
     private originalAsset: SpAssetModel;
+    private initialGeneratedAssetId?: string;
+    private initialGeneratedElementId?: string;
 
     async saveAsset() {
         if (this.isNewAsset && this.pendingManageAssetResult === undefined) {
@@ -265,7 +267,11 @@ export class SpAssetDetailsComponent
     }
 
     onAssetAvailable() {
-        this.originalAsset = this.cloneAsset(this.asset);
+        if (this.isNewAsset) {
+            this.initialGeneratedAssetId = this.asset.assetId;
+            this.initialGeneratedElementId = this.asset.elementId;
+        }
+        this.originalAsset = this.normalizeAssetForComparison(this.asset);
     }
 
     private makeManageableAsset(asset: SpAssetModel): ManageableAsset {
@@ -294,7 +300,7 @@ export class SpAssetDetailsComponent
             await firstValueFrom(this.assetService.updateAsset(this.asset));
         }
         await this.savePendingManageAssetChanges();
-        this.originalAsset = this.cloneAsset(this.asset);
+        this.originalAsset = this.normalizeAssetForComparison(this.asset);
     }
 
     private async savePendingManageAssetChanges(): Promise<void> {
@@ -316,11 +322,42 @@ export class SpAssetDetailsComponent
         if (!this.originalAsset || !this.asset) {
             return false;
         }
-
         return (
-            JSON.stringify(this.originalAsset) !==
-            JSON.stringify(this.cloneAsset(this.asset))
+            JSON.stringify(
+                this.normalizeAssetForComparison(this.originalAsset),
+            ) !== JSON.stringify(this.normalizeAssetForComparison(this.asset))
         );
+    }
+
+    private normalizeAssetForComparison(asset: SpAssetModel): SpAssetModel {
+        const clonedAsset = this.cloneAsset(asset);
+        if (this.isNewAsset) {
+            if (clonedAsset.assetName === 'New Asset') {
+                clonedAsset.assetName = '';
+            }
+            if (clonedAsset.assetId === this.initialGeneratedAssetId) {
+                clonedAsset.assetId = '';
+            }
+            if (clonedAsset.elementId === this.initialGeneratedElementId) {
+                clonedAsset.elementId = '';
+            }
+        }
+        clonedAsset.additionalData ??= {};
+        clonedAsset.additionalData.customFields ??= [];
+        clonedAsset.assetSite ??= {
+            area: undefined,
+            siteId: undefined,
+            hasExactLocation: false,
+            location: undefined,
+        };
+        clonedAsset.assetType ??= {
+            assetIcon: undefined,
+            assetIconColor: undefined,
+            assetTypeCategory: undefined,
+            assetTypeLabel: undefined,
+            isa95AssetType: 'OTHER',
+        };
+        return clonedAsset;
     }
 
     private cloneAsset(asset: SpAssetModel): SpAssetModel {
