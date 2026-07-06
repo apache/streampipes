@@ -323,9 +323,12 @@ export class SpAssetDetailsComponent
             return false;
         }
         return (
-            JSON.stringify(
+            this.stringifyForComparison(
                 this.normalizeAssetForComparison(this.originalAsset),
-            ) !== JSON.stringify(this.normalizeAssetForComparison(this.asset))
+            ) !==
+            this.stringifyForComparison(
+                this.normalizeAssetForComparison(this.asset),
+            )
         );
     }
 
@@ -362,5 +365,32 @@ export class SpAssetDetailsComponent
 
     private cloneAsset(asset: SpAssetModel): SpAssetModel {
         return JSON.parse(JSON.stringify(asset));
+    }
+
+    private stringifyForComparison(asset: SpAssetModel): string {
+        return JSON.stringify(this.sortObjectKeys(asset));
+    }
+
+    private sortObjectKeys(value: unknown): unknown {
+        if (Array.isArray(value)) {
+            return value.map(entry => this.sortObjectKeys(entry));
+        }
+
+        if (value && typeof value === 'object') {
+            return Object.keys(value)
+                .sort()
+                .reduce(
+                    (sortedValue, key) => {
+                        const entry = (value as Record<string, unknown>)[key];
+                        if (entry !== undefined) {
+                            sortedValue[key] = this.sortObjectKeys(entry);
+                        }
+                        return sortedValue;
+                    },
+                    {} as Record<string, unknown>,
+                );
+        }
+
+        return value;
     }
 }
