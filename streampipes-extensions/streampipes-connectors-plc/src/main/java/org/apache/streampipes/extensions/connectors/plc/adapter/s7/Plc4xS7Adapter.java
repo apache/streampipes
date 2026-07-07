@@ -54,6 +54,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @deprecated Use the generic PLC4X S7 adapter instead.
+ *     This concrete adapter is planned for removal after the 0.99.0 release.
+ */
+@Deprecated(since = "0.99.0", forRemoval = true)
 public class Plc4xS7Adapter implements StreamPipesAdapter {
 
   /**

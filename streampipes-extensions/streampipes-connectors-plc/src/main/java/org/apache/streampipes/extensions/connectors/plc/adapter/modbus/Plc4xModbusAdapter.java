@@ -61,6 +61,11 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @deprecated Use the generic PLC4X Modbus adapter instead.
+ *     This concrete adapter is planned for removal after the 0.99.0 release.
+ */
+@Deprecated(since = "0.99.0", forRemoval = true)
 public class Plc4xModbusAdapter implements StreamPipesAdapter, IPullAdapter {
 
   private static final Logger LOG = LoggerFactory.getLogger(Plc4xModbusAdapter.class);
