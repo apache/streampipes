@@ -26,6 +26,10 @@
 
 ## Description
 
+This adapter is deprecated since StreamPipes 0.99.0 and is planned for removal after the 0.99.0 release.
+Use the Siemens S7 (Basic) adapter instead.
+Existing adapter instances are automatically migrated, so no manual effort is required.
+
 The adapter allows to connect with a Siemens S7 PLC.
 
 ***
