@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -54,6 +55,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -149,7 +151,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     Principal user = userStorage.getUser(username);
     PrincipalUserDetails<?> userDetails = makeDetails(user);
     var onBehalfOfHeader = request.getHeader(HttpConstants.X_ON_BEHALF_OF);
-    if (isAdminUser(userDetails) && onBehalfOfHeader != null) {
+    if (canActOnBehalfOf(userDetails.getAuthorities()) && onBehalfOfHeader != null) {
       var onBehalfOf = userStorage.getUserById(onBehalfOfHeader);
       if (onBehalfOf != null) {
         userDetails = makeDetails(onBehalfOf);
@@ -177,10 +179,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         );
   }
 
-  private boolean isAdminUser(PrincipalUserDetails<?> userDetails) {
-    return userDetails.getAuthorities().stream()
+  static boolean canActOnBehalfOf(Collection<? extends GrantedAuthority> authorities) {
+    return authorities.stream()
         .anyMatch(a ->
             Objects.equals(a.getAuthority(), DefaultRole.Constants.ROLE_ADMIN_VALUE)
+                || Objects.equals(a.getAuthority(), DefaultRole.Constants.ROLE_SERVICE_ADMIN_VALUE)
         );
   }
 

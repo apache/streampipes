@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.execution.task;
 
 import org.apache.streampipes.commons.prometheus.pipelines.PipelinesStats;
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
+import org.apache.streampipes.manager.pipeline.PipelineElementUserCleaner;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -69,6 +70,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
   private void setPipelineStarted(Pipeline pipeline) {
     pipeline.setRunning(true);
     pipeline.setStartedAt(new Date().getTime());
+    PipelineElementUserCleaner.clearCorrespondingUsers(pipeline);
     pipelinesStats.updatePipelineRunningState(pipeline.getElementId(),pipeline.getName()
                                                                   ,  true);
     pipelinesStats.updatePipelineHealthState(pipeline.getElementId(),pipeline.getName(), pipeline.getHealthStatus().toString());
@@ -81,6 +83,7 @@ public class StorePipelineStatusTask implements PipelineExecutionTask {
 
   private void setPipelineStopped(Pipeline pipeline) {
     pipeline.setRunning(false);
+    PipelineElementUserCleaner.clearCorrespondingUsers(pipeline);
     pipelinesStats.updatePipelineRunningState(pipeline.getElementId(),pipeline.getName()
                                                                   , false);
     pipelinesStats.updatePipelineHealthState(

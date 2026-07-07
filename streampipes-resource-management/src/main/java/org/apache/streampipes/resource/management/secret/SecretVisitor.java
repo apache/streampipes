@@ -134,6 +134,6 @@ public class SecretVisitor implements StaticPropertyVisitor {
 
   @Override
   public void visit(RuntimeResolvableGroupStaticProperty groupStaticProperty) {
-    // Do nothing
+    visit((StaticPropertyGroup) groupStaticProperty);
   }
 }
