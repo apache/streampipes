@@ -87,7 +87,7 @@ export class AssetBtns {
     }
 
     public static adapterCheckbox(adapterName: string) {
-        return cy.dataCy('select-adapters-checkbox-' + adapterName, {
+        return cy.dataCy('select-adapter-checkbox-' + adapterName, {
             timeout: 10000,
         });
     }
