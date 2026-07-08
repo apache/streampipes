@@ -53,7 +53,7 @@
 
         <ng-container matColumnDef="group">
             <th
-                fxFlex="45"
+                fxFlex="40"
                 fxLayoutAlign="start center"
                 mat-header-cell
                 *matHeaderCellDef
@@ -61,7 +61,7 @@
                 {{ 'Service Group' | translate }}
             </th>
             <td
-                fxFlex="45"
+                fxFlex="40"
                 fxLayoutAlign="start center"
                 mat-cell
                 *matCellDef="let element"
@@ -91,7 +91,7 @@
 
         <ng-container matColumnDef="action">
             <th
-                fxFlex="10"
+                fxFlex="15"
                 fxLayoutAlign="end center"
                 mat-header-cell
                 *matHeaderCellDef
@@ -106,11 +106,19 @@
                 </button>
             </th>
             <td
-                fxFlex="10"
+                fxFlex="15"
                 fxLayoutAlign="end center"
                 mat-cell
                 *matCellDef="let element"
             >
+                <button
+                    mat-icon-button
+                    color="accent"
+                    [matTooltip]="'View running instances' | translate"
+                    (click)="openRunningInstances(element)"
+                >
+                    <mat-icon>list_alt</mat-icon>
+                </button>
                 <button
                     mat-icon-button
                     color="accent"
