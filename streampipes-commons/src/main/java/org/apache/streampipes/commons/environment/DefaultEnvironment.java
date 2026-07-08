@@ -198,6 +198,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public BooleanEnvironmentVariable getFunctionStateEndpointsEnabled() {
+    return new BooleanEnvironmentVariable(Envs.SP_FUNCTION_STATE_ENDPOINTS_ENABLED);
+  }
+
+  @Override
   public List<OAuthConfiguration> getOAuthConfigurations() {
     return new OAuthConfigurationParser().parse(System.getenv());
   }

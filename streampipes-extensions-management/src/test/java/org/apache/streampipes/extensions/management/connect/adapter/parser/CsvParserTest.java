@@ -76,4 +76,34 @@ public class CsvParserTest extends ParserTest {
     verify(mockEventHandler, times(1)).handle(expectedEvent);
   }
 
+  @Test
+  public void parseHeaderWithQuotedDelimiter() {
+    var event = toStream("column1,column2,\"column2,5\"\n1,2,3");
+    var mockEventHandler = mock(IParserEventHandler.class);
+
+    var parser = new CsvParser(true, ',');
+    parser.parse(event, mockEventHandler);
+
+    Map<String, Object> expectedEvent = new HashMap<>();
+    expectedEvent.put("column1", 1);
+    expectedEvent.put("column2", 2);
+    expectedEvent.put("column2,5", 3);
+    verify(mockEventHandler).handle(expectedEvent);
+  }
+
+  @Test
+  public void parseValueWithQuotedDelimiter() {
+    var event = toStream("k1,k2,k3\nv1,\"2,5\",3");
+    var mockEventHandler = mock(IParserEventHandler.class);
+
+    var parser = new CsvParser(true, ',');
+    parser.parse(event, mockEventHandler);
+
+    Map<String, Object> expectedEvent = new HashMap<>();
+    expectedEvent.put(K1, "v1");
+    expectedEvent.put(K2, "2,5");
+    expectedEvent.put("k3", 3);
+    verify(mockEventHandler).handle(expectedEvent);
+  }
+
 }
