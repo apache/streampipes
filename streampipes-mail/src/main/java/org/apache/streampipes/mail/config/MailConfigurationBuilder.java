@@ -24,7 +24,12 @@ import org.simplejavamail.api.mailer.config.TransportStrategy;
 import org.simplejavamail.mailer.MailerBuilder;
 import org.simplejavamail.mailer.internal.MailerRegularBuilderImpl;
 
+import java.util.Objects;
+
 public class MailConfigurationBuilder {
+
+  private static final String STARTTLS_ENABLE_PROPERTY = "mail.smtp.starttls.enable";
+  private static final String STARTTLS_REQUIRED_PROPERTY = "mail.smtp.starttls.required";
 
   public Mailer buildMailerFromConfig(EmailConfig config) {
     MailerRegularBuilderImpl builder = MailerBuilder
@@ -54,19 +59,26 @@ public class MailConfigurationBuilder {
       }
     }
 
+    disableStartTlsForPlainSmtp(config, builder);
 
     return builder.buildMailer();
 
   }
 
-  private TransportStrategy toTransportStrategy(
-      org.apache.streampipes.model.configuration.TransportStrategy strategy) {
-    if (strategy == org.apache.streampipes.model.configuration.TransportStrategy.SMTP) {
-      return TransportStrategy.SMTP;
-    } else if (strategy == org.apache.streampipes.model.configuration.TransportStrategy.SMTPS) {
-      return TransportStrategy.SMTPS;
-    } else {
-      return TransportStrategy.SMTP_TLS;
+  private void disableStartTlsForPlainSmtp(EmailConfig config,
+                                           MailerRegularBuilderImpl builder) {
+    if (config.getTransportStrategy() == org.apache.streampipes.model.configuration.TransportStrategy.SMTP) {
+      builder.withProperty(STARTTLS_ENABLE_PROPERTY, "false");
+      builder.withProperty(STARTTLS_REQUIRED_PROPERTY, "false");
     }
+  }
+
+  TransportStrategy toTransportStrategy(
+      org.apache.streampipes.model.configuration.TransportStrategy strategy) {
+    return switch (Objects.requireNonNull(strategy, "Transport strategy must be configured")) {
+      case SMTP -> TransportStrategy.SMTP;
+      case SMTPS -> TransportStrategy.SMTPS;
+      case SMTP_TLS -> TransportStrategy.SMTP_TLS;
+    };
   }
 }
