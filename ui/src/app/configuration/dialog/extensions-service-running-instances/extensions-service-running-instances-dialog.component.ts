@@ -219,14 +219,18 @@ export class SpExtensionsServiceRunningInstancesDialogComponent implements OnIni
     }
 
     confirmRemoval(): void {
-        if (!this.pendingRemoval) {
+        const pendingRemoval = this.pendingRemoval;
+
+        if (!pendingRemoval) {
             return;
         }
 
-        if (this.pendingRemoval.type === 'adapter') {
-            this.removeAdapterInstance(this.pendingRemoval.item);
-        } else if (this.pendingRemoval.type === 'pipelineElement') {
-            this.removePipelineElementInstance(this.pendingRemoval.item);
+        this.pendingRemoval = undefined;
+
+        if (pendingRemoval.type === 'adapter') {
+            this.removeAdapterInstance(pendingRemoval.item);
+        } else if (pendingRemoval.type === 'pipelineElement') {
+            this.removePipelineElementInstance(pendingRemoval.item);
         } else {
             this.removeAllInstances();
         }

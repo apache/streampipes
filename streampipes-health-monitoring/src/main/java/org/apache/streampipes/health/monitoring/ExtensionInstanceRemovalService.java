@@ -33,12 +33,16 @@ import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 public class ExtensionInstanceRemovalService {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ExtensionInstanceRemovalService.class);
 
   private final IExtensionsServiceStorage extensionsServiceStorage;
   private final ResourceProvider resourceProvider;
@@ -64,11 +68,21 @@ public class ExtensionInstanceRemovalService {
     ).getRunningInstances(serviceId);
 
     for (var adapter : runningInstances.adapters()) {
-      removeAdapterInstance(serviceId, adapter.instanceId());
+      try {
+        removeAdapterInstance(serviceId, adapter.instanceId());
+      } catch (IOException e) {
+        LOG.warn("Could not remove adapter instance {} from service {} during bulk removal",
+            adapter.instanceId(), serviceId, e);
+      }
     }
 
     for (var pipelineElement : runningInstances.pipelineElements()) {
-      removePipelineElementInstance(serviceId, pipelineElement.instanceId());
+      try {
+        removePipelineElementInstance(serviceId, pipelineElement.instanceId());
+      } catch (IOException e) {
+        LOG.warn("Could not remove pipeline element instance {} from service {} during bulk removal",
+            pipelineElement.instanceId(), serviceId, e);
+      }
     }
   }
 
