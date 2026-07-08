@@ -73,19 +73,25 @@
                     }
                 </div>
             </div>
-            <div fxFlex="100" fxLayout="column" style="margin-top: 20px">
-                <sp-basic-header-title-component
-                    title="Functions"
-                ></sp-basic-header-title-component>
-                <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-                    <div fxFlex="100">
-                        @if (functionsReady) {
-                            <sp-functions-overview [functions]="functions">
-                            </sp-functions-overview>
-                        }
+            @if (isAdminRole) {
+                <div fxFlex="100" fxLayout="column" style="margin-top: 20px">
+                    <sp-basic-header-title-component
+                        title="Functions"
+                    ></sp-basic-header-title-component>
+                    <div
+                        fxFlex="100"
+                        fxLayout="row"
+                        fxLayoutAlign="center start"
+                    >
+                        <div fxFlex="100">
+                            @if (functionsReady) {
+                                <sp-functions-overview [functions]="functions">
+                                </sp-functions-overview>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </sp-basic-view>

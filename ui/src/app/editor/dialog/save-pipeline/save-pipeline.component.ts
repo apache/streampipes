@@ -333,20 +333,11 @@ export class SavePipelineComponent implements OnInit {
     }
 
     getPipelineCanvasMetadata$(pipelineId: string): Observable<object> {
-        let request;
         this.pipelineCanvasMetadata.pipelineId = pipelineId;
-        if (this.storageOptions.updateModeActive) {
-            request = this.pipelineCanvasService.updatePipelineCanvasMetadata(
-                this.pipelineCanvasMetadata,
-            );
-        } else {
-            this.pipelineCanvasMetadata._id = undefined;
-            this.pipelineCanvasMetadata._rev = undefined;
-            request = this.pipelineCanvasService.addPipelineCanvasMetadata(
-                this.pipelineCanvasMetadata,
-            );
-        }
-        return request;
+        return this.pipelineCanvasService.updatePipelineCanvasMetadata(
+            pipelineId,
+            this.pipelineCanvasMetadata,
+        );
     }
 
     addStatusIndicator(message: string, status: Status) {

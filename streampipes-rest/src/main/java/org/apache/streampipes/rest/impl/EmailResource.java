@@ -18,12 +18,14 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.mail.MailSender;
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.mail.SpEmail;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +42,7 @@ public class EmailResource extends AbstractAuthGuardedRestResource {
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> sendEmail(@RequestBody SpEmail email) {
     var configuration = configurationStorage.get();
     if (configuration.getEmailConfig().isEmailConfigured()) {
@@ -53,5 +56,9 @@ public class EmailResource extends AbstractAuthGuardedRestResource {
       return serverError(
           "Could not send email - no valid mail configuration provided in StreamPipes (go to settings -> mail)");
     }
+  }
+
+  public boolean hasWriteAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE);
   }
 }
