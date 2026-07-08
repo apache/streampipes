@@ -23,6 +23,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.execution.PipelineExecutor;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeValidationStep;
+import org.apache.streampipes.manager.pipeline.PipelineElementUserCleaner;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -138,6 +139,7 @@ public class PipelineUpdateCoordinator {
           modifiedPipeline.setValid(false);
         }
 
+        PipelineElementUserCleaner.clearCorrespondingUsers(modifiedPipeline);
         pipelineStorage.updateElement(modifiedPipeline);
 
         if (shouldRestartPipeline && canAutoMigrate) {

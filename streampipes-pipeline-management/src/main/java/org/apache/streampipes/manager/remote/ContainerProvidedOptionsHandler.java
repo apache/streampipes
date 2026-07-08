@@ -30,6 +30,8 @@ import org.apache.streampipes.manager.util.AuthTokenProvider;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.resource.management.secret.SecretDecrypter;
+import org.apache.streampipes.resource.management.secret.SecretService;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -54,6 +56,7 @@ public class ContainerProvidedOptionsHandler {
       throws SpConfigurationException, SpRuntimeException {
 
     try {
+      new SecretService(new SecretDecrypter()).applyConfig(request.getStaticProperties());
       var payload = JacksonSerializer.getObjectMapper().writeValueAsString(request);
       var requestTarget = getEndpointRequestTarget(request.getAppId());
       var authToken = new AuthTokenProvider(resourceManager).getAuthTokenForCurrentUser();
