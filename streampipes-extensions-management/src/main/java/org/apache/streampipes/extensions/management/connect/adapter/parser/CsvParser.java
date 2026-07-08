@@ -177,7 +177,6 @@ public class CsvParser implements IParser {
     var reader = new BufferedReader(new InputStreamReader(inputStream));
     CSVParser parser = new CSVParserBuilder()
         .withSeparator(delimiter)
-        .withIgnoreQuotations(true)
         .build();
 
     return new CSVReaderBuilder(reader)
