@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Plc4xS7ToGenericAdapterMigrationTest {
@@ -78,6 +79,9 @@ class Plc4xS7ToGenericAdapterMigrationTest {
     assertTrue(settings.connectionString().startsWith("s7-light:tcp://192.168.34.56?"));
     assertTrue(Arrays.asList(settings.connectionString().split("\\?", 2)[1].split("&"))
         .containsAll(List.of("remote-rack=0", "remote-slot=3")));
+    assertEquals("PLC Address", migratedAdapter.getConfig().get(0).getLabel());
+    assertEquals("Tags", migratedAdapter.getConfig().get(5).getLabel());
+    assertFalse(migratedAdapter.isIncludesLocales());
     assertEquals(1000, settings.pollingInterval());
     assertEquals("%I0.0:BOOL", settings.nodes().get("input"));
     assertEquals("%Q0.4:TIME_OF_DAY", settings.nodes().get("output"));

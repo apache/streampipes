@@ -18,10 +18,12 @@
 
 package org.apache.streampipes.extensions.connectors.plc.adapter.migration;
 
+import org.apache.streampipes.extensions.api.assets.DefaultAssetResolver;
 import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.extensions.api.migration.IAdapterMigrator;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.config.AdapterConfigurationProvider;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xLabels;
+import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.migration.MigrationResult;
@@ -37,6 +39,7 @@ import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +49,8 @@ public class Plc4xS7ToGenericAdapterMigration implements IAdapterMigrator {
 
   private static final String OLD_APP_ID = "org.apache.streampipes.connect.iiot.adapters.plc4x.s7";
   static final String NEW_APP_ID = AdapterConfigurationProvider.ID + "s7";
+  private static final String GENERIC_APP_ID = "org.apache.streampipes.connect.iiot.adapters.plc4x.generic";
+  private static final String DEFAULT_LOCALE = "strings.en";
 
   private static final String PLC_IP = "plc_ip";
   private static final String PLC_POLLING_INTERVAL = "plc_polling_interval";
@@ -83,8 +88,27 @@ public class Plc4xS7ToGenericAdapterMigration implements IAdapterMigrator {
         makeProtocolMetadata(splitAddress.queryParameters()),
         makeCodeBlock(extractor)
     ));
+    applyGenericAdapterLabels(element);
 
     return MigrationResult.success(element);
+  }
+
+  private void applyGenericAdapterLabels(AdapterDescription element) {
+    element.setIncludesLocales(true);
+    if (element.getIncludedLocales() == null || element.getIncludedLocales().isEmpty()) {
+      element.setIncludedLocales(List.of(DEFAULT_LOCALE));
+    }
+
+    try {
+      new LabelGenerator<>(
+          element,
+          false,
+          new DefaultAssetResolver(GENERIC_APP_ID)
+      ).generateLabels();
+    } catch (IOException e) {
+      throw new RuntimeException("Could not apply generic PLC4X labels to migrated S7 adapter", e);
+    }
+    element.setIncludesLocales(false);
   }
 
   private StaticProperty makeSupportedTransports() {
