@@ -40,6 +40,7 @@ import org.apache.streampipes.service.core.migrations.v099.RemoveInternalNotific
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
+import org.apache.streampipes.service.core.migrations.v099.connect.MigratePlc4xS7AdaptersToGenericAdapter;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
@@ -102,6 +103,7 @@ public class AvailableMigrations {
         new AddScriptTemplateViewMigration(),
         new ComputeCertificateThumbprintMigration(),
         new MigrateAdaptersToUseScript(adapterStorage),
+        new MigratePlc4xS7AdaptersToGenericAdapter(adapterStorage),
         new ModifyAssetLinkIconMigration(),
         new RemoveDuplicatedAssetPermissions(permissionStorage, assetStorage),
         new AddFunctionStateViewMigration(),
