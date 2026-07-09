@@ -24,8 +24,10 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarg
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.util.AuthTokenProvider;
-import org.apache.streampipes.model.api.EndpointSelectable;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.client.user.Permission;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
@@ -58,7 +60,7 @@ public class InvokeExtensionRequest extends PipelineElementExtensionRequest {
     var authToken = new AuthTokenProvider(resourceManager).getAuthToken(pipelineId);
     return requestManager().request(
         ExtensionServiceRequests
-            .pipelineElementInvocation(requestTarget, toJson(pipelineElement), authToken)
+            .pipelineElementInvocation(requestTarget, toJson(pipelineElement, pipelineId), authToken)
     );
   }
 
@@ -70,7 +72,34 @@ public class InvokeExtensionRequest extends PipelineElementExtensionRequest {
         endpointUrl, pipelineElementName, exceptionMessage);
   }
 
-  private String toJson(EndpointSelectable pipelineElement) throws JsonProcessingException {
-    return JacksonSerializer.getObjectMapper().writeValueAsString(pipelineElement);
+  String toJson(InvocableStreamPipesEntity pipelineElement,
+                String pipelineId) throws JsonProcessingException {
+    var invocation = makeInvocationPayload(pipelineElement);
+    if (pipelineId != null) {
+      invocation.setCorrespondingUser(getPipelineOwnerSid(pipelineId));
+    }
+    return JacksonSerializer.getObjectMapper().writeValueAsString(invocation);
+  }
+
+  private InvocableStreamPipesEntity makeInvocationPayload(InvocableStreamPipesEntity pipelineElement) {
+    InvocableStreamPipesEntity invocation;
+    if (pipelineElement instanceof DataProcessorInvocation processorInvocation) {
+      invocation = new DataProcessorInvocation(processorInvocation);
+    } else if (pipelineElement instanceof DataSinkInvocation sinkInvocation) {
+      invocation = new DataSinkInvocation(sinkInvocation);
+    } else {
+      throw new IllegalArgumentException("Unsupported pipeline element type: "
+          + pipelineElement.getClass().getCanonicalName());
+    }
+    invocation.setSelectedServiceId(pipelineElement.getSelectedServiceId());
+    return invocation;
+  }
+
+  private String getPipelineOwnerSid(String pipelineId) {
+    return resourceManager.managePermissions().findForObjectId(pipelineId)
+        .stream()
+        .findFirst()
+        .map(Permission::getOwnerSid)
+        .orElseThrow(() -> new IllegalArgumentException("Could not find owner for pipeline " + pipelineId));
   }
 }

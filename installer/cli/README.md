@@ -17,6 +17,8 @@
   -->
 # StreamPipes CLI - The Developer's Favorite
 
+> **Deprecated:** The StreamPipes CLI is deprecated and will be removed in a future release. The functionality remains available for now, but new development setups should use the experimental dev container setup in [`../../.devcontainer`](../../.devcontainer).
+
 The StreamPipes command-line interface (CLI) is focused on developers in order to provide an easy entrypoint to set up a suitable dev environment, either planning on developing
 
 * new extensions such as **connect adapters, processors, sinks** or,
