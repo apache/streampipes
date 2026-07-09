@@ -102,6 +102,7 @@ public class MigratePlc4xS7AdaptersToGenericAdapter implements Migration {
     LOG.info("Migrating PLC4X S7 adapter to generic PLC4X adapter: {}", adapter.getElementId());
 
     var splitAddress = SplitPlcAddress.from(textValue(adapter, PLC_IP));
+    var codeBlock = makeCodeBlock(adapter);
     adapter.setAppId(NEW_APP_ID);
     adapter.setVersion(GENERIC_ADAPTER_VERSION);
     adapter.setIncludesLocales(true);
@@ -119,7 +120,7 @@ public class MigratePlc4xS7AdaptersToGenericAdapter implements Migration {
         makeSupportedTransports(),
         makeTransportMetadata(),
         makeProtocolMetadata(splitAddress.queryParameters()),
-        makeCodeBlock(makeTags(adapter))
+        makeCodeBlock(codeBlock)
     ));
 
     adapterStorage.updateElement(adapter);
@@ -225,50 +226,69 @@ public class MigratePlc4xS7AdaptersToGenericAdapter implements Migration {
     return group;
   }
 
-  private StaticProperty makeCodeBlock(String value) {
+  private StaticProperty makeCodeBlock(MigratedCodeBlock migratedCodeBlock) {
     var codeBlock = new CodeInputStaticProperty(
         PLC_CODE_BLOCK,
         "Tags",
         "Enter the tags in the code block below, according to the described format"
     );
     codeBlock.setLanguage("None");
-    codeBlock.setCodeTemplate("");
-    codeBlock.setValue(value);
+    codeBlock.setCodeTemplate(migratedCodeBlock.codeTemplate());
+    codeBlock.setValue(migratedCodeBlock.value());
     return codeBlock;
   }
 
-  private String makeTags(AdapterDescription adapter) {
+  private MigratedCodeBlock makeCodeBlock(AdapterDescription adapter) {
     var alternatives = getProperty(adapter, PLC_NODE_INPUT_ALTERNATIVES, StaticPropertyAlternatives.class);
     if (alternatives.isPresent()) {
-      return makeTagsFromAlternatives(alternatives.get());
+      return makeCodeBlockFromAlternatives(alternatives.get());
     }
 
-    return getProperty(adapter, PLC_NODES, CollectionStaticProperty.class)
+    var tags = getProperty(adapter, PLC_NODES, CollectionStaticProperty.class)
         .map(this::makeTagsFromCollection)
         .orElse("");
+    return new MigratedCodeBlock(tags, "");
   }
 
-  private String makeTagsFromAlternatives(StaticPropertyAlternatives alternatives) {
+  private MigratedCodeBlock makeCodeBlockFromAlternatives(StaticPropertyAlternatives alternatives) {
     var selectedAlternative = alternatives.getAlternatives()
         .stream()
         .filter(StaticPropertyAlternative::getSelected)
         .findFirst();
+    var codeBlockTemplate = getCodeBlockFromAlternatives(alternatives)
+        .map(CodeInputStaticProperty::getCodeTemplate)
+        .orElse("");
 
     if (selectedAlternative.isPresent()
         && PLC_NODE_INPUT_COLLECTION_ALTERNATIVE.equals(selectedAlternative.get().getInternalName())) {
-      return Optional.ofNullable(selectedAlternative.get().getStaticProperty())
+      var tags = Optional.ofNullable(selectedAlternative.get().getStaticProperty())
           .filter(CollectionStaticProperty.class::isInstance)
           .map(CollectionStaticProperty.class::cast)
           .map(this::makeTagsFromCollection)
           .orElse("");
+      return new MigratedCodeBlock(tags, codeBlockTemplate);
     }
 
-    return selectedAlternative
+    var selectedCodeBlock = selectedAlternative
+        .map(StaticPropertyAlternative::getStaticProperty)
+        .filter(CodeInputStaticProperty.class::isInstance)
+        .map(CodeInputStaticProperty.class::cast);
+    var tags = selectedCodeBlock
+        .map(CodeInputStaticProperty::getValue)
+        .orElse("");
+    var template = selectedCodeBlock
+        .map(CodeInputStaticProperty::getCodeTemplate)
+        .orElse(codeBlockTemplate);
+    return new MigratedCodeBlock(tags, template);
+  }
+
+  private Optional<CodeInputStaticProperty> getCodeBlockFromAlternatives(StaticPropertyAlternatives alternatives) {
+    return alternatives.getAlternatives()
+        .stream()
         .map(StaticPropertyAlternative::getStaticProperty)
         .filter(CodeInputStaticProperty.class::isInstance)
         .map(CodeInputStaticProperty.class::cast)
-        .map(CodeInputStaticProperty::getValue)
-        .orElse("");
+        .findFirst();
   }
 
   private String makeTagsFromCollection(CollectionStaticProperty nodes) {
@@ -415,5 +435,9 @@ public class MigratePlc4xS7AdaptersToGenericAdapter implements Migration {
       }
       return new QueryParameter(splitParameter[0], splitParameter[1]);
     }
+  }
+
+  private record MigratedCodeBlock(String value,
+                                   String codeTemplate) {
   }
 }

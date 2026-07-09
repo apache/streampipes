@@ -56,6 +56,7 @@ class MigratePlc4xS7AdaptersToGenericAdapterTest {
   private static final String PLC_NODE_INPUT_CODE_BLOCK_ALTIVE = "plc_node_input_code_block_altive";
   private static final String PLC_NODE_INPUT_COLLECTION_ALTERNATIVE = "plc_node_input_collection_alternative";
   private static final String PLC_CODE_BLOCK = "plc_code_block";
+  private static final String CODE_TEMPLATE = "temperature=%I0.0:INT";
 
   @Test
   void migratesCollectionBasedS7Adapter() throws IOException {
@@ -104,6 +105,7 @@ class MigratePlc4xS7AdaptersToGenericAdapterTest {
     assertGenericAdapterMetadata(migratedAdapter);
     assertEquals("192.168.34.56", value(migratedAdapter.getConfig().get(0)));
     assertEquals(codeBlock, value(migratedAdapter.getConfig().get(5)));
+    assertEquals(CODE_TEMPLATE, ((CodeInputStaticProperty) migratedAdapter.getConfig().get(5)).getCodeTemplate());
   }
 
   @Test
@@ -226,6 +228,7 @@ class MigratePlc4xS7AdaptersToGenericAdapterTest {
   private CodeInputStaticProperty makeCodeBlock(String value) {
     var codeBlock = new CodeInputStaticProperty();
     codeBlock.setInternalName(PLC_CODE_BLOCK);
+    codeBlock.setCodeTemplate(CODE_TEMPLATE);
     codeBlock.setValue(value);
     return codeBlock;
   }
