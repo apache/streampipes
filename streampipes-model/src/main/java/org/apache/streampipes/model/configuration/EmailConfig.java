@@ -51,6 +51,7 @@ public class EmailConfig {
   public static EmailConfig fromDefaults() {
     EmailConfig config = new EmailConfig();
     config.setEmailConfigured(false);
+    config.setTransportStrategy(TransportStrategy.SMTP);
 
     return config;
   }
