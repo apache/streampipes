@@ -54,6 +54,26 @@
                         </sp-label>
                     </div>
                 </div>
+
+                <div
+                    class="feature-card-meta-box"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fxLayoutGap="0.75rem"
+                >
+                    <mat-icon class="feature-card-meta-icon">numbers</mat-icon>
+                    <div>
+                        <div class="feature-card-meta-field-label">
+                            {{ 'Total events' | translate }}
+                        </div>
+                        <div
+                            class="feature-card-meta-field-value mt-xs"
+                            data-cy="dataset-feature-card-total-events"
+                        >
+                            {{ totalEventCount ?? '-' }}
+                        </div>
+                    </div>
+                </div>
             </sp-feature-card-meta-section>
 
             <div class="feature-card-meta-section__label">
