@@ -1,0 +1,454 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
+        <div fxLayout="column" fxLayoutGap="20px" class="p-15">
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <div fxLayout="column" fxLayoutGap="5px">
+                    <div class="text-md">
+                        {{ serviceReg.svcId }}
+                    </div>
+                    <div class="text-sm">
+                        {{ serviceReg.svcGroup }}
+                    </div>
+                </div>
+                <div>
+                    <button
+                        mat-icon-button
+                        color="accent"
+                        [disabled]="loading || removing"
+                        [matTooltip]="'Refresh running instances' | translate"
+                        (click)="loadRunningInstances()"
+                    >
+                        <mat-icon>refresh</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            @if (loading) {
+                <div
+                    fxLayout="row"
+                    fxLayoutAlign="center center"
+                    class="loading-container"
+                >
+                    <mat-spinner diameter="32"></mat-spinner>
+                </div>
+            }
+
+            @if (!loading && loadError) {
+                <div class="empty-state">
+                    {{ 'Could not load running instances' | translate }}
+                </div>
+            }
+
+            @if (!loading && !loadError) {
+                <div fxLayout="column" fxLayoutGap="10px">
+                    <div class="section-title">
+                        {{ 'Adapters' | translate }}
+                    </div>
+                    @if (adapterDataSource.data.length > 0) {
+                        <sp-table
+                            fxFlex="100"
+                            [dataSource]="adapterDataSource"
+                            [columns]="adapterColumns"
+                            [nameSearchConfig]="adapterNameSearchConfig"
+                        >
+                            <ng-container matColumnDef="name">
+                                <th
+                                    fxFlex="25"
+                                    fxLayoutAlign="start center"
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                >
+                                    {{ 'Name' | translate }}
+                                </th>
+                                <td
+                                    fxFlex="25"
+                                    fxLayoutAlign="start center"
+                                    mat-cell
+                                    *matCellDef="let adapter"
+                                >
+                                    {{ adapter.displayName | translate }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="state">
+                                <th
+                                    fxFlex="15"
+                                    fxLayoutAlign="start center"
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                >
+                                    {{ 'State' | translate }}
+                                </th>
+                                <td
+                                    fxFlex="15"
+                                    fxLayoutAlign="start center"
+                                    mat-cell
+                                    *matCellDef="let adapter"
+                                >
+                                    <sp-label
+                                        size="small"
+                                        variant="soft"
+                                        [tone]="
+                                            getAdapterStateTone(adapter.state)
+                                        "
+                                        [labelText]="adapter.state | translate"
+                                    >
+                                    </sp-label>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="relation">
+                                <th
+                                    fxFlex="15"
+                                    fxLayoutAlign="start center"
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                >
+                                    {{ 'Relation' | translate }}
+                                </th>
+                                <td
+                                    fxFlex="15"
+                                    fxLayoutAlign="start center"
+                                    mat-cell
+                                    *matCellDef="let adapter"
+                                >
+                                    <sp-label
+                                        size="small"
+                                        variant="soft"
+                                        [tone]="
+                                            getRelationTone(adapter.orphaned)
+                                        "
+                                        [labelText]="
+                                            adapter.relation | translate
+                                        "
+                                    >
+                                    </sp-label>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="instanceId">
+                                <th
+                                    fxFlex="35"
+                                    fxLayoutAlign="start center"
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                >
+                                    {{ 'Instance ID' | translate }}
+                                </th>
+                                <td
+                                    fxFlex="35"
+                                    fxLayoutAlign="start center"
+                                    mat-cell
+                                    *matCellDef="let adapter"
+                                    class="instance-id"
+                                >
+                                    {{ adapter.instanceId }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="action">
+                                <th
+                                    fxFlex="10"
+                                    fxLayoutAlign="end center"
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                ></th>
+                                <td
+                                    fxFlex="10"
+                                    fxLayoutAlign="end center"
+                                    mat-cell
+                                    *matCellDef="let adapter"
+                                >
+                                    <button
+                                        mat-icon-button
+                                        class="btn-warn"
+                                        [disabled]="removing"
+                                        [matTooltip]="
+                                            'Remove instance from service'
+                                                | translate
+                                        "
+                                        (click)="
+                                            requestRemoveAdapterInstance(
+                                                adapter
+                                            );
+                                            $event.stopPropagation()
+                                        "
+                                    >
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                        </sp-table>
+                    } @else {
+                        <div class="empty-state">
+                            {{ 'No running adapters' | translate }}
+                        </div>
+                    }
+                </div>
+
+                <div fxLayout="column" fxLayoutGap="10px">
+                    <div class="section-title">
+                        {{ 'Pipeline elements' | translate }}
+                    </div>
+                    @if (pipelineElementDataSource.data.length > 0) {
+                        <sp-table
+                            fxFlex="100"
+                            [dataSource]="pipelineElementDataSource"
+                            [columns]="pipelineElementColumns"
+                            [nameSearchConfig]="pipelineElementNameSearchConfig"
+                        >
+                            <ng-container matColumnDef="name">
+                                <th
+                                    fxFlex="20"
+                                    fxLayoutAlign="start center"
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                >
+                                    {{ 'Name' | translate }}
+                                </th>
+                                <td
+                                    fxFlex="20"
+                                    fxLayoutAlign="start center"
+                                    mat-cell
+                                    *matCellDef="let element"
+                                >
+                                    {{ element.displayName | translate }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="pipelineName">
+                                <th
+                                    fxFlex="20"
+                                    fxLayoutAlign="start center"
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                >
+                                    {{ 'Pipeline' | translate }}
+                                </th>
+                                <td
+                                    fxFlex="20"
+                                    fxLayoutAlign="start center"
+                                    mat-cell
+                                    *matCellDef="let element"
+                                >
+                                    {{ element.pipelineDisplayName }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="type">
+                                <th
+                                    fxFlex="12"
+                                    fxLayoutAlign="start center"
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                >
+                                    {{ 'Type' | translate }}
+                                </th>
+                                <td
+                                    fxFlex="12"
+                                    fxLayoutAlign="start center"
+                                    mat-cell
+                                    *matCellDef="let element"
+                                >
+                                    <sp-label
+                                        size="small"
+                                        variant="soft"
+                                        [tone]="
+                                            getPipelineElementTypeTone(
+                                                element.type
+                                            )
+                                        "
+                                        [labelText]="element.type | translate"
+                                    >
+                                    </sp-label>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="relation">
+                                <th
+                                    fxFlex="13"
+                                    fxLayoutAlign="start center"
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                >
+                                    {{ 'Relation' | translate }}
+                                </th>
+                                <td
+                                    fxFlex="13"
+                                    fxLayoutAlign="start center"
+                                    mat-cell
+                                    *matCellDef="let element"
+                                >
+                                    <sp-label
+                                        size="small"
+                                        variant="soft"
+                                        [tone]="
+                                            getRelationTone(element.orphaned)
+                                        "
+                                        [labelText]="
+                                            element.relation | translate
+                                        "
+                                    >
+                                    </sp-label>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="instanceId">
+                                <th
+                                    fxFlex="25"
+                                    fxLayoutAlign="start center"
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                >
+                                    {{ 'Instance ID' | translate }}
+                                </th>
+                                <td
+                                    fxFlex="25"
+                                    fxLayoutAlign="start center"
+                                    mat-cell
+                                    *matCellDef="let element"
+                                    class="instance-id"
+                                >
+                                    {{ element.instanceId }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="action">
+                                <th
+                                    fxFlex="10"
+                                    fxLayoutAlign="end center"
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                ></th>
+                                <td
+                                    fxFlex="10"
+                                    fxLayoutAlign="end center"
+                                    mat-cell
+                                    *matCellDef="let element"
+                                >
+                                    <button
+                                        mat-icon-button
+                                        color="accent"
+                                        [disabled]="removing"
+                                        [matTooltip]="
+                                            'Remove instance from service'
+                                                | translate
+                                        "
+                                        (click)="
+                                            requestRemovePipelineElementInstance(
+                                                element
+                                            );
+                                            $event.stopPropagation()
+                                        "
+                                    >
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                        </sp-table>
+                    } @else {
+                        <div class="empty-state">
+                            {{ 'No running pipeline elements' | translate }}
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div
+        class="sp-dialog-actions running-instances-actions"
+        fxLayout="column"
+        fxLayoutGap="10px"
+    >
+        @if (pendingRemoval) {
+            <sp-alert-banner
+                class="confirmation-alert"
+                type="warning"
+                icon="warning"
+                [title]="getPendingRemovalTitle() | translate"
+                [description]="
+                    'Deleted instances of active pipelines or adapters will be redeployed by the health check.'
+                        | translate
+                "
+            >
+                <div
+                    class="confirmation-content"
+                    fxLayout="column"
+                    fxLayoutAlign="start start"
+                    fxLayoutGap="10px"
+                >
+                    <div class="text-sm instance-id">
+                        {{ getPendingRemovalDescription() | translate }}
+                    </div>
+                    <div
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        fxLayoutGap="10px"
+                    >
+                        <button
+                            mat-button
+                            mat-flat-button
+                            class="mat-basic"
+                            [disabled]="removing"
+                            (click)="cancelRemoval()"
+                        >
+                            {{ 'Cancel' | translate }}
+                        </button>
+                        <button
+                            mat-button
+                            mat-flat-button
+                            color="accent"
+                            [disabled]="removing"
+                            (click)="confirmRemoval()"
+                        >
+                            {{ 'Remove' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </sp-alert-banner>
+        }
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <button
+                mat-button
+                mat-flat-button
+                class="btn-warn"
+                [disabled]="
+                    removing ||
+                    loading ||
+                    totalInstanceCount === 0 ||
+                    !!pendingRemoval
+                "
+                (click)="requestRemoveAllInstances()"
+            >
+                {{ 'Remove all instances' | translate }}
+            </button>
+            <button
+                mat-button
+                mat-flat-button
+                class="mat-basic"
+                (click)="close()"
+            >
+                {{ 'Close' | translate }}
+            </button>
+        </div>
+    </div>
+</div>
