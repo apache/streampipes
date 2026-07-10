@@ -44,7 +44,6 @@ export class AdapterCodeDialogComponent {
     @Input()
     adapter: AdapterDescription;
 
-
     close(): void {
         this.dialogRef.close();
     }
