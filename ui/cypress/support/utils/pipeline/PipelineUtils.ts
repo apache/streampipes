@@ -157,7 +157,7 @@ export class PipelineUtils {
         // Save and start pipeline
         PipelineBtns.savePipelineBtn().click();
         if (pipelineInput) {
-            cy.dataCy('managed-resource-name').type(pipelineInput.pipelineName);
+            PipelineBtns.managedResourceName().type(pipelineInput.pipelineName);
         }
         PipelineUtils.finalizePipelineStart();
     }
@@ -169,13 +169,13 @@ export class PipelineUtils {
         // Save and start pipeline
         PipelineBtns.savePipelineBtn().click();
         if (pipelineInput) {
-            cy.dataCy('managed-resource-name').type(pipelineInput.pipelineName);
+            PipelineBtns.managedResourceName().type(pipelineInput.pipelineName);
         }
         PipelineUtils.finalizePipelineStart(assetNameList);
     }
 
     private static addToAsset(assetNameList) {
-        cy.dataCy('sp-show-pipeline-asset-checkbox')
+        PipelineBtns.pipelineAssetCheckbox()
             .find('input[type="checkbox"]')
             .then($checkbox => {
                 if (!$checkbox.prop('checked')) {
@@ -193,18 +193,29 @@ export class PipelineUtils {
         });
     }
 
+    public static addManagedPipelineToAssets(assetNameList: string[]) {
+        PipelineUtils.addToAsset(assetNameList);
+    }
+
     public static clonePipeline(newPipelineName: string) {
-        cy.dataCy('sp-editor-checkbox-create-new-pipeline', {
-            timeout: 15000,
-        }).click();
+        PipelineBtns.createNewPipelineCheckbox().click();
         PipelineBtns.savePipelineBtn().click();
-        cy.dataCy('managed-resource-name').clear();
-        cy.dataCy('managed-resource-name').type(newPipelineName);
+        PipelineBtns.managedResourceName().clear();
+        PipelineBtns.managedResourceName().type(newPipelineName);
     }
 
     public static updatePipeline(newPipelineName: string) {
-        //PipelineBtns.pipelineCloneModeBtn().children().click();
-        cy.dataCy('managed-resource-name').type(newPipelineName);
+        PipelineBtns.managedResourceName().type(newPipelineName);
+    }
+
+    public static openPipelineManagementInEditor() {
+        PipelineBtns.pipelineOptions().click();
+        PipelineBtns.managePipelineInEditor().click();
+    }
+
+    public static renameManagedPipeline(newPipelineName: string) {
+        PipelineBtns.managedResourceName().clear();
+        PipelineUtils.updatePipeline(newPipelineName);
     }
 
     public static finalizePipelineStart(assetNameList?: string[]) {
@@ -214,7 +225,7 @@ export class PipelineUtils {
 
         PipelineBtns.editorSaveBtn().click();
 
-        cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(
+        cy.dataCy('sp-pipeline-started', { timeout: 15000 }).should(
             'be.visible',
         );
         PipelineBtns.savePipelineStatusClose().click();

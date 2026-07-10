@@ -35,8 +35,7 @@ describe('Test rename of running pipeline', () => {
         cy.wait(1000);
 
         PipelineBtns.managePipeline().click();
-        cy.dataCy('managed-resource-name').clear();
-        PipelineUtils.updatePipeline('Renamed Pipeline');
+        PipelineUtils.renameManagedPipeline('Renamed Pipeline');
         PipelineBtns.editorSaveBtn().click();
 
         PipelineUtils.verifyPipelineCount(1);

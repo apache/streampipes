@@ -37,7 +37,7 @@ describe('Test update of running pipeline', () => {
         cy.wait(1000);
         PipelineUtils.clonePipeline('Pipeline Test 2');
         PipelineBtns.editorSaveBtn().click();
-        cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(
+        cy.dataCy('sp-pipeline-started', { timeout: 15000 }).should(
             'be.visible',
         );
         PipelineBtns.savePipelineStatusClose().click();

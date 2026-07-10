@@ -36,6 +36,14 @@ export class PipelineBtns {
         return cy.dataCy('open-manage-pipeline');
     }
 
+    public static pipelineOptions() {
+        return cy.dataCy('options-pipeline');
+    }
+
+    public static managePipelineInEditor() {
+        return cy.dataCy('manage-pipeline-btn');
+    }
+
     public static pipelinesToEditor() {
         return cy.dataCy('pipelines-navigate-to-editor');
     }
@@ -94,6 +102,16 @@ export class PipelineBtns {
         return cy.dataCy('pipeline-update-mode-clone');
     }
 
+    public static createNewPipelineCheckbox() {
+        return cy.dataCy('sp-editor-checkbox-create-new-pipeline', {
+            timeout: 15000,
+        });
+    }
+
+    public static managedResourceName() {
+        return cy.dataCy('managed-resource-name');
+    }
+
     public static editorApplyBtn() {
         return cy.dataCy('sp-editor-apply');
     }
@@ -107,7 +125,7 @@ export class PipelineBtns {
     }
 
     public static pipelineStartedSuccess() {
-        return cy.dataCy('sp-pipeline-started-success', { timeout: 15000 });
+        return cy.dataCy('sp-pipeline-started', { timeout: 15000 });
     }
 
     public static updateAndMigratePipeline() {
@@ -170,7 +188,7 @@ export class PipelineBtns {
         return cy.dataCy('sp-save-pipeline-status-close');
     }
     public static pipelineAssetCheckbox() {
-        return cy.dataCy('sp-show-pipeline-asset-checkbox');
+        return cy.dataCy('sp-show-asset-checkbox');
     }
 
     public static pipelineEditorCancel() {
