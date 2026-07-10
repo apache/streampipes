@@ -48,6 +48,7 @@ import { EditorService } from '../../services/editor.service';
 import {
     LinkageData,
     Message,
+    MeasurementUpdateInfo,
     Pipeline,
     PipelineCanvasMetadata,
     PipelineCanvasMetadataService,
@@ -64,6 +65,7 @@ import { JsplumbService } from '../../services/jsplumb.service';
 import { TranslateService } from '@ngx-translate/core';
 import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
+import { SavePipelineUpdateMigrationComponent } from '../../dialog/save-pipeline/save-pipeline-update-migration/save-pipeline-update-migration.component';
 
 @Component({
     selector: 'sp-pipeline-assembly',
@@ -285,6 +287,10 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         pipeline.createdAt = this.originalPipeline.createdAt;
         pipeline.createdByUser = this.originalPipeline.createdByUser;
 
+        if (!(await this.confirmPipelineUpdateIfRequired(pipeline))) {
+            return;
+        }
+
         await this.savePipelineResource(pipeline, startPipelineAfterStorage);
         await this.savePendingManagePipelineChanges();
         this.editorService.makePipelineAssemblyEmpty(true);
@@ -408,6 +414,59 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
                 name: pipeline.name ?? '',
             },
         ];
+    }
+
+    private async confirmPipelineUpdateIfRequired(
+        pipeline: Pipeline,
+    ): Promise<boolean> {
+        if (!this.originalPipeline || !this.hasDataLakeSink(pipeline)) {
+            return true;
+        }
+
+        const measurementUpdateInfos = await firstValueFrom(
+            this.pipelineService.performPipelineMigrationPreflight(pipeline),
+        );
+
+        if (measurementUpdateInfos.length === 0) {
+            return true;
+        }
+
+        return this.openPipelineUpdateMigrationDialog(measurementUpdateInfos);
+    }
+
+    private hasDataLakeSink(pipeline: Pipeline): boolean {
+        return pipeline.actions.some(
+            action =>
+                action.appId ===
+                'org.apache.streampipes.sinks.internal.jvm.datalake',
+        );
+    }
+
+    private async openPipelineUpdateMigrationDialog(
+        measurementUpdateInfos: MeasurementUpdateInfo[],
+    ): Promise<boolean> {
+        const dialogRef = this.dialogService.open(
+            SavePipelineUpdateMigrationComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Pipeline update review'),
+                width: '50vw',
+                data: {
+                    measurementUpdateInfos,
+                },
+            },
+        );
+
+        const startUpdateSubscription =
+            dialogRef.componentInstance.instance.startUpdateEmitter.subscribe(
+                () => {
+                    dialogRef.close(true);
+                },
+            );
+
+        const shouldContinue = await firstValueFrom(dialogRef.afterClosed());
+        startUpdateSubscription.unsubscribe();
+        return !!shouldContinue;
     }
 
     togglePreview(): void {
