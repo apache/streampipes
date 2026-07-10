@@ -58,6 +58,11 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 
+export interface PipelineAssemblySaveOptions {
+    startPipelineAfterStorage: boolean;
+    createNewPipeline: boolean;
+}
+
 @Component({
     selector: 'sp-pipeline-assembly-options',
     templateUrl: './pipeline-assembly-options.component.html',
@@ -81,6 +86,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class PipelineAssemblyOptionsComponent {
     startPipelineAfterStorage = true;
+    createNewPipeline = false;
     editorService = inject(EditorService);
     pipelineValidationService = inject(PipelineValidationService);
     private pipelinePositioningService = inject(PipelinePositioningService);
@@ -106,7 +112,8 @@ export class PipelineAssemblyOptionsComponent {
     editMode = false;
 
     @Output()
-    savePipelineEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    savePipelineEmitter: EventEmitter<PipelineAssemblySaveOptions> =
+        new EventEmitter<PipelineAssemblySaveOptions>();
 
     @Output()
     clearAssemblyEmitter: EventEmitter<void> = new EventEmitter<void>();

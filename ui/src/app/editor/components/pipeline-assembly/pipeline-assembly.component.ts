@@ -29,6 +29,7 @@ import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../services/pipeline-positioning.service';
 import { PipelineValidationService } from '../../services/pipeline-validation.service';
 import {
+    InvocablePipelineElementUnion,
     PipelineElementConfig,
     PipelineElementUnion,
 } from '../../model/editor.model';
@@ -59,7 +60,10 @@ import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 import { firstValueFrom, forkJoin } from 'rxjs';
 import { Router } from '@angular/router';
 import { PipelineAssemblyDrawingAreaComponent } from './pipeline-assembly-drawing-area/pipeline-assembly-drawing-area.component';
-import { PipelineAssemblyOptionsComponent } from './pipeline-assembly-options/pipeline-assembly-options.component';
+import {
+    PipelineAssemblyOptionsComponent,
+    PipelineAssemblySaveOptions,
+} from './pipeline-assembly-options/pipeline-assembly-options.component';
 import { JsplumbService } from '../../services/jsplumb.service';
 import { TranslateService } from '@ngx-translate/core';
 import { FlexDirective } from '@ngbracket/ngx-layout/flex';
@@ -71,6 +75,7 @@ import {
     StatusIndicator,
 } from '../../../core-ui/multi-step-status-indicator/multi-step-status-indicator.model';
 import { PipelineAction } from '../../../pipelines/model/pipeline-model';
+import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 
 interface PipelineSaveResult {
     saveSuccessful: boolean;
@@ -106,6 +111,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private permissionsService = inject(PermissionsService);
     private assetSaveService = inject(AssetSaveService);
     private pipelineOperationsService = inject(PipelineOperationsService);
+    private idGeneratorService = inject(IdGeneratorService);
 
     @Input()
     rawPipelineModel: PipelineElementConfig[];
@@ -177,12 +183,40 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     /**
      * Sends the pipeline to the server
      */
-    submit(startPipelineAfterStorage = true) {
-        if (this.originalPipeline) {
-            void this.savePipelineChanges(startPipelineAfterStorage);
+    submit(
+        saveOptions: PipelineAssemblySaveOptions = {
+            startPipelineAfterStorage: true,
+            createNewPipeline: false,
+        },
+    ) {
+        const pipeline = this.makePipelineForSave();
+
+        if (this.originalPipeline && saveOptions.createNewPipeline) {
+            this.prepareClonedPipeline(pipeline);
+            this.openCreatePipelineDialog(
+                pipeline,
+                saveOptions.startPipelineAfterStorage,
+                this.makeClonedPipelineCanvasMetadata(),
+            );
             return;
         }
 
+        if (this.originalPipeline) {
+            void this.savePipelineChanges(
+                pipeline,
+                saveOptions.startPipelineAfterStorage,
+            );
+            return;
+        }
+
+        this.openCreatePipelineDialog(
+            pipeline,
+            saveOptions.startPipelineAfterStorage,
+            this.pipelineCanvasMetadata,
+        );
+    }
+
+    private makePipelineForSave(): Pipeline {
         const pipelineModel = this.rawPipelineModel;
         const pipeline = this.objectProvider.makePipeline(pipelineModel);
         this.pipelinePositioningService.collectPipelineElementPositions(
@@ -193,6 +227,14 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
             pipelineModel,
             this.readonly,
         );
+        return pipeline;
+    }
+
+    private openCreatePipelineDialog(
+        pipeline: Pipeline,
+        startPipelineAfterStorage: boolean,
+        pipelineCanvasMetadata: PipelineCanvasMetadata,
+    ): void {
         const resourceConfig: ObjectManageDialogResourceConfig<Pipeline> = {
             resourceLabel: 'Pipeline',
             nameLabel: 'Pipeline name',
@@ -205,6 +247,8 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
                 const saveResult = await this.savePipelineResource(
                     resource,
                     startPipelineAfterStorage,
+                    false,
+                    pipelineCanvasMetadata,
                 );
                 if (!saveResult.saveSuccessful) {
                     throw new Error('Saving the pipeline failed.');
@@ -216,8 +260,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
             title: this.translateService.instant('Save pipeline'),
             width: '50vw',
             data: {
-                createMode: !this.originalPipeline,
-                objectInstanceId: this.originalPipeline?._id,
+                createMode: true,
                 resource: JSON.parse(JSON.stringify(pipeline)),
                 saveMode: 'immediate',
                 resourceConfig,
@@ -287,18 +330,9 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     }
 
     private async savePipelineChanges(
+        pipeline: Pipeline,
         startPipelineAfterStorage: boolean,
     ): Promise<void> {
-        const pipelineModel = this.rawPipelineModel;
-        const pipeline = this.objectProvider.makePipeline(pipelineModel);
-        this.pipelinePositioningService.collectPipelineElementPositions(
-            this.pipelineCanvasMetadata,
-            pipelineModel,
-        );
-        pipeline.valid = this.pipelineValidationService.isValidPipeline(
-            pipelineModel,
-            this.readonly,
-        );
         pipeline._id = this.originalPipeline._id;
         pipeline.name = this.originalPipeline.name;
         pipeline.description = this.originalPipeline.description;
@@ -313,6 +347,8 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         const saveResult = await this.savePipelineResource(
             pipeline,
             startPipelineAfterStorage,
+            true,
+            this.pipelineCanvasMetadata,
         );
         if (!saveResult.saveSuccessful) {
             return;
@@ -327,10 +363,14 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private async savePipelineResource(
         pipeline: Pipeline,
         startPipelineAfterStorage: boolean,
+        updateExisting: boolean,
+        pipelineCanvasMetadata: PipelineCanvasMetadata,
     ): Promise<PipelineSaveResult> {
         const saveResult = await this.executePipelineSave(
             pipeline,
             startPipelineAfterStorage,
+            updateExisting,
+            pipelineCanvasMetadata,
         );
         await this.openPipelineSaveStatusDialog(saveResult);
         return saveResult;
@@ -434,9 +474,45 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         return !!shouldContinue;
     }
 
+    private prepareClonedPipeline(pipeline: Pipeline): void {
+        pipeline._id = undefined;
+        pipeline._rev = undefined;
+        pipeline.name = this.originalPipeline.name;
+        pipeline.description = this.originalPipeline.description;
+        pipeline.running = false;
+        pipeline.actions.forEach(element =>
+            this.updateInvocablePipelineElementId(element),
+        );
+        pipeline.sepas.forEach(element =>
+            this.updateInvocablePipelineElementId(element),
+        );
+    }
+
+    private updateInvocablePipelineElementId(
+        entity: InvocablePipelineElementUnion,
+    ): void {
+        const lastIdIndex = entity.elementId.lastIndexOf(':');
+        entity.elementId =
+            entity.elementId.substring(0, lastIdIndex + 1) +
+            this.idGeneratorService.generate(5);
+    }
+
+    private makeClonedPipelineCanvasMetadata(): PipelineCanvasMetadata {
+        const metadata = PipelineCanvasMetadata.fromData(
+            this.pipelineCanvasMetadata,
+            new PipelineCanvasMetadata(),
+        );
+        metadata._id = undefined;
+        metadata._rev = undefined;
+        metadata.pipelineId = undefined;
+        return metadata;
+    }
+
     private async executePipelineSave(
         pipeline: Pipeline,
         startPipelineAfterStorage: boolean,
+        updateExisting: boolean,
+        pipelineCanvasMetadata: PipelineCanvasMetadata,
     ): Promise<PipelineSaveResult> {
         const saveResult: PipelineSaveResult = {
             saveSuccessful: false,
@@ -444,7 +520,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         };
 
         try {
-            if (this.originalPipeline && pipeline.running) {
+            if (updateExisting && pipeline.running) {
                 this.addStatusIndicator(
                     saveResult,
                     this.translateService.instant('Stopping pipeline'),
@@ -471,7 +547,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
                 this.translateService.instant('Saving pipeline'),
                 Status.PROGRESS,
             );
-            const saveMessage = this.originalPipeline
+            const saveMessage = updateExisting
                 ? await firstValueFrom(
                       this.pipelineService.updatePipeline(pipeline),
                   )
@@ -487,7 +563,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
             this.modifyLastStatusIndicator(saveResult, Status.SUCCESS);
 
             const pipelineId =
-                this.originalPipeline?._id ??
+                (updateExisting ? this.originalPipeline?._id : undefined) ??
                 saveMessage.notifications?.[1]?.description;
             if (!pipelineId) {
                 this.addStatusIndicator(
@@ -506,11 +582,11 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
                 this.translateService.instant('Saving metadata'),
                 Status.PROGRESS,
             );
-            this.pipelineCanvasMetadata.pipelineId = pipelineId;
+            pipelineCanvasMetadata.pipelineId = pipelineId;
             await firstValueFrom(
                 this.pipelineCanvasService.updatePipelineCanvasMetadata(
                     pipelineId,
-                    this.pipelineCanvasMetadata,
+                    pipelineCanvasMetadata,
                 ),
             );
             this.modifyLastStatusIndicator(saveResult, Status.SUCCESS);
