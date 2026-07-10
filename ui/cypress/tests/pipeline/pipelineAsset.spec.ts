@@ -64,15 +64,14 @@ describe('Test Saving Pipeline with Asset Link', () => {
 
     it('Add Pipeline to Asset during creation', () => {
         AssetUtils.goToAssets();
-        AssetUtils.checkAmountOfAssetsGreaterThan(0);
-
-        AssetUtils.editAsset(assetName1);
-        AssetUtils.checkAmountOfLinkedResources(linkedPipelineResources);
-
-        AssetUtils.goToAssets();
-        AssetUtils.checkAmountOfAssetsGreaterThan(0);
-        AssetUtils.editAsset(assetName2);
-        AssetUtils.checkAmountOfLinkedResources(linkedPipelineResources);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(
+            assetName1,
+            linkedPipelineResources,
+        );
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(
+            assetName2,
+            linkedPipelineResources,
+        );
     });
 
     it('Edit Pipeline to Asset during Edit', () => {
@@ -83,10 +82,13 @@ describe('Test Saving Pipeline with Asset Link', () => {
         PipelineUtils.applyPipelineManagementChanges();
         PipelineUtils.savePipelineUpdate();
 
+        AssetUtils.goToAssets();
+
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(
             assetName2,
             linkedPipelineResources,
         );
+
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(
             assetName3,
             linkedPipelineResources,
