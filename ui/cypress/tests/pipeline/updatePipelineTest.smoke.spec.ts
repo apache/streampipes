@@ -29,14 +29,18 @@ describe('Test update of running pipeline', () => {
         PipelineUtils.addSampleAdapterAndPipeline();
         PipelineUtils.editPipeline(pipelineName);
         cy.wait(1000);
-        PipelineUtils.startPipeline();
+        PipelineBtns.savePipelineBtn().click();
+        PipelineBtns.savePipelineStatusClose().click();
         cy.dataCy('more-options', { timeout: 10000 }).should('have.length', 1);
 
         PipelineUtils.editPipeline(pipelineName);
         cy.wait(1000);
-        PipelineBtns.savePipelineBtn().click();
         PipelineUtils.clonePipeline('Pipeline Test 2');
-        PipelineUtils.finalizePipelineStart();
+        PipelineBtns.editorSaveBtn().click();
+        cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(
+            'be.visible',
+        );
+        PipelineBtns.savePipelineStatusClose().click();
         cy.dataCy('more-options', { timeout: 10000 }).should('have.length', 2);
     });
 });
