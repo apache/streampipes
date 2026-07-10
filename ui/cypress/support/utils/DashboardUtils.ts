@@ -87,7 +87,7 @@ export class DashboardUtils {
             .should('be.gte', amountOfEvents);
     }
 
-    public static removeWidgetFromDashboard(dashboardName: string) {
+    public static removeChartFromDashboard(dashboardName: string) {
         cy.visit('#/dashboard');
         cy.dataCy('edit-dashboard-' + dashboardName).click();
         cy.dataCy('widget-remove-button').click();
@@ -117,7 +117,7 @@ export class DashboardUtils {
             );
         }
 
-        DashboardUtils.removeWidgetFromDashboard(dashboardName);
+        DashboardUtils.removeChartFromDashboard(dashboardName);
     }
 
     public static checkAmountOfDashboards(amount: number) {

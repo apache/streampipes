@@ -43,7 +43,7 @@ describe('Test missing properties in data lake', () => {
     });
 
     it('Test table with missing properties', () => {
-        ChartUtils.addDataViewAndTableWidget(PrepareTestDataUtils.dataName);
+        ChartUtils.createTableChart(PrepareTestDataUtils.dataName);
 
         ChartWidgetTableUtils.checkAmountOfRows(5);
 

@@ -38,16 +38,12 @@ describe('Test add Assets To Dashboard', () => {
     });
 
     it('Create Dashboard and add Assets', () => {
-        const dataView = 'TestView';
+        const chart = 'TestView';
 
         const name = 'Dashboard1';
 
         const assetNameList = [assetName1, assetName2];
-        ChartUtils.createDashboardWithLinkedAssets(
-            dataView,
-            name,
-            assetNameList,
-        );
+        ChartUtils.createDashboardWithLinkedAssets(chart, name, assetNameList);
 
         //Go Back to Asset
         AssetUtils.goToAssets();
@@ -60,22 +56,18 @@ describe('Test add Assets To Dashboard', () => {
     });
 
     it('Edit Dashboard and edit Asset Links', () => {
-        const dataView = 'TestView';
+        const chart = 'TestView';
 
         const name = 'Dashboard1';
 
         const assetNameList = [assetName1, assetName2];
-        ChartUtils.createDashboardWithLinkedAssets(
-            dataView,
-            name,
-            assetNameList,
-        );
+        ChartUtils.createDashboardWithLinkedAssets(chart, name, assetNameList);
         ChartUtils.goToDashboard();
         ChartUtils.editDashboardSettings(name);
         ChartUtils.renameDashboard('NEW');
         const assetNameList2 = [assetName2, assetName3];
         ChartUtils.addToAsset(assetNameList2);
-        ChartUtils.saveDataView();
+        ChartUtils.saveChart();
 
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 1);

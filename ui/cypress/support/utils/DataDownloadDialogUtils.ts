@@ -31,7 +31,7 @@ export class DataDownloadDialogUtils {
         ChartUtils.goToDatalake();
 
         // select data view in edit mode
-        ChartUtils.editDataView(dataViewName);
+        ChartUtils.editChart(dataViewName);
 
         // select download button
         cy.dataCy('data-view-data-download-btn').click();

@@ -188,7 +188,7 @@ export class ChartSelectionComponent implements OnInit {
             chart,
             widgetTypeLabel,
             widgetTypeIcon: template?.icon ?? 'insert_chart',
-            dataCyId: `add-data-view-btn-${chart.name.replaceAll(' ', '')}`,
+            dataCyId: `add-chart-btn-${chart.name.replaceAll(' ', '')}`,
             searchText: [
                 chart.name,
                 chart.datasetName,

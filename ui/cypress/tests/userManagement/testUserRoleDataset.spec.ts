@@ -111,7 +111,7 @@ describe('Test Dataset Permissions', () => {
 
         GeneralUtils.openMenuForRow('test');
 
-        ChartBtns.viewWidget('test').click();
+        ChartBtns.viewChart('test').click();
 
         assertAlertBanner(true);
 
@@ -125,7 +125,7 @@ describe('Test Dataset Permissions', () => {
 
         GeneralUtils.openMenuForRow('test');
 
-        ChartBtns.viewWidget('test').click();
+        ChartBtns.viewChart('test').click();
 
         assertAlertBanner(false);
     });
@@ -167,15 +167,15 @@ describe('Test Dataset Permissions', () => {
 
     function assertDatasetAvailabilityInCharts(available: boolean) {
         ChartUtils.goToDatalake();
-        ChartBtns.openNewDataViewBtn().click();
+        ChartBtns.openNewChartBtn().click();
         if (!available) {
             cy.get('sp-alert-banner').should('be.visible');
-            ChartBtns.discardDataExplorerWidgetBtn().click();
+            ChartBtns.discardChartBtn().click();
         } else {
             ChartUtils.selectDataSet(datasetName);
-            ChartBtns.discardDataExplorerWidgetBtn().click();
-            ChartUtils.addDataViewAndTableWidget(datasetName, true);
-            ChartUtils.saveDataViewConfiguration(false, false, 'test');
+            ChartBtns.discardChartBtn().click();
+            ChartUtils.createTableChart(datasetName, true);
+            ChartUtils.saveChartConfiguration(false, false, 'test');
         }
     }
 
@@ -193,7 +193,7 @@ describe('Test Dataset Permissions', () => {
         ChartUtils.goToDashboard();
         ChartUtils.createNewDashboard(name);
         ChartUtils.editDashboard(name);
-        ChartUtils.addDataViewToDashboard('test', true);
+        ChartUtils.addChartToDashboard('test', true);
     }
     function assertDatasetIsVisibleAndEditableCanChangePermissions(user: User) {
         UserUtils.switchUser(user);

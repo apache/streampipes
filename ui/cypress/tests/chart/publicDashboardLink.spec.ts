@@ -57,12 +57,12 @@ describe('Public dashboard links', () => {
 });
 
 function createPublicDashboardWithTableChart(): void {
-    ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
-    ChartUtils.saveDataViewConfiguration(false, false, chartName);
+    ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
+    ChartUtils.saveChartConfiguration(false, false, chartName);
 
     ChartUtils.goToDashboard();
     ChartUtils.createAndEditDashboard(dashboardName);
-    ChartUtils.addDataViewToDashboard(chartName, true);
+    ChartUtils.addChartToDashboard(chartName, true);
     ChartUtils.saveDashboardConfiguration();
 
     PermissionUtils.markElementAsAnonymousPublic(dashboardName);
