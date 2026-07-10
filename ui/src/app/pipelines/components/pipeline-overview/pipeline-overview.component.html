@@ -219,16 +219,26 @@
         <button
             mat-menu-item
             (click)="
-                pipelineOperationsService.showPermissionsDialog(
+                pipelineOperationsService.showManageDialog(
                     element,
                     refreshPipelinesEmitter
                 )
             "
-            data-cy="open-manage-permissions"
+            data-cy="open-manage-pipeline"
         >
             <mat-icon>share</mat-icon>
-            <span>{{ 'Manage permissions' | translate }}</span>
+            <span>{{ 'Manage' | translate }}</span>
         </button>
+        @if (hasPipelineWritePrivileges) {
+            <button
+                mat-menu-item
+                (click)="pipelineOperationsService.showCodeDialog(element)"
+                data-cy="open-pipeline-code-trigger"
+            >
+                <mat-icon>code</mat-icon>
+                <span>{{ 'Code' | translate }}</span>
+            </button>
+        }
         @if (hasPipelineWritePrivileges) {
             <button
                 mat-menu-item

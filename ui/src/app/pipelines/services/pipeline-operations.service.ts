@@ -17,10 +17,16 @@
  */
 
 import { EventEmitter, inject, Injectable } from '@angular/core';
-import { PipelineSummaryDto } from '@streampipes/platform-services';
+import {
+    Pipeline,
+    PipelineService,
+    PipelineSummaryDto,
+} from '@streampipes/platform-services';
 import {
     DialogRef,
     DialogService,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
     ObjectPermissionDialogComponent,
     PanelType,
 } from '@streampipes/shared-ui';
@@ -29,11 +35,13 @@ import { DeletePipelineDialogComponent } from '../dialog/delete-pipeline/delete-
 import { Router } from '@angular/router';
 import { PipelineAction } from '../model/pipeline-model';
 import { PipelineNotificationsComponent } from '../dialog/pipeline-notifications/pipeline-notifications.component';
+import { PipelineCodeDialogComponent } from '../../pipeline-details/dialogs/pipeline-code/pipeline-code-dialog.component';
 
 @Injectable({ providedIn: 'root' })
 export class PipelineOperationsService {
     private dialogService = inject(DialogService);
     private router = inject(Router);
+    private pipelineService = inject(PipelineService);
 
     starting: any;
     stopping: any;
@@ -156,6 +164,47 @@ export class PipelineOperationsService {
         });
     }
 
+    showManageDialog(
+        pipelineSummary: PipelineSummaryDto,
+        refreshPipelinesEmitter: EventEmitter<boolean>,
+    ) {
+        this.pipelineService
+            .getPipelineById(pipelineSummary.elementId)
+            .subscribe(pipeline => {
+                const resourceConfig: ObjectManageDialogResourceConfig<Pipeline> =
+                    {
+                        resourceLabel: 'Pipeline',
+                        nameLabel: 'Pipeline name',
+                        descriptionLabel: 'Description',
+                        nameProperty: 'name',
+                        assetLinkType: 'pipeline',
+                        assetLinkCheckboxLabel:
+                            'Add the current pipeline to an existing asset',
+                        saveResource: resource =>
+                            this.pipelineService.updatePipeline(resource),
+                    };
+                const dialogRef = this.dialogService.open(
+                    ObjectManageDialogComponent,
+                    {
+                        panelType: PanelType.SLIDE_IN_PANEL,
+                        title: 'Manage',
+                        width: '50vw',
+                        data: {
+                            objectInstanceId: pipeline._id,
+                            resource: { ...pipeline },
+                            saveMode: 'immediate',
+                            resourceConfig,
+                            headerTitle: 'Manage Pipeline ' + pipeline.name,
+                        },
+                    },
+                );
+
+                dialogRef.afterClosed().subscribe(refresh => {
+                    refreshPipelinesEmitter.emit(!!refresh);
+                });
+            });
+    }
+
     showPermissionsDialog(
         pipelineSummary: PipelineSummaryDto,
         refreshPipelinesEmitter: EventEmitter<boolean>,
@@ -178,6 +227,21 @@ export class PipelineOperationsService {
         dialogRef.afterClosed().subscribe(refresh => {
             refreshPipelinesEmitter.emit(refresh);
         });
+    }
+
+    showCodeDialog(pipelineSummary: PipelineSummaryDto): void {
+        this.pipelineService
+            .getPipelineById(pipelineSummary.elementId)
+            .subscribe(pipeline => {
+                this.dialogService.open(PipelineCodeDialogComponent, {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    width: '50vw',
+                    title: 'Pipeline code',
+                    data: {
+                        pipeline,
+                    },
+                });
+            });
     }
 
     showPipelineInEditor(id: string) {
