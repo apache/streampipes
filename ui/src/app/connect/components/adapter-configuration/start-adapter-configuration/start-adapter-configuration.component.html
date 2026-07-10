@@ -17,11 +17,13 @@
 -->
 
 <div [formGroup]="startAdapterForm" fxLayout="column" fxFlex="100">
+    @if(!isEditMode){   
     <sp-basic-inner-panel
         [panelTitle]="'Adapter settings' | translate"
         outerMargin="20px 0px 10px 0px"
     >
         <div fxFlex="100">
+         
             <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
                 <sp-form-field [level]="2" [label]="'Name' | translate">
                     <mat-form-field color="accent">
@@ -93,7 +95,7 @@
             </div>
         </div>
     </sp-basic-inner-panel>
-
+    }
     <div fxFlex="100" fxLayout="column">
         @if (!isEditMode) {
             <sp-adapter-options-panel
@@ -107,7 +109,7 @@
             </sp-adapter-options-panel>
         }
 
-        @if (isAssetAdmin) {
+        @if (isAssetAdmin && !isEditMode) {
             <sp-adapter-options-panel
                 [optionTitle]="'Add to Asset' | translate"
                 [optionDescription]="
@@ -283,24 +285,7 @@
             }
         }
 
-        <sp-adapter-options-panel
-            [optionTitle]="'Show code' | translate"
-            [optionDescription]="
-                'Show code to programmatically deploy this adapter over the API'
-                    | translate
-            "
-            optionIcon="code"
-            dataCy="show-code-checkbox"
-            (optionSelectedEmitter)="showCode = $event"
-        >
-            @if (showCode) {
-                <sp-adapter-code-panel
-                    [adapterDescription]="adapterDescription"
-                    class="w-100"
-                >
-                </sp-adapter-code-panel>
-            }
-        </sp-adapter-options-panel>
+
     </div>
 
     <div fxLayoutAlign="end" style="margin-top: 10px">
