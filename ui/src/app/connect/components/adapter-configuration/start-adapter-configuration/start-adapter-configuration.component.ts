@@ -64,7 +64,6 @@ import { MatInput } from '@angular/material/input';
 import { SpAdapterOptionsPanelComponent } from './adapter-options-panel/adapter-options-panel.component';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatTooltip } from '@angular/material/tooltip';
-import { AdapterCodePanelComponent } from '../../adapter-code-panel/adapter-code-panel.component';
 import { MatButton } from '@angular/material/button';
 
 @Component({
