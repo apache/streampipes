@@ -84,6 +84,11 @@ interface PipelineSaveResult {
     pipelineAction?: PipelineAction;
 }
 
+interface PipelineUpdatePreflightResult {
+    continueSave: boolean;
+    statusIndicators: StatusIndicator[];
+}
+
 @Component({
     selector: 'sp-pipeline-assembly',
     templateUrl: './pipeline-assembly.component.html',
@@ -340,7 +345,15 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         pipeline.createdAt = this.originalPipeline.createdAt;
         pipeline.createdByUser = this.originalPipeline.createdByUser;
 
-        if (!(await this.confirmPipelineUpdateIfRequired(pipeline))) {
+        const preflightResult =
+            await this.performPipelineUpdatePreflightIfRequired(pipeline);
+        if (!preflightResult.continueSave) {
+            if (preflightResult.statusIndicators.length > 0) {
+                await this.openPipelineSaveStatusDialog({
+                    saveSuccessful: false,
+                    statusIndicators: preflightResult.statusIndicators,
+                });
+            }
             return;
         }
 
@@ -349,6 +362,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
             startPipelineAfterStorage,
             true,
             this.pipelineCanvasMetadata,
+            preflightResult.statusIndicators,
         );
         if (!saveResult.saveSuccessful) {
             return;
@@ -365,12 +379,14 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         startPipelineAfterStorage: boolean,
         updateExisting: boolean,
         pipelineCanvasMetadata: PipelineCanvasMetadata,
+        initialStatusIndicators: StatusIndicator[] = [],
     ): Promise<PipelineSaveResult> {
         const saveResult = await this.executePipelineSave(
             pipeline,
             startPipelineAfterStorage,
             updateExisting,
             pipelineCanvasMetadata,
+            initialStatusIndicators,
         );
         await this.openPipelineSaveStatusDialog(saveResult);
         return saveResult;
@@ -421,22 +437,54 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         ];
     }
 
-    private async confirmPipelineUpdateIfRequired(
+    private async performPipelineUpdatePreflightIfRequired(
         pipeline: Pipeline,
-    ): Promise<boolean> {
+    ): Promise<PipelineUpdatePreflightResult> {
         if (!this.originalPipeline || !this.hasDataLakeSink(pipeline)) {
-            return true;
+            return {
+                continueSave: true,
+                statusIndicators: [],
+            };
         }
 
-        const measurementUpdateInfos = await firstValueFrom(
-            this.pipelineService.performPipelineMigrationPreflight(pipeline),
-        );
+        const statusIndicators: StatusIndicator[] = [
+            {
+                message: this.translateService.instant(
+                    'Checking pipeline update',
+                ),
+                status: Status.PROGRESS,
+            },
+        ];
+
+        let measurementUpdateInfos: MeasurementUpdateInfo[];
+        try {
+            measurementUpdateInfos = await firstValueFrom(
+                this.pipelineService.performPipelineMigrationPreflight(
+                    pipeline,
+                ),
+            );
+        } catch {
+            statusIndicators[0].status = Status.FAILURE;
+            return {
+                continueSave: false,
+                statusIndicators,
+            };
+        }
 
         if (measurementUpdateInfos.length === 0) {
-            return true;
+            statusIndicators[0].status = Status.SUCCESS;
+            return {
+                continueSave: true,
+                statusIndicators,
+            };
         }
 
-        return this.openPipelineUpdateMigrationDialog(measurementUpdateInfos);
+        return {
+            continueSave: await this.openPipelineUpdateMigrationDialog(
+                measurementUpdateInfos,
+            ),
+            statusIndicators: [],
+        };
     }
 
     private hasDataLakeSink(pipeline: Pipeline): boolean {
@@ -513,10 +561,11 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         startPipelineAfterStorage: boolean,
         updateExisting: boolean,
         pipelineCanvasMetadata: PipelineCanvasMetadata,
+        initialStatusIndicators: StatusIndicator[],
     ): Promise<PipelineSaveResult> {
         const saveResult: PipelineSaveResult = {
             saveSuccessful: false,
-            statusIndicators: [],
+            statusIndicators: [...initialStatusIndicators],
         };
 
         try {
@@ -647,7 +696,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
             SavePipelineStatusDialogComponent,
             {
                 panelType: PanelType.STANDARD_PANEL,
-                title: this.translateService.instant('Pipeline status'),
+                title: this.translateService.instant('Save pipeline'),
                 width: '50vw',
                 data: {
                     statusIndicators: saveResult.statusIndicators,
