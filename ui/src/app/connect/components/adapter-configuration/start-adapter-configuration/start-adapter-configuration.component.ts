@@ -87,7 +87,6 @@ import { MatButton } from '@angular/material/button';
         MatSelect,
         MatOption,
         MatTooltip,
-        AdapterCodePanelComponent,
         MatButton,
         TranslatePipe,
         TimestampPipe,
