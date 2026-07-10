@@ -33,7 +33,7 @@ describe('Test rename of running pipeline', () => {
         PipelineUtils.editPipeline('Pipeline Test');
         cy.wait(1000);
         PipelineBtns.savePipelineBtn().click();
-        cy.dataCy('sp-editor-pipeline-name').clear();
+        cy.dataCy('managed-resource-name').clear();
         PipelineUtils.updatePipeline('Renamed Pipeline');
         PipelineUtils.finalizePipelineStart();
 
@@ -42,7 +42,7 @@ describe('Test rename of running pipeline', () => {
 
         PipelineUtils.editPipeline('Renamed Pipeline');
         PipelineBtns.savePipelineBtn().click();
-        cy.dataCy('sp-editor-pipeline-name').clear();
+        cy.dataCy('managed-resource-name').clear();
         PipelineUtils.clonePipeline('Cloned Renamed Pipeline');
         PipelineUtils.finalizePipelineStart();
 

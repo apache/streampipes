@@ -164,7 +164,6 @@ describe('Test pipeline updates with data lake schema changes', () => {
 
     function savePipeline() {
         PipelineBtns.savePipelineBtn().click();
-        PipelineBtns.navigateToOverviewCheckbox().children().click();
         PipelineBtns.editorApplyBtn().click();
     }
 

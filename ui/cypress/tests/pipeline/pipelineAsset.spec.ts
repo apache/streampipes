@@ -81,7 +81,7 @@ describe('Test Saving Pipeline with Asset Link', () => {
         cy.dataCy('sp-editor-save-pipeline', { timeout: 10000 })
             .should('exist')
             .click();
-        cy.dataCy('sp-editor-pipeline-name').clear();
+        cy.dataCy('managed-resource-name').clear();
         PipelineUtils.updatePipeline('Renamed Pipeline');
         PipelineUtils.finalizePipelineStart([assetName1, assetName3]);
 

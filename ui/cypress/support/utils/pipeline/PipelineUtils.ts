@@ -157,9 +157,7 @@ export class PipelineUtils {
         // Save and start pipeline
         PipelineBtns.savePipelineBtn().click();
         if (pipelineInput) {
-            cy.dataCy('sp-editor-pipeline-name').type(
-                pipelineInput.pipelineName,
-            );
+            cy.dataCy('managed-resource-name').type(pipelineInput.pipelineName);
         }
         PipelineUtils.finalizePipelineStart();
     }
@@ -171,9 +169,7 @@ export class PipelineUtils {
         // Save and start pipeline
         PipelineBtns.savePipelineBtn().click();
         if (pipelineInput) {
-            cy.dataCy('sp-editor-pipeline-name').type(
-                pipelineInput.pipelineName,
-            );
+            cy.dataCy('managed-resource-name').type(pipelineInput.pipelineName);
         }
         PipelineUtils.finalizePipelineStart(assetNameList);
     }
@@ -198,26 +194,25 @@ export class PipelineUtils {
     }
 
     public static clonePipeline(newPipelineName: string) {
-        cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
+        cy.dataCy('managed-resource-name').type(newPipelineName);
         PipelineBtns.pipelineCloneModeBtn().children().click();
     }
 
     public static updatePipeline(newPipelineName: string) {
         //PipelineBtns.pipelineCloneModeBtn().children().click();
-        cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
+        cy.dataCy('managed-resource-name').type(newPipelineName);
     }
 
     public static finalizePipelineStart(assetNameList?: string[]) {
-        PipelineBtns.navigateToOverviewCheckbox().children().click();
         if (assetNameList) {
             PipelineUtils.addToAsset(assetNameList);
         }
+
         PipelineBtns.editorApplyBtn().click();
 
         cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(
             'be.visible',
         );
-        PipelineBtns.navigateToPipelineOverview().click();
     }
 
     public static checkAmountOfPipelinesPipeline(amount: number) {

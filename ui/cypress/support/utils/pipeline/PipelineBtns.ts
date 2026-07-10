@@ -90,12 +90,8 @@ export class PipelineBtns {
         return cy.dataCy('pipeline-update-mode-clone');
     }
 
-    public static navigateToOverviewCheckbox() {
-        return cy.dataCy('sp-editor-checkbox-navigate-to-overview');
-    }
-
     public static editorApplyBtn() {
-        return cy.dataCy('sp-editor-apply');
+        return cy.dataCy('sp-manage-save');
     }
 
     public static pipelineStartedError() {
