@@ -53,6 +53,7 @@ import {
     SpTableActionsDirective,
     SpTableComponent,
 } from '@streampipes/shared-ui';
+import { AdapterCodePanelComponent } from '../adapter-code-panel/adapter-code-panel.component';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -325,7 +326,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     showManageDialog(adapter: AdapterSummaryDto): void {
-        this.adapterService.getAdapter(adapter.elementId).subscribe(fullAdapter => {
+         this.adapterService.getAdapter(adapter.elementId).subscribe(fullAdapter => {
             const resourceConfig: ObjectManageDialogResourceConfig<AdapterDescription> =
                 {
                     resourceLabel: 'Adapter',
@@ -363,8 +364,22 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                     this.getAdaptersRunning();
                 }
             });
-        });
+              });
     }
+
+showCodeDialog(adapter: AdapterSummaryDto): void {
+    this.adapterService.getAdapter(adapter.elementId).subscribe(fullAdapter => {
+        this.dialogService.open(AdapterCodePanelComponent, {
+            panelType: PanelType.STANDARD_PANEL,
+            title: this.translate.instant('Show as Code'),
+            width: '70vw',
+            data: {
+                adapterDescription: fullAdapter,
+                maxHeight: 'none',
+            },
+        });
+    });
+}
 
     /**
      * Start edit mode

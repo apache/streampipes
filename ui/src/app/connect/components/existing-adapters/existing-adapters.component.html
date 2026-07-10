@@ -254,6 +254,14 @@
                     </button>
                     <button
                         mat-menu-item
+                        data-cy="show-adapter-code"
+                        (click)="showCodeDialog(element)"
+                    >
+                        <mat-icon>code</mat-icon>
+                        <span>{{ 'Show as Code' | translate }}</span>
+                    </button>
+                    <button
+                        mat-menu-item
                         data-cy="edit-adapter"
                         (click)="editAdapter(element)"
                     >
