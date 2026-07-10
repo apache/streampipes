@@ -194,8 +194,12 @@ export class PipelineUtils {
     }
 
     public static clonePipeline(newPipelineName: string) {
+        cy.dataCy('sp-editor-checkbox-create-new-pipeline', {
+            timeout: 15000,
+        }).click();
+        PipelineBtns.savePipelineBtn().click();
+        cy.dataCy('managed-resource-name').clear();
         cy.dataCy('managed-resource-name').type(newPipelineName);
-        PipelineBtns.pipelineCloneModeBtn().children().click();
     }
 
     public static updatePipeline(newPipelineName: string) {
