@@ -53,7 +53,7 @@ import {
     SpTableActionsDirective,
     SpTableComponent,
 } from '@streampipes/shared-ui';
-import { AdapterCodePanelComponent } from '../adapter-code-panel/adapter-code-panel.component';
+import { AdapterCodeDialogComponent } from '../../dialog/adapter-code-dialog/adapter-code-dialog.component';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -373,13 +373,12 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.adapterService
             .getAdapter(adapter.elementId)
             .subscribe(fullAdapter => {
-                this.dialogService.open(AdapterCodePanelComponent, {
-                    panelType: PanelType.STANDARD_PANEL,
+                this.dialogService.open(AdapterCodeDialogComponent, {
+                    panelType: PanelType.SLIDE_IN_PANEL,
                     title: this.translate.instant('Show as Code'),
-                    width: '70vw',
+                    width: '50vw',
                     data: {
-                        adapterDescription: fullAdapter,
-                        maxHeight: 'none',
+                        adapter: fullAdapter,
                     },
                 });
             });
