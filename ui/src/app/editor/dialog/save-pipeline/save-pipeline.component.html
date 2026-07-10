@@ -1,0 +1,78 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content padding-20">
+        <div fxFlex="100" fxLayout="column">
+            @if (
+                pipelineUpdatePreflight &&
+                !operationCompleted &&
+                !operationProgress
+            ) {
+                <sp-save-pipeline-update-migration
+                    [measurementUpdateInfos]="measurementUpdateInfos"
+                    (startUpdateEmitter)="savePipeline(true)"
+                >
+                </sp-save-pipeline-update-migration>
+            }
+
+            @if (operationProgress || operationCompleted) {
+                <sp-multi-step-status-indicator
+                    [statusIndicators]="statusIndicators"
+                >
+                </sp-multi-step-status-indicator>
+            }
+
+            @if (finalPipelineOperationStatus) {
+                <div class="mt-10">
+                    <mat-divider></mat-divider>
+                    <sp-pipeline-started-status
+                        class="mt-10"
+                        [forceStopDisabled]="true"
+                        [action]="pipelineAction"
+                        [pipelineOperationStatus]="finalPipelineOperationStatus"
+                    >
+                    </sp-pipeline-started-status>
+                </div>
+            }
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions" fxLayoutGap="10px">
+        @if (operationCompleted) {
+            <button
+                mat-flat-button
+                class="mat-basic"
+                data-cy="sp-save-pipeline-status-close"
+                (click)="close()"
+            >
+                {{ 'Close' | translate }}
+            </button>
+        }
+        @if (pipelineUpdatePreflight && !operationProgress) {
+            <button
+                mat-flat-button
+                class="mat-basic"
+                data-cy="sp-editor-cancel"
+                (click)="close()"
+            >
+                {{ 'Cancel' | translate }}
+            </button>
+        }
+    </div>
+</div>
