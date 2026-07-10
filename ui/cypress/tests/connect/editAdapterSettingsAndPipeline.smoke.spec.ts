@@ -99,8 +99,7 @@ describe('Test Edit Adapter and Pipeline', () => {
             .click({ force: true });
         PipelineBtns.saveElementConfigBtn().click({ force: true });
         PipelineBtns.savePipelineBtn().click();
-        PipelineBtns.editorApplyBtn().click();
-        PipelineBtns.navigateToPipelineOverview().click();
+        PipelineBtns.savePipelineStatusClose().click();
 
         // Visit dashboard
         cy.wait(5000);
