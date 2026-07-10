@@ -37,14 +37,13 @@ import { TranslatePipe } from '@ngx-translate/core';
         TranslatePipe,
     ],
 })
-export class AdapterCodeDialogComponent implements OnInit {
+export class AdapterCodeDialogComponent {
     private dialogRef =
         inject<DialogRef<AdapterCodeDialogComponent>>(DialogRef);
 
     @Input()
     adapter: AdapterDescription;
 
-    ngOnInit(): void {}
 
     close(): void {
         this.dialogRef.close();
