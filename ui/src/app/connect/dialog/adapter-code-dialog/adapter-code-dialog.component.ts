@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { AdapterDescription } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
