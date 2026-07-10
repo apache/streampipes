@@ -96,7 +96,9 @@
         #assemblyOptionsPipelineCacheComponent
     >
     </sp-pipeline-assembly-options-pipeline-cache>
-    @if (editMode) {
+
+    <span fxFlex></span>
+        @if (editMode) {
         <button
             mat-icon-button
             [matMenuTriggerFor]="pipelineOptionsMenu"
@@ -124,7 +126,6 @@
             </button>
         </mat-menu>
     }
-    <span fxFlex></span>
     <button
         mat-icon-button
         [matTooltip]="'Clear Assembly Area' | translate"
