@@ -18,6 +18,7 @@
 
 import { EventEmitter, inject, Injectable } from '@angular/core';
 import {
+    Message,
     Pipeline,
     PipelineService,
     PipelineSummaryDto,
@@ -36,6 +37,7 @@ import { Router } from '@angular/router';
 import { PipelineAction } from '../model/pipeline-model';
 import { PipelineNotificationsComponent } from '../dialog/pipeline-notifications/pipeline-notifications.component';
 import { PipelineCodeDialogComponent } from '../../pipeline-details/dialogs/pipeline-code/pipeline-code-dialog.component';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PipelineOperationsService {
@@ -180,8 +182,38 @@ export class PipelineOperationsService {
                         assetLinkType: 'pipeline',
                         assetLinkCheckboxLabel:
                             'Add the current pipeline to an existing asset',
-                        saveResource: resource =>
-                            this.pipelineService.updatePipeline(resource),
+                        saveResource: async resource => {
+                            const shouldRestart = resource.running;
+
+                            if (shouldRestart) {
+                                const stopResult = await firstValueFrom(
+                                    this.pipelineService.stopPipeline(
+                                        resource._id,
+                                    ),
+                                );
+                                this.assertPipelineOperationSucceeded(
+                                    stopResult.success,
+                                    'Stopping the pipeline failed.',
+                                );
+                            }
+
+                            const result = await firstValueFrom(
+                                this.pipelineService.updatePipeline(resource),
+                            );
+                            this.assertPipelineSaveSucceeded(result);
+
+                            if (shouldRestart) {
+                                const startResult = await firstValueFrom(
+                                    this.pipelineService.startPipeline(
+                                        resource._id,
+                                    ),
+                                );
+                                this.assertPipelineOperationSucceeded(
+                                    startResult.success,
+                                    'Starting the pipeline failed.',
+                                );
+                            }
+                        },
                     };
                 const dialogRef = this.dialogService.open(
                     ObjectManageDialogComponent,
@@ -254,5 +286,20 @@ export class PipelineOperationsService {
 
     modifyPipeline(pipeline) {
         this.showPipelineInEditor(pipeline);
+    }
+
+    private assertPipelineSaveSucceeded(result: Message): void {
+        if (!result.success) {
+            throw new Error('Saving the pipeline failed.');
+        }
+    }
+
+    private assertPipelineOperationSucceeded(
+        success: boolean,
+        errorMessage: string,
+    ): void {
+        if (!success) {
+            throw new Error(errorMessage);
+        }
     }
 }

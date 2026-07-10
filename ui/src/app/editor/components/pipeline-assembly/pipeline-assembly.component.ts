@@ -47,7 +47,6 @@ import {
 import { EditorService } from '../../services/editor.service';
 import {
     LinkageData,
-    Message,
     MeasurementUpdateInfo,
     Pipeline,
     PipelineCanvasMetadata,
@@ -66,6 +65,19 @@ import { TranslateService } from '@ngx-translate/core';
 import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
 import { SavePipelineUpdateMigrationComponent } from '../../dialog/save-pipeline/save-pipeline-update-migration/save-pipeline-update-migration.component';
+import { SavePipelineStatusDialogComponent } from '../../dialog/save-pipeline/save-pipeline-status-dialog/save-pipeline-status-dialog.component';
+import {
+    Status,
+    StatusIndicator,
+} from '../../../core-ui/multi-step-status-indicator/multi-step-status-indicator.model';
+import { PipelineAction } from '../../../pipelines/model/pipeline-model';
+
+interface PipelineSaveResult {
+    saveSuccessful: boolean;
+    statusIndicators: StatusIndicator[];
+    finalPipelineOperationStatus?: PipelineOperationStatus;
+    pipelineAction?: PipelineAction;
+}
 
 @Component({
     selector: 'sp-pipeline-assembly',
@@ -189,8 +201,15 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
             assetLinkType: 'pipeline',
             assetLinkCheckboxLabel:
                 'Add the current pipeline to an existing asset',
-            saveResource: resource =>
-                this.savePipelineResource(resource, startPipelineAfterStorage),
+            saveResource: async resource => {
+                const saveResult = await this.savePipelineResource(
+                    resource,
+                    startPipelineAfterStorage,
+                );
+                if (!saveResult.saveSuccessful) {
+                    throw new Error('Saving the pipeline failed.');
+                }
+            },
         };
         const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
@@ -291,7 +310,14 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
-        await this.savePipelineResource(pipeline, startPipelineAfterStorage);
+        const saveResult = await this.savePipelineResource(
+            pipeline,
+            startPipelineAfterStorage,
+        );
+        if (!saveResult.saveSuccessful) {
+            return;
+        }
+
         await this.savePendingManagePipelineChanges();
         this.editorService.makePipelineAssemblyEmpty(true);
         this.editorService.removePipelineFromCache().subscribe();
@@ -301,74 +327,13 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private async savePipelineResource(
         pipeline: Pipeline,
         startPipelineAfterStorage: boolean,
-    ): Promise<void> {
-        const pipelineId = await this.persistPipeline(pipeline);
-        this.pipelineCanvasMetadata.pipelineId = pipelineId;
-        await firstValueFrom(
-            this.pipelineCanvasService.updatePipelineCanvasMetadata(
-                pipelineId,
-                this.pipelineCanvasMetadata,
-            ),
+    ): Promise<PipelineSaveResult> {
+        const saveResult = await this.executePipelineSave(
+            pipeline,
+            startPipelineAfterStorage,
         );
-
-        if (startPipelineAfterStorage) {
-            await this.startPipeline(pipelineId);
-        }
-    }
-
-    private async persistPipeline(pipeline: Pipeline): Promise<string> {
-        if (this.originalPipeline) {
-            if (pipeline.running) {
-                await this.stopPipeline(this.originalPipeline._id);
-            }
-
-            const result = await firstValueFrom(
-                this.pipelineService.updatePipeline(pipeline),
-            );
-            this.assertSaveSuccess(result);
-            return this.originalPipeline._id;
-        }
-
-        const result = await firstValueFrom(
-            this.pipelineService.storePipeline(pipeline),
-        );
-        this.assertSaveSuccess(result);
-        const pipelineId = result.notifications?.[1]?.description;
-
-        if (!pipelineId) {
-            throw new Error('The pipeline id was missing after saving.');
-        }
-
-        pipeline._id = pipelineId;
-        return pipelineId;
-    }
-
-    private async stopPipeline(pipelineId: string): Promise<void> {
-        const result = await firstValueFrom(
-            this.pipelineService.stopPipeline(pipelineId),
-        );
-
-        if (!result.success) {
-            throw new Error('Stopping the existing pipeline failed.');
-        }
-    }
-
-    private async startPipeline(pipelineId: string): Promise<void> {
-        const result = await firstValueFrom(
-            this.pipelineService.startPipeline(pipelineId),
-        );
-
-        if (!result.success) {
-            throw new Error('Starting the pipeline failed.');
-        }
-    }
-
-    private assertSaveSuccess(
-        result: Message | PipelineOperationStatus,
-    ): asserts result is Message {
-        if (!result.success) {
-            throw new Error('Saving the pipeline failed.');
-        }
+        await this.openPipelineSaveStatusDialog(saveResult);
+        return saveResult;
     }
 
     private async savePendingManagePipelineChanges(): Promise<void> {
@@ -467,6 +432,157 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         const shouldContinue = await firstValueFrom(dialogRef.afterClosed());
         startUpdateSubscription.unsubscribe();
         return !!shouldContinue;
+    }
+
+    private async executePipelineSave(
+        pipeline: Pipeline,
+        startPipelineAfterStorage: boolean,
+    ): Promise<PipelineSaveResult> {
+        const saveResult: PipelineSaveResult = {
+            saveSuccessful: false,
+            statusIndicators: [],
+        };
+
+        try {
+            if (this.originalPipeline && pipeline.running) {
+                this.addStatusIndicator(
+                    saveResult,
+                    this.translateService.instant('Stopping pipeline'),
+                    Status.PROGRESS,
+                );
+                const stopResult = await firstValueFrom(
+                    this.pipelineService.stopPipeline(
+                        this.originalPipeline._id,
+                    ),
+                );
+                saveResult.finalPipelineOperationStatus = stopResult;
+                saveResult.pipelineAction = PipelineAction.Stop;
+                this.modifyLastStatusIndicator(
+                    saveResult,
+                    stopResult.success ? Status.SUCCESS : Status.FAILURE,
+                );
+                if (!stopResult.success) {
+                    return saveResult;
+                }
+            }
+
+            this.addStatusIndicator(
+                saveResult,
+                this.translateService.instant('Saving pipeline'),
+                Status.PROGRESS,
+            );
+            const saveMessage = this.originalPipeline
+                ? await firstValueFrom(
+                      this.pipelineService.updatePipeline(pipeline),
+                  )
+                : await firstValueFrom(
+                      this.pipelineService.storePipeline(pipeline),
+                  );
+
+            if (!saveMessage.success) {
+                this.modifyLastStatusIndicator(saveResult, Status.FAILURE);
+                return saveResult;
+            }
+
+            this.modifyLastStatusIndicator(saveResult, Status.SUCCESS);
+
+            const pipelineId =
+                this.originalPipeline?._id ??
+                saveMessage.notifications?.[1]?.description;
+            if (!pipelineId) {
+                this.addStatusIndicator(
+                    saveResult,
+                    this.translateService.instant(
+                        'The pipeline id was missing after saving.',
+                    ),
+                    Status.FAILURE,
+                );
+                return saveResult;
+            }
+
+            pipeline._id = pipelineId;
+            this.addStatusIndicator(
+                saveResult,
+                this.translateService.instant('Saving metadata'),
+                Status.PROGRESS,
+            );
+            this.pipelineCanvasMetadata.pipelineId = pipelineId;
+            await firstValueFrom(
+                this.pipelineCanvasService.updatePipelineCanvasMetadata(
+                    pipelineId,
+                    this.pipelineCanvasMetadata,
+                ),
+            );
+            this.modifyLastStatusIndicator(saveResult, Status.SUCCESS);
+            saveResult.saveSuccessful = true;
+
+            if (startPipelineAfterStorage) {
+                this.addStatusIndicator(
+                    saveResult,
+                    this.translateService.instant('Starting pipeline'),
+                    Status.PROGRESS,
+                );
+                const startResult = await firstValueFrom(
+                    this.pipelineService.startPipeline(pipelineId),
+                );
+                saveResult.finalPipelineOperationStatus = startResult;
+                saveResult.pipelineAction = PipelineAction.Start;
+                this.modifyLastStatusIndicator(
+                    saveResult,
+                    startResult.success ? Status.SUCCESS : Status.FAILURE,
+                );
+            }
+        } catch {
+            if (saveResult.statusIndicators.length === 0) {
+                this.addStatusIndicator(
+                    saveResult,
+                    this.translateService.instant('Saving pipeline'),
+                    Status.FAILURE,
+                );
+            } else {
+                this.modifyLastStatusIndicator(saveResult, Status.FAILURE);
+            }
+        }
+
+        return saveResult;
+    }
+
+    private addStatusIndicator(
+        saveResult: PipelineSaveResult,
+        message: string,
+        status: Status,
+    ): void {
+        saveResult.statusIndicators.push({ message, status });
+    }
+
+    private modifyLastStatusIndicator(
+        saveResult: PipelineSaveResult,
+        status: Status,
+    ): void {
+        saveResult.statusIndicators[
+            saveResult.statusIndicators.length - 1
+        ].status = status;
+    }
+
+    private async openPipelineSaveStatusDialog(
+        saveResult: PipelineSaveResult,
+    ): Promise<void> {
+        const dialogRef = this.dialogService.open(
+            SavePipelineStatusDialogComponent,
+            {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translateService.instant('Pipeline status'),
+                width: '50vw',
+                data: {
+                    statusIndicators: saveResult.statusIndicators,
+                    finalPipelineOperationStatus:
+                        saveResult.finalPipelineOperationStatus,
+                    pipelineAction: saveResult.pipelineAction,
+                },
+            },
+        );
+
+        await firstValueFrom(dialogRef.afterClosed());
     }
 
     togglePreview(): void {

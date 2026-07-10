@@ -208,11 +208,12 @@ export class PipelineUtils {
             PipelineUtils.addToAsset(assetNameList);
         }
 
-        PipelineBtns.editorApplyBtn().click();
+        PipelineBtns.editorSaveBtn().click();
 
         cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(
             'be.visible',
         );
+        PipelineBtns.savePipelineStatusClose().click();
     }
 
     public static checkAmountOfPipelinesPipeline(amount: number) {

@@ -32,6 +32,10 @@ export class PipelineBtns {
         return cy.dataCy('modify-pipeline-btn');
     }
 
+    public static managePipeline() {
+        return cy.dataCy('open-manage-pipeline');
+    }
+
     public static pipelinesToEditor() {
         return cy.dataCy('pipelines-navigate-to-editor');
     }
@@ -91,6 +95,10 @@ export class PipelineBtns {
     }
 
     public static editorApplyBtn() {
+        return cy.dataCy('sp-editor-apply');
+    }
+
+    public static editorSaveBtn() {
         return cy.dataCy('sp-manage-save');
     }
 
@@ -158,6 +166,9 @@ export class PipelineBtns {
         return cy.dataCy('sp-editor-save-pipeline');
     }
 
+    public static savePipelineStatusClose() {
+        return cy.dataCy('sp-save-pipeline-status-close');
+    }
     public static pipelineAssetCheckbox() {
         return cy.dataCy('sp-show-pipeline-asset-checkbox');
     }
