@@ -19,10 +19,38 @@
 :host {
     display: block;
     height: 100%;
+    min-height: 0;
 }
 
 .designer-panel-content {
     padding: 0;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.asset-selection-view {
+    display: block;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+:host ::ng-deep .asset-selection-view .page-container {
+    height: calc(100vh - 76px);
+    min-height: 0;
+}
+
+:host
+    ::ng-deep
+    .asset-selection-view
+    .page-container
+    > div:not(.page-container-nav) {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.tree-content {
+    min-height: 0;
     overflow: hidden;
 }
 
@@ -30,6 +58,7 @@
     padding: 5px 5px 10px 2px;
     overflow-y: auto;
     flex: 1 1 auto;
+    min-height: 0;
 }
 
 .sp-tree-invisible {
