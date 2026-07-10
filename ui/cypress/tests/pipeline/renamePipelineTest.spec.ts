@@ -44,7 +44,7 @@ describe('Test rename of running pipeline', () => {
 
         PipelineUtils.verifyPipelineCount(1);
         PipelineUtils.verifyPipelineName('Renamed Pipeline');
-        /**
+
         PipelineUtils.editPipeline('Renamed Pipeline');
         PipelineBtns.savePipelineBtn().click();
         cy.dataCy('managed-resource-name').clear();
@@ -52,6 +52,6 @@ describe('Test rename of running pipeline', () => {
         PipelineUtils.finalizePipelineStart();
 
         PipelineUtils.verifyPipelineCount(2);
-        PipelineUtils.verifyPipelineName('Cloned Renamed Pipeline');*/
+        PipelineUtils.verifyPipelineName('Cloned Renamed Pipeline');
     });
 });
