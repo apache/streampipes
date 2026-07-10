@@ -109,7 +109,6 @@ describe('Test pipeline updates with data lake schema changes', () => {
 
         PipelineBtns.pipelineEditWarning().should('not.exist');
         PipelineBtns.pipelineStartedSuccess().should('be.visible');
-        PipelineBtns.navigateToPipelineOverview().click();
 
         ChartUtils.goToDatalake();
         ChartBtns.chartSyncProblemIcon().should('not.exist');
@@ -164,7 +163,6 @@ describe('Test pipeline updates with data lake schema changes', () => {
 
     function savePipeline() {
         PipelineBtns.savePipelineBtn().click();
-        PipelineBtns.editorApplyBtn().click();
     }
 
     function addTableChart(measurementName: string) {

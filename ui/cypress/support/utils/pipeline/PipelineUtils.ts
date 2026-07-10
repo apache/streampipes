@@ -218,13 +218,25 @@ export class PipelineUtils {
         PipelineUtils.updatePipeline(newPipelineName);
     }
 
+    public static applyPipelineManagementChanges() {
+        PipelineBtns.editorSaveBtn().click();
+    }
+
     public static finalizePipelineStart(assetNameList?: string[]) {
         if (assetNameList) {
             PipelineUtils.addToAsset(assetNameList);
         }
 
-        PipelineBtns.editorSaveBtn().click();
+        PipelineUtils.applyPipelineManagementChanges();
+        PipelineUtils.closePipelineSaveStatus();
+    }
 
+    public static savePipelineUpdate() {
+        PipelineBtns.savePipelineBtn().click();
+        PipelineUtils.closePipelineSaveStatus();
+    }
+
+    private static closePipelineSaveStatus() {
         cy.dataCy('sp-pipeline-started', { timeout: 15000 }).should(
             'be.visible',
         );
