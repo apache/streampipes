@@ -28,7 +28,7 @@
             [previewModeActive]="previewModeActive"
             (clearAssemblyEmitter)="clearAssembly()"
             (togglePreviewEmitter)="togglePreview()"
-            (savePipelineEmitter)="submit()"
+            (savePipelineEmitter)="submit($event)"
             (displayPipelineTemplateEmitter)="displayPipelineTemplate($event)"
         >
         </sp-pipeline-assembly-options>

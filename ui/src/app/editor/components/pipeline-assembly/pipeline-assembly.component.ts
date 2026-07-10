@@ -35,18 +35,23 @@ import { ObjectProvider } from '../../services/object-provider.service';
 import {
     DialogService,
     KeyboardShortcutService,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
     PanelType,
     ShortcutRegistration,
     SpBasicViewComponent,
 } from '@streampipes/shared-ui';
-import { SavePipelineComponent } from '../../dialog/save-pipeline/save-pipeline.component';
 import { EditorService } from '../../services/editor.service';
 import {
+    Message,
     Pipeline,
     PipelineCanvasMetadata,
+    PipelineCanvasMetadataService,
+    PipelineOperationStatus,
+    PipelineService,
 } from '@streampipes/platform-services';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
-import { forkJoin } from 'rxjs';
+import { firstValueFrom, forkJoin } from 'rxjs';
 import { Router } from '@angular/router';
 import { PipelineAssemblyDrawingAreaComponent } from './pipeline-assembly-drawing-area/pipeline-assembly-drawing-area.component';
 import { PipelineAssemblyOptionsComponent } from './pipeline-assembly-options/pipeline-assembly-options.component';
@@ -76,6 +81,8 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private jsplumbService = inject(JsplumbService);
     private translateService = inject(TranslateService);
     private shortcutService = inject(KeyboardShortcutService);
+    private pipelineService = inject(PipelineService);
+    private pipelineCanvasService = inject(PipelineCanvasMetadataService);
 
     @Input()
     rawPipelineModel: PipelineElementConfig[];
@@ -146,7 +153,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     /**
      * Sends the pipeline to the server
      */
-    submit() {
+    submit(startPipelineAfterStorage = true) {
         const pipelineModel = this.rawPipelineModel;
         const pipeline = this.objectProvider.makePipeline(pipelineModel);
         this.pipelinePositioningService.collectPipelineElementPositions(
@@ -157,27 +164,119 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
             pipelineModel,
             this.readonly,
         );
-        const dialogRef = this.dialogService.open(SavePipelineComponent, {
+        if (this.originalPipeline) {
+            pipeline._id = this.originalPipeline._id;
+            pipeline.name = this.originalPipeline.name;
+            pipeline.description = this.originalPipeline.description;
+            pipeline.running = this.originalPipeline.running;
+            pipeline.createdAt = this.originalPipeline.createdAt;
+            pipeline.createdByUser = this.originalPipeline.createdByUser;
+        }
+
+        const resourceConfig: ObjectManageDialogResourceConfig<Pipeline> = {
+            resourceLabel: 'Pipeline',
+            nameLabel: 'Pipeline name',
+            descriptionLabel: 'Description',
+            nameProperty: 'name',
+            assetLinkType: 'pipeline',
+            assetLinkCheckboxLabel:
+                'Add the current pipeline to an existing asset',
+            saveResource: resource =>
+                this.savePipelineResource(resource, startPipelineAfterStorage),
+        };
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: this.translateService.instant('Save pipeline'),
-            width: '40vw',
+            width: '50vw',
             data: {
-                pipeline: pipeline,
-                originalPipeline: this.originalPipeline,
-                pipelineCanvasMetadata: this.pipelineCanvasMetadata,
+                createMode: !this.originalPipeline,
+                objectInstanceId: this.originalPipeline?._id,
+                resource: JSON.parse(JSON.stringify(pipeline)),
+                saveMode: 'immediate',
+                resourceConfig,
+                headerTitle: this.translateService.instant('Save pipeline'),
             },
         });
-        dialogRef
-            .afterClosed()
-            .subscribe((config: { reload: boolean; pipelineId: string }) => {
-                if (config?.reload) {
-                    this.clearAssembly();
-                    this.rawPipelineModel = [];
-                    setTimeout(() => {
-                        this.router.navigate(['pipelines', 'create']);
-                    });
-                }
-            });
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.editorService.makePipelineAssemblyEmpty(true);
+                this.editorService.removePipelineFromCache().subscribe();
+                this.router.navigate(['pipelines']);
+            }
+        });
+    }
+
+    private async savePipelineResource(
+        pipeline: Pipeline,
+        startPipelineAfterStorage: boolean,
+    ): Promise<void> {
+        const pipelineId = await this.persistPipeline(pipeline);
+        this.pipelineCanvasMetadata.pipelineId = pipelineId;
+        await firstValueFrom(
+            this.pipelineCanvasService.updatePipelineCanvasMetadata(
+                pipelineId,
+                this.pipelineCanvasMetadata,
+            ),
+        );
+
+        if (startPipelineAfterStorage) {
+            await this.startPipeline(pipelineId);
+        }
+    }
+
+    private async persistPipeline(pipeline: Pipeline): Promise<string> {
+        if (this.originalPipeline) {
+            if (pipeline.running) {
+                await this.stopPipeline(this.originalPipeline._id);
+            }
+
+            const result = await firstValueFrom(
+                this.pipelineService.updatePipeline(pipeline),
+            );
+            this.assertSaveSuccess(result);
+            return this.originalPipeline._id;
+        }
+
+        const result = await firstValueFrom(
+            this.pipelineService.storePipeline(pipeline),
+        );
+        this.assertSaveSuccess(result);
+        const pipelineId = result.notifications?.[1]?.description;
+
+        if (!pipelineId) {
+            throw new Error('The pipeline id was missing after saving.');
+        }
+
+        pipeline._id = pipelineId;
+        return pipelineId;
+    }
+
+    private async stopPipeline(pipelineId: string): Promise<void> {
+        const result = await firstValueFrom(
+            this.pipelineService.stopPipeline(pipelineId),
+        );
+
+        if (!result.success) {
+            throw new Error('Stopping the existing pipeline failed.');
+        }
+    }
+
+    private async startPipeline(pipelineId: string): Promise<void> {
+        const result = await firstValueFrom(
+            this.pipelineService.startPipeline(pipelineId),
+        );
+
+        if (!result.success) {
+            throw new Error('Starting the pipeline failed.');
+        }
+    }
+
+    private assertSaveSuccess(
+        result: Message | PipelineOperationStatus,
+    ): asserts result is Message {
+        if (!result.success) {
+            throw new Error('Saving the pipeline failed.');
+        }
     }
 
     togglePreview(): void {

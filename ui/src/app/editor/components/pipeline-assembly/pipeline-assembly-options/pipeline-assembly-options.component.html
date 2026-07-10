@@ -22,7 +22,7 @@
         [matTooltip]="'Save pipeline' | translate"
         [matTooltipPosition]="'above'"
         [disabled]="!pipelineValidationService.pipelineValid"
-        (click)="savePipelineEmitter.emit()"
+        (click)="savePipelineEmitter.emit(startPipelineAfterStorage)"
         type="submit"
         data-cy="sp-editor-save-pipeline"
     >
@@ -31,6 +31,14 @@
             <span>&nbsp;{{ 'Save' | translate }}</span>
         </div>
     </button>
+    <mat-checkbox
+        [(ngModel)]="startPipelineAfterStorage"
+        color="accent"
+        class="ml-10"
+        data-cy="sp-editor-checkbox-start-immediately"
+    >
+        {{ 'Start pipeline immediately' | translate }}
+    </mat-checkbox>
     <span class="assembly-options-divider"></span>
     <button
         mat-flat-button

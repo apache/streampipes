@@ -24,6 +24,7 @@ import {
     ViewChild,
     inject,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { JsplumbBridge } from '../../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../../services/pipeline-positioning.service';
 import { PipelineValidationService } from '../../../services/pipeline-validation.service';
@@ -51,6 +52,7 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -60,9 +62,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./pipeline-assembly-options.component.scss'],
     imports: [
         FlexDirective,
+        FormsModule,
         LayoutDirective,
         LayoutAlignDirective,
         MatButton,
+        MatCheckbox,
         MatTooltip,
         MatIconButton,
         PipelineAssemblyOptionsPipelineCacheComponent,
@@ -70,6 +74,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class PipelineAssemblyOptionsComponent {
+    startPipelineAfterStorage = true;
     editorService = inject(EditorService);
     pipelineValidationService = inject(PipelineValidationService);
     private pipelinePositioningService = inject(PipelinePositioningService);
@@ -92,7 +97,7 @@ export class PipelineAssemblyOptionsComponent {
     previewModeActive: boolean;
 
     @Output()
-    savePipelineEmitter: EventEmitter<void> = new EventEmitter<void>();
+    savePipelineEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     @Output()
     clearAssemblyEmitter: EventEmitter<void> = new EventEmitter<void>();
