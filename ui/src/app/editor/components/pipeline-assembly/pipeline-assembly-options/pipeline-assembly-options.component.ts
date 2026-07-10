@@ -53,6 +53,8 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -67,8 +69,12 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutAlignDirective,
         MatButton,
         MatCheckbox,
+        MatIcon,
         MatTooltip,
         MatIconButton,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
         PipelineAssemblyOptionsPipelineCacheComponent,
         TranslatePipe,
     ],
@@ -96,6 +102,9 @@ export class PipelineAssemblyOptionsComponent {
     @Input()
     previewModeActive: boolean;
 
+    @Input()
+    editMode = false;
+
     @Output()
     savePipelineEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -108,6 +117,12 @@ export class PipelineAssemblyOptionsComponent {
     @Output()
     displayPipelineTemplateEmitter: EventEmitter<Pipeline> =
         new EventEmitter<Pipeline>();
+
+    @Output()
+    managePipelineEmitter: EventEmitter<void> = new EventEmitter<void>();
+
+    @Output()
+    deletePipelineEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     @ViewChild('assemblyOptionsPipelineCacheComponent')
     assemblyOptionsCacheComponent: PipelineAssemblyOptionsPipelineCacheComponent;

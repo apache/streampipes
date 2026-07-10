@@ -19,6 +19,7 @@
 import {
     AfterViewInit,
     Component,
+    EventEmitter,
     Input,
     OnDestroy,
     ViewChild,
@@ -33,21 +34,25 @@ import {
 } from '../../model/editor.model';
 import { ObjectProvider } from '../../services/object-provider.service';
 import {
+    AssetSaveService,
     DialogService,
     KeyboardShortcutService,
     ObjectManageDialogComponent,
     ObjectManageDialogResourceConfig,
+    ObjectManageDialogResult,
     PanelType,
     ShortcutRegistration,
     SpBasicViewComponent,
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../services/editor.service';
 import {
+    LinkageData,
     Message,
     Pipeline,
     PipelineCanvasMetadata,
     PipelineCanvasMetadataService,
     PipelineOperationStatus,
+    PermissionsService,
     PipelineService,
 } from '@streampipes/platform-services';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
@@ -58,6 +63,7 @@ import { PipelineAssemblyOptionsComponent } from './pipeline-assembly-options/pi
 import { JsplumbService } from '../../services/jsplumb.service';
 import { TranslateService } from '@ngx-translate/core';
 import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
 
 @Component({
     selector: 'sp-pipeline-assembly',
@@ -83,6 +89,9 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private shortcutService = inject(KeyboardShortcutService);
     private pipelineService = inject(PipelineService);
     private pipelineCanvasService = inject(PipelineCanvasMetadataService);
+    private permissionsService = inject(PermissionsService);
+    private assetSaveService = inject(AssetSaveService);
+    private pipelineOperationsService = inject(PipelineOperationsService);
 
     @Input()
     rawPipelineModel: PipelineElementConfig[];
@@ -101,6 +110,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
 
     previewModeActive = false;
     readonly: boolean;
+    private pendingManagePipelineResult?: ObjectManageDialogResult<Pipeline>;
 
     jsplumbBridge: JsplumbBridge;
     private shortcutReg: ShortcutRegistration;
@@ -154,6 +164,11 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
      * Sends the pipeline to the server
      */
     submit(startPipelineAfterStorage = true) {
+        if (this.originalPipeline) {
+            void this.savePipelineChanges(startPipelineAfterStorage);
+            return;
+        }
+
         const pipelineModel = this.rawPipelineModel;
         const pipeline = this.objectProvider.makePipeline(pipelineModel);
         this.pipelinePositioningService.collectPipelineElementPositions(
@@ -164,15 +179,6 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
             pipelineModel,
             this.readonly,
         );
-        if (this.originalPipeline) {
-            pipeline._id = this.originalPipeline._id;
-            pipeline.name = this.originalPipeline.name;
-            pipeline.description = this.originalPipeline.description;
-            pipeline.running = this.originalPipeline.running;
-            pipeline.createdAt = this.originalPipeline.createdAt;
-            pipeline.createdByUser = this.originalPipeline.createdByUser;
-        }
-
         const resourceConfig: ObjectManageDialogResourceConfig<Pipeline> = {
             resourceLabel: 'Pipeline',
             nameLabel: 'Pipeline name',
@@ -204,6 +210,86 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
                 this.router.navigate(['pipelines']);
             }
         });
+    }
+
+    managePipeline(): void {
+        if (!this.originalPipeline) {
+            return;
+        }
+
+        const resource: Pipeline = { ...this.originalPipeline };
+        const resourceConfig: ObjectManageDialogResourceConfig<Pipeline> = {
+            resourceLabel: 'Pipeline',
+            nameLabel: 'Pipeline name',
+            descriptionLabel: 'Description',
+            nameProperty: 'name',
+            assetLinkType: 'pipeline',
+            assetLinkCheckboxLabel:
+                'Add the current pipeline to an existing asset',
+        };
+
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('Manage'),
+            width: '50vw',
+            data: {
+                objectInstanceId: resource._id,
+                resource,
+                saveMode: 'deferred',
+                resourceConfig,
+                headerTitle:
+                    this.translateService.instant('Manage Pipeline ') +
+                    resource.name,
+            },
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && typeof result !== 'boolean') {
+                this.pendingManagePipelineResult = result;
+                Object.assign(this.originalPipeline, result.resource);
+            }
+        });
+    }
+
+    deletePipeline(): void {
+        if (!this.originalPipeline) {
+            return;
+        }
+
+        this.pipelineOperationsService.showDeleteDialog(
+            this.originalPipeline._id,
+            this.originalPipeline.name,
+            this.originalPipeline.running,
+            new EventEmitter<boolean>(),
+            () => this.router.navigate(['pipelines']),
+        );
+    }
+
+    private async savePipelineChanges(
+        startPipelineAfterStorage: boolean,
+    ): Promise<void> {
+        const pipelineModel = this.rawPipelineModel;
+        const pipeline = this.objectProvider.makePipeline(pipelineModel);
+        this.pipelinePositioningService.collectPipelineElementPositions(
+            this.pipelineCanvasMetadata,
+            pipelineModel,
+        );
+        pipeline.valid = this.pipelineValidationService.isValidPipeline(
+            pipelineModel,
+            this.readonly,
+        );
+        pipeline._id = this.originalPipeline._id;
+        pipeline.name = this.originalPipeline.name;
+        pipeline.description = this.originalPipeline.description;
+        pipeline.running = this.originalPipeline.running;
+        pipeline.createdAt = this.originalPipeline.createdAt;
+        pipeline.createdByUser = this.originalPipeline.createdByUser;
+
+        await this.savePipelineResource(pipeline, startPipelineAfterStorage);
+        await this.savePendingManagePipelineChanges();
+        this.editorService.makePipelineAssemblyEmpty(true);
+        this.editorService.removePipelineFromCache().subscribe();
+        this.router.navigate(['pipelines']);
     }
 
     private async savePipelineResource(
@@ -277,6 +363,51 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         if (!result.success) {
             throw new Error('Saving the pipeline failed.');
         }
+    }
+
+    private async savePendingManagePipelineChanges(): Promise<void> {
+        const result = this.pendingManagePipelineResult;
+        if (!result) {
+            return;
+        }
+
+        if (result.permission) {
+            await firstValueFrom(
+                this.permissionsService.updatePermission(result.permission),
+            );
+        }
+
+        if (this.shouldSaveManagePipelineAssets(result)) {
+            await this.assetSaveService.saveSelectedAssets(
+                result.selectedAssets,
+                this.createPipelineLinkageData(result.resource),
+                result.deselectedAssets,
+                result.originalAssets,
+            );
+        }
+
+        this.pendingManagePipelineResult = undefined;
+    }
+
+    private shouldSaveManagePipelineAssets(
+        result: ObjectManageDialogResult<Pipeline>,
+    ): boolean {
+        return (
+            result.addToAssets &&
+            (result.selectedAssets.length > 0 ||
+                result.deselectedAssets.length > 0 ||
+                result.originalAssets.length > 0)
+        );
+    }
+
+    private createPipelineLinkageData(pipeline: Pipeline): LinkageData[] {
+        return [
+            {
+                type: 'pipeline',
+                id: pipeline._id ?? '',
+                name: pipeline.name ?? '',
+            },
+        ];
     }
 
     togglePreview(): void {

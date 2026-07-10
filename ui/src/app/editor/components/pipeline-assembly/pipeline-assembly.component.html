@@ -26,9 +26,12 @@
             [allElements]="allElements"
             [jsplumbBridge]="jsplumbBridge"
             [previewModeActive]="previewModeActive"
+            [editMode]="!!originalPipeline"
             (clearAssemblyEmitter)="clearAssembly()"
             (togglePreviewEmitter)="togglePreview()"
             (savePipelineEmitter)="submit($event)"
+            (managePipelineEmitter)="managePipeline()"
+            (deletePipelineEmitter)="deletePipeline()"
             (displayPipelineTemplateEmitter)="displayPipelineTemplate($event)"
         >
         </sp-pipeline-assembly-options>

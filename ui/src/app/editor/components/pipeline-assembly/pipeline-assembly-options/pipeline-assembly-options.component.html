@@ -96,6 +96,34 @@
         #assemblyOptionsPipelineCacheComponent
     >
     </sp-pipeline-assembly-options-pipeline-cache>
+    @if (editMode) {
+        <button
+            mat-icon-button
+            [matMenuTriggerFor]="pipelineOptionsMenu"
+            [attr.aria-label]="'Options' | translate"
+            data-cy="options-pipeline"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #pipelineOptionsMenu="matMenu">
+            <button
+                mat-menu-item
+                (click)="managePipelineEmitter.emit()"
+                data-cy="manage-pipeline-btn"
+            >
+                <mat-icon>settings</mat-icon>
+                <span>{{ 'Manage pipeline' | translate }}</span>
+            </button>
+            <button
+                mat-menu-item
+                (click)="deletePipelineEmitter.emit()"
+                data-cy="delete-pipeline-btn"
+            >
+                <mat-icon>clear</mat-icon>
+                <span>{{ 'Delete pipeline' | translate }}</span>
+            </button>
+        </mat-menu>
+    }
     <span fxFlex></span>
     <button
         mat-icon-button
