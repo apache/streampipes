@@ -326,60 +326,64 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     }
 
     showManageDialog(adapter: AdapterSummaryDto): void {
-         this.adapterService.getAdapter(adapter.elementId).subscribe(fullAdapter => {
-            const resourceConfig: ObjectManageDialogResourceConfig<AdapterDescription> =
-                {
-                    resourceLabel: 'Adapter',
-                    nameLabel: 'Adapter name',
-                    descriptionLabel: 'Adapter description',
-                    nameProperty: 'name',
-                    assetLinkType: 'adapter',
-                    assetLinkCheckboxLabel:
-                        'Add the current adapter to an existing asset',
-                    saveResource: resource =>
-                        this.adapterService.updateAdapter(resource),
-                };
+        this.adapterService
+            .getAdapter(adapter.elementId)
+            .subscribe(fullAdapter => {
+                const resourceConfig: ObjectManageDialogResourceConfig<AdapterDescription> =
+                    {
+                        resourceLabel: 'Adapter',
+                        nameLabel: 'Adapter name',
+                        descriptionLabel: 'Adapter description',
+                        nameProperty: 'name',
+                        assetLinkType: 'adapter',
+                        assetLinkCheckboxLabel:
+                            'Add the current adapter to an existing asset',
+                        saveResource: resource =>
+                            this.adapterService.updateAdapter(resource),
+                    };
 
-            const dialogRef = this.dialogService.open(
-                ObjectManageDialogComponent,
-                {
-                    panelType: PanelType.SLIDE_IN_PANEL,
-                    title: this.translate.instant('Manage'),
-                    width: '50vw',
-                    data: {
-                        objectInstanceId:
-                            fullAdapter.correspondingDataStreamElementId,
-                        resource: fullAdapter,
-                        saveMode: 'immediate',
-                        resourceConfig,
-                        headerTitle:
-                            this.translate.instant('Manage Adapter ') +
-                            adapter.name,
+                const dialogRef = this.dialogService.open(
+                    ObjectManageDialogComponent,
+                    {
+                        panelType: PanelType.SLIDE_IN_PANEL,
+                        title: this.translate.instant('Manage'),
+                        width: '50vw',
+                        data: {
+                            objectInstanceId:
+                                fullAdapter.correspondingDataStreamElementId,
+                            resource: fullAdapter,
+                            saveMode: 'immediate',
+                            resourceConfig,
+                            headerTitle:
+                                this.translate.instant('Manage Adapter ') +
+                                adapter.name,
+                        },
                     },
-                },
-            );
+                );
 
-            dialogRef.afterClosed().subscribe(refresh => {
-                if (refresh) {
-                    this.getAdaptersRunning();
-                }
+                dialogRef.afterClosed().subscribe(refresh => {
+                    if (refresh) {
+                        this.getAdaptersRunning();
+                    }
+                });
             });
-              });
     }
 
-showCodeDialog(adapter: AdapterSummaryDto): void {
-    this.adapterService.getAdapter(adapter.elementId).subscribe(fullAdapter => {
-        this.dialogService.open(AdapterCodePanelComponent, {
-            panelType: PanelType.STANDARD_PANEL,
-            title: this.translate.instant('Show as Code'),
-            width: '70vw',
-            data: {
-                adapterDescription: fullAdapter,
-                maxHeight: 'none',
-            },
-        });
-    });
-}
+    showCodeDialog(adapter: AdapterSummaryDto): void {
+        this.adapterService
+            .getAdapter(adapter.elementId)
+            .subscribe(fullAdapter => {
+                this.dialogService.open(AdapterCodePanelComponent, {
+                    panelType: PanelType.STANDARD_PANEL,
+                    title: this.translate.instant('Show as Code'),
+                    width: '70vw',
+                    data: {
+                        adapterDescription: fullAdapter,
+                        maxHeight: 'none',
+                    },
+                });
+            });
+    }
 
     /**
      * Start edit mode
