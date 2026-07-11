@@ -51,7 +51,8 @@ public class PostgreSql extends JdbcClient {
   @Override
   protected void extractTableInformation() {
 
-    String query = "SELECT * FROM information_schema.columns WHERE table_name = ? ;";
+    String query = "SELECT * FROM information_schema.columns "
+        + "WHERE table_name = ? AND table_schema = current_schema() ;";
 
     String[] queryParameter = new String[]{params.getDbTable()};
 
