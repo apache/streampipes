@@ -38,3 +38,9 @@ db_password.description=The password for the PostgreSQL Server
 
 ssl_mode.title=SSL Mode
 ssl_mode.description=Should the connection be secured via SSL?
+
+append_to_existing.title=Use Existing Table
+append_to_existing.description=Write events into the table entered above
+
+batch_size.title=Batch Size
+batch_size.description=How many events should the sink collect before writing them together to the database?

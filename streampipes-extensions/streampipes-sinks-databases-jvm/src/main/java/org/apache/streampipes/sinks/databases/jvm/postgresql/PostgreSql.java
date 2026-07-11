@@ -36,6 +36,8 @@ public class PostgreSql extends JdbcClient {
       throws SpRuntimeException {
 
     this.params = parameters;
+    this.appendToExisting = parameters.isAppendToExisting();
+    this.batchSize = parameters.getBatchSize();
 
     // get(0) because it is the only input stream of the sink (and not two)
     // See (https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)

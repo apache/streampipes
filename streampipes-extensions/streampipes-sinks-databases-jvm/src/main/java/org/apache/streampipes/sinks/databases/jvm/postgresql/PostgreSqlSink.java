@@ -37,6 +37,8 @@ import org.apache.streampipes.sdk.helpers.Tuple2;
 
 public class PostgreSqlSink implements IStreamPipesDataSink {
 
+  private static final String APPEND_TO_EXISTING_KEY = "append_to_existing";
+  private static final String BATCH_SIZE_KEY = "batch_size";
   private static final String DATABASE_HOST_KEY = "db_host";
   private static final String DATABASE_PORT_KEY = "db_port";
   private static final String DATABASE_NAME_KEY = "db_name";
@@ -54,7 +56,7 @@ public class PostgreSqlSink implements IStreamPipesDataSink {
     return DataSinkConfiguration.create(
         PostgreSqlSink::new,
         DataSinkBuilder
-            .create("org.apache.streampipes.sinks.databases.jvm.postgresql", 0)
+            .create("org.apache.streampipes.sinks.databases.jvm.postgresql", 1)
             .withLocales(Locales.EN)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .category(DataSinkType.DATABASE)
@@ -71,6 +73,8 @@ public class PostgreSqlSink implements IStreamPipesDataSink {
                 Options.from(
                     new Tuple2<>("Yes", SSL_ENABLED),
                     new Tuple2<>("No", SSL_DISABLED)))
+            .requiredSlideToggle(Labels.withId(APPEND_TO_EXISTING_KEY), false)
+            .requiredIntegerParameter(Labels.withId(BATCH_SIZE_KEY), 1)
             .build()
     );
   }
@@ -87,6 +91,13 @@ public class PostgreSqlSink implements IStreamPipesDataSink {
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
     String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
     String sslSelection = extractor.selectedSingleValueInternalName(SSL_MODE, String.class);
+    boolean appendToExisting = extractor.slideToggleValue(APPEND_TO_EXISTING_KEY);
+    Integer batchSize = extractor.singleValueParameter(BATCH_SIZE_KEY, Integer.class);
+    if (batchSize == null || batchSize < 1) {
+      throw new SpRuntimeException("Batch size must be at least 1, but was '" + batchSize
+              + "'. Use 1 to write each event immediately, "
+              + "or a higher value to write events in batches.");
+    }
 
     PostgreSqlParameters params = new PostgreSqlParameters(
         parameters.getModel(),
@@ -96,7 +107,9 @@ public class PostgreSqlSink implements IStreamPipesDataSink {
         tableName,
         user,
         password,
-        sslSelection.equals(SSL_ENABLED));
+        sslSelection.equals(SSL_ENABLED),
+        appendToExisting,
+        batchSize);
 
     this.postgreSql = new PostgreSql();
     postgreSql.onInvocation(params);
