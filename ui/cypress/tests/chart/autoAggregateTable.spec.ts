@@ -48,7 +48,7 @@ describe('Test auto aggregate table result size', () => {
             },
         );
 
-        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
+        ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
         ChartUtils.selectDataConfig();
         ChartUtils.selectAggregatedQueryType();
         ChartUtils.enableAutoAggregate();

@@ -30,7 +30,7 @@ describe('Test Table View in Charts', () => {
         /**
          * Prepare tests
          */
-        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
+        ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
 
         // Validate that X lines are available
         ChartWidgetTableUtils.checkAmountOfRows(10);
@@ -81,7 +81,7 @@ describe('Test Table View in Charts', () => {
         ChartUtils.validateAutoCompleteOptions(['a', 'b', 'c']);
         cy.dataCy('design-panel-data-settings-filter-value').type('{esc}');
 
-        ChartUtils.saveAndEditWidget('NewWidget');
+        ChartUtils.saveAndEditChart('NewWidget');
         ChartUtils.checkIfFilterIsSet(1);
         ChartWidgetTableUtils.checkAmountOfRows(4);
         ChartUtils.dataConfigRemoveFilter();
@@ -99,7 +99,7 @@ describe('Test Table View in Charts', () => {
             .first({ timeout: 10000 })
             .contains('c', { timeout: 10000 });
         ChartWidgetTableUtils.checkAmountOfRows(10);
-        ChartUtils.saveAndReEditWidget('NewWidget');
+        ChartUtils.saveAndReEditChart('NewWidget');
         cy.dataCy('data-explorer-group-by-randomtext')
             .find('input')
             .should('be.checked');

@@ -25,16 +25,16 @@ describe('Test Map View in Charts', () => {
     });
 
     it('Perform Test', () => {
-        ChartUtils.addDataViewAndWidget(PrepareTestDataUtils.dataName, 'map');
+        ChartUtils.createChart(PrepareTestDataUtils.dataName, 'map');
 
         // Change marker positions
         ChartUtils.openVisualizationConfig();
-        cy.dataCy('data-view-map-select-latitude')
+        cy.dataCy('chart-map-select-latitude')
             .click()
             .find('mat-option')
             .contains('count (prepared_data #1)')
             .click();
-        cy.dataCy('data-view-map-select-longitude')
+        cy.dataCy('chart-map-select-longitude')
             .click()
             .find('mat-option')
             .contains('randomnumber (prepared_data #1)')
@@ -50,9 +50,9 @@ describe('Test Map View in Charts', () => {
 
         // Change from markers to trace
         ChartUtils.openVisualizationConfig();
-        cy.dataCy('data-view-map-select-marker-or-trace').click();
-        cy.dataCy('data-view-map-option-trace').click();
-        cy.dataCy('data-view-map-option-trace').should('not.exist');
+        cy.dataCy('chart-map-select-marker-or-trace').click();
+        cy.dataCy('chart-map-option-trace').click();
+        cy.dataCy('chart-map-option-trace').should('not.exist');
 
         // Check if trace is visible
         cy.get('path').should('have.class', 'leaflet-interactive');

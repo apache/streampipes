@@ -41,9 +41,9 @@ describe('Validate that filter works for numerical dimension property', () => {
 
     it('Perform Test', () => {
         ChartUtils.goToDatalake();
-        ChartUtils.createAndEditDataView();
+        ChartUtils.createAndEditChart();
 
-        // create table widget and select time range
+        // Create table chart and select time range
         const startDate = new Date(1737029442000);
         const endDate = new Date(1742220659000);
 
