@@ -62,6 +62,17 @@ The username for the PostgreSQL Server.
 
 The password for the PostgreSQL Server.
 
+### Use Existing Table
+
+Writes events into the table entered above. If the table does not exist, the pipeline does not start.
+Enable this option to make sure the table you write into complies with your database schema guidelines.
+
+### Batch Size
+
+The number of events collected before they are written together to the database. Use the value 1 to
+write each event on its own. Higher values are faster at high data rates. Buffered events are flushed
+when the pipeline stops.
+
 ## Output
 
 (not applicable for data sinks)
