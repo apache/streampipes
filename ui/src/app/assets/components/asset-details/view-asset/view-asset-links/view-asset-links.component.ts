@@ -27,10 +27,7 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import {
-    SpAlertBannerComponent,
-    SplitSectionComponent,
-} from '@streampipes/shared-ui';
+import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { AssetLinkTableComponent } from './asset-link-table/asset-link-table.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -43,7 +40,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutAlignDirective,
         SplitSectionComponent,
         AssetLinkTableComponent,
-        SpAlertBannerComponent,
         TranslatePipe,
     ],
 })

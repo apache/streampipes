@@ -34,7 +34,6 @@
                 }
             </div>
             @if (
-                !assetLinkTypesLoading &&
                 assetLinkTypes.length > 0 &&
                 selectedAsset.assetLinks?.length > 0
             ) {
@@ -44,17 +43,6 @@
                     [loading]="assetLinkTypesLoading"
                 >
                 </sp-asset-link-table>
-            } @else if (assetLinkTypesLoading) {
-                <sp-alert-banner
-                    type="info"
-                    icon="hourglass_empty"
-                    [title]="'Loading linked resources' | translate"
-                    [description]="
-                        'This can take a moment while Streampipes gathers the available assets.'
-                            | translate
-                    "
-                >
-                </sp-alert-banner>
             } @else {
                 <sp-alert-banner
                     type="info"

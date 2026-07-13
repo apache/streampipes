@@ -49,7 +49,6 @@ import {
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'sp-asset-details-links',
@@ -58,7 +57,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
         SplitSectionComponent,
         LayoutGapDirective,
         MatButton,
-        MatProgressSpinner,
         LayoutDirective,
         FlexDirective,
         AssetLinkTableComponent,
