@@ -23,20 +23,9 @@ export class PermissionUtils {
     public static openManagePermissions(resourceName: string) {
         GeneralUtils.openMenuForRow(resourceName);
 
-        //necessary as the old permission dialog is currently not replaced everywhere
-        GeneralUtils.visibleMaterialMenu().then($menu => {
-            const $specific = $menu.find(
-                `[data-cy="open-manage-permissions-${resourceName}"]`,
-            );
+        GeneralUtils.visibleMaterialMenu();
 
-            if ($specific.length) {
-                cy.wrap($specific).click();
-            } else {
-                cy.dataCy('open-manage-permissions')
-                    .should('be.visible')
-                    .click();
-            }
-        });
+        cy.dataCy('open-manage-permissions').should('be.visible').click();
     }
 
     public static changeOwnership(resourceName: string, email: string) {
