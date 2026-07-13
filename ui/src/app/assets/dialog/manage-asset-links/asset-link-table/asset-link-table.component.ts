@@ -66,7 +66,6 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { LayoutGapDirective } from '@ngbracket/ngx-layout';
-import { SpAlertBannerComponent } from '@streampipes/shared-ui';
 
 interface AssetLinkGroupHeaderRow {
     groupHeader: true;
@@ -115,7 +114,6 @@ type AssetLinkViewMode = 'grouped' | 'list';
         MatSuffix,
         MatTable,
         NgStyle,
-        SpAlertBannerComponent,
         TranslatePipe,
     ],
 })

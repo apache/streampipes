@@ -52,7 +52,6 @@ import {
     PanelType,
     SpTableActionsDirective,
     SpTableComponent,
-    SpAlertBannerComponent,
 } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
@@ -91,7 +90,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
         MatMenuItem,
         MatIcon,
         MatProgressSpinner,
-        SpAlertBannerComponent,
         TranslatePipe,
     ],
 })

@@ -43,20 +43,10 @@
         }
     </div>
     @if (!assetLinksLoaded) {
-        <sp-alert-banner
-            type="info"
-            [title]="'Loading linked resources' | translate"
-            [description]="
-                'This can take a moment while Streampipes gathers the available assets.'
-                    | translate
-            "
-        >
-            <mat-spinner
-                [mode]="'indeterminate'"
-                [diameter]="20"
-                style="margin-top: 10px"
-            ></mat-spinner>
-        </sp-alert-banner>
+        <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+            <mat-spinner [diameter]="25"></mat-spinner>
+            <h5>{{ 'Loading' | translate }}</h5>
+        </div>
     } @else {
         <div fxLayout="column" fxFlex="100" class="mt-10">
             <sp-asset-link-table

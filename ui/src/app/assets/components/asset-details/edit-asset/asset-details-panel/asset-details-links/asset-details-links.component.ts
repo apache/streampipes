@@ -38,7 +38,6 @@ import {
     DialogService,
     PanelType,
     SpAssetBrowserService,
-    SpAlertBannerComponent,
 } from '@streampipes/shared-ui';
 import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -63,7 +62,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
         LayoutDirective,
         FlexDirective,
         AssetLinkTableComponent,
-        SpAlertBannerComponent,
         TranslatePipe,
     ],
 })

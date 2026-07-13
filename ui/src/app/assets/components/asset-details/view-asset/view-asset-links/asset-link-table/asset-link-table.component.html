@@ -19,20 +19,10 @@
 <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
     <div fxFlex="100" fxLayout="column" fxLayoutGap="8px">
         @if (loading) {
-            <sp-alert-banner
-                type="info"
-                [title]="'Loading linked resources' | translate"
-                [description]="
-                    'This can take a moment while Streampipes gathers the available assets.'
-                        | translate
-                "
-            >
-                <mat-spinner
-                    [mode]="'indeterminate'"
-                    [diameter]="20"
-                    style="margin-top: 10px"
-                ></mat-spinner>
-            </sp-alert-banner>
+            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+                <mat-spinner [diameter]="25"></mat-spinner>
+                <h5>{{ 'Loading' | translate }}</h5>
+            </div>
         } @else {
             <sp-table
                 fxFlex="100"
