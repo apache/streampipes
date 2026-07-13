@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.model.pipeline;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.shared.preprocessing.elements.ScriptTransformationPipelineElement;
 import org.apache.streampipes.connect.transformer.api.Context;
 import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class AdapterPipeline implements IAdapterPipeline {
+public class AdapterPipeline implements IAdapterPipeline, AutoCloseable {
 
   private List<IAdapterPipelineElement> pipelineElements;
   private IAdapterPipelineElement pipelineSink;
@@ -100,5 +101,16 @@ public class AdapterPipeline implements IAdapterPipeline {
   @Override
   public EventSchema getResultingEventSchema() {
     return resultingEventSchema;
+  }
+
+  @Override
+  public void close() {
+    if (pipelineSink instanceof AutoCloseable closeable) {
+      try {
+        closeable.close();
+      } catch (Exception e) {
+        throw new SpRuntimeException(e);
+      }
+    }
   }
 }
