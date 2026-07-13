@@ -23,15 +23,15 @@ import org.apache.streampipes.extensions.management.connect.adapter.model.EventC
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public enum RunningAdapterInstances {
   INSTANCE;
 
-  private final Map<String, StreamPipesAdapter> runningAdapterInstances = new HashMap<>();
-  private final Map<String, AdapterDescription> runningAdapterDescriptionInstances = new HashMap<>();
-  private final Map<String, EventCollector> runningAdapterCollectors = new HashMap<>();
+  private final Map<String, StreamPipesAdapter> runningAdapterInstances = new ConcurrentHashMap<>();
+  private final Map<String, AdapterDescription> runningAdapterDescriptionInstances = new ConcurrentHashMap<>();
+  private final Map<String, EventCollector> runningAdapterCollectors = new ConcurrentHashMap<>();
 
   public void addAdapter(String elementId,
                          StreamPipesAdapter adapter,
@@ -56,4 +56,5 @@ public enum RunningAdapterInstances {
   public Collection<AdapterDescription> getAllRunningAdapterDescriptions() {
     return this.runningAdapterDescriptionInstances.values();
   }
+
 }
