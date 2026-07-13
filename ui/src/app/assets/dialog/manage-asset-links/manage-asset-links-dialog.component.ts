@@ -63,6 +63,7 @@ export class SpManageAssetLinksDialogComponent
     clonedAssetLinks: AssetLink[] = [];
 
     resourceRows: AssetLinkResourceRow[] = [];
+    resourcesLoading = true;
 
     ngOnInit(): void {
         super.onInit();
@@ -161,6 +162,7 @@ export class SpManageAssetLinksDialogComponent
                 ),
             ),
         ];
+        this.resourcesLoading = false;
     }
 
     linkSelected(resourceId: string): boolean {
