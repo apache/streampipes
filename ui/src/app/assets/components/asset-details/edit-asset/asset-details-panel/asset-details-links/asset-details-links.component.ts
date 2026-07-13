@@ -38,6 +38,7 @@ import {
     DialogService,
     PanelType,
     SpAssetBrowserService,
+    SpAlertBannerComponent,
 } from '@streampipes/shared-ui';
 import { EditAssetLinkDialogComponent } from '../../../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -49,6 +50,7 @@ import {
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'sp-asset-details-links',
@@ -57,9 +59,11 @@ import { MatButton } from '@angular/material/button';
         SplitSectionComponent,
         LayoutGapDirective,
         MatButton,
+        MatProgressSpinner,
         LayoutDirective,
         FlexDirective,
         AssetLinkTableComponent,
+        SpAlertBannerComponent,
         TranslatePipe,
     ],
 })

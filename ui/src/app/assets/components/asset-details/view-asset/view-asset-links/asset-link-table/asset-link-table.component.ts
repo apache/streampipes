@@ -68,6 +68,7 @@ import { AssetLinkTableTypeComponent } from './asset-link-table-link-type/asset-
 import { AssetLinkTableAdditionalDataComponent } from './asset-link-table-additional-data/asset-link-table-additional-data.component';
 import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'sp-asset-link-table',
@@ -89,6 +90,7 @@ import { MatIcon } from '@angular/material/icon';
         SpTableActionsDirective,
         MatMenuItem,
         MatIcon,
+        MatProgressSpinner,
         SpAlertBannerComponent,
         TranslatePipe,
     ],

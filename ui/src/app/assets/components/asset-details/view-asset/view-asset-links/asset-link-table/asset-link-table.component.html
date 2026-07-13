@@ -21,13 +21,18 @@
         @if (loading) {
             <sp-alert-banner
                 type="info"
-                icon="hourglass_empty"
                 [title]="'Loading linked resources' | translate"
                 [description]="
                     'This can take a moment while Streampipes gathers the available assets.'
                         | translate
                 "
-            ></sp-alert-banner>
+            >
+                <mat-spinner
+                    [mode]="'indeterminate'"
+                    [diameter]="20"
+                    style="margin-top: 10px"
+                ></mat-spinner>
+            </sp-alert-banner>
         } @else {
             <sp-table
                 fxFlex="100"
