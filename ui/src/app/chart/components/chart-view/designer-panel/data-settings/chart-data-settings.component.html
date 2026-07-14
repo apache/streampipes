@@ -84,74 +84,20 @@
                             </div>
                         }
                         @if (availableMeasurements.length !== 0) {
-                            <mat-form-field
+                            <sp-search-select
                                 fxFlex="100"
-                                appearance="outline"
-                                subscriptSizing="dynamic"
+                                [items]="availableMeasurements"
+                                [value]="selectedMeasurement"
+                                [placeholder]="'Search datasets' | translate"
+                                dataCy="data-explorer-select-data-set"
+                                (valueChange)="
+                                    onMeasurementSelectionChange(
+                                        sourceConfig,
+                                        $event
+                                    )
+                                "
                             >
-                                <mat-icon matPrefix>search</mat-icon>
-                                <input
-                                    matInput
-                                    [placeholder]="
-                                        'Search datasets' | translate
-                                    "
-                                    [value]="measurementInputValue"
-                                    (input)="
-                                        onMeasurementSearchChange(
-                                            $any($event.target).value
-                                        )
-                                    "
-                                    [matAutocomplete]="datasetAutocomplete"
-                                    data-cy="data-explorer-select-data-set"
-                                />
-                                @if (hasActiveMeasurementSearch()) {
-                                    <button
-                                        mat-icon-button
-                                        matSuffix
-                                        type="button"
-                                        [attr.aria-label]="
-                                            'Clear search' | translate
-                                        "
-                                        (click)="clearMeasurementSearch()"
-                                    >
-                                        <mat-icon>close</mat-icon>
-                                    </button>
-                                }
-                                <mat-autocomplete
-                                    #datasetAutocomplete="matAutocomplete"
-                                    autoActiveFirstOption
-                                    (optionSelected)="
-                                        onMeasurementSelected(
-                                            sourceConfig,
-                                            $event
-                                        )
-                                    "
-                                >
-                                    @for (
-                                        measurement of filteredMeasurements;
-                                        track measurement.elementId
-                                    ) {
-                                        <mat-option
-                                            [value]="measurement.measureName"
-                                        >
-                                            <span class="font-medium text-sm">{{
-                                                measurement.measureName
-                                            }}</span>
-                                        </mat-option>
-                                    }
-                                    @if (
-                                        filteredMeasurements.length === 0 &&
-                                        hasActiveMeasurementSearch()
-                                    ) {
-                                        <mat-option disabled>
-                                            {{
-                                                'No datasets match your search.'
-                                                    | translate
-                                            }}
-                                        </mat-option>
-                                    }
-                                </mat-autocomplete>
-                            </mat-form-field>
+                            </sp-search-select>
                         }
                     </sp-split-section>
                     @if (sourceConfig.measureName) {
