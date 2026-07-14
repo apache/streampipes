@@ -72,7 +72,9 @@ public class DataSinkPipelineElementManagement extends InvocablePipelineElementM
                                    DataSinkInvocation graph) {
     var runtime = getRuntime();
     var response = runtime.onRuntimeInvoked(runningInstanceId, pipelineElement, graph);
-    getRunningInstances().add(runningInstanceId, graph, runtime);
+    if (response.isSuccess()) {
+      getRunningInstances().add(runningInstanceId, graph, runtime);
+    }
     return response;
   }
 }

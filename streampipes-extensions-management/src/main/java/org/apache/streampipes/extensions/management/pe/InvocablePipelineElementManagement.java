@@ -122,9 +122,7 @@ public abstract class InvocablePipelineElementManagement<
     if (runningInstance != null) {
       Response response = runningInstance.onRuntimeDetached(runningInstanceId);
 
-      if (response.isSuccess()) {
-        runningInstances.remove(runningInstanceId);
-      }
+      runningInstances.remove(runningInstanceId);
 
       return response;
     }
