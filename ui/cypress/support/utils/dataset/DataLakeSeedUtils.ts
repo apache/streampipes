@@ -20,6 +20,7 @@ import * as CSV from 'csv-string';
 
 type CsvRuntimeType = 'STRING' | 'BOOLEAN' | 'LONG' | 'FLOAT';
 type CsvImportTargetMode = 'NEW' | 'EXISTING';
+type CsvImportJobState = 'RUNNING' | 'SUCCEEDED' | 'FAILED';
 
 interface CsvImportConfiguration {
     delimiter: string;
@@ -50,6 +51,19 @@ interface CsvImportPreviewResult {
 
 interface CsvImportResult {
     importedRowCount: number;
+    validationMessages: Array<{ field: string; message: string }>;
+}
+
+interface CsvImportJobStartResult {
+    jobId: string;
+}
+
+interface CsvImportJobStatus {
+    state: CsvImportJobState;
+    processedRows: number;
+    totalRows: number;
+    progress: number;
+    result?: CsvImportResult;
     validationMessages: Array<{ field: string; message: string }>;
 }
 
@@ -240,7 +254,7 @@ export class DataLakeSeedUtils {
                     };
 
                     return cy
-                        .request<CsvImportResult>({
+                        .request<CsvImportJobStartResult>({
                             method: 'POST',
                             url: '/streampipes-backend/api/v4/datalake/import',
                             body: request,
@@ -248,19 +262,64 @@ export class DataLakeSeedUtils {
                                 Authorization: `Bearer ${token}`,
                             },
                         })
-                        .then(importResponse => {
+                        .then(importResponse =>
+                            this.pollImportStatus(
+                                importResponse.body.jobId,
+                                token,
+                            ),
+                        )
+                        .then(importResult => {
                             expect(
-                                importResponse.body.validationMessages,
+                                importResult.validationMessages,
                                 'import validation messages',
                             ).to.have.length(0);
                             expect(
-                                importResponse.body.importedRowCount,
+                                importResult.importedRowCount,
                                 'imported row count',
                             ).to.equal(options.rows.length);
-                            return importResponse.body;
+                            return importResult;
                         });
                 });
         });
+    }
+
+    private static pollImportStatus(
+        jobId: string,
+        token: string | null,
+        retries = 60,
+    ): Cypress.Chainable<CsvImportResult> {
+        return cy
+            .request<CsvImportJobStatus>({
+                method: 'GET',
+                url: `/streampipes-backend/api/v4/datalake/import/${encodeURIComponent(jobId)}`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then(statusResponse => {
+                const status = statusResponse.body;
+                if (status.state === 'SUCCEEDED' && status.result) {
+                    return status.result;
+                }
+
+                if (status.state === 'FAILED') {
+                    throw new Error(
+                        status.validationMessages
+                            .map(message => message.message)
+                            .join('\n') || 'CSV import failed.',
+                    );
+                }
+
+                if (retries <= 0) {
+                    throw new Error('CSV import did not finish in time.');
+                }
+
+                return cy
+                    .wait(1000)
+                    .then(() =>
+                        this.pollImportStatus(jobId, token, retries - 1),
+                    );
+            });
     }
 
     private static buildColumns(
