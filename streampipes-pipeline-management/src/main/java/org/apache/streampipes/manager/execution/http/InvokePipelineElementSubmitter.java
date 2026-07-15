@@ -72,7 +72,7 @@ public class InvokePipelineElementSubmitter extends BasePipelineElementSubmitter
                                                                     List<InvocableStreamPipesEntity> pe) {
     return pe
         .stream()
-        .filter(g -> g.getBelongsTo().equals(elementId))
+        .filter(g -> g.getElementId().equals(elementId))
         .findFirst();
   }
 }
