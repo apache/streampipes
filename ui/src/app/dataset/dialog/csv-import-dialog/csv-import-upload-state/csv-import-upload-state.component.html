@@ -18,16 +18,15 @@
 
 <div class="upload-state">
     @if (importLoading()) {
-        <mat-spinner [diameter]="56"></mat-spinner>
-        <div class="upload-title">
-            {{ 'Uploading CSV data' | translate }}
-        </div>
-        <div class="upload-copy">
-            {{
-                'The data is currently being written to the data lake.'
-                    | translate
-            }}
-        </div>
+        <sp-progress-bar
+            [title]="'Uploading CSV data' | translate"
+            [ariaLabel]="'CSV import progress' | translate"
+            [value]="processedRows()"
+            [max]="totalRows()"
+            [itemLabel]="'rows imported' | translate"
+            progressBarDataCy="csv-import-progress-bar"
+            progressLabelDataCy="csv-import-progress-label"
+        ></sp-progress-bar>
     } @else if (hasImportResult()) {
         <mat-icon class="success-icon">check_circle</mat-icon>
         <div class="upload-title" data-cy="csv-import-success-title">

@@ -16,42 +16,26 @@
  *
  */
 
-.upload-state {
-    min-height: 17.5rem;
+.progress-bar {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: var(--space-md);
     text-align: center;
+    width: 100%;
 }
 
-.upload-title {
+.progress-bar-track {
+    width: min(100%, 26.25rem);
+}
+
+.progress-bar-title {
     font-size: var(--font-size-xl);
     font-weight: 600;
 }
 
-.result-meta {
+.progress-bar-copy,
+.progress-bar-meta {
     color: var(--color-text-200, #5a6673);
     max-width: 26.25rem;
-}
-
-.success-icon {
-    color: var(--color-success, #2e7d32);
-    font-size: 3rem;
-    width: 3rem;
-    height: 3rem;
-}
-
-.result-name {
-    font-weight: 600;
-}
-
-.upload-errors {
-    max-width: 32.5rem;
-    color: var(--color-text-200, #5a6673);
-}
-
-.upload-error-line + .upload-error-line {
-    margin-top: var(--space-sm);
 }

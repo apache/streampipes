@@ -69,6 +69,7 @@ class CsvImportParserTest {
     assertEquals(List.of("timestamp", "text"), sample.headers());
     assertEquals("a, b", sample.rows().get(0).get(1));
     assertEquals("escaped \"quote\"", sample.rows().get(1).get(1));
+    assertEquals(2, sample.totalRows());
   }
 
   @Test
