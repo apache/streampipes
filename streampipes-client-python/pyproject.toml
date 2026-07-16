@@ -15,20 +15,24 @@
 # limitations under the License.
 #
 
-[tool.poetry]
+[project]
 name = "streampipes"
-version = "0.0.0"  # gets overwritten in CI pipeline
 description = "Python library for Apache StreamPipes"
-license = "Apache 2.0"
+license = "Apache-2.0"
 authors = [
-    "Apache Software Foundation <dev@streampipes.apache.org>"
+    { name = "Apache Software Foundation", email = "dev@streampipes.apache.org" }
 ]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "confluent-kafka>=2.0.2,<3",
+    "nats-py>=2.2,<3",
+    "pandas>=2.3,<3",
+    "pydantic>=2.6.3,<3.0.0",
+    "requests>=2.28,<3",
+    "typing-extensions>=4.5,<5"
+]
+dynamic = ["version"]
 readme = "README.md"
-
-homepage = "https://streampipes.apache.org/docs/docs/python/latest/"
-repository = "https://github.com/apache/streampipes"
-documentation = "https://streampipes.apache.org/docs/docs/python/latest/"
-
 keywords = [
     "streampipes",
     "iot",
@@ -37,7 +41,6 @@ keywords = [
     "stream-processing",
     "apache",
 ]
-
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
@@ -48,18 +51,17 @@ classifiers = [
     "Topic :: Scientific/Engineering"
 ]
 
+[project.urls]
+Homepage = "https://streampipes.apache.org/docs/docs/python/latest/"
+Repository = "https://github.com/apache/streampipes"
+Documentation = "https://streampipes.apache.org/docs/docs/python/latest/"
+
+[tool.poetry]
+version = "0.0.0"  # gets overwritten in CI pipeline
+
 include = [
     { path = "streampipes/py.typed" }
 ]
-
-[tool.poetry.dependencies]
-python = ">=3.10,<3.14"
-confluent-kafka = "~2, >=2.0.2"
-nats-py = "~2, >=2.2"
-pandas = ">=2.3, <3"
-pydantic = "~2, >=2.6.3"
-requests = "~2, >=2.28"
-typing-extensions = "~4, >=4.5"
 
 [tool.poetry.group.dev]
 optional = true
