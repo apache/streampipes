@@ -43,27 +43,20 @@ with any type of incoming event, making it a versatile choice for various use ca
 
 #### Webhook URL
 
-To configure the MS Teams Sink, you need to provide the Webhook URL that enables the sink to send messages to a specific
-MS Teams channel. If you don't have a Webhook URL, you can learn how to create
-one [here](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook?tabs=dotnet#create-incoming-webhooks-1).
+To configure the MS Teams Sink, you need to provide the Webhook URL that enables the sink to send
+messages to a specific MS Teams channel. The webhook must be created as a Power Automate workflow
+using the *"Post to a channel when a webhook request is received"* workflow template.
 
 #### Message Content Options
 
 You can choose between two message content formats:
 
-- **Simple Message Content:** Supports plain text and basic markdown formatting.
-- **Advanced Message Content:** Expects JSON input directly forwarded to Teams without modification. This format is
-  highly customizable and can be used for Adaptive Cards.
+- **Simple Message Content:** Send plain text. The text is automatically wrapped in an Adaptive Card
+  before being sent to Teams.
+- **Advanced Message Content:** Expects JSON input directly forwarded to Teams without modification.
+  This format is highly customizable and can be used for Adaptive Cards.
 
 Choose the format that best suits your messaging needs.
-
-### Silent Period
-
-The *Silent Period* is the duration, expressed in minutes, during which notifications are temporarily disabled after one
-has been sent. This feature is implemented to prevent overwhelming the target with frequent notifications, avoiding
-potential spam behavior.
-
----
 
 ## Usage
 
