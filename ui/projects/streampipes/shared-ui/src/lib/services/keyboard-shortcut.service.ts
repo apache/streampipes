@@ -24,9 +24,16 @@ export interface ShortcutAction {
     key: string;
     ctrl?: boolean;
     shift?: boolean;
+    alt?: boolean;
     action: (event: KeyboardEvent) => void;
     preventDefault?: boolean;
     allowInDialog?: boolean;
+}
+
+export interface SequenceAction {
+    sequence: [string, string]; // e.g. ['g', 'p']
+    action: (event: KeyboardEvent) => void;
+    preventDefault?: boolean;
 }
 
 export type ShortcutRegistration = { unregister: () => void };
@@ -35,6 +42,11 @@ export type ShortcutRegistration = { unregister: () => void };
 export class KeyboardShortcutService implements OnDestroy {
     private keydown$ = new Subject<KeyboardEvent>();
     private registrations: Map<string, ShortcutAction[]> = new Map();
+    private sequenceRegistrations: Map<string, SequenceAction[]> = new Map();
+    private pendingSequenceKey: string | null = null;
+    private pendingSequenceTimeout: any = null;
+    private readonly SEQUENCE_TIMEOUT_MS = 1000;
+
     private listener = (e: KeyboardEvent) => {
         const isInput = this.isInputFocused(e);
         const ctrl = e.ctrlKey || e.metaKey;
@@ -58,29 +70,83 @@ export class KeyboardShortcutService implements OnDestroy {
     ngOnDestroy(): void {
         document.removeEventListener('keydown', this.listener, true);
         this.keydown$.complete();
+        this.clearPendingSequence();
     }
 
     register(id: string, actions: ShortcutAction[]): ShortcutRegistration {
         this.registrations.set(id, actions);
-        return { unregister: () => this.registrations.delete(id) };
+        return { unregister: () => this.unregister(id) };
+    }
+
+    registerSequences(
+        id: string,
+        actions: SequenceAction[],
+    ): ShortcutRegistration {
+        this.sequenceRegistrations.set(id, actions);
+        return { unregister: () => this.unregister(id) };
     }
 
     unregister(id: string): void {
         this.registrations.delete(id);
+        this.sequenceRegistrations.delete(id);
     }
 
     private handleEvent(event: KeyboardEvent): void {
         const key = event.key.toLowerCase();
         const ctrl = event.ctrlKey || event.metaKey;
         const shift = event.shiftKey;
+        const alt = event.altKey;
 
+        // 1. If a sequence is pending, THIS keystroke completes or cancels it —
+        //    it never falls through to single-key matching.
+        if (this.pendingSequenceKey) {
+            const firstKey = this.pendingSequenceKey;
+            this.clearPendingSequence();
+
+            const seqMatch = Array.from(this.sequenceRegistrations.values())
+                .flat()
+                .find(a => a.sequence[0] === firstKey && a.sequence[1] === key);
+
+            if (seqMatch) {
+                if (seqMatch.preventDefault !== false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                if (!this.dialogService.hasOpenDialogs) {
+                    seqMatch.action(event);
+                }
+                return;
+            }
+            // no match: fall through and evaluate this key normally (don't return)
+        }
+
+        // 2. Does this key start a known sequence (no modifiers held)?
+        const startsSequence =
+            !ctrl &&
+            !shift &&
+            !alt &&
+            Array.from(this.sequenceRegistrations.values())
+                .flat()
+                .some(a => a.sequence[0] === key);
+
+        if (startsSequence) {
+            this.pendingSequenceKey = key;
+            this.pendingSequenceTimeout = setTimeout(
+                () => this.clearPendingSequence(),
+                this.SEQUENCE_TIMEOUT_MS,
+            );
+            return; // don't evaluate single-key matches for the first key either
+        }
+
+        // 3. Existing single-key/combo matching (unchanged, but add alt check)
         const match = Array.from(this.registrations.values())
             .flat()
             .find(
                 a =>
                     a.key.toLowerCase() === key &&
                     !!a.ctrl === ctrl &&
-                    !!a.shift === shift,
+                    !!a.shift === shift &&
+                    !!a.alt === alt,
             );
 
         if (match) {
@@ -88,11 +154,18 @@ export class KeyboardShortcutService implements OnDestroy {
                 event.preventDefault();
                 event.stopPropagation();
             }
-
             if (!this.dialogService.hasOpenDialogs || match.allowInDialog) {
                 match.action(event);
             }
         }
+    }
+
+    private clearPendingSequence(): void {
+        if (this.pendingSequenceTimeout) {
+            clearTimeout(this.pendingSequenceTimeout);
+        }
+        this.pendingSequenceKey = null;
+        this.pendingSequenceTimeout = null;
     }
 
     private isInputFocused = (event: KeyboardEvent): boolean => {

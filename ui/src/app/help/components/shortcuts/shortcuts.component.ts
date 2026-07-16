@@ -21,6 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SpBasicHeaderTitleComponent } from '@streampipes/shared-ui';
 import { TranslateService } from '@ngx-translate/core';
+import { NavMenuService } from '../../../core/navigation/nav-menu.service';
 
 interface ShortcutDefinition {
     combo: string;
@@ -52,6 +53,7 @@ const SHORTCUT_TRANSLATION_KEYS = {
 })
 export class ShortcutsTabComponent {
     private translateService = inject(TranslateService);
+    private navMenuService = inject(NavMenuService);
 
     title = '';
     shortcuts: ShortcutDefinition[] = [];
@@ -115,6 +117,29 @@ export class ShortcutsTabComponent {
                             ],
                     },
                 ];
+
+                this.shortcuts.push(
+                    ...this.navMenuService.items
+                        .filter(
+                            item =>
+                                !!item.shortcutKey && item.visible !== false,
+                        )
+                        .map(item => ({
+                            combo: `g then ${item.shortcutKey}`,
+                            context: 'Anywhere outside inputs',
+                            description: `Navigate to ${item.title}`,
+                        })),
+                    {
+                        combo: '?',
+                        context: 'Anywhere outside inputs',
+                        description: 'Open help page',
+                    },
+                    {
+                        combo: 'Ctrl + B / Alt + B',
+                        context: 'Anywhere',
+                        description: 'Toggle sidebar menu',
+                    },
+                );
             });
     }
 }

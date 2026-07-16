@@ -18,15 +18,22 @@
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { CurrentUserService } from '@streampipes/shared-ui';
+import {
+    CurrentUserService,
+    KeyboardShortcutService,
+    ShortcutRegistration,
+    ShortcutAction,
+    SequenceAction,
+} from '@streampipes/shared-ui';
 import { TranslateService } from '@ngx-translate/core';
 import { CollapseService } from '../../collapse.service';
+import { NavMenuService } from '../../navigation/nav-menu.service';
 import { Subscription } from 'rxjs';
 import { NgClass } from '@angular/common';
 import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { IconbarComponent } from '../iconbar/iconbar.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'sp-streampipes',
@@ -55,9 +62,14 @@ export class StreampipesComponent implements OnInit, OnDestroy {
     private translate = inject(TranslateService);
     private collapseService = inject(CollapseService);
     private currentUserService = inject(CurrentUserService);
+    private shortcutService = inject(KeyboardShortcutService);
+    private router = inject(Router);
+    private navMenuService = inject(NavMenuService);
 
     darkMode$: Subscription;
     user$: Subscription;
+    private shortcutReg: ShortcutRegistration;
+    private shortcutSeqReg: ShortcutRegistration;
 
     collapsed = this.collapseService.isCollapsed;
 
@@ -77,10 +89,50 @@ export class StreampipesComponent implements OnInit, OnDestroy {
                 this.translate.use(user.language);
             }
         });
+
+        const singleKeyActions: ShortcutAction[] = [
+            {
+                key: '?',
+                shift: true,
+                action: () => this.router.navigateByUrl('help'),
+            },
+            {
+                key: 'b',
+                ctrl: true,
+                action: () => this.collapseService.toggleMenubar(),
+            },
+            {
+                key: 'b',
+                alt: true,
+                action: () => this.collapseService.toggleMenubar(),
+            },
+        ];
+
+        const sequenceActions: SequenceAction[] = this.navMenuService.items
+            .filter(item => !!item.shortcutKey)
+            .map(item => ({
+                sequence: ['g', item.shortcutKey] as [string, string],
+                action: () => {
+                    if (item.visible !== false) {
+                        this.router.navigateByUrl(item.link || '');
+                    }
+                },
+            }));
+
+        this.shortcutReg = this.shortcutService.register(
+            'streampipes-global',
+            singleKeyActions,
+        );
+        this.shortcutSeqReg = this.shortcutService.registerSequences(
+            'streampipes-global',
+            sequenceActions,
+        );
     }
 
     ngOnDestroy() {
         this.darkMode$?.unsubscribe();
         this.user$?.unsubscribe();
+        this.shortcutReg?.unregister();
+        this.shortcutSeqReg?.unregister();
     }
 }

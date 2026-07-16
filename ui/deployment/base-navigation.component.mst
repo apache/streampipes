@@ -26,6 +26,7 @@ import { UserPrivilege } from '../auth/user-privilege.enum';
 import { UserRole } from '../auth/user-role.enum';
 import { inject } from '@angular/core';
 import { CollapseService } from '../collapse.service';
+import { NavMenuService } from '../navigation/nav-menu.service';
 
 export interface MenuItem {
   link: string;
@@ -35,6 +36,7 @@ export interface MenuItem {
   privileges: any[];
   visible?: boolean;
   category: string;
+  shortcutKey?: string;
 }
 
 export interface MenuGroup {
@@ -67,19 +69,8 @@ export abstract class BaseNavigationComponent {
     {{/categoriesActive}}
   ];
 
-  public menu = [
-    {{#modulesActive}}
-    {
-        link: '{{{link}}}',
-        title: '{{{title}}}',
-        icon: '{{{icon}}}',
-        pageNames: [{{{pageNames}}}],
-        privileges: {{{privileges}}},
-        visible: false,
-        category: '{{{category}}}'
-    },
-    {{/modulesActive}}
-  ];
+   protected navMenuService = inject(NavMenuService);
+   public menu = this.navMenuService.items;
 
    protected authService = inject(AuthService);
    protected currentUserService = inject(CurrentUserService);
