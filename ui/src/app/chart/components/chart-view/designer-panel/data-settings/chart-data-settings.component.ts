@@ -20,6 +20,7 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     ViewChild,
@@ -114,7 +115,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         TranslatePipe,
     ],
 })
-export class ChartDataSettingsComponent implements OnInit {
+export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     private datalakeRestService = inject(DatalakeRestService);
     private widgetConfigService = inject(ChartConfigurationService);
     private fieldProviderService = inject(ChartFieldProviderService);
@@ -145,6 +146,9 @@ export class ChartDataSettingsComponent implements OnInit {
     availableMeasurements: DatasetSummaryDto[] = [];
     selectedMeasurement: DatasetSummaryDto | undefined;
 
+    private pendingMeasurementRefresh = false;
+    private dataRefreshTimeout?: ReturnType<typeof setTimeout>;
+
     step = 0;
 
     expandFieldsDataSource = true;
@@ -157,6 +161,10 @@ export class ChartDataSettingsComponent implements OnInit {
     ngOnInit(): void {
         this.syncCurrentMeasure();
         this.loadPipelinesAndMeasurements();
+    }
+
+    ngOnDestroy(): void {
+        clearTimeout(this.dataRefreshTimeout);
     }
 
     loadPipelinesAndMeasurements() {
@@ -287,6 +295,7 @@ export class ChartDataSettingsComponent implements OnInit {
             return;
         }
 
+        this.pendingMeasurementRefresh = refreshData;
         sourceConfig.queryConfig.fields = [];
         if (this.fieldSelectionPanel) {
             this.fieldSelectionPanel.applyDefaultFields();
@@ -297,8 +306,8 @@ export class ChartDataSettingsComponent implements OnInit {
             this.groupSelectionPanel.applyDefaultFields();
         }
 
-        if (refreshData) {
-            this.triggerDataRefresh();
+        if (refreshData && this.fieldSelectionPanel) {
+            this.scheduleDataRefresh();
         }
     }
 
@@ -369,7 +378,14 @@ export class ChartDataSettingsComponent implements OnInit {
         };
     }
 
-    createDefaultWidget(): void {
+    onInitialFieldSelection(): void {
+        const defaultWidgetCreated = this.createDefaultWidget();
+        if (defaultWidgetCreated || this.pendingMeasurementRefresh) {
+            this.scheduleDataRefresh();
+        }
+    }
+
+    createDefaultWidget(): boolean {
         if (this.checkIfDefaultTableShouldBeShown()) {
             const fields = this.fieldProviderService.generateFieldLists(
                 this.dataConfig.sourceConfigs,
@@ -380,13 +396,18 @@ export class ChartDataSettingsComponent implements OnInit {
             this.widgetTypeService.notify({
                 widgetId: this.currentlyConfiguredWidget.elementId,
                 newWidgetTypeId: this.currentlyConfiguredWidget.widgetType,
+                deferInitialDataLoad: true,
             });
 
             this.createWidgetEmitter.emit({
                 a: this.dataLakeMeasure,
                 b: this.currentlyConfiguredWidget,
             });
+
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -403,6 +424,12 @@ export class ChartDataSettingsComponent implements OnInit {
             refreshData: true,
             refreshView: true,
         });
+    }
+
+    private scheduleDataRefresh(): void {
+        this.pendingMeasurementRefresh = false;
+        clearTimeout(this.dataRefreshTimeout);
+        this.dataRefreshTimeout = setTimeout(() => this.triggerDataRefresh());
     }
 
     toggleExpandFieldsDataSource() {
