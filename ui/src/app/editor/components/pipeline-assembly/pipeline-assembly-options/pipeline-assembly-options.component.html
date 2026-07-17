@@ -17,33 +17,16 @@
 -->
 
 <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-    <button
-        mat-flat-button
-        [matTooltip]="'Save pipeline' | translate"
-        [matTooltipPosition]="'above'"
+    <sp-split-button
+        dataCy="sp-editor-save-pipeline"
+        [label]="'Store and Start' | translate"
+        icon="save"
+        [actions]="savePipelineActions"
         [disabled]="!pipelineValidationService.pipelineValid"
-        (click)="
-            savePipelineEmitter.emit({
-                startPipelineAfterStorage: startPipelineAfterStorage,
-                createNewPipeline: editMode && createNewPipeline,
-            })
-        "
-        type="submit"
-        data-cy="sp-editor-save-pipeline"
-    >
-        <div fxLayoutAlign="start center" fxLayout="row">
-            <i class="material-icons">save</i>
-            <span>&nbsp;{{ 'Save' | translate }}</span>
-        </div>
-    </button>
-    <mat-checkbox
-        [(ngModel)]="startPipelineAfterStorage"
-        color="accent"
-        class="ml-10"
-        data-cy="sp-editor-checkbox-start-immediately"
-    >
-        {{ 'Start pipeline immediately' | translate }}
-    </mat-checkbox>
+        [menuAriaLabel]="'Select save action'"
+        (primaryAction)="emitSavePipeline(true)"
+        (actionSelected)="onSavePipelineActionSelected($event)"
+    ></sp-split-button>
     @if (editMode) {
         <mat-checkbox
             [(ngModel)]="createNewPipeline"

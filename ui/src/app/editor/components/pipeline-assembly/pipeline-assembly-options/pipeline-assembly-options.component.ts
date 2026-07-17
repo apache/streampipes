@@ -32,6 +32,8 @@ import {
     ConfirmDialogComponent,
     DialogService,
     PanelType,
+    SpSplitButtonAction,
+    SpSplitButtonComponent,
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../../services/editor.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -81,12 +83,19 @@ export interface PipelineAssemblySaveOptions {
         MatMenu,
         MatMenuItem,
         PipelineAssemblyOptionsPipelineCacheComponent,
+        SpSplitButtonComponent,
         TranslatePipe,
     ],
 })
 export class PipelineAssemblyOptionsComponent {
-    startPipelineAfterStorage = true;
     createNewPipeline = false;
+    savePipelineActions: SpSplitButtonAction[] = [
+        {
+            label: 'Store',
+            action: 'store',
+            icon: 'save',
+        },
+    ];
     editorService = inject(EditorService);
     pipelineValidationService = inject(PipelineValidationService);
     private pipelinePositioningService = inject(PipelinePositioningService);
@@ -193,6 +202,17 @@ export class PipelineAssemblyOptionsComponent {
             this.rawPipelineModel.length === 0 ||
             this.rawPipelineModel.every(pe => pe.settings.disabled)
         );
+    }
+
+    emitSavePipeline(startPipelineAfterStorage: boolean): void {
+        this.savePipelineEmitter.emit({
+            startPipelineAfterStorage,
+            createNewPipeline: this.editMode && this.createNewPipeline,
+        });
+    }
+
+    onSavePipelineActionSelected(action: SpSplitButtonAction): void {
+        this.emitSavePipeline(action.action === 'store-and-start');
     }
 
     triggerCacheUpdate(): void {
