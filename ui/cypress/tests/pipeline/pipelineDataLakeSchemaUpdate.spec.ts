@@ -81,8 +81,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
         PipelineBtns.updateAndMigratePipeline().should('not.be.disabled');
         PipelineBtns.updateAndMigratePipeline().click();
 
-        PipelineBtns.pipelineStartedSuccess().should('be.visible');
-        PipelineBtns.navigateToPipelineOverview().click();
+        PipelineUtils.closePipelineSaveStatus();
 
         ChartUtils.goToDatalake();
         ChartBtns.chartSyncProblemIcon().should('be.visible');
