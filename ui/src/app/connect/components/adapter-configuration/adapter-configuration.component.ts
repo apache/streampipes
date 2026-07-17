@@ -135,6 +135,7 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
     manageAdapter(): void {
         const currentAdapter =
             this.state().adapterDescription ?? this.adapterDescription;
+        const pendingManageResult = this.pendingManageAdapterResult;
 
         if (!currentAdapter) {
             return;
@@ -161,6 +162,10 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
                 resource: { ...currentAdapter },
                 saveMode: 'deferred',
                 resourceConfig,
+                selectedAssets: pendingManageResult?.selectedAssets ?? [],
+                deselectedAssets: pendingManageResult?.deselectedAssets ?? [],
+                originalAssets: pendingManageResult?.originalAssets ?? [],
+                addToAssets: pendingManageResult?.addToAssets ?? true,
                 headerTitle:
                     this.translate.instant('Manage Adapter ') +
                     (currentAdapter.name ?? ''),
