@@ -26,6 +26,7 @@ import {
 import {
     AdapterDescription,
     EventSchema,
+    Permission,
     ReduceEventRateRule,
     RemoveDuplicateRule,
     SpAssetTreeNode,
@@ -107,6 +108,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
     @Input() eventSchema: EventSchema;
 
     @Input() isEditMode: boolean;
+    @Input() permission?: Permission;
+    @Input() addToAssets = true;
 
     /**
      * Cancels the adapter configuration process
@@ -144,9 +147,9 @@ export class StartAdapterConfigurationComponent implements OnInit {
     startAdapterNow = true;
     showCode = false;
     showAsset = false;
-    selectedAssets = [];
-    deselectedAssets = [];
-    originalAssets = [];
+    @Input() selectedAssets: SpAssetTreeNode[] = [];
+    @Input() deselectedAssets: SpAssetTreeNode[] = [];
+    @Input() originalAssets: SpAssetTreeNode[] = [];
 
     isAssetAdmin = false;
     isPipelineAdmin = false;
@@ -200,6 +203,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
             data: {
                 adapter: this.adapterDescription,
                 editMode: true,
+                permission: this.permission,
+                addToAssets: this.addToAssets,
                 selectedAssets: this.selectedAssets,
                 deselectedAssets: this.deselectedAssets,
                 originalAssets: this.originalAssets,
