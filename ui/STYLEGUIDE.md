@@ -126,6 +126,20 @@ Use it as follows:
 Allowed types are `info`, `warning`, `error` and `success`.
 You can also add additional content to the banner.
 
+#### Progress bar
+
+Use `sp-progress-bar` when real progress is available. Provide the current `value`, the `max` value, and optional title or item label text.
+
+```html
+<sp-progress-bar
+  [title]="'Uploading CSV data' | translate"
+  [ariaLabel]="'CSV import progress' | translate"
+  [value]="processedRows"
+  [max]="totalRows"
+  [itemLabel]="'rows imported' | translate"
+></sp-progress-bar>
+```
+
 #### Tables
 
 For rendering tables, always use the `sp-table` component which comes with pre-defined features for paging, sorting and layout.

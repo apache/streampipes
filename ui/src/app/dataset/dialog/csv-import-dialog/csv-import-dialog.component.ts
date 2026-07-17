@@ -19,6 +19,7 @@
 import {
     Component,
     computed,
+    DestroyRef,
     inject,
     Input,
     signal,
@@ -39,10 +40,11 @@ import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     CsvImportColumn,
     CsvImportConfiguration,
+    CsvImportJobStatus,
     CsvImportPreviewRequest,
     CsvImportPreviewResult,
     CsvImportRequest,
@@ -63,7 +65,7 @@ import {
     FormFieldComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import { startWith } from 'rxjs';
+import { startWith, Subscription, switchMap, timer } from 'rxjs';
 import { CsvImportColumnModel, CsvImportColumnRole } from './csv-import.model';
 import { CsvImportPreviewTableComponent } from './csv-import-preview-table/csv-import-preview-table.component';
 import { CsvImportUploadStateComponent } from './csv-import-upload-state/csv-import-upload-state.component';
@@ -102,9 +104,12 @@ export class CsvImportDialogComponent {
     private readonly fb = inject(FormBuilder);
     private readonly dialogRef = inject(DialogRef<CsvImportDialogComponent>);
     private readonly datalakeRestService = inject(DatalakeRestService);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly translateService = inject(TranslateService);
 
     private previewReloadTimeout?: ReturnType<typeof setTimeout>;
     private schemaValidationTimeout?: ReturnType<typeof setTimeout>;
+    private importPollingSubscription?: Subscription;
 
     readonly selectedFile = signal<File | undefined>(undefined);
     readonly uploadId = signal<string | undefined>(undefined);
@@ -117,6 +122,9 @@ export class CsvImportDialogComponent {
         CsvImportSchemaValidationResult | undefined
     >(undefined);
     readonly importResult = signal<CsvImportResult | undefined>(undefined);
+    readonly importJobId = signal<string | undefined>(undefined);
+    readonly importProcessedRows = signal(0);
+    readonly importTotalRows = signal(0);
     readonly columnModels = signal<CsvImportColumnModel[]>([]);
     readonly previewLoading = signal(false);
     readonly importLoading = signal(false);
@@ -274,6 +282,10 @@ export class CsvImportDialogComponent {
                     this.schedulePreviewReload();
                 }
             });
+
+        this.destroyRef.onDestroy(() => {
+            this.stopImportPolling();
+        });
     }
 
     onFileSelected(event: Event): void {
@@ -475,12 +487,14 @@ export class CsvImportDialogComponent {
         }
 
         this.importLoading.set(true);
+        this.importProcessedRows.set(0);
+        this.importTotalRows.set(this.previewResult()?.totalRows ?? 0);
         this.datalakeRestService
             .importCsvData(this.buildImportRequest())
             .subscribe({
                 next: result => {
-                    this.importResult.set(result);
-                    this.importLoading.set(false);
+                    this.importJobId.set(result.jobId);
+                    this.pollImportStatus(result.jobId);
                 },
                 error: error => {
                     this.importLoading.set(false);
@@ -494,7 +508,9 @@ export class CsvImportDialogComponent {
                                       field: 'import',
                                       message:
                                           error?.error?.message ??
-                                          'CSV import failed.',
+                                          this.translateService.instant(
+                                              'The CSV import failed.',
+                                          ),
                                   },
                               ],
                     );
@@ -503,6 +519,7 @@ export class CsvImportDialogComponent {
     }
 
     close(refresh = false): void {
+        this.stopImportPolling();
         this.dialogRef.close(refresh);
     }
 
@@ -669,8 +686,73 @@ export class CsvImportDialogComponent {
     }
 
     private clearImportResult(): void {
+        this.stopImportPolling();
         this.importResult.set(undefined);
+        this.importJobId.set(undefined);
+        this.importProcessedRows.set(0);
+        this.importTotalRows.set(0);
         this.uploadMessages.set([]);
+    }
+
+    private pollImportStatus(jobId: string): void {
+        this.stopImportPolling();
+        this.importPollingSubscription = timer(0, 1000)
+            .pipe(
+                switchMap(() =>
+                    this.datalakeRestService.getCsvImportJobStatus(jobId),
+                ),
+            )
+            .subscribe({
+                next: status => this.handleImportStatus(status),
+                error: error => {
+                    this.importLoading.set(false);
+                    this.stopImportPolling();
+                    this.uploadMessages.set([
+                        {
+                            field: 'import',
+                            message:
+                                error?.error?.message ??
+                                this.translateService.instant(
+                                    'CSV import status could not be loaded.',
+                                ),
+                        },
+                    ]);
+                },
+            });
+    }
+
+    private handleImportStatus(status: CsvImportJobStatus): void {
+        this.importProcessedRows.set(status.processedRows);
+        this.importTotalRows.set(status.totalRows);
+
+        if (status.state === 'RUNNING') {
+            return;
+        }
+
+        this.importLoading.set(false);
+        this.stopImportPolling();
+
+        if (status.state === 'SUCCEEDED' && status.result) {
+            this.importResult.set(status.result);
+        } else {
+            this.uploadMessages.set(
+                status.validationMessages?.length
+                    ? status.validationMessages
+                    : [
+                          {
+                              field: 'import',
+                              message: this.translateService.instant(
+                                  'The CSV import failed.',
+                              ),
+                          },
+                      ],
+            );
+        }
+    }
+
+    private stopImportPolling(): void {
+        this.importPollingSubscription?.unsubscribe();
+        this.importPollingSubscription = undefined;
     }
 
     private schedulePreviewReload(): void {

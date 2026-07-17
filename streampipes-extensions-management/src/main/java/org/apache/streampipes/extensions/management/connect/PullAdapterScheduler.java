@@ -31,6 +31,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PullAdapterScheduler {
 
@@ -44,15 +45,23 @@ public class PullAdapterScheduler {
 
   public void schedule(IPullAdapter pullAdapter,
                        String adapterElementId) {
+    var pullFailed = new AtomicBoolean();
     final Runnable task = () -> {
       try {
         pullAdapter.pullData();
+        if (pullFailed.compareAndSet(true, false)) {
+          LOG.info("Adapter {} recovered from pull failures", adapterElementId);
+        }
       } catch (ExecutionException | InterruptedException | TimeoutException | RuntimeException e) {
-        LOG.error("Error while pulling data: {}", e.getMessage());
-        SpMonitoringManager.INSTANCE.addErrorMessage(
-            adapterElementId,
-            SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e))
-        );
+        if (pullFailed.compareAndSet(false, true)) {
+          LOG.warn("Adapter {} failed while pulling data: {}", adapterElementId, e.getMessage());
+          SpMonitoringManager.INSTANCE.addErrorMessage(
+              adapterElementId,
+              SpLogEntry.from(System.currentTimeMillis(), SpLogMessage.from(e))
+          );
+        } else {
+          LOG.debug("Adapter {} still failing while pulling data: {}", adapterElementId, e.getMessage());
+        }
         if (e instanceof InterruptedException) {
           Thread.currentThread().interrupt();
         }
