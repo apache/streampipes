@@ -50,5 +50,4 @@ export class SpSpinnerComponent {
     @Input() gap = '8px';
     @Input() mode: ProgressSpinnerMode = 'indeterminate';
     @Input() diameter = 30;
-    @Input() strokeWidth?: number;
 }
