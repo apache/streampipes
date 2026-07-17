@@ -235,6 +235,7 @@ export class PipelineUtils {
     public static savePipelineUpdate() {
         PipelineBtns.savePipelineBtn().click();
         PipelineUtils.closePipelineSaveStatus();
+        PipelineBtns.pipelinesToEditor().should('exist');
     }
 
     private static closePipelineSaveStatus() {
