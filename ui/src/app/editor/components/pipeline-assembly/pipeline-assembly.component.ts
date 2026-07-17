@@ -347,9 +347,10 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
         pipelineCanvasMetadata: PipelineCanvasMetadata,
     ): Promise<boolean> {
         const dialogRef = this.dialogService.open(SavePipelineComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
+            panelType: PanelType.STANDARD_PANEL,
             title: this.translateService.instant('Save pipeline'),
-            width: '50vw',
+            width: '70vw',
+            disableClose: true,
             data: {
                 pipeline,
                 originalPipeline: updateExisting
