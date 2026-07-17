@@ -24,7 +24,7 @@ authors = [
 ]
 requires-python = ">=3.10,<3.14"
 dependencies = [
-    "confluent-kafka>=2.0.2,<3",
+    "confluent-kafka>=2.15.0,<3",
     "nats-py>=2.2,<3",
     "pandas>=2.3,<3",
     "pydantic>=2.6.3,<3.0.0",
