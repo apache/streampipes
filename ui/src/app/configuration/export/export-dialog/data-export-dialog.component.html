@@ -209,10 +209,12 @@
                 class="mt-10"
                 fxLayoutAlign="center center"
             >
-                <mat-spinner [diameter]="25" color="accent"></mat-spinner>
-                <h4 class="mt-10">
-                    {{ 'Exporting resources...' | translate }}
-                </h4>
+                <sp-spinner
+                    [diameter]="25"
+                    color="accent"
+                    [text]="'Exporting resources...' | translate"
+                    [textClass]="'mt-10'"
+                ></sp-spinner>
                 <span class="text-md mt-10">
                     {{
                         'Depending on number and size of exported files, this might take a while...'

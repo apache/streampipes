@@ -16,11 +16,18 @@
   ~
   -->
 
-<div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">
-    <sp-spinner
-        [diameter]="30"
-        color="accent"
-        [text]="message()"
-        [textClass]="'message-text'"
-    ></sp-spinner>
+<div
+    [fxLayout]="layout"
+    [fxLayoutAlign]="align"
+    [fxLayoutGap]="text ? gap : '0px'"
+    class="sp-spinner"
+>
+    <mat-spinner
+        [color]="color"
+        [diameter]="diameter"
+        [mode]="mode"
+    ></mat-spinner>
+    @if (text) {
+        <div class="sp-spinner__text" [ngClass]="textClass">{{ text }}</div>
+    }
 </div>

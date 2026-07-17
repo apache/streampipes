@@ -52,6 +52,7 @@ import {
     PanelType,
     SpTableActionsDirective,
     SpTableComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
@@ -67,7 +68,6 @@ import { AssetLinkTableTypeComponent } from './asset-link-table-link-type/asset-
 import { AssetLinkTableAdditionalDataComponent } from './asset-link-table-additional-data/asset-link-table-additional-data.component';
 import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'sp-asset-link-table',
@@ -89,7 +89,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
         SpTableActionsDirective,
         MatMenuItem,
         MatIcon,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         TranslatePipe,
     ],
 })

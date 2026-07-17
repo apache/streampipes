@@ -24,13 +24,13 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
     MatButtonToggle,
     MatButtonToggleGroup,
 } from '@angular/material/button-toggle';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-static-tree-input-button-menu',
@@ -43,7 +43,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatButton,
         MatIconButton,
         MatIcon,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         FlexDirective,
         MatButtonToggleGroup,
         MatButtonToggle,

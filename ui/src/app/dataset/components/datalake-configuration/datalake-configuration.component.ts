@@ -63,6 +63,7 @@ import {
     SpTableAssetContextConfig,
     SpTableActionsDirective,
     SpTableComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { DeleteDatalakeIndexComponent } from '../../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { SpConfigurationRoutes } from '../../../configuration/configuration.breadcrumb';
@@ -85,7 +86,6 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
@@ -111,7 +111,7 @@ import { DatalakeLastEventLabelComponent } from './datalake-last-event-label/dat
         MatSortHeader,
         MatCellDef,
         MatCell,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         FlexOrderDirective,
         NgStyle,
         StyleDirective,

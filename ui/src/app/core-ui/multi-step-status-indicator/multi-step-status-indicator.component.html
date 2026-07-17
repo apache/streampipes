@@ -27,10 +27,7 @@
             >
                 @if (step.status === Status.PROGRESS) {
                     <div>
-                        <mat-spinner
-                            [diameter]="25"
-                            color="accent"
-                        ></mat-spinner>
+                        <sp-spinner [diameter]="25" color="accent"></sp-spinner>
                     </div>
                 }
                 @if (step.status === Status.SUCCESS) {

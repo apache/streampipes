@@ -59,6 +59,7 @@ import {
     TimeRangeSelectorMenuComponent,
     TimeSelectionService,
     TimeSelectorLabel,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { ChartSharedService } from '../../services/chart-shared.service';
 import {
@@ -79,7 +80,6 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -97,7 +97,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatIconButton,
         MatIcon,
         FormsModule,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         SpLabelComponent,
         MatMenuTrigger,
         MatTooltip,

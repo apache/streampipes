@@ -18,12 +18,12 @@
 <div style="z-index: 5" [ngClass]="elementCssClasses">
     @if (pipelineElementConfig.settings.loadingStatus) {
         <div class="pipeline-element-progress-container sp-fade">
-            <mat-spinner
+            <sp-spinner
                 [mode]="'indeterminate'"
                 class="pipeline-element-progress"
                 [diameter]="40"
                 color="accent"
-            ></mat-spinner>
+            ></sp-spinner>
         </div>
     }
     @if (pipelineElementConfig.settings.loadingStatus) {

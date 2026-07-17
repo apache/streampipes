@@ -34,8 +34,9 @@
                 }
             </div>
             @if (
-                assetLinkTypes.length > 0 &&
-                selectedAsset.assetLinks?.length > 0
+                assetLinkTypesLoading ||
+                (assetLinkTypes.length > 0 &&
+                    selectedAsset.assetLinks?.length > 0)
             ) {
                 <sp-asset-link-table
                     [asset]="selectedAsset"

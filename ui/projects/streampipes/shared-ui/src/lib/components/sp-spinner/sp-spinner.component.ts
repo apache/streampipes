@@ -16,30 +16,39 @@
  *
  */
 
+import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Status, StatusIndicator } from './multi-step-status-indicator.model';
-import { SpSpinnerComponent } from '@streampipes/shared-ui';
+import { ThemePalette } from '@angular/material/core';
 import {
-    FlexDirective,
+    MatProgressSpinner,
+    ProgressSpinnerMode,
+} from '@angular/material/progress-spinner';
+import {
     LayoutAlignDirective,
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 
 @Component({
-    selector: 'sp-multi-step-status-indicator',
-    templateUrl: './multi-step-status-indicator.component.html',
-    styleUrls: ['./multi-step-status-indicator.component.scss'],
+    selector: 'sp-spinner',
+    templateUrl: './sp-spinner.component.html',
+    styleUrls: ['./sp-spinner.component.scss'],
     imports: [
         LayoutDirective,
-        LayoutGapDirective,
-        FlexDirective,
         LayoutAlignDirective,
-        SpSpinnerComponent,
+        LayoutGapDirective,
+        MatProgressSpinner,
+        NgClass,
     ],
 })
-export class MultiStepStatusIndicatorComponent {
-    @Input()
-    statusIndicators: StatusIndicator[] = [];
-    protected readonly Status = Status;
+export class SpSpinnerComponent {
+    @Input() color: ThemePalette = 'accent';
+    @Input() text = '';
+    @Input() textClass = '';
+    @Input() layout: 'column' | 'row' = 'column';
+    @Input() align = 'center center';
+    @Input() gap = '8px';
+    @Input() mode: ProgressSpinnerMode = 'indeterminate';
+    @Input() diameter = 30;
+    @Input() strokeWidth?: number;
 }

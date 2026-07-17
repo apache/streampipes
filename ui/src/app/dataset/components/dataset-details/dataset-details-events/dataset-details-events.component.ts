@@ -23,6 +23,7 @@ import {
     SpBasicHeaderTitleComponent,
     SpBasicNavTabsComponent,
     SpElementIdComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { SpAbstractDatasetDetailsDirective } from '../abstract-dataset-details.directive';
 import {
@@ -33,7 +34,6 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -59,7 +59,7 @@ type PreviewRow = Record<string, unknown>;
         FlexDirective,
         MatButton,
         MatIcon,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         MatFormField,
         MatLabel,
         MatInput,

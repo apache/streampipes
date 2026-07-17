@@ -21,35 +21,26 @@
         [title]="'Charts' | translate"
     ></sp-basic-header-title-component>
     @if (isLoading && !hasLoadedCharts) {
-        <div
-            fxLayout="column"
-            fxFlex="100"
-            fxLayoutAlign="center center"
-            fxLayoutGap="12px"
-        >
-            <mat-progress-spinner
+        <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">
+            <sp-spinner
                 mode="indeterminate"
                 diameter="40"
-            ></mat-progress-spinner>
-            <span class="chart-overview-loading-text">{{
-                'Loading' | translate
-            }}</span>
+                [text]="'Loading' | translate"
+                [textClass]="'chart-overview-loading-text'"
+            ></sp-spinner>
         </div>
     } @else {
         @if (isLoading) {
-            <div
-                fxLayout="row"
-                fxLayoutAlign="end center"
-                fxLayoutGap="8px"
-                class="p-2"
-            >
-                <mat-progress-spinner
+            <div class="p-2">
+                <sp-spinner
                     mode="indeterminate"
                     diameter="18"
-                ></mat-progress-spinner>
-                <span class="chart-overview-loading-text">{{
-                    'Loading' | translate
-                }}</span>
+                    layout="row"
+                    align="end center"
+                    gap="8px"
+                    [text]="'Loading' | translate"
+                    [textClass]="'chart-overview-loading-text'"
+                ></sp-spinner>
             </div>
         }
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">

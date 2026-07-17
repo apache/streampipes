@@ -38,7 +38,6 @@ import { MatDivider } from '@angular/material/divider';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -64,6 +63,7 @@ import {
     DialogRef,
     FormFieldComponent,
     SplitSectionComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { startWith, Subscription, switchMap, timer } from 'rxjs';
 import { CsvImportColumnModel, CsvImportColumnRole } from './csv-import.model';
@@ -86,7 +86,7 @@ import { CsvImportUploadStateComponent } from './csv-import-upload-state/csv-imp
         MatSelect,
         MatOption,
         MatDivider,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         MatStepper,
         MatStep,
         MatStepLabel,

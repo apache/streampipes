@@ -25,12 +25,12 @@
         <div fxFlex="100" fxLayoutAlign="start center" fxLayout="row">
             <div fxLayout="row" fxLayoutAlign="start center">
                 @if (pipelineCacheRunning) {
-                    <mat-spinner
+                    <sp-spinner
                         data-cy="saving-pipeline-modification"
                         [mode]="'indeterminate'"
                         color="accent"
                         [diameter]="15"
-                    ></mat-spinner>
+                    ></sp-spinner>
                 }
                 @if (pipelineCacheRunning) {
                     <span class="modification-status"

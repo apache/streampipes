@@ -25,7 +25,11 @@ import {
     DashboardService,
     DataExplorerWidgetModel,
 } from '@streampipes/platform-services';
-import { DialogRef, FormFieldComponent } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    FormFieldComponent,
+    SpSpinnerComponent,
+} from '@streampipes/shared-ui';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 import { Observable, zip } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -47,7 +51,6 @@ import {
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 export interface WidgetClone {
     current: DataExplorerWidgetModel;
@@ -74,7 +77,7 @@ export interface WidgetClone {
         LayoutGapDirective,
         MatButton,
         LayoutAlignDirective,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         TranslatePipe,
         FormFieldComponent,
     ],

@@ -30,18 +30,16 @@
                     fxLayout="column"
                 >
                     <div fxFlex="100" fxLayoutAlign="center center">
-                        <mat-spinner
+                        <sp-spinner
                             color="accent"
                             [diameter]="30"
-                            fxLayoutAlign="center"
                             style="margin: 10px 0 5px 0"
-                        >
-                            @if (action === 0) {
-                                {{ 'Starting' | translate }}
-                            } @else {
-                                {{ 'Stopping' | translate }}
-                            }
-                        </mat-spinner>
+                            [text]="
+                                action === 0
+                                    ? ('Starting' | translate)
+                                    : ('Stopping' | translate)
+                            "
+                        ></sp-spinner>
                     </div>
                     <div
                         fxFlex="100"

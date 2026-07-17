@@ -51,17 +51,18 @@
                     class="container-fluid marketplace-container"
                     fxFlex="100"
                     fxLayoutAlign="center center"
-                    fxLayout="row"
                 >
-                    <mat-spinner
+                    <sp-spinner
                         [mode]="'indeterminate'"
                         [diameter]="20"
                         color="accent"
-                    ></mat-spinner>
-                    <h4>
-                        &nbsp;&nbsp;Searching for available adapters, please
-                        wait...
-                    </h4>
+                        layout="row"
+                        gap="8px"
+                        [text]="
+                            'Searching for available adapters, please wait...'
+                                | translate
+                        "
+                    ></sp-spinner>
                 </div>
             }
             @if (!adaptersLoading && !adapterLoadingError) {

@@ -19,10 +19,12 @@
 <div class="data-preview">
     @if (!runtimeData) {
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
-            <mat-spinner [diameter]="20" color="accent"></mat-spinner>
-            <span class="preview-table text-sm mt-10"
-                >{{ 'Waiting for live data' | translate }}...</span
-            >
+            <sp-spinner
+                [diameter]="20"
+                color="accent"
+                [text]="'Waiting for live data...' | translate"
+                [textClass]="'preview-table text-sm mt-10'"
+            ></sp-spinner>
         </div>
     }
     @if (runtimeData) {

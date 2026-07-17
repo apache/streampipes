@@ -48,11 +48,11 @@
             <span>{{ 'Reload' | translate }}</span>
         </button>
         @if (loading) {
-            <mat-spinner
+            <sp-spinner
                 color="accent"
                 [mode]="'indeterminate'"
                 [diameter]="15"
-            ></mat-spinner>
+            ></sp-spinner>
         }
     </div>
     @if (!staticProperty.horizontalRendering) {

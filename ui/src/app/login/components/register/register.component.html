@@ -77,12 +77,12 @@
                         </button>
                     }
                     @if (registrationInProcess) {
-                        <mat-spinner
+                        <sp-spinner
                             [mode]="'indeterminate'"
                             color="accent"
                             [diameter]="20"
                             style="margin-top: 10px"
-                        ></mat-spinner>
+                        ></sp-spinner>
                     }
                     @if (registrationError) {
                         <sp-alert-banner
