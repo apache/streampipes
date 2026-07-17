@@ -41,8 +41,10 @@ describe('Test rename of running pipeline', () => {
         PipelineUtils.verifyPipelineCount(1);
         PipelineUtils.verifyPipelineName('Renamed Pipeline');
 
-        PipelineUtils.editPipeline('Renamed Pipeline');
-        PipelineUtils.clonePipeline('Cloned Renamed Pipeline');
+        PipelineUtils.clonePipeline(
+            'Renamed Pipeline',
+            'Cloned Renamed Pipeline',
+        );
         PipelineUtils.finalizePipelineStart();
 
         PipelineUtils.verifyPipelineCount(2);

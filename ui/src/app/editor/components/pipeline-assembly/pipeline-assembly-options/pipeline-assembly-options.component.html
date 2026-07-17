@@ -27,16 +27,6 @@
         (primaryAction)="emitSavePipeline(true)"
         (actionSelected)="onSavePipelineActionSelected($event)"
     ></sp-split-button>
-    @if (editMode) {
-        <mat-checkbox
-            [(ngModel)]="createNewPipeline"
-            color="accent"
-            class="ml-10"
-            data-cy="sp-editor-checkbox-create-new-pipeline"
-        >
-            {{ 'Create new pipeline' | translate }}
-        </mat-checkbox>
-    }
     <span class="assembly-options-divider"></span>
     <button
         mat-flat-button

@@ -24,7 +24,6 @@ import {
     ViewChild,
     inject,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { JsplumbBridge } from '../../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../../services/pipeline-positioning.service';
 import { PipelineValidationService } from '../../../services/pipeline-validation.service';
@@ -54,7 +53,6 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -62,7 +60,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 export interface PipelineAssemblySaveOptions {
     startPipelineAfterStorage: boolean;
-    createNewPipeline: boolean;
 }
 
 @Component({
@@ -71,11 +68,9 @@ export interface PipelineAssemblySaveOptions {
     styleUrls: ['./pipeline-assembly-options.component.scss'],
     imports: [
         FlexDirective,
-        FormsModule,
         LayoutDirective,
         LayoutAlignDirective,
         MatButton,
-        MatCheckbox,
         MatIcon,
         MatTooltip,
         MatIconButton,
@@ -88,7 +83,6 @@ export interface PipelineAssemblySaveOptions {
     ],
 })
 export class PipelineAssemblyOptionsComponent {
-    createNewPipeline = false;
     savePipelineActions: SpSplitButtonAction[] = [
         {
             label: 'Store',
@@ -207,7 +201,6 @@ export class PipelineAssemblyOptionsComponent {
     emitSavePipeline(startPipelineAfterStorage: boolean): void {
         this.savePipelineEmitter.emit({
             startPipelineAfterStorage,
-            createNewPipeline: this.editMode && this.createNewPipeline,
         });
     }
 

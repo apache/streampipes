@@ -215,6 +215,16 @@
                 <mat-icon>mode_edit</mat-icon>
                 <span>{{ 'Edit' | translate }}</span>
             </button>
+            <button
+                mat-menu-item
+                (click)="
+                    pipelineOperationsService.clonePipeline(element.elementId)
+                "
+                data-cy="clone-pipeline-btn"
+            >
+                <mat-icon>content_copy</mat-icon>
+                <span>{{ 'Clone' | translate }}</span>
+            </button>
         }
         <button
             mat-menu-item

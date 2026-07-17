@@ -197,8 +197,9 @@ export class PipelineUtils {
         PipelineUtils.addToAsset(assetNameList);
     }
 
-    public static clonePipeline(newPipelineName: string) {
-        PipelineBtns.createNewPipelineCheckbox().click();
+    public static clonePipeline(pipelineName: string, newPipelineName: string) {
+        GeneralUtils.openMenuForRow(pipelineName);
+        PipelineBtns.clonePipeline().first().click();
         PipelineBtns.savePipelineBtn().click();
         PipelineBtns.managedResourceName().clear();
         PipelineBtns.managedResourceName().type(newPipelineName);

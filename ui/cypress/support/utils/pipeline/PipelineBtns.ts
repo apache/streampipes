@@ -32,6 +32,10 @@ export class PipelineBtns {
         return cy.dataCy('modify-pipeline-btn');
     }
 
+    public static clonePipeline() {
+        return cy.dataCy('clone-pipeline-btn');
+    }
+
     public static managePipeline() {
         return cy.dataCy('open-manage-pipeline');
     }
@@ -100,12 +104,6 @@ export class PipelineBtns {
 
     public static pipelineCloneModeBtn() {
         return cy.dataCy('pipeline-update-mode-clone');
-    }
-
-    public static createNewPipelineCheckbox() {
-        return cy.dataCy('sp-editor-checkbox-create-new-pipeline', {
-            timeout: 15000,
-        });
     }
 
     public static managedResourceName() {

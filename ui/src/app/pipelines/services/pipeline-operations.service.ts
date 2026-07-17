@@ -280,12 +280,22 @@ export class PipelineOperationsService {
         this.router.navigate(['pipelines', 'modify', id]);
     }
 
+    showPipelineCloneInEditor(id: string) {
+        this.router.navigate(['pipelines', 'modify', id], {
+            queryParams: { clone: true },
+        });
+    }
+
     showPipelineDetails(id: string) {
         this.router.navigate(['pipelines', 'details', id]);
     }
 
-    modifyPipeline(pipeline) {
-        this.showPipelineInEditor(pipeline);
+    modifyPipeline(pipelineId: string) {
+        this.showPipelineInEditor(pipelineId);
+    }
+
+    clonePipeline(pipelineId: string) {
+        this.showPipelineCloneInEditor(pipelineId);
     }
 
     private assertPipelineSaveSucceeded(result: Message): void {

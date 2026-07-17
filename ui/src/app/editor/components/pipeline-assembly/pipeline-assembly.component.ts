@@ -104,6 +104,9 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     originalPipeline: Pipeline;
 
     @Input()
+    cloneMode = false;
+
+    @Input()
     pipelineCanvasMetadata: PipelineCanvasMetadata;
 
     @Input()
@@ -170,12 +173,11 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     submit(
         saveOptions: PipelineAssemblySaveOptions = {
             startPipelineAfterStorage: true,
-            createNewPipeline: false,
         },
     ) {
         const pipeline = this.makePipelineForSave();
 
-        if (this.originalPipeline && saveOptions.createNewPipeline) {
+        if (this.originalPipeline && this.cloneMode) {
             this.prepareClonedPipeline(pipeline);
             this.openCreatePipelineDialog(
                 pipeline,
@@ -419,7 +421,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private prepareClonedPipeline(pipeline: Pipeline): void {
         pipeline._id = undefined;
         pipeline._rev = undefined;
-        pipeline.name = this.originalPipeline.name;
+        pipeline.name = `${this.originalPipeline.name}_cloned`;
         pipeline.description = this.originalPipeline.description;
         pipeline.running = false;
         pipeline.actions.forEach(element =>

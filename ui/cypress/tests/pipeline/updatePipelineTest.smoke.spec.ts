@@ -33,9 +33,7 @@ describe('Test update of running pipeline', () => {
         PipelineBtns.savePipelineStatusClose().click();
         cy.dataCy('more-options', { timeout: 10000 }).should('have.length', 1);
 
-        PipelineUtils.editPipeline(pipelineName);
-        cy.wait(1000);
-        PipelineUtils.clonePipeline('Pipeline Test 2');
+        PipelineUtils.clonePipeline(pipelineName, 'Pipeline Test 2');
         PipelineBtns.editorSaveBtn().click();
         cy.dataCy('sp-pipeline-started', { timeout: 15000 }).should(
             'be.visible',
