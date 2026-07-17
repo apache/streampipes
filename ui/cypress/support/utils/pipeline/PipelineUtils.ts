@@ -197,12 +197,20 @@ export class PipelineUtils {
         PipelineUtils.addToAsset(assetNameList);
     }
 
-    public static clonePipeline(pipelineName: string, newPipelineName: string) {
+    public static clonePipeline(
+        pipelineName: string,
+        newPipelineName?: string,
+    ) {
         GeneralUtils.openMenuForRow(pipelineName);
         PipelineBtns.clonePipeline().first().click();
-        PipelineBtns.savePipelineBtn().click();
-        PipelineBtns.managedResourceName().clear();
-        PipelineBtns.managedResourceName().type(newPipelineName);
+        PipelineBtns.savePipelineBtn().should('be.visible').click();
+
+        if (newPipelineName) {
+            PipelineBtns.managedResourceName()
+                .should('be.visible')
+                .clear()
+                .type(newPipelineName);
+        }
     }
 
     public static updatePipeline(newPipelineName: string) {
