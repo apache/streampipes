@@ -99,7 +99,11 @@ export class PipelineBtns {
     }
 
     public static savePipelineBtn() {
-        return cy.dataCy('sp-editor-save-pipeline');
+        return cy
+            .get('sp-split-button[datacy="sp-editor-save-pipeline"]', {
+                timeout: 15000,
+            })
+            .find('.split-button__main');
     }
 
     public static pipelineCloneModeBtn() {
@@ -179,7 +183,7 @@ export class PipelineBtns {
         return cy.dataCy('settings-pipeline-element-button');
     }
     public static pipelineEditorSave() {
-        return cy.dataCy('sp-editor-save-pipeline');
+        return PipelineBtns.savePipelineBtn();
     }
 
     public static savePipelineStatusClose() {
