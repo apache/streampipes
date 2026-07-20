@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 
 class CsvImportParser {
@@ -154,6 +155,17 @@ class CsvImportParser {
       DataLakeMeasure measure,
       DataLakeDataWriter dataWriter
   ) throws IOException {
+    return importCsvFile(path, request, measure, dataWriter, importedRows -> {
+    });
+  }
+
+  int importCsvFile(
+      Path path,
+      CsvImportRequest request,
+      DataLakeMeasure measure,
+      DataLakeDataWriter dataWriter,
+      IntConsumer progressConsumer
+  ) throws IOException {
     var runtimeHeaders = request.getColumns().stream()
         .map(CsvImportColumn::getRuntimeName)
         .collect(Collectors.toList());
@@ -178,8 +190,10 @@ class CsvImportParser {
         }
         batch.add(convertRow(row, request, rowNumber));
         if (batch.size() >= IMPORT_BATCH_SIZE) {
+          var batchSize = batch.size();
           dataWriter.writeData(measure, runtimeHeaders, new ArrayList<>(batch));
-          importedRows[0] += IMPORT_BATCH_SIZE;
+          importedRows[0] += batchSize;
+          progressConsumer.accept(importedRows[0]);
           batch.clear();
         }
       }
@@ -189,6 +203,7 @@ class CsvImportParser {
       var batchSize = batch.size();
       dataWriter.writeData(measure, runtimeHeaders, new ArrayList<>(batch));
       importedRows[0] += batchSize;
+      progressConsumer.accept(importedRows[0]);
     }
 
     return importedRows[0];
@@ -197,6 +212,7 @@ class CsvImportParser {
   CsvFileSample readCsvSample(Path path, CsvImportConfiguration config, int maxRows) throws IOException {
     var headers = new ArrayList<String>();
     var rows = new ArrayList<List<String>>();
+    var totalRows = new int[]{0};
 
     parseCsvFile(path, config, new CsvRowConsumer() {
       @Override
@@ -211,6 +227,7 @@ class CsvImportParser {
               message("rows", "Row " + rowNumber + " does not match the header size.")
           ));
         }
+        totalRows[0] += 1;
         if (rows.size() < maxRows) {
           rows.add(row);
         }
@@ -224,7 +241,7 @@ class CsvImportParser {
       throw new CsvImportValidationException(List.of(message("rows", "At least one row must be provided.")));
     }
 
-    return new CsvFileSample(headers, rows);
+    return new CsvFileSample(headers, rows, totalRows[0]);
   }
 
   private List<Object> convertRow(List<String> row, CsvImportRequest request, int rowNumber) {
@@ -602,10 +619,12 @@ class CsvImportParser {
 
     private final List<String> headers;
     private final List<List<String>> rows;
+    private final int totalRows;
 
-    CsvFileSample(List<String> headers, List<List<String>> rows) {
+    CsvFileSample(List<String> headers, List<List<String>> rows, int totalRows) {
       this.headers = headers;
       this.rows = rows;
+      this.totalRows = totalRows;
     }
 
     List<String> headers() {
@@ -614,6 +633,10 @@ class CsvImportParser {
 
     List<List<String>> rows() {
       return rows;
+    }
+
+    int totalRows() {
+      return totalRows;
     }
   }
 }

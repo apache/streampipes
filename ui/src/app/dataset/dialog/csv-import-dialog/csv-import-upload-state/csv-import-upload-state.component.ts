@@ -18,13 +18,15 @@
 
 import { Component, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
     CsvImportResult,
     CsvImportValidationMessage,
 } from '@streampipes/platform-services';
-import { SpAlertBannerComponent } from '@streampipes/shared-ui';
+import {
+    ProgressBarComponent,
+    SpAlertBannerComponent,
+} from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-csv-import-upload-state',
@@ -32,7 +34,7 @@ import { SpAlertBannerComponent } from '@streampipes/shared-ui';
     styleUrls: ['./csv-import-upload-state.component.scss'],
     imports: [
         MatIcon,
-        MatProgressSpinner,
+        ProgressBarComponent,
         TranslatePipe,
         SpAlertBannerComponent,
     ],
@@ -42,4 +44,6 @@ export class CsvImportUploadStateComponent {
     readonly hasImportResult = input(false);
     readonly importResult = input<CsvImportResult | undefined>(undefined);
     readonly uploadErrors = input<CsvImportValidationMessage[]>([]);
+    readonly processedRows = input(0);
+    readonly totalRows = input(0);
 }

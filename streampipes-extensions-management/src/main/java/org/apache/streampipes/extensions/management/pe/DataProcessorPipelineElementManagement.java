@@ -73,7 +73,9 @@ public class DataProcessorPipelineElementManagement extends InvocablePipelineEle
                                    DataProcessorInvocation graph) {
     var runtime = getRuntime();
     var response = runtime.onRuntimeInvoked(runningInstanceId, pipelineElement, graph);
-    getRunningInstances().add(runningInstanceId, graph, runtime);
+    if (response.isSuccess()) {
+      getRunningInstances().add(runningInstanceId, graph, runtime);
+    }
     return response;
   }
 }

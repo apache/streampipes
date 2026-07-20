@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public enum SpMonitoringManager {
 
@@ -39,16 +40,13 @@ public enum SpMonitoringManager {
   private final Map<String, SpMetricsEntry> metricsInfos;
 
   SpMonitoringManager() {
-    this.logInfos = new HashMap<>();
-    this.metricsInfos = new HashMap<>();
+    this.logInfos = new ConcurrentHashMap<>();
+    this.metricsInfos = new ConcurrentHashMap<>();
   }
 
   public void addErrorMessage(String resourceId,
                               SpLogEntry errorMessageEntry) {
-    if (!logInfos.containsKey(resourceId)) {
-      logInfos.put(resourceId, new FixedSizeList<>(100));
-    }
-    this.logInfos.get(resourceId).add(errorMessageEntry);
+    this.logInfos.computeIfAbsent(resourceId, key -> new FixedSizeList<>(100)).add(errorMessageEntry);
   }
 
   public void increaseInCounter(String resourceId,
@@ -80,8 +78,12 @@ public enum SpMonitoringManager {
   }
 
   public void reset(String resourceId) {
-    this.resetCounter(resourceId);
-    this.resetLogs(resourceId);
+    this.remove(resourceId);
+  }
+
+  public void remove(String resourceId) {
+    this.metricsInfos.remove(resourceId);
+    this.logInfos.remove(resourceId);
   }
 
   public SpMetricsEntry getMetricsEntry(String resourceId,

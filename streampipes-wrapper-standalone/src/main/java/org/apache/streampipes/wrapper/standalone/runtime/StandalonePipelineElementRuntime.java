@@ -75,18 +75,44 @@ public abstract class StandalonePipelineElementRuntime<
     this.runtimeContext = runtimeContext;
     this.instanceId = pipelineElementInvocation.getElementId();
     this.inputCollectors = getInputCollectors(pipelineElementInvocation.getInputStreams());
-    this.beforeStart();
+    try {
+      this.beforeStart();
+    } catch (RuntimeException e) {
+      try {
+        this.afterStartFailed();
+      } catch (RuntimeException cleanupException) {
+        e.addSuppressed(cleanupException);
+      }
+      throw e;
+    }
   }
 
   @Override
   public void stopRuntime() {
-    this.inputCollectors.forEach(is -> is.unregisterConsumer(instanceId));
-    resetCounter(instanceId);
-    afterStop();
+    RuntimeException stopException = null;
+    try {
+      unregisterInputCollectors();
+    } catch (RuntimeException e) {
+      stopException = collectCleanupException(stopException, e);
+    }
+    try {
+      afterStop();
+    } catch (RuntimeException e) {
+      stopException = collectCleanupException(stopException, e);
+    }
+    try {
+      removeMonitoring(instanceId);
+    } catch (RuntimeException e) {
+      stopException = collectCleanupException(stopException, e);
+    }
+
+    if (stopException != null) {
+      throw stopException;
+    }
   }
 
-  protected void resetCounter(String resourceId) throws SpRuntimeException {
-    monitoringManager.resetCounter(resourceId);
+  protected void removeMonitoring(String resourceId) throws SpRuntimeException {
+    monitoringManager.remove(resourceId);
   }
 
   protected List<SpInputCollector> getInputCollectors(List<SpDataStream> inputStreams) throws SpRuntimeException {
@@ -113,6 +139,45 @@ public abstract class StandalonePipelineElementRuntime<
 
   protected void registerInputCollectors() {
     this.inputCollectors.forEach(is -> is.registerConsumer(instanceId, this));
+  }
+
+  protected void unregisterInputCollectors() {
+    if (this.inputCollectors != null) {
+      this.inputCollectors.forEach(is -> is.unregisterConsumer(instanceId));
+    }
+  }
+
+  protected void afterStartFailed() {
+    RuntimeException cleanupException = null;
+    try {
+      unregisterInputCollectors();
+    } catch (RuntimeException e) {
+      cleanupException = collectCleanupException(cleanupException, e);
+    }
+    try {
+      disconnectInputCollectors();
+    } catch (RuntimeException e) {
+      cleanupException = collectCleanupException(cleanupException, e);
+    }
+    try {
+      removeMonitoring(instanceId);
+    } catch (RuntimeException e) {
+      cleanupException = collectCleanupException(cleanupException, e);
+    }
+
+    if (cleanupException != null) {
+      throw cleanupException;
+    }
+  }
+
+  protected RuntimeException collectCleanupException(RuntimeException cleanupException,
+                                                    RuntimeException nextException) {
+    if (cleanupException == null) {
+      return nextException;
+    } else {
+      cleanupException.addSuppressed(nextException);
+      return cleanupException;
+    }
   }
 
   protected abstract void beforeStart();
