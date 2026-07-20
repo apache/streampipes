@@ -40,6 +40,7 @@ public class ExtensionHealthCheck implements Runnable {
   private final IExtensionsServiceStorage extensionsServiceStorage;
   private final SpResourceManager resourceManager;
   private final List<HealthCheck> registeredHealthChecks;
+  private final PipelineRecoveryBackoff pipelineRecoveryBackoff;
 
   public ExtensionHealthCheck(ResourceProvider resourceProvider,
                               IExtensionsServiceStorage extensionsServiceStorage,
@@ -51,6 +52,7 @@ public class ExtensionHealthCheck implements Runnable {
     this.extensionRequestManager = extensionRequestManager;
     this.resourceManager = resourceManager;
     this.registeredHealthChecks = registeredHealthChecks;
+    this.pipelineRecoveryBackoff = new PipelineRecoveryBackoff();
   }
 
   @Override
@@ -100,7 +102,13 @@ public class ExtensionHealthCheck implements Runnable {
 
   protected List<HealthCheck> getBuiltInHealthChecks(HealthCheckData healthCheckData) {
     return List.of(
-        new PipelineHealthCheck(healthCheckData, extensionRequestManager, resourceProvider, resourceManager),
+        new PipelineHealthCheck(
+            healthCheckData,
+            extensionRequestManager,
+            resourceProvider,
+            resourceManager,
+            pipelineRecoveryBackoff
+        ),
         new AdapterHealthCheck(healthCheckData)
     );
   }

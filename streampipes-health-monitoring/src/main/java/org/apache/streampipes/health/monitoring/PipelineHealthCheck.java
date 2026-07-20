@@ -43,6 +43,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PipelineHealthCheck implements HealthCheck {
@@ -54,15 +56,25 @@ public class PipelineHealthCheck implements HealthCheck {
   private final ExtensionServiceRequestManager requestManager;
   private final ResourceProvider resourceProvider;
   private final SpResourceManager resourceManager;
+  private final PipelineRecoveryBackoff recoveryBackoff;
 
   public PipelineHealthCheck(HealthCheckData healthCheckData,
                              ExtensionServiceRequestManager requestManager,
                              ResourceProvider resourceProvider,
                              SpResourceManager resourceManager) {
+    this(healthCheckData, requestManager, resourceProvider, resourceManager, new PipelineRecoveryBackoff());
+  }
+
+  PipelineHealthCheck(HealthCheckData healthCheckData,
+                      ExtensionServiceRequestManager requestManager,
+                      ResourceProvider resourceProvider,
+                      SpResourceManager resourceManager,
+                      PipelineRecoveryBackoff recoveryBackoff) {
     this.healthCheckData = healthCheckData;
     this.requestManager = requestManager;
     this.resourceProvider = resourceProvider;
     this.resourceManager = resourceManager;
+    this.recoveryBackoff = recoveryBackoff;
   }
 
   @Override
@@ -102,8 +114,9 @@ public class PipelineHealthCheck implements HealthCheck {
   }
 
   private void checkAndRestorePipelineElements() {
+    recoveryBackoff.retainOnly(getActiveRecoveryKeys());
     healthCheckData.activeResources().runningPipelines().forEach(pipeline -> {
-      List<String> failedInstances = new ArrayList<>();
+      List<String> missingInstances = new ArrayList<>();
       List<String> recoveredInstances = new ArrayList<>();
       List<String> pipelineNotifications = new ArrayList<>();
       List<InvocableStreamPipesEntity> runningPipelineElements = Stream.concat(
@@ -114,25 +127,37 @@ public class PipelineHealthCheck implements HealthCheck {
       runningPipelineElements.forEach(pipelineElement -> {
         String instanceId = HealthCheckUtils.extractInstanceId(pipelineElement);
         if (isNowhereRunning(instanceId)) {
-          boolean success = restorePipelineElement(pipelineElement, pipeline.getPipelineId());
-          if (!success) {
-            failedInstances.add(instanceId);
-            HealthCheckUtils.addFailedAttemptNotification(pipelineNotifications, pipelineElement);
-            LOG.info("Could not restore pipeline element {} of pipeline {}",
-                pipelineElement.getName(), pipeline.getName());
-          } else {
+          missingInstances.add(instanceId);
+          if (recoveryBackoff.isAttemptDue(pipeline.getPipelineId(), instanceId)) {
+            boolean success = restorePipelineElement(pipelineElement, pipeline.getPipelineId());
+            if (!success) {
+              var state = recoveryBackoff.recordFailure(pipeline.getPipelineId(), instanceId);
+              HealthCheckUtils.addFailedAttemptNotification(pipelineNotifications, pipelineElement);
+              logFailedRecovery(pipeline, pipelineElement, state);
+            } else {
+              missingInstances.remove(instanceId);
+              recoveredInstances.add(instanceId);
+              int previousFailures = recoveryBackoff.reset(pipeline.getPipelineId(), instanceId);
+              logSuccessfulRecovery(pipeline, pipelineElement, previousFailures);
+            }
+          }
+        } else {
+          int previousFailures = recoveryBackoff.reset(pipeline.getPipelineId(), instanceId);
+          if (previousFailures > 0) {
             recoveredInstances.add(instanceId);
-            LOG.info("Successfully restored pipeline element {} of pipeline {}",
-                pipelineElement.getName(), pipeline.getName());
+            LOG.info("Pipeline element {} of pipeline {} is running again after {} failed recovery attempts",
+                pipelineElement.getName(), pipeline.getName(), previousFailures);
           }
         }
       });
-      if (!failedInstances.isEmpty() || !recoveredInstances.isEmpty()) {
+      boolean recoveredBeforeThisCheck = missingInstances.isEmpty()
+          && pipeline.getHealthStatus() == PipelineHealthStatus.FAILURE;
+      if (!missingInstances.isEmpty() || !recoveredInstances.isEmpty() || recoveredBeforeThisCheck) {
         var currentPipeline = resourceProvider.pipelineStorage().getElementById(pipeline.getPipelineId());
-        if (!failedInstances.isEmpty()) {
+        if (!missingInstances.isEmpty()) {
           currentPipeline.setHealthStatus(PipelineHealthStatus.FAILURE);
           pipelinesStats.failedIncrease();
-        } else if (!recoveredInstances.isEmpty()) {
+        } else {
           currentPipeline.setHealthStatus(PipelineHealthStatus.OK);
           pipelinesStats.attentionRequiredIncrease();
         }
@@ -152,6 +177,47 @@ public class PipelineHealthCheck implements HealthCheck {
         - pipelinesStats.getAttentionRequiredPipelines();
     pipelinesStats.setHealthyPipelines(healthNum);
     pipelinesStats.setElementCount(getElementsCount(healthCheckData.activeResources().allPipelines()));
+  }
+
+  private Set<PipelineRecoveryBackoff.RecoveryKey> getActiveRecoveryKeys() {
+    return healthCheckData.activeResources().runningPipelines().stream()
+        .flatMap(pipeline -> Stream.concat(pipeline.getSepas().stream(), pipeline.getActions().stream())
+            .map(pipelineElement -> new PipelineRecoveryBackoff.RecoveryKey(
+                pipeline.getPipelineId(),
+                HealthCheckUtils.extractInstanceId(pipelineElement)
+            )))
+        .collect(Collectors.toSet());
+  }
+
+  private void logFailedRecovery(Pipeline pipeline,
+                                 InvocableStreamPipesEntity pipelineElement,
+                                 PipelineRecoveryBackoff.RecoveryState state) {
+    var logMessage = "Could not restore pipeline element {} of pipeline {} on attempt {}; "
+        + "next attempt in {} seconds";
+    var delaySeconds = state.delay().toSeconds();
+    if (state.failedAttempts() == 1) {
+      LOG.warn(logMessage, pipelineElement.getName(), pipeline.getName(), state.failedAttempts(), delaySeconds);
+    } else if (isPowerOfTwo(state.failedAttempts())) {
+      LOG.info(logMessage, pipelineElement.getName(), pipeline.getName(), state.failedAttempts(), delaySeconds);
+    } else {
+      LOG.debug(logMessage, pipelineElement.getName(), pipeline.getName(), state.failedAttempts(), delaySeconds);
+    }
+  }
+
+  private void logSuccessfulRecovery(Pipeline pipeline,
+                                     InvocableStreamPipesEntity pipelineElement,
+                                     int previousFailures) {
+    if (previousFailures == 0) {
+      LOG.info("Successfully restored pipeline element {} of pipeline {}",
+          pipelineElement.getName(), pipeline.getName());
+    } else {
+      LOG.info("Successfully restored pipeline element {} of pipeline {} after {} failed attempts",
+          pipelineElement.getName(), pipeline.getName(), previousFailures);
+    }
+  }
+
+  private boolean isPowerOfTwo(int value) {
+    return (value & (value - 1)) == 0;
   }
 
   protected boolean restorePipelineElement(InvocableStreamPipesEntity pipelineElement,
