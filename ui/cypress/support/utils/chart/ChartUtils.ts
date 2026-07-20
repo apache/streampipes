@@ -16,14 +16,14 @@
  *
  */
 
-import { DataLakeFilterConfig } from '../../model/DataLakeFilterConfig';
+import { DatasetFilterConfig } from '../../model/DatasetFilterConfig';
 import { ChartWidget } from '../../model/ChartWidget';
 import { DataSetUtils } from '../DataSetUtils';
 import { PrepareTestDataUtils } from '../PrepareTestDataUtils';
 import { GeneralUtils } from '../GeneralUtils';
 import { ChartBtns } from './ChartBtns';
 import { SharedBtns } from '../shared/SharedBtns';
-import { DataLakeSeedUtils } from '../dataset/DataLakeSeedUtils';
+import { DatasetSeedUtils } from '../dataset/DatasetSeedUtils';
 import { ConnectBtns } from '../connect/ConnectBtns';
 
 export class ChartUtils {
@@ -109,7 +109,7 @@ export class ChartUtils {
         format: 'csv' | 'json_array' = 'csv',
     ) {
         if (format === 'csv') {
-            return DataLakeSeedUtils.importCsvFixture({
+            return DatasetSeedUtils.importCsvFixture({
                 fixture: dataSet,
                 measurementName: ChartUtils.ADAPTER_NAME,
                 delimiter: ';',
@@ -121,7 +121,7 @@ export class ChartUtils {
                 },
             });
         } else {
-            return DataLakeSeedUtils.importJsonArrayFixture({
+            return DatasetSeedUtils.importJsonArrayFixture({
                 fixture: dataSet,
                 measurementName: ChartUtils.ADAPTER_NAME,
                 timestampColumn: 'timestamp',
@@ -568,7 +568,7 @@ export class ChartUtils {
         cy.dataCy('data-explorer-data-set-field-select-all').click();
     }
 
-    public static dataConfigAddFilter(filterConfig: DataLakeFilterConfig) {
+    public static dataConfigAddFilter(filterConfig: DatasetFilterConfig) {
         cy.dataCy('design-panel-data-settings-add-filter').click();
 
         // Select field

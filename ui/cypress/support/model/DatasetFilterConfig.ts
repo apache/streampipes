@@ -16,7 +16,7 @@
  *
  */
 
-export class DataLakeFilterConfig {
+export class DatasetFilterConfig {
     field: string;
     value: string;
     operator: string | '<' | '>' | '=' | '!=';

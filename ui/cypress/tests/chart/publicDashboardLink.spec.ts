@@ -17,7 +17,7 @@
  */
 
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
-import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
+import { DatasetSeedUtils } from '../../support/utils/dataset/DatasetSeedUtils';
 import { Inspector } from '../../support/utils/dashboard/Inspector';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 
@@ -28,7 +28,7 @@ const tableColumns = ['time', 'randombool', 'randomnumber', 'randomtext'];
 describe('Public dashboard links', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataLakeSeedUtils.importCsvData({
+        DatasetSeedUtils.importCsvData({
             headers: ['timestamp', 'randombool', 'randomnumber', 'randomtext'],
             rows: kioskTableRows(),
             measurementName: ChartUtils.ADAPTER_NAME,
