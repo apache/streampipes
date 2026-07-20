@@ -43,7 +43,7 @@
                         [level]="3"
                         [title]="'Dataset' | translate"
                     >
-                        @if (availableMeasurements.length === 0) {
+                        @if (availableDatasets.length === 0) {
                             <sp-alert-banner
                                 type="warning"
                                 icon="warning"
@@ -83,15 +83,15 @@
                                 </div>
                             </div>
                         }
-                        @if (availableMeasurements.length !== 0) {
+                        @if (availableDatasets.length !== 0) {
                             <sp-search-select
                                 fxFlex="100"
-                                [items]="availableMeasurements"
-                                [value]="selectedMeasurement"
+                                [items]="availableDatasets"
+                                [value]="selectedDataset"
                                 [placeholder]="'Search datasets' | translate"
                                 dataCy="data-explorer-select-data-set"
                                 (valueChange)="
-                                    onMeasurementSelectionChange(
+                                    onDatasetSelectionChange(
                                         sourceConfig,
                                         $event
                                     )

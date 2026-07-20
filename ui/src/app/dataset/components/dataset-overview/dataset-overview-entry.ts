@@ -16,9 +16,8 @@
  *
  */
 
-export class DataLakeConfigurationEntry {
+export class DatasetOverviewEntry {
     public name: string;
-    public measureName: string;
     public pipelines: string[] = [];
     public lastEvent: number | null = null;
     public lastEventLoading = false;

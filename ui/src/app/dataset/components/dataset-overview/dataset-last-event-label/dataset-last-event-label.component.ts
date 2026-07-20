@@ -28,12 +28,12 @@ import { SpLabelComponent } from '@streampipes/shared-ui';
 import { LastUpdatedFormatterService } from '../../../../core-services/time-formatting/last-updated-formatter.service';
 
 @Component({
-    selector: 'sp-datalake-last-event-label',
-    templateUrl: './datalake-last-event-label.component.html',
-    styleUrls: ['./datalake-last-event-label.component.scss'],
+    selector: 'sp-dataset-last-event-label',
+    templateUrl: './dataset-last-event-label.component.html',
+    styleUrls: ['./dataset-last-event-label.component.scss'],
     imports: [MatTooltip, SpLabelComponent],
 })
-export class DatalakeLastEventLabelComponent implements OnChanges {
+export class DatasetLastEventLabelComponent implements OnChanges {
     @Input()
     lastEvent: number | null;
 
