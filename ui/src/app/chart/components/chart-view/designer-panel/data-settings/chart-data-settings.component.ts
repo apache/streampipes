@@ -20,6 +20,7 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     ViewChild,
@@ -58,32 +59,23 @@ import { MatTooltip } from '@angular/material/tooltip';
 import {
     FormFieldComponent,
     SpAlertBannerComponent,
+    SearchSelectComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import {
-    MatFormField,
-    MatPrefix,
-    MatSuffix,
-} from '@angular/material/form-field';
-import { MatOption } from '@angular/material/core';
+import { MatFormField } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { ClassDirective } from '@ngbracket/ngx-layout/extended';
-import { MatInput } from '@angular/material/input';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
 import { AggregateConfigurationComponent } from './aggregate-configuration/aggregate-configuration.component';
 import { FillConfigurationComponent } from './fill-configuration/fill-configuration.component';
 import { FilterSelectionPanelComponent } from './filter-selection-panel/filter-selection-panel.component';
 import { OrderSelectionPanelComponent } from './order-selection-panel/order-selection-panel.component';
 import { ResultLabelConfigurationComponent } from './result-label-configuration/result-label-configuration.component';
 import { TranslatePipe } from '@ngx-translate/core';
-import {
-    MatAutocomplete,
-    MatAutocompleteSelectedEvent,
-    MatAutocompleteTrigger,
-} from '@angular/material/autocomplete';
 
 @Component({
     selector: 'sp-chart-data-settings',
@@ -103,9 +95,6 @@ import {
         LayoutGapDirective,
         MatButton,
         MatFormField,
-        MatPrefix,
-        MatSuffix,
-        MatOption,
         MatIcon,
         MatRadioGroup,
         FormsModule,
@@ -113,10 +102,9 @@ import {
         ClassDirective,
         MatRadioButton,
         FormFieldComponent,
-        MatInput,
         MatCheckbox,
-        MatAutocomplete,
-        MatAutocompleteTrigger,
+        MatInput,
+        SearchSelectComponent,
         AggregateConfigurationComponent,
         FillConfigurationComponent,
         FieldSelectionPanelComponent,
@@ -127,7 +115,7 @@ import {
         TranslatePipe,
     ],
 })
-export class ChartDataSettingsComponent implements OnInit {
+export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     private datalakeRestService = inject(DatalakeRestService);
     private widgetConfigService = inject(ChartConfigurationService);
     private fieldProviderService = inject(ChartFieldProviderService);
@@ -156,8 +144,10 @@ export class ChartDataSettingsComponent implements OnInit {
     groupSelectionPanel: GroupSelectionPanelComponent;
 
     availableMeasurements: DatasetSummaryDto[] = [];
-    filteredMeasurements: DatasetSummaryDto[] = [];
-    measurementInputValue = '';
+    selectedMeasurement: DatasetSummaryDto | undefined;
+
+    private pendingMeasurementRefresh = false;
+    private dataRefreshTimeout?: ReturnType<typeof setTimeout>;
 
     step = 0;
 
@@ -173,17 +163,24 @@ export class ChartDataSettingsComponent implements OnInit {
         this.loadPipelinesAndMeasurements();
     }
 
+    ngOnDestroy(): void {
+        clearTimeout(this.dataRefreshTimeout);
+    }
+
     loadPipelinesAndMeasurements() {
         this.datalakeRestService.getMeasurementSummary().subscribe(response => {
             this.availableMeasurements = response.resources.sort((a, b) =>
                 a.measureName.localeCompare(b.measureName),
             );
-            this.applyMeasurementSearch();
+            this.syncSelectedMeasurementSummary();
 
             if (!this.sourceConfig) {
                 const defaultConfigs = this.findDefaultConfig();
                 this.initializeSourceConfig(defaultConfigs.measureName);
                 if (defaultConfigs.measureName !== undefined) {
+                    this.selectedMeasurement = this.findMeasurementSummary(
+                        defaultConfigs.measureName,
+                    );
                     this.loadMeasurement(
                         defaultConfigs.measureName,
                         true,
@@ -229,45 +226,35 @@ export class ChartDataSettingsComponent implements OnInit {
 
     updateMeasure(sourceConfig: SourceConfig, measureName: string) {
         sourceConfig.measureName = measureName;
-        this.measurementInputValue = measureName;
+        this.selectedMeasurement = this.findMeasurementSummary(measureName);
         this.loadMeasurement(measureName, true, true);
     }
 
-    onMeasurementSearchChange(value: string): void {
-        this.measurementInputValue = value;
-        this.applyMeasurementSearch();
-    }
-
-    clearMeasurementSearch(): void {
-        this.measurementInputValue = '';
-        this.applyMeasurementSearch();
-    }
-
-    hasActiveMeasurementSearch(): boolean {
-        return this.measurementInputValue.trim().length > 0;
-    }
-
-    onMeasurementSelected(
+    onMeasurementSelectionChange(
         sourceConfig: SourceConfig,
-        event: MatAutocompleteSelectedEvent,
+        selectedMeasurement:
+            | DatasetSummaryDto
+            | DatasetSummaryDto[]
+            | undefined,
     ): void {
-        this.updateMeasure(sourceConfig, event.option.value);
-    }
-
-    private applyMeasurementSearch(): void {
-        const query = this.measurementInputValue.trim().toLowerCase();
-        if (!query) {
-            this.filteredMeasurements = this.availableMeasurements;
+        if (Array.isArray(selectedMeasurement)) {
             return;
         }
 
-        this.filteredMeasurements = this.availableMeasurements.filter(
-            measurement =>
-                measurement.measureName.toLowerCase().includes(query) ||
-                measurement.pipelines.some(pipeline =>
-                    pipeline.toLowerCase().includes(query),
-                ),
-        );
+        if (!selectedMeasurement) {
+            this.clearMeasure(sourceConfig);
+            return;
+        }
+
+        this.updateMeasure(sourceConfig, selectedMeasurement.measureName);
+    }
+
+    private clearMeasure(sourceConfig: SourceConfig): void {
+        sourceConfig.measureName = '';
+        sourceConfig.measure = undefined;
+        sourceConfig.queryConfig.fields = [];
+        sourceConfig.queryConfig.groupBy = [];
+        this.selectedMeasurement = undefined;
     }
 
     private loadMeasurement(
@@ -300,12 +287,15 @@ export class ChartDataSettingsComponent implements OnInit {
         this.dataLakeMeasureChange.emit(measure);
         sourceConfig.measureName = measure.measureName;
         sourceConfig.measure = measure;
-        this.measurementInputValue = measure.measureName;
+        this.selectedMeasurement = this.findMeasurementSummary(
+            measure.measureName,
+        );
 
         if (!resetQueryConfig) {
             return;
         }
 
+        this.pendingMeasurementRefresh = refreshData;
         sourceConfig.queryConfig.fields = [];
         if (this.fieldSelectionPanel) {
             this.fieldSelectionPanel.applyDefaultFields();
@@ -316,8 +306,8 @@ export class ChartDataSettingsComponent implements OnInit {
             this.groupSelectionPanel.applyDefaultFields();
         }
 
-        if (refreshData) {
-            this.triggerDataRefresh();
+        if (refreshData && this.fieldSelectionPanel) {
+            this.scheduleDataRefresh();
         }
     }
 
@@ -325,10 +315,30 @@ export class ChartDataSettingsComponent implements OnInit {
         if (this.sourceConfig?.measure) {
             this.dataLakeMeasure = this.sourceConfig.measure;
             this.dataLakeMeasureChange.emit(this.sourceConfig.measure);
-            this.measurementInputValue = this.sourceConfig.measure.measureName;
+            this.selectedMeasurement = this.findMeasurementSummary(
+                this.sourceConfig.measure.measureName,
+            );
         } else if (this.sourceConfig?.measureName) {
-            this.measurementInputValue = this.sourceConfig.measureName;
+            this.selectedMeasurement = this.findMeasurementSummary(
+                this.sourceConfig.measureName,
+            );
         }
+    }
+
+    private syncSelectedMeasurementSummary(): void {
+        if (this.sourceConfig?.measureName) {
+            this.selectedMeasurement = this.findMeasurementSummary(
+                this.sourceConfig.measureName,
+            );
+        }
+    }
+
+    private findMeasurementSummary(
+        measureName: string,
+    ): DatasetSummaryDto | undefined {
+        return this.availableMeasurements.find(
+            measurement => measurement.measureName === measureName,
+        );
     }
 
     changeDataAggregation() {
@@ -368,7 +378,14 @@ export class ChartDataSettingsComponent implements OnInit {
         };
     }
 
-    createDefaultWidget(): void {
+    onInitialFieldSelection(): void {
+        const defaultWidgetCreated = this.createDefaultWidget();
+        if (defaultWidgetCreated || this.pendingMeasurementRefresh) {
+            this.scheduleDataRefresh();
+        }
+    }
+
+    createDefaultWidget(): boolean {
         if (this.checkIfDefaultTableShouldBeShown()) {
             const fields = this.fieldProviderService.generateFieldLists(
                 this.dataConfig.sourceConfigs,
@@ -379,13 +396,18 @@ export class ChartDataSettingsComponent implements OnInit {
             this.widgetTypeService.notify({
                 widgetId: this.currentlyConfiguredWidget.elementId,
                 newWidgetTypeId: this.currentlyConfiguredWidget.widgetType,
+                deferInitialDataLoad: true,
             });
 
             this.createWidgetEmitter.emit({
                 a: this.dataLakeMeasure,
                 b: this.currentlyConfiguredWidget,
             });
+
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -402,6 +424,12 @@ export class ChartDataSettingsComponent implements OnInit {
             refreshData: true,
             refreshView: true,
         });
+    }
+
+    private scheduleDataRefresh(): void {
+        this.pendingMeasurementRefresh = false;
+        clearTimeout(this.dataRefreshTimeout);
+        this.dataRefreshTimeout = setTimeout(() => this.triggerDataRefresh());
     }
 
     toggleExpandFieldsDataSource() {

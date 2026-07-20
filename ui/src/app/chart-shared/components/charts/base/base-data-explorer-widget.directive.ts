@@ -87,6 +87,9 @@ export abstract class BaseDataExplorerWidgetDirective<
     previewMode = false;
 
     @Input()
+    deferInitialDataLoad = false;
+
+    @Input()
     gridMode = true;
 
     @Input() dataViewDashboardItem: ClientDashboardItem;
@@ -213,7 +216,9 @@ export abstract class BaseDataExplorerWidgetDirective<
             },
         );
 
-        this.updateData();
+        if (!this.deferInitialDataLoad) {
+            this.updateData();
+        }
     }
 
     public cleanupSubscriptions(): void {
