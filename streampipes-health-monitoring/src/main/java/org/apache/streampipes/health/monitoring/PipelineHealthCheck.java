@@ -41,19 +41,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 public class PipelineHealthCheck implements HealthCheck {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineHealthCheck.class);
-  private static final int MAX_FAILED_ATTEMPTS = 10;
-
-  private static final Map<String, Integer> failedRestartAttempts = new HashMap<>();
   private static final PipelinesStats pipelinesStats = new PipelinesStats();
 
   private final HealthCheckData healthCheckData;
@@ -109,7 +103,6 @@ public class PipelineHealthCheck implements HealthCheck {
 
   private void checkAndRestorePipelineElements() {
     healthCheckData.activeResources().runningPipelines().forEach(pipeline -> {
-      AtomicBoolean shouldUpdatePipeline = new AtomicBoolean(false);
       List<String> failedInstances = new ArrayList<>();
       List<String> recoveredInstances = new ArrayList<>();
       List<String> pipelineNotifications = new ArrayList<>();
@@ -121,41 +114,20 @@ public class PipelineHealthCheck implements HealthCheck {
       runningPipelineElements.forEach(pipelineElement -> {
         String instanceId = HealthCheckUtils.extractInstanceId(pipelineElement);
         if (isNowhereRunning(instanceId)) {
-          if (shouldRetry(instanceId)) {
-            shouldUpdatePipeline.set(true);
-            boolean success;
-            try {
-              var service = new ExtensionsServiceEndpointGenerator().selectService(
-                  pipelineElement.getAppId(),
-                  ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement.getAppId()),
-                  Collections.emptySet()
-              );
-              new SecretService(new SecretDecrypter()).apply(pipelineElement);
-              pipelineElement.setSelectedEndpointUrl(service.getServiceUrl());
-              pipelineElement.setSelectedServiceId(service.getSvcId());
-              success = new InvokeExtensionRequest(requestManager, resourceManager)
-                  .execute(pipelineElement, pipeline.getPipelineId()).isSuccess();
-              new SecretService(new SecretEncrypter()).apply(pipelineElement);
-            } catch (NoServiceEndpointsAvailableException e) {
-              success = false;
-            }
-            if (!success) {
-              failedInstances.add(instanceId);
-              HealthCheckUtils.addFailedAttemptNotification(pipelineNotifications, pipelineElement);
-              increaseFailedAttempt(instanceId);
-              LOG.info("Could not restore pipeline element {} of pipeline {} ({}/{})",
-                  pipelineElement.getName(), pipeline.getName(), failedRestartAttempts.get(instanceId),
-                  MAX_FAILED_ATTEMPTS);
-            } else {
-              recoveredInstances.add(instanceId);
-              resetFailedAttempts(instanceId);
-              LOG.info("Successfully restored pipeline element {} of pipeline {}",
-                  pipelineElement.getName(), pipeline.getName());
-            }
+          boolean success = restorePipelineElement(pipelineElement, pipeline.getPipelineId());
+          if (!success) {
+            failedInstances.add(instanceId);
+            HealthCheckUtils.addFailedAttemptNotification(pipelineNotifications, pipelineElement);
+            LOG.info("Could not restore pipeline element {} of pipeline {}",
+                pipelineElement.getName(), pipeline.getName());
+          } else {
+            recoveredInstances.add(instanceId);
+            LOG.info("Successfully restored pipeline element {} of pipeline {}",
+                pipelineElement.getName(), pipeline.getName());
           }
         }
       });
-      if (shouldUpdatePipeline.get()) {
+      if (!failedInstances.isEmpty() || !recoveredInstances.isEmpty()) {
         var currentPipeline = resourceProvider.pipelineStorage().getElementById(pipeline.getPipelineId());
         if (!failedInstances.isEmpty()) {
           currentPipeline.setHealthStatus(PipelineHealthStatus.FAILURE);
@@ -182,40 +154,32 @@ public class PipelineHealthCheck implements HealthCheck {
     pipelinesStats.setElementCount(getElementsCount(healthCheckData.activeResources().allPipelines()));
   }
 
+  protected boolean restorePipelineElement(InvocableStreamPipesEntity pipelineElement,
+                                           String pipelineId) {
+    try {
+      var service = new ExtensionsServiceEndpointGenerator().selectService(
+          pipelineElement.getAppId(),
+          ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement.getAppId()),
+          Collections.emptySet()
+      );
+      new SecretService(new SecretDecrypter()).apply(pipelineElement);
+      pipelineElement.setSelectedEndpointUrl(service.getServiceUrl());
+      pipelineElement.setSelectedServiceId(service.getSvcId());
+      boolean success = new InvokeExtensionRequest(requestManager, resourceManager)
+          .execute(pipelineElement, pipelineId).isSuccess();
+      new SecretService(new SecretEncrypter()).apply(pipelineElement);
+      return success;
+    } catch (NoServiceEndpointsAvailableException e) {
+      return false;
+    }
+  }
+
   private boolean isNowhereRunning(String instanceId) {
     return (healthCheckData.activeExtensionInstances().entrySet().stream()
         .noneMatch(entry -> entry.getValue().runningPipelineElementInstanceIds().contains(instanceId)));
   }
 
-  private boolean shouldRetry(String instanceId) {
-    if (!failedRestartAttempts.containsKey(instanceId)) {
-      return true;
-    } else {
-      return failedRestartAttempts.get(instanceId) < MAX_FAILED_ATTEMPTS;
-    }
-  }
-
-  private void resetFailedAttempts(String instanceId) {
-    failedRestartAttempts.put(instanceId, 0);
-  }
-
-  private void increaseFailedAttempt(String instanceId) {
-    if (!failedRestartAttempts.containsKey(instanceId)) {
-      failedRestartAttempts.put(instanceId, 1);
-    } else {
-      Integer currentAttempt = failedRestartAttempts.get(instanceId) + 1;
-      failedRestartAttempts.put(instanceId, currentAttempt);
-    }
-  }
-
   private int getElementsCount(List<Pipeline> allPipelines) {
     return allPipelines.stream().mapToInt(pipeline -> pipeline.getActions().size()).sum();
-  }
-
-  private String getInvocationUrl(InvocableStreamPipesEntity pipelineElement,
-                                  String baseUrl) {
-    return ExtensionsServiceEndpointUtils
-        .getPipelineElementType(pipelineElement)
-        .getInvocationUrl(baseUrl, pipelineElement.getAppId());
   }
 }
