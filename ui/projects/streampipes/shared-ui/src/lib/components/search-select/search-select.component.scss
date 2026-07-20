@@ -1,0 +1,104 @@
+/*!
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.search-select-check-icon {
+    margin-right: var(--space-xs);
+    width: 1.125rem;
+}
+
+.search-select-chip-colored {
+    background-color: transparent;
+    color: var(--sp-search-select-chip-fg);
+    min-height: auto;
+    padding: 0;
+    --mat-chip-container-height: auto;
+    --mat-chip-elevated-container-color: transparent;
+    --mat-chip-elevated-selected-container-color: transparent;
+    --mat-chip-flat-disabled-selected-container-color: transparent;
+    --mat-chip-outline-color: transparent;
+    --mat-chip-outline-width: 0;
+    --mat-chip-flat-selected-outline-width: 0;
+    --mat-chip-focus-outline-color: transparent;
+    --mat-chip-label-text-color: var(--sp-search-select-chip-fg);
+    --mat-chip-selected-label-text-color: var(--sp-search-select-chip-fg);
+    --mat-chip-with-trailing-icon-trailing-icon-color: var(
+        --sp-search-select-chip-fg
+    );
+    --mat-chip-selected-trailing-icon-color: var(--sp-search-select-chip-fg);
+    --mdc-chip-elevated-container-color: transparent;
+    --mdc-chip-outline-color: transparent;
+    --mdc-chip-outline-width: 0;
+    --mdc-chip-focus-outline-color: transparent;
+    --mdc-chip-label-text-color: var(--sp-search-select-chip-fg);
+    --mdc-chip-with-trailing-icon-trailing-icon-color: var(
+        --sp-search-select-chip-fg
+    );
+    --mdc-chip-with-trailing-icon-trailing-icon-hover-color: var(
+        --sp-search-select-chip-fg
+    );
+    --mdc-chip-with-trailing-icon-trailing-icon-focus-color: var(
+        --sp-search-select-chip-fg
+    );
+}
+
+// Angular Material renders chip outlines inside component internals. Colored
+// items use sp-label for the visible badge, so the Material wrapper stays flat.
+:host ::ng-deep .search-select-chip-colored {
+    .mat-mdc-chip-focus-overlay {
+        display: none;
+    }
+
+    .mdc-evolution-chip__cell,
+    .mdc-evolution-chip__action,
+    .mat-mdc-chip-action-label {
+        min-height: auto;
+    }
+
+    .mdc-evolution-chip__cell--primary,
+    .mdc-evolution-chip__action--primary {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .mdc-evolution-chip__action--primary::before {
+        border-color: transparent;
+        border-width: 0;
+    }
+
+    .mdc-evolution-chip__cell--trailing,
+    .mdc-evolution-chip__action--trailing {
+        padding-left: var(--space-xs);
+        padding-right: 0;
+    }
+
+    .mdc-evolution-chip__action,
+    .mdc-evolution-chip__text-label,
+    .mat-mdc-chip-action-label,
+    .mat-icon {
+        color: var(--sp-search-select-chip-fg);
+    }
+}
