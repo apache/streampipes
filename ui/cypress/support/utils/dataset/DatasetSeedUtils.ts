@@ -116,7 +116,7 @@ interface ImportRequest {
     columns: CsvImportColumn[];
 }
 
-export class DataLakeSeedUtils {
+export class DatasetSeedUtils {
     private static readonly TIMESTAMP_SEMANTIC_TYPE =
         'http://schema.org/DateTime';
 
@@ -338,7 +338,7 @@ export class DataLakeSeedUtils {
                     propertyScope: 'HEADER_PROPERTY',
                     semanticType:
                         override.semanticType ??
-                        DataLakeSeedUtils.TIMESTAMP_SEMANTIC_TYPE,
+                        DatasetSeedUtils.TIMESTAMP_SEMANTIC_TYPE,
                 };
             }
 
