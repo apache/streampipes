@@ -140,6 +140,8 @@ public class PipelineHealthCheck implements HealthCheck {
               int previousFailures = recoveryBackoff.reset(pipeline.getPipelineId(), instanceId);
               logSuccessfulRecovery(pipeline, pipelineElement, previousFailures);
             }
+          } else {
+            HealthCheckUtils.addPendingRecoveryNotification(pipelineNotifications, pipelineElement);
           }
         } else {
           int previousFailures = recoveryBackoff.reset(pipeline.getPipelineId(), instanceId);
@@ -193,7 +195,7 @@ public class PipelineHealthCheck implements HealthCheck {
                                  InvocableStreamPipesEntity pipelineElement,
                                  PipelineRecoveryBackoff.RecoveryState state) {
     var logMessage = "Could not restore pipeline element {} of pipeline {} on attempt {}; "
-        + "next attempt in {} seconds";
+        + "next attempt is eligible in {} seconds";
     var delaySeconds = state.delay().toSeconds();
     if (state.failedAttempts() == 1) {
       LOG.warn(logMessage, pipelineElement.getName(), pipeline.getName(), state.failedAttempts(), delaySeconds);

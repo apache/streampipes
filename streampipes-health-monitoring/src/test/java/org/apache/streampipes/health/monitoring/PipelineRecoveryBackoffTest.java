@@ -44,6 +44,29 @@ public class PipelineRecoveryBackoffTest {
   }
 
   @Test
+  public void configuredHealthCheckIntervalIsUsedAsInitialDelay() {
+    var recoveryBackoff = new PipelineRecoveryBackoff(Duration.ofMinutes(2));
+    var expectedDelays = new long[]{2, 4, 8, 10, 10};
+
+    for (long expectedDelay : expectedDelays) {
+      var state = recoveryBackoff.recordFailure("pipeline", "instance");
+      assertEquals(Duration.ofMinutes(expectedDelay), state.delay());
+    }
+  }
+
+  @Test
+  public void healthCheckIntervalAboveDefaultMaximumBecomesMaximumDelay() {
+    var healthCheckInterval = Duration.ofMinutes(15);
+    var recoveryBackoff = new PipelineRecoveryBackoff(healthCheckInterval);
+
+    var firstFailure = recoveryBackoff.recordFailure("pipeline", "instance");
+    var secondFailure = recoveryBackoff.recordFailure("pipeline", "instance");
+
+    assertEquals(healthCheckInterval, firstFailure.delay());
+    assertEquals(healthCheckInterval, secondFailure.delay());
+  }
+
+  @Test
   public void resetAllowsImmediateRecoveryAttempt() {
     var recoveryBackoff = recoveryBackoff();
     recoveryBackoff.recordFailure("pipeline", "instance");

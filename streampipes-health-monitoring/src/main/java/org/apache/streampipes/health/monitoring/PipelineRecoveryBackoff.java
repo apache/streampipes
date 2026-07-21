@@ -38,6 +38,14 @@ final class PipelineRecoveryBackoff {
     this(Clock.systemUTC(), DEFAULT_INITIAL_DELAY, DEFAULT_MAX_DELAY);
   }
 
+  PipelineRecoveryBackoff(Duration healthCheckInterval) {
+    this(
+        Clock.systemUTC(),
+        healthCheckInterval,
+        max(DEFAULT_MAX_DELAY, healthCheckInterval)
+    );
+  }
+
   PipelineRecoveryBackoff(Clock clock,
                           Duration initialDelay,
                           Duration maxDelay) {
@@ -82,6 +90,11 @@ final class PipelineRecoveryBackoff {
     long multiplier = 1L << exponent;
     Duration calculatedDelay = initialDelay.multipliedBy(multiplier);
     return calculatedDelay.compareTo(maxDelay) > 0 ? maxDelay : calculatedDelay;
+  }
+
+  private static Duration max(Duration first,
+                              Duration second) {
+    return first.compareTo(second) >= 0 ? first : second;
   }
 
   record RecoveryKey(String pipelineId, String instanceId) {

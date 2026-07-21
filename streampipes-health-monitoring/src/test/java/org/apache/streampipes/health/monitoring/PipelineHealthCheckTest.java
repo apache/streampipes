@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -81,6 +82,9 @@ public class PipelineHealthCheckTest {
 
     assertEquals(1, healthCheck.restoreAttempts("missing"));
     assertEquals(PipelineHealthStatus.FAILURE, pipeline.getHealthStatus());
+    assertEquals(1, pipeline.getPipelineNotifications().size());
+    assertTrue(pipeline.getPipelineNotifications().get(0)
+        .contains("The next automatic recovery attempt is pending."));
 
     clock.advance(PipelineRecoveryBackoff.DEFAULT_INITIAL_DELAY);
     healthCheck.runCheck();
