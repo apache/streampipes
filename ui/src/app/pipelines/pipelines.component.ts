@@ -141,7 +141,6 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     }
 
     getPipelines() {
-        this.pipelines = [];
         this.pipelineService.getPipelineSummary().subscribe(resourceSummary => {
             this.pipelines = resourceSummary.resources.sort((a, b) =>
                 a.name.localeCompare(b.name),
