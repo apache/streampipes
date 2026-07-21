@@ -83,7 +83,7 @@
     "shepherd.js": "^11.2.0",
     "supercluster": "^8.0.1",
     "stream-browserify": "3.0.0",
-    "swagger-ui-dist": "5.15.1",
+    "swagger-ui-dist": "5.32.9",
     "tslib": "^2.6.2",
     "zone.js": "~0.15.1"
   },
