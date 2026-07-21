@@ -16,7 +16,7 @@
  *
  */
 
-import { getTestBed, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import {
     HttpTestingController,
     provideHttpClientTesting,
@@ -27,9 +27,9 @@ import {
     provideHttpClient,
     withInterceptorsFromDi,
 } from '@angular/common/http';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 describe('ConfigurationService', () => {
-    let injector: TestBed;
     let service: ConfigurationService;
     let httpMock: HttpTestingController;
 
@@ -42,9 +42,8 @@ describe('ConfigurationService', () => {
                 provideHttpClientTesting(),
             ],
         });
-        injector = getTestBed();
-        service = injector.get(ConfigurationService);
-        httpMock = injector.get(HttpTestingController);
+        service = TestBed.inject(ConfigurationService);
+        httpMock = TestBed.inject(HttpTestingController);
     });
     afterEach(() => {
         httpMock.verify();
@@ -60,7 +59,11 @@ describe('ConfigurationService', () => {
 
     it('should create Put to /api/v2/extensions-services-configurations/abc', () => {
         service
-            .updateExtensionsServiceConfigs({} as SpServiceConfiguration)
+            .updateExtensionsServiceConfigs(
+                Object.assign(new SpServiceConfiguration(), {
+                    serviceGroup: 'abc',
+                }),
+            )
             .subscribe(res => res);
         const req = httpMock.expectOne(
             '/streampipes-backend/api/v2/extensions-services-configurations/abc',

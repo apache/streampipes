@@ -16,23 +16,13 @@
  *
  */
 
-import { Component, ElementRef, OnInit, inject } from '@angular/core';
-import SwaggerUIBundle from 'swagger-ui-dist/swagger-ui-es-bundle.js';
-
-@Component({
-    selector: 'sp-apidocs',
-    templateUrl: './apidocs.component.html',
-    styleUrls: ['./apidocs.component.scss'],
-})
-export class ApidocsComponent implements OnInit {
-    private el = inject(ElementRef);
-
-    ngOnInit(): void {
-        SwaggerUIBundle({
-            url: '/streampipes-backend/apidocs',
-            domNode: this.el.nativeElement.querySelector('.swagger-ui'),
-            deepLinking: false,
-            presets: [SwaggerUIBundle.presets.apis],
-        });
-    }
-}
+window.matchMedia ??= query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+});
