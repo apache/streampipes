@@ -16,21 +16,37 @@
  *
  */
 import { AddToCollectionComponent } from './add-to-collection.component';
+import { firstValueFrom } from 'rxjs';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { TestBed } from '@angular/core/testing';
+import { StaticPropertyUtilService } from '../../static-property-util.service';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('AddToCollectionComponent', () => {
-    const component: AddToCollectionComponent = new AddToCollectionComponent(
-        undefined,
-    );
+    let component: AddToCollectionComponent;
 
-    it('parse csv string', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: StaticPropertyUtilService, useValue: {} },
+                {
+                    provide: TranslateService,
+                    useValue: { instant: () => '' },
+                },
+            ],
+        });
+        component = TestBed.runInInjectionContext(
+            () => new AddToCollectionComponent(),
+        );
+    });
+
+    it('parse csv string', async () => {
         const csvString = ['a,b', 'a1,b1', 'a2,b2'].join('\n');
 
-        const result = component.parseCsv(csvString);
+        const result = await firstValueFrom(component.parseCsv(csvString));
 
-        result.subscribe(res => {
-            expect(res.length).toBe(2);
-            expect(res[0]).toEqual({ a: 'a1', b: 'b1' });
-            expect(res[1]).toEqual({ a: 'a2', b: 'b2' });
-        });
+        expect(result.length).toBe(2);
+        expect(result[0]).toEqual({ a: 'a1', b: 'b1' });
+        expect(result[1]).toEqual({ a: 'a2', b: 'b2' });
     });
 });
