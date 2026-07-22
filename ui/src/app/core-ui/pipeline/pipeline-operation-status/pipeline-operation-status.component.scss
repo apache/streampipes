@@ -16,6 +16,121 @@
  *
  */
 
-.status-outer {
-    border: 1px solid var(--color-bg-3);
+.status-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    width: 100%;
+    margin-top: var(--space-md);
+}
+
+.status-entry {
+    min-width: 0;
+    animation: status-entry-in var(--motion-duration-standard)
+        var(--motion-easing-standard) both;
+}
+
+.status-error {
+    display: block;
+}
+
+.status-error sp-alert-banner {
+    display: block;
+}
+
+.status-meta,
+.status-heading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    min-width: 0;
+}
+
+.status-meta {
+    margin-top: var(--space-2xs);
+}
+
+.status-id {
+    min-width: 0;
+    color: var(--fg-muted);
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-normal);
+    overflow-wrap: anywhere;
+}
+
+.error-detail {
+    max-height: 14rem;
+    margin: var(--space-sm) 0 0;
+    padding: var(--space-sm) var(--space-md);
+    overflow: auto;
+    border-radius: var(--radius-xs);
+    background: color-mix(in srgb, var(--color-bg-0) 72%, transparent);
+    color: var(--mat-sys-on-surface);
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-relaxed);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.status-success {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--color-border-subtle);
+    transition: background-color var(--motion-duration-fast)
+        var(--motion-easing-standard);
+}
+
+.status-success:hover {
+    background-color: var(--color-surface-interactive-hover);
+}
+
+.status-icon {
+    flex: 0 0 auto;
+    color: var(--color-success);
+}
+
+.status-content {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.status-heading {
+    justify-content: space-between;
+}
+
+.status-name {
+    min-width: 0;
+    font-weight: var(--font-weight-medium);
+    overflow-wrap: anywhere;
+}
+
+.success-detail {
+    margin-top: var(--space-2xs);
+    color: var(--fg-muted);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+    overflow-wrap: anywhere;
+}
+
+@keyframes status-entry-in {
+    from {
+        opacity: 0;
+        transform: translateY(var(--space-xs));
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .status-entry {
+        animation: none;
+    }
+
+    .status-success {
+        transition: none;
+    }
 }
