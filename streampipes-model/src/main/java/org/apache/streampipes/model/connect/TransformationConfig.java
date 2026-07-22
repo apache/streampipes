@@ -23,6 +23,12 @@ import java.util.List;
 import java.util.Map;
 
 public class TransformationConfig {
+  public static final String DEFAULT_LANGUAGE = "javascript";
+  public static final String DEFAULT_SCRIPT = """
+      function transform(event, out, ctx) {
+        out.collect(event);
+      }""";
+
   private boolean scriptActive;
   private String language;
   private String script;
@@ -35,6 +41,19 @@ public class TransformationConfig {
   public TransformationConfig() {
     this.inputs = new ArrayList<>();
     this.outputs = new ArrayList<>();
+    this.scriptActive = false;
+    this.language = DEFAULT_LANGUAGE;
+    this.script = DEFAULT_SCRIPT;
+  }
+
+  public void applyScriptDefaults() {
+    if (language == null || language.isBlank()) {
+      language = DEFAULT_LANGUAGE;
+    }
+
+    if (script == null || script.isBlank()) {
+      script = DEFAULT_SCRIPT;
+    }
   }
 
   public String getLanguage() {

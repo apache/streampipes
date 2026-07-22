@@ -19,6 +19,9 @@
 package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.connect.ReduceEventRateRule;
+import org.apache.streampipes.model.connect.RemoveDuplicateRule;
+import org.apache.streampipes.model.connect.TransformationConfig;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
@@ -47,10 +50,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -81,9 +86,21 @@ class MigrateAdaptersToUseScriptTest {
   }
 
   @Test
+  void shouldExecute_ReturnsTrue_WhenAdapterHasLegacyRulesAndDefaultScript() {
+    var adapter = createBaseAdapter(new RenameRuleDescription("old", "new"));
+
+    when(mockStorage.findAll()).thenReturn(List.of(adapter));
+
+    boolean result = migration.shouldExecute();
+
+    assertTrue(result);
+  }
+
+  @Test
   void executeMigration_RemoveAdditionalMetadata() throws IOException {
     // Arrange
     var adapter = new AdapterDescription();
+    adapter.getTransformationConfig().setScript(null);
     var eventPropertyPrimitive = new EventPropertyPrimitive();
     eventPropertyPrimitive.setAdditionalMetadata(Collections.singletonMap("key", "value"));
     var eventSchema = new EventSchema();
@@ -111,6 +128,66 @@ class MigrateAdaptersToUseScriptTest {
 
     // Verify the storage was actually updated
     verify(mockStorage).updateElement(adapter);
+  }
+
+  @Test
+  void executeMigration_KeepsInputsAndOutputsNonNull_WhenExistingConfigHasNullLists() throws IOException {
+    var adapter = createBaseAdapterWithoutRules();
+    var oldConfig = new TransformationConfig();
+    oldConfig.setScript(null);
+    oldConfig.setInputs(null);
+    oldConfig.setOutputs(null);
+    adapter.setTransformationConfig(oldConfig);
+
+    when(mockStorage.findAll()).thenReturn(List.of(adapter));
+
+    migration.executeMigration();
+
+    var resultConfig = adapter.getTransformationConfig();
+    assertNotNull(resultConfig.getInputs());
+    assertTrue(resultConfig.getInputs().isEmpty());
+    assertNotNull(resultConfig.getOutputs());
+    assertTrue(resultConfig.getOutputs().isEmpty());
+    verify(mockStorage).updateElement(adapter);
+  }
+
+  @Test
+  void executeMigration_CopiesExistingTransformationConfigValues() throws IOException {
+    var input = new HashMap<String, Object>();
+    input.put("runtimeName", "temperature");
+    var output = new HashMap<String, Object>();
+    output.put("runtimeName", "temperature_celsius");
+
+    var inputs = new ArrayList<Map<String, Object>>();
+    inputs.add(input);
+    var outputs = new ArrayList<Map<String, Object>>();
+    outputs.add(output);
+
+    var reduceEventRateRule = new ReduceEventRateRule(10, "mean");
+    var removeDuplicateRule = new RemoveDuplicateRule("500");
+
+    var oldConfig = new TransformationConfig();
+    oldConfig.setScript(null);
+    oldConfig.setInputs(inputs);
+    oldConfig.setOutputs(outputs);
+    oldConfig.setReduceEventRateRule(reduceEventRateRule);
+    oldConfig.setRemoveDuplicateRule(removeDuplicateRule);
+
+    var adapter = createBaseAdapterWithoutRules();
+    adapter.setTransformationConfig(oldConfig);
+
+    when(mockStorage.findAll()).thenReturn(List.of(adapter));
+
+    migration.executeMigration();
+
+    var resultConfig = adapter.getTransformationConfig();
+    assertEquals(TransformationConfig.DEFAULT_LANGUAGE, resultConfig.getLanguage());
+    assertEquals(inputs, resultConfig.getInputs());
+    assertEquals(outputs, resultConfig.getOutputs());
+    assertNotSame(inputs, resultConfig.getInputs());
+    assertNotSame(outputs, resultConfig.getOutputs());
+    assertEquals(reduceEventRateRule, resultConfig.getReduceEventRateRule());
+    assertEquals(removeDuplicateRule, resultConfig.getRemoveDuplicateRule());
   }
 
   @Test
@@ -420,6 +497,14 @@ class MigrateAdaptersToUseScriptTest {
     AdapterDescription adapter = new AdapterDescription();
     adapter.setRules(new ArrayList<>(Collections.singletonList(rule)));
     // Initialize other mandatory structures if your migration touches them
+    adapter.setDataStream(new SpDataStream());
+    adapter.getDataStream().setEventSchema(new EventSchema());
+    return adapter;
+  }
+
+  private AdapterDescription createBaseAdapterWithoutRules() {
+    AdapterDescription adapter = new AdapterDescription();
+    adapter.setRules(new ArrayList<>());
     adapter.setDataStream(new SpDataStream());
     adapter.getDataStream().setEventSchema(new EventSchema());
     return adapter;
