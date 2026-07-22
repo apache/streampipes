@@ -36,11 +36,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class MigrateAdaptersToUseScript implements Migration {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrateAdaptersToUseScript.class);
+  private static final String SCRIPT_LANGUAGE = "javascript";
 
   private final IAdapterStorage adapterStorage;
 
@@ -86,7 +88,7 @@ public class MigrateAdaptersToUseScript implements Migration {
     removeAdditionalMetadata(adapter);
 
     // migration logic for a single adapter
-    var config = initializeTransformationConfig();
+    var config = initializeTransformationConfig(adapter.getTransformationConfig());
 
     var scriptBuilder = TransformationScriptBuilder.create();
 
@@ -121,12 +123,24 @@ public class MigrateAdaptersToUseScript implements Migration {
   }
 
 
-  private TransformationConfig initializeTransformationConfig() {
+  private TransformationConfig initializeTransformationConfig(TransformationConfig oldConfig) {
     var config = new TransformationConfig();
-    config.setLanguage("javascript");
-    config.setInputs(new ArrayList<>());
-    config.setOutputs(new ArrayList<>());
+    config.setLanguage(SCRIPT_LANGUAGE);
+
+    if (oldConfig == null) {
+      return config;
+    }
+
+    config.setInputs(copyOrEmpty(oldConfig.getInputs()));
+    config.setOutputs(copyOrEmpty(oldConfig.getOutputs()));
+    config.setReduceEventRateRule(oldConfig.getReduceEventRateRule());
+    config.setRemoveDuplicateRule(oldConfig.getRemoveDuplicateRule());
+
     return config;
+  }
+
+  private List<Map<String, Object>> copyOrEmpty(List<Map<String, Object>> values) {
+    return values == null ? new ArrayList<>() : new ArrayList<>(values);
   }
 
   /**
