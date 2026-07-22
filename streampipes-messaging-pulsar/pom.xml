@@ -36,7 +36,7 @@
         <dependency>
             <groupId>org.apache.pulsar</groupId>
             <artifactId>pulsar-client</artifactId>
-            <version>3.2.2</version>
+            <version>4.2.3</version>
         </dependency>
     </dependencies>
 
