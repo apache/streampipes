@@ -78,14 +78,23 @@
                 {{ 'Keep editing' | translate }}
             </button>
         }
-        <button
-            id="confirm_adapter_started_button"
-            class="mat-basic"
-            mat-flat-button
-            data-cy="close-adapter-started-dialog-button"
-            (click)="onCloseConfirm()"
-        >
-            {{ 'Close' | translate }}
-        </button>
+        @if (
+            !(
+                adapterUpdatePreflight &&
+                editMode &&
+                !adapterInstalled &&
+                !loading
+            )
+        ) {
+            <button
+                id="confirm_adapter_started_button"
+                class="mat-basic"
+                mat-flat-button
+                data-cy="close-adapter-started-dialog-button"
+                (click)="onCloseConfirm()"
+            >
+                {{ 'Close' | translate }}
+            </button>
+        }
     </div>
 </div>

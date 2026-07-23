@@ -56,6 +56,7 @@ import {
 import { AdapterCodeDialogComponent } from '../../dialog/adapter-code-dialog/adapter-code-dialog.component';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
+import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-started-dialog.component';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { SpConnectRoutes } from '../../connect.breadcrumb';
@@ -339,7 +340,10 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                         assetLinkCheckboxLabel:
                             'Add the current adapter to an existing asset',
                         saveResource: resource =>
-                            this.adapterService.updateAdapter(resource),
+                            this.updateManagedAdapter(
+                                fullAdapter.name,
+                                resource,
+                            ),
                     };
 
                 const dialogRef = this.dialogService.open(
@@ -351,7 +355,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                         data: {
                             objectInstanceId:
                                 fullAdapter.correspondingDataStreamElementId,
-                            resource: fullAdapter,
+                            resource: { ...fullAdapter },
                             saveMode: 'immediate',
                             resourceConfig,
                             headerTitle:
@@ -367,6 +371,32 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                     }
                 });
             });
+    }
+
+    private updateManagedAdapter(
+        originalName: string,
+        updatedAdapter: AdapterDescription,
+    ) {
+        if (originalName === updatedAdapter.name) {
+            return this.adapterService.updateAdapter(updatedAdapter);
+        }
+
+        return new Promise<boolean>(resolve => {
+            const dialogRef = this.dialogService.open(AdapterStartedDialog, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translate.instant('Edit adapter'),
+                width: '70vw',
+                data: {
+                    adapter: updatedAdapter,
+                    editMode: true,
+                    addToAssets: false,
+                },
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                resolve(result === 'Confirm');
+            });
+        });
     }
 
     showCodeDialog(adapter: AdapterSummaryDto): void {
