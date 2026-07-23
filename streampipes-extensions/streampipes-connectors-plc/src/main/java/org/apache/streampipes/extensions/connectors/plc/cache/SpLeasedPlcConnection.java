@@ -57,6 +57,7 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -66,7 +67,7 @@ public class SpLeasedPlcConnection implements EventPlcConnection {
   private static final Logger log = LoggerFactory.getLogger(SpLeasedPlcConnection.class);
   private final SpConnectionContainer connectionContainer;
   private final AtomicReference<PlcConnection> connection;
-  private boolean invalidateConnection;
+  private volatile boolean invalidateConnection;
   private final Timer usageTimer;
   private final Duration maxUseDuration;
 
@@ -176,17 +177,20 @@ public class SpLeasedPlcConnection implements EventPlcConnection {
         return new PlcReadRequest() {
           @Override
           public CompletableFuture<? extends PlcReadResponse> execute() {
-            CompletableFuture<? extends PlcReadResponse> future =
-                innerPlcReadRequest.execute().orTimeout(Math.min(1000, maxUseDuration.toMillis()), TimeUnit.MILLISECONDS);
+            CompletableFuture<? extends PlcReadResponse> future;
+            try {
+              future = innerPlcReadRequest.execute()
+                  .orTimeout(Math.min(1000, maxUseDuration.toMillis()), TimeUnit.MILLISECONDS);
+            } catch (RuntimeException e) {
+              invalidateConnection(e);
+              return CompletableFuture.failedFuture(e);
+            }
             final CompletableFuture<PlcReadResponse> responseFuture = new CompletableFuture<>();
             future.handle((plcReadResponse, throwable) -> {
               if (throwable == null) {
                 responseFuture.complete(plcReadResponse);
               } else {
-                // Mark the connection as invalid.
-                invalidateConnection = true;
-                log.debug("ReadRequest execution completed exceptionally invalidateConnection=true",
-                    throwable);
+                invalidateConnection(throwable);
                 responseFuture.completeExceptionally(throwable);
               }
               return null;
@@ -570,6 +574,14 @@ public class SpLeasedPlcConnection implements EventPlcConnection {
   @Override
   public void removeEventListener(EventListener listener) {
     connectionContainer.removeEventListener(listener);
+  }
+
+  private void invalidateConnection(Throwable throwable) {
+    invalidateConnection = true;
+    Throwable cause = throwable instanceof CompletionException && throwable.getCause() != null
+        ? throwable.getCause()
+        : throwable;
+    log.debug("PLC request execution completed exceptionally, invalidating leased connection", cause);
   }
 
 }

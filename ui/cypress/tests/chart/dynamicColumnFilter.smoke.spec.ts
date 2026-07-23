@@ -20,14 +20,14 @@ import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 import { ChartWidgetTableUtils } from '../../support/utils/chart/ChartWidgetTableUtils';
 
-describe('Dynamic Column Filters in Table Widget', () => {
+describe('Dynamic Column Filters in Table Charts', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
     });
 
     it('Applies a Top 10 number filter on a numeric column', () => {
-        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
+        ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
 
         ChartWidgetTableUtils.checkAmountOfRows(10);
 

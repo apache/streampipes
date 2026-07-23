@@ -35,7 +35,7 @@ import {
     GenericStorageService,
     SpQueryResult,
 } from '@streampipes/platform-services';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -72,6 +72,7 @@ export class DatasetFeatureCardComponent implements OnInit {
     assetLinkType: AssetLinkType;
     dataPreview: SpQueryResult;
     lastEventTs: number | undefined;
+    totalEventCount: number | undefined;
     previewRows: PreviewRow[] = [];
 
     private datalakeRestService = inject(DatalakeRestService);
@@ -93,30 +94,43 @@ export class DatasetFeatureCardComponent implements OnInit {
     }
 
     loadSampleData(): void {
-        this.datalakeRestService
-            .getData(this.dataset.measureName, {
-                endDate: new Date().getTime(),
-                startDate: 0,
-                limit: 1,
-                order: 'DESC',
-                missingValueBehaviour: 'empty',
-                columns: this.dataset.eventSchema.eventProperties
-                    .map(ep => ep.runtimeName)
-                    .toString(),
-            })
-            .subscribe(res => {
-                this.dataPreview = res;
-                if (res.total > 0) {
-                    const previewRow = res.allDataSeries?.[0]?.rows?.[0] ?? [];
-                    this.lastEventTs = Number(previewRow[0]);
-                    this.previewRows = res.headers.map((header, index) =>
+        forkJoin({
+            dataPreview: this.datalakeRestService
+                .getData(this.dataset.measureName, {
+                    endDate: new Date().getTime(),
+                    startDate: 0,
+                    limit: 1,
+                    order: 'DESC',
+                    missingValueBehaviour: 'empty',
+                    columns: this.dataset.eventSchema.eventProperties
+                        .map(ep => ep.runtimeName)
+                        .toString(),
+                })
+                .pipe(catchError(() => of(new SpQueryResult()))),
+            totalEventCount: this.loadTotalEventCount(),
+        }).subscribe(res => {
+            this.dataPreview = res.dataPreview;
+            this.totalEventCount = res.totalEventCount;
+
+            if (res.dataPreview.total > 0) {
+                const previewRow =
+                    res.dataPreview.allDataSeries?.[0]?.rows?.[0] ?? [];
+                this.lastEventTs = Number(previewRow[0]);
+                this.previewRows = res.dataPreview.headers.map(
+                    (header, index) =>
                         this.toPreviewRow(header, previewRow[index]),
-                    );
-                } else {
-                    this.previewRows = [];
-                    this.lastEventTs = undefined;
-                }
-            });
+                );
+            } else {
+                this.previewRows = [];
+                this.lastEventTs = undefined;
+            }
+        });
+    }
+
+    private loadTotalEventCount(): Observable<number> {
+        return this.datalakeRestService
+            .getMeasurementEntryCount(this.dataset.elementId)
+            .pipe(catchError(() => of(0)));
     }
 
     formatDate(timestamp?: number): string {

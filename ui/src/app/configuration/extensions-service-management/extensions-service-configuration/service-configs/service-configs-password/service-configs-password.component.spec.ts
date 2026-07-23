@@ -17,7 +17,7 @@
  */
 
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ServiceConfigsPasswordComponent } from './service-configs-password.component';
 import { ConfigurationService } from '../../../../shared/configuration.service';
@@ -36,6 +36,8 @@ import {
     provideHttpClient,
     withInterceptorsFromDi,
 } from '@angular/common/http';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { ConfigItem } from '@streampipes/platform-services';
 
 describe('ServiceConfigsPasswordComponent', () => {
     let fixture: ComponentFixture<ServiceConfigsPasswordComponent>;
@@ -44,7 +46,7 @@ describe('ServiceConfigsPasswordComponent', () => {
 
     let component: ServiceConfigsPasswordComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         configurationServiceStub = {
             adjustConfigurationKey(key) {
                 let str1 = key.replace(/SP/g, '');
@@ -56,7 +58,7 @@ describe('ServiceConfigsPasswordComponent', () => {
             },
         };
 
-        TestBed.configureTestingModule({
+        await TestBed.configureTestingModule({
             imports: [
                 CommonModule,
                 BrowserAnimationsModule,
@@ -81,32 +83,36 @@ describe('ServiceConfigsPasswordComponent', () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(ServiceConfigsPasswordComponent);
-
         component = fixture.componentInstance;
-    }));
+        component.configuration = {
+            key: 'test.password',
+            value: '',
+        } as ConfigItem;
+        fixture.detectChanges();
+        await fixture.whenStable();
+    });
 
-    it(`should create`, waitForAsync(() => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
-    }));
+    });
 
-    it('should show pw', waitForAsync(() => {
+    it('should show pw', () => {
         expect(component.password).toBe('*****');
-    }));
+    });
 
-    it(`should click button`, waitForAsync(() => {
-        spyOn(component, 'changePw');
+    it(`should click button`, async () => {
+        const changePasswordSpy = vi.spyOn(component, 'changePw');
 
         const input = fixture.debugElement.nativeElement.querySelector('input');
         input.click();
+        await fixture.whenStable();
 
-        fixture.whenStable().then(() => {
-            expect(component.changePw).toHaveBeenCalled();
-            const bannerDe: DebugElement = fixture.debugElement;
+        expect(changePasswordSpy).toHaveBeenCalled();
+        const bannerDe: DebugElement = fixture.debugElement;
 
-            const inputDe = bannerDe.query(By.css('input'));
-            const inputValue: HTMLElement = inputDe.nativeElement;
+        const inputDe = bannerDe.query(By.css('input'));
+        const inputValue: HTMLElement = inputDe.nativeElement;
 
-            expect(inputValue.textContent).toBe('');
-        });
-    }));
+        expect(inputValue.textContent).toBe('');
+    });
 });

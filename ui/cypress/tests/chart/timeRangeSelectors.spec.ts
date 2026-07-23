@@ -51,7 +51,7 @@ describe('Test Time Range Selectors in Charts', () => {
 
     it('Perform Test', () => {
         ChartUtils.goToDatalake();
-        ChartUtils.createAndEditDataView();
+        ChartUtils.createAndEditChart();
 
         periods.forEach(period => {
             cy.log('Testing period: ' + period.selector);

@@ -39,7 +39,7 @@ describe('Creates a new adapter with a linked asset', () => {
     });
 
     it('Add Assets during Chart generation', () => {
-        ChartUtils.createDataViewWithAssets([assetName1, assetName2]);
+        ChartUtils.createChartWithAssets([assetName1, assetName2]);
         AssetUtils.checkAmountOfAssets(3);
         //Test
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName1, 1);
@@ -47,7 +47,7 @@ describe('Creates a new adapter with a linked asset', () => {
     });
 
     it('Edit Assets during Chart generation', () => {
-        ChartUtils.createDataViewWithAssets([assetName1, assetName2]);
+        ChartUtils.createChartWithAssets([assetName1, assetName2]);
 
         AssetUtils.checkAmountOfAssets(3);
         //Test
@@ -57,11 +57,11 @@ describe('Creates a new adapter with a linked asset', () => {
         // Go To Chart and Edit
         ChartUtils.goToDatalake();
         cy.wait(1000);
-        ChartUtils.manageDataView('NewWidget');
-        ChartUtils.renameWidget('Rename');
+        ChartUtils.manageChart('NewWidget');
+        ChartUtils.renameChart('Rename');
         ChartUtils.addDashboardToAsset([assetName1, assetName3]);
-        ChartBtns.saveDataViewBtn().click();
-        ChartBtns.openNewDataViewBtn().should('be.visible');
+        ChartBtns.saveChartBtn().click();
+        ChartBtns.openNewChartBtn().should('be.visible');
 
         AssetUtils.checkAmountOfAssets(3);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);

@@ -25,10 +25,7 @@ describe('Test Scatter View in Charts', () => {
     });
 
     it('Perform Test', () => {
-        ChartUtils.addDataViewAndWidget(
-            PrepareTestDataUtils.dataName,
-            'scatter-chart',
-        );
+        ChartUtils.createChart(PrepareTestDataUtils.dataName, 'scatter-chart');
 
         // Check if scatter plot is displayed
         cy.dataCy('scatter-chart').should('be.visible');

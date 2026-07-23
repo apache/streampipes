@@ -34,10 +34,11 @@ import {
     ResourceSummaryDto,
 } from '../model/resource/resource-summary.model';
 import {
+    CsvImportJobStartResult,
+    CsvImportJobStatus,
     CsvImportPreviewRequest,
     CsvImportPreviewResult,
     CsvImportRequest,
-    CsvImportResult,
     CsvImportSchemaValidationRequest,
     CsvImportSchemaValidationResult,
 } from '../model/datalake/csv-import.model';
@@ -310,8 +311,19 @@ export class DatalakeRestService {
         );
     }
 
-    importCsvData(request: CsvImportRequest): Observable<CsvImportResult> {
-        return this.http.post<CsvImportResult>(this.dataLakeImportUrl, request);
+    importCsvData(
+        request: CsvImportRequest,
+    ): Observable<CsvImportJobStartResult> {
+        return this.http.post<CsvImportJobStartResult>(
+            this.dataLakeImportUrl,
+            request,
+        );
+    }
+
+    getCsvImportJobStatus(jobId: string): Observable<CsvImportJobStatus> {
+        return this.http.get<CsvImportJobStatus>(
+            `${this.dataLakeImportUrl}/${encodeURIComponent(jobId)}`,
+        );
     }
 
     dropSingleMeasurementSeries(index: string) {

@@ -108,7 +108,7 @@ describe('Test that resources can be added to assets on creation', () => {
         UserUtils.switchUser(newUser);
 
         ChartUtils.goToDatalake();
-        ChartUtils.createAndEditDataView();
+        ChartUtils.createAndEditChart();
 
         ChartBtns.chartAssetCheckboxBtn().should('exist');
 
@@ -117,7 +117,7 @@ describe('Test that resources can be added to assets on creation', () => {
         UserUtils.switchUser(newUser);
 
         ChartUtils.goToDatalake();
-        ChartUtils.createAndEditDataView();
+        ChartUtils.createAndEditChart();
 
         ChartBtns.chartAssetCheckboxBtn().should('not.exist');
     });

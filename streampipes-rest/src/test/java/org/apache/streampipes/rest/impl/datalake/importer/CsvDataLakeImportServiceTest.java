@@ -22,6 +22,8 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
 import org.apache.streampipes.model.datalake.importer.CsvImportConfiguration;
+import org.apache.streampipes.model.datalake.importer.CsvImportJobState;
+import org.apache.streampipes.model.datalake.importer.CsvImportJobStatus;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportSchemaIssueType;
@@ -40,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -68,6 +71,7 @@ class CsvDataLakeImportServiceTest {
     var result = service.preview(makePreviewRequest("existing-measure"));
 
     assertFalse(result.isValid());
+    assertEquals(2, result.getTotalRows());
     assertEquals("LONG", result.getColumns().get(0).getInferredType());
     assertEquals("FLOAT", result.getColumns().get(1).getInferredType());
     assertTrue(result.getValidationMessages()
@@ -181,6 +185,7 @@ class CsvDataLakeImportServiceTest {
 
     assertTrue(previewResult.isValid());
     assertEquals(2, previewResult.getPreviewRows().size());
+    assertEquals(2, previewResult.getTotalRows());
     assertTrue(previewResult.getUploadId() != null && !previewResult.getUploadId().isBlank());
 
     var importRequest = new CsvImportRequest();
@@ -195,6 +200,50 @@ class CsvDataLakeImportServiceTest {
     assertTrue(importResult.isCreatedNewMeasurement());
     assertEquals(2, importResult.getImportedRowCount());
     verify(dataWriter).writeData(any(DataLakeMeasure.class), anyList(), anyList());
+  }
+
+  @Test
+  void shouldStartImportJobAndExposeSucceededStatus() throws Exception {
+    var schemaManagement = mock(IDataExplorerSchemaManagement.class);
+    var dataWriter = mock(DataLakeDataWriter.class);
+    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+
+    when(schemaManagement.getExistingMeasureByName("new-measure"))
+        .thenReturn(Optional.empty());
+    when(schemaManagement.createOrUpdateMeasurement(any(DataLakeMeasure.class), any()))
+        .thenAnswer(invocation -> {
+          var measure = invocation.getArgument(0, DataLakeMeasure.class);
+          measure.setElementId("measure-id");
+          return measure;
+        });
+
+    var startResult = service.startImportJob(makeImportRequest(CsvImportTargetMode.NEW, "new-measure"), "sid");
+    var status = awaitTerminalStatus(service, startResult.getJobId(), "sid");
+
+    assertEquals(CsvImportJobState.SUCCEEDED, status.getState());
+    assertEquals(2, status.getProcessedRows());
+    assertEquals(2, status.getTotalRows());
+    assertEquals(100, status.getProgress());
+    assertEquals(2, status.getResult().getImportedRowCount());
+    assertTrue(service.getImportJobStatus(startResult.getJobId(), "other-sid").isEmpty());
+  }
+
+  @Test
+  void shouldExposeFailedImportJobValidationMessages() throws Exception {
+    var schemaManagement = mock(IDataExplorerSchemaManagement.class);
+    var dataWriter = mock(DataLakeDataWriter.class);
+    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+
+    var request = makeImportRequest(CsvImportTargetMode.NEW, "new-measure");
+    request.setTimestampColumn(null);
+
+    var startResult = service.startImportJob(request, "sid");
+    var status = awaitTerminalStatus(service, startResult.getJobId(), "sid");
+
+    assertEquals(CsvImportJobState.FAILED, status.getState());
+    assertTrue(status.getValidationMessages()
+        .stream()
+        .anyMatch(message -> message.getMessage().contains("timestamp")));
   }
 
   @Test
@@ -365,6 +414,22 @@ class CsvDataLakeImportServiceTest {
     temperature.setPropertyScope("MEASUREMENT_PROPERTY");
 
     return new EventSchema(List.of(timestamp, temperature));
+  }
+
+  private CsvImportJobStatus awaitTerminalStatus(
+      CsvDataLakeImportService service,
+      String jobId,
+      String sid
+  ) throws Exception {
+    CsvImportJobStatus status = null;
+    for (int i = 0; i < 50; i++) {
+      status = service.getImportJobStatus(jobId, sid).orElseThrow();
+      if (status.getState() != CsvImportJobState.RUNNING) {
+        return status;
+      }
+      TimeUnit.MILLISECONDS.sleep(20);
+    }
+    return status;
   }
 
   private EventSchema makeStoredExistingSchema() {

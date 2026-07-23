@@ -45,6 +45,7 @@ public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime
     IDataSinkParameters> implements IDataSinkRuntime, RawDataProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneEventSinkRuntime.class);
+  private boolean pipelineStarted;
 
   public StandaloneEventSinkRuntime() {
     super(new DataSinkContextGenerator(), new DataSinkParameterGenerator());
@@ -83,14 +84,52 @@ public class StandaloneEventSinkRuntime extends StandalonePipelineElementRuntime
   @Override
   protected void beforeStart() {
     pipelineElement.onPipelineStarted(runtimeParameters, runtimeContext);
+    pipelineStarted = true;
     inputCollectors.forEach(is -> is.registerConsumer(instanceId, this));
     prepareRuntime();
   }
 
   @Override
   protected void afterStop() {
-    inputCollectors.forEach(is -> is.unregisterConsumer(instanceId));
-    pipelineElement.onPipelineStopped();
-    postDiscard();
+    RuntimeException stopException = null;
+    try {
+      pipelineElement.onPipelineStopped();
+    } catch (RuntimeException e) {
+      stopException = collectCleanupException(stopException, e);
+    } finally {
+      pipelineStarted = false;
+    }
+    try {
+      postDiscard();
+    } catch (RuntimeException e) {
+      stopException = collectCleanupException(stopException, e);
+    }
+
+    if (stopException != null) {
+      throw stopException;
+    }
+  }
+
+  @Override
+  protected void afterStartFailed() {
+    RuntimeException cleanupException = null;
+    try {
+      super.afterStartFailed();
+    } catch (RuntimeException e) {
+      cleanupException = collectCleanupException(cleanupException, e);
+    }
+    try {
+      if (pipelineStarted) {
+        pipelineElement.onPipelineStopped();
+      }
+    } catch (RuntimeException e) {
+      cleanupException = collectCleanupException(cleanupException, e);
+    } finally {
+      pipelineStarted = false;
+    }
+
+    if (cleanupException != null) {
+      throw cleanupException;
+    }
   }
 }

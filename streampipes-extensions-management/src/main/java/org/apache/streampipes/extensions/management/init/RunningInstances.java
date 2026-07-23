@@ -23,17 +23,17 @@ import org.apache.streampipes.extensions.management.util.ElementInfo;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public enum RunningInstances {
   INSTANCE;
 
   private final Map<String,
-      ElementInfo<NamedStreamPipesEntity, IStreamPipesRuntime<?, ?>>> runningInstances = new HashMap<>();
+      ElementInfo<NamedStreamPipesEntity, IStreamPipesRuntime<?, ?>>> runningInstances = new ConcurrentHashMap<>();
 
 
   public void add(String id,

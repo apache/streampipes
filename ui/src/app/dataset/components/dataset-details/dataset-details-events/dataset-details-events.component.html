@@ -45,7 +45,7 @@
                 </sp-element-id>
             </div>
 
-            <div fxLayout="row" fxLayoutAlign="end center">
+            <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0.5rem">
                 <mat-form-field
                     appearance="outline"
                     subscriptSizing="dynamic"
@@ -62,6 +62,16 @@
                         data-cy="dataset-details-event-limit"
                     />
                 </mat-form-field>
+                <button
+                    mat-icon-button
+                    color="accent"
+                    [matTooltip]="'Refresh' | translate"
+                    [disabled]="loadingEvents"
+                    data-cy="dataset-details-refresh-events"
+                    (click)="refreshLatestEvents()"
+                >
+                    <mat-icon>refresh</mat-icon>
+                </button>
             </div>
 
             <div fxLayout="column" class="events-preview-section">

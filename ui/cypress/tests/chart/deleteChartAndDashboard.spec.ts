@@ -17,7 +17,7 @@
  */
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 
-describe('Test Deletion of Data View and Dashboard', () => {
+describe('Test Deletion of Chart and Dashboard', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
@@ -25,21 +25,21 @@ describe('Test Deletion of Data View and Dashboard', () => {
 
     it('Perform Test', () => {
         const dashboard = 'TestDashboard';
-        const dataView = 'TestView';
+        const chart = 'TestView';
 
         ChartUtils.goToDatalake();
 
-        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
+        ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
 
-        ChartUtils.saveDataViewConfiguration(false, false, dataView);
+        ChartUtils.saveChartConfiguration(false, false, chart);
 
-        ChartUtils.checkRowsViewsTable(1);
+        ChartUtils.checkRowsChartsTable(1);
 
         ChartUtils.goToDashboard();
 
         ChartUtils.createAndEditDashboard(dashboard);
 
-        ChartUtils.addDataViewToDashboard(dataView, true);
+        ChartUtils.addChartToDashboard(chart, true);
 
         ChartUtils.saveDashboardConfiguration();
 
@@ -52,19 +52,19 @@ describe('Test Deletion of Data View and Dashboard', () => {
 
         ChartUtils.goToDatalake();
 
-        ChartUtils.cancelDeleteDataView(dataView);
+        ChartUtils.cancelDeleteChart(chart);
 
-        ChartUtils.checkRowsViewsTable(1);
+        ChartUtils.checkRowsChartsTable(1);
 
-        ChartUtils.deleteDataView(dataView);
+        ChartUtils.deleteChart(chart);
 
-        ChartUtils.checkRowsViewsTable(0);
+        ChartUtils.checkRowsChartsTable(0);
 
         ChartUtils.goToDashboard();
 
         ChartUtils.editDashboard(dashboard);
 
-        // Validate that data view is removed from dashboard
+        // Validate that chart is removed from dashboard
         ChartUtils.getEmptyDashboardInformation().should('be.visible');
 
         ChartUtils.saveDashboardConfiguration();

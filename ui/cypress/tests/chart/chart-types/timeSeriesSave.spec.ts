@@ -22,23 +22,19 @@ import { PrepareTestDataUtils } from '../../../support/utils/PrepareTestDataUtil
 const testView1 = 'TestView1';
 const testView2 = 'TestView2';
 
-describe('Test if widget configuration is updated correctly', () => {
+describe('Test if chart configuration is updated correctly', () => {
     beforeEach('Setup Test', () => {
         ChartUtils.initDataLakeTests();
 
-        // Create first test data view with one time series widget
-        ChartUtils.addDataViewAndTimeSeriesWidget(
-            PrepareTestDataUtils.dataName,
-        );
+        // Create first time series chart
+        ChartUtils.createTimeSeriesChart(PrepareTestDataUtils.dataName);
 
-        ChartUtils.saveDataViewConfiguration(false, false, testView1);
+        ChartUtils.saveChartConfiguration(false, false, testView1);
 
         cy.wait(1000);
-        // Create second test data view with one time series widget
-        ChartUtils.addDataViewAndTimeSeriesWidget(
-            PrepareTestDataUtils.dataName,
-        );
-        ChartUtils.saveDataViewConfiguration(false, false, testView2);
+        // Create second time series chart
+        ChartUtils.createTimeSeriesChart(PrepareTestDataUtils.dataName);
+        ChartUtils.saveChartConfiguration(false, false, testView2);
     });
 
     it('Perform Test', () => {
@@ -47,8 +43,8 @@ describe('Test if widget configuration is updated correctly', () => {
 });
 
 const runTestCase = () => {
-    // Visit settings of widget
-    ChartUtils.editDataView(testView1);
+    // Visit chart settings
+    ChartUtils.editChart(testView1);
 
     // Change first field from line plot to scatter plot
     ChartUtils.openVisualizationConfig();

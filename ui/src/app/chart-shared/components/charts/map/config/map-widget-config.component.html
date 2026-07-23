@@ -34,7 +34,7 @@
                     (changeSelectedProperty)="
                         setSelectedLatitudeProperty($event)
                     "
-                    data-cy="data-view-map-select-latitude"
+                    data-cy="chart-map-select-latitude"
                 >
                 </sp-select-single-property-config>
             </sp-form-field>
@@ -49,7 +49,7 @@
                     (changeSelectedProperty)="
                         setSelectedLongitudeProperty($event)
                     "
-                    data-cy="data-view-map-select-longitude"
+                    data-cy="chart-map-select-longitude"
                 >
                 </sp-select-single-property-config>
             </sp-form-field>
@@ -85,16 +85,16 @@
                                 .selectedMarkerOrTrace
                         "
                         (selectionChange)="triggerViewRefresh()"
-                        data-cy="data-view-map-select-marker-or-trace"
+                        data-cy="chart-map-select-marker-or-trace"
                     >
                         <mat-option
                             [value]="'marker'"
-                            data-cy="data-view-map-option-marker"
+                            data-cy="chart-map-option-marker"
                             >{{ 'Marker' | translate }}</mat-option
                         >
                         <mat-option
                             [value]="'trace'"
-                            data-cy="data-view-map-option-trace"
+                            data-cy="chart-map-option-trace"
                             >{{ 'Trace' | translate }}</mat-option
                         >
                     </mat-select>

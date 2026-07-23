@@ -40,6 +40,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,8 @@ public class PostStartupTask implements Runnable {
                          ExtensionServiceRequestManager extensionServiceRequestManager,
                          WorkerRestClient workerRestClient,
                          SpResourceManager resourceManager,
-                         List<HealthCheck> registeredHealthChecks) {
+                         List<HealthCheck> registeredHealthChecks,
+                         Duration healthCheckInterval) {
     this.pipelineStorage = pipelineStorage;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.executorService = Executors.newSingleThreadScheduledExecutor();
@@ -93,7 +95,8 @@ public class PostStartupTask implements Runnable {
             StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
             extensionServiceRequestManager,
             resourceManager,
-            registeredHealthChecks
+            registeredHealthChecks,
+            healthCheckInterval
         )
     );
   }

@@ -16,14 +16,11 @@
  *
  */
 
-export class DataLakeFilterConfig {
-    field: string;
-    value: string;
-    operator: string | '<' | '>' | '=' | '!=';
+package org.apache.streampipes.extensions.management.init;
 
-    constructor(field: string, value: string, operator: string) {
-        this.field = field;
-        this.value = value;
-        this.operator = operator;
-    }
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.management.connect.adapter.model.EventCollector;
+
+public record RunningAdapterInstance(StreamPipesAdapter adapter,
+                                     EventCollector eventCollector) {
 }

@@ -16,17 +16,24 @@
  *
  */
 
-export class DataLakeConfigurationEntry {
-    public name: string;
-    public measureName: string;
-    public pipelines: string[] = [];
-    public lastEvent: number | null = null;
-    public lastEventLoading = false;
-    public remove = true;
-    public elementId: string;
-    public retentionConfigured = false;
-    public lastExport: string | null = null;
-    public lastRetentionStatus: boolean | null = null;
+package org.apache.streampipes.model.datalake.importer;
 
-    constructor() {}
+public class CsvImportJobStartResult {
+
+  private String jobId;
+
+  public CsvImportJobStartResult() {
+  }
+
+  public CsvImportJobStartResult(String jobId) {
+    this.jobId = jobId;
+  }
+
+  public String getJobId() {
+    return jobId;
+  }
+
+  public void setJobId(String jobId) {
+    this.jobId = jobId;
+  }
 }

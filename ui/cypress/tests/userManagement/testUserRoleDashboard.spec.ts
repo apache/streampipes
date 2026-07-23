@@ -22,7 +22,7 @@ import { User } from '../../support/model/User';
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { ChartBtns } from '../../support/utils/chart/ChartBtns';
-import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
+import { DatasetSeedUtils } from '../../support/utils/dataset/DatasetSeedUtils';
 
 describe('Test User Roles for Dashboards', () => {
     const dashboardName = 'test-dashboard';
@@ -124,7 +124,7 @@ describe('Test User Roles for Dashboards', () => {
     it('Test Dashboard and Charts Permissions', () => {
         UserUtils.switchUser(dashboardAdmin1);
 
-        DataLakeSeedUtils.importCsvFixture({
+        DatasetSeedUtils.importCsvFixture({
             fixture: 'datalake/machine-data-simulator-import.csv',
             measurementName: datasetName,
             delimiter: ',',
@@ -137,8 +137,8 @@ describe('Test User Roles for Dashboards', () => {
         ChartUtils.createNewDashboard(dashboardName);
 
         ChartUtils.editDashboard(dashboardName);
-        ChartUtils.addDataViewToDashboard('chart1', true);
-        ChartUtils.addDataViewToDashboard('chart2', true);
+        ChartUtils.addChartToDashboard('chart1', true);
+        ChartUtils.addChartToDashboard('chart2', true);
         ChartUtils.saveDashboard();
 
         PermissionUtils.markElementAsPublic(dashboardName);
@@ -148,19 +148,19 @@ describe('Test User Roles for Dashboards', () => {
         ChartUtils.viewDashboard(dashboardName);
         ChartBtns.moreOptionsBtn('chart1').should('exist');
         ChartBtns.moreOptionsBtn('chart2').should('exist');
-        ChartBtns.removeWidgetBtn('chart1').should('not.exist');
-        ChartBtns.removeWidgetBtn('chart2').should('not.exist');
+        ChartBtns.removeChartBtn('chart1').should('not.exist');
+        ChartBtns.removeChartBtn('chart2').should('not.exist');
 
         ChartUtils.goToDashboard();
         ChartUtils.editDashboard(dashboardName);
         ChartBtns.moreOptionsBtn('chart1').should('exist');
         ChartBtns.moreOptionsBtn('chart2').should('exist');
-        ChartBtns.removeWidgetBtn('chart1').should('exist');
-        ChartBtns.removeWidgetBtn('chart2').should('exist');
+        ChartBtns.removeChartBtn('chart1').should('exist');
+        ChartBtns.removeChartBtn('chart2').should('exist');
 
         // Validate to add new widget to dashboard
         ChartBtns.createChartBtn().should('not.exist');
-        ChartBtns.removeWidgetBtn('chart2').click();
+        ChartBtns.removeChartBtn('chart2').click();
         ChartUtils.saveDashboard();
 
         UserUtils.switchUser(dashboardUser1);
@@ -200,7 +200,7 @@ describe('Test User Roles for Dashboards', () => {
     }
 
     function addChart(chartName: string, saveConfig: boolean = true) {
-        ChartUtils.addDataViewAndTableWidget(datasetName, true);
-        ChartUtils.saveDataViewConfiguration(false, saveConfig, chartName);
+        ChartUtils.createTableChart(datasetName, true);
+        ChartUtils.saveChartConfiguration(false, saveConfig, chartName);
     }
 });

@@ -26,10 +26,7 @@ describe('Test Progress Bar View in Charts', () => {
     });
 
     it('Perform Test', () => {
-        ChartUtils.addDataViewAndWidget(
-            PrepareTestDataUtils.dataName,
-            'progress-bar',
-        );
+        ChartUtils.createChart(PrepareTestDataUtils.dataName, 'progress-bar');
 
         ChartUtils.openVisualizationConfig();
         ChartBtns.progressBarTitleInput().type('Job Progress');

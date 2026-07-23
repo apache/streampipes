@@ -82,6 +82,7 @@ import jakarta.annotation.PreDestroy;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -196,16 +197,21 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
     new ApplyDefaultRolesAndPrivilegesTask(roleStorage, privilegeStorage).execute();
     coreStatusManager.updateCoreStatus(SpCoreConfigurationStatus.READY);
 
+    var healthCheckInterval = Duration.ofMillis(
+        env.getHealthCheckIntervalInMillis().getValueOrDefault()
+    );
+
     executorService.schedule(new PostStartupTask(
             getPipelineStorage(),
             extensionServiceRequestManager,
             workerRestClient,
             resourceManager,
-            getRegisteredExtensionHealthChecks()),
+            getRegisteredExtensionHealthChecks(),
+            healthCheckInterval),
         env.getInitialHealthCheckDelayInMillis().getValueOrDefault(),
         TimeUnit.MILLISECONDS);
 
-    scheduleHealthChecks(env.getHealthCheckIntervalInMillis().getValueOrDefault(), List
+    scheduleHealthChecks(healthCheckInterval, List
         .of(new ServiceHealthCheck(
                 extensionsServiceStorage,
                 extensionServiceRequestManager,
@@ -224,7 +230,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                 StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
                 extensionServiceRequestManager,
                 resourceManager,
-                getRegisteredExtensionHealthChecks()
+                getRegisteredExtensionHealthChecks(),
+                healthCheckInterval
             )));
 
     var logFetchInterval = env.getLogFetchIntervalInMillis().getValueOrDefault();
@@ -236,13 +243,13 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
         TimeUnit.MILLISECONDS);
   }
 
-  private void scheduleHealthChecks(int healthCheckIntervalInMillis, List<Runnable> checks) {
+  private void scheduleHealthChecks(Duration healthCheckInterval, List<Runnable> checks) {
     var healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
     checks.forEach(check -> {
-      LOG.info("Health check {} configured to run every {} seconds", check.getClass().getSimpleName(),
-          TimeUnit.MILLISECONDS.toSeconds(healthCheckIntervalInMillis));
-      healthCheckExecutorService.scheduleAtFixedRate(check, healthCheckIntervalInMillis,
-          healthCheckIntervalInMillis,
+      LOG.info("Health check {} configured with a delay of {} seconds between runs", check.getClass().getSimpleName(),
+          healthCheckInterval.toSeconds());
+      healthCheckExecutorService.scheduleWithFixedDelay(check, healthCheckInterval.toMillis(),
+          healthCheckInterval.toMillis(),
           TimeUnit.MILLISECONDS);
     });
   }

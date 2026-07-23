@@ -383,10 +383,10 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
             showLegacyWarning: !!chart.multiSourceChart,
             showRequiresAttentionWarning:
                 chart.healthStatus === 'REQUIRES_ATTENTION',
-            showDataCyId: `show-data-view-${sanitizedName}`,
-            editDataCyId: `edit-data-view-${sanitizedName}`,
+            showDataCyId: `show-chart-${sanitizedName}`,
+            editDataCyId: `edit-chart-${sanitizedName}`,
             manageDataCyId: `open-manage-permissions-${sanitizedName}`,
-            deleteDataCyId: `delete-data-view-${chart.name}`,
+            deleteDataCyId: `delete-chart-${chart.name}`,
         };
     }
 }

@@ -27,7 +27,7 @@ describe('Advanced Filter Expressions in Charts', () => {
     });
 
     it('Applies nested advanced filter expressions and persists them', () => {
-        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
+        ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
 
         ChartWidgetTableUtils.checkAmountOfRows(10);
         ChartUtils.selectDataConfig();
@@ -64,7 +64,7 @@ describe('Advanced Filter Expressions in Charts', () => {
         // a AND (22 OR 56) => 2 rows in sample.csv
         ChartWidgetTableUtils.checkAmountOfRows(2);
 
-        ChartUtils.saveAndEditWidget('AdvancedFilterWidget');
+        ChartUtils.saveAndEditChart('AdvancedFilterWidget');
         ChartWidgetTableUtils.checkAmountOfRows(2);
         ChartUtils.selectDataConfig();
         ChartBtns.advancedFilterBtn().should('be.visible');
@@ -76,7 +76,7 @@ describe('Advanced Filter Expressions in Charts', () => {
     });
 
     it('Closes table filter dropdown with ESC', () => {
-        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
+        ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
 
         cy.dataCy('column-filter-trigger-randomtext').click({ force: true });
         cy.get('.column-filter-dropdown').should('be.visible');
