@@ -52,6 +52,7 @@ import {
     SpTableMultiActionOption,
     SpTableActionsDirective,
     SpTableComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { AdapterCodeDialogComponent } from '../../dialog/adapter-code-dialog/adapter-code-dialog.component';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
@@ -73,7 +74,6 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { AdapterStatusLightComponent } from './adapter-status-light/adapter-status-light.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatMenuItem } from '@angular/material/menu';
 import { DatePipe } from '@angular/common';
 
@@ -101,7 +101,7 @@ import { DatePipe } from '@angular/common';
         MatCellDef,
         MatCell,
         AdapterStatusLightComponent,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         SpLabelComponent,
         SpTableActionsDirective,
         MatMenuItem,

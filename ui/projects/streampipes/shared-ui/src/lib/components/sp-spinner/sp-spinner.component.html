@@ -16,17 +16,18 @@
   ~
   -->
 
-<div fxLayout="column">
-    <div fxLayoutAlign="center">
-        <sp-spinner
-            [diameter]="50"
-            style="margin: 10px 0 5px 0"
-            text="Loading"
-        ></sp-spinner>
-    </div>
-    <div fxLayoutAlign="center">
-        <h4>
-            {{ textMessage }}
-        </h4>
-    </div>
+<div
+    [fxLayout]="layout"
+    [fxLayoutAlign]="align"
+    [fxLayoutGap]="text ? gap : '0px'"
+    class="sp-spinner"
+>
+    <mat-spinner
+        color="accent"
+        [diameter]="diameter"
+        mode="indeterminate"
+    ></mat-spinner>
+    @if (text) {
+        <div class="sp-spinner__text">{{ text }}</div>
+    }
 </div>

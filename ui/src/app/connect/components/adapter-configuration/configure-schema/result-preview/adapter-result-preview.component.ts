@@ -24,6 +24,7 @@ import {
 import {
     SpBasicInnerPanelComponent,
     SpExceptionMessageComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import {
     FlexDirective,
@@ -34,7 +35,6 @@ import {
     MatButtonToggle,
     MatButtonToggleGroup,
 } from '@angular/material/button-toggle';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -47,7 +47,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatButtonToggleGroup,
         MatButtonToggle,
         LayoutDirective,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         SpExceptionMessageComponent,
         AdapterEventPreviewComponent,
         TranslatePipe,

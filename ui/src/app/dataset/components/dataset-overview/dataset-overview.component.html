@@ -92,12 +92,10 @@
                         *matCellDef="let configurationEntry"
                     >
                         @if (configurationEntry.lastEventLoading) {
-                            <mat-spinner
+                            <sp-spinner
                                 [diameter]="20"
-                                fxLayoutAlign="center"
-                                color="accent"
-                                >{{ 'Loading' | translate }}
-                            </mat-spinner>
+                                [text]="'Loading' | translate"
+                            ></sp-spinner>
                         } @else {
                             <sp-dataset-last-event-label
                                 [lastEvent]="configurationEntry.lastEvent"

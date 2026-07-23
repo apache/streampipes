@@ -30,9 +30,11 @@ import {
 } from '@angular/forms';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
-import { SpExceptionMessageComponent } from '@streampipes/shared-ui';
+import {
+    SpExceptionMessageComponent,
+    SpSpinnerComponent,
+} from '@streampipes/shared-ui';
 import { MatRadioButton } from '@angular/material/radio';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -47,7 +49,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatButton,
         SpExceptionMessageComponent,
         MatRadioButton,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         TranslatePipe,
     ],
 })

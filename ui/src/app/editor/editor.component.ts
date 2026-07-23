@@ -31,6 +31,7 @@ import {
 import {
     SpBasicViewComponent,
     SpBreadcrumbService,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, of, zip } from 'rxjs';
@@ -43,7 +44,6 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { PipelineElementIconStandComponent } from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
 import { PipelineAssemblyComponent } from './components/pipeline-assembly/pipeline-assembly.component';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -56,7 +56,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutDirective,
         FlexDirective,
         LayoutAlignDirective,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         SpBasicViewComponent,
         PipelineElementIconStandComponent,
         PipelineAssemblyComponent,

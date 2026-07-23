@@ -18,12 +18,12 @@
 
 import { Component, inject, input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { SpSpinnerComponent } from '@streampipes/shared-ui';
 import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'sp-loading-indicator',
@@ -33,7 +33,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
         LayoutDirective,
         FlexDirective,
         LayoutAlignDirective,
-        MatProgressSpinner,
+        SpSpinnerComponent,
     ],
 })
 export class LoadingIndicatorComponent {

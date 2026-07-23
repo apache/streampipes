@@ -52,6 +52,7 @@ export class ViewAssetLinksComponent implements OnInit {
     selectedAsset: SpAsset;
 
     assetLinkTypes: AssetLinkType[] = [];
+    assetLinkTypesLoading = true;
 
     private genericStorageService = inject(GenericStorageService);
 
@@ -60,6 +61,7 @@ export class ViewAssetLinksComponent implements OnInit {
             .getAllDocuments(AssetConstants.ASSET_LINK_TYPES_DOC_NAME)
             .subscribe(res => {
                 this.assetLinkTypes = res;
+                this.assetLinkTypesLoading = false;
             });
     }
 }

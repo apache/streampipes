@@ -19,12 +19,10 @@
 <div fxLayout="column" fxFlex="100" class="pipeline-editor-outer">
     @if (!allElementsLoaded) {
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
-            <mat-spinner
+            <sp-spinner
                 [diameter]="30"
-                color="accent"
-                mode="indeterminate"
-            ></mat-spinner>
-            <p>{{ 'Preparing pipeline editor...' | translate }}</p>
+                [text]="'Preparing pipeline editor...' | translate"
+            ></sp-spinner>
         </div>
     } @else {
         <div fxLayout="row" fxFlex="100">

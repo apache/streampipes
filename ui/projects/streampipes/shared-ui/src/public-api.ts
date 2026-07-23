@@ -51,6 +51,7 @@ export * from './lib/components/search-select/search-select-template.directive';
 export * from './lib/components/progress-bar/progress-bar.component';
 export * from './lib/components/split-section/split-section.component';
 export * from './lib/components/split-button/split-button.component';
+export * from './lib/components/sp-spinner/sp-spinner.component';
 export * from './lib/components/sp-exception-message/sp-exception-message.component';
 export * from './lib/components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
 export * from './lib/components/sp-exception-message/exception-details/exception-details.component';
