@@ -48,6 +48,7 @@ public class AdapterUpdateManagement {
   public void updateAdapter(AdapterDescription ad)
       throws AdapterException {
     // update adapter in database 
+    AdapterTransformationConfigDefaults.applyTo(ad);
     this.adapterResourceManager.encryptAndUpdate(ad);
     boolean shouldRestart = ad.isRunning();
 
