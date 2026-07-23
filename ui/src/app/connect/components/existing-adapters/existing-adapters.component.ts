@@ -18,6 +18,7 @@
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
+    AdapterDescription,
     AdapterMonitoringService,
     AdapterService,
     AdapterSummaryDto,
@@ -37,7 +38,8 @@ import {
     CurrentUserService,
     DialogRef,
     DialogService,
-    ObjectPermissionDialogComponent,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
     PanelType,
     SpAssetBrowserService,
     SpBasicHeaderTitleComponent,
@@ -51,8 +53,10 @@ import {
     SpTableActionsDirective,
     SpTableComponent,
 } from '@streampipes/shared-ui';
+import { AdapterCodeDialogComponent } from '../../dialog/adapter-code-dialog/adapter-code-dialog.component';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
+import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-started-dialog.component';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { SpConnectRoutes } from '../../connect.breadcrumb';
@@ -322,28 +326,92 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         }
     }
 
-    showPermissionsDialog(adapter: AdapterSummaryDto): void {
-        const dialogRef = this.dialogService.open(
-            ObjectPermissionDialogComponent,
-            {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: this.translate.instant('Manage permissions'),
-                width: '50vw',
-                data: {
-                    objectInstanceId: adapter.correspondingDataStreamElementId,
-                    headerTitle:
-                        this.translate.instant(
-                            'Manage permissions for adapter ',
-                        ) + adapter.name,
-                },
-            },
-        );
+    showManageDialog(adapter: AdapterSummaryDto): void {
+        this.adapterService
+            .getAdapter(adapter.elementId)
+            .subscribe(fullAdapter => {
+                const resourceConfig: ObjectManageDialogResourceConfig<AdapterDescription> =
+                    {
+                        resourceLabel: 'Adapter',
+                        nameLabel: 'Adapter name',
+                        descriptionLabel: 'Adapter description',
+                        nameProperty: 'name',
+                        assetLinkType: 'adapter',
+                        assetLinkCheckboxLabel:
+                            'Add the current adapter to an existing asset',
+                        saveResource: resource =>
+                            this.updateManagedAdapter(
+                                fullAdapter.name,
+                                resource,
+                            ),
+                    };
 
-        dialogRef.afterClosed().subscribe(refresh => {
-            if (refresh) {
-                this.getAdaptersRunning();
-            }
+                const dialogRef = this.dialogService.open(
+                    ObjectManageDialogComponent,
+                    {
+                        panelType: PanelType.SLIDE_IN_PANEL,
+                        title: this.translate.instant('Manage'),
+                        width: '50vw',
+                        data: {
+                            objectInstanceId:
+                                fullAdapter.correspondingDataStreamElementId,
+                            resource: { ...fullAdapter },
+                            saveMode: 'immediate',
+                            resourceConfig,
+                            headerTitle:
+                                this.translate.instant('Manage Adapter ') +
+                                adapter.name,
+                        },
+                    },
+                );
+
+                dialogRef.afterClosed().subscribe(refresh => {
+                    if (refresh) {
+                        this.getAdaptersRunning();
+                    }
+                });
+            });
+    }
+
+    private updateManagedAdapter(
+        originalName: string,
+        updatedAdapter: AdapterDescription,
+    ) {
+        if (originalName === updatedAdapter.name) {
+            return this.adapterService.updateAdapter(updatedAdapter);
+        }
+
+        return new Promise<boolean>(resolve => {
+            const dialogRef = this.dialogService.open(AdapterStartedDialog, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translate.instant('Edit adapter'),
+                width: '70vw',
+                data: {
+                    adapter: updatedAdapter,
+                    editMode: true,
+                    addToAssets: false,
+                },
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                resolve(result === 'Confirm');
+            });
         });
+    }
+
+    showCodeDialog(adapter: AdapterSummaryDto): void {
+        this.adapterService
+            .getAdapter(adapter.elementId)
+            .subscribe(fullAdapter => {
+                this.dialogService.open(AdapterCodeDialogComponent, {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translate.instant('Show as Code'),
+                    width: '50vw',
+                    data: {
+                        adapter: fullAdapter,
+                    },
+                });
+            });
     }
 
     /**

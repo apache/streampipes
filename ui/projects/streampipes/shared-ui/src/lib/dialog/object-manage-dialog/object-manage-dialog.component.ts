@@ -398,8 +398,10 @@ export class ObjectManageDialogComponent<
             return;
         }
 
-        await this.saveImmediately(result);
-        this.close(true);
+        const saved = await this.saveImmediately(result);
+        if (saved) {
+            this.close(true);
+        }
     }
 
     close(result?: ObjectManageDialogResult<TResource> | boolean) {
@@ -433,9 +435,13 @@ export class ObjectManageDialogComponent<
 
     private async saveImmediately(
         result: ObjectManageDialogResult<TResource>,
-    ): Promise<void> {
+    ): Promise<boolean> {
         this.touchResource(result.resource);
-        await this.saveResource(result.resource);
+        const saved = await this.saveResource(result.resource);
+        if (!saved) {
+            return false;
+        }
+
         if (result.permission) {
             await firstValueFrom(
                 this.permissionsService.updatePermission(result.permission),
@@ -450,6 +456,8 @@ export class ObjectManageDialogComponent<
                 result.originalAssets,
             );
         }
+
+        return true;
     }
 
     private createLinkageData(resource: TResource): LinkageData[] {
@@ -480,17 +488,17 @@ export class ObjectManageDialogComponent<
         );
     }
 
-    private async saveResource(resource: TResource): Promise<void> {
+    private async saveResource(resource: TResource): Promise<boolean> {
         const saveResource = this.resourceConfig.saveResource;
         if (!saveResource) {
-            return;
+            return true;
         }
 
         const saveResult = saveResource(resource);
         if (isObservable(saveResult)) {
-            await firstValueFrom(saveResult);
+            return (await firstValueFrom(saveResult)) !== false;
         } else {
-            await saveResult;
+            return (await saveResult) !== false;
         }
     }
 

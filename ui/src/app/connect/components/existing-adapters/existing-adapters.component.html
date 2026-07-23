@@ -254,6 +254,14 @@
                     </button>
                     <button
                         mat-menu-item
+                        data-cy="show-adapter-code"
+                        (click)="showCodeDialog(element)"
+                    >
+                        <mat-icon>code</mat-icon>
+                        <span>{{ 'Code' | translate }}</span>
+                    </button>
+                    <button
+                        mat-menu-item
                         data-cy="edit-adapter"
                         (click)="editAdapter(element)"
                     >
@@ -262,11 +270,11 @@
                     </button>
                     <button
                         mat-menu-item
-                        data-cy="open-manage-permissions"
-                        (click)="showPermissionsDialog(element)"
+                        data-cy="open-manage-adapter"
+                        (click)="showManageDialog(element)"
                     >
-                        <mat-icon>share</mat-icon>
-                        <span>{{ 'Manage permissions' | translate }}</span>
+                        <mat-icon>settings</mat-icon>
+                        <span>{{ 'Manage' | translate }}</span>
                     </button>
                     <button
                         mat-menu-item

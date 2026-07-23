@@ -26,7 +26,6 @@
     } @else if (!permissionDenied || createMode) {
         <div class="sp-dialog-content">
             <div fxFlex="100" fxLayout="column" class="p-15">
-                <h4>{{ headerTitle }}</h4>
                 <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                     @if (showResourceSection) {
                         <sp-split-section
