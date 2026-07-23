@@ -62,8 +62,8 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
     adapterDescription.getTransformationConfig()
                       .setInputs(sampleData.getSamples());
 
-    setDefaultScriptIfNotSet(adapterDescription);
-    setDefaultScriptLanguageIfNotSet(adapterDescription);
+    adapterDescription.getTransformationConfig()
+                      .applyScriptDefaults();
 
     guessManagement.transformSampleData(adapterDescription, userId);
 
@@ -88,31 +88,4 @@ public class AdapterSchemaGenerator implements AdapterModelGenerator {
     }
   }
 
-  private void setDefaultScriptIfNotSet(AdapterDescription adapterDescription) {
-    if (adapterDescription.getTransformationConfig()
-                          .getScript() == null
-        || adapterDescription.getTransformationConfig()
-                             .getScript()
-                             .isEmpty()) {
-      adapterDescription.getTransformationConfig().setScriptActive(true);
-      adapterDescription.getTransformationConfig()
-                        .setScript("""
-                                   function transform(event, out, ctx) {
-                                      out.collect(event);
-                                    }
-                                   """);
-
-    }
-  }
-
-  private void setDefaultScriptLanguageIfNotSet(AdapterDescription adapterDescription) {
-    if (adapterDescription.getTransformationConfig()
-                          .getLanguage() == null
-        || adapterDescription.getTransformationConfig()
-                             .getLanguage()
-                             .isEmpty()) {
-      adapterDescription.getTransformationConfig()
-                        .setLanguage("javascript");
-    }
-  }
 }
