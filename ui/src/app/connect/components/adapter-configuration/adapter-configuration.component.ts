@@ -121,12 +121,16 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
     }
 
     nextAdapterSettings() {
+        const adapter =
+            this.stateService.state().adapterDescription ??
+            this.adapterDescription;
+
         this.shepherdService.trigger('specific-settings-next-button');
         this.goForward();
-        this.stateService.updateAdapter(this.adapterDescription);
+        this.stateService.updateAdapter(adapter);
 
-        if (this.adapterDescription.transformationConfig.inputs.length == 0) {
-            this.stateService.getSampleEvent(this.adapterDescription);
+        if (adapter.transformationConfig.inputs.length == 0) {
+            this.stateService.getSampleEvent(adapter);
         }
     }
 
