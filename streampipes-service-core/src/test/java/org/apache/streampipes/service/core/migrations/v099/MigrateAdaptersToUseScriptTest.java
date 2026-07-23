@@ -88,6 +88,7 @@ class MigrateAdaptersToUseScriptTest {
   @Test
   void shouldExecute_ReturnsTrue_WhenAdapterHasLegacyRulesAndDefaultScript() {
     var adapter = createBaseAdapter(new RenameRuleDescription("old", "new"));
+    adapter.setTransformationConfig(TransformationConfig.withDefaultScript());
 
     when(mockStorage.findAll()).thenReturn(List.of(adapter));
 

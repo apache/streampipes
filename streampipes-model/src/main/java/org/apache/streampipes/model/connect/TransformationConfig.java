@@ -41,9 +41,12 @@ public class TransformationConfig {
   public TransformationConfig() {
     this.inputs = new ArrayList<>();
     this.outputs = new ArrayList<>();
-    this.scriptActive = false;
-    this.language = DEFAULT_LANGUAGE;
-    this.script = DEFAULT_SCRIPT;
+  }
+
+  public static TransformationConfig withDefaultScript() {
+    var config = new TransformationConfig();
+    config.applyScriptDefaults();
+    return config;
   }
 
   public void applyScriptDefaults() {
