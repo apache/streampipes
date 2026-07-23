@@ -143,10 +143,10 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     @ViewChild('groupSelectionPanel')
     groupSelectionPanel: GroupSelectionPanelComponent;
 
-    availableMeasurements: DatasetSummaryDto[] = [];
-    selectedMeasurement: DatasetSummaryDto | undefined;
+    availableDatasets: DatasetSummaryDto[] = [];
+    selectedDataset: DatasetSummaryDto | undefined;
 
-    private pendingMeasurementRefresh = false;
+    private pendingDatasetRefresh = false;
     private dataRefreshTimeout?: ReturnType<typeof setTimeout>;
 
     step = 0;
@@ -160,25 +160,25 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.syncCurrentMeasure();
-        this.loadPipelinesAndMeasurements();
+        this.loadPipelinesAndDatasets();
     }
 
     ngOnDestroy(): void {
         clearTimeout(this.dataRefreshTimeout);
     }
 
-    loadPipelinesAndMeasurements() {
+    loadPipelinesAndDatasets() {
         this.datalakeRestService.getMeasurementSummary().subscribe(response => {
-            this.availableMeasurements = response.resources.sort((a, b) =>
+            this.availableDatasets = response.resources.sort((a, b) =>
                 a.measureName.localeCompare(b.measureName),
             );
-            this.syncSelectedMeasurementSummary();
+            this.syncSelectedDatasetSummary();
 
             if (!this.sourceConfig) {
                 const defaultConfigs = this.findDefaultConfig();
                 this.initializeSourceConfig(defaultConfigs.measureName);
                 if (defaultConfigs.measureName !== undefined) {
-                    this.selectedMeasurement = this.findMeasurementSummary(
+                    this.selectedDataset = this.findDatasetSummary(
                         defaultConfigs.measureName,
                     );
                     this.loadMeasurement(
@@ -205,19 +205,18 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     } {
         const measureNameFromQueryParams =
             this.route.snapshot.queryParams.measureName;
-        const matchingMeasurement = this.availableMeasurements.find(
-            measurement =>
-                measurement.measureName === measureNameFromQueryParams,
+        const matchingDataset = this.availableDatasets.find(
+            dataset => dataset.measureName === measureNameFromQueryParams,
         );
-        if (matchingMeasurement) {
+        if (matchingDataset) {
             return {
-                measureName: matchingMeasurement.measureName,
+                measureName: matchingDataset.measureName,
             };
         }
 
-        if (this.availableMeasurements.length > 0) {
+        if (this.availableDatasets.length > 0) {
             return {
-                measureName: this.availableMeasurements[0].measureName,
+                measureName: this.availableDatasets[0].measureName,
             };
         } else {
             return { measureName: undefined };
@@ -226,27 +225,24 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
 
     updateMeasure(sourceConfig: SourceConfig, measureName: string) {
         sourceConfig.measureName = measureName;
-        this.selectedMeasurement = this.findMeasurementSummary(measureName);
+        this.selectedDataset = this.findDatasetSummary(measureName);
         this.loadMeasurement(measureName, true, true);
     }
 
-    onMeasurementSelectionChange(
+    onDatasetSelectionChange(
         sourceConfig: SourceConfig,
-        selectedMeasurement:
-            | DatasetSummaryDto
-            | DatasetSummaryDto[]
-            | undefined,
+        selectedDataset: DatasetSummaryDto | DatasetSummaryDto[] | undefined,
     ): void {
-        if (Array.isArray(selectedMeasurement)) {
+        if (Array.isArray(selectedDataset)) {
             return;
         }
 
-        if (!selectedMeasurement) {
+        if (!selectedDataset) {
             this.clearMeasure(sourceConfig);
             return;
         }
 
-        this.updateMeasure(sourceConfig, selectedMeasurement.measureName);
+        this.updateMeasure(sourceConfig, selectedDataset.measureName);
     }
 
     private clearMeasure(sourceConfig: SourceConfig): void {
@@ -254,7 +250,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
         sourceConfig.measure = undefined;
         sourceConfig.queryConfig.fields = [];
         sourceConfig.queryConfig.groupBy = [];
-        this.selectedMeasurement = undefined;
+        this.selectedDataset = undefined;
     }
 
     private loadMeasurement(
@@ -287,15 +283,13 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
         this.dataLakeMeasureChange.emit(measure);
         sourceConfig.measureName = measure.measureName;
         sourceConfig.measure = measure;
-        this.selectedMeasurement = this.findMeasurementSummary(
-            measure.measureName,
-        );
+        this.selectedDataset = this.findDatasetSummary(measure.measureName);
 
         if (!resetQueryConfig) {
             return;
         }
 
-        this.pendingMeasurementRefresh = refreshData;
+        this.pendingDatasetRefresh = refreshData;
         sourceConfig.queryConfig.fields = [];
         if (this.fieldSelectionPanel) {
             this.fieldSelectionPanel.applyDefaultFields();
@@ -315,29 +309,29 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
         if (this.sourceConfig?.measure) {
             this.dataLakeMeasure = this.sourceConfig.measure;
             this.dataLakeMeasureChange.emit(this.sourceConfig.measure);
-            this.selectedMeasurement = this.findMeasurementSummary(
+            this.selectedDataset = this.findDatasetSummary(
                 this.sourceConfig.measure.measureName,
             );
         } else if (this.sourceConfig?.measureName) {
-            this.selectedMeasurement = this.findMeasurementSummary(
+            this.selectedDataset = this.findDatasetSummary(
                 this.sourceConfig.measureName,
             );
         }
     }
 
-    private syncSelectedMeasurementSummary(): void {
+    private syncSelectedDatasetSummary(): void {
         if (this.sourceConfig?.measureName) {
-            this.selectedMeasurement = this.findMeasurementSummary(
+            this.selectedDataset = this.findDatasetSummary(
                 this.sourceConfig.measureName,
             );
         }
     }
 
-    private findMeasurementSummary(
+    private findDatasetSummary(
         measureName: string,
     ): DatasetSummaryDto | undefined {
-        return this.availableMeasurements.find(
-            measurement => measurement.measureName === measureName,
+        return this.availableDatasets.find(
+            dataset => dataset.measureName === measureName,
         );
     }
 
@@ -380,7 +374,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
 
     onInitialFieldSelection(): void {
         const defaultWidgetCreated = this.createDefaultWidget();
-        if (defaultWidgetCreated || this.pendingMeasurementRefresh) {
+        if (defaultWidgetCreated || this.pendingDatasetRefresh) {
             this.scheduleDataRefresh();
         }
     }
@@ -427,7 +421,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     }
 
     private scheduleDataRefresh(): void {
-        this.pendingMeasurementRefresh = false;
+        this.pendingDatasetRefresh = false;
         clearTimeout(this.dataRefreshTimeout);
         this.dataRefreshTimeout = setTimeout(() => this.triggerDataRefresh());
     }

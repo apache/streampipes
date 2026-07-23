@@ -16,14 +16,13 @@
  *
  */
 
-export class DataLakeFilterConfig {
-    field: string;
-    value: string;
-    operator: string | '<' | '>' | '=' | '!=';
-
-    constructor(field: string, value: string, operator: string) {
-        this.field = field;
-        this.value = value;
-        this.operator = operator;
-    }
-}
+window.matchMedia ??= query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+});

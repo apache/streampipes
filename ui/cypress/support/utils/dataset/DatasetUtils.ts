@@ -27,7 +27,7 @@ export class DatasetUtils {
         cy.visit('#/datasets');
     }
 
-    public static goToDatalakeConfiguration() {
+    public static goToDatasetOverview() {
         this.goToDatasets();
     }
 
@@ -269,7 +269,7 @@ export class DatasetUtils {
         const rawLastEventValue = cells
             .flatMap(cell =>
                 Array.from(
-                    cell.querySelectorAll('sp-datalake-last-event-label'),
+                    cell.querySelectorAll('sp-dataset-last-event-label'),
                 ),
             )
             .map(label => label.getAttribute('data-last-event-value'))

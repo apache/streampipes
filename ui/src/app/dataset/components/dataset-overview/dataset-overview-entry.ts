@@ -16,23 +16,16 @@
  *
  */
 
-import { Component, ElementRef, OnInit, inject } from '@angular/core';
-import SwaggerUIBundle from 'swagger-ui-dist/swagger-ui-es-bundle.js';
+export class DatasetOverviewEntry {
+    public name: string;
+    public pipelines: string[] = [];
+    public lastEvent: number | null = null;
+    public lastEventLoading = false;
+    public remove = true;
+    public elementId: string;
+    public retentionConfigured = false;
+    public lastExport: string | null = null;
+    public lastRetentionStatus: boolean | null = null;
 
-@Component({
-    selector: 'sp-apidocs',
-    templateUrl: './apidocs.component.html',
-    styleUrls: ['./apidocs.component.scss'],
-})
-export class ApidocsComponent implements OnInit {
-    private el = inject(ElementRef);
-
-    ngOnInit(): void {
-        SwaggerUIBundle({
-            url: '/streampipes-backend/apidocs',
-            domNode: this.el.nativeElement.querySelector('.swagger-ui'),
-            deepLinking: false,
-            presets: [SwaggerUIBundle.presets.apis],
-        });
-    }
+    constructor() {}
 }

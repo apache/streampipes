@@ -43,7 +43,7 @@
                 mat-icon-button
                 [matTooltip]="'Refresh' | translate"
                 data-cy="refresh-data-lake-measures"
-                (click)="loadAvailableMeasurements()"
+                (click)="loadAvailableDatasets()"
             >
                 <mat-icon>refresh</mat-icon>
             </button>
@@ -98,11 +98,11 @@
                                 [text]="'Loading' | translate"
                             ></sp-spinner>
                         } @else {
-                            <sp-datalake-last-event-label
+                            <sp-dataset-last-event-label
                                 [lastEvent]="configurationEntry.lastEvent"
                                 [currentTime]="currentTime"
                             >
-                            </sp-datalake-last-event-label>
+                            </sp-dataset-last-event-label>
                         }
                     </td>
                 </ng-container>
@@ -229,7 +229,7 @@
                         <button
                             mat-menu-item
                             data-cy="datalake-truncate-btn"
-                            (click)="cleanDatalakeIndex(element.name)"
+                            (click)="truncateDataset(element.name)"
                         >
                             <mat-icon>local_fire_department</mat-icon>
                             <span>{{ 'Truncate data' | translate }}</span>
@@ -238,7 +238,7 @@
                             mat-menu-item
                             data-cy="datalake-delete-btn"
                             [disabled]="!element.remove"
-                            (click)="deleteDatalakeIndex(element.name)"
+                            (click)="deleteDataset(element.name)"
                         >
                             <mat-icon>delete</mat-icon>
                             <span>{{ 'Delete dataset' | translate }}</span>

@@ -27,6 +27,7 @@ import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,17 +41,35 @@ public class ExtensionHealthCheck implements Runnable {
   private final IExtensionsServiceStorage extensionsServiceStorage;
   private final SpResourceManager resourceManager;
   private final List<HealthCheck> registeredHealthChecks;
+  private final PipelineRecoveryBackoff pipelineRecoveryBackoff;
 
   public ExtensionHealthCheck(ResourceProvider resourceProvider,
                               IExtensionsServiceStorage extensionsServiceStorage,
                               ExtensionServiceRequestManager extensionRequestManager,
                               SpResourceManager resourceManager,
                               List<HealthCheck> registeredHealthChecks) {
+    this(
+        resourceProvider,
+        extensionsServiceStorage,
+        extensionRequestManager,
+        resourceManager,
+        registeredHealthChecks,
+        PipelineRecoveryBackoff.DEFAULT_INITIAL_DELAY
+    );
+  }
+
+  public ExtensionHealthCheck(ResourceProvider resourceProvider,
+                              IExtensionsServiceStorage extensionsServiceStorage,
+                              ExtensionServiceRequestManager extensionRequestManager,
+                              SpResourceManager resourceManager,
+                              List<HealthCheck> registeredHealthChecks,
+                              Duration healthCheckInterval) {
     this.resourceProvider = resourceProvider;
     this.extensionsServiceStorage = extensionsServiceStorage;
     this.extensionRequestManager = extensionRequestManager;
     this.resourceManager = resourceManager;
     this.registeredHealthChecks = registeredHealthChecks;
+    this.pipelineRecoveryBackoff = new PipelineRecoveryBackoff(healthCheckInterval);
   }
 
   @Override
@@ -100,7 +119,13 @@ public class ExtensionHealthCheck implements Runnable {
 
   protected List<HealthCheck> getBuiltInHealthChecks(HealthCheckData healthCheckData) {
     return List.of(
-        new PipelineHealthCheck(healthCheckData, extensionRequestManager, resourceProvider, resourceManager),
+        new PipelineHealthCheck(
+            healthCheckData,
+            extensionRequestManager,
+            resourceProvider,
+            resourceManager,
+            pipelineRecoveryBackoff
+        ),
         new AdapterHealthCheck(healthCheckData)
     );
   }

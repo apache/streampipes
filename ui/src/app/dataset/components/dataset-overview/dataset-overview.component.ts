@@ -38,7 +38,7 @@ import {
     MatTable,
     MatTableDataSource,
 } from '@angular/material/table';
-import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
+import { DatasetOverviewEntry } from './dataset-overview-entry';
 import {
     DatalakeRestService,
     DataLakeMeasure,
@@ -65,7 +65,7 @@ import {
     SpTableComponent,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
-import { DeleteDatalakeIndexComponent } from '../../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
+import { DeleteDatasetDialogComponent } from '../../dialog/delete-dataset/delete-dataset-dialog.component';
 import { SpConfigurationRoutes } from '../../../configuration/configuration.breadcrumb';
 import { DataRetentionDialogComponent } from '../../dialog/data-retention-dialog/data-retention-dialog.component';
 import { ExportProviderComponent } from '../../dialog/export-provider-dialog/export-provider-dialog.component';
@@ -90,12 +90,12 @@ import { NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
 import { catchError, of, Subscription } from 'rxjs';
-import { DatalakeLastEventLabelComponent } from './datalake-last-event-label/datalake-last-event-label.component';
+import { DatasetLastEventLabelComponent } from './dataset-last-event-label/dataset-last-event-label.component';
 
 @Component({
-    selector: 'sp-datalake-configuration',
-    templateUrl: './datalake-configuration.component.html',
-    styleUrls: ['./datalake-configuration.component.scss'],
+    selector: 'sp-dataset-overview',
+    templateUrl: './dataset-overview.component.html',
+    styleUrls: ['./dataset-overview.component.scss'],
     imports: [
         LayoutDirective,
         LayoutAlignDirective,
@@ -127,18 +127,18 @@ import { DatalakeLastEventLabelComponent } from './datalake-last-event-label/dat
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
         SpTableActionsDirective,
-        DatalakeLastEventLabelComponent,
+        DatasetLastEventLabelComponent,
     ],
 })
-export class DatalakeConfigurationComponent
+export class DatasetOverviewComponent
     implements OnInit, AfterViewInit, OnDestroy
 {
     paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(SpTableComponent)
-    spTable!: SpTableComponent<DataLakeConfigurationEntry>;
+    spTable!: SpTableComponent<DatasetOverviewEntry>;
 
-    private datalakeRestService = inject(DatalakeRestService);
+    private datasetRestService = inject(DatalakeRestService);
     private dialogService = inject(DialogService);
     private breadcrumbService = inject(SpBreadcrumbService);
     private exportProviderRestService = inject(ExportProviderService);
@@ -146,10 +146,10 @@ export class DatalakeConfigurationComponent
     private currentUserService = inject(CurrentUserService);
     private assetFilterService = inject(SpAssetBrowserService);
     private router = inject(Router);
-    dataSource: MatTableDataSource<DataLakeConfigurationEntry> =
+    dataSource: MatTableDataSource<DatasetOverviewEntry> =
         new MatTableDataSource([]);
-    availableMeasurements: DataLakeConfigurationEntry[] = [];
-    filteredMeasurements: DataLakeConfigurationEntry[] = [];
+    availableDatasets: DatasetOverviewEntry[] = [];
+    filteredDatasets: DatasetOverviewEntry[] = [];
     availableExportProvider: ExportProviderSettings[] = [];
     readonly assetContextConfig: SpTableAssetContextConfig = {
         resourceLinkType: 'measurement',
@@ -204,13 +204,13 @@ export class DatalakeConfigurationComponent
         this.assetFilter$ =
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
                 this.currentFilterIds = filter?.activeElementIds;
-                this.applyMeasurementFilters(this.currentFilterIds);
+                this.applyDatasetFilters(this.currentFilterIds);
             });
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: 'Datasets' },
         ]);
-        this.loadAvailableMeasurements();
+        this.loadAvailableDatasets();
         this.loadAvailableExportProvider();
         const currentUser = this.currentUserService.getCurrentUser();
         this.isAdmin = currentUser.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
@@ -244,35 +244,35 @@ export class DatalakeConfigurationComponent
             });
     }
 
-    loadAvailableMeasurements(): void {
-        this.availableMeasurements = [];
-        this.datalakeRestService
+    loadAvailableDatasets(): void {
+        this.availableDatasets = [];
+        this.datasetRestService
             .getMeasurementSummary()
             .subscribe(datasetSummary => {
-                this.availableMeasurements = datasetSummary.resources.map(
-                    measurement => this.toConfigurationEntry(measurement),
+                this.availableDatasets = datasetSummary.resources.map(dataset =>
+                    this.toOverviewEntry(dataset),
                 );
 
-                this.availableMeasurements.sort((a, b) =>
+                this.availableDatasets.sort((a, b) =>
                     a.name.localeCompare(b.name),
                 );
-                this.applyMeasurementFilters(this.currentFilterIds);
+                this.applyDatasetFilters(this.currentFilterIds);
             });
     }
 
-    applyMeasurementFilters(elementIds: Set<string>): void {
+    applyDatasetFilters(elementIds: Set<string>): void {
         this.currentFilterIds = elementIds;
         if (elementIds === undefined) {
-            this.filteredMeasurements = [];
+            this.filteredDatasets = [];
         } else if (elementIds.size === 0) {
-            this.filteredMeasurements = this.availableMeasurements;
+            this.filteredDatasets = this.availableDatasets;
         } else {
-            this.filteredMeasurements = this.availableMeasurements.filter(
-                measurement => elementIds.has(measurement.elementId),
+            this.filteredDatasets = this.availableDatasets.filter(dataset =>
+                elementIds.has(dataset.elementId),
             );
         }
 
-        this.dataSource.data = this.filteredMeasurements;
+        this.dataSource.data = this.filteredDatasets;
         this.updatePaginatorAfterFiltering();
         this.receiveLastEventTimes(this.pageIndex);
 
@@ -288,7 +288,7 @@ export class DatalakeConfigurationComponent
         }
 
         const maxPageIndex = Math.max(
-            Math.ceil(this.filteredMeasurements.length / this.pageSize) - 1,
+            Math.ceil(this.filteredDatasets.length / this.pageSize) - 1,
             0,
         );
         if (this.pageIndex > maxPageIndex) {
@@ -313,40 +313,40 @@ export class DatalakeConfigurationComponent
         });
     }
 
-    cleanDatalakeIndex(measurementIndex: string): void {
-        const dialogRef: DialogRef<DeleteDatalakeIndexComponent> =
-            this.dialogService.open(DeleteDatalakeIndexComponent, {
+    truncateDataset(datasetName: string): void {
+        const dialogRef: DialogRef<DeleteDatasetDialogComponent> =
+            this.dialogService.open(DeleteDatasetDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,
                 title: this.translateService.instant('Truncate data'),
                 width: '70vw',
                 data: {
-                    measurementIndex: measurementIndex,
+                    datasetName,
                     deleteDialog: false,
                 },
             });
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                this.loadAvailableMeasurements();
+                this.loadAvailableDatasets();
             }
         });
     }
 
-    deleteDatalakeIndex(measurementIndex: string): void {
-        const dialogRef: DialogRef<DeleteDatalakeIndexComponent> =
-            this.dialogService.open(DeleteDatalakeIndexComponent, {
+    deleteDataset(datasetName: string): void {
+        const dialogRef: DialogRef<DeleteDatasetDialogComponent> =
+            this.dialogService.open(DeleteDatasetDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,
                 title: this.translateService.instant('Delete data'),
                 width: '70vw',
                 data: {
-                    measurementIndex: measurementIndex,
+                    datasetName,
                     deleteDialog: true,
                 },
             });
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                this.loadAvailableMeasurements();
+                this.loadAvailableDatasets();
             }
         });
     }
@@ -388,14 +388,14 @@ export class DatalakeConfigurationComponent
         });
     }
 
-    openDownloadDialog(measurementName: string): void {
+    openDownloadDialog(datasetName: string): void {
         this.dialogService.open(DataDownloadDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: this.translateService.instant('Download data'),
             width: '50vw',
             data: {
                 dataDownloadDialogModel: {
-                    measureName: measurementName,
+                    measureName: datasetName,
                 },
             },
         });
@@ -405,7 +405,7 @@ export class DatalakeConfigurationComponent
         this.router.navigate(['datasets', elementId]);
     }
 
-    openRetentionDialog(measurementId: string): void {
+    openRetentionDialog(datasetName: string): void {
         const dialogRef: DialogRef<DataRetentionDialogComponent> =
             this.dialogService.open(DataRetentionDialogComponent, {
                 panelType: PanelType.SLIDE_IN_PANEL,
@@ -413,25 +413,25 @@ export class DatalakeConfigurationComponent
                 width: '50vw',
                 data: {
                     dataRetentionDialogModel: {
-                        measureName: measurementId,
+                        measureName: datasetName,
                     },
-                    measurementIndex: measurementId,
+                    measurementIndex: datasetName,
                 },
             });
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
                 setTimeout(() => {
-                    this.loadAvailableMeasurements();
+                    this.loadAvailableDatasets();
                 }, 1000);
             }
         });
     }
 
-    openRetentionLog(measurementId: string): void {
-        this.datalakeRestService.getMeasurement(measurementId).subscribe({
-            next: measurement => {
-                this.openRetentionLogDialog(measurement);
+    openRetentionLog(datasetId: string): void {
+        this.datasetRestService.getMeasurement(datasetId).subscribe({
+            next: dataset => {
+                this.openRetentionLogDialog(dataset);
             },
         });
     }
@@ -444,14 +444,14 @@ export class DatalakeConfigurationComponent
     receiveLastEventTimes(pageIndex: number): void {
         const start = pageIndex * this.pageSize;
         const end = start + this.pageSize;
-        const measurements = this.filteredMeasurements
+        const datasets = this.filteredDatasets
             .slice(start, end)
-            .filter(m => m.lastEvent === null);
-        if (measurements.length > 0) {
-            this.queryLastEventTimes(measurements);
+            .filter(dataset => dataset.lastEvent === null);
+        if (datasets.length > 0) {
+            this.queryLastEventTimes(datasets);
         }
     }
-    showPermissionsDialog(element: DataLakeConfigurationEntry): void {
+    showPermissionsDialog(element: DatasetOverviewEntry): void {
         this.dialogService.open(ObjectPermissionDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: this.translateService.instant('Manage permissions'),
@@ -461,7 +461,7 @@ export class DatalakeConfigurationComponent
                 headerTitle:
                     this.translateService.instant(
                         'Manage permissions for dataset ',
-                    ) + element.measureName,
+                    ) + element.name,
             },
         });
     }
@@ -473,8 +473,8 @@ export class DatalakeConfigurationComponent
                 title: this.translateService.instant('Import CSV'),
                 width: '60vw',
                 data: {
-                    measurementNames: this.availableMeasurements.map(
-                        measurement => measurement.name,
+                    measurementNames: this.availableDatasets.map(
+                        dataset => dataset.name,
                     ),
                 },
             });
@@ -484,52 +484,47 @@ export class DatalakeConfigurationComponent
                 dialogRef.componentInstance?.instance?.hasImportResult?.() ===
                 true;
             if (refresh || importCompleted) {
-                this.loadAvailableMeasurements();
+                this.loadAvailableDatasets();
             }
         });
     }
 
-    queryLastEventTimes(measurements: DataLakeConfigurationEntry[]): void {
-        this.applyLastEventLoadingStatus(measurements, true);
-        this.datalakeRestService
-            .getLatestMeasurementEvents(
-                measurements.map(measurement => measurement.name),
-            )
+    queryLastEventTimes(datasets: DatasetOverviewEntry[]): void {
+        this.applyLastEventLoadingStatus(datasets, true);
+        this.datasetRestService
+            .getLatestMeasurementEvents(datasets.map(dataset => dataset.name))
             .pipe(catchError(() => of({} as Record<string, number>)))
             .subscribe(latestEvents => {
-                this.applyLastEventLoadingStatus(measurements, false);
-                measurements.forEach(measurement => {
-                    measurement.lastEvent = latestEvents[measurement.name] ?? 0;
+                this.applyLastEventLoadingStatus(datasets, false);
+                datasets.forEach(dataset => {
+                    dataset.lastEvent = latestEvents[dataset.name] ?? 0;
                 });
             });
     }
 
     applyLastEventLoadingStatus(
-        measurements: DataLakeConfigurationEntry[],
+        datasets: DatasetOverviewEntry[],
         status: boolean,
     ): void {
-        measurements.forEach(measurement => {
-            measurement.lastEventLoading = status;
+        datasets.forEach(dataset => {
+            dataset.lastEventLoading = status;
         });
     }
 
-    private toConfigurationEntry(
-        measurement: DatasetSummaryDto,
-    ): DataLakeConfigurationEntry {
-        const entry = new DataLakeConfigurationEntry();
-        entry.elementId = measurement.elementId;
-        entry.name = measurement.measureName;
-        entry.measureName = measurement.measureName;
-        entry.pipelines = measurement.pipelines;
-        entry.retentionConfigured = measurement.retentionConfigured;
-        entry.lastExport = measurement.lastExport;
-        entry.lastRetentionStatus = measurement.lastRetentionStatus;
-        entry.remove = measurement.removable;
+    private toOverviewEntry(dataset: DatasetSummaryDto): DatasetOverviewEntry {
+        const entry = new DatasetOverviewEntry();
+        entry.elementId = dataset.elementId;
+        entry.name = dataset.measureName;
+        entry.pipelines = dataset.pipelines;
+        entry.retentionConfigured = dataset.retentionConfigured;
+        entry.lastExport = dataset.lastExport;
+        entry.lastRetentionStatus = dataset.lastRetentionStatus;
+        entry.remove = dataset.removable;
         entry.lastEvent = null;
         return entry;
     }
 
-    private openRetentionLogDialog(measurement: DataLakeMeasure): void {
+    private openRetentionLogDialog(dataset: DataLakeMeasure): void {
         const dialogRef: DialogRef<DataRetentionLogDialogComponent> =
             this.dialogService.open(DataRetentionLogDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,
@@ -537,7 +532,7 @@ export class DatalakeConfigurationComponent
                 width: '100vw',
                 data: {
                     retentionLog:
-                        measurement.retentionTime?.retentionExportConfig
+                        dataset.retentionTime?.retentionExportConfig
                             ?.retentionLog ?? [],
                 },
             });
@@ -545,7 +540,7 @@ export class DatalakeConfigurationComponent
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
                 setTimeout(() => {
-                    this.loadAvailableMeasurements();
+                    this.loadAvailableDatasets();
                 }, 1000);
             }
         });

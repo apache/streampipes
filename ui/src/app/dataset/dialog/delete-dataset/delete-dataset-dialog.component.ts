@@ -29,8 +29,8 @@ import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 
 @Component({
-    selector: 'sp-delete-datalake-index-dialog',
-    templateUrl: './delete-datalake-index-dialog.component.html',
+    selector: 'sp-delete-dataset-dialog',
+    templateUrl: './delete-dataset-dialog.component.html',
     imports: [
         LayoutDirective,
         FlexDirective,
@@ -41,9 +41,9 @@ import { MatDivider } from '@angular/material/divider';
         TranslatePipe,
     ],
 })
-export class DeleteDatalakeIndexComponent implements OnInit {
+export class DeleteDatasetDialogComponent implements OnInit {
     @Input()
-    measurementIndex: string;
+    datasetName: string;
 
     @Input()
     deleteDialog: boolean;
@@ -51,7 +51,7 @@ export class DeleteDatalakeIndexComponent implements OnInit {
     isInProgress = false;
     currentStatus: any;
 
-    private dialogRef = inject(DialogRef<DeleteDatalakeIndexComponent>);
+    private dialogRef = inject(DialogRef<DeleteDatasetDialogComponent>);
     private datalakeRestService = inject(DatalakeRestService);
     private translateService = inject(TranslateService);
 
@@ -61,11 +61,11 @@ export class DeleteDatalakeIndexComponent implements OnInit {
     ngOnInit() {
         this.confirmDeleteMessage = this.translateService.instant(
             'Do you really want to delete the dataset {{index}}?',
-            { index: this.measurementIndex },
+            { index: this.datasetName },
         );
         this.confirmTruncateMessage = this.translateService.instant(
             'Do you really want to truncate the data in {{index}}?',
-            { index: this.measurementIndex },
+            { index: this.datasetName },
         );
     }
 
@@ -78,7 +78,7 @@ export class DeleteDatalakeIndexComponent implements OnInit {
         this.currentStatus =
             this.translateService.instant('Truncating data...');
         this.datalakeRestService
-            .removeData(this.measurementIndex)
+            .removeData(this.datasetName)
             .subscribe(_data => {
                 this.close(true);
             });
@@ -90,7 +90,7 @@ export class DeleteDatalakeIndexComponent implements OnInit {
 
         // this.datalakeRestService.dropSingleMeasurementSeries(measurmentIndex);
         this.datalakeRestService
-            .dropSingleMeasurementSeries(this.measurementIndex)
+            .dropSingleMeasurementSeries(this.datasetName)
             .subscribe(_data => {
                 this.close(true);
             });

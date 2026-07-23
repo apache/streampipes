@@ -16,17 +16,14 @@
  *
  */
 
-export class DataLakeConfigurationEntry {
-    public name: string;
-    public measureName: string;
-    public pipelines: string[] = [];
-    public lastEvent: number | null = null;
-    public lastEventLoading = false;
-    public remove = true;
-    public elementId: string;
-    public retentionConfigured = false;
-    public lastExport: string | null = null;
-    public lastRetentionStatus: boolean | null = null;
+export class DatasetFilterConfig {
+    field: string;
+    value: string;
+    operator: string | '<' | '>' | '=' | '!=';
 
-    constructor() {}
+    constructor(field: string, value: string, operator: string) {
+        this.field = field;
+        this.value = value;
+        this.operator = operator;
+    }
 }
