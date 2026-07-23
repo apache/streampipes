@@ -28,7 +28,7 @@ describe('Test Table View in Charts', () => {
     });
 
     it('Perform Test', () => {
-        ChartUtils.addDataViewAndWidget(
+        ChartUtils.createChart(
             PrepareTestDataUtils.dataName,
             ChartWidget.TABLE,
         );
@@ -38,7 +38,7 @@ describe('Test Table View in Charts', () => {
     });
 
     it('Renames table field labels', () => {
-        ChartUtils.addDataViewAndWidget(
+        ChartUtils.createChart(
             PrepareTestDataUtils.dataName,
             ChartWidget.TABLE,
         );

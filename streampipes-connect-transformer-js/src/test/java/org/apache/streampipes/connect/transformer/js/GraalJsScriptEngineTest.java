@@ -174,6 +174,26 @@ public class GraalJsScriptEngineTest {
   }
 
   @Test
+  void collectEventWithNestedJavaScriptObjectAddedToHostMap() throws Exception {
+    var transformer = engine.compile("""
+        function transform(event, out, ctx) {
+          event.test = {"test": 1};
+          out.collect(event);
+        }
+        """);
+
+    var output = new ArrayList<Map<String, Object>>();
+    transformer.transform(new LinkedHashMap<>(
+        Map.of(
+            "value", 1)), output::add, null);
+
+    assertEquals(1, output.size());
+    assertEquals(Map.of("test", 1), output.get(0).get("test"));
+    var serialized = OBJECT_MAPPER.writeValueAsString(output.get(0));
+    assertTrue(serialized.contains("\"test\":{\"test\":1}"));
+  }
+
+  @Test
   void serializePrimitiveArraysNestedInHostMapOutput() throws Exception {
     var transformer = engine.compile("""
         function transform(event, out, ctx) {

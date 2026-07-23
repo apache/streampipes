@@ -39,6 +39,12 @@ public class HealthCheckUtils {
         + "' was not available and could not be restored.");
   }
 
+  public static void addPendingRecoveryNotification(List<String> pipelineNotifications,
+                                                    InvocableStreamPipesEntity pipelineElement) {
+    pipelineNotifications.add(getCurrentDatetime() + "Pipeline element '" + pipelineElement.getName()
+        + "' is not available. The next automatic recovery attempt is pending.");
+  }
+
   private static String getCurrentDatetime() {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
     LocalDateTime now = LocalDateTime.now();

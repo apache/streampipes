@@ -274,7 +274,10 @@ export class ChartContainerComponent
                     if (
                         typeChange.widgetId === this.configuredWidget.elementId
                     ) {
-                        this.chooseWidget(typeChange.newWidgetTypeId);
+                        this.chooseWidget(
+                            typeChange.newWidgetTypeId,
+                            typeChange.deferInitialDataLoad,
+                        );
                     }
                 },
             );
@@ -322,11 +325,14 @@ export class ChartContainerComponent
         this.interval$?.unsubscribe();
     }
 
-    chooseWidget(widgetTypeId: string) {
+    chooseWidget(widgetTypeId: string, deferInitialDataLoad = false) {
         if (widgetTypeId != undefined && !this.showRequiresAttentionMessage) {
             const widgetToDisplay =
                 this.chartRegistryService.getChartTemplate(widgetTypeId);
-            this.loadComponent(widgetToDisplay.widgetComponent);
+            this.loadComponent(
+                widgetToDisplay.widgetComponent,
+                deferInitialDataLoad,
+            );
         }
     }
 
@@ -338,7 +344,7 @@ export class ChartContainerComponent
         );
     }
 
-    loadComponent(widgetToDisplay) {
+    loadComponent(widgetToDisplay, deferInitialDataLoad = false) {
         const container = this.el.nativeElement.querySelector(
             '.widget-content',
         ) as HTMLDivElement;
@@ -373,6 +379,7 @@ export class ChartContainerComponent
         this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
         this.componentRef.instance.previewMode = this.previewMode;
         this.componentRef.instance.gridMode = this.gridMode;
+        this.componentRef.instance.deferInitialDataLoad = deferInitialDataLoad;
         this.componentRef.instance.widgetIndex = this.widgetIndex;
         this.componentRef.instance.observableGenerator =
             this.observableGenerator;

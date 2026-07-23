@@ -26,10 +26,7 @@ describe('Test Value Card View in Charts', () => {
     });
 
     it('Perform Test', () => {
-        ChartUtils.addDataViewAndWidget(
-            PrepareTestDataUtils.dataName,
-            'value-card',
-        );
+        ChartUtils.createChart(PrepareTestDataUtils.dataName, 'value-card');
 
         ChartUtils.openVisualizationConfig();
         ChartBtns.valueCardShowTimestampCheckbox()
@@ -37,14 +34,14 @@ describe('Test Value Card View in Charts', () => {
             .should('be.checked');
         ChartBtns.valueCardTitleInput().type('Current Snapshot');
         ChartBtns.valueCardDescriptionInput().type(
-            'First returned values from the data view.',
+            'First returned values from the chart.',
         );
 
         ChartBtns.valueCardWidget().should('be.visible');
         ChartBtns.valueCardTitle().should('contain.text', 'Current Snapshot');
         ChartBtns.valueCardDescription().should(
             'contain.text',
-            'First returned values from the data view.',
+            'First returned values from the chart.',
         );
         ChartBtns.valueCardTimestamp().should('be.visible');
         ChartBtns.valueCardItems().should('have.length.greaterThan', 0);

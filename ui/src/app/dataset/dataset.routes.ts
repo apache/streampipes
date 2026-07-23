@@ -17,7 +17,7 @@
  */
 
 import { Routes } from '@angular/router';
-import { DatalakeConfigurationComponent } from './components/datalake-configuration/datalake-configuration.component';
+import { DatasetOverviewComponent } from './components/dataset-overview/dataset-overview.component';
 import { DatasetDetailsSchemaComponent } from './components/dataset-details/dataset-details-schema/dataset-details-schema.component';
 import { DatasetDetailsEventsComponent } from './components/dataset-details/dataset-details-events/dataset-details-events.component';
 import { DatasetDetailsMetricsComponent } from './components/dataset-details/dataset-details-metrics/dataset-details-metrics.component';
@@ -29,7 +29,7 @@ export const DATASET_ROUTES: Routes = [
             {
                 path: '',
                 pathMatch: 'full',
-                component: DatalakeConfigurationComponent,
+                component: DatasetOverviewComponent,
             },
             {
                 path: ':elementId',

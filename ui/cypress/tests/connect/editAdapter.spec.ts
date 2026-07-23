@@ -110,10 +110,10 @@ describe('Test Edit Adapter', () => {
         storeAndStartEditedAdapter();
 
         // Validate that the data is further persisted in the database by checking if the last event changes in the data lake
-        DatasetUtils.goToDatalakeConfiguration();
+        DatasetUtils.goToDatasetOverview();
         DatasetUtils.waitForDatasetNotEmpty().then(initialLastEvent => {
             cy.wait(3000);
-            DatasetUtils.goToDatalakeConfiguration();
+            DatasetUtils.goToDatasetOverview();
             DatasetUtils.expectDatasetLastEventChanged(initialLastEvent);
         });
     });

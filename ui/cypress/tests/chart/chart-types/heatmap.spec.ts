@@ -25,10 +25,7 @@ describe('Test Heatmap View in Charts', () => {
     });
 
     it('Perform Test', () => {
-        ChartUtils.addDataViewAndWidget(
-            PrepareTestDataUtils.dataName,
-            'heatmap',
-        );
+        ChartUtils.createChart(PrepareTestDataUtils.dataName, 'heatmap');
 
         // Check checkbox
         ChartUtils.openVisualizationConfig();

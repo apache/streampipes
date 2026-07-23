@@ -64,7 +64,7 @@ public abstract class InvocablePipelineElementManagement<
 
   public Response invokeRuntime(String appId, K graph) {
     if (isDebug()) {
-      LOG.info("SP_DEBUG env variable is set - overriding broker hostname and port for local development");
+      LOG.debug("SP_DEBUG env variable is set - overriding broker hostname and port for local development");
       graph = createGroundingDebugInformation(graph);
     }
 
@@ -122,9 +122,7 @@ public abstract class InvocablePipelineElementManagement<
     if (runningInstance != null) {
       Response response = runningInstance.onRuntimeDetached(runningInstanceId);
 
-      if (response.isSuccess()) {
-        runningInstances.remove(runningInstanceId);
-      }
+      runningInstances.remove(runningInstanceId);
 
       return response;
     }

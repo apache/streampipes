@@ -24,7 +24,7 @@ describe('Test Time Order in Charts', () => {
         cy.initStreamPipesTest();
         ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
         ChartUtils.goToDatalake();
-        ChartUtils.createAndEditDataView();
+        ChartUtils.createAndEditChart();
     });
 
     it('Perform Test with ascending and descending order', () => {
@@ -53,8 +53,8 @@ describe('Test Time Order in Charts', () => {
 
         // Save and leave view, edit view again and check ascending order
         ChartUtils.selectAppearanceConfig();
-        ChartUtils.saveDataViewConfiguration(false, false, chartName);
-        ChartUtils.editDataView(chartName);
+        ChartUtils.saveChartConfiguration(false, false, chartName);
+        ChartUtils.editChart(chartName);
         ChartUtils.clickOrderBy('ascending');
         ChartUtils.openVisualizationConfig();
         ChartUtils.selectVisualizationType(ChartWidget.TABLE);

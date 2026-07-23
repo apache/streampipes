@@ -18,14 +18,14 @@
 
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { ChartWidgetTableUtils } from '../../support/utils/chart/ChartWidgetTableUtils';
-import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
+import { DatasetFilterConfig } from '../../support/model/DatasetFilterConfig';
 import { ChartWidget } from '../../support/model/ChartWidget';
-import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
+import { DatasetSeedUtils } from '../../support/utils/dataset/DatasetSeedUtils';
 
 describe('Validate that filter works for numerical dimension property', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataLakeSeedUtils.importCsvFixture({
+        DatasetSeedUtils.importCsvFixture({
             fixture: 'datalake/filterNumericalStringProperties.csv',
             measurementName: 'Test Adapter',
             delimiter: ';',
@@ -41,9 +41,9 @@ describe('Validate that filter works for numerical dimension property', () => {
 
     it('Perform Test', () => {
         ChartUtils.goToDatalake();
-        ChartUtils.createAndEditDataView();
+        ChartUtils.createAndEditChart();
 
-        // create table widget and select time range
+        // Create table chart and select time range
         const startDate = new Date(1737029442000);
         const endDate = new Date(1742220659000);
 
@@ -59,7 +59,7 @@ describe('Validate that filter works for numerical dimension property', () => {
 
         // select filter for tag
         ChartUtils.selectDataConfig();
-        let filterConfig = new DataLakeFilterConfig('dimensionKey', '1.0', '=');
+        let filterConfig = new DatasetFilterConfig('dimensionKey', '1.0', '=');
         ChartUtils.dataConfigAddFilter(filterConfig);
 
         // validate data in table is filtered
@@ -70,7 +70,7 @@ describe('Validate that filter works for numerical dimension property', () => {
 
         ChartUtils.selectDataConfig();
 
-        filterConfig = new DataLakeFilterConfig('v1', '20', '=');
+        filterConfig = new DatasetFilterConfig('v1', '20', '=');
         ChartUtils.dataConfigAddFilter(filterConfig);
 
         // validate data in table is filtered

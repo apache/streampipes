@@ -155,77 +155,21 @@
                                         [level]="3"
                                         [label]="'Authorized Users' | translate"
                                     >
-                                        <mat-form-field
-                                            color="accent"
-                                            data-cy="authorized-users-label"
-                                        >
-                                            <mat-chip-grid
-                                                #chipList
-                                                [attr.aria-label]="
-                                                    'User selection' | translate
+                                        <div data-cy="authorized-users-label">
+                                            <sp-search-select
+                                                [items]="availableUsers"
+                                                [value]="grantedUserAuthorities"
+                                                [multiple]="true"
+                                                [placeholder]="
+                                                    'Add' | translate
+                                                "
+                                                dataCy="authorized-user"
+                                                (valueChange)="
+                                                    onGrantedUsersChange($event)
                                                 "
                                             >
-                                                @for (
-                                                    user of grantedUserAuthorities;
-                                                    track user
-                                                ) {
-                                                    <mat-chip-row
-                                                        selectable="true"
-                                                        removable="true"
-                                                        (removed)="
-                                                            removeUser(user)
-                                                        "
-                                                    >
-                                                        {{ user.email }}
-                                                        <button matChipRemove>
-                                                            <mat-icon
-                                                                >cancel</mat-icon
-                                                            >
-                                                        </button>
-                                                    </mat-chip-row>
-                                                }
-                                                <input
-                                                    matInput
-                                                    [placeholder]="
-                                                        'Add' | translate
-                                                    "
-                                                    #userInput
-                                                    [formControl]="userCtrl"
-                                                    [matAutocomplete]="userAuto"
-                                                    [matChipInputFor]="chipList"
-                                                    [matChipInputSeparatorKeyCodes]="
-                                                        separatorKeysCodes
-                                                    "
-                                                    data-cy="authorized-user"
-                                                    (matChipInputTokenEnd)="
-                                                        addUser($event)
-                                                    "
-                                                />
-                                            </mat-chip-grid>
-
-                                            <mat-autocomplete
-                                                #userAuto="matAutocomplete"
-                                                (optionSelected)="
-                                                    userSelected($event)
-                                                "
-                                            >
-                                                @for (
-                                                    user of filteredUsers$
-                                                        | async;
-                                                    track user
-                                                ) {
-                                                    <mat-option
-                                                        [value]="user"
-                                                        [attr.data-cy]="
-                                                            'user-option-' +
-                                                            user.email
-                                                        "
-                                                    >
-                                                        {{ user.email }}
-                                                    </mat-option>
-                                                }
-                                            </mat-autocomplete>
-                                        </mat-form-field>
+                                            </sp-search-select>
+                                        </div>
                                     </sp-form-field>
                                 </div>
 
@@ -236,80 +180,25 @@
                                             'Authorized Groups' | translate
                                         "
                                     >
-                                        <mat-form-field
-                                            color="accent"
-                                            data-cy="authorized-groups-label"
-                                        >
-                                            <mat-chip-grid
-                                                #chipList
-                                                [attr.aria-label]="
-                                                    'Group selection'
-                                                        | translate
+                                        <div data-cy="authorized-groups-label">
+                                            <sp-search-select
+                                                [items]="availableGroups"
+                                                [value]="
+                                                    grantedGroupAuthorities
+                                                "
+                                                [multiple]="true"
+                                                [placeholder]="
+                                                    'Add' | translate
+                                                "
+                                                dataCy="authorized-group"
+                                                (valueChange)="
+                                                    onGrantedGroupsChange(
+                                                        $event
+                                                    )
                                                 "
                                             >
-                                                @for (
-                                                    group of grantedGroupAuthorities;
-                                                    track group
-                                                ) {
-                                                    <mat-chip-row
-                                                        selectable="true"
-                                                        removable="true"
-                                                        (removed)="
-                                                            removeGroup(group)
-                                                        "
-                                                    >
-                                                        {{ group.groupName }}
-                                                        <button matChipRemove>
-                                                            <mat-icon
-                                                                >cancel</mat-icon
-                                                            >
-                                                        </button>
-                                                    </mat-chip-row>
-                                                }
-                                                <input
-                                                    matInput
-                                                    [placeholder]="
-                                                        'Add' | translate
-                                                    "
-                                                    data-cy="authorized-group"
-                                                    #groupInput
-                                                    [formControl]="groupCtrl"
-                                                    [matAutocomplete]="
-                                                        groupAuto
-                                                    "
-                                                    [matChipInputFor]="chipList"
-                                                    [matChipInputSeparatorKeyCodes]="
-                                                        separatorKeysCodes
-                                                    "
-                                                    (matChipInputTokenEnd)="
-                                                        addGroup($event)
-                                                    "
-                                                />
-                                            </mat-chip-grid>
-
-                                            <mat-autocomplete
-                                                #groupAuto="matAutocomplete"
-                                                (optionSelected)="
-                                                    groupSelected($event)
-                                                "
-                                            >
-                                                @for (
-                                                    group of filteredGroups$
-                                                        | async;
-                                                    track group
-                                                ) {
-                                                    <mat-option
-                                                        [attr.data-cy]="
-                                                            'group-option-' +
-                                                            group.groupName
-                                                        "
-                                                        [value]="group"
-                                                    >
-                                                        {{ group.groupName }}
-                                                    </mat-option>
-                                                }
-                                            </mat-autocomplete>
-                                        </mat-form-field>
+                                            </sp-search-select>
+                                        </div>
                                     </sp-form-field>
                                 </div>
                             }

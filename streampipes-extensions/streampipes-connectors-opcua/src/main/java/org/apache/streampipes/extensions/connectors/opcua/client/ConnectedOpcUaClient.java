@@ -25,15 +25,24 @@ import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.subscriptions.MonitoredItemServiceOperationResult;
 import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaMonitoredItem;
 import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaSubscription;
+import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.UaException;
+import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
+import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
+import org.eclipse.milo.opcua.stack.core.types.structured.ReadRequest;
+import org.eclipse.milo.opcua.stack.core.types.structured.ReadResponse;
+import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 
@@ -120,6 +129,34 @@ public class ConnectedOpcUaClient {
    */
   public OpcUaClient getClient() {
     return this.client;
+  }
+
+  public CompletableFuture<List<DataValue>> readValuesAsync(List<NodeId> nodeIds,
+                                                             long requestTimeoutMillis) {
+    var readValueIds = nodeIds.stream()
+        .map(nodeId -> new ReadValueId(
+            nodeId,
+            AttributeId.Value.uid(),
+            null,
+            QualifiedName.NULL_VALUE
+        ))
+        .toArray(ReadValueId[]::new);
+
+    return client.getSessionAsync().thenCompose(session -> {
+      var request = new ReadRequest(
+          client.newRequestHeader(session.getAuthenticationToken(), uint(requestTimeoutMillis)),
+          0.0,
+          TimestampsToReturn.Both,
+          readValueIds
+      );
+
+      return client.sendRequestAsync(request)
+          .thenApply(ReadResponse.class::cast)
+          .thenApply(response -> {
+            var results = response.getResults();
+            return results == null ? List.of() : Arrays.asList(results);
+          });
+    });
   }
 
   public void disconnect() {

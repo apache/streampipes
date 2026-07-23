@@ -53,7 +53,7 @@ public class OpcUaAdapterTestHarness {
 
   public Map<String, Object> readSingleEvent(String endpointUrl, List<String> selectedNodeIds) throws Exception {
     var collectorQueue = new LinkedBlockingQueue<Map<String, Object>>();
-    var extractor = makeExtractor(endpointUrl, selectedNodeIds);
+    var extractor = makeExtractor(endpointUrl, selectedNodeIds, 1000, "opcua-adapter-it");
     var runtimeContext = makeRuntimeContext();
     var adapter = new OpcUaAdapter(new OpcUaClientProvider());
     var started = false;
@@ -72,7 +72,22 @@ public class OpcUaAdapterTestHarness {
     }
   }
 
-  private IAdapterParameterExtractor makeExtractor(String endpointUrl, List<String> selectedNodeIds) {
+  public RunningOpcUaAdapter startPullAdapter(OpcUaClientProvider clientProvider,
+                                              String endpointUrl,
+                                              List<String> selectedNodeIds,
+                                              int pollingIntervalMillis,
+                                              String adapterId) throws Exception {
+    var extractor = makeExtractor(endpointUrl, selectedNodeIds, pollingIntervalMillis, adapterId);
+    var runtimeContext = makeRuntimeContext();
+    var adapter = new OpcUaAdapter(clientProvider);
+    adapter.onAdapterStarted(extractor, event -> { }, runtimeContext);
+    return new RunningOpcUaAdapter(adapter, extractor, runtimeContext);
+  }
+
+  private IAdapterParameterExtractor makeExtractor(String endpointUrl,
+                                                   List<String> selectedNodeIds,
+                                                   int pollingIntervalMillis,
+                                                   String adapterId) {
     IStaticPropertyExtractor staticExtractor = mock(IStaticPropertyExtractor.class);
 
     when(staticExtractor.selectedAlternativeInternalId(ADAPTER_TYPE.name()))
@@ -90,7 +105,7 @@ public class OpcUaAdapterTestHarness {
     when(staticExtractor.singleValueParameter(OPC_SERVER_URL.name(), String.class))
         .thenReturn(endpointUrl);
     when(staticExtractor.singleValueParameter(PULLING_INTERVAL.name(), Integer.class))
-        .thenReturn(1000);
+        .thenReturn(pollingIntervalMillis);
     when(staticExtractor.selectedSingleValueInternalName(
         SharedUserConfiguration.INCOMPLETE_EVENT_HANDLING_KEY,
         String.class
@@ -99,7 +114,7 @@ public class OpcUaAdapterTestHarness {
         .thenReturn(OpcUaNamingStrategy.DISPLAY_NAME.name());
 
     AdapterDescription adapterDescription = new AdapterDescription();
-    adapterDescription.setElementId("opcua-adapter-it");
+    adapterDescription.setElementId(adapterId);
 
     IAdapterParameterExtractor extractor = mock(IAdapterParameterExtractor.class);
     when(extractor.getStaticPropertyExtractor()).thenReturn(staticExtractor);
@@ -113,5 +128,14 @@ public class OpcUaAdapterTestHarness {
     when(runtimeContext.getStreamPipesClient()).thenReturn(streamPipesClient);
     return runtimeContext;
   }
-}
 
+  public record RunningOpcUaAdapter(OpcUaAdapter adapter,
+                                    IAdapterParameterExtractor extractor,
+                                    IAdapterRuntimeContext runtimeContext) implements AutoCloseable {
+
+    @Override
+    public void close() throws Exception {
+      adapter.onAdapterStopped(extractor, runtimeContext);
+    }
+  }
+}

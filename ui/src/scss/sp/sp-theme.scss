@@ -147,6 +147,11 @@ html {
         overflow: hidden;
     }
 
+    .sp-table-actions-menu.mat-mdc-menu-panel {
+        min-width: 13rem;
+        max-width: min(28rem, calc(100vw - 2rem));
+    }
+
     .mat-mdc-menu-content {
         padding: var(--space-xs) 0;
     }
@@ -177,6 +182,10 @@ html {
         text-overflow: ellipsis;
         white-space: nowrap;
         line-height: 1.25rem;
+    }
+
+    .sp-table-actions-menu .mat-mdc-menu-item span {
+        white-space: nowrap;
     }
 
     .mat-mdc-menu-item:hover:not([disabled]),

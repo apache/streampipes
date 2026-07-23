@@ -29,7 +29,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
     const dataStreamSelector = 'test';
     const chartName = 'Chart Density';
     const pipelineName = 'Pipeline Test';
-    const dataLakeMeasurement = 'demo';
+    const datasetName = 'demo';
 
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
@@ -49,7 +49,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
         PipelineBtns.saveElementConfigBtn().click();
         savePipeline();
 
-        PipelineBtns.pipelineEditWarning().contains(dataLakeMeasurement);
+        PipelineBtns.pipelineEditWarning().contains(datasetName);
         PipelineBtns.pipelineMeasurementEditWarning().contains(
             'density (http://www.w3.org/2001/XMLSchema#float -> http://www.w3.org/2001/XMLSchema#boolean)',
         );
@@ -61,7 +61,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
         addPipelineWithProcessor(
             fieldMapperProcessor('sensorId', 'sensorIdHash'),
         );
-        addTableChart(dataLakeMeasurement);
+        addTableChart(datasetName);
 
         PipelineUtils.goToPipelines();
         editPipelineProcessor();
@@ -75,7 +75,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
         PipelineUtils.pipelineElementUpdateCompleted();
         savePipeline();
 
-        PipelineBtns.pipelineEditWarning().contains(dataLakeMeasurement);
+        PipelineBtns.pipelineEditWarning().contains(datasetName);
         PipelineBtns.pipelineChartEditWarning().contains(chartName);
         PipelineBtns.pipelineChartEditWarning().contains('density');
         PipelineBtns.updateAndMigratePipeline().should('not.be.disabled');
@@ -91,7 +91,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
     it('Test pipeline update with an added field', () => {
         createAdapter();
         addPipelineWithProcessor(javaScriptEvalProcessor());
-        addTableChart(dataLakeMeasurement);
+        addTableChart(datasetName);
 
         PipelineUtils.goToPipelines();
         editPipelineProcessor();
@@ -121,7 +121,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
             .addProcessingElement(processingElement)
             .addSink(
                 PipelineElementBuilder.create('data_lake')
-                    .addInput('input', 'db_measurement', dataLakeMeasurement)
+                    .addInput('input', 'db_measurement', datasetName)
                     .build(),
             )
             .build();
@@ -169,8 +169,8 @@ describe('Test pipeline updates with data lake schema changes', () => {
     }
 
     function addTableChart(measurementName: string) {
-        ChartUtils.addDataViewAndTableWidget(measurementName, true);
-        ChartUtils.saveDataViewConfiguration(false, false, chartName);
+        ChartUtils.createTableChart(measurementName, true);
+        ChartUtils.saveChartConfiguration(false, false, chartName);
         ChartUtils.checkAmount(1);
     }
 

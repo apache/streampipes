@@ -54,7 +54,7 @@ describe('Connect schema rule transformations', () => {
 
         ConnectUtils.finishConfigureFieldsConfiguration();
 
-        ChartUtils.clearMeasurementData('Adapter to test rules').then(() => {
+        ChartUtils.clearDatasetData('Adapter to test rules').then(() => {
             ConnectUtils.startAdapter(adapterConfiguration, true);
             ConnectUtils.restartAdapter(adapterConfiguration.adapterName);
 
