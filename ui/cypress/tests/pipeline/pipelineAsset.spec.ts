@@ -27,6 +27,10 @@ describe('Test Saving Pipeline with Asset Link', () => {
     const assetName1 = 'Test1';
     const assetName2 = 'Test2';
     const assetName3 = 'Test3';
+    const initialPipelineName = 'Pipeline Test';
+    const renamedPipelineName = 'Renamed Pipeline';
+    const linkedPipelineResources = 1;
+
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         AssetUtils.goToAssets();
@@ -42,7 +46,7 @@ describe('Test Saving Pipeline with Asset Link', () => {
 
         ConnectUtils.addMachineDataSimulator(adapterName);
 
-        const pipelineInput = PipelineBuilder.create('Pipeline Test')
+        const pipelineInput = PipelineBuilder.create(initialPipelineName)
             .addSource(adapterName)
             .addSink(
                 PipelineElementBuilder.create('data_lake')
@@ -55,44 +59,44 @@ describe('Test Saving Pipeline with Asset Link', () => {
             assetName1,
             assetName2,
         ]);
+        PipelineUtils.goToPipelines();
     });
 
     it('Add Pipeline to Asset during creation', () => {
-        PipelineUtils.editPipeline('Pipeline Test');
-
-        // Go Back to Asset
         AssetUtils.goToAssets();
-        AssetUtils.checkAmountOfAssetsGreaterThan(0);
-
-        // CLick on Asset
-
-        AssetUtils.editAsset(assetName1);
-        AssetUtils.checkAmountOfLinkedResources(2);
-
-        // Go Back to Asset
-        AssetUtils.goToAssets();
-        AssetUtils.checkAmountOfAssetsGreaterThan(0);
-        AssetUtils.editAsset(assetName2);
-        AssetUtils.checkAmountOfLinkedResources(2);
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(
+            assetName1,
+            linkedPipelineResources,
+        );
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(
+            assetName2,
+            linkedPipelineResources,
+        );
     });
 
     it('Edit Pipeline to Asset during Edit', () => {
-        PipelineUtils.editPipeline('Pipeline Test');
-        cy.dataCy('sp-editor-save-pipeline', { timeout: 10000 })
-            .should('exist')
-            .click();
-        cy.dataCy('sp-editor-pipeline-name').clear();
-        PipelineUtils.updatePipeline('Renamed Pipeline');
-        PipelineUtils.finalizePipelineStart([assetName1, assetName3]);
+        PipelineUtils.editPipeline(initialPipelineName);
+        PipelineUtils.openPipelineManagementInEditor();
+        PipelineUtils.renameManagedPipeline(renamedPipelineName);
+        PipelineUtils.addManagedPipelineToAssets([assetName3]);
+        PipelineUtils.applyPipelineManagementChanges();
+        PipelineUtils.savePipelineUpdate();
 
-        // Test Number of Asset Links
-        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 2);
-        AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName3, 2);
+        AssetUtils.goToAssets();
 
-        // Test Renaming
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(
+            assetName2,
+            linkedPipelineResources,
+        );
+
+        AssetUtils.checkAmountOfLinkedResourcesByAssetName(
+            assetName3,
+            linkedPipelineResources,
+        );
+
         AssetUtils.checkResourceNamingByAssetName(
             assetName2,
-            'Renamed Pipeline',
+            renamedPipelineName,
         );
     });
 });
