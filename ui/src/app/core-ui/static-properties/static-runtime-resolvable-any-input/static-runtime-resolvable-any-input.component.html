@@ -48,11 +48,7 @@
             <span>{{ 'Reload' | translate }}</span>
         </button>
         @if (loading) {
-            <sp-spinner
-                color="accent"
-                [mode]="'indeterminate'"
-                [diameter]="15"
-            ></sp-spinner>
+            <sp-spinner [diameter]="15"></sp-spinner>
         }
     </div>
     @if (!staticProperty.horizontalRendering) {

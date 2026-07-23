@@ -22,17 +22,11 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-adapter-started-loading',
     templateUrl: './adapter-started-loading.component.html',
-    imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        SpSpinnerComponent,
-        TranslatePipe,
-    ],
+    imports: [LayoutDirective, LayoutAlignDirective, SpSpinnerComponent],
 })
 export class SpAdapterStartedLoadingComponent {
     @Input()

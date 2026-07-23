@@ -115,10 +115,7 @@
                                 data-cy="adapter-operation-in-progress-spinner"
                                 fxLayoutAlign="center center"
                             >
-                                <sp-spinner
-                                    color="accent"
-                                    [diameter]="20"
-                                ></sp-spinner>
+                                <sp-spinner [diameter]="20"></sp-spinner>
                             </div>
                         } @else if (!adapter.running) {
                             <button

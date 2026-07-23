@@ -16,13 +16,8 @@
  *
  */
 
-import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
-import {
-    MatProgressSpinner,
-    ProgressSpinnerMode,
-} from '@angular/material/progress-spinner';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
     LayoutAlignDirective,
     LayoutDirective,
@@ -38,16 +33,12 @@ import {
         LayoutAlignDirective,
         LayoutGapDirective,
         MatProgressSpinner,
-        NgClass,
     ],
 })
 export class SpSpinnerComponent {
-    @Input() color: ThemePalette = 'accent';
     @Input() text = '';
-    @Input() textClass = '';
     @Input() layout: 'column' | 'row' = 'column';
     @Input() align = 'center center';
     @Input() gap = '8px';
-    @Input() mode: ProgressSpinnerMode = 'indeterminate';
     @Input() diameter = 30;
 }

@@ -106,10 +106,8 @@
             class="chart-selection-loading"
         >
             <sp-spinner
-                mode="indeterminate"
                 diameter="36"
                 [text]="'Loading charts...' | translate"
-                [textClass]="'chart-selection-loading-text'"
             ></sp-spinner>
         </div>
     } @else if (charts.length > 0 && filteredChartItems.length > 0) {

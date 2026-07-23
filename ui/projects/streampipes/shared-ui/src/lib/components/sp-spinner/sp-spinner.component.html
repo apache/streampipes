@@ -23,11 +23,11 @@
     class="sp-spinner"
 >
     <mat-spinner
-        [color]="color"
+        color="accent"
         [diameter]="diameter"
-        [mode]="mode"
+        mode="indeterminate"
     ></mat-spinner>
     @if (text) {
-        <div class="sp-spinner__text" [ngClass]="textClass">{{ text }}</div>
+        <div class="sp-spinner__text">{{ text }}</div>
     }
 </div>

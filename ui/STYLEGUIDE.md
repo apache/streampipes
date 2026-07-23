@@ -202,6 +202,20 @@ Use `sp-progress-bar` when real progress is available. Provide the current `valu
 ></sp-progress-bar>
 ```
 
+#### Spinner
+
+Use `sp-spinner` for indeterminate loading states where no real progress value is available. Prefer it over direct `mat-spinner` usage to keep loading indicators consistent.
+
+```html
+<sp-spinner [text]="'Loading assets' | translate" [diameter]="30"></sp-spinner>
+```
+
+For compact inline loading states, use a smaller diameter and row layout:
+
+```html
+<sp-spinner [diameter]="20" layout="row"></sp-spinner>
+```
+
 #### Tables
 
 For rendering tables, always use the `sp-table` component which comes with pre-defined features for paging, sorting and layout.

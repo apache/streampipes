@@ -23,23 +23,19 @@
     @if (isLoading && !hasLoadedCharts) {
         <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">
             <sp-spinner
-                mode="indeterminate"
                 diameter="40"
                 [text]="'Loading' | translate"
-                [textClass]="'chart-overview-loading-text'"
             ></sp-spinner>
         </div>
     } @else {
         @if (isLoading) {
             <div class="p-2">
                 <sp-spinner
-                    mode="indeterminate"
                     diameter="18"
                     layout="row"
                     align="end center"
                     gap="8px"
                     [text]="'Loading' | translate"
-                    [textClass]="'chart-overview-loading-text'"
                 ></sp-spinner>
             </div>
         }
