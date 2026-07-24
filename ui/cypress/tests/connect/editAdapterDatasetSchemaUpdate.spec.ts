@@ -66,7 +66,6 @@ describe('Test adapter updates with data lake schema changes', () => {
         PipelineBtns.measurementUpdateDialogEditPipelineBtn().click();
 
         PipelineBtns.savePipelineBtn().click();
-        PipelineBtns.editorApplyBtn().click();
         PipelineBtns.pipelineStartedError();
     });
 
@@ -103,6 +102,8 @@ describe('Test adapter updates with data lake schema changes', () => {
 
         ConnectBtns.adapterManualPipelineMigrationWarning().should('not.exist');
         ConnectBtns.adapterChartEditWarning().should('not.exist');
+        ConnectBtns.updateAndMigratePipelines().click();
+        ConnectBtns.connectAdapterAddedSuccessfully().should('be.visible');
         ConnectUtils.closeAdapterPreview();
 
         PipelineUtils.goToPipelines();
