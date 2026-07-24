@@ -118,6 +118,25 @@ public final class ExtensionServiceRequestTargets {
     );
   }
 
+  public static ExtensionServiceRequestTarget adapterHealth(SpServiceRegistration service) {
+    return forService(
+        service,
+        ExtensionServiceBrokerOperations.ADAPTER_HEALTH,
+        path("api", "v1", "adapter-health"),
+        topic(ExtensionServiceBrokerOperations.ADAPTER_HEALTH)
+    );
+  }
+
+  public static ExtensionServiceRequestTarget adapterHealthTrigger(SpServiceRegistration service,
+                                                                   String adapterId) {
+    return forService(
+        service,
+        ExtensionServiceBrokerOperations.ADAPTER_HEALTH,
+        path("api", "v1", "adapter-health", adapterId, "trigger"),
+        topic(ExtensionServiceBrokerOperations.ADAPTER_HEALTH, adapterId, "trigger")
+    );
+  }
+
   public static ExtensionServiceRequestTarget extensionInstanceHealth(SpServiceRegistration service) {
     return forService(
         service,

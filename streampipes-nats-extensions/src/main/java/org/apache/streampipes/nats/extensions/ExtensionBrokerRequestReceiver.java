@@ -40,6 +40,7 @@ import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerT
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceTransportMode;
 import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
 import org.apache.streampipes.nats.extensions.operation.connect.AdapterAssetOperationHandler;
+import org.apache.streampipes.nats.extensions.operation.connect.AdapterHealthOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.connect.AdapterStateChangeOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.connect.RuntimeOptionsOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.connect.SampleDataOperationHandler;
@@ -285,6 +286,7 @@ public class ExtensionBrokerRequestReceiver {
             ),
             new RuntimeOptionsOperationHandler(objectMapper, runtimeResolvableManagement),
             new SampleDataOperationHandler(objectMapper, sampleDataRequestManagement),
+            new AdapterHealthOperationHandler(objectMapper),
             new OutputSchemaOperationHandler(
                 objectMapper,
                 dataProcessorPipelineElementManagement,

@@ -56,7 +56,6 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -356,15 +355,20 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
       this.pullAdapterScheduler = new PullAdapterScheduler();
       this.pullAdapterScheduler.schedule(this, extractor.getAdapterDescription().getElementId());
     } else {
-      var allNodeIds = this.allNodes.stream()
-          .map(node -> node.nodeInfo().getNodeId()).toList();
       try {
-        this.connectedClient.createListSubscription(allNodeIds, this.opcUaAdapterConfig, this);
+        createSubscription();
       } catch (Exception e) {
         var errorMessage = buildStartupErrorMessage(e);
         throw new AdapterException(errorMessage, e);
       }
     }
+  }
+
+  private void createSubscription() throws Exception {
+    var allNodeIds = this.allNodes.stream()
+        .map(node -> node.nodeInfo().getNodeId())
+        .toList();
+    this.connectedClient.createListSubscription(allNodeIds, this.opcUaAdapterConfig, this);
   }
 
   @Override
@@ -416,7 +420,10 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
     }
     try {
       var client = connectedClient.getClient();
-      var response = client.readValuesAsync(0, TimestampsToReturn.Neither, Collections.singletonList(SERVER_STATE_NODE))
+      var response = connectedClient.readValuesAsync(
+              List.of(SERVER_STATE_NODE),
+              TimeUnit.SECONDS.toMillis(HEALTH_CHECK_TIMEOUT_SECONDS)
+          )
           .get(HEALTH_CHECK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
       if (response == null || response.isEmpty()) {
         return attemptReconnectAndReport("OPC-UA server did not respond - empty response from server state node");
@@ -445,9 +452,12 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
         connectedClient = null;
       }
       event.clear();
-      nodeIdToLabelMapping.clear();
+      nodeIdToNodeMapping.clear();
       Thread.sleep(1000);
       prepareAdapter();
+      if (!opcUaAdapterConfig.inPullMode()) {
+        createSubscription();
+      }
       LOG.info("OPC-UA reconnection successful after detecting: {}", originalIssue);
       return DataSourceHealthCheckResult.healthy("OPC-UA connection was restored. Previous issue: " + originalIssue);
     } catch (Exception reconnectEx) {

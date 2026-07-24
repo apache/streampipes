@@ -38,6 +38,8 @@ public class ExtensionServiceBrokerOperations {
       operation("RUNTIME_OPTIONS", "adapter-runtime-options");
   public static final ExtensionServiceBrokerOperation SAMPLE_DATA =
       operation("SAMPLE_DATA", "adapter-sample-data");
+  public static final ExtensionServiceBrokerOperation ADAPTER_HEALTH =
+      operation("ADAPTER_HEALTH", "adapter-health");
   public static final ExtensionServiceBrokerOperation EXTENSION_INSTANCE_HEALTH =
       operation("EXTENSION_INSTANCE_HEALTH", "extension-instance-health");
   public static final ExtensionServiceBrokerOperation SERVICE_HEALTH =
