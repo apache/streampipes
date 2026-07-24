@@ -33,7 +33,7 @@ export class PermissionUtils {
                 cy.wrap($specific).click();
             } else {
                 cy.get(
-                    '[data-cy="open-manage-permissions"], [data-cy="open-manage-adapter"]',
+                    '[data-cy="open-manage-permissions"], [data-cy="open-manage-adapter"], [data-cy="open-manage-pipeline"]',
                 )
                     .should('be.visible')
                     .click();
