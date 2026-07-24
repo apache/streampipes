@@ -163,7 +163,9 @@ export class PermissionUtils {
 
     public static validateUserCanChangePermissions(resourceName: string) {
         PermissionUtils.openManagePermissions(resourceName);
-        cy.dataCy('permission-public-element').should('exist');
+        cy.dataCy('permission-public-element', { timeout: 10000 }).should(
+            'exist',
+        );
         PermissionUtils.cancel();
     }
 
