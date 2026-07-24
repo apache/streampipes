@@ -54,6 +54,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @deprecated Use the generic PLC4X S7 adapter instead.
+ *     This concrete adapter is planned for removal after the 0.99.0 release.
+ */
+@Deprecated(since = "0.99.0", forRemoval = true)
 public class Plc4xS7Adapter implements StreamPipesAdapter {
 
   /**
@@ -158,7 +163,14 @@ public class Plc4xS7Adapter implements StreamPipesAdapter {
       IAdapterRuntimeContext adapterRuntimeContext
   ) {
     var settings = getConfigurations(extractor.getStaticPropertyExtractor());
-    var plcRequestReader = new ContinuousPlcRequestReader(connectionManager, settings, requestProvider, collector);
+    var adapterName = extractor.getAdapterDescription().getName();
+    var plcRequestReader = new ContinuousPlcRequestReader(
+        connectionManager,
+        settings,
+        requestProvider,
+        collector,
+        adapterName
+    );
     this.pullAdapterScheduler = new PullAdapterScheduler();
     this.pullAdapterScheduler.schedule(
         plcRequestReader,

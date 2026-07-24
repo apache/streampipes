@@ -16,7 +16,7 @@
  *
  */
 
-import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
+import { DatasetFilterConfig } from '../../support/model/DatasetFilterConfig';
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { ChartWidgetTableUtils } from '../../support/utils/chart/ChartWidgetTableUtils';
 
@@ -30,7 +30,7 @@ describe('Test Table View in Charts', () => {
         /**
          * Prepare tests
          */
-        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
+        ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
 
         // Validate that X lines are available
         ChartWidgetTableUtils.checkAmountOfRows(10);
@@ -42,7 +42,7 @@ describe('Test Table View in Charts', () => {
          * Test filter configuration
          */
         // Test number
-        let filterConfig = new DataLakeFilterConfig('randomnumber', '22', '=');
+        let filterConfig = new DatasetFilterConfig('randomnumber', '22', '=');
         ChartUtils.dataConfigAddFilter(filterConfig);
         ChartWidgetTableUtils.checkAmountOfRows(2);
         ChartUtils.validateFilterOptions(['=', '<', '<=', '>=', '>', '!=']);
@@ -50,20 +50,20 @@ describe('Test Table View in Charts', () => {
         ChartWidgetTableUtils.checkAmountOfRows(10);
 
         // Test number greater then
-        filterConfig = new DataLakeFilterConfig('randomnumber', '50', '>');
+        filterConfig = new DatasetFilterConfig('randomnumber', '50', '>');
         ChartUtils.dataConfigAddFilter(filterConfig);
         ChartWidgetTableUtils.checkAmountOfRows(5);
         ChartUtils.validateFilterOptions(['=', '<', '<=', '>=', '>', '!=']);
         ChartUtils.dataConfigRemoveFilter();
 
         // Test number smaller then
-        filterConfig = new DataLakeFilterConfig('randomnumber', '50', '<');
+        filterConfig = new DatasetFilterConfig('randomnumber', '50', '<');
         ChartUtils.dataConfigAddFilter(filterConfig);
         ChartWidgetTableUtils.checkAmountOfRows(5);
         ChartUtils.dataConfigRemoveFilter();
 
         // Test boolean
-        filterConfig = new DataLakeFilterConfig('randombool', 'true', '=');
+        filterConfig = new DatasetFilterConfig('randombool', 'true', '=');
         ChartUtils.dataConfigAddFilter(filterConfig);
         ChartWidgetTableUtils.checkAmountOfRows(6);
         ChartUtils.validateFilterOptions(['=', '!=']);
@@ -71,7 +71,7 @@ describe('Test Table View in Charts', () => {
         ChartUtils.dataConfigRemoveFilter();
 
         // Test string & if filter is persisted correctly
-        filterConfig = new DataLakeFilterConfig('randomtext', 'a', '=');
+        filterConfig = new DatasetFilterConfig('randomtext', 'a', '=');
         ChartUtils.checkIfFilterIsSet(0);
         ChartUtils.dataConfigAddFilter(filterConfig);
         ChartUtils.checkIfFilterIsSet(1);
@@ -81,7 +81,7 @@ describe('Test Table View in Charts', () => {
         ChartUtils.validateAutoCompleteOptions(['a', 'b', 'c']);
         cy.dataCy('design-panel-data-settings-filter-value').type('{esc}');
 
-        ChartUtils.saveAndEditWidget('NewWidget');
+        ChartUtils.saveAndEditChart('NewWidget');
         ChartUtils.checkIfFilterIsSet(1);
         ChartWidgetTableUtils.checkAmountOfRows(4);
         ChartUtils.dataConfigRemoveFilter();
@@ -99,7 +99,7 @@ describe('Test Table View in Charts', () => {
             .first({ timeout: 10000 })
             .contains('c', { timeout: 10000 });
         ChartWidgetTableUtils.checkAmountOfRows(10);
-        ChartUtils.saveAndReEditWidget('NewWidget');
+        ChartUtils.saveAndReEditChart('NewWidget');
         cy.dataCy('data-explorer-group-by-randomtext')
             .find('input')
             .should('be.checked');

@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.extensions.api.connect.IPollingSettings;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
+import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PullAdapterSchedulerTest {
@@ -42,6 +44,30 @@ class PullAdapterSchedulerTest {
       assertTrue(secondInvocation.await(2, TimeUnit.SECONDS));
     } finally {
       scheduler.shutdown();
+    }
+  }
+
+  @Test
+  void recordsOnlyFirstFailureUntilAdapterRecovers() throws InterruptedException {
+    var adapterId = "repeatedly-failing-adapter";
+    var scheduler = new PullAdapterScheduler();
+    var fourthInvocation = new CountDownLatch(1);
+    SpMonitoringManager.INSTANCE.remove(adapterId);
+
+    try {
+      scheduler.schedule(new RepeatedlyFailingPullAdapter(fourthInvocation), adapterId);
+      assertTrue(fourthInvocation.await(2, TimeUnit.SECONDS));
+    } finally {
+      scheduler.shutdown();
+    }
+
+    try {
+      var logEntries = SpMonitoringManager.INSTANCE.getMonitoringInfo()
+          .getLogInfos()
+          .get(adapterId);
+      assertEquals(2, logEntries.size());
+    } finally {
+      SpMonitoringManager.INSTANCE.remove(adapterId);
     }
   }
 
@@ -60,6 +86,35 @@ class PullAdapterSchedulerTest {
         throw new IllegalStateException("first poll failed");
       }
       secondInvocation.countDown();
+    }
+
+    @Override
+    public IPollingSettings getPollingInterval() {
+      return PollingSettings.from(TimeUnit.MILLISECONDS, 10);
+    }
+  }
+
+  private static class RepeatedlyFailingPullAdapter implements IPullAdapter {
+
+    private final AtomicInteger invocations = new AtomicInteger();
+    private final CountDownLatch fourthInvocation;
+
+    private RepeatedlyFailingPullAdapter(CountDownLatch fourthInvocation) {
+      this.fourthInvocation = fourthInvocation;
+    }
+
+    @Override
+    public void pullData() {
+      int invocation = invocations.incrementAndGet();
+      try {
+        if (invocation == 1 || invocation == 2 || invocation == 4) {
+          throw new IllegalStateException("poll failed");
+        }
+      } finally {
+        if (invocation == 4) {
+          fourthInvocation.countDown();
+        }
+      }
     }
 
     @Override

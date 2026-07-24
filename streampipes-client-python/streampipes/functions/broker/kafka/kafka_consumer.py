@@ -16,7 +16,7 @@
 #
 
 import logging
-from typing import AsyncIterator
+from collections.abc import AsyncIterator
 
 from confluent_kafka import Consumer as KafkaConnection  # type: ignore
 

@@ -44,6 +44,7 @@ describe('Test asset filters', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         cy.importAssetResources();
+        AssetUtils.waitForAssets(['asset-1_0', 'asset-2_0', 'asset-3_0']);
         // This is currently required because the assets are only loaded on page load
         cy.reload();
     });

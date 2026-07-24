@@ -23,6 +23,7 @@ import org.apache.streampipes.model.client.user.PrincipalType;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.utils.Utils;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,17 +40,23 @@ import java.util.List;
 @RequestMapping("/api/v2/admin/users")
 public class UserAdminResource extends AbstractAuthGuardedRestResource {
 
+  private final IUserStorage userStorage;
+
+  public UserAdminResource(IUserStorage userStorage) {
+    this.userStorage = userStorage;
+  }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<List<Principal>> getAllUsers(
       @RequestParam(value = "type", required = false) String principalType) {
     List<Principal> allPrincipals = new ArrayList<>();
     if (principalType != null && principalType.equals(PrincipalType.USER_ACCOUNT.name())) {
-      allPrincipals.addAll(getUserStorage().getAllUserAccounts());
+      allPrincipals.addAll(userStorage.getAllUserAccounts());
     } else if (principalType != null && principalType.equals(PrincipalType.SERVICE_ACCOUNT.name())) {
-      allPrincipals.addAll(getUserStorage().getAllServiceAccounts());
+      allPrincipals.addAll(userStorage.getAllServiceAccounts());
     } else {
-      allPrincipals.addAll(getUserStorage().getAllUsers());
+      allPrincipals.addAll(userStorage.getAllUsers());
     }
     Utils.removeCredentials(allPrincipals);
     return ok(allPrincipals);

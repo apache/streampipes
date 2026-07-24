@@ -167,7 +167,6 @@ public class LoadManager {
 
   public static void migrateForHealthCheck(List<SpServiceRegistration> needDeletedServices,
                                            SpResourceManager resourceManager) {
-    var pipelineStorage = resourceManager.managePipelines().getDb();
     if (!environment.getLoadManagerEnable().getValueOrDefault() || loadBalancer == null) {
       return;
     }
@@ -201,7 +200,7 @@ public class LoadManager {
                                          loadBalanceResourceUnit.getLabels());
               if (targetService != null) {
                 ResourceUnitMigration.migrationForHealth(loadBalanceResourceUnit, targetService,
-                                                         service, pipelineStorage);
+                                                         service, resourceManager);
               }
             }
           }

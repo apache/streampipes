@@ -23,7 +23,6 @@ __all__ = [
     "Versions",
 ]
 
-from typing import Type
 
 from streampipes.model.container.resource_container import ResourceContainer
 from streampipes.model.resource import Version
@@ -45,7 +44,7 @@ class Versions(ResourceContainer):
     """
 
     @classmethod
-    def _resource_cls(cls) -> Type[Resource]:
+    def _resource_cls(cls) -> type[Resource]:
         """Returns the class of the resource that are bundled.
 
         Returns

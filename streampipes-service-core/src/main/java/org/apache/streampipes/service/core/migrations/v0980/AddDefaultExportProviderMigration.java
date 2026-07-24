@@ -21,14 +21,16 @@ package org.apache.streampipes.service.core.migrations.v0980;
 import org.apache.streampipes.model.configuration.DefaultExportProviderConfig;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
 
 public class AddDefaultExportProviderMigration implements Migration {
 
-  private final ISpCoreConfigurationStorage storage = StorageDispatcher.INSTANCE.getNoSqlStore()
-      .getSpCoreConfigurationStorage();
+  private final ISpCoreConfigurationStorage storage;
+
+  public AddDefaultExportProviderMigration(ISpCoreConfigurationStorage storage) {
+    this.storage = storage;
+  }
 
   @Override
   public boolean shouldExecute() {

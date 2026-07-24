@@ -23,21 +23,16 @@ import {
 } from '../../../model/editor.model';
 import { PipelineElementTypeUtils } from '../../../utils/editor.utils';
 import { EditorService } from '../../../services/editor.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatTooltip } from '@angular/material/tooltip';
 import { NgClass } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import {
     PipelineElementComponent,
     SpLabelComponent,
     SpAssetBrowserService,
     SpTableAssetContextService,
 } from '@streampipes/shared-ui';
-import { MatButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SpDataStream } from '@streampipes/platform-services';
 import { SpTableResolvedAssetContext } from '@streampipes/shared-ui';
@@ -48,15 +43,12 @@ import { map } from 'rxjs';
     templateUrl: './pipeline-element-icon-stand-row.component.html',
     styleUrls: ['./pipeline-element-icon-stand-row.component.scss'],
     imports: [
-        LayoutDirective,
-        FlexDirective,
         MatTooltip,
         NgClass,
-        ClassDirective,
         PipelineElementComponent,
         SpLabelComponent,
-        LayoutAlignDirective,
-        MatButton,
+        MatIconButton,
+        MatIcon,
     ],
 })
 export class PipelineElementIconStandRowComponent implements OnInit {

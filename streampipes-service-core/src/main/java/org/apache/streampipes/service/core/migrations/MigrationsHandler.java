@@ -30,7 +30,7 @@ public class MigrationsHandler {
   private static final Logger LOG = LoggerFactory.getLogger(MigrationsHandler.class);
 
   public void performMigrations(List<Migration> availableMigrations) {
-    LOG.info("Running required migrations...");
+    LOG.info("Applying required migrations");
     availableMigrations.forEach(migration -> {
       if (migration.shouldExecute()) {
         LOG.info("Performing migration: {}", migration.getDescription());

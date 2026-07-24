@@ -33,9 +33,7 @@ public class StreamPipesApplicationPackage {
   private Set<String> assets;
   private Set<String> adapters;
   private Set<String> dashboards;
-  private Set<String> dashboardWidgets;
   private Set<String> dataViews;
-  private Set<String> dataViewWidgets;
   private Set<String> dataLakeMeasures;
   private Set<String> dataSources;
   private Set<String> pipelines;
@@ -50,9 +48,7 @@ public class StreamPipesApplicationPackage {
     this.adapters = new HashSet<>();
     this.assets = new HashSet<>();
     this.dashboards = new HashSet<>();
-    this.dashboardWidgets = new HashSet<>();
     this.dataViews = new HashSet<>();
-    this.dataViewWidgets = new HashSet<>();
     this.dataLakeMeasures = new HashSet<>();
     this.dataSources = new HashSet<>();
     this.pipelines = new HashSet<>();
@@ -108,18 +104,6 @@ public class StreamPipesApplicationPackage {
     this.dashboards.add(dashboard);
   }
 
-  public Set<String> getDashboardWidgets() {
-    return dashboardWidgets;
-  }
-
-  public void setDashboardWidgets(Set<String> dashboardWidgets) {
-    this.dashboardWidgets = dashboardWidgets;
-  }
-
-  public void addDashboardWidget(String dashboardWidget) {
-    this.dashboardWidgets.add(dashboardWidget);
-  }
-
   public Set<String> getDataViews() {
     return dataViews;
   }
@@ -130,18 +114,6 @@ public class StreamPipesApplicationPackage {
 
   public void addDataView(String dataView) {
     this.dataViews.add(dataView);
-  }
-
-  public Set<String> getDataViewWidgets() {
-    return dataViewWidgets;
-  }
-
-  public void setDataViewWidgets(Set<String> dataViewWidgets) {
-    this.dataViewWidgets = dataViewWidgets;
-  }
-
-  public void addDataViewWidget(String dataViewWidget) {
-    this.dataViewWidgets.add(dataViewWidget);
   }
 
   public Set<String> getDataLakeMeasures() {

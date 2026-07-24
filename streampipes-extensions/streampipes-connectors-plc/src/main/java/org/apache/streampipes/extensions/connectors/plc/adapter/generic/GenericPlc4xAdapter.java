@@ -79,7 +79,14 @@ public class GenericPlc4xAdapter implements StreamPipesAdapter, SupportsRuntimeC
     var settings = new Plc4xConnectionExtractor(
         extractor.getStaticPropertyExtractor(), driver.getProtocolCode()
     ).makeSettings();
-    var plcRequestReader = new ContinuousPlcRequestReader(connectionManager, settings, requestProvider, collector);
+    var adapterName = extractor.getAdapterDescription().getName();
+    var plcRequestReader = new ContinuousPlcRequestReader(
+        connectionManager,
+        settings,
+        requestProvider,
+        collector,
+        adapterName
+    );
     this.pullAdapterScheduler = new PullAdapterScheduler();
     this.pullAdapterScheduler.schedule(plcRequestReader, extractor.getAdapterDescription().getElementId());
   }

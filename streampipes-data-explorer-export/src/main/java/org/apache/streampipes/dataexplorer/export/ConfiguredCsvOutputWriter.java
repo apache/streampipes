@@ -78,7 +78,9 @@ public class ConfiguredCsvOutputWriter extends ConfiguredOutputWriter {
 
   private String makeHeaderLine(List<String> columns) {
     StringJoiner joiner = new StringJoiner(this.delimiter);
-    columns.forEach(c -> joiner.add(getHeaderName(schema, c, headerColumnNameStrategy)));
+    columns.forEach(c -> joiner.add(
+        itemGenerator.encodeCsvValue(getHeaderName(schema, c, headerColumnNameStrategy))
+    ));
     return joiner + LINE_SEPARATOR;
   }
 }

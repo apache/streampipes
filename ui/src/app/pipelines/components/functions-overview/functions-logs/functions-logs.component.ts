@@ -28,6 +28,7 @@ import {
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { SpSimpleLogsComponent } from '../../../../core-ui/monitoring/simple-logs/simple-logs.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-functions-logs',
@@ -41,6 +42,7 @@ import { SpSimpleLogsComponent } from '../../../../core-ui/monitoring/simple-log
         MatIconButton,
         MatTooltip,
         SpSimpleLogsComponent,
+        TranslatePipe,
     ],
 })
 export class SpFunctionsLogsComponent

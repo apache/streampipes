@@ -19,13 +19,11 @@
 @use './variables';
 
 .sp-no-padding-dialog .mat-dialog-container {
-    box-shadow:
-        0 11px 15px -7px rgba(0, 0, 0, 0.2),
-        0 24px 38px 3px rgba(0, 0, 0, 0.14),
-        0 9px 46px 8px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-overlay);
     display: block;
-    padding: 0px;
-    border-radius: 2px;
+    padding: 0;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
     box-sizing: border-box;
     overflow: auto;
     outline: 0;
@@ -34,13 +32,11 @@
 }
 
 .sp.no-padding-dialog .mat-dialog-container .md-dialog {
-    box-shadow:
-        0 11px 15px -7px rgba(0, 0, 0, 0.2),
-        0 24px 38px 3px rgba(0, 0, 0, 0.14),
-        0 9px 46px 8px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-overlay);
     display: block;
-    padding: 0px;
-    border-radius: 2px;
+    padding: 0;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
     box-sizing: border-box;
     overflow: auto;
     outline: 0;
@@ -49,8 +45,9 @@
 }
 
 .sp-no-padding-dialog .mat-dialog-container .md-dialog .md-toolbar {
-    background: var(--color-secondary);
-    color: white;
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+    border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .sp-no-padding-dialog .mat-dialog-container .md-dialog .md-dialog-content {
@@ -76,10 +73,11 @@
     padding-left: 16px;
     min-height: 52px;
     overflow: hidden;
-    border-top: 1px solid #cccccc;
+    border-top: 1px solid var(--color-border-subtle);
 }
 
 .custom-dialog-container .mat-dialog-container {
-    padding: 0px;
+    padding: 0;
     overflow: auto;
+    border-radius: var(--radius-md);
 }

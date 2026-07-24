@@ -24,8 +24,8 @@ import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.mail.SpEmail;
 import org.apache.streampipes.model.opcua.Certificate;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +47,15 @@ public class CertificateExpiryEmailScheduler implements SchedulingConfigurer {
   private static final Logger LOG = LoggerFactory.getLogger(CertificateExpiryEmailScheduler.class);
 
   private static final String SUBJECT = "Upcoming certificate expirations — action required";
+
+  private final ISpCoreConfigurationStorage coreConfigurationStorage;
+  private final IUserStorage userStorage;
+
+  public CertificateExpiryEmailScheduler(ISpCoreConfigurationStorage coreConfigurationStorage,
+                                         IUserStorage userStorage) {
+    this.coreConfigurationStorage = coreConfigurationStorage;
+    this.userStorage = userStorage;
+  }
 
   public void checkForExpiringCertificates() {
 
@@ -94,7 +103,7 @@ public class CertificateExpiryEmailScheduler implements SchedulingConfigurer {
   }
 
   private List<String> getEmailAddressesOfAdmins() {
-    return getUserStorageAPI()
+    return userStorage
         .getAllUserAccounts()
         .stream()
         .filter(u -> u.getRoles().contains(DefaultRole.ROLE_ADMIN.name()))
@@ -114,7 +123,7 @@ public class CertificateExpiryEmailScheduler implements SchedulingConfigurer {
   private void sendEmail(List<String> recipients, String message) {
     var email = SpEmail.from(recipients, SUBJECT, message);
     try {
-      new MailSender().sendEmail(email);
+      new MailSender(coreConfigurationStorage.get()).sendEmail(email);
     } catch (IOException e) {
       LOG.error("Failed to send certificate expiry email to {}", recipients, e);
     }
@@ -139,9 +148,4 @@ public class CertificateExpiryEmailScheduler implements SchedulingConfigurer {
                  })
                  .toList();
   }
-
-  private IUserStorage getUserStorageAPI() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
-  }
-
 }

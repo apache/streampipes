@@ -16,40 +16,45 @@
  *
  */
 
-.statusValue {
-    font-size: 40pt;
-    background: darkblue;
-    color: white;
-    margin: 5px;
-    min-height: 140px;
-    padding: 15px;
-}
-
-.statusValue > h4 {
-    font-size: 20pt;
-    margin-bottom: 30px;
-}
-
-.fix-margin {
-    margin-top: -5px;
+:host {
+    display: block;
+    width: 100%;
+    --status-widget-color: var(--color-primary);
+    --status-widget-bg: color-mix(
+        in srgb,
+        var(--status-widget-color) 10%,
+        var(--color-bg-0)
+    );
 }
 
 .status-container {
-    height: 150px;
     width: 100%;
-    color: var(--color-primary);
-    border-radius: 5px;
-    margin-bottom: 20px;
-    border: 2px solid var(--color-bg-2);
-    background: var(--color-bg-2);
-    border-bottom: 5px solid var(--color-primary);
+    min-height: 7rem;
+    box-sizing: border-box;
+    color: var(--status-widget-color);
+    border-radius: var(--radius-md);
+    background: var(--status-widget-bg);
+    overflow: hidden;
 }
 
 .status-container-value {
-    font-size: 36pt;
-    font-weight: bold;
+    min-width: 0;
+    color: var(--status-widget-color);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    letter-spacing: -0.02em;
+    text-align: center;
+    overflow-wrap: anywhere;
 }
 
 .status-container-label {
-    font-size: 14pt;
+    color: color-mix(in srgb, var(--status-widget-color) 82%, transparent);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-normal);
+}
+
+.status-container.p-10 {
+    padding: var(--space-md);
 }

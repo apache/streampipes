@@ -16,32 +16,18 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { AssetSaveService, DialogRef } from '@streampipes/shared-ui';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { DialogRef } from '@streampipes/shared-ui';
 import {
-    DatalakeRestService,
-    DataSinkInvocation,
-    LinkageData,
+    MeasurementUpdateInfo,
     Message,
     Pipeline,
     PipelineCanvasMetadata,
     PipelineCanvasMetadataService,
     PipelineOperationStatus,
-    MeasurementUpdateInfo,
     PipelineService,
-    SpAssetTreeNode,
 } from '@streampipes/platform-services';
-import { EditorService } from '../../services/editor.service';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { UntypedFormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
-import {
-    InvocablePipelineElementUnion,
-    PipelineStorageOptions,
-} from '../../model/editor.model';
-import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
-import { firstValueFrom, lastValueFrom, Observable, of, tap } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import {
     Status,
     StatusIndicator,
@@ -53,12 +39,16 @@ import {
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { SavePipelineSettingsComponent } from './save-pipeline-settings/save-pipeline-settings.component';
 import { MultiStepStatusIndicatorComponent } from '../../../core-ui/multi-step-status-indicator/multi-step-status-indicator.component';
 import { MatDivider } from '@angular/material/divider';
 import { PipelineStartedStatusComponent } from '../../../core-ui/pipeline/pipeline-started-status/pipeline-started-status.component';
 import { MatButton } from '@angular/material/button';
 import { SavePipelineUpdateMigrationComponent } from './save-pipeline-update-migration/save-pipeline-update-migration.component';
+
+export interface SavePipelineDialogResult {
+    success: boolean;
+    pipelineId?: string;
+}
 
 @Component({
     selector: 'sp-save-pipeline',
@@ -67,178 +57,98 @@ import { SavePipelineUpdateMigrationComponent } from './save-pipeline-update-mig
     imports: [
         FlexDirective,
         LayoutDirective,
-        SavePipelineSettingsComponent,
+        LayoutGapDirective,
         MultiStepStatusIndicatorComponent,
         MatDivider,
         PipelineStartedStatusComponent,
-        LayoutGapDirective,
         MatButton,
         TranslatePipe,
         SavePipelineUpdateMigrationComponent,
     ],
 })
 export class SavePipelineComponent implements OnInit {
-    private editorService = inject(EditorService);
     private dialogRef = inject(DialogRef<SavePipelineComponent>);
-    private idGeneratorService = inject(IdGeneratorService);
     private pipelineService = inject(PipelineService);
-    private router = inject(Router);
-    private shepherdService = inject(ShepherdService);
     private pipelineCanvasService = inject(PipelineCanvasMetadataService);
-    private assetSaveService = inject(AssetSaveService);
-    private dataLakeService = inject(DatalakeRestService);
     private translateService = inject(TranslateService);
 
     @Input()
     pipeline: Pipeline;
 
     @Input()
-    originalPipeline: Pipeline;
-
-    selectedAssets: SpAssetTreeNode[];
-    deselectedAssets: SpAssetTreeNode[];
-    originalAssets: SpAssetTreeNode[];
+    originalPipeline?: Pipeline;
 
     @Input()
     pipelineCanvasMetadata: PipelineCanvasMetadata;
+
+    @Input()
+    startPipelineAfterStorage = true;
+
+    @Input()
+    updateExisting = false;
 
     operationProgress = false;
     operationCompleted = false;
     operationSuccess = false;
 
-    errorMessage = '';
     pipelineId: string;
-
-    storageOptions: PipelineStorageOptions = {
-        updateMode: 'update',
-        startPipelineAfterStorage: true,
-        navigateToPipelineOverview: true,
-        updateModeActive: false,
-    };
-
-    submitPipelineForm: UntypedFormGroup = new UntypedFormGroup({});
     statusIndicators: StatusIndicator[] = [];
-    finalPipelineOperationStatus: PipelineOperationStatus;
-    pipelineAction: PipelineAction;
+    finalPipelineOperationStatus?: PipelineOperationStatus;
+    pipelineAction?: PipelineAction;
     pipelineUpdatePreflight = false;
     measurementUpdateInfos: MeasurementUpdateInfo[] = [];
 
-    ngOnInit() {
-        this.storageOptions.updateModeActive =
-            this.originalPipeline !== undefined;
-        if (this.storageOptions.updateModeActive) {
-            this.pipeline._id = this.originalPipeline._id;
-            this.pipeline.name = this.originalPipeline.name;
-            this.pipeline.description = this.originalPipeline.description;
-            this.pipeline.running = this.originalPipeline.running;
-            this.pipeline.createdAt = this.originalPipeline.createdAt;
-            this.pipeline.createdByUser = this.originalPipeline.createdByUser;
-        }
-
-        if (this.shepherdService.isTourActive()) {
-            this.shepherdService.trigger('enter-pipeline-name');
-        }
+    ngOnInit(): void {
+        void this.savePipeline();
     }
 
-    performStorageOperations(
-        stopPipeline$: Observable<null | PipelineOperationStatus>,
-        savePipeline$: Observable<Message>,
-    ) {
-        // if pipeline is running and update mode: stop pipeline
-        // if update mode: update pipeline, if not update mode or update mode clone: save pipeline
-        // if update mode and not clone: update canvas, else store new canvas
-        // if should start: start pipeline
-        stopPipeline$
-            .pipe(
-                tap(() =>
-                    this.addStatusIndicator(
-                        this.translateService.instant('Saving pipeline'),
-                        Status.PROGRESS,
-                    ),
-                ),
-                switchMap(() => savePipeline$),
-                tap(message => {
-                    this.operationSuccess = message.success;
-                    if (!message.success) {
-                        this.handleStorageError();
-                    }
-                    this.modifyStatusIndicator(Status.SUCCESS);
-                    this.pipelineId = message.notifications[1].description;
-                }),
-                // only continue if pipeline was saved
-                filter(message => message.success),
-                tap(() =>
-                    this.addStatusIndicator(
-                        this.translateService.instant('Saving metadata'),
-                        Status.PROGRESS,
-                    ),
-                ),
-                switchMap(() =>
-                    this.getPipelineCanvasMetadata$(this.pipelineId),
-                ),
-                tap(() => this.modifyStatusIndicator(Status.SUCCESS)),
-                switchMap(() => this.getStartPipeline$()),
-            )
-            .subscribe({
-                next: message => {
-                    this.onSuccess(message);
-                    // Add Asset as soon as pipelineId is known
-                    this.addToAsset();
-                },
-                error: msg => {
-                    this.onFailure(msg);
-                },
-            });
-    }
-
-    clonePipeline(): void {
-        this.pipeline._id = undefined;
-        this.pipeline._rev = undefined;
-        this.pipeline.running = false;
-        this.pipeline.actions.forEach(element => this.updateId(element));
-        this.pipeline.sepas.forEach(element => this.updateId(element));
-        this.pipelineCanvasMetadata._id = undefined;
-        this.pipelineCanvasMetadata._rev = undefined;
-    }
-
-    savePipeline(skipPreflight = false) {
-        if (this.shouldPerformUpdatePreflight(skipPreflight)) {
-            this.performUpdatePreflight();
+    async savePipeline(skipPreflight = false): Promise<void> {
+        if (await this.shouldPerformUpdatePreflight(skipPreflight)) {
+            await this.performUpdatePreflight();
             return;
         }
 
         this.pipelineUpdatePreflight = false;
-        let stopPipeline$: Observable<null | PipelineOperationStatus> =
-            of(null);
-        let savePipeline$: Observable<Message> =
-            this.pipelineService.storePipeline(this.pipeline);
         this.operationProgress = true;
-        if (this.storageOptions.updateModeActive) {
-            if (this.storageOptions.updateMode === 'clone') {
-                this.clonePipeline();
-            } else {
-                if (this.pipeline.running) {
-                    stopPipeline$ = this.getStopPipeline$();
+
+        try {
+            if (this.updateExisting && this.pipeline.running) {
+                const stopResult = await this.stopPipeline();
+                if (!stopResult.success) {
+                    return;
                 }
-                savePipeline$ = this.pipelineService.updatePipeline(
-                    this.pipeline,
-                );
             }
+
+            const saveMessage = await this.storeOrUpdatePipeline();
+            if (!saveMessage.success) {
+                this.handleStorageError();
+                return;
+            }
+
+            this.pipelineId = this.getPipelineId(saveMessage);
+            if (!this.pipelineId) {
+                this.handleStorageError();
+                return;
+            }
+
+            this.pipeline._id = this.pipelineId;
+            await this.savePipelineCanvasMetadata();
+            if (!(await this.startPipelineIfRequested())) {
+                return;
+            }
+            this.onSuccess();
+        } catch {
+            this.onFailure();
         }
-
-        this.performStorageOperations(stopPipeline$, savePipeline$);
     }
 
-    shouldPerformUpdatePreflight(skipPreflight: boolean): boolean {
-        return (
-            !skipPreflight &&
-            this.storageOptions.updateModeActive &&
-            this.storageOptions.updateMode !== 'clone' &&
-            this.hasDataLakeSink()
-        );
+    private async shouldPerformUpdatePreflight(
+        skipPreflight: boolean,
+    ): Promise<boolean> {
+        return !skipPreflight && this.updateExisting && this.hasDataLakeSink();
     }
 
-    hasDataLakeSink(): boolean {
+    private hasDataLakeSink(): boolean {
         return this.pipeline.actions.some(
             action =>
                 action.appId ===
@@ -246,131 +156,131 @@ export class SavePipelineComponent implements OnInit {
         );
     }
 
-    performUpdatePreflight(): void {
+    private async performUpdatePreflight(): Promise<void> {
         this.operationProgress = true;
         this.addStatusIndicator(
             this.translateService.instant('Checking pipeline update'),
             Status.PROGRESS,
         );
-        this.pipelineService
-            .performPipelineMigrationPreflight(this.pipeline)
-            .subscribe({
-                next: updateInfos => {
-                    if (updateInfos.length === 0) {
-                        this.modifyStatusIndicator(Status.SUCCESS);
-                        this.savePipeline(true);
-                    } else {
-                        this.measurementUpdateInfos = updateInfos;
-                        this.pipelineUpdatePreflight = true;
-                        this.operationProgress = false;
-                        this.statusIndicators = [];
-                    }
-                },
-                error: msg => {
-                    this.onFailure(msg);
-                },
-            });
-    }
 
-    updateId(entity: InvocablePipelineElementUnion) {
-        const lastIdIndex = entity.elementId.lastIndexOf(':');
-        entity.elementId =
-            entity.elementId.substring(0, lastIdIndex + 1) +
-            this.idGeneratorService.generate(5);
-    }
-
-    getStopPipeline$(): Observable<PipelineOperationStatus> {
-        return of(null).pipe(
-            tap(() =>
-                this.addStatusIndicator(
-                    this.translateService.instant('Stopping pipeline'),
-                    Status.PROGRESS,
+        try {
+            const updateInfos = await firstValueFrom(
+                this.pipelineService.performPipelineMigrationPreflight(
+                    this.pipeline,
                 ),
-            ),
-            switchMap(() =>
-                this.pipelineService.stopPipeline(this.originalPipeline._id),
-            ),
-            tap(msg => {
-                this.operationSuccess = msg.success;
-                if (!msg.success) {
-                    this.handlePipelineOperationError(msg, PipelineAction.Stop);
-                } else {
-                    this.modifyStatusIndicator(Status.SUCCESS);
-                }
-            }),
-            filter(status => status.success),
+            );
+
+            if (updateInfos.length === 0) {
+                this.modifyStatusIndicator(Status.SUCCESS);
+                await this.savePipeline(true);
+            } else {
+                this.measurementUpdateInfos = updateInfos;
+                this.pipelineUpdatePreflight = true;
+                this.operationProgress = false;
+                this.statusIndicators = [];
+            }
+        } catch {
+            this.onFailure();
+        }
+    }
+
+    private async stopPipeline(): Promise<PipelineOperationStatus> {
+        this.addStatusIndicator(
+            this.translateService.instant('Stopping pipeline'),
+            Status.PROGRESS,
+        );
+        const stopResult = await firstValueFrom(
+            this.pipelineService.stopPipeline(this.originalPipeline._id),
+        );
+        this.operationSuccess = stopResult.success;
+        if (!stopResult.success) {
+            this.handlePipelineOperationError(stopResult, PipelineAction.Stop);
+        } else {
+            this.modifyStatusIndicator(Status.SUCCESS);
+        }
+        return stopResult;
+    }
+
+    private async storeOrUpdatePipeline(): Promise<Message> {
+        this.addStatusIndicator(
+            this.translateService.instant('Saving pipeline'),
+            Status.PROGRESS,
+        );
+        const saveMessage = this.updateExisting
+            ? await firstValueFrom(
+                  this.pipelineService.updatePipeline(this.pipeline),
+              )
+            : await firstValueFrom(
+                  this.pipelineService.storePipeline(this.pipeline),
+              );
+        this.operationSuccess = saveMessage.success;
+        this.modifyStatusIndicator(
+            saveMessage.success ? Status.SUCCESS : Status.FAILURE,
+        );
+        return saveMessage;
+    }
+
+    private getPipelineId(saveMessage: Message): string {
+        return (
+            (this.updateExisting ? this.originalPipeline?._id : undefined) ??
+            saveMessage.notifications?.[1]?.description
         );
     }
 
-    getStartPipeline$(): Observable<null | PipelineOperationStatus> {
-        if (this.storageOptions.startPipelineAfterStorage) {
-            return of(null).pipe(
-                tap(() =>
-                    this.addStatusIndicator(
-                        this.translateService.instant('Starting pipeline'),
-                        Status.PROGRESS,
-                    ),
-                ),
-                switchMap(() =>
-                    this.pipelineService.startPipeline(this.pipelineId),
-                ),
-                tap(msg => {
-                    if (!msg.success) {
-                        this.handlePipelineOperationError(
-                            msg,
-                            PipelineAction.Start,
-                        );
-                    } else {
-                        this.modifyStatusIndicator(
-                            msg.success ? Status.SUCCESS : Status.FAILURE,
-                        );
-                    }
-                }),
-            );
-        } else {
-            return of(null);
-        }
-    }
-
-    getPipelineCanvasMetadata$(pipelineId: string): Observable<object> {
-        let request;
-        this.pipelineCanvasMetadata.pipelineId = pipelineId;
-        if (this.storageOptions.updateModeActive) {
-            request = this.pipelineCanvasService.updatePipelineCanvasMetadata(
+    private async savePipelineCanvasMetadata(): Promise<void> {
+        this.addStatusIndicator(
+            this.translateService.instant('Saving metadata'),
+            Status.PROGRESS,
+        );
+        this.pipelineCanvasMetadata.pipelineId = this.pipelineId;
+        await firstValueFrom(
+            this.pipelineCanvasService.updatePipelineCanvasMetadata(
+                this.pipelineId,
                 this.pipelineCanvasMetadata,
-            );
-        } else {
-            this.pipelineCanvasMetadata._id = undefined;
-            this.pipelineCanvasMetadata._rev = undefined;
-            request = this.pipelineCanvasService.addPipelineCanvasMetadata(
-                this.pipelineCanvasMetadata,
-            );
+            ),
+        );
+        this.modifyStatusIndicator(Status.SUCCESS);
+    }
+
+    private async startPipelineIfRequested(): Promise<boolean> {
+        if (!this.startPipelineAfterStorage) {
+            return true;
         }
-        return request;
+
+        this.addStatusIndicator(
+            this.translateService.instant('Starting pipeline'),
+            Status.PROGRESS,
+        );
+        const startResult = await firstValueFrom(
+            this.pipelineService.startPipeline(this.pipelineId),
+        );
+        if (!startResult.success) {
+            this.handlePipelineOperationError(
+                startResult,
+                PipelineAction.Start,
+            );
+            return false;
+        } else {
+            this.modifyStatusIndicator(Status.SUCCESS);
+            this.showPipelineOperationStatus(startResult, PipelineAction.Start);
+        }
+        return true;
     }
 
-    addStatusIndicator(message: string, status: Status) {
-        this.statusIndicators.push({ message, status });
-    }
-
-    modifyStatusIndicator(status: Status) {
-        // modify status of the last indicator
-        this.statusIndicators[this.statusIndicators.length - 1].status = status;
-    }
-
-    handleStorageError(): void {
+    private handleStorageError(): void {
         this.onFailure();
     }
 
-    handlePipelineOperationError(
+    private handlePipelineOperationError(
         status: PipelineOperationStatus,
         pipelineAction: PipelineAction,
-    ) {
+    ): void {
         this.onFailure();
         this.showPipelineOperationStatus(status, pipelineAction);
     }
 
-    onFailure(_msg?: any) {
+    private onFailure(): void {
+        this.operationProgress = false;
         this.operationCompleted = true;
         this.operationSuccess = false;
         if (this.statusIndicators.length > 0) {
@@ -378,97 +288,32 @@ export class SavePipelineComponent implements OnInit {
         }
     }
 
-    showPipelineOperationStatus(
+    private showPipelineOperationStatus(
         status: PipelineOperationStatus,
         pipelineAction: PipelineAction,
-    ) {
+    ): void {
         this.finalPipelineOperationStatus = status;
         this.pipelineAction = pipelineAction;
     }
 
-    onSuccess(status?: PipelineOperationStatus) {
+    private onSuccess(): void {
         this.operationProgress = false;
         this.operationCompleted = true;
-        if (status) {
-            this.showPipelineOperationStatus(status, PipelineAction.Start);
-        }
-        this.editorService.makePipelineAssemblyEmpty(true);
-        this.editorService.removePipelineFromCache().subscribe();
-        if (this.shepherdService.isTourActive()) {
-            this.shepherdService.hideCurrentStep();
-        }
-        if (this.storageOptions.navigateToPipelineOverview && status?.success) {
-            this.navigateToPipelineOverview();
-        }
+        this.operationSuccess = true;
     }
 
-    navigateToPipelineOverview(): void {
-        this.hide(true);
-        this.router.navigate(['pipelines']);
+    addStatusIndicator(message: string, status: Status): void {
+        this.statusIndicators.push({ message, status });
     }
 
-    hide(skipReload: boolean) {
-        let reloadConfig = undefined;
-        if (!skipReload) {
-            reloadConfig = this.operationSuccess
-                ? { reload: true, pipelineId: this.pipelineId }
-                : undefined;
-        }
-        this.dialogRef.close(reloadConfig);
+    modifyStatusIndicator(status: Status): void {
+        this.statusIndicators[this.statusIndicators.length - 1].status = status;
     }
 
-    async addToAsset(): Promise<void> {
-        let linkageData: LinkageData[] = [];
-        linkageData = await this.addPipelineLinkageData(linkageData);
-
-        await this.saveAssets(linkageData);
-    }
-    private async addPipelineLinkageData(
-        linkageData: LinkageData[],
-    ): Promise<LinkageData[]> {
-        const pipeline = await firstValueFrom(
-            this.pipelineService.getPipelineById(this.pipelineId),
-        );
-
-        linkageData.push({
-            type: 'pipeline',
-            id: this.pipelineId,
-            name: pipeline.name,
-        });
-
-        const serviceList: DataSinkInvocation[] =
-            pipeline.actions as DataSinkInvocation[];
-        const dataSinkServices: DataSinkInvocation[] = serviceList.filter(
-            action => action.serviceTagPrefix === 'DATA_SINK',
-        );
-
-        for (const service of dataSinkServices) {
-            const staticProperty = service.staticProperties.find(
-                prop => prop.internalName === 'db_measurement',
-            );
-
-            const measureFromPipeline = (staticProperty as { value: string })
-                .value;
-
-            const measure = await lastValueFrom(
-                this.dataLakeService.getMeasurementByName(measureFromPipeline),
-            );
-
-            linkageData.push({
-                type: 'measurement',
-                id: measure.elementId,
-                name: measureFromPipeline,
-            });
-        }
-        return linkageData;
-    }
-
-    private async saveAssets(linkageData: LinkageData[]): Promise<void> {
-        await this.assetSaveService.saveSelectedAssets(
-            this.selectedAssets,
-            linkageData,
-            this.deselectedAssets,
-            this.originalAssets,
-        );
+    close(): void {
+        this.dialogRef.close({
+            success: this.operationSuccess,
+            pipelineId: this.pipelineId,
+        } satisfies SavePipelineDialogResult);
     }
 }

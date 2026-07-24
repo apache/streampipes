@@ -31,7 +31,7 @@ export class ChartWidgetTableUtils {
     }
 
     /**
-     * Checks how many rows are visible within the table widget in charts
+     * Checks how many rows are visible within a table chart.
      * @param amount of expected rows
      */
     public static checkAmountOfRows(amount: number) {

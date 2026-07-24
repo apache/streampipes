@@ -190,9 +190,5 @@ public class PipelineManager {
     pipeline.setHealthStatus(PipelineHealthStatus.OK);
     pipeline.setCreatedByUser(username);
     pipeline.setCreatedAt(new Date().getTime());
-    pipeline.getSepas()
-            .forEach(processor -> processor.setCorrespondingUser(username));
-    pipeline.getActions()
-            .forEach(action -> action.setCorrespondingUser(username));
   }
 }

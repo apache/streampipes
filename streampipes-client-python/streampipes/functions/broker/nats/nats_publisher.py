@@ -16,7 +16,7 @@
 #
 import json
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from nats import connect
 
@@ -48,7 +48,7 @@ class NatsPublisher(Publisher):
         self.nats_client = await connect([f"nats://{hostname}:{port}"])
         logger.info(f"Connecting to NATS at {hostname}:{port}")
 
-    async def publish_event(self, event: Dict[str, Any]):
+    async def publish_event(self, event: dict[str, Any]):
         """Publish an event to a connected data stream.
 
         Parameters

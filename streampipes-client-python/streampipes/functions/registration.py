@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import List
 
 from streampipes.functions.streampipes_function import StreamPipesFunction
 
@@ -30,7 +29,7 @@ class Registration:
     """
 
     def __init__(self) -> None:
-        self.functions: List[StreamPipesFunction] = []
+        self.functions: list[StreamPipesFunction] = []
 
     def register(self, streampipes_function: StreamPipesFunction):
         """Registers a new function.
@@ -48,7 +47,7 @@ class Registration:
         self.functions.append(streampipes_function)  # TODO register function to AdminAPI
         return self
 
-    def getFunctions(self) -> List[StreamPipesFunction]:
+    def getFunctions(self) -> list[StreamPipesFunction]:
         """Get all registered functions.
 
         This method exists to be consistent with the Java client.

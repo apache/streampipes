@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.manager.file;
 
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,12 @@ import java.io.InputStream;
 public class FileHandler {
 
   Logger logger = LoggerFactory.getLogger(FileHandler.class);
+
+  private final ISpCoreConfigurationStorage coreConfigurationStorage;
+
+  public FileHandler(ISpCoreConfigurationStorage coreConfigurationStorage) {
+    this.coreConfigurationStorage = coreConfigurationStorage;
+  }
 
   public void storeFile(String filename, InputStream fileInputStream) throws IOException {
     File targetFile = makeFile(filename);
@@ -68,7 +76,7 @@ public class FileHandler {
   }
 
   private String makeFileLocation() {
-    return FileConstants.FILES_BASE_DIR
+    return coreConfigurationStorage.get().getFilesDir()
         + File.separator;
   }
 }

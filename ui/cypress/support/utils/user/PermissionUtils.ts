@@ -58,6 +58,13 @@ export class PermissionUtils {
         PermissionUtils.save();
     }
 
+    public static markElementAsAnonymousPublic(resourceName: string) {
+        PermissionUtils.openManagePermissions(resourceName);
+        PermissionUtils.validateAnonymousPublicLinkOption();
+        StaticPropertyUtils.clickCheckbox('permission-anonymous-read');
+        PermissionUtils.save();
+    }
+
     public static markElementAsPublicInManageDialog() {
         StaticPropertyUtils.clickCheckbox('permission-public-element');
         PermissionUtils.saveManageDialog();
@@ -158,6 +165,14 @@ export class PermissionUtils {
         PermissionUtils.cancel();
     }
 
+    public static validateAnonymousPublicLinkIsEnabled(resourceName: string) {
+        PermissionUtils.openManagePermissions(resourceName);
+        PermissionUtils.validateAnonymousPublicLinkOption()
+            .find('input[type="checkbox"]')
+            .should('be.checked');
+        PermissionUtils.cancel();
+    }
+
     public static validateUserCanChangePermissionsInManageDialog() {
         cy.dataCy('permission-public-element').should('exist');
         PermissionUtils.cancelManageDialog();
@@ -166,5 +181,9 @@ export class PermissionUtils {
     public static validateUserCanNotChangePermissionsInManageDialog() {
         cy.dataCy('warning-permissions-managed-by-owner').should('exist');
         PermissionUtils.cancelManageDialog();
+    }
+
+    private static validateAnonymousPublicLinkOption() {
+        return cy.dataCy('permission-anonymous-read').should('exist');
     }
 }

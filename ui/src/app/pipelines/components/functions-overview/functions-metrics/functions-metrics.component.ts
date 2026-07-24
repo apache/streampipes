@@ -29,6 +29,7 @@ import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { KeyValuePipe } from '@angular/common';
 import { SpSimpleMetricsComponent } from '../../../../core-ui/monitoring/simple-metrics/simple-metrics.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-functions-metrics',
@@ -43,6 +44,7 @@ import { SpSimpleMetricsComponent } from '../../../../core-ui/monitoring/simple-
         MatTooltip,
         KeyValuePipe,
         SpSimpleMetricsComponent,
+        TranslatePipe,
     ],
 })
 export class SpFunctionsMetricsComponent

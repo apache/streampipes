@@ -16,39 +16,66 @@
 ~
 -->
 
-@for (msg of pipelineOperationStatus()?.elementStatus ?? []; track msg) {
-    <div fxFlex="100" fxLayout="column" class="status-outer mt-10">
-        <div fxFlex="100" fxLayout="column">
-            <div
-                fxFlex="100"
-                fxLayout="row"
-                fxLayoutAlign="start center"
-                class="p-15"
-            >
-                @if (msg.success) {
-                    <mat-icon color="accent">done</mat-icon>
-                }
-                @if (!msg.success) {
-                    <mat-icon style="color: red">warning</mat-icon>
-                }
-                <div fxFlex="100" fxLayout="column" class="ml-5">
-                    <span
-                        ><b>{{ msg.elementName }}</b></span
-                    >
-                    <small>{{
-                        msg.elementId.substr(0, msg.elementId.lastIndexOf('/'))
-                    }}</small>
+<div class="status-list" role="list">
+    @for (msg of elementStatuses(); track msg.elementId + $index) {
+        @if (!msg.success) {
+            <div class="status-entry status-error" role="listitem">
+                <sp-alert-banner
+                    type="error"
+                    [title]="msg.elementName || ('Error' | translate)"
+                >
+                    <div class="status-meta">
+                        <sp-label
+                            tone="error"
+                            size="small"
+                            variant="soft"
+                            shape="badge"
+                            textCase="uppercase"
+                            [labelText]="'Error' | translate"
+                        ></sp-label>
+                        @if (msg.elementId) {
+                            <code class="status-id" [title]="msg.elementId">{{
+                                getDisplayElementId(msg)
+                            }}</code>
+                        }
+                    </div>
+                    @if (msg.optionalMessage) {
+                        <pre
+                            class="error-detail"
+                            [textContent]="msg.optionalMessage"
+                        ></pre>
+                    }
+                </sp-alert-banner>
+            </div>
+        } @else {
+            <div class="status-entry status-success" role="listitem">
+                <mat-icon class="status-icon" aria-hidden="true"
+                    >check_circle</mat-icon
+                >
+                <div class="status-content">
+                    <div class="status-heading">
+                        <span class="status-name">{{ msg.elementName }}</span>
+                        <sp-label
+                            tone="success"
+                            size="small"
+                            variant="soft"
+                            shape="badge"
+                            textCase="uppercase"
+                            [labelText]="'Success' | translate"
+                        ></sp-label>
+                    </div>
+                    @if (msg.elementId) {
+                        <code class="status-id" [title]="msg.elementId">{{
+                            getDisplayElementId(msg)
+                        }}</code>
+                    }
+                    @if (msg.optionalMessage) {
+                        <div class="success-detail">
+                            {{ msg.optionalMessage }}
+                        </div>
+                    }
                 </div>
             </div>
-            <div>
-                @if (msg.optionalMessage) {
-                    <div fxFlex="100" fxLayout="column" class="mt-10">
-                        <div class="error-message">
-                            <div class="p-10">{{ msg.optionalMessage }}</div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-}
+        }
+    }
+</div>

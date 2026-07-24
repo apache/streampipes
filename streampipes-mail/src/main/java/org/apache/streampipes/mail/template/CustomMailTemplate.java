@@ -19,6 +19,7 @@
 package org.apache.streampipes.mail.template;
 
 import org.apache.streampipes.mail.template.generation.MailTemplateBuilder;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 
 import java.util.Map;
 
@@ -30,7 +31,9 @@ public class CustomMailTemplate extends AbstractMailTemplate {
 
   public CustomMailTemplate(String title,
                             String preheader,
-                            String content) {
+                            String content,
+                            SpCoreConfiguration configuration) {
+    super(configuration);
     this.title = title;
     this.preheader = preheader;
     this.content = content;

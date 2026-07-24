@@ -21,7 +21,7 @@ package org.apache.streampipes.rest.impl.admin;
 import org.apache.streampipes.model.client.user.Privilege;
 import org.apache.streampipes.rest.core.base.impl.DefaultCRUDRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class PrivilegeResource extends DefaultCRUDRestResource<Privilege> {
 
-  public PrivilegeResource() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getPrivilegeStorage());
+  public PrivilegeResource(IPrivilegeStorage privilegeStorage) {
+    super(privilegeStorage);
   }
 }

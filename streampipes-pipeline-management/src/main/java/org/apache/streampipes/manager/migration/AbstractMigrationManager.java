@@ -94,7 +94,7 @@ public abstract class AbstractMigrationManager {
       String serializedRequest = JacksonSerializer.getObjectMapper().writeValueAsString(migrationRequest);
 
       var migrationResponse = requestManager.request(
-          ExtensionServiceRequests.migration(requestTarget, serializedRequest)
+          ExtensionServiceRequests.migration(requestTarget, serializedRequest, resourceManager)
       );
 
       TypeReference<MigrationResult<T>> typeReference = new TypeReference<>() {
@@ -157,7 +157,7 @@ public abstract class AbstractMigrationManager {
       var entityPayload = requestManager
           .request(ExtensionServiceRequests.descriptionUpdate(requestTarget, resourceManager))
           .responseBody();
-      var updateResult = new TypeExtractor(entityPayload, requestManager, resourceManager.managePermissions())
+      var updateResult = new TypeExtractor(entityPayload, requestManager, resourceManager)
           .getTypeVerifier().verifyAndUpdate();
       if (!updateResult.isSuccess()) {
         LOG.error(

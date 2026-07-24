@@ -15,7 +15,8 @@
 # limitations under the License.
 #
 import asyncio
-from typing import Any, Coroutine, Dict
+from collections.abc import Coroutine
+from typing import Any
 
 from streampipes.functions.broker import Publisher, get_broker
 from streampipes.model.resource.data_stream import DataStream
@@ -41,7 +42,7 @@ class OutputCollector:
         self.publisher: Publisher = get_broker(data_stream, is_publisher=True)  # type: ignore
         self._run_coroutine(self.publisher.connect(data_stream))
 
-    def collect(self, event: Dict[str, Any]) -> None:
+    def collect(self, event: dict[str, Any]) -> None:
         """Publishes an event to the output stream.
 
         Parameters

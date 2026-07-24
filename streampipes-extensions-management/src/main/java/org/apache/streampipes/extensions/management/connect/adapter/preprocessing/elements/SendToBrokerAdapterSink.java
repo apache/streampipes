@@ -33,7 +33,7 @@ import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.util.Map;
 
-public class SendToBrokerAdapterSink implements IAdapterPipelineElement {
+public class SendToBrokerAdapterSink implements IAdapterPipelineElement, AutoCloseable {
 
   protected AdapterDescription adapterDescription;
   protected SpDataFormatDefinition dataFormatDefinition;
@@ -85,6 +85,11 @@ public class SendToBrokerAdapterSink implements IAdapterPipelineElement {
     producer.publish(event);
   }
 
+  @Override
+  public void close() {
+    producer.disconnect();
+  }
+
   public void modifyProtocolForDebugging(TransportProtocol protocol) {
     protocol.setBrokerHostname("localhost");
     if (protocol instanceof KafkaTransportProtocol) {
@@ -108,4 +113,3 @@ public class SendToBrokerAdapterSink implements IAdapterPipelineElement {
   }
 
 }
-

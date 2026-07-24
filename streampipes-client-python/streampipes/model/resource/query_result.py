@@ -16,7 +16,7 @@
 #
 
 from itertools import chain
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Literal
 
 import pandas as pd
 from pydantic import Field, StrictInt, StrictStr
@@ -38,7 +38,7 @@ class QueryResult(Resource):
     the Python representation (both serialized and deserialized) and Java representation (serialized only).
     """
 
-    def convert_to_pandas_representation(self) -> Dict[str, Union[List[str], List[List[Any]]]]:
+    def convert_to_pandas_representation(self) -> dict[str, list[str] | list[list[Any]]]:
         """Returns the dictionary representation of a data lake series
         to be used when creating a pandas Dataframe.
 
@@ -70,11 +70,11 @@ class QueryResult(Resource):
         }
 
     total: StrictInt
-    headers: List[StrictStr]
-    all_data_series: List[DataSeries]
+    headers: list[StrictStr]
+    all_data_series: list[DataSeries]
     query_status: Literal["OK", "TOO_MUCH_DATA"] = Field(alias="spQueryStatus")
     source_index: StrictInt
-    for_id: Optional[str] = None
+    for_id: str | None = None
     last_timestamp: StrictInt
 
     def to_pandas(self) -> pd.DataFrame:
@@ -97,7 +97,7 @@ class QueryResult(Resource):
         cls,
         df: pd.DataFrame,
         source_index: int = 0,
-        for_id: Optional[str] = None,
+        for_id: str | None = None,
         query_status: Literal["OK", "TOO_MUCH_DATA"] = "OK",
     ) -> "QueryResult":
         """Create a QueryResult object from a pandas DataFrame.

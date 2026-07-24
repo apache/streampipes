@@ -102,6 +102,68 @@ To render smaller inputs in a dense layout, assign the CSS class `form-field-sma
 
 You can also define an optional tooltip which is shown above the label.
 
+#### Search Select
+
+Use `sp-search-select` when users need to select one or more items from a searchable list, such as datasets, labels, sites, asset types, users, roles or groups.
+
+Keep data loading, persistence and feature-specific actions outside the component. For example, actions such as `Manage Labels` or refresh buttons should remain in the parent view, usually in the surrounding `sp-form-field` actions.
+
+Single-select example:
+
+```html
+<sp-search-select
+  [items]="availableMeasurements"
+  [(value)]="selectedMeasurement"
+  [placeholder]="'Search datasets' | translate"
+>
+</sp-search-select>
+```
+
+Multi-select example:
+
+```html
+<sp-search-select
+  [items]="labels"
+  [(value)]="selectedLabels"
+  [multiple]="true"
+  [placeholder]="'Add labels' | translate"
+>
+</sp-search-select>
+```
+
+The component keeps the selected value as the full object. It displays items by convention using `label`, `name`, `measureName`, `title`, `email`, `groupName`, `value`, `filename`, `assetName`, `_id` or `id`, and filters client-side by the displayed value.
+
+Objects with a `color` property are rendered as small `sp-label` badges in both the selected value and the dropdown. This covers labels without adding label-specific inputs to the component:
+
+```html
+<sp-search-select
+  [items]="labels"
+  [(value)]="selectedLabels"
+  [multiple]="true"
+  [placeholder]="'Add labels' | translate"
+>
+</sp-search-select>
+```
+
+Use optional templates only when the default text or colored-label rendering is not enough:
+
+```html
+<sp-search-select
+  [items]="users"
+  [(value)]="selectedUsers"
+  [multiple]="true"
+  [placeholder]="'Add users' | translate"
+>
+  <ng-template spSearchSelectOption let-user>
+    {{ user.email }} ({{ user.principalId }})
+  </ng-template>
+
+  <ng-template spSearchSelectChip let-user> {{ user.email }} </ng-template>
+</sp-search-select>
+```
+
+Do not add feature-specific inputs such as label color keys, server-side search, action slots or custom comparison functions unless there is a concrete reusable need. Prefer the minimal API and keep feature behavior in the parent component.
+
 #### Label
 
 Use form labels to ensure a consistent layout of forms and labels.
@@ -125,6 +187,34 @@ Use it as follows:
 
 Allowed types are `info`, `warning`, `error` and `success`.
 You can also add additional content to the banner.
+
+#### Progress bar
+
+Use `sp-progress-bar` when real progress is available. Provide the current `value`, the `max` value, and optional title or item label text.
+
+```html
+<sp-progress-bar
+  [title]="'Uploading CSV data' | translate"
+  [ariaLabel]="'CSV import progress' | translate"
+  [value]="processedRows"
+  [max]="totalRows"
+  [itemLabel]="'rows imported' | translate"
+></sp-progress-bar>
+```
+
+#### Spinner
+
+Use `sp-spinner` for indeterminate loading states where no real progress value is available. Prefer it over direct `mat-spinner` usage to keep loading indicators consistent.
+
+```html
+<sp-spinner [text]="'Loading assets' | translate" [diameter]="30"></sp-spinner>
+```
+
+For compact inline loading states, use a smaller diameter and row layout:
+
+```html
+<sp-spinner [diameter]="20" layout="row"></sp-spinner>
+```
 
 #### Tables
 

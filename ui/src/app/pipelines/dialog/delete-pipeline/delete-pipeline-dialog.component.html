@@ -82,11 +82,7 @@
         @if (isInProgress) {
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <div fxLayout="row" fxLayoutAlign="space-around">
-                    <mat-spinner
-                        [diameter]="50"
-                        [mode]="'indeterminate'"
-                        color="accent"
-                    ></mat-spinner>
+                    <sp-spinner [diameter]="50"></sp-spinner>
                 </div>
                 <b
                     ><h4>{{ currentStatus }}</h4></b

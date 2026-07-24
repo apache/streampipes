@@ -157,9 +157,7 @@ export class PipelineUtils {
         // Save and start pipeline
         PipelineBtns.savePipelineBtn().click();
         if (pipelineInput) {
-            cy.dataCy('sp-editor-pipeline-name').type(
-                pipelineInput.pipelineName,
-            );
+            PipelineBtns.managedResourceName().type(pipelineInput.pipelineName);
         }
         PipelineUtils.finalizePipelineStart();
     }
@@ -171,15 +169,13 @@ export class PipelineUtils {
         // Save and start pipeline
         PipelineBtns.savePipelineBtn().click();
         if (pipelineInput) {
-            cy.dataCy('sp-editor-pipeline-name').type(
-                pipelineInput.pipelineName,
-            );
+            PipelineBtns.managedResourceName().type(pipelineInput.pipelineName);
         }
         PipelineUtils.finalizePipelineStart(assetNameList);
     }
 
     private static addToAsset(assetNameList) {
-        cy.dataCy('sp-show-pipeline-asset-checkbox')
+        PipelineBtns.pipelineAssetCheckbox()
             .find('input[type="checkbox"]')
             .then($checkbox => {
                 if (!$checkbox.prop('checked')) {
@@ -197,27 +193,64 @@ export class PipelineUtils {
         });
     }
 
-    public static clonePipeline(newPipelineName: string) {
-        cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
-        PipelineBtns.pipelineCloneModeBtn().children().click();
+    public static addManagedPipelineToAssets(assetNameList: string[]) {
+        PipelineUtils.addToAsset(assetNameList);
+    }
+
+    public static clonePipeline(
+        pipelineName: string,
+        newPipelineName?: string,
+    ) {
+        GeneralUtils.openMenuForRow(pipelineName);
+        PipelineBtns.clonePipeline().first().click();
+        PipelineBtns.savePipelineBtn().should('be.visible').click();
+
+        if (newPipelineName) {
+            PipelineBtns.managedResourceName()
+                .should('be.visible')
+                .clear()
+                .type(newPipelineName);
+        }
     }
 
     public static updatePipeline(newPipelineName: string) {
-        //PipelineBtns.pipelineCloneModeBtn().children().click();
-        cy.dataCy('sp-editor-pipeline-name').type(newPipelineName);
+        PipelineBtns.managedResourceName().type(newPipelineName);
+    }
+
+    public static openPipelineManagementInEditor() {
+        PipelineBtns.pipelineOptions().click();
+        PipelineBtns.managePipelineInEditor().click();
+    }
+
+    public static renameManagedPipeline(newPipelineName: string) {
+        PipelineBtns.managedResourceName().clear();
+        PipelineUtils.updatePipeline(newPipelineName);
+    }
+
+    public static applyPipelineManagementChanges() {
+        PipelineBtns.editorSaveBtn().click();
     }
 
     public static finalizePipelineStart(assetNameList?: string[]) {
-        PipelineBtns.navigateToOverviewCheckbox().children().click();
         if (assetNameList) {
             PipelineUtils.addToAsset(assetNameList);
         }
-        PipelineBtns.editorApplyBtn().click();
 
-        cy.dataCy('sp-pipeline-started-success', { timeout: 15000 }).should(
+        PipelineUtils.applyPipelineManagementChanges();
+        PipelineUtils.closePipelineSaveStatus();
+    }
+
+    public static savePipelineUpdate() {
+        PipelineBtns.savePipelineBtn().click();
+        PipelineUtils.closePipelineSaveStatus();
+        PipelineBtns.pipelinesToEditor().should('exist');
+    }
+
+    private static closePipelineSaveStatus() {
+        cy.dataCy('sp-pipeline-started', { timeout: 15000 }).should(
             'be.visible',
         );
-        PipelineBtns.navigateToPipelineOverview().click();
+        PipelineBtns.savePipelineStatusClose().click();
     }
 
     public static checkAmountOfPipelinesPipeline(amount: number) {
@@ -227,7 +260,9 @@ export class PipelineUtils {
             // The wait is needed because the default value is the no-table-entries element.
             // It must be waited till the data is loaded. Once a better solution is found, this can be removed.
             cy.wait(1000);
-            cy.dataCy('no-table-entries').should('have.length', 2);
+            cy.dataCy('all-pipelines-table')
+                .find('[data-cy="no-table-entries"]')
+                .should('have.length', 1);
         } else {
             PipelineBtns.statusPipeline().should('have.length', amount);
         }

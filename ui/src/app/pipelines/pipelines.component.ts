@@ -132,14 +132,15 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     }
 
     getFunctions() {
-        this.functionsService.getActiveFunctions().subscribe(functions => {
-            this.functions = functions.map(f => f.functionId).sort();
-            this.functionsReady = true;
-        });
+        if (this.isAdminRole) {
+            this.functionsService.getActiveFunctions().subscribe(functions => {
+                this.functions = functions.map(f => f.functionId).sort();
+                this.functionsReady = true;
+            });
+        }
     }
 
     getPipelines() {
-        this.pipelines = [];
         this.pipelineService.getPipelineSummary().subscribe(resourceSummary => {
             this.pipelines = resourceSummary.resources.sort((a, b) =>
                 a.name.localeCompare(b.name),

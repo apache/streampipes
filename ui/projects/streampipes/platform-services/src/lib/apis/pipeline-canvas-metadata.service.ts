@@ -30,13 +30,6 @@ export class PipelineCanvasMetadataService {
     private http = inject(HttpClient);
     private platformServicesCommons = inject(PlatformServicesCommons);
 
-    addPipelineCanvasMetadata(pipelineCanvasMetadata: PipelineCanvasMetadata) {
-        return this.http.post(
-            this.pipelineCanvasMetadataBasePath,
-            pipelineCanvasMetadata,
-        );
-    }
-
     getPipelineCanvasMetadata(
         pipelineId: string,
     ): Observable<PipelineCanvasMetadata> {
@@ -50,12 +43,11 @@ export class PipelineCanvasMetadataService {
     }
 
     updatePipelineCanvasMetadata(
+        pipelineId: string,
         pipelineCanvasMetadata: PipelineCanvasMetadata,
     ) {
         return this.http.put(
-            this.pipelineCanvasMetadataBasePath +
-                '/' +
-                pipelineCanvasMetadata.pipelineId,
+            this.pipelineCanvasMetadataPipelinePath + pipelineId,
             pipelineCanvasMetadata,
         );
     }

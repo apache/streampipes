@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 import logging
-from typing import AsyncIterator
+from collections.abc import AsyncIterator
 
 from nats import connect
 

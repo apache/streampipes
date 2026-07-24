@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 from abc import abstractmethod
-from typing import Any, Dict
+from typing import Any
 
 from streampipes.functions.broker import Broker
 
@@ -27,7 +27,7 @@ class Publisher(Broker):
     """
 
     @abstractmethod
-    async def publish_event(self, event: Dict[str, Any]) -> None:
+    async def publish_event(self, event: dict[str, Any]) -> None:
         """Publish an event to a connected data stream.
 
         Parameters

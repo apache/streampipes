@@ -21,14 +21,21 @@ package org.apache.streampipes.export.resolver;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class FileResolver extends AbstractResolver<FileMetadata> {
 
+  private final IFileMetadataStorage fileMetadataStorage;
+
+  public FileResolver(IFileMetadataStorage fileMetadataStorage) {
+    this.fileMetadataStorage = fileMetadataStorage;
+  }
+
   @Override
   public FileMetadata findDocument(String resourceId) {
-    return getNoSqlStore().getFileMetadataStorage().getElementById(resourceId);
+    return fileMetadataStorage.getElementById(resourceId);
   }
 
   @Override
@@ -49,7 +56,7 @@ public class FileResolver extends AbstractResolver<FileMetadata> {
 
   @Override
   public void writeDocument(String document, AssetExportConfiguration config) throws JsonProcessingException {
-    getNoSqlStore().getFileMetadataStorage().persist(deserializeDocument(document));
+    fileMetadataStorage.persist(deserializeDocument(document));
   }
 
   @Override
@@ -61,6 +68,6 @@ public class FileResolver extends AbstractResolver<FileMetadata> {
   public void deleteDocument(String document) throws JsonProcessingException {
     var fileMetadata = readDocument(document);
     var resourceId = fileMetadata.getElementId();
-    getNoSqlStore().getFileMetadataStorage().deleteElementById(resourceId);
+    fileMetadataStorage.deleteElementById(resourceId);
   }
 }

@@ -16,13 +16,51 @@
  *
  */
 
-.mdc-tab__text-label {
-    color: rgba(0, 0, 0, 0.87);
+.mat-mdc-tab-group {
+    --mat-tab-active-indicator-color: var(--mat-sys-primary);
+    --mat-tab-active-label-text-color: var(--mat-sys-primary);
+    --mat-tab-active-focus-label-text-color: var(--mat-sys-primary);
+    --mat-tab-active-hover-label-text-color: var(--mat-sys-primary);
+    --mat-tab-inactive-label-text-color: var(--mat-sys-on-surface-variant);
+    --mat-tab-inactive-focus-label-text-color: var(--mat-sys-on-surface);
+    --mat-tab-inactive-hover-label-text-color: var(--mat-sys-on-surface);
+    --mat-tab-divider-color: var(--color-border-subtle);
+}
+
+.mat-mdc-tab {
+    border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+    transition:
+        background-color var(--motion-duration-fast)
+            var(--motion-easing-standard),
+        color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.mat-mdc-tab:hover {
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
+}
+
+.mat-mdc-tab.mdc-tab--active {
+    background: transparent;
+}
+
+.mat-mdc-tab.mdc-tab--active:hover {
+    background: color-mix(in srgb, var(--mat-sys-primary) 5%, transparent);
+}
+
+.mat-mdc-tab:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--color-focus-ring);
+}
+
+.mat-mdc-tab .mdc-tab-indicator__content--underline {
+    border-top-width: 2px;
+    border-radius: var(--radius-pill);
 }
 
 .mat-mdc-tab-group.small-tab-headers .mdc-tab__text-label {
     height: 32px;
-    font-size: 10pt;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
 }
 
 .mat-mdc-tab-group.mat-tab-fill-height .mat-mdc-tab-body-wrapper {

@@ -23,6 +23,7 @@ import {
     SpBasicHeaderTitleComponent,
     SpBasicNavTabsComponent,
     SpElementIdComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { SpAbstractDatasetDetailsDirective } from '../abstract-dataset-details.directive';
 import {
@@ -31,11 +32,11 @@ import {
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { MatTooltip } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { catchError, finalize, of } from 'rxjs';
@@ -58,10 +59,12 @@ type PreviewRow = Record<string, unknown>;
         FlexDirective,
         MatButton,
         MatIcon,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         MatFormField,
         MatLabel,
         MatInput,
+        MatIconButton,
+        MatTooltip,
         FormsModule,
         TranslatePipe,
     ],
@@ -122,6 +125,10 @@ export class DatasetDetailsEventsComponent
     onEventLimitChange(value: number): void {
         this.eventLimit = Math.min(Math.max(Number(value) || 1, 1), 1000);
         this.loadLatestEvents();
+    }
+
+    refreshLatestEvents(): void {
+        this.onEventLimitChange(this.eventLimit);
     }
 
     navigateToCreateChart(): void {

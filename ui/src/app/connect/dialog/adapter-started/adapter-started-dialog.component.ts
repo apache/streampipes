@@ -35,7 +35,9 @@ import {
     ErrorMessage,
     LinkageData,
     Message,
+    Permission,
     PipelineOperationStatus,
+    PermissionsService,
     PipelineTemplateService,
     PipelineUpdateInfo,
     SpAssetTreeNode,
@@ -84,6 +86,7 @@ export class AdapterStartedDialog implements OnInit {
     private compactPipelineService = inject(CompactPipelineService);
     private assetSaveService = inject(AssetSaveService);
     private dataLakeService = inject(DatalakeRestService);
+    private permissionsService = inject(PermissionsService);
 
     adapterInstalled = false;
 
@@ -100,6 +103,8 @@ export class AdapterStartedDialog implements OnInit {
     @Input() selectedAssets: SpAssetTreeNode[];
     @Input() deselectedAssets: SpAssetTreeNode[];
     @Input() originalAssets: SpAssetTreeNode[];
+    @Input() permission?: Permission;
+    @Input() addToAssets = true;
 
     /**
      * Indicates if a pipeline to store the adapter events should be started
@@ -185,8 +190,9 @@ export class AdapterStartedDialog implements OnInit {
 
         this.loading = true;
         this.adapterService.updateAdapter(this.adapter).subscribe({
-            next: status => {
+            next: async status => {
                 if (status.success) {
+                    await this.persistManageMetadata();
                     this.onAdapterReady(
                         `Adapter ${this.adapter.name} was successfully updated and is available in the pipeline editor.`,
                     );
@@ -195,8 +201,6 @@ export class AdapterStartedDialog implements OnInit {
 
                     this.onAdapterFailure(errorLogMessage);
                 }
-
-                this.addToAsset();
             },
             error: error => {
                 this.onAdapterFailure(error.error);
@@ -334,7 +338,9 @@ export class AdapterStartedDialog implements OnInit {
                 linkageData = this.createLinkageData(this.adapter);
             }
 
-            await this.saveAssets(linkageData);
+            if (this.addToAssets) {
+                await this.saveAssets(linkageData);
+            }
 
             this.setSuccessMessage();
         } catch (err) {
@@ -398,16 +404,30 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     private setSuccessMessage(): void {
-        if (this.selectedAssets.length > 0) {
+        if (this.addToAssets && this.selectedAssets.length > 0) {
             this.addToAssetText = this.translateService.instant(
                 'Your Assets were successfully added.',
             );
         }
-        if (this.deselectedAssets && this.deselectedAssets.length > 0) {
+        if (
+            this.addToAssets &&
+            this.deselectedAssets &&
+            this.deselectedAssets.length > 0
+        ) {
             this.deletedFromAssetText = this.translateService.instant(
                 'Your Assets were successfully deleted.',
             );
         }
+    }
+
+    private async persistManageMetadata(): Promise<void> {
+        if (this.permission) {
+            await firstValueFrom(
+                this.permissionsService.updatePermission(this.permission),
+            );
+        }
+
+        await this.addToAsset();
     }
 
     private formatWithAnd(list: string[]): string {

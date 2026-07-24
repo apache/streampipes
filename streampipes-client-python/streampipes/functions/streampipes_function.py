@@ -16,7 +16,7 @@
 #
 from abc import ABC, abstractmethod
 from time import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from streampipes.functions.broker.output_collector import OutputCollector
 from streampipes.functions.utils.function_context import FunctionContext
@@ -42,14 +42,14 @@ class StreamPipesFunction(ABC):
         List of all output collectors which are created based on the provided function definitions.
     """
 
-    def __init__(self, function_definition: Optional[FunctionDefinition] = None):
+    def __init__(self, function_definition: FunctionDefinition | None = None):
         self.function_definition = function_definition or FunctionDefinition()
         self.output_collectors = {
             stream_id: OutputCollector(data_stream)
             for stream_id, data_stream in self.function_definition.output_data_streams.items()
         }
 
-    def add_output(self, stream_id: str, event: Dict[str, Any]):
+    def add_output(self, stream_id: str, event: dict[str, Any]):
         """Send an event via an output data stream to StreamPipes.
 
         Parameters
@@ -84,7 +84,7 @@ class StreamPipesFunction(ABC):
             collector.disconnect()
         self.onServiceStopped()
 
-    def requiredStreamIds(self) -> List[str]:
+    def requiredStreamIds(self) -> list[str]:
         """Get the ids of the streams needed by the function.
 
         Returns
@@ -110,7 +110,7 @@ class StreamPipesFunction(ABC):
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
-    def onEvent(self, event: Dict[str, Any], streamId: str) -> None:
+    def onEvent(self, event: dict[str, Any], streamId: str) -> None:
         """Is called for every event of a data stream.
 
         Parameters

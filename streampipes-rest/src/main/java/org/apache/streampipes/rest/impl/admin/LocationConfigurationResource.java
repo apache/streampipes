@@ -21,6 +21,7 @@ package org.apache.streampipes.rest.impl.admin;
 import org.apache.streampipes.model.configuration.LocationConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,18 +36,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v2/admin/location-config")
 public class LocationConfigurationResource extends AbstractAuthGuardedRestResource {
 
+  private final ISpCoreConfigurationStorage configurationStorage;
+
+  public LocationConfigurationResource(ISpCoreConfigurationStorage configurationStorage) {
+    this.configurationStorage = configurationStorage;
+  }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public LocationConfig getLocationConfig() {
-    return getSpCoreConfigurationStorage().get().getLocationConfig();
+    return configurationStorage.get().getLocationConfig();
   }
 
   @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<Void> updateGeneralConfiguration(@RequestBody LocationConfig config) {
-    var storage = getSpCoreConfigurationStorage();
-    var cfg = storage.get();
+    var cfg = configurationStorage.get();
     cfg.setLocationConfig(config);
-    storage.updateElement(cfg);
+    configurationStorage.updateElement(cfg);
 
     return ok();
   }

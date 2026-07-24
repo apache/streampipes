@@ -18,7 +18,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import pandas as pd
 from pydantic import StrictInt, StrictStr
@@ -84,7 +84,7 @@ class DataSeries(Resource):
 
         return cls.model_validate(data_series)
 
-    def convert_to_pandas_representation(self) -> Dict[str, Union[List[str], List[List[Any]]]]:
+    def convert_to_pandas_representation(self) -> dict[str, list[str] | list[list[Any]]]:
         """Returns the dictionary representation of a data lake series
         to be used when creating a pandas Dataframe.
 
@@ -99,9 +99,9 @@ class DataSeries(Resource):
         return self.model_dump(include={"headers", "rows"})
 
     total: StrictInt
-    headers: List[StrictStr]
-    rows: List[List[Any]]
-    tags: Optional[str] = None
+    headers: list[StrictStr]
+    rows: list[list[Any]]
+    tags: str | None = None
 
     def to_pandas(self) -> pd.DataFrame:
         """Returns the data lake series in representation of a Pandas Dataframe.

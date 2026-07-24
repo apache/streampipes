@@ -66,11 +66,10 @@
                         }
                     </button>
                     @if (loading) {
-                        <mat-spinner
-                            [mode]="'indeterminate'"
+                        <sp-spinner
                             [diameter]="20"
                             style="margin-top: 10px"
-                        ></mat-spinner>
+                        ></sp-spinner>
                     }
                     @if (authenticationFailed) {
                         <sp-alert-banner

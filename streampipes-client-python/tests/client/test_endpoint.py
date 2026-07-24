@@ -17,7 +17,6 @@
 
 import json
 from copy import deepcopy
-from typing import Dict, List
 from unittest import TestCase
 from unittest.mock import MagicMock, call, patch
 
@@ -88,7 +87,7 @@ class TestStreamPipesEndpoints(TestCase):
             }
         ]
 
-        self.data_stream_all: List[Dict] = [
+        self.data_stream_all: list[dict] = [
             {
                 "@class": "org.apache.streampipes.model.SpDataStream",
                 "elementId": "urn:streampipes.apache.org:eventstream:uPDKLI",

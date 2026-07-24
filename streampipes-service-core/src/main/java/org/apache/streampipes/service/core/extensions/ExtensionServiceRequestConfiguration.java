@@ -29,7 +29,13 @@ import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
+import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserGroupStorage;
+import org.apache.streampipes.storage.api.user.IUserStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,7 +102,13 @@ public class ExtensionServiceRequestConfiguration {
                                              IDashboardStorage dashboardStorage,
                                              IAssetStorage assetStorage,
                                              IPipelineStorage pipelineStorage,
-                                             IDataLakeMeasureStorage datasetStorage) {
+                                             IDataLakeMeasureStorage datasetStorage,
+                                             ISpCoreConfigurationStorage coreConfigurationStorage,
+                                             IFileMetadataStorage fileMetadataStorage,
+                                             IRoleStorage roleStorage,
+                                             IUserGroupStorage userGroupStorage,
+                                             IPrivilegeStorage privilegeStorage,
+                                             IUserStorage userStorage) {
     return new SpResourceManager(
         permissionStorage,
         chartStorage,
@@ -104,7 +116,13 @@ public class ExtensionServiceRequestConfiguration {
         assetStorage,
         dashboardStorage,
         pipelineStorage,
-        datasetStorage
+        datasetStorage,
+        coreConfigurationStorage,
+        fileMetadataStorage,
+        roleStorage,
+        userGroupStorage,
+        privilegeStorage,
+        userStorage
     );
   }
 

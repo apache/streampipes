@@ -50,14 +50,14 @@ public class ExtensionItemInstaller {
     var requestTarget = getDescriptionRequestTarget(req);
     var description = fetchDescription(requestTarget);
     return new TypeExtractor(description, requestManager,
-        resourceManager.managePermissions()).getTypeVerifier().verifyAndAdd(principalSid, req.publicElement());
+        resourceManager).getTypeVerifier().verifyAndAdd(principalSid, req.publicElement());
   }
 
   public Message updateExtension(ExtensionItemInstallationRequest req) throws IOException, SepaParseException {
     var requestTarget = getDescriptionRequestTarget(req);
     var description = fetchDescription(requestTarget);
     return new TypeExtractor(description, requestManager,
-        resourceManager.managePermissions()).getTypeVerifier().verifyAndUpdate();
+        resourceManager).getTypeVerifier().verifyAndUpdate();
   }
 
   private ExtensionServiceRequestTarget getDescriptionRequestTarget(ExtensionItemInstallationRequest req) {

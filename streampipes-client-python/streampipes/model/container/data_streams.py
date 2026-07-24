@@ -18,7 +18,6 @@
 """
 Implementation of a resource container for the data streams endpoint.
 """
-from typing import Type
 
 from streampipes.model.container.resource_container import ResourceContainer
 from streampipes.model.resource.data_stream import DataStream
@@ -39,7 +38,7 @@ class DataStreams(ResourceContainer):
     """
 
     @classmethod
-    def _resource_cls(cls) -> Type[Resource]:
+    def _resource_cls(cls) -> type[Resource]:
         """Returns the class of the resource that are bundled.
 
         Returns

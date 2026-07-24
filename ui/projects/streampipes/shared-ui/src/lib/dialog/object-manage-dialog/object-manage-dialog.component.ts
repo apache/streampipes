@@ -16,11 +16,9 @@
  *
  */
 
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
     AfterViewInit,
     Component,
-    ElementRef,
     inject,
     Input,
     OnDestroy,
@@ -54,27 +52,7 @@ import {
     UserService,
     UserInfo,
 } from '@streampipes/platform-services';
-import {
-    MatChipGrid,
-    MatChipInput,
-    MatChipInputEvent,
-    MatChipRemove,
-    MatChipRow,
-} from '@angular/material/chips';
-import {
-    combineLatest,
-    firstValueFrom,
-    isObservable,
-    Observable,
-    shareReplay,
-    zip,
-} from 'rxjs';
-import {
-    MatAutocomplete,
-    MatAutocompleteSelectedEvent,
-    MatAutocompleteTrigger,
-} from '@angular/material/autocomplete';
-import { map, startWith } from 'rxjs/operators';
+import { firstValueFrom, isObservable, zip } from 'rxjs';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -91,7 +69,6 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { MatDivider } from '@angular/material/divider';
-import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
     ObjectManageDialogResource,
@@ -99,6 +76,7 @@ import {
     ObjectManageDialogResult,
     ObjectManageDialogSaveMode,
 } from './model/object-manage-model.model';
+import { SearchSelectComponent } from '../../components/search-select/search-select.component';
 
 @Component({
     selector: 'sp-object-manage-dialog',
@@ -117,23 +95,17 @@ import {
         MatSelect,
         MatOption,
         MatCheckbox,
-        MatChipGrid,
-        MatChipRow,
-        MatChipRemove,
         MatIcon,
         MatInput,
-        MatAutocompleteTrigger,
-        MatChipInput,
-        MatAutocomplete,
         LayoutGapDirective,
         MatIconButton,
         MatTooltip,
         CdkCopyToClipboard,
         MatDivider,
         MatButton,
-        AsyncPipe,
         TranslatePipe,
         AssetLinkConfigurationComponent,
+        SearchSelectComponent,
     ],
 })
 export class ObjectManageDialogComponent<
@@ -141,8 +113,6 @@ export class ObjectManageDialogComponent<
 >
     implements OnInit, AfterViewInit, OnDestroy
 {
-    separatorKeysCodes: number[] = [ENTER, COMMA];
-
     @Input()
     createMode: boolean = false;
 
@@ -197,19 +167,12 @@ export class ObjectManageDialogComponent<
     allUsers: ShortUserInfo[];
     allGroups: Group[];
 
-    filteredUsers$: Observable<ShortUserInfo[]>;
-    filteredGroups$: Observable<Group[]>;
-
     loading = true;
     permissionDenied = false;
     private assetRestoreInterval?: ReturnType<typeof setInterval>;
 
-    @ViewChild('userInput') userInput: ElementRef<HTMLInputElement>;
-    @ViewChild('groupInput') groupInput: ElementRef<HTMLInputElement>;
     @ViewChild(AssetLinkConfigurationComponent)
     assetLinkConfigurationComponent?: AssetLinkConfigurationComponent;
-    userCtrl = new UntypedFormControl();
-    groupCtrl = new UntypedFormControl();
 
     private fb = inject(UntypedFormBuilder);
     private dialogRef = inject(
@@ -363,34 +326,6 @@ export class ObjectManageDialogComponent<
                     new UntypedFormControl(this.permission.readAnonymous),
                 );
             }
-            this.filteredUsers$ = combineLatest([
-                this.userCtrl.valueChanges.pipe(startWith(null)),
-                this.parentForm
-                    .get('owner')!
-                    .valueChanges.pipe(
-                        startWith(this.parentForm.get('owner')!.value),
-                    ),
-            ]).pipe(
-                map(([username]) => {
-                    const base = this.allUsers.filter(
-                        u => !this.isOwnerOrAdded(u),
-                    );
-                    return username ? this._filter(username) : base.slice();
-                }),
-                shareReplay({ bufferSize: 1, refCount: true }),
-            );
-
-            this.filteredGroups$ = this.groupCtrl.valueChanges.pipe(
-                startWith(null),
-                map((groupName: string | null) => {
-                    return groupName
-                        ? this._filterGroup(groupName)
-                        : this.allGroups
-                              .filter(g => !this.isGroupAdded(g))
-                              .slice();
-                }),
-            );
-
             this.permission.grantedAuthorities.forEach(authority => {
                 if (authority.principalType === 'GROUP') {
                     this.addGroupToSelection(authority);
@@ -463,50 +398,32 @@ export class ObjectManageDialogComponent<
             return;
         }
 
-        await this.saveImmediately(result);
-        this.close(true);
+        const saved = await this.saveImmediately(result);
+        if (saved) {
+            this.close(true);
+        }
     }
 
     close(result?: ObjectManageDialogResult<TResource> | boolean) {
         this.dialogRef.close(result);
     }
 
-    removeUser(user: ShortUserInfo) {
-        const currentIndex = this.grantedUserAuthorities.findIndex(
-            u => u.principalId === user.principalId,
-        );
-        this.grantedUserAuthorities.splice(currentIndex, 1);
-        this.userCtrl.setValue(null);
+    get availableUsers(): ShortUserInfo[] {
+        return this.allUsers?.filter(u => !this.isOwnerOrAdded(u)) ?? [];
     }
 
-    removeGroup(group: Group) {
-        const currentIndex = this.grantedGroupAuthorities.findIndex(
-            u => u.groupId === group.groupId,
-        );
-        this.grantedGroupAuthorities.splice(currentIndex, 1);
-        this.groupCtrl.setValue(null);
+    get availableGroups(): Group[] {
+        return this.allGroups?.filter(g => !this.isGroupAdded(g)) ?? [];
     }
 
-    addUser(event: MatChipInputEvent) {
-        event.chipInput.clear();
-        this.userCtrl.setValue(null);
+    onGrantedUsersChange(
+        users: ShortUserInfo | ShortUserInfo[] | undefined,
+    ): void {
+        this.grantedUserAuthorities = Array.isArray(users) ? users : [];
     }
 
-    addGroup(event: MatChipInputEvent) {
-        event.chipInput.clear();
-        this.groupCtrl.setValue(null);
-    }
-
-    userSelected(event: MatAutocompleteSelectedEvent) {
-        this.grantedUserAuthorities.push(event.option.value);
-        this.userInput.nativeElement.value = '';
-        this.userCtrl.setValue(null);
-    }
-
-    groupSelected(event: MatAutocompleteSelectedEvent) {
-        this.grantedGroupAuthorities.push(event.option.value);
-        this.groupInput.nativeElement.value = '';
-        this.groupCtrl.setValue(null);
+    onGrantedGroupsChange(groups: Group | Group[] | undefined): void {
+        this.grantedGroupAuthorities = Array.isArray(groups) ? groups : [];
     }
 
     private addUserToSelection(authority: PermissionEntry) {
@@ -518,9 +435,13 @@ export class ObjectManageDialogComponent<
 
     private async saveImmediately(
         result: ObjectManageDialogResult<TResource>,
-    ): Promise<void> {
+    ): Promise<boolean> {
         this.touchResource(result.resource);
-        await this.saveResource(result.resource);
+        const saved = await this.saveResource(result.resource);
+        if (!saved) {
+            return false;
+        }
+
         if (result.permission) {
             await firstValueFrom(
                 this.permissionsService.updatePermission(result.permission),
@@ -535,6 +456,8 @@ export class ObjectManageDialogComponent<
                 result.originalAssets,
             );
         }
+
+        return true;
     }
 
     private createLinkageData(resource: TResource): LinkageData[] {
@@ -565,17 +488,17 @@ export class ObjectManageDialogComponent<
         );
     }
 
-    private async saveResource(resource: TResource): Promise<void> {
+    private async saveResource(resource: TResource): Promise<boolean> {
         const saveResource = this.resourceConfig.saveResource;
         if (!saveResource) {
-            return;
+            return true;
         }
 
         const saveResult = saveResource(resource);
         if (isObservable(saveResult)) {
-            await firstValueFrom(saveResult);
+            return (await firstValueFrom(saveResult)) !== false;
         } else {
-            await saveResult;
+            return (await saveResult) !== false;
         }
     }
 

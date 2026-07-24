@@ -18,6 +18,17 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
+        <sp-alert-banner
+            type="info"
+            [title]="'Shared transformation templates' | translate"
+            [description]="
+                'Templates are shared and are not permission-managed individually. Users with adapter access can view, edit, and remove templates. Do not store sensitive data in templates.'
+                    | translate
+            "
+            data-cy="script-template-shared-info"
+        >
+        </sp-alert-banner>
+
         <sp-form-field [level]="3" [label]="'Template' | translate">
             <mat-form-field>
                 <mat-select

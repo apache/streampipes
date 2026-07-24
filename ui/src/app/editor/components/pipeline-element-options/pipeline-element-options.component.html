@@ -15,99 +15,85 @@
 ~ limitations under the License.
 ~
 -->
-<div>
-    <div>
-        <div
-            [ngStyle]="
-                currentMouseOverElement === pipelineElement.payload.dom
-                    ? { opacity: 1 }
-                    : { opacity: 1 }
-            "
-            class="sp-fade-options"
-        >
-            @if (pipelineElement.type !== 'stream') {
-                <span
-                    class="options-button customize-button"
-                    style="z-index: 10"
-                >
-                    <button
-                        class="options-icon-button"
-                        mat-icon-button
-                        [matTooltip]="'Configure Element' | translate"
-                        [matTooltipPosition]="'above'"
-                        (click)="customizeElement(pipelineElement)"
-                        data-cy="settings-pipeline-element-button"
-                    >
-                        <mat-icon class="options-icon-size">settings</mat-icon>
-                    </button>
-                </span>
-            }
-            @if (pipelineElement.type === 'stream' && isWildcardTopic()) {
-                <span
-                    class="options-button customize-button"
-                    style="z-index: 10"
-                >
-                    <button
-                        class="options-icon-button"
-                        mat-icon-button
-                        [matTooltip]="'Configure Element' | translate"
-                        [matTooltipPosition]="'above'"
-                        (click)="openCustomizeStreamDialog()"
-                    >
-                        <mat-icon class="options-icon-size">settings</mat-icon>
-                    </button>
-                </span>
-            }
-            <span class="options-button delete-button" style="z-index: 10">
+<div
+    [ngStyle]="
+        currentMouseOverElement === pipelineElement.payload.dom
+            ? { opacity: 1 }
+            : { opacity: 1 }
+    "
+    class="sp-fade-options"
+>
+    <div class="pipeline-element-action-bar pipeline-element-action-bar--top">
+        @if (pipelineElement.type !== 'stream') {
+            <span class="options-button customize-button">
                 <button
                     class="options-icon-button"
                     mat-icon-button
-                    [matTooltip]="'Delete Element' | translate"
+                    [matTooltip]="'Configure Element' | translate"
                     [matTooltipPosition]="'above'"
-                    (click)="removeElement(pipelineElement)"
+                    (click)="customizeElement(pipelineElement)"
+                    data-cy="settings-pipeline-element-button"
                 >
-                    <mat-icon class="options-icon-size">clear</mat-icon>
+                    <mat-icon class="options-icon-size">settings</mat-icon>
                 </button>
             </span>
-            @if (pipelineElement.type !== 'action') {
-                <span
-                    class="options-button possible-button"
-                    style="z-index: 10"
-                >
-                    <button
-                        class="options-icon-button"
-                        mat-icon-button
-                        [matTooltip]="'Compatible Elements' | translate"
-                        [matTooltipPosition]="'below'"
-                        [disabled]="
-                            !possibleElements || possibleElements.length === 0
-                        "
-                        (click)="openPossibleElementsDialog()"
-                        [attr.data-cy]="
-                            'sp-possible-elements-' +
-                            pipelineElement.payload.name
-                                .toLowerCase()
-                                .replaceAll(' ', '_')
-                        "
-                        _
-                    >
-                        <mat-icon class="options-icon-size"
-                            >account_tree</mat-icon
-                        >
-                    </button>
-                </span>
-            }
-            <span class="options-button help-button" style="z-index: 10">
+        }
+        @if (pipelineElement.type === 'stream' && isWildcardTopic()) {
+            <span class="options-button customize-button">
                 <button
                     class="options-icon-button"
-                    [matTooltip]="'Help' | translate"
-                    [matTooltipPosition]="'below'"
                     mat-icon-button
-                    (click)="openHelpDialog()"
+                    [matTooltip]="'Configure Element' | translate"
+                    [matTooltipPosition]="'above'"
+                    (click)="openCustomizeStreamDialog()"
                 >
-                    <mat-icon class="options-icon-size">help</mat-icon>
+                    <mat-icon class="options-icon-size">settings</mat-icon>
                 </button>
             </span>
-        </div>
+        }
+        @if (pipelineElement.type !== 'action') {
+            <span class="options-button possible-button">
+                <button
+                    class="options-icon-button"
+                    mat-icon-button
+                    [matTooltip]="'Compatible Elements' | translate"
+                    [matTooltipPosition]="'above'"
+                    [disabled]="
+                        !possibleElements || possibleElements.length === 0
+                    "
+                    (click)="openPossibleElementsDialog()"
+                    [attr.data-cy]="
+                        'sp-possible-elements-' +
+                        pipelineElement.payload.name
+                            .toLowerCase()
+                            .replaceAll(' ', '_')
+                    "
+                >
+                    <mat-icon class="options-icon-size">account_tree</mat-icon>
+                </button>
+            </span>
+        }
+        <span class="options-button help-button">
+            <button
+                class="options-icon-button"
+                [matTooltip]="'Help' | translate"
+                [matTooltipPosition]="'above'"
+                mat-icon-button
+                (click)="openHelpDialog()"
+            >
+                <mat-icon class="options-icon-size">help</mat-icon>
+            </button>
+        </span>
+        <span class="options-button delete-button">
+            <button
+                class="options-icon-button"
+                mat-icon-button
+                [matTooltip]="'Delete Element' | translate"
+                [matTooltipPosition]="'above'"
+                (click)="removeElement(pipelineElement)"
+            >
+                <mat-icon class="options-icon-size">clear</mat-icon>
+            </button>
+        </span>
     </div>
 </div>

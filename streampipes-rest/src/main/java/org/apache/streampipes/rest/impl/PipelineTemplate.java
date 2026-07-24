@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.template.compact.CompactPipelineTemplateManagement;
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.model.template.PipelineTemplateGenerationRequest;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
@@ -30,6 +31,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,6 +63,7 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
 
   @GetMapping(
       produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  @PreAuthorize("this.hasWriteAuthority()")
   public List<CompactPipelineTemplate> findAll() {
     return storage.findAll()
         .stream()
@@ -71,6 +74,7 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
   @GetMapping(
       path = "/{id}",
       produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> findById(@PathVariable("id") String id) {
     return ok(storage.getElementById(id));
   }
@@ -79,6 +83,7 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
   @PostMapping(
       produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML},
       consumes = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  @PreAuthorize("this.hasWriteAuthority()")
   public void create(@RequestBody CompactPipelineTemplate entity) {
     storage.persist(entity);
   }
@@ -86,11 +91,13 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
   @PutMapping(path = "/{id}",
       produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML},
       consumes = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  @PreAuthorize("this.hasWriteAuthority()")
   public void update(@PathVariable("id") String id, @RequestBody CompactPipelineTemplate entity) {
     storage.updateElement(entity);
   }
 
   @DeleteMapping(path = "/{id}")
+  @PreAuthorize("this.hasWriteAuthority()")
   public void delete(@PathVariable("id") String id) {
     storage.deleteElementById(id);
   }
@@ -99,6 +106,7 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
   @PostMapping(path = "/{id}/pipeline",
       produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML},
       consumes = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> makePipelineFromTemplate(@RequestBody PipelineTemplateGenerationRequest request) {
     try {
       return ok(templateManagement.makePipeline(request).pipeline());
@@ -112,6 +120,7 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
   @GetMapping(
       path = "/{id}/streams",
       produces = {MediaType.APPLICATION_JSON_VALUE, SpMediaType.YAML, SpMediaType.YML})
+  @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<Map<String, List<List<String>>>> getAvailableStreamsForTemplate(
       @PathVariable("id") String pipelineTemplateId) {
     try {
@@ -121,5 +130,9 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public boolean hasWriteAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE);
   }
 }

@@ -60,6 +60,7 @@ public class AdapterPipelineGeneratorBase {
                              .filter(ep -> ep.getAdditionalMetadata()
                                              .containsKey("originType"))
                              .map(ep -> new DatatypeTransformationRule(
+                                 adapterDescription.getName(),
                                  ep.getRuntimeName(),
                                  ((EventPropertyPrimitive) ep).getRuntimeType()
                              ))

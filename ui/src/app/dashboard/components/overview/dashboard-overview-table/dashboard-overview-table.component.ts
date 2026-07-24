@@ -176,6 +176,10 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
                         resource: { ...resource },
                         saveMode: 'immediate',
                         resourceConfig,
+                        anonymousReadSupported: true,
+                        publicLink: this.makeDashboardKioskUrl(
+                            resource.elementId,
+                        ),
                         headerTitle:
                             this.translateService.instant('Manage Dashboard ') +
                             resource.name,

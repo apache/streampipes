@@ -67,6 +67,7 @@ import { PipelineElementTemplateConfigComponent } from '../../../core-ui/pipelin
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
+import { LayoutGapDirective } from '@ngbracket/ngx-layout';
 
 @Component({
     selector: 'sp-customize-pipeline-element',
@@ -92,6 +93,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatDivider,
         MatButton,
         TranslatePipe,
+        LayoutGapDirective,
     ],
 })
 export class CustomizeComponent implements OnInit, AfterViewInit {

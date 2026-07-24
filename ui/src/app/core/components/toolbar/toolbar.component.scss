@@ -62,4 +62,9 @@
 ::ng-deep .toolbar-menu {
     background-color: var(--mat-sys-surface);
     --mat-menu-item-icon-color: var(--mat-sys-on-surface);
+    color: var(--mat-sys-on-surface);
+}
+
+::ng-deep .toolbar-menu .current-user {
+    color: var(--mat-sys-on-surface);
 }

@@ -37,9 +37,14 @@ public class AdapterWorkerRequestManagement {
   private final AdapterWorkerManagement adapterManagement;
 
   public AdapterWorkerRequestManagement() {
+    this(AdapterTransitionRegistry.INSTANCE);
+  }
+
+  public AdapterWorkerRequestManagement(AdapterTransitionRegistry adapterTransitionRegistry) {
     this(new AdapterWorkerManagement(
         RunningAdapterInstances.INSTANCE,
-        DeclarersSingleton.getInstance()
+        DeclarersSingleton.getInstance(),
+        adapterTransitionRegistry
     ));
   }
 

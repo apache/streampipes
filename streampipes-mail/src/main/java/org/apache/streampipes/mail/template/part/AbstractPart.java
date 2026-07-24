@@ -17,7 +17,9 @@
  */
 package org.apache.streampipes.mail.template.part;
 
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
+
 public abstract class AbstractPart {
 
-  public abstract String generate();
+  public abstract String generate(SpCoreConfiguration configuration);
 }

@@ -237,6 +237,17 @@ export class PipelineComponent implements OnInit, OnDestroy {
             this.currentMouseOverElement === elementId ? '' : elementId;
     }
 
+    hasVisibleMetrics(pipelineElementConfig: PipelineElementConfig): boolean {
+        const metrics =
+            this.metricsInfo?.[pipelineElementConfig.payload.elementId];
+        const hasMessagesIn = Object.keys(metrics?.messagesIn ?? {}).length > 0;
+        const hasMessagesOut = metrics?.messagesOut?.counter !== undefined;
+
+        return pipelineElementConfig.type === 'action'
+            ? hasMessagesIn
+            : hasMessagesIn || hasMessagesOut;
+    }
+
     findPipelineElementByElementId(elementId: string) {
         return this.allElements.find(a => a.elementId === elementId);
     }

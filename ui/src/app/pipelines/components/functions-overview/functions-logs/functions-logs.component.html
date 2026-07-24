@@ -22,12 +22,12 @@
     [showBackLink]="true"
     [backLinkTarget]="['pipelines']"
 >
-    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+    <div nav fxLayout="row" fxLayoutAlign="end center">
         <button
             mat-icon-button
             color="accent"
             class="mr-10"
-            matTooltip="Refresh"
+            [matTooltip]="'Refresh' | translate"
             (click)="triggerUpdate()"
         >
             <i class="material-icons">refresh</i>

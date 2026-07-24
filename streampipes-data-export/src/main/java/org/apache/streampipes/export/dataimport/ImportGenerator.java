@@ -48,7 +48,7 @@ public abstract class ImportGenerator<T> {
 
   public ImportGenerator() {
     this.defaultMapper = JacksonSerializer.getObjectMapper(Map.of(
-      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false,
       SerializationFeature.INDENT_OUTPUT, false 
     ));
   }
@@ -74,7 +74,7 @@ public abstract class ImportGenerator<T> {
       }
     }
 
-    for (String chartId : manifest.getDataViewWidgets()) {
+    for (String chartId : manifest.getDataViews()) {
       try {
         handleChart(asString(previewFiles.get(chartId)), chartId);
       } catch (DocumentConflictException e) {

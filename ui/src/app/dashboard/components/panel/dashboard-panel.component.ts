@@ -185,7 +185,7 @@ export class DashboardPanelComponent
     private dataExplorerSharedService = inject(ChartSharedService);
 
     observableGenerator =
-        this.dataExplorerSharedService.defaultObservableGenerator();
+        this.dataExplorerSharedService.dashboardObservableGenerator();
 
     private pendingManageDashboardResult?: ObjectManageDialogResult<Dashboard>;
 
@@ -415,6 +415,8 @@ export class DashboardPanelComponent
                 resource,
                 saveMode: 'deferred',
                 resourceConfig,
+                anonymousReadSupported: true,
+                publicLink: this.makeDashboardKioskUrl(resource.elementId),
                 headerTitle:
                     this.translateService.instant('Manage Dashboard ') +
                     resource.name,
@@ -432,6 +434,10 @@ export class DashboardPanelComponent
                 );
             }
         });
+    }
+
+    private makeDashboardKioskUrl(dashboardId: string): string {
+        return `${window.location.protocol}//${window.location.host}/#/dashboard-kiosk/${dashboardId}`;
     }
 
     startEditMode(widgetModel: DataExplorerWidgetModel) {

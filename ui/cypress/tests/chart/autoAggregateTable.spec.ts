@@ -18,7 +18,7 @@
 
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { ChartWidgetTableUtils } from '../../support/utils/chart/ChartWidgetTableUtils';
-import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
+import { DatasetSeedUtils } from '../../support/utils/dataset/DatasetSeedUtils';
 
 describe('Test auto aggregate table result size', () => {
     const eventCount = 10050;
@@ -27,7 +27,7 @@ describe('Test auto aggregate table result size', () => {
 
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataLakeSeedUtils.importJsonArrayRecords({
+        DatasetSeedUtils.importJsonArrayRecords({
             records: makeAutoAggregateRecords(
                 eventCount,
                 maximumAmountOfEvents,
@@ -48,7 +48,7 @@ describe('Test auto aggregate table result size', () => {
             },
         );
 
-        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
+        ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
         ChartUtils.selectDataConfig();
         ChartUtils.selectAggregatedQueryType();
         ChartUtils.enableAutoAggregate();

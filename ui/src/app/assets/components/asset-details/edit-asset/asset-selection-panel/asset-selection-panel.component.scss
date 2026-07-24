@@ -19,10 +19,38 @@
 :host {
     display: block;
     height: 100%;
+    min-height: 0;
 }
 
 .designer-panel-content {
     padding: 0;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.asset-selection-view {
+    display: block;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+:host ::ng-deep .asset-selection-view .page-container {
+    height: calc(100vh - 76px);
+    min-height: 0;
+}
+
+:host
+    ::ng-deep
+    .asset-selection-view
+    .page-container
+    > div:not(.page-container-nav) {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.tree-content {
+    min-height: 0;
     overflow: hidden;
 }
 
@@ -30,6 +58,7 @@
     padding: 5px 5px 10px 2px;
     overflow-y: auto;
     flex: 1 1 auto;
+    min-height: 0;
 }
 
 .sp-tree-invisible {
@@ -53,12 +82,18 @@
     padding-left: 6px;
 }
 
-.mat-tree-node {
+.mat-tree-node,
+.tree-row {
     min-height: 48px;
     font-family: inherit;
 }
 
-.mat-tree-node:hover .asset-node {
+.tree-row {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.tree-row:hover .asset-node {
     background: var(--color-bg-1);
 }
 
@@ -77,8 +112,31 @@
     background: var(--color-bg-0);
 }
 
-.asset-node:hover {
+.cdk-drag-preview .asset-node,
+.cdk-drag-preview.asset-node {
+    box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.35;
+}
+
+.cdk-drag-animating,
+.cdk-drop-list-dragging .mat-tree-node:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.tree-row:hover .asset-node {
     border-color: var(--color-primary);
+}
+
+.tree-row.drop-target-active .asset-node {
+    background: color-mix(in srgb, var(--color-primary) 12%, white);
+    box-shadow: inset 0 0 0 2px var(--color-primary);
+}
+
+.tree-row.drop-target-active .node-toggle {
+    color: var(--color-primary);
 }
 
 .asset-node-disabled {
@@ -102,6 +160,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    min-width: 0;
 }
 
 .node-icon {
@@ -119,6 +178,7 @@
 .node-text {
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .node-title {
@@ -133,6 +193,11 @@
 .node-actions {
     display: flex;
     gap: 6px;
+}
+
+.node-drag-handle {
+    cursor: grab;
+    flex: 0 0 auto;
 }
 
 .node-toggle {

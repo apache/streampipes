@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest import TestCase
 
 from streampipes.endpoint.api.data_lake_measure import (
@@ -55,7 +55,7 @@ class TestMeasurementGetQueryConfig(TestCase):
         self.assertEqual("?limit=1000&page=5", result)
 
     def test_datetime_validation(self):
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
 
         config_dict = {"start_date": now, "end_date": now}
         measurement_config = DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict)

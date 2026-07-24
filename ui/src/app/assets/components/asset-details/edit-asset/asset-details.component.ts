@@ -51,7 +51,7 @@ import {
 } from '@streampipes/platform-services';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom, from, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { finalize, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { SupportsUnsavedChangeDialog } from '../../../../chart-shared/models/dataview-dashboard.model';
 
 type ManageableAsset = SpAssetModel & {
@@ -91,6 +91,9 @@ export class SpAssetDetailsComponent
 
     private pendingManageAssetResult?: ObjectManageDialogResult<ManageableAsset>;
     private originalAsset: SpAssetModel;
+    private initialGeneratedAssetId?: string;
+    private initialGeneratedElementId?: string;
+    private pendingConfirmLeaveDialog?: Observable<boolean>;
 
     async saveAsset() {
         await this.saveAssetChanges();
@@ -110,41 +113,17 @@ export class SpAssetDetailsComponent
     }
 
     manageAsset(): void {
-        const resource = this.makeManageableAsset(this.asset);
-        const resourceConfig: ObjectManageDialogResourceConfig<ManageableAsset> =
-            {
-                resourceLabel: 'Asset',
-                nameLabel: 'Asset name',
-                descriptionLabel: 'Asset description',
-                nameProperty: 'name',
-                showAssetLinking: false,
-            };
-        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: this.translateService.instant('Manage'),
-            width: '50vw',
-            data: {
-                objectInstanceId: resource.elementId,
-                resource,
-                saveMode: 'deferred',
-                resourceConfig,
-                headerTitle:
-                    this.translateService.instant('Manage Asset ') +
-                    resource.name,
-            },
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result && typeof result !== 'boolean') {
-                this.pendingManageAssetResult = result;
-                Object.assign(
-                    this.asset,
-                    this.makeAssetResource(result.resource),
-                );
-            }
-        });
+        this.openManageAssetDialog();
     }
 
     deleteAsset(): void {
+        if (this.isNewAsset) {
+            this.router.navigate(['assets'], {
+                state: { omitConfirm: true },
+            });
+            return;
+        }
+
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
@@ -172,42 +151,113 @@ export class SpAssetDetailsComponent
         });
     }
 
+    private openManageAssetDialog(saveAfterClose = false): void {
+        const resource = this.makeManageableAsset(this.asset);
+        const resourceConfig: ObjectManageDialogResourceConfig<ManageableAsset> =
+            {
+                resourceLabel: 'Asset',
+                nameLabel: 'Asset name',
+                descriptionLabel: 'Asset description',
+                nameProperty: 'name',
+                showAssetLinking: false,
+                saveResource: this.isNewAsset
+                    ? resource =>
+                          this.assetService
+                              .createAsset(this.makeAssetResource(resource))
+                              .pipe(
+                                  tap(savedAsset => {
+                                      Object.assign(
+                                          this.asset,
+                                          savedAsset ??
+                                              this.makeAssetResource(resource),
+                                      );
+                                      this.isNewAsset = false;
+                                  }),
+                              )
+                    : undefined,
+            };
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.isNewAsset
+                ? this.translateService.instant('New Asset')
+                : this.translateService.instant('Manage'),
+            width: '50vw',
+
+            data: {
+                objectInstanceId: resource.elementId,
+                resource,
+                saveMode: this.isNewAsset ? 'immediate' : 'deferred',
+                createMode: this.isNewAsset,
+                resourceConfig,
+                headerTitle: this.isNewAsset
+                    ? this.translateService.instant('New Asset')
+                    : this.translateService.instant('Manage Asset ') +
+                      (resource.name ?? ''),
+            },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (saveAfterClose && result === true) {
+                this.assetBrowserService.refreshBrowserAssetData();
+                this.router.navigate(['assets'], {
+                    state: { omitConfirm: true },
+                });
+                return;
+            }
+
+            if (result && typeof result !== 'boolean') {
+                this.pendingManageAssetResult = result;
+                Object.assign(
+                    this.asset,
+                    this.makeAssetResource(result.resource),
+                );
+
+                if (saveAfterClose) {
+                    void this.saveAsset();
+                }
+            }
+        });
+    }
+
     confirmLeaveDialog(
         _route: ActivatedRouteSnapshot,
         _state: RouterStateSnapshot,
     ): Observable<boolean> {
-        if (this.setShouldShowConfirm()) {
-            const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-                width: '500px',
-                data: {
-                    title: this.translateService.instant('Save changes?'),
-                    subtitle: this.translateService.instant(
-                        'Update all changes to asset or discard current changes.',
-                    ),
-                    neutralTitle: this.translateService.instant('Keep editing'),
-                    cancelTitle:
-                        this.translateService.instant('Discard changes'),
-                    confirmTitle: this.translateService.instant('Update'),
-                },
-            });
-            return dialogRef.afterClosed().pipe(
-                switchMap((dialogResult: ConfirmDialogAction | undefined) => {
-                    if (dialogResult === 'confirm') {
-                        return from(this.saveAssetChanges()).pipe(
-                            map(() => true),
-                        );
-                    }
-
-                    if (dialogResult === 'cancel') {
-                        return of(true);
-                    }
-
-                    return of(false);
-                }),
-            );
-        } else {
+        if (!this.setShouldShowConfirm()) {
             return of(true);
         }
+
+        if (this.pendingConfirmLeaveDialog) {
+            return this.pendingConfirmLeaveDialog;
+        }
+
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '500px',
+            data: {
+                title: this.translateService.instant('Save changes?'),
+                subtitle: this.translateService.instant(
+                    'Update all changes to asset or discard current changes.',
+                ),
+                neutralTitle: this.translateService.instant('Keep editing'),
+                cancelTitle: this.translateService.instant('Discard changes'),
+                confirmTitle: this.translateService.instant('Update'),
+            },
+        });
+        this.pendingConfirmLeaveDialog = dialogRef.afterClosed().pipe(
+            switchMap((dialogResult: ConfirmDialogAction | undefined) => {
+                if (dialogResult === 'confirm') {
+                    return from(this.saveAssetChanges()).pipe(map(() => true));
+                }
+
+                if (dialogResult === 'cancel') {
+                    return of(true);
+                }
+
+                return of(false);
+            }),
+            finalize(() => (this.pendingConfirmLeaveDialog = undefined)),
+            shareReplay({ bufferSize: 1, refCount: true }),
+        );
+        return this.pendingConfirmLeaveDialog;
     }
 
     setShouldShowConfirm(): boolean {
@@ -218,7 +268,11 @@ export class SpAssetDetailsComponent
     }
 
     onAssetAvailable() {
-        this.originalAsset = this.cloneAsset(this.asset);
+        if (this.isNewAsset) {
+            this.initialGeneratedAssetId = this.asset.assetId;
+            this.initialGeneratedElementId = this.asset.elementId;
+        }
+        this.originalAsset = this.normalizeAssetForComparison(this.asset);
     }
 
     private makeManageableAsset(asset: SpAssetModel): ManageableAsset {
@@ -240,9 +294,14 @@ export class SpAssetDetailsComponent
 
     private async saveAssetChanges(): Promise<void> {
         this.cleanupEmpty();
-        await firstValueFrom(this.assetService.updateAsset(this.asset));
+        if (this.isNewAsset) {
+            await firstValueFrom(this.assetService.createAsset(this.asset));
+            this.isNewAsset = false;
+        } else {
+            await firstValueFrom(this.assetService.updateAsset(this.asset));
+        }
         await this.savePendingManageAssetChanges();
-        this.originalAsset = this.cloneAsset(this.asset);
+        this.originalAsset = this.normalizeAssetForComparison(this.asset);
     }
 
     private async savePendingManageAssetChanges(): Promise<void> {
@@ -264,14 +323,45 @@ export class SpAssetDetailsComponent
         if (!this.originalAsset || !this.asset) {
             return false;
         }
-
         return (
-            JSON.stringify(this.originalAsset) !==
-            JSON.stringify(this.cloneAsset(this.asset))
+            JSON.stringify(
+                this.normalizeAssetForComparison(this.originalAsset),
+            ) !== JSON.stringify(this.normalizeAssetForComparison(this.asset))
         );
     }
 
+    private normalizeAssetForComparison(asset: SpAssetModel): SpAssetModel {
+        const clonedAsset = this.cloneAsset(asset);
+        if (this.isNewAsset) {
+            if (clonedAsset.assetName === 'New Asset') {
+                clonedAsset.assetName = '';
+            }
+            if (clonedAsset.assetId === this.initialGeneratedAssetId) {
+                clonedAsset.assetId = '';
+            }
+            if (clonedAsset.elementId === this.initialGeneratedElementId) {
+                clonedAsset.elementId = '';
+            }
+        }
+        clonedAsset.additionalData ??= {};
+        clonedAsset.additionalData.customFields ??= [];
+        clonedAsset.assetSite ??= {
+            area: undefined,
+            siteId: undefined,
+            hasExactLocation: false,
+            location: undefined,
+        };
+        clonedAsset.assetType ??= {
+            assetIcon: undefined,
+            assetIconColor: undefined,
+            assetTypeCategory: undefined,
+            assetTypeLabel: undefined,
+            isa95AssetType: 'OTHER',
+        };
+        return clonedAsset;
+    }
+
     private cloneAsset(asset: SpAssetModel): SpAssetModel {
-        return JSON.parse(JSON.stringify(asset));
+        return SpAssetModel.fromData(asset);
     }
 }

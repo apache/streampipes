@@ -49,7 +49,7 @@ describe('Connect value rule transformations', () => {
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
         ConnectUtils.finishConfigureFieldsConfiguration();
 
-        ChartUtils.clearMeasurementData('Adapter to test rules').then(() => {
+        ChartUtils.clearDatasetData('Adapter to test rules').then(() => {
             ConnectUtils.tearDownPreprocessingRuleTest(
                 adapterConfiguration,
                 'cypress/fixtures/connect/valueRules/expected.csv',

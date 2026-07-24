@@ -27,8 +27,10 @@ import {
 } from '@streampipes/platform-services';
 import { NgClass } from '@angular/common';
 import { ClassDirective } from '@ngbracket/ngx-layout/extended';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { PipelineElementComponent } from '@streampipes/shared-ui';
+import {
+    PipelineElementComponent,
+    SpSpinnerComponent,
+} from '@streampipes/shared-ui';
 import { MatTooltip } from '@angular/material/tooltip';
 import { PipelineElementStatisticsComponent } from '../../pipeline-element-statistics/pipeline-element-statistics.component';
 import { PipelineElementOptionsComponent } from '../../pipeline-element-options/pipeline-element-options.component';
@@ -40,7 +42,7 @@ import { PipelineElementPreviewComponent } from '../../pipeline-element-preview/
     imports: [
         NgClass,
         ClassDirective,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         PipelineElementComponent,
         MatTooltip,
         PipelineElementStatisticsComponent,

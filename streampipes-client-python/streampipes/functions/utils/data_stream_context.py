@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import List
 
 from streampipes.functions.broker import Consumer
 from streampipes.functions.streampipes_function import StreamPipesFunction
@@ -34,7 +33,7 @@ class DataStreamContext:
         The consumer to connect to this data stream.
     """
 
-    def __init__(self, functions: List[StreamPipesFunction], schema: DataStream, broker: Consumer) -> None:
+    def __init__(self, functions: list[StreamPipesFunction], schema: DataStream, broker: Consumer) -> None:
         self.functions = functions
         self.schema = schema
         self.broker = broker

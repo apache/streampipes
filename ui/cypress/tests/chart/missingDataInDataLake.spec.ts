@@ -19,7 +19,7 @@
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
 import { ChartWidgetTableUtils } from '../../support/utils/chart/ChartWidgetTableUtils';
-import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
+import { DatasetSeedUtils } from '../../support/utils/dataset/DatasetSeedUtils';
 
 describe('Test missing properties in data lake', () => {
     const headers = ['timestamp', 'v1', 'v2', 'v3', 'v4'];
@@ -33,7 +33,7 @@ describe('Test missing properties in data lake', () => {
 
     before('Setup Test', () => {
         cy.initStreamPipesTest();
-        DataLakeSeedUtils.importCsvData({
+        DatasetSeedUtils.importCsvData({
             headers,
             rows,
             measurementName: PrepareTestDataUtils.dataName,
@@ -43,7 +43,7 @@ describe('Test missing properties in data lake', () => {
     });
 
     it('Test table with missing properties', () => {
-        ChartUtils.addDataViewAndTableWidget(PrepareTestDataUtils.dataName);
+        ChartUtils.createTableChart(PrepareTestDataUtils.dataName);
 
         ChartWidgetTableUtils.checkAmountOfRows(5);
 

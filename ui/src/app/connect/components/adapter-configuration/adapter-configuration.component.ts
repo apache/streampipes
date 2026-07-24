@@ -31,6 +31,11 @@ import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AdapterConfigurationStateService } from './adapter-configuration-state-service/adapter-configuration-state.service';
 import {
+    DialogService,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
+    ObjectManageDialogResult,
+    PanelType,
     SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
 } from '@streampipes/shared-ui';
@@ -43,6 +48,10 @@ import { AdapterSettingsComponent } from './adapter-settings/adapter-settings.co
 import { ConfigureSchemaComponent } from './configure-schema/configure-schema.component';
 import { ConfigureFieldsComponent } from './configure-fields/configure-fields.component';
 import { StartAdapterConfigurationComponent } from './start-adapter-configuration/start-adapter-configuration.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 
 @Component({
     selector: 'sp-adapter-configuration',
@@ -54,6 +63,11 @@ import { StartAdapterConfigurationComponent } from './start-adapter-configuratio
         LayoutDirective,
         LayoutAlignDirective,
         SpBasicHeaderTitleComponent,
+        MatIconButton,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
+        MatIcon,
         MatStepper,
         MatStep,
         MatStepLabel,
@@ -69,6 +83,7 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
     private router = inject(Router);
     private translate = inject(TranslateService);
     private stateService = inject(AdapterConfigurationStateService);
+    private dialogService = inject(DialogService);
 
     @Input() adapterDescription: AdapterDescription;
 
@@ -82,6 +97,7 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
 
     myStepper: MatStepper;
     pageTitle = '';
+    private pendingManageAdapterResult?: ObjectManageDialogResult<AdapterDescription>;
 
     ngOnInit() {
         this.pageTitle = this.isEditMode
@@ -116,17 +132,126 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
         this.router.navigate(['connect']).then();
     }
 
+    manageAdapter(): void {
+        const currentAdapter =
+            this.state().adapterDescription ?? this.adapterDescription;
+        const pendingManageResult = this.pendingManageAdapterResult;
+
+        if (!currentAdapter) {
+            return;
+        }
+
+        const resourceConfig: ObjectManageDialogResourceConfig<AdapterDescription> =
+            {
+                resourceLabel: 'Adapter',
+                nameLabel: 'Adapter name',
+                descriptionLabel: 'Adapter description',
+                nameProperty: 'name',
+                assetLinkType: 'adapter',
+                assetLinkCheckboxLabel:
+                    'Add the current adapter to an existing asset',
+            };
+
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translate.instant('Manage'),
+            width: '50vw',
+            data: {
+                objectInstanceId:
+                    currentAdapter.correspondingDataStreamElementId,
+                resource: { ...currentAdapter },
+                saveMode: 'deferred',
+                resourceConfig,
+                selectedAssets: pendingManageResult?.selectedAssets ?? [],
+                deselectedAssets: pendingManageResult?.deselectedAssets ?? [],
+                originalAssets: pendingManageResult?.originalAssets ?? [],
+                addToAssets: pendingManageResult?.addToAssets ?? true,
+                headerTitle:
+                    this.translate.instant('Manage Adapter ') +
+                    (currentAdapter.name ?? ''),
+            },
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && typeof result !== 'boolean') {
+                this.pendingManageAdapterResult = result;
+                Object.assign(
+                    currentAdapter,
+                    result.resource as AdapterDescription,
+                );
+                this.adapterDescription = currentAdapter;
+                this.displayName = currentAdapter.name;
+                this.pageTitle =
+                    this.translate.instant('Edit adapter: ') + this.displayName;
+            }
+        });
+    }
+
+    deleteAdapter(): void {
+        const currentAdapter =
+            this.state().adapterDescription ?? this.adapterDescription;
+
+        if (!currentAdapter) {
+            return;
+        }
+
+        const dialogRef = this.dialogService.open(
+            DeleteAdapterDialogComponent,
+            {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translate.instant('Delete Adapter'),
+                width: '70vw',
+                data: {
+                    adapter: currentAdapter,
+                },
+            },
+        );
+
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.stateService.reset();
+                this.router.navigate(['connect'], {
+                    state: { omitConfirm: true },
+                });
+            }
+        });
+    }
+
+    get pendingPermission() {
+        return this.pendingManageAdapterResult?.permission;
+    }
+
+    get pendingSelectedAssets() {
+        return this.pendingManageAdapterResult?.selectedAssets ?? [];
+    }
+
+    get pendingDeselectedAssets() {
+        return this.pendingManageAdapterResult?.deselectedAssets ?? [];
+    }
+
+    get pendingOriginalAssets() {
+        return this.pendingManageAdapterResult?.originalAssets ?? [];
+    }
+
+    get shouldAddToAssets() {
+        return this.pendingManageAdapterResult?.addToAssets ?? true;
+    }
+
     ngOnDestroy() {
         this.stateService.reset();
     }
 
     nextAdapterSettings() {
+        const adapter =
+            this.stateService.state().adapterDescription ??
+            this.adapterDescription;
+
         this.shepherdService.trigger('specific-settings-next-button');
         this.goForward();
-        this.stateService.updateAdapter(this.adapterDescription);
+        this.stateService.updateAdapter(adapter);
 
-        if (this.adapterDescription.transformationConfig.inputs.length == 0) {
-            this.stateService.getSampleEvent(this.adapterDescription);
+        if (adapter.transformationConfig.inputs.length == 0) {
+            this.stateService.getSampleEvent(adapter);
         }
     }
 

@@ -33,7 +33,6 @@ import org.apache.streampipes.resource.management.AdapterDescriptionResourceMana
 import org.apache.streampipes.resource.management.DataProcessorResourceManager;
 import org.apache.streampipes.resource.management.DataSinkResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -65,16 +64,17 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
   private final AdapterDescriptionResourceManager adapterDescriptionResourceManager;
   private final DataStreamResourceManager dataStreamResourceManager;
   private final SpResourceManager resourceManager;
+  private final AssetManager assetManager;
 
   public ExtensionsInstallationResource(ExtensionServiceRequestManager extensionServiceRequestManager,
                                         SpResourceManager resourceManager) {
     this.resourceManager = resourceManager;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
-    PermissionResourceManager permissionResourceManager = resourceManager.managePermissions();
     this.dataSinkResourceManager = resourceManager.manageDataSinks();
     this.dataProcessorResourceManager = resourceManager.manageDataProcessors();
     this.adapterDescriptionResourceManager = resourceManager.manageAdapterDescriptions();
     this.dataStreamResourceManager = resourceManager.manageDataStreams();
+    this.assetManager = new AssetManager(resourceManager.getCoreConfigurationStorage());
   }
 
   @PostMapping(
@@ -124,7 +124,7 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
         return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
             NotificationType.STORAGE_ERROR.description()));
       }
-      AssetManager.deleteAsset(appId);
+      assetManager.deleteAsset(appId);
     } catch (IOException e) {
       return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(),
           NotificationType.STORAGE_ERROR.description()));

@@ -18,31 +18,40 @@
 
 .pipeline-element-configuration-status {
     position: absolute;
-    left: 20px;
-    top: -25px;
-    width: 100%;
-    height: 100%;
-}
-
-.pi-processor {
-    left: 0px;
+    right: -0.35rem;
+    bottom: -0.35rem;
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--mat-sys-surface);
+    pointer-events: none;
 }
 
 .pi-stream {
-    left: 0px;
+    right: 0.15rem;
+    bottom: 0.15rem;
+}
+
+.pipeline-element-configuration-status .material-icons {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+    line-height: 1;
 }
 
 .pipeline-element-configuration-invalid-icon {
-    font-size: var(--font-size-lg);
     color: var(--color-error);
 }
 
 .pipeline-element-configuration-modified-icon {
-    font-size: var(--font-size-lg);
     color: var(--color-warning);
 }
 
 .pipeline-element-configuration-ok-icon {
-    font-size: var(--font-size-lg);
     color: var(--color-success);
 }

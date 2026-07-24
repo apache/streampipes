@@ -119,24 +119,24 @@ public class SpKafkaProducer implements EventProducer, Serializable {
     Properties props = new Properties();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokerUrl);
 
-    AdminClient adminClient = KafkaAdminClient.create(props);
+    try (AdminClient adminClient = KafkaAdminClient.create(props)) {
+      ListTopicsResult topics = adminClient.listTopics();
 
-    ListTopicsResult topics = adminClient.listTopics();
+      if (!topicExists(topics)) {
+        Map<String, String> topicConfig = new HashMap<>();
+        String retentionTime = Environments.getEnvironment().getKafkaRetentionTimeMs().getValueOrDefault();
+        topicConfig.put(TopicConfig.RETENTION_MS_CONFIG, retentionTime);
 
-    if (!topicExists(topics)) {
-      Map<String, String> topicConfig = new HashMap<>();
-      String retentionTime = Environments.getEnvironment().getKafkaRetentionTimeMs().getValueOrDefault();
-      topicConfig.put(TopicConfig.RETENTION_MS_CONFIG, retentionTime);
+        final NewTopic newTopic = new NewTopic(topic, 1, (short) 1);
+        newTopic.configs(topicConfig);
 
-      final NewTopic newTopic = new NewTopic(topic, 1, (short) 1);
-      newTopic.configs(topicConfig);
+        final CreateTopicsResult createTopicsResult = adminClient.createTopics(Collections.singleton(newTopic));
+        createTopicsResult.values().get(topic).get();
+        LOG.info("Successfully created Kafka topic " + topic);
 
-      final CreateTopicsResult createTopicsResult = adminClient.createTopics(Collections.singleton(newTopic));
-      createTopicsResult.values().get(topic).get();
-      LOG.info("Successfully created Kafka topic " + topic);
-
-    } else {
-      LOG.debug("Topic " + topic + "already exists in the broker, skipping topic creation");
+      } else {
+        LOG.debug("Topic " + topic + "already exists in the broker, skipping topic creation");
+      }
     }
   }
 

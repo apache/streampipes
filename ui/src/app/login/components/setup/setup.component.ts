@@ -31,9 +31,9 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIcon } from '@angular/material/icon';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
+import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-setup',
@@ -49,7 +49,7 @@ import { MatButton } from '@angular/material/button';
         MatInput,
         MatCheckbox,
         MatIcon,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         MatDivider,
         MatButton,
     ],

@@ -9,6 +9,13 @@
       "projectName": "streampipes-service-core",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
+      "vmArgs": [
+        "-Dcom.sun.management.jmxremote.port=10020",
+        "-Dcom.sun.management.jmxremote.rmi.port=10020",
+        "-Djava.rmi.server.hostname=localhost",
+        "-Dcom.sun.management.jmxremote.authenticate=false",
+        "-Dcom.sun.management.jmxremote.ssl=false"
+      ],
       "env": {
         "SP_BACKEND_HOST": "localhost",
         "SP_CORE_HOST": "localhost",
@@ -44,6 +51,13 @@
       "projectName": "streampipes-extensions-all-iiot",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
+      "vmArgs": [
+        "-Dcom.sun.management.jmxremote.port=10021",
+        "-Dcom.sun.management.jmxremote.rmi.port=10021",
+        "-Djava.rmi.server.hostname=localhost",
+        "-Dcom.sun.management.jmxremote.authenticate=false",
+        "-Dcom.sun.management.jmxremote.ssl=false"
+      ],
       "env": {
         "SP_BACKEND_HOST": "localhost",
         "SP_CORE_HOST": "localhost",

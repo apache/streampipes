@@ -22,7 +22,7 @@ This endpoint allows to consume data stored in StreamPipes' data lake.
 from datetime import datetime
 from json import dumps
 from math import ceil
-from typing import Any, Dict, List, Literal, Optional, Tuple, Type
+from typing import Any, Literal
 
 from pandas import DataFrame
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, ValidationError, field_validator
@@ -81,17 +81,17 @@ class MeasurementGetQueryConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
-    columns: Optional[str] = Field(default=None, pattern=_regex_comma_separated_string)
-    end_date: Optional[StrictInt] = Field(default=None, alias="endDate")
-    limit: Optional[int] = Field(ge=1, default=1000)
-    offset: Optional[int] = Field(default=None, ge=0)
-    order: Optional[Literal["ASC", "DESC"]] = None
-    page_no: Optional[int] = Field(default=None, alias="page", ge=1)
-    start_date: Optional[StrictInt] = Field(default=None, alias="startDate")
+    columns: str | None = Field(default=None, pattern=_regex_comma_separated_string)
+    end_date: StrictInt | None = Field(default=None, alias="endDate")
+    limit: int | None = Field(ge=1, default=1000)
+    offset: int | None = Field(default=None, ge=0)
+    order: Literal["ASC", "DESC"] | None = None
+    page_no: int | None = Field(default=None, alias="page", ge=1)
+    start_date: StrictInt | None = Field(default=None, alias="startDate")
 
     @field_validator("columns", mode="before")
     @classmethod
-    def _convert_to_comma_separated_string(cls, value: Any) -> Optional[str]:
+    def _convert_to_comma_separated_string(cls, value: Any) -> str | None:
         """Pydantic validator to convert a list to a comma separated string.
         This is necessary for the StreamPipes API.
 
@@ -283,7 +283,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     """
 
     @staticmethod
-    def _validate_query_params(query_params: Dict[str, Any]) -> MeasurementGetQueryConfig:
+    def _validate_query_params(query_params: dict[str, Any]) -> MeasurementGetQueryConfig:
         """Validates given query params.
 
         Validates the given query parameters via the
@@ -314,7 +314,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         return config
 
     @property
-    def _resource_cls(self) -> Type[QueryResult]:
+    def _resource_cls(self) -> type[QueryResult]:
         """
         Additional reference to resource class.
         This endpoint deviates from the desired relationship
@@ -329,7 +329,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         return QueryResult
 
     @property
-    def _container_cls(self) -> Type[ResourceContainer]:
+    def _container_cls(self) -> type[ResourceContainer]:
         """Defines the model container class the endpoint refers to.
 
         Returns
@@ -339,14 +339,14 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         return DataLakeMeasures
 
     @property
-    def _relative_api_path(self) -> Tuple[str, ...]:
+    def _relative_api_path(self) -> tuple[str, ...]:
         """Defines the relative api path to the DataLakeMeasurement endpoint.
         Each path within the URL is defined as an own string.
         """
 
         return "api", "v4", "datalake", "measurements"
 
-    def get(self, identifier: str, **kwargs: Optional[Dict[str, Any]]) -> QueryResult:
+    def get(self, identifier: str, **kwargs: dict[str, Any] | None) -> QueryResult:
         """Queries the specified data lake measure from the API.
 
         By default, the maximum number of returned records is 1000.

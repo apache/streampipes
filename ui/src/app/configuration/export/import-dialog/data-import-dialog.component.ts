@@ -22,6 +22,7 @@ import {
     SpAlertBannerComponent,
     SpAssetBrowserService,
     SplitSectionComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
@@ -49,7 +50,6 @@ import { SpDataExportItemComponent } from '../export-dialog/data-export-item/dat
 import { GenericStorageItemsComponent } from '../export-dialog/generic-storage-items/generic-storage-items.component';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatDivider } from '@angular/material/divider';
 
 @Component({
@@ -74,7 +74,7 @@ import { MatDivider } from '@angular/material/divider';
         FormsModule,
         FlexDirective,
         LayoutAlignDirective,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         MatDivider,
         TranslatePipe,
     ],

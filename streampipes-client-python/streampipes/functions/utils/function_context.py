@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, List
 
 from streampipes.client.client import StreamPipesClient
 from streampipes.model.resource.data_stream import DataStream
@@ -35,7 +34,7 @@ class FunctionContext:
         The ids of the streams needed by this function.
     """
 
-    def __init__(self, function_id: str, schema: Dict[str, DataStream], client: StreamPipesClient, streams: List[str]):
+    def __init__(self, function_id: str, schema: dict[str, DataStream], client: StreamPipesClient, streams: list[str]):
         self.function_id = function_id
         self.schema = schema
         self.client = client

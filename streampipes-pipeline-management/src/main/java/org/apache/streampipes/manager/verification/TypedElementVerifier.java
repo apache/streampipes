@@ -20,9 +20,8 @@ package org.apache.streampipes.manager.verification;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
-import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -47,9 +46,9 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
       Consumer<T> updateOperation,
       SpServiceUrlProvider serviceUrlProvider,
       ExtensionServiceRequestManager requestManager,
-      PermissionResourceManager permissionResourceManager
+      SpResourceManager resourceManager
   ) {
-    super(graphData, elementClass, storageApi, permissionResourceManager);
+    super(graphData, elementClass, storageApi, resourceManager);
     this.existsChecker = existsChecker;
     this.storeOperation = storeOperation;
     this.updateOperation = updateOperation;
@@ -65,9 +64,9 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
       Consumer<T> updateOperation,
       SpServiceUrlProvider serviceUrlProvider,
       ExtensionServiceRequestManager requestManager,
-      PermissionResourceManager permissionResourceManager
+      SpResourceManager resourceManager
   ) {
-    super(elementDescription, storageApi, permissionResourceManager);
+    super(elementDescription, storageApi, resourceManager);
     this.existsChecker = existsChecker;
     this.storeOperation = storeOperation;
     this.updateOperation = updateOperation;
@@ -92,7 +91,7 @@ public class TypedElementVerifier<T extends NamedStreamPipesEntity> extends Elem
   @Override
   protected void storeAssets() throws IOException, NoServiceEndpointsAvailableException {
     if (elementDescription.isIncludesAssets()) {
-      AssetManager.storeAsset(serviceUrlProvider, elementDescription.getAppId(), requestManager);
+      assetManager.storeAsset(serviceUrlProvider, elementDescription.getAppId(), requestManager);
     }
   }
 }

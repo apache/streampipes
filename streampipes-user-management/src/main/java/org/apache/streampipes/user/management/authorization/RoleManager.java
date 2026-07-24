@@ -22,7 +22,6 @@ import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,8 +31,8 @@ public class RoleManager {
 
   private final IRoleStorage storage;
 
-  public RoleManager() {
-    this.storage = StorageDispatcher.INSTANCE.getNoSqlStore().getRoleStorage();
+  public RoleManager(IRoleStorage roleStorage) {
+    this.storage = roleStorage;
   }
 
   public List<Role> makeDefaultRoles() {

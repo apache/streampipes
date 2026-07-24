@@ -22,7 +22,6 @@ Specific implementation of the StreamPipes API's data stream endpoints.
 __all__ = [
     "DataStreamEndpoint",
 ]
-from typing import Tuple, Type
 
 from streampipes.endpoint.endpoint import APIEndpoint
 from streampipes.model.container import DataStreams
@@ -64,7 +63,7 @@ class DataStreamEndpoint(APIEndpoint):
     """
 
     @property
-    def _container_cls(self) -> Type[ResourceContainer]:
+    def _container_cls(self) -> type[ResourceContainer]:
         """Defines the model container class the endpoint refers to.
 
 
@@ -75,7 +74,7 @@ class DataStreamEndpoint(APIEndpoint):
         return DataStreams
 
     @property
-    def _relative_api_path(self) -> Tuple[str, ...]:
+    def _relative_api_path(self) -> tuple[str, ...]:
         """Defines the relative api path to the DataStream endpoint.
         Each path within the URL is defined as an own string.
 

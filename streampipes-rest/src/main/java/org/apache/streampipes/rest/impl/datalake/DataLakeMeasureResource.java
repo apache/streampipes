@@ -29,9 +29,9 @@ import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +44,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -80,29 +79,54 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
   }
 
   /**
-   * Handles HTTP GET requests to retrieve the entry counts of specified
-   * measurements.
+   * Handles HTTP GET requests to retrieve the entry count of a specified
+   * measurement.
    *
-   * @param measurementNames A list of measurement names to return the count.
-   * @return A ResponseEntity containing a map of measurement names and their
-   *         corresponding entry counts.
+   * @param elementId The measurement id to return the count for.
+   * @return The entry count of the measurement.
    */
-  @Operation(summary = "Retrieve measurement counts", description = "Retrieves the entry counts for the specified measurements from the data lake.")
-  @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority()")
-  @PostFilter("this.checkPermissionByName(filterObject.key, 'READ')")
-  public Map<String, Integer> getEntryCountsOfMeasurements(
-      @Parameter(description = "A list of measurement names to return the count.") @RequestParam(value = "measurementNames") List<String> measurementNames,
-      @Parameter(description = "The number of days from today where the count should start") @RequestParam(value = "daysBack", defaultValue = "-1") int daysBack) {
+  @Operation(
+      summary = "Retrieve measurement count",
+      description = "Retrieves the entry count for the specified measurement from the data lake."
+  )
+  @GetMapping(path = "{id}/count", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#elementId, 'READ')")
+  public ResponseEntity<?> getEntryCountOfMeasurement(
+      @Parameter(description = "The measurement id to return the count for.")
+      @PathVariable("id") String elementId,
+      @Parameter(description = "The number of days from today where the count should start")
+      @RequestParam(value = "daysBack", defaultValue = "-1") int daysBack) {
+    var measure = this.dataLakeMeasureManagement.getById(elementId);
+    if (Objects.isNull(measure)) {
+      return notFound();
+    }
+
     var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
-    var result = new DataExplorerDispatcher()
+    return ok(new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getMeasurementCounter(
             allMeasurements,
-            measurementNames,
+            List.of(measure.getMeasureName()),
             daysBack)
-        .countMeasurementSizes();
-    return result;
+        .countMeasurementSizes()
+        .getOrDefault(measure.getMeasureName(), 0));
+  }
+
+  @Operation(
+      summary = "Deprecated measurement count endpoint",
+      description = "Use /api/v4/datalake/measure/{id}/count instead.",
+      deprecated = true
+  )
+  @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  @Deprecated(since = "0.99.0", forRemoval = true)
+  public ResponseEntity<?> getDeprecatedEntryCountOfMeasurement() {
+    return ResponseEntity
+        .status(HttpStatus.GONE)
+        .body(SpLogMessage.warn(
+            "Deprecated endpoint",
+            "Use /api/v4/datalake/measure/{id}/count instead."
+        ));
   }
 
   @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)

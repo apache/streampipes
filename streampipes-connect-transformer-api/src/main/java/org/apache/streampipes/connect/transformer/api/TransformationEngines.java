@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public enum TransformationEngines {
 
@@ -36,7 +37,14 @@ public enum TransformationEngines {
   }
 
   public TransformationEngine getTransformationEngine(String language) {
+    validateSupportedLanguage(language);
     return transformationEngines.get(language).get();
+  }
+
+  public void validateSupportedLanguage(String language) {
+    if (!transformationEngines.containsKey(language)) {
+      throw new IllegalArgumentException(unsupportedLanguageMessage(language));
+    }
   }
 
   public List<ScriptMetadata> getAvailableEngineMetadata() {
@@ -45,5 +53,23 @@ public enum TransformationEngines {
         .stream()
         .map(transformationEngineSupplier -> transformationEngineSupplier.get().metadata())
         .toList();
+  }
+
+  private String unsupportedLanguageMessage(String language) {
+    var requestedLanguage = language == null || language.isBlank()
+        ? "missing"
+        : "'" + language + "'";
+
+    var supportedLanguages = transformationEngines.keySet()
+        .stream()
+        .sorted()
+        .collect(Collectors.joining(", "));
+
+    var message = "Unsupported script transformation language " + requestedLanguage + ". ";
+    if (supportedLanguages.isBlank()) {
+      return message + "No script transformation languages are available.";
+    }
+
+    return message + "Supported languages: " + supportedLanguages + ".";
   }
 }

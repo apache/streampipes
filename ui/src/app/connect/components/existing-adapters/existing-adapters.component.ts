@@ -18,6 +18,7 @@
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
+    AdapterDescription,
     AdapterMonitoringService,
     AdapterService,
     AdapterSummaryDto,
@@ -37,7 +38,8 @@ import {
     CurrentUserService,
     DialogRef,
     DialogService,
-    ObjectPermissionDialogComponent,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
     PanelType,
     SpAssetBrowserService,
     SpBasicHeaderTitleComponent,
@@ -45,14 +47,17 @@ import {
     SpBreadcrumbService,
     SpExceptionDetailsDialogComponent,
     SpLabelComponent,
-    SpTableActionsDirective,
     SpTableAssetContextConfig,
-    SpTableComponent,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
+    SpTableActionsDirective,
+    SpTableComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
+import { AdapterCodeDialogComponent } from '../../dialog/adapter-code-dialog/adapter-code-dialog.component';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-adapter-actions-dialog.component';
+import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-started-dialog.component';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { AdapterHealthStatus } from '../../model/adapter-health-status.model';
@@ -70,7 +75,6 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { AdapterStatusLightComponent } from './adapter-status-light/adapter-status-light.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatMenuItem } from '@angular/material/menu';
 import { DatePipe } from '@angular/common';
 import { AdapterHealthService } from '../../services/adapter-health.service';
@@ -99,7 +103,7 @@ import { AdapterHealthService } from '../../services/adapter-health.service';
         MatCellDef,
         MatCell,
         AdapterStatusLightComponent,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         SpLabelComponent,
         SpTableActionsDirective,
         MatMenuItem,
@@ -163,6 +167,28 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     private assetFilterService = inject(SpAssetBrowserService);
     private adapterHealthService = inject(AdapterHealthService);
 
+    constructor() {
+        this.dataSource.sortingDataAccessor = (adapter, column) => {
+            if (column === 'status') {
+                return Number(adapter.running);
+            } else if (column === 'adapterBase') {
+                return adapter.appId;
+            } else if (column === 'lastModified') {
+                return adapter.createdAt;
+            } else if (column === 'messagesSent') {
+                return (
+                    this.adapterMetrics[adapter.elementId]?.messagesOut
+                        ?.counter ?? 0
+                );
+            } else if (column === 'lastMessage') {
+                return (
+                    this.adapterMetrics[adapter.elementId]?.lastTimestamp ?? 0
+                );
+            }
+            return adapter[column];
+        };
+    }
+
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('adapter');
         this.assetFilter$ =
@@ -181,15 +207,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                 this.tutorialActive = tutorialActive;
             },
         );
-        this.dataSource.sortingDataAccessor = (adapter, column) => {
-            if (column === 'status') {
-                return adapter.running;
-            } else if (column === 'lastModified') {
-                return adapter.createdAt;
-            }
-            return adapter[column];
-        };
-
         this.healthPoll$ = interval(5000).subscribe(() => {
             this.loadHealthStatuses();
         });
@@ -304,6 +321,7 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             .getMetricsInfoForAdapters(filteredElementIds)
             .subscribe(metrics => {
                 this.adapterMetrics = metrics;
+                this.dataSource.data = [...this.filteredAdapters];
             });
     }
 
@@ -316,28 +334,92 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         }
     }
 
-    showPermissionsDialog(adapter: AdapterSummaryDto): void {
-        const dialogRef = this.dialogService.open(
-            ObjectPermissionDialogComponent,
-            {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: this.translate.instant('Manage permissions'),
-                width: '50vw',
-                data: {
-                    objectInstanceId: adapter.correspondingDataStreamElementId,
-                    headerTitle:
-                        this.translate.instant(
-                            'Manage permissions for adapter ',
-                        ) + adapter.name,
-                },
-            },
-        );
+    showManageDialog(adapter: AdapterSummaryDto): void {
+        this.adapterService
+            .getAdapter(adapter.elementId)
+            .subscribe(fullAdapter => {
+                const resourceConfig: ObjectManageDialogResourceConfig<AdapterDescription> =
+                    {
+                        resourceLabel: 'Adapter',
+                        nameLabel: 'Adapter name',
+                        descriptionLabel: 'Adapter description',
+                        nameProperty: 'name',
+                        assetLinkType: 'adapter',
+                        assetLinkCheckboxLabel:
+                            'Add the current adapter to an existing asset',
+                        saveResource: resource =>
+                            this.updateManagedAdapter(
+                                fullAdapter.name,
+                                resource,
+                            ),
+                    };
 
-        dialogRef.afterClosed().subscribe(refresh => {
-            if (refresh) {
-                this.getAdaptersRunning();
-            }
+                const dialogRef = this.dialogService.open(
+                    ObjectManageDialogComponent,
+                    {
+                        panelType: PanelType.SLIDE_IN_PANEL,
+                        title: this.translate.instant('Manage'),
+                        width: '50vw',
+                        data: {
+                            objectInstanceId:
+                                fullAdapter.correspondingDataStreamElementId,
+                            resource: { ...fullAdapter },
+                            saveMode: 'immediate',
+                            resourceConfig,
+                            headerTitle:
+                                this.translate.instant('Manage Adapter ') +
+                                adapter.name,
+                        },
+                    },
+                );
+
+                dialogRef.afterClosed().subscribe(refresh => {
+                    if (refresh) {
+                        this.getAdaptersRunning();
+                    }
+                });
+            });
+    }
+
+    private updateManagedAdapter(
+        originalName: string,
+        updatedAdapter: AdapterDescription,
+    ) {
+        if (originalName === updatedAdapter.name) {
+            return this.adapterService.updateAdapter(updatedAdapter);
+        }
+
+        return new Promise<boolean>(resolve => {
+            const dialogRef = this.dialogService.open(AdapterStartedDialog, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: this.translate.instant('Edit adapter'),
+                width: '70vw',
+                data: {
+                    adapter: updatedAdapter,
+                    editMode: true,
+                    addToAssets: false,
+                },
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                resolve(result === 'Confirm');
+            });
         });
+    }
+
+    showCodeDialog(adapter: AdapterSummaryDto): void {
+        this.adapterService
+            .getAdapter(adapter.elementId)
+            .subscribe(fullAdapter => {
+                this.dialogService.open(AdapterCodeDialogComponent, {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translate.instant('Show as Code'),
+                    width: '50vw',
+                    data: {
+                        adapter: fullAdapter,
+                    },
+                });
+            });
     }
 
     /**

@@ -22,6 +22,7 @@ import org.apache.streampipes.mail.template.CustomMailTemplate;
 import org.apache.streampipes.mail.template.InitialPasswordMailTemplate;
 import org.apache.streampipes.mail.template.PasswordRecoveryMailTemplate;
 import org.apache.streampipes.mail.utils.MailUtils;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 import org.apache.streampipes.model.mail.SpEmail;
 
 import org.simplejavamail.api.email.Email;
@@ -30,6 +31,10 @@ import java.io.IOException;
 
 public class MailSender extends AbstractMailer {
 
+  public MailSender(SpCoreConfiguration configuration) {
+    super(configuration);
+  }
+
   public void sendEmail(SpEmail mail) throws IOException {
     Email email = baseEmail()
         .withRecipients(toSimpleRecipientList(mail.getRecipients()))
@@ -37,7 +42,8 @@ public class MailSender extends AbstractMailer {
         .appendTextHTML(new CustomMailTemplate(
             mail.getSubject(),
             mail.getPreheader(),
-            mail.getMessage()).generateTemplate())
+            mail.getMessage(),
+            spCoreConfiguration).generateTemplate())
         .buildEmail();
 
     deliverMail(email);
@@ -46,8 +52,9 @@ public class MailSender extends AbstractMailer {
   public void sendAccountActivationMail(String recipientAddress,
                                         String activationCode) throws IOException {
     Email email = baseEmail()
-        .withSubject(MailUtils.extractAppName() + " - Account Activation")
-        .appendTextHTML(new AccountActiviationMailTemplate(activationCode).generateTemplate())
+        .withSubject(MailUtils.extractAppName(spCoreConfiguration) + " - Account Activation")
+        .appendTextHTML(new AccountActiviationMailTemplate(activationCode, spCoreConfiguration)
+            .generateTemplate())
         .to(recipientAddress)
         .buildEmail();
 
@@ -57,8 +64,9 @@ public class MailSender extends AbstractMailer {
   public void sendPasswordRecoveryMail(String recipientAddress,
                                        String recoveryCode) throws IOException {
     Email email = baseEmail()
-        .withSubject(MailUtils.extractAppName() + " - Password Recovery")
-        .appendTextHTML(new PasswordRecoveryMailTemplate(recoveryCode).generateTemplate())
+        .withSubject(MailUtils.extractAppName(spCoreConfiguration) + " - Password Recovery")
+        .appendTextHTML(new PasswordRecoveryMailTemplate(recoveryCode, spCoreConfiguration)
+            .generateTemplate())
         .to(recipientAddress)
         .buildEmail();
 
@@ -68,8 +76,9 @@ public class MailSender extends AbstractMailer {
   public void sendInitialPasswordMail(String recipientAddress,
                                       String generatedProperty) throws IOException {
     Email email = baseEmail()
-        .withSubject(MailUtils.extractAppName() + " - New Account")
-        .appendTextHTML(new InitialPasswordMailTemplate(generatedProperty).generateTemplate())
+        .withSubject(MailUtils.extractAppName(spCoreConfiguration) + " - New Account")
+        .appendTextHTML(new InitialPasswordMailTemplate(generatedProperty, spCoreConfiguration)
+            .generateTemplate())
         .to(recipientAddress)
         .buildEmail();
 

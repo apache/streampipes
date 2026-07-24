@@ -23,7 +23,6 @@ __all__ = [
     "VersionEndpoint",
 ]
 
-from typing import Tuple, Type
 
 from streampipes.endpoint import APIEndpoint
 from streampipes.model.container import Versions
@@ -64,7 +63,7 @@ class VersionEndpoint(APIEndpoint):
     """
 
     @property
-    def _container_cls(self) -> Type[ResourceContainer]:
+    def _container_cls(self) -> type[ResourceContainer]:
         """Defines the model container class the endpoint refers to.
 
         Returns
@@ -75,7 +74,7 @@ class VersionEndpoint(APIEndpoint):
         return Versions
 
     @property
-    def _resource_cls(cls) -> Type[Version]:
+    def _resource_cls(cls) -> type[Version]:
         """Returns the class of the resource that are bundled.
 
         Returns
@@ -85,7 +84,7 @@ class VersionEndpoint(APIEndpoint):
         return Version
 
     @property
-    def _relative_api_path(self) -> Tuple[str, ...]:
+    def _relative_api_path(self) -> tuple[str, ...]:
         """Defines the relative api path to the DataStream endpoint.
 
         Each path within the URL is defined as an own string.

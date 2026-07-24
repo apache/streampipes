@@ -113,6 +113,25 @@ export class ChartSharedService {
         };
     }
 
+    dashboardObservableGenerator(): ObservableGenerator {
+        return {
+            generateObservables: (
+                startTime: number,
+                endTime: number,
+                dataConfig: DataExplorerDataConfig,
+                widgetId: string,
+                maxRowCountPerTag: number,
+            ) => {
+                return this.dataViewQueryGeneratorService.generateBatchedObservables(
+                    startTime,
+                    endTime,
+                    dataConfig,
+                    maxRowCountPerTag,
+                );
+            },
+        };
+    }
+
     kioskModeObservableGenerator(dashboardId: string): ObservableGenerator {
         return {
             generateObservables: (
@@ -122,7 +141,7 @@ export class ChartSharedService {
                 widgetId: string,
                 maxRowCountPerTag: number,
             ) => {
-                return this.dataViewQueryGeneratorService.generateObservablesForKioskMode(
+                return this.dataViewQueryGeneratorService.generateBatchedObservablesForKioskMode(
                     startTime,
                     endTime,
                     dataConfig,

@@ -31,6 +31,7 @@ import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapter
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV4;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV5;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV6;
+import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaAdapterMigrationV7;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaSinkMigrationV1;
 import org.apache.streampipes.extensions.connectors.opcua.migration.OpcUaSinkMigrationV2;
 import org.apache.streampipes.extensions.connectors.opcua.sink.OpcUaSink;
@@ -69,6 +70,7 @@ public class OpcUaConnectorsModuleExport implements IExtensionModuleExport {
         new OpcUaAdapterMigrationV4(),
         new OpcUaAdapterMigrationV5(),
         new OpcUaAdapterMigrationV6(),
+        new OpcUaAdapterMigrationV7(),
         new OpcUaSinkMigrationV1(),
         new OpcUaSinkMigrationV2()
     );

@@ -34,10 +34,11 @@ import {
     ResourceSummaryDto,
 } from '../model/resource/resource-summary.model';
 import {
+    CsvImportJobStartResult,
+    CsvImportJobStatus,
     CsvImportPreviewRequest,
     CsvImportPreviewResult,
     CsvImportRequest,
-    CsvImportResult,
     CsvImportSchemaValidationRequest,
     CsvImportSchemaValidationResult,
 } from '../model/datalake/csv-import.model';
@@ -64,18 +65,18 @@ export class DatalakeRestService {
         return this.baseUrl + '/api/v4/datalake/import';
     }
 
-    getMeasurementEntryCounts(
-        measurementNames: string[],
+    getMeasurementEntryCount(
+        measurementId: string,
         daysBack = -1,
-    ): Observable<Record<string, number>> {
-        return this.http
-            .get(`${this.dataLakeMeasureUrl}/count`, {
+    ): Observable<number> {
+        return this.http.get<number>(
+            `${this.dataLakeMeasureUrl}/${encodeURIComponent(measurementId)}/count`,
+            {
                 params: {
-                    measurementNames,
                     daysBack,
                 },
-            })
-            .pipe(map(r => r as Record<string, number>));
+            },
+        );
     }
 
     getAllMeasurementSeries(): Observable<DataLakeMeasure[]> {
@@ -117,6 +118,18 @@ export class DatalakeRestService {
                 headers: { ignoreLoadingBar: '' },
             })
             .pipe(map(response => response as SpQueryResult[]));
+    }
+
+    getLatestMeasurementEvents(
+        measurementNames: string[],
+    ): Observable<Record<string, number>> {
+        return this.http.post<Record<string, number>>(
+            `${this.dataLakeUrl}/measurements/latest-events`,
+            measurementNames,
+            {
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+            },
+        );
     }
 
     getData(
@@ -298,8 +311,19 @@ export class DatalakeRestService {
         );
     }
 
-    importCsvData(request: CsvImportRequest): Observable<CsvImportResult> {
-        return this.http.post<CsvImportResult>(this.dataLakeImportUrl, request);
+    importCsvData(
+        request: CsvImportRequest,
+    ): Observable<CsvImportJobStartResult> {
+        return this.http.post<CsvImportJobStartResult>(
+            this.dataLakeImportUrl,
+            request,
+        );
+    }
+
+    getCsvImportJobStatus(jobId: string): Observable<CsvImportJobStatus> {
+        return this.http.get<CsvImportJobStatus>(
+            `${this.dataLakeImportUrl}/${encodeURIComponent(jobId)}`,
+        );
     }
 
     dropSingleMeasurementSeries(index: string) {

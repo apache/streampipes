@@ -53,7 +53,6 @@ import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaMonitoredItem;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,14 +89,14 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   private int numberOfEventProperties = 0;
 
   /**
-   * This variable is used to map the node ids during the subscription to the labels of the nodes
+   * This variable is used to map the node ids during the subscription to the selected nodes.
    */
-  private final Map<String, String> nodeIdToLabelMapping;
+  private final Map<String, OpcUaNode> nodeIdToNodeMapping;
 
   public OpcUaAdapter(OpcUaClientProvider clientProvider) {
     this.clientProvider = clientProvider;
     this.event = new HashMap<>();
-    this.nodeIdToLabelMapping = new HashMap<>();
+    this.nodeIdToNodeMapping = new HashMap<>();
   }
 
   private void prepareAdapter() throws AdapterException {
@@ -136,14 +135,10 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
         }
 
         this.pullingIntervalMilliSeconds = effectiveIntervalMs;
-      } else {
-        var allNodeIds = this.allNodes.stream()
-            .map(node -> node.nodeInfo().getNodeId()).toList();
-        this.connectedClient.createListSubscription(allNodeIds, this);
       }
 
-      this.allNodes.forEach(node -> this.nodeIdToLabelMapping
-          .put(node.nodeInfo().getNodeId().toString(), node.nodeInfo().getDisplayName()));
+      this.allNodes.forEach(node -> this.nodeIdToNodeMapping
+          .put(node.nodeInfo().getNodeId().toString(), node));
 
     } catch (Exception e) {
       var errorMessage = buildStartupErrorMessage(e);
@@ -186,14 +181,16 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
       LOG.debug("Reading {} OPC UA nodes: {}", nodeIds.size(), nodeIds);
 
       var response =
-          this.connectedClient.getClient().readValuesAsync(
-              0,
-              TimestampsToReturn.Both,
-              nodeIds);
+          this.connectedClient.readValuesAsync(
+              nodeIds,
+              this.getPollingInterval().timeUnit().toMillis(this.getPollingInterval().value()));
       boolean badStatusCodeReceived = false;
       boolean emptyValueReceived = false;
       List<DataValue> returnValues =
-          response.get(this.getPollingInterval().value(), this.getPollingInterval().timeUnit());
+          response.get(
+              2L * this.getPollingInterval().value(),
+              this.getPollingInterval().timeUnit()
+          );
       if (returnValues == null) {
         emptyValueReceived = true;
         LOG.debug("Null value object returned for OPC UA nodes {} - event will not be sent", nodeIds);
@@ -280,27 +277,59 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   public void onSubscriptionValue(OpcUaMonitoredItem item,
                                   DataValue value) {
 
-    String key = this.nodeIdToLabelMapping.get(item.getReadValueId().getNodeId().toString());
-
-    var currNode = this.allNodes.stream()
-        .filter(node -> key.equals(node.nodeInfo().getDisplayName()))
-        .findFirst()
-        .orElse(null);
+    var nodeId = item.getReadValueId().getNodeId();
+    var currNode = this.nodeIdToNodeMapping.get(nodeId.toString());
 
     if (currNode != null) {
-      currNode.addToEvent(connectedClient.getClient(), event, value.getValue());
-      // ensure that event is complete and all opc ua subscriptions transmitted at least one value
-      if (event.size() >= numberOfEventProperties) {
-        Map<String, Object> newEvent = new HashMap<>();
-        // deep copy of event to prevent preprocessor error
-        for (String k : event.keySet()) {
-          newEvent.put(k, event.get(k));
+      if (value == null) {
+        LOG.warn("Received null DataValue for OPC UA subscription node label: {}, node id: {}",
+            currNode.nodeInfo().getDisplayName(),
+            nodeId);
+        return;
+      }
+
+      var status = value.getStatusCode();
+      if (status != null && status.isGood()) {
+        synchronized (event) {
+          currNode.addToEvent(connectedClient.getClient(), event, value.getValue());
+          publishSubscriptionEventIfComplete();
         }
-        collector.collect(newEvent);
+      } else if (shouldSkipEvent(true)) {
+        LOG.warn("Received status code {} for OPC UA subscription node label: {}, node id: {}",
+            status,
+            currNode.nodeInfo().getDisplayName(),
+            nodeId);
+      } else {
+        synchronized (event) {
+          event.remove(currNode.nodeInfo().getDesiredName(""));
+          publishSubscriptionEvent();
+        }
       }
     } else {
       LOG.error("No event is produced, because subscription item {} could not be found within all nodes", item);
     }
+  }
+
+  private void publishSubscriptionEvent() {
+    if (!event.isEmpty()) {
+      collector.collect(copySubscriptionEvent());
+    }
+  }
+
+  private void publishSubscriptionEventIfComplete() {
+    // ensure that event is complete and all opc ua subscriptions transmitted at least one value
+    if (event.size() >= numberOfEventProperties) {
+      collector.collect(copySubscriptionEvent());
+    }
+  }
+
+  private Map<String, Object> copySubscriptionEvent() {
+    Map<String, Object> newEvent = new HashMap<>();
+    // deep copy of event to prevent preprocessor error
+    for (String k : event.keySet()) {
+      newEvent.put(k, event.get(k));
+    }
+    return newEvent;
   }
 
   @Override
@@ -326,6 +355,15 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
     if (this.opcUaAdapterConfig.inPullMode()) {
       this.pullAdapterScheduler = new PullAdapterScheduler();
       this.pullAdapterScheduler.schedule(this, extractor.getAdapterDescription().getElementId());
+    } else {
+      var allNodeIds = this.allNodes.stream()
+          .map(node -> node.nodeInfo().getNodeId()).toList();
+      try {
+        this.connectedClient.createListSubscription(allNodeIds, this.opcUaAdapterConfig, this);
+      } catch (Exception e) {
+        var errorMessage = buildStartupErrorMessage(e);
+        throw new AdapterException(errorMessage, e);
+      }
     }
   }
 
@@ -347,14 +385,15 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
   @Override
   public IAdapterConfiguration declareConfig() {
-    var builder = AdapterConfigurationBuilder.create(ID, 6, () -> new OpcUaAdapter(clientProvider))
+    var builder = AdapterConfigurationBuilder.create(ID, 7, () -> new OpcUaAdapter(clientProvider))
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
         .requiredAlternatives(Labels.withId(ADAPTER_TYPE),
             Alternatives.from(Labels.withId(PULL_MODE),
                 SharedUserConfiguration.getPullModeGroup()
             ),
-            Alternatives.from(Labels.withId(SUBSCRIPTION_MODE)));
+            Alternatives.from(Labels.withId(SUBSCRIPTION_MODE),
+                SharedUserConfiguration.getSubscriptionModeGroup()));
     SharedUserConfiguration.appendSharedOpcUaConfig(builder, true);
     builder.requiredStaticProperty(SharedUserConfiguration.makeNamingStrategyOption());
     return builder.buildConfiguration();

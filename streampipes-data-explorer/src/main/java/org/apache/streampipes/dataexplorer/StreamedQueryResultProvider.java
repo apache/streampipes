@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriter;
+import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -39,22 +39,25 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
   private static final String TIME_FIELD = "time";
 
   private final OutputFormat format;
+  private final ConfiguredOutputWriterFactory outputWriterFactory;
 
   public StreamedQueryResultProvider(ProvidedRestQueryParams params,
                                      OutputFormat format,
+                                     ConfiguredOutputWriterFactory outputWriterFactory,
                                      IDataExplorerQueryManagement dataExplorerQueryManagement,
                                      DataExplorerQueryExecutor<?, ?> queryExecutor,
                                      IDataExplorerSchemaManagement schemaManagement,
                                      boolean ignoreMissingValues) {
     super(params, dataExplorerQueryManagement, queryExecutor, schemaManagement, ignoreMissingValues);
     this.format = format;
+    this.outputWriterFactory = outputWriterFactory;
   }
 
   public void getDataAsStream(OutputStream outputStream) throws IOException {
     var usesLimit = queryParams.has(SupportedRestQueryParams.QP_LIMIT);
     var measurement = findByMeasurementName(queryParams.getMeasurementId()).get();
 
-    var configuredWriter = ConfiguredOutputWriter
+    var configuredWriter = outputWriterFactory
         .getConfiguredWriter(measurement, format, queryParams, ignoreMissingData);
 
     if (!queryParams.has(SupportedRestQueryParams.QP_LIMIT)) {

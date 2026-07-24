@@ -24,8 +24,9 @@ An endpoint provides all options to communicate with a dedicated part of StreamP
 import json
 import logging
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from http import HTTPStatus
-from typing import Callable, Optional, Tuple, Type, final
+from typing import final
 
 from requests import Response
 from requests.exceptions import HTTPError
@@ -87,7 +88,7 @@ class APIEndpoint(Endpoint):
 
     @property
     @abstractmethod
-    def _container_cls(self) -> Type[ResourceContainer]:
+    def _container_cls(self) -> type[ResourceContainer]:
         """Defines the model container class the endpoint refers to.
         This model container class corresponds to the Python data model,
         which handles multiple resources returned from the endpoint.
@@ -101,7 +102,7 @@ class APIEndpoint(Endpoint):
 
     @property
     @abstractmethod
-    def _relative_api_path(self) -> Tuple[str, ...]:
+    def _relative_api_path(self) -> tuple[str, ...]:
         """Defines the relative api path with regard to the StreamPipes API URL.
         Each path within the URL is defined as an own string.
 
@@ -237,7 +238,7 @@ class APIEndpoint(Endpoint):
             headers={"Content-type": "application/json"},
         )
 
-    def put(self, resource: Resource, identifier: Optional[str] = None) -> None:
+    def put(self, resource: Resource, identifier: str | None = None) -> None:
         """Allows to update a resource in the StreamPipes API.
 
         Parameters
@@ -276,7 +277,7 @@ class MessagingEndpoint(Endpoint):
     """
 
     def __init__(self, parent_client: "StreamPipesClient"):  # type: ignore # noqa: F821
-        self._broker: Optional[Broker] = None
+        self._broker: Broker | None = None
         super().__init__(parent_client=parent_client)
 
     @property

@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import List, Optional
 
 from pydantic import Field, StrictBool, StrictStr
 
@@ -88,25 +87,25 @@ class DataStream(Resource):
     class_name: StrictStr = Field(alias="@class", default_factory=lambda: "org.apache.streampipes.model.SpDataStream")
     element_id: StrictStr = Field(default="")
     name: StrictStr = Field(default="Unnamed")
-    description: Optional[StrictStr] = None
-    icon_url: Optional[StrictStr] = None
-    app_id: Optional[StrictStr] = None
+    description: StrictStr | None = None
+    icon_url: StrictStr | None = None
+    app_id: StrictStr | None = None
     includes_assets: StrictBool = Field(default=False)
     includes_locales: StrictBool = Field(default=False)
-    included_assets: List[StrictStr] = Field(default_factory=list)
-    included_locales: List[StrictStr] = Field(default_factory=list)
-    application_links: List[ApplicationLink] = Field(default_factory=list)
+    included_assets: list[StrictStr] = Field(default_factory=list)
+    included_locales: list[StrictStr] = Field(default_factory=list)
+    application_links: list[ApplicationLink] = Field(default_factory=list)
     internally_managed: StrictBool = Field(default=False)
-    connected_to: Optional[List[StrictStr]] = None
+    connected_to: list[StrictStr] | None = None
     event_grounding: EventGrounding = Field(default_factory=EventGrounding)
-    event_schema: Optional[EventSchema] = None
-    measurement_capability: Optional[List[MeasurementCapability]] = None
-    measurement_object: Optional[List[MeasurementObject]] = None
-    corresponding_adapter_id: Optional[StrictStr] = None
-    category: Optional[List[StrictStr]] = None
-    uri: Optional[StrictStr] = None
-    dom: Optional[StrictStr] = None
-    rev: Optional[StrictStr] = Field(default=None, alias="_rev")
+    event_schema: EventSchema | None = None
+    measurement_capability: list[MeasurementCapability] | None = None
+    measurement_object: list[MeasurementObject] | None = None
+    corresponding_adapter_id: StrictStr | None = None
+    category: list[StrictStr] | None = None
+    uri: StrictStr | None = None
+    dom: StrictStr | None = None
+    rev: StrictStr | None = Field(default=None, alias="_rev")
 
     def to_dict(self, use_source_names=True):
         """Returns the resource in dictionary representation.

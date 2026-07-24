@@ -27,6 +27,8 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.CustomTransformOutputStrategy;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.resource.management.secret.SecretDecrypter;
+import org.apache.streampipes.resource.management.secret.SecretService;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
@@ -72,7 +74,7 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
 
   private EventSchema makeRequest() {
     try {
-      String httpRequestBody = JacksonSerializer.getObjectMapper().writeValueAsString(dataProcessorInvocation);
+      String httpRequestBody = makeRequestBody();
       var service = new ExtensionsServiceEndpointGenerator().selectService(
           dataProcessorInvocation.getAppId(),
           SpServiceUrlProvider.DATA_PROCESSOR,
@@ -89,6 +91,12 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
       e.printStackTrace();
       return new EventSchema();
     }
+  }
+
+  String makeRequestBody() throws IOException {
+    var requestInvocation = new DataProcessorInvocation(dataProcessorInvocation);
+    new SecretService(new SecretDecrypter()).apply(requestInvocation);
+    return JacksonSerializer.getObjectMapper().writeValueAsString(requestInvocation);
   }
 
   private EventSchema handleResponse(ExtensionServiceOperationResult response) throws JsonSyntaxException, IOException {

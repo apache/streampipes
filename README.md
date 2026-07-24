@@ -59,8 +59,6 @@ As a ready-to-use platform, StreamPipes enables users to implement industrial Io
 
 ## Product Tour
 
-The repository already contains a few visuals. The gallery below uses them directly and reserves explicit slots for additional screenshots so the README can evolve without another structural rewrite.
-
 | Feature                                        | Preview                                                            |
 |------------------------------------------------|--------------------------------------------------------------------|
 | Connect data sources with a guided setup flow  | ![StreamPipes Connect](images/connect-create-opcua-browser.png)    |
@@ -92,7 +90,7 @@ The repository already contains a few visuals. The gallery below uses them direc
 The fastest way to get a full installation with extensions is to use one of the Docker-based installers:
 
 - [StreamPipes Compose](installer/compose) for container-based deployment
-- [StreamPipes CLI](installer/cli) for developers who want to extend StreamPipes
+- [StreamPipes CLI](installer/cli) for developers who want to extend StreamPipes (**deprecated**)
 - [StreamPipes k8s](installer/k8s) for cluster-based operation
 
 For most first-time users, `installer/compose` is the right starting point.
@@ -105,6 +103,16 @@ docker-compose up -d
 After the services are up, open `http://localhost` to complete the setup in the browser.
 
 ### Build StreamPipes as a developer
+
+> **Deprecated:** The StreamPipes CLI remains available for existing users, but it is deprecated and will be removed in a future release. For local development, prefer the dev container setup described below.
+
+#### Dev Container Setup (Experimental)
+
+The repository includes an experimental dev container setup in [`.devcontainer`](.devcontainer). It starts the required third-party services with Docker Compose and provides a containerized development environment for running StreamPipes from source.
+
+For users not using VS Code, the dev container files can still serve as the reference setup for the required development services and environment variables. See [`.devcontainer/docker-compose.yml`](.devcontainer/docker-compose.yml), [`.devcontainer/.env.example`](.devcontainer/.env.example), and [`.devcontainer/README.md`](.devcontainer/README.md) for the current Compose configuration.
+
+For VS Code users, open the repository in VS Code and run `Dev Containers: Reopen in Container`. After the container has started, use the included VS Code tasks or debug launch configurations to start the core, extensions, and UI.
 
 Prerequisites:
 
@@ -160,7 +168,7 @@ This repository contains the StreamPipes platform, SDKs, extensions, installers,
 - [`streampipes-extensions`](streampipes-extensions) for bundled adapters and pipeline elements
 - [`streampipes-sdk`](streampipes-sdk) for extension development
 - [`ui`](ui) for the web application
-- [`installer`](installer) for Compose, CLI, and Kubernetes deployment options
+- [`installer`](installer) for Compose, deprecated CLI, and Kubernetes deployment options
 
 ## Extending StreamPipes
 

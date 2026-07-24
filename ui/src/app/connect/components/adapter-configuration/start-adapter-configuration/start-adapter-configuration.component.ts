@@ -26,6 +26,7 @@ import {
 import {
     AdapterDescription,
     EventSchema,
+    Permission,
     ReduceEventRateRule,
     RemoveDuplicateRule,
     SpAssetTreeNode,
@@ -64,7 +65,6 @@ import { MatInput } from '@angular/material/input';
 import { SpAdapterOptionsPanelComponent } from './adapter-options-panel/adapter-options-panel.component';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatTooltip } from '@angular/material/tooltip';
-import { AdapterCodePanelComponent } from '../../adapter-code-panel/adapter-code-panel.component';
 import { MatButton } from '@angular/material/button';
 
 @Component({
@@ -87,7 +87,6 @@ import { MatButton } from '@angular/material/button';
         MatSelect,
         MatOption,
         MatTooltip,
-        AdapterCodePanelComponent,
         MatButton,
         TranslatePipe,
         TimestampPipe,
@@ -109,6 +108,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
     @Input() eventSchema: EventSchema;
 
     @Input() isEditMode: boolean;
+    @Input() permission?: Permission;
+    @Input() addToAssets = true;
 
     /**
      * Cancels the adapter configuration process
@@ -146,9 +147,9 @@ export class StartAdapterConfigurationComponent implements OnInit {
     startAdapterNow = true;
     showCode = false;
     showAsset = false;
-    selectedAssets = [];
-    deselectedAssets = [];
-    originalAssets = [];
+    @Input() selectedAssets: SpAssetTreeNode[] = [];
+    @Input() deselectedAssets: SpAssetTreeNode[] = [];
+    @Input() originalAssets: SpAssetTreeNode[] = [];
 
     isAssetAdmin = false;
     isPipelineAdmin = false;
@@ -202,6 +203,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
             data: {
                 adapter: this.adapterDescription,
                 editMode: true,
+                permission: this.permission,
+                addToAssets: this.addToAssets,
                 selectedAssets: this.selectedAssets,
                 deselectedAssets: this.deselectedAssets,
                 originalAssets: this.originalAssets,

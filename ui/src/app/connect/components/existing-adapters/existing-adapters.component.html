@@ -116,10 +116,7 @@
                                 data-cy="adapter-operation-in-progress-spinner"
                                 fxLayoutAlign="center center"
                             >
-                                <mat-spinner
-                                    color="accent"
-                                    [diameter]="20"
-                                ></mat-spinner>
+                                <sp-spinner [diameter]="20"></sp-spinner>
                             </div>
                         } @else if (!adapter.running) {
                             <button
@@ -171,7 +168,9 @@
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="adapterBase">
-                    <th mat-header-cell *matHeaderCellDef>Adapter</th>
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        Adapter
+                    </th>
                     <td mat-cell *matCellDef="let adapter">
                         @if (getIconUrl(adapter) && !adapter.icon) {
                             <img
@@ -205,6 +204,7 @@
                 <ng-container matColumnDef="messagesSent">
                     <th
                         mat-header-cell
+                        mat-sort-header
                         *matHeaderCellDef
                         matTooltip="Messages sent since last start"
                     >
@@ -225,7 +225,7 @@
                 </ng-container>
 
                 <ng-container matColumnDef="lastMessage">
-                    <th mat-header-cell *matHeaderCellDef>
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
                         {{ 'Last message' | translate }}
                     </th>
                     <td mat-cell *matCellDef="let adapter">
@@ -254,6 +254,14 @@
                     </button>
                     <button
                         mat-menu-item
+                        data-cy="show-adapter-code"
+                        (click)="showCodeDialog(element)"
+                    >
+                        <mat-icon>code</mat-icon>
+                        <span>{{ 'Code' | translate }}</span>
+                    </button>
+                    <button
+                        mat-menu-item
                         data-cy="edit-adapter"
                         (click)="editAdapter(element)"
                     >
@@ -262,11 +270,11 @@
                     </button>
                     <button
                         mat-menu-item
-                        data-cy="open-manage-permissions"
-                        (click)="showPermissionsDialog(element)"
+                        data-cy="open-manage-adapter"
+                        (click)="showManageDialog(element)"
                     >
-                        <mat-icon>share</mat-icon>
-                        <span>{{ 'Manage permissions' | translate }}</span>
+                        <mat-icon>settings</mat-icon>
+                        <span>{{ 'Manage' | translate }}</span>
                     </button>
                     <button
                         mat-menu-item

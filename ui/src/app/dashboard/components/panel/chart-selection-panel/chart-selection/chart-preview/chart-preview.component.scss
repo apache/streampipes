@@ -60,11 +60,7 @@ mat-icon {
     min-width: 40px;
     height: 40px;
     border-radius: 12px;
-    background: linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--color-primary) 14%, white) 0%,
-        color-mix(in srgb, var(--color-primary) 8%, var(--color-bg-1)) 100%
-    );
+    background: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg-1));
     color: var(--color-primary);
 }
 

@@ -44,7 +44,12 @@
         >
         </sp-dropped-pipeline-element>
         @if (readonly) {
-            <div class="topics-button customize-button">
+            <div
+                class="topics-button customize-button"
+                [class.topics-button--with-metrics]="
+                    hasVisibleMetrics(pipelineElementConfig)
+                "
+            >
                 <button
                     class="topics-icon-button"
                     mat-icon-button

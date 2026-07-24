@@ -22,6 +22,7 @@ import org.apache.streampipes.mail.template.generation.MailTemplateBuilder;
 import org.apache.streampipes.mail.template.part.LinkPart;
 import org.apache.streampipes.mail.template.part.MailTemplatePart;
 import org.apache.streampipes.mail.utils.MailUtils;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 
 import java.util.Map;
 
@@ -29,7 +30,9 @@ public class AccountActiviationMailTemplate extends AbstractMailTemplate {
 
   private final String activationCode;
 
-  public AccountActiviationMailTemplate(String activationCode) {
+  public AccountActiviationMailTemplate(String activationCode,
+                                        SpCoreConfiguration configuration) {
+    super(configuration);
     this.activationCode = activationCode;
   }
 
@@ -40,7 +43,7 @@ public class AccountActiviationMailTemplate extends AbstractMailTemplate {
 
   @Override
   protected String getPreHeader() {
-    return "Activate your " + MailUtils.extractAppName() + " account";
+    return "Activate your " + MailUtils.extractAppName(configuration) + " account";
   }
 
   @Override
@@ -60,6 +63,7 @@ public class AccountActiviationMailTemplate extends AbstractMailTemplate {
   }
 
   private String makeLink() {
-    return new LinkPart("/#/activate-account?activationCode=" + encodeUrlPart(this.activationCode)).generate();
+    return new LinkPart("/#/activate-account?activationCode=" + encodeUrlPart(this.activationCode))
+        .generate(configuration);
   }
 }

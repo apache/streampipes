@@ -24,6 +24,11 @@ import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 import { PlatformServicesCommons } from './commons.service';
 import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
 
+export interface DashboardKioskDataQuery {
+    widgetId: string;
+    queryParams: DatalakeQueryParameters;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -31,14 +36,13 @@ export class DashboardKioskRestService {
     private http = inject(HttpClient);
     private platformServicesCommons = inject(PlatformServicesCommons);
 
-    getData(
+    performMultiQuery(
         dashboardId: string,
-        widgetId: string,
-        queryParams: DatalakeQueryParameters,
-    ): Observable<SpQueryResult> {
+        requests: DashboardKioskDataQuery[],
+    ): Observable<SpQueryResult[]> {
         const context = new HttpContext().set(NGX_LOADING_BAR_IGNORED, true);
-        const url = `${this.dashboardKioskBasePath}/${dashboardId}/${widgetId}/data`;
-        return this.http.post<SpQueryResult>(url, queryParams, {
+        const url = `${this.dashboardKioskBasePath}/${dashboardId}/data`;
+        return this.http.post<SpQueryResult[]>(url, requests, {
             context,
         });
     }

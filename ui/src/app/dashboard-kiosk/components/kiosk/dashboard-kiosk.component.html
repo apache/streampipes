@@ -51,6 +51,19 @@
                             >&nbsp;|&nbsp;{{ dashboard?.description }}</span
                         >
                     }
+                    @if (lastUpdatedAt) {
+                        <sp-label
+                            class="last-updated"
+                            icon="update"
+                            tone="info"
+                            size="small"
+                            variant="soft"
+                            shape="rounded"
+                        >
+                            {{ 'Last updated' | translate }}:
+                            {{ formatLastUpdatedAt() }}
+                        </sp-label>
+                    }
                 </div>
             </div>
         </div>

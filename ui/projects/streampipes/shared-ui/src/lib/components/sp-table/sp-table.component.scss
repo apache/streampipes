@@ -16,14 +16,81 @@
  *
  */
 
+:host {
+    --table-divider-color: color-mix(
+        in srgb,
+        var(--mat-sys-on-surface) 10%,
+        transparent
+    );
+    --table-divider-strong-color: color-mix(
+        in srgb,
+        var(--mat-sys-on-surface) 16%,
+        transparent
+    );
+}
+
 .paginator-container {
-    border-top: 1px solid var(--color-bg-3);
+    border-top: 1px solid var(--table-divider-color);
+    background: var(--mat-sys-surface);
+}
+
+.paginator-container .mat-mdc-paginator-page-size-select {
+    width: 5.25rem;
+}
+
+.paginator-container .mat-mdc-paginator .mat-mdc-select {
+    line-height: 1.5;
+    margin-top: 5px;
+}
+
+.paginator-container
+    .mat-mdc-paginator-page-size-select
+    .mdc-text-field--outlined {
+    height: 1.875rem;
+    background: var(--color-surface-interactive);
+    border-radius: var(--radius-sm);
+}
+
+.paginator-container
+    .mat-mdc-paginator-page-size-select
+    .mat-mdc-form-field-infix {
+    display: flex;
+    align-items: center;
+    min-height: 1.875rem;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.paginator-container
+    .mat-mdc-paginator-page-size-select
+    .mat-mdc-select-trigger {
+    display: flex;
+    align-items: center;
+    height: 1.875rem;
+    color: var(--color-primary);
+    font-weight: var(--font-weight-medium);
+}
+
+.paginator-container .mat-mdc-paginator-page-size-select .mat-mdc-select-value {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    line-height: inherit;
+}
+
+.paginator-container
+    .mat-mdc-paginator-page-size-select
+    .mat-mdc-select-arrow-wrapper {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transform: none;
 }
 
 .selection-toolbar {
-    border-bottom: 1px solid var(--color-bg-3);
+    border-bottom: 1px solid var(--color-border-subtle);
     margin-bottom: var(--space-md);
-    padding-bottom: var(--space-xs);
+    padding: var(--space-sm);
 }
 
 .selection-toolbar__left {
@@ -35,7 +102,9 @@
 }
 
 .grouping-toolbar {
-    padding: var(--space-sm) 0 var(--space-lg);
+    padding: var(--space-sm);
+    margin-bottom: var(--space-md);
+    border-radius: var(--radius-sm);
 }
 
 .grouping-toolbar--standalone {
@@ -85,16 +154,51 @@
 }
 
 .table-search-field__clear {
-    color: var(--color-text-2);
+    color: var(--color-primary);
 }
 
-.mat-mdc-row:hover {
-    background-color: var(--color-bg-1);
+.sp-table {
+    border-collapse: collapse;
+}
+
+.mat-mdc-header-row {
+    background: var(--mat-sys-surface);
+    border-bottom: none;
+    box-shadow: inset 0 -1px var(--table-divider-strong-color);
+}
+
+.mat-mdc-header-cell {
+    color: var(--mat-sys-on-surface);
+    font-weight: var(--font-weight-semibold);
+    border-bottom: 0;
+}
+
+.mat-mdc-row {
+    transition: background-color var(--motion-duration-fast)
+        var(--motion-easing-standard);
+}
+
+.mat-mdc-row:hover:not(.grouped-table-row--header) {
+    background-color: var(--color-surface-interactive-hover);
+}
+
+.mat-mdc-row:has(.mat-mdc-checkbox-checked) {
+    background-color: var(--color-surface-selected);
+}
+
+.mat-mdc-row:has(.mat-mdc-checkbox-checked):hover {
+    background-color: var(--color-surface-selected-hover);
+}
+
+.cursor-pointer:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: -2px;
 }
 
 .mat-mdc-no-data-row {
     height: var(--mat-table-row-item-container-height, 52px);
     text-align: center;
+    color: var(--mat-sys-on-surface-variant);
 }
 
 .cursor-pointer {
@@ -120,7 +224,7 @@
 }
 
 .asset-context-empty {
-    color: var(--color-text-2);
+    color: var(--mat-sys-on-surface-variant);
     font-size: var(--font-size-xs);
 }
 
@@ -135,13 +239,14 @@
 
 .grouped-table-header {
     padding: var(--space-md) var(--space-lg);
-    border-top: 1px solid var(--color-bg-3);
-    border-bottom: 1px solid var(--color-bg-3);
-    background: var(--color-bg-1);
+    border-top: 1px solid var(--table-divider-color);
+    border-bottom: 1px solid var(--table-divider-color);
+    background: var(--color-surface-interactive);
 }
 
 .grouped-table-title {
     margin: 0;
     font-size: var(--font-size-md);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
+    color: var(--mat-sys-on-surface);
 }

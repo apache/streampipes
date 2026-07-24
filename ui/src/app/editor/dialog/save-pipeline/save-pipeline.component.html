@@ -17,98 +17,64 @@
 -->
 
 <div class="sp-dialog-container">
-    <div class="sp-dialog-content padding-20">
-        <div fxFlex="100" fxLayout="column">
-            @if (
-                !operationCompleted &&
-                !operationProgress &&
-                !pipelineUpdatePreflight
-            ) {
-                <sp-save-pipeline-settings
-                    [currentPipelineName]="pipeline.name"
-                    [submitPipelineForm]="submitPipelineForm"
-                    [pipeline]="pipeline"
-                    [storageOptions]="storageOptions"
-                    [(selectedAssets)]="selectedAssets"
-                    [(deselectedAssets)]="deselectedAssets"
-                    [(originalAssets)]="originalAssets"
-                >
-                </sp-save-pipeline-settings>
-            }
-
-            @if (
-                pipelineUpdatePreflight &&
-                !operationCompleted &&
-                !operationProgress
-            ) {
-                <sp-save-pipeline-update-migration
-                    [measurementUpdateInfos]="measurementUpdateInfos"
-                    (startUpdateEmitter)="savePipeline(true)"
-                >
-                </sp-save-pipeline-update-migration>
-            }
-
-            @if (operationProgress || operationCompleted) {
-                <sp-multi-step-status-indicator
-                    [statusIndicators]="statusIndicators"
-                >
-                </sp-multi-step-status-indicator>
-            }
-
-            @if (finalPipelineOperationStatus) {
-                <div class="mt-10">
-                    <mat-divider></mat-divider>
-                    <sp-pipeline-started-status
-                        class="mt-10"
-                        [forceStopDisabled]="true"
-                        [action]="pipelineAction"
-                        [pipelineOperationStatus]="finalPipelineOperationStatus"
+    <div class="sp-dialog-content p-15">
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+            <div fxFlex="100" fxLayout="column" class="w-100">
+                @if (
+                    pipelineUpdatePreflight &&
+                    !operationCompleted &&
+                    !operationProgress
+                ) {
+                    <sp-save-pipeline-update-migration
+                        fxFlex="100"
+                        [measurementUpdateInfos]="measurementUpdateInfos"
+                        (startUpdateEmitter)="savePipeline(true)"
                     >
-                    </sp-pipeline-started-status>
-                </div>
-            }
+                    </sp-save-pipeline-update-migration>
+                }
+
+                @if (operationProgress || operationCompleted) {
+                    <sp-multi-step-status-indicator
+                        [statusIndicators]="statusIndicators"
+                    >
+                    </sp-multi-step-status-indicator>
+                }
+
+                @if (finalPipelineOperationStatus) {
+                    <div class="mt-10">
+                        <mat-divider></mat-divider>
+                        <sp-pipeline-started-status
+                            class="mt-10"
+                            [forceStopDisabled]="true"
+                            [action]="pipelineAction"
+                            [pipelineOperationStatus]="
+                                finalPipelineOperationStatus
+                            "
+                        >
+                        </sp-pipeline-started-status>
+                    </div>
+                }
+            </div>
         </div>
     </div>
     <mat-divider></mat-divider>
-    <div class="sp-dialog-actions" fxLayoutGap="10px">
-        @if (operationCompleted) {
-            <button mat-flat-button (click)="hide(false)">
-                Create another pipeline
-            </button>
-        }
+    <div class="sp-dialog-actions actions-align-right" fxLayoutGap="10px">
         @if (operationCompleted) {
             <button
                 mat-flat-button
                 class="mat-basic"
-                data-cy="sp-navigate-to-pipeline-overview"
-                (click)="navigateToPipelineOverview()"
+                data-cy="sp-save-pipeline-status-close"
+                (click)="close()"
             >
-                Open pipeline overview
+                {{ 'Close' | translate }}
             </button>
         }
-        @if (
-            !operationCompleted && !operationSuccess && !pipelineUpdatePreflight
-        ) {
-            <button
-                [disabled]="
-                    !submitPipelineForm.valid ||
-                    operationProgress ||
-                    operationCompleted
-                "
-                mat-flat-button
-                color="accent"
-                (click)="savePipeline()"
-                data-cy="sp-editor-apply"
-            >
-                {{ 'Apply' | translate }}
-            </button>
-        }
-        @if (!operationProgress && (!operationCompleted || !operationSuccess)) {
+        @if (pipelineUpdatePreflight && !operationProgress) {
             <button
                 mat-flat-button
                 class="mat-basic"
-                (click)="hide(true)"
                 data-cy="sp-editor-cancel"
+                (click)="close()"
             >
                 {{ 'Cancel' | translate }}
             </button>

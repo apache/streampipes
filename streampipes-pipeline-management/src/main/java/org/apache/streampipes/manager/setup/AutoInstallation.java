@@ -53,7 +53,7 @@ public class AutoInstallation implements BackgroundTaskNotifier {
   public void startAutoInstallation() {
     InitialSettings settings = collectInitialSettings();
 
-    List<InstallationStep> steps = InstallationConfiguration.getInstallationSteps(settings);
+    List<InstallationStep> steps = InstallationConfiguration.getInstallationSteps(settings, resourceManager);
     List<Runnable> backgroundSteps = InstallationConfiguration.getBackgroundInstallationSteps(
         settings,
         this,

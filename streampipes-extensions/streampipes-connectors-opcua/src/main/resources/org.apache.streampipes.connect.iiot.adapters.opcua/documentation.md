@@ -39,6 +39,8 @@ The following environment variables control that location and certificate identi
 * SP_OPCUA_KEYSTORE_FILE the keystore file to create or reuse (e.g., keystore.pfx, must be of type PKCS12)
 * SP_OPCUA_KEYSTORE_PASSWORD the password to the keystore
 * SP_OPCUA_APPLICATION_URI the application URI used by the client to identify itself
+* SP_OPCUA_DISALLOW_INSECURE_ENDPOINTS set to `true` to reject connections that use security mode `None`
+  or security policy `None`
 
 Certificate requirements:
 

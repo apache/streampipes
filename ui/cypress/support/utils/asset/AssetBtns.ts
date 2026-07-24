@@ -22,6 +22,9 @@ export class AssetBtns {
     public static createAssetBtn() {
         return cy.dataCy('create-new-asset-button', { timeout: 10000 });
     }
+    public static createBtn() {
+        return cy.dataCy('sp-manage-save', { timeout: 10000 });
+    }
 
     public static assetNameInput() {
         return cy.dataCy('asset-name', { timeout: 10000 });
@@ -84,7 +87,7 @@ export class AssetBtns {
     }
 
     public static adapterCheckbox(adapterName: string) {
-        return cy.dataCy('select-adapters-checkbox-' + adapterName, {
+        return cy.dataCy('select-adapter-checkbox-' + adapterName, {
             timeout: 10000,
         });
     }

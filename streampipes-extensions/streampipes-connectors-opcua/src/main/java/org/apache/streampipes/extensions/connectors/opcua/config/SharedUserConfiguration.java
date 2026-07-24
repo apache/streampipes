@@ -21,8 +21,10 @@ package org.apache.streampipes.extensions.connectors.opcua.config;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels;
 import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaNamingStrategy;
 import org.apache.streampipes.extensions.connectors.opcua.utils.SecurityUtils;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.staticproperty.PropertyValueSpecification;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
@@ -43,6 +45,10 @@ import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabe
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.OPC_URL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PASSWORD;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.PULLING_INTERVAL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_DISCARD_OLDEST;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_PUBLISHING_INTERVAL;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_QUEUE_SIZE;
+import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.SUBSCRIPTION_SAMPLING_INTERVAL;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME;
 import static org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaLabels.USERNAME_GROUP;
 
@@ -51,6 +57,9 @@ public class SharedUserConfiguration {
   public static final String INCOMPLETE_EVENT_HANDLING_KEY = "incomplete-event-handling";
   public static final String INCOMPLETE_OPTION_IGNORE = "ignore-event";
   public static final String INCOMPLETE_OPTION_SEND = "send-event";
+  public static final String SUBSCRIPTION_GROUP = "subscription-mode-group";
+  public static final String SUBSCRIPTION_DISCARD_OLDEST_TRUE = "true";
+  public static final String SUBSCRIPTION_DISCARD_OLDEST_FALSE = "false";
 
   public static final String SECURITY_MODE = "securityMode";
   public static final String SECURITY_POLICY = "securityPolicy";
@@ -146,14 +155,64 @@ public class SharedUserConfiguration {
     return group;
   }
 
+  public static StaticPropertyGroup getSubscriptionModeGroup() {
+    var group = StaticProperties.group(
+        Labels.withId(SUBSCRIPTION_GROUP),
+        false,
+        positiveIntegerProperty(
+            SUBSCRIPTION_PUBLISHING_INTERVAL,
+            OpcUaAdapterConfig.DEFAULT_SUBSCRIPTION_PUBLISHING_INTERVAL_MS,
+            100,
+            3600000),
+        positiveIntegerProperty(
+            SUBSCRIPTION_SAMPLING_INTERVAL,
+            OpcUaAdapterConfig.DEFAULT_SUBSCRIPTION_SAMPLING_INTERVAL_MS,
+            100,
+            3600000),
+        positiveIntegerProperty(
+            SUBSCRIPTION_QUEUE_SIZE,
+            OpcUaAdapterConfig.DEFAULT_SUBSCRIPTION_QUEUE_SIZE,
+            1,
+            100),
+        getSubscriptionDiscardOldestConfig(),
+        getIncompleteEventConfig()
+    );
+    group.setHorizontalRendering(false);
+    return group;
+  }
+
+  private static FreeTextStaticProperty positiveIntegerProperty(OpcUaLabels label,
+                                                                int defaultValue,
+                                                                int min,
+                                                                int max) {
+    var property = StaticProperties.integerFreeTextProperty(Labels.withId(label), defaultValue);
+    property.setValueSpecification(new PropertyValueSpecification(min, max, 1));
+    return property;
+  }
+
+  public static OneOfStaticProperty getSubscriptionDiscardOldestConfig() {
+    var property = StaticProperties.singleValueSelection(
+        Labels.withId(SUBSCRIPTION_DISCARD_OLDEST),
+        List.of(
+            new Option("Discard oldest", SUBSCRIPTION_DISCARD_OLDEST_TRUE),
+            new Option("Discard newest", SUBSCRIPTION_DISCARD_OLDEST_FALSE)
+        )
+    );
+    property.getOptions().get(0).setSelected(OpcUaAdapterConfig.DEFAULT_SUBSCRIPTION_DISCARD_OLDEST);
+    property.getOptions().get(1).setSelected(!OpcUaAdapterConfig.DEFAULT_SUBSCRIPTION_DISCARD_OLDEST);
+    return property;
+  }
+
   public static OneOfStaticProperty getIncompleteEventConfig() {
-    return StaticProperties.singleValueSelection(
+    var property = StaticProperties.singleValueSelection(
         Labels.withId(INCOMPLETE_EVENT_HANDLING_KEY),
         List.of(
             new Option("Ignore (only complete messages are sent)", INCOMPLETE_OPTION_IGNORE),
             new Option("Send (incomplete messages are sent)", INCOMPLETE_OPTION_SEND)
         )
     );
+    property.getOptions().get(0).setSelected(true);
+    return property;
   }
 
   public static List<String> getDependsOn(boolean adapterConfig) {

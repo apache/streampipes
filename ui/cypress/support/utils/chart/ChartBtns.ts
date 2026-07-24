@@ -21,11 +21,11 @@ export class ChartBtns {
         return cy.dataCy('refresh-data-lake-measures');
     }
 
-    public static saveDataViewButton() {
-        return cy.dataCy('save-data-view-btn', { timeout: 10000 });
+    public static saveChartButton() {
+        return cy.dataCy('save-chart-btn', { timeout: 10000 });
     }
 
-    public static saveDataViewBtn() {
+    public static saveChartBtn() {
         return cy.dataCy('sp-manage-save');
     }
 
@@ -47,8 +47,8 @@ export class ChartBtns {
         });
     }
 
-    public static deleteDataViewBtn(dataViewName) {
-        return cy.dataCy('delete-data-view-' + dataViewName, {
+    public static deleteChartBtn(chartName) {
+        return cy.dataCy('delete-chart-' + chartName, {
             timeout: 10000,
         });
     }
@@ -57,8 +57,8 @@ export class ChartBtns {
         return cy.dataCy('save-dashboard-btn', { timeout: 10000 });
     }
 
-    public static removeWidgetBtn(dataViewName) {
-        return cy.dataCy('remove-' + dataViewName);
+    public static removeChartBtn(chartName) {
+        return cy.dataCy('remove-' + chartName);
     }
 
     public static createChartBtn() {
@@ -77,15 +77,14 @@ export class ChartBtns {
         return cy.dataCy('open-manage-permissions-' + dashboardName);
     }
 
-    public static openNewDataViewBtn() {
-        return cy.dataCy('open-new-data-view', { timeout: 10000 });
+    public static openNewChartBtn() {
+        return cy.dataCy('open-new-chart', { timeout: 10000 });
     }
 
-    public static addDataViewBtn(dataViewName: string) {
-        return cy.dataCy(
-            'add-data-view-btn-' + dataViewName.replaceAll(' ', ''),
-            { timeout: 10000 },
-        );
+    public static addChartBtn(chartName: string) {
+        return cy.dataCy('add-chart-btn-' + chartName.replaceAll(' ', ''), {
+            timeout: 10000,
+        });
     }
 
     public static refreshChartSelectionBtn() {
@@ -97,7 +96,7 @@ export class ChartBtns {
     }
 
     public static chartAssetCheckboxBtn() {
-        return cy.dataCy('add-to-Asset-data-view-btn');
+        return cy.dataCy('add-to-asset-chart-btn');
     }
 
     public static chartOptionsBtn() {
@@ -126,8 +125,8 @@ export class ChartBtns {
             .find('input[type="checkbox"]');
     }
 
-    public static editDataViewButton(dataViewName: string) {
-        return cy.dataCy('edit-data-view-' + dataViewName.replace(/ /g, ''));
+    public static editChartButton(chartName: string) {
+        return cy.dataCy('edit-chart-' + chartName.replace(/ /g, ''));
     }
 
     public static chartSyncProblemIcon() {
@@ -138,27 +137,27 @@ export class ChartBtns {
         return cy.dataCy('chart-requires-attention-warning');
     }
 
-    public static editWidget(widgetName: string) {
-        return cy.dataCy('edit-' + widgetName);
+    public static editChart(chartName: string) {
+        return cy.dataCy('edit-' + chartName);
     }
 
-    public static viewWidget(widgetName: string) {
-        return cy.dataCy('show-data-view-' + widgetName);
+    public static viewChart(chartName: string) {
+        return cy.dataCy('show-chart-' + chartName);
     }
 
-    public static moreOptionsBtn(widgetName) {
-        return cy.dataCy('more-options-' + widgetName);
+    public static moreOptionsBtn(chartName) {
+        return cy.dataCy('more-options-' + chartName);
     }
 
-    public static startEditWidget(widgetName) {
-        return cy.dataCy('start-edit-' + widgetName);
+    public static startEditChart(chartName) {
+        return cy.dataCy('start-edit-' + chartName);
     }
 
     public static goBackToOverviewBtn() {
         return cy.dataCy('save-data-explorer-go-back-to-overview');
     }
 
-    public static discardDataExplorerWidgetBtn() {
+    public static discardChartBtn() {
         return cy.dataCy('save-data-explorer-go-back-to-overview');
     }
 
@@ -326,38 +325,8 @@ export class ChartBtns {
         return cy.dataCy('progress-bar-secondary-label');
     }
 
-    public static addNewWidgetBtn() {
-        return cy.dataCy('add-new-widget', { timeout: 10000 });
-    }
-
-    public static dataLakeTruncateBtn() {
-        return cy.dataCy('datalake-truncate-btn');
-    }
-
-    public static dataLakeDeleteBtn() {
-        return cy.dataCy('datalake-delete-btn');
-    }
-
-    public static confirmDataLakeTruncateBtn() {
-        return cy.dataCy('confirm-truncate-data-btn', { timeout: 10000 });
-    }
-
-    public static confirmDataLakeDeleteBtn() {
-        return cy.dataCy('confirm-delete-data-btn', { timeout: 10000 });
-    }
-
-    public static datalakeNumberEvents() {
-        return cy.dataCy('datalake-number-of-events', { timeout: 10000 });
-    }
-
-    public static datalakeTotalCountBtn() {
-        return cy.dataCy('datalake-total-count-button', { timeout: 10000 });
-    }
-
-    public static datalakeNumberOfEventsSpinner() {
-        return cy.dataCy('datalake-number-of-events-spinner', {
-            timeout: 30000,
-        });
+    public static addNewChartBtn() {
+        return cy.dataCy('add-new-chart', { timeout: 10000 });
     }
 
     public static dashboardAssetCheckboxBtn() {
@@ -365,7 +334,7 @@ export class ChartBtns {
     }
 
     public static closeDashboardCreate() {
-        return cy.dataCy('close-data-view');
+        return cy.dataCy('close-dashboard');
     }
 
     public static advancedFilterBtn() {

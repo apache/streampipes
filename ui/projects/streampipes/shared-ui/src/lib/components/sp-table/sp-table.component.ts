@@ -223,6 +223,8 @@ export class SpTableComponent<T>
     private renderedDataSubscription?: Subscription;
     private assetDataSubscription?: Subscription;
     private nameSearchSubscription?: Subscription;
+    private columnDefsSubscription?: Subscription;
+    private registeredColumnDefs = new Set<MatColumnDef>();
     private nameSearchInput$ = new Subject<string>();
     private viewInitialized = false;
     private defaultFilterPredicates = new WeakMap<
@@ -261,9 +263,11 @@ export class SpTableComponent<T>
     }
 
     ngAfterContentInit() {
-        this.columnDefs.forEach(columnDef =>
-            this.table.addColumnDef(columnDef),
-        );
+        this.syncColumnDefs();
+        this.columnDefsSubscription = this.columnDefs.changes.subscribe(() => {
+            this.syncColumnDefs();
+            this.table.renderRows();
+        });
         this.rowDefs.forEach(rowDef => this.table.addRowDef(rowDef));
         this.headerRowDefs.forEach(headerRowDef =>
             this.table.addHeaderRowDef(headerRowDef),
@@ -275,8 +279,6 @@ export class SpTableComponent<T>
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes['dataSource']) {
-            this.selection.clear();
-            this.emitSelection();
             this.visiblePageRows = [];
             this.configureNameSearch();
             if (this.viewInitialized) {
@@ -312,6 +314,7 @@ export class SpTableComponent<T>
         this.renderedDataSubscription?.unsubscribe();
         this.assetDataSubscription?.unsubscribe();
         this.nameSearchSubscription?.unsubscribe();
+        this.columnDefsSubscription?.unsubscribe();
     }
 
     @HostListener('window:resize')
@@ -562,6 +565,24 @@ export class SpTableComponent<T>
         });
     }
 
+    private syncColumnDefs() {
+        const currentColumnDefs = new Set(this.columnDefs.toArray());
+
+        this.registeredColumnDefs.forEach(columnDef => {
+            if (!currentColumnDefs.has(columnDef)) {
+                this.table.removeColumnDef(columnDef);
+                this.registeredColumnDefs.delete(columnDef);
+            }
+        });
+
+        currentColumnDefs.forEach(columnDef => {
+            if (!this.registeredColumnDefs.has(columnDef)) {
+                this.table.addColumnDef(columnDef);
+                this.registeredColumnDefs.add(columnDef);
+            }
+        });
+    }
+
     private refreshRenderedRows() {
         this.updateRenderedState(this.getCurrentPageRows(), false);
     }
@@ -619,35 +640,57 @@ export class SpTableComponent<T>
         return rows.slice(startIndex, startIndex + pageSize);
     }
 
-    private updateRenderedState(rows: T[], pruneSelection = true) {
+    private updateRenderedState(rows: T[], reconcileSelection = true) {
         this.visiblePageRows = rows;
         this.rebuildGroupedSections(rows);
 
-        if (pruneSelection) {
-            this.pruneSelection();
+        if (reconcileSelection) {
+            this.reconcileSelection();
         }
 
         if (this.viewInitialized) {
+            if (this.viewMode === 'grouped') {
+                this.table.dataSource = this.renderedGroupedRows;
+            }
             this.table.renderRows();
         }
     }
 
-    private pruneSelection() {
+    private reconcileSelection() {
         if (!this.selection.hasValue() || !this.dataSource) {
             return;
         }
 
-        const availableRows = new Set(this.dataSource.filteredData ?? []);
-        const rowsToRemove = this.selection.selected.filter(
-            row => !availableRows.has(row),
+        const availableRowsByResourceId = new Map<unknown, T>(
+            (this.dataSource.data ?? []).map(row => [
+                this.getSelectionKey(row),
+                row,
+            ]),
         );
+        const reconciledSelection = this.selection.selected
+            .map(row =>
+                availableRowsByResourceId.get(this.getSelectionKey(row)),
+            )
+            .filter((row): row is T => row !== undefined);
+        const selectionChanged =
+            reconciledSelection.length !== this.selection.selected.length ||
+            reconciledSelection.some(
+                (row, index) => row !== this.selection.selected[index],
+            );
 
-        if (!rowsToRemove.length) {
+        if (!selectionChanged) {
             return;
         }
 
-        this.selection.deselect(...rowsToRemove);
+        this.selection.clear();
+        this.selection.select(...reconciledSelection);
         this.emitSelection();
+    }
+
+    private getSelectionKey(row: T): unknown {
+        const resourceId = (row as Record<string, unknown>)[this.resourceIdKey];
+
+        return resourceId ?? row;
     }
 
     private emitSelection() {

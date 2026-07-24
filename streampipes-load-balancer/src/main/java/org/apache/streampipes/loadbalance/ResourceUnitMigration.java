@@ -52,7 +52,7 @@ public class ResourceUnitMigration {
   public static void migrationForHealth(LoadBalanceResourceUnit<InvocableStreamPipesEntity> resourceUnit,
                                         SpServiceRegistration targetService,
                                         SpServiceRegistration sourceService,
-                                        IPipelineStorage pipelineStorage) {
+                                        SpResourceManager resourceManager) {
 
     logger.info("Migrating pipeline resource unit {} to service {} for health recovery",
                 resourceUnit.getId(), targetService.getSvcId());
@@ -68,11 +68,12 @@ public class ResourceUnitMigration {
         logger.debug("Invoking element {} on new endpoint {}", element.getElementId(),
                      newEndpointUrl);
 
-        new InvokeHttpRequest().execute(element, newEndpointUrl, resourceUnit.getPipelineId());
+        new InvokeHttpRequest().execute(
+            element, newEndpointUrl, resourceUnit.getPipelineId(), resourceManager);
       }
 
       // Update pipeline in storage with new endpoints
-      updatePipelineEndpoints(resourceUnit, pipelineStorage);
+      updatePipelineEndpoints(resourceUnit, resourceManager.managePipelines().getDb());
 
       logger.info("Successfully migrated pipeline resource unit {} to service {}",
                   resourceUnit.getId(), targetService.getSvcId());
@@ -296,7 +297,7 @@ public class ResourceUnitMigration {
         if (isAdapter) {
           migrateAdapterForHealth(matchingUnit, targetService, sourceService, resourceManager);
         } else {
-          migrationForHealth(matchingUnit, targetService, sourceService, pipelineStorage);
+          migrationForHealth(matchingUnit, targetService, sourceService, resourceManager);
         }
         transferredAmount += stats.getEventRateOut() + stats.getEventRateIn();
         migratedCount++;

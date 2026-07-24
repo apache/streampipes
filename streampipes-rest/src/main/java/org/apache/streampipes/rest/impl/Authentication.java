@@ -33,7 +33,7 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.service.RefreshTokenService;
@@ -74,11 +74,13 @@ public class Authentication extends AbstractRestResource {
 
   AuthenticationManager authenticationManager;
   private final SpResourceManager resourceManager;
+  private final ISpCoreConfigurationStorage coreConfigurationStorage;
 
   public Authentication(AuthenticationManager authenticationManager,
                         SpResourceManager resourceManager) {
     this.authenticationManager = authenticationManager;
     this.resourceManager = resourceManager;
+    this.coreConfigurationStorage = resourceManager.getCoreConfigurationStorage();
   }
 
   @PostMapping(
@@ -117,9 +119,7 @@ public class Authentication extends AbstractRestResource {
       return unauthorized();
     }
 
-    var principal = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getUserStorageAPI()
+    var principal = resourceManager.manageUsers().getDb()
         .getUserById(issuedRefreshToken.principalId());
 
     if (!(principal instanceof UserAccount userAccount)) {
@@ -129,7 +129,12 @@ public class Authentication extends AbstractRestResource {
 
     setRefreshCookie(request, response, issuedRefreshToken);
 
-    String jwt = new JwtTokenProvider().createToken(userAccount);
+    String jwt = new JwtTokenProvider(
+        coreConfigurationStorage,
+        resourceManager.manageUsers().getDb(),
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage()
+    ).createToken(userAccount);
     return ok(new JwtAuthenticationResponse(jwt));
   }
 
@@ -163,7 +168,7 @@ public class Authentication extends AbstractRestResource {
   public synchronized ResponseEntity<SuccessMessage> doRegister(
       @RequestBody UserRegistrationData userRegistrationData
   ) {
-    GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
+    GeneralConfig config = coreConfigurationStorage.get().getGeneralConfig();
     if (!config.isAllowSelfRegistration()) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
@@ -204,7 +209,7 @@ public class Authentication extends AbstractRestResource {
       path = "settings",
       produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> getAuthSettings() {
-    GeneralConfig config = getSpCoreConfigurationStorage().get().getGeneralConfig();
+    GeneralConfig config = coreConfigurationStorage.get().getGeneralConfig();
     var termsAcknowledgmentRequired = config.getUserAcknowledgment() != null
         && config.getUserAcknowledgment().required();
     Map<String, Object> response = new HashMap<>();
@@ -241,7 +246,12 @@ public class Authentication extends AbstractRestResource {
   }
 
   private JwtAuthenticationResponse makeJwtResponse(org.springframework.security.core.Authentication auth) {
-    String jwt = new JwtTokenProvider().createToken(auth);
+    String jwt = new JwtTokenProvider(
+        coreConfigurationStorage,
+        resourceManager.manageUsers().getDb(),
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage()
+    ).createToken(auth);
     return new JwtAuthenticationResponse(jwt);
   }
 

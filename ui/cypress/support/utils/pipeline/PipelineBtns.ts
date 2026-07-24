@@ -32,6 +32,22 @@ export class PipelineBtns {
         return cy.dataCy('modify-pipeline-btn');
     }
 
+    public static clonePipeline() {
+        return cy.dataCy('clone-pipeline-btn');
+    }
+
+    public static managePipeline() {
+        return cy.dataCy('open-manage-pipeline');
+    }
+
+    public static pipelineOptions() {
+        return cy.dataCy('options-pipeline');
+    }
+
+    public static managePipelineInEditor() {
+        return cy.dataCy('manage-pipeline-btn');
+    }
+
     public static pipelinesToEditor() {
         return cy.dataCy('pipelines-navigate-to-editor');
     }
@@ -83,19 +99,27 @@ export class PipelineBtns {
     }
 
     public static savePipelineBtn() {
-        return cy.dataCy('sp-editor-save-pipeline');
+        return cy
+            .get('sp-split-button[datacy="sp-editor-save-pipeline"]', {
+                timeout: 15000,
+            })
+            .find('.split-button__main');
     }
 
     public static pipelineCloneModeBtn() {
         return cy.dataCy('pipeline-update-mode-clone');
     }
 
-    public static navigateToOverviewCheckbox() {
-        return cy.dataCy('sp-editor-checkbox-navigate-to-overview');
+    public static managedResourceName() {
+        return cy.dataCy('managed-resource-name');
     }
 
     public static editorApplyBtn() {
         return cy.dataCy('sp-editor-apply');
+    }
+
+    public static editorSaveBtn() {
+        return cy.dataCy('sp-manage-save');
     }
 
     public static pipelineStartedError() {
@@ -103,7 +127,7 @@ export class PipelineBtns {
     }
 
     public static pipelineStartedSuccess() {
-        return cy.dataCy('sp-pipeline-started-success', { timeout: 15000 });
+        return cy.dataCy('sp-pipeline-started', { timeout: 15000 });
     }
 
     public static updateAndMigratePipeline() {
@@ -159,11 +183,14 @@ export class PipelineBtns {
         return cy.dataCy('settings-pipeline-element-button');
     }
     public static pipelineEditorSave() {
-        return cy.dataCy('sp-editor-save-pipeline');
+        return PipelineBtns.savePipelineBtn();
     }
 
+    public static savePipelineStatusClose() {
+        return cy.dataCy('sp-save-pipeline-status-close');
+    }
     public static pipelineAssetCheckbox() {
-        return cy.dataCy('sp-show-pipeline-asset-checkbox');
+        return cy.dataCy('sp-show-asset-checkbox');
     }
 
     public static pipelineEditorCancel() {

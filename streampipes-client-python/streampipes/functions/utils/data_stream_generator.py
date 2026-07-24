@@ -16,7 +16,6 @@
 #
 
 from enum import Enum
-from typing import Dict, Optional
 
 from streampipes.functions.broker import SupportedBroker
 from streampipes.model.common import (
@@ -52,8 +51,8 @@ class RuntimeType(Enum):
 # TODO Use an more general approach to create a data stream
 def create_data_stream(
     name: str,
-    attributes: Dict[str, str],
-    stream_id: Optional[str] = None,
+    attributes: dict[str, str],
+    stream_id: str | None = None,
     broker: SupportedBroker = SupportedBroker.NATS,
 ):
     """Creates a data stream

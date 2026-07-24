@@ -24,6 +24,7 @@ import {
 import {
     DialogRef,
     FormFieldComponent,
+    SpAlertBannerComponent,
     SpLabelComponent,
 } from '@streampipes/shared-ui';
 import { MatFormField } from '@angular/material/form-field';
@@ -51,6 +52,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrl: './select-adapter-transformation-template-dialog.component.scss',
     imports: [
         FormFieldComponent,
+        SpAlertBannerComponent,
         MatFormField,
         MatSelect,
         FormsModule,

@@ -74,6 +74,7 @@ export * from './lib/model/resource/resource-summary.model';
 export * from './lib/model/datalake/data-lake-query-config.model';
 export * from './lib/query/DatalakeQueryParameterBuilder';
 export * from './lib/query/data-view-query-generator.service';
+export * from './lib/query/dashboard-data-request-coordinator.service';
 export * from './lib/query/generic-storage-query-builder';
 export * from './lib/model/user/user.model';
 

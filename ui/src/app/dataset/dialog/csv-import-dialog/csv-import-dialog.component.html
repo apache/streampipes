@@ -151,7 +151,7 @@
                 >
                     @if (previewLoading()) {
                         <div section-actions>
-                            <mat-spinner [diameter]="24"></mat-spinner>
+                            <sp-spinner [diameter]="24"></sp-spinner>
                         </div>
                     }
 
@@ -259,6 +259,8 @@
                         [hasImportResult]="hasImportResult()"
                         [importResult]="importResult()"
                         [uploadErrors]="uploadMessages()"
+                        [processedRows]="importProcessedRows()"
+                        [totalRows]="importTotalRows()"
                     ></sp-csv-import-upload-state>
                 </sp-split-section>
 

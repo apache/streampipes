@@ -17,83 +17,89 @@
 -->
 
 <div [formGroup]="startAdapterForm" fxLayout="column" fxFlex="100">
-    <sp-basic-inner-panel
-        [panelTitle]="'Adapter settings' | translate"
-        outerMargin="20px 0px 10px 0px"
-    >
-        <div fxFlex="100">
-            <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
-                <sp-form-field [level]="2" [label]="'Name' | translate">
-                    <mat-form-field color="accent">
-                        <input
-                            formControlName="adapterName"
-                            matInput
-                            id="input-AdapterName"
-                            [placeholder]="'Name' | translate"
-                            data-cy="sp-adapter-name"
-                            required
-                            (blur)="triggerTutorialAdapterNameAssigned()"
-                        />
-                        @if (
-                            startAdapterForm
-                                .get('adapterName')
-                                .hasError('invalidName')
-                        ) {
-                            <mat-error>
-                                Name can only contain letters, numbers, special
-                                characters (including umlauts), punctuation,
-                                symbols, and spaces.
-                            </mat-error>
-                        }
-                        @if (
-                            startAdapterForm
-                                .get('adapterName')
-                                .hasError('leadingOrTrailingWhitespace')
-                        ) {
-                            <mat-error>
-                                Name cannot start or end with a space.
-                            </mat-error>
-                        }
-                        @if (
-                            startAdapterForm
-                                .get('adapterName')
-                                .hasError('required') ||
-                            startAdapterForm
-                                .get('adapterName')
-                                .hasError('whiteSpaceOnly')
-                        ) {
-                            <mat-error> Adapter name is required. </mat-error>
-                        }
-                        @if (
-                            startAdapterForm
-                                .get('adapterName')
-                                .hasError('minlength') ||
-                            startAdapterForm
-                                .get('adapterName')
-                                .hasError('maxlength')
-                        ) {
-                            <mat-error>
-                                Adapter name must have between 3 and 40
-                                characters.
-                            </mat-error>
-                        }
-                    </mat-form-field>
-                </sp-form-field>
-                <sp-form-field [level]="2" [label]="'Description' | translate">
-                    <mat-form-field color="accent">
-                        <input
-                            matInput
-                            id="input-AdapterDescription"
-                            [ngModelOptions]="{ standalone: true }"
-                            [placeholder]="'Description' | translate"
-                            [(ngModel)]="adapterDescription.description"
-                        />
-                    </mat-form-field>
-                </sp-form-field>
+    @if (!isEditMode) {
+        <sp-basic-inner-panel
+            [panelTitle]="'Adapter settings' | translate"
+            outerMargin="20px 0px 10px 0px"
+        >
+            <div fxFlex="100">
+                <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
+                    <sp-form-field [level]="2" [label]="'Name' | translate">
+                        <mat-form-field color="accent">
+                            <input
+                                formControlName="adapterName"
+                                matInput
+                                id="input-AdapterName"
+                                [placeholder]="'Name' | translate"
+                                data-cy="sp-adapter-name"
+                                required
+                                (blur)="triggerTutorialAdapterNameAssigned()"
+                            />
+                            @if (
+                                startAdapterForm
+                                    .get('adapterName')
+                                    .hasError('invalidName')
+                            ) {
+                                <mat-error>
+                                    Name can only contain letters, numbers,
+                                    special characters (including umlauts),
+                                    punctuation, symbols, and spaces.
+                                </mat-error>
+                            }
+                            @if (
+                                startAdapterForm
+                                    .get('adapterName')
+                                    .hasError('leadingOrTrailingWhitespace')
+                            ) {
+                                <mat-error>
+                                    Name cannot start or end with a space.
+                                </mat-error>
+                            }
+                            @if (
+                                startAdapterForm
+                                    .get('adapterName')
+                                    .hasError('required') ||
+                                startAdapterForm
+                                    .get('adapterName')
+                                    .hasError('whiteSpaceOnly')
+                            ) {
+                                <mat-error>
+                                    Adapter name is required.
+                                </mat-error>
+                            }
+                            @if (
+                                startAdapterForm
+                                    .get('adapterName')
+                                    .hasError('minlength') ||
+                                startAdapterForm
+                                    .get('adapterName')
+                                    .hasError('maxlength')
+                            ) {
+                                <mat-error>
+                                    Adapter name must have between 3 and 40
+                                    characters.
+                                </mat-error>
+                            }
+                        </mat-form-field>
+                    </sp-form-field>
+                    <sp-form-field
+                        [level]="2"
+                        [label]="'Description' | translate"
+                    >
+                        <mat-form-field color="accent">
+                            <input
+                                matInput
+                                id="input-AdapterDescription"
+                                [ngModelOptions]="{ standalone: true }"
+                                [placeholder]="'Description' | translate"
+                                [(ngModel)]="adapterDescription.description"
+                            />
+                        </mat-form-field>
+                    </sp-form-field>
+                </div>
             </div>
-        </div>
-    </sp-basic-inner-panel>
-
+        </sp-basic-inner-panel>
+    }
     <div fxFlex="100" fxLayout="column">
         @if (!isEditMode) {
             <sp-adapter-options-panel
@@ -107,7 +113,7 @@
             </sp-adapter-options-panel>
         }
 
-        @if (isAssetAdmin) {
+        @if (isAssetAdmin && !isEditMode) {
             <sp-adapter-options-panel
                 [optionTitle]="'Add to Asset' | translate"
                 [optionDescription]="
@@ -282,25 +288,6 @@
                 </sp-adapter-options-panel>
             }
         }
-
-        <sp-adapter-options-panel
-            [optionTitle]="'Show code' | translate"
-            [optionDescription]="
-                'Show code to programmatically deploy this adapter over the API'
-                    | translate
-            "
-            optionIcon="code"
-            dataCy="show-code-checkbox"
-            (optionSelectedEmitter)="showCode = $event"
-        >
-            @if (showCode) {
-                <sp-adapter-code-panel
-                    [adapterDescription]="adapterDescription"
-                    class="w-100"
-                >
-                </sp-adapter-code-panel>
-            }
-        </sp-adapter-options-panel>
     </div>
 
     <div fxLayoutAlign="end" style="margin-top: 10px">

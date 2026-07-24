@@ -48,19 +48,40 @@ public class SecurityConfig {
   private final MessageSecurityMode securityMode;
   private final SecurityPolicy securityPolicy;
   private final IStreamPipesClient streamPipesClient;
+  private final boolean disallowInsecureEndpoints;
 
   public SecurityConfig(MessageSecurityMode securityMode,
                         SecurityPolicy securityPolicy,
                         IStreamPipesClient streamPipesClient) {
+    this(
+        securityMode,
+        securityPolicy,
+        streamPipesClient,
+        Environments.getEnvironment().getOpcUaDisallowInsecureEndpoints().getValueOrDefault()
+    );
+  }
+
+  SecurityConfig(MessageSecurityMode securityMode,
+                 SecurityPolicy securityPolicy,
+                 IStreamPipesClient streamPipesClient,
+                 boolean disallowInsecureEndpoints) {
     this.securityMode = securityMode;
     this.securityPolicy = securityPolicy;
     this.streamPipesClient = streamPipesClient;
+    this.disallowInsecureEndpoints = disallowInsecureEndpoints;
   }
 
   public void configureSecurityPolicy(OpcUaConfig config,
                                       List<EndpointDescription> endpoints,
                                       OpcUaClientConfigBuilder builder)
       throws SpConfigurationException, URISyntaxException {
+    if (disallowInsecureEndpoints && (securityMode == MessageSecurityMode.None || securityPolicy == SecurityPolicy.None)) {
+      throw new SpConfigurationException(
+          "OPC UA connections with security mode None or security policy None are disabled by "
+              + "SP_OPCUA_DISALLOW_INSECURE_ENDPOINTS"
+      );
+    }
+
     URI configuredServerUri = new URI(config.getOpcServerURL()).parseServerAuthority();
 
     EndpointDescription tmpEndpoint = endpoints

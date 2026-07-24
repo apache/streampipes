@@ -27,6 +27,7 @@ import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpoi
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.resource.management.SpResourceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,8 +47,13 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(GuessResource.class);
 
-  public GuessResource(ExtensionServiceRequestManager extensionServiceRequestManager) {
-    super(() -> new GuessManagement(new ExtensionsServiceEndpointGenerator(), extensionServiceRequestManager));
+  public GuessResource(ExtensionServiceRequestManager extensionServiceRequestManager,
+                       SpResourceManager resourceManager) {
+    super(() -> new GuessManagement(
+        new ExtensionsServiceEndpointGenerator(),
+        extensionServiceRequestManager,
+        resourceManager)
+    );
   }
 
 

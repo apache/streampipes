@@ -16,21 +16,33 @@
  *
  */
 
-import { DataLakeFilterConfig } from '../../model/DataLakeFilterConfig';
+import { DatasetFilterConfig } from '../../model/DatasetFilterConfig';
 import { ChartWidget } from '../../model/ChartWidget';
 import { DataSetUtils } from '../DataSetUtils';
 import { PrepareTestDataUtils } from '../PrepareTestDataUtils';
 import { GeneralUtils } from '../GeneralUtils';
 import { ChartBtns } from './ChartBtns';
 import { SharedBtns } from '../shared/SharedBtns';
-import { DataLakeSeedUtils } from '../dataset/DataLakeSeedUtils';
+import { DatasetSeedUtils } from '../dataset/DatasetSeedUtils';
 import { ConnectBtns } from '../connect/ConnectBtns';
 
 export class ChartUtils {
     public static ADAPTER_NAME = 'datalake_configuration';
 
-    public static goToDatalake() {
+    public static goToDatalake(discardUnsavedChanges: boolean = true) {
         cy.visit('#/chart');
+        if (!discardUnsavedChanges) {
+            return;
+        }
+        cy.location('hash', { timeout: 10000 }).then(hash => {
+            if (hash.startsWith('#/chart/')) {
+                SharedBtns.confirmDialogCancelBtn()
+                    .should('be.visible')
+                    .click();
+            }
+        });
+        cy.location('hash', { timeout: 10000 }).should('eq', '#/chart');
+        cy.get('sp-chart-overview', { timeout: 10000 }).should('be.visible');
     }
 
     public static goToDashboard() {
@@ -62,14 +74,14 @@ export class ChartUtils {
     public static checkChartCanBeEdited(chartName: string) {
         GeneralUtils.openMenuForRow(chartName);
         GeneralUtils.visibleMaterialMenu().within(() => {
-            ChartBtns.editDataViewButton(chartName).should('exist');
+            ChartBtns.editChartButton(chartName).should('exist');
         });
     }
 
     public static checkChartCanNotBeEdited(chartName: string) {
         GeneralUtils.openMenuForRow(chartName);
         GeneralUtils.visibleMaterialMenu().within(() => {
-            ChartBtns.editDataViewButton(chartName).should('not.exist');
+            ChartBtns.editChartButton(chartName).should('not.exist');
         });
     }
 
@@ -97,7 +109,7 @@ export class ChartUtils {
         format: 'csv' | 'json_array' = 'csv',
     ) {
         if (format === 'csv') {
-            return DataLakeSeedUtils.importCsvFixture({
+            return DatasetSeedUtils.importCsvFixture({
                 fixture: dataSet,
                 measurementName: ChartUtils.ADAPTER_NAME,
                 delimiter: ';',
@@ -109,7 +121,7 @@ export class ChartUtils {
                 },
             });
         } else {
-            return DataLakeSeedUtils.importJsonArrayFixture({
+            return DatasetSeedUtils.importJsonArrayFixture({
                 fixture: dataSet,
                 measurementName: ChartUtils.ADAPTER_NAME,
                 timestampColumn: 'timestamp',
@@ -117,13 +129,13 @@ export class ChartUtils {
         }
     }
 
-    public static addDataViewAndWidget(
+    public static createChart(
         dataSet: string,
         widgetType: string,
         ignoreTimeSelection = false,
     ) {
         ChartUtils.goToDatalake();
-        ChartUtils.createAndEditDataView();
+        ChartUtils.createAndEditChart();
 
         if (!ignoreTimeSelection) {
             ChartUtils.selectTimeRange(
@@ -132,7 +144,6 @@ export class ChartUtils {
             );
         }
 
-        // ChartUtils.addNewWidget();
         ChartUtils.selectDataSet(dataSet);
         ChartUtils.dataConfigSelectAllFields();
 
@@ -183,7 +194,7 @@ export class ChartUtils {
         ChartUtils.goToDashboard();
         ChartUtils.addNewDashboard(name);
         ChartUtils.addAssetsToDashboard(assetNameList);
-        ChartUtils.saveDataView();
+        ChartUtils.saveChart();
         ChartUtils.waitForDashboardInOverview(name);
     }
 
@@ -191,7 +202,7 @@ export class ChartUtils {
         ChartBtns.newDashboardDialogBtn().click();
         ChartBtns.saveDashboardBtn().click();
         cy.dataCy('managed-resource-name').type(name);
-        ChartBtns.saveDataViewBtn().click();
+        ChartBtns.saveChartBtn().click();
     }
 
     public static addNewDashboardwithAssets(name: string, assetNameList) {
@@ -199,19 +210,15 @@ export class ChartUtils {
         ChartBtns.saveDashboardBtn().click();
         cy.dataCy('managed-resource-name').type(name);
         ChartUtils.addAssetsToDashboard(assetNameList);
-        ChartBtns.saveDataViewBtn().click();
+        ChartBtns.saveChartBtn().click();
     }
 
-    public static createDashboardWithLinkedAssets(
-        dataView,
-        name,
-        assetNameList,
-    ) {
+    public static createDashboardWithLinkedAssets(chart, name, assetNameList) {
         ChartUtils.goToDatalake();
 
-        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
+        ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
 
-        ChartUtils.saveDataViewConfiguration(false, false, dataView);
+        ChartUtils.saveChartConfiguration(false, false, chart);
 
         ChartUtils.goToDashboard();
 
@@ -220,8 +227,8 @@ export class ChartUtils {
         ChartUtils.waitForDashboardInOverview(name);
     }
 
-    public static saveDataView() {
-        return ChartBtns.saveDataViewBtn().click();
+    public static saveChart() {
+        return ChartBtns.saveChartBtn().click();
     }
 
     public static saveDashboard() {
@@ -236,21 +243,17 @@ export class ChartUtils {
         }).should('be.visible');
     }
 
-    public static addDataViewAndTableWidget(
+    public static createTableChart(
         dataSet: string,
         ignoreTimeSelection = false,
     ) {
-        this.addDataViewAndWidget(
-            dataSet,
-            ChartWidget.TABLE,
-            ignoreTimeSelection,
-        );
+        this.createChart(dataSet, ChartWidget.TABLE, ignoreTimeSelection);
     }
 
-    public static addDataViewAndTimeSeriesWidget(dataSet: string) {
-        this.addDataViewAndWidget(dataSet, ChartWidget.TIME_SERIES);
+    public static createTimeSeriesChart(dataSet: string) {
+        this.createChart(dataSet, ChartWidget.TIME_SERIES);
     }
-    public static renameWidget(newName: string) {
+    public static renameChart(newName: string) {
         cy.dataCy('managed-resource-name').clear().type(newName);
         cy.dataCy('managed-resource-name').should('have.value', newName);
     }
@@ -265,12 +268,12 @@ export class ChartUtils {
     }
 
     public static createAndEditDashboard(name: string) {
-        // Create new data view
+        // Create new dashboard
         ChartBtns.newDashboardDialogBtn().click();
         ChartBtns.saveDashboardBtn().click();
-        // Configure data view
+        // Configure dashboard
         cy.dataCy('managed-resource-name').type(name);
-        ChartBtns.saveDataViewBtn().click();
+        ChartBtns.saveChartBtn().click();
         cy.contains('[role="row"], tr, mat-row', name, {
             timeout: 10000,
         }).should('be.visible');
@@ -278,8 +281,8 @@ export class ChartUtils {
         this.editDashboard(name);
     }
 
-    public static addDataViewToDashboard(
-        dataViewName: string,
+    public static addChartToDashboard(
+        chartName: string,
         ignoreTimeRange = false,
     ) {
         if (!ignoreTimeRange) {
@@ -290,20 +293,19 @@ export class ChartUtils {
         }
 
         ChartBtns.refreshChartSelectionBtn().should('not.be.disabled');
-        ChartBtns.addDataViewBtn(dataViewName)
+        ChartBtns.addChartBtn(chartName)
             .should('be.visible')
             .click('bottom', { scrollBehavior: false });
     }
 
-    public static createAndEditDataView() {
-        // Create new data view
-        ChartBtns.openNewDataViewBtn().click();
+    public static createAndEditChart() {
+        ChartBtns.openNewChartBtn().click();
         cy.location('hash').should('include', '/chart/create');
         cy.location('hash').should('include', 'editMode=true');
     }
 
-    public static removeWidget(dataViewName: string) {
-        ChartBtns.removeWidgetBtn(dataViewName).click();
+    public static removeChart(chartName: string) {
+        ChartBtns.removeChartBtn(chartName).click();
     }
 
     public static editDashboard(dashboardName: string) {
@@ -327,45 +329,45 @@ export class ChartUtils {
         });
     }
 
-    public static editDataView(dataViewName: string) {
+    public static editChart(chartName: string) {
         // Click edit button
         // following only works if single view is available
-        GeneralUtils.openMenuForRow(dataViewName);
+        GeneralUtils.openMenuForRow(chartName);
         GeneralUtils.visibleMaterialMenu().within(() => {
-            ChartBtns.editDataViewButton(dataViewName).click();
+            ChartBtns.editChartButton(chartName).click();
         });
     }
 
-    public static manageDataView(dataViewName: string) {
+    public static manageChart(chartName: string) {
         // Click edit button
         // following only works if single view is available
-        GeneralUtils.openMenuForRow(dataViewName);
+        GeneralUtils.openMenuForRow(chartName);
         GeneralUtils.visibleMaterialMenu().within(() => {
-            ChartBtns.manageChartButton(dataViewName).click();
+            ChartBtns.manageChartButton(chartName).click();
         });
     }
 
-    public static saveDataViewConfiguration(
+    public static saveChartConfiguration(
         confirmSave: boolean = false,
         withoutConfig: boolean = true,
         name: string = 'New Chart',
     ) {
         if (withoutConfig) {
-            ChartBtns.saveDataViewButton().click({
+            ChartBtns.saveChartButton().click({
                 force: true,
             });
         } else {
-            ChartBtns.saveDataViewButton().click({
+            ChartBtns.saveChartButton().click({
                 force: true,
             });
             cy.dataCy('managed-resource-name').clear().type(name);
-            ChartBtns.saveDataViewBtn().should('be.visible');
-            ChartBtns.saveDataViewBtn().click();
+            ChartBtns.saveChartBtn().should('be.visible');
+            ChartBtns.saveChartBtn().click();
         }
         if (confirmSave) {
             SharedBtns.confirmDialogConfirmBtn().click();
         }
-        ChartBtns.openNewDataViewBtn().should('be.visible');
+        ChartBtns.openNewChartBtn().should('be.visible');
     }
 
     public static saveDashboardConfiguration() {
@@ -382,7 +384,7 @@ export class ChartUtils {
             ChartBtns.manageChartBtn().click();
         });
         ChartUtils.addDashboardToAsset(assetNameList);
-        ChartBtns.saveDataViewBtn().click();
+        ChartBtns.saveChartBtn().click();
     }
 
     public static addChartDialogAssets(assetNameList = []) {
@@ -423,10 +425,10 @@ export class ChartUtils {
         SharedBtns.confirmDialogConfirmBtn().click();
     }
 
-    public static deleteDataView(dataViewName: string) {
-        GeneralUtils.openMenuForRow(dataViewName);
+    public static deleteChart(chartName: string) {
+        GeneralUtils.openMenuForRow(chartName);
         GeneralUtils.visibleMaterialMenu().within(() => {
-            ChartBtns.deleteDataViewBtn(dataViewName).click();
+            ChartBtns.deleteChartBtn(chartName).click();
         });
         SharedBtns.confirmDialogConfirmBtn().click();
     }
@@ -439,37 +441,37 @@ export class ChartUtils {
         SharedBtns.confirmDialogCancelBtn().click();
     }
 
-    public static cancelDeleteDataView(dataViewName: string) {
-        GeneralUtils.openMenuForRow(dataViewName);
+    public static cancelDeleteChart(chartName: string) {
+        GeneralUtils.openMenuForRow(chartName);
         GeneralUtils.visibleMaterialMenu().within(() => {
-            ChartBtns.deleteDataViewBtn(dataViewName).click();
+            ChartBtns.deleteChartBtn(chartName).click();
         });
         SharedBtns.confirmDialogCancelBtn().click();
     }
 
-    public static editWidget(widgetName: string) {
-        ChartBtns.editWidget(widgetName).click();
+    public static editSavedChart(chartName: string) {
+        ChartBtns.editChart(chartName).click();
     }
 
-    public static startEditWidget(widgetName: string) {
-        ChartBtns.moreOptionsBtn(widgetName).click();
-        ChartBtns.startEditWidget(widgetName).click();
+    public static startEditChart(chartName: string) {
+        ChartBtns.moreOptionsBtn(chartName).click();
+        ChartBtns.startEditChart(chartName).click();
     }
 
-    public static saveAndReEditWidget(dataViewName: string) {
-        // Save data view configuration
-        ChartBtns.saveDataViewButton().click();
-        ChartBtns.openNewDataViewBtn().should('be.visible');
-        ChartUtils.editDataView(dataViewName);
+    public static saveAndReEditChart(chartName: string) {
+        // Save chart configuration
+        ChartBtns.saveChartButton().click();
+        ChartBtns.openNewChartBtn().should('be.visible');
+        ChartUtils.editChart(chartName);
     }
 
-    public static saveAndEditWidget(dataViewName: string) {
-        // Save data view configuration
-        ChartBtns.saveDataViewButton().click();
-        cy.dataCy('managed-resource-name').clear().type(dataViewName);
-        ChartBtns.saveDataViewBtn().click();
-        ChartBtns.openNewDataViewBtn().should('be.visible');
-        ChartUtils.editDataView(dataViewName);
+    public static saveAndEditChart(chartName: string) {
+        // Save chart configuration
+        ChartBtns.saveChartButton().click();
+        cy.dataCy('managed-resource-name').clear().type(chartName);
+        ChartBtns.saveChartBtn().click();
+        ChartBtns.openNewChartBtn().should('be.visible');
+        ChartUtils.editChart(chartName);
     }
 
     public static saveAndReEditDashboard(dashboardName: string) {
@@ -487,8 +489,8 @@ export class ChartUtils {
         ChartBtns.goBackToOverviewBtn().click();
     }
 
-    public static addNewWidget() {
-        ChartBtns.addNewWidgetBtn().click();
+    public static addNewChart() {
+        ChartBtns.addNewChartBtn().click();
     }
 
     public static selectDataSet(dataSet: string) {
@@ -510,7 +512,7 @@ export class ChartUtils {
     }
 
     /**
-     * Checks if in the widget configuration the filters are set or not
+     * Checks if filters are set in the chart configuration.
      * @param amountOfFilter the amount of filters that should be set. 0 if no filter should be visible
      */
     public static checkIfFilterIsSet(amountOfFilter: number) {
@@ -566,7 +568,7 @@ export class ChartUtils {
         cy.dataCy('data-explorer-data-set-field-select-all').click();
     }
 
-    public static dataConfigAddFilter(filterConfig: DataLakeFilterConfig) {
+    public static dataConfigAddFilter(filterConfig: DatasetFilterConfig) {
         cy.dataCy('design-panel-data-settings-add-filter').click();
 
         // Select field
@@ -639,46 +641,42 @@ export class ChartUtils {
     }
 
     public static selectDataConfig() {
-        this.selectDataViewConfigTab(0);
+        this.selectChartConfigTab(0);
     }
 
     public static openVisualizationConfig() {
-        this.selectDataViewConfigTab(1);
+        this.selectChartConfigTab(1);
     }
 
     public static selectAppearanceConfig() {
-        this.selectDataViewConfigTab(2);
+        this.selectChartConfigTab(2);
     }
 
     // Workaround: mat-tab does not render the data-cy attribute, so we select tabs by index.
     // Using the label is not reliable due to multi-language support.
-    private static selectDataViewConfigTab(tabNumber: number) {
+    private static selectChartConfigTab(tabNumber: number) {
         cy.get('div[role=tab]').eq(tabNumber).click();
     }
 
-    public static selectDataViewNameAndSave(dataViewName: string) {
-        ChartBtns.saveDataViewButton().click();
-        cy.dataCy('managed-resource-name').clear().type(dataViewName);
-        ChartBtns.saveDataViewBtn().click();
+    public static selectChartNameAndSave(chartName: string) {
+        ChartBtns.saveChartButton().click();
+        cy.dataCy('managed-resource-name').clear().type(chartName);
+        ChartBtns.saveChartBtn().click();
     }
 
     public static clickCreateButton() {
-        // Create widget
+        // Create chart
         cy.dataCy('data-explorer-select-data-set-create-btn').click();
     }
 
-    public static goToDatalakeConfiguration() {
-        cy.visit('#/datasets');
-    }
-
     public static checkResults(
-        measurementName: string,
+        datasetName: string,
         fileRoute: string,
         ignoreTime: boolean,
     ) {
         const fileType = this.getFileType(fileRoute);
 
-        this.fetchDataLakeResults(measurementName, fileType).then(
+        this.fetchDataLakeResults(datasetName, fileType).then(
             actualResultString =>
                 this.compareResults(
                     actualResultString,
@@ -689,12 +687,12 @@ export class ChartUtils {
         );
     }
 
-    public static clearMeasurementData(measurementName: string) {
+    public static clearDatasetData(datasetName: string) {
         const token = window.localStorage.getItem('auth-token');
         return cy
             .request({
                 method: 'DELETE',
-                url: `/streampipes-backend/api/v4/datalake/measurements/${measurementName}`,
+                url: `/streampipes-backend/api/v4/datalake/measurements/${datasetName}`,
                 failOnStatusCode: false,
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -710,13 +708,13 @@ export class ChartUtils {
     }
 
     private static fetchDataLakeResults(
-        measurementName: string,
+        datasetName: string,
         fileType: 'csv' | 'json',
     ): Cypress.Chainable<string> {
         return cy
             .request({
                 method: 'GET',
-                url: `/streampipes-backend/api/v4/datalake/measurements/${measurementName}/download?format=${fileType}&delimiter=semicolon`,
+                url: `/streampipes-backend/api/v4/datalake/measurements/${datasetName}/download?format=${fileType}&delimiter=semicolon`,
                 headers: {
                     'content-type': 'application/octet-stream',
                 },
@@ -805,26 +803,14 @@ export class ChartUtils {
         return currentDate;
     }
 
-    public static getDatalakeNumberOfEvents(): Cypress.Chainable<number> {
-        ChartBtns.datalakeTotalCountBtn().should('be.visible').click();
-        ChartBtns.datalakeTotalCountBtn().should('not.exist');
-        ChartBtns.datalakeNumberOfEventsSpinner().should('not.exist');
-
-        return cy
-            .dataCy('datalake-number-of-events', { timeout: 10000 })
-            .should('be.visible')
-            .invoke('text')
-            .then(text => Number(text.replaceAll(',', '').trim()));
-    }
-
     public static checkRowsDashboardTable(amount: number) {
         cy.dataCy('dashboard-table-overview', {
             timeout: 10000,
         }).should('have.length', amount);
     }
 
-    public static checkRowsViewsTable(amount: number) {
-        cy.dataCy('data-views-table-overview', {
+    public static checkRowsChartsTable(amount: number) {
+        cy.dataCy('charts-table-overview', {
             timeout: 10000,
         }).should('have.length', amount);
     }
@@ -832,20 +818,20 @@ export class ChartUtils {
     public static checkIfConfirmationDialogIsShowing(): void {
         cy.dataCy('confirm-dialog').should('be.visible');
     }
-    public static createDataViewWithAssets(assetNames) {
+    public static createChartWithAssets(assetNames) {
         ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
 
         // Create Diagram
-        ChartUtils.addDataViewAndTableWidget(ChartUtils.ADAPTER_NAME);
+        ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
         //Save
-        ChartBtns.saveDataViewButton().click();
-        ChartUtils.addDataViewName('NewWidget');
+        ChartBtns.saveChartButton().click();
+        ChartUtils.addChartName('NewWidget');
         ChartUtils.addDashboardToAsset(assetNames);
-        ChartBtns.saveDataViewBtn().click();
-        ChartBtns.openNewDataViewBtn().should('be.visible');
+        ChartBtns.saveChartBtn().click();
+        ChartBtns.openNewChartBtn().should('be.visible');
     }
 
-    public static addDataViewName(name) {
+    public static addChartName(name) {
         cy.dataCy('managed-resource-name').clear().type(name);
     }
 }

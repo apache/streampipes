@@ -19,36 +19,45 @@
 package org.apache.streampipes.extensions.management.init;
 
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.management.connect.adapter.model.EventCollector;
 import org.apache.streampipes.extensions.management.monitoring.AdapterHealthCheckManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public enum RunningAdapterInstances {
   INSTANCE;
 
-  private final Map<String, StreamPipesAdapter> runningAdapterInstances = new HashMap<>();
-  private final Map<String, AdapterDescription> runningAdapterDescriptionInstances = new HashMap<>();
+  private final Map<String, StreamPipesAdapter> runningAdapterInstances = new ConcurrentHashMap<>();
+  private final Map<String, AdapterDescription> runningAdapterDescriptionInstances = new ConcurrentHashMap<>();
+  private final Map<String, EventCollector> runningAdapterCollectors = new ConcurrentHashMap<>();
 
-  public void addAdapter(String elementId, StreamPipesAdapter adapter, AdapterDescription adapterDescription) {
+  public void addAdapter(String elementId,
+                         StreamPipesAdapter adapter,
+                         AdapterDescription adapterDescription,
+                         EventCollector collector) {
     runningAdapterInstances.put(elementId, adapter);
     runningAdapterDescriptionInstances.put(elementId, adapterDescription);
+    runningAdapterCollectors.put(elementId, collector);
     AdapterHealthCheckManager.INSTANCE.registerAdapter(elementId, adapter, adapterDescription);
   }
 
-  public StreamPipesAdapter removeAdapter(String elementId) {
-    StreamPipesAdapter result = runningAdapterInstances.get(elementId);
+  public RunningAdapterInstance removeAdapter(String elementId) {
+    var result = new RunningAdapterInstance(
+        runningAdapterInstances.get(elementId),
+        runningAdapterCollectors.get(elementId)
+    );
     runningAdapterInstances.remove(elementId);
     runningAdapterDescriptionInstances.remove(elementId);
     AdapterHealthCheckManager.INSTANCE.unregisterAdapter(elementId);
-    return result;
+    runningAdapterCollectors.remove(elementId);
+    return result.adapter() != null ? result : null;
   }
 
   public Collection<AdapterDescription> getAllRunningAdapterDescriptions() {
     return this.runningAdapterDescriptionInstances.values();
   }
-
 
 }

@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl.datalake.importer;
 
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
+import org.apache.streampipes.model.datalake.importer.CsvImportJobStatus;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
@@ -34,6 +35,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -129,18 +132,32 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
       produces = MediaType.APPLICATION_JSON_VALUE
   )
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<CsvImportResult> importData(@RequestBody CsvImportRequest request) {
+  public ResponseEntity<?> importData(@RequestBody CsvImportRequest request) {
     if (!hasWritePermission(request.getTarget())) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     try {
-      return ok(importService.importData(request, getAuthenticatedUserSid()));
+      return ok(importService.startImportJob(request, getAuthenticatedUserSid()));
     } catch (CsvImportValidationException e) {
       var result = new CsvImportResult();
       result.setValidationMessages(e.getValidationMessages());
       return ResponseEntity.badRequest().body(result);
     }
+  }
+
+  /**
+   * Returns the current state of a CSV import job owned by the authenticated user.
+   */
+  @GetMapping(
+      path = "/{jobId}",
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  @PreAuthorize("this.hasWriteAuthority()")
+  public ResponseEntity<CsvImportJobStatus> getImportStatus(@PathVariable String jobId) {
+    return importService.getImportJobStatus(jobId, getAuthenticatedUserSid())
+        .map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   private boolean hasWritePermission(org.apache.streampipes.model.datalake.importer.CsvImportTarget target) {

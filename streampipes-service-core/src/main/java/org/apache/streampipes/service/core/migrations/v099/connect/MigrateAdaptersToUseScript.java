@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class MigrateAdaptersToUseScript implements Migration {
@@ -50,17 +51,17 @@ public class MigrateAdaptersToUseScript implements Migration {
   }
 
   @Override
-  // Execute if there is an adapter with no transformation config or script
+  // Execute if an adapter still has legacy transformation rules or misses its script config
   public boolean shouldExecute() {
     List<AdapterDescription> adapters = adapterStorage.findAll();
-    return adapters != null && adapters.stream().anyMatch(this::hasEmptyTransformationConfig);
+    return adapters != null && adapters.stream().anyMatch(this::shouldMigrate);
   }
 
   @Override
   public void executeMigration() throws IOException {
     adapterStorage.findAll()
         .stream()
-        .filter(this::hasEmptyTransformationConfig)
+        .filter(this::shouldMigrate)
         .forEach(this::migrateAndUpdateAdapter);
   }
 
@@ -69,8 +70,19 @@ public class MigrateAdaptersToUseScript implements Migration {
     return "Changes the rules based adapters to use script based transformations instead.";
   }
 
-  private boolean hasEmptyTransformationConfig(AdapterDescription adapter) {
-    return adapter.getTransformationConfig() == null || adapter.getTransformationConfig().getScript() == null;
+  private boolean shouldMigrate(AdapterDescription adapter) {
+    return adapter.getTransformationConfig() == null
+        || hasNoScript(adapter)
+        || hasLegacyRules(adapter);
+  }
+
+  private boolean hasNoScript(AdapterDescription adapter) {
+    var script = adapter.getTransformationConfig().getScript();
+    return script == null || script.isBlank();
+  }
+
+  private boolean hasLegacyRules(AdapterDescription adapter) {
+    return adapter.getRules() != null && !adapter.getRules().isEmpty();
   }
 
   private void migrateAndUpdateAdapter(AdapterDescription adapterDescription) {
@@ -86,7 +98,7 @@ public class MigrateAdaptersToUseScript implements Migration {
     removeAdditionalMetadata(adapter);
 
     // migration logic for a single adapter
-    var config = initializeTransformationConfig();
+    var config = initializeTransformationConfig(adapter.getTransformationConfig());
 
     var scriptBuilder = TransformationScriptBuilder.create();
 
@@ -121,12 +133,24 @@ public class MigrateAdaptersToUseScript implements Migration {
   }
 
 
-  private TransformationConfig initializeTransformationConfig() {
+  private TransformationConfig initializeTransformationConfig(TransformationConfig oldConfig) {
     var config = new TransformationConfig();
-    config.setLanguage("javascript");
-    config.setInputs(new ArrayList<>());
-    config.setOutputs(new ArrayList<>());
+    config.setLanguage(TransformationConfig.DEFAULT_LANGUAGE);
+
+    if (oldConfig == null) {
+      return config;
+    }
+
+    config.setInputs(copyOrEmpty(oldConfig.getInputs()));
+    config.setOutputs(copyOrEmpty(oldConfig.getOutputs()));
+    config.setReduceEventRateRule(oldConfig.getReduceEventRateRule());
+    config.setRemoveDuplicateRule(oldConfig.getRemoveDuplicateRule());
+
     return config;
+  }
+
+  private List<Map<String, Object>> copyOrEmpty(List<Map<String, Object>> values) {
+    return values == null ? new ArrayList<>() : new ArrayList<>(values);
   }
 
   /**

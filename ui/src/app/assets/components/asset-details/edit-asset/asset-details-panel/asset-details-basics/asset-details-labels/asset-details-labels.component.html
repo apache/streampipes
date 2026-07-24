@@ -44,68 +44,21 @@
                                 <mat-icon>refresh</mat-icon>
                             </button>
                         </div>
-                        <mat-form-field [disabled]="allLabels.length === 0">
-                            <mat-chip-grid #chipGrid aria-label="Labels">
-                                @for (label of labels; track label) {
-                                    <mat-chip-row
-                                        (removed)="remove(label)"
-                                        [ngStyle]="{ background: label.color }"
-                                    >
-                                        <span
-                                            [ngStyle]="{
-                                                color: labelTextColors[
-                                                    label._id
-                                                ],
-                                            }"
-                                            >{{ label.label }}</span
-                                        >
-                                        <button
-                                            matChipRemove
-                                            [ngStyle]="{
-                                                color: labelTextColors[
-                                                    label._id
-                                                ],
-                                            }"
-                                        >
-                                            <mat-icon>cancel</mat-icon>
-                                        </button>
-                                    </mat-chip-row>
-                                }
-                            </mat-chip-grid>
-                            <input
-                                [placeholder]="
-                                    allLabels.length === 0
-                                        ? ('No labels available - Click \'Manage Labels\''
-                                          | translate)
-                                        : ('Click to add label' | translate)
-                                "
-                                data-cy="asset-label-input"
-                                #labelInput
-                                [formControl]="labelCtrl"
-                                [matChipInputFor]="chipGrid"
-                                [matAutocomplete]="auto"
-                                [matChipInputSeparatorKeyCodes]="
-                                    separatorKeysCodes
-                                "
-                                (matChipInputTokenEnd)="add($event)"
-                                [disabled]="allLabels.length === 0"
-                            />
-                            <mat-autocomplete
-                                #auto="matAutocomplete"
-                                (optionSelected)="selected($event)"
-                            >
-                                @for (
-                                    label of filteredLabels | async;
-                                    track label
-                                ) {
-                                    <mat-option
-                                        [value]="label._id"
-                                        [attr.data-cy]="'option-' + label.label"
-                                        >{{ label.label }}</mat-option
-                                    >
-                                }
-                            </mat-autocomplete>
-                        </mat-form-field>
+                        <sp-search-select
+                            [items]="allLabels"
+                            [value]="labels"
+                            [multiple]="true"
+                            [disabled]="allLabels.length === 0"
+                            [placeholder]="
+                                allLabels.length === 0
+                                    ? ('No labels available - Click \'Manage Labels\''
+                                      | translate)
+                                    : ('Click to add label' | translate)
+                            "
+                            dataCy="asset-label-input"
+                            (valueChange)="onLabelsChange($event)"
+                        >
+                        </sp-search-select>
                     </sp-form-field>
                 }
             </div>

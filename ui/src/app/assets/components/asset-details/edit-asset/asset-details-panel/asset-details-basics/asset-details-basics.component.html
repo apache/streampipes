@@ -21,34 +21,36 @@
         [level]="2"
         [title]="('Basics' | translate) + ': ' + asset.assetName"
     >
-        <sp-form-field
-            [level]="2"
-            [label]="'Name' | translate"
-            [description]="'A short name of the asset' | translate"
-        >
-            <mat-form-field>
-                <input
-                    data-cy="asset-name"
-                    matInput
-                    [(ngModel)]="asset.assetName"
-                    [disabled]="!editMode"
-                />
-            </mat-form-field>
-        </sp-form-field>
-        <sp-form-field
-            fxFlex="100"
-            [level]="2"
-            [label]="'Description' | translate"
-            [description]="'A longer description of this asset' | translate"
-        >
-            <mat-form-field>
-                <input
-                    matInput
-                    [(ngModel)]="asset.assetDescription"
-                    [disabled]="!editMode"
-                />
-            </mat-form-field>
-        </sp-form-field>
+        @if (!rootNode || isNewAsset) {
+            <sp-form-field
+                [level]="2"
+                [label]="'Name' | translate"
+                [description]="'A short name of the asset' | translate"
+            >
+                <mat-form-field>
+                    <input
+                        data-cy="asset-name"
+                        matInput
+                        [(ngModel)]="asset.assetName"
+                        [disabled]="!editMode"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+            <sp-form-field
+                fxFlex="100"
+                [level]="2"
+                [label]="'Description' | translate"
+                [description]="'A longer description of this asset' | translate"
+            >
+                <mat-form-field>
+                    <input
+                        matInput
+                        [(ngModel)]="asset.assetDescription"
+                        [disabled]="!editMode"
+                    />
+                </mat-form-field>
+            </sp-form-field>
+        }
         <sp-form-field
             fxFlex="100"
             [level]="2"

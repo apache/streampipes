@@ -21,7 +21,6 @@ Configuration class for the StreamPipes client.
 
 
 from dataclasses import dataclass, field
-from typing import Dict, Optional
 
 __all__ = [
     "StreamPipesClientConfig",
@@ -61,6 +60,6 @@ class StreamPipesClientConfig:
 
     credential_provider: CredentialProvider
     host_address: str
-    https_disabled: Optional[bool] = False
-    port: Optional[int] = 80
-    additional_headers: Optional[Dict[str, str]] = field(default_factory=dict)
+    https_disabled: bool | None = False
+    port: int | None = 80
+    additional_headers: dict[str, str] | None = field(default_factory=dict)

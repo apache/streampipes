@@ -20,40 +20,41 @@ package org.apache.streampipes.user.management.service;
 import org.apache.streampipes.model.client.user.RawUserApiToken;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.user.IUserStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.TokenUtil;
+
+import java.util.Objects;
 
 public class TokenService {
 
   public RawUserApiToken createAndStoreNewToken(String email,
-                                                RawUserApiToken baseToken) {
-    UserAccount user = getUserStorage().getUserAccount(email);
+                                                RawUserApiToken baseToken,
+                                                IUserStorage userStorage) {
+    UserAccount user = userStorage.getUserAccount(email);
     RawUserApiToken generatedToken = TokenUtil.createToken(baseToken.tokenName());
-    storeToken(user, generatedToken);
+    storeToken(user, generatedToken, userStorage);
     return generatedToken;
   }
 
   public boolean hasValidToken(String apiUser,
-                               String hashedToken) {
-    UserAccount userAccount = getUserStorage().getUserAccount(apiUser);
-    if (userAccount == null) {
+                               String hashedToken,
+                               IUserStorage userStorage) {
+    UserAccount userAccount = userStorage.getUserAccount(apiUser);
+    if (userAccount == null || userAccount.getUserApiTokens() == null) {
       return false;
     } else {
       return userAccount
           .getUserApiTokens()
           .stream()
-          .anyMatch(t -> t.getHashedToken().equals(hashedToken));
+          .anyMatch(t -> hashedToken != null
+              && t != null
+              && Objects.equals(hashedToken, t.getHashedToken()));
     }
   }
 
-  private void storeToken(UserAccount user, RawUserApiToken generatedToken) {
+  private void storeToken(UserAccount user,
+                          RawUserApiToken generatedToken,
+                          IUserStorage userStorage) {
     user.getUserApiTokens().add(TokenUtil.toUserToken(generatedToken));
-    getUserStorage().updateUser(user);
-  }
-
-  private IUserStorage getUserStorage() {
-    return StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getUserStorageAPI();
+    userStorage.updateUser(user);
   }
 }

@@ -29,6 +29,8 @@ import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,6 +47,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v2/adapter-monitoring")
 public class AdapterMonitoringResource extends AbstractMonitoringResource {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AdapterMonitoringResource.class);
 
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
 
@@ -94,6 +98,9 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
   public ResponseEntity<Map<String, SpMetricsEntry>> getMetricsInfos(
       @RequestParam(value = "filter") List<String> elementIds
   ) {
+    LOG.debug("Manual adapter monitoring refresh requested from REST endpoint: filters={}, thread={}",
+        elementIds,
+        Thread.currentThread().getName());
     new ExtensionsServiceLogExecutor(extensionServiceRequestManager, resourceManager).triggerUpdate();
     var filteredElementIds = elementIds.stream()
         .map(a -> resourceManager.manageAdapters().getDb().getElementById(a))

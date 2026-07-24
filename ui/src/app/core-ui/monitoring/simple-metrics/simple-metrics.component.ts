@@ -30,7 +30,7 @@ import { DatePipe } from '@angular/common';
 @Component({
     selector: 'sp-simple-metrics',
     templateUrl: './simple-metrics.component.html',
-    styleUrls: [],
+    styleUrls: ['./simple-metrics.component.scss'],
     imports: [
         LayoutDirective,
         SpBasicHeaderTitleComponent,

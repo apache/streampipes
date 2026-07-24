@@ -22,9 +22,18 @@ import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaNamingStrat
 
 public class OpcUaAdapterConfig extends OpcUaConfig {
 
+  public static final int DEFAULT_SUBSCRIPTION_PUBLISHING_INTERVAL_MS = 1000;
+  public static final int DEFAULT_SUBSCRIPTION_SAMPLING_INTERVAL_MS = 1000;
+  public static final int DEFAULT_SUBSCRIPTION_QUEUE_SIZE = 10;
+  public static final boolean DEFAULT_SUBSCRIPTION_DISCARD_OLDEST = true;
+
   private Integer pullIntervalMilliSeconds;
   private String incompleteEventStrategy;
   private OpcUaNamingStrategy namingStrategy;
+  private int subscriptionPublishingIntervalMs = DEFAULT_SUBSCRIPTION_PUBLISHING_INTERVAL_MS;
+  private int subscriptionSamplingIntervalMs = DEFAULT_SUBSCRIPTION_SAMPLING_INTERVAL_MS;
+  private int subscriptionQueueSize = DEFAULT_SUBSCRIPTION_QUEUE_SIZE;
+  private boolean subscriptionDiscardOldest = DEFAULT_SUBSCRIPTION_DISCARD_OLDEST;
 
   public Integer getPullIntervalMilliSeconds() {
     return pullIntervalMilliSeconds;
@@ -52,6 +61,38 @@ public class OpcUaAdapterConfig extends OpcUaConfig {
 
   public void setNamingStrategy(OpcUaNamingStrategy namingStrategy) {
     this.namingStrategy = namingStrategy;
+  }
+
+  public int getSubscriptionPublishingIntervalMs() {
+    return subscriptionPublishingIntervalMs;
+  }
+
+  public void setSubscriptionPublishingIntervalMs(int subscriptionPublishingIntervalMs) {
+    this.subscriptionPublishingIntervalMs = subscriptionPublishingIntervalMs;
+  }
+
+  public int getSubscriptionSamplingIntervalMs() {
+    return subscriptionSamplingIntervalMs;
+  }
+
+  public void setSubscriptionSamplingIntervalMs(int subscriptionSamplingIntervalMs) {
+    this.subscriptionSamplingIntervalMs = subscriptionSamplingIntervalMs;
+  }
+
+  public int getSubscriptionQueueSize() {
+    return subscriptionQueueSize;
+  }
+
+  public void setSubscriptionQueueSize(int subscriptionQueueSize) {
+    this.subscriptionQueueSize = subscriptionQueueSize;
+  }
+
+  public boolean isSubscriptionDiscardOldest() {
+    return subscriptionDiscardOldest;
+  }
+
+  public void setSubscriptionDiscardOldest(boolean subscriptionDiscardOldest) {
+    this.subscriptionDiscardOldest = subscriptionDiscardOldest;
   }
 
 }

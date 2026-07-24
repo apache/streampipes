@@ -38,6 +38,7 @@ import {
     ConfirmDialogComponent,
     DialogService,
     PanelType,
+    SpAlertBannerComponent,
 } from '@streampipes/shared-ui';
 import { CreateAdapterTransformationTemplateDialogComponent } from '../../../dialog/create-adapter-transformation-template-dialog/create-adapter-transformation-template-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -57,6 +58,7 @@ import { AdapterSamplePreviewComponent } from './sample-preview/adapter-sample-p
 import { AdapterResultPreviewComponent } from './result-preview/adapter-result-preview.component';
 import { MatButton } from '@angular/material/button';
 import type { editor as MonacoEditor } from 'monaco-editor';
+import { validateFieldNames } from './field-name-validation';
 
 @Component({
     selector: 'sp-configure-schema',
@@ -72,6 +74,7 @@ import type { editor as MonacoEditor } from 'monaco-editor';
         LayoutAlignDirective,
         MatButton,
         TranslatePipe,
+        SpAlertBannerComponent,
     ],
 })
 export class ConfigureSchemaComponent implements OnInit {
@@ -147,6 +150,22 @@ export class ConfigureSchemaComponent implements OnInit {
                 ?.outputs?.[0] || {},
     );
 
+    schemaEvent = computed(() =>
+        this.scriptActive() ? this.output() : this.input(),
+    );
+
+    fieldNameValidation = computed(() =>
+        validateFieldNames(this.schemaEvent()),
+    );
+
+    invalidFieldNames = computed(
+        () => this.fieldNameValidation().invalidFieldNames,
+    );
+
+    warningFieldNames = computed(
+        () => this.fieldNameValidation().warningFieldNames,
+    );
+
     isNextDisabled = computed(() => {
         const state = this.stateService.state();
         const hasInputEvents =
@@ -158,7 +177,8 @@ export class ConfigureSchemaComponent implements OnInit {
             state.isRunningScript ||
             !!state.sampleError ||
             !!state.scriptError ||
-            !hasInputEvents
+            !hasInputEvents ||
+            this.invalidFieldNames().length > 0
         );
     });
 

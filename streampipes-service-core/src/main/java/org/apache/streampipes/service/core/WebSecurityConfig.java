@@ -21,6 +21,7 @@ package org.apache.streampipes.service.core;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.service.base.security.UnauthorizedRequestEntryPoint;
 import org.apache.streampipes.service.core.filter.TokenAuthenticationFilter;
 import org.apache.streampipes.service.core.oauth2.CustomOAuth2UserService;
@@ -30,7 +31,7 @@ import org.apache.streampipes.service.core.oauth2.OAuth2AccessTokenResponseConve
 import org.apache.streampipes.service.core.oauth2.OAuth2AuthenticationFailureHandler;
 import org.apache.streampipes.service.core.oauth2.OAuth2AuthenticationSuccessHandler;
 import org.apache.streampipes.service.core.oauth2.OAuthEnabledCondition;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.user.management.service.SpUserDetailsService;
 
 import org.slf4j.Logger;
@@ -44,10 +45,10 @@ import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -96,19 +97,18 @@ public class WebSecurityConfig {
   @Autowired
   private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
-  private final IPermissionStorage permissionStorage;
+  private final SpResourceManager resourceManager;
 
   public WebSecurityConfig(StreamPipesPasswordEncoder passwordEncoder,
-                           IPermissionStorage permissionStorage) {
+                           SpResourceManager resourceManager) {
     this.passwordEncoder = passwordEncoder;
-    this.userDetailsService = new SpUserDetailsService(permissionStorage);
+    this.userDetailsService = new SpUserDetailsService(
+        resourceManager.manageUsers().getDb(),
+        resourceManager.managePermissions().getDb(),
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage());
     this.env = Environments.getEnvironment();
-    this.permissionStorage = permissionStorage;
-  }
-
-  @Autowired
-  public void configureGlobal(AuthenticationManagerBuilder auth) {
-    auth.userDetailsService(userDetailsService).passwordEncoder(this.passwordEncoder.passwordEncoder());
+    this.resourceManager = resourceManager;
   }
 
   @Bean
@@ -121,7 +121,8 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) {
+  public SecurityFilterChain filterChain(HttpSecurity http,
+                                         ISpCoreConfigurationStorage coreConfigurationStorage) {
     http
         .cors(Customizer.withDefaults())
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -158,7 +159,7 @@ public class WebSecurityConfig {
   }
 
   public TokenAuthenticationFilter tokenAuthenticationFilter() {
-    return new TokenAuthenticationFilter(permissionStorage);
+    return new TokenAuthenticationFilter(resourceManager);
   }
 
   @Bean(BeanIds.USER_DETAILS_SERVICE)
@@ -167,8 +168,10 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-    return authConfig.getAuthenticationManager();
+  public AuthenticationManager authenticationManager() {
+    var authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+    authenticationProvider.setPasswordEncoder(this.passwordEncoder.passwordEncoder());
+    return new ProviderManager(authenticationProvider);
   }
 
   @Bean

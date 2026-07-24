@@ -18,18 +18,16 @@
 <div style="z-index: 5" [ngClass]="elementCssClasses">
     @if (pipelineElementConfig.settings.loadingStatus) {
         <div class="pipeline-element-progress-container sp-fade">
-            <mat-spinner
-                [mode]="'indeterminate'"
+            <sp-spinner
                 class="pipeline-element-progress"
                 [diameter]="40"
-                color="accent"
-            ></mat-spinner>
+            ></sp-spinner>
         </div>
     }
     @if (pipelineElementConfig.settings.loadingStatus) {
         <div class="pipeline-element-loading-container sp-fade-opacity"></div>
     }
-    @if (!readonly) {
+    @if (!readonly && pipelineElementConfig.settings.completed > 0) {
         <div
             class="pipeline-element-configuration-status {{
                 pipelineElementConfig.type === 'stream'

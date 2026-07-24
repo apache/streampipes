@@ -22,28 +22,31 @@ import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public enum SpMonitoringManager {
 
   INSTANCE;
 
+  private static final Logger LOG = LoggerFactory.getLogger(SpMonitoringManager.class);
+
   private final Map<String, FixedSizeList<SpLogEntry>> logInfos;
   private final Map<String, SpMetricsEntry> metricsInfos;
 
   SpMonitoringManager() {
-    this.logInfos = new HashMap<>();
-    this.metricsInfos = new HashMap<>();
+    this.logInfos = new ConcurrentHashMap<>();
+    this.metricsInfos = new ConcurrentHashMap<>();
   }
 
   public void addErrorMessage(String resourceId,
                               SpLogEntry errorMessageEntry) {
-    if (!logInfos.containsKey(resourceId)) {
-      logInfos.put(resourceId, new FixedSizeList<>(100));
-    }
-    this.logInfos.get(resourceId).add(errorMessageEntry);
+    this.logInfos.computeIfAbsent(resourceId, key -> new FixedSizeList<>(100)).add(errorMessageEntry);
   }
 
   public void increaseInCounter(String resourceId,
@@ -75,8 +78,12 @@ public enum SpMonitoringManager {
   }
 
   public void reset(String resourceId) {
-    this.resetCounter(resourceId);
-    this.resetLogs(resourceId);
+    this.remove(resourceId);
+  }
+
+  public void remove(String resourceId) {
+    this.metricsInfos.remove(resourceId);
+    this.logInfos.remove(resourceId);
   }
 
   public SpMetricsEntry getMetricsEntry(String resourceId,
@@ -90,6 +97,15 @@ public enum SpMonitoringManager {
 
   public SpEndpointMonitoringInfo getMonitoringInfo() {
     var logInfos = makeLogInfos();
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Providing extension monitoring snapshot: resourceCount={}, totalOutputCounter={}, "
+              + "latestOutputTimestamp={}, thread={}",
+          metricsInfos.size(),
+          totalOutputCounter(),
+          latestOutputTimestamp(),
+          Thread.currentThread().getName());
+    }
+
     return new SpEndpointMonitoringInfo(logInfos, metricsInfos);
   }
 
@@ -118,6 +134,21 @@ public enum SpMonitoringManager {
 
   private void addMetricsObject(String resourceId) {
     this.metricsInfos.put(resourceId, new SpMetricsEntry());
+  }
+
+  private long totalOutputCounter() {
+    return metricsInfos.values()
+        .stream()
+        .mapToLong(metricsEntry -> metricsEntry.getMessagesOut().getCounter())
+        .sum();
+  }
+
+  private long latestOutputTimestamp() {
+    return metricsInfos.values()
+        .stream()
+        .mapToLong(metricsEntry -> metricsEntry.getMessagesOut().getLastTimestamp())
+        .max()
+        .orElse(0);
   }
 
 }

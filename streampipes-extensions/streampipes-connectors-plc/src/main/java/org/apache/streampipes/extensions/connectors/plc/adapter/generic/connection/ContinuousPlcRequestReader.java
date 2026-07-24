@@ -22,7 +22,6 @@ import org.apache.streampipes.extensions.api.connect.IEventCollector;
 import org.apache.streampipes.extensions.api.connect.IPollingSettings;
 import org.apache.streampipes.extensions.api.connect.IPullAdapter;
 import org.apache.streampipes.extensions.connectors.plc.adapter.generic.model.Plc4xConnectionSettings;
-import org.apache.streampipes.extensions.connectors.plc.cache.SpCachedPlcConnectionManager;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 
 import org.apache.plc4x.java.api.PlcConnection;
@@ -42,6 +41,7 @@ public class ContinuousPlcRequestReader
   private final IEventCollector collector;
   private int idlePullsBeforeNextAttempt = 0;
   private int currentIdlePulls = 0;
+  private final String adapterName;
 
   /**
    *  Failure and recovery strategy:
@@ -52,10 +52,12 @@ public class ContinuousPlcRequestReader
       PlcConnectionManager connectionManager,
       Plc4xConnectionSettings settings,
       PlcRequestProvider requestProvider,
-      IEventCollector collector
+      IEventCollector collector,
+      String adapterName
   ) {
     super(connectionManager, settings, requestProvider);
     this.collector = collector;
+    this.adapterName = adapterName;
   }
 
   @Override
@@ -75,23 +77,22 @@ public class ContinuousPlcRequestReader
             .get(5000, TimeUnit.MILLISECONDS);
         processPlcReadResponse(readResponse);
       } else {
-        LOG.error("Not connected to PLC with connection string {}", settings.connectionString());
+        LOG.error(
+            "Not connected to PLC with connection string {}, adapter {}",
+            settings.connectionString(),
+            adapterName
+        );
         handleFailingPlcRead();
       }
     } catch (Exception e) {
-      handleFailingPlcReadAndRemoveFromCache(e.getMessage());
+      handleFailingPlcRead(e.getMessage());
     }
   }
 
-  private void handleFailingPlcReadAndRemoveFromCache(String problem) {
-    // ensure that the cached connection manager removes the broken connection
-    if (connectionManager instanceof SpCachedPlcConnectionManager) {
-      ((SpCachedPlcConnectionManager) connectionManager).removeCachedConnection(settings.connectionString());
-    }
-
+  private void handleFailingPlcRead(String problem) {
     LOG.error(
-        "Error while reading from PLC with connection string {}. Setting adapter to idle for {} attempts. {} ",
-        settings.connectionString(), idlePullsBeforeNextAttempt, problem
+        "Error while reading from PLC with connection string {}, adapter {}. Setting adapter to idle for {} attempts. {} ",
+        settings.connectionString(), adapterName, idlePullsBeforeNextAttempt, problem
     );
 
     handleFailingPlcRead();

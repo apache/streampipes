@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Optional
 
 from pydantic import StrictBool, StrictStr
 
@@ -56,11 +55,11 @@ class DataLakeMeasure(Resource):
             "num_event_properties": len(self.event_schema.event_properties) if self.event_schema else 0,
         }
 
-    element_id: Optional[StrictStr] = None
+    element_id: StrictStr | None = None
     measure_name: StrictStr
     timestamp_field: StrictStr
-    event_schema: Optional[EventSchema] = None
-    pipeline_id: Optional[StrictStr] = None
-    pipeline_name: Optional[StrictStr] = None
+    event_schema: EventSchema | None = None
+    pipeline_id: StrictStr | None = None
+    pipeline_name: StrictStr | None = None
     pipeline_is_running: StrictBool
-    schema_version: Optional[StrictStr] = None
+    schema_version: StrictStr | None = None

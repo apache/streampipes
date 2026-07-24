@@ -104,6 +104,8 @@ public interface Environment {
 
   BooleanEnvironmentVariable getResetEndpointEnabled();
 
+  BooleanEnvironmentVariable getFunctionStateEndpointsEnabled();
+
   List<OAuthConfiguration> getOAuthConfigurations();
 
   // Messaging
@@ -181,6 +183,8 @@ public interface Environment {
   StringEnvironmentVariable getOpcUaKeystoreType();
 
   StringEnvironmentVariable getOpcUaKeystoreAlias();
+
+  BooleanEnvironmentVariable getOpcUaDisallowInsecureEndpoints();
 
   IntEnvironmentVariable getOpcUaMinPullIntervalMs();
 

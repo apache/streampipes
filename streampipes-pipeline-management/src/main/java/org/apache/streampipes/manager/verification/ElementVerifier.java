@@ -29,6 +29,7 @@ import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
@@ -51,30 +52,34 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
   protected T elementDescription;
 
   protected final IPipelineElementDescriptionStorage storageApi;
+  protected final AssetManager assetManager;
   private final PermissionResourceManager permissionResourceManager;
 
   public ElementVerifier(
       String graphData,
       Class<T> elementClass,
       IPipelineElementDescriptionStorage storageApi,
-      PermissionResourceManager permissionResourceManager
+      SpResourceManager resourceManager
   ) {
     this.elementClass = elementClass;
     this.graphData = graphData;
     this.storageApi = storageApi;
     this.shouldTransform = true;
-    this.permissionResourceManager = permissionResourceManager;
+    this.permissionResourceManager = resourceManager.managePermissions();
+    this.assetManager = new AssetManager(resourceManager.getCoreConfigurationStorage());
   }
 
   public ElementVerifier(T elementDescription,
                          IPipelineElementDescriptionStorage storageApi,
-                         PermissionResourceManager permissionResourceManager) {
+                         SpResourceManager resourceManager) {
     this.elementDescription = elementDescription;
     this.storageApi = storageApi;
     this.graphData = null;
     this.elementClass = null;
     this.shouldTransform = false;
-    this.permissionResourceManager = permissionResourceManager;
+    this.permissionResourceManager = resourceManager.managePermissions();
+    this.assetManager = new AssetManager(resourceManager.getCoreConfigurationStorage());
+
   }
 
   protected abstract StorageState store();
@@ -122,7 +127,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   protected void updateAssets() throws IOException, NoServiceEndpointsAvailableException {
     if (elementDescription.isIncludesAssets()) {
-      AssetManager.deleteAsset(elementDescription.getAppId());
+      assetManager.deleteAsset(elementDescription.getAppId());
       storeAssets();
     }
   }

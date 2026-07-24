@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+    Component,
+    DestroyRef,
+    inject,
+    OnDestroy,
+    OnInit,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     CompositeDashboard,
     Dashboard,
@@ -25,9 +32,9 @@ import {
     TimeSettings,
 } from '@streampipes/platform-services';
 import { ActivatedRoute } from '@angular/router';
-import { of, Subscription, timer } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { TimeSelectionService } from '@streampipes/shared-ui';
+import { EMPTY, Subscription, timer } from 'rxjs';
+import { catchError, exhaustMap, tap } from 'rxjs/operators';
+import { SpLabelComponent, TimeSelectionService } from '@streampipes/shared-ui';
 import { DataExplorerDashboardService } from '../../../dashboard-shared/services/dashboard.service';
 import { ChartSharedService } from '../../../chart-shared/services/chart-shared.service';
 import { ObservableGenerator } from '../../../chart-shared/models/dataview-dashboard.model';
@@ -38,6 +45,8 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LastUpdatedFormatterService } from '../../../core-services/time-formatting/last-updated-formatter.service';
 
 @Component({
     selector: 'sp-dashboard-kiosk',
@@ -49,20 +58,28 @@ import {
         FlexDirective,
         LayoutAlignDirective,
         DashboardGridViewComponent,
+        SpLabelComponent,
+        TranslatePipe,
     ],
 })
 export class DashboardKioskComponent implements OnInit, OnDestroy {
     private route = inject(ActivatedRoute);
+    private destroyRef = inject(DestroyRef);
     private dashboardService = inject(DashboardService);
     private timeSelectionService = inject(TimeSelectionService);
     private dataExplorerDashboardService = inject(DataExplorerDashboardService);
     private dataExplorerSharedService = inject(ChartSharedService);
+    private lastUpdatedFormatterService = inject(LastUpdatedFormatterService);
 
     observableGenerator: ObservableGenerator;
     dashboard: Dashboard;
     widgets: DataExplorerWidgetModel[] = [];
     refresh$: Subscription;
+    dashboardRefresh$: Subscription;
+    lastUpdatedClock$: Subscription;
     eTag: string;
+    lastUpdatedAt: number;
+    currentTime: number;
 
     ngOnInit() {
         const dashboardId = this.route.snapshot.params.dashboardId;
@@ -72,26 +89,26 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
             );
         this.dashboardService
             .getCompositeDashboard(dashboardId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(res => {
                 if (res.ok) {
-                    const cd = res.body;
-                    cd.dashboard.widgets.forEach(w => {
-                        w.id ??=
-                            this.dataExplorerDashboardService.makeUniqueWidgetId();
-                    });
                     const eTag = res.headers.get('ETag');
-                    this.initDashboard(cd, eTag);
+                    this.initDashboard(res.body, eTag);
                 }
             });
     }
 
     initDashboard(cd: CompositeDashboard, eTag: string): void {
+        cd.dashboard.widgets.forEach(w => {
+            w.id ??= this.dataExplorerDashboardService.makeUniqueWidgetId();
+        });
         this.dashboard = cd.dashboard;
         this.widgets = cd.widgets;
         this.eTag = eTag;
+        this.refresh$?.unsubscribe();
         if (this.dashboard.dashboardLiveSettings.refreshModeActive) {
             this.createQuerySubscription();
-            this.createRefreshListener();
+            this.createDashboardRefreshSubscription();
         }
     }
 
@@ -102,40 +119,44 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
                 1000,
         )
             .pipe(
-                switchMap(() => {
+                tap(() => {
                     this.timeSelectionService.updateTimeSettings(
                         this.timeSelectionService.defaultQuickTimeSelections,
                         this.dashboard.dashboardTimeSettings,
                         new Date(),
                     );
                     this.updateDateRange(this.dashboard.dashboardTimeSettings);
-                    return of(null);
                 }),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
     }
 
-    createRefreshListener(): void {
-        this.dashboardService
-            .getCompositeDashboard(this.dashboard.elementId, this.eTag) // this should send If-None-Match
-            .subscribe({
-                next: res => {
-                    if (res.status === 200) {
-                        const newEtag = res.headers.get('ETag');
-                        if (newEtag) {
-                            this.eTag = newEtag;
-                        }
-                        this.dashboard = undefined;
-                        this.refresh$?.unsubscribe();
-                        setTimeout(() => {
-                            this.initDashboard(res.body, newEtag);
-                        });
+    createDashboardRefreshSubscription(): void {
+        if (this.dashboardRefresh$) {
+            return;
+        }
+
+        this.dashboardRefresh$ = timer(5000, 5000)
+            .pipe(
+                exhaustMap(() =>
+                    this.dashboardService
+                        .getCompositeDashboard(
+                            this.dashboard.elementId,
+                            this.eTag,
+                        )
+                        .pipe(catchError(() => EMPTY)),
+                ),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(res => {
+                if (res.status === 200) {
+                    const newEtag = res.headers.get('ETag');
+                    if (newEtag) {
+                        this.eTag = newEtag;
                     }
-                    setTimeout(() => this.createRefreshListener(), 5000);
-                },
-                error: _err => {
-                    setTimeout(() => this.createRefreshListener(), 5000);
-                },
+                    this.initDashboard(res.body, newEtag);
+                }
             });
     }
 
@@ -146,9 +167,37 @@ export class DashboardKioskComponent implements OnInit, OnDestroy {
             ts = timeSettings;
         }
         this.timeSelectionService.notify(ts);
+        this.markDataUpdated();
+    }
+
+    markDataUpdated(): void {
+        this.lastUpdatedAt = Date.now();
+        this.currentTime = this.lastUpdatedAt;
+        this.startLastUpdatedClock();
+    }
+
+    startLastUpdatedClock(): void {
+        if (this.lastUpdatedClock$) {
+            return;
+        }
+
+        this.lastUpdatedClock$ = timer(1000, 1000)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.currentTime = Date.now();
+            });
+    }
+
+    formatLastUpdatedAt(): string {
+        return this.lastUpdatedFormatterService.formatLastUpdatedAt(
+            this.lastUpdatedAt,
+            this.currentTime,
+        );
     }
 
     ngOnDestroy() {
         this.refresh$?.unsubscribe();
+        this.dashboardRefresh$?.unsubscribe();
+        this.lastUpdatedClock$?.unsubscribe();
     }
 }

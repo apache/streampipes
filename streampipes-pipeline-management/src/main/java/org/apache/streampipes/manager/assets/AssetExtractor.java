@@ -19,6 +19,7 @@ package org.apache.streampipes.manager.assets;
 
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.zip.ZipFileExtractor;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,12 +27,16 @@ import java.io.InputStream;
 
 public class AssetExtractor {
 
-  private InputStream zipInputStream;
-  private String appId;
+  private final InputStream zipInputStream;
+  private final String appId;
+  private final ISpCoreConfigurationStorage coreConfigurationStorage;
 
-  public AssetExtractor(InputStream zipInputStream, String appId) {
+  public AssetExtractor(InputStream zipInputStream,
+                        String appId,
+                        ISpCoreConfigurationStorage coreConfigurationStorage) {
     this.zipInputStream = zipInputStream;
     this.appId = appId;
+    this.coreConfigurationStorage = coreConfigurationStorage;
   }
 
   public void extractAssetContents() throws IOException {
@@ -44,7 +49,7 @@ public class AssetExtractor {
   }
 
   private String makeAssetLocation(String appId) {
-    return AssetConstants.ASSET_BASE_DIR
+    return coreConfigurationStorage.get().getAssetDir()
         + File.separator + appId;
   }
 

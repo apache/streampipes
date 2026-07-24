@@ -27,7 +27,7 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -50,24 +50,24 @@ public class TypeExtractor {
   private final String extensionElementDescription;
   private final IPipelineElementDescriptionStorage storageApi;
   private final ExtensionServiceRequestManager requestManager;
-  private final PermissionResourceManager permissionResourceManager;
+  private final SpResourceManager resourceManager;
 
   public TypeExtractor(String extensionElementDescription,
                        ExtensionServiceRequestManager requestManager,
-                       PermissionResourceManager permissionResourceManager) {
-    this(extensionElementDescription, defaultStorageApi(), requestManager, permissionResourceManager);
+                       SpResourceManager resourceManager) {
+    this(extensionElementDescription, defaultStorageApi(), requestManager, resourceManager);
   }
 
   public TypeExtractor(
       String extensionElementDescription,
       IPipelineElementDescriptionStorage storageApi,
       ExtensionServiceRequestManager requestManager,
-      PermissionResourceManager permissionResourceManager
+      SpResourceManager resourceManager
   ) {
     this.extensionElementDescription = extensionElementDescription;
     this.storageApi = storageApi;
     this.requestManager = requestManager;
-    this.permissionResourceManager = permissionResourceManager;
+    this.resourceManager = resourceManager;
   }
 
   public ElementVerifier<?> getTypeVerifier() throws SepaParseException {
@@ -140,7 +140,7 @@ public class TypeExtractor {
         updateOperation,
         serviceUrlProvider,
         requestManager,
-        permissionResourceManager
+        resourceManager
     );
   }
 

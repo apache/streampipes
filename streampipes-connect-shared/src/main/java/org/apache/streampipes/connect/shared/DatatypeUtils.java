@@ -24,6 +24,8 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class DatatypeUtils {
 
   private static final Logger LOG = LoggerFactory.getLogger(DatatypeUtils.class);
@@ -35,38 +37,114 @@ public class DatatypeUtils {
    * If the conversion is not possible due to a format mismatch, the original value is returned.
    * A number format exception during conversion is logged as an error.
    *
+   * @param adapterName The adapter whose event value should be converted.
    * @param value The value to be converted. It can be of any type.
    * @param targetDatatypeXsd The target XSD datatype as a string. Supported types are XSD.STRING,
    *                          XSD.DOUBLE, XSD.FLOAT, XSD.BOOLEAN, XSD.INTEGER, and XSD.LONG.
    * @return The converted value as an Object. If conversion fails, the original value is returned.
-   * @throws NumberFormatException if the string does not contain a parsable number for numeric conversions.
    */
-  public static Object convertValue(Object value,
+  public static Object convertValue(String adapterName,
+                                    Object value,
                                     String targetDatatypeXsd) {
-    var stringValue = String.valueOf(value);
+    return convertValue(adapterName, value, targetDatatypeXsd, new AtomicBoolean(false));
+  }
+
+  public static Object convertValue(String adapterName,
+                                    Object value,
+                                    String targetDatatypeXsd,
+                                    AtomicBoolean loggedConversionError) {
+    if (value == null) {
+      return null;
+    }
+
     if (XSD.STRING.toString().equals(targetDatatypeXsd)) {
-      return stringValue;
+      return String.valueOf(value);
+    }
+
+    if (value instanceof Number number && isNumericDatatype(targetDatatypeXsd)) {
+      return convertNumber(number, targetDatatypeXsd);
+    }
+
+    if (value instanceof Boolean booleanValue && XSD.BOOLEAN.toString().equals(targetDatatypeXsd)) {
+      return booleanValue;
+    }
+
+    if (!isSupportedDatatype(targetDatatypeXsd)) {
+      return value;
+    }
+
+    try {
+      return convertString(String.valueOf(value), targetDatatypeXsd);
+    } catch (NumberFormatException e) {
+      logConversionError(adapterName, value, targetDatatypeXsd, loggedConversionError);
+      return value;
+    }
+  }
+
+  private static void logConversionError(String adapterName,
+                                         Object value,
+                                         String targetDatatypeXsd,
+                                         AtomicBoolean loggedConversionError) {
+    if (loggedConversionError.compareAndSet(false, true)) {
+      LOG.warn(
+          "Could not convert value '{}' to datatype '{}' for adapter '{}'. Further occurrences are logged at debug "
+              + "level.",
+          value,
+          targetDatatypeXsd,
+          adapterName
+      );
     } else {
-      try {
-        if (XSD.DOUBLE.toString().equals(targetDatatypeXsd)) {
-          return Double.parseDouble(stringValue);
-        } else if (XSD.FLOAT.toString().equals(targetDatatypeXsd)) {
-          return Float.parseFloat(stringValue);
-        } else if (XSD.BOOLEAN.toString().equals(targetDatatypeXsd)) {
-          return Boolean.parseBoolean(stringValue);
-        } else if (XSD.INTEGER.toString().equals(targetDatatypeXsd)) {
-          return ((Double) Double.parseDouble(stringValue)).intValue();
-        } else if (XSD.LONG.toString().equals(targetDatatypeXsd)) {
-          var floatingNumber = Double.parseDouble(stringValue);
-          return Long.parseLong(String.valueOf(Math.round(floatingNumber)));
-        }
-      } catch (NumberFormatException e) {
-        LOG.error("Number format exception {}", value);
-        return value;
-      }
+      LOG.debug(
+          "Could not convert value '{}' to datatype '{}' for adapter '{}'",
+          value,
+          targetDatatypeXsd,
+          adapterName
+      );
+    }
+  }
+
+  private static Object convertNumber(Number value,
+                                      String targetDatatypeXsd) {
+    if (XSD.DOUBLE.toString().equals(targetDatatypeXsd)) {
+      return value.doubleValue();
+    } else if (XSD.FLOAT.toString().equals(targetDatatypeXsd)) {
+      return value.floatValue();
+    } else if (XSD.INTEGER.toString().equals(targetDatatypeXsd)) {
+      return value.intValue();
+    } else if (XSD.LONG.toString().equals(targetDatatypeXsd)) {
+      return Math.round(value.doubleValue());
     }
 
     return value;
+  }
+
+  private static Object convertString(String value,
+                                      String targetDatatypeXsd) {
+    if (XSD.DOUBLE.toString().equals(targetDatatypeXsd)) {
+      return Double.parseDouble(value);
+    } else if (XSD.FLOAT.toString().equals(targetDatatypeXsd)) {
+      return Float.parseFloat(value);
+    } else if (XSD.BOOLEAN.toString().equals(targetDatatypeXsd)) {
+      return Boolean.parseBoolean(value);
+    } else if (XSD.INTEGER.toString().equals(targetDatatypeXsd)) {
+      return ((Double) Double.parseDouble(value)).intValue();
+    } else if (XSD.LONG.toString().equals(targetDatatypeXsd)) {
+      var floatingNumber = Double.parseDouble(value);
+      return Long.parseLong(String.valueOf(Math.round(floatingNumber)));
+    }
+
+    return value;
+  }
+
+  private static boolean isSupportedDatatype(String targetDatatypeXsd) {
+    return isNumericDatatype(targetDatatypeXsd) || XSD.BOOLEAN.toString().equals(targetDatatypeXsd);
+  }
+
+  private static boolean isNumericDatatype(String targetDatatypeXsd) {
+    return XSD.DOUBLE.toString().equals(targetDatatypeXsd)
+        || XSD.FLOAT.toString().equals(targetDatatypeXsd)
+        || XSD.INTEGER.toString().equals(targetDatatypeXsd)
+        || XSD.LONG.toString().equals(targetDatatypeXsd);
   }
 
   public static String getXsdDatatype(String value,
@@ -90,6 +168,10 @@ public class DatatypeUtils {
   public static Class<?> getTypeClass(String value,
                                       boolean preferFloatingPointNumber) {
     var targetClass = String.class;
+    if (value == null) {
+      return targetClass;
+    }
+
     if (NumberUtils.isParsable(value)) {
       Class<?> numberClass;
       try {

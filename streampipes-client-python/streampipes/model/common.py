@@ -21,7 +21,6 @@ Classes of the StreamPipes data model that are commonly shared.
 
 import random
 import string
-from typing import List, Optional
 from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
@@ -78,7 +77,7 @@ class BasicModel(BaseModel):
 class BaseElement(BasicModel):
     """Structure of a basic element in the StreamPipes Backend."""
 
-    element_id: Optional[StrictStr] = None
+    element_id: StrictStr | None = None
 
 
 class ValueSpecification(BasicModel):
@@ -86,11 +85,11 @@ class ValueSpecification(BasicModel):
     Data model of an `ValueSpecification` in compliance with the StreamPipes Backend.
     """
 
-    class_name: Optional[StrictStr] = Field(default=None, alias="@class")
-    element_id: Optional[StrictStr] = None
-    min_value: Optional[int] = None
-    max_value: Optional[int] = None
-    step: Optional[float] = None
+    class_name: StrictStr | None = Field(default=None, alias="@class")
+    element_id: StrictStr | None = None
+    min_value: int | None = None
+    max_value: int | None = None
+    step: float | None = None
 
 
 class EventProperty(BasicModel):
@@ -100,15 +99,15 @@ class EventProperty(BasicModel):
 
     class_name: StrictStr = Field(alias="@class", default="org.apache.streampipes.model.schema.EventPropertyPrimitive")
     element_id: StrictStr = Field(default_factory=lambda: f"sp:eventproperty:{random_letters(6)}")
-    label: Optional[StrictStr] = None
-    description: Optional[StrictStr] = None
+    label: StrictStr | None = None
+    description: StrictStr | None = None
     runtime_name: StrictStr
-    semantic_type: Optional[StrictStr] = None
-    property_scope: Optional[StrictStr] = Field(default="MEASUREMENT_PROPERTY")
-    runtime_id: Optional[StrictStr] = None
+    semantic_type: StrictStr | None = None
+    property_scope: StrictStr | None = Field(default="MEASUREMENT_PROPERTY")
+    runtime_id: StrictStr | None = None
     runtime_type: StrictStr = Field(default="http://www.w3.org/2001/XMLSchema#string")
-    measurement_unit: Optional[StrictStr] = None
-    value_specification: Optional[ValueSpecification] = None
+    measurement_unit: StrictStr | None = None
+    value_specification: ValueSpecification | None = None
 
 
 class EventSchema(BasicModel):
@@ -116,7 +115,7 @@ class EventSchema(BasicModel):
     Data model of an `EventSchema` in compliance with the StreamPipes Backend.
     """
 
-    event_properties: List[EventProperty]
+    event_properties: list[EventProperty]
 
 
 class ApplicationLink(BasicModel):
@@ -124,13 +123,13 @@ class ApplicationLink(BasicModel):
     Data model of an `ApplicationLink` in compliance with the StreamPipes Backend.
     """
 
-    class_name: Optional[StrictStr] = Field(default=None, alias="@class")
-    element_id: Optional[StrictStr] = None
-    application_name: Optional[StrictStr] = None
-    application_description: Optional[StrictStr] = None
-    application_url: Optional[StrictStr] = None
-    application_icon_url: Optional[StrictStr] = None
-    application_link_type: Optional[StrictStr] = None
+    class_name: StrictStr | None = Field(default=None, alias="@class")
+    element_id: StrictStr | None = None
+    application_name: StrictStr | None = None
+    application_description: StrictStr | None = None
+    application_url: StrictStr | None = None
+    application_icon_url: StrictStr | None = None
+    application_link_type: StrictStr | None = None
 
 
 class TopicDefinition(BasicModel):
@@ -138,7 +137,7 @@ class TopicDefinition(BasicModel):
     Data model of a `TopicDefinition` in compliance with the StreamPipes Backend.
     """
 
-    class_name: Optional[StrictStr] = Field(
+    class_name: StrictStr | None = Field(
         alias="@class", default="org.apache.streampipes.model.grounding.SimpleTopicDefinition"
     )
     actual_topic_name: StrictStr = Field(default_factory=lambda: f"org.apache.streampipes.connect.{uuid4()}")
@@ -163,7 +162,7 @@ class TransportFormat(BasicModel):
     Data model of a `TransportFormat` in compliance with the StreamPipes Backend.
     """
 
-    rdf_type: List[StrictStr] = Field(default=["http://sepa.event-processing.org/sepa#json"])
+    rdf_type: list[StrictStr] = Field(default=["http://sepa.event-processing.org/sepa#json"])
 
 
 class EventGrounding(BasicModel):
@@ -171,8 +170,8 @@ class EventGrounding(BasicModel):
     Data model of an `EventGrounding` in compliance to with StreamPipes Backend.
     """
 
-    transport_protocols: List[TransportProtocol] = Field(default_factory=lambda: [TransportProtocol()])
-    transport_formats: List[TransportFormat] = Field(default_factory=lambda: [TransportFormat()])
+    transport_protocols: list[TransportProtocol] = Field(default_factory=lambda: [TransportProtocol()])
+    transport_formats: list[TransportFormat] = Field(default_factory=lambda: [TransportFormat()])
 
 
 class MeasurementCapability(BasicModel):
@@ -180,8 +179,8 @@ class MeasurementCapability(BasicModel):
     Data model of a `MeasurementCapability` in compliance with the StreamPipes Backend.
     """
 
-    capability: Optional[StrictStr] = None
-    element_id: Optional[StrictStr] = None
+    capability: StrictStr | None = None
+    element_id: StrictStr | None = None
 
 
 class MeasurementObject(BasicModel):
@@ -189,5 +188,5 @@ class MeasurementObject(BasicModel):
     Data model of a `MeasurementObject` in compliance with the StreamPipes Backend.
     """
 
-    element_id: Optional[StrictStr] = None
-    measures_object: Optional[StrictStr] = None
+    element_id: StrictStr | None = None
+    measures_object: StrictStr | None = None

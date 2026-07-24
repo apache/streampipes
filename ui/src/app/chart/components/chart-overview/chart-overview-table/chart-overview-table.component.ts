@@ -51,6 +51,7 @@ import {
     SpBasicHeaderTitleComponent,
     SpTableActionsDirective,
     SpTableComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -67,7 +68,6 @@ import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { ChartRegistry } from '../../../../chart-shared/registry/chart-registry.service';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 type ManageableChart = DataExplorerWidgetModel & {
     name: string;
@@ -109,7 +109,7 @@ type ChartOverviewRow = ChartSummaryDto & {
         MatMenuItem,
         MatIcon,
         MatTooltip,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         TranslatePipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -383,10 +383,10 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
             showLegacyWarning: !!chart.multiSourceChart,
             showRequiresAttentionWarning:
                 chart.healthStatus === 'REQUIRES_ATTENTION',
-            showDataCyId: `show-data-view-${sanitizedName}`,
-            editDataCyId: `edit-data-view-${sanitizedName}`,
+            showDataCyId: `show-chart-${sanitizedName}`,
+            editDataCyId: `edit-chart-${sanitizedName}`,
             manageDataCyId: `open-manage-permissions-${sanitizedName}`,
-            deleteDataCyId: `delete-data-view-${chart.name}`,
+            deleteDataCyId: `delete-chart-${chart.name}`,
         };
     }
 }

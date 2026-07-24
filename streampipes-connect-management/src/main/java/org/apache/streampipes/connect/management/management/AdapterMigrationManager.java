@@ -101,7 +101,7 @@ public class AdapterMigrationManager extends AbstractMigrationManager implements
                 migrationResult.element().getElementId()
             );
             try {
-              workerRestClient.stopStreamAdapter(service, adapterDescription);
+              workerRestClient.stopAdapter(service, adapterDescription);
             } catch (AdapterException e) {
               LOG.error("Stopping adapter failed: {}", StringUtils.join(e.getStackTrace(), "\n"));
             }

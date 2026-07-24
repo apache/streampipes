@@ -27,6 +27,30 @@ import {
     SpServiceRegistration,
 } from '@streampipes/platform-services';
 
+export interface RunningExtensionInstances {
+    serviceId: string;
+    adapters: RunningAdapterInstance[];
+    pipelineElements: RunningPipelineElementInstance[];
+}
+
+export interface RunningAdapterInstance {
+    instanceId: string;
+    name?: string;
+    appId?: string;
+    state: 'RUNNING' | 'STARTING' | 'STOPPING';
+    orphaned: boolean;
+}
+
+export interface RunningPipelineElementInstance {
+    instanceId: string;
+    name?: string;
+    appId?: string;
+    pipelineId?: string;
+    pipelineName?: string;
+    type: 'PROCESSOR' | 'SINK' | 'UNKNOWN';
+    orphaned: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ConfigurationService {
     private http = inject(HttpClient);
@@ -66,6 +90,48 @@ export class ConfigurationService {
                     return response as SpServiceRegistration[];
                 }),
             );
+    }
+
+    getRunningExtensionInstances(
+        serviceId: string,
+    ): Observable<RunningExtensionInstances> {
+        return this.http
+            .get(
+                this.getServerUrl() +
+                    `/api/v2/extensions-services/${encodeURIComponent(serviceId)}/running-instances`,
+            )
+            .pipe(
+                map(response => {
+                    return response as RunningExtensionInstances;
+                }),
+            );
+    }
+
+    removeAllRunningExtensionInstances(serviceId: string): Observable<object> {
+        return this.http.delete(
+            this.getServerUrl() +
+                `/api/v2/extensions-services/${encodeURIComponent(serviceId)}/running-instances`,
+        );
+    }
+
+    removeRunningAdapterInstance(
+        serviceId: string,
+        instanceId: string,
+    ): Observable<object> {
+        return this.http.delete(
+            this.getServerUrl() +
+                `/api/v2/extensions-services/${encodeURIComponent(serviceId)}/running-instances/adapters/${encodeURIComponent(instanceId)}`,
+        );
+    }
+
+    removeRunningPipelineElementInstance(
+        serviceId: string,
+        instanceId: string,
+    ): Observable<object> {
+        return this.http.delete(
+            this.getServerUrl() +
+                `/api/v2/extensions-services/${encodeURIComponent(serviceId)}/running-instances/pipeline-elements/${encodeURIComponent(instanceId)}`,
+        );
     }
 
     getExtensionsServiceConfigs(): Observable<SpServiceConfiguration[]> {

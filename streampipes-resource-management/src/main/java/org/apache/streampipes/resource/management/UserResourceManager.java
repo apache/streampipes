@@ -30,6 +30,7 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserActivationToken;
 import org.apache.streampipes.model.client.user.UserRegistrationData;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
@@ -51,19 +52,18 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   private static final int RECOVERY_TOKEN_LENGTH = 40;
   private static final Logger LOG = LoggerFactory.getLogger(UserResourceManager.class);
 
-  public UserResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI());
+  private final ISpCoreConfigurationStorage coreConfigurationStorage;
+
+  public UserResourceManager(IUserStorage userStorage,
+                             ISpCoreConfigurationStorage coreConfigurationStorage) {
+    super(userStorage);
+    this.coreConfigurationStorage = coreConfigurationStorage;
   }
 
-  public static void setHideTutorial(String username, boolean hideTutorial) {
-    IUserStorage userService = getUserStorage();
-    UserAccount user = userService.getUserAccount(username);
+  public void setHideTutorial(String username, boolean hideTutorial) {
+    UserAccount user = db.getUserAccount(username);
     user.setHideTutorial(hideTutorial);
-    userService.updateUser(user);
-  }
-
-  public static IUserStorage getUserStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
+    db.updateUser(user);
   }
 
   public Principal getPrincipalById(String principalId) {
@@ -78,8 +78,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
   public Principal getAdminUser() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore()
-        .getUserStorageAPI()
+    return db
         .getAllUserAccounts()
         .stream()
         .filter(u -> u.getRoles().contains(DefaultRole.ROLE_ADMIN.name()))
@@ -147,7 +146,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
                                    String activationCode) throws IOException {
     UserActivationToken token = UserActivationToken.create(activationCode, username);
     getUserActivationTokenStorage().persist(token);
-    new MailSender().sendAccountActivationMail(username, activationCode);
+    new MailSender(coreConfigurationStorage.get()).sendAccountActivationMail(username, activationCode);
   }
 
   public void sendPasswordRecoveryLink(String username) throws UserNotFoundException, IOException {
@@ -155,7 +154,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     if (db.checkUserExists(username)) {
       String recoveryCode = TokenUtil.generateToken(RECOVERY_TOKEN_LENGTH);
       storeRecoveryCode(username, recoveryCode);
-      new MailSender().sendPasswordRecoveryMail(username, recoveryCode);
+      new MailSender(coreConfigurationStorage.get()).sendPasswordRecoveryMail(username, recoveryCode);
     }
   }
 

@@ -35,6 +35,7 @@ import { SpServiceRegistration } from '@streampipes/platform-services';
 import { ConfigurationService } from '../../shared/configuration.service';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpExtensionsServiceDetailsDialogComponent } from '../../dialog/extensions-service-details/extensions-service-details-dialog.component';
+import { SpExtensionsServiceRunningInstancesDialogComponent } from '../../dialog/extensions-service-running-instances/extensions-service-running-instances-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     FlexDirective,
@@ -92,12 +93,26 @@ export class SpRegisteredExtensionsServiceComponent {
 
     openServiceDetails(serviceReg: SpServiceRegistration) {
         this.dialogService.open(SpExtensionsServiceDetailsDialogComponent, {
-            panelType: PanelType.STANDARD_PANEL,
+            panelType: PanelType.SLIDE_IN_PANEL,
             title: this.translateService.instant('Service details'),
             width: '70vw',
             data: {
                 serviceReg,
             },
         });
+    }
+
+    openRunningInstances(serviceReg: SpServiceRegistration) {
+        this.dialogService.open(
+            SpExtensionsServiceRunningInstancesDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Running instances'),
+                width: '80vw',
+                data: {
+                    serviceReg,
+                },
+            },
+        );
     }
 }

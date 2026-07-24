@@ -77,7 +77,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     ));
     var guessManagement = new GuessManagement(
         new ExtensionsServiceEndpointGenerator(),
-        requestManager
+        requestManager,
+        resourceManager
     );
     this.requestManager = requestManager;
     this.compactAdapterManagement = new CompactAdapterManagement(
@@ -143,7 +144,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
         }
         if (compactAdapter.createOptions()
                           .start()) {
-          managementService.startStreamAdapter(adapterId);
+          managementService.startAdapter(adapterId);
         }
       }
       return ok(Notifications.success(adapterId));

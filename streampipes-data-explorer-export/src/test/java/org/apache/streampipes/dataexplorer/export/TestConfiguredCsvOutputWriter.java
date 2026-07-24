@@ -25,8 +25,10 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_CSV_DELIMITER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestConfiguredCsvOutputWriter extends TestConfiguredOutputWriter {
@@ -47,6 +49,28 @@ public class TestConfiguredCsvOutputWriter extends TestConfiguredOutputWriter {
 
       writer.afterLastItem(outputStream);
       assertEquals(Expected, outputStream.toString(StandardCharsets.UTF_8));
+    }
+  }
+
+  @Test
+  public void testCsvOutputWriterEscapesConfiguredDelimiter() throws IOException {
+    var writer = new ConfiguredCsvOutputWriter();
+    var params = new HashMap<String, String>();
+    params.put(QP_CSV_DELIMITER, "semicolon");
+    writer.configure(null, new ProvidedRestQueryParams(null, params), true);
+    var columns = Arrays.asList("time", "string;header");
+    var row = Arrays.<Object>asList(1781515964488L, "abc=;,");
+
+    try (var outputStream = new ByteArrayOutputStream()) {
+      writer.beforeFirstItem(outputStream);
+
+      writer.writeItem(outputStream, row, columns, true);
+
+      writer.afterLastItem(outputStream);
+      assertEquals(
+          "time;\"string;header\"\n1781515964488;\"abc=;,\"\n",
+          outputStream.toString(StandardCharsets.UTF_8)
+      );
     }
   }
 }

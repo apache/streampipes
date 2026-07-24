@@ -29,16 +29,20 @@ import org.apache.plc4x.java.api.exceptions.PlcConnectionException;
 import org.apache.plc4x.java.api.messages.PlcBrowseRequest;
 import org.apache.plc4x.java.api.messages.PlcPingResponse;
 import org.apache.plc4x.java.api.messages.PlcReadRequest;
+import org.apache.plc4x.java.api.messages.PlcReadResponse;
 import org.apache.plc4x.java.api.messages.PlcSubscriptionRequest;
 import org.apache.plc4x.java.api.messages.PlcUnsubscriptionRequest;
 import org.apache.plc4x.java.api.messages.PlcWriteRequest;
 import org.apache.plc4x.java.api.metadata.PlcConnectionMetadata;
 import org.apache.plc4x.java.api.model.PlcTag;
+import org.apache.plc4x.java.api.types.PlcResponseCode;
 import org.apache.plc4x.java.api.value.PlcValue;
 import org.apache.plc4x.java.utils.cache.exceptions.PlcConnectionManagerClosedException;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -46,7 +50,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -161,6 +167,93 @@ class ConnectionContainerReproTest {
     }
   }
 
+  static class MutableConnection extends DummyConnection {
+    private final AtomicBoolean connected;
+    private final AtomicInteger closeCalls;
+
+    MutableConnection(boolean connected) {
+      this.connected = new AtomicBoolean(connected);
+      this.closeCalls = new AtomicInteger();
+    }
+
+    @Override
+    public boolean isConnected() {
+      return connected.get();
+    }
+
+    @Override
+    public void close() {
+      closeCalls.incrementAndGet();
+    }
+
+    void setConnected(boolean connected) {
+      this.connected.set(connected);
+    }
+
+    int closeCalls() {
+      return closeCalls.get();
+    }
+  }
+
+  static class RejectingReadConnection extends MutableConnection {
+
+    RejectingReadConnection() {
+      super(true);
+    }
+
+    @Override
+    public PlcReadRequest.Builder readRequestBuilder() {
+      return new PlcReadRequest.Builder() {
+        @Override
+        public PlcReadRequest build() {
+          return new PlcReadRequest() {
+            @Override
+            public CompletableFuture<? extends PlcReadResponse> execute() {
+              throw new RejectedExecutionException("transaction executor terminated");
+            }
+
+            @Override
+            public int getNumberOfTags() {
+              return 0;
+            }
+
+            @Override
+            public LinkedHashSet<String> getTagNames() {
+              return new LinkedHashSet<>();
+            }
+
+            @Override
+            public PlcResponseCode getTagResponseCode(String tagName) {
+              return null;
+            }
+
+            @Override
+            public PlcTag getTag(String name) {
+              return null;
+            }
+
+            @Override
+            public List<PlcTag> getTags() {
+              return List.of();
+            }
+          };
+        }
+
+        @Override
+        public PlcReadRequest.Builder addTagAddress(String name,
+                                                    String tagAddress) {
+          return this;
+        }
+
+        @Override
+        public PlcReadRequest.Builder addTag(String name,
+                                             PlcTag tag) {
+          return this;
+        }
+      };
+    }
+  }
+
   @Test
   void recoversAfterFailedReconnectAndServesNewLeases() throws Exception {
     FlakyManager mgr = new FlakyManager();
@@ -192,6 +285,131 @@ class ConnectionContainerReproTest {
     cc.returnConnection((SpLeasedPlcConnection) lease2, false);
     PlcConnection lease3 = cc.lease().get(500, TimeUnit.MILLISECONDS);
     assertNotNull(lease3);
+  }
+
+  @Test
+  void replacesDisconnectedIdleConnection() throws Exception {
+    var staleConnection = new MutableConnection(true);
+    var managerCalls = new AtomicInteger();
+    PlcConnectionManager manager = new PlcConnectionManager() {
+      @Override
+      public PlcConnection getConnection(String url) {
+        if (managerCalls.incrementAndGet() == 1) {
+          return staleConnection;
+        }
+        return new DummyConnection();
+      }
+
+      @Override
+      public PlcConnection getConnection(String url,
+                                         PlcAuthentication authentication) {
+        return null;
+      }
+    };
+    SpConnectionContainer connectionContainer = new SpConnectionContainer(
+        manager,
+        "mock://plc",
+        Duration.ofSeconds(30),
+        Duration.ofSeconds(30),
+        url -> null
+    );
+
+    SpLeasedPlcConnection firstLease =
+        (SpLeasedPlcConnection) connectionContainer.lease().get(500, TimeUnit.MILLISECONDS);
+    connectionContainer.returnConnection(firstLease, false);
+
+    staleConnection.setConnected(false);
+
+    SpLeasedPlcConnection secondLease =
+        (SpLeasedPlcConnection) connectionContainer.lease().get(500, TimeUnit.MILLISECONDS);
+    assertNotNull(secondLease);
+    assertEquals(2, managerCalls.get());
+    assertEquals(1, staleConnection.closeCalls());
+    connectionContainer.returnConnection(secondLease, false);
+    connectionContainer.close();
+  }
+
+  @Test
+  void doesNotEagerlyReplaceInvalidConnectionWithoutWaitingClient() throws Exception {
+    var firstConnection = new MutableConnection(true);
+    var secondConnection = new MutableConnection(true);
+    var managerCalls = new AtomicInteger();
+    PlcConnectionManager manager = new PlcConnectionManager() {
+      @Override
+      public PlcConnection getConnection(String url) {
+        return managerCalls.incrementAndGet() == 1 ? firstConnection : secondConnection;
+      }
+
+      @Override
+      public PlcConnection getConnection(String url,
+                                         PlcAuthentication authentication) {
+        return null;
+      }
+    };
+    var connectionContainer = new SpConnectionContainer(
+        manager,
+        "mock://plc",
+        Duration.ofSeconds(30),
+        Duration.ofSeconds(30),
+        url -> null
+    );
+
+    SpLeasedPlcConnection firstLease =
+        (SpLeasedPlcConnection) connectionContainer.lease().get(500, TimeUnit.MILLISECONDS);
+    connectionContainer.returnConnection(firstLease, true);
+
+    assertEquals(1, managerCalls.get());
+    assertEquals(1, firstConnection.closeCalls());
+
+    SpLeasedPlcConnection secondLease =
+        (SpLeasedPlcConnection) connectionContainer.lease().get(500, TimeUnit.MILLISECONDS);
+    assertEquals(2, managerCalls.get());
+    connectionContainer.returnConnection(secondLease, false);
+    connectionContainer.close();
+  }
+
+  @Test
+  void invalidatesLeaseWhenReadExecutionIsRejectedSynchronously() throws Exception {
+    var firstConnection = new RejectingReadConnection();
+    var managerCalls = new AtomicInteger();
+    PlcConnectionManager manager = new PlcConnectionManager() {
+      @Override
+      public PlcConnection getConnection(String url) {
+        return managerCalls.incrementAndGet() == 1 ? firstConnection : new DummyConnection();
+      }
+
+      @Override
+      public PlcConnection getConnection(String url,
+                                         PlcAuthentication authentication) {
+        return null;
+      }
+    };
+    var connectionContainer = new SpConnectionContainer(
+        manager,
+        "mock://plc",
+        Duration.ofSeconds(30),
+        Duration.ofSeconds(30),
+        url -> null
+    );
+
+    SpLeasedPlcConnection firstLease =
+        (SpLeasedPlcConnection) connectionContainer.lease().get(500, TimeUnit.MILLISECONDS);
+
+    var readRequest = firstLease.readRequestBuilder().build();
+    var exception = assertThrows(
+        ExecutionException.class,
+        () -> readRequest.execute().get(500, TimeUnit.MILLISECONDS)
+    );
+    assertTrue(exception.getCause() instanceof RejectedExecutionException);
+
+    firstLease.close();
+
+    PlcConnection secondLease = connectionContainer.lease().get(500, TimeUnit.MILLISECONDS);
+    assertNotNull(secondLease);
+    assertEquals(2, managerCalls.get());
+    assertEquals(1, firstConnection.closeCalls());
+    secondLease.close();
+    connectionContainer.close();
   }
 
   @Test

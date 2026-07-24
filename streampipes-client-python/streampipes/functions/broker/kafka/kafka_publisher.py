@@ -17,7 +17,7 @@
 
 import json
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from confluent_kafka import Producer  # type: ignore
 
@@ -48,7 +48,7 @@ class KafkaPublisher(Publisher):
         self.kafka_producer = Producer({"bootstrap.servers": f"{hostname}:{port}"})
         logger.info(f"Connecting to Kafka at {hostname}:{port}")
 
-    async def publish_event(self, event: Dict[str, Any]):
+    async def publish_event(self, event: dict[str, Any]):
         """Publish an event to a connected data stream.
 
         Parameters

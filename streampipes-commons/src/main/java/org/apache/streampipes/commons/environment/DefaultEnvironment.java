@@ -198,6 +198,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public BooleanEnvironmentVariable getFunctionStateEndpointsEnabled() {
+    return new BooleanEnvironmentVariable(Envs.SP_FUNCTION_STATE_ENDPOINTS_ENABLED);
+  }
+
+  @Override
   public List<OAuthConfiguration> getOAuthConfigurations() {
     return new OAuthConfigurationParser().parse(System.getenv());
   }
@@ -375,6 +380,11 @@ public class DefaultEnvironment implements Environment {
   @Override
   public StringEnvironmentVariable getOpcUaKeystoreAlias() {
     return new StringEnvironmentVariable(Envs.SP_OPCUA_KEYSTORE_ALIAS);
+  }
+
+  @Override
+  public BooleanEnvironmentVariable getOpcUaDisallowInsecureEndpoints() {
+    return new BooleanEnvironmentVariable(Envs.SP_OPCUA_DISALLOW_INSECURE_ENDPOINTS);
   }
 
   @Override

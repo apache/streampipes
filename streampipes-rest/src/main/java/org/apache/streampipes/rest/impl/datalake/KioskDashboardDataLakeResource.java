@@ -71,30 +71,42 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
     this.permissionStorage = resourceManager.managePermissions().getDb();
   }
 
-  @PostMapping(path = "/{dashboardId}/{widgetId}/data",
+  @PostMapping(path = "/{dashboardId}/data",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthorityOrAnonymous(#dashboardId) and hasPermission(#dashboardId, 'READ')")
   public ResponseEntity<?> getData(@PathVariable("dashboardId") String dashboardId,
-                                   @PathVariable("widgetId") String widgetId,
-                                   @RequestBody Map<String, String> queryParams) {
+                                   @RequestBody List<KioskDashboardDataQuery> dataQueries) {
     var dashboard = dashboardStorage.getElementById(dashboardId);
-    if (dashboard.getWidgets().stream().noneMatch(w -> w.getDataViewElementId().equals(widgetId))) {
-      return badRequest(String.format("Widget with id %s not found in dashboard", widgetId));
+    var dashboardWidgetIds = dashboard.getWidgets().stream()
+        .map(w -> w.getDataViewElementId())
+        .toList();
+
+    if (dataQueries.stream().anyMatch(query -> !dashboardWidgetIds.contains(query.widgetId()))) {
+      return badRequest("At least one widget was not found in dashboard");
     }
+
+    try {
+      var results = dataQueries.stream()
+          .map(query -> executeKioskDataQuery(query.widgetId(), query.queryParams()))
+          .toList();
+      return ok(results);
+    } catch (IllegalArgumentException e) {
+      return badRequest(e.getMessage());
+    } catch (RuntimeException e) {
+      return badRequest(SpLogMessage.from(e));
+    }
+  }
+
+  private SpQueryResult executeKioskDataQuery(String widgetId,
+                                              Map<String, String> queryParams) {
     var widget = dataExplorerWidgetStorage.getElementById(widgetId);
     var measureName = queryParams.get("measureName");
     if (!checkMeasureNameInWidget(widget, measureName)) {
-     return badRequest("Measure name not found in widget configuration");
+      throw new IllegalArgumentException("Measure name not found in widget configuration");
     } else {
       ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(measureName, queryParams);
-      try {
-        SpQueryResult result =
-            this.dataExplorerQueryManagement.getData(sanitizedParams, true);
-        return ok(result);
-      } catch (RuntimeException e) {
-        return badRequest(SpLogMessage.from(e));
-      }
+      return this.dataExplorerQueryManagement.getData(sanitizedParams, true);
     }
   }
 
@@ -114,6 +126,11 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
     } else {
       return false;
     }
+  }
+
+  public record KioskDashboardDataQuery(String widgetId,
+                                       Map<String, String> queryParams) {
+
   }
 
   public boolean hasReadAuthorityOrAnonymous(String dashboardId) {

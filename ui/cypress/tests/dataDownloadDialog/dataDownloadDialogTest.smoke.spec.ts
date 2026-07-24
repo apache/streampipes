@@ -29,8 +29,8 @@ describe('Test chart data download dialog', () => {
             'json_array',
         );
 
-        ChartUtils.addDataViewAndTableWidget(PrepareTestDataUtils.dataName);
-        ChartUtils.saveDataViewConfiguration(false, false, dataViewName);
+        ChartUtils.createTableChart(PrepareTestDataUtils.dataName);
+        ChartUtils.saveChartConfiguration(false, false, chartName);
     });
 
     beforeEach('Setup Test', () => {
@@ -38,7 +38,7 @@ describe('Test chart data download dialog', () => {
         cy.login();
     });
 
-    const dataViewName = 'NewWidget';
+    const chartName = 'NewChart';
 
     const formatTestsExportConfig: ExportConfig = {
         formatExportConfig: undefined,
@@ -60,7 +60,7 @@ describe('Test chart data download dialog', () => {
         DataDownloadDialogUtils.testDownload(
             formatTestsExportConfig,
             resultFile,
-            dataViewName,
+            chartName,
         );
     });
 
@@ -75,7 +75,7 @@ describe('Test chart data download dialog', () => {
         DataDownloadDialogUtils.testDownload(
             formatTestsExportConfig,
             resultFile,
-            dataViewName,
+            chartName,
         );
     });
 
@@ -88,7 +88,7 @@ describe('Test chart data download dialog', () => {
         DataDownloadDialogUtils.testDownload(
             formatTestsExportConfig,
             resultFile,
-            dataViewName,
+            chartName,
         );
     });
 
@@ -105,7 +105,7 @@ describe('Test chart data download dialog', () => {
         DataDownloadDialogUtils.testDownload(
             formatTestsExportConfig,
             resultFile,
-            dataViewName,
+            chartName,
         );
     });
 });
