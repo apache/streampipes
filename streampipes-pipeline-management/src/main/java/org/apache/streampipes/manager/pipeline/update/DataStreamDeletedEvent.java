@@ -16,9 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.event;
+package org.apache.streampipes.manager.pipeline.update;
 
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-
-public record AdapterUpdatedEvent(AdapterDescription adapterDescription) {
+public record DataStreamDeletedEvent(String elementId) {
 }

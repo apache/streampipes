@@ -31,8 +31,6 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
-import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.manager.pipeline.update.PipelineUpdateCoordinator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
@@ -44,6 +42,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +66,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
 
   public CompactAdapterResource(WorkerRestClient workerRestClient,
                                 ExtensionServiceRequestManager requestManager,
+                                ApplicationEventPublisher eventPublisher,
                                 SpResourceManager resourceManager) {
     super(() -> new AdapterMasterManagement(
         resourceManager,
@@ -87,16 +87,12 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     this.pipelineManager = new PipelineManager(
         resourceManager
     );
-    var pipelineUpdateCoordinator = new PipelineUpdateCoordinator(
-        requestManager,
-        resourceManager,
-        new ChartSchemaUpdateCoordinator(resourceManager.manageCharts().getDb()),
-        pipelineManager
-    );
     this.adapterUpdateManagement = new AdapterUpdateManagement(
         managementService,
-        pipelineUpdateCoordinator,
-        resourceManager);
+        requestManager,
+        resourceManager,
+        eventPublisher
+    );
   }
 
   @PostMapping(
