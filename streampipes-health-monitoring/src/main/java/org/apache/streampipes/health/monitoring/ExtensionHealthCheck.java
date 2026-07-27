@@ -19,6 +19,7 @@
 package org.apache.streampipes.health.monitoring;
 
 import org.apache.streampipes.health.monitoring.model.HealthCheckData;
+import org.apache.streampipes.manager.api.extensions.AdapterHealthStatusManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.health.ExtensionInstanceHealth;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -126,7 +127,14 @@ public class ExtensionHealthCheck implements Runnable {
             resourceManager,
             pipelineRecoveryBackoff
         ),
-        new AdapterHealthCheck(healthCheckData)
+        new AdapterHealthCheck(
+            healthCheckData,
+            new AdapterHealthStatusManager(
+                extensionsServiceStorage,
+                extensionRequestManager,
+                resourceManager
+            )
+        )
     );
   }
 }

@@ -106,10 +106,7 @@ public final class ExtensionServiceRequests {
 
   public static ExtensionServiceRequest adapterHealth(ExtensionServiceRequestTarget target,
                                                       SpResourceManager resourceManager) {
-    return get(
-        target,
-        new AuthTokenProvider(resourceManager).getAuthTokenForCurrentUser()
-    );
+    return get(target, serviceAdminToken(resourceManager));
   }
 
   public static ExtensionServiceRequest adapterHealthTrigger(ExtensionServiceRequestTarget target,

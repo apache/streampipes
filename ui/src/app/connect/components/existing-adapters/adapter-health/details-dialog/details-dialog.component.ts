@@ -56,8 +56,9 @@ import { AdapterHealthErrorOutputComponent } from '../error-output/error-output.
     ],
 })
 export class AdapterHealthDetailsDialogComponent implements OnInit, OnDestroy {
-    @Input() healthStatus: AdapterHealthStatus | null;
+    @Input() adapterId: string;
 
+    healthStatus: AdapterHealthStatus | null;
     isTriggering = false;
     HealthCheckStatus = HealthCheckStatus;
     timeUntilNextCheck = '';
@@ -81,6 +82,7 @@ export class AdapterHealthDetailsDialogComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.pollStatus();
         this.updateCountdown();
         this.countdownInterval = setInterval(
             () => this.updateCountdown(),
@@ -95,14 +97,15 @@ export class AdapterHealthDetailsDialogComponent implements OnInit, OnDestroy {
     }
 
     private pollStatus(): void {
-        if (!this.healthStatus?.adapterId) return;
-        this.adapterHealthService.getAllHealthStatuses().subscribe(statuses => {
-            const updated = statuses.get(this.healthStatus.adapterId);
-            if (updated) {
-                this.healthStatus = updated;
-                this.updateCountdown();
-            }
-        });
+        if (!this.adapterId) return;
+        this.adapterHealthService
+            .getHealthStatus(this.adapterId)
+            .subscribe(status => {
+                if (status) {
+                    this.healthStatus = status;
+                    this.updateCountdown();
+                }
+            });
     }
 
     private updateCountdown(): void {
@@ -192,5 +195,5 @@ export class AdapterHealthDetailsDialogComponent implements OnInit, OnDestroy {
         return line.substring(separatorIndex + 1).trim();
     }
 
-    close = () => this.dialogRef.close();
+    close = () => this.dialogRef.close(this.healthStatus?.overallStatus);
 }

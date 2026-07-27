@@ -34,6 +34,7 @@ public class AdapterHealthOperationHandler implements ExtensionBrokerOperationHa
   private static final String OPERATION = ExtensionServiceBrokerOperations.ADAPTER_HEALTH.operationId();
   private static final String TOPIC_OPERATION_SEGMENT =
       ExtensionServiceBrokerOperations.ADAPTER_HEALTH.firstTopicSegment();
+  private static final String SUMMARY_COMMAND = "summary";
   private static final String TRIGGER_COMMAND = "trigger";
 
   private final ObjectMapper objectMapper;
@@ -64,6 +65,20 @@ public class AdapterHealthOperationHandler implements ExtensionBrokerOperationHa
     if (operationSegments.size() == 1) {
       var payload = objectMapper.writeValueAsString(
           AdapterHealthCheckManager.INSTANCE.getAllHealthStatuses()
+      );
+      return ExtensionBrokerResponseFactory.ok(request.getRequestId(), payload);
+    }
+
+    if (operationSegments.size() == 2 && SUMMARY_COMMAND.equals(operationSegments.get(1))) {
+      var payload = objectMapper.writeValueAsString(
+          AdapterHealthCheckManager.INSTANCE.getOverallHealthStatuses()
+      );
+      return ExtensionBrokerResponseFactory.ok(request.getRequestId(), payload);
+    }
+
+    if (operationSegments.size() == 2) {
+      var payload = objectMapper.writeValueAsString(
+          AdapterHealthCheckManager.INSTANCE.getHealthStatus(operationSegments.get(1))
       );
       return ExtensionBrokerResponseFactory.ok(request.getRequestId(), payload);
     }

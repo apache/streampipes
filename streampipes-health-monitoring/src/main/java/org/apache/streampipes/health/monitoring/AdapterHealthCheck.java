@@ -22,13 +22,16 @@ import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.health.monitoring.model.HealthCheckData;
 import org.apache.streampipes.loadbalance.pipeline.ExtensionsLogProvider;
+import org.apache.streampipes.manager.api.extensions.AdapterHealthStatusManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.HealthCheckStatus;
 import org.apache.streampipes.model.health.AdapterInstanceState;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -40,9 +43,16 @@ public class AdapterHealthCheck implements HealthCheck {
   private static final Logger LOG = LoggerFactory.getLogger(AdapterHealthCheck.class);
 
   private final HealthCheckData healthCheckData;
+  private final AdapterHealthStatusManager adapterHealthStatusManager;
 
   public AdapterHealthCheck(HealthCheckData healthCheckData) {
+    this(healthCheckData, null);
+  }
+
+  public AdapterHealthCheck(HealthCheckData healthCheckData,
+                            AdapterHealthStatusManager adapterHealthStatusManager) {
     this.healthCheckData = healthCheckData;
+    this.adapterHealthStatusManager = adapterHealthStatusManager;
   }
 
   /**
@@ -77,6 +87,8 @@ public class AdapterHealthCheck implements HealthCheck {
             allAdaptersToRecover.size(),
             adaptersToMonitor.size());
 
+        updateHealthStatuses(adaptersToMonitor, allAdaptersToRecover);
+
         if (!adaptersToMonitor.isEmpty()) {
           updateMonitoringMetrics(adaptersToMonitor);
         } else {
@@ -87,10 +99,26 @@ public class AdapterHealthCheck implements HealthCheck {
 
         // Recover Adapters
         this.recoverAdapters(allAdaptersToRecover);
+      } else if (adapterHealthStatusManager != null) {
+        AdapterHealthStatusStore.INSTANCE.replaceHealthStatuses(Map.of());
       }
     } catch (NoSuchElementException e) {
       LOG.error("Could not update adapter metrics due to an invalid state. ({})", e.getMessage());
     }
+  }
+
+  protected void updateHealthStatuses(List<AdapterDescription> activeAdapters,
+                                      List<AdapterDescription> unavailableAdapters) {
+    if (adapterHealthStatusManager == null) {
+      return;
+    }
+
+    var healthStatuses = new HashMap<>(
+        adapterHealthStatusManager.getOverallHealthStatuses(activeAdapters)
+    );
+    unavailableAdapters.forEach(adapter ->
+        healthStatuses.put(adapter.getElementId(), HealthCheckStatus.UNHEALTHY));
+    AdapterHealthStatusStore.INSTANCE.replaceHealthStatuses(healthStatuses);
   }
 
   /**

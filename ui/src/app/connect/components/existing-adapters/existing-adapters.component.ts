@@ -60,9 +60,8 @@ import { AllAdapterActionsComponent } from '../../dialog/start-all-adapters/all-
 import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-started-dialog.component';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import { AdapterHealthStatus } from '../../model/adapter-health-status.model';
 import { SpConnectRoutes } from '../../connect.breadcrumb';
-import { interval, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -77,7 +76,6 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { AdapterStatusLightComponent } from './adapter-status-light/adapter-status-light.component';
 import { MatMenuItem } from '@angular/material/menu';
 import { DatePipe } from '@angular/common';
-import { AdapterHealthService } from '../../services/adapter-health.service';
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -139,7 +137,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         new MatTableDataSource();
 
     adapterMetrics: Record<string, SpMetricsEntry> = {};
-    adapterHealthStatuses: Map<string, AdapterHealthStatus> = new Map();
     tutorialActive = false;
     readonly bulkAdapterActionOptions: SpTableMultiActionOption[] = [
         { value: 'start', label: 'Start selected', icon: 'play_arrow' },
@@ -149,7 +146,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     assetFilter$: Subscription;
     user$: Subscription;
     tutorial$: Subscription;
-    healthPoll$: Subscription;
     currentFilterIds: Set<string> = new Set<string>();
 
     startAdapterErrorText = 'Could not start adapter';
@@ -165,7 +161,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     private translate = inject(TranslateService);
     private adapterMonitoringService = inject(AdapterMonitoringService);
     private assetFilterService = inject(SpAssetBrowserService);
-    private adapterHealthService = inject(AdapterHealthService);
 
     constructor() {
         this.dataSource.sortingDataAccessor = (adapter, column) => {
@@ -207,9 +202,6 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
                 this.tutorialActive = tutorialActive;
             },
         );
-        this.healthPoll$ = interval(5000).subscribe(() => {
-            this.loadHealthStatuses();
-        });
     }
 
     startAdapter(adapter: AdapterSummaryDto): void {
@@ -455,23 +447,10 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
             this.applyAdapterFilters(this.currentFilterIds);
             this.operationInProgressAdapterId = undefined;
             this.getMonitoringInfos(this.existingAdapters);
-            this.loadHealthStatuses();
             setTimeout(() => {
                 this.dataSource.sort = this.sort;
             });
         });
-    }
-
-    loadHealthStatuses(): void {
-        this.adapterHealthService.getAllHealthStatuses().subscribe(statuses => {
-            this.adapterHealthStatuses = statuses;
-        });
-    }
-
-    getHealthStatus(adapter: AdapterSummaryDto): AdapterHealthStatus | null {
-        return adapter.running
-            ? this.adapterHealthStatuses.get(adapter.elementId) || null
-            : null;
     }
 
     applyAdapterFilters(elementIds: Set<string>): void {
@@ -506,6 +485,5 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.user$?.unsubscribe();
         this.tutorial$?.unsubscribe();
         this.assetFilter$?.unsubscribe();
-        this.healthPoll$?.unsubscribe();
     }
 }

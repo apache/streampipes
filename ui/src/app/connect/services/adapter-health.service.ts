@@ -19,7 +19,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { AdapterHealthStatus } from '../model/adapter-health-status.model';
 
 @Injectable({ providedIn: 'root' })
@@ -27,17 +27,10 @@ export class AdapterHealthService {
     private http = inject(HttpClient);
     private readonly basePath = '/streampipes-backend/api/v2/adapter-health';
 
-    getAllHealthStatuses(): Observable<Map<string, AdapterHealthStatus>> {
-        return this.http.get<AdapterHealthStatus[]>(this.basePath).pipe(
-            map(statuses =>
-                statuses.reduce(
-                    (mapByAdapterId, status) =>
-                        mapByAdapterId.set(status.adapterId, status),
-                    new Map<string, AdapterHealthStatus>(),
-                ),
-            ),
-            catchError(() => of(new Map<string, AdapterHealthStatus>())),
-        );
+    getHealthStatus(adapterId: string): Observable<AdapterHealthStatus | null> {
+        return this.http
+            .get<AdapterHealthStatus>(`${this.basePath}/${adapterId}`)
+            .pipe(catchError(() => of(null)));
     }
 
     triggerHealthCheck(adapterId: string): Observable<void> {

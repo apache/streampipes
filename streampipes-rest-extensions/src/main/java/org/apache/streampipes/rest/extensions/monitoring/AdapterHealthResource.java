@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.extensions.monitoring;
 
 import org.apache.streampipes.extensions.management.monitoring.AdapterHealthCheckManager;
 import org.apache.streampipes.model.connect.adapter.AdapterHealthStatus;
+import org.apache.streampipes.model.connect.adapter.HealthCheckStatus;
 import org.apache.streampipes.rest.extensions.AbstractExtensionsResource;
 
 import org.springframework.http.MediaType;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/adapter-health")
@@ -38,6 +40,11 @@ public class AdapterHealthResource extends AbstractExtensionsResource {
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<AdapterHealthStatus>> getAllAdapterHealth() {
     return ok(AdapterHealthCheckManager.INSTANCE.getAllHealthStatuses());
+  }
+
+  @GetMapping(value = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, HealthCheckStatus>> getAdapterHealthSummary() {
+    return ok(AdapterHealthCheckManager.INSTANCE.getOverallHealthStatuses());
   }
 
   @GetMapping(value = "/{adapterId}", produces = MediaType.APPLICATION_JSON_VALUE)

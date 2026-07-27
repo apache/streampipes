@@ -24,10 +24,8 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatTooltip } from '@angular/material/tooltip';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import {
-    AdapterHealthStatus,
-    HealthCheckStatus,
-} from '../../../model/adapter-health-status.model';
+import { HealthCheckStatus } from '../../../model/adapter-health-status.model';
+import { AdapterSummaryDto } from '@streampipes/platform-services';
 import { AdapterHealthDetailsDialogComponent } from '../adapter-health/details-dialog/details-dialog.component';
 
 @Component({
@@ -37,8 +35,9 @@ import { AdapterHealthDetailsDialogComponent } from '../adapter-health/details-d
     imports: [LayoutDirective, LayoutAlignDirective, MatTooltip, NgClass],
 })
 export class AdapterStatusLightComponent {
+    @Input() adapterId: string;
     @Input() adapterRunning: boolean;
-    @Input() healthStatus: AdapterHealthStatus | null = null;
+    @Input() healthStatus: AdapterSummaryDto['healthStatus'] | null = null;
 
     private dialogService = inject(DialogService);
 
@@ -48,11 +47,11 @@ export class AdapterStatusLightComponent {
         }
         if (
             !this.healthStatus ||
-            this.healthStatus.overallStatus === HealthCheckStatus.UNKNOWN
+            this.healthStatus === HealthCheckStatus.UNKNOWN
         ) {
             return 'light-neutral';
         }
-        return this.healthStatus.overallStatus === HealthCheckStatus.UNHEALTHY
+        return this.healthStatus === HealthCheckStatus.UNHEALTHY
             ? 'light-red'
             : 'light-green';
     }
@@ -62,11 +61,19 @@ export class AdapterStatusLightComponent {
         if (!this.adapterRunning) {
             return;
         }
-        this.dialogService.open(AdapterHealthDetailsDialogComponent, {
-            panelType: PanelType.STANDARD_PANEL,
-            title: 'Adapter Health Status',
-            width: '90vw',
-            data: { healthStatus: this.healthStatus },
+        const dialogRef = this.dialogService.open(
+            AdapterHealthDetailsDialogComponent,
+            {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'Adapter Health Status',
+                width: '90vw',
+                data: { adapterId: this.adapterId },
+            },
+        );
+        dialogRef.afterClosed().subscribe(healthStatus => {
+            if (healthStatus) {
+                this.healthStatus = healthStatus;
+            }
         });
     }
 }

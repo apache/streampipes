@@ -41,6 +41,7 @@ export interface AdapterSummaryDto {
     appId: string;
     includedAssets: string[];
     icon: string;
+    healthStatus: 'HEALTHY' | 'UNHEALTHY' | 'UNKNOWN';
 }
 
 export interface AssetSummaryDto {

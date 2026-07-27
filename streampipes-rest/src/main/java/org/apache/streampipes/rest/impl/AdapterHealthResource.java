@@ -18,70 +18,48 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.health.monitoring.AdapterHealthStatusStore;
+import org.apache.streampipes.manager.api.extensions.AdapterHealthStatusManager;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
-import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTargets;
-import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequests;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterHealthStatus;
-import org.apache.streampipes.model.connect.adapter.HealthCheckStatus;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v2/adapter-health")
 public class AdapterHealthResource extends AbstractAuthGuardedRestResource {
 
-  private static final Logger LOG = LoggerFactory.getLogger(AdapterHealthResource.class);
-  private static final String KAFKA_ADAPTER_APP_ID = "org.apache.streampipes.connect.iiot.protocol.stream.kafka";
-  private static final String OPC_UA_ADAPTER_APP_ID = "org.apache.streampipes.connect.iiot.adapters.opcua";
-  private static final String MQTT_ADAPTER_APP_ID = "org.apache.streampipes.connect.iiot.protocol.stream.mqtt";
-  private static final Set<String> SUPPORTED_ADAPTER_APP_IDS = Set.of(
-      KAFKA_ADAPTER_APP_ID,
-      OPC_UA_ADAPTER_APP_ID,
-      MQTT_ADAPTER_APP_ID
-  );
-
   private final IAdapterStorage adapterStorage;
-  private final IExtensionsServiceStorage extensionsServiceStorage;
-  private final ExtensionServiceRequestManager extensionServiceRequestManager;
-  private final ObjectMapper objectMapper;
+  private final AdapterHealthStatusManager healthStatusManager;
   private final SpPermissionEvaluator permissionEvaluator;
-  private final SpResourceManager resourceManager;
 
   public AdapterHealthResource(IAdapterStorage adapterStorage,
                                SpPermissionEvaluator permissionEvaluator,
                                ExtensionServiceRequestManager extensionServiceRequestManager,
                                SpResourceManager resourceManager) {
     this.adapterStorage = adapterStorage;
-    this.extensionsServiceStorage = getNoSqlStorage().getExtensionsServiceStorage();
-    this.extensionServiceRequestManager = extensionServiceRequestManager;
-    this.objectMapper = new ObjectMapper();
+    this.healthStatusManager = new AdapterHealthStatusManager(
+        getNoSqlStorage().getExtensionsServiceStorage(),
+        extensionServiceRequestManager,
+        resourceManager
+    );
     this.permissionEvaluator = permissionEvaluator;
-    this.resourceManager = resourceManager;
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -92,118 +70,30 @@ public class AdapterHealthResource extends AbstractAuthGuardedRestResource {
         .filter(adapter -> checkAdapterPermission(adapter, "READ"))
         .toList();
 
-    var groupedByEndpoint = runningAdapters.stream()
-        .filter(adapter -> adapter.getSelectedEndpointUrl() != null && !adapter.getSelectedEndpointUrl().isBlank())
-        .collect(Collectors.groupingBy(AdapterDescription::getSelectedEndpointUrl));
-
-    var statusesByAdapterId = new HashMap<String, AdapterHealthStatus>();
-    groupedByEndpoint.forEach((endpoint, adapters) -> {
-      var endpointStatuses = fetchHealthStatuses(adapters.get(0)).stream()
-          .collect(Collectors.toMap(AdapterHealthStatus::getAdapterId, status -> status, (s1, s2) -> s1));
-
-      adapters.forEach(adapter -> {
-        var status = endpointStatuses.get(adapter.getElementId());
-        if (status == null) {
-          status = createFallbackStatus(adapter);
-        }
-        normalizeStatus(status, adapter);
-        statusesByAdapterId.put(adapter.getElementId(), status);
-      });
-    });
-
-    runningAdapters.stream()
-        .filter(adapter -> !statusesByAdapterId.containsKey(adapter.getElementId()))
-        .forEach(adapter -> statusesByAdapterId.put(adapter.getElementId(), createFallbackStatus(adapter)));
-
-    return ok(new ArrayList<>(statusesByAdapterId.values()));
+    return ok(healthStatusManager.getHealthStatuses(runningAdapters));
   }
 
-  private List<AdapterHealthStatus> fetchHealthStatuses(AdapterDescription adapter) {
-    try {
-      var service = resolveExtensionService(adapter);
-      var requestTarget = ExtensionServiceRequestTargets.adapterHealth(service);
-      var response = extensionServiceRequestManager.request(
-          ExtensionServiceRequests.adapterHealth(requestTarget, resourceManager)
-      );
-      if (response.isSuccess()) {
-        return objectMapper.readValue(response.responseBody(), new TypeReference<>() {
-        });
-      }
-
-      LOG.debug("Health request to {} returned status {}", service.getServiceUrl(), response.statusCode());
-    } catch (IOException | IllegalArgumentException e) {
-      LOG.debug("Failed to fetch adapter health statuses from {}", adapter.getSelectedEndpointUrl(), e);
-    }
-
-    return List.of();
-  }
-
-  private AdapterHealthStatus createFallbackStatus(AdapterDescription adapter) {
-    var status = new AdapterHealthStatus();
-    status.setAdapterId(adapter.getElementId());
-    status.setAdapterName(adapter.getName());
-    status.setBackendHealth(HealthCheckStatus.HEALTHY);
-    status.setBackendHealthMessage("Extension service is running");
-    status.setDataSourceHealth(HealthCheckStatus.UNKNOWN);
-    status.setDataSourceHealthSupported(SUPPORTED_ADAPTER_APP_IDS.contains(adapter.getAppId()));
-    status.setDataSourceHealthMessage(status.isDataSourceHealthSupported()
-        ? "Waiting for first health check..."
-        : "Data source health checks are not supported for this adapter type yet.");
-    status.setDataSourceHealthDetails(null);
-    status.setConsecutiveFailures(0);
-    status.setLastCheckTimestamp(System.currentTimeMillis());
-    status.updateOverallStatus();
-    return status;
-  }
-
-  private void normalizeStatus(AdapterHealthStatus status, AdapterDescription adapter) {
-    status.setAdapterId(adapter.getElementId());
-    status.setAdapterName(adapter.getName());
-
-    if (!status.isDataSourceHealthSupported()) {
-      status.setDataSourceHealth(HealthCheckStatus.UNKNOWN);
-      status.setDataSourceHealthMessage("Data source health checks are not supported for this adapter type yet.");
-      status.setDataSourceHealthDetails(null);
-      status.setConsecutiveFailures(0);
-    }
-
-    if (status.getBackendHealth() == null) {
-      status.setBackendHealth(HealthCheckStatus.HEALTHY);
-      status.setBackendHealthMessage("Extension service is running");
-    }
-
-    status.updateOverallStatus();
-  }
-
-  @org.springframework.web.bind.annotation.PostMapping(value = "/{adapterId}/trigger", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/{adapterId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
-  public ResponseEntity<Void> triggerAdapterHealthCheck(@org.springframework.web.bind.annotation.PathVariable String adapterId) {
-    try {
-      var adapter = adapterStorage.getElementById(adapterId);
-      if (adapter != null && adapter.isRunning() && adapter.getSelectedEndpointUrl() != null) {
-        var requestTarget = ExtensionServiceRequestTargets.adapterHealthTrigger(
-            resolveExtensionService(adapter),
-            adapterId
-        );
-        extensionServiceRequestManager.request(
-            ExtensionServiceRequests.adapterHealthTrigger(requestTarget, resourceManager)
-        );
-      }
-    } catch (IOException | IllegalArgumentException e) {
-      LOG.error("Failed to trigger health check for adapter {}", adapterId, e);
+  public ResponseEntity<AdapterHealthStatus> getAdapterHealth(@PathVariable String adapterId) {
+    var adapter = adapterStorage.getElementById(adapterId);
+    if (adapter == null || !checkAdapterPermission(adapter, "READ")) {
+      return ResponseEntity.notFound().build();
+    }
+
+    var healthStatus = healthStatusManager.getHealthStatus(adapter);
+    AdapterHealthStatusStore.INSTANCE.updateHealthStatus(adapterId, healthStatus.getOverallStatus());
+    return ok(healthStatus);
+  }
+
+  @PostMapping(value = "/{adapterId}/trigger", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasReadAuthority()")
+  public ResponseEntity<Void> triggerAdapterHealthCheck(@PathVariable String adapterId) {
+    var adapter = adapterStorage.getElementById(adapterId);
+    if (adapter != null && adapter.isRunning() && checkAdapterPermission(adapter, "READ")) {
+      healthStatusManager.triggerHealthCheck(adapter);
     }
     return ResponseEntity.ok().build();
-  }
-
-  private SpServiceRegistration resolveExtensionService(AdapterDescription adapter) {
-    return extensionsServiceStorage.findAll().stream()
-        .filter(service -> adapter.getSelectedServiceId() != null
-            ? adapter.getSelectedServiceId().equals(service.getSvcId())
-            : adapter.getSelectedEndpointUrl().equals(service.getServiceUrl()))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException(
-            "Could not resolve extension service for adapter " + adapter.getElementId()
-        ));
   }
 
   /**

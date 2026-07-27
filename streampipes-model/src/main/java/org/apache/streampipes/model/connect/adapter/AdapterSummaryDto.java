@@ -28,5 +28,29 @@ public record AdapterSummaryDto(String elementId,
                                 long createdAt,
                                 String appId,
                                 List<String> includedAssets,
-                                String icon) {
+                                String icon,
+                                HealthCheckStatus healthStatus) {
+
+  public AdapterSummaryDto(String elementId,
+                           String correspondingDataStreamElementId,
+                           String name,
+                           String description,
+                           boolean running,
+                           long createdAt,
+                           String appId,
+                           List<String> includedAssets,
+                           String icon) {
+    this(
+        elementId,
+        correspondingDataStreamElementId,
+        name,
+        description,
+        running,
+        createdAt,
+        appId,
+        includedAssets,
+        icon,
+        HealthCheckStatus.UNKNOWN
+    );
+  }
 }

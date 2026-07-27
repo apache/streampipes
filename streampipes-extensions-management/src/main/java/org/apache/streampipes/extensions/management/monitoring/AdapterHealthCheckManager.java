@@ -35,6 +35,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public enum AdapterHealthCheckManager {
   INSTANCE;
@@ -87,6 +88,14 @@ public enum AdapterHealthCheckManager {
 
   public List<AdapterHealthStatus> getAllHealthStatuses() {
     return List.copyOf(healthStatuses.values());
+  }
+
+  public Map<String, HealthCheckStatus> getOverallHealthStatuses() {
+    return healthStatuses.entrySet().stream()
+        .collect(Collectors.toUnmodifiableMap(
+            Map.Entry::getKey,
+            entry -> entry.getValue().getOverallStatus()
+        ));
   }
 
   private void scheduleHealthCheck(String adapterId, long delayMs) {

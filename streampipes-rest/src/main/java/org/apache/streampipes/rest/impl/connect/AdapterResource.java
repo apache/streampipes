@@ -24,6 +24,7 @@ import org.apache.streampipes.connect.management.management.AdapterMasterManagem
 import org.apache.streampipes.connect.management.management.AdapterUpdateManagement;
 import org.apache.streampipes.connect.management.management.CompactAdapterManagement;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
+import org.apache.streampipes.health.monitoring.AdapterHealthStatusStore;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
@@ -362,7 +363,10 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
   public ResourceSummaryDto<AdapterSummaryDto> getAdapterSummary() {
-    return resourceManager.manageAdapters().getSummary(getAuthentication());
+    return resourceManager.manageAdapters().getSummary(
+        getAuthentication(),
+        AdapterHealthStatusStore.INSTANCE.getHealthStatuses()
+    );
   }
 
   private AdapterDescription getAdapterDescription(String elementId) throws AdapterException {

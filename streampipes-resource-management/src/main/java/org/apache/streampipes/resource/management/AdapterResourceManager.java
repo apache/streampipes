@@ -20,6 +20,7 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSummaryDto;
+import org.apache.streampipes.model.connect.adapter.HealthCheckStatus;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
@@ -28,6 +29,8 @@ import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
 
 import org.springframework.security.core.Authentication;
+
+import java.util.Map;
 
 public class AdapterResourceManager extends AbstractResourceManager<IAdapterStorage> {
 
@@ -43,6 +46,11 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
   }
 
   public ResourceSummaryDto<AdapterSummaryDto> getSummary(Authentication auth) {
+    return getSummary(auth, Map.of());
+  }
+
+  public ResourceSummaryDto<AdapterSummaryDto> getSummary(Authentication auth,
+                                                          Map<String, HealthCheckStatus> healthStatuses) {
     var adapters = db.findAll().stream()
         .filter(adapter -> canReadAdapter(auth, adapter))
         .map(adapter -> new AdapterSummaryDto(
@@ -54,7 +62,8 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
             adapter.getCreatedAt(),
             adapter.getAppId(),
             adapter.getIncludedAssets(),
-            adapter.getIcon()
+            adapter.getIcon(),
+            healthStatuses.getOrDefault(adapter.getElementId(), HealthCheckStatus.UNKNOWN)
         ))
         .toList();
 
