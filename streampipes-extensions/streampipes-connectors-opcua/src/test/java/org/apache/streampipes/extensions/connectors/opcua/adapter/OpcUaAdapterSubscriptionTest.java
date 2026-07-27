@@ -42,6 +42,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -118,6 +119,21 @@ class OpcUaAdapterSubscriptionTest {
     var incompleteEvent = eventCaptor.getAllValues().get(1);
     assertEquals(1, incompleteEvent.get("stable"));
     assertFalse(incompleteEvent.containsKey("intermittent"));
+  }
+
+  @Test
+  void shouldTrackBadStatusTransitionsAndRecoveryPerNode() {
+    var adapter = new OpcUaAdapter(mock(OpcUaClientProvider.class));
+    var nodeId = new NodeId(2, "IntermittentValue");
+    var firstBadStatus = new StatusCode(StatusCodes.Bad_NotReadable);
+    var changedBadStatus = new StatusCode(StatusCodes.Bad_NotConnected);
+
+    assertTrue(adapter.markBadSubscriptionStatus(nodeId, firstBadStatus));
+    assertFalse(adapter.markBadSubscriptionStatus(nodeId, firstBadStatus));
+    assertTrue(adapter.markBadSubscriptionStatus(nodeId, changedBadStatus));
+    assertTrue(adapter.clearBadSubscriptionStatus(nodeId));
+    assertFalse(adapter.clearBadSubscriptionStatus(nodeId));
+    assertTrue(adapter.markBadSubscriptionStatus(nodeId, firstBadStatus));
   }
 
   private OpcUaAdapter makeAdapter(IEventCollector collector,
