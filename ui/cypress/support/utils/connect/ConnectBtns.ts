@@ -151,6 +151,14 @@ export class ConnectBtns {
         return cy.dataCy('show-code-checkbox');
     }
 
+    public static showAdapterCode() {
+        return cy.dataCy('show-adapter-code', { timeout: 10000 });
+    }
+
+    public static closeAdapterCodeDialog() {
+        return cy.dataCy('close-adapter-code-dialog', { timeout: 10000 });
+    }
+
     public static deleteAdapterAndAssociatedPipelineConfirmation() {
         return cy.dataCy(
             'delete-adapter-and-associated-pipelines-confirmation',
