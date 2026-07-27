@@ -78,18 +78,12 @@ describe('Creates a new adapter with a linked asset', () => {
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
 
+        ConnectUtils.manageEditedAdapter('Changed', [assetName1, assetName3]);
+
         // Go adapter settings page
         ConnectBtns.adapterSettingsNextBtn().click();
         ConnectBtns.configureSchemaNextBtn().click();
         ConnectBtns.configureFieldsNextBtn().click();
-
-        // Rename
-        ConnectUtils.renameAdapter('Changed');
-
-        // Deselect Asset 2
-        ConnectUtils.editAsset([assetName1]);
-
-        ConnectUtils.editAsset([assetName3]);
 
         ConnectBtns.storeEditAdapter().click();
 

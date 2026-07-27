@@ -44,7 +44,9 @@ describe('Test Edit Adapter', () => {
         ConnectBtns.editAdapter().should('not.be.disabled');
         ConnectBtns.editAdapter().click();
 
-        // Change adapter name and wait time
+        ConnectUtils.manageEditedAdapter(newAdapterName);
+
+        // Change adapter wait time
 
         const newUserConfiguration = AdapterBuilder.create(
             'Machine_Data_Simulator',
@@ -65,8 +67,6 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.refreshEventSchema();
         ConnectUtils.finishConfigureFieldsConfiguration();
-
-        ConnectBtns.adapterNameInput().clear().type(newAdapterName);
 
         // This wait is required to ensure that there is no couch db update conflict
         ConnectBtns.storeEditAdapter().click();

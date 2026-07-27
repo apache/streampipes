@@ -56,6 +56,22 @@ export class ConnectBtns {
         GeneralUtils.openMenuForRow(adapterName);
     }
 
+    public static adapterConfigurationOptions() {
+        return cy.dataCy('options-adapter', { timeout: 10000 });
+    }
+
+    public static manageAdapter() {
+        return cy.dataCy('manage-adapter-btn', { timeout: 10000 });
+    }
+
+    public static managedResourceName() {
+        return cy.dataCy('managed-resource-name', { timeout: 10000 });
+    }
+
+    public static manageResourceSave() {
+        return cy.dataCy('sp-manage-save', { timeout: 10000 });
+    }
+
     public static refreshSchema() {
         return cy.dataCy('refresh-schema');
     }
@@ -131,8 +147,12 @@ export class ConnectBtns {
         return cy.dataCy('stop-all-adapters-btn');
     }
 
-    public static showCodeCheckbox() {
-        return cy.dataCy('show-code-checkbox');
+    public static showAdapterCode() {
+        return cy.dataCy('show-adapter-code', { timeout: 10000 });
+    }
+
+    public static closeAdapterCodeDialog() {
+        return cy.dataCy('close-adapter-code-dialog', { timeout: 10000 });
     }
 
     public static deleteAdapterAndAssociatedPipelineConfirmation() {
