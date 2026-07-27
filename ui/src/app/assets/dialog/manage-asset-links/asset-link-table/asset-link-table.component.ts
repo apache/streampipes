@@ -65,6 +65,7 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { LayoutGapDirective } from '@ngbracket/ngx-layout';
+import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 interface AssetLinkGroupHeaderRow {
     groupHeader: true;
@@ -101,6 +102,7 @@ type AssetLinkViewMode = 'grouped' | 'list';
         MatHeaderRow,
         MatHeaderRowDef,
         MatIcon,
+        SpSpinnerComponent,
         MatIconButton,
         MatInput,
         MatNoDataRow,
@@ -127,6 +129,9 @@ export class AssetLinkTableComponent {
 
     @Input()
     assetLinkTypes: AssetLinkType[] = [];
+
+    @Input()
+    resourcesLoading = false;
 
     @Output()
     selectionChange = new EventEmitter<AssetLinkSelectionChange>();

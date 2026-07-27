@@ -50,11 +50,7 @@
             fxLayoutAlign="start center"
             data-cy="reloading-nodes"
         >
-            <mat-spinner
-                color="accent"
-                [mode]="'indeterminate'"
-                [diameter]="15"
-            ></mat-spinner>
+            <sp-spinner [diameter]="15"></sp-spinner>
             <span class="reloading-nodes-label">{{
                 'Reloading nodes' | translate
             }}</span>

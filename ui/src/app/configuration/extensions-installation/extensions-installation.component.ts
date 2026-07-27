@@ -25,6 +25,7 @@ import {
     SpBasicNavTabsComponent,
     SpBreadcrumbService,
     SpNavigationItem,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { ExtensionItemDescription } from '@streampipes/platform-services';
 import {
@@ -49,7 +50,6 @@ import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { EndpointItemComponent } from './endpoint-item/endpoint-item.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { OrderByPipe } from './filter/order-by.pipe';
 import { PipelineElementNameFilter } from './filter/pipeline-element-name.pipe';
 import { PipelineElementInstallationStatusFilter } from './filter/pipeline-element-installation-status.pipe';
@@ -76,7 +76,7 @@ import { PipelineElementTypeFilter } from './filter/pipeline-element-type.pipe';
         MatPrefix,
         SpBasicHeaderTitleComponent,
         EndpointItemComponent,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         TranslatePipe,
         OrderByPipe,
         PipelineElementNameFilter,

@@ -32,7 +32,9 @@ export class PermissionUtils {
             if ($specific.length) {
                 cy.wrap($specific).click();
             } else {
-                cy.dataCy('open-manage-permissions')
+                cy.get(
+                    '[data-cy="open-manage-permissions"], [data-cy="open-manage-adapter"], [data-cy="open-manage-pipeline"]',
+                )
                     .should('be.visible')
                     .click();
             }
@@ -74,14 +76,14 @@ export class PermissionUtils {
         PermissionUtils.openManagePermissions(resourceName);
 
         cy.dataCy('authorized-user').type(email);
-        cy.get(`[data-cy="user-option-${email}"]`).click();
+        cy.get('.cdk-overlay-container mat-option').contains(email).click();
 
         PermissionUtils.save();
     }
 
     public static authorizeUserInManageDialog(email: string) {
         cy.dataCy('authorized-user').type(email);
-        cy.get(`[data-cy="user-option-${email}"]`).click();
+        cy.get('.cdk-overlay-container mat-option').contains(email).click();
 
         PermissionUtils.saveManageDialog();
     }
@@ -89,14 +91,14 @@ export class PermissionUtils {
     public static authorizeGroup(resourceName: string, groupName: string) {
         PermissionUtils.openManagePermissions(resourceName);
         cy.dataCy('authorized-group').type(groupName);
-        cy.get(`[data-cy="group-option-${groupName}"]`).click();
+        cy.get('.cdk-overlay-container mat-option').contains(groupName).click();
 
         PermissionUtils.save();
     }
 
     public static authorizeGroupInManageDialog(groupName: string) {
         cy.dataCy('authorized-group').type(groupName);
-        cy.get(`[data-cy="group-option-${groupName}"]`).click();
+        cy.get('.cdk-overlay-container mat-option').contains(groupName).click();
 
         PermissionUtils.saveManageDialog();
     }
@@ -161,7 +163,9 @@ export class PermissionUtils {
 
     public static validateUserCanChangePermissions(resourceName: string) {
         PermissionUtils.openManagePermissions(resourceName);
-        cy.dataCy('permission-public-element').should('exist');
+        cy.dataCy('permission-public-element', { timeout: 10000 }).should(
+            'exist',
+        );
         PermissionUtils.cancel();
     }
 

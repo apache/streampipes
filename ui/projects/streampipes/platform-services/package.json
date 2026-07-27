@@ -2,22 +2,13 @@
   "name": "@streampipes/platform-services",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^21.2.12",
-    "@angular/core": "^21.2.12",
-    "@angular/platform-browser": "^21.2.12",
+    "@angular/common": "^21.2.18",
+    "@angular/core": "^21.2.18",
+    "@angular/platform-browser": "^21.2.18",
     "@ngx-loading-bar/http-client": "^7.0.1",
     "rxjs": "^7.8.2"
   },
   "dependencies": {
     "tslib": "^2.6.2"
-  },
-  "devDependencies": {
-    "karma": "~6.4.1",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage-istanbul-reporter": "~3.0.2",
-    "karma-firefox-launcher": "^2.1.2",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "^2.0.0",
-    "karma-verbose-reporter": "0.0.6"
   }
 }

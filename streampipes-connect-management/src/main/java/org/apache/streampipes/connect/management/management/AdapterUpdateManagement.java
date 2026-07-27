@@ -19,13 +19,17 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
-import org.apache.streampipes.manager.pipeline.update.PipelineUpdateCoordinator;
+import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.pipeline.update.DataStreamUpdateManagement;
+import org.apache.streampipes.manager.pipeline.update.DataStreamUpdatedEvent;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
+
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 
@@ -34,20 +38,27 @@ public class AdapterUpdateManagement {
   private final AdapterMasterManagement adapterMasterManagement;
   private final AdapterResourceManager adapterResourceManager;
   private final DataStreamResourceManager dataStreamResourceManager;
-  private final PipelineUpdateCoordinator pipelineUpdateCoordinator;
+  private final DataStreamUpdateManagement dataStreamUpdateManagement;
+  private final ApplicationEventPublisher eventPublisher;
 
   public AdapterUpdateManagement(AdapterMasterManagement adapterMasterManagement,
-                                 PipelineUpdateCoordinator pipelineUpdateCoordinator,
-                                 SpResourceManager resourceManager) {
+                                 ExtensionServiceRequestManager requestManager,
+                                 SpResourceManager resourceManager,
+                                 ApplicationEventPublisher eventPublisher) {
     this.adapterMasterManagement = adapterMasterManagement;
     this.adapterResourceManager = resourceManager.manageAdapters();
     this.dataStreamResourceManager = resourceManager.manageDataStreams();
-    this.pipelineUpdateCoordinator = pipelineUpdateCoordinator;
+    this.dataStreamUpdateManagement = new DataStreamUpdateManagement(
+        requestManager,
+        resourceManager
+    );
+    this.eventPublisher = eventPublisher;
   }
 
   public void updateAdapter(AdapterDescription ad)
       throws AdapterException {
-    // update adapter in database 
+    // update adapter in database
+    AdapterTransformationConfigDefaults.applyTo(ad);
     this.adapterResourceManager.encryptAndUpdate(ad);
     boolean shouldRestart = ad.isRunning();
 
@@ -55,10 +66,10 @@ public class AdapterUpdateManagement {
       this.adapterMasterManagement.stopAdapter(ad.getElementId(), true);
     }
 
-    // update data source in database
-    this.updateDataSource(ad);
-
-    pipelineUpdateCoordinator.updatePipelines(ad);
+    // update data source
+    var updatedDataStream = this.updateDataSource(ad);
+    dataStreamUpdateManagement.updateDataStream(updatedDataStream);
+    publishEvent(new DataStreamUpdatedEvent(updatedDataStream));
 
     if (shouldRestart) {
       this.adapterMasterManagement.startAdapter(ad.getElementId());
@@ -66,16 +77,28 @@ public class AdapterUpdateManagement {
   }
 
   public List<PipelineUpdateInfo> checkPipelineMigrations(AdapterDescription adapterDescription) {
-    return pipelineUpdateCoordinator.checkPipelineMigrations(adapterDescription);
+    return dataStreamUpdateManagement.checkPipelineMigrations(toDataStreamUpdate(adapterDescription));
   }
 
-  private void updateDataSource(AdapterDescription ad) {
+  private SpDataStream updateDataSource(AdapterDescription ad) {
     // get data source
     SpDataStream dataStream = this.dataStreamResourceManager.find(ad.getCorrespondingDataStreamElementId());
 
-    SourcesManagement.updateDataStream(ad, dataStream);
+    return SourcesManagement.updateDataStream(ad, dataStream);
+  }
 
-    // Update data source in database
-    this.dataStreamResourceManager.update(dataStream);
+  private SpDataStream toDataStreamUpdate(AdapterDescription adapterDescription) {
+    // create a new data stream because adapterDescription.getStream() misses the real id and name
+    var dataStream = new SpDataStream();
+    dataStream.setElementId(adapterDescription.getCorrespondingDataStreamElementId());
+    dataStream.setName(adapterDescription.getName());
+    dataStream.setEventSchema(adapterDescription.getEventSchema());
+    return dataStream;
+  }
+
+  private void publishEvent(Object event) {
+    if (eventPublisher != null) {
+      eventPublisher.publishEvent(event);
+    }
   }
 }

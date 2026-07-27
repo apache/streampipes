@@ -37,11 +37,11 @@ import {
 import {
     FormFieldComponent,
     SpAlertBannerComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -61,7 +61,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatInput,
         MatError,
         MatButton,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         SpAlertBannerComponent,
         RouterLink,
         TranslatePipe,

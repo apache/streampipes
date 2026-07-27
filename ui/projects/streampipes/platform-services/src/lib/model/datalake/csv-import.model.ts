@@ -19,6 +19,7 @@
 import { EventSchema } from '../gen/streampipes-model';
 
 export type CsvImportTargetMode = 'NEW' | 'EXISTING';
+export type CsvImportJobState = 'RUNNING' | 'SUCCEEDED' | 'FAILED';
 export type CsvRuntimeType = 'STRING' | 'BOOLEAN' | 'LONG' | 'FLOAT';
 
 export interface CsvImportConfiguration {
@@ -66,6 +67,7 @@ export interface CsvImportPreviewResult {
     columns: CsvImportColumn[];
     guessedEventSchema: EventSchema;
     timestampCandidates: string[];
+    totalRows: number;
     valid: boolean;
     validationMessages: CsvImportValidationMessage[];
 }
@@ -110,5 +112,19 @@ export interface CsvImportResult {
     measurementId: string;
     createdNewMeasurement: boolean;
     importedRowCount: number;
+    validationMessages: CsvImportValidationMessage[];
+}
+
+export interface CsvImportJobStartResult {
+    jobId: string;
+}
+
+export interface CsvImportJobStatus {
+    jobId: string;
+    state: CsvImportJobState;
+    processedRows: number;
+    totalRows: number;
+    progress: number;
+    result?: CsvImportResult;
     validationMessages: CsvImportValidationMessage[];
 }

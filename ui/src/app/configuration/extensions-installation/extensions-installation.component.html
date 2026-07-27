@@ -181,18 +181,16 @@
             </div>
         }
         @if (!endpointItemsLoadingComplete) {
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
-                <mat-spinner
-                    [mode]="'indeterminate'"
+            <div fxFlex="100" fxLayoutAlign="center center">
+                <sp-spinner
                     [diameter]="20"
-                    color="accent"
-                ></mat-spinner>
-                <h4>
-                    &nbsp;&nbsp;{{
+                    layout="row"
+                    gap="8px"
+                    [text]="
                         'Searching for available extensions, please wait...'
                             | translate
-                    }}
-                </h4>
+                    "
+                ></sp-spinner>
             </div>
         }
     </div>

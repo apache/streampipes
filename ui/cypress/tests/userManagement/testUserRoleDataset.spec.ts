@@ -24,7 +24,7 @@ import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { ChartBtns } from '../../support/utils/chart/ChartBtns';
 import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
 import { GeneralUtils } from '../../support/utils/GeneralUtils';
-import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
+import { DatasetSeedUtils } from '../../support/utils/dataset/DatasetSeedUtils';
 import { SharedBtns } from '../../support/utils/shared/SharedBtns';
 
 describe('Test Dataset Permissions', () => {
@@ -181,7 +181,7 @@ describe('Test Dataset Permissions', () => {
 
     function generateDataset() {
         UserUtils.switchUser(datasetAdmin1);
-        DataLakeSeedUtils.importCsvFixture({
+        DatasetSeedUtils.importCsvFixture({
             fixture: 'datalake/machine-data-simulator-import.csv',
             measurementName: datasetName,
             delimiter: ',',

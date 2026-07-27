@@ -19,18 +19,27 @@
 package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
+import org.apache.streampipes.extensions.api.connect.IAdapterConfiguration;
+import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
+import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
+import org.apache.streampipes.extensions.management.connect.adapter.model.EventCollector;
 import org.apache.streampipes.extensions.management.init.IDeclarersSingleton;
+import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
 import org.apache.streampipes.model.health.AdapterInstanceState;
 import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class AdapterWorkerManagementTest {
@@ -60,5 +69,37 @@ public class AdapterWorkerManagementTest {
     assertThrows(AdapterException.class, () -> adapterWorkerManagement.invokeAdapter(adapterDescription));
     assertTrue(adapterTransitionRegistry.getTransitioningAdapterInstanceStates().isEmpty());
 
+  }
+
+  @Test
+  public void stopAdapterClosesEventCollectorWhenAdapterStopFails() throws AdapterException {
+    var elementId = "adapter-id-" + UUID.randomUUID();
+    var adapterDescription = AdapterConfigurationBuilder
+        .create("id", 0,  null)
+        .build();
+    adapterDescription.setElementId(elementId);
+
+    var adapter = mock(StreamPipesAdapter.class);
+    var adapterConfig = mock(IAdapterConfiguration.class);
+    var eventCollector = mock(EventCollector.class);
+
+    when(adapter.declareConfig()).thenReturn(adapterConfig);
+    when(adapterConfig.getSupportedParsers()).thenReturn(List.of());
+    doThrow(new AdapterException("stop failed"))
+        .when(adapter)
+        .onAdapterStopped(any(), any());
+
+    RunningAdapterInstances.INSTANCE.addAdapter(elementId, adapter, adapterDescription, eventCollector);
+    var adapterWorkerManagement = new AdapterWorkerManagement(
+        RunningAdapterInstances.INSTANCE, null, new AdapterTransitionRegistry()) {
+      @Override
+      protected IAdapterRuntimeContext makeRuntimeContext(String adapterInstanceId) {
+        return mock(IAdapterRuntimeContext.class);
+      }
+    };
+
+    assertThrows(AdapterException.class, () -> adapterWorkerManagement.stopAdapter(adapterDescription));
+
+    verify(eventCollector).close();
   }
 }

@@ -52,6 +52,7 @@ import {
     PanelType,
     SpTableActionsDirective,
     SpTableComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
@@ -88,6 +89,7 @@ import { MatIcon } from '@angular/material/icon';
         SpTableActionsDirective,
         MatMenuItem,
         MatIcon,
+        SpSpinnerComponent,
         TranslatePipe,
     ],
 })
@@ -105,6 +107,9 @@ export class AssetLinkTableComponent
 
     @Input()
     editMode = false;
+
+    @Input()
+    loading = false;
 
     @ViewChild(MatSort)
     sort: MatSort;

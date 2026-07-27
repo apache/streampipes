@@ -27,14 +27,14 @@ import org.apache.streampipes.wrapper.standalone.routing.StandaloneSpOutputColle
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ProtocolManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProtocolManager.class);
-  public static Map<String, StandaloneSpInputCollector> consumers = new HashMap<>();
-  public static Map<String, StandaloneSpOutputCollector> producers = new HashMap<>();
+  public static Map<String, StandaloneSpInputCollector> consumers = new ConcurrentHashMap<>();
+  public static Map<String, StandaloneSpOutputCollector> producers = new ConcurrentHashMap<>();
 
   // TODO currently only the topic name is used as an identifier for a consumer/producer. Should
   // be changed by some hashCode implementation in streampipes-model, but this requires changes
@@ -45,13 +45,12 @@ public class ProtocolManager {
       throws SpRuntimeException {
     ProtocolOverrides.addNatsTokenIfConfigured(protocol);
 
-    if (consumers.containsKey(topicName(protocol))) {
-      return consumers.get(topicName(protocol));
-    } else {
-      consumers.put(topicName(protocol), makeInputCollector(protocol, singletonEngine));
-      LOG.debug("Adding new consumer to consumer map (size=" + consumers.size() + "): " + topicName(protocol));
-      return consumers.get(topicName(protocol));
-    }
+    var topic = topicName(protocol);
+    return consumers.computeIfAbsent(topic, key -> {
+      var inputCollector = makeInputCollector(protocol, singletonEngine);
+      LOG.debug("Adding new consumer to consumer map (size={}): {}", consumers.size(), key);
+      return inputCollector;
+    });
 
   }
 
@@ -60,15 +59,14 @@ public class ProtocolManager {
       throws SpRuntimeException {
     ProtocolOverrides.addNatsTokenIfConfigured(protocol);
 
-    if (producers.containsKey(topicName(protocol))) {
-      return producers.get(topicName(protocol));
-    } else {
-      producers.put(topicName(protocol), makeOutputCollector(protocol, resourceId));
+    var topic = topicName(protocol);
+    return producers.computeIfAbsent(topic, key -> {
+      var outputCollector = makeOutputCollector(protocol, resourceId);
       LOG.debug("Adding new producer to producer map (size={}): {}",
           producers.size(),
-          topicName(protocol));
-      return producers.get(topicName(protocol));
-    }
+          key);
+      return outputCollector;
+    });
 
   }
 

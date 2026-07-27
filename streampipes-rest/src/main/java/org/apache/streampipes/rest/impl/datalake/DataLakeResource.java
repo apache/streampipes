@@ -336,22 +336,22 @@ public class DataLakeResource extends AbstractDataLakeResource {
     }
   }
 
-  @PostMapping(path = "/measurements/{measurementID}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasWriteAuthority()")
+  @PostMapping(path = "/measurements/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("this.hasWriteAuthority() and this.checkPermissionByName(#measureName, 'WRITE')")
   @Operation(summary = "Store a measurement series to a data lake with the given id", tags = {
       "Data Lake" }, responses = {
           @ApiResponse(responseCode = "400", description = "Can't store the given data to this data lake"),
           @ApiResponse(responseCode = "200", description = "Successfully stored data") })
   public ResponseEntity<?> storeDataToMeasurement(
-      @PathVariable String measurementID,
+      @PathVariable String measureName,
       @RequestBody SpQueryResult queryResult,
       @Parameter(in = ParameterIn.QUERY, description = "should not identical schemas be stored") @RequestParam(value = "ignoreSchemaMismatch", required = false) boolean ignoreSchemaMismatch) {
     var dataWriter = new DataLakeDataWriter(ignoreSchemaMismatch, datasetStorage);
     try {
-      dataWriter.writeData(measurementID, queryResult);
+      dataWriter.writeData(measureName, queryResult);
     } catch (SpRuntimeException e) {
       LOG.warn("Could not store event", e);
-      return badRequest(Notifications.error("Could not store event for measurement " + measurementID, e.getMessage()));
+      return badRequest(Notifications.error("Could not store event for measurement " + measureName, e.getMessage()));
     }
     return ok();
   }

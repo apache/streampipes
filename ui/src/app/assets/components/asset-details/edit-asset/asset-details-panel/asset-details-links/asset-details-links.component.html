@@ -42,15 +42,14 @@
             </button>
         }
     </div>
-    @if (assetLinkTypes) {
-        <div fxLayout="column" fxFlex="100" class="mt-10">
-            <sp-asset-link-table
-                #assetLinkTable
-                [assetLinkTypes]="assetLinkTypes"
-                [asset]="asset"
-                [assetModel]="assetModel"
-                [editMode]="true"
-            ></sp-asset-link-table>
-        </div>
-    }
+    <div fxLayout="column" fxFlex="100" class="mt-10">
+        <sp-asset-link-table
+            #assetLinkTable
+            [assetLinkTypes]="assetLinkTypes"
+            [asset]="asset"
+            [assetModel]="assetModel"
+            [editMode]="true"
+            [loading]="!assetLinksLoaded"
+        ></sp-asset-link-table>
+    </div>
 </sp-split-section>

@@ -20,7 +20,6 @@ package org.apache.streampipes.extensions.management.connect;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.connect.transformer.api.TransformationEngines;
-import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.connect.context.IAdapterRuntimeContext;
 import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.management.connect.adapter.model.EventCollector;
@@ -65,10 +64,6 @@ public class AdapterWorkerManagement {
       if (adapter.isPresent()) {
         var newAdapterInstance = adapter.get().declareConfig().getSupplier().get();
         validateScriptLanguage(adapterDescription);
-        runningAdapterInstances.addAdapter(
-            adapterDescription.getElementId(),
-            newAdapterInstance,
-            adapterDescription);
 
         // This method allows adapters to modify the adapter description prior to invocation.
         // It is particularly useful for adapters like FileReplayAdapter that need to manipulate timestamp values
@@ -79,8 +74,19 @@ public class AdapterWorkerManagement {
         var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
         var runtimeContext = makeRuntimeContext(adapterDescription.getElementId());
         var eventCollector = EventCollector.from(adapterDescription, runtimeContext);
+        runningAdapterInstances.addAdapter(
+            adapterDescription.getElementId(),
+            newAdapterInstance,
+            adapterDescription,
+            eventCollector);
 
-        newAdapterInstance.onAdapterStarted(extractor, eventCollector, runtimeContext);
+        try {
+          newAdapterInstance.onAdapterStarted(extractor, eventCollector, runtimeContext);
+        } catch (AdapterException | RuntimeException e) {
+          runningAdapterInstances.removeAdapter(adapterDescription.getElementId());
+          closeEventCollector(eventCollector);
+          throw e;
+        }
       } else {
         var errorMessage = "Adapter with id %s could not be found".formatted(adapterDescription.getAppId());
         LOG.error(errorMessage);
@@ -97,14 +103,19 @@ public class AdapterWorkerManagement {
 
     adapterTransitionRegistry.registerStopping(elementId);
     try {
-      StreamPipesAdapter adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
+      var runningAdapter = runningAdapterInstances.removeAdapter(elementId);
 
-      if (adapter != null) {
+      if (runningAdapter != null) {
+        var adapter = runningAdapter.adapter();
 
-        var registeredParsers = adapter.declareConfig().getSupportedParsers();
-        var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
-        var runtimeContext = makeRuntimeContext(elementId);
-        adapter.onAdapterStopped(extractor, runtimeContext);
+        try {
+          var registeredParsers = adapter.declareConfig().getSupportedParsers();
+          var extractor = AdapterParameterExtractor.from(adapterDescription, registeredParsers);
+          var runtimeContext = makeRuntimeContext(elementId);
+          adapter.onAdapterStopped(extractor, runtimeContext);
+        } finally {
+          closeEventCollector(runningAdapter.eventCollector());
+        }
       }
 
       resetMonitoring(elementId);
@@ -113,7 +124,7 @@ public class AdapterWorkerManagement {
     }
   }
 
-  private IAdapterRuntimeContext makeRuntimeContext(String adapterInstanceId) {
+  protected IAdapterRuntimeContext makeRuntimeContext(String adapterInstanceId) {
     return new AdapterContextGenerator().makeRuntimeContext(adapterInstanceId);
   }
 
@@ -130,5 +141,15 @@ public class AdapterWorkerManagement {
 
   private void resetMonitoring(String elementId) {
     SpMonitoringManager.INSTANCE.reset(elementId);
+  }
+
+  private void closeEventCollector(EventCollector eventCollector) {
+    try {
+      if (eventCollector != null) {
+        eventCollector.close();
+      }
+    } catch (RuntimeException e) {
+      LOG.error("Could not close adapter event collector", e);
+    }
   }
 }

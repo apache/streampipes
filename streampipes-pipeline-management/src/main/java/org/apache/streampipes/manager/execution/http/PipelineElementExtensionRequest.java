@@ -71,13 +71,12 @@ public abstract class PipelineElementExtensionRequest {
     org.apache.streampipes.model.Response streamPipesResp = JacksonSerializer
         .getObjectMapper()
         .readValue(resp, org.apache.streampipes.model.Response.class);
-    return convert(streamPipesResp, endpointUrl, pipelineElement.getName());
+    return convert(streamPipesResp, pipelineElement.getName());
   }
 
   private PipelineElementStatus convert(org.apache.streampipes.model.Response response,
-                                        String endpointUrl,
                                         String pipelineElementName) {
-    return new PipelineElementStatus(endpointUrl, pipelineElementName, response.isSuccess(),
+    return new PipelineElementStatus(response.getElementId(), pipelineElementName, response.isSuccess(),
         response.getOptionalMessage());
   }
 

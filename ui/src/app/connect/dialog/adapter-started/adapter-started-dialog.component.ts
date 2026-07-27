@@ -35,7 +35,9 @@ import {
     ErrorMessage,
     LinkageData,
     Message,
+    Permission,
     PipelineOperationStatus,
+    PermissionsService,
     PipelineTemplateService,
     PipelineUpdateInfo,
     SpAssetTreeNode,
@@ -84,6 +86,7 @@ export class AdapterStartedDialog implements OnInit {
     private compactPipelineService = inject(CompactPipelineService);
     private assetSaveService = inject(AssetSaveService);
     private dataLakeService = inject(DatalakeRestService);
+    private permissionsService = inject(PermissionsService);
 
     adapterInstalled = false;
 
@@ -97,9 +100,11 @@ export class AdapterStartedDialog implements OnInit {
     /**
      * Assets selectedAsset to link the adapter tp
      */
-    @Input() selectedAssets: SpAssetTreeNode[];
-    @Input() deselectedAssets: SpAssetTreeNode[];
-    @Input() originalAssets: SpAssetTreeNode[];
+    @Input() selectedAssets: SpAssetTreeNode[] = [];
+    @Input() deselectedAssets: SpAssetTreeNode[] = [];
+    @Input() originalAssets: SpAssetTreeNode[] = [];
+    @Input() permission?: Permission;
+    @Input() addToAssets = true;
 
     /**
      * Indicates if a pipeline to store the adapter events should be started
@@ -140,11 +145,13 @@ export class AdapterStartedDialog implements OnInit {
     deletedFromAssetText = '';
 
     ngOnInit() {
-        if (this.editMode) {
-            this.initAdapterUpdatePreflight();
-        } else {
-            this.addAdapter();
-        }
+        queueMicrotask(() => {
+            if (this.editMode) {
+                this.initAdapterUpdatePreflight();
+            } else {
+                this.addAdapter();
+            }
+        });
     }
 
     initAdapterUpdatePreflight(): void {
@@ -185,18 +192,21 @@ export class AdapterStartedDialog implements OnInit {
 
         this.loading = true;
         this.adapterService.updateAdapter(this.adapter).subscribe({
-            next: status => {
+            next: async status => {
                 if (status.success) {
-                    this.onAdapterReady(
-                        `Adapter ${this.adapter.name} was successfully updated and is available in the pipeline editor.`,
-                    );
+                    try {
+                        await this.persistManageMetadata();
+                        this.onAdapterReady(
+                            `Adapter ${this.adapter.name} was successfully updated and is available in the pipeline editor.`,
+                        );
+                    } catch (error) {
+                        this.onAssetSaveFailure(error);
+                    }
                 } else {
                     const errorLogMessage = this.getErrorLogMessage(status);
 
                     this.onAdapterFailure(errorLogMessage);
                 }
-
-                this.addToAsset();
             },
             error: error => {
                 this.onAdapterFailure(error.error);
@@ -223,12 +233,12 @@ export class AdapterStartedDialog implements OnInit {
                 if (status.success) {
                     const adapterElementId = status.notifications[0].title;
                     this.adapterElementId = adapterElementId;
-                    this.adapterElementId = adapterElementId;
                     if (this.saveInDataLake) {
                         this.startSaveInDataLakePipeline(adapterElementId);
                     } else {
-                        this.startAdapter(adapterElementId, true);
-                        this.addToAsset();
+                        this.startAdapter(adapterElementId, true, () =>
+                            this.addToAsset(),
+                        );
                     }
                 } else {
                     const errorMsg: SpLogMessage =
@@ -257,7 +267,11 @@ export class AdapterStartedDialog implements OnInit {
         };
     }
 
-    startAdapter(adapterElementId: string, showPreview = false) {
+    startAdapter(
+        adapterElementId: string,
+        showPreview = false,
+        afterStart?: () => Promise<void>,
+    ): void {
         const successMessage = this.translateService.instant(
             'Your new data stream is now available in the pipeline editor.',
         );
@@ -277,17 +291,44 @@ export class AdapterStartedDialog implements OnInit {
             );
             this.adapterService
                 .startAdapterByElementId(adapterElementId)
-                .subscribe(
-                    () => {
-                        this.onAdapterReady(successMessage, showPreview);
+                .subscribe({
+                    next: () => {
+                        void this.finishAdapterStart(
+                            successMessage,
+                            showPreview,
+                            afterStart,
+                        );
                     },
-                    error => {
+                    error: error => {
                         this.onAdapterFailure(error.error);
                     },
-                );
+                });
         } else {
-            this.onAdapterReady(successMessage, false);
+            void this.finishAdapterStart(successMessage, false, afterStart);
         }
+    }
+
+    private async finishAdapterStart(
+        successMessage: string,
+        showPreview: boolean,
+        afterStart?: () => Promise<void>,
+    ): Promise<void> {
+        try {
+            await afterStart?.();
+            this.onAdapterReady(successMessage, showPreview);
+        } catch (error) {
+            this.onAssetSaveFailure(error);
+        }
+    }
+
+    private onAssetSaveFailure(error: unknown): void {
+        this.onAdapterFailure({
+            cause: `${error}`,
+            detail: '',
+            fullStackTrace: `${error}`,
+            level: 'ERROR',
+            title: 'Could not save asset links',
+        });
     }
 
     onAdapterFailure(adapterErrorMessage: SpLogMessage) {
@@ -318,28 +359,27 @@ export class AdapterStartedDialog implements OnInit {
 
     async addToAsset(pipelineId = ''): Promise<void> {
         let linkageData: LinkageData[];
-        try {
-            if (!this.editMode) {
-                const adapter = await this.getAdapter();
-                linkageData = this.createLinkageData(adapter);
 
-                if (this.saveInDataLake && pipelineId !== '') {
-                    await this.addDataLakeLinkageData(
-                        adapter,
-                        linkageData,
-                        pipelineId,
-                    );
-                }
-            } else {
-                linkageData = this.createLinkageData(this.adapter);
+        if (!this.editMode) {
+            const adapter = await this.getAdapter();
+            linkageData = this.createLinkageData(adapter);
+
+            if (this.saveInDataLake && pipelineId !== '') {
+                await this.addDataLakeLinkageData(
+                    adapter,
+                    linkageData,
+                    pipelineId,
+                );
             }
-
-            await this.saveAssets(linkageData);
-
-            this.setSuccessMessage();
-        } catch (err) {
-            console.error('Error in addToAsset:', err);
+        } else {
+            linkageData = this.createLinkageData(this.adapter);
         }
+
+        if (this.addToAssets) {
+            await this.saveAssets(linkageData);
+        }
+
+        this.setSuccessMessage();
     }
 
     private async getAdapter(): Promise<AdapterDescription> {
@@ -398,16 +438,30 @@ export class AdapterStartedDialog implements OnInit {
     }
 
     private setSuccessMessage(): void {
-        if (this.selectedAssets.length > 0) {
+        if (this.addToAssets && this.selectedAssets.length > 0) {
             this.addToAssetText = this.translateService.instant(
                 'Your Assets were successfully added.',
             );
         }
-        if (this.deselectedAssets && this.deselectedAssets.length > 0) {
+        if (
+            this.addToAssets &&
+            this.deselectedAssets &&
+            this.deselectedAssets.length > 0
+        ) {
             this.deletedFromAssetText = this.translateService.instant(
                 'Your Assets were successfully deleted.',
             );
         }
+    }
+
+    private async persistManageMetadata(): Promise<void> {
+        if (this.permission) {
+            await firstValueFrom(
+                this.permissionsService.updatePermission(this.permission),
+            );
+        }
+
+        await this.addToAsset();
     }
 
     private formatWithAnd(list: string[]): string {
@@ -443,8 +497,9 @@ export class AdapterStartedDialog implements OnInit {
                             pipelineOperationStatus => {
                                 this.pipelineOperationStatus =
                                     pipelineOperationStatus;
-                                this.startAdapter(adapterElementId, true);
-                                this.addToAsset(pipelineId);
+                                this.startAdapter(adapterElementId, true, () =>
+                                    this.addToAsset(pipelineId),
+                                );
                             },
                             error => {
                                 this.onAdapterFailure(error.error);

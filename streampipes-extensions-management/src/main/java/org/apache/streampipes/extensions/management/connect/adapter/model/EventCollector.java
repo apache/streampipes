@@ -26,7 +26,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.Map;
 
-public class EventCollector implements IEventCollector {
+public class EventCollector implements IEventCollector, AutoCloseable {
 
   private final AdapterPipeline adapterPipeline;
   private final IAdapterRuntimeContext runtimeContext;
@@ -37,8 +37,8 @@ public class EventCollector implements IEventCollector {
     this.runtimeContext = runtimeContext;
   }
 
-  public static IEventCollector from(AdapterDescription adapterDescription,
-                                     IAdapterRuntimeContext runtimeContext) {
+  public static EventCollector from(AdapterDescription adapterDescription,
+                                    IAdapterRuntimeContext runtimeContext) {
     var adapterPipeline = new AdapterPipelineGenerator().generatePipeline(adapterDescription);
     return new EventCollector(adapterPipeline, runtimeContext);
   }
@@ -50,5 +50,10 @@ public class EventCollector implements IEventCollector {
     } catch (RuntimeException e) {
       runtimeContext.getLogger().error(e);
     }
+  }
+
+  @Override
+  public void close() {
+    adapterPipeline.close();
   }
 }

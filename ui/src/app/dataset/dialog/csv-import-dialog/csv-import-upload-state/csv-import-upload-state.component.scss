@@ -17,31 +17,30 @@
  */
 
 .upload-state {
-    min-height: 280px;
+    min-height: 17.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 14px;
+    gap: var(--space-md);
     text-align: center;
 }
 
 .upload-title {
-    font-size: 20px;
+    font-size: var(--font-size-xl);
     font-weight: 600;
 }
 
-.upload-copy,
 .result-meta {
     color: var(--color-text-200, #5a6673);
-    max-width: 420px;
+    max-width: 26.25rem;
 }
 
 .success-icon {
     color: var(--color-success, #2e7d32);
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
 }
 
 .result-name {
@@ -49,10 +48,10 @@
 }
 
 .upload-errors {
-    max-width: 520px;
+    max-width: 32.5rem;
     color: var(--color-text-200, #5a6673);
 }
 
 .upload-error-line + .upload-error-line {
-    margin-top: 6px;
+    margin-top: var(--space-sm);
 }

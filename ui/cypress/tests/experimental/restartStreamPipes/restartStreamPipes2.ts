@@ -27,7 +27,7 @@ describe('Validate StreamPipes after restart', () => {
 
     it('Perform Test', () => {
         // Truncate data in db
-        DatasetUtils.goToDatalakeConfiguration();
+        DatasetUtils.goToDatasetOverview();
         DatasetBtns.dataLakeTruncateBtn().should('be.visible').click();
         DatasetBtns.confirmDataLakeTruncateBtn().should('be.visible').click();
 

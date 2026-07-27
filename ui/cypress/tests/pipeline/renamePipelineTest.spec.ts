@@ -16,6 +16,7 @@
  *
  */
 
+import { GeneralUtils } from '../../support/utils/GeneralUtils';
 import { PipelineBtns } from '../../support/utils/pipeline/PipelineBtns';
 import { PipelineUtils } from '../../support/utils/pipeline/PipelineUtils';
 
@@ -30,20 +31,20 @@ describe('Test rename of running pipeline', () => {
         PipelineUtils.verifyPipelineCount(1);
         PipelineUtils.verifyPipelineName('Pipeline Test');
 
-        PipelineUtils.editPipeline('Pipeline Test');
+        GeneralUtils.openMenuForRow('Pipeline Test');
         cy.wait(1000);
-        PipelineBtns.savePipelineBtn().click();
-        cy.dataCy('sp-editor-pipeline-name').clear();
-        PipelineUtils.updatePipeline('Renamed Pipeline');
-        PipelineUtils.finalizePipelineStart();
+
+        PipelineBtns.managePipeline().click();
+        PipelineUtils.renameManagedPipeline('Renamed Pipeline');
+        PipelineBtns.editorSaveBtn().click();
 
         PipelineUtils.verifyPipelineCount(1);
         PipelineUtils.verifyPipelineName('Renamed Pipeline');
 
-        PipelineUtils.editPipeline('Renamed Pipeline');
-        PipelineBtns.savePipelineBtn().click();
-        cy.dataCy('sp-editor-pipeline-name').clear();
-        PipelineUtils.clonePipeline('Cloned Renamed Pipeline');
+        PipelineUtils.clonePipeline(
+            'Renamed Pipeline',
+            'Cloned Renamed Pipeline',
+        );
         PipelineUtils.finalizePipelineStart();
 
         PipelineUtils.verifyPipelineCount(2);

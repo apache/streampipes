@@ -50,7 +50,6 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaMonitoredItem;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -176,14 +175,16 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
       LOG.debug("Reading {} OPC UA nodes: {}", nodeIds.size(), nodeIds);
 
       var response =
-          this.connectedClient.getClient().readValuesAsync(
-              0,
-              TimestampsToReturn.Both,
-              nodeIds);
+          this.connectedClient.readValuesAsync(
+              nodeIds,
+              this.getPollingInterval().timeUnit().toMillis(this.getPollingInterval().value()));
       boolean badStatusCodeReceived = false;
       boolean emptyValueReceived = false;
       List<DataValue> returnValues =
-          response.get(this.getPollingInterval().value(), this.getPollingInterval().timeUnit());
+          response.get(
+              2L * this.getPollingInterval().value(),
+              this.getPollingInterval().timeUnit()
+          );
       if (returnValues == null) {
         emptyValueReceived = true;
         LOG.debug("Null value object returned for OPC UA nodes {} - event will not be sent", nodeIds);

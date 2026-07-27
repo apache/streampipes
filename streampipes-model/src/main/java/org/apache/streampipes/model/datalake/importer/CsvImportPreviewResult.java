@@ -31,6 +31,7 @@ public class CsvImportPreviewResult {
   private List<CsvImportColumn> columns = new ArrayList<>();
   private EventSchema guessedEventSchema;
   private List<String> timestampCandidates = new ArrayList<>();
+  private int totalRows;
   private boolean valid;
   private List<CsvImportValidationMessage> validationMessages = new ArrayList<>();
 
@@ -80,6 +81,14 @@ public class CsvImportPreviewResult {
 
   public void setTimestampCandidates(List<String> timestampCandidates) {
     this.timestampCandidates = timestampCandidates;
+  }
+
+  public int getTotalRows() {
+    return totalRows;
+  }
+
+  public void setTotalRows(int totalRows) {
+    this.totalRows = totalRows;
   }
 
   public boolean isValid() {
