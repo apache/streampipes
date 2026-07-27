@@ -147,10 +147,6 @@ export class ConnectBtns {
         return cy.dataCy('stop-all-adapters-btn');
     }
 
-    public static showCodeCheckbox() {
-        return cy.dataCy('show-code-checkbox');
-    }
-
     public static showAdapterCode() {
         return cy.dataCy('show-adapter-code', { timeout: 10000 });
     }

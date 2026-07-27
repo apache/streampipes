@@ -143,11 +143,6 @@ export class ConnectUtils {
         }
     }
 
-    public static renameAdapter(newName: string) {
-        ConnectBtns.adapterNameInput().clear().type(newName);
-        ConnectBtns.adapterNameInput().should('have.value', newName);
-    }
-
     public static manageEditedAdapter(newName: string, assetNameList = []) {
         ConnectBtns.adapterConfigurationOptions().click();
         ConnectBtns.manageAdapter().click();
@@ -155,10 +150,12 @@ export class ConnectUtils {
         ConnectBtns.managedResourceName().clear().type(newName);
         ConnectBtns.managedResourceName().should('have.value', newName);
 
-        cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
-        assetNameList.forEach(assetName => {
-            this.selectAssetTreeNode(assetName);
-        });
+        if (assetNameList.length > 0) {
+            cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
+            assetNameList.forEach(assetName => {
+                this.selectAssetTreeNode(assetName);
+            });
+        }
 
         ConnectBtns.manageResourceSave().click();
         ConnectBtns.manageResourceSave().should('not.exist');
