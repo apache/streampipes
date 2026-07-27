@@ -25,7 +25,10 @@ import {
     ViewChild,
 } from '@angular/core';
 import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
-import { AdapterDescription } from '@streampipes/platform-services';
+import {
+    AdapterDescription,
+    SpAssetTreeNode,
+} from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -98,6 +101,7 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
     myStepper: MatStepper;
     pageTitle = '';
     private pendingManageAdapterResult?: ObjectManageDialogResult<AdapterDescription>;
+    private readonly emptyAssets: SpAssetTreeNode[] = [];
 
     ngOnInit() {
         this.pageTitle = this.isEditMode
@@ -222,15 +226,22 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
     }
 
     get pendingSelectedAssets() {
-        return this.pendingManageAdapterResult?.selectedAssets ?? [];
+        return (
+            this.pendingManageAdapterResult?.selectedAssets ?? this.emptyAssets
+        );
     }
 
     get pendingDeselectedAssets() {
-        return this.pendingManageAdapterResult?.deselectedAssets ?? [];
+        return (
+            this.pendingManageAdapterResult?.deselectedAssets ??
+            this.emptyAssets
+        );
     }
 
     get pendingOriginalAssets() {
-        return this.pendingManageAdapterResult?.originalAssets ?? [];
+        return (
+            this.pendingManageAdapterResult?.originalAssets ?? this.emptyAssets
+        );
     }
 
     get shouldAddToAssets() {
