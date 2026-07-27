@@ -185,8 +185,13 @@ public class JdbcClient {
       // Database should exist by now so we can establish a connection
       connection = DriverManager.getConnection(url + databaseName, this.dbDescription.getUsername(),
           this.dbDescription.getPassword());
+      prepareConnection();
       this.statementHandler.setStatement(connection.createStatement());
-      ResultSet rs = connection.getMetaData().getTables(null, null, this.tableDescription.getName(), null);
+      ResultSet rs = connection.getMetaData().getTables(
+          null,
+          getTableSchemaPattern(),
+          this.tableDescription.getName(),
+          null);
       boolean tableAlreadyExists = rs.next();
       rs.close();
       if (tableAlreadyExists) {
@@ -205,6 +210,14 @@ public class JdbcClient {
       closeAll();
       throw new SpRuntimeException(e.getMessage());
     }
+  }
+
+  protected void prepareConnection() throws SQLException {
+
+  }
+
+  protected String getTableSchemaPattern() throws SQLException {
+    return null;
   }
 
   /**

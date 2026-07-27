@@ -26,9 +26,12 @@ import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEn
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
+
 public class PostgreSql extends JdbcClient {
 
   private static final Logger LOG = LoggerFactory.getLogger(PostgreSql.class);
+  private static final String DEFAULT_SCHEMA = "public";
 
   private PostgreSqlParameters params;
 
@@ -46,6 +49,21 @@ public class PostgreSql extends JdbcClient {
         parameters.getGraph().getInputStreams().get(0).getEventSchema(),
         parameters,
         SupportedDbEngines.POSTGRESQL);
+  }
+
+  @Override
+  protected void prepareConnection() throws SQLException {
+    try (var statement = this.connection.prepareStatement("SELECT current_schema()");
+         var resultSet = statement.executeQuery()) {
+      if (resultSet.next() && resultSet.getString(1) == null) {
+        this.connection.setSchema(DEFAULT_SCHEMA);
+      }
+    }
+  }
+
+  @Override
+  protected String getTableSchemaPattern() throws SQLException {
+    return this.connection.getSchema();
   }
 
   @Override
