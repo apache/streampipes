@@ -26,7 +26,6 @@ import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaCertificate
 import org.apache.streampipes.model.opcua.Certificate;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClientConfigBuilder;
-import org.eclipse.milo.opcua.stack.core.security.FileBasedTrustListManager;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.MessageSecurityMode;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
@@ -41,7 +40,6 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SecurityConfig {
 
@@ -104,14 +102,16 @@ public class SecurityConfig {
       try {
         var env = Environments.getEnvironment();
         var securityDir = Paths.get(env.getOpcUaSecurityDir().getValueOrDefault());
-        var trustListManager = FileBasedTrustListManager.createAndInitialize(securityDir.resolve("pki"));
+        var trustListManager = SharedTrustListManagerProvider
+            .getInstance()
+            .getOrCreate(securityDir.resolve("pki"));
 
-        var loadedCerts = new AtomicReference<>(fetchTrustedCertsFromRest());
+        var loadedCerts = fetchTrustedCertsFromRest();
 
         var compositeValidator = new CompositeCertificateValidator(
             config,
             trustListManager,
-            loadedCerts.get(),
+            loadedCerts,
             List.of(),
             streamPipesClient
         );
@@ -153,7 +153,7 @@ public class SecurityConfig {
         original.getSecurityLevel());
   }
 
-  private List<X509Certificate> fetchTrustedCertsFromRest() throws SpConfigurationException {
+  List<X509Certificate> fetchTrustedCertsFromRest() throws SpConfigurationException {
     try {
       var response = streamPipesClient.customRequest().getList(OpcUaCertificateUtils.getCoreTrustedCertificatePath(), Certificate.class);
       return response

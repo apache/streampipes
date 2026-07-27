@@ -18,8 +18,14 @@
 
 package org.apache.streampipes.extensions.connectors.opcua.config.security;
 
+import org.apache.streampipes.client.api.ICustomRequestApi;
+import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.extensions.connectors.opcua.config.OpcUaConfig;
+import org.apache.streampipes.extensions.connectors.opcua.utils.OpcUaCertificateUtils;
+import org.apache.streampipes.model.opcua.Certificate;
+import org.apache.streampipes.model.opcua.CertificateBuilder;
+import org.apache.streampipes.model.opcua.CertificateState;
 
 import org.eclipse.milo.opcua.sdk.client.OpcUaClientConfigBuilder;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
@@ -29,6 +35,8 @@ import org.eclipse.milo.opcua.stack.core.types.enumerated.MessageSecurityMode;
 import org.eclipse.milo.opcua.stack.core.types.structured.ApplicationDescription;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 import org.eclipse.milo.opcua.stack.core.types.structured.UserTokenPolicy;
+import org.eclipse.milo.opcua.stack.core.util.SelfSignedCertificateBuilder;
+import org.eclipse.milo.opcua.stack.core.util.SelfSignedCertificateGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -39,6 +47,10 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class SecurityConfigTest {
 
@@ -136,6 +148,41 @@ class SecurityConfigTest {
         List.of(makeNoneEndpoint()),
         new OpcUaClientConfigBuilder()
     ));
+  }
+
+  @Test
+  void fetchesCurrentTrustedCertificatesForEveryConnectionConfiguration() throws Exception {
+    var streamPipesClient = mock(IStreamPipesClient.class);
+    var customRequestApi = mock(ICustomRequestApi.class);
+    var trustedCertificate = makeTrustedCertificate();
+    when(streamPipesClient.customRequest()).thenReturn(customRequestApi);
+    when(customRequestApi.getList(OpcUaCertificateUtils.getCoreTrustedCertificatePath(), Certificate.class))
+        .thenReturn(List.of(trustedCertificate), List.of());
+
+    var securityConfig = new SecurityConfig(
+        MessageSecurityMode.Sign,
+        SecurityPolicy.Basic256Sha256,
+        streamPipesClient,
+        false
+    );
+
+    var firstFetch = securityConfig.fetchTrustedCertsFromRest();
+    var secondFetch = securityConfig.fetchTrustedCertsFromRest();
+
+    assertEquals(1, firstFetch.size());
+    assertTrue(secondFetch.isEmpty());
+    verify(customRequestApi, times(2))
+        .getList(OpcUaCertificateUtils.getCoreTrustedCertificatePath(), Certificate.class);
+  }
+
+  private Certificate makeTrustedCertificate() throws Exception {
+    var keyPair = SelfSignedCertificateGenerator.generateRsaKeyPair(2048);
+    var certificate = new SelfSignedCertificateBuilder(keyPair)
+        .setCommonName("StreamPipes OPC UA test")
+        .setApplicationUri("urn:org:apache:streampipes:opcua:test")
+        .addDnsName("localhost")
+        .build();
+    return CertificateBuilder.fromX509(certificate, CertificateState.TRUSTED);
   }
 
   private OpcUaConfig makeConfig() {
