@@ -125,14 +125,14 @@ export class ShortcutsTabComponent {
                                 !!item.shortcutKey && item.visible !== false,
                         )
                         .map(item => ({
-                            combo: `g then ${item.shortcutKey}`,
-                            context: 'Anywhere outside inputs',
+                            combo: `Shift + ${item.shortcutKey.toUpperCase()}`,
+                            context: 'Outside inputs and dialogs',
                             description: `Navigate to ${item.title}`,
                         })),
                     {
-                        combo: '?',
-                        context: 'Anywhere outside inputs',
-                        description: 'Open help page',
+                        combo: 'Shift + ?',
+                        context: 'Outside inputs and dialogs',
+                        description: 'Show all keyboard shortcuts',
                     },
                     {
                         combo: 'Ctrl + B / Alt + B',

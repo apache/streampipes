@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable, NgZone, OnDestroy, inject } from '@angular/core';
+import { Injectable, NgZone, OnDestroy, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { DialogService } from '../dialog/base-dialog/base-dialog.service';
 
@@ -40,28 +40,63 @@ export type ShortcutRegistration = { unregister: () => void };
 
 @Injectable({ providedIn: 'root' })
 export class KeyboardShortcutService implements OnDestroy {
+    readonly shortcutHintsVisible = signal(false);
+
     private keydown$ = new Subject<KeyboardEvent>();
     private registrations: Map<string, ShortcutAction[]> = new Map();
     private sequenceRegistrations: Map<string, SequenceAction[]> = new Map();
     private pendingSequenceKey: string | null = null;
     private pendingSequenceTimeout: any = null;
+    private shortcutHintTimeout: ReturnType<typeof setTimeout> | null = null;
     private readonly SEQUENCE_TIMEOUT_MS = 1000;
+    private readonly SHORTCUT_HINT_DELAY_MS = 200;
 
     private listener = (e: KeyboardEvent) => {
         const isInput = this.isInputFocused(e);
         const ctrl = e.ctrlKey || e.metaKey;
+
+        if (e.key === 'Shift') {
+            this.handleShiftKeyDown(e, isInput);
+        }
 
         if (!isInput || ctrl || e.key === 'Escape') {
             this.keydown$.next(e);
         }
     };
 
+    private keyupListener = (e: KeyboardEvent) => {
+        if (e.key === 'Shift') {
+            this.hideShortcutHints();
+        }
+    };
+
+    private windowBlurListener = () => this.hideShortcutHints();
+
+    private focusInListener = (event: FocusEvent) => {
+        if (this.isInputFocused(event)) {
+            this.hideShortcutHints();
+        }
+    };
+
+    private visibilityChangeListener = () => {
+        if (document.hidden) {
+            this.hideShortcutHints();
+        }
+    };
+
     private dialogService = inject(DialogService);
 
     constructor(private ngZone: NgZone) {
-        this.ngZone.runOutsideAngular(() =>
-            document.addEventListener('keydown', this.listener, true),
-        );
+        this.ngZone.runOutsideAngular(() => {
+            document.addEventListener('keydown', this.listener, true);
+            document.addEventListener('keyup', this.keyupListener, true);
+            document.addEventListener('focusin', this.focusInListener, true);
+            window.addEventListener('blur', this.windowBlurListener);
+            document.addEventListener(
+                'visibilitychange',
+                this.visibilityChangeListener,
+            );
+        });
         this.keydown$.subscribe(e =>
             this.ngZone.run(() => this.handleEvent(e)),
         );
@@ -69,8 +104,16 @@ export class KeyboardShortcutService implements OnDestroy {
 
     ngOnDestroy(): void {
         document.removeEventListener('keydown', this.listener, true);
+        document.removeEventListener('keyup', this.keyupListener, true);
+        document.removeEventListener('focusin', this.focusInListener, true);
+        window.removeEventListener('blur', this.windowBlurListener);
+        document.removeEventListener(
+            'visibilitychange',
+            this.visibilityChangeListener,
+        );
         this.keydown$.complete();
         this.clearPendingSequence();
+        this.hideShortcutHints();
     }
 
     register(id: string, actions: ShortcutAction[]): ShortcutRegistration {
@@ -155,9 +198,44 @@ export class KeyboardShortcutService implements OnDestroy {
                 event.stopPropagation();
             }
             if (!this.dialogService.hasOpenDialogs || match.allowInDialog) {
+                if (match.shift) {
+                    this.hideShortcutHints();
+                }
                 match.action(event);
             }
         }
+    }
+
+    private handleShiftKeyDown(event: KeyboardEvent, isInput: boolean): void {
+        if (
+            event.repeat ||
+            isInput ||
+            event.ctrlKey ||
+            event.metaKey ||
+            event.altKey ||
+            this.dialogService.hasOpenDialogs ||
+            this.shortcutHintTimeout
+        ) {
+            return;
+        }
+
+        this.shortcutHintTimeout = setTimeout(() => {
+            if (
+                !this.dialogService.hasOpenDialogs &&
+                !this.isEditableElement(document.activeElement)
+            ) {
+                this.ngZone.run(() => this.shortcutHintsVisible.set(true));
+            }
+            this.shortcutHintTimeout = null;
+        }, this.SHORTCUT_HINT_DELAY_MS);
+    }
+
+    private hideShortcutHints(): void {
+        if (this.shortcutHintTimeout) {
+            clearTimeout(this.shortcutHintTimeout);
+        }
+        this.shortcutHintTimeout = null;
+        this.shortcutHintsVisible.set(false);
     }
 
     private clearPendingSequence(): void {
@@ -168,11 +246,15 @@ export class KeyboardShortcutService implements OnDestroy {
         this.pendingSequenceTimeout = null;
     }
 
-    private isInputFocused = (event: KeyboardEvent): boolean => {
-        const tag = (event.target as HTMLElement)?.tagName;
+    private isInputFocused = (event: Event): boolean =>
+        this.isEditableElement(event.target);
+
+    private isEditableElement(target: EventTarget | null): boolean {
+        const element = target as HTMLElement;
+        const tag = element?.tagName;
         return (
             ['INPUT', 'TEXTAREA', 'SELECT'].includes(tag) ||
-            (event.target as HTMLElement)?.isContentEditable
+            element?.isContentEditable
         );
-    };
+    }
 }

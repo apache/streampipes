@@ -23,7 +23,6 @@ import {
     KeyboardShortcutService,
     ShortcutRegistration,
     ShortcutAction,
-    SequenceAction,
 } from '@streampipes/shared-ui';
 import { TranslateService } from '@ngx-translate/core';
 import { CollapseService } from '../../collapse.service';
@@ -34,6 +33,8 @@ import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { IconbarComponent } from '../iconbar/iconbar.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { Router, RouterOutlet } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ShortcutDialogComponent } from '../../../help/components/shortcuts/shortcut-dialog.component';
 
 @Component({
     selector: 'sp-streampipes',
@@ -65,11 +66,11 @@ export class StreampipesComponent implements OnInit, OnDestroy {
     private shortcutService = inject(KeyboardShortcutService);
     private router = inject(Router);
     private navMenuService = inject(NavMenuService);
+    private dialog = inject(MatDialog);
 
     darkMode$: Subscription;
     user$: Subscription;
     private shortcutReg: ShortcutRegistration;
-    private shortcutSeqReg: ShortcutRegistration;
 
     collapsed = this.collapseService.isCollapsed;
 
@@ -94,7 +95,7 @@ export class StreampipesComponent implements OnInit, OnDestroy {
             {
                 key: '?',
                 shift: true,
-                action: () => this.router.navigateByUrl('help'),
+                action: () => this.openShortcutDialog(),
             },
             {
                 key: 'b',
@@ -106,33 +107,37 @@ export class StreampipesComponent implements OnInit, OnDestroy {
                 alt: true,
                 action: () => this.collapseService.toggleMenubar(),
             },
+            ...this.navMenuService.items
+                .filter(item => !!item.shortcutKey)
+                .map(item => ({
+                    key: item.shortcutKey,
+                    shift: true,
+                    action: () => {
+                        if (item.visible !== false) {
+                            this.router.navigateByUrl(item.link || '');
+                        }
+                    },
+                })),
         ];
-
-        const sequenceActions: SequenceAction[] = this.navMenuService.items
-            .filter(item => !!item.shortcutKey)
-            .map(item => ({
-                sequence: ['g', item.shortcutKey] as [string, string],
-                action: () => {
-                    if (item.visible !== false) {
-                        this.router.navigateByUrl(item.link || '');
-                    }
-                },
-            }));
 
         this.shortcutReg = this.shortcutService.register(
             'streampipes-global',
             singleKeyActions,
         );
-        this.shortcutSeqReg = this.shortcutService.registerSequences(
-            'streampipes-global',
-            sequenceActions,
-        );
+    }
+
+    private openShortcutDialog(): void {
+        this.dialog.open(ShortcutDialogComponent, {
+            width: 'min(900px, 90vw)',
+            maxWidth: '90vw',
+            maxHeight: '90vh',
+            autoFocus: false,
+        });
     }
 
     ngOnDestroy() {
         this.darkMode$?.unsubscribe();
         this.user$?.unsubscribe();
         this.shortcutReg?.unregister();
-        this.shortcutSeqReg?.unregister();
     }
 }

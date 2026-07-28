@@ -184,4 +184,94 @@ describe('KeyboardShortcutService', () => {
         // Cleanup
         document.body.removeChild(input);
     });
+
+    it('should show shortcut hints after holding Shift', fakeAsync(() => {
+        document.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'Shift',
+                shiftKey: true,
+            }),
+        );
+
+        tick(199);
+        expect(service.shortcutHintsVisible()).toBe(false);
+
+        tick(1);
+        expect(service.shortcutHintsVisible()).toBe(true);
+
+        document.dispatchEvent(
+            new KeyboardEvent('keyup', {
+                key: 'Shift',
+            }),
+        );
+        expect(service.shortcutHintsVisible()).toBe(false);
+    }));
+
+    it('should not show shortcut hints in editable fields', fakeAsync(() => {
+        let fired = false;
+        service.register('test', [
+            {
+                key: 'p',
+                shift: true,
+                action: () => {
+                    fired = true;
+                },
+            },
+        ]);
+
+        const input = document.createElement('input');
+        document.body.appendChild(input);
+        input.focus();
+
+        input.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'Shift',
+                shiftKey: true,
+                bubbles: true,
+            }),
+        );
+        input.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'P',
+                shiftKey: true,
+                bubbles: true,
+            }),
+        );
+        tick(200);
+
+        expect(service.shortcutHintsVisible()).toBe(false);
+        expect(fired).toBe(false);
+
+        document.body.removeChild(input);
+    }));
+
+    it('should fire Shift shortcuts before hints appear', fakeAsync(() => {
+        let fired = false;
+        service.register('test', [
+            {
+                key: 'p',
+                shift: true,
+                action: () => {
+                    fired = true;
+                },
+            },
+        ]);
+
+        document.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'Shift',
+                shiftKey: true,
+            }),
+        );
+        tick(50);
+        document.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'P',
+                shiftKey: true,
+            }),
+        );
+
+        expect(fired).toBe(true);
+        expect(service.shortcutHintsVisible()).toBe(false);
+    }));
 });

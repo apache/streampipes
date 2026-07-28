@@ -23,7 +23,7 @@ spAssets:
     pageNames: 'PageName.ASSETS'
     showStatusBox: false
     category: 'management'
-    shortcutKey: 'a'
+    shortcutKey: 'x'
 spDatasets:
     routesPath: './dataset/dataset.routes'
     routesName: DATASET_ROUTES
@@ -34,7 +34,7 @@ spDatasets:
     pageNames: 'PageName.DATASETS'
     showStatusBox: false
     category: 'management'
-    shortcutKey: 'y'
+    shortcutKey: 't'
 spHome:
     routesPath: './home/home.routes'
     routesName: HOME_ROUTES
@@ -66,7 +66,7 @@ spConnect:
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_ADAPTER, UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_ADAPTER]'
     category: 'management'
-    shortcutKey: 'c'
+    shortcutKey: 'a'
 spPipelines:
     routesPath: './pipelines/pipelines.routes'
     routesName: PIPELINES_ROUTES
@@ -138,4 +138,4 @@ spChart:
         viewRoles: '[UserPrivilege.PRIVILEGE_READ_DATA_EXPLORER_VIEW, UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
         createRoles: '[UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW]'
     category: 'visualization'
-    shortcutKey: 'e'
+    shortcutKey: 'c'
