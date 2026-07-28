@@ -190,6 +190,7 @@ export class AssetLinkTableComponent implements OnInit, OnChanges, OnDestroy {
                 width: '50vw',
                 data: {
                     assetLink: assetLink,
+                    assetLinks: this.asset.assetLinks,
                     assetLinkTypes: this.assetLinkTypes,
                     createMode: false,
                 },

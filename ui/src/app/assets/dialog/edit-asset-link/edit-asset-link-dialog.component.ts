@@ -70,6 +70,9 @@ export class EditAssetLinkDialogComponent
     assetLinkTypes: AssetLinkType[];
 
     @Input()
+    assetLinks: AssetLink[] = [];
+
+    @Input()
     createMode: boolean;
 
     parentForm: UntypedFormGroup;
@@ -102,24 +105,42 @@ export class EditAssetLinkDialogComponent
     }
 
     get selectableResources(): any[] {
+        let resources: any[];
+
         switch (this.selectedLinkType.linkQueryHint) {
             case 'pipeline':
-                return this.pipelines ?? [];
+                resources = this.pipelines ?? [];
+                break;
             case 'data-source':
-                return this.dataSources ?? [];
+                resources = this.dataSources ?? [];
+                break;
             case 'dashboard':
-                return this.dashboards ?? [];
+                resources = this.dashboards ?? [];
+                break;
             case 'chart':
-                return this.charts ?? [];
+                resources = this.charts ?? [];
+                break;
             case 'adapter':
-                return this.adapters ?? [];
+                resources = this.adapters ?? [];
+                break;
             case 'measurement':
-                return this.dataLakeMeasures ?? [];
+                resources = this.dataLakeMeasures ?? [];
+                break;
             case 'file':
-                return this.files ?? [];
+                resources = this.files ?? [];
+                break;
             default:
-                return [];
+                resources = [];
         }
+
+        return resources.filter(
+            resource =>
+                !this.assetLinks.some(
+                    assetLink =>
+                        assetLink !== this.assetLink &&
+                        assetLink.resourceId === this.getResourceId(resource),
+                ),
+        );
     }
 
     ngOnInit(): void {
@@ -195,8 +216,14 @@ export class EditAssetLinkDialogComponent
     afterResourcesLoaded(): void {
         if (!this.createMode) {
             this.currentResource = this.allResources.find(
-                r => r.elementId === this.clonedAssetLink.resourceId,
+                resource =>
+                    this.getResourceId(resource) ===
+                    this.clonedAssetLink.resourceId,
             );
         }
+    }
+
+    private getResourceId(resource: any): string {
+        return resource.fileId ?? resource.elementId;
     }
 }
