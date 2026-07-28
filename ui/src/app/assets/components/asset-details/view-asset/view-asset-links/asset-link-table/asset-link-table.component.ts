@@ -17,7 +17,6 @@
  */
 
 import {
-    AfterViewInit,
     Component,
     inject,
     Input,
@@ -93,9 +92,7 @@ import { MatIcon } from '@angular/material/icon';
         TranslatePipe,
     ],
 })
-export class AssetLinkTableComponent
-    implements OnInit, AfterViewInit, OnChanges, OnDestroy
-{
+export class AssetLinkTableComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     assetModel: SpAssetModel;
 
@@ -112,7 +109,11 @@ export class AssetLinkTableComponent
     loading = false;
 
     @ViewChild(MatSort)
-    sort: MatSort;
+    set sort(sort: MatSort | undefined) {
+        if (sort) {
+            this.dataSource.sort = sort;
+        }
+    }
 
     displayedColumns: string[] = [
         'type',
@@ -156,12 +157,6 @@ export class AssetLinkTableComponent
 
     ngOnChanges(_changes: SimpleChanges) {
         this.refreshData();
-    }
-
-    ngAfterViewInit() {
-        setTimeout(() => {
-            this.dataSource.sort = this.sort;
-        });
     }
 
     refreshData(): void {
