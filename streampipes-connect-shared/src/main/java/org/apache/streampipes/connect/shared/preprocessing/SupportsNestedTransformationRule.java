@@ -38,6 +38,10 @@ public abstract class SupportsNestedTransformationRule implements Transformation
       String key = eventKey.get(0);
       List<String> newKeysTmpList = eventKey.subList(1, eventKey.size());
 
+      if (!(event.get(key) instanceof Map<?, ?>)) {
+        return event;
+      }
+
       Map<String, Object> newSubEvent =
           applyNested((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
 
