@@ -49,6 +49,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 
 import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaMonitoredItem;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
+import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,8 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -77,6 +80,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   private OpcUaNodeProvider nodeProvider;
   private List<OpcUaNode> allNodes;
   private final Map<String, Object> event;
+  private final Map<NodeId, SubscriptionStatus> badSubscriptionStatuses;
 
   private IEventCollector collector;
   private PullAdapterScheduler pullAdapterScheduler;
@@ -91,6 +95,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
     this.clientProvider = clientProvider;
     this.event = new HashMap<>();
     this.nodeIdToNodeMapping = new HashMap<>();
+    this.badSubscriptionStatuses = new ConcurrentHashMap<>();
   }
 
   private void prepareAdapter() throws AdapterException {
@@ -284,24 +289,44 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
 
       var status = value.getStatusCode();
       if (status != null && status.isGood()) {
+        if (clearBadSubscriptionStatus(nodeId)) {
+          LOG.info("OPC UA subscription node label: {}, node id: {} recovered with status code {}",
+              currNode.nodeInfo().getDisplayName(),
+              nodeId,
+              status);
+        }
         synchronized (event) {
           currNode.addToEvent(connectedClient.getClient(), event, value.getValue());
           publishSubscriptionEventIfComplete();
         }
-      } else if (shouldSkipEvent(true)) {
-        LOG.warn("Received status code {} for OPC UA subscription node label: {}, node id: {}",
-            status,
-            currNode.nodeInfo().getDisplayName(),
-            nodeId);
       } else {
-        synchronized (event) {
-          event.remove(currNode.nodeInfo().getDesiredName(""));
-          publishSubscriptionEvent();
+        if (markBadSubscriptionStatus(nodeId, status)) {
+          LOG.warn("Received status code {} for OPC UA subscription node label: {}, node id: {}",
+              status,
+              currNode.nodeInfo().getDisplayName(),
+              nodeId);
+        }
+        if (!shouldSkipEvent(true)) {
+          synchronized (event) {
+            event.remove(currNode.nodeInfo().getDesiredName(""));
+            publishSubscriptionEvent();
+          }
         }
       }
     } else {
       LOG.error("No event is produced, because subscription item {} could not be found within all nodes", item);
     }
+  }
+
+  boolean markBadSubscriptionStatus(NodeId nodeId,
+                                    StatusCode status) {
+    var currentStatus = new SubscriptionStatus(status);
+    var previousStatus = badSubscriptionStatuses.put(nodeId, currentStatus);
+    return !Objects.equals(previousStatus, currentStatus);
+  }
+
+  boolean clearBadSubscriptionStatus(NodeId nodeId) {
+    return badSubscriptionStatuses.remove(nodeId) != null;
   }
 
   private void publishSubscriptionEvent() {
@@ -326,6 +351,9 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
     return newEvent;
   }
 
+  private record SubscriptionStatus(StatusCode status) {
+  }
+
   @Override
   public PollingSettings getPollingInterval() {
     return PollingSettings.from(TimeUnit.MILLISECONDS, this.pullingIntervalMilliSeconds);
@@ -335,6 +363,7 @@ public class OpcUaAdapter implements StreamPipesAdapter, IPullAdapter, SupportsR
   public void onAdapterStarted(IAdapterParameterExtractor extractor,
                                IEventCollector collector,
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
+    this.badSubscriptionStatuses.clear();
     this.opcUaAdapterConfig =
         SpOpcUaConfigExtractor.extractAdapterConfig(
             extractor.getStaticPropertyExtractor(),
