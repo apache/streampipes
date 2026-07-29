@@ -49,6 +49,8 @@ import {
     FormFieldComponent,
     PanelType,
     SpBasicInnerPanelComponent,
+    SpSplitButtonAction,
+    SpSplitButtonComponent,
 } from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
@@ -88,11 +90,20 @@ import { MatButton } from '@angular/material/button';
         MatOption,
         MatTooltip,
         MatButton,
+        SpSplitButtonComponent,
         TranslatePipe,
         TimestampPipe,
     ],
 })
 export class StartAdapterConfigurationComponent implements OnInit {
+    adapterStorageActions: SpSplitButtonAction[] = [
+        {
+            label: 'Store',
+            action: 'store',
+            icon: 'save',
+        },
+    ];
+
     private dialogService = inject(DialogService);
     private shepherdService = inject(ShepherdService);
     private formBuilder = inject(UntypedFormBuilder);
@@ -144,7 +155,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     saveInDataLake = false;
     dataLakeTimestampField: string;
 
-    startAdapterNow = true;
     showCode = false;
     showAsset = false;
     @Input() selectedAssets: SpAssetTreeNode[] = [];
@@ -195,7 +205,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
         }
     }
 
-    public editAdapter() {
+    public editAdapter(startAdapterAfterUpdate = false) {
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
             title: this.translateService.instant('Edit adapter'),
@@ -203,6 +213,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
             data: {
                 adapter: this.adapterDescription,
                 editMode: true,
+                startAdapterAfterUpdate,
                 permission: this.permission,
                 addToAssets: this.addToAssets,
                 selectedAssets: this.selectedAssets,
@@ -218,7 +229,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
         });
     }
 
-    public startAdapter() {
+    public startAdapter(startAdapterNow: boolean) {
         this.shepherdService.trigger('adapter-settings-adapter-started');
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
@@ -229,7 +240,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 saveInDataLake: this.saveInDataLake,
                 dataLakeTimestampField: this.dataLakeTimestampField,
                 editMode: false,
-                startAdapterNow: this.startAdapterNow,
+                startAdapterNow,
                 selectedAssets: this.selectedAssets,
             },
         });
@@ -237,6 +248,14 @@ export class StartAdapterConfigurationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(() => {
             this.adapterStartedEmitter.emit();
         });
+    }
+
+    onCreateAdapterActionSelected(action: SpSplitButtonAction): void {
+        this.startAdapter(action.action !== 'store');
+    }
+
+    onEditAdapterActionSelected(action: SpSplitButtonAction): void {
+        this.editAdapter(action.action !== 'store');
     }
 
     onSelectedAssetsChange(updatedAssets: SpAssetTreeNode[]): void {

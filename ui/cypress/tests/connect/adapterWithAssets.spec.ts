@@ -85,7 +85,7 @@ describe('Creates a new adapter with a linked asset', () => {
         ConnectBtns.configureSchemaNextBtn().click();
         ConnectBtns.configureFieldsNextBtn().click();
 
-        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.storeStoppedAdapter().click();
 
         cy.dataCy('sp-connect-adapter-success-added', {
             timeout: 60000,

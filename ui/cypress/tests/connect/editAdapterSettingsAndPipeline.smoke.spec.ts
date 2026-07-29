@@ -77,7 +77,7 @@ describe('Test Edit Adapter and Pipeline', () => {
         ConnectBtns.refreshSchemaBtn().click();
         ConnectUtils.finishConfigureFieldsConfiguration();
         // Update event schema
-        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.storeAndRestartRunningAdapter().click();
 
         // Check for warning message
         ConnectBtns.adapterEditWarning().should('be.visible');
