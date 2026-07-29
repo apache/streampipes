@@ -68,6 +68,8 @@ export class SpAssetBrowserService {
     }
 
     loadAssetData(): void {
+        const previousAssetData = this.loadedAssetData;
+        const activeFilters = this.filter$.getValue();
         const assets$ = this.assetService.getAllAssets();
         const assetLinks$ = this.genericStorageService.getAllDocuments(
             AssetConstants.ASSET_LINK_TYPES_DOC_NAME,
@@ -87,7 +89,16 @@ export class SpAssetBrowserService {
                 labels: res[3].sort((a, b) => a.label.localeCompare(b.label)),
             };
             this.assetData$.next(this.loadedAssetData);
-            this.reloadFilters();
+            if (activeFilters === undefined) {
+                this.reloadFilters();
+            } else {
+                const refreshedFilters = this.refreshFilterSelections(
+                    activeFilters,
+                    previousAssetData,
+                );
+                this.filter$.next(refreshedFilters);
+                this.applyFilters(refreshedFilters);
+            }
         });
     }
 
@@ -209,6 +220,57 @@ export class SpAssetBrowserService {
             filterDisabled: false,
         };
         this.currentAssetFilter$.next(currentFilter);
+    }
+
+    private refreshFilterSelections(
+        activeFilters: AssetFilter,
+        previousAssetData: AssetBrowserData,
+    ): AssetFilter {
+        const previousTypes = this.typeService.getTypeDescriptions();
+        const currentTypes = this.typeService.getTypeDescriptions();
+
+        return {
+            selectedSites: this.refreshSelectedItems(
+                previousAssetData?.sites ?? [],
+                this.loadedAssetData.sites,
+                activeFilters.selectedSites,
+                site => site._id,
+            ),
+            selectedLabels: this.refreshSelectedItems(
+                previousAssetData?.labels ?? [],
+                this.loadedAssetData.labels,
+                activeFilters.selectedLabels,
+                label => label._id,
+            ),
+            selectedTypes: this.refreshSelectedItems(
+                previousTypes,
+                currentTypes,
+                activeFilters.selectedTypes,
+                type => type.type,
+            ),
+            selectedAssetModels: this.refreshSelectedItems(
+                previousAssetData?.assets ?? [],
+                this.loadedAssetData.assets,
+                activeFilters.selectedAssetModels,
+                asset => asset.assetId,
+            ),
+        };
+    }
+
+    private refreshSelectedItems<T, TId>(
+        previousItems: T[],
+        currentItems: T[],
+        selectedItems: T[],
+        getId: (item: T) => TId,
+    ): T[] {
+        const selectedIds = new Set(selectedItems.map(getId));
+        const allItemsSelected =
+            previousItems.length === selectedItems.length &&
+            previousItems.every(item => selectedIds.has(getId(item)));
+
+        return allItemsSelected
+            ? [...currentItems]
+            : currentItems.filter(item => selectedIds.has(getId(item)));
     }
 
     private allSelected(items: any[], selected: any[]) {
