@@ -129,7 +129,7 @@ describe('Test adapter updates with data lake schema changes', () => {
         SharedBtns.confirmDialogConfirmBtn().click();
 
         ConnectUtils.finishConfigureFieldsConfiguration();
-        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.storeAndRestartRunningAdapter().click();
     }
 
     function addTableChart(measurementName: string) {

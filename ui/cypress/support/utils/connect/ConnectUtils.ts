@@ -266,18 +266,17 @@ export class ConnectUtils {
                 .click();
         }
 
-        // Deselect auto start of adapter
-        if (!adapterInput.startAdapter) {
-            ConnectBtns.startAdapterNowCheckbox().click();
-        }
-
         //add the Adapter to an Asset
 
         if (addToAsset) {
             this.addToAsset(assetNameList);
         }
 
-        ConnectBtns.adapterSettingsStartAdapter().click();
+        if (adapterInput.startAdapter) {
+            ConnectBtns.storeAndStartNewAdapter().click();
+        } else {
+            ConnectBtns.storeNewAdapter().click();
+        }
 
         if (adapterStartFails) {
             cy.dataCy('sp-exception-details', {

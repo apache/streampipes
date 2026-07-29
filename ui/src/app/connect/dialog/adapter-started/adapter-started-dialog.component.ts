@@ -126,6 +126,11 @@ export class AdapterStartedDialog implements OnInit {
      */
     @Input() startAdapterNow = true;
 
+    /**
+     * Starts a previously stopped adapter after it was successfully updated.
+     */
+    @Input() startAdapterAfterUpdate = false;
+
     @Input()
     allResourcesAlias = this.translateService.instant('Resources');
 
@@ -196,9 +201,7 @@ export class AdapterStartedDialog implements OnInit {
                 if (status.success) {
                     try {
                         await this.persistManageMetadata();
-                        this.onAdapterReady(
-                            `Adapter ${this.adapter.name} was successfully updated and is available in the pipeline editor.`,
-                        );
+                        this.finishAdapterUpdate();
                     } catch (error) {
                         this.onAssetSaveFailure(error);
                     }
@@ -212,6 +215,28 @@ export class AdapterStartedDialog implements OnInit {
                 this.onAdapterFailure(error.error);
             },
         });
+    }
+
+    private finishAdapterUpdate(): void {
+        const successMessage = `Adapter ${this.adapter.name} was successfully updated and is available in the pipeline editor.`;
+
+        if (!this.startAdapterAfterUpdate) {
+            this.onAdapterReady(successMessage);
+            return;
+        }
+
+        this.loadingText = this.translateService.instant(
+            'Starting adapter {{adapterName}}',
+            {
+                adapterName: this.adapter.name,
+            },
+        );
+        this.adapterService
+            .startAdapterByElementId(this.adapter.elementId)
+            .subscribe({
+                next: () => this.onAdapterReady(successMessage),
+                error: error => this.onAdapterFailure(error.error),
+            });
     }
 
     addAdapter() {

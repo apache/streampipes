@@ -69,7 +69,7 @@ describe('Test Edit Adapter', () => {
         ConnectUtils.finishConfigureFieldsConfiguration();
 
         // This wait is required to ensure that there is no couch db update conflict
-        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.storeStoppedAdapter().click();
 
         ConnectBtns.connectAdapterAddedSuccessfully().should('be.visible');
 
@@ -120,9 +120,8 @@ describe('Test Edit Adapter', () => {
 
     const storeAndStartEditedAdapter = () => {
         ConnectUtils.finishConfigureFieldsConfiguration();
-        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.storeAndStartStoppedAdapter().click();
         ConnectBtns.updateAndMigratePipelines().click();
         ConnectUtils.closeAdapterPreview();
-        ConnectBtns.startAdapter().click();
     };
 });
