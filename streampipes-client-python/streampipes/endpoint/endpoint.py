@@ -148,13 +148,16 @@ class APIEndpoint(Endpoint):
             status_code = err.response.status_code
 
             # get custom error message based on the returned status code
-            error_message = _error_code_to_message[status_code]
+            error_message = _error_code_to_message.get(
+                status_code,
+                "\nThe StreamPipes Backend returned an unexpected HTTP error.\n",
+            )
 
             if status_code in [
                 HTTPStatus.BAD_REQUEST.numerator,
                 HTTPStatus.METHOD_NOT_ALLOWED.numerator,
                 HTTPStatus.NOT_FOUND.numerator,
-            ]:
+            ] or status_code not in _error_code_to_message:
                 error_message += f"url: {err.response.url}\nstatus code: {status_code}"
 
             logger.debug(f"HTTP error response: {err.response.text}")
