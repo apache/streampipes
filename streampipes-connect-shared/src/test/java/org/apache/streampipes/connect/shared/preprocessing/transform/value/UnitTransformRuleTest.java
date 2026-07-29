@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UnitTransformRuleTest {
 
@@ -127,6 +130,105 @@ public class UnitTransformRuleTest {
               .size()
     );
     assertEquals(273.15, result.get(PROPERTY_TWO));
+  }
+
+  @Test
+  public void preserveMissingValue() {
+    var unitTransformationRule = getTopLevelRule();
+    Map<String, Object> event = new HashMap<>();
+
+    var result = unitTransformationRule.apply(event);
+
+    assertFalse(result.containsKey(PROPERTY_TWO));
+  }
+
+  @Test
+  public void preserveNullValue() {
+    var unitTransformationRule = getTopLevelRule();
+    Map<String, Object> event = new HashMap<>();
+    event.put(PROPERTY_TWO, null);
+
+    var result = unitTransformationRule.apply(event);
+
+    assertTrue(result.containsKey(PROPERTY_TWO));
+    assertNull(result.get(PROPERTY_TWO));
+  }
+
+  @Test
+  public void preserveInvalidValue() {
+    var unitTransformationRule = getTopLevelRule();
+    Map<String, Object> event = new HashMap<>();
+    event.put(PROPERTY_TWO, "invalid");
+
+    var result = unitTransformationRule.apply(event);
+
+    assertEquals("invalid", result.get(PROPERTY_TWO));
+  }
+
+  @Test
+  public void preserveMissingNestedParent() {
+    var unitTransformationRule = getNestedRule();
+    Map<String, Object> event = new HashMap<>();
+
+    var result = unitTransformationRule.apply(event);
+
+    assertFalse(result.containsKey(PARENT_PROPERTY));
+  }
+
+  @Test
+  public void preserveNullNestedParent() {
+    var unitTransformationRule = getNestedRule();
+    Map<String, Object> event = new HashMap<>();
+    event.put(PARENT_PROPERTY, null);
+
+    var result = unitTransformationRule.apply(event);
+
+    assertTrue(result.containsKey(PARENT_PROPERTY));
+    assertNull(result.get(PARENT_PROPERTY));
+  }
+
+  @Test
+  public void preserveMissingNestedChild() {
+    var unitTransformationRule = getNestedRule();
+    Map<String, Object> subEvent = new HashMap<>();
+    Map<String, Object> event = new HashMap<>();
+    event.put(PARENT_PROPERTY, subEvent);
+
+    var result = unitTransformationRule.apply(event);
+
+    var resultSubEvent = (Map<?, ?>) result.get(PARENT_PROPERTY);
+    assertFalse(resultSubEvent.containsKey(CHILD_PROPERTY));
+  }
+
+  @Test
+  public void preserveNullNestedChild() {
+    var unitTransformationRule = getNestedRule();
+    Map<String, Object> subEvent = new HashMap<>();
+    subEvent.put(CHILD_PROPERTY, null);
+    Map<String, Object> event = new HashMap<>();
+    event.put(PARENT_PROPERTY, subEvent);
+
+    var result = unitTransformationRule.apply(event);
+
+    var resultSubEvent = (Map<?, ?>) result.get(PARENT_PROPERTY);
+    assertTrue(resultSubEvent.containsKey(CHILD_PROPERTY));
+    assertNull(resultSubEvent.get(CHILD_PROPERTY));
+  }
+
+  private UnitTransformationRule getTopLevelRule() {
+    return new UnitTransformationRule(
+        List.of(PROPERTY_TWO),
+        UNIT_DEGREE_CELSIUS,
+        UNIT_KELVIN
+    );
+  }
+
+  private UnitTransformationRule getNestedRule() {
+    return new UnitTransformationRule(
+        List.of(PARENT_PROPERTY, CHILD_PROPERTY),
+        UNIT_DEGREE_CELSIUS,
+        UNIT_KELVIN
+    );
   }
 
   private Map<String, Object> getEventWithTwoProperties(double value1, double value2) {

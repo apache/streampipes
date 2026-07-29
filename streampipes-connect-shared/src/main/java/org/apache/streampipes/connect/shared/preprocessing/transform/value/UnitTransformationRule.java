@@ -60,13 +60,27 @@ public class UnitTransformationRule extends SupportsNestedTransformationRule {
 
   @Override
   protected void applyTransformation(Map<String, Object> event, List<String> eventKey) {
+    var key = eventKey.get(0);
+    if (!event.containsKey(key) || event.get(key) == null) {
+      return;
+    }
+
+    var originalValue = event.get(key);
     try {
-      double value = Double.parseDouble(String.valueOf(event.get(eventKey.get(0))));
+      double value = Double.parseDouble(String.valueOf(originalValue));
 
       Quantity obs = new Quantity(value, unitTypeFrom);
       double newValue = obs.convertTo(unitTypeTo).getValue();
 
-      event.put(eventKey.get(0), newValue);
+      event.put(key, newValue);
+    } catch (NumberFormatException e) {
+      logger.debug(
+          "Could not convert value '{}' from unit '{}' to '{}' for event property '{}'",
+          originalValue,
+          unitTypeFrom,
+          unitTypeTo,
+          key
+      );
     } catch (ClassCastException | IllegalAccessException e) {
       logger.error(e.toString());
     }

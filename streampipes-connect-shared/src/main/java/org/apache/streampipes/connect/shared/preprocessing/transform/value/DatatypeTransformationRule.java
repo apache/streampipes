@@ -44,6 +44,10 @@ public class DatatypeTransformationRule implements TransformationRule {
 
   @Override
   public Map<String, Object> apply(Map<String, Object> event) {
+    if (!event.containsKey(eventKey)) {
+      return event;
+    }
+
     Object value = event.get(eventKey);
     Object transformedValue = transformDatatype(value);
     event.put(eventKey, transformedValue);
