@@ -202,13 +202,17 @@ export class SpAssetBrowserService {
     applyAssetFilter(filteredAssets: SpAsset[]) {
         let elementIds: Set<string> | undefined = undefined;
 
-        if (filteredAssets.length === 0) {
-            elementIds = undefined;
-        } else {
-            elementIds = new Set<string>();
+        if (filteredAssets.length > 0) {
+            const collectedElementIds = new Set<string>();
             filteredAssets.forEach(asset => {
-                this.collectElementIds(asset, this.activeAssetLink, elementIds);
+                this.collectElementIds(
+                    asset,
+                    this.activeAssetLink,
+                    collectedElementIds,
+                );
             });
+            elementIds =
+                collectedElementIds.size > 0 ? collectedElementIds : undefined;
         }
         const currentFilter = {
             filterActive: true,
