@@ -60,6 +60,16 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "testing": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "assets": ["src/assets"],
+              "polyfills": ["zone.js"],
+              "styles": [],
+              "scripts": []
             }
           },
           "defaultConfiguration": "production"
@@ -85,14 +95,11 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": ["src/polyfills.ts"],
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "assets": ["src/assets"],
-            "scripts": []
+            "buildTarget": "app:build:testing",
+            "setupFiles": ["src/test-setup.ts"],
+            "tsConfig": "tsconfig.spec.json"
           }
         },
         "lint": {
@@ -137,14 +144,6 @@
           },
           "defaultConfiguration": "production"
         },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "main": "projects/streampipes/platform-services/src/test.ts",
-            "tsConfig": "projects/streampipes/platform-services/tsconfig.spec.json",
-            "karmaConfig": "projects/streampipes/platform-services/karma.conf.js"
-          }
-        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
@@ -178,11 +177,9 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "projects/streampipes/shared-ui/src/test.ts",
-            "tsConfig": "projects/streampipes/shared-ui/tsconfig.spec.json",
-            "karmaConfig": "projects/streampipes/shared-ui/karma.conf.js"
+            "tsConfig": "projects/streampipes/shared-ui/tsconfig.spec.json"
           }
         },
         "lint": {

@@ -196,17 +196,15 @@ public class FileReplayAdapter implements StreamPipesAdapter {
 
   protected void validateTimestampFieldInInputEvent(IAdapterParameterExtractor extractor)
       throws AdapterException {
-    var inputEvents = extractor.getAdapterDescription()
-                               .getTransformationConfig()
-                               .getInputs();
+    var sampleInputEvent = getSampleInputEvent(extractor);
 
-    if (inputEvents == null || inputEvents.isEmpty()) {
+    if (sampleInputEvent == null || sampleInputEvent.isEmpty()) {
       throw new AdapterException("Could not validate timestamp field in original input event. "
                                      + "No sample input event is available. The file replay adapter requires a Unix "
                                      + "timestamp to be present in the original input data.");
     }
 
-    var timestampFieldValue = inputEvents.get(0).get(timestampRuntimeName);
+    var timestampFieldValue = sampleInputEvent.get(timestampRuntimeName);
 
     if (!(timestampFieldValue instanceof Number)) {
       throw new AdapterException("The timestamp field in the original input event must be numeric. "
@@ -216,6 +214,27 @@ public class FileReplayAdapter implements StreamPipesAdapter {
           timestampFieldValue
       ));
     }
+  }
+
+  private Map<String, Object> getSampleInputEvent(IAdapterParameterExtractor extractor) throws AdapterException {
+    var transformationConfig = extractor.getAdapterDescription()
+                                        .getTransformationConfig();
+
+    if (transformationConfig != null
+        && transformationConfig.getInputs() != null
+        && !transformationConfig.getInputs().isEmpty()) {
+      return transformationConfig.getInputs().get(0);
+    }
+
+    var inputStream = getFileAsInputStreamFromEndpoint(extractor);
+    var sampleData = extractor.selectedParser().getSampleData(inputStream);
+    if (sampleData == null
+        || sampleData.getSamples() == null
+        || sampleData.getSamples().isEmpty()) {
+      return Map.of();
+    }
+
+    return sampleData.getSamples().get(0);
   }
 
   private void getFileFromEndpointAndParseFile(
@@ -329,7 +348,7 @@ public class FileReplayAdapter implements StreamPipesAdapter {
                     .getSampleData(inputStream);
   }
 
-  private InputStream getFileAsInputStreamFromEndpoint(IAdapterParameterExtractor extractor) throws AdapterException {
+  protected InputStream getFileAsInputStreamFromEndpoint(IAdapterParameterExtractor extractor) throws AdapterException {
     var selectedFileName = extractor
         .getStaticPropertyExtractor()
         .selectedFilename(FILE_PATH);

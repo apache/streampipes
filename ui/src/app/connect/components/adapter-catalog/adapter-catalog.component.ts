@@ -25,6 +25,7 @@ import {
     SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBreadcrumbService,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { SpConnectRoutes } from '../../connect.breadcrumb';
@@ -34,7 +35,6 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { SpConnectFilterToolbarComponent } from '../filter-toolbar/filter-toolbar.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AdapterCatalogItemComponent } from './adapter-description/adapter-catalog-item.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
@@ -50,7 +50,7 @@ import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
         LayoutDirective,
         SpConnectFilterToolbarComponent,
         SpBasicHeaderTitleComponent,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         AdapterCatalogItemComponent,
         TranslatePipe,
         AdapterFilterPipe,

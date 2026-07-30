@@ -17,20 +17,16 @@
 -->
 
 <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-    <button
-        mat-flat-button
-        [matTooltip]="'Save pipeline' | translate"
-        [matTooltipPosition]="'above'"
+    <sp-split-button
+        dataCy="sp-editor-save-pipeline"
+        [label]="'Store and Start' | translate"
+        icon="save"
+        [actions]="savePipelineActions"
         [disabled]="!pipelineValidationService.pipelineValid"
-        (click)="savePipelineEmitter.emit()"
-        type="submit"
-        data-cy="sp-editor-save-pipeline"
-    >
-        <div fxLayoutAlign="start center" fxLayout="row">
-            <i class="material-icons">save</i>
-            <span>&nbsp;{{ 'Save' | translate }}</span>
-        </div>
-    </button>
+        [menuAriaLabel]="'Select save action'"
+        (primaryAction)="emitSavePipeline(true)"
+        (actionSelected)="onSavePipelineActionSelected($event)"
+    ></sp-split-button>
     <span class="assembly-options-divider"></span>
     <button
         mat-flat-button
@@ -88,7 +84,36 @@
         #assemblyOptionsPipelineCacheComponent
     >
     </sp-pipeline-assembly-options-pipeline-cache>
+
     <span fxFlex></span>
+    @if (editMode) {
+        <button
+            mat-icon-button
+            [matMenuTriggerFor]="pipelineOptionsMenu"
+            [attr.aria-label]="'Options' | translate"
+            data-cy="options-pipeline"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #pipelineOptionsMenu="matMenu">
+            <button
+                mat-menu-item
+                (click)="managePipelineEmitter.emit()"
+                data-cy="manage-pipeline-btn"
+            >
+                <mat-icon>settings</mat-icon>
+                <span>{{ 'Manage pipeline' | translate }}</span>
+            </button>
+            <button
+                mat-menu-item
+                (click)="deletePipelineEmitter.emit()"
+                data-cy="delete-pipeline-btn"
+            >
+                <mat-icon>clear</mat-icon>
+                <span>{{ 'Delete pipeline' | translate }}</span>
+            </button>
+        </mat-menu>
+    }
     <button
         mat-icon-button
         [matTooltip]="'Clear Assembly Area' | translate"

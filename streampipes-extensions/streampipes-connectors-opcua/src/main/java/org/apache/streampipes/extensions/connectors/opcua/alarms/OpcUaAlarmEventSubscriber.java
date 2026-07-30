@@ -70,11 +70,25 @@ public class OpcUaAlarmEventSubscriber implements AutoCloseable {
   OpcUaAlarmEventSubscriber(ConnectedOpcUaClient connectedClient,
                             OpcUaAlarmAdapterConfig config,
                             Consumer<Map<String, Object>> eventConsumer) {
+    this(
+        connectedClient,
+        config,
+        eventConsumer,
+        OpcUaAlarmEventMapper.create(connectedClient.getClient(), config),
+        new OpcUaAlarmEventFilter(config)
+    );
+  }
+
+  OpcUaAlarmEventSubscriber(ConnectedOpcUaClient connectedClient,
+                            OpcUaAlarmAdapterConfig config,
+                            Consumer<Map<String, Object>> eventConsumer,
+                            OpcUaAlarmEventMapper eventMapper,
+                            OpcUaAlarmEventFilter eventFilter) {
     this.connectedClient = connectedClient;
     this.config = config;
     this.eventConsumer = eventConsumer;
-    this.eventMapper = OpcUaAlarmEventMapper.create(connectedClient.getClient(), config);
-    this.eventFilter = new OpcUaAlarmEventFilter(config);
+    this.eventMapper = eventMapper;
+    this.eventFilter = eventFilter;
     this.sessionActivityListener = new SessionActivityListener() {
       @Override
       public void onSessionActive(org.eclipse.milo.opcua.sdk.client.UaSession session) {
@@ -119,6 +133,17 @@ public class OpcUaAlarmEventSubscriber implements AutoCloseable {
   private void createSubscription() throws UaException {
     setLastSubscriptionOperation("create-subscription");
     OpcUaSubscription newSubscription = createManagedSubscription();
+    this.subscription = newSubscription;
+
+    try {
+      initializeSubscription(newSubscription);
+    } catch (UaException | RuntimeException e) {
+      deleteSubscriptionQuietly();
+      throw e;
+    }
+  }
+
+  private void initializeSubscription(OpcUaSubscription newSubscription) throws UaException {
     newSubscription.setSubscriptionListener(new OpcUaSubscription.SubscriptionListener() {
       @Override
       public void onKeepAliveReceived(OpcUaSubscription subscription) {
@@ -196,14 +221,13 @@ public class OpcUaAlarmEventSubscriber implements AutoCloseable {
         results.get(0).operationResult().orElse(results.get(0).serviceResult())
     );
 
-    this.subscription = newSubscription;
     requestConditionRefresh(newSubscription);
     setLastSubscriptionOperation(
         "subscription-ready(subscriptionId=%s)".formatted(newSubscription.getSubscriptionId().orElse(null))
     );
   }
 
-  private OpcUaSubscription createManagedSubscription() throws UaException {
+  OpcUaSubscription createManagedSubscription() throws UaException {
     var subscription = new OpcUaSubscription(connectedClient.getClient(), PUBLISHING_INTERVAL_MS);
     subscription.create();
     return subscription;

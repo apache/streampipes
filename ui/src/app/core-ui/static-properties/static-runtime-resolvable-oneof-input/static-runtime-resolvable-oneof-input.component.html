@@ -63,11 +63,7 @@
                 }
                 @if (loading) {
                     <div fxLayout="column">
-                        <mat-spinner
-                            color="accent"
-                            [mode]="'indeterminate'"
-                            [diameter]="20"
-                        ></mat-spinner>
+                        <sp-spinner [diameter]="20"></sp-spinner>
                     </div>
                 }
             </div>

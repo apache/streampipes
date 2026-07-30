@@ -85,6 +85,7 @@ public class AdapterMasterManagement {
     var eventGrounding = GroundingUtils.createEventGrounding();
     adapterDescription.setEventGrounding(eventGrounding);
 
+    AdapterTransformationConfigDefaults.applyTo(adapterDescription);
     adapterResourceManager.encryptAndCreate(adapterDescription);
 
     // Stream is only created if the adpater is successfully stored

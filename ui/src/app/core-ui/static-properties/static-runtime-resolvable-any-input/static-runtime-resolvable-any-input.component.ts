@@ -30,11 +30,11 @@ import {
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-app-static-runtime-resolvable-any-input',
@@ -44,7 +44,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutDirective,
         LayoutGapDirective,
         MatButton,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         MatCheckbox,
         FormsModule,
         MatFormField,

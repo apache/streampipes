@@ -143,9 +143,22 @@ export class ConnectUtils {
         }
     }
 
-    public static renameAdapter(newName: string) {
-        ConnectBtns.adapterNameInput().clear().type(newName);
-        ConnectBtns.adapterNameInput().should('have.value', newName);
+    public static manageEditedAdapter(newName: string, assetNameList = []) {
+        ConnectBtns.adapterConfigurationOptions().click();
+        ConnectBtns.manageAdapter().click();
+
+        ConnectBtns.managedResourceName().clear().type(newName);
+        ConnectBtns.managedResourceName().should('have.value', newName);
+
+        if (assetNameList.length > 0) {
+            cy.get('mat-tree.asset-tree', { timeout: 10000 }).should('exist');
+            assetNameList.forEach(assetName => {
+                this.selectAssetTreeNode(assetName);
+            });
+        }
+
+        ConnectBtns.manageResourceSave().click();
+        ConnectBtns.manageResourceSave().should('not.exist');
     }
 
     public static addMachineDataSimulator(
@@ -253,18 +266,17 @@ export class ConnectUtils {
                 .click();
         }
 
-        // Deselect auto start of adapter
-        if (!adapterInput.startAdapter) {
-            ConnectBtns.startAdapterNowCheckbox().click();
-        }
-
         //add the Adapter to an Asset
 
         if (addToAsset) {
             this.addToAsset(assetNameList);
         }
 
-        ConnectBtns.adapterSettingsStartAdapter().click();
+        if (adapterInput.startAdapter) {
+            ConnectBtns.storeAndStartNewAdapter().click();
+        } else {
+            ConnectBtns.storeNewAdapter().click();
+        }
 
         if (adapterStartFails) {
             cy.dataCy('sp-exception-details', {

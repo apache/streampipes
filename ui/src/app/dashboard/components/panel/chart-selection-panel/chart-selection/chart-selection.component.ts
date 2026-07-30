@@ -50,7 +50,6 @@ import {
     MatSuffix,
 } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
 import {
     CdkFixedSizeVirtualScroll,
@@ -59,6 +58,7 @@ import {
 } from '@angular/cdk/scrolling';
 import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { ChartSelectionItem } from './chart-selection.model';
+import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-chart-selection',
@@ -79,7 +79,7 @@ import { ChartSelectionItem } from './chart-selection.model';
         MatPrefix,
         MatSuffix,
         MatInput,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         TranslatePipe,
         MatTooltip,
         CdkVirtualScrollViewport,

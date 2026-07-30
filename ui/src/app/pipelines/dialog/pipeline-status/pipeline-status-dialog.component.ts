@@ -16,7 +16,7 @@
  *
  */
 
-import { DialogRef } from '@streampipes/shared-ui';
+import { DialogRef, SpSpinnerComponent } from '@streampipes/shared-ui';
 import {
     PipelineOperationStatus,
     PipelineService,
@@ -29,7 +29,6 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
@@ -43,7 +42,7 @@ import { PipelineStartedStatusComponent } from '../../../core-ui/pipeline/pipeli
         LayoutDirective,
         LayoutAlignDirective,
         FlexDirective,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         MatIcon,
         MatDivider,
         MatButton,

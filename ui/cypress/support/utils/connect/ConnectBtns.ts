@@ -56,12 +56,41 @@ export class ConnectBtns {
         GeneralUtils.openMenuForRow(adapterName);
     }
 
+    public static adapterConfigurationOptions() {
+        return cy.dataCy('options-adapter', { timeout: 10000 });
+    }
+
+    public static manageAdapter() {
+        return cy.dataCy('manage-adapter-btn', { timeout: 10000 });
+    }
+
+    public static managedResourceName() {
+        return cy.dataCy('managed-resource-name', { timeout: 10000 });
+    }
+
+    public static manageResourceSave() {
+        return cy.dataCy('sp-manage-save', { timeout: 10000 });
+    }
+
     public static refreshSchema() {
         return cy.dataCy('refresh-schema');
     }
 
-    public static storeEditAdapter() {
-        return cy.dataCy('store-edit-adapter');
+    public static storeAndRestartRunningAdapter() {
+        return cy.dataCy('store-and-restart-edit-adapter');
+    }
+
+    public static storeAndStartStoppedAdapter() {
+        return ConnectBtns.splitButtonPrimaryAction(
+            'sp-adapter-edit-store-actions',
+        );
+    }
+
+    public static storeStoppedAdapter() {
+        return ConnectBtns.splitButtonAction(
+            'sp-adapter-edit-store-actions',
+            'Store',
+        );
     }
 
     public static changeRuntimeType() {
@@ -115,12 +144,15 @@ export class ConnectBtns {
     }
 
     // =====================  Adapter settings btns  ==========================
-    public static adapterSettingsStartAdapter() {
-        return cy.dataCy('adapter-settings-start-adapter-btn');
+    public static storeAndStartNewAdapter() {
+        return ConnectBtns.splitButtonPrimaryAction('sp-adapter-store-actions');
     }
 
-    public static startAdapterNowCheckbox() {
-        return cy.dataCy('start-adapter-now-checkbox');
+    public static storeNewAdapter() {
+        return ConnectBtns.splitButtonAction(
+            'sp-adapter-store-actions',
+            'Store',
+        );
     }
 
     public static startAllAdapters() {
@@ -131,8 +163,12 @@ export class ConnectBtns {
         return cy.dataCy('stop-all-adapters-btn');
     }
 
-    public static showCodeCheckbox() {
-        return cy.dataCy('show-code-checkbox');
+    public static showAdapterCode() {
+        return cy.dataCy('show-adapter-code', { timeout: 10000 });
+    }
+
+    public static closeAdapterCodeDialog() {
+        return cy.dataCy('close-adapter-code-dialog', { timeout: 10000 });
     }
 
     public static deleteAdapterAndAssociatedPipelineConfirmation() {
@@ -168,6 +204,24 @@ export class ConnectBtns {
         return cy.dataCy('file-input-selected', {
             timeout: 10000,
         });
+    }
+
+    private static splitButton(dataCy: string) {
+        return cy.get(`sp-split-button[datacy="${dataCy}"]`, {
+            timeout: 10000,
+        });
+    }
+
+    private static splitButtonPrimaryAction(dataCy: string) {
+        return ConnectBtns.splitButton(dataCy).find('.split-button__main');
+    }
+
+    private static splitButtonAction(dataCy: string, actionLabel: string) {
+        ConnectBtns.splitButton(dataCy).find('.split-button__toggle').click();
+        return cy
+            .get('.split-button__menu-panel', { timeout: 10000 })
+            .find('.split-button__menu-item')
+            .contains(actionLabel);
     }
 
     // ========================================================================

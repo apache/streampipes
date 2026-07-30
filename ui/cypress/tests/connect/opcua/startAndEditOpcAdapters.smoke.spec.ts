@@ -107,7 +107,7 @@ const editAdapterTest = (adapterInput: AdapterInput) => {
     ConnectBtns.refreshSchemaBtn().click();
     ConnectUtils.finishConfigureFieldsConfiguration();
 
-    ConnectBtns.storeEditAdapter().click();
+    ConnectBtns.storeAndRestartRunningAdapter().click();
     ConnectUtils.closeAdapterPreview();
     ConnectUtils.validateEventsInPreview(adapterInput.adapterName, 4);
 };

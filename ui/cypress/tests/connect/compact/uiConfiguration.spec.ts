@@ -35,12 +35,13 @@ describe('Test Compact Adapters', () => {
             .build();
 
         ConnectUtils.addAdapter(adapterInput);
-
-        // Validate code editor in start dialog
-        ConnectBtns.showCodeCheckbox().click();
-        validateCodeEditor();
-
         ConnectUtils.startAdapter(adapterInput);
+
+        // Validate code editor from adapter overview context menu
+        GeneralUtils.openMenuForRow(adapterInput.adapterName);
+        ConnectBtns.showAdapterCode().click();
+        validateCodeEditor();
+        ConnectBtns.closeAdapterCodeDialog().click();
 
         // Validate code editor in adapter details
         GeneralUtils.openMenuForRow(adapterInput.adapterName);

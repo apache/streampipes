@@ -17,7 +17,6 @@
  */
 
 import {
-    AfterViewInit,
     Component,
     inject,
     Input,
@@ -52,6 +51,7 @@ import {
     PanelType,
     SpTableActionsDirective,
     SpTableComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
@@ -88,12 +88,11 @@ import { MatIcon } from '@angular/material/icon';
         SpTableActionsDirective,
         MatMenuItem,
         MatIcon,
+        SpSpinnerComponent,
         TranslatePipe,
     ],
 })
-export class AssetLinkTableComponent
-    implements OnInit, AfterViewInit, OnChanges, OnDestroy
-{
+export class AssetLinkTableComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     assetModel: SpAssetModel;
 
@@ -106,8 +105,15 @@ export class AssetLinkTableComponent
     @Input()
     editMode = false;
 
+    @Input()
+    loading = false;
+
     @ViewChild(MatSort)
-    sort: MatSort;
+    set sort(sort: MatSort | undefined) {
+        if (sort) {
+            this.dataSource.sort = sort;
+        }
+    }
 
     displayedColumns: string[] = [
         'type',
@@ -153,12 +159,6 @@ export class AssetLinkTableComponent
         this.refreshData();
     }
 
-    ngAfterViewInit() {
-        setTimeout(() => {
-            this.dataSource.sort = this.sort;
-        });
-    }
-
     refreshData(): void {
         this.dataSource.data = this.asset.assetLinks;
     }
@@ -190,6 +190,7 @@ export class AssetLinkTableComponent
                 width: '50vw',
                 data: {
                     assetLink: assetLink,
+                    assetLinks: this.asset.assetLinks,
                     assetLinkTypes: this.assetLinkTypes,
                     createMode: false,
                 },

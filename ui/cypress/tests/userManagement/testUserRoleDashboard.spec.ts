@@ -22,7 +22,7 @@ import { User } from '../../support/model/User';
 import { ChartUtils } from '../../support/utils/chart/ChartUtils';
 import { PermissionUtils } from '../../support/utils/user/PermissionUtils';
 import { ChartBtns } from '../../support/utils/chart/ChartBtns';
-import { DataLakeSeedUtils } from '../../support/utils/dataset/DataLakeSeedUtils';
+import { DatasetSeedUtils } from '../../support/utils/dataset/DatasetSeedUtils';
 
 describe('Test User Roles for Dashboards', () => {
     const dashboardName = 'test-dashboard';
@@ -124,7 +124,7 @@ describe('Test User Roles for Dashboards', () => {
     it('Test Dashboard and Charts Permissions', () => {
         UserUtils.switchUser(dashboardAdmin1);
 
-        DataLakeSeedUtils.importCsvFixture({
+        DatasetSeedUtils.importCsvFixture({
             fixture: 'datalake/machine-data-simulator-import.csv',
             measurementName: datasetName,
             delimiter: ',',

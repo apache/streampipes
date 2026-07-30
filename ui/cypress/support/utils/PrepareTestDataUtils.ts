@@ -16,7 +16,7 @@
  *
  */
 
-import { DataLakeSeedUtils } from './dataset/DataLakeSeedUtils';
+import { DatasetSeedUtils } from './dataset/DatasetSeedUtils';
 
 export class PrepareTestDataUtils {
     public static dataName = 'prepared_data';
@@ -33,14 +33,14 @@ export class PrepareTestDataUtils {
         }
 
         if (format === 'csv') {
-            return DataLakeSeedUtils.importCsvFixture({
+            return DatasetSeedUtils.importCsvFixture({
                 fixture: dataSet,
                 measurementName: PrepareTestDataUtils.dataName,
                 delimiter: ';',
                 timestampColumn: 'timestamp',
             });
         } else {
-            return DataLakeSeedUtils.importJsonArrayFixture({
+            return DatasetSeedUtils.importJsonArrayFixture({
                 fixture: dataSet,
                 measurementName: PrepareTestDataUtils.dataName,
                 timestampColumn: 'timestamp',

@@ -27,8 +27,8 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-pipeline-assembly-options-pipeline-cache',
@@ -38,7 +38,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         LayoutDirective,
         LayoutAlignDirective,
         FlexDirective,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         TranslatePipe,
     ],
 })

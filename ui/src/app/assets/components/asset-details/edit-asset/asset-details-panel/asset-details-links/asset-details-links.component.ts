@@ -138,6 +138,7 @@ export class AssetDetailsLinksComponent implements OnInit {
                 width: '50vw',
                 data: {
                     assetLink: assetLink,
+                    assetLinks: this.asset.assetLinks,
                     assetLinkTypes: this.assetLinkTypes,
                     createMode: true,
                 },

@@ -117,7 +117,7 @@ public class GraalJsScriptEngine implements TransformationEngine {
       throws ScriptExecutionException {
     try {
       transformFunction.execute(
-          input,
+          ScriptHostObjectAdapter.wrap(input),
           ScriptOutputCollector.wrap(out),
           ctx
       );

@@ -193,16 +193,19 @@ export class KeyboardShortcutService implements OnDestroy {
             );
 
         if (match) {
+            if (this.dialogService.hasOpenDialogs && !match.allowInDialog) {
+                return;
+            }
+
             if (match.preventDefault !== false) {
                 event.preventDefault();
                 event.stopPropagation();
             }
-            if (!this.dialogService.hasOpenDialogs || match.allowInDialog) {
-                if (match.shift) {
-                    this.hideShortcutHints();
-                }
-                match.action(event);
+
+            if (match.shift) {
+                this.hideShortcutHints();
             }
+            match.action(event);
         }
     }
 

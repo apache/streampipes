@@ -36,6 +36,7 @@ import {
     SpBreadcrumbService,
     SplitSectionComponent,
     SpNavigationItem,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -48,7 +49,6 @@ import { MatInput } from '@angular/material/input';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatButton } from '@angular/material/button';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { SpEmailTemplateConfigurationComponent } from './email-template-configuration/email-template-configuration.component';
 import { MatDivider } from '@angular/material/divider';
 
@@ -71,7 +71,7 @@ import { MatDivider } from '@angular/material/divider';
         MatCheckbox,
         MatLabel,
         MatButton,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         SpAlertBannerComponent,
         SpEmailTemplateConfigurationComponent,
         MatDivider,

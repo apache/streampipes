@@ -26,8 +26,7 @@ import org.apache.streampipes.connect.management.management.CompactAdapterManage
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
-import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.manager.pipeline.update.PipelineUpdateCoordinator;
+import org.apache.streampipes.manager.pipeline.update.DataStreamDeletedEvent;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -42,8 +41,6 @@ import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
-import org.apache.streampipes.rest.event.AdapterDeletedEvent;
-import org.apache.streampipes.rest.event.AdapterUpdatedEvent;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
@@ -82,7 +79,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   private final ApplicationEventPublisher eventPublisher;
   private final PermissionResourceManager permissionResourceManager;
   private final PipelineManager pipelineManager;
-  private final PipelineUpdateCoordinator pipelineUpdateCoordinator;
+  private final AdapterUpdateManagement adapterUpdateManagement;
   private final SpResourceManager resourceManager;
 
   public AdapterResource(WorkerRestClient workerRestClient,
@@ -109,11 +106,11 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     this.pipelineManager = new PipelineManager(
         resourceManager
     );
-    this.pipelineUpdateCoordinator = new PipelineUpdateCoordinator(
+    this.adapterUpdateManagement = new AdapterUpdateManagement(
+        managementService,
         requestManager,
         resourceManager,
-        new ChartSchemaUpdateCoordinator(resourceManager.manageCharts().getDb()),
-        pipelineManager
+        eventPublisher
     );
   }
 
@@ -151,12 +148,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#adapterDescription.correspondingDataStreamElementId, 'WRITE')")
   public ResponseEntity<? extends Message> updateAdapter(@RequestBody AdapterDescription adapterDescription) {
-    var updateManager = new AdapterUpdateManagement(
-        managementService, pipelineUpdateCoordinator, resourceManager
-    );
     try {
-      updateManager.updateAdapter(adapterDescription);
-      publishEvent(new AdapterUpdatedEvent(adapterDescription));
+      adapterUpdateManagement.updateAdapter(adapterDescription);
     } catch (AdapterException e) {
       LOG.error("Error while updating adapter with id {}", adapterDescription.getElementId(), e);
       return ok(Notifications.error(e.getMessage(), ExceptionUtils.getStackTrace(e)));
@@ -169,10 +162,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
   public ResponseEntity<List<PipelineUpdateInfo>> performPipelineMigrationPreflight(
       @RequestBody AdapterDescription adapterDescription) {
-    var updateManager = new AdapterUpdateManagement(
-        managementService, pipelineUpdateCoordinator, resourceManager
-    );
-    var migrations = updateManager.checkPipelineMigrations(adapterDescription);
+    var migrations = adapterUpdateManagement.checkPipelineMigrations(adapterDescription);
 
     return ok(migrations);
   }
@@ -272,7 +262,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         if (pipelinesUsingAdapter.isEmpty()) {
           try {
             managementService.deleteAdapter(elementId);
-            publishEvent(new AdapterDeletedEvent(adapter));
+            publishEvent(new DataStreamDeletedEvent(adapter.getCorrespondingDataStreamElementId()));
 
             return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));
           } catch (AdapterException e) {
@@ -325,7 +315,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
                 pipelineManager.deletePipeline(pipelineId);
               }
               managementService.deleteAdapter(elementId);
-              publishEvent(new AdapterDeletedEvent(adapter));
+              publishEvent(new DataStreamDeletedEvent(adapter.getCorrespondingDataStreamElementId()));
 
               return ok(Notifications.success("Adapter with id: " + elementId
                   + " and all pipelines using the adapter are deleted."));
