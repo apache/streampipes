@@ -122,6 +122,7 @@ for (let module of config.modules) {
         category: modules[module]['category'],
         featureCards: cardsForModule,
         hasFeatureCards: cardsForModule.length > 0,
+        shortcutKey: modules[module]['shortcutKey'],
     });
     console.log('Active Angular Module: ' + module);
 }
@@ -138,6 +139,13 @@ fs.writeFileSync(
     'src/app/home/home.service.ts',
     mustache.render(
         fs.readFileSync('deployment/home.service.mst', 'utf8').toString(),
+        modulesActive,
+    ),
+);
+fs.writeFileSync(
+    'src/app/core/navigation/nav-menu.service.ts',
+    mustache.render(
+        fs.readFileSync('deployment/nav-menu.service.mst', 'utf8').toString(),
         modulesActive,
     ),
 );

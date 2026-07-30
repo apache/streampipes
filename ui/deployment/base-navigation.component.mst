@@ -20,12 +20,16 @@
 import { NavigationEnd, Router } from '@angular/router';
 import { PageName } from '../navigation/page-name.enum';
 import { AuthService } from '../../services/auth.service';
-import { CurrentUserService } from '@streampipes/shared-ui';
+import {
+  CurrentUserService,
+  KeyboardShortcutService
+} from '@streampipes/shared-ui';
 import { AppConstants } from '../../services/app.constants';
 import { UserPrivilege } from '../auth/user-privilege.enum';
 import { UserRole } from '../auth/user-role.enum';
 import { inject } from '@angular/core';
 import { CollapseService } from '../collapse.service';
+import { NavMenuService } from '../navigation/nav-menu.service';
 
 export interface MenuItem {
   link: string;
@@ -35,6 +39,7 @@ export interface MenuItem {
   privileges: any[];
   visible?: boolean;
   category: string;
+  shortcutKey?: string;
 }
 
 export interface MenuGroup {
@@ -67,27 +72,18 @@ export abstract class BaseNavigationComponent {
     {{/categoriesActive}}
   ];
 
-  public menu = [
-    {{#modulesActive}}
-    {
-        link: '{{{link}}}',
-        title: '{{{title}}}',
-        icon: '{{{icon}}}',
-        pageNames: [{{{pageNames}}}],
-        privileges: {{{privileges}}},
-        visible: false,
-        category: '{{{category}}}'
-    },
-    {{/modulesActive}}
-  ];
+   protected navMenuService = inject(NavMenuService);
+   public menu = this.navMenuService.items;
 
    protected authService = inject(AuthService);
    protected currentUserService = inject(CurrentUserService);
    protected router = inject(Router);
    protected appConstants = inject(AppConstants);
    protected collapseService = inject(CollapseService);
+   protected keyboardShortcutService = inject(KeyboardShortcutService);
 
    collapsed = this.collapseService.isCollapsed;
+   shortcutHintsVisible = this.keyboardShortcutService.shortcutHintsVisible;
 
     onInit() {
       this.currentUserService.user$.subscribe(user => {
