@@ -127,4 +127,5 @@ nav:
       - Using Online Machine Learning on a StreamPipes Data Stream: tutorials/4-using-online-machine-learning-on-a-streampipes-data-stream.ipynb
       - Applying Interoperable Machine Learning in StreamPipes: tutorials/5-applying-interoperable-machine-learning-in-streampipes.ipynb
       - Creating Output Streams with StreamPipes Functions: tutorials/6-streampipes-function-output-stream.ipynb
+      - Creating and Managing Adapters and Pipelines with Python: tutorials/7-creating-and-managing-adapters-and-pipelines.ipynb
   - 📚 Reference: reference/*
