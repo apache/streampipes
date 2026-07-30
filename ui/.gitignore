@@ -63,6 +63,7 @@ projects/streampipes/shared-ui/node_modules
 
 # misc
 /.angular/cache
+/.eslintcache
 /.sass-cache
 /connect.lock
 /coverage
