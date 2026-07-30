@@ -64,6 +64,11 @@
                             [class.hidden]="collapsed()"
                             >{{ item.title }}</span
                         >
+                        @if (shortcutHintsVisible() && !!item.shortcutKey) {
+                            <kbd class="shortcut-key">{{
+                                item.shortcutKey | uppercase
+                            }}</kbd>
+                        }
                     </button>
                 }
             }
@@ -99,7 +104,11 @@
                     <div
                         class="menu-group-items"
                         [style.maxHeight]="
-                            group.collapsed && !collapsed() ? '0px' : '500px'
+                            group.collapsed &&
+                            !collapsed() &&
+                            !shortcutHintsVisible()
+                                ? '0px'
+                                : '500px'
                         "
                         [class.instant]="collapsed()"
                         role="list"
@@ -130,6 +139,14 @@
                                         [class.hidden]="collapsed()"
                                         >{{ item.title | translate }}</span
                                     >
+                                    @if (
+                                        shortcutHintsVisible() &&
+                                        !!item.shortcutKey
+                                    ) {
+                                        <kbd class="shortcut-key">{{
+                                            item.shortcutKey | uppercase
+                                        }}</kbd>
+                                    }
                                 </button>
                             }
                         }
