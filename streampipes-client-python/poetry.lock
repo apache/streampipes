@@ -406,7 +406,7 @@ files = [
     {file = "cffi-2.0.0-cp39-cp39-win_amd64.whl", hash = "sha256:b882b3df248017dba09d6b16defe9b5c407fe32fc7c65a9c69798e6175601be9"},
     {file = "cffi-2.0.0.tar.gz", hash = "sha256:44d1b5909021139fe36001ae048dbdde8214afa20200eda0f64c068cac5d5529"},
 ]
-markers = {deployment = "platform_machine != \"ppc64le\" and platform_machine != \"s390x\" and sys_platform == \"linux\" and platform_python_implementation != \"PyPy\"", dev = "platform_python_implementation != \"PyPy\"", docs = "implementation_name == \"pypy\""}
+markers = {deployment = "sys_platform == \"linux\" and platform_python_implementation != \"PyPy\" and platform_machine != \"ppc64le\" and platform_machine != \"s390x\"", docs = "implementation_name == \"pypy\""}
 
 [package.dependencies]
 pycparser = {version = "*", markers = "implementation_name != \"PyPy\""}
@@ -746,7 +746,8 @@ version = "48.0.1"
 description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
 optional = false
 python-versions = "!=3.9.0,!=3.9.1,>=3.9"
-groups = ["deployment", "dev"]
+groups = ["deployment"]
+markers = "sys_platform == \"linux\" and platform_machine != \"ppc64le\" and platform_machine != \"s390x\""
 files = [
     {file = "cryptography-48.0.1-cp311-abi3-macosx_10_9_universal2.whl", hash = "sha256:3e4a1a3232eef2e6c732827d5722db29a0cc8b27af2a4d865b094cf954be9ca1"},
     {file = "cryptography-48.0.1-cp311-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:32143b24adb918f078134e1e230f1eb8cc04886b92c28b5f0041aaf3e5699225"},
@@ -3052,7 +3053,7 @@ files = [
     {file = "pycparser-2.22-py3-none-any.whl", hash = "sha256:c3702b6d3dd8c7abc1afa565d7e63d53a1d0bd86cdc24edd75470f4de499cfcc"},
     {file = "pycparser-2.22.tar.gz", hash = "sha256:491c8be9c040f5390f5bf44a5b07752bd07f56edf992381b05c701439eec10f6"},
 ]
-markers = {deployment = "platform_machine != \"ppc64le\" and platform_machine != \"s390x\" and sys_platform == \"linux\" and platform_python_implementation != \"PyPy\" and implementation_name != \"PyPy\"", dev = "platform_python_implementation != \"PyPy\" and implementation_name != \"PyPy\"", docs = "implementation_name == \"pypy\""}
+markers = {deployment = "sys_platform == \"linux\" and platform_python_implementation != \"PyPy\" and implementation_name != \"PyPy\" and platform_machine != \"ppc64le\" and platform_machine != \"s390x\"", docs = "implementation_name == \"pypy\""}
 
 [[package]]
 name = "pydantic"
@@ -4714,5 +4715,5 @@ type = ["pytest-mypy"]
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.10,<3.14"
-content-hash = "018a5583f235a19f8a96c5cf4301c2cd4562d795de53031247fe61272d82cf3c"
+python-versions = ">=3.10"
+content-hash = "704b08c3e9498812c9194058ce22cdbf1e83da1f8ee1a58da893b87aea3b184b"
