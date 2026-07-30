@@ -21,6 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SpBasicHeaderTitleComponent } from '@streampipes/shared-ui';
 import { TranslateService } from '@ngx-translate/core';
+import { NavMenuService } from '../../../core/navigation/nav-menu.service';
 
 interface ShortcutDefinition {
     combo: string;
@@ -29,6 +30,7 @@ interface ShortcutDefinition {
 }
 
 const SHORTCUT_TRANSLATION_KEYS = {
+    anywhere: 'Anywhere',
     title: 'Shortcuts',
     saveContext:
         "'Ctrl/Cmd + S' in chart/dashboard/pipeline edit view or asset link dialog",
@@ -42,6 +44,10 @@ const SHORTCUT_TRANSLATION_KEYS = {
     filterDescription: 'Focuses/selects the filter search input.',
     escapeContext: "'Esc' Dialog keyboard behavior",
     escapeDescription: 'Closes shared overlay dialogs/popups.',
+    navigateTo: 'Navigate to {{page}}',
+    outsideInputsAndDialogs: 'Outside inputs and dialogs',
+    showAll: 'Show all keyboard shortcuts',
+    toggleSidebar: 'Toggle sidebar menu',
 } as const;
 
 @Component({
@@ -52,6 +58,7 @@ const SHORTCUT_TRANSLATION_KEYS = {
 })
 export class ShortcutsTabComponent {
     private translateService = inject(TranslateService);
+    private navMenuService = inject(NavMenuService);
 
     title = '';
     shortcuts: ShortcutDefinition[] = [];
@@ -115,6 +122,49 @@ export class ShortcutsTabComponent {
                             ],
                     },
                 ];
+
+                this.shortcuts.push(
+                    ...this.navMenuService.items
+                        .filter(
+                            item =>
+                                !!item.shortcutKey && item.visible !== false,
+                        )
+                        .map(item => ({
+                            combo: `Shift + ${item.shortcutKey.toUpperCase()}`,
+                            context:
+                                translations[
+                                    SHORTCUT_TRANSLATION_KEYS
+                                        .outsideInputsAndDialogs
+                                ],
+                            description: this.translateService.instant(
+                                SHORTCUT_TRANSLATION_KEYS.navigateTo,
+                                {
+                                    page: this.translateService.instant(
+                                        item.title,
+                                    ),
+                                },
+                            ),
+                        })),
+                    {
+                        combo: 'Shift + ?',
+                        context:
+                            translations[
+                                SHORTCUT_TRANSLATION_KEYS
+                                    .outsideInputsAndDialogs
+                            ],
+                        description:
+                            translations[SHORTCUT_TRANSLATION_KEYS.showAll],
+                    },
+                    {
+                        combo: 'Ctrl + B / Alt + B',
+                        context:
+                            translations[SHORTCUT_TRANSLATION_KEYS.anywhere],
+                        description:
+                            translations[
+                                SHORTCUT_TRANSLATION_KEYS.toggleSidebar
+                            ],
+                    },
+                );
             });
     }
 }

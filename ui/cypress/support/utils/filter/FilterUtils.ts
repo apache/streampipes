@@ -24,6 +24,14 @@ export class FilterUtils {
         FilterBtns.applyFiltersBtn().should('be.visible');
     }
 
+    private static closeDropdownAndApplyFilters() {
+        cy.get('body').type('{esc}');
+        FilterBtns.applyFiltersBtn()
+            .should('be.visible')
+            .and('be.enabled')
+            .click();
+    }
+
     public static clearFilter() {
         this.openFilterMenu();
         FilterBtns.resetFiltersBtn().click();
@@ -53,9 +61,7 @@ export class FilterUtils {
             this.selectAssetFilter(assetName);
         });
 
-        // click somewhere else to close the dropdown
-        cy.get('body').click(0, 0);
-        FilterBtns.applyFiltersBtn().click();
+        this.closeDropdownAndApplyFilters();
     }
 
     public static filterSites(siteNames: string[]) {
@@ -67,9 +73,7 @@ export class FilterUtils {
             this.selectSiteFilter(siteName);
         });
 
-        // click somewhere else to close the dropdown
-        cy.get('body').click(0, 0);
-        FilterBtns.applyFiltersBtn().click();
+        this.closeDropdownAndApplyFilters();
     }
 
     public static filterLabels(siteNames: string[]) {
@@ -81,9 +85,7 @@ export class FilterUtils {
             this.selectLabelFilter(siteName);
         });
 
-        // click somewhere else to close the dropdown
-        cy.get('body').click(0, 0);
-        FilterBtns.applyFiltersBtn().click();
+        this.closeDropdownAndApplyFilters();
     }
 
     public static filterTypes(typeNames: string[]) {
@@ -95,8 +97,6 @@ export class FilterUtils {
             this.selectTypeFilter(siteName);
         });
 
-        // click somewhere else to close the dropdown
-        cy.get('body').click(0, 0);
-        FilterBtns.applyFiltersBtn().click();
+        this.closeDropdownAndApplyFilters();
     }
 }

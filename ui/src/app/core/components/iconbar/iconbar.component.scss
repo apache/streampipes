@@ -209,6 +209,7 @@
 
 /* Menu item button */
 .menu-item {
+    position: relative;
     width: 100%;
     height: var(--mb-item-h);
     padding: 8px 10px;
@@ -259,6 +260,32 @@
 
 .item-title {
     flex: 1 1 auto;
+}
+
+.shortcut-key {
+    flex: 0 0 auto;
+    min-width: 22px;
+    padding: 2px 5px;
+    color: var(--color-default-text);
+    font-family: inherit;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    line-height: 16px;
+    text-align: center;
+    background: var(--color-bg-0);
+    border: 1px solid var(--color-border-subtle, var(--color-bg-3));
+    border-bottom-width: 2px;
+    border-radius: var(--button-border-radius);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 18%);
+}
+
+.menubar-root.collapsed .shortcut-key {
+    position: absolute;
+    top: 0;
+    right: 1px;
+    min-width: 17px;
+    padding: 0 3px;
+    line-height: 15px;
 }
 
 .text-ellipsis {

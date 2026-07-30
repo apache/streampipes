@@ -16,37 +16,24 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import { BaseNavigationComponent } from '../base-navigation.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { Component } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatDialogClose, MatDialogContent } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatDivider } from '@angular/material/divider';
 import { TranslatePipe } from '@ngx-translate/core';
-import { UpperCasePipe } from '@angular/common';
+import { ShortcutsTabComponent } from './shortcuts.component';
 
 @Component({
-    selector: 'sp-iconbar',
-    templateUrl: './iconbar.component.html',
-    styleUrls: ['./iconbar.component.scss'],
+    selector: 'sp-shortcut-dialog',
+    templateUrl: './shortcut-dialog.component.html',
+    styleUrl: './shortcut-dialog.component.scss',
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
+        MatDialogClose,
+        MatDialogContent,
         MatIcon,
-        FlexDirective,
-        MatDivider,
+        MatIconButton,
+        ShortcutsTabComponent,
         TranslatePipe,
-        UpperCasePipe,
     ],
 })
-export class IconbarComponent
-    extends BaseNavigationComponent
-    implements OnInit
-{
-    ngOnInit(): void {
-        super.onInit();
-    }
-}
+export class ShortcutDialogComponent {}

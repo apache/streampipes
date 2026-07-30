@@ -101,18 +101,6 @@
         </sp-basic-inner-panel>
     }
     <div fxFlex="100" fxLayout="column">
-        @if (!isEditMode) {
-            <sp-adapter-options-panel
-                [optionTitle]="'Run adapter' | translate"
-                [optionDescription]="'Start adapter now' | translate"
-                optionIcon="play_arrow"
-                dataCy="start-adapter-now-checkbox"
-                [isChecked]="startAdapterNow"
-                (optionSelectedEmitter)="startAdapterNow = $event"
-            >
-            </sp-adapter-options-panel>
-        }
-
         @if (isAssetAdmin && !isEditMode) {
             <sp-adapter-options-panel
                 [optionTitle]="'Add to Asset' | translate"
@@ -303,30 +291,43 @@
             {{ 'Back' | translate }}
         </button>
         @if (!isEditMode) {
-            <button
+            <sp-split-button
+                class="ml-10"
+                dataCy="sp-adapter-store-actions"
+                [label]="'Store and Start' | translate"
+                icon="save"
+                [actions]="adapterStorageActions"
                 [disabled]="!startAdapterSettingsFormValid"
-                mat-flat-button
-                data-cy="adapter-settings-start-adapter-btn"
-                color="accent"
-                (click)="startAdapter()"
-                mat-button
-                style="margin-left: 10px"
-            >
-                {{ 'Start Adapter' | translate }}
-            </button>
+                [menuAriaLabel]="'Select action'"
+                (primaryAction)="startAdapter(true)"
+                (actionSelected)="onCreateAdapterActionSelected($event)"
+            ></sp-split-button>
         }
-        @if (isEditMode) {
+        @if (isEditMode && adapterDescription.running) {
             <button
                 [disabled]="!startAdapterSettingsFormValid"
                 mat-flat-button
-                data-cy="store-edit-adapter"
+                data-cy="store-and-restart-edit-adapter"
                 color="accent"
                 (click)="editAdapter()"
                 mat-button
                 style="margin-left: 10px"
             >
-                {{ 'Update Adapter' | translate }}
+                {{ 'Store and Restart' | translate }}
             </button>
+        }
+        @if (isEditMode && !adapterDescription.running) {
+            <sp-split-button
+                class="ml-10"
+                dataCy="sp-adapter-edit-store-actions"
+                [label]="'Store and Start' | translate"
+                icon="save"
+                [actions]="adapterStorageActions"
+                [disabled]="!startAdapterSettingsFormValid"
+                [menuAriaLabel]="'Select action'"
+                (primaryAction)="editAdapter(true)"
+                (actionSelected)="onEditAdapterActionSelected($event)"
+            ></sp-split-button>
         }
     </div>
 </div>
