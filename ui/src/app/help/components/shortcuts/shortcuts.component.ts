@@ -30,6 +30,7 @@ interface ShortcutDefinition {
 }
 
 const SHORTCUT_TRANSLATION_KEYS = {
+    anywhere: 'Anywhere',
     title: 'Shortcuts',
     saveContext:
         "'Ctrl/Cmd + S' in chart/dashboard/pipeline edit view or asset link dialog",
@@ -43,6 +44,10 @@ const SHORTCUT_TRANSLATION_KEYS = {
     filterDescription: 'Focuses/selects the filter search input.',
     escapeContext: "'Esc' Dialog keyboard behavior",
     escapeDescription: 'Closes shared overlay dialogs/popups.',
+    navigateTo: 'Navigate to {{page}}',
+    outsideInputsAndDialogs: 'Outside inputs and dialogs',
+    showAll: 'Show all keyboard shortcuts',
+    toggleSidebar: 'Toggle sidebar menu',
 } as const;
 
 @Component({
@@ -126,18 +131,38 @@ export class ShortcutsTabComponent {
                         )
                         .map(item => ({
                             combo: `Shift + ${item.shortcutKey.toUpperCase()}`,
-                            context: 'Outside inputs and dialogs',
-                            description: `Navigate to ${item.title}`,
+                            context:
+                                translations[
+                                    SHORTCUT_TRANSLATION_KEYS
+                                        .outsideInputsAndDialogs
+                                ],
+                            description: this.translateService.instant(
+                                SHORTCUT_TRANSLATION_KEYS.navigateTo,
+                                {
+                                    page: this.translateService.instant(
+                                        item.title,
+                                    ),
+                                },
+                            ),
                         })),
                     {
                         combo: 'Shift + ?',
-                        context: 'Outside inputs and dialogs',
-                        description: 'Show all keyboard shortcuts',
+                        context:
+                            translations[
+                                SHORTCUT_TRANSLATION_KEYS
+                                    .outsideInputsAndDialogs
+                            ],
+                        description:
+                            translations[SHORTCUT_TRANSLATION_KEYS.showAll],
                     },
                     {
                         combo: 'Ctrl + B / Alt + B',
-                        context: 'Anywhere',
-                        description: 'Toggle sidebar menu',
+                        context:
+                            translations[SHORTCUT_TRANSLATION_KEYS.anywhere],
+                        description:
+                            translations[
+                                SHORTCUT_TRANSLATION_KEYS.toggleSidebar
+                            ],
                     },
                 );
             });
