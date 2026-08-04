@@ -92,7 +92,7 @@
     "@angular-eslint/eslint-plugin-template": "^21.3.1",
     "@angular-eslint/schematics": "^21.3.1",
     "@angular-eslint/template-parser": "^21.3.1",
-    "@angular/build": "^21.2.19",
+    "@angular/build": "^22.1.2",
     "@angular/cli": "^21.2.19",
     "@angular/compiler-cli": "^21.2.18",
     "@eslint/eslintrc": "^3.3.1",
