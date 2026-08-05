@@ -448,6 +448,11 @@ public class DefaultEnvironment implements Environment {
   }
 
   @Override
+  public IntEnvironmentVariable getMsSqlPollingMinIntervalSeconds() {
+    return new IntEnvironmentVariable(Envs.SP_MSSQL_POLLING_MIN_INTERVAL_SECONDS);
+  }
+
+  @Override
   public BooleanEnvironmentVariable getFileLoggingEnabled() {
     return new BooleanEnvironmentVariable(Envs.SP_LOGGING_FILE_ENABLED);
   }
