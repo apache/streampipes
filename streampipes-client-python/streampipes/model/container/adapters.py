@@ -15,18 +15,21 @@
 # limitations under the License.
 #
 
-from .adapters import Adapters
-from .data_lake_measures import DataLakeMeasures
-from .data_streams import DataStreams
-from .pipelines import Pipelines
-from .summary_resource_container import SummaryResourceContainer
-from .versions import Versions
+"""Adapter resource container."""
 
-__all__ = [
-    "Adapters",
-    "DataLakeMeasures",
-    "DataStreams",
-    "Pipelines",
-    "SummaryResourceContainer",
-    "Versions",
-]
+from streampipes.model.container.summary_resource_container import (
+    SummaryResourceContainer,
+)
+from streampipes.model.resource.adapter import AdapterSummary
+from streampipes.model.resource.resource import Resource
+
+__all__ = ["Adapters"]
+
+
+class Adapters(SummaryResourceContainer):
+    """Collection of adapter summaries."""
+
+    @classmethod
+    def _resource_cls(cls) -> type[Resource]:
+        """Return the contained adapter resource type."""
+        return AdapterSummary

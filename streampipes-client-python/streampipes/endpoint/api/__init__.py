@@ -15,12 +15,16 @@
 # limitations under the License.
 #
 
+from .adapter import AdapterEndpoint
 from .data_lake_measure import DataLakeMeasureEndpoint
 from .data_stream import DataStreamEndpoint
+from .pipeline import PipelineEndpoint
 from .version import VersionEndpoint
 
 __all__ = [
+    "AdapterEndpoint",
     "DataLakeMeasureEndpoint",
     "DataStreamEndpoint",
+    "PipelineEndpoint",
     "VersionEndpoint",
 ]
