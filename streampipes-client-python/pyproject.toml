@@ -109,7 +109,7 @@ types-requests = "2.33.0.20260402"
 optional = true
 
 [tool.poetry.group.deployment.dependencies]
-twine = "6.2.0"
+twine = "7.0.0"
 
 [[tool.poetry.source]]
 name = "PyPI"
