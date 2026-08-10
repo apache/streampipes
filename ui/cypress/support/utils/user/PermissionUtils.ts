@@ -25,7 +25,9 @@ export class PermissionUtils {
 
         GeneralUtils.visibleMaterialMenu();
 
-        cy.dataCy('open-manage-permissions').should('be.visible').click();
+        cy.dataCy('open-manage-permissions-' + resourceName)
+            .should('be.visible')
+            .click();
     }
 
     public static changeOwnership(resourceName: string, email: string) {
