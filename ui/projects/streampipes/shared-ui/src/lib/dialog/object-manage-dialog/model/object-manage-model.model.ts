@@ -38,7 +38,7 @@ export interface ObjectManageDialogResourceConfig<
     nameLabel?: string;
     descriptionLabel?: string;
     idProperty?: '_id' | 'elementId';
-    nameProperty?: 'title' | 'name';
+    nameProperty?: 'title' | 'name' | 'measureName';
     descriptionProperty?: string;
     showResourceFields?: boolean;
     showAssetLinking?: boolean;

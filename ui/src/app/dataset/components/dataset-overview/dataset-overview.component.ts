@@ -54,7 +54,8 @@ import {
     DialogRef,
     DialogService,
     LocalStorageService,
-    ObjectPermissionDialogComponent,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
     PanelType,
     SpAssetBrowserService,
     SpBasicHeaderTitleComponent,
@@ -452,16 +453,31 @@ export class DatasetOverviewComponent
         }
     }
     showPermissionsDialog(element: DatasetOverviewEntry): void {
-        this.dialogService.open(ObjectPermissionDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: this.translateService.instant('Manage permissions'),
-            width: '50vw',
-            data: {
-                objectInstanceId: element.elementId,
-                headerTitle:
-                    this.translateService.instant(
-                        'Manage permissions for dataset ',
-                    ) + element.name,
+        this.datasetRestService.getMeasurement(element.elementId).subscribe({
+            next: dataset => {
+                const resourceConfig: ObjectManageDialogResourceConfig<DataLakeMeasure> =
+                    {
+                        resourceLabel: 'Dataset',
+                        nameLabel: 'Dataset name',
+                        nameProperty: 'measureName',
+                        showResourceFields: false,
+                        showAssetLinking: false,
+                    };
+
+                this.dialogService.open(ObjectManageDialogComponent, {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translateService.instant('Manage'),
+                    width: '50vw',
+                    data: {
+                        objectInstanceId: element.elementId,
+                        dataset,
+                        saveMode: 'immediate',
+                        resourceConfig,
+                        headerTitle:
+                            this.translateService.instant('Manage Dataset ') +
+                            element.name,
+                    },
+                });
             },
         });
     }
