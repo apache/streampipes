@@ -51,9 +51,3 @@ the new baseline. Sequence regression caused by truncation or reseeding is not d
 
 SQL temporal values are emitted as epoch milliseconds and binary values as Base64 strings, matching the MSSQL connector
 conventions. Each poll uses and closes one JDBC connection. Connection login and query execution have finite timeouts.
-
-### SQL Server integration test
-
-`MsSqlTablePollingClientIntegrationTest` exercises the connector against a real SQL Server without starting StreamPipes.
-Set `SP_TEST_MSSQL_HOST` to enable it; port, database, username, password, encryption, and certificate trust can be set with
-the corresponding `SP_TEST_MSSQL_*` variables. The configured account must be allowed to create and remove a test schema.
