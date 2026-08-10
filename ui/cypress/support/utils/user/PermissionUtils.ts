@@ -40,7 +40,7 @@ export class PermissionUtils {
     public static changeOwnershipInManageDialog(email: string) {
         cy.dataCy('owner-select').click();
         cy.get(`[data-cy="owner-option-${email}"]`, { timeout: 10000 }).click();
-        PermissionUtils.saveManageDialog();
+        PermissionUtils.save();
     }
 
     public static markElementAsPublic(resourceName: string) {
@@ -58,7 +58,7 @@ export class PermissionUtils {
 
     public static markElementAsPublicInManageDialog() {
         StaticPropertyUtils.clickCheckbox('permission-public-element');
-        PermissionUtils.saveManageDialog();
+        PermissionUtils.save();
     }
 
     public static authorizeUser(resourceName: string, email: string) {
@@ -68,13 +68,6 @@ export class PermissionUtils {
         cy.get('.cdk-overlay-container mat-option').contains(email).click();
 
         PermissionUtils.save();
-    }
-
-    public static authorizeUserInManageDialog(email: string) {
-        cy.dataCy('authorized-user').type(email);
-        cy.get('.cdk-overlay-container mat-option').contains(email).click();
-
-        PermissionUtils.saveManageDialog();
     }
 
     public static authorizeGroup(resourceName: string, groupName: string) {
@@ -89,45 +82,14 @@ export class PermissionUtils {
         cy.dataCy('authorized-group').type(groupName);
         cy.get('.cdk-overlay-container mat-option').contains(groupName).click();
 
-        PermissionUtils.saveManageDialog();
+        PermissionUtils.save();
     }
-
-    public static saveManageDialog() {
+    public static save() {
         cy.dataCy('sp-manage-save').should('be.visible').click();
     }
 
-    public static cancelManageDialog() {
-        cy.dataCy('sp-manage-cancel').should('be.visible').click();
-    }
-
-    public static save() {
-        //necessary as the old permission dialog is currently not replaced everywhere
-        cy.get('body').then($body => {
-            const $saveButton = $body.find('[data-cy="sp-manage-save"]');
-
-            if ($saveButton.length) {
-                cy.wrap($saveButton).click();
-            } else {
-                cy.dataCy('sp-manage-permissions-save')
-                    .should('be.visible')
-                    .click();
-            }
-        });
-    }
-
     public static cancel() {
-        //necessary as the old permission dialog is currently not replaced everywhere
-        cy.get('body').then($body => {
-            const $saveButton = $body.find('[data-cy="sp-manage-cancel"]');
-
-            if ($saveButton.length) {
-                cy.wrap($saveButton).click();
-            } else {
-                cy.dataCy('sp-manage-permissions-cancel')
-                    .should('be.visible')
-                    .click();
-            }
-        });
+        cy.dataCy('sp-manage-cancel').should('be.visible').click();
     }
 
     public static validateUserCanNotChangePermissions(resourceName: string) {
@@ -168,12 +130,12 @@ export class PermissionUtils {
 
     public static validateUserCanChangePermissionsInManageDialog() {
         cy.dataCy('permission-public-element').should('exist');
-        PermissionUtils.cancelManageDialog();
+        PermissionUtils.cancel();
     }
 
     public static validateUserCanNotChangePermissionsInManageDialog() {
         cy.dataCy('warning-permissions-managed-by-owner').should('exist');
-        PermissionUtils.cancelManageDialog();
+        PermissionUtils.cancel();
     }
 
     private static validateAnonymousPublicLinkOption() {
