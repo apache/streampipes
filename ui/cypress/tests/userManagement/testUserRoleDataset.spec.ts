@@ -217,7 +217,7 @@ describe('Test Dataset Permissions', () => {
     }
 
     function authUserOnDataset(email: string) {
-        UserUtils.switchUser(datasetAdmin1);
+        UserUtils.switchUser(UserUtils.adminUser);
 
         DatasetUtils.authorizeUserOnDataset(datasetName, email);
     }

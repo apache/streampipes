@@ -267,7 +267,7 @@
                     </button>
                     <button
                         mat-menu-item
-                        data-cy="open-manage-adapter"
+                        [attr.data-cy]="'open-manage-' + element.name"
                         (click)="showManageDialog(element)"
                     >
                         <mat-icon>settings</mat-icon>

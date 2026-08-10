@@ -244,7 +244,7 @@
                         </button>
                         <button
                             mat-menu-item
-                            data-cy="open-manage-permissions"
+                            [attr.data-cy]="'open-manage-' + element.name"
                             (click)="showPermissionsDialog(element)"
                         >
                             <mat-icon>share</mat-icon>

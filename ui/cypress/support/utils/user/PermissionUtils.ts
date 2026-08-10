@@ -25,7 +25,7 @@ export class PermissionUtils {
 
         GeneralUtils.visibleMaterialMenu();
 
-        cy.dataCy('open-manage-permissions-' + resourceName)
+        cy.dataCy('open-manage-' + resourceName)
             .should('be.visible')
             .click();
     }
