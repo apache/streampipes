@@ -470,7 +470,7 @@ export class DatasetOverviewComponent
                     width: '50vw',
                     data: {
                         objectInstanceId: element.elementId,
-                        dataset,
+                        resource: dataset,
                         saveMode: 'immediate',
                         resourceConfig,
                         headerTitle:
