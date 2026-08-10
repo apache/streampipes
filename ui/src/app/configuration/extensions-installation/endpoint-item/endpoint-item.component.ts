@@ -34,7 +34,8 @@ import {
 import { AppConstants } from '../../../services/app.constants';
 import {
     DialogService,
-    ObjectPermissionDialogComponent,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
     PanelType,
 } from '@streampipes/shared-ui';
 import { ExtensionsInstallationService } from '../extensions-installation.service';
@@ -208,14 +209,26 @@ export class EndpointItemComponent implements OnInit {
     }
 
     showPermissionsDialog(elementId: string, elementName: string) {
-        this.dialogService.open(ObjectPermissionDialogComponent, {
+        this.dialogService.open(ObjectManageDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
-            title: this.translateService.instant('Manage permissions'),
+            title: this.translateService.instant('Manage'),
             width: '50vw',
             data: {
                 objectInstanceId: elementId,
+                resource: {
+                    elementId,
+                    name: elementName,
+                },
+                saveMode: 'immediate',
+                resourceConfig: {
+                    resourceLabel: 'Pipeline element',
+                    nameLabel: 'Pipeline element name',
+                    nameProperty: 'name',
+                    showResourceFields: false,
+                    showAssetLinking: false,
+                } as ObjectManageDialogResourceConfig,
                 headerTitle: this.translateService.instant(
-                    'Manage permissions for pipeline element {{name}}',
+                    'Manage Pipeline Element {{name}}',
                     { name: elementName },
                 ),
             },
