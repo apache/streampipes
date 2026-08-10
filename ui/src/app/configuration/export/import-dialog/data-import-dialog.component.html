@@ -204,10 +204,10 @@
                 class="mt-10"
                 fxLayoutAlign="center center"
             >
-                <mat-spinner [diameter]="50" color="accent"></mat-spinner>
-                <h4 class="mt-10">
-                    {{ 'Importing resources...' | translate }}
-                </h4>
+                <sp-spinner
+                    [diameter]="50"
+                    [text]="'Importing resources...' | translate"
+                ></sp-spinner>
             </div>
         }
     </div>

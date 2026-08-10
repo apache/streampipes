@@ -49,6 +49,7 @@ export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
     dataViewMode: boolean;
     previewMode: boolean;
     gridMode: boolean;
+    deferInitialDataLoad?: boolean;
     widgetIndex?: number;
     dashboardChartOverrides?: DashboardChartOverrides;
 
@@ -131,6 +132,7 @@ export interface WidgetBaseAppearanceConfig {
 export interface ChartTypeChangeMessage {
     widgetId: string;
     newWidgetTypeId: string;
+    deferInitialDataLoad?: boolean;
 }
 
 export interface RefreshMessage {

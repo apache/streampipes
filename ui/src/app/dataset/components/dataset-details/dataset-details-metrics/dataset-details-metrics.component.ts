@@ -19,7 +19,10 @@
 import { Component, OnInit } from '@angular/core';
 import { SpAbstractDatasetDetailsDirective } from '../abstract-dataset-details.directive';
 import { SpQueryResult } from '@streampipes/platform-services';
-import { SpBasicNavTabsComponent } from '@streampipes/shared-ui';
+import {
+    SpBasicNavTabsComponent,
+    SpSpinnerComponent,
+} from '@streampipes/shared-ui';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -28,7 +31,6 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SpSimpleMetricsComponent } from '../../../../core-ui/monitoring/simple-metrics/simple-metrics.component';
 import { SpConfigurationRoutes } from '../../../../configuration/configuration.breadcrumb';
@@ -55,7 +57,7 @@ interface DayBucket extends DailyEventCount {
         FlexDirective,
         MatIconButton,
         MatTooltip,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         TranslatePipe,
         SpSimpleMetricsComponent,
         DailyEventCountsChartComponent,

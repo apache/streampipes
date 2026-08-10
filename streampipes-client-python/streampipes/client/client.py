@@ -31,8 +31,10 @@ from requests import Session
 from streampipes.client.config import StreamPipesClientConfig
 from streampipes.endpoint import APIEndpoint
 from streampipes.endpoint.api import (
+    AdapterEndpoint,
     DataLakeMeasureEndpoint,
     DataStreamEndpoint,
+    PipelineEndpoint,
     VersionEndpoint,
 )
 
@@ -63,6 +65,10 @@ class StreamPipesClient:
         Instance of the data lake measure endpoint
     dataStreamApi: DataStreamEndpoint
         Instance of the data stream endpoint
+    adapterApi: AdapterEndpoint
+        Instance of the adapter endpoint
+    pipelineApi: PipelineEndpoint
+        Instance of the pipeline endpoint
 
     Raises
     ------
@@ -142,8 +148,10 @@ class StreamPipesClient:
 
         # provide all available endpoints here
         # name of the endpoint needs to be consistent with the Java client
+        self.adapterApi = AdapterEndpoint(parent_client=self)
         self.dataLakeMeasureApi = DataLakeMeasureEndpoint(parent_client=self)
         self.dataStreamApi = DataStreamEndpoint(parent_client=self)
+        self.pipelineApi = PipelineEndpoint(parent_client=self)
         self.versionApi = VersionEndpoint(parent_client=self)
 
         self.server_version = self._get_server_version()

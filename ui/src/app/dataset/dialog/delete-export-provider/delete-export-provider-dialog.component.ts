@@ -17,7 +17,7 @@
  */
 
 import { Component, inject, Input } from '@angular/core';
-import { DialogRef } from '@streampipes/shared-ui';
+import { DialogRef, SpSpinnerComponent } from '@streampipes/shared-ui';
 import { ExportProviderService } from '@streampipes/platform-services';
 import {
     FlexDirective,
@@ -25,7 +25,6 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatDivider } from '@angular/material/divider';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -37,7 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         FlexDirective,
         LayoutAlignDirective,
         MatButton,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         MatDivider,
         TranslatePipe,
     ],

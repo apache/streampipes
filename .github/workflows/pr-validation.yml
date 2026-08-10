@@ -23,10 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
 
       - name: Set up JDK 25
-        uses: actions/setup-java@v5.3.0
+        uses: actions/setup-java@v5.6.0
         with:
           distribution: 'temurin'
           java-version: '25'
@@ -41,10 +41,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v7.0.0
-      
+        uses: actions/checkout@v7.0.1
+
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '22.x'
           cache: 'npm'
@@ -81,17 +81,17 @@ jobs:
     needs: [python-quality-checks, python-unit-tests, run-format-and-lint-ui]
     steps:
       - name: Checkout
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
 
       - name: Set up JDK 25
-        uses: actions/setup-java@v5.3.0
+        uses: actions/setup-java@v5.6.0
         with:
           distribution: 'temurin'
           java-version: '25'
           cache: 'maven'
 
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '22.x'
           cache: 'npm'
@@ -140,7 +140,7 @@ jobs:
   python-quality-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7.0.1
 
       - name: Set up Python
         uses: actions/setup-python@v6.3.0
@@ -148,9 +148,9 @@ jobs:
           python-version: "3.10"
 
       - name: Install and configure Poetry
-        uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a
+        uses: snok/install-poetry@a783c322200f0519c7926aa6faa857c4e23e9263
         with:
-          version: 2.2.1
+          version: 2.4.1
           virtualenvs-create: true
           virtualenvs-in-project: true
 
@@ -169,14 +169,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["3.10", "3.11", "3.12", "3.13"]
+        python: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         os: [ubuntu-latest, macos-latest, windows-latest]
     defaults:
       run:
         shell: bash
 
     steps:
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7.0.1
 
       - name: Set up Python v${{ matrix.python }}
         uses: actions/setup-python@v6.3.0
@@ -184,9 +184,9 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install and configure Poetry
-        uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a
+        uses: snok/install-poetry@a783c322200f0519c7926aa6faa857c4e23e9263
         with:
-          version: 2.2.1
+          version: 2.4.1
           virtualenvs-create: true
           virtualenvs-in-project: true
 
@@ -204,7 +204,7 @@ jobs:
   python-doc-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7.0.1
 
       - name: Set up Python
         uses: actions/setup-python@v6.3.0
@@ -212,9 +212,9 @@ jobs:
           python-version: "3.10"
 
       - name: Install and configure Poetry
-        uses: snok/install-poetry@76e04a911780d5b312d89783f7b1cd627778900a
+        uses: snok/install-poetry@a783c322200f0519c7926aa6faa857c4e23e9263
         with:
-          version: 2.2.1
+          version: 2.4.1
           virtualenvs-create: true
           virtualenvs-in-project: true
 

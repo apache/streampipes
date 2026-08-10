@@ -21,6 +21,7 @@ import {
     DialogService,
     PanelType,
     SpAlertBannerComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { AppConstants } from '../../../services/app.constants';
@@ -41,7 +42,6 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MissingElementsForTutorialComponent } from '../../../editor/dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
 import { forkJoin } from 'rxjs';
 import { LayoutGapDirective } from '@ngbracket/ngx-layout';
@@ -56,7 +56,7 @@ import { LayoutGapDirective } from '@ngbracket/ngx-layout';
         LayoutAlignDirective,
         MatButton,
         MatDivider,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         LayoutGapDirective,
         SpAlertBannerComponent,
     ],

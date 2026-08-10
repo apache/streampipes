@@ -27,9 +27,14 @@ import java.time.Duration;
 public class OpcUaDemoServerContainer extends GenericContainer<OpcUaDemoServerContainer> {
 
   public static final int OPC_UA_PORT = 4840;
+  public static final String DEFAULT_IMAGE = "digitalpetri/opc-ua-demo-server:latest";
 
   public OpcUaDemoServerContainer() {
-    super(DockerImageName.parse("digitalpetri/opc-ua-demo-server:latest"));
+    this(DEFAULT_IMAGE);
+  }
+
+  public OpcUaDemoServerContainer(String imageName) {
+    super(DockerImageName.parse(imageName));
   }
 
   @Override

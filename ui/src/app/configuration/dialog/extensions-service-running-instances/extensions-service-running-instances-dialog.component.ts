@@ -20,7 +20,6 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
     MatCell,
     MatCellDef,
@@ -45,6 +44,7 @@ import {
     SpLabelComponent,
     SpTableComponent,
     SpTableNameSearchConfig,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import {
     ConfigurationService,
@@ -95,7 +95,7 @@ type PendingRemoval =
         MatHeaderCellDef,
         MatIcon,
         MatIconButton,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         MatTooltip,
         SpAlertBannerComponent,
         SpLabelComponent,

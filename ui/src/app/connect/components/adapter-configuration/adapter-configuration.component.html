@@ -21,7 +21,36 @@
     [showBackLink]="true"
     [backLinkTarget]="['connect']"
 >
-    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center"></div>
+    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+        @if (isEditMode) {
+            <button
+                mat-icon-button
+                [matMenuTriggerFor]="optMenu"
+                [attr.aria-label]="'Options' | translate"
+                data-cy="options-adapter"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #optMenu="matMenu">
+                <button
+                    mat-menu-item
+                    (click)="manageAdapter()"
+                    data-cy="manage-adapter-btn"
+                >
+                    <mat-icon>settings</mat-icon>
+                    <span>{{ 'Manage' | translate }}</span>
+                </button>
+                <button
+                    mat-menu-item
+                    (click)="deleteAdapter()"
+                    data-cy="delete-adapter-btn"
+                >
+                    <mat-icon>clear</mat-icon>
+                    <span>{{ 'Delete' | translate }}</span>
+                </button>
+            </mat-menu>
+        }
+    </div>
     @let adapterConfigurationState = state();
     @if (adapterConfigurationState) {
         @if (adapterConfigurationState.adapterDescription) {
@@ -97,6 +126,11 @@
                                 adapterDescription.dataStream.eventSchema
                             "
                             [isEditMode]="isEditMode"
+                            [permission]="pendingPermission"
+                            [selectedAssets]="pendingSelectedAssets"
+                            [deselectedAssets]="pendingDeselectedAssets"
+                            [originalAssets]="pendingOriginalAssets"
+                            [addToAssets]="shouldAddToAssets"
                             (cancelEmitter)="navigateToAdapterCatalog()"
                             (goBackEmitter)="goBack()"
                             (adapterStartedEmitter)="adapterWasStarted()"

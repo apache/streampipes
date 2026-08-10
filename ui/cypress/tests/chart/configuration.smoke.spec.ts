@@ -29,7 +29,7 @@ describe('Test Truncate data in datalake', () => {
     });
 
     it('Perform Test', () => {
-        DatasetUtils.goToDatalakeConfiguration();
+        DatasetUtils.goToDatasetOverview();
 
         // Check if the last event is shown
         DatasetUtils.expectDatasetNotEmpty(PrepareTestDataUtils.dataName);
@@ -51,7 +51,7 @@ describe('Delete data in datalake', () => {
     });
 
     it('Perform Test', () => {
-        DatasetUtils.goToDatalakeConfiguration();
+        DatasetUtils.goToDatasetOverview();
 
         // Check if the last event is shown
         DatasetUtils.expectDatasetNotEmpty(PrepareTestDataUtils.dataName);

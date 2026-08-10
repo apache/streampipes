@@ -16,23 +16,40 @@
  *
  */
 
-import { Component, input } from '@angular/core';
-import { PipelineOperationStatus } from '@streampipes/platform-services';
+import { Component, computed, input } from '@angular/core';
 import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+    PipelineElementStatus,
+    PipelineOperationStatus,
+} from '@streampipes/platform-services';
 import { MatIcon } from '@angular/material/icon';
+import {
+    SpAlertBannerComponent,
+    SpLabelComponent,
+} from '@streampipes/shared-ui';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-pipeline-operation-status',
     templateUrl: './pipeline-operation-status.component.html',
     styleUrls: ['./pipeline-operation-status.component.scss'],
-    imports: [FlexDirective, LayoutDirective, LayoutAlignDirective, MatIcon],
+    imports: [MatIcon, SpAlertBannerComponent, SpLabelComponent, TranslatePipe],
 })
 export class PipelineOperationStatusComponent {
     readonly pipelineOperationStatus = input<
         PipelineOperationStatus | undefined
     >(undefined);
+
+    readonly elementStatuses = computed(() =>
+        [...(this.pipelineOperationStatus()?.elementStatus ?? [])].sort(
+            (first, second) => Number(first.success) - Number(second.success),
+        ),
+    );
+
+    getDisplayElementId(status: PipelineElementStatus): string {
+        const elementId = status.elementId ?? '';
+        const lastSeparatorIndex = elementId.lastIndexOf('/');
+        return lastSeparatorIndex > 0
+            ? elementId.substring(0, lastSeparatorIndex)
+            : elementId;
+    }
 }

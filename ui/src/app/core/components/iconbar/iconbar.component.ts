@@ -26,6 +26,7 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/divider';
 import { TranslatePipe } from '@ngx-translate/core';
+import { UpperCasePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-iconbar',
@@ -38,6 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         FlexDirective,
         MatDivider,
         TranslatePipe,
+        UpperCasePipe,
     ],
 })
 export class IconbarComponent

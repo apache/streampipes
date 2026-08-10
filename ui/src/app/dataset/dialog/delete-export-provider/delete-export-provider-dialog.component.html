@@ -67,14 +67,8 @@
                 data-cy="adapter-deletion-in-progress"
             >
                 <div fxLayout="row" fxLayoutAlign="space-around">
-                    <mat-spinner
-                        [mode]="'indeterminate'"
-                        color="accent"
-                    ></mat-spinner>
+                    <sp-spinner [text]="currentStatus"></sp-spinner>
                 </div>
-                <b
-                    ><h4>{{ currentStatus }}</h4></b
-                >
             </div>
         }
     </div>

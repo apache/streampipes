@@ -49,7 +49,7 @@ describe('Test Adapter Transformation Rules are properly stored', () => {
         cy.dataCy('connect-remove-duplicates-input').clear().type('10000');
         ConnectBtns.connectReduceEventRate().click();
         cy.dataCy('connect-reduce-event-input').clear().type('20000');
-        ConnectBtns.adapterSettingsStartAdapter().click();
+        ConnectBtns.storeAndStartNewAdapter().click();
         ConnectUtils.closeAdapterPreview();
 
         // Edit adapter and check if given values and added property still provided

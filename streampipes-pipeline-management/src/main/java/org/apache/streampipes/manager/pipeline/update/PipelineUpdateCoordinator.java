@@ -27,7 +27,6 @@ import org.apache.streampipes.manager.pipeline.PipelineElementUserCleaner;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.PipelineUpdateInfo;
 import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -58,13 +57,11 @@ public class PipelineUpdateCoordinator {
   private final IPipelineStorage pipelineStorage;
 
   public PipelineUpdateCoordinator(ExtensionServiceRequestManager requestManager,
-                                   SpResourceManager resourceManager,
-                                   ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
-                                   PipelineManager pipelineManager) {
+                                   SpResourceManager resourceManager) {
     this.requestManager = requestManager;
     this.resourceManager = resourceManager;
-    this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
-    this.pipelineManager = pipelineManager;
+    this.chartSchemaUpdateCoordinator = new ChartSchemaUpdateCoordinator(resourceManager.manageCharts().getDb());
+    this.pipelineManager = new PipelineManager(resourceManager);
     this.pipelineStorage = resourceManager.managePipelines().getDb();
   }
 
@@ -77,28 +74,11 @@ public class PipelineUpdateCoordinator {
     );
   }
 
-  public void updatePipelines(AdapterDescription adapterDescription) {
-    updatePipelines(
-        adapterDescription.getCorrespondingDataStreamElementId(),
-        adapterDescription.getName(),
-        adapterDescription.getEventSchema(),
-        "Adapter"
-    );
-  }
-
   public List<PipelineUpdateInfo> checkPipelineMigrations(SpDataStream dataStream) {
     return checkPipelineMigrations(
         dataStream.getElementId(),
         dataStream.getName(),
         dataStream.getEventSchema()
-    );
-  }
-
-  public List<PipelineUpdateInfo> checkPipelineMigrations(AdapterDescription adapterDescription) {
-    return checkPipelineMigrations(
-        adapterDescription.getCorrespondingDataStreamElementId(),
-        adapterDescription.getName(),
-        adapterDescription.getEventSchema()
     );
   }
 

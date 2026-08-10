@@ -60,6 +60,7 @@ class CsvImportUploadStorage {
         uploadId,
         tempFile,
         ownerSid,
+        0,
         Instant.now()
     );
     uploads.put(uploadId, upload);
@@ -69,6 +70,13 @@ class CsvImportUploadStorage {
   Optional<StoredUpload> get(String uploadId) {
     cleanupExpired();
     return Optional.ofNullable(uploads.get(uploadId));
+  }
+
+  void updateTotalRows(String uploadId, int totalRows) {
+    var upload = uploads.get(uploadId);
+    if (upload != null) {
+      upload.setTotalRows(totalRows);
+    }
   }
 
   void remove(String uploadId) {
@@ -102,12 +110,14 @@ class CsvImportUploadStorage {
     private final String uploadId;
     private final Path path;
     private final String ownerSid;
+    private int totalRows;
     private final Instant createdAt;
 
-    StoredUpload(String uploadId, Path path, String ownerSid, Instant createdAt) {
+    StoredUpload(String uploadId, Path path, String ownerSid, int totalRows, Instant createdAt) {
       this.uploadId = uploadId;
       this.path = path;
       this.ownerSid = ownerSid;
+      this.totalRows = totalRows;
       this.createdAt = createdAt;
     }
 
@@ -121,6 +131,14 @@ class CsvImportUploadStorage {
 
     String ownerSid() {
       return ownerSid;
+    }
+
+    int totalRows() {
+      return totalRows;
+    }
+
+    void setTotalRows(int totalRows) {
+      this.totalRows = totalRows;
     }
 
     Instant createdAt() {

@@ -21,7 +21,11 @@ from unittest.mock import MagicMock, call, patch
 from streampipes.client import StreamPipesClient
 from streampipes.client.config import StreamPipesClientConfig
 from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
-from streampipes.endpoint.api import DataLakeMeasureEndpoint
+from streampipes.endpoint.api import (
+    AdapterEndpoint,
+    DataLakeMeasureEndpoint,
+    PipelineEndpoint,
+)
 
 
 class TestStreamPipesClient(TestCase):
@@ -47,6 +51,8 @@ class TestStreamPipesClient(TestCase):
         for key, value in expected_headers.items():
             self.assertEqual(result_headers.get(key), value)
         self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
+        self.assertTrue(isinstance(result.adapterApi, AdapterEndpoint))
+        self.assertTrue(isinstance(result.pipelineApi, PipelineEndpoint))
         self.assertEqual(result.base_api_path, "http://localhost:80/streampipes-backend/")
 
     @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
@@ -72,6 +78,8 @@ class TestStreamPipesClient(TestCase):
         for key, value in expected_headers.items():
             self.assertEqual(result_headers.get(key), value)
         self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
+        self.assertTrue(isinstance(result.adapterApi, AdapterEndpoint))
+        self.assertTrue(isinstance(result.pipelineApi, PipelineEndpoint))
         self.assertEqual(result.base_api_path, "https://localhost:443/streampipes-backend/")
 
     def test_client_create_invalid_config(self):
@@ -126,6 +134,8 @@ class TestStreamPipesClient(TestCase):
                 )
             if "versions" in kwargs["url"]:
                 return MockResponse(json.dumps({"backendVersion": "SP-dev"}))
+            if "connect/master/adapters" in kwargs["url"] or "pipelines" in kwargs["url"]:
+                return MockResponse(json.dumps({"resources": [], "totalCount": 0}))
 
         make_request.side_effect = simulate_response
         StreamPipesClient.create(
@@ -143,7 +153,7 @@ class TestStreamPipesClient(TestCase):
                     "\nHi there!\nYou are connected to a StreamPipes instance running at "
                     "https://localhost:443 with version SP-dev.\n"
                     "The following StreamPipes resources are available with this client:\n"
-                    "1x DataLakeMeasures\n1x DataStreams"
+                    "1x DataLakeMeasures\n1x DataStreams\n0x Adapters\n0x Pipelines"
                 ),
             ],
             any_order=True,

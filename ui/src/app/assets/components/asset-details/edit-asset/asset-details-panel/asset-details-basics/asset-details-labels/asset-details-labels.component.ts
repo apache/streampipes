@@ -18,12 +18,10 @@
 
 import {
     Component,
-    ElementRef,
     Input,
     OnChanges,
     OnInit,
     SimpleChanges,
-    ViewChild,
     inject,
 } from '@angular/core';
 import {
@@ -31,20 +29,10 @@ import {
     SpAsset,
     SpLabel,
 } from '@streampipes/platform-services';
-import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Observable } from 'rxjs';
-import {
-    MatAutocomplete,
-    MatAutocompleteSelectedEvent,
-    MatAutocompleteTrigger,
-} from '@angular/material/autocomplete';
-import { map, startWith } from 'rxjs/operators';
 import {
     FormFieldComponent,
-    SpColorizationService,
     SpLabelComponent,
+    SearchSelectComponent,
 } from '@streampipes/shared-ui';
 import {
     FlexDirective,
@@ -55,10 +43,6 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField } from '@angular/material/form-field';
-import { AsyncPipe, NgStyle } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
-import { MatOption } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -74,23 +58,13 @@ import { TranslatePipe } from '@ngx-translate/core';
         RouterLink,
         MatIconButton,
         MatIcon,
-        MatFormField,
-        MatChipsModule,
-        NgStyle,
-        StyleDirective,
-        FormsModule,
-        MatAutocompleteTrigger,
-        ReactiveFormsModule,
-        MatAutocomplete,
-        MatOption,
+        SearchSelectComponent,
         SpLabelComponent,
-        AsyncPipe,
         TranslatePipe,
     ],
 })
 export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     private labelsService = inject(LabelsService);
-    private colorizationService = inject(SpColorizationService);
 
     @Input()
     asset: SpAsset;
@@ -99,15 +73,8 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     editMode: boolean;
 
     labels: SpLabel[] = [];
-    labelTextColors: Record<string, string> = {};
-
-    separatorKeysCodes: number[] = [ENTER, COMMA];
-    labelCtrl = new FormControl('');
-    filteredLabels: Observable<SpLabel[]>;
     allLabels: SpLabel[] = [];
     labelsAvailable = false;
-
-    @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
 
     ngOnInit(): void {
         this.loadLabels();
@@ -118,22 +85,9 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
             this.allLabels = labels.sort((a, b) =>
                 a.label.localeCompare(b.label),
             );
-            labels.forEach(
-                label =>
-                    (this.labelTextColors[label._id] =
-                        this.colorizationService.generateContrastColor(
-                            label.color,
-                        )),
-            );
             this.refreshCurrentLabels();
             this.labelsAvailable = true;
-            this.updateFilteredLabels();
         });
-
-        this.filteredLabels = this.labelCtrl.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filter(value as string)),
-        );
     }
 
     refreshCurrentLabels(): void {
@@ -150,67 +104,11 @@ export class AssetDetailsLabelsComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if (changes['asset'] && this.labelsAvailable) {
             this.refreshCurrentLabels();
-            this.updateFilteredLabels();
         }
     }
 
-    getAvailableLabels(): SpLabel[] {
-        return this.allLabels.filter(
-            label =>
-                !this.labels.some(
-                    selectedLabel => selectedLabel._id === label._id,
-                ),
-        );
-    }
-
-    add(event: MatChipInputEvent): void {
-        const value = (event.value || '').trim();
-        if (value) {
-            this.addLabelToSelection(value);
-        }
-        event.chipInput?.clear();
-        this.labelCtrl.setValue(null);
-    }
-
-    findLabel(value: string): SpLabel {
-        return this.allLabels.find(l => l._id === value);
-    }
-
-    remove(label: SpLabel): void {
-        const index = this.asset.labelIds.indexOf(label._id);
-        const labelsIndex = this.labels.findIndex(l => l._id === label._id);
-        if (index >= 0) {
-            this.labels.splice(labelsIndex, 1);
-            this.asset.labelIds.splice(index, 1);
-        }
-        this.updateFilteredLabels();
-    }
-
-    selected(event: MatAutocompleteSelectedEvent): void {
-        this.addLabelToSelection(event.option.value);
-        this.labelInput.nativeElement.value = '';
-        this.labelCtrl.setValue(null);
-    }
-
-    addLabelToSelection(textLabel: string): void {
-        const label = this.findLabel(textLabel);
-        if (label && !this.labels.some(l => l._id === label._id)) {
-            this.labels.push(label);
-            this.asset.labelIds.push(label._id);
-        }
-    }
-
-    private _filter(value: string): SpLabel[] {
-        const filterValue = value.toLowerCase();
-        return this.getAvailableLabels().filter(label =>
-            label.label.toLowerCase().includes(filterValue),
-        );
-    }
-
-    private updateFilteredLabels(): void {
-        this.filteredLabels = this.labelCtrl.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filter(typeof value === 'string' ? value : '')),
-        );
+    onLabelsChange(labels: SpLabel | SpLabel[] | undefined): void {
+        this.labels = Array.isArray(labels) ? labels : [];
+        this.asset.labelIds = this.labels.map(label => label._id);
     }
 }

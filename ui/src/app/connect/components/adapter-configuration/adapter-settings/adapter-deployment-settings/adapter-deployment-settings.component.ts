@@ -16,41 +16,24 @@
  *
  */
 
-import {
-    Component,
-    ElementRef,
-    inject,
-    Input,
-    OnInit,
-    ViewChild,
-} from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import {
     ExtensionDeploymentConfiguration,
     ServiceTagService,
     SpServiceTag,
 } from '@streampipes/platform-services';
-import { Observable } from 'rxjs';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { map, startWith } from 'rxjs/operators';
-import {
-    MatAutocomplete,
-    MatAutocompleteSelectedEvent,
-    MatAutocompleteTrigger,
-} from '@angular/material/autocomplete';
+import { FormsModule } from '@angular/forms';
 import {
     MatRadioButton,
     MatRadioChange,
     MatRadioGroup,
 } from '@angular/material/radio';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
-import { MatFormField } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatOption } from '@angular/material/select';
-import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormFieldComponent } from '@streampipes/shared-ui';
+import {
+    FormFieldComponent,
+    SearchSelectComponent,
+} from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-adapter-deployment-settings',
@@ -61,16 +44,9 @@ import { FormFieldComponent } from '@streampipes/shared-ui';
         MatRadioGroup,
         FormsModule,
         MatRadioButton,
-        MatFormField,
-        MatChipsModule,
-        MatIcon,
-        MatAutocompleteTrigger,
-        ReactiveFormsModule,
-        MatAutocomplete,
-        MatOption,
-        AsyncPipe,
         TranslatePipe,
         FormFieldComponent,
+        SearchSelectComponent,
     ],
 })
 export class SpAdapterDeploymentSettingsComponent implements OnInit {
@@ -80,26 +56,8 @@ export class SpAdapterDeploymentSettingsComponent implements OnInit {
     deploymentConfiguration: ExtensionDeploymentConfiguration;
 
     availableServiceTags: SpServiceTag[] = [];
-    availableServiceTagValues: string[] = [];
 
     deploymentMode = 'all';
-
-    separatorKeysCodes: number[] = [ENTER, COMMA];
-    serviceTagCtrl = new FormControl('');
-    filteredServiceTags: Observable<string[]>;
-
-    @ViewChild('serviceTagInput') serviceTagInput: ElementRef<HTMLInputElement>;
-
-    constructor() {
-        this.filteredServiceTags = this.serviceTagCtrl.valueChanges.pipe(
-            startWith(null),
-            map((serviceTagValue: string | null) => {
-                return serviceTagValue
-                    ? this._filter(serviceTagValue)
-                    : this.availableServiceTagValues.slice();
-            }),
-        );
-    }
 
     ngOnInit(): void {
         if (this.deploymentConfiguration.desiredServiceTags.length > 0) {
@@ -107,54 +65,17 @@ export class SpAdapterDeploymentSettingsComponent implements OnInit {
         }
         this.serviceTagService.getCustomServiceTags().subscribe(res => {
             this.availableServiceTags = res;
-            this.availableServiceTagValues = res.map(st => st.value);
         });
     }
 
-    add(event: MatChipInputEvent): void {
-        const value = (event.value || '').trim();
-
-        if (value) {
-            this.deploymentConfiguration.desiredServiceTags.push(
-                this.findTag(value),
-            );
-        }
-
-        if (event.chipInput) {
-            event.chipInput.clear();
-        }
-
-        this.serviceTagCtrl.setValue(null);
-    }
-
-    findTag(value: string): SpServiceTag {
-        return this.availableServiceTags.find(st => st.value === value);
-    }
-
-    remove(serviceTag: string): void {
-        const index = this.deploymentConfiguration.desiredServiceTags.findIndex(
-            st => st.value === serviceTag,
-        );
-
-        if (index >= 0) {
-            this.deploymentConfiguration.desiredServiceTags.splice(index, 1);
-        }
-    }
-
-    selected(event: MatAutocompleteSelectedEvent): void {
-        this.deploymentConfiguration.desiredServiceTags.push(
-            this.findTag(event.option.viewValue),
-        );
-        this.serviceTagInput.nativeElement.value = '';
-        this.serviceTagCtrl.setValue(null);
-    }
-
-    private _filter(value: string): string[] {
-        const filterValue = value.toLowerCase();
-
-        return this.availableServiceTagValues.filter(st =>
-            st.toLowerCase().includes(filterValue),
-        );
+    onServiceTagsChange(
+        serviceTags: SpServiceTag | SpServiceTag[] | undefined,
+    ): void {
+        this.deploymentConfiguration.desiredServiceTags = Array.isArray(
+            serviceTags,
+        )
+            ? serviceTags
+            : [];
     }
 
     handleSelectionChange(event: MatRadioChange): void {

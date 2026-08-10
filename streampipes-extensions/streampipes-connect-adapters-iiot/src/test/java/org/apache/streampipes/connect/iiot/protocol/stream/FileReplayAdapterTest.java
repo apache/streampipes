@@ -20,19 +20,24 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.extensions.api.connect.IEventCollector;
+import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.api.extractor.IAdapterParameterExtractor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.guess.SampleData;
 import org.apache.streampipes.sdk.helpers.EpProperties;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -113,6 +118,20 @@ class FileReplayAdapterTest {
   }
 
   @Test
+  void validateTimestampFieldInInputEvent_shouldUseParserSampleWhenOriginalInputIsEmpty() throws AdapterException {
+    var parser = mock(IParser.class);
+    var sampleData = new SampleData();
+    sampleData.setSamples(List.of(Map.of(TIMESTAMP, TIMESTAMP_VALUE)));
+    adapterDescription.getTransformationConfig().setInputs(List.of());
+    when(extractor.selectedParser()).thenReturn(parser);
+    when(parser.getSampleData(any(InputStream.class))).thenReturn(sampleData);
+    fileReplayAdapter = new TestFileReplayAdapter();
+    fileReplayAdapter.setTimestampRuntimeName(TIMESTAMP);
+
+    fileReplayAdapter.validateTimestampFieldInInputEvent(extractor);
+  }
+
+  @Test
   void validateTimestampFieldInInputEvent_shouldThrowForStringTimestampInOriginalInput() {
     adapterDescription.getTransformationConfig().setInputs(List.of(Map.of(TIMESTAMP, "2021-12-24T12:55:12.123+01:00")));
 
@@ -130,4 +149,11 @@ class FileReplayAdapterTest {
     assertEquals(Long.class, event.get(TIMESTAMP).getClass());
   }
 
+  private static class TestFileReplayAdapter extends FileReplayAdapter {
+
+    @Override
+    protected InputStream getFileAsInputStreamFromEndpoint(IAdapterParameterExtractor extractor) {
+      return new ByteArrayInputStream(new byte[0]);
+    }
+  }
 }

@@ -51,9 +51,10 @@
                     fxLayout="row"
                     fxLayoutAlign="center center"
                 >
-                    <mat-spinner [diameter]="32" color="accent">
-                        {{ 'Loading' | translate }}
-                    </mat-spinner>
+                    <sp-spinner
+                        [diameter]="32"
+                        [text]="'Loading' | translate"
+                    ></sp-spinner>
                 </div>
             }
 

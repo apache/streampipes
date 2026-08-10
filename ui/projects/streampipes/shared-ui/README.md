@@ -36,7 +36,7 @@ After building your library with `ng build shared-ui`, go to the dist folder `cd
 
 ## Running unit tests
 
-Run `ng test shared-ui` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `ng test @streampipes/shared-ui` to execute the unit tests with Vitest.
 
 ## Further help
 

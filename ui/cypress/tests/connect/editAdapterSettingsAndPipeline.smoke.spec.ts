@@ -77,7 +77,7 @@ describe('Test Edit Adapter and Pipeline', () => {
         ConnectBtns.refreshSchemaBtn().click();
         ConnectUtils.finishConfigureFieldsConfiguration();
         // Update event schema
-        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.storeAndRestartRunningAdapter().click();
 
         // Check for warning message
         ConnectBtns.adapterEditWarning().should('be.visible');
@@ -99,9 +99,7 @@ describe('Test Edit Adapter and Pipeline', () => {
             .click({ force: true });
         PipelineBtns.saveElementConfigBtn().click({ force: true });
         PipelineBtns.savePipelineBtn().click();
-        PipelineBtns.navigateToOverviewCheckbox().children().click();
-        PipelineBtns.editorApplyBtn().click();
-        PipelineBtns.navigateToPipelineOverview().click();
+        PipelineBtns.savePipelineStatusClose().click();
 
         // Visit dashboard
         cy.wait(5000);

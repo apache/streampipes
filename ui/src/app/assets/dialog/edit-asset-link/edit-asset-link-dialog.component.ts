@@ -17,7 +17,11 @@
  */
 
 import { Component, Input, OnInit, inject } from '@angular/core';
-import { DialogRef, FormFieldComponent } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    FormFieldComponent,
+    SearchSelectComponent,
+} from '@streampipes/shared-ui';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { FormsModule, UntypedFormGroup } from '@angular/forms';
 import {
@@ -31,7 +35,7 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-asset-link-dialog-component',
@@ -48,6 +52,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatDivider,
         MatButton,
         TranslatePipe,
+        SearchSelectComponent,
     ],
 })
 export class EditAssetLinkDialogComponent
@@ -56,12 +61,16 @@ export class EditAssetLinkDialogComponent
 {
     private dialogRef =
         inject<DialogRef<EditAssetLinkDialogComponent>>(DialogRef);
+    private translateService = inject(TranslateService);
 
     @Input()
     assetLink: AssetLink;
 
     @Input()
     assetLinkTypes: AssetLinkType[];
+
+    @Input()
+    assetLinks: AssetLink[] = [];
 
     @Input()
     createMode: boolean;
@@ -73,6 +82,66 @@ export class EditAssetLinkDialogComponent
     currentResource: any;
 
     selectedLinkType: AssetLinkType;
+
+    get resourceSelectionLabel(): string | undefined {
+        switch (this.selectedLinkType.linkQueryHint) {
+            case 'pipeline':
+                return this.translateService.instant('Pipelines');
+            case 'data-source':
+                return this.translateService.instant('Data Stream');
+            case 'dashboard':
+                return this.translateService.instant('Dashboard');
+            case 'chart':
+                return this.translateService.instant('Chart');
+            case 'adapter':
+                return this.translateService.instant('Adapter');
+            case 'measurement':
+                return this.translateService.instant('Dataset');
+            case 'file':
+                return this.translateService.instant('Files');
+            default:
+                return undefined;
+        }
+    }
+
+    get selectableResources(): any[] {
+        let resources: any[];
+
+        switch (this.selectedLinkType.linkQueryHint) {
+            case 'pipeline':
+                resources = this.pipelines ?? [];
+                break;
+            case 'data-source':
+                resources = this.dataSources ?? [];
+                break;
+            case 'dashboard':
+                resources = this.dashboards ?? [];
+                break;
+            case 'chart':
+                resources = this.charts ?? [];
+                break;
+            case 'adapter':
+                resources = this.adapters ?? [];
+                break;
+            case 'measurement':
+                resources = this.dataLakeMeasures ?? [];
+                break;
+            case 'file':
+                resources = this.files ?? [];
+                break;
+            default:
+                resources = [];
+        }
+
+        return resources.filter(
+            resource =>
+                !this.assetLinks.some(
+                    assetLink =>
+                        assetLink !== this.assetLink &&
+                        assetLink.resourceId === this.getResourceId(resource),
+                ),
+        );
+    }
 
     ngOnInit(): void {
         super.onInit();
@@ -104,6 +173,9 @@ export class EditAssetLinkDialogComponent
         this.clonedAssetLink.linkType = linkType.linkType;
         this.clonedAssetLink.queryHint = linkType.linkQueryHint;
         this.clonedAssetLink.navigationActive = linkType.navigationActive;
+        this.clonedAssetLink.resourceId = '';
+        this.clonedAssetLink.linkLabel = '';
+        this.currentResource = undefined;
     }
 
     changeLabel(id: string, label: string, currentResource: any) {
@@ -112,11 +184,46 @@ export class EditAssetLinkDialogComponent
         this.currentResource = currentResource;
     }
 
+    onResourceChanged(currentResource: any): void {
+        if (!currentResource || Array.isArray(currentResource)) {
+            this.clonedAssetLink.resourceId = '';
+            this.clonedAssetLink.linkLabel = '';
+            this.currentResource = undefined;
+            return;
+        }
+
+        if (this.selectedLinkType.linkQueryHint === 'file') {
+            this.changeLabel(
+                currentResource.fileId,
+                currentResource.filename,
+                currentResource,
+            );
+        } else if (this.selectedLinkType.linkQueryHint === 'measurement') {
+            this.changeLabel(
+                currentResource.elementId,
+                currentResource.measureName,
+                currentResource,
+            );
+        } else {
+            this.changeLabel(
+                currentResource.elementId,
+                currentResource.name,
+                currentResource,
+            );
+        }
+    }
+
     afterResourcesLoaded(): void {
         if (!this.createMode) {
             this.currentResource = this.allResources.find(
-                r => r.elementId === this.clonedAssetLink.resourceId,
+                resource =>
+                    this.getResourceId(resource) ===
+                    this.clonedAssetLink.resourceId,
             );
         }
+    }
+
+    private getResourceId(resource: any): string {
+        return resource.fileId ?? resource.elementId;
     }
 }

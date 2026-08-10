@@ -17,10 +17,17 @@
  */
 
 import { EventEmitter, inject, Injectable } from '@angular/core';
-import { PipelineSummaryDto } from '@streampipes/platform-services';
+import {
+    Message,
+    Pipeline,
+    PipelineService,
+    PipelineSummaryDto,
+} from '@streampipes/platform-services';
 import {
     DialogRef,
     DialogService,
+    ObjectManageDialogComponent,
+    ObjectManageDialogResourceConfig,
     ObjectPermissionDialogComponent,
     PanelType,
 } from '@streampipes/shared-ui';
@@ -29,11 +36,14 @@ import { DeletePipelineDialogComponent } from '../dialog/delete-pipeline/delete-
 import { Router } from '@angular/router';
 import { PipelineAction } from '../model/pipeline-model';
 import { PipelineNotificationsComponent } from '../dialog/pipeline-notifications/pipeline-notifications.component';
+import { PipelineCodeDialogComponent } from '../../pipeline-details/dialogs/pipeline-code/pipeline-code-dialog.component';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PipelineOperationsService {
     private dialogService = inject(DialogService);
     private router = inject(Router);
+    private pipelineService = inject(PipelineService);
 
     starting: any;
     stopping: any;
@@ -156,6 +166,77 @@ export class PipelineOperationsService {
         });
     }
 
+    showManageDialog(
+        pipelineSummary: PipelineSummaryDto,
+        refreshPipelinesEmitter: EventEmitter<boolean>,
+    ) {
+        this.pipelineService
+            .getPipelineById(pipelineSummary.elementId)
+            .subscribe(pipeline => {
+                const resourceConfig: ObjectManageDialogResourceConfig<Pipeline> =
+                    {
+                        resourceLabel: 'Pipeline',
+                        nameLabel: 'Pipeline name',
+                        descriptionLabel: 'Description',
+                        nameProperty: 'name',
+                        assetLinkType: 'pipeline',
+                        assetLinkCheckboxLabel:
+                            'Add the current pipeline to an existing asset',
+                        saveResource: async resource => {
+                            const shouldRestart = resource.running;
+
+                            if (shouldRestart) {
+                                const stopResult = await firstValueFrom(
+                                    this.pipelineService.stopPipeline(
+                                        resource._id,
+                                    ),
+                                );
+                                this.assertPipelineOperationSucceeded(
+                                    stopResult.success,
+                                    'Stopping the pipeline failed.',
+                                );
+                            }
+
+                            const result = await firstValueFrom(
+                                this.pipelineService.updatePipeline(resource),
+                            );
+                            this.assertPipelineSaveSucceeded(result);
+
+                            if (shouldRestart) {
+                                const startResult = await firstValueFrom(
+                                    this.pipelineService.startPipeline(
+                                        resource._id,
+                                    ),
+                                );
+                                this.assertPipelineOperationSucceeded(
+                                    startResult.success,
+                                    'Starting the pipeline failed.',
+                                );
+                            }
+                        },
+                    };
+                const dialogRef = this.dialogService.open(
+                    ObjectManageDialogComponent,
+                    {
+                        panelType: PanelType.SLIDE_IN_PANEL,
+                        title: 'Manage',
+                        width: '50vw',
+                        data: {
+                            objectInstanceId: pipeline._id,
+                            resource: { ...pipeline },
+                            saveMode: 'immediate',
+                            resourceConfig,
+                            headerTitle: 'Manage Pipeline ' + pipeline.name,
+                        },
+                    },
+                );
+
+                dialogRef.afterClosed().subscribe(refresh => {
+                    refreshPipelinesEmitter.emit(!!refresh);
+                });
+            });
+    }
+
     showPermissionsDialog(
         pipelineSummary: PipelineSummaryDto,
         refreshPipelinesEmitter: EventEmitter<boolean>,
@@ -180,15 +261,55 @@ export class PipelineOperationsService {
         });
     }
 
+    showCodeDialog(pipelineSummary: PipelineSummaryDto): void {
+        this.pipelineService
+            .getPipelineById(pipelineSummary.elementId)
+            .subscribe(pipeline => {
+                this.dialogService.open(PipelineCodeDialogComponent, {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    width: '50vw',
+                    title: 'Pipeline code',
+                    data: {
+                        pipeline,
+                    },
+                });
+            });
+    }
+
     showPipelineInEditor(id: string) {
         this.router.navigate(['pipelines', 'modify', id]);
+    }
+
+    showPipelineCloneInEditor(id: string) {
+        this.router.navigate(['pipelines', 'modify', id], {
+            queryParams: { clone: true },
+        });
     }
 
     showPipelineDetails(id: string) {
         this.router.navigate(['pipelines', 'details', id]);
     }
 
-    modifyPipeline(pipeline) {
-        this.showPipelineInEditor(pipeline);
+    modifyPipeline(pipelineId: string) {
+        this.showPipelineInEditor(pipelineId);
+    }
+
+    clonePipeline(pipelineId: string) {
+        this.showPipelineCloneInEditor(pipelineId);
+    }
+
+    private assertPipelineSaveSucceeded(result: Message): void {
+        if (!result.success) {
+            throw new Error('Saving the pipeline failed.');
+        }
+    }
+
+    private assertPipelineOperationSucceeded(
+        success: boolean,
+        errorMessage: string,
+    ): void {
+        if (!success) {
+            throw new Error(errorMessage);
+        }
     }
 }

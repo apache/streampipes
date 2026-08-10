@@ -28,8 +28,8 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpSpinnerComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-pipeline-element-preview',
@@ -39,7 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         KeyValuePipe,
         TranslatePipe,
     ],

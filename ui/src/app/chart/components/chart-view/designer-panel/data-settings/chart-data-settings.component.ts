@@ -20,6 +20,7 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     ViewChild,
@@ -58,32 +59,23 @@ import { MatTooltip } from '@angular/material/tooltip';
 import {
     FormFieldComponent,
     SpAlertBannerComponent,
+    SearchSelectComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import {
-    MatFormField,
-    MatPrefix,
-    MatSuffix,
-} from '@angular/material/form-field';
-import { MatOption } from '@angular/material/core';
+import { MatFormField } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { ClassDirective } from '@ngbracket/ngx-layout/extended';
-import { MatInput } from '@angular/material/input';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatInput } from '@angular/material/input';
 import { AggregateConfigurationComponent } from './aggregate-configuration/aggregate-configuration.component';
 import { FillConfigurationComponent } from './fill-configuration/fill-configuration.component';
 import { FilterSelectionPanelComponent } from './filter-selection-panel/filter-selection-panel.component';
 import { OrderSelectionPanelComponent } from './order-selection-panel/order-selection-panel.component';
 import { ResultLabelConfigurationComponent } from './result-label-configuration/result-label-configuration.component';
 import { TranslatePipe } from '@ngx-translate/core';
-import {
-    MatAutocomplete,
-    MatAutocompleteSelectedEvent,
-    MatAutocompleteTrigger,
-} from '@angular/material/autocomplete';
 
 @Component({
     selector: 'sp-chart-data-settings',
@@ -103,9 +95,6 @@ import {
         LayoutGapDirective,
         MatButton,
         MatFormField,
-        MatPrefix,
-        MatSuffix,
-        MatOption,
         MatIcon,
         MatRadioGroup,
         FormsModule,
@@ -113,10 +102,9 @@ import {
         ClassDirective,
         MatRadioButton,
         FormFieldComponent,
-        MatInput,
         MatCheckbox,
-        MatAutocomplete,
-        MatAutocompleteTrigger,
+        MatInput,
+        SearchSelectComponent,
         AggregateConfigurationComponent,
         FillConfigurationComponent,
         FieldSelectionPanelComponent,
@@ -127,7 +115,7 @@ import {
         TranslatePipe,
     ],
 })
-export class ChartDataSettingsComponent implements OnInit {
+export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     private datalakeRestService = inject(DatalakeRestService);
     private widgetConfigService = inject(ChartConfigurationService);
     private fieldProviderService = inject(ChartFieldProviderService);
@@ -155,9 +143,11 @@ export class ChartDataSettingsComponent implements OnInit {
     @ViewChild('groupSelectionPanel')
     groupSelectionPanel: GroupSelectionPanelComponent;
 
-    availableMeasurements: DatasetSummaryDto[] = [];
-    filteredMeasurements: DatasetSummaryDto[] = [];
-    measurementInputValue = '';
+    availableDatasets: DatasetSummaryDto[] = [];
+    selectedDataset: DatasetSummaryDto | undefined;
+
+    private pendingDatasetRefresh = false;
+    private dataRefreshTimeout?: ReturnType<typeof setTimeout>;
 
     step = 0;
 
@@ -170,20 +160,27 @@ export class ChartDataSettingsComponent implements OnInit {
 
     ngOnInit(): void {
         this.syncCurrentMeasure();
-        this.loadPipelinesAndMeasurements();
+        this.loadPipelinesAndDatasets();
     }
 
-    loadPipelinesAndMeasurements() {
+    ngOnDestroy(): void {
+        clearTimeout(this.dataRefreshTimeout);
+    }
+
+    loadPipelinesAndDatasets() {
         this.datalakeRestService.getMeasurementSummary().subscribe(response => {
-            this.availableMeasurements = response.resources.sort((a, b) =>
+            this.availableDatasets = response.resources.sort((a, b) =>
                 a.measureName.localeCompare(b.measureName),
             );
-            this.applyMeasurementSearch();
+            this.syncSelectedDatasetSummary();
 
             if (!this.sourceConfig) {
                 const defaultConfigs = this.findDefaultConfig();
                 this.initializeSourceConfig(defaultConfigs.measureName);
                 if (defaultConfigs.measureName !== undefined) {
+                    this.selectedDataset = this.findDatasetSummary(
+                        defaultConfigs.measureName,
+                    );
                     this.loadMeasurement(
                         defaultConfigs.measureName,
                         true,
@@ -208,19 +205,18 @@ export class ChartDataSettingsComponent implements OnInit {
     } {
         const measureNameFromQueryParams =
             this.route.snapshot.queryParams.measureName;
-        const matchingMeasurement = this.availableMeasurements.find(
-            measurement =>
-                measurement.measureName === measureNameFromQueryParams,
+        const matchingDataset = this.availableDatasets.find(
+            dataset => dataset.measureName === measureNameFromQueryParams,
         );
-        if (matchingMeasurement) {
+        if (matchingDataset) {
             return {
-                measureName: matchingMeasurement.measureName,
+                measureName: matchingDataset.measureName,
             };
         }
 
-        if (this.availableMeasurements.length > 0) {
+        if (this.availableDatasets.length > 0) {
             return {
-                measureName: this.availableMeasurements[0].measureName,
+                measureName: this.availableDatasets[0].measureName,
             };
         } else {
             return { measureName: undefined };
@@ -229,45 +225,32 @@ export class ChartDataSettingsComponent implements OnInit {
 
     updateMeasure(sourceConfig: SourceConfig, measureName: string) {
         sourceConfig.measureName = measureName;
-        this.measurementInputValue = measureName;
+        this.selectedDataset = this.findDatasetSummary(measureName);
         this.loadMeasurement(measureName, true, true);
     }
 
-    onMeasurementSearchChange(value: string): void {
-        this.measurementInputValue = value;
-        this.applyMeasurementSearch();
-    }
-
-    clearMeasurementSearch(): void {
-        this.measurementInputValue = '';
-        this.applyMeasurementSearch();
-    }
-
-    hasActiveMeasurementSearch(): boolean {
-        return this.measurementInputValue.trim().length > 0;
-    }
-
-    onMeasurementSelected(
+    onDatasetSelectionChange(
         sourceConfig: SourceConfig,
-        event: MatAutocompleteSelectedEvent,
+        selectedDataset: DatasetSummaryDto | DatasetSummaryDto[] | undefined,
     ): void {
-        this.updateMeasure(sourceConfig, event.option.value);
-    }
-
-    private applyMeasurementSearch(): void {
-        const query = this.measurementInputValue.trim().toLowerCase();
-        if (!query) {
-            this.filteredMeasurements = this.availableMeasurements;
+        if (Array.isArray(selectedDataset)) {
             return;
         }
 
-        this.filteredMeasurements = this.availableMeasurements.filter(
-            measurement =>
-                measurement.measureName.toLowerCase().includes(query) ||
-                measurement.pipelines.some(pipeline =>
-                    pipeline.toLowerCase().includes(query),
-                ),
-        );
+        if (!selectedDataset) {
+            this.clearMeasure(sourceConfig);
+            return;
+        }
+
+        this.updateMeasure(sourceConfig, selectedDataset.measureName);
+    }
+
+    private clearMeasure(sourceConfig: SourceConfig): void {
+        sourceConfig.measureName = '';
+        sourceConfig.measure = undefined;
+        sourceConfig.queryConfig.fields = [];
+        sourceConfig.queryConfig.groupBy = [];
+        this.selectedDataset = undefined;
     }
 
     private loadMeasurement(
@@ -300,12 +283,13 @@ export class ChartDataSettingsComponent implements OnInit {
         this.dataLakeMeasureChange.emit(measure);
         sourceConfig.measureName = measure.measureName;
         sourceConfig.measure = measure;
-        this.measurementInputValue = measure.measureName;
+        this.selectedDataset = this.findDatasetSummary(measure.measureName);
 
         if (!resetQueryConfig) {
             return;
         }
 
+        this.pendingDatasetRefresh = refreshData;
         sourceConfig.queryConfig.fields = [];
         if (this.fieldSelectionPanel) {
             this.fieldSelectionPanel.applyDefaultFields();
@@ -316,8 +300,8 @@ export class ChartDataSettingsComponent implements OnInit {
             this.groupSelectionPanel.applyDefaultFields();
         }
 
-        if (refreshData) {
-            this.triggerDataRefresh();
+        if (refreshData && this.fieldSelectionPanel) {
+            this.scheduleDataRefresh();
         }
     }
 
@@ -325,10 +309,30 @@ export class ChartDataSettingsComponent implements OnInit {
         if (this.sourceConfig?.measure) {
             this.dataLakeMeasure = this.sourceConfig.measure;
             this.dataLakeMeasureChange.emit(this.sourceConfig.measure);
-            this.measurementInputValue = this.sourceConfig.measure.measureName;
+            this.selectedDataset = this.findDatasetSummary(
+                this.sourceConfig.measure.measureName,
+            );
         } else if (this.sourceConfig?.measureName) {
-            this.measurementInputValue = this.sourceConfig.measureName;
+            this.selectedDataset = this.findDatasetSummary(
+                this.sourceConfig.measureName,
+            );
         }
+    }
+
+    private syncSelectedDatasetSummary(): void {
+        if (this.sourceConfig?.measureName) {
+            this.selectedDataset = this.findDatasetSummary(
+                this.sourceConfig.measureName,
+            );
+        }
+    }
+
+    private findDatasetSummary(
+        measureName: string,
+    ): DatasetSummaryDto | undefined {
+        return this.availableDatasets.find(
+            dataset => dataset.measureName === measureName,
+        );
     }
 
     changeDataAggregation() {
@@ -368,7 +372,14 @@ export class ChartDataSettingsComponent implements OnInit {
         };
     }
 
-    createDefaultWidget(): void {
+    onInitialFieldSelection(): void {
+        const defaultWidgetCreated = this.createDefaultWidget();
+        if (defaultWidgetCreated || this.pendingDatasetRefresh) {
+            this.scheduleDataRefresh();
+        }
+    }
+
+    createDefaultWidget(): boolean {
         if (this.checkIfDefaultTableShouldBeShown()) {
             const fields = this.fieldProviderService.generateFieldLists(
                 this.dataConfig.sourceConfigs,
@@ -379,13 +390,18 @@ export class ChartDataSettingsComponent implements OnInit {
             this.widgetTypeService.notify({
                 widgetId: this.currentlyConfiguredWidget.elementId,
                 newWidgetTypeId: this.currentlyConfiguredWidget.widgetType,
+                deferInitialDataLoad: true,
             });
 
             this.createWidgetEmitter.emit({
                 a: this.dataLakeMeasure,
                 b: this.currentlyConfiguredWidget,
             });
+
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -402,6 +418,12 @@ export class ChartDataSettingsComponent implements OnInit {
             refreshData: true,
             refreshView: true,
         });
+    }
+
+    private scheduleDataRefresh(): void {
+        this.pendingDatasetRefresh = false;
+        clearTimeout(this.dataRefreshTimeout);
+        this.dataRefreshTimeout = setTimeout(() => this.triggerDataRefresh());
     }
 
     toggleExpandFieldsDataSource() {

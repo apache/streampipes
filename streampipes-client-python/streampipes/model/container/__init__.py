@@ -15,12 +15,18 @@
 # limitations under the License.
 #
 
+from .adapters import Adapters
 from .data_lake_measures import DataLakeMeasures
 from .data_streams import DataStreams
+from .pipelines import Pipelines
+from .summary_resource_container import SummaryResourceContainer
 from .versions import Versions
 
 __all__ = [
+    "Adapters",
     "DataLakeMeasures",
     "DataStreams",
+    "Pipelines",
+    "SummaryResourceContainer",
     "Versions",
 ]

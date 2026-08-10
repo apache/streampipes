@@ -117,7 +117,7 @@ describe('Test Edit Adapter', () => {
 
     function storeAndCloseAdapterPreview() {
         ConnectBtns.configureFieldsNextBtn().click();
-        ConnectBtns.storeEditAdapter().click();
+        ConnectBtns.storeAndRestartRunningAdapter().click();
         ConnectUtils.closeAdapterPreview();
     }
 });

@@ -269,9 +269,7 @@
                             <div fxLayout="column">
                                 @if (sendingTestMailInProgress) {
                                     <div fxLayout="row">
-                                        <mat-progress-spinner
-                                            diameter="10"
-                                        ></mat-progress-spinner>
+                                        <sp-spinner diameter="10"></sp-spinner>
                                         <h5>
                                             {{
                                                 'Trying to send test mail...'

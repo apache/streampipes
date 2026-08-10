@@ -19,9 +19,11 @@
 package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -38,6 +40,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class DataLakeResourceTest {
+
+  @Test
+  void storeDataToMeasurementRequiresWritePermissionForMeasurement() throws Exception {
+    var method = DataLakeResource.class.getMethod(
+        "storeDataToMeasurement",
+        String.class,
+        SpQueryResult.class,
+        boolean.class);
+
+    var annotation = method.getAnnotation(PreAuthorize.class);
+
+    assertEquals(
+        "this.hasWriteAuthority() and this.checkPermissionByName(#measureName, 'WRITE')",
+        annotation.value());
+  }
 
   @Test
   void getLatestEventsRequestsLatestTimestampsForDistinctMeasurements() throws Exception {

@@ -21,6 +21,7 @@ import {
     DialogRef,
     SpAlertBannerComponent,
     SplitSectionComponent,
+    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { DataExportService } from '../data-export.service';
 import {
@@ -34,7 +35,6 @@ import {
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
@@ -72,7 +72,7 @@ type ExportSectionKey =
         LayoutDirective,
         LayoutAlignDirective,
         LayoutGapDirective,
-        MatProgressSpinner,
+        SpSpinnerComponent,
         MatDivider,
         MatButton,
         MatCheckbox,

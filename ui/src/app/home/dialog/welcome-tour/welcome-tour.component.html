@@ -41,8 +41,12 @@
                         fxLayoutAlign="center center"
                         fxLayoutGap="10px"
                     >
-                        <mat-spinner [diameter]="20"></mat-spinner>
-                        <span>Checking tutorial pipeline elements...</span>
+                        <sp-spinner
+                            [diameter]="20"
+                            layout="row"
+                            gap="10px"
+                            text="Checking tutorial pipeline elements..."
+                        ></sp-spinner>
                     </div>
                 }
                 @if (showMissingElementsHint) {

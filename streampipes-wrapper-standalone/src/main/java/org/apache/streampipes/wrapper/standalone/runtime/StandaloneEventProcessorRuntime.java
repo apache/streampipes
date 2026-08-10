@@ -48,6 +48,7 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneEventProcessorRuntime.class);
 
   protected SpOutputCollector outputCollector;
+  private boolean pipelineStarted;
 
   public StandaloneEventProcessorRuntime() {
     super(new DataProcessorContextGenerator(), new DataProcessorParameterGenerator());
@@ -96,14 +97,64 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
   protected void beforeStart() {
     this.outputCollector = getOutputCollector();
     pipelineElement.onPipelineStarted(runtimeParameters, outputCollector, runtimeContext);
+    pipelineStarted = true;
     prepareRuntime();
   }
 
   @Override
   protected void afterStop() {
-    disconnectInputCollectors();
-    pipelineElement.onPipelineStopped();
-    outputCollector.disconnect();
+    RuntimeException stopException = null;
+    try {
+      disconnectInputCollectors();
+    } catch (RuntimeException e) {
+      stopException = collectCleanupException(stopException, e);
+    }
+    try {
+      pipelineElement.onPipelineStopped();
+    } catch (RuntimeException e) {
+      stopException = collectCleanupException(stopException, e);
+    } finally {
+      pipelineStarted = false;
+    }
+    try {
+      outputCollector.disconnect();
+    } catch (RuntimeException e) {
+      stopException = collectCleanupException(stopException, e);
+    }
+
+    if (stopException != null) {
+      throw stopException;
+    }
+  }
+
+  @Override
+  protected void afterStartFailed() {
+    RuntimeException cleanupException = null;
+    try {
+      super.afterStartFailed();
+    } catch (RuntimeException e) {
+      cleanupException = collectCleanupException(cleanupException, e);
+    }
+    try {
+      if (pipelineStarted) {
+        pipelineElement.onPipelineStopped();
+      }
+    } catch (RuntimeException e) {
+      cleanupException = collectCleanupException(cleanupException, e);
+    } finally {
+      pipelineStarted = false;
+    }
+    try {
+      if (outputCollector != null) {
+        outputCollector.disconnect();
+      }
+    } catch (RuntimeException e) {
+      cleanupException = collectCleanupException(cleanupException, e);
+    }
+
+    if (cleanupException != null) {
+      throw cleanupException;
+    }
   }
 
 }
