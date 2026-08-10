@@ -69,7 +69,7 @@ public class MsSqlTablePollingClient implements MsSqlPollingRowSource {
           + "OR (ty.name IN ('decimal', 'numeric') AND c.scale = 0)) "
           + "AND EXISTS (SELECT 1 FROM sys.indexes i "
           + "JOIN sys.index_columns ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id "
-          + "WHERE i.object_id = t.object_id AND i.is_unique_constraint = 1 "
+          + "WHERE i.object_id = t.object_id AND (i.is_primary_key = 1 OR i.is_unique_constraint = 1) "
           + "AND ic.column_id = c.column_id AND ic.key_ordinal = 1 "
           + "AND NOT EXISTS (SELECT 1 FROM sys.index_columns other "
           + "WHERE other.object_id = i.object_id AND other.index_id = i.index_id AND other.key_ordinal > 1)) "
@@ -221,7 +221,7 @@ public class MsSqlTablePollingClient implements MsSqlPollingRowSource {
     return columns;
   }
 
-  private Object convertValue(Object value, MsSqlColumn column) {
+  private Object convertValue(Object value, MsSqlColumn column) throws SQLException {
     if (value == null) {
       return null;
     }
@@ -259,7 +259,7 @@ public class MsSqlTablePollingClient implements MsSqlPollingRowSource {
         return value.toString();
       }
     }
-    return value;
+    return MsSqlValueConverter.convert(value, column);
   }
 
   private boolean isDateTimeOffset(MsSqlColumn column) {
@@ -322,7 +322,7 @@ public class MsSqlTablePollingClient implements MsSqlPollingRowSource {
         try (ResultSet resultSet = statement.executeQuery()) {
           List<MsSqlRow> rows = new ArrayList<>();
           ResultSetMetaData resultMetadata = resultSet.getMetaData();
-          Map<String, MsSqlColumn> columnsByName = new LinkedHashMap<>();
+          Map<String, MsSqlColumn> columnsByName = new java.util.TreeMap<>(String.CASE_INSENSITIVE_ORDER);
           schema.forEach(column -> columnsByName.put(column.name(), column));
           while (resultSet.next()) {
             Map<String, Object> event = new LinkedHashMap<>();
@@ -330,15 +330,20 @@ public class MsSqlTablePollingClient implements MsSqlPollingRowSource {
             for (int index = 1; index <= resultMetadata.getColumnCount(); index++) {
               String name = resultMetadata.getColumnLabel(index);
               MsSqlColumn column = columnsByName.get(name);
+              if (column == null) {
+                throw new SQLException(
+                    "Could not map SQL Server result column " + name + " to the captured table schema."
+                );
+              }
               Object rawValue = resultSet.getObject(index);
-              Object converted = column == null ? rawValue : convertValue(rawValue, column);
-              if (name.equals(config.sequenceColumn())) {
+              Object converted = convertValue(rawValue, column);
+              if (column.name().equalsIgnoreCase(config.sequenceColumn())) {
                 rowSequence = exactDecimal(rawValue).orElseThrow(
                     () -> new SQLException("Sequence column contains null: " + config.sequenceColumn())
                 );
                 converted = rowSequence;
               }
-              event.put(name, converted);
+              event.put(column.name(), converted);
             }
             if (rowSequence == null) {
               throw new SQLException("Sequence column is missing from query result: " + config.sequenceColumn());

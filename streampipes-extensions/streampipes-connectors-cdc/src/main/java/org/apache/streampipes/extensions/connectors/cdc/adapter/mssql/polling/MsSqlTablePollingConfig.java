@@ -22,7 +22,6 @@ import org.apache.streampipes.extensions.api.extractor.IStaticPropertyExtractor;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
 
-import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 
@@ -37,8 +36,6 @@ public record MsSqlTablePollingConfig(
     String timezone,
     MsSqlTableIdentifier table,
     String sequenceColumn,
-    StartupMode startupMode,
-    BigDecimal customSequence,
     int pollingIntervalSeconds,
     int batchSize,
     int maxRowsPerPoll
@@ -54,8 +51,6 @@ public record MsSqlTablePollingConfig(
   public static final String TIMEZONE_KEY = "timezone";
   public static final String TABLE_KEY = "table";
   public static final String SEQUENCE_COLUMN_KEY = "sequence-column";
-  public static final String STARTUP_MODE_KEY = "startup-mode";
-  public static final String CUSTOM_SEQUENCE_KEY = "custom-sequence";
   public static final String POLLING_INTERVAL_SECONDS_KEY = "polling-interval-seconds";
   public static final String BATCH_SIZE_KEY = "batch-size";
   public static final String MAX_ROWS_PER_POLL_KEY = "max-rows-per-poll";
@@ -70,7 +65,6 @@ public record MsSqlTablePollingConfig(
   public static MsSqlTablePollingConfig from(IStaticPropertyExtractor extractor,
                                              boolean requireTable,
                                              boolean requireSequenceColumn) {
-    String customSequence = extractor.singleValueParameter(CUSTOM_SEQUENCE_KEY, String.class);
     return new MsSqlTablePollingConfig(
         extractor.singleValueParameter(HOST_KEY, String.class),
         extractor.singleValueParameter(PORT_KEY, Integer.class),
@@ -82,8 +76,6 @@ public record MsSqlTablePollingConfig(
         extractor.singleValueParameter(TIMEZONE_KEY, String.class),
         selectedTable(extractor, requireTable),
         selectedRuntimeValue(extractor, SEQUENCE_COLUMN_KEY, requireSequenceColumn),
-        StartupMode.valueOf(extractor.selectedSingleValue(STARTUP_MODE_KEY, String.class)),
-        customSequence == null || customSequence.isBlank() ? null : new BigDecimal(customSequence),
         extractor.singleValueParameter(POLLING_INTERVAL_SECONDS_KEY, Integer.class),
         extractor.singleValueParameter(BATCH_SIZE_KEY, Integer.class),
         extractor.singleValueParameter(MAX_ROWS_PER_POLL_KEY, Integer.class)
@@ -91,7 +83,7 @@ public record MsSqlTablePollingConfig(
   }
 
   public MsSqlPollingSettings pollingSettings() {
-    return new MsSqlPollingSettings(startupMode, customSequence, batchSize, maxRowsPerPoll);
+    return new MsSqlPollingSettings(batchSize, maxRowsPerPoll);
   }
 
   public ZoneId zoneId() {

@@ -18,22 +18,12 @@
 
 package org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling;
 
-import java.math.BigDecimal;
-
 public record MsSqlPollingSettings(
-    StartupMode startupMode,
-    BigDecimal customSequence,
     int batchSize,
     int maxRowsPerPoll
 ) {
 
   public MsSqlPollingSettings {
-    if (startupMode == null) {
-      throw new IllegalArgumentException("Startup mode is required.");
-    }
-    if (startupMode == StartupMode.CUSTOM_SEQUENCE && customSequence == null) {
-      throw new IllegalArgumentException("A custom sequence is required for CUSTOM_SEQUENCE startup mode.");
-    }
     if (batchSize <= 0) {
       throw new IllegalArgumentException("Batch size must be positive.");
     }

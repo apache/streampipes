@@ -18,9 +18,6 @@
 
 package org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling;
 
-import org.apache.streampipes.extensions.api.monitoring.IExtensionsLogger;
-import org.apache.streampipes.model.monitoring.SpLogMessage;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,9 +28,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -62,6 +57,7 @@ class MsSqlTablePollingClientIntegrationTest {
          Statement statement = connection.createStatement()) {
       statement.execute("CREATE SCHEMA " + MsSqlTablePollingClient.quoteIdentifier(table.schema()));
       statement.execute("CREATE TABLE " + table.displayName() + " ("
+          + "primary_sequence BIGINT IDENTITY PRIMARY KEY, "
           + "sequence_id DECIMAL(38, 0) NOT NULL, "
           + "recorded_at DATETIME2(3) NULL, "
           + "payload VARBINARY(16) NULL, "
@@ -96,7 +92,10 @@ class MsSqlTablePollingClientIntegrationTest {
 
     assertTrue(client.discoverTables().stream().anyMatch(option -> table.encode().equals(option.getInternalName())));
     assertFalse(client.discoverTables().stream().anyMatch(option -> option.getName().contains(viewName)));
-    assertEquals(List.of("sequence_id"), client.discoverSequenceColumns().stream().map(option -> option.getName()).toList());
+    assertEquals(
+        List.of("primary_sequence", "sequence_id"),
+        client.discoverSequenceColumns().stream().map(option -> option.getName()).toList()
+    );
     assertEquals(BigDecimal.ONE, client.sampleRow().get("sequence_id"));
 
     insertRows(client);
@@ -115,22 +114,6 @@ class MsSqlTablePollingClientIntegrationTest {
       assertEquals("BAUG", rows.get(0).event().get("payload"));
     }
 
-    InMemoryCheckpointStore store = new InMemoryCheckpointStore();
-    store.save("adapter-live", 0, Optional.of(new BigDecimal("99999999999999999999999999999999999999")));
-    TestLogger logger = new TestLogger();
-    List<Map<String, Object>> emitted = new ArrayList<>();
-    new MsSqlTablePoller(
-        "adapter-live",
-        new MsSqlPollingSettings(StartupMode.ALL_EXISTING, null, 10, 10),
-        schema,
-        "sequence_id",
-        client,
-        store,
-        emitted::add,
-        logger
-    ).poll();
-    assertTrue(emitted.isEmpty());
-    assertEquals(1, logger.errors);
   }
 
   private void insertRows(MsSqlTablePollingClient client) throws Exception {
@@ -162,8 +145,6 @@ class MsSqlTablePollingClientIntegrationTest {
         "UTC",
         selectedTable,
         "sequence_id",
-        StartupMode.ALL_EXISTING,
-        null,
         1,
         10,
         10
@@ -175,29 +156,4 @@ class MsSqlTablePollingClientIntegrationTest {
     return value == null ? defaultValue : value;
   }
 
-  private static class TestLogger implements IExtensionsLogger {
-    private int errors;
-
-    @Override
-    public void log(SpLogMessage logMessage) {
-    }
-
-    @Override
-    public void error(Exception e) {
-      errors++;
-    }
-
-    @Override
-    public void error(String details, Exception e) {
-      errors++;
-    }
-
-    @Override
-    public void info(String title, String details) {
-    }
-
-    @Override
-    public void warn(String title, String details) {
-    }
-  }
 }

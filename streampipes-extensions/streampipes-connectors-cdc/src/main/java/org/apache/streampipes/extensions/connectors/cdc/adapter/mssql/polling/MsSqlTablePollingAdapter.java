@@ -40,15 +40,14 @@ import org.apache.streampipes.sdk.builder.adapter.AdapterConfigurationBuilder;
 import org.apache.streampipes.sdk.builder.adapter.SampleDataBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.helpers.Tuple2;
 
+import java.math.BigDecimal;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingConfig.BATCH_SIZE_KEY;
-import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingConfig.CUSTOM_SEQUENCE_KEY;
 import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingConfig.DATABASE_KEY;
 import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingConfig.DEFAULT_BATCH_SIZE;
 import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingConfig.DEFAULT_MAX_ROWS_PER_POLL;
@@ -59,7 +58,6 @@ import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.pol
 import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingConfig.POLLING_INTERVAL_SECONDS_KEY;
 import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingConfig.PORT_KEY;
 import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingConfig.SEQUENCE_COLUMN_KEY;
-import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingConfig.STARTUP_MODE_KEY;
 import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingConfig.TABLE_KEY;
 import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingConfig.TIMEZONE_KEY;
 import static org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingConfig.TRUST_SERVER_CERTIFICATE_KEY;
@@ -69,19 +67,9 @@ public class MsSqlTablePollingAdapter implements StreamPipesAdapter, IPullAdapte
 
   public static final String ID = "org.apache.streampipes.connect.cdc.adapter.mssql.polling";
 
-  private final CheckpointStore checkpointStore;
-
   private PullAdapterScheduler scheduler;
   private MsSqlTablePoller poller;
   private int pollingIntervalSeconds;
-
-  public MsSqlTablePollingAdapter() {
-    this(new FileCheckpointStore());
-  }
-
-  MsSqlTablePollingAdapter(CheckpointStore checkpointStore) {
-    this.checkpointStore = checkpointStore;
-  }
 
   @Override
   public StaticProperty resolveConfiguration(String staticPropertyInternalName,
@@ -120,7 +108,7 @@ public class MsSqlTablePollingAdapter implements StreamPipesAdapter, IPullAdapte
 
     return AdapterConfigurationBuilder.create(ID, 0, MsSqlTablePollingAdapter::new)
         .withLocales(Locales.EN)
-        .withAssets(ExtensionAssetType.DOCUMENTATION)
+        .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .requiredTextParameter(Labels.withId(HOST_KEY))
         .requiredIntegerParameter(Labels.withId(PORT_KEY), 1433)
         .requiredTextParameter(Labels.withId(DATABASE_KEY))
@@ -131,15 +119,6 @@ public class MsSqlTablePollingAdapter implements StreamPipesAdapter, IPullAdapte
         .requiredTextParameter(Labels.withId(TIMEZONE_KEY), ZoneOffset.UTC.getId())
         .requiredSingleValueSelectionFromContainer(Labels.withId(TABLE_KEY), connectionDependencies)
         .requiredSingleValueSelectionFromContainer(Labels.withId(SEQUENCE_COLUMN_KEY), sequenceDependencies)
-        .requiredSingleValueSelection(
-            Labels.withId(STARTUP_MODE_KEY),
-            Options.from(
-                new Tuple2<>("New rows only", StartupMode.NEW_ROWS.name()),
-                new Tuple2<>("All existing rows", StartupMode.ALL_EXISTING.name()),
-                new Tuple2<>("Custom sequence", StartupMode.CUSTOM_SEQUENCE.name())
-            )
-        )
-        .requiredTextParameter(Labels.withId(CUSTOM_SEQUENCE_KEY), "0")
         .requiredIntegerParameter(Labels.withId(POLLING_INTERVAL_SECONDS_KEY), 5)
         .requiredIntegerParameter(Labels.withId(BATCH_SIZE_KEY), DEFAULT_BATCH_SIZE)
         .requiredIntegerParameter(Labels.withId(MAX_ROWS_PER_POLL_KEY), DEFAULT_MAX_ROWS_PER_POLL)
@@ -162,31 +141,22 @@ public class MsSqlTablePollingAdapter implements StreamPipesAdapter, IPullAdapte
 
     MsSqlTablePollingClient client = new MsSqlTablePollingClient(config);
     client.validateConfiguration();
-    List<MsSqlColumn> currentSchema = client.describeSchema();
-    List<MsSqlColumn> expectedSchema;
-    try {
-      expectedSchema = checkpointStore.loadExpectedSchema(extractor.getAdapterDescription().getElementId())
-          .orElseThrow(() -> new AdapterException(
-              "No captured SQL Server schema is available. Request schema detection before starting the adapter."
-          ));
-    } catch (AdapterException e) {
-      throw e;
+    List<MsSqlColumn> currentSchema;
+    Optional<BigDecimal> startupCursor;
+    try (MsSqlPollingRowSource.PollSession startupSession = client.openSession()) {
+      currentSchema = startupSession.currentSchema();
+      startupCursor = startupSession.maximumSequence();
     } catch (Exception e) {
-      throw new AdapterException("Failed to load the captured SQL Server schema: " + e.getMessage(), e);
-    }
-    String initialMismatch = MsSqlTablePoller.describeSchemaMismatch(expectedSchema, currentSchema);
-    if (initialMismatch != null) {
-      throw new AdapterException("SQL Server table schema changed since schema discovery: " + initialMismatch);
+      throw new AdapterException("Failed to capture the SQL Server startup watermark: " + e.getMessage(), e);
     }
 
     this.pollingIntervalSeconds = config.pollingIntervalSeconds();
     this.poller = new MsSqlTablePoller(
-        extractor.getAdapterDescription().getElementId(),
         config.pollingSettings(),
-        expectedSchema,
+        currentSchema,
         config.sequenceColumn(),
+        startupCursor,
         client,
-        checkpointStore,
         collector::collect,
         adapterRuntimeContext.getLogger()
     );
@@ -210,12 +180,6 @@ public class MsSqlTablePollingAdapter implements StreamPipesAdapter, IPullAdapte
     MsSqlTablePollingConfig config = MsSqlTablePollingConfig.from(extractor.getStaticPropertyExtractor());
     MsSqlTablePollingClient client = new MsSqlTablePollingClient(config);
     client.validateConfiguration();
-    List<MsSqlColumn> expectedSchema = client.describeSchema();
-    try {
-      checkpointStore.saveExpectedSchema(extractor.getAdapterDescription().getElementId(), expectedSchema);
-    } catch (Exception e) {
-      throw new AdapterException("Failed to persist the captured SQL Server schema: " + e.getMessage(), e);
-    }
     return SampleDataBuilder.create().sample(client.sampleRow()).build();
   }
 

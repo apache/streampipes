@@ -28,39 +28,33 @@ import java.util.function.Consumer;
 
 public class MsSqlTablePoller {
 
-  private final String adapterElementId;
   private final MsSqlPollingSettings settings;
   private final List<MsSqlColumn> expectedSchema;
   private final String sequenceColumn;
   private final MsSqlPollingRowSource rowSource;
-  private final CheckpointStore checkpointStore;
   private final Consumer<Map<String, Object>> collector;
   private final IExtensionsLogger logger;
 
+  private Optional<BigDecimal> cursor;
   private String reportedSchemaMismatch;
-  private String reportedRegression;
 
-  public MsSqlTablePoller(String adapterElementId,
-                          MsSqlPollingSettings settings,
+  public MsSqlTablePoller(MsSqlPollingSettings settings,
                           List<MsSqlColumn> expectedSchema,
                           String sequenceColumn,
+                          Optional<BigDecimal> startupCursor,
                           MsSqlPollingRowSource rowSource,
-                          CheckpointStore checkpointStore,
                           Consumer<Map<String, Object>> collector,
                           IExtensionsLogger logger) {
-    this.adapterElementId = adapterElementId;
     this.settings = settings;
     this.expectedSchema = List.copyOf(expectedSchema);
     this.sequenceColumn = sequenceColumn;
     this.rowSource = rowSource;
-    this.checkpointStore = checkpointStore;
     this.collector = collector;
     this.logger = logger;
+    this.cursor = startupCursor;
   }
 
   public void poll() throws Exception {
-    CheckpointSnapshot checkpoint = checkpointStore.load(adapterElementId);
-
     try (MsSqlPollingRowSource.PollSession session = rowSource.openSession()) {
       String mismatch = describeSchemaMismatch(expectedSchema, session.currentSchema());
       if (mismatch != null) {
@@ -69,43 +63,21 @@ public class MsSqlTablePoller {
       }
       reportSchemaRecovery();
 
-      if (!checkpoint.present()) {
-        checkpoint = initializeCheckpoint(checkpoint, session);
-        if (checkpoint == null) {
-          return;
-        }
-      }
-
-      Optional<BigDecimal> maximum = session.maximumSequence();
-      if (isRegression(checkpoint.cursor(), maximum)) {
-        reportRegression(checkpoint.cursor().orElseThrow(), maximum);
-        return;
-      }
-      reportedRegression = null;
-
       int rowsProcessed = 0;
       while (rowsProcessed < settings.maxRowsPerPoll()) {
         int requested = Math.min(settings.batchSize(), settings.maxRowsPerPoll() - rowsProcessed);
-        List<MsSqlRow> batch = session.readAfter(checkpoint.cursor(), requested);
+        List<MsSqlRow> batch = session.readAfter(cursor, requested);
         if (batch.isEmpty()) {
           return;
         }
 
-        validateBatch(batch, checkpoint.cursor());
+        validateBatch(batch, cursor);
         for (MsSqlRow row : batch) {
           collector.accept(row.event());
         }
 
         BigDecimal highestSequence = batch.get(batch.size() - 1).sequence();
-        Optional<CheckpointSnapshot> saved = checkpointStore.save(
-            adapterElementId,
-            checkpoint.revision(),
-            Optional.of(highestSequence)
-        );
-        if (saved.isEmpty()) {
-          return;
-        }
-        checkpoint = saved.orElseThrow();
+        cursor = Optional.of(highestSequence);
         rowsProcessed += batch.size();
 
         if (batch.size() < requested) {
@@ -113,22 +85,6 @@ public class MsSqlTablePoller {
         }
       }
     }
-  }
-
-  private CheckpointSnapshot initializeCheckpoint(CheckpointSnapshot absent,
-                                                  MsSqlPollingRowSource.PollSession session) throws Exception {
-    Optional<BigDecimal> cursor = switch (settings.startupMode()) {
-      case NEW_ROWS -> session.maximumSequence();
-      case ALL_EXISTING -> Optional.empty();
-      case CUSTOM_SEQUENCE -> Optional.of(settings.customSequence());
-    };
-
-    return checkpointStore.save(adapterElementId, absent.revision(), cursor).orElse(null);
-  }
-
-  private boolean isRegression(Optional<BigDecimal> checkpoint, Optional<BigDecimal> maximum) {
-    return checkpoint.isPresent()
-        && (maximum.isEmpty() || maximum.orElseThrow().compareTo(checkpoint.orElseThrow()) < 0);
   }
 
   private void validateBatch(List<MsSqlRow> batch, Optional<BigDecimal> cursor) {
@@ -173,12 +129,4 @@ public class MsSqlTablePoller {
     }
   }
 
-  private void reportRegression(BigDecimal checkpoint, Optional<BigDecimal> maximum) {
-    String details = "Persisted sequence " + checkpoint + " is greater than current table maximum "
-        + maximum.map(BigDecimal::toPlainString).orElse("<empty>") + ". Reset polling state to recover.";
-    if (!details.equals(reportedRegression)) {
-      logger.error("MSSQL sequence regression: " + details, new IllegalStateException(details));
-      reportedRegression = details;
-    }
-  }
 }

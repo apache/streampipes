@@ -135,5 +135,6 @@ export class StaticRuntimeResolvableOneOfInputComponent
         this.parentForm.controls[this.staticProperty.internalName].setErrors(
             error,
         );
+        this.applyCompletedConfiguration(error === undefined);
     }
 }

@@ -20,8 +20,6 @@ package org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling;
 
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,27 +28,24 @@ class MsSqlTablePollingConfigurationTest {
 
   @Test
   void intervalAtAndAboveAdministrativeMinimumIsAccepted() {
-    assertDoesNotThrow(() -> config(2, 10, 10, StartupMode.NEW_ROWS, null).validate(2));
-    assertDoesNotThrow(() -> config(3, 10, 10, StartupMode.NEW_ROWS, null).validate(2));
+    assertDoesNotThrow(() -> config(2, 10, 10).validate(2));
+    assertDoesNotThrow(() -> config(3, 10, 10).validate(2));
   }
 
   @Test
   void intervalBelowAdministrativeMinimumIsRejected() {
     assertThrows(IllegalArgumentException.class, () ->
-        config(1, 10, 10, StartupMode.NEW_ROWS, null).validate(2)
+        config(1, 10, 10).validate(2)
     );
   }
 
   @Test
-  void invalidBatchLimitsAndMissingCustomCursorAreRejected() {
+  void invalidBatchLimitsAreRejected() {
     assertThrows(IllegalArgumentException.class, () ->
-        config(2, 0, 10, StartupMode.NEW_ROWS, null).validate(1)
+        config(2, 0, 10).validate(1)
     );
     assertThrows(IllegalArgumentException.class, () ->
-        config(2, 11, 10, StartupMode.NEW_ROWS, null).validate(1)
-    );
-    assertThrows(IllegalArgumentException.class, () ->
-        config(2, 10, 10, StartupMode.CUSTOM_SEQUENCE, null).validate(1)
+        config(2, 11, 10).validate(1)
     );
   }
 
@@ -77,9 +72,7 @@ class MsSqlTablePollingConfigurationTest {
 
   private static MsSqlTablePollingConfig config(int interval,
                                                 int batchSize,
-                                                int maxRows,
-                                                StartupMode startupMode,
-                                                BigDecimal customSequence) {
+                                                int maxRows) {
     return new MsSqlTablePollingConfig(
         "localhost",
         1433,
@@ -91,11 +84,10 @@ class MsSqlTablePollingConfigurationTest {
         "UTC",
         new MsSqlTableIdentifier("dbo", "measurements"),
         "sequence_id",
-        startupMode,
-        customSequence,
         interval,
         batchSize,
         maxRows
     );
   }
+
 }

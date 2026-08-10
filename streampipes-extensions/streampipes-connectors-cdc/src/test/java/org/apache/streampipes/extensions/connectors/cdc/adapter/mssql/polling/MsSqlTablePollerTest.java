@@ -33,9 +33,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MsSqlTablePollerTest {
 
@@ -45,83 +43,36 @@ class MsSqlTablePollerTest {
   );
 
   @Test
-  void allExistingEmitsRowsAndCheckpointsCompletedBatch() throws Exception {
-    InMemoryCheckpointStore store = new InMemoryCheckpointStore();
-    TestRowSource source = new TestRowSource(List.of(
-        row("9223372036854775808", "first"),
-        row("9223372036854775809", "second")
-    ));
-    List<Map<String, Object>> emitted = new ArrayList<>();
-    MsSqlTablePoller poller = new MsSqlTablePoller(
-        "adapter-1",
-        new MsSqlPollingSettings(StartupMode.ALL_EXISTING, null, 2, 10),
-        SCHEMA,
-        "sequence_id",
-        source,
-        store,
-        emitted::add,
-        new TestLogger()
-    );
-
-    poller.poll();
-
-    assertEquals(List.of("first", "second"), emitted.stream().map(event -> event.get("value")).toList());
-    assertEquals(
-        new BigDecimal("9223372036854775809"),
-        store.load("adapter-1").cursor().orElseThrow()
-    );
-    assertEquals(1, source.openCount);
-    assertEquals(1, source.closeCount);
-  }
-
-  @Test
-  void newRowsStartsAtCurrentMaximumAndReadsRowsAddedLater() throws Exception {
-    InMemoryCheckpointStore store = new InMemoryCheckpointStore();
+  void emitsOnlyRowsAddedAfterStartupWatermark() throws Exception {
     TestRowSource source = new TestRowSource(new ArrayList<>(List.of(row("10", "existing"))));
     List<Map<String, Object>> emitted = new ArrayList<>();
-    MsSqlTablePoller poller = poller(
-        new MsSqlPollingSettings(StartupMode.NEW_ROWS, null, 2, 10), source, store, emitted::add, new TestLogger()
-    );
+    MsSqlTablePoller poller = poller(Optional.of(new BigDecimal("10")), source, emitted::add);
 
-    poller.poll();
     source.rows.add(row("11", "new"));
     poller.poll();
 
-    assertEquals(List.of("new"), emitted.stream().map(event -> event.get("value")).toList());
-    assertEquals(new BigDecimal("11"), store.load("adapter-1").cursor().orElseThrow());
+    assertEquals(List.of("new"), values(emitted));
   }
 
   @Test
-  void customSequenceIsExclusiveAndExactAboveLongRange() throws Exception {
-    BigDecimal custom = new BigDecimal("9223372036854775808");
-    InMemoryCheckpointStore store = new InMemoryCheckpointStore();
-    TestRowSource source = new TestRowSource(List.of(
-        row(custom.toPlainString(), "boundary"),
-        row("9223372036854775809", "after")
-    ));
+  void emptyTableAtStartupEmitsItsFirstRow() throws Exception {
+    TestRowSource source = new TestRowSource(new ArrayList<>());
     List<Map<String, Object>> emitted = new ArrayList<>();
+    MsSqlTablePoller poller = poller(Optional.empty(), source, emitted::add);
 
-    poller(
-        new MsSqlPollingSettings(StartupMode.CUSTOM_SEQUENCE, custom, 1, 10),
-        source,
-        store,
-        emitted::add,
-        new TestLogger()
-    ).poll();
+    source.rows.add(row("1", "first"));
+    poller.poll();
 
-    assertEquals(List.of("after"), emitted.stream().map(event -> event.get("value")).toList());
+    assertEquals(List.of("first"), values(emitted));
   }
 
   @Test
-  void maxRowsPerPollContinuesBacklogOnNextInvocation() throws Exception {
-    InMemoryCheckpointStore store = new InMemoryCheckpointStore();
+  void advancesInMemoryCursorAcrossBatchesAndPolls() throws Exception {
     TestRowSource source = new TestRowSource(List.of(
         row("1", "one"), row("2", "two"), row("3", "three"), row("4", "four"), row("5", "five")
     ));
     List<Map<String, Object>> emitted = new ArrayList<>();
-    MsSqlTablePoller poller = poller(
-        new MsSqlPollingSettings(StartupMode.ALL_EXISTING, null, 2, 4), source, store, emitted::add, new TestLogger()
-    );
+    MsSqlTablePoller poller = poller(Optional.empty(), new MsSqlPollingSettings(2, 4), source, emitted::add);
 
     poller.poll();
     assertEquals(List.of("one", "two", "three", "four"), values(emitted));
@@ -129,42 +80,33 @@ class MsSqlTablePollerTest {
 
     assertEquals(List.of("one", "two", "three", "four", "five"), values(emitted));
     assertEquals(2, source.openCount);
+    assertEquals(2, source.closeCount);
   }
 
   @Test
-  void collectorFailureReplaysWholeUncheckpointedBatch() throws Exception {
-    InMemoryCheckpointStore store = new InMemoryCheckpointStore();
+  void collectorFailureDoesNotAdvanceTheInMemoryCursor() throws Exception {
     TestRowSource source = new TestRowSource(List.of(row("1", "one"), row("2", "two")));
     AtomicBoolean failOnce = new AtomicBoolean(true);
     List<Map<String, Object>> emitted = new ArrayList<>();
-    MsSqlTablePoller poller = poller(
-        new MsSqlPollingSettings(StartupMode.ALL_EXISTING, null, 2, 10),
-        source,
-        store,
-        event -> {
-          emitted.add(event);
-          if (failOnce.compareAndSet(true, false)) {
-            throw new IllegalStateException("collector failed");
-          }
-        },
-        new TestLogger()
-    );
+    MsSqlTablePoller poller = poller(Optional.empty(), source, event -> {
+      emitted.add(event);
+      if (failOnce.compareAndSet(true, false)) {
+        throw new IllegalStateException("collector failed");
+      }
+    });
 
     assertThrows(IllegalStateException.class, poller::poll);
-    assertTrue(store.load("adapter-1").cursor().isEmpty());
     poller.poll();
 
     assertEquals(List.of("one", "one", "two"), values(emitted));
-    assertEquals(new BigDecimal("2"), store.load("adapter-1").cursor().orElseThrow());
   }
 
   @Test
   void schemaMismatchIsSuppressedUntilDistinctAndReportsRecovery() throws Exception {
-    InMemoryCheckpointStore store = new InMemoryCheckpointStore();
     TestRowSource source = new TestRowSource(List.of(row("1", "one")));
     TestLogger logger = new TestLogger();
-    MsSqlTablePoller poller = poller(
-        new MsSqlPollingSettings(StartupMode.ALL_EXISTING, null, 1, 10), source, store, event -> { }, logger
+    MsSqlTablePoller poller = new MsSqlTablePoller(
+        new MsSqlPollingSettings(1, 10), SCHEMA, "sequence_id", Optional.empty(), source, event -> { }, logger
     );
     source.schema = List.of(SCHEMA.get(0));
 
@@ -179,60 +121,18 @@ class MsSqlTablePollerTest {
     assertEquals(1, logger.infos.size());
   }
 
-  @Test
-  void sequenceRegressionPausesAndPreservesCheckpoint() throws Exception {
-    InMemoryCheckpointStore store = new InMemoryCheckpointStore();
-    CheckpointSnapshot saved = store.save("adapter-1", 0, Optional.of(new BigDecimal("100"))).orElseThrow();
-    TestRowSource source = new TestRowSource(List.of(row("10", "old")));
-    TestLogger logger = new TestLogger();
-    MsSqlTablePoller poller = poller(
-        new MsSqlPollingSettings(StartupMode.ALL_EXISTING, null, 1, 10), source, store, event -> { }, logger
-    );
-
-    poller.poll();
-    poller.poll();
-
-    assertEquals(1, logger.errors.size());
-    assertEquals(saved, store.load("adapter-1"));
+  private static MsSqlTablePoller poller(Optional<BigDecimal> startupCursor,
+                                         TestRowSource source,
+                                         java.util.function.Consumer<Map<String, Object>> collector) {
+    return poller(startupCursor, new MsSqlPollingSettings(2, 10), source, collector);
   }
 
-  @Test
-  void deletionRejectsStaleSaveAndReappliesStartupMode() throws Exception {
-    InMemoryCheckpointStore store = new InMemoryCheckpointStore();
-    TestRowSource source = new TestRowSource(List.of(row("1", "one")));
-    List<Map<String, Object>> emitted = new ArrayList<>();
-    AtomicBoolean deleted = new AtomicBoolean();
-    MsSqlTablePoller poller = poller(
-        new MsSqlPollingSettings(StartupMode.NEW_ROWS, null, 1, 10),
-        source,
-        store,
-        event -> {
-          emitted.add(event);
-          if (deleted.compareAndSet(false, true)) {
-            CheckpointSnapshot current = store.load("adapter-1");
-            assertTrue(store.delete("adapter-1", current.revision()));
-          }
-        },
-        new TestLogger()
-    );
-    CheckpointSnapshot initial = store.save("adapter-1", 0, Optional.empty()).orElseThrow();
-    assertTrue(initial.present());
-
-    poller.poll();
-    assertFalse(store.load("adapter-1").present());
-    poller.poll();
-
-    assertEquals(List.of("one"), values(emitted));
-    assertEquals(new BigDecimal("1"), store.load("adapter-1").cursor().orElseThrow());
-  }
-
-  private static MsSqlTablePoller poller(MsSqlPollingSettings settings,
-                                         MsSqlPollingRowSource source,
-                                         CheckpointStore store,
-                                         java.util.function.Consumer<Map<String, Object>> collector,
-                                         IExtensionsLogger logger) {
+  private static MsSqlTablePoller poller(Optional<BigDecimal> startupCursor,
+                                         MsSqlPollingSettings settings,
+                                         TestRowSource source,
+                                         java.util.function.Consumer<Map<String, Object>> collector) {
     return new MsSqlTablePoller(
-        "adapter-1", settings, SCHEMA, "sequence_id", source, store, collector, logger
+        settings, SCHEMA, "sequence_id", startupCursor, source, collector, new TestLogger()
     );
   }
 
@@ -296,21 +196,22 @@ class MsSqlTablePollerTest {
     }
 
     @Override
-    public void error(Exception e) {
+    public void error(Exception exception) {
+      errors.add(exception.getMessage());
     }
 
     @Override
-    public void error(String details, Exception e) {
-      errors.add(details);
+    public void error(String title, Exception exception) {
+      errors.add(title + exception.getMessage());
     }
 
     @Override
-    public void info(String title, String details) {
-      infos.add(details);
+    public void info(String title, String description) {
+      infos.add(title + description);
     }
 
     @Override
-    public void warn(String title, String details) {
+    public void warn(String title, String description) {
     }
   }
 }

@@ -47,7 +47,12 @@ public class AdapterWorkerSampleDataRequestManagement {
   }
 
   public SampleData getSampleData(AdapterDescription adapterDescription) throws AdapterException, ParseException {
-    return getOrCreateSampleDataManagement().getSampleData(adapterDescription);
+    try {
+      return getOrCreateSampleDataManagement().getSampleData(adapterDescription);
+    } catch (RuntimeException e) {
+      String cause = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
+      throw new AdapterException("Failed to get adapter sample data: " + cause, e);
+    }
   }
 
   private AdapterWorkerSampleDataManagement getOrCreateSampleDataManagement() {
