@@ -19,11 +19,11 @@
 
 ## Reporting a Vulnerability
 
-Please report suspected security vulnerabilities in Apache StreamPipes
-**privately** to the StreamPipes security list at
-`security@streampipes.apache.org`, following the [Apache Software Foundation security process](https://www.apache.org/security/).
-Do **not** open public GitHub issues or pull requests for security reports — a
-private report lets the issue be investigated and fixed before disclosure.
+Please report suspected security vulnerabilities in Apache StreamPipes **privately** to the ASF Security Team at [security@apache.org](mailto:security@apache.org?subject=%5BSECURITY%5D%20StreamPipes), following the [Apache Software Foundation security process](https://www.apache.org/security/).
+
+Please send one plain-text, unencrypted email per vulnerability, and describe the issue in the **message body** rather than as an image, HTML, or PDF attachment.
+
+Do **not** open public GitHub issues or pull requests for security reports, and do not disclose the issue publicly until the project has responded: a private report lets the issue be investigated and fixed before disclosure.
 
 ## Threat Model
 A threat model for Apache StreamPipes is maintained in

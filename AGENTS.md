@@ -42,7 +42,7 @@ extension runtime), the adversaries in and out of scope, and what StreamPipes
 upholds versus what it leaves to the operator.
 
 ### Step 2 — Read the security policy
-Read **[SECURITY.md](SECURITY.md)** for how to report (`security@streampipes.apache.org`).
+Read **[SECURITY.md](SECURITY.md)** for how to report (`security@apache.org`).
 
 ### Key scoping facts (see THREAT_MODEL.md)
 - The **streampipes-rest** HTTP/REST layer is the primary control boundary; the external-data  ingestion boundary is at the adapters. The broker, datastore, and extension-runtime services are assumed to run inside an operator-controlled perimeter. 
