@@ -21,6 +21,7 @@ package org.apache.streampipes.client.api;
 import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.api.config.IStreamPipesClientConfig;
 import org.apache.streampipes.client.api.credentials.CredentialsProvider;
+import org.apache.streampipes.client.api.external.ExternalRequestConfig;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.model.mail.SpEmail;
 
@@ -49,6 +50,14 @@ public interface IStreamPipesClient extends Serializable {
   IDataProcessorApi processors();
 
   ICustomRequestApi customRequest();
+
+  default IExternalRequestApi externalRequest() {
+    return externalRequest(ExternalRequestConfig.defaults());
+  }
+
+  default IExternalRequestApi externalRequest(ExternalRequestConfig config) {
+    throw new UnsupportedOperationException("External requests are not supported by this client implementation");
+  }
 
   IAdminApi adminApi();
 
