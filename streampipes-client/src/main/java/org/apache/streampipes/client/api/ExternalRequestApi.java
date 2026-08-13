@@ -21,6 +21,7 @@ package org.apache.streampipes.client.api;
 import org.apache.streampipes.client.api.external.ExternalRequest;
 import org.apache.streampipes.client.api.external.ExternalRequestConfig;
 import org.apache.streampipes.client.api.external.ExternalRequestException;
+import org.apache.streampipes.client.api.external.ExternalRequestMethod;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -44,16 +45,161 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ExternalRequestApi implements IExternalRequestApi {
 
   private static final String JSON_MEDIA_TYPE = "application/json";
   private static final int MAX_ERROR_RESPONSE_BYTES = 8 * 1024;
+  private static final ScheduledExecutorService RESPONSE_TIMEOUT_SCHEDULER = Executors.newSingleThreadScheduledExecutor(
+      runnable -> {
+        Thread thread = new Thread(runnable, "streampipes-external-request-timeout");
+        thread.setDaemon(true);
+        return thread;
+      }
+  );
 
   private final ExternalRequestConfig config;
 
   public ExternalRequestApi(ExternalRequestConfig config) {
     this.config = config;
+  }
+
+  @Override
+  public <T> void sendPost(String url, T payload) {
+    executeWithoutResponse(request(ExternalRequestMethod.POST, url, Map.of(), Map.of(), payload));
+  }
+
+  @Override
+  public <T> void sendPost(String url, Map<String, String> headers, T payload) {
+    executeWithoutResponse(request(ExternalRequestMethod.POST, url, headers, Map.of(), payload));
+  }
+
+  @Override
+  public <T> T sendPost(String url, Object payload, Class<T> responseClass) {
+    return execute(request(ExternalRequestMethod.POST, url, Map.of(), Map.of(), payload), responseClass);
+  }
+
+  @Override
+  public <T> T sendPost(String url, Map<String, String> headers, Object payload, Class<T> responseClass) {
+    return execute(request(ExternalRequestMethod.POST, url, headers, Map.of(), payload), responseClass);
+  }
+
+  @Override
+  public Map<String, Object> sendPostJson(String url, Object payload) {
+    return sendPost(url, payload, Map.class);
+  }
+
+  @Override
+  public Map<String, Object> sendPostJson(String url, Map<String, String> headers, Object payload) {
+    return sendPost(url, headers, payload, Map.class);
+  }
+
+  @Override
+  public <T> T sendGet(String url, Class<T> responseClass) {
+    return sendGet(url, Map.of(), Map.of(), responseClass);
+  }
+
+  @Override
+  public <T> T sendGet(String url, Map<String, String> headers, Class<T> responseClass) {
+    return sendGet(url, headers, Map.of(), responseClass);
+  }
+
+  @Override
+  public <T> T sendGet(String url,
+                       Map<String, String> headers,
+                       Map<String, String> queryParameters,
+                       Class<T> responseClass) {
+    return execute(request(ExternalRequestMethod.GET, url, headers, queryParameters, null), responseClass);
+  }
+
+  @Override
+  public Map<String, Object> sendGetJson(String url) {
+    return sendGet(url, Map.class);
+  }
+
+  @Override
+  public Map<String, Object> sendGetJson(String url, Map<String, String> headers) {
+    return sendGet(url, headers, Map.class);
+  }
+
+  @Override
+  public Map<String, Object> sendGetJson(String url,
+                                         Map<String, String> headers,
+                                         Map<String, String> queryParameters) {
+    return sendGet(url, headers, queryParameters, Map.class);
+  }
+
+  @Override
+  public <T> void sendPut(String url, T payload) {
+    executeWithoutResponse(request(ExternalRequestMethod.PUT, url, Map.of(), Map.of(), payload));
+  }
+
+  @Override
+  public <T> void sendPut(String url, Map<String, String> headers, T payload) {
+    executeWithoutResponse(request(ExternalRequestMethod.PUT, url, headers, Map.of(), payload));
+  }
+
+  @Override
+  public <T> T sendPut(String url, Object payload, Class<T> responseClass) {
+    return execute(request(ExternalRequestMethod.PUT, url, Map.of(), Map.of(), payload), responseClass);
+  }
+
+  @Override
+  public <T> T sendPut(String url, Map<String, String> headers, Object payload, Class<T> responseClass) {
+    return execute(request(ExternalRequestMethod.PUT, url, headers, Map.of(), payload), responseClass);
+  }
+
+  @Override
+  public Map<String, Object> sendPutJson(String url, Object payload) {
+    return sendPut(url, payload, Map.class);
+  }
+
+  @Override
+  public Map<String, Object> sendPutJson(String url, Map<String, String> headers, Object payload) {
+    return sendPut(url, headers, payload, Map.class);
+  }
+
+  @Override
+  public void sendDelete(String url) {
+    executeWithoutResponse(request(ExternalRequestMethod.DELETE, url, Map.of(), Map.of(), null));
+  }
+
+  @Override
+  public void sendDelete(String url, Map<String, String> headers) {
+    executeWithoutResponse(request(ExternalRequestMethod.DELETE, url, headers, Map.of(), null));
+  }
+
+  @Override
+  public Map<String, Object> sendDeleteJson(String url) {
+    return execute(request(ExternalRequestMethod.DELETE, url, Map.of(), Map.of(), null), Map.class);
+  }
+
+  @Override
+  public Map<String, Object> sendDeleteJson(String url, Map<String, String> headers) {
+    return execute(request(ExternalRequestMethod.DELETE, url, headers, Map.of(), null), Map.class);
+  }
+
+  @Override
+  public <T> List<T> getList(String url, Class<T> responseClass) {
+    return getList(url, Map.of(), Map.of(), responseClass);
+  }
+
+  @Override
+  public <T> List<T> getList(String url, Map<String, String> headers, Class<T> responseClass) {
+    return getList(url, headers, Map.of(), responseClass);
+  }
+
+  @Override
+  public <T> List<T> getList(String url,
+                             Map<String, String> headers,
+                             Map<String, String> queryParameters,
+                             Class<T> responseClass) {
+    return getList(request(ExternalRequestMethod.GET, url, headers, queryParameters, null), responseClass);
   }
 
   @Override
@@ -67,6 +213,10 @@ public class ExternalRequestApi implements IExternalRequestApi {
     } catch (JsonProcessingException e) {
       throw new ExternalRequestException("Could not deserialize external HTTP response", e);
     }
+  }
+
+  private void executeWithoutResponse(ExternalRequest request) {
+    executeRequest(request);
   }
 
   @Override
@@ -97,28 +247,72 @@ public class ExternalRequestApi implements IExternalRequestApi {
         .disableAutomaticRetries()
         .disableRedirectHandling()
         .build();
-         CloseableHttpResponse response = client.execute(httpRequest)) {
-      int statusCode = response.getStatusLine().getStatusCode();
-      String body;
+    ) {
+      AtomicBoolean timedOut = new AtomicBoolean();
+      ScheduledFuture<?> timeout = RESPONSE_TIMEOUT_SCHEDULER.schedule(() -> {
+        timedOut.set(true);
+        closeQuietly(client);
+      }, effectiveResponseTimeout(request), TimeUnit.MILLISECONDS);
       try {
-        body = readEntity(response.getEntity(), effectiveMaxResponseBytes(request));
-      } catch (ResponseSizeLimitException e) {
-        throw sizeLimitException(request, statusCode, e);
-      }
-      if (statusCode < 200 || statusCode >= 300) {
+        try (CloseableHttpResponse response = client.execute(httpRequest)) {
+          int statusCode = response.getStatusLine().getStatusCode();
+          String body;
+          try {
+            body = readEntity(response.getEntity(), effectiveMaxResponseBytes(request));
+          } catch (ResponseSizeLimitException e) {
+            throw sizeLimitException(request, statusCode, e);
+          }
+          if (statusCode < 200 || statusCode >= 300) {
+            throw new ExternalRequestException(
+                "External " + request.getMethod() + " request to " + sanitizedUri(request.getUri())
+                    + " failed with status " + statusCode + ": " + abbreviate(body),
+                statusCode
+            );
+          }
+          return body;
+        }
+      } catch (IOException e) {
+        if (timedOut.get()) {
+          throw new ExternalRequestException(
+              "External " + request.getMethod() + " request to " + sanitizedUri(request.getUri()) + " timed out",
+              e
+          );
+        }
         throw new ExternalRequestException(
-            "External " + request.getMethod() + " request to " + sanitizedUri(request.getUri())
-                + " failed with status " + statusCode + ": " + abbreviate(body),
-            statusCode
+            "Could not execute external " + request.getMethod() + " request to " + sanitizedUri(request.getUri()),
+            e
         );
+      } finally {
+        timeout.cancel(false);
       }
-      return body;
     } catch (IOException e) {
       throw new ExternalRequestException(
-          "Could not execute external " + request.getMethod() + " request to " + sanitizedUri(request.getUri()),
+          "Could not close external " + request.getMethod() + " request to " + sanitizedUri(request.getUri()),
           e
       );
     }
+  }
+
+  private void closeQuietly(CloseableHttpClient client) {
+    try {
+      client.close();
+    } catch (IOException ignored) {
+      // The timeout is already being reported to the caller.
+    }
+  }
+
+  private ExternalRequest request(ExternalRequestMethod method,
+                                  String url,
+                                  Map<String, String> headers,
+                                  Map<String, String> queryParameters,
+                                  Object payload) {
+    ExternalRequest.Builder builder = ExternalRequest.builder(method, URI.create(url))
+        .headers(headers)
+        .queryParameters(queryParameters);
+    if (payload != null) {
+      builder.payload(payload);
+    }
+    return builder.build();
   }
 
   private HttpUriRequest makeRequest(ExternalRequest request) {

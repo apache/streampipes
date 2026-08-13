@@ -104,10 +104,30 @@ public final class ExternalRequest {
       if (name == null || name.isBlank() || value == null) {
         throw new IllegalArgumentException("header names and values must not be null or blank");
       }
-      if (RESTRICTED_HEADERS.contains(name.toLowerCase())) {
+      if (!isHeaderName(name) || containsControlCharacter(value)) {
+        throw new IllegalArgumentException("headers must not contain control characters");
+      }
+      if (RESTRICTED_HEADERS.stream().anyMatch(restrictedHeader -> restrictedHeader.equalsIgnoreCase(name))) {
         throw new IllegalArgumentException("header '" + name + "' is controlled by the HTTP client");
       }
     });
+  }
+
+  private static boolean isHeaderName(String name) {
+    for (int index = 0; index < name.length(); index++) {
+      char character = name.charAt(index);
+      if (!((character >= '0' && character <= '9')
+          || (character >= 'A' && character <= 'Z')
+          || (character >= 'a' && character <= 'z')
+          || "!#$%&'*+-.^_`|~".indexOf(character) >= 0)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static boolean containsControlCharacter(String value) {
+    return value.chars().anyMatch(character -> character <= 31 || character == 127);
   }
 
   private void validatePayload() {

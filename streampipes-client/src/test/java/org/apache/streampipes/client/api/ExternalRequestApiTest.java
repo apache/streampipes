@@ -20,10 +20,8 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
-import org.apache.streampipes.client.api.external.ExternalRequest;
 import org.apache.streampipes.client.api.external.ExternalRequestConfig;
 import org.apache.streampipes.client.api.external.ExternalRequestException;
-import org.apache.streampipes.client.api.external.ExternalRequestMethod;
 import org.apache.streampipes.client.credentials.StreamPipesApiKeyCredentials;
 
 import com.sun.net.httpserver.HttpServer;
@@ -32,7 +30,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -73,11 +70,8 @@ class ExternalRequestApiTest {
 
     var client = client();
     client.getConfig().addCustomHeader("X-On-Behalf-Of", "user-id");
-    var request = ExternalRequest.builder(ExternalRequestMethod.GET, resourceUri("/resource"))
-        .build();
-
     Map<?, ?> response = client.externalRequest(ExternalRequestConfig.defaults())
-        .execute(request, Map.class);
+        .sendGet(resourceUri("/resource").toString(), Map.class);
 
     assertEquals("external", response.get("name"));
     assertNull(authorization.get());
@@ -89,40 +83,55 @@ class ExternalRequestApiTest {
     AtomicReference<String> requestMethod = new AtomicReference<>();
     AtomicReference<String> requestBody = new AtomicReference<>();
     AtomicReference<String> authorization = new AtomicReference<>();
-    AtomicReference<String> query = new AtomicReference<>();
     server = HttpServer.create(new InetSocketAddress(0), 0);
     server.createContext("/resource", exchange -> {
       requestMethod.set(exchange.getRequestMethod());
       requestBody.set(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
       authorization.set(exchange.getRequestHeaders().getFirst("Authorization"));
-      query.set(exchange.getRequestURI().getRawQuery());
-      exchange.sendResponseHeaders("DELETE".equals(exchange.getRequestMethod()) ? 204 : 202, -1);
+      if ("POST".equals(exchange.getRequestMethod())) {
+        writeJson(exchange, 200, "{\"created\":true}");
+      } else if ("PUT".equals(exchange.getRequestMethod())) {
+        writeJson(exchange, 200, "{\"updated\":true}");
+      } else {
+        exchange.sendResponseHeaders(204, -1);
+        exchange.close();
+      }
+    });
+    server.start();
+
+    var api = client().externalRequest();
+    api.sendPost(resourceUri("/resource").toString(), Map.of("Authorization", "Bearer external-token"), Map.of("value", 1));
+    assertEquals("POST", requestMethod.get());
+    assertTrue(requestBody.get().contains("\"value\" : 1"));
+    assertEquals("Bearer external-token", authorization.get());
+
+    api.sendPut(resourceUri("/resource").toString(), Map.of("value", 2));
+    assertEquals("PUT", requestMethod.get());
+
+    api.sendDelete(resourceUri("/resource").toString());
+    assertEquals("DELETE", requestMethod.get());
+
+    Map<String, Object> postResponse = api.sendPostJson(resourceUri("/resource").toString(), Map.of("value", 3));
+    assertEquals(true, postResponse.get("created"));
+
+    Map<String, Object> putResponse = api.sendPutJson(resourceUri("/resource").toString(), Map.of("value", 4));
+    assertEquals(true, putResponse.get("updated"));
+  }
+
+  @Test
+  void sendsVoidRequestsWithoutRequiringJsonResponses() throws Exception {
+    server = HttpServer.create(new InetSocketAddress(0), 0);
+    server.createContext("/acknowledged", exchange -> {
+      byte[] body = "accepted".getBytes(StandardCharsets.UTF_8);
+      exchange.sendResponseHeaders(202, body.length);
+      exchange.getResponseBody().write(body);
       exchange.close();
     });
     server.start();
 
     var api = client().externalRequest();
-    ExternalRequest post = ExternalRequest.builder(ExternalRequestMethod.POST, resourceUri("/resource"))
-        .header("Authorization", "Bearer external-token")
-        .queryParameter("filter", "a value")
-        .payload(Map.of("value", 1))
-        .build();
-    assertNull(api.execute(post, Object.class));
-    assertEquals("POST", requestMethod.get());
-    assertTrue(requestBody.get().contains("\"value\" : 1"));
-    assertEquals("Bearer external-token", authorization.get());
-    assertEquals("filter=a+value", query.get());
-
-    ExternalRequest put = ExternalRequest.builder(ExternalRequestMethod.PUT, resourceUri("/resource"))
-        .payload(Map.of("value", 2))
-        .build();
-    assertNull(api.execute(put, Object.class));
-    assertEquals("PUT", requestMethod.get());
-
-    ExternalRequest delete = ExternalRequest.builder(ExternalRequestMethod.DELETE, resourceUri("/resource"))
-        .build();
-    assertNull(api.execute(delete, Object.class));
-    assertEquals("DELETE", requestMethod.get());
+    api.sendPost(resourceUri("/acknowledged"), Map.of("value", 1));
+    api.sendPut(resourceUri("/acknowledged"), Map.of("value", 2));
   }
 
   @Test
@@ -135,12 +144,11 @@ class ExternalRequestApiTest {
     });
     server.start();
 
-    ExternalRequest request = ExternalRequest.builder(
-        ExternalRequestMethod.GET,
-        URI.create(resourceUri("/query").toString() + "?existing=value")
-    ).queryParameter("added", "another value").build();
-
-    client().externalRequest().executeJson(request);
+    client().externalRequest().sendGetJson(
+        resourceUri("/query").toString() + "?existing=value",
+        Map.of(),
+        Map.of("added", "another value")
+    );
 
     assertEquals("existing=value&added=another+value", query.get());
   }
@@ -156,43 +164,29 @@ class ExternalRequestApiTest {
     });
     server.start();
 
-    List<Map> response = client().externalRequest().getList(
-        ExternalRequest.builder(ExternalRequestMethod.GET, resourceUri("/list")).build(), Map.class);
+    List<Map> response = client().externalRequest().getList(resourceUri("/list").toString(), Map.class);
     assertEquals("one", response.get(0).get("name"));
 
     ExternalRequestException exception = assertThrows(ExternalRequestException.class,
-        () -> client().externalRequest().executeJson(
-            ExternalRequest.builder(ExternalRequestMethod.GET, resourceUri("/redirect")).build()));
+        () -> client().externalRequest().sendGetJson(resourceUri("/redirect").toString()));
     assertEquals(302, exception.getStatusCode());
   }
 
   @Test
   void rejectsInvalidRequestsAndBoundsResponseBodies() throws Exception {
+    assertThrows(IllegalArgumentException.class, () -> client().externalRequest().sendGetJson("/relative"));
     assertThrows(IllegalArgumentException.class,
-        () -> ExternalRequest.builder(ExternalRequestMethod.GET, URI.create("/relative")).build());
+        () -> client().externalRequest().sendGetJson("https://user@example.org"));
     assertThrows(IllegalArgumentException.class,
-        () -> ExternalRequest.builder(ExternalRequestMethod.GET, URI.create("https://user@example.org")).build());
+        () -> client().externalRequest().sendGetJson("https://example.org#fragment"));
     assertThrows(IllegalArgumentException.class,
-        () -> ExternalRequest.builder(ExternalRequestMethod.GET, URI.create("https://example.org#fragment")).build());
-    assertThrows(IllegalArgumentException.class,
-        () -> ExternalRequest.builder(ExternalRequestMethod.GET, URI.create("https://example.org"))
-            .header("hOsT", "other.example")
-            .build());
-    assertThrows(IllegalArgumentException.class,
-        () -> ExternalRequest.builder(ExternalRequestMethod.POST, URI.create("https://example.org")).build());
+        () -> client().externalRequest().sendGetJson("https://example.org", Map.of("hOsT", "other.example")));
 
     server = HttpServer.create(new InetSocketAddress(0), 0);
     server.createContext("/large", exchange -> writeJson(exchange, 200, "\"" + "x".repeat(128) + "\""));
     server.start();
     var api = client().externalRequest(ExternalRequestConfig.builder().maxResponseBytes(64).build());
-    ExternalRequest request = ExternalRequest.builder(ExternalRequestMethod.GET, resourceUri("/large")).build();
-
-    assertThrows(ExternalRequestException.class, () -> api.executeJson(request));
-
-    ExternalRequest largerRequestLimit = ExternalRequest.builder(ExternalRequestMethod.GET, resourceUri("/large"))
-        .maxResponseBytes(128)
-        .build();
-    assertThrows(IllegalArgumentException.class, () -> api.executeJson(largerRequestLimit));
+    assertThrows(ExternalRequestException.class, () -> api.sendGetJson(resourceUri("/large").toString()));
   }
 
   @Test
@@ -201,20 +195,16 @@ class ExternalRequestApiTest {
     server.createContext("/failure", exchange -> writeJson(exchange, 418, "{\"error\":\"unavailable\"}"));
     server.start();
 
-    ExternalRequest request = ExternalRequest.builder(
-        ExternalRequestMethod.GET,
-        URI.create(resourceUri("/failure").toString() + "?apiKey=secret")
-    ).build();
     ExternalRequestException exception = assertThrows(ExternalRequestException.class,
-        () -> client().externalRequest().executeJson(request));
+        () -> client().externalRequest().sendGetJson(resourceUri("/failure").toString() + "?apiKey=secret"));
 
     assertEquals(418, exception.getStatusCode());
     assertTrue(exception.getMessage().contains("unavailable"));
     assertFalse(exception.getMessage().contains("apiKey=secret"));
   }
 
-  private URI resourceUri(String path) {
-    return URI.create("http://localhost:" + server.getAddress().getPort() + path);
+  private String resourceUri(String path) {
+    return "http://localhost:" + server.getAddress().getPort() + path;
   }
 
   private StreamPipesClient client() {
