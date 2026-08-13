@@ -70,18 +70,8 @@ public class ExternalRequestApi implements IExternalRequestApi {
   }
 
   @Override
-  public <T> void sendPost(String url, T payload) {
-    executeWithoutResponse(request(ExternalRequestMethod.POST, url, Map.of(), Map.of(), payload));
-  }
-
-  @Override
   public <T> void sendPost(String url, Map<String, String> headers, T payload) {
     executeWithoutResponse(request(ExternalRequestMethod.POST, url, headers, Map.of(), payload));
-  }
-
-  @Override
-  public <T> T sendPost(String url, Object payload, Class<T> responseClass) {
-    return execute(request(ExternalRequestMethod.POST, url, Map.of(), Map.of(), payload), responseClass);
   }
 
   @Override
@@ -90,23 +80,8 @@ public class ExternalRequestApi implements IExternalRequestApi {
   }
 
   @Override
-  public Map<String, Object> sendPostJson(String url, Object payload) {
-    return sendPost(url, payload, Map.class);
-  }
-
-  @Override
   public Map<String, Object> sendPostJson(String url, Map<String, String> headers, Object payload) {
     return sendPost(url, headers, payload, Map.class);
-  }
-
-  @Override
-  public <T> T sendGet(String url, Class<T> responseClass) {
-    return sendGet(url, Map.of(), Map.of(), responseClass);
-  }
-
-  @Override
-  public <T> T sendGet(String url, Map<String, String> headers, Class<T> responseClass) {
-    return sendGet(url, headers, Map.of(), responseClass);
   }
 
   @Override
@@ -118,25 +93,10 @@ public class ExternalRequestApi implements IExternalRequestApi {
   }
 
   @Override
-  public Map<String, Object> sendGetJson(String url) {
-    return sendGet(url, Map.class);
-  }
-
-  @Override
-  public Map<String, Object> sendGetJson(String url, Map<String, String> headers) {
-    return sendGet(url, headers, Map.class);
-  }
-
-  @Override
   public Map<String, Object> sendGetJson(String url,
                                          Map<String, String> headers,
                                          Map<String, String> queryParameters) {
     return sendGet(url, headers, queryParameters, Map.class);
-  }
-
-  @Override
-  public <T> void sendPut(String url, T payload) {
-    executeWithoutResponse(request(ExternalRequestMethod.PUT, url, Map.of(), Map.of(), payload));
   }
 
   @Override
@@ -145,18 +105,8 @@ public class ExternalRequestApi implements IExternalRequestApi {
   }
 
   @Override
-  public <T> T sendPut(String url, Object payload, Class<T> responseClass) {
-    return execute(request(ExternalRequestMethod.PUT, url, Map.of(), Map.of(), payload), responseClass);
-  }
-
-  @Override
   public <T> T sendPut(String url, Map<String, String> headers, Object payload, Class<T> responseClass) {
     return execute(request(ExternalRequestMethod.PUT, url, headers, Map.of(), payload), responseClass);
-  }
-
-  @Override
-  public Map<String, Object> sendPutJson(String url, Object payload) {
-    return sendPut(url, payload, Map.class);
   }
 
   @Override
@@ -165,33 +115,13 @@ public class ExternalRequestApi implements IExternalRequestApi {
   }
 
   @Override
-  public void sendDelete(String url) {
-    executeWithoutResponse(request(ExternalRequestMethod.DELETE, url, Map.of(), Map.of(), null));
-  }
-
-  @Override
   public void sendDelete(String url, Map<String, String> headers) {
     executeWithoutResponse(request(ExternalRequestMethod.DELETE, url, headers, Map.of(), null));
   }
 
   @Override
-  public Map<String, Object> sendDeleteJson(String url) {
-    return execute(request(ExternalRequestMethod.DELETE, url, Map.of(), Map.of(), null), Map.class);
-  }
-
-  @Override
   public Map<String, Object> sendDeleteJson(String url, Map<String, String> headers) {
     return execute(request(ExternalRequestMethod.DELETE, url, headers, Map.of(), null), Map.class);
-  }
-
-  @Override
-  public <T> List<T> getList(String url, Class<T> responseClass) {
-    return getList(url, Map.of(), Map.of(), responseClass);
-  }
-
-  @Override
-  public <T> List<T> getList(String url, Map<String, String> headers, Class<T> responseClass) {
-    return getList(url, headers, Map.of(), responseClass);
   }
 
   @Override

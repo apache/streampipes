@@ -71,7 +71,7 @@ class ExternalRequestApiTest {
     var client = client();
     client.getConfig().addCustomHeader("X-On-Behalf-Of", "user-id");
     Map<?, ?> response = client.externalRequest(ExternalRequestConfig.defaults())
-        .sendGet(resourceUri("/resource").toString(), Map.class);
+        .sendGet(resourceUri("/resource"), Map.of(), Map.of(), Map.class);
 
     assertEquals("external", response.get("name"));
     assertNull(authorization.get());
@@ -105,16 +105,16 @@ class ExternalRequestApiTest {
     assertTrue(requestBody.get().contains("\"value\" : 1"));
     assertEquals("Bearer external-token", authorization.get());
 
-    api.sendPut(resourceUri("/resource").toString(), Map.of("value", 2));
+    api.sendPut(resourceUri("/resource"), Map.of(), Map.of("value", 2));
     assertEquals("PUT", requestMethod.get());
 
-    api.sendDelete(resourceUri("/resource").toString());
+    api.sendDelete(resourceUri("/resource"), Map.of());
     assertEquals("DELETE", requestMethod.get());
 
     Map<String, Object> postResponse = api.sendPostJson(resourceUri("/resource").toString(), Map.of("value", 3));
     assertEquals(true, postResponse.get("created"));
 
-    Map<String, Object> putResponse = api.sendPutJson(resourceUri("/resource").toString(), Map.of("value", 4));
+    Map<String, Object> putResponse = api.sendPutJson(resourceUri("/resource"), Map.of(), Map.of("value", 4));
     assertEquals(true, putResponse.get("updated"));
   }
 
@@ -130,8 +130,8 @@ class ExternalRequestApiTest {
     server.start();
 
     var api = client().externalRequest();
-    api.sendPost(resourceUri("/acknowledged"), Map.of("value", 1));
-    api.sendPut(resourceUri("/acknowledged"), Map.of("value", 2));
+    api.sendPost(resourceUri("/acknowledged"), Map.of(), Map.of("value", 1));
+    api.sendPut(resourceUri("/acknowledged"), Map.of(), Map.of("value", 2));
   }
 
   @Test
@@ -164,7 +164,7 @@ class ExternalRequestApiTest {
     });
     server.start();
 
-    List<Map> response = client().externalRequest().getList(resourceUri("/list").toString(), Map.class);
+    List<Map> response = client().externalRequest().getList(resourceUri("/list"), Map.of(), Map.of(), Map.class);
     assertEquals("one", response.get(0).get("name"));
 
     ExternalRequestException exception = assertThrows(ExternalRequestException.class,
@@ -180,7 +180,8 @@ class ExternalRequestApiTest {
     assertThrows(IllegalArgumentException.class,
         () -> client().externalRequest().sendGetJson("https://example.org#fragment"));
     assertThrows(IllegalArgumentException.class,
-        () -> client().externalRequest().sendGetJson("https://example.org", Map.of("hOsT", "other.example")));
+        () -> client().externalRequest().sendGetJson(
+            "https://example.org", Map.of("hOsT", "other.example"), Map.of()));
 
     server = HttpServer.create(new InetSocketAddress(0), 0);
     server.createContext("/large", exchange -> writeJson(exchange, 200, "\"" + "x".repeat(128) + "\""));

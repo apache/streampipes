@@ -31,58 +31,38 @@ import java.util.Map;
  */
 public interface IExternalRequestApi {
 
-  <T> void sendPost(String url, T payload);
-
   <T> void sendPost(String url, Map<String, String> headers, T payload);
-
-  <T> T sendPost(String url, Object payload, Class<T> responseClass);
 
   <T> T sendPost(String url, Map<String, String> headers, Object payload, Class<T> responseClass);
 
-  Map<String, Object> sendPostJson(String url, Object payload);
+  default Map<String, Object> sendPostJson(String url, Object payload) {
+    return sendPostJson(url, Map.of(), payload);
+  }
 
   Map<String, Object> sendPostJson(String url, Map<String, String> headers, Object payload);
-
-  <T> T sendGet(String url, Class<T> responseClass);
-
-  <T> T sendGet(String url, Map<String, String> headers, Class<T> responseClass);
 
   <T> T sendGet(String url,
                 Map<String, String> headers,
                 Map<String, String> queryParameters,
                 Class<T> responseClass);
 
-  Map<String, Object> sendGetJson(String url);
-
-  Map<String, Object> sendGetJson(String url, Map<String, String> headers);
+  default Map<String, Object> sendGetJson(String url) {
+    return sendGetJson(url, Map.of(), Map.of());
+  }
 
   Map<String, Object> sendGetJson(String url,
                                   Map<String, String> headers,
                                   Map<String, String> queryParameters);
 
-  <T> void sendPut(String url, T payload);
-
   <T> void sendPut(String url, Map<String, String> headers, T payload);
-
-  <T> T sendPut(String url, Object payload, Class<T> responseClass);
 
   <T> T sendPut(String url, Map<String, String> headers, Object payload, Class<T> responseClass);
 
-  Map<String, Object> sendPutJson(String url, Object payload);
-
   Map<String, Object> sendPutJson(String url, Map<String, String> headers, Object payload);
-
-  void sendDelete(String url);
 
   void sendDelete(String url, Map<String, String> headers);
 
-  Map<String, Object> sendDeleteJson(String url);
-
   Map<String, Object> sendDeleteJson(String url, Map<String, String> headers);
-
-  <T> List<T> getList(String url, Class<T> responseClass);
-
-  <T> List<T> getList(String url, Map<String, String> headers, Class<T> responseClass);
 
   <T> List<T> getList(String url,
                       Map<String, String> headers,
