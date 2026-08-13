@@ -1,0 +1,53 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+## Microsoft SQL Server Table Polling Adapter
+
+This adapter polls appended rows from one ordinary SQL Server table. It does not use Debezium and does not require
+Change Data Capture (CDC).
+
+### Source requirements
+
+Select a non-null `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, or scale-zero `DECIMAL`/`NUMERIC` sequence column backed by
+a single-column unique constraint. The table must be append-only and sequence values must become visible in increasing
+order. Updates, deletes, views, joins, and late lower-sequence commits are not supported.
+
+### Startup behavior
+
+When the adapter starts, it records the current maximum sequence in memory. It emits only rows with a greater sequence
+value. Rows that exist before this watermark, including rows inserted while the adapter was stopped, are not replayed.
+The startup watermark is the activation boundary; it is captured before the polling scheduler starts.
+
+### Delivery
+
+Rows are read using ordered keyset pagination and emitted individually. The in-memory cursor advances only after every
+row in a batch has been handed to the collector. A failed handoff retries that batch while the adapter remains running.
+Restarting the adapter captures a fresh watermark and intentionally provides no replay guarantee.
+
+### Polling limits and schema changes
+
+The batch size defaults to 500 and the maximum rows per poll defaults to 10,000. The administrator can set the minimum
+allowed interval with `SP_MSSQL_POLLING_MIN_INTERVAL_SECONDS` (default: 1). Startup fails if the configured interval is
+below this value.
+
+The output contains every source column, including the sequence, and no synthetic timestamp. Schema changes during an
+active run pause emission until the original column order and JDBC types return. A restart captures the current schema as
+the new baseline. Sequence regression caused by truncation or reseeding is not detected in this version.
+
+SQL temporal values are emitted as epoch milliseconds and binary values as Base64 strings, matching the MSSQL connector
+conventions. Each poll uses and closes one JDBC connection. Connection login and query execution have finite timeouts.

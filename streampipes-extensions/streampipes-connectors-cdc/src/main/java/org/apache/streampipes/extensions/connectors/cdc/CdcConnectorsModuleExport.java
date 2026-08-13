@@ -23,6 +23,7 @@ import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.MsSqlCdcAdapter;
+import org.apache.streampipes.extensions.connectors.cdc.adapter.mssql.polling.MsSqlTablePollingAdapter;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +32,7 @@ public class CdcConnectorsModuleExport implements IExtensionModuleExport {
 
   @Override
   public List<StreamPipesAdapter> adapters() {
-    return List.of(new MsSqlCdcAdapter());
+    return List.of(new MsSqlCdcAdapter(), new MsSqlTablePollingAdapter());
   }
 
   @Override

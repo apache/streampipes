@@ -1,0 +1,46 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.connect.cdc.adapter.mssql.polling.title=Microsoft SQL Server Table Polling
+org.apache.streampipes.connect.cdc.adapter.mssql.polling.description=Polls newly appended rows from an ordinary SQL Server table without CDC
+
+host.title=Host
+host.description=SQL Server hostname or IP address
+port.title=Port
+port.description=SQL Server TCP port
+database.title=Database
+database.description=SQL Server database name
+username.title=Username
+username.description=SQL Server user name
+password.title=Password
+password.description=SQL Server password
+encrypt.title=Encrypt Connection
+encrypt.description=Use TLS when connecting to SQL Server
+trust-server-certificate.title=Trust Server Certificate
+trust-server-certificate.description=Trust the SQL Server certificate without validating its chain
+timezone.title=Timezone
+timezone.description=Timezone for DATETIME and DATETIME2 values without timezone information
+table.title=Base Table
+table.description=Ordinary user table to poll; views and system tables are excluded
+sequence-column.title=Sequence Column
+sequence-column.description=Non-null exact integer column backed by a single-column unique constraint
+polling-interval-seconds.title=Polling Interval (seconds)
+polling-interval-seconds.description=Fixed delay between polls
+batch-size.title=Batch Size
+batch-size.description=Maximum rows read and handed to the collector in one batch
+max-rows-per-poll.title=Maximum Rows per Poll
+max-rows-per-poll.description=Maximum backlog rows handed off during one scheduled invocation
