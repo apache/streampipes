@@ -25,16 +25,19 @@ import org.apache.streampipes.client.api.DataLakeResourceApi;
 import org.apache.streampipes.client.api.DataProcessorApi;
 import org.apache.streampipes.client.api.DataSinkApi;
 import org.apache.streampipes.client.api.DataStreamApi;
+import org.apache.streampipes.client.api.ExternalRequestApi;
 import org.apache.streampipes.client.api.FileApi;
 import org.apache.streampipes.client.api.IAdapterApi;
 import org.apache.streampipes.client.api.IAdminApi;
 import org.apache.streampipes.client.api.ICustomRequestApi;
+import org.apache.streampipes.client.api.IExternalRequestApi;
 import org.apache.streampipes.client.api.IPipelineElementTemplateApi;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.client.api.PipelineApi;
 import org.apache.streampipes.client.api.PipelineElementTemplateApi;
 import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.api.credentials.CredentialsProvider;
+import org.apache.streampipes.client.api.external.ExternalRequestConfig;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.model.StreamPipesClientConnectionConfig;
 import org.apache.streampipes.client.paths.ApiPath;
@@ -207,6 +210,16 @@ public class StreamPipesClient implements
   @ExposedToScripts
   public ICustomRequestApi customRequest() {
     return new CustomRequestApi(config);
+  }
+
+  @Override
+  public IExternalRequestApi externalRequest() {
+    return externalRequest(ExternalRequestConfig.defaults());
+  }
+
+  @Override
+  public IExternalRequestApi externalRequest(ExternalRequestConfig requestConfig) {
+    return new ExternalRequestApi(requestConfig);
   }
 
   @Override
