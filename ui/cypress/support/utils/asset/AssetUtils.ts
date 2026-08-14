@@ -188,33 +188,28 @@ export class AssetUtils {
     }
 
     public static changeOwnership(assetName: string, email: string) {
-        AssetUtils.openManageAsset(assetName);
-        PermissionUtils.changeOwnershipInManageDialog(email);
+        PermissionUtils.changeOwnership(assetName, email);
     }
 
     public static markAsPublic(assetName: string) {
-        AssetUtils.openManageAsset(assetName);
-        PermissionUtils.markElementAsPublicInManageDialog();
+        PermissionUtils.markElementAsPublic(assetName);
     }
 
     public static authorizeUser(assetName: string, email: string) {
-        AssetUtils.openManageAsset(assetName);
-        PermissionUtils.authorizeUserInManageDialog(email);
+        PermissionUtils.authorizeUser(assetName, email);
     }
 
     public static authorizeGroup(assetName: string, groupName: string) {
         AssetUtils.openManageAsset(assetName);
-        PermissionUtils.authorizeGroupInManageDialog(groupName);
+        PermissionUtils.authorizeGroup(assetName, groupName);
     }
 
     public static validateUserCanChangePermissions(assetName: string) {
-        AssetUtils.openManageAsset(assetName);
-        PermissionUtils.validateUserCanChangePermissionsInManageDialog();
+        PermissionUtils.validateUserCanChangePermissions(assetName);
     }
 
     public static validateUserCanNotChangePermissions(assetName: string) {
-        AssetUtils.openManageAsset(assetName);
-        PermissionUtils.validateUserCanNotChangePermissionsInManageDialog();
+        PermissionUtils.validateUserCanNotChangePermissions(assetName);
     }
 
     public static checkAmountOfAssetsGreaterThan(amount: number) {

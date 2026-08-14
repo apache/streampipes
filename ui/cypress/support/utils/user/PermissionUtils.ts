@@ -37,12 +37,6 @@ export class PermissionUtils {
         PermissionUtils.save();
     }
 
-    public static changeOwnershipInManageDialog(email: string) {
-        cy.dataCy('owner-select').click();
-        cy.get(`[data-cy="owner-option-${email}"]`, { timeout: 10000 }).click();
-        PermissionUtils.save();
-    }
-
     public static markElementAsPublic(resourceName: string) {
         PermissionUtils.openManagePermissions(resourceName);
         StaticPropertyUtils.clickCheckbox('permission-public-element');
@@ -53,11 +47,6 @@ export class PermissionUtils {
         PermissionUtils.openManagePermissions(resourceName);
         PermissionUtils.validateAnonymousPublicLinkOption();
         StaticPropertyUtils.clickCheckbox('permission-anonymous-read');
-        PermissionUtils.save();
-    }
-
-    public static markElementAsPublicInManageDialog() {
-        StaticPropertyUtils.clickCheckbox('permission-public-element');
         PermissionUtils.save();
     }
 
@@ -78,12 +67,6 @@ export class PermissionUtils {
         PermissionUtils.save();
     }
 
-    public static authorizeGroupInManageDialog(groupName: string) {
-        cy.dataCy('authorized-group').type(groupName);
-        cy.get('.cdk-overlay-container mat-option').contains(groupName).click();
-
-        PermissionUtils.save();
-    }
     public static save() {
         cy.dataCy('sp-manage-save').should('be.visible').click();
     }
@@ -125,16 +108,6 @@ export class PermissionUtils {
         PermissionUtils.validateAnonymousPublicLinkOption()
             .find('input[type="checkbox"]')
             .should('be.checked');
-        PermissionUtils.cancel();
-    }
-
-    public static validateUserCanChangePermissionsInManageDialog() {
-        cy.dataCy('permission-public-element').should('exist');
-        PermissionUtils.cancel();
-    }
-
-    public static validateUserCanNotChangePermissionsInManageDialog() {
-        cy.dataCy('warning-permissions-managed-by-owner').should('exist');
         PermissionUtils.cancel();
     }
 
