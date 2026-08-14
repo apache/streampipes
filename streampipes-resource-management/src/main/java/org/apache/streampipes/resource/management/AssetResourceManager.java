@@ -56,7 +56,7 @@ public class AssetResourceManager extends CrudResourceManager<SpAssetModel, IAss
         asset.getElementId(),
         asset.getAssetName(),
         asset.getAssetDescription(),
-        asset.getAssetSite() != null ? asset.getAssetSite().getSiteId() : null,
+        asset.getAssetSite() != null ? asset.getAssetSite().siteId() : null,
         asset.isRemovable()
     );
   }
