@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.rest.impl.dataset;
 
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DataLakeDataWriterTest {
+class DatasetDataWriterTest {
 
   @Test
   void shouldSkipNullValuesWhenBuildingEventMap() {
@@ -37,7 +37,7 @@ class DataLakeDataWriterTest {
     row.add(null);
     row.add("ok");
 
-    var eventMap = DataLakeDataWriter.toEventMap(row, headers);
+    var eventMap = DatasetDataWriter.toEventMap(row, headers);
 
     assertEquals(2, eventMap.size());
     assertEquals(1710000000000L, eventMap.get("timestamp"));
@@ -50,7 +50,7 @@ class DataLakeDataWriterTest {
     var expected = new HashSet<>(List.of("timestamp", "temperature", "status"));
     var actual = new HashSet<>(List.of("timestamp", "status"));
 
-    assertTrue(DataLakeDataWriter.matchesRuntimeNames(expected, actual, true));
-    assertFalse(DataLakeDataWriter.matchesRuntimeNames(expected, actual, false));
+    assertTrue(DatasetDataWriter.matchesRuntimeNames(expected, actual, true));
+    assertFalse(DatasetDataWriter.matchesRuntimeNames(expected, actual, false));
   }
 }

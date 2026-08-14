@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -37,18 +37,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DataLakeDataWriter {
+public class DatasetDataWriter {
 
   private final boolean ignoreSchemaMismatch;
   private final boolean allowMissingFields;
   private final IDataLakeMeasureStorage datasetStorage;
 
-  public DataLakeDataWriter(boolean ignoreSchemaMismatch,
+  public DatasetDataWriter(boolean ignoreSchemaMismatch,
                             IDataLakeMeasureStorage datasetStorage) {
     this(ignoreSchemaMismatch, false, datasetStorage);
   }
 
-  public DataLakeDataWriter(boolean ignoreSchemaMismatch,
+  public DatasetDataWriter(boolean ignoreSchemaMismatch,
                             boolean allowMissingFields,
                             IDataLakeMeasureStorage datasetStorage) {
     this.ignoreSchemaMismatch = ignoreSchemaMismatch;

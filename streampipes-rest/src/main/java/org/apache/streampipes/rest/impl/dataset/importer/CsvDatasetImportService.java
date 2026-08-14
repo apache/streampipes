@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake.importer;
+package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -34,7 +34,7 @@ import org.apache.streampipes.model.datalake.importer.CsvImportTarget;
 import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
 import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.rest.impl.datalake.DataLakeDataWriter;
+import org.apache.streampipes.rest.impl.dataset.DatasetDataWriter;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -51,44 +51,44 @@ import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 
-public class CsvDataLakeImportService {
+public class CsvDatasetImportService {
 
   private static final int MAX_PREVIEW_ROWS = 50;
   private static final int MAX_ANALYSIS_ROWS = 200;
   private static final String STREAM_PREFIX = "s0::";
 
-  private final DataLakeDataWriter dataWriter;
+  private final DatasetDataWriter dataWriter;
   private final CsvImportUploadStorage uploadStorage;
   private final CsvImportParser parser;
   private final CsvImportValidationService validationService;
   private final IDataExplorerSchemaManagement schemaManagement;
   private final CsvImportJobManager jobManager;
 
-  public CsvDataLakeImportService(IDataExplorerSchemaManagement schemaManagement,
+  public CsvDatasetImportService(IDataExplorerSchemaManagement schemaManagement,
                                   IDataLakeMeasureStorage datasetStorage) {
     this(
         schemaManagement,
-        new DataLakeDataWriter(false, true, datasetStorage),
+        new DatasetDataWriter(false, true, datasetStorage),
         new CsvImportUploadStorage(),
         new CsvImportParser());
   }
 
-  CsvDataLakeImportService(
+  CsvDatasetImportService(
       IDataExplorerSchemaManagement schemaManagement,
-      DataLakeDataWriter dataWriter) {
+      DatasetDataWriter dataWriter) {
     this(schemaManagement, dataWriter, new CsvImportUploadStorage(), new CsvImportParser());
   }
 
-  CsvDataLakeImportService(
+  CsvDatasetImportService(
       IDataExplorerSchemaManagement schemaManagement,
-      DataLakeDataWriter dataWriter,
+      DatasetDataWriter dataWriter,
       CsvImportUploadStorage uploadStorage) {
     this(schemaManagement, dataWriter, uploadStorage, new CsvImportParser());
   }
 
-  CsvDataLakeImportService(
+  CsvDatasetImportService(
       IDataExplorerSchemaManagement schemaManagement,
-      DataLakeDataWriter dataWriter,
+      DatasetDataWriter dataWriter,
       CsvImportUploadStorage uploadStorage,
       CsvImportParser parser) {
     this.schemaManagement = schemaManagement;

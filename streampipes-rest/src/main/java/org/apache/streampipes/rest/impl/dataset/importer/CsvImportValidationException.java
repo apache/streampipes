@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake.importer;
+package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
 

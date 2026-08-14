@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake.importer;
+package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.model.datalake.importer.CsvImportJobStartResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportJobState;
@@ -40,17 +40,17 @@ class CsvImportJobManager {
 
   private static final Duration DEFAULT_TTL = Duration.ofHours(12);
 
-  private final CsvDataLakeImportService importService;
+  private final CsvDatasetImportService importService;
   private final ConcurrentMap<String, StoredJob> jobs;
   private final ExecutorService executorService;
   private final Duration ttl;
 
-  CsvImportJobManager(CsvDataLakeImportService importService) {
+  CsvImportJobManager(CsvDatasetImportService importService) {
     this(importService, Executors.newCachedThreadPool(), DEFAULT_TTL);
   }
 
   CsvImportJobManager(
-      CsvDataLakeImportService importService,
+      CsvDatasetImportService importService,
       ExecutorService executorService,
       Duration ttl) {
     this.importService = importService;

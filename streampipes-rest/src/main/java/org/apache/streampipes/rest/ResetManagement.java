@@ -93,7 +93,7 @@ public class ResetManagement {
 
     deleteAllFiles();
 
-    removeAllDataInDataLake();
+    removeAllDataInDataset();
 
     removeAllDataViewWidgets();
 
@@ -155,8 +155,8 @@ public class ResetManagement {
     allFiles.forEach(fileMetadata -> fileManager.deleteFile(fileMetadata.getFileId()));
   }
 
-  private void removeAllDataInDataLake() {
-    var dataLakeMeasureManagement = new DataExplorerDispatcher()
+  private void removeAllDataInDataset() {
+    var datasetMeasureManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getSchemaManagement(
             chartSchemaUpdateCoordinator,
@@ -164,13 +164,13 @@ public class ResetManagement {
             resourceManager.manageDataLakeMeasures().getDb());
     var dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
-        .getQueryManagement(dataLakeMeasureManagement);
-    List<DataLakeMeasure> allMeasurements = dataLakeMeasureManagement.getAllMeasurements();
+        .getQueryManagement(datasetMeasureManagement);
+    List<DataLakeMeasure> allMeasurements = datasetMeasureManagement.getAllMeasurements();
     allMeasurements.forEach(measurement -> {
-      boolean isSuccessDataLake = dataExplorerQueryManagement.deleteData(measurement.getMeasureName());
+      boolean isSuccessDataset = dataExplorerQueryManagement.deleteData(measurement.getMeasureName());
 
-      if (isSuccessDataLake) {
-        dataLakeMeasureManagement.deleteMeasurementByName(measurement.getMeasureName());
+      if (isSuccessDataset) {
+        datasetMeasureManagement.deleteMeasurementByName(measurement.getMeasureName());
       }
     });
   }

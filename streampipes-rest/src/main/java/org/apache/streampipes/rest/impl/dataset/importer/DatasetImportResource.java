@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake.importer;
+package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.importer.CsvImportJobStatus;
@@ -28,7 +28,7 @@ import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationR
 import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.rest.impl.datalake.AbstractDataLakeResource;
+import org.apache.streampipes.rest.impl.dataset.AbstractDatasetResource;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import org.springframework.http.HttpStatus;
@@ -48,15 +48,15 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v4/datalake/import")
-public class DataLakeImportResource extends AbstractDataLakeResource {
+public class DatasetImportResource extends AbstractDatasetResource {
 
-  private final CsvDataLakeImportService importService;
+  private final CsvDatasetImportService importService;
 
-  public DataLakeImportResource(IChartStorage chartStorage,
+  public DatasetImportResource(IChartStorage chartStorage,
                                 SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
-    this.importService = new CsvDataLakeImportService(
-        getDataLakeMeasureManagement(),
+    this.importService = new CsvDatasetImportService(
+        getDatasetMeasureManagement(),
         resourceManager.manageDataLakeMeasures().getDb()
     );
   }
@@ -163,7 +163,7 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
   private boolean hasWritePermission(org.apache.streampipes.model.datalake.importer.CsvImportTarget target) {
     return target == null
         || target.getMode() != CsvImportTargetMode.EXISTING
-        || getDataLakeMeasureManagement().getExistingMeasureByName(target.getMeasurementName()).isEmpty()
+        || getDatasetMeasureManagement().getExistingMeasureByName(target.getMeasurementName()).isEmpty()
         || this.checkPermissionByName(target.getMeasurementName(), "WRITE");
   }
 }

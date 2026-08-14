@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
@@ -47,14 +47,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v3/datalake/dashboard/kiosk")
-public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResource {
+public class KioskDashboardDatasetResource extends AbstractAuthGuardedRestResource {
 
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
   private final IDashboardStorage dashboardStorage;
   private final IChartStorage dataExplorerWidgetStorage;
   private final IPermissionStorage permissionStorage;
 
-  public KioskDashboardDataLakeResource(IChartStorage dataExplorerWidgetStorage,
+  public KioskDashboardDatasetResource(IChartStorage dataExplorerWidgetStorage,
                                         SpResourceManager resourceManager) {
     IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()

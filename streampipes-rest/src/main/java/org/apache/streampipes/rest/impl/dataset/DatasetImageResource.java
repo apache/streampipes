@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -32,7 +32,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v4/datalake/images")
-public class DataLakeImageResource extends AbstractAuthGuardedRestResource {
+public class DatasetImageResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "{imageId}", produces = "image/jpeg")
   public ResponseEntity<byte[]> getImage(@PathVariable("imageId") String imageId) throws IOException {

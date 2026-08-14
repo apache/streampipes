@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.dataexplorer.influx.sanitize.MeasureNameSanitizer;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -41,7 +41,7 @@ import java.util.List;
 @RequestMapping("/api/v3/datalake/pipelines")
 public class PersistedDataStreamResource extends AbstractPipelineExtractionResource<DataLakeMeasure> {
 
-  private static final String DataLakeAppId = "org.apache.streampipes.sinks.internal.jvm.datalake";
+  private static final String DATASET_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
   private static final String MeasureFieldInternalName = "db_measurement";
 
   public PersistedDataStreamResource(SpResourceManager resourceManager) {
@@ -52,14 +52,14 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
   @PreAuthorize(AuthConstants.HAS_READ_DATASET_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ') and hasPermission(filterObject.measureName, 'READ')")
   public List<DataLakeMeasure> getPersistedDataStreams() {
-    return extract(new ArrayList<>(), DataLakeAppId);
+    return extract(new ArrayList<>(), DATASET_APP_ID);
   }
 
   @GetMapping(path = "{pipelineId}/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getVisualizablePipelineByPipelineIdAndVisualizationName(
       @PathVariable("pipelineId") String pipelineId,
       @PathVariable("measureName") String measureName) {
-    return getPipelineByIdAndFieldValue(DataLakeAppId, pipelineId, measureName);
+    return getPipelineByIdAndFieldValue(DATASET_APP_ID, pipelineId, measureName);
   }
 
   @Override

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
@@ -30,19 +30,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Objects;
 
-public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
+public class AbstractDatasetResource extends AbstractAuthGuardedRestResource {
 
-  final IDataExplorerSchemaManagement dataLakeMeasureManagement;
-  private final IDataLakeMeasureStorage dataLakeMeasureStorage;
+  final IDataExplorerSchemaManagement datasetMeasureManagement;
+  private final IDataLakeMeasureStorage datasetMeasureStorage;
   protected final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
   private final SpResourceManager resourceManager;
 
-  public AbstractDataLakeResource(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
+  public AbstractDatasetResource(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
                                   SpResourceManager resourceManager) {
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
     this.resourceManager = resourceManager;
-    this.dataLakeMeasureStorage = resourceManager.manageDataLakeMeasures().getDb();
-    this.dataLakeMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
+    this.datasetMeasureStorage = resourceManager.manageDataLakeMeasures().getDb();
+    this.datasetMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
         .getSchemaManagement(
             chartSchemaUpdateCoordinator,
             resourceManager.managePermissions().getDb(),
@@ -63,8 +63,8 @@ public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATASET_VALUE);
   }
 
-  protected IDataExplorerSchemaManagement getDataLakeMeasureManagement() {
-    return dataLakeMeasureManagement;
+  protected IDataExplorerSchemaManagement getDatasetMeasureManagement() {
+    return datasetMeasureManagement;
   }
 
   /**
@@ -76,7 +76,7 @@ public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
   public boolean checkPermissionByName(String measurementName,
                                        String permission) {
 
-    var measure = dataLakeMeasureStorage.getByMeasureName(measurementName);
+    var measure = datasetMeasureStorage.getByMeasureName(measurementName);
     if (Objects.nonNull(measure)) {
       var spPermissionEvaluator = new SpPermissionEvaluator(resourceManager.managePermissions().getDb());
       var authentication = SecurityContextHolder.getContext()

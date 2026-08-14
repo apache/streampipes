@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.model.datalake.SpQueryResult;
@@ -39,11 +39,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class DataLakeResourceTest {
+class DatasetResourceTest {
 
   @Test
   void storeDataToMeasurementRequiresWritePermissionForMeasurement() throws Exception {
-    var method = DataLakeResource.class.getMethod(
+    var method = DatasetResource.class.getMethod(
         "storeDataToMeasurement",
         String.class,
         SpQueryResult.class,
@@ -61,7 +61,7 @@ class DataLakeResourceTest {
     var queryManagement = mock(IDataExplorerQueryManagement.class);
     when(queryManagement.getLatestTimestamps(List.of("a", "bb", "broken")))
         .thenReturn(Map.of("a", 1L, "bb", 2L, "broken", 0L));
-    var resource = dataLakeResource(queryManagement, true);
+    var resource = datasetResource(queryManagement, true);
 
     var response = resource.getLatestEvents(List.of("a", "bb", "a", "broken"));
 
@@ -74,7 +74,7 @@ class DataLakeResourceTest {
   @Test
   void getLatestEventsRejectsUnauthorizedMeasurementBeforeQuerying() throws Exception {
     var queryManagement = mock(IDataExplorerQueryManagement.class);
-    var resource = dataLakeResource(queryManagement, false);
+    var resource = datasetResource(queryManagement, false);
 
     var response = resource.getLatestEvents(List.of("a"));
 
@@ -84,17 +84,17 @@ class DataLakeResourceTest {
     verify(queryManagement, times(0)).getLatestTimestamps(any());
   }
 
-  private static DataLakeResource dataLakeResource(IDataExplorerQueryManagement queryManagement,
+  private static DatasetResource datasetResource(IDataExplorerQueryManagement queryManagement,
                                                    boolean canRead) throws Exception {
-    var resource = mock(DataLakeResource.class, CALLS_REAL_METHODS);
+    var resource = mock(DatasetResource.class, CALLS_REAL_METHODS);
     doReturn(canRead).when(resource).checkPermissionByName(any(), eq("READ"));
     setQueryManagement(resource, queryManagement);
     return resource;
   }
 
-  private static void setQueryManagement(DataLakeResource resource,
+  private static void setQueryManagement(DatasetResource resource,
                                          IDataExplorerQueryManagement queryManagement) throws Exception {
-    Field field = DataLakeResource.class.getDeclaredField("dataExplorerQueryManagement");
+    Field field = DatasetResource.class.getDeclaredField("dataExplorerQueryManagement");
     field.setAccessible(true);
     field.set(resource, queryManagement);
   }
