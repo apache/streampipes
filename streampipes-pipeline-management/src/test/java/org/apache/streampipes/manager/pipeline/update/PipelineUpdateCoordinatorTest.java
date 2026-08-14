@@ -158,7 +158,7 @@ class PipelineUpdateCoordinatorTest {
 
     var storedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Old stream");
     storedPipeline.getStreams().get(0).setEventSchema(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
-    storedPipeline.setActions(List.of(makeDataLakeSink()));
+    storedPipeline.setActions(List.of(makeDatasetSink()));
 
     var modifiedPipeline = makePipeline("pipeline-1", "Pipeline", true, "stream-1", "Updated stream");
     var measurementUpdateInfo = PipelineElementValidationInfo.info(
@@ -272,7 +272,7 @@ class PipelineUpdateCoordinatorTest {
 
     var pipeline = makePipeline("pipeline-1", "Pipeline", false, "stream-1", "Old stream");
     pipeline.getStreams().get(0).setEventSchema(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
-    pipeline.setActions(List.of(makeDataLakeSink()));
+    pipeline.setActions(List.of(makeDatasetSink()));
 
     var measurementUpdateInfo = PipelineElementValidationInfo.info(
         measurementUpdateRequiredMessage());
@@ -331,7 +331,7 @@ class PipelineUpdateCoordinatorTest {
     return pipeline;
   }
 
-  private DataSinkInvocation makeDataLakeSink() {
+  private DataSinkInvocation makeDatasetSink() {
     var sink = new DataSinkInvocation();
     sink.setAppId(DATA_LAKE_SINK_APP_ID);
     return sink;

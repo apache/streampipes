@@ -16,13 +16,13 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake.migrations;
+package org.apache.streampipes.sinks.internal.jvm.dataset.migrations;
 
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
+import org.apache.streampipes.sinks.internal.jvm.dataset.DatasetSink;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,24 +31,24 @@ import java.util.ArrayList;
 
 import static org.mockito.Mockito.mock;
 
-public class DataLakeSinkMigrationV1Test {
+public class DatasetSinkMigrationV1Test {
 
   @Test
   public void migrate() {
-    var dataLakeSinkMigrationV1 = new DataLakeSinkMigrationV1();
+    var datasetSinkMigrationV1 = new DatasetSinkMigrationV1();
 
     var extractor = mock(DataSinkParameterExtractor.class);
     var invocation = new DataSinkInvocation();
     invocation.setStaticProperties(new ArrayList<>());
 
-    var actual = dataLakeSinkMigrationV1.migrate(invocation, extractor);
+    var actual = datasetSinkMigrationV1.migrate(invocation, extractor);
 
     Assertions.assertTrue(actual.success());
     Assertions.assertEquals(actual.element()
                                   .getStaticProperties()
                                   .size(), 1);
     var schemaUpdateStaticProperty = getOneOfStaticProperty(actual);
-    Assertions.assertEquals(schemaUpdateStaticProperty.getInternalName(), DataLakeSink.SCHEMA_UPDATE_KEY);
+    Assertions.assertEquals(schemaUpdateStaticProperty.getInternalName(), DatasetSink.SCHEMA_UPDATE_KEY);
     Assertions.assertEquals(schemaUpdateStaticProperty.getOptions().get(0).isSelected(), true);
     Assertions.assertEquals(schemaUpdateStaticProperty.getOptions().get(1).isSelected(), false);
   }

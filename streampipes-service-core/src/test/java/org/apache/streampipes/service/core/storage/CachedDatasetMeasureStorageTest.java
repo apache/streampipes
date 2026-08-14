@@ -33,19 +33,19 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class CachedDataLakeMeasureStorageTest {
+class CachedDatasetMeasureStorageTest {
 
   private static final String MEASURE_ID = "measure-id";
   private static final String MEASURE_NAME = "measure-name";
 
   private IDataLakeMeasureStorage delegate;
-  private CachedDataLakeMeasureStorage storage;
+  private CachedDatasetMeasureStorage storage;
 
   @BeforeEach
   void setUp() {
     delegate = mock(IDataLakeMeasureStorage.class);
-    var cacheManager = new ConcurrentMapCacheManager(CachedDataLakeMeasureStorage.CACHE_NAME);
-    storage = new CachedDataLakeMeasureStorage(delegate, cacheManager);
+    var cacheManager = new ConcurrentMapCacheManager(CachedDatasetMeasureStorage.CACHE_NAME);
+    storage = new CachedDatasetMeasureStorage(delegate, cacheManager);
   }
 
   @Test

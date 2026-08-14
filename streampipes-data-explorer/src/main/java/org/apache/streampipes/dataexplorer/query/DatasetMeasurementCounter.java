@@ -35,15 +35,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurementCounter {
+public abstract class DatasetMeasurementCounter implements IDataLakeMeasurementCounter {
 
-  private static final Logger LOG = LoggerFactory.getLogger(DataLakeMeasurementCounter.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DatasetMeasurementCounter.class);
 
   protected final List<DataLakeMeasure> allMeasurements;
   protected final List<String> measurementNames;
   protected final int daysBack;
 
-  public DataLakeMeasurementCounter(
+  public DatasetMeasurementCounter(
       List<DataLakeMeasure> allMeasurements,
       List<String> measurementNames,
       int daysBack

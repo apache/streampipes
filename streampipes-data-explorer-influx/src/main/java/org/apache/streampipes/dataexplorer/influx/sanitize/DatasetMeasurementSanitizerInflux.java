@@ -20,11 +20,11 @@ package org.apache.streampipes.dataexplorer.influx.sanitize;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.DataLakeMeasurementSanitizer;
+import org.apache.streampipes.dataexplorer.DatasetMeasurementSanitizer;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
-public class DataLakeMeasurementSanitizerInflux extends DataLakeMeasurementSanitizer {
-  public DataLakeMeasurementSanitizerInflux(
+public class DatasetMeasurementSanitizerInflux extends DatasetMeasurementSanitizer {
+  public DatasetMeasurementSanitizerInflux(
     IStreamPipesClient client,
     DataLakeMeasure measure
   ) {
@@ -32,7 +32,7 @@ public class DataLakeMeasurementSanitizerInflux extends DataLakeMeasurementSanit
   }
 
   @Override
-  protected void cleanDataLakeMeasure() throws SpRuntimeException {
+  protected void cleanDataset() throws SpRuntimeException {
     // Sanitize the data lake measure name
     measure.setMeasureName(new MeasureNameSanitizer().sanitize(measure.getMeasureName()));
 

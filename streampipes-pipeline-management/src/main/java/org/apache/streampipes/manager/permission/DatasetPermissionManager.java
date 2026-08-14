@@ -22,24 +22,24 @@ import org.apache.streampipes.model.client.user.PermissionBuilder;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
-public class DataLakePermissionManager {
+public class DatasetPermissionManager {
 
   private final IPermissionStorage permissionStorage;
 
-  public DataLakePermissionManager(IPermissionStorage permissionStorage) {
+  public DatasetPermissionManager(IPermissionStorage permissionStorage) {
     this.permissionStorage = permissionStorage;
   }
 
-  private Permission createDataLakePermission(String measurement, String principalSid) {
+  private Permission createDatasetPermission(String measurement, String principalSid) {
     return PermissionBuilder
         .create(measurement, DataLakeMeasure.class, principalSid)
         .build();
   }
 
-  public void makeAndPersistDataLakePermission(String measurement,
+  public void makeAndPersistDatasetPermission(String measurement,
                                                String ownerSid) {
 
-    Permission p = createDataLakePermission(measurement, ownerSid);
+    Permission p = createDatasetPermission(measurement, ownerSid);
     permissionStorage.persist(p);
 
   }

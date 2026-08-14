@@ -27,8 +27,8 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
-import org.apache.streampipes.dataexplorer.iotdb.sanitize.DataLakeMeasurementSanitizerIotDb;
-import org.apache.streampipes.manager.permission.DataLakePermissionManager;
+import org.apache.streampipes.dataexplorer.iotdb.sanitize.DatasetMeasurementSanitizerIotDb;
+import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
@@ -42,7 +42,7 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
   public IDataLakeMeasurementCounter getMeasurementCounter(List<DataLakeMeasure> allMeasurements,
                                                            List<String> measurementsToCount,
                                                            int daysBack) {
-    return new DataLakeMeasurementCounterIotDb(allMeasurements, measurementsToCount, daysBack);
+    return new DatasetMeasurementCounterIotDb(allMeasurements, measurementsToCount, daysBack);
   }
 
   @Override
@@ -59,7 +59,7 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
                                                            IDataLakeMeasureStorage datasetStorage) {
     return new DataExplorerSchemaManagement(
         datasetStorage,
-        new DataLakePermissionManager(permissionStorage),
+        new DatasetPermissionManager(permissionStorage),
         chartSchemaUpdateCoordinator
     );
   }
@@ -71,6 +71,6 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
 
   @Override
   public IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DataLakeMeasure measure) {
-    return new DataLakeMeasurementSanitizerIotDb(client, measure);
+    return new DatasetMeasurementSanitizerIotDb(client, measure);
   }
 }

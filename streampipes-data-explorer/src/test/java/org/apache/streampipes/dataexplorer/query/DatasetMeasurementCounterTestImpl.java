@@ -23,8 +23,8 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class DataLakeMeasurementCounterTestImpl extends DataLakeMeasurementCounter {
-  public DataLakeMeasurementCounterTestImpl(
+public class DatasetMeasurementCounterTestImpl extends DatasetMeasurementCounter {
+  public DatasetMeasurementCounterTestImpl(
       List<DataLakeMeasure> allMeasurements, List<String> measurementNames
   ) {
     super(allMeasurements, measurementNames, -1);

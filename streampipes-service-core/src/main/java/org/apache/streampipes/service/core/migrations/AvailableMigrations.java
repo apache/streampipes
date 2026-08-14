@@ -20,7 +20,7 @@
 package org.apache.streampipes.service.core.migrations;
 
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.service.core.migrations.v0980.AddDataLakeMeasureViewMigration;
+import org.apache.streampipes.service.core.migrations.v0980.AddDatasetMeasureViewMigration;
 import org.apache.streampipes.service.core.migrations.v0980.AddDefaultExportProviderMigration;
 import org.apache.streampipes.service.core.migrations.v0980.FixImportedPermissionsMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinkTypesMigration;
@@ -91,7 +91,7 @@ public class AvailableMigrations {
     return Arrays.asList(
         new ModifyAssetLinksMigration(),
         new ModifyAssetLinkTypesMigration(),
-        new AddDataLakeMeasureViewMigration(),
+        new AddDatasetMeasureViewMigration(),
         new AddDefaultExportProviderMigration(coreConfigStorage),
         new FixImportedPermissionsMigration(chartStorage, dashboardStorage, permissionStorage),
         new AddAssetManagementViewMigration(),

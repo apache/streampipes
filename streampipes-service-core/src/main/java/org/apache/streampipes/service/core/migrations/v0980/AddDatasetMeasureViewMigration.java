@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.service.core.migrations.v0980;
 
-import org.apache.streampipes.manager.setup.tasks.AddDataLakeMeasureViewTask;
+import org.apache.streampipes.manager.setup.tasks.AddDatasetMeasureViewTask;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
@@ -26,7 +26,7 @@ import org.lightcouch.NoDocumentException;
 
 import java.io.IOException;
 
-public class AddDataLakeMeasureViewMigration implements Migration {
+public class AddDatasetMeasureViewMigration implements Migration {
 
   @Override
   public boolean shouldExecute() {
@@ -34,9 +34,9 @@ public class AddDataLakeMeasureViewMigration implements Migration {
       var designDoc = Utils
           .getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME)
           .design()
-          .getFromDb(AddDataLakeMeasureViewTask.MEASUREMENT_BY_NAME_VIEW);
-      var viewKey = AddDataLakeMeasureViewTask.VIEW_NAME;
-      var viewMapFunction = AddDataLakeMeasureViewTask.MAP_FUNCTION;
+          .getFromDb(AddDatasetMeasureViewTask.MEASUREMENT_BY_NAME_VIEW);
+      var viewKey = AddDatasetMeasureViewTask.VIEW_NAME;
+      var viewMapFunction = AddDatasetMeasureViewTask.MAP_FUNCTION;
       var views = designDoc.getViews();
 
       if (views.containsKey(viewKey)) {
@@ -51,7 +51,7 @@ public class AddDataLakeMeasureViewMigration implements Migration {
 
   @Override
   public void executeMigration() throws IOException {
-    new AddDataLakeMeasureViewTask().execute();
+    new AddDatasetMeasureViewTask().execute();
   }
 
   @Override

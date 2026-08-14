@@ -20,7 +20,7 @@ package org.apache.streampipes.service.core.scheduler;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
-import org.apache.streampipes.export.DataLakeExportManager;
+import org.apache.streampipes.export.DatasetExportManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -36,14 +36,14 @@ import org.springframework.scheduling.support.CronTrigger;
 import java.util.List;
 
 @Configuration
-public class DataLakeScheduler implements SchedulingConfigurer {
+public class DatasetScheduler implements SchedulingConfigurer {
 
-    private final DataLakeExportManager dataLakeExportManager;
-    private static final Logger LOG = LoggerFactory.getLogger(DataLakeScheduler.class);
+  private final DatasetExportManager datasetExportManager;
+  private static final Logger LOG = LoggerFactory.getLogger(DatasetScheduler.class);
 
   private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
 
-    public DataLakeScheduler(IChartStorage chartStorage,
+    public DatasetScheduler(IChartStorage chartStorage,
                              SpResourceManager resourceManager) {
         var chartSchemaUpdateCoordinator = new ChartSchemaUpdateCoordinator(chartStorage);
         dataExplorerSchemaManagement = new DataExplorerDispatcher()
@@ -52,7 +52,7 @@ public class DataLakeScheduler implements SchedulingConfigurer {
                 chartSchemaUpdateCoordinator,
                 resourceManager.managePermissions().getDb(),
                 resourceManager.manageDataLakeMeasures().getDb());
-        this.dataLakeExportManager = new DataLakeExportManager(
+        this.datasetExportManager = new DatasetExportManager(
             dataExplorerSchemaManagement,
             new DataExplorerDispatcher().getDataExplorerManager()
                 .getQueryManagement(dataExplorerSchemaManagement),
@@ -64,12 +64,12 @@ public class DataLakeScheduler implements SchedulingConfigurer {
         LOG.info("Retention CRON Job triggered.");
         List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.debug("GET ALL Measurements");
-        for (DataLakeMeasure dataLakeMeasure : allMeasurements) {
+        for (DataLakeMeasure datasetMeasure : allMeasurements) {
             try {
-                dataLakeExportManager.cleanupSingleMeasurement(dataLakeMeasure);
+                datasetExportManager.cleanupSingleMeasurement(datasetMeasure);
             } catch (Exception e) {
                 LOG.error(String.format("An unexpected error occurred during export. Data Measure: %s. Error: %s",
-                        dataLakeMeasure, e.getMessage()), e);
+                        datasetMeasure, e.getMessage()), e);
             }
 
         }

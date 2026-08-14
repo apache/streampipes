@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
-public class DataLakeMeasurementSanitizerIotDbTest {
+public class DatasetMeasurementSanitizerIotDbTest {
 
   private IStreamPipesClient clientMock;
 
@@ -39,7 +39,7 @@ public class DataLakeMeasurementSanitizerIotDbTest {
   }
 
   @Test
-  public void cleanDataLakeMeasure() {
+  public void cleanDataset() {
     var eventSchema = EventSchemaTestBuilder.create()
         .withEventProperty(
             EventPropertyPrimitiveTestBuilder
@@ -62,9 +62,9 @@ public class DataLakeMeasurementSanitizerIotDbTest {
         "s0::%s".formatted("timestamp"),
         eventSchema
     );
-    var sanitizer = new DataLakeMeasurementSanitizerIotDb(clientMock, measure);
+    var sanitizer = new DatasetMeasurementSanitizerIotDb(clientMock, measure);
 
-    sanitizer.cleanDataLakeMeasure();
+    sanitizer.cleanDataset();
     var result = sanitizer.getMeasure();
 
     assertEquals("invalid_Measure", result.getMeasureName());

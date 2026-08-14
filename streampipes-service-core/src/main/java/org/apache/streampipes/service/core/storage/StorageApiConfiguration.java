@@ -36,7 +36,7 @@ import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.ChartStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.DashboardStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.explorer.DataLakeMeasureStorage;
+import org.apache.streampipes.storage.couchdb.impl.explorer.DatasetMeasureStorage;
 import org.apache.streampipes.storage.couchdb.impl.function.FunctionStateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.AssetStorageImpl;
@@ -149,11 +149,11 @@ public class StorageApiConfiguration {
 
   @Bean
   public IDataLakeMeasureStorage datasetStorage(CacheManager cacheManager) {
-    IDataLakeMeasureStorage delegate = new DataLakeMeasureStorage(
+    IDataLakeMeasureStorage delegate = new DatasetMeasureStorage(
         () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
         DataLakeMeasure.class
     );
-    return dataLakeMeasureCacheEnabled ? new CachedDataLakeMeasureStorage(delegate, cacheManager) : delegate;
+    return dataLakeMeasureCacheEnabled ? new CachedDatasetMeasureStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean

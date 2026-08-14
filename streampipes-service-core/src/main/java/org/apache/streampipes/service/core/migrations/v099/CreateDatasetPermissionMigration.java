@@ -35,7 +35,7 @@ import java.util.Optional;
 
 public class CreateDatasetPermissionMigration implements Migration {
 
-  private final CRUDStorage<DataLakeMeasure> dataLakeStorage;
+  private final CRUDStorage<DataLakeMeasure> datasetStorage;
   private final CRUDStorage<Pipeline> pipelineStorage;
   private final IPermissionStorage permissionStorage;
   private final PermissionResourceManager permissionResourceManager;
@@ -49,7 +49,7 @@ public class CreateDatasetPermissionMigration implements Migration {
   public CreateDatasetPermissionMigration(IPermissionStorage permissionStorage,
                                           IPipelineStorage pipelineStorage,
                                           IDataLakeMeasureStorage datasetStorage) {
-    this.dataLakeStorage = datasetStorage;
+    this.datasetStorage = datasetStorage;
     this.pipelineStorage = pipelineStorage;
     this.permissionStorage = permissionStorage;
     this.permissionResourceManager = new PermissionResourceManager(permissionStorage);
@@ -62,7 +62,7 @@ public class CreateDatasetPermissionMigration implements Migration {
 
   @Override
   public void executeMigration() throws IOException {
-    dataLakeStorage.findAll().forEach(measure -> {
+    datasetStorage.findAll().forEach(measure -> {
       var existingPermission = permissionStorage.getUserPermissionsForObject(measure.getElementId());
 
       if (existingPermission.isEmpty()) {

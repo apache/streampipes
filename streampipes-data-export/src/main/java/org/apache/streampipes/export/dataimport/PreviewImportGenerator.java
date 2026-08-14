@@ -124,7 +124,7 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   }
 
   @Override
-  protected void handleDataLakeMeasure(String document, String measurementId) throws JsonProcessingException {
+  protected void handleDataset(String document, String measurementId) throws JsonProcessingException {
     addExportItem(measurementId, new MeasurementResolver(datasetStorage).readDocument(document).getMeasureName(),
         importConfig::addDataLakeMeasure);
   }

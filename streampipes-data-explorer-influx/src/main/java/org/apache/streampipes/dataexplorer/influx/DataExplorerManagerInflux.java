@@ -28,8 +28,8 @@ import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
-import org.apache.streampipes.dataexplorer.influx.sanitize.DataLakeMeasurementSanitizerInflux;
-import org.apache.streampipes.manager.permission.DataLakePermissionManager;
+import org.apache.streampipes.dataexplorer.influx.sanitize.DatasetMeasurementSanitizerInflux;
+import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
@@ -47,7 +47,7 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
       List<DataLakeMeasure> allMeasurements,
       List<String> measurementsToCount,
       int daysBack) {
-    return new DataLakeMeasurementCounterInflux(allMeasurements, measurementsToCount, daysBack);
+    return new DatasetMeasurementCounterInflux(allMeasurements, measurementsToCount, daysBack);
   }
 
   @Override
@@ -63,7 +63,7 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
                                                            IDataLakeMeasureStorage datasetStorage) {
     return new DataExplorerSchemaManagement(
         datasetStorage,
-        new DataLakePermissionManager(
+        new DatasetPermissionManager(
             permissionStorage
         ),
         chartSchemaUpdateCoordinator
@@ -82,6 +82,6 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
 
   @Override
   public IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DataLakeMeasure measure) {
-    return new DataLakeMeasurementSanitizerInflux(client, measure);
+    return new DatasetMeasurementSanitizerInflux(client, measure);
   }
 }

@@ -30,65 +30,65 @@ import java.util.List;
  * Base class with shared implementation that is common for all time series storage backends.
  * Leaves open the storage specific implementation
  */
-public abstract class DataLakeMeasurementSanitizer implements IDataLakeMeasurementSanitizer {
+public abstract class DatasetMeasurementSanitizer implements IDataLakeMeasurementSanitizer {
 
   protected final DataLakeMeasure measure;
   protected final IStreamPipesClient client;
 
-  public DataLakeMeasurementSanitizer(IStreamPipesClient client, DataLakeMeasure measure){
+  public DatasetMeasurementSanitizer(IStreamPipesClient client, DataLakeMeasure measure){
     this.client = client;
     this.measure = measure;
   }
 
   /**
-   * Sanitizes the data lake measure and registers it with the data lake.
+   * Sanitizes the dataset measure and registers it.
    * <p>
-   * This method first sanitizes the data lake measure,
-   * then registers it at the data lake.
+   * This method first sanitizes the dataset measure,
+   * then registers it.
    *
-   * @return The sanitized and registered data lake measure.
+   * @return The sanitized and registered dataset measure.
    */
   @Override
   public DataLakeMeasure sanitizeAndRegister(){
-    sanitizeDataLakeMeasure();
-    registerAtDataLake();
+    sanitizeDataset();
+    registerAtDataset();
 
     return measure;
   }
 
   /**
-   * Sanitizes the data lake measure and updates it in the data lake.
+   * Sanitizes the dataset measure and updates it.
    * <p>
-   * This method first sanitizes the data lake measure,
-   * then updates it at the data lake.
+   * This method first sanitizes the dataset measure,
+   * then updates it.
    *
-   * @return The sanitized and updated data lake measure.
+   * @return The sanitized and updated dataset measure.
    */
   @Override
   public DataLakeMeasure sanitizeAndUpdate(){
-    sanitizeDataLakeMeasure();
-    updateAtDataLake();
+    sanitizeDataset();
+    updateDataset();
 
     return measure;
   }
 
 
 
-  private void registerAtDataLake() throws SpRuntimeException {
+  private void registerAtDataset() throws SpRuntimeException {
     client.dataLakeMeasureApi().create(measure);
   }
 
-  private void updateAtDataLake() throws SpRuntimeException {
+  private void updateDataset() throws SpRuntimeException {
     client.dataLakeMeasureApi().update(measure);
   }
 
-  private void sanitizeDataLakeMeasure() throws SpRuntimeException {
+  private void sanitizeDataset() throws SpRuntimeException {
     removeTimestampsFromEventSchema();
-    cleanDataLakeMeasure();
+    cleanDataset();
   }
 
   /**
-   * Cleans the data lake measure to ensure compliance with the requirements of the respective time series storage.
+   * Cleans the dataset measure to ensure compliance with the requirements of the respective time series storage.
    * <p>
    * This method performs the following steps:
    * <ol>
@@ -97,7 +97,7 @@ public abstract class DataLakeMeasurementSanitizer implements IDataLakeMeasureme
    * </ol>
    * @throws SpRuntimeException if an error occurs during the cleaning process.
    */
-  protected abstract void cleanDataLakeMeasure() throws SpRuntimeException;
+  protected abstract void cleanDataset() throws SpRuntimeException;
 
   protected void removeTimestampsFromEventSchema() throws SpRuntimeException{
     var timestampField = measure.getTimestampField();

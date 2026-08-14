@@ -26,12 +26,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DataLakeQueryBuilderTest {
+public class DatasetQueryBuilderTest {
 
   private static final String MEASUREMENT = "measurement";
   @Test
   public void withSimpleColumnsTest() {
-    var result = DataLakeInfluxQueryBuilder
+    var result = DatasetInfluxQueryBuilder
         .create(MEASUREMENT)
         .withSimpleColumns(List.of("one", "two"))
         .build();
@@ -42,7 +42,7 @@ public class DataLakeQueryBuilderTest {
 
   @Test
   public void withAggregatedColumnEscapesDottedFieldAndAliasTest() {
-    var result = DataLakeInfluxQueryBuilder
+    var result = DatasetInfluxQueryBuilder
         .create(MEASUREMENT)
         .withAggregatedColumn("temperature.a", AggregationFunction.MEAN, "temperature.a")
         .build();
@@ -53,7 +53,7 @@ public class DataLakeQueryBuilderTest {
 
   @Test
   public void withGroupByEscapesDottedFieldTest() {
-    var result = DataLakeInfluxQueryBuilder
+    var result = DatasetInfluxQueryBuilder
         .create(MEASUREMENT)
         .withSimpleColumn("value")
         .withGroupBy("temperature.a")

@@ -36,11 +36,11 @@ import org.apache.streampipes.vocabulary.SO;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_CONNECTOR_ID;
-import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_DIMENSIONS_FIELD;
-import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_MEASUREMENT_FIELD;
-import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_TEMPLATE_ID;
-import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_TIMESTAMP_FIELD;
+import static org.apache.streampipes.manager.template.instances.PersistDatasetPipelineTemplate.DATA_LAKE_CONNECTOR_ID;
+import static org.apache.streampipes.manager.template.instances.PersistDatasetPipelineTemplate.DATA_LAKE_DIMENSIONS_FIELD;
+import static org.apache.streampipes.manager.template.instances.PersistDatasetPipelineTemplate.DATA_LAKE_MEASUREMENT_FIELD;
+import static org.apache.streampipes.manager.template.instances.PersistDatasetPipelineTemplate.DATA_LAKE_TEMPLATE_ID;
+import static org.apache.streampipes.manager.template.instances.PersistDatasetPipelineTemplate.DATA_LAKE_TIMESTAMP_FIELD;
 
 public class PersistPipelineHandler {
 

@@ -104,7 +104,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   }
 
   private IDataLakeQueryBuilder<Query> getQueryBuilder(String measurementId) {
-    return DataLakeInfluxQueryBuilder.create(measurementId);
+    return DatasetInfluxQueryBuilder.create(measurementId);
   }
 
   @Override

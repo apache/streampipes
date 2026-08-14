@@ -54,7 +54,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT * FROM \"abc\" WHERE (time < 100000000 AND time > 0) ORDER BY time DESC LIMIT 1;", query);
   }
@@ -68,7 +68,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT * FROM \"abc\" WHERE (time < 2000000 AND time > 1000000);", query);
   }
@@ -83,7 +83,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000);", query);
   }
@@ -99,7 +99,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 = true);", query);
   }
@@ -115,7 +115,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 = 'def');", query);
   }
@@ -131,7 +131,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 = 1.0);", query);
   }
@@ -147,7 +147,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 > 1.0);", query);
   }
@@ -163,7 +163,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 > 1.0 AND"
         + " p2 < 2.0);", query);
@@ -179,7 +179,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT MEAN(p1) AS p1_mean FROM \"abc\" WHERE (time < 2000000 AND time > 1000000);", query);
   }
@@ -194,7 +194,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
         + " time > 1000000);", query);
@@ -211,7 +211,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
         + " time > 1000000) GROUP BY \"sensorId\";", query);
@@ -228,7 +228,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
         + " time > 1000000) GROUP BY \"sensorId\",\"sensorId2\";", query);
@@ -243,7 +243,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(none);", query);
   }
@@ -258,7 +258,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT value FROM \"abc\" GROUP BY time(1ms),\"sensorId\" fill(none);", query);
   }
@@ -273,7 +273,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(previous);", query);
   }
@@ -288,7 +288,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(linear);", query);
   }
@@ -303,7 +303,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(null);", query);
   }
@@ -318,7 +318,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(12.5);", query);
   }
@@ -384,7 +384,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) "
         + "AND (p1 = 1 OR p2 = 2);", query);
@@ -406,7 +406,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) "
         + "AND (p1 = 1 OR p2 = 2);", query);
@@ -426,7 +426,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) "
         + "AND (p1 = true);", query);
@@ -446,7 +446,7 @@ public class SelectQueryParamsTest {
 
     SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
 
-    String query = qp.toQuery(DataLakeInfluxQueryBuilder.create("abc")).getCommand();
+    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) "
         + "AND (p1 = 1.0);", query);

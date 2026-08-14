@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeDetector;
-import org.apache.streampipes.manager.permission.DataLakePermissionManager;
+import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
@@ -40,11 +40,11 @@ import java.util.stream.Stream;
 public class DataExplorerSchemaManagement implements IDataExplorerSchemaManagement {
 
   CRUDStorage<DataLakeMeasure> dataLakeStorage;
-  private final DataLakePermissionManager permissionManager;
+  private final DatasetPermissionManager permissionManager;
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
   public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage,
-                               DataLakePermissionManager permissionManager,
+                               DatasetPermissionManager permissionManager,
                                ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.dataLakeStorage = dataLakeStorage;
     this.permissionManager = permissionManager;
@@ -77,7 +77,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
     if (existingMeasure.isEmpty()) {
       measure.setElementId(UUID.randomUUID().toString());
       setSchemaVersionAndStoreMeasurement(measure);
-      permissionManager.makeAndPersistDataLakePermission(measure.getElementId(), principalSid);
+      permissionManager.makeAndPersistDatasetPermission(measure.getElementId(), principalSid);
 
     } else {
       handleExistingMeasurement(measure, existingMeasure.get());

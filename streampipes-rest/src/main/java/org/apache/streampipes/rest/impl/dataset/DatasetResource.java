@@ -23,7 +23,7 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
-import org.apache.streampipes.export.DataLakeExportManager;
+import org.apache.streampipes.export.DatasetExportManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
@@ -98,7 +98,7 @@ public class DatasetResource extends AbstractDatasetResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DatasetResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
-  private final DataLakeExportManager datasetExportManager;
+  private final DatasetExportManager datasetExportManager;
   private final IDataLakeMeasureStorage datasetStorage;
   private final ConfiguredOutputWriterFactory outputWriterFactory;
 
@@ -112,7 +112,7 @@ public class DatasetResource extends AbstractDatasetResource {
     this.outputWriterFactory = new ConfiguredOutputWriterFactory(
         resourceManager.getFileMetadataStorage(),
         resourceManager.getCoreConfigurationStorage());
-    this.datasetExportManager = new DataLakeExportManager(
+    this.datasetExportManager = new DatasetExportManager(
         this.datasetMeasureManagement,
         dataExplorerQueryManagement,
         resourceManager.getCoreConfigurationStorage(),

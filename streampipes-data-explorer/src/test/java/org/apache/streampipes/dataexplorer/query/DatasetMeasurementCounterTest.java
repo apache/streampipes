@@ -30,13 +30,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public class DataLakeMeasurementCounterTest {
+public class DatasetMeasurementCounterTest {
 
   private static final String MEASURE_1_NAME = "measure1";
   private static final String MEASURE_2_NAME = "measure2";
   private static final String UNKNOWN_MEASURE_NAME = "unknownMeasureName";
 
-  private DataLakeMeasurementCounterTestImpl counter;
+  private DatasetMeasurementCounterTestImpl counter;
 
   private List<DataLakeMeasure> allMeasurements;
 
@@ -54,7 +54,7 @@ public class DataLakeMeasurementCounterTest {
   void countMeasurementSizes_WithTwoEntries() {
     var measurementNames = List.of(MEASURE_1_NAME, MEASURE_2_NAME);
 
-    counter = new DataLakeMeasurementCounterTestImpl(allMeasurements, measurementNames);
+    counter = new DatasetMeasurementCounterTestImpl(allMeasurements, measurementNames);
     var result = counter.countMeasurementSizes();
     assertEquals(2, result.size());
     assertEquals(1, result.get(MEASURE_1_NAME));
@@ -64,7 +64,7 @@ public class DataLakeMeasurementCounterTest {
   @Test
   void countMeasurementSizes_WithNotExistingMeasureName() {
     var measurementNames = List.of(UNKNOWN_MEASURE_NAME);
-    counter = new DataLakeMeasurementCounterTestImpl(allMeasurements, measurementNames);
+    counter = new DatasetMeasurementCounterTestImpl(allMeasurements, measurementNames);
 
     var result = counter.countMeasurementSizes();
     assertEquals(0, result.size());
@@ -72,7 +72,7 @@ public class DataLakeMeasurementCounterTest {
 
   @Test
   void countMeasurementSizes_WithEmptyMeasureNames() {
-    counter = new DataLakeMeasurementCounterTestImpl(allMeasurements, List.of());
+    counter = new DatasetMeasurementCounterTestImpl(allMeasurements, List.of());
 
     var result = counter.countMeasurementSizes();
     assertEquals(0, result.size());
@@ -80,7 +80,7 @@ public class DataLakeMeasurementCounterTest {
 
   @Test
   void countMeasurementSizes_WithEmptyMeasurementsAndMeasureNames() {
-    counter = new DataLakeMeasurementCounterTestImpl(List.of(), List.of());
+    counter = new DatasetMeasurementCounterTestImpl(List.of(), List.of());
 
     var result = counter.countMeasurementSizes();
     assertEquals(0, result.size());

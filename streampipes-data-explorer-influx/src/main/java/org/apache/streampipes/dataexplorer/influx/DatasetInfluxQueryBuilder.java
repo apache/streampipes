@@ -48,7 +48,7 @@ import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.asc;
 import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.desc;
 import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.select;
 
-public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> {
+public class DatasetInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> {
 
   private final String measurementId;
   private final SelectionQueryImpl selectionQuery;
@@ -62,7 +62,7 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
 
   private final Environment env;
 
-  private DataLakeInfluxQueryBuilder(String measurementId) {
+  private DatasetInfluxQueryBuilder(String measurementId) {
     this.measurementId = measurementId;
     this.selectionQuery = select();
     this.whereClauses = new ArrayList<>();
@@ -70,32 +70,32 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
     this.env = Environments.getEnvironment();
   }
 
-  public static DataLakeInfluxQueryBuilder create(String measurementId) {
-    return new DataLakeInfluxQueryBuilder(measurementId);
+  public static DatasetInfluxQueryBuilder create(String measurementId) {
+    return new DatasetInfluxQueryBuilder(measurementId);
   }
 
 
   @Override
-  public DataLakeInfluxQueryBuilder withAllColumns() {
+  public DatasetInfluxQueryBuilder withAllColumns() {
     this.selectionQuery.all();
     return this;
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withSimpleColumn(String columnName) {
+  public DatasetInfluxQueryBuilder withSimpleColumn(String columnName) {
     this.selectionQuery.column(columnName);
     return this;
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withSimpleColumns(List<String> columnNames) {
+  public DatasetInfluxQueryBuilder withSimpleColumns(List<String> columnNames) {
     columnNames.forEach(this.selectionQuery::column);
 
     return this;
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withAggregatedColumn(String columnName,
+  public DatasetInfluxQueryBuilder withAggregatedColumn(String columnName,
                                                          AggregationFunction aggregationFunction,
                                                          String aliasName) {
 
@@ -113,19 +113,19 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withStartTime(long startTime) {
+  public DatasetInfluxQueryBuilder withStartTime(long startTime) {
     this.whereClauses.add(new SimpleClause("time", ">=", startTime * 1000000));
     return this;
   }
 
 
   @Override
-  public DataLakeInfluxQueryBuilder withEndTime(long endTime) {
+  public DatasetInfluxQueryBuilder withEndTime(long endTime) {
     return withEndTime(endTime, true);
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withEndTime(long endTime,
+  public DatasetInfluxQueryBuilder withEndTime(long endTime,
                                                 boolean includeEndTime) {
     String operator = includeEndTime ? "<=" : "<";
     this.whereClauses.add(new SimpleClause("time", operator, endTime * 1000000));
@@ -133,7 +133,7 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withTimeBoundary(long startTime,
+  public DatasetInfluxQueryBuilder withTimeBoundary(long startTime,
                                                      long endTime) {
     this.withStartTime(startTime);
     this.withEndTime(endTime);
@@ -142,7 +142,7 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withFilter(String field,
+  public DatasetInfluxQueryBuilder withFilter(String field,
                                                String operator,
                                                Object value) {
     this.whereClauses.add(new SimpleClause(field, operator, value));
@@ -150,7 +150,7 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withExclusiveFilter(String field,
+  public DatasetInfluxQueryBuilder withExclusiveFilter(String field,
                                                         String operator,
                                                         List<?> values) {
     List<ConjunctionClause> or = new ArrayList<>();
@@ -161,7 +161,7 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withInclusiveFilter(String field,
+  public DatasetInfluxQueryBuilder withInclusiveFilter(String field,
                                                         String operator,
                                                         List<?> values) {
     List<ConjunctionClause> and = new ArrayList<>();
@@ -194,7 +194,7 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withGroupByTime(String timeInterval) {
+  public DatasetInfluxQueryBuilder withGroupByTime(String timeInterval) {
 
     this.groupByClauses.add(new RawTextClause("time(" + timeInterval + ")"));
 
@@ -202,7 +202,7 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withGroupByTime(String timeInterval,
+  public DatasetInfluxQueryBuilder withGroupByTime(String timeInterval,
                                                     String offsetInterval) {
 
     this.groupByClauses.add(new RawTextClause("time("
@@ -215,7 +215,7 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withGroupBy(String column) {
+  public DatasetInfluxQueryBuilder withGroupBy(String column) {
 
     this.groupByClauses.add(new RawTextClause("\"" + column + "\""));
 
@@ -223,7 +223,7 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withOrderBy(DataLakeQueryOrdering ordering) {
+  public DatasetInfluxQueryBuilder withOrderBy(DataLakeQueryOrdering ordering) {
     if (DataLakeQueryOrdering.ASC.equals(ordering)) {
       this.ordering = asc();
     } else {
@@ -234,14 +234,14 @@ public class DataLakeInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> 
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withLimit(int limit) {
+  public DatasetInfluxQueryBuilder withLimit(int limit) {
     this.limit = limit;
 
     return this;
   }
 
   @Override
-  public DataLakeInfluxQueryBuilder withOffset(int offset) {
+  public DatasetInfluxQueryBuilder withOffset(int offset) {
     this.offset = offset;
 
     return this;

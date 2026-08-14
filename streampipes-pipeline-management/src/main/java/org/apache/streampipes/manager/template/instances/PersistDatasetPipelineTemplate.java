@@ -26,7 +26,7 @@ import org.apache.streampipes.model.template.PipelinePlaceholders;
 import java.util.List;
 import java.util.Map;
 
-public class PersistDataLakePipelineTemplate implements DefaultPipelineTemplateProvider {
+public class PersistDatasetPipelineTemplate implements DefaultPipelineTemplateProvider {
 
   public static final String DATA_LAKE_SINK_REF = "lake";
   public static final String DATA_LAKE_SINK_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";

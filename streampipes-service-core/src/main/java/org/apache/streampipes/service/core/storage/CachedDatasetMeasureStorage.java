@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cache.CacheManager;
 
-public class CachedDataLakeMeasureStorage
+public class CachedDatasetMeasureStorage
     extends AbstractCachedCrudStorage<DataLakeMeasure, IDataLakeMeasureStorage>
     implements IDataLakeMeasureStorage {
 
@@ -33,19 +33,19 @@ public class CachedDataLakeMeasureStorage
 
   private static final String MEASURE_NAME_KEY_PREFIX = "name:";
 
-  public CachedDataLakeMeasureStorage(IDataLakeMeasureStorage delegate,
+  public CachedDatasetMeasureStorage(IDataLakeMeasureStorage delegate,
                                       CacheManager cacheManager) {
     this(delegate, cacheManager, JacksonSerializer.getObjectMapper());
   }
 
-  CachedDataLakeMeasureStorage(IDataLakeMeasureStorage delegate,
+  CachedDatasetMeasureStorage(IDataLakeMeasureStorage delegate,
                                CacheManager cacheManager,
                                ObjectMapper objectMapper) {
     super(
         delegate,
         cacheManager,
         CACHE_NAME,
-        objectMapper.copy().addMixIn(DataLakeMeasure.class, DataLakeMeasureCacheMixin.class),
+        objectMapper.copy().addMixIn(DataLakeMeasure.class, DatasetMeasureCacheMixin.class),
         DataLakeMeasure.class
     );
   }
@@ -59,7 +59,7 @@ public class CachedDataLakeMeasureStorage
     );
   }
 
-  private abstract static class DataLakeMeasureCacheMixin {
+  private abstract static class DatasetMeasureCacheMixin {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     abstract String getTimestampField();

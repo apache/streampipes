@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer;
 
-import org.apache.streampipes.manager.permission.DataLakePermissionManager;
+import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
@@ -51,14 +51,14 @@ public class DataExplorerSchemaManagementTest {
   public static final String OLD_PROPERTY = "oldProperty";
 
   private CRUDStorage<DataLakeMeasure> dataLakeStorageMock;
-  private DataLakePermissionManager permissionManagerMock;
+  private DatasetPermissionManager permissionManagerMock;
   private ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
   @BeforeEach
   public void setUp() {
     dataLakeStorageMock = mock(CRUDStorage.class);
     IPermissionStorage permissionStorageMock = mock(IPermissionStorage.class);
-    this.permissionManagerMock = new DataLakePermissionManager(permissionStorageMock);
+    this.permissionManagerMock = new DatasetPermissionManager(permissionStorageMock);
     this.chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
   }
 

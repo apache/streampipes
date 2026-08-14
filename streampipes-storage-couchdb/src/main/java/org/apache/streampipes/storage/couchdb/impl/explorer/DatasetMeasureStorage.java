@@ -27,11 +27,11 @@ import org.lightcouch.CouchDbClient;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class DataLakeMeasureStorage extends DefaultCrudStorage<DataLakeMeasure> implements IDataLakeMeasureStorage {
+public class DatasetMeasureStorage extends DefaultCrudStorage<DataLakeMeasure> implements IDataLakeMeasureStorage {
 
   public static final String MEASUREMENT_BY_NAME_VIEW = "measurement/by-measure-name";
 
-  public DataLakeMeasureStorage(Supplier<CouchDbClient> couchDbClientSupplier, Class<DataLakeMeasure> clazz) {
+  public DatasetMeasureStorage(Supplier<CouchDbClient> couchDbClientSupplier, Class<DataLakeMeasure> clazz) {
     super(couchDbClientSupplier, clazz);
   }
 

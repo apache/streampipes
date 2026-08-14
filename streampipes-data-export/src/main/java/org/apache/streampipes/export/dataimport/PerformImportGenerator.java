@@ -139,10 +139,10 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   }
 
   @Override
-  protected void handleDataLakeMeasure(String document, String dataLakeMeasureId) throws JsonProcessingException {
-    if (shouldStore(dataLakeMeasureId, config.getDataLakeMeasures())) {
+  protected void handleDataset(String document, String datasetMeasureId) throws JsonProcessingException {
+    if (shouldStore(datasetMeasureId, config.getDataLakeMeasures())) {
       writeDocument(document, new MeasurementResolver(datasetStorage));
-      permissionsToStore.add(new PermissionInfo(dataLakeMeasureId, DataLakeMeasure.class));
+      permissionsToStore.add(new PermissionInfo(datasetMeasureId, DataLakeMeasure.class));
     }
   }
 

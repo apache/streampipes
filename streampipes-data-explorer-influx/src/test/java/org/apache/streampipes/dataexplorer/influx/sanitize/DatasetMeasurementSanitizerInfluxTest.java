@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DataLakeMeasurementSanitizerInfluxTest {
+public class DatasetMeasurementSanitizerInfluxTest {
 
   private IStreamPipesClient clientMock;
 
@@ -49,7 +49,7 @@ public class DataLakeMeasurementSanitizerInfluxTest {
   }
 
   @Test
-  public void cleanDataLakeMeasure() {
+  public void cleanDataset() {
     var measure = new DataLakeMeasure(
       "test?Measurement",
       "timestamp",
@@ -68,7 +68,7 @@ public class DataLakeMeasurementSanitizerInfluxTest {
                             .build()
     );
 
-    var result = new DataLakeMeasurementSanitizerInflux(clientMock, measure).sanitizeAndRegister();
+    var result = new DatasetMeasurementSanitizerInflux(clientMock, measure).sanitizeAndRegister();
 
     assertEquals("test_Measurement", result.getMeasureName());
     assertEquals(2, result.getEventSchema().getEventProperties().size());
@@ -77,7 +77,7 @@ public class DataLakeMeasurementSanitizerInfluxTest {
   }
 
   @Test
-  public void cleanDataLakeMeasureNoTimestampField() {
+  public void cleanDatasetNoTimestampField() {
     var measure = new DataLakeMeasure("test", EventSchemaTestBuilder.create()
                                                                     .withEventProperties(List.of(
                                                                       EventPropertyPrimitiveTestBuilder.create()
@@ -88,6 +88,6 @@ public class DataLakeMeasurementSanitizerInfluxTest {
                                                                     .build());
 
     assertThrows(SpRuntimeException.class,
-                 () -> new DataLakeMeasurementSanitizerInflux(clientMock, measure).sanitizeAndRegister());
+                 () -> new DatasetMeasurementSanitizerInflux(clientMock, measure).sanitizeAndRegister());
   }
 }
