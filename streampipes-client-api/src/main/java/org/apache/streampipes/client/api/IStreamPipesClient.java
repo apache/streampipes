@@ -61,7 +61,7 @@ public interface IStreamPipesClient extends Serializable {
 
   IAdminApi adminApi();
 
-  IDataLakeMeasureApi dataLakeMeasureApi();
+  IDatasetMeasureApi datasetMeasureApi();
 
   void deliverEmail(SpEmail email);
 

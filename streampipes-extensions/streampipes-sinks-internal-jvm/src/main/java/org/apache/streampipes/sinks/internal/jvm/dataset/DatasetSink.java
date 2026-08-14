@@ -30,7 +30,7 @@ import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.datalake.RetentionTimeConfig;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
@@ -115,7 +115,7 @@ public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig 
 
     var retentionTimeConfig = getRetentionTime(measureName, runtimeContext.getStreamPipesClient());
 
-    var measure = new DataLakeMeasure(measureName, timestampField, eventSchema, retentionTimeConfig);
+    var measure = new DatasetMeasure(measureName, timestampField, eventSchema, retentionTimeConfig);
 
     var schemaUpdateOptionString = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
 
@@ -166,7 +166,7 @@ public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig 
   private RetentionTimeConfig getRetentionTime(String measureName, IStreamPipesClient client){
 
     try {
-      var originalMeasure = client.dataLakeMeasureApi().getByDatasetName(measureName);
+      var originalMeasure = client.datasetMeasureApi().getByDatasetName(measureName);
       RetentionTimeConfig retentionTime = null;
 
       if (originalMeasure.isPresent()) {

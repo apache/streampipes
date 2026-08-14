@@ -31,7 +31,7 @@ import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManage
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -165,7 +165,7 @@ public class ResetManagement {
     var dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(datasetMeasureManagement);
-    List<DataLakeMeasure> allMeasurements = datasetMeasureManagement.getAllMeasurements();
+    List<DatasetMeasure> allMeasurements = datasetMeasureManagement.getAllMeasurements();
     allMeasurements.forEach(measurement -> {
       boolean isSuccessDataset = dataExplorerQueryManagement.deleteData(measurement.getMeasureName());
 

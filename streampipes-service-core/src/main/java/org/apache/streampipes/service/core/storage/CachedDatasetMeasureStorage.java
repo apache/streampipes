@@ -17,44 +17,44 @@
  */
 package org.apache.streampipes.service.core.storage;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cache.CacheManager;
 
 public class CachedDatasetMeasureStorage
-    extends AbstractCachedCrudStorage<DataLakeMeasure, IDataLakeMeasureStorage>
-    implements IDataLakeMeasureStorage {
+    extends AbstractCachedCrudStorage<DatasetMeasure, IDatasetMeasureStorage>
+    implements IDatasetMeasureStorage {
 
   static final String CACHE_NAME = "dataLakeMeasures";
 
   private static final String MEASURE_NAME_KEY_PREFIX = "name:";
 
-  public CachedDatasetMeasureStorage(IDataLakeMeasureStorage delegate,
+  public CachedDatasetMeasureStorage(IDatasetMeasureStorage delegate,
                                       CacheManager cacheManager) {
     this(delegate, cacheManager, JacksonSerializer.getObjectMapper());
   }
 
-  CachedDatasetMeasureStorage(IDataLakeMeasureStorage delegate,
+  CachedDatasetMeasureStorage(IDatasetMeasureStorage delegate,
                                CacheManager cacheManager,
                                ObjectMapper objectMapper) {
     super(
         delegate,
         cacheManager,
         CACHE_NAME,
-        objectMapper.copy().addMixIn(DataLakeMeasure.class, DatasetMeasureCacheMixin.class),
-        DataLakeMeasure.class
+        objectMapper.copy().addMixIn(DatasetMeasure.class, DatasetMeasureCacheMixin.class),
+        DatasetMeasure.class
     );
   }
 
   @Override
-  public DataLakeMeasure getByMeasureName(String measureName) {
+  public DatasetMeasure getByMeasureName(String measureName) {
     return getOrLoad(
         key(MEASURE_NAME_KEY_PREFIX, measureName),
-        type(DataLakeMeasure.class),
+        type(DatasetMeasure.class),
         () -> delegate.getByMeasureName(measureName)
     );
   }

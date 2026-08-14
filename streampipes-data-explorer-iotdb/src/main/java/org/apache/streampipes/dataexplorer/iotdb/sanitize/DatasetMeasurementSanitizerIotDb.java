@@ -21,7 +21,7 @@ package org.apache.streampipes.dataexplorer.iotdb.sanitize;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.DatasetMeasurementSanitizer;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 
 /**
  * Ensures proper sanitization of data lake measurements with respect to Apache IoTDB specifics.
@@ -33,12 +33,12 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
  * @see <a href="https://iotdb.apache.org/UserGuide/latest/Basic-Concept/Data-Model-and-Terminology.html#path">IotDB Path Spec</a>
  */
 public class DatasetMeasurementSanitizerIotDb extends DatasetMeasurementSanitizer {
-  public DatasetMeasurementSanitizerIotDb(IStreamPipesClient client, DataLakeMeasure measure) {
+  public DatasetMeasurementSanitizerIotDb(IStreamPipesClient client, DatasetMeasure measure) {
     super(client, measure);
   }
 
   @Override
-  protected void cleanDataset() throws SpRuntimeException {
+  protected void cleanDatasetMeasure() throws SpRuntimeException {
       measure.setMeasureName(new MeasureNameSanitizerIotDb().sanitize(measure.getMeasureName()));
 
       measure.getEventSchema()
@@ -48,7 +48,7 @@ public class DatasetMeasurementSanitizerIotDb extends DatasetMeasurementSanitize
              );
   }
 
-  protected DataLakeMeasure getMeasure() {
+  protected DatasetMeasure getMeasure() {
     return measure;
   }
 }

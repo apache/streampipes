@@ -16,12 +16,27 @@
  *
  */
 
-package org.apache.streampipes.storage.api.explorer;
+package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.storage.api.core.CRUDStorage;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 
-public interface IDataLakeMeasureStorage extends CRUDStorage<DataLakeMeasure> {
+import java.util.List;
+import java.util.Optional;
 
-  DataLakeMeasure getByMeasureName(String measureName);
+public interface IDatasetMeasureApi extends CRUDApi<String, DatasetMeasure> {
+  Optional<DatasetMeasure> get(String id);
+
+  Optional<DatasetMeasure> getByDatasetName(String datasetName);
+
+  @Override
+  List<DatasetMeasure> all();
+
+  @Override
+  void create(DatasetMeasure element);
+
+  @Override
+  void delete(String elementId);
+
+  @Override
+  void update(DatasetMeasure measure);
 }

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.query;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,12 +38,12 @@ public class DatasetMeasurementCounterTest {
 
   private DatasetMeasurementCounterTestImpl counter;
 
-  private List<DataLakeMeasure> allMeasurements;
+  private List<DatasetMeasure> allMeasurements;
 
   @BeforeEach
   void setUp() {
-    var measure1 = mock(DataLakeMeasure.class);
-    var measure2 = mock(DataLakeMeasure.class);
+    var measure1 = mock(DatasetMeasure.class);
+    var measure2 = mock(DatasetMeasure.class);
     when(measure1.getMeasureName()).thenReturn(MEASURE_1_NAME);
     when(measure2.getMeasureName()).thenReturn(MEASURE_2_NAME);
 

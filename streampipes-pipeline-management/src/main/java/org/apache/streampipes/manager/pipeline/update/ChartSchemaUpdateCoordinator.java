@@ -21,7 +21,7 @@ package org.apache.streampipes.manager.pipeline.update;
 import org.apache.streampipes.model.connect.adapter.ChartSchemaUpdateInfo;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetHealthStatus;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -172,22 +172,22 @@ public class ChartSchemaUpdateCoordinator {
     }
   }
 
-  private DataLakeMeasure parseMeasure(Object measure,
+  private DatasetMeasure parseMeasure(Object measure,
                                        String measureName) {
-    var dataLakeMeasure = objectMapper.convertValue(measure, DataLakeMeasure.class);
+    var dataLakeMeasure = objectMapper.convertValue(measure, DatasetMeasure.class);
     if (dataLakeMeasure == null) {
-      dataLakeMeasure = new DataLakeMeasure();
+      dataLakeMeasure = new DatasetMeasure();
     }
     if (dataLakeMeasure.getMeasureName() == null) {
       dataLakeMeasure.setMeasureName(measureName);
     }
     if (dataLakeMeasure.getSchemaVersion() == null) {
-      dataLakeMeasure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
+      dataLakeMeasure.setSchemaVersion(DatasetMeasure.CURRENT_SCHEMA_VERSION);
     }
     return dataLakeMeasure;
   }
 
-  private Map<String, Object> serializeMeasure(DataLakeMeasure measure) {
+  private Map<String, Object> serializeMeasure(DatasetMeasure measure) {
     return objectMapper.convertValue(measure, MAP_TYPE);
   }
 

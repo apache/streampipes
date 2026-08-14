@@ -19,7 +19,7 @@
 package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -39,12 +39,12 @@ public abstract class DatasetMeasurementCounter implements IDataLakeMeasurementC
 
   private static final Logger LOG = LoggerFactory.getLogger(DatasetMeasurementCounter.class);
 
-  protected final List<DataLakeMeasure> allMeasurements;
+  protected final List<DatasetMeasure> allMeasurements;
   protected final List<String> measurementNames;
   protected final int daysBack;
 
   public DatasetMeasurementCounter(
-      List<DataLakeMeasure> allMeasurements,
+      List<DatasetMeasure> allMeasurements,
       List<String> measurementNames,
       int daysBack
   ) {
@@ -62,7 +62,7 @@ public abstract class DatasetMeasurementCounter implements IDataLakeMeasurementC
         .map(this::getMeasure)
         .filter(Objects::nonNull)
         .collect(Collectors.toMap(
-                     DataLakeMeasure::getMeasureName,
+                     DatasetMeasure::getMeasureName,
                      this::createQueryAsAsyncFuture
                  )
         );
@@ -71,12 +71,12 @@ public abstract class DatasetMeasurementCounter implements IDataLakeMeasurementC
   }
 
   /**
-   * Retrieves the {@link DataLakeMeasure} with the specified measure name from the collection of all measurements.
+   * Retrieves the {@link DatasetMeasure} with the specified measure name from the collection of all measurements.
    *
    * @param measureName The name of the measure to retrieve.
-   * @return The DataLakeMeasure corresponding to the provided measure name, or null if no such measure is found.
+   * @return The DatasetMeasure corresponding to the provided measure name, or null if no such measure is found.
    */
-  private DataLakeMeasure getMeasure(String measureName) {
+  private DatasetMeasure getMeasure(String measureName) {
     return allMeasurements
         .stream()
         .filter(m -> m.getMeasureName()
@@ -108,12 +108,12 @@ public abstract class DatasetMeasurementCounter implements IDataLakeMeasurementC
   }
 
   /**
-   * Retrieves the runtime name of the first measurement property from the event schema of the given DataLakeMeasure.
+   * Retrieves the runtime name of the first measurement property from the event schema of the given DatasetMeasure.
    *
-   * @param measure The {@link DataLakeMeasure} from which to retrieve the first measurement property.
+   * @param measure The {@link DatasetMeasure} from which to retrieve the first measurement property.
    * @return The runtime name of the first measurement property, or null if no such property is found.
    */
-  protected String getFirstMeasurementProperty(DataLakeMeasure measure) {
+  protected String getFirstMeasurementProperty(DatasetMeasure measure) {
     var propertyRuntimeName = measure
         .getEventSchema()
         .getEventProperties()
@@ -146,7 +146,7 @@ public abstract class DatasetMeasurementCounter implements IDataLakeMeasurementC
   }
 
   /**
-   * Create the count query for the given DataLakeMeasure and return it as a {@link CompletableFuture}.
+   * Create the count query for the given DatasetMeasure and return it as a {@link CompletableFuture}.
    */
-  protected abstract CompletableFuture<Integer> createQueryAsAsyncFuture(DataLakeMeasure measure);
+  protected abstract CompletableFuture<Integer> createQueryAsAsyncFuture(DatasetMeasure measure);
 }

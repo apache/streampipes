@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.service.core.storage;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
@@ -148,10 +148,10 @@ public class StorageApiConfiguration {
   }
 
   @Bean
-  public IDataLakeMeasureStorage datasetStorage(CacheManager cacheManager) {
-    IDataLakeMeasureStorage delegate = new DatasetMeasureStorage(
+  public IDatasetMeasureStorage datasetStorage(CacheManager cacheManager) {
+    IDatasetMeasureStorage delegate = new DatasetMeasureStorage(
         () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
-        DataLakeMeasure.class
+        DatasetMeasure.class
     );
     return dataLakeMeasureCacheEnabled ? new CachedDatasetMeasureStorage(delegate, cacheManager) : delegate;
   }

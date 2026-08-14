@@ -27,7 +27,7 @@ import org.apache.streampipes.dataexplorer.export.objectstorage.ExportProviderFa
 import org.apache.streampipes.dataexplorer.export.objectstorage.IObjectStorage;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.model.configuration.ProviderType;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.datalake.RetentionAction;
 import org.apache.streampipes.model.datalake.RetentionLog;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
@@ -67,7 +67,7 @@ public class DatasetExportManager {
 
     private String savePath = "";
 
-    private void exportMeasurement(DataLakeMeasure datasetMeasure, Instant now, long endDate) throws Exception {
+    private void exportMeasurement(DatasetMeasure datasetMeasure, Instant now, long endDate) throws Exception {
 
         if (env.getRetentionLocalDir().getValueOrDefault() == null
                 || env.getRetentionLocalDir().getValueOrDefault().isEmpty()) {
@@ -168,7 +168,7 @@ public class DatasetExportManager {
         }
     }
 
-    private void updateLastSync(DataLakeMeasure datasetMeasure, Instant now, boolean success, String error) {
+    private void updateLastSync(DatasetMeasure datasetMeasure, Instant now, boolean success, String error) {
         datasetMeasure.getRetentionTime().getRetentionExportConfig().setLastExport(now.toString());
         datasetMeasure.getRetentionTime().getRetentionExportConfig()
                 .addRetentionLog(new RetentionLog(success, this.savePath, now.toString(), error));
@@ -176,7 +176,7 @@ public class DatasetExportManager {
 
     }
 
-    private void deleteMeasurement(DataLakeMeasure datasetMeasure, Instant now, long endDate) {
+    private void deleteMeasurement(DatasetMeasure datasetMeasure, Instant now, long endDate) {
 
         this.dataExplorerQueryManagement.deleteData(datasetMeasure.getMeasureName(), null, endDate);
     }
@@ -193,7 +193,7 @@ public class DatasetExportManager {
         return result;
     }
 
-    public void cleanupSingleMeasurement(DataLakeMeasure datasetMeasure) throws Exception {
+    public void cleanupSingleMeasurement(DatasetMeasure datasetMeasure) throws Exception {
         boolean success = false;
         Instant now = Instant.now();
         if (datasetMeasure.getRetentionTime() != null) {

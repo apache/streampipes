@@ -22,7 +22,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 
 import org.apache.iotdb.isession.pool.SessionDataSetWrapper;
@@ -90,7 +90,7 @@ public class DataExplorerIotDbQueryExecutor extends DataExplorerQueryExecutor<St
   }
 
   @Override
-  public boolean deleteData(DataLakeMeasure measure) {
+  public boolean deleteData(DatasetMeasure measure) {
     var deleteTimeSeriesQuery = "DELETE timeseries root.streampipes.%s.*".formatted(measure.getMeasureName());
     return executeNonQueryStatement(deleteTimeSeriesQuery);
   }

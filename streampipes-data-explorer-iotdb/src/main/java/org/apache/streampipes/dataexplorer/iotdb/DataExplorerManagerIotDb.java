@@ -30,8 +30,8 @@ import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.iotdb.sanitize.DatasetMeasurementSanitizerIotDb;
 import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.List;
@@ -39,7 +39,7 @@ import java.util.List;
 public class DataExplorerManagerIotDb implements IDataExplorerManager {
 
   @Override
-  public IDataLakeMeasurementCounter getMeasurementCounter(List<DataLakeMeasure> allMeasurements,
+  public IDataLakeMeasurementCounter getMeasurementCounter(List<DatasetMeasure> allMeasurements,
                                                            List<String> measurementsToCount,
                                                            int daysBack) {
     return new DatasetMeasurementCounterIotDb(allMeasurements, measurementsToCount, daysBack);
@@ -56,7 +56,7 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
   @Override
   public IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
                                                            IPermissionStorage permissionStorage,
-                                                           IDataLakeMeasureStorage datasetStorage) {
+                                                           IDatasetMeasureStorage datasetStorage) {
     return new DataExplorerSchemaManagement(
         datasetStorage,
         new DatasetPermissionManager(permissionStorage),
@@ -65,12 +65,12 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
   }
 
   @Override
-  public ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure, boolean ignoreDuplicates) {
+  public ITimeSeriesStorage getTimeseriesStorage(DatasetMeasure measure, boolean ignoreDuplicates) {
     return new TimeSeriesStorageIotDb(measure, new IotDbPropertyConverter(), new IotDbSessionProvider());
   }
 
   @Override
-  public IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DataLakeMeasure measure) {
+  public IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMeasure measure) {
     return new DatasetMeasurementSanitizerIotDb(client, measure);
   }
 }

@@ -24,7 +24,7 @@ import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -33,7 +33,7 @@ import java.util.Objects;
 public class AbstractDatasetResource extends AbstractAuthGuardedRestResource {
 
   final IDataExplorerSchemaManagement datasetMeasureManagement;
-  private final IDataLakeMeasureStorage datasetMeasureStorage;
+  private final IDatasetMeasureStorage datasetMeasureStorage;
   protected final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
   private final SpResourceManager resourceManager;
 

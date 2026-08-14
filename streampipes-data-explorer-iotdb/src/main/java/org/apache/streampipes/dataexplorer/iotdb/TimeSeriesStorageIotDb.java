@@ -22,7 +22,7 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.TimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.iotdb.sanitize.IotDbNameSanitizer;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
@@ -42,7 +42,7 @@ public class TimeSeriesStorageIotDb extends TimeSeriesStorage {
   private final IotDbPropertyConverter propertyConverter;
   private final SessionPool sessionPool;
 
-  public TimeSeriesStorageIotDb(DataLakeMeasure measure,
+  public TimeSeriesStorageIotDb(DatasetMeasure measure,
                                 IotDbPropertyConverter propertyConverter,
                                 IotDbSessionProvider iotDbSessionProvider) {
     super(measure);

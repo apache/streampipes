@@ -22,7 +22,7 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.export.DatasetExportManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
@@ -62,9 +62,9 @@ public class DatasetScheduler implements SchedulingConfigurer {
 
     public void cleanupMeasurements() {
         LOG.info("Retention CRON Job triggered.");
-        List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
+        List<DatasetMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
         LOG.debug("GET ALL Measurements");
-        for (DataLakeMeasure datasetMeasure : allMeasurements) {
+        for (DatasetMeasure datasetMeasure : allMeasurements) {
             try {
                 datasetExportManager.cleanupSingleMeasurement(datasetMeasure);
             } catch (Exception e) {

@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.storage.couchdb.impl.explorer;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
 
 import org.lightcouch.CouchDbClient;
@@ -27,22 +27,22 @@ import org.lightcouch.CouchDbClient;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class DatasetMeasureStorage extends DefaultCrudStorage<DataLakeMeasure> implements IDataLakeMeasureStorage {
+public class DatasetMeasureStorage extends DefaultCrudStorage<DatasetMeasure> implements IDatasetMeasureStorage {
 
   public static final String MEASUREMENT_BY_NAME_VIEW = "measurement/by-measure-name";
 
-  public DatasetMeasureStorage(Supplier<CouchDbClient> couchDbClientSupplier, Class<DataLakeMeasure> clazz) {
+  public DatasetMeasureStorage(Supplier<CouchDbClient> couchDbClientSupplier, Class<DatasetMeasure> clazz) {
     super(couchDbClientSupplier, clazz);
   }
 
   @Override
-  public DataLakeMeasure getByMeasureName(String measureName) {
-    List<DataLakeMeasure> results = couchDbClientSupplier.get()
+  public DatasetMeasure getByMeasureName(String measureName) {
+    List<DatasetMeasure> results = couchDbClientSupplier.get()
         .view(MEASUREMENT_BY_NAME_VIEW)
         .key(measureName)
         .includeDocs(true)
         .limit(1)
-        .query(DataLakeMeasure.class);
+        .query(DatasetMeasure.class);
 
     if (!results.isEmpty()) {
       return results.get(0);
@@ -52,10 +52,10 @@ public class DatasetMeasureStorage extends DefaultCrudStorage<DataLakeMeasure> i
   }
 
   @Override
-  public List<DataLakeMeasure> findAll() {
+  public List<DatasetMeasure> findAll() {
     return couchDbClientSupplier.get()
         .view(MEASUREMENT_BY_NAME_VIEW)
         .includeDocs(true)
-        .query(DataLakeMeasure.class);
+        .query(DatasetMeasure.class);
   }
 }

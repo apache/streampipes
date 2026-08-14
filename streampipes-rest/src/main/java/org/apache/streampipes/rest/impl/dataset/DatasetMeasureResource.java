@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.datalake.DatasetSummaryDto;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
@@ -66,9 +66,9 @@ public class DatasetMeasureResource extends AbstractDatasetResource {
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<?> addDataset(@RequestBody DataLakeMeasure measure) {
+  public ResponseEntity<?> addDataset(@RequestBody DatasetMeasure measure) {
     try {
-      DataLakeMeasure result = this.datasetMeasureManagement.createOrUpdateMeasurement(
+      DatasetMeasure result = this.datasetMeasureManagement.createOrUpdateMeasurement(
           measure,
           getAuthenticatedUserSid()
       );
@@ -155,7 +155,7 @@ public class DatasetMeasureResource extends AbstractDatasetResource {
    @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<?> updateDatasetMeasure(
       @PathVariable("id") String elementId,
-      @RequestBody DataLakeMeasure measure) {
+      @RequestBody DatasetMeasure measure) {
     if (elementId.equals(measure.getElementId())) {
       try {
         this.datasetMeasureManagement.updateMeasurement(measure);

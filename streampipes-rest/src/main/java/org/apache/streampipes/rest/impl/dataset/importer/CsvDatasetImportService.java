@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
 import org.apache.streampipes.model.datalake.importer.CsvImportJobStartResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportJobStatus;
@@ -35,7 +35,7 @@ import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
 import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.rest.impl.dataset.DatasetDataWriter;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,7 +65,7 @@ public class CsvDatasetImportService {
   private final CsvImportJobManager jobManager;
 
   public CsvDatasetImportService(IDataExplorerSchemaManagement schemaManagement,
-                                  IDataLakeMeasureStorage datasetStorage) {
+                                  IDatasetMeasureStorage datasetStorage) {
     this(
         schemaManagement,
         new DatasetDataWriter(false, true, datasetStorage),
@@ -374,7 +374,7 @@ public class CsvDatasetImportService {
       String principalSid,
       EventSchema eventSchema) {
     if (request.getTarget().getMode() == CsvImportTargetMode.NEW) {
-      var measure = new DataLakeMeasure();
+      var measure = new DatasetMeasure();
       measure.setMeasureName(request.getTarget().getMeasurementName().trim());
       measure.setTimestampField(STREAM_PREFIX + request.getTimestampColumn());
       measure.setEventSchema(removeTimestampProperty(eventSchema, request.getTimestampColumn()));
@@ -405,6 +405,6 @@ public class CsvDatasetImportService {
     return sanitizedSchema;
   }
 
-  private record StoredMeasure(DataLakeMeasure measure, boolean createdNewMeasurement) {
+  private record StoredMeasure(DatasetMeasure measure, boolean createdNewMeasurement) {
   }
 }

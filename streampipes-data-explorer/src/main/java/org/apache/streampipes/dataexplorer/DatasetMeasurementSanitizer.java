@@ -21,7 +21,7 @@ package org.apache.streampipes.dataexplorer;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.schema.EventProperty;
 
 import java.util.List;
@@ -32,10 +32,10 @@ import java.util.List;
  */
 public abstract class DatasetMeasurementSanitizer implements IDataLakeMeasurementSanitizer {
 
-  protected final DataLakeMeasure measure;
+  protected final DatasetMeasure measure;
   protected final IStreamPipesClient client;
 
-  public DatasetMeasurementSanitizer(IStreamPipesClient client, DataLakeMeasure measure){
+  public DatasetMeasurementSanitizer(IStreamPipesClient client, DatasetMeasure measure){
     this.client = client;
     this.measure = measure;
   }
@@ -49,7 +49,7 @@ public abstract class DatasetMeasurementSanitizer implements IDataLakeMeasuremen
    * @return The sanitized and registered dataset measure.
    */
   @Override
-  public DataLakeMeasure sanitizeAndRegister(){
+  public DatasetMeasure sanitizeAndRegister(){
     sanitizeDataset();
     registerAtDataset();
 
@@ -65,7 +65,7 @@ public abstract class DatasetMeasurementSanitizer implements IDataLakeMeasuremen
    * @return The sanitized and updated dataset measure.
    */
   @Override
-  public DataLakeMeasure sanitizeAndUpdate(){
+  public DatasetMeasure sanitizeAndUpdate(){
     sanitizeDataset();
     updateDataset();
 
@@ -75,16 +75,16 @@ public abstract class DatasetMeasurementSanitizer implements IDataLakeMeasuremen
 
 
   private void registerAtDataset() throws SpRuntimeException {
-    client.dataLakeMeasureApi().create(measure);
+    client.datasetMeasureApi().create(measure);
   }
 
   private void updateDataset() throws SpRuntimeException {
-    client.dataLakeMeasureApi().update(measure);
+    client.datasetMeasureApi().update(measure);
   }
 
   private void sanitizeDataset() throws SpRuntimeException {
     removeTimestampsFromEventSchema();
-    cleanDataset();
+    cleanDatasetMeasure();
   }
 
   /**
@@ -97,7 +97,7 @@ public abstract class DatasetMeasurementSanitizer implements IDataLakeMeasuremen
    * </ol>
    * @throws SpRuntimeException if an error occurs during the cleaning process.
    */
-  protected abstract void cleanDataset() throws SpRuntimeException;
+  protected abstract void cleanDatasetMeasure() throws SpRuntimeException;
 
   protected void removeTimestampsFromEventSchema() throws SpRuntimeException{
     var timestampField = measure.getTimestampField();

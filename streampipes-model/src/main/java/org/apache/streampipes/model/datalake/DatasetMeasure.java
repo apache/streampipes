@@ -30,7 +30,7 @@ import com.google.gson.annotations.SerializedName;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
-public class DataLakeMeasure implements Storable {
+public class DatasetMeasure implements Storable {
 
   public static final String CURRENT_SCHEMA_VERSION = "1.1";
   public static final String ASSERTION_ERROR_MESSAGE = "timestamp field requires a stream prefix (e.g. s0::timestamp)";
@@ -55,29 +55,29 @@ public class DataLakeMeasure implements Storable {
 
   private RetentionTimeConfig retentionTime;
 
-  public DataLakeMeasure() {
+  public DatasetMeasure() {
     super();
   }
 
-  public DataLakeMeasure(DataLakeMeasure other) {
+  public DatasetMeasure(DatasetMeasure other) {
     this.measureName = other.getMeasureName();
     this.eventSchema = new EventSchema(other.getEventSchema());
 
   }
 
-  public DataLakeMeasure(String measureName, EventSchema eventSchema) {
+  public DatasetMeasure(String measureName, EventSchema eventSchema) {
     this.measureName = measureName;
     this.eventSchema = eventSchema;
   }
 
-  public DataLakeMeasure(String measureName, String timestampField, EventSchema eventSchema) {
+  public DatasetMeasure(String measureName, String timestampField, EventSchema eventSchema) {
     this.measureName = measureName;
     this.eventSchema = eventSchema;
     this.timestampField = timestampField;
   }
 
 
-  public DataLakeMeasure(String measureName, String timestampField, EventSchema eventSchema, RetentionTimeConfig retentionTime) {
+  public DatasetMeasure(String measureName, String timestampField, EventSchema eventSchema, RetentionTimeConfig retentionTime) {
     this.measureName = measureName;
     this.eventSchema = eventSchema;
     this.timestampField = timestampField;

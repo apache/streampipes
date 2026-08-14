@@ -20,8 +20,8 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
@@ -50,7 +50,7 @@ public class DataExplorerSchemaManagementTest {
   public static final String NEW_PROPERTY = "newProperty";
   public static final String OLD_PROPERTY = "oldProperty";
 
-  private CRUDStorage<DataLakeMeasure> dataLakeStorageMock;
+  private CRUDStorage<DatasetMeasure> dataLakeStorageMock;
   private DatasetPermissionManager permissionManagerMock;
   private ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
@@ -185,18 +185,18 @@ public class DataExplorerSchemaManagementTest {
         .build();
   }
 
-  private DataLakeMeasure getNewMeasure(DataLakeMeasureSchemaUpdateStrategy updateStrategy) {
+  private DatasetMeasure getNewMeasure(DataLakeMeasureSchemaUpdateStrategy updateStrategy) {
     return getSampleMeasure(
         updateStrategy,
         List.of(getEventProperty(NEW_PROPERTY, XSD.STRING))
     );
   }
 
-  private DataLakeMeasure getSampleMeasure(
+  private DatasetMeasure getSampleMeasure(
       DataLakeMeasureSchemaUpdateStrategy updateStrategy,
       List<EventProperty> eventProperties
   ) {
-    var measure = new DataLakeMeasure();
+    var measure = new DatasetMeasure();
     measure.setMeasureName("testMeasure");
     measure.setSchemaUpdateStrategy(updateStrategy);
 
@@ -213,7 +213,7 @@ public class DataExplorerSchemaManagementTest {
   }
 
   private boolean containsPropertyWithName(
-      DataLakeMeasure measure,
+      DatasetMeasure measure,
       String runtimeName
   ) {
     return measure

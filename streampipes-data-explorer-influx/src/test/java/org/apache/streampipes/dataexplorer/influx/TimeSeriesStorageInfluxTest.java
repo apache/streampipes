@@ -22,7 +22,7 @@ package org.apache.streampipes.dataexplorer.influx;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.runtime.SchemaInfo;
@@ -434,7 +434,7 @@ public class TimeSeriesStorageInfluxTest {
    */
   private TimeSeriesStorageInflux getInfluxStore(EventSchema eventSchema) {
 
-    DataLakeMeasure measure = new DataLakeMeasure(
+    DatasetMeasure measure = new DatasetMeasure(
         EXPECTED_MEASUREMENT,
         "s0::%s".formatted(TIMESTAMP),
         eventSchema

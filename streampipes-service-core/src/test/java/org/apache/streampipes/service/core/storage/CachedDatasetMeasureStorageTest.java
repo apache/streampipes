@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.service.core.storage;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,12 +38,12 @@ class CachedDatasetMeasureStorageTest {
   private static final String MEASURE_ID = "measure-id";
   private static final String MEASURE_NAME = "measure-name";
 
-  private IDataLakeMeasureStorage delegate;
+  private IDatasetMeasureStorage delegate;
   private CachedDatasetMeasureStorage storage;
 
   @BeforeEach
   void setUp() {
-    delegate = mock(IDataLakeMeasureStorage.class);
+    delegate = mock(IDatasetMeasureStorage.class);
     var cacheManager = new ConcurrentMapCacheManager(CachedDatasetMeasureStorage.CACHE_NAME);
     storage = new CachedDatasetMeasureStorage(delegate, cacheManager);
   }
@@ -99,8 +99,8 @@ class CachedDatasetMeasureStorageTest {
     verify(delegate, times(2)).getByMeasureName(MEASURE_NAME);
   }
 
-  private DataLakeMeasure makeMeasure(String pipelineName) {
-    var measure = new DataLakeMeasure();
+  private DatasetMeasure makeMeasure(String pipelineName) {
+    var measure = new DatasetMeasure();
     measure.setElementId(MEASURE_ID);
     measure.setMeasureName(MEASURE_NAME);
     measure.setPipelineName(pipelineName);

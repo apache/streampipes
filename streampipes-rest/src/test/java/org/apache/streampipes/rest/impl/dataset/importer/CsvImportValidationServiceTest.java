@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
 import org.apache.streampipes.model.datalake.importer.CsvImportConfiguration;
 import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
@@ -64,7 +64,7 @@ class CsvImportValidationServiceTest {
   @Test
   void shouldRejectDuplicateMeasurementDuringPreviewValidation() {
     var schemaManagement = mock(IDataExplorerSchemaManagement.class);
-    var existingMeasure = new DataLakeMeasure();
+    var existingMeasure = new DatasetMeasure();
     existingMeasure.setMeasureName("existing-measure");
     when(schemaManagement.getExistingMeasureByName("existing-measure"))
         .thenReturn(Optional.of(existingMeasure));
@@ -80,7 +80,7 @@ class CsvImportValidationServiceTest {
   @Test
   void shouldReportSchemaIssuesForExistingMeasurement() {
     var schemaManagement = mock(IDataExplorerSchemaManagement.class);
-    var existingMeasure = new DataLakeMeasure();
+    var existingMeasure = new DatasetMeasure();
     existingMeasure.setMeasureName("existing-measure");
     existingMeasure.setTimestampField("s0::timestamp");
     existingMeasure.setEventSchema(new EventSchema(List.of(

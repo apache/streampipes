@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.query.DatasetMeasurementCounter;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
@@ -34,20 +34,20 @@ public class DatasetMeasurementCounterIotDb extends DatasetMeasurementCounter {
 
   private static final Logger LOG = LoggerFactory.getLogger(DatasetMeasurementCounterIotDb.class);
 
-  public DatasetMeasurementCounterIotDb(List<DataLakeMeasure> allMeasurements,
+  public DatasetMeasurementCounterIotDb(List<DatasetMeasure> allMeasurements,
                                          List<String> measurementNames,
                                          int daysBack) {
     super(allMeasurements, measurementNames, daysBack);
   }
 
   /**
-   * Creates a CompletableFuture to execute a count query on a DataLakeMeasure asynchronously.
+   * Creates a CompletableFuture to execute a count query on a DatasetMeasure asynchronously.
    *
-   * @param measure The DataLakeMeasure object representing the measure to query.
+   * @param measure The DatasetMeasure object representing the measure to query.
    * @return A {@link CompletableFuture} representing the count query result as a future.
    */
   @Override
-  protected CompletableFuture<Integer> createQueryAsAsyncFuture(DataLakeMeasure measure) {
+  protected CompletableFuture<Integer> createQueryAsAsyncFuture(DatasetMeasure measure) {
     var sessionPool = new IotDbSessionProvider().getSessionPool(Environments.getEnvironment());
     return CompletableFuture.supplyAsync(() -> {
 

@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.dataexplorer.influx.sanitize.MeasureNameSanitizer;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -39,7 +39,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v3/datalake/pipelines")
-public class PersistedDataStreamResource extends AbstractPipelineExtractionResource<DataLakeMeasure> {
+public class PersistedDataStreamResource extends AbstractPipelineExtractionResource<DatasetMeasure> {
 
   private static final String DATASET_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
   private static final String MeasureFieldInternalName = "db_measurement";
@@ -51,7 +51,7 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_READ_DATASET_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ') and hasPermission(filterObject.measureName, 'READ')")
-  public List<DataLakeMeasure> getPersistedDataStreams() {
+  public List<DatasetMeasure> getPersistedDataStreams() {
     return extract(new ArrayList<>(), DATASET_APP_ID);
   }
 
@@ -63,12 +63,12 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
   }
 
   @Override
-  protected DataLakeMeasure convert(Pipeline pipeline, DataSinkInvocation sink) {
+  protected DatasetMeasure convert(Pipeline pipeline, DataSinkInvocation sink) {
 
     var measureName = extractFieldValue(sink, MeasureFieldInternalName);
     var sanitizedMeasureName = new MeasureNameSanitizer().sanitize(measureName);
 
-    DataLakeMeasure measure = new DataLakeMeasure();
+    DatasetMeasure measure = new DatasetMeasure();
     measure.setEventSchema(sink.getInputStreams().get(0).getEventSchema());
     measure.setPipelineId(pipeline.getPipelineId());
     measure.setPipelineName(pipeline.getName());
@@ -79,7 +79,7 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
   }
 
   @Override
-  protected boolean matches(DataLakeMeasure measure, String pipelineId, String fieldValue) {
+  protected boolean matches(DatasetMeasure measure, String pipelineId, String fieldValue) {
     return measure.getMeasureName().equals(fieldValue);
   }
 }

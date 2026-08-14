@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.datalake.importer.CsvImportConfiguration;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
@@ -217,7 +217,7 @@ class CsvImportValidationService {
     return messages;
   }
 
-  DataLakeMeasure requireExistingMeasurement(String measurementName) {
+  DatasetMeasure requireExistingMeasurement(String measurementName) {
     return schemaManagement.getExistingMeasureByName(measurementName)
         .orElseThrow(() -> new CsvImportValidationException(List.of(
             message("target.measurementName", "The selected measurement does not exist.")
@@ -225,7 +225,7 @@ class CsvImportValidationService {
   }
 
   private List<CsvImportSchemaIssue> compareSchemas(
-      DataLakeMeasure existingMeasure,
+      DatasetMeasure existingMeasure,
       EventSchema importSchema,
       String timestampColumn
   ) {

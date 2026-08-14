@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.connect.management.util.EventSchemaUtils;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
 import org.apache.streampipes.model.datalake.importer.CsvImportConfiguration;
 import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
@@ -152,7 +152,7 @@ class CsvImportParser {
   int importCsvFile(
       Path path,
       CsvImportRequest request,
-      DataLakeMeasure measure,
+      DatasetMeasure measure,
       DatasetDataWriter dataWriter
   ) throws IOException {
     return importCsvFile(path, request, measure, dataWriter, importedRows -> {
@@ -162,7 +162,7 @@ class CsvImportParser {
   int importCsvFile(
       Path path,
       CsvImportRequest request,
-      DataLakeMeasure measure,
+      DatasetMeasure measure,
       DatasetDataWriter dataWriter,
       IntConsumer progressConsumer
   ) throws IOException {
