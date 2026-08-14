@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
     MatCell,
     MatCellDef,
@@ -26,7 +26,7 @@ import {
     MatTableDataSource,
 } from '@angular/material/table';
 import {
-    AssetSummaryDto,
+    AssetSiteDesc,
     AssetManagementService,
     SpAssetModel,
 } from '@streampipes/platform-services';
@@ -94,7 +94,7 @@ type ManageableAsset = SpAssetModel & {
         TranslatePipe,
     ],
 })
-export class SpAssetOverviewComponent implements OnInit {
+export class SpAssetOverviewComponent implements OnInit, OnDestroy {
     private assetService = inject(AssetManagementService);
     private breadcrumbService = inject(SpBreadcrumbService);
     private dialogService = inject(DialogService);
@@ -105,21 +105,23 @@ export class SpAssetOverviewComponent implements OnInit {
     private dialog = inject(MatDialog);
     private translateService = inject(TranslateService);
 
-    existingAssets: AssetSummaryDto[] = [];
-    filteredAssets: AssetSummaryDto[] = [];
+    existingAssets: SpAssetModel[] = [];
+    filteredAssets: SpAssetModel[] = [];
+    sitesById: Record<string, AssetSiteDesc> = {};
 
-    displayedColumns: string[] = ['assetName', 'actions'];
+    displayedColumns: string[] = ['assetName', 'location', 'actions'];
 
     @ViewChild(MatSort)
     sort: MatSort;
 
-    dataSource: MatTableDataSource<AssetSummaryDto> =
-        new MatTableDataSource<AssetSummaryDto>();
+    dataSource: MatTableDataSource<SpAssetModel> =
+        new MatTableDataSource<SpAssetModel>();
 
     hasWritePrivilege = false;
 
     assetFilter$: Subscription;
-    currentFilterIds = new Set<string>();
+    assetData$: Subscription;
+    currentFilterIds?: Set<string>;
 
     private assetFilterService = inject(SpAssetBrowserService);
 
@@ -129,6 +131,22 @@ export class SpAssetOverviewComponent implements OnInit {
         );
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpAssetRoutes.BASE),
+        );
+
+        this.dataSource.sortingDataAccessor = (asset, column) => {
+            if (column === 'location') {
+                return this.getLocationLabel(asset);
+            }
+
+            return asset[column];
+        };
+
+        this.assetData$ = this.assetBrowserService.assetData$.subscribe(
+            assetData => {
+                this.sitesById = Object.fromEntries(
+                    (assetData?.sites ?? []).map(site => [site._id, site]),
+                );
+            },
         );
 
         this.loadAssets();
@@ -158,16 +176,23 @@ export class SpAssetOverviewComponent implements OnInit {
             });
     }
 
+    ngOnDestroy(): void {
+        this.assetFilter$?.unsubscribe();
+        this.assetData$?.unsubscribe();
+    }
+
     loadAssets(): void {
-        this.assetService.getAssetSummary().subscribe(result => {
-            this.existingAssets = result.resources.sort((a, b) =>
+        console.log('LOAD ASSET');
+        this.assetService.getAllAssets().subscribe(result => {
+            this.existingAssets = result.sort((a, b) =>
                 a.assetName.localeCompare(b.assetName),
             );
+            console.log(this.existingAssets);
             this.applyAssetFilters(this.currentFilterIds);
         });
     }
 
-    applyAssetFilters(elementIds: Set<string>): void {
+    applyAssetFilters(elementIds?: Set<string>): void {
         if (elementIds === undefined || elementIds.size === 0) {
             this.filteredAssets = this.existingAssets;
         } else {
@@ -177,6 +202,17 @@ export class SpAssetOverviewComponent implements OnInit {
         }
         this.dataSource.sort = this.sort;
         this.dataSource.data = this.filteredAssets;
+    }
+
+    getLocationLabel(asset: SpAssetModel): string {
+        const siteId = asset.assetSite?.siteId;
+        if (siteId) {
+            return (
+                this.sitesById[siteId]?.label ?? asset.assetSite?.area ?? '-'
+            );
+        }
+
+        return asset.assetSite?.area ?? '-';
     }
 
     createNewAsset() {
@@ -206,12 +242,12 @@ export class SpAssetOverviewComponent implements OnInit {
         );
     }
 
-    goToDetailsView(asset: AssetSummaryDto, editMode = false) {
+    goToDetailsView(asset: SpAssetModel, editMode = false) {
         const mode = editMode && this.hasWritePrivilege ? 'edit' : 'view';
         this.router.navigate(['assets', 'details', asset.elementId, mode]);
     }
 
-    deleteAsset(asset: AssetSummaryDto) {
+    deleteAsset(asset: SpAssetModel) {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
@@ -235,58 +271,53 @@ export class SpAssetOverviewComponent implements OnInit {
         });
     }
 
-    showManageDialog(assetSummary: AssetSummaryDto) {
-        this.assetService.getAsset(assetSummary.elementId).subscribe(asset => {
-            const resource: ManageableAsset = {
-                ...asset,
-                name: asset.assetName,
-                description: asset.assetDescription,
+    showManageDialog(asset: SpAssetModel) {
+        const resource: ManageableAsset = {
+            ...asset,
+            name: asset.assetName,
+            description: asset.assetDescription,
+        };
+        const resourceConfig: ObjectManageDialogResourceConfig<ManageableAsset> =
+            {
+                resourceLabel: 'Asset',
+                nameLabel: 'Asset name',
+                descriptionLabel: 'Asset description',
+                nameProperty: 'name',
+                showResourceFields: this.hasWritePrivilege,
+                showAssetLinking: false,
+                saveResource: this.hasWritePrivilege
+                    ? resource => {
+                          const { name, description, ...assetToSave } =
+                              resource;
+                          return this.assetService.updateAsset({
+                              ...assetToSave,
+                              assetName: name,
+                              assetDescription: description,
+                          });
+                      }
+                    : undefined,
             };
-            const resourceConfig: ObjectManageDialogResourceConfig<ManageableAsset> =
-                {
-                    resourceLabel: 'Asset',
-                    nameLabel: 'Asset name',
-                    descriptionLabel: 'Asset description',
-                    nameProperty: 'name',
-                    showResourceFields: this.hasWritePrivilege,
-                    showAssetLinking: false,
-                    saveResource: this.hasWritePrivilege
-                        ? resource => {
-                              const { name, description, ...assetToSave } =
-                                  resource;
-                              return this.assetService.updateAsset({
-                                  ...assetToSave,
-                                  assetName: name,
-                                  assetDescription: description,
-                              });
-                          }
-                        : undefined,
-                };
 
-            const dialogRef = this.dialogService.open(
-                ObjectManageDialogComponent,
-                {
-                    panelType: PanelType.SLIDE_IN_PANEL,
-                    title: this.translateService.instant('Manage'),
-                    width: '50vw',
-                    data: {
-                        objectInstanceId: resource.elementId,
-                        resource,
-                        saveMode: 'immediate',
-                        resourceConfig,
-                        headerTitle:
-                            this.translateService.instant('Manage Asset ') +
-                            resource.assetName,
-                    },
-                },
-            );
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: this.translateService.instant('Manage'),
+            width: '50vw',
+            data: {
+                objectInstanceId: resource.elementId,
+                resource,
+                saveMode: 'immediate',
+                resourceConfig,
+                headerTitle:
+                    this.translateService.instant('Manage Asset ') +
+                    resource.assetName,
+            },
+        });
 
-            dialogRef.afterClosed().subscribe(refresh => {
-                if (refresh) {
-                    this.loadAssets();
-                    this.assetBrowserService.refreshBrowserAssetData();
-                }
-            });
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.loadAssets();
+                this.assetBrowserService.refreshBrowserAssetData();
+            }
         });
     }
 }
