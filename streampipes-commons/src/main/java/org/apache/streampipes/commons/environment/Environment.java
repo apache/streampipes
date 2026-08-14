@@ -210,6 +210,8 @@ public interface Environment {
 
   IntEnvironmentVariable getMsSqlCdcPollIntervalMs();
 
+  IntEnvironmentVariable getMsSqlPollingMinIntervalSeconds();
+
   BooleanEnvironmentVariable getFileLoggingEnabled();
 
   BooleanEnvironmentVariable getConsoleLoggingEnabled();

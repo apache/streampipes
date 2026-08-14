@@ -121,6 +121,9 @@ public final class PolyglotTypeConverter {
       if (hostObject != null && hostObject.getClass().isArray()) {
         return getArrayValue(hostObject);
       }
+      if (hostObject instanceof String || hostObject instanceof Number || hostObject instanceof Boolean) {
+        return hostObject;
+      }
     }
     if (value.hasHashEntries()) {
       Map<String, Object> result = new LinkedHashMap<>();
