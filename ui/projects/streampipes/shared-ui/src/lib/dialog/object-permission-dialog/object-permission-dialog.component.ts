@@ -133,8 +133,12 @@ export class ObjectPermissionDialogComponent implements OnInit {
             ),
         ).subscribe(
             results => {
-                this.allUsers = results[0];
-                this.allGroups = results[1];
+                this.allUsers = results[0].filter(user =>
+                    this.isSelectableUser(user),
+                );
+                this.allGroups = results[1].filter(group =>
+                    this.isSelectableGroup(group),
+                );
                 this.processPermissions(results[2]);
                 this.permissionDenied = false;
                 this.loading = false;
@@ -219,33 +223,61 @@ export class ObjectPermissionDialogComponent implements OnInit {
     }
 
     get availableUsers(): ShortUserInfo[] {
-        return this.allUsers?.filter(u => !this.isOwnerOrAdded(u)) ?? [];
+        return (
+            this.allUsers?.filter(
+                user =>
+                    this.isSelectableUser(user) && !this.isOwnerOrAdded(user),
+            ) ?? []
+        );
     }
 
     get availableGroups(): Group[] {
-        return this.allGroups?.filter(g => !this.isGroupAdded(g)) ?? [];
+        return (
+            this.allGroups?.filter(
+                group =>
+                    this.isSelectableGroup(group) && !this.isGroupAdded(group),
+            ) ?? []
+        );
     }
 
     onGrantedUsersChange(
         users: ShortUserInfo | ShortUserInfo[] | undefined,
     ): void {
-        this.grantedUserAuthorities = Array.isArray(users) ? users : [];
+        this.grantedUserAuthorities = Array.isArray(users)
+            ? users.filter(user => this.isSelectableUser(user))
+            : [];
     }
 
     onGrantedGroupsChange(groups: Group | Group[] | undefined): void {
-        this.grantedGroupAuthorities = Array.isArray(groups) ? groups : [];
+        this.grantedGroupAuthorities = Array.isArray(groups)
+            ? groups.filter(group => this.isSelectableGroup(group))
+            : [];
     }
 
     private addUserToSelection(authority: PermissionEntry) {
         const user = this.allUsers.find(u => u.principalId === authority.sid);
-        if (user !== undefined) {
+        if (user !== undefined && this.isSelectableUser(user)) {
             this.grantedUserAuthorities.push(user);
         }
     }
 
     private addGroupToSelection(authority: PermissionEntry) {
         const group = this.allGroups.find(u => u.groupId === authority.sid);
-        this.grantedGroupAuthorities.push(group);
+        if (group !== undefined && this.isSelectableGroup(group)) {
+            this.grantedGroupAuthorities.push(group);
+        }
+    }
+
+    private isSelectableUser(user: ShortUserInfo | undefined): boolean {
+        return (
+            user !== undefined &&
+            user.principalType !== 'GROUP' &&
+            !!user.principalId
+        );
+    }
+
+    private isSelectableGroup(group: Group | undefined): boolean {
+        return group !== undefined && !!group.groupId;
     }
 
     private isOwnerOrAdded(user: ShortUserInfo): boolean {
