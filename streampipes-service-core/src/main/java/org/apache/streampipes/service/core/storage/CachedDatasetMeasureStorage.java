@@ -29,7 +29,7 @@ public class CachedDatasetMeasureStorage
     extends AbstractCachedCrudStorage<DatasetMeasure, IDatasetMeasureStorage>
     implements IDatasetMeasureStorage {
 
-  static final String CACHE_NAME = "dataLakeMeasures";
+  static final String CACHE_NAME = "datasetMeasures";
 
   private static final String MEASURE_NAME_KEY_PREFIX = "name:";
 

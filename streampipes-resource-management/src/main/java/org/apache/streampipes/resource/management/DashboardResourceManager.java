@@ -34,15 +34,15 @@ import java.util.Map;
 public class DashboardResourceManager extends CrudResourceManager<DashboardModel, IDashboardStorage> {
 
   private final IChartStorage widgetStorage;
-  private final IDatasetMeasureStorage dataLakeMeasureStorage;
+  private final IDatasetMeasureStorage datasetMeasureStorage;
 
   public DashboardResourceManager(IDashboardStorage dashboardStorage,
                                    IChartStorage widgetStorage,
-                                   IDatasetMeasureStorage dataLakeMeasureStorage,
+                                   IDatasetMeasureStorage datasetMeasureStorage,
                                    PermissionResourceManager permissionResourceManager) {
     super(dashboardStorage, DashboardModel.class, permissionResourceManager);
     this.widgetStorage = widgetStorage;
-    this.dataLakeMeasureStorage = dataLakeMeasureStorage;
+    this.datasetMeasureStorage = datasetMeasureStorage;
   }
 
   public ResourceSummaryDto<DashboardSummaryDto> getSummary(Authentication auth) {
@@ -64,9 +64,9 @@ public class DashboardResourceManager extends CrudResourceManager<DashboardModel
     var dashboard = db.getElementById(dashboardId);
     var widgets = dashboard.getWidgets().stream()
         .map(w -> widgetStorage.getElementById(w.getDataViewElementId())).toList();
-    var dataLakeMeasures = getMeasureNames(widgets).stream().map(dataLakeMeasureStorage::getByMeasureName).toList();
+    var datasetMeasures = getMeasureNames(widgets).stream().map(datasetMeasureStorage::getByMeasureName).toList();
 
-    return new CompositeDashboardModel(dashboard, widgets, dataLakeMeasures);
+    return new CompositeDashboardModel(dashboard, widgets, datasetMeasures);
   }
 
   private List<String> getMeasureNames(List<DataExplorerWidgetModel> widgets) {

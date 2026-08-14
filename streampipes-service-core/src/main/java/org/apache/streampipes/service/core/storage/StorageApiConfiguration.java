@@ -64,7 +64,7 @@ public class StorageApiConfiguration {
   private final boolean adapterCacheEnabled;
   private final boolean dashboardCacheEnabled;
   private final boolean pipelineCacheEnabled;
-  private final boolean dataLakeMeasureCacheEnabled;
+  private final boolean datasetMeasureCacheEnabled;
   private final boolean roleCacheEnabled;
   private final boolean userGroupCacheEnabled;
   private final boolean privilegeCacheEnabled;
@@ -77,7 +77,7 @@ public class StorageApiConfiguration {
       @Value("${streampipes.storage.cache.adapters.enabled:true}") boolean adapterCacheEnabled,
       @Value("${streampipes.storage.cache.dashboards.enabled:true}") boolean dashboardCacheEnabled,
       @Value("${streampipes.storage.cache.pipelines.enabled:true}") boolean pipelineCacheEnabled,
-      @Value("${streampipes.storage.cache.data-lake-measures.enabled:true}") boolean dataLakeMeasureCacheEnabled,
+      @Value("${streampipes.storage.cache.data-lake-measures.enabled:true}") boolean datasetMeasureCacheEnabled,
       @Value("${streampipes.storage.cache.roles.enabled:true}") boolean roleCacheEnabled,
       @Value("${streampipes.storage.cache.user-groups.enabled:true}") boolean userGroupCacheEnabled,
       @Value("${streampipes.storage.cache.privileges.enabled:true}") boolean privilegeCacheEnabled,
@@ -88,7 +88,7 @@ public class StorageApiConfiguration {
     this.adapterCacheEnabled = adapterCacheEnabled;
     this.dashboardCacheEnabled = dashboardCacheEnabled;
     this.pipelineCacheEnabled = pipelineCacheEnabled;
-    this.dataLakeMeasureCacheEnabled = dataLakeMeasureCacheEnabled;
+    this.datasetMeasureCacheEnabled = datasetMeasureCacheEnabled;
     this.roleCacheEnabled = roleCacheEnabled;
     this.userGroupCacheEnabled = userGroupCacheEnabled;
     this.privilegeCacheEnabled = privilegeCacheEnabled;
@@ -153,7 +153,7 @@ public class StorageApiConfiguration {
         () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
         DatasetMeasure.class
     );
-    return dataLakeMeasureCacheEnabled ? new CachedDatasetMeasureStorage(delegate, cacheManager) : delegate;
+    return datasetMeasureCacheEnabled ? new CachedDatasetMeasureStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean

@@ -174,17 +174,17 @@ public class ChartSchemaUpdateCoordinator {
 
   private DatasetMeasure parseMeasure(Object measure,
                                        String measureName) {
-    var dataLakeMeasure = objectMapper.convertValue(measure, DatasetMeasure.class);
-    if (dataLakeMeasure == null) {
-      dataLakeMeasure = new DatasetMeasure();
+    var datasetMeasure = objectMapper.convertValue(measure, DatasetMeasure.class);
+    if (datasetMeasure == null) {
+      datasetMeasure = new DatasetMeasure();
     }
-    if (dataLakeMeasure.getMeasureName() == null) {
-      dataLakeMeasure.setMeasureName(measureName);
+    if (datasetMeasure.getMeasureName() == null) {
+      datasetMeasure.setMeasureName(measureName);
     }
-    if (dataLakeMeasure.getSchemaVersion() == null) {
-      dataLakeMeasure.setSchemaVersion(DatasetMeasure.CURRENT_SCHEMA_VERSION);
+    if (datasetMeasure.getSchemaVersion() == null) {
+      datasetMeasure.setSchemaVersion(DatasetMeasure.CURRENT_SCHEMA_VERSION);
     }
-    return dataLakeMeasure;
+    return datasetMeasure;
   }
 
   private Map<String, Object> serializeMeasure(DatasetMeasure measure) {

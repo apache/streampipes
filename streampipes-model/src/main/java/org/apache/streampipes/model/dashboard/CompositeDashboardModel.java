@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 public record CompositeDashboardModel(DashboardModel dashboard,
                                       List<DataExplorerWidgetModel> widgets,
-                                      List<DatasetMeasure> dataLakeMeasures) {
+                                      List<DatasetMeasure> datasetMeasures) {
 
   public String getRevisionHash() {
 
