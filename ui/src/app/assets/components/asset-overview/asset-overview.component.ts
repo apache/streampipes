@@ -26,6 +26,7 @@ import {
     MatTableDataSource,
 } from '@angular/material/table';
 import {
+    AssetSummaryDto,
     AssetSiteDesc,
     AssetManagementService,
     SpAssetModel,
@@ -105,8 +106,8 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
     private dialog = inject(MatDialog);
     private translateService = inject(TranslateService);
 
-    existingAssets: SpAssetModel[] = [];
-    filteredAssets: SpAssetModel[] = [];
+    existingAssets: AssetSummaryDto[] = [];
+    filteredAssets: AssetSummaryDto[] = [];
     sitesById: Record<string, AssetSiteDesc> = {};
 
     displayedColumns: string[] = ['assetName', 'location', 'actions'];
@@ -114,8 +115,8 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
     @ViewChild(MatSort)
     sort: MatSort;
 
-    dataSource: MatTableDataSource<SpAssetModel> =
-        new MatTableDataSource<SpAssetModel>();
+    dataSource: MatTableDataSource<AssetSummaryDto> =
+        new MatTableDataSource<AssetSummaryDto>();
 
     hasWritePrivilege = false;
 
@@ -182,12 +183,10 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
     }
 
     loadAssets(): void {
-        console.log('LOAD ASSET');
-        this.assetService.getAllAssets().subscribe(result => {
-            this.existingAssets = result.sort((a, b) =>
+        this.assetService.getAssetSummary().subscribe(result => {
+            this.existingAssets = result.resources.sort((a, b) =>
                 a.assetName.localeCompare(b.assetName),
             );
-            console.log(this.existingAssets);
             this.applyAssetFilters(this.currentFilterIds);
         });
     }
@@ -204,15 +203,12 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
         this.dataSource.data = this.filteredAssets;
     }
 
-    getLocationLabel(asset: SpAssetModel): string {
-        const siteId = asset.assetSite?.siteId;
-        if (siteId) {
-            return (
-                this.sitesById[siteId]?.label ?? asset.assetSite?.area ?? '-'
-            );
+    getLocationLabel(asset: AssetSummaryDto): string {
+        if (asset.siteId) {
+            return this.sitesById[asset.siteId]?.label ?? '-';
         }
 
-        return asset.assetSite?.area ?? '-';
+        return '-';
     }
 
     createNewAsset() {
@@ -242,12 +238,12 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
         );
     }
 
-    goToDetailsView(asset: SpAssetModel, editMode = false) {
+    goToDetailsView(asset: AssetSummaryDto, editMode = false) {
         const mode = editMode && this.hasWritePrivilege ? 'edit' : 'view';
         this.router.navigate(['assets', 'details', asset.elementId, mode]);
     }
 
-    deleteAsset(asset: SpAssetModel) {
+    deleteAsset(asset: AssetSummaryDto) {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             width: '500px',
             data: {
@@ -271,53 +267,58 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
         });
     }
 
-    showManageDialog(asset: SpAssetModel) {
-        const resource: ManageableAsset = {
-            ...asset,
-            name: asset.assetName,
-            description: asset.assetDescription,
-        };
-        const resourceConfig: ObjectManageDialogResourceConfig<ManageableAsset> =
-            {
-                resourceLabel: 'Asset',
-                nameLabel: 'Asset name',
-                descriptionLabel: 'Asset description',
-                nameProperty: 'name',
-                showResourceFields: this.hasWritePrivilege,
-                showAssetLinking: false,
-                saveResource: this.hasWritePrivilege
-                    ? resource => {
-                          const { name, description, ...assetToSave } =
-                              resource;
-                          return this.assetService.updateAsset({
-                              ...assetToSave,
-                              assetName: name,
-                              assetDescription: description,
-                          });
-                      }
-                    : undefined,
+    showManageDialog(assetSummary: AssetSummaryDto) {
+        this.assetService.getAsset(assetSummary.elementId).subscribe(asset => {
+            const resource: ManageableAsset = {
+                ...asset,
+                name: asset.assetName,
+                description: asset.assetDescription,
             };
+            const resourceConfig: ObjectManageDialogResourceConfig<ManageableAsset> =
+                {
+                    resourceLabel: 'Asset',
+                    nameLabel: 'Asset name',
+                    descriptionLabel: 'Asset description',
+                    nameProperty: 'name',
+                    showResourceFields: this.hasWritePrivilege,
+                    showAssetLinking: false,
+                    saveResource: this.hasWritePrivilege
+                        ? resource => {
+                              const { name, description, ...assetToSave } =
+                                  resource;
+                              return this.assetService.updateAsset({
+                                  ...assetToSave,
+                                  assetName: name,
+                                  assetDescription: description,
+                              });
+                          }
+                        : undefined,
+                };
 
-        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: this.translateService.instant('Manage'),
-            width: '50vw',
-            data: {
-                objectInstanceId: resource.elementId,
-                resource,
-                saveMode: 'immediate',
-                resourceConfig,
-                headerTitle:
-                    this.translateService.instant('Manage Asset ') +
-                    resource.assetName,
-            },
-        });
+            const dialogRef = this.dialogService.open(
+                ObjectManageDialogComponent,
+                {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translateService.instant('Manage'),
+                    width: '50vw',
+                    data: {
+                        objectInstanceId: resource.elementId,
+                        resource,
+                        saveMode: 'immediate',
+                        resourceConfig,
+                        headerTitle:
+                            this.translateService.instant('Manage Asset ') +
+                            resource.assetName,
+                    },
+                },
+            );
 
-        dialogRef.afterClosed().subscribe(refresh => {
-            if (refresh) {
-                this.loadAssets();
-                this.assetBrowserService.refreshBrowserAssetData();
-            }
+            dialogRef.afterClosed().subscribe(refresh => {
+                if (refresh) {
+                    this.loadAssets();
+                    this.assetBrowserService.refreshBrowserAssetData();
+                }
+            });
         });
     }
 }
