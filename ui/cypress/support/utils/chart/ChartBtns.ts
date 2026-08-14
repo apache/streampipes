@@ -30,7 +30,7 @@ export class ChartBtns {
     }
 
     public static manageChartButton(title) {
-        return cy.dataCy('open-manage-permissions-' + title);
+        return cy.dataCy('open-manage-' + title);
     }
 
     public static saveDashboardBtn() {
