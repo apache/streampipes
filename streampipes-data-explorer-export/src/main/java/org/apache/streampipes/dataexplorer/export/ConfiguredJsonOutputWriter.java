@@ -20,8 +20,8 @@ package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.dataexplorer.export.item.ItemGenerator;
 import org.apache.streampipes.dataexplorer.export.item.JsonItemGenerator;
-import org.apache.streampipes.model.datalake.DatasetMeasure;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;

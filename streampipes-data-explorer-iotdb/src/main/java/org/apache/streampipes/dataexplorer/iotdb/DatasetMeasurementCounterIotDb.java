@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.query.DatasetMeasurementCounter;
-import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;

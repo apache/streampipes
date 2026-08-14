@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer.influx;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
-import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Query;

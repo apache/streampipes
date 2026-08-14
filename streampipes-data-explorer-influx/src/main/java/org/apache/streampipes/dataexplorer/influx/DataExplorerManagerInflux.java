@@ -31,7 +31,7 @@ import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.influx.sanitize.DatasetMeasurementSanitizerInflux;
 import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 

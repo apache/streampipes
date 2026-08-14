@@ -30,9 +30,9 @@ import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.datalake.DatasetMeasure;
-import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
-import org.apache.streampipes.model.datalake.RetentionTimeConfig;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasureSchemaUpdateStrategy;
+import org.apache.streampipes.model.dataset.RetentionTimeConfig;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -120,9 +120,9 @@ public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig 
     var schemaUpdateOptionString = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
 
     if (schemaUpdateOptionString.equals(EXTEND_EXISTING_SCHEMA_OPTION)) {
-      measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
+      measure.setSchemaUpdateStrategy(DatasetMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
     } else {
-      measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
+      measure.setSchemaUpdateStrategy(DatasetMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
     }
 
     var userSid = parameters.getModel().getCorrespondingUser();

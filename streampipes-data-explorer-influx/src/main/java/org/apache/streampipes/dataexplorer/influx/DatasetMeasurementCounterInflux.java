@@ -19,8 +19,8 @@
 package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.dataexplorer.query.DatasetMeasurementCounter;
-import org.apache.streampipes.model.datalake.AggregationFunction;
-import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.model.dataset.AggregationFunction;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

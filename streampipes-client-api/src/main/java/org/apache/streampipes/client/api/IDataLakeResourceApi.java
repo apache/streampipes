@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.dataset.SpQueryResult;
 
 import java.util.Map;
 

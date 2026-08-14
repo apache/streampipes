@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.dataexplorer.api;
 
-import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 
 /**
  * The IDataLakeMeasurementSanitizer interface defines methods for sanitizing and registering or

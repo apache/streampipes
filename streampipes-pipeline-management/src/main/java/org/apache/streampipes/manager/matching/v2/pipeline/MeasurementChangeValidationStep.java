@@ -22,7 +22,7 @@ import org.apache.streampipes.manager.pipeline.update.MeasurementUpdateUtils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.datalake.CriticalMeasurementFieldChange;
+import org.apache.streampipes.model.dataset.CriticalMeasurementFieldChange;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;

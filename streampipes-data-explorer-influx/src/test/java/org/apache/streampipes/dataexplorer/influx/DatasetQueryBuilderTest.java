@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
-import org.apache.streampipes.model.datalake.AggregationFunction;
+import org.apache.streampipes.model.dataset.AggregationFunction;
 
 import org.junit.jupiter.api.Test;
 

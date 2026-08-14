@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer;
 
-import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.vocabulary.SPSensor;
 

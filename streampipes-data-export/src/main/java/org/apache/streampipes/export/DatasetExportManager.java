@@ -27,10 +27,10 @@ import org.apache.streampipes.dataexplorer.export.objectstorage.ExportProviderFa
 import org.apache.streampipes.dataexplorer.export.objectstorage.IObjectStorage;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.model.configuration.ProviderType;
-import org.apache.streampipes.model.datalake.DatasetMeasure;
-import org.apache.streampipes.model.datalake.RetentionAction;
-import org.apache.streampipes.model.datalake.RetentionLog;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.RetentionAction;
+import org.apache.streampipes.model.dataset.RetentionLog;
+import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 

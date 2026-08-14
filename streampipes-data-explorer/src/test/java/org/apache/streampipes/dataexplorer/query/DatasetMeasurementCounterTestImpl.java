@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.query;
 
-import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

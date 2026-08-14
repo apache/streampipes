@@ -19,9 +19,9 @@
 package org.apache.streampipes.manager.pipeline.update;
 
 import org.apache.streampipes.model.connect.adapter.ChartSchemaUpdateInfo;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetHealthStatus;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetHealthStatus;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;

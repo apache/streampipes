@@ -21,7 +21,7 @@ package org.apache.streampipes.dataexplorer.influx;
 import org.apache.streampipes.dataexplorer.influx.utils.ProvidedQueryParameterBuilder;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,11 +29,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_END_DATE;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_LIMIT;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_ORDER;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_START_DATE;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_END_DATE;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_LIMIT;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_ORDER;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_START_DATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

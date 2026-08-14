@@ -20,8 +20,8 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
-import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
@@ -72,7 +72,7 @@ public class DataExplorerSchemaManagementTest {
     );
 
     var oldMeasure = getSampleMeasure(
-        DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA,
+        DatasetMeasureSchemaUpdateStrategy.UPDATE_SCHEMA,
         List.of()
     );
     var resultingMeasure = schemaManagement.createOrUpdateMeasurement(oldMeasure,null);
@@ -87,7 +87,7 @@ public class DataExplorerSchemaManagementTest {
   public void createMeasurementWithUpdateStrategy() {
 
     var oldMeasure = getSampleMeasure(
-        DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA,
+        DatasetMeasureSchemaUpdateStrategy.UPDATE_SCHEMA,
         List.of(
             getEventProperty(OLD_PROPERTY, XSD.STRING)
         )
@@ -101,7 +101,7 @@ public class DataExplorerSchemaManagementTest {
         chartSchemaUpdateCoordinator
     );
 
-    var newMeasure = getNewMeasure(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
+    var newMeasure = getNewMeasure(DatasetMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
 
     var resultMeasure = schemaManagement.createOrUpdateMeasurement(newMeasure,null);
 
@@ -118,7 +118,7 @@ public class DataExplorerSchemaManagementTest {
   public void createMeasurementWithExtendSchemaStrategy() {
 
     var oldMeasure = getSampleMeasure(
-        DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA,
+        DatasetMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA,
         List.of(
             getEventProperty(OLD_PROPERTY, XSD.STRING)
         )
@@ -130,7 +130,7 @@ public class DataExplorerSchemaManagementTest {
         permissionManagerMock,
         chartSchemaUpdateCoordinator
     );
-    var newMeasure = getNewMeasure(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
+    var newMeasure = getNewMeasure(DatasetMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
 
     var resultMeasure = schemaManagement.createOrUpdateMeasurement(newMeasure,null);
 
@@ -144,7 +144,7 @@ public class DataExplorerSchemaManagementTest {
   @Test
   public void createMeasurementWithExtendSchemaStrategyAndDifferentPropertyTypes() {
     var oldMeasure = getSampleMeasure(
-        DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA,
+        DatasetMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA,
         List.of(
             getEventProperty(OLD_PROPERTY, XSD.STRING),
             getEventProperty(NEW_PROPERTY, XSD.INTEGER)
@@ -160,7 +160,7 @@ public class DataExplorerSchemaManagementTest {
         chartSchemaUpdateCoordinator
     );
 
-    var newMeasure = getNewMeasure(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
+    var newMeasure = getNewMeasure(DatasetMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
 
     var exception = assertThrows(
         RuntimeException.class,
@@ -185,7 +185,7 @@ public class DataExplorerSchemaManagementTest {
         .build();
   }
 
-  private DatasetMeasure getNewMeasure(DataLakeMeasureSchemaUpdateStrategy updateStrategy) {
+  private DatasetMeasure getNewMeasure(DatasetMeasureSchemaUpdateStrategy updateStrategy) {
     return getSampleMeasure(
         updateStrategy,
         List.of(getEventProperty(NEW_PROPERTY, XSD.STRING))
@@ -193,7 +193,7 @@ public class DataExplorerSchemaManagementTest {
   }
 
   private DatasetMeasure getSampleMeasure(
-      DataLakeMeasureSchemaUpdateStrategy updateStrategy,
+      DatasetMeasureSchemaUpdateStrategy updateStrategy,
       List<EventProperty> eventProperties
   ) {
     var measure = new DatasetMeasure();

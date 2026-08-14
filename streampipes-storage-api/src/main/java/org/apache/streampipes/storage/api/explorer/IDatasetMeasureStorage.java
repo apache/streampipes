@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.storage.api.explorer;
 
-import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface IDatasetMeasureStorage extends CRUDStorage<DatasetMeasure> {

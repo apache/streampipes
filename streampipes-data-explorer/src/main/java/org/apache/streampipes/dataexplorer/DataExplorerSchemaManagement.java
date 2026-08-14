@@ -22,8 +22,8 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeDetector;
 import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
-import org.apache.streampipes.model.datalake.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
@@ -94,7 +94,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
       DatasetMeasure existingMeasure) {
     measure.setElementId(existingMeasure.getElementId());
     checkFieldChanges(existingMeasure.getEventSchema(), measure.getEventSchema());
-    if (DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA.equals(measure.getSchemaUpdateStrategy())) {
+    if (DatasetMeasureSchemaUpdateStrategy.UPDATE_SCHEMA.equals(measure.getSchemaUpdateStrategy())) {
       // For the update schema strategy the old schema is overwritten with the new one
       updateMeasurement(measure);
     } else {
@@ -119,7 +119,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   private static void setDefaultUpdateStrategyIfNoneProvided(DatasetMeasure measure) {
     if (measure.getSchemaUpdateStrategy() == null) {
-      measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
+      measure.setSchemaUpdateStrategy(DatasetMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
     }
   }
 
