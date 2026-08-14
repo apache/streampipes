@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.export;
 
-import org.apache.streampipes.model.datalake.DataSetMeasure;
+import org.apache.streampipes.model.datalake.DatasetMeasure;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
@@ -34,7 +34,7 @@ public class ConfiguredOutputWriterFactory {
     this.coreConfigurationStorage = coreConfigurationStorage;
   }
 
-  public ConfiguredOutputWriter getConfiguredWriter(DataSetMeasure schema,
+  public ConfiguredOutputWriter getConfiguredWriter(DatasetMeasure schema,
                                                     OutputFormat format,
                                                     ProvidedRestQueryParams params,
                                                     boolean ignoreMissingValues) {
