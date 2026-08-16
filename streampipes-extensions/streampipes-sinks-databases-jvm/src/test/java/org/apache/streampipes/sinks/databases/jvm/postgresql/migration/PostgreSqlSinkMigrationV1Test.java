@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,17 +43,22 @@ class PostgreSqlSinkMigrationV1Test {
 
   private static final String APPEND_TO_EXISTING_KEY = "append_to_existing";
   private static final String BATCH_SIZE_KEY = "batch_size";
+  private static final List<String> VERSION_ZERO_FIELDS = List.of(
+      "db_host", "db_port", "db_name", "db_table", "db_user", "db_password", "ssl_mode"
+  );
 
   /**
-   * Runs the migration on a pipeline saved with the given fields and returns it afterward.
+   * Runs the migration on a pipeline saved with model version 0 and returns it afterward.
+   * The migration moves fields around without reading them, so plain text fields are enough.
    *
-   * @param existingProperties the fields the pipeline already had.
    * @return the migrated pipeline element.
    */
-  private DataSinkInvocation runMigration(StaticProperty... existingProperties) {
-    DataSinkInvocation pipelineElement = new DataSinkInvocation();
+  private DataSinkInvocation runMigration() {
     List<StaticProperty> properties = new ArrayList<>();
-    Collections.addAll(properties, existingProperties);
+    VERSION_ZERO_FIELDS.forEach(name -> properties.add(
+        new FreeTextStaticProperty(name, name, "", XSD.STRING)));
+
+    DataSinkInvocation pipelineElement = new DataSinkInvocation();
     pipelineElement.setStaticProperties(properties);
 
     MigrationResult<DataSinkInvocation> result =
@@ -98,12 +102,15 @@ class PostgreSqlSinkMigrationV1Test {
   void testMigrate_pipelineWithoutTheNewFields_addsTwoFields() {
     DataSinkInvocation migrated = runMigration();
 
-    int expected = 2;
-    int actual = migrated.getStaticProperties().size();
-    assertEquals(expected, actual, "the migration should add the two new fields");
+    List<String> expected = List.of(
+        "db_host", "db_port", "db_name", "db_table", APPEND_TO_EXISTING_KEY,
+        "db_user", "db_password", "ssl_mode", BATCH_SIZE_KEY
+    );
+    List<String> actual = migrated.getStaticProperties().stream()
+        .map(StaticProperty::getInternalName)
+        .toList();
 
-    findField(migrated, APPEND_TO_EXISTING_KEY);
-    findField(migrated, BATCH_SIZE_KEY);
+    assertEquals(expected, actual, "the toggle belongs below the table name and the batch size last");
   }
 
   @Test
@@ -132,22 +139,5 @@ class PostgreSqlSinkMigrationV1Test {
     URI actualType = batchSize.getRequiredDatatype();
 
     assertEquals(expectedType, actualType, "the batch size should be restricted to integers");
-  }
-
-  @Test
-  void testMigrate_pipelineWithExistingFields_keepsThemAndAddsTheTwoNewOnes() {
-    FreeTextStaticProperty host = new FreeTextStaticProperty("db_host", "Hostname", "", XSD.STRING);
-    FreeTextStaticProperty table = new FreeTextStaticProperty("db_table", "Table Name", "", XSD.STRING);
-
-    DataSinkInvocation migrated = runMigration(host, table);
-
-    int expected = 4;
-    int actual = migrated.getStaticProperties().size();
-    assertEquals(expected, actual, "existing fields should be kept and the two new ones added");
-
-    findField(migrated, "db_host");
-    findField(migrated, "db_table");
-    findField(migrated, APPEND_TO_EXISTING_KEY);
-    findField(migrated, BATCH_SIZE_KEY);
   }
 }

@@ -54,6 +54,11 @@ The name of the database where events will be stored
 
 The name of the table where events will be stored (will be created if it does not exist)
 
+### Use Existing Table
+
+Writes events into the table entered above. If the table does not exist, the pipeline does not start.
+Enable this option to make sure the table you write into complies with your database schema guidelines.
+
 ### Username
 
 The username for the PostgreSQL Server.
@@ -61,11 +66,6 @@ The username for the PostgreSQL Server.
 ### Password
 
 The password for the PostgreSQL Server.
-
-### Use Existing Table
-
-Writes events into the table entered above. If the table does not exist, the pipeline does not start.
-Enable this option to make sure the table you write into complies with your database schema guidelines.
 
 ### Batch Size
 

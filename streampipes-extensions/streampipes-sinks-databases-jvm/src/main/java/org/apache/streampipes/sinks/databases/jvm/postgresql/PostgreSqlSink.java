@@ -67,13 +67,13 @@ public class PostgreSqlSink implements IStreamPipesDataSink {
             .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 5432)
             .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
             .requiredTextParameter(Labels.withId(DATABASE_TABLE_KEY))
+            .requiredSlideToggle(Labels.withId(APPEND_TO_EXISTING_KEY), false)
             .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
             .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
             .requiredSingleValueSelection(Labels.withId(SSL_MODE),
                 Options.from(
                     new Tuple2<>("Yes", SSL_ENABLED),
                     new Tuple2<>("No", SSL_DISABLED)))
-            .requiredSlideToggle(Labels.withId(APPEND_TO_EXISTING_KEY), false)
             .requiredIntegerParameter(Labels.withId(BATCH_SIZE_KEY), 1)
             .build()
     );
@@ -95,8 +95,8 @@ public class PostgreSqlSink implements IStreamPipesDataSink {
     Integer batchSize = extractor.singleValueParameter(BATCH_SIZE_KEY, Integer.class);
     if (batchSize == null || batchSize < 1) {
       throw new SpRuntimeException("Batch size must be at least 1, but was '" + batchSize
-              + "'. Use 1 to write each event immediately, "
-              + "or a higher value to write events in batches.");
+          + "'. Use 1 to write each event immediately, "
+          + "or a higher value to write events in batches.");
     }
 
     PostgreSqlParameters params = new PostgreSqlParameters(
