@@ -25,6 +25,7 @@ import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlSink;
 import org.apache.streampipes.vocabulary.XSD;
 
 import org.junit.jupiter.api.Test;
@@ -81,7 +82,7 @@ class PostgreSqlSinkMigrationV1Test {
   void testConfig_migration_fromVersionZeroToOne() {
     ModelMigratorConfig config = new PostgreSqlSinkMigrationV1().config();
 
-    String expectedAppId = PostgreSqlSinkMigrationV1.ID;
+    String expectedAppId = PostgreSqlSink.ID;
     String actualAppId = config.targetAppId();
     assertEquals(expectedAppId, actualAppId, "migration should target the PostgreSQL sink");
 

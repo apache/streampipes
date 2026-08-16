@@ -26,6 +26,8 @@ import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlSink;
 import org.apache.streampipes.vocabulary.XSD;
 
 /**
@@ -37,10 +39,6 @@ import org.apache.streampipes.vocabulary.XSD;
  */
 public class PostgreSqlSinkMigrationV1 implements IDataSinkMigrator {
 
-  public static final String APPEND_TO_EXISTING_KEY = "append_to_existing";
-  public static final String BATCH_SIZE_KEY = "batch_size";
-  public static final String ID = "org.apache.streampipes.sinks.databases.jvm.postgresql";
-
   /*
    * Position of the toggle in a pipeline stored with model version 0, where the fields are
    * host, port, database, table, user, password and ssl mode. The sink renders the toggle
@@ -51,7 +49,7 @@ public class PostgreSqlSinkMigrationV1 implements IDataSinkMigrator {
   @Override
   public ModelMigratorConfig config() {
     return new ModelMigratorConfig(
-        ID,
+        PostgreSqlSink.ID,
         SpServiceTagPrefix.DATA_SINK,
         0,
         1
@@ -62,24 +60,41 @@ public class PostgreSqlSinkMigrationV1 implements IDataSinkMigrator {
   public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
                                                      IDataSinkParameterExtractor extractor)
       throws RuntimeException {
-
-    var appendToggle = new SlideToggleStaticProperty(
-        APPEND_TO_EXISTING_KEY,
-        "Use Existing Table",
-        "Write events into the table entered above",
-        false);
-    appendToggle.setSelected(false);
-
-    var batchSize = new FreeTextStaticProperty(
-        BATCH_SIZE_KEY,
-        "Batch Size",
-        "How many events should the sink collect before writing them together to the database?",
-        XSD.INTEGER);
-    batchSize.setValue("1");
-
-    element.getStaticProperties().add(APPEND_TO_EXISTING_INDEX, appendToggle);
-    element.getStaticProperties().add(batchSize);
-
+    addAppendToggle(element);
+    addBatchSize(element);
     return MigrationResult.success(element);
+  }
+
+  private void addAppendToggle(DataSinkInvocation element) {
+    var label = Labels.from(
+        PostgreSqlSink.APPEND_TO_EXISTING_KEY,
+        "Use Existing Table",
+        "Write events into the table entered above"
+    );
+    var staticProperty = new SlideToggleStaticProperty(
+        label.getInternalId(),
+        label.getLabel(),
+        label.getDescription(),
+        false
+    );
+
+    element.getStaticProperties().add(APPEND_TO_EXISTING_INDEX, staticProperty);
+  }
+
+  private void addBatchSize(DataSinkInvocation element) {
+    var label = Labels.from(
+        PostgreSqlSink.BATCH_SIZE_KEY,
+        "Batch Size",
+        "How many events should the sink collect before writing them together to the database?"
+    );
+    var staticProperty = new FreeTextStaticProperty(
+        label.getInternalId(),
+        label.getLabel(),
+        label.getDescription()
+    );
+    staticProperty.setRequiredDatatype(XSD.INTEGER);
+    staticProperty.setValue("1");
+
+    element.getStaticProperties().add(staticProperty);
   }
 }
