@@ -54,10 +54,11 @@ The name of the database where events will be stored
 
 The name of the table where events will be stored (will be created if it does not exist)
 
-### Use Existing Table
+### Allow New Table Creation
 
-Writes events into the table entered above. If the table does not exist, the pipeline does not start.
-Enable this option to make sure the table you write into complies with your database schema guidelines.
+When enabled, the sink creates the table entered above if it does not exist yet.
+When disabled, the pipeline does not start and asks you to create the table first.
+Use this if the tables in your database have to be created by you.
 
 ### Username
 

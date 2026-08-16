@@ -33,9 +33,9 @@ import org.apache.streampipes.vocabulary.XSD;
 /**
  * Migrates the PostgreSQL sink from model version 0 to 1.
  * <p>
- * Version 1 adds two configuration fields: a toggle to write into an existing table, and a
- * batch size for grouping events into a single insert. Existing pipelines keep their previous
- * behavior through the default values: toggle off (create a new table) and batch size 1.
+ * Version 1 adds two configuration fields: a toggle that allows the sink to create the target
+ * table, and a batch size for grouping events into a single insert. Existing pipelines keep
+ * their previous behavior through the default values: table creation allowed and batch size 1.
  */
 public class PostgreSqlSinkMigrationV1 implements IDataSinkMigrator {
 
@@ -44,7 +44,7 @@ public class PostgreSqlSinkMigrationV1 implements IDataSinkMigrator {
    * host, port, database, table, user, password and ssl mode. The sink renders the toggle
    * right below the table name, so a migrated pipeline has to show it in the same place.
    */
-  private static final int APPEND_TO_EXISTING_INDEX = 4;
+  private static final int ALLOW_NEW_TABLE_CREATION_INDEX = 4;
 
   @Override
   public ModelMigratorConfig config() {
@@ -60,25 +60,26 @@ public class PostgreSqlSinkMigrationV1 implements IDataSinkMigrator {
   public MigrationResult<DataSinkInvocation> migrate(DataSinkInvocation element,
                                                      IDataSinkParameterExtractor extractor)
       throws RuntimeException {
-    addAppendToggle(element);
+    addAllowNewTableCreationToggle(element);
     addBatchSize(element);
     return MigrationResult.success(element);
   }
 
-  private void addAppendToggle(DataSinkInvocation element) {
+  private void addAllowNewTableCreationToggle(DataSinkInvocation element) {
     var label = Labels.from(
-        PostgreSqlSink.APPEND_TO_EXISTING_KEY,
-        "Use Existing Table",
-        "Write events into the table entered above"
+        PostgreSqlSink.ALLOW_NEW_TABLE_CREATION_KEY,
+        "Allow New Table Creation",
+        "Let the sink create the table entered above if it does not exist yet"
     );
     var staticProperty = new SlideToggleStaticProperty(
         label.getInternalId(),
         label.getLabel(),
         label.getDescription(),
-        false
+        true
     );
+    staticProperty.setSelected(true);
 
-    element.getStaticProperties().add(APPEND_TO_EXISTING_INDEX, staticProperty);
+    element.getStaticProperties().add(ALLOW_NEW_TABLE_CREATION_INDEX, staticProperty);
   }
 
   private void addBatchSize(DataSinkInvocation element) {

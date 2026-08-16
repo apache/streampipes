@@ -39,7 +39,7 @@ public class PostgreSql extends JdbcClient {
       throws SpRuntimeException {
 
     this.params = parameters;
-    this.appendToExisting = parameters.isAppendToExisting();
+    this.allowNewTableCreation = parameters.allowsNewTableCreation();
     this.batchSize = parameters.getBatchSize();
 
     // get(0) because it is the only input stream of the sink (and not two)

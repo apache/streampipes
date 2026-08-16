@@ -42,8 +42,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class PostgreSqlSinkMigrationV1Test {
 
-  private static final String APPEND_TO_EXISTING_KEY = "append_to_existing";
-  private static final String BATCH_SIZE_KEY = "batch_size";
   private static final List<String> VERSION_ZERO_FIELDS = List.of(
       "db_host", "db_port", "db_name", "db_table", "db_user", "db_password", "ssl_mode"
   );
@@ -104,8 +102,8 @@ class PostgreSqlSinkMigrationV1Test {
     DataSinkInvocation migrated = runMigration();
 
     List<String> expected = List.of(
-        "db_host", "db_port", "db_name", "db_table", APPEND_TO_EXISTING_KEY,
-        "db_user", "db_password", "ssl_mode", BATCH_SIZE_KEY
+        "db_host", "db_port", "db_name", "db_table", PostgreSqlSink.ALLOW_NEW_TABLE_CREATION_KEY,
+        "db_user", "db_password", "ssl_mode", PostgreSqlSink.BATCH_SIZE_KEY
     );
     List<String> actual = migrated.getStaticProperties().stream()
         .map(StaticProperty::getInternalName)
@@ -115,22 +113,34 @@ class PostgreSqlSinkMigrationV1Test {
   }
 
   @Test
-  void testMigrate_addsUseExistingTableToggleTurnedOff() {
+  void testMigrate_addsAllowNewTableCreationToggleTurnedOn() {
     DataSinkInvocation migrated = runMigration();
     SlideToggleStaticProperty toggle =
-        (SlideToggleStaticProperty) findField(migrated, APPEND_TO_EXISTING_KEY);
+        (SlideToggleStaticProperty) findField(migrated, PostgreSqlSink.ALLOW_NEW_TABLE_CREATION_KEY);
 
-    boolean expected = false;
+    boolean expected = true;
     boolean actual = toggle.isSelected();
 
-    assertEquals(expected, actual, "the toggle must default to off to preserve the old behavior");
+    assertEquals(expected, actual, "version 0 pipelines created missing tables, so the toggle must be on");
+  }
+
+  @Test
+  void testMigrate_addsAllowNewTableCreationToggleDefaultingToOn() {
+    DataSinkInvocation migrated = runMigration();
+    SlideToggleStaticProperty toggle =
+        (SlideToggleStaticProperty) findField(migrated, PostgreSqlSink.ALLOW_NEW_TABLE_CREATION_KEY);
+
+    boolean expected = true;
+    boolean actual = toggle.isDefaultValue();
+
+    assertEquals(expected, actual, "the default should match the one the sink declares");
   }
 
   @Test
   void testMigrate_addsBatchSizeDefaultingToOne() {
     DataSinkInvocation migrated = runMigration();
     FreeTextStaticProperty batchSize =
-        (FreeTextStaticProperty) findField(migrated, BATCH_SIZE_KEY);
+        (FreeTextStaticProperty) findField(migrated, PostgreSqlSink.BATCH_SIZE_KEY);
 
     String expectedValue = "1";
     String actualValue = batchSize.getValue();

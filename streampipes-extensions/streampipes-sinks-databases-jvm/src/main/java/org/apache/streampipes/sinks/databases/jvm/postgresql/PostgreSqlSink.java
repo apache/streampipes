@@ -38,7 +38,7 @@ import org.apache.streampipes.sdk.helpers.Tuple2;
 public class PostgreSqlSink implements IStreamPipesDataSink {
 
   public static final String ID = "org.apache.streampipes.sinks.databases.jvm.postgresql";
-  public static final String APPEND_TO_EXISTING_KEY = "append_to_existing";
+  public static final String ALLOW_NEW_TABLE_CREATION_KEY = "allow_new_table_creation";
   public static final String BATCH_SIZE_KEY = "batch_size";
 
   private static final String DATABASE_HOST_KEY = "db_host";
@@ -69,7 +69,7 @@ public class PostgreSqlSink implements IStreamPipesDataSink {
             .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 5432)
             .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
             .requiredTextParameter(Labels.withId(DATABASE_TABLE_KEY))
-            .requiredSlideToggle(Labels.withId(APPEND_TO_EXISTING_KEY), false)
+            .requiredSlideToggle(Labels.withId(ALLOW_NEW_TABLE_CREATION_KEY), true)
             .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
             .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
             .requiredSingleValueSelection(Labels.withId(SSL_MODE),
@@ -93,7 +93,7 @@ public class PostgreSqlSink implements IStreamPipesDataSink {
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
     String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
     String sslSelection = extractor.selectedSingleValueInternalName(SSL_MODE, String.class);
-    boolean appendToExisting = extractor.slideToggleValue(APPEND_TO_EXISTING_KEY);
+    boolean allowNewTableCreation = extractor.slideToggleValue(ALLOW_NEW_TABLE_CREATION_KEY);
     Integer batchSize = extractor.singleValueParameter(BATCH_SIZE_KEY, Integer.class);
     if (batchSize == null || batchSize < 1) {
       throw new SpRuntimeException("Batch size must be at least 1, but was '" + batchSize
@@ -109,7 +109,7 @@ public class PostgreSqlSink implements IStreamPipesDataSink {
         user,
         password,
         sslSelection.equals(SSL_ENABLED),
-        appendToExisting,
+        allowNewTableCreation,
         batchSize);
 
     this.postgreSql = new PostgreSql();

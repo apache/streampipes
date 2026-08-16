@@ -23,12 +23,12 @@ import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.JdbcConnectio
 
 public class PostgreSqlParameters extends JdbcConnectionParameters {
 
-  private final boolean appendToExisting;
+  private final boolean allowNewTableCreation;
   private final int batchSize;
 
   public PostgreSqlParameters(DataSinkInvocation graph, String postgreSqlHost, Integer postgreSqlPort,
                               String databaseName, String tableName, String user, String password, Boolean sslEnabled,
-                              Boolean appendToExisting, Integer batchSize) {
+                              Boolean allowNewTableCreation, Integer batchSize) {
     super(
         graph,
         postgreSqlHost,
@@ -41,12 +41,12 @@ public class PostgreSqlParameters extends JdbcConnectionParameters {
         "org.postgresql.ssl.NonValidatingFactory",
         true);
 
-    this.appendToExisting = appendToExisting != null && appendToExisting;
+    this.allowNewTableCreation = allowNewTableCreation == null || allowNewTableCreation;
     this.batchSize = (batchSize == null || batchSize < 1) ? 1 : batchSize;
   }
 
-  public boolean isAppendToExisting() {
-    return appendToExisting;
+  public boolean allowsNewTableCreation() {
+    return allowNewTableCreation;
   }
 
   public int getBatchSize() {

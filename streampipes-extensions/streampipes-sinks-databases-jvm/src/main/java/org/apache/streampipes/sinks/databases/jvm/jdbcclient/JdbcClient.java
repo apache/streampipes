@@ -51,11 +51,10 @@ public class JdbcClient {
   protected StatementHandler statementHandler;
 
   /*
-   * Controls what happens when the target table does not exist yet.
-   * If false, the sink creates a new table. Otherwise, it writes into a
-   * table provided by the user and fails if it is missing.
+   * Controls whether the sink may create the target table if it does not exist yet.
+   * If false, the sink only writes into a table provided by the user and fails if it is missing.
    */
-  protected boolean appendToExisting = false;
+  protected boolean allowNewTableCreation = true;
 
   /*
    * Number of events to buffer before one batch insert (one round trip to the database).
@@ -196,12 +195,12 @@ public class JdbcClient {
       rs.close();
       if (tableAlreadyExists) {
         validateTable();
-      } else if (this.appendToExisting) {
-        // The user wants to use an existing table, so the sink does not create a new one
+      } else if (!this.allowNewTableCreation) {
+        // The user does not allow the sink to create tables, so the table has to be there already
         throw new SpRuntimeException("Table '" + this.tableDescription.getName()
-                + "' does not exist, but the option 'Use existing table' is enabled. "
-                + "Check that the table name matches an existing table in your database, "
-                + "or disable the option to let the sink create one automatically.");
+            + "' does not exist and the option 'Allow New Table Creation' is disabled. "
+            + "Check that the table name matches an existing table in your database, "
+            + "or enable the option to let the sink create one automatically.");
       } else {
         createTable();
       }
@@ -233,7 +232,7 @@ public class JdbcClient {
     checkConnected();
     Map<String, Object> eventMap = event.getRaw();
     if (!this.tableDescription.tableExists()) {
-      if (this.appendToExisting) {
+      if (!this.allowNewTableCreation) {
         throw new SpRuntimeException("Table '" + this.tableDescription.getName() + "' is not available.");
       }
       // Creates the table
@@ -245,23 +244,23 @@ public class JdbcClient {
       if (this.batchSize > 1) {
         // Collects events and sends them together in one batch insert
         this.statementHandler.addToBatch(
-                this.dbDescription, this.tableDescription,
-                connection, eventMap);
+            this.dbDescription, this.tableDescription,
+            connection, eventMap);
         if (this.statementHandler.getPendingBatchCount() >= this.batchSize) {
           this.statementHandler.executeBatch();
         }
       } else {
         // Sends one statement per event
         this.statementHandler.executePreparedStatement(
-                this.dbDescription, this.tableDescription,
-                connection, eventMap);
+            this.dbDescription, this.tableDescription,
+            connection, eventMap);
       }
     } catch (SQLException e) {
       boolean tableMissing = e.getSQLState() != null && e.getSQLState().startsWith("42");
-      if (tableMissing && !this.appendToExisting && this.batchSize <= 1) {
+      if (tableMissing && this.allowNewTableCreation && this.batchSize <= 1) {
         // If the table does not exists (because it got deleted or something, will cause the error
         // code "42") we will try to create a new one. Otherwise we do not handle the exception.
-        // Skipped when the user wants to use an existing table, or when events are still waiting to be written.
+        // Skipped when the user does not allow table creation, or when events are still waiting to be written.
         LOG.warn("Table '" + this.tableDescription.getName() + "' was unexpectedly not found and gets recreated.");
         this.tableDescription.setTableMissing();
         createTable();
