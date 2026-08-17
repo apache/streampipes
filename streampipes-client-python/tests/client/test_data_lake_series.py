@@ -86,7 +86,7 @@ class TestDataLakeSeries(TestCase):
         result = client.dataLakeMeasureApi.get(identifier="test")
 
         http_session.assert_has_calls(
-            [call().get(url="https://localhost:80/streampipes-backend/api/v4/datalake/measurements/test?limit=1000")],
+            [call().get(url="https://localhost:80/streampipes-backend/api/v4/dataset/measurements/test?limit=1000")],
             any_order=True,
         )
 

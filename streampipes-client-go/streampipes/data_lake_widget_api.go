@@ -41,7 +41,7 @@ func NewDataLakeWidget(clientConfig config.StreamPipesClientConfig) *DataLakeWid
 
 func (d *DataLakeWidget) GetSingleDataLakeWidget(widgetId string) (data_lake.DataExplorerWidgetModel, error) {
 
-	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/datalake/dashboard/widgets", []string{widgetId})
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/dataset/dashboard/widgets", []string{widgetId})
 	log.Printf("Get data from: %s", endPointUrl)
 
 	response, err := d.executeRequest("GET", endPointUrl, nil)
@@ -72,7 +72,7 @@ func (d *DataLakeWidget) GetSingleDataLakeWidget(widgetId string) (data_lake.Dat
 
 func (d *DataLakeWidget) GetAllDataLakeWidget() ([]data_lake.DataExplorerWidgetModel, error) {
 
-	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/datalake/dashboard/widgets", nil)
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/dataset/dashboard/widgets", nil)
 	log.Printf("Get data from: %s", endPointUrl)
 
 	response, err := d.executeRequest("GET", endPointUrl, nil)
@@ -102,7 +102,7 @@ func (d *DataLakeWidget) GetAllDataLakeWidget() ([]data_lake.DataExplorerWidgetM
 }
 
 func (d *DataLakeWidget) DeleteSingleDataLakeWidget(widgetId string) error {
-	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/datalake/dashboard/widgets", []string{widgetId})
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/dataset/dashboard/widgets", []string{widgetId})
 	log.Printf("Delete data from: %s", endPointUrl)
 
 	response, err := d.executeRequest("DELETE", endPointUrl, nil)
