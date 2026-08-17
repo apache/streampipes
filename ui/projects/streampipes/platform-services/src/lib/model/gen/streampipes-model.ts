@@ -18,7 +18,7 @@
  */
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-08-17 13:35:20.
+// Generated using typescript-generator version 3.2.1263 on 2026-08-17 11:51:26.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -409,9 +409,13 @@ export class StaticProperty {
             case 'org.apache.streampipes.model.staticproperty.OneOfStaticProperty':
                 return OneOfStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty':
-                return RuntimeResolvableAnyStaticProperty.fromData(data);
+                return RuntimeResolvableAnyStaticProperty.fromData(
+                    data as RuntimeResolvableAnyStaticProperty,
+                );
             case 'org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty':
-                return RuntimeResolvableOneOfStaticProperty.fromData(data);
+                return RuntimeResolvableOneOfStaticProperty.fromData(
+                    data as RuntimeResolvableOneOfStaticProperty,
+                );
             case 'org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty':
                 return RuntimeResolvableTreeInputStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.SecretStaticProperty':
@@ -425,7 +429,9 @@ export class StaticProperty {
             case 'org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty':
                 return SlideToggleStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty':
-                return RuntimeResolvableGroupStaticProperty.fromData(data);
+                return RuntimeResolvableGroupStaticProperty.fromData(
+                    data as RuntimeResolvableGroupStaticProperty,
+                );
         }
     }
 }
@@ -4251,7 +4257,7 @@ export class StaticPropertyAlternatives extends StaticProperty {
     }
 }
 
-export interface Storable {
+interface Storable {
     elementId: string;
     rev: string;
 }

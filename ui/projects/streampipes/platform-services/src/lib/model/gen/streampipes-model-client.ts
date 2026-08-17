@@ -18,7 +18,7 @@
  */
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-08-17 13:35:23.
+// Generated using typescript-generator version 3.2.1263 on 2026-08-17 11:51:30.
 
 export class Group implements Storable {
     alternateIds: string[];
