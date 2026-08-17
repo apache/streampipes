@@ -102,8 +102,8 @@ export class DataRetentionDialogComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    close(refreshDataLakeIndex: boolean) {
-        this.dialogRef.close(refreshDataLakeIndex);
+    close(refreshDatasetIndex: boolean) {
+        this.dialogRef.close(refreshDatasetIndex);
     }
 
     setCleanUp() {

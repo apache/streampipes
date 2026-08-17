@@ -74,7 +74,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.resourceManager = resourceManager;
     this.pipelineManager = pipelineManager;
-    this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
+    this.datasetStorage = resourceManager.manageDatasetMeasures().getDb();
   }
 
   @Override

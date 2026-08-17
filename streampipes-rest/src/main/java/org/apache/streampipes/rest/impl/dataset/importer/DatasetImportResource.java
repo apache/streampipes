@@ -57,7 +57,7 @@ public class DatasetImportResource extends AbstractDatasetResource {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
     this.importService = new CsvDatasetImportService(
         getDatasetMeasureManagement(),
-        resourceManager.manageDataLakeMeasures().getDb()
+        resourceManager.manageDatasetMeasures().getDb()
     );
   }
 

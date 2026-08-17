@@ -152,8 +152,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
     private cachedDuplicateRule: RemoveDuplicateRule = null;
     private cachedEventRateRule: ReduceEventRateRule | null;
 
-    saveInDataLake = false;
-    dataLakeTimestampField: string;
+    saveInDataset = false;
+    datasetTimestampField: string;
 
     showCode = false;
     showAsset = false;
@@ -198,10 +198,10 @@ export class StartAdapterConfigurationComponent implements OnInit {
                 this.eventSchema.eventProperties,
             );
             if (timestampFields.length > 0) {
-                this.dataLakeTimestampField = timestampFields[0].runtimeName;
+                this.datasetTimestampField = timestampFields[0].runtimeName;
             }
         } else {
-            this.dataLakeTimestampField = '';
+            this.datasetTimestampField = '';
         }
     }
 
@@ -237,8 +237,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
             width: '70vw',
             data: {
                 adapter: this.adapterDescription,
-                saveInDataLake: this.saveInDataLake,
-                dataLakeTimestampField: this.dataLakeTimestampField,
+                saveInDataset: this.saveInDataset,
+                datasetTimestampField: this.datasetTimestampField,
                 editMode: false,
                 startAdapterNow,
                 selectedAssets: this.selectedAssets,
@@ -313,7 +313,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     handlePersistOption(selected: boolean) {
-        this.saveInDataLake = selected;
+        this.saveInDataset = selected;
         this.findDefaultTimestamp(selected);
         this.checkAndTriggerTutorial('adapter-persist-selected');
     }

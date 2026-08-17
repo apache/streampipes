@@ -51,8 +51,8 @@ export class DeleteExportProviderComponent {
     isInProgress = false;
     currentStatus: any;
 
-    close(refreshDataLakeIndex: boolean) {
-        this.dialogRef.close(refreshDataLakeIndex);
+    close(refreshDatasetIndex: boolean) {
+        this.dialogRef.close(refreshDatasetIndex);
     }
 
     deleteExportProvider() {

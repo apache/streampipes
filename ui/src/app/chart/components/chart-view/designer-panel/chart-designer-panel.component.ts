@@ -62,7 +62,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class ChartDesignerPanelComponent {
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
-    @Input() dataLakeMeasure: DatasetMeasure;
+    @Input() datasetMeasure: DatasetMeasure;
     @Input() newWidgetMode = false;
 
     @Output() addWidgetEmitter: EventEmitter<
@@ -94,7 +94,7 @@ export class ChartDesignerPanelComponent {
         }
 
         this.addWidgetEmitter.emit({
-            a: this.dataLakeMeasure,
+            a: this.datasetMeasure,
             b: this.currentlyConfiguredWidget,
         });
     }

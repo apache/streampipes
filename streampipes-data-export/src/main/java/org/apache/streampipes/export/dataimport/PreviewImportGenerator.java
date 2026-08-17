@@ -60,7 +60,7 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.pipelineManager = pipelineManager;
     this.resourceManager = resourceManager;
-    this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
+    this.datasetStorage = resourceManager.manageDatasetMeasures().getDb();
 
   }
 

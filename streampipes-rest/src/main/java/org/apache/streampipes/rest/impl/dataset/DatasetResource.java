@@ -105,7 +105,7 @@ public class DatasetResource extends AbstractDatasetResource {
   public DatasetResource(IChartStorage chartStorage,
                           SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
-    this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
+    this.datasetStorage = resourceManager.manageDatasetMeasures().getDb();
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(this.datasetMeasureManagement);

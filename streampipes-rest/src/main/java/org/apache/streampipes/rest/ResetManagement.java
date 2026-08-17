@@ -161,7 +161,7 @@ public class ResetManagement {
         .getSchemaManagement(
             chartSchemaUpdateCoordinator,
             resourceManager.managePermissions().getDb(),
-            resourceManager.manageDataLakeMeasures().getDb());
+            resourceManager.manageDatasetMeasures().getDb());
     var dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getQueryManagement(datasetMeasureManagement);

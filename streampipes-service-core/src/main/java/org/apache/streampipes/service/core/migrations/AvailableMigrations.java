@@ -79,7 +79,7 @@ public class AvailableMigrations {
     this.dashboardStorage = resourceManager.manageDashboards().getDb();
     this.assetStorage = resourceManager.manageAssets().getDb();
     this.pipelineStorage = resourceManager.managePipelines().getDb();
-    this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
+    this.datasetStorage = resourceManager.manageDatasetMeasures().getDb();
     this.coreConfigStorage = resourceManager.getCoreConfigurationStorage();
     this.roleStorage = resourceManager.getRoleStorage();
     this.userGroupStorage = resourceManager.getUserGroupStorage();

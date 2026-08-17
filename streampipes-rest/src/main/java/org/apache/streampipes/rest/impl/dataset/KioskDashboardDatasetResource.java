@@ -61,7 +61,7 @@ public class KioskDashboardDatasetResource extends AbstractAuthGuardedRestResour
         .getSchemaManagement(
             new ChartSchemaUpdateCoordinator(dataExplorerWidgetStorage),
             resourceManager.managePermissions().getDb(),
-            resourceManager.manageDataLakeMeasures().getDb()
+            resourceManager.manageDatasetMeasures().getDb()
         );
     this.dashboardStorage = resourceManager.manageDashboards().getDb();
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()

@@ -64,8 +64,8 @@ export class ExportProviderConnectionTestComponent implements OnInit {
     message = '';
     filePath = '';
 
-    close(refreshDataLakeIndex: boolean) {
-        this.dialogRef.close(refreshDataLakeIndex);
+    close(refreshDatasetIndex: boolean) {
+        this.dialogRef.close(refreshDatasetIndex);
     }
 
     testExportProvider() {

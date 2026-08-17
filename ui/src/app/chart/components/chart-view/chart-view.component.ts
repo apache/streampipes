@@ -124,7 +124,7 @@ export class ChartViewComponent
     editMode = true;
     dataView: DataExplorerWidgetModel;
     originalDataView: DataExplorerWidgetModel;
-    dataLakeMeasure: DatasetMeasure;
+    datasetMeasure: DatasetMeasure;
     drawerWidth = 450;
 
     selectedAssets = [];
@@ -214,7 +214,7 @@ export class ChartViewComponent
     setDefaultValuesOnOriginalDataViewForNewCharts() {
         //Change original Data View if default Config does not exist
 
-        //Reset name as widget generation sets name to  datalakename - chart
+        // Reset name as widget generation sets name to dataset name - chart
         this.dataView.baseAppearanceConfig.widgetTitle =
             this.translateService.instant('New chart');
         this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
@@ -404,7 +404,7 @@ export class ChartViewComponent
     createWidget() {
         this.dataView = new DataExplorerWidgetModel();
         this.dataView['@class'] =
-            'org.apache.streampipes.model.datalake.DataExplorerWidgetModel';
+            'org.apache.streampipes.model.dataset.DataExplorerWidgetModel';
         this.dataView.baseAppearanceConfig = {};
         this.dataView.baseAppearanceConfig.widgetTitle =
             this.translateService.instant('New chart');

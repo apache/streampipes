@@ -84,7 +84,7 @@ export class DataRetentionNowDialogComponent implements OnInit {
             );
     }
 
-    close(refreshDataLakeIndex: boolean) {
-        this.dialogRef.close(refreshDataLakeIndex);
+    close(refreshDatasetIndex: boolean) {
+        this.dialogRef.close(refreshDatasetIndex);
     }
 }

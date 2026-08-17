@@ -61,7 +61,7 @@ public class DatasetMeasureResource extends AbstractDatasetResource {
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority()")
   public ResourceSummaryDto<DatasetSummaryDto> getDatasetSummary() {
-    return resourceManager.manageDataLakeMeasures().getSummary(getAuthentication());
+    return resourceManager.manageDatasetMeasures().getSummary(getAuthentication());
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

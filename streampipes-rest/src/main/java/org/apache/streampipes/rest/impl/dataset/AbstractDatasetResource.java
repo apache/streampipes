@@ -41,12 +41,12 @@ public class AbstractDatasetResource extends AbstractAuthGuardedRestResource {
                                   SpResourceManager resourceManager) {
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
     this.resourceManager = resourceManager;
-    this.datasetMeasureStorage = resourceManager.manageDataLakeMeasures().getDb();
+    this.datasetMeasureStorage = resourceManager.manageDatasetMeasures().getDb();
     this.datasetMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
         .getSchemaManagement(
             chartSchemaUpdateCoordinator,
             resourceManager.managePermissions().getDb(),
-            resourceManager.manageDataLakeMeasures().getDb());
+            resourceManager.manageDatasetMeasures().getDb());
   }
 
   /**

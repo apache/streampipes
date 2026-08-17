@@ -101,7 +101,7 @@ public class SpResourceManager {
     return new AdapterResourceManager(adapterStorage, certificateStorage, managePermissions());
   }
 
-  public DatasetMeasureResourceManager manageDataLakeMeasures() {
+  public DatasetMeasureResourceManager manageDatasetMeasures() {
     return new DatasetMeasureResourceManager(datasetStorage, pipelineStorage, managePermissions());
   }
 

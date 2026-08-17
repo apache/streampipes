@@ -61,7 +61,7 @@ export class SpAdapterStartedSuccessComponent {
     pipelineOperationStatus: PipelineOperationStatus;
 
     @Input()
-    saveInDataLake: boolean;
+    saveInDataset: boolean;
 
     @Input()
     adapterErrorMessage: SpLogMessage;

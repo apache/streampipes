@@ -51,7 +51,7 @@ public class DatasetScheduler implements SchedulingConfigurer {
             .getSchemaManagement(
                 chartSchemaUpdateCoordinator,
                 resourceManager.managePermissions().getDb(),
-                resourceManager.manageDataLakeMeasures().getDb());
+                resourceManager.manageDatasetMeasures().getDb());
         this.datasetExportManager = new DatasetExportManager(
             dataExplorerSchemaManagement,
             new DataExplorerDispatcher().getDataExplorerManager()

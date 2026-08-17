@@ -161,7 +161,7 @@ export class DashboardPanelComponent
 
     public items: Dashboard[];
 
-    dataLakeMeasure: DatasetMeasure;
+    datasetMeasure: DatasetMeasure;
     auth$: Subscription;
     refresh$: Subscription;
     private shortcutReg: ShortcutRegistration;

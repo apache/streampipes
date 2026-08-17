@@ -135,7 +135,7 @@ export class ChartContainerComponent
     configuredWidget: DataExplorerWidgetModel;
 
     @Input()
-    dataLakeMeasure: DatasetMeasure;
+    datasetMeasure: DatasetMeasure;
 
     @Input()
     editMode: boolean;
@@ -267,7 +267,7 @@ export class ChartContainerComponent
             );
         });
         this.widgetLoaded = true;
-        this.title = this.dataLakeMeasure?.measureName;
+        this.title = this.datasetMeasure?.measureName;
         this.widgetTypeChanged$ =
             this.widgetTypeService.chartTypeChangeSubject.subscribe(
                 typeChange => {

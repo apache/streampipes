@@ -67,7 +67,7 @@ export class DashboardSlideViewComponent
         setTimeout(() => {
             this.selectedWidgetIndex = index;
             this.currentWidget = this.configuredWidgets.get(dataViewElementId);
-            this.currentMeasure = this.dataLakeMeasures.get(dataViewElementId);
+            this.currentMeasure = this.datasetMeasures.get(dataViewElementId);
             this.currentDashboardItem = this.dashboard.widgets[index];
             this.displayWidget = true;
         });

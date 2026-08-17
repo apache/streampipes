@@ -49,7 +49,7 @@ export abstract class AbstractChartViewDirective {
         string,
         DataExplorerWidgetModel
     >();
-    dataLakeMeasures: Map<string, DatasetMeasure> = new Map<
+    datasetMeasures: Map<string, DatasetMeasure> = new Map<
         string,
         DatasetMeasure
     >();
@@ -120,7 +120,7 @@ export abstract class AbstractChartViewDirective {
                 widget.widgetType,
             );
             this.configuredWidgets.set(widget.elementId, widget);
-            this.dataLakeMeasures.set(
+            this.datasetMeasures.set(
                 widget.elementId,
                 widget.dataConfig.sourceConfigs[0].measure,
             );
