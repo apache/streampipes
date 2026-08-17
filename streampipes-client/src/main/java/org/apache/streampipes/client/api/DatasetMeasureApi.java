@@ -20,40 +20,40 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import java.util.List;
 import java.util.Optional;
 
-public class DatasetMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
+public class DatasetMeasureApi extends AbstractTypedClientApi<DatasetMeasure>
     implements IDatasetMeasureApi {
 
   public DatasetMeasureApi(StreamPipesClientConfig clientConfig) {
-    super(clientConfig, DataLakeMeasure.class);
+    super(clientConfig, DatasetMeasure.class);
   }
 
   @Override
   @ExposedToScripts
-  public Optional<DataLakeMeasure> get(String id) {
+  public Optional<DatasetMeasure> get(String id) {
     return getSingle(getBaseResourcePath().addToPath(id));
   }
 
   @Override
   @ExposedToScripts
-  public Optional<DataLakeMeasure> getByDatasetName(String datasetName) {
+  public Optional<DatasetMeasure> getByDatasetName(String datasetName) {
     return getSingle(getBaseResourcePath().addToPath("byName").addToPath(datasetName));
   }
 
   @Override
   @ExposedToScripts
-  public List<DataLakeMeasure> all() {
+  public List<DatasetMeasure> all() {
     throw new IllegalArgumentException("Not yet implemented");
   }
 
   @Override
   @ExposedToScripts
-  public void create(DataLakeMeasure element) {
+  public void create(DatasetMeasure element) {
     post(getBaseResourcePath(), element);
   }
 
@@ -65,7 +65,7 @@ public class DatasetMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
 
   @Override
   @ExposedToScripts
-  public void update(DataLakeMeasure measure) {
+  public void update(DatasetMeasure measure) {
     put(getBaseResourcePath().addToPath(measure.getElementId()), measure);
   }
 

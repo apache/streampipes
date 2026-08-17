@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl.dataset.importer;
 
-import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
+import org.apache.streampipes.model.dataset.importer.CsvImportColumn;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 

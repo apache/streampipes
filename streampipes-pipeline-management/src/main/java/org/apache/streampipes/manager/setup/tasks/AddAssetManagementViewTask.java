@@ -35,14 +35,14 @@ public class AddAssetManagementViewTask implements InstallationTask {
 
   @Override
   public void execute() {
-    DesignDocument dataLakeDoc = prepareDocument(DESIGN_DOCUMENT);
+    DesignDocument datasetDoc = prepareDocument(DESIGN_DOCUMENT);
     Map<String, DesignDocument.MapReduce> views = new HashMap<>();
 
     DesignDocument.MapReduce byNameFn = new DesignDocument.MapReduce();
     byNameFn.setMap(MAP_FUNCTION);
 
     views.put(VIEW_NAME, byNameFn);
-    dataLakeDoc.setViews(views);
-    Utils.getCouchDbClient("genericstorage", true).design().synchronizeWithDb(dataLakeDoc);
+    datasetDoc.setViews(views);
+    Utils.getCouchDbClient("genericstorage", true).design().synchronizeWithDb(datasetDoc);
   }
 }

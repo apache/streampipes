@@ -19,9 +19,9 @@
 package org.apache.streampipes.manager.pipeline.update;
 
 import org.apache.streampipes.model.connect.adapter.ChartSchemaUpdateInfo;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetHealthStatus;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetHealthStatus;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -172,22 +172,22 @@ public class ChartSchemaUpdateCoordinator {
     }
   }
 
-  private DataLakeMeasure parseMeasure(Object measure,
+  private DatasetMeasure parseMeasure(Object measure,
                                        String measureName) {
-    var dataLakeMeasure = objectMapper.convertValue(measure, DataLakeMeasure.class);
-    if (dataLakeMeasure == null) {
-      dataLakeMeasure = new DataLakeMeasure();
+    var datasetMeasure = objectMapper.convertValue(measure, DatasetMeasure.class);
+    if (datasetMeasure == null) {
+      datasetMeasure = new DatasetMeasure();
     }
-    if (dataLakeMeasure.getMeasureName() == null) {
-      dataLakeMeasure.setMeasureName(measureName);
+    if (datasetMeasure.getMeasureName() == null) {
+      datasetMeasure.setMeasureName(measureName);
     }
-    if (dataLakeMeasure.getSchemaVersion() == null) {
-      dataLakeMeasure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
+    if (datasetMeasure.getSchemaVersion() == null) {
+      datasetMeasure.setSchemaVersion(DatasetMeasure.CURRENT_SCHEMA_VERSION);
     }
-    return dataLakeMeasure;
+    return datasetMeasure;
   }
 
-  private Map<String, Object> serializeMeasure(DataLakeMeasure measure) {
+  private Map<String, Object> serializeMeasure(DatasetMeasure measure) {
     return objectMapper.convertValue(measure, MAP_TYPE);
   }
 

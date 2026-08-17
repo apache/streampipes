@@ -19,14 +19,14 @@
 package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.importer.CsvImportJobStatus;
-import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
-import org.apache.streampipes.model.datalake.importer.CsvImportPreviewResult;
-import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
-import org.apache.streampipes.model.datalake.importer.CsvImportResult;
-import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationRequest;
-import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationResult;
-import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
+import org.apache.streampipes.model.dataset.importer.CsvImportJobStatus;
+import org.apache.streampipes.model.dataset.importer.CsvImportPreviewRequest;
+import org.apache.streampipes.model.dataset.importer.CsvImportPreviewResult;
+import org.apache.streampipes.model.dataset.importer.CsvImportRequest;
+import org.apache.streampipes.model.dataset.importer.CsvImportResult;
+import org.apache.streampipes.model.dataset.importer.CsvImportSchemaValidationRequest;
+import org.apache.streampipes.model.dataset.importer.CsvImportSchemaValidationResult;
+import org.apache.streampipes.model.dataset.importer.CsvImportTargetMode;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.impl.dataset.AbstractDatasetResource;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
@@ -56,7 +56,7 @@ public class DatasetImportResource extends AbstractDatasetResource {
                                 SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
     this.importService = new CsvDatasetImportService(
-        getDatasetManagement(),
+        getDatasetMeasureManagement(),
         resourceManager.manageDataLakeMeasures().getDb()
     );
   }
@@ -160,10 +160,10 @@ public class DatasetImportResource extends AbstractDatasetResource {
         .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
-  private boolean hasWritePermission(org.apache.streampipes.model.datalake.importer.CsvImportTarget target) {
+  private boolean hasWritePermission(org.apache.streampipes.model.dataset.importer.CsvImportTarget target) {
     return target == null
         || target.getMode() != CsvImportTargetMode.EXISTING
-        || getDatasetManagement().getExistingMeasureByName(target.getMeasurementName()).isEmpty()
+        || getDatasetMeasureManagement().getExistingMeasureByName(target.getMeasurementName()).isEmpty()
         || this.checkPermissionByName(target.getMeasurementName(), "WRITE");
   }
 }

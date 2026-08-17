@@ -20,8 +20,8 @@ package org.apache.streampipes.dataexplorer.api;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.List;
@@ -32,12 +32,12 @@ public interface IDataExplorerManager {
    * Provide an instance of {@link IDataLakeMeasurementCounter} for counting the sizes of measurements within a data
    * lake.
    *
-   * @param allMeasurements     A list of {@link DataLakeMeasure} objects representing all measurements in the data lake.
+   * @param allMeasurements     A list of {@link DatasetMeasure} objects representing all measurements in the data lake.
    * @param measurementsToCount A list of measurement names for which the sizes should be counted.
    * @return An instance of {@link IDataLakeMeasurementCounter} configured to count the sizes of the specified measurements.
    */
   IDataLakeMeasurementCounter getMeasurementCounter(
-      List<DataLakeMeasure> allMeasurements,
+      List<DatasetMeasure> allMeasurements,
       List<String> measurementsToCount,
       int daysBack
   );
@@ -46,13 +46,13 @@ public interface IDataExplorerManager {
 
   IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
                                                     IPermissionStorage permissionStorage,
-                                                    IDataLakeMeasureStorage datasetStorage);
+                                                    IDatasetMeasureStorage datasetStorage);
 
-  default ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure) {
+  default ITimeSeriesStorage getTimeseriesStorage(DatasetMeasure measure) {
     return getTimeseriesStorage(measure, false);
   }
 
-  ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure, boolean ignoreDuplicates);
+  ITimeSeriesStorage getTimeseriesStorage(DatasetMeasure measure, boolean ignoreDuplicates);
 
-  IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DataLakeMeasure measure);
+  IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMeasure measure);
 }

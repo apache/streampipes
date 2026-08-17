@@ -20,8 +20,8 @@ package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.DatasetSummaryDto;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetSummaryDto;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -66,9 +66,9 @@ public class DatasetMeasureResource extends AbstractDatasetResource {
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<?> addDataset(@RequestBody DataLakeMeasure datasetMeasure) {
+  public ResponseEntity<?> addDataset(@RequestBody DatasetMeasure datasetMeasure) {
     try {
-      DataLakeMeasure result = this.datasetMeasureManagement.createOrUpdateMeasurement(
+      DatasetMeasure result = this.datasetMeasureManagement.createOrUpdateMeasurement(
           datasetMeasure,
           getAuthenticatedUserSid()
       );
@@ -131,7 +131,7 @@ public class DatasetMeasureResource extends AbstractDatasetResource {
 
   @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority() and hasPermission(#elementId, 'READ')")
-  public ResponseEntity<?> getDataset(@PathVariable("id") String elementId) {
+  public ResponseEntity<?> getDatasetMeasure(@PathVariable("id") String elementId) {
     var measure = this.datasetMeasureManagement.getById(elementId);
     if (Objects.nonNull(measure)) {
       return ok(measure);
@@ -142,7 +142,7 @@ public class DatasetMeasureResource extends AbstractDatasetResource {
 
   @GetMapping(path = "byName/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
  @PreAuthorize("this.hasReadAuthority() and this.checkPermissionByName(#measureName, 'READ')")
-  public ResponseEntity<?> getDatasetByName(@PathVariable("measureName") String measureName) {
+  public ResponseEntity<?> getDatasetMeasureByName(@PathVariable("measureName") String measureName) {
     var measureOpt = this.datasetMeasureManagement.getExistingMeasureByName(measureName);
     if (measureOpt.isPresent()) {
       return ok(measureOpt.get());
@@ -153,9 +153,9 @@ public class DatasetMeasureResource extends AbstractDatasetResource {
 
   @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
    @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'WRITE')")
-  public ResponseEntity<?> updateDataset(
+  public ResponseEntity<?> updateDatasetMeasure(
       @PathVariable("id") String elementId,
-      @RequestBody DataLakeMeasure measure) {
+      @RequestBody DatasetMeasure measure) {
     if (elementId.equals(measure.getElementId())) {
       try {
         this.datasetMeasureManagement.updateMeasurement(measure);
@@ -169,7 +169,7 @@ public class DatasetMeasureResource extends AbstractDatasetResource {
 
   @DeleteMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
    @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'READ')")
-  public ResponseEntity<?> deleteDataset(@PathVariable("id") String elementId) {
+  public ResponseEntity<?> deleteDatasetMeasure(@PathVariable("id") String elementId) {
     try {
       this.datasetMeasureManagement.deleteMeasurement(elementId);
       return ok();

@@ -21,7 +21,7 @@ package org.apache.streampipes.dataexplorer.param.model;
 
 import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
-import org.apache.streampipes.model.datalake.AggregationFunction;
+import org.apache.streampipes.model.dataset.AggregationFunction;
 
 import java.util.Arrays;
 import java.util.List;

@@ -19,8 +19,8 @@
 package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
-import org.apache.streampipes.model.datalake.ChartSummaryDto;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+import org.apache.streampipes.model.dataset.ChartSummaryDto;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.ChartResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;

@@ -19,16 +19,16 @@
 package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.importer.CsvImportConfiguration;
-import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
-import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
-import org.apache.streampipes.model.datalake.importer.CsvImportSchemaIssue;
-import org.apache.streampipes.model.datalake.importer.CsvImportSchemaIssueType;
-import org.apache.streampipes.model.datalake.importer.CsvImportSchemaValidationRequest;
-import org.apache.streampipes.model.datalake.importer.CsvImportTarget;
-import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
-import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.importer.CsvImportConfiguration;
+import org.apache.streampipes.model.dataset.importer.CsvImportPreviewRequest;
+import org.apache.streampipes.model.dataset.importer.CsvImportRequest;
+import org.apache.streampipes.model.dataset.importer.CsvImportSchemaIssue;
+import org.apache.streampipes.model.dataset.importer.CsvImportSchemaIssueType;
+import org.apache.streampipes.model.dataset.importer.CsvImportSchemaValidationRequest;
+import org.apache.streampipes.model.dataset.importer.CsvImportTarget;
+import org.apache.streampipes.model.dataset.importer.CsvImportTargetMode;
+import org.apache.streampipes.model.dataset.importer.CsvImportValidationMessage;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -217,7 +217,7 @@ class CsvImportValidationService {
     return messages;
   }
 
-  DataLakeMeasure requireExistingMeasurement(String measurementName) {
+  DatasetMeasure requireExistingMeasurement(String measurementName) {
     return schemaManagement.getExistingMeasureByName(measurementName)
         .orElseThrow(() -> new CsvImportValidationException(List.of(
             message("target.measurementName", "The selected measurement does not exist.")
@@ -225,7 +225,7 @@ class CsvImportValidationService {
   }
 
   private List<CsvImportSchemaIssue> compareSchemas(
-      DataLakeMeasure existingMeasure,
+      DatasetMeasure existingMeasure,
       EventSchema importSchema,
       String timestampColumn
   ) {

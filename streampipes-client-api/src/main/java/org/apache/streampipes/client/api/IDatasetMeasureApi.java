@@ -18,25 +18,25 @@
 
 package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface IDatasetMeasureApi extends CRUDApi<String, DataLakeMeasure> {
-  Optional<DataLakeMeasure> get(String id);
+public interface IDatasetMeasureApi extends CRUDApi<String, DatasetMeasure> {
+  Optional<DatasetMeasure> get(String id);
 
-  Optional<DataLakeMeasure> getByDatasetName(String datasetName);
-
-  @Override
-  List<DataLakeMeasure> all();
+  Optional<DatasetMeasure> getByDatasetName(String datasetName);
 
   @Override
-  void create(DataLakeMeasure element);
+  List<DatasetMeasure> all();
+
+  @Override
+  void create(DatasetMeasure element);
 
   @Override
   void delete(String elementId);
 
   @Override
-  void update(DataLakeMeasure measure);
+  void update(DatasetMeasure measure);
 }

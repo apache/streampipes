@@ -23,20 +23,20 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
-import org.apache.streampipes.export.DataLakeExportManager;
+import org.apache.streampipes.export.DatasetExportManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.DataSeries;
-import org.apache.streampipes.model.datalake.RetentionTimeConfig;
-import org.apache.streampipes.model.datalake.SpQueryResult;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.dataset.DataSeries;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.RetentionTimeConfig;
+import org.apache.streampipes.model.dataset.SpQueryResult;
+import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -68,29 +68,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_AGGREGATION_FUNCTION;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_AUTO_AGGREGATE;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_COLUMNS;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_COUNT_ONLY;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_CSV_DELIMITER;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_END_DATE;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_FILTER;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_FILTER_EXPRESSION;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_FORMAT;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_GROUP_BY;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_HEADER_COLUMN_NAME;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_LIMIT;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_OFFSET;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_ORDER;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_PAGE;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_START_DATE;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_TIME_INTERVAL;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_XLSX_START_ROW;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_XLSX_TEMPLATE_ID;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_XLSX_USE_TEMPLATE;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.SUPPORTED_PARAMS;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_AGGREGATION_FUNCTION;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_AUTO_AGGREGATE;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_COLUMNS;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_COUNT_ONLY;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_CSV_DELIMITER;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_END_DATE;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_FILTER;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_FILTER_EXPRESSION;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_FORMAT;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_GROUP_BY;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_HEADER_COLUMN_NAME;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_LIMIT;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_OFFSET;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_ORDER;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_PAGE;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_START_DATE;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_TIME_INTERVAL;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_XLSX_START_ROW;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_XLSX_TEMPLATE_ID;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_XLSX_USE_TEMPLATE;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.SUPPORTED_PARAMS;
 
 @RestController
 @RequestMapping("/api/v4/dataset")
@@ -98,8 +98,8 @@ public class DatasetResource extends AbstractDatasetResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DatasetResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
-  private final DataLakeExportManager datasetExportManager;
-  private final IDataLakeMeasureStorage datasetStorage;
+  private final DatasetExportManager datasetExportManager;
+  private final IDatasetMeasureStorage datasetStorage;
   private final ConfiguredOutputWriterFactory outputWriterFactory;
 
   public DatasetResource(IChartStorage chartStorage,
@@ -112,7 +112,7 @@ public class DatasetResource extends AbstractDatasetResource {
     this.outputWriterFactory = new ConfiguredOutputWriterFactory(
         resourceManager.getFileMetadataStorage(),
         resourceManager.getCoreConfigurationStorage());
-    this.datasetExportManager = new DataLakeExportManager(
+    this.datasetExportManager = new DatasetExportManager(
         this.datasetMeasureManagement,
         dataExplorerQueryManagement,
         resourceManager.getCoreConfigurationStorage(),
@@ -150,9 +150,9 @@ public class DatasetResource extends AbstractDatasetResource {
   public ResponseEntity<?> dropMeasurementSeries(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathVariable("measurementID") String measurementID) {
 
-    boolean datasetDeleted = this.dataExplorerQueryManagement.deleteData(measurementID);
+    boolean isSuccessDataset = this.dataExplorerQueryManagement.deleteData(measurementID);
 
-    if (datasetDeleted) {
+    if (isSuccessDataset) {
       boolean isSuccessEventProperty = this.datasetMeasureManagement.deleteMeasurementByName(measurementID);
       if (isSuccessEventProperty) {
         return ok();
@@ -170,11 +170,11 @@ public class DatasetResource extends AbstractDatasetResource {
   
   @GetMapping(path = "/measurements", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all measurement series", tags = { "Data Lake" }, responses = {
-      @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class)))) })
+      @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DatasetMeasure.class)))) })
    @PreAuthorize("this.hasReadAuthority()")
      @PostFilter("hasPermission(filterObject.elementId, 'READ')")
-      public  List<DataLakeMeasure> getAll() {
-    List<DataLakeMeasure> allMeasurements = this.datasetMeasureManagement.getAllMeasurements();
+      public  List<DatasetMeasure> getAll() {
+    List<DatasetMeasure> allMeasurements = this.datasetMeasureManagement.getAllMeasurements();
     return allMeasurements;
   }
 
