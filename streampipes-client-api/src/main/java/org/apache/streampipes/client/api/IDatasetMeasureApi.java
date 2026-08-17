@@ -16,28 +16,27 @@
  *
  */
 
-import { MissingValueBehaviour } from './data-lake-query-config.model';
+package org.apache.streampipes.client.api;
 
-export interface DatalakeQueryParameters {
-    columns?: string;
-    startDate?: number;
-    endDate?: number;
-    page?: number;
-    limit?: number;
-    offset?: number;
-    groupBy?: string;
-    order?: string;
-    aggregationFunction?: string;
-    timeInterval?: string;
-    fill?: string | number;
-    countOnly?: boolean;
-    autoAggregate?: boolean;
-    filter?: string;
-    filterExpression?: string;
-    missingValueBehaviour?: MissingValueBehaviour;
-    maximumAmountOfEvents?: number;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
-    // should be only used for multi-query requests
-    measureName?: string;
-    forId?: string;
+import java.util.List;
+import java.util.Optional;
+
+public interface IDatasetMeasureApi extends CRUDApi<String, DataLakeMeasure> {
+  Optional<DataLakeMeasure> get(String id);
+
+  Optional<DataLakeMeasure> getByDatasetName(String datasetName);
+
+  @Override
+  List<DataLakeMeasure> all();
+
+  @Override
+  void create(DataLakeMeasure element);
+
+  @Override
+  void delete(String elementId);
+
+  @Override
+  void update(DataLakeMeasure measure);
 }

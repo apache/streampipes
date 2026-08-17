@@ -75,11 +75,11 @@ public abstract class DataLakeMeasurementSanitizer implements IDataLakeMeasureme
 
 
   private void registerAtDataLake() throws SpRuntimeException {
-    client.dataLakeMeasureApi().create(measure);
+    client.datasetMeasureApi().create(measure);
   }
 
   private void updateAtDataLake() throws SpRuntimeException {
-    client.dataLakeMeasureApi().update(measure);
+    client.datasetMeasureApi().update(measure);
   }
 
   private void sanitizeDataLakeMeasure() throws SpRuntimeException {

@@ -27,7 +27,7 @@ import {
 import { Observable, of } from 'rxjs';
 import { DataLakeMeasure, SpQueryResult } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
-import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
+import { DatasetQueryParameters } from '../model/dataset/DatasetQueryParameters';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 import {
     DatasetSummaryDto,
@@ -41,28 +41,28 @@ import {
     CsvImportRequest,
     CsvImportSchemaValidationRequest,
     CsvImportSchemaValidationResult,
-} from '../model/datalake/csv-import.model';
+} from '../model/dataset/csv-import.model';
 
 @Injectable({
     providedIn: 'root',
 })
-export class DatalakeRestService {
+export class DatasetRestService {
     private http = inject(HttpClient);
 
     private get baseUrl() {
         return '/streampipes-backend';
     }
 
-    public get dataLakeUrl() {
-        return this.baseUrl + '/api/v4' + '/datalake';
+    public get datasetUrl() {
+        return this.baseUrl + '/api/v4' + '/dataset';
     }
 
-    public get dataLakeMeasureUrl() {
-        return this.baseUrl + '/api/v4/datalake/measure';
+    public get datasetMeasureUrl() {
+        return this.baseUrl + '/api/v4/dataset/measure';
     }
 
-    public get dataLakeImportUrl() {
-        return this.baseUrl + '/api/v4/datalake/import';
+    public get datasetImportUrl() {
+        return this.baseUrl + '/api/v4/dataset/import';
     }
 
     getMeasurementEntryCount(
@@ -70,7 +70,7 @@ export class DatalakeRestService {
         daysBack = -1,
     ): Observable<number> {
         return this.http.get<number>(
-            `${this.dataLakeMeasureUrl}/${encodeURIComponent(measurementId)}/count`,
+            `${this.datasetMeasureUrl}/${encodeURIComponent(measurementId)}/count`,
             {
                 params: {
                     daysBack,
@@ -80,7 +80,7 @@ export class DatalakeRestService {
     }
 
     getAllMeasurementSeries(): Observable<DataLakeMeasure[]> {
-        const url = this.dataLakeUrl + '/measurements';
+        const url = this.datasetUrl + '/measurements';
         return this.http.get(url).pipe(
             map(response => {
                 return (response as any[]).map(p =>
@@ -92,29 +92,27 @@ export class DatalakeRestService {
 
     getMeasurementSummary(): Observable<ResourceSummaryDto<DatasetSummaryDto>> {
         return this.http.get<ResourceSummaryDto<DatasetSummaryDto>>(
-            `${this.dataLakeMeasureUrl}/summary`,
+            `${this.datasetMeasureUrl}/summary`,
         );
     }
 
     getMeasurement(id: string): Observable<DataLakeMeasure> {
         return this.http
-            .get(`${this.dataLakeMeasureUrl}/${id}`)
+            .get(`${this.datasetMeasureUrl}/${id}`)
             .pipe(map(res => res as DataLakeMeasure));
     }
 
     getMeasurementByName(name: string): Observable<DataLakeMeasure> {
         return this.http
-            .get(
-                `${this.dataLakeMeasureUrl}/byName/${encodeURIComponent(name)}`,
-            )
+            .get(`${this.datasetMeasureUrl}/byName/${encodeURIComponent(name)}`)
             .pipe(map(res => res as DataLakeMeasure));
     }
 
     performMultiQuery(
-        queryParams: DatalakeQueryParameters[],
+        queryParams: DatasetQueryParameters[],
     ): Observable<SpQueryResult[]> {
         return this.http
-            .post(`${this.dataLakeUrl}/query`, queryParams, {
+            .post(`${this.datasetUrl}/query`, queryParams, {
                 headers: { ignoreLoadingBar: '' },
             })
             .pipe(map(response => response as SpQueryResult[]));
@@ -124,7 +122,7 @@ export class DatalakeRestService {
         measurementNames: string[],
     ): Observable<Record<string, number>> {
         return this.http.post<Record<string, number>>(
-            `${this.dataLakeUrl}/measurements/latest-events`,
+            `${this.datasetUrl}/measurements/latest-events`,
             measurementNames,
             {
                 context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
@@ -134,7 +132,7 @@ export class DatalakeRestService {
 
     getData(
         index: string,
-        queryParams: DatalakeQueryParameters,
+        queryParams: DatasetQueryParameters,
         ignoreLoadingBar = false,
     ): Observable<SpQueryResult> {
         const columns = queryParams.columns;
@@ -147,7 +145,7 @@ export class DatalakeRestService {
             return of(emptyQueryResult);
         } else {
             const url =
-                this.dataLakeUrl + '/measurements/' + encodeURIComponent(index);
+                this.datasetUrl + '/measurements/' + encodeURIComponent(index);
             return this.http.get<SpQueryResult>(url, {
                 params: queryParams as unknown as HttpParams,
                 context,
@@ -164,7 +162,7 @@ export class DatalakeRestService {
         } else {
             return this.http
                 .get(
-                    this.dataLakeUrl +
+                    this.datasetUrl +
                         '/measurements/' +
                         encodeURIComponent(index) +
                         '/tags?fields=' +
@@ -196,7 +194,7 @@ export class DatalakeRestService {
         index: string,
         formatConfig: Record<string, any>,
         missingValueBehaviour: string,
-        queryParams: DatalakeQueryParameters,
+        queryParams: DatasetQueryParameters,
     ) {
         const qp = { ...formatConfig, ...queryParams, missingValueBehaviour };
 
@@ -204,7 +202,7 @@ export class DatalakeRestService {
     }
 
     cleanup(index: string, config: any) {
-        const url = `${this.dataLakeUrl}/${encodeURIComponent(index)}/cleanup`;
+        const url = `${this.datasetUrl}/${encodeURIComponent(index)}/cleanup`;
         const request = new HttpRequest('POST', url, config, {
             headers: new HttpHeaders({ 'Content-Type': 'application/json' }), // optional if already handled globally
         });
@@ -221,18 +219,18 @@ export class DatalakeRestService {
             .set('startDate', startTime.toString())
             .set('endDate', endTime.toString());
         return this.http.delete<void>(
-            `${this.dataLakeUrl}/measurements/${encodeURIComponent(measurementName)}`,
+            `${this.datasetUrl}/measurements/${encodeURIComponent(measurementName)}`,
             { params },
         );
     }
 
     deleteCleanup(index: string) {
-        const url = `${this.dataLakeUrl}/${encodeURIComponent(index)}/cleanup`;
+        const url = `${this.datasetUrl}/${encodeURIComponent(index)}/cleanup`;
         return this.http.delete(url);
     }
 
     runCleanupNow(index: string) {
-        const url = `${this.dataLakeUrl}/${encodeURIComponent(index)}/runSyncNow`;
+        const url = `${this.datasetUrl}/${encodeURIComponent(index)}/runSyncNow`;
         const request = new HttpRequest('POST', url, {});
 
         return this.http.request(request);
@@ -240,7 +238,7 @@ export class DatalakeRestService {
 
     buildDownloadRequest(index: string, queryParams: any) {
         const url =
-            this.dataLakeUrl +
+            this.datasetUrl +
             '/measurements/' +
             encodeURIComponent(index) +
             '/download';
@@ -259,7 +257,7 @@ export class DatalakeRestService {
         _ignoreSchemaMismatch = true,
     ): Observable<void> {
         return this.http.post<void>(
-            `${this.dataLakeUrl}/measurements/${encodeURIComponent(measureName)}`,
+            `${this.datasetUrl}/measurements/${encodeURIComponent(measureName)}`,
             spQueryResult,
             {},
         );
@@ -271,7 +269,7 @@ export class DatalakeRestService {
 
     removeData(index: string) {
         const url =
-            this.dataLakeUrl + '/measurements/' + encodeURIComponent(index);
+            this.datasetUrl + '/measurements/' + encodeURIComponent(index);
 
         return this.http.delete(url);
     }
@@ -291,13 +289,13 @@ export class DatalakeRestService {
             );
 
             return this.http.post<CsvImportPreviewResult>(
-                `${this.dataLakeImportUrl}/preview`,
+                `${this.datasetImportUrl}/preview`,
                 formData,
             );
         }
 
         return this.http.post<CsvImportPreviewResult>(
-            `${this.dataLakeImportUrl}/preview`,
+            `${this.datasetImportUrl}/preview`,
             request,
         );
     }
@@ -306,7 +304,7 @@ export class DatalakeRestService {
         request: CsvImportSchemaValidationRequest,
     ): Observable<CsvImportSchemaValidationResult> {
         return this.http.post<CsvImportSchemaValidationResult>(
-            `${this.dataLakeImportUrl}/validate-schema`,
+            `${this.datasetImportUrl}/validate-schema`,
             request,
         );
     }
@@ -315,20 +313,20 @@ export class DatalakeRestService {
         request: CsvImportRequest,
     ): Observable<CsvImportJobStartResult> {
         return this.http.post<CsvImportJobStartResult>(
-            this.dataLakeImportUrl,
+            this.datasetImportUrl,
             request,
         );
     }
 
     getCsvImportJobStatus(jobId: string): Observable<CsvImportJobStatus> {
         return this.http.get<CsvImportJobStatus>(
-            `${this.dataLakeImportUrl}/${encodeURIComponent(jobId)}`,
+            `${this.datasetImportUrl}/${encodeURIComponent(jobId)}`,
         );
     }
 
     dropSingleMeasurementSeries(index: string) {
         const url =
-            this.dataLakeUrl +
+            this.datasetUrl +
             '/measurements/' +
             encodeURIComponent(index) +
             '/drop';
@@ -336,7 +334,7 @@ export class DatalakeRestService {
     }
 
     dropAllMeasurementSeries() {
-        const url = this.dataLakeUrl + '/measurements/';
+        const url = this.datasetUrl + '/measurements/';
         return this.http.delete(url);
     }
 
@@ -351,8 +349,8 @@ export class DatalakeRestService {
         order?: string,
         aggregationFunction?: string,
         timeInterval?: string,
-    ): DatalakeQueryParameters {
-        const queryParams: DatalakeQueryParameters = {};
+    ): DatasetQueryParameters {
+        const queryParams: DatasetQueryParameters = {};
 
         if (columns) {
             queryParams.columns = columns;

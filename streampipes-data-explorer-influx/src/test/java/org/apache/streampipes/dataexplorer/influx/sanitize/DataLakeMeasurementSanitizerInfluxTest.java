@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.influx.sanitize;
 
-import org.apache.streampipes.client.api.IDataLakeMeasureApi;
+import org.apache.streampipes.client.api.IDatasetMeasureApi;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -43,8 +43,8 @@ public class DataLakeMeasurementSanitizerInfluxTest {
   public void setUp() {
     clientMock = mock(IStreamPipesClient.class);
 
-    var apiMock = mock(IDataLakeMeasureApi.class);
-    when(clientMock.dataLakeMeasureApi()).thenReturn(apiMock);
+    var apiMock = mock(IDatasetMeasureApi.class);
+    when(clientMock.datasetMeasureApi()).thenReturn(apiMock);
 
   }
 

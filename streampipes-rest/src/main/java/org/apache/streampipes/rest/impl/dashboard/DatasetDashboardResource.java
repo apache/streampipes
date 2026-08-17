@@ -48,13 +48,13 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/v3/datalake/dashboard")
-public class DataLakeDashboardResource extends AbstractAuthGuardedRestResource {
+@RequestMapping("/api/v3/dataset/dashboard")
+public class DatasetDashboardResource extends AbstractAuthGuardedRestResource {
 
   private final IPermissionStorage permissionStorage;
   private final DashboardResourceManager dashboardResourceManager;
 
-  public DataLakeDashboardResource(SpResourceManager resourceManager) {
+  public DatasetDashboardResource(SpResourceManager resourceManager) {
     this.permissionStorage = resourceManager.managePermissions().getDb();
     this.dashboardResourceManager = resourceManager.manageDashboards();
   }

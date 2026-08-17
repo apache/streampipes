@@ -116,11 +116,11 @@ export class ChartService {
     }
 
     private get persistedDataStreamsUrl() {
-        return `${this.baseUrl}/api/v3/datalake/pipelines`;
+        return `${this.baseUrl}/api/v3/dataset/pipelines`;
     }
 
     private get dashboardWidgetUrl() {
-        return `${this.baseUrl}/api/v3/datalake/dashboard/widgets`;
+        return `${this.baseUrl}/api/v3/dataset/dashboard/widgets`;
     }
 
     getPersistedDataStream(

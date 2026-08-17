@@ -16,27 +16,22 @@
  *
  */
 
-package org.apache.streampipes.client.api;
+package org.apache.streampipes.rest.impl.dataset.importer;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface IDataLakeMeasureApi extends CRUDApi<String, DataLakeMeasure> {
-  Optional<DataLakeMeasure> get(String id);
+public class CsvImportValidationException extends RuntimeException {
 
-  Optional<DataLakeMeasure> getByDatasetName(String datasetName);
+  private final List<CsvImportValidationMessage> validationMessages;
 
-  @Override
-  List<DataLakeMeasure> all();
+  public CsvImportValidationException(List<CsvImportValidationMessage> validationMessages) {
+    super(validationMessages.isEmpty() ? "CSV import validation failed" : validationMessages.get(0).getMessage());
+    this.validationMessages = validationMessages;
+  }
 
-  @Override
-  void create(DataLakeMeasure element);
-
-  @Override
-  void delete(String elementId);
-
-  @Override
-  void update(DataLakeMeasure measure);
+  public List<CsvImportValidationMessage> getValidationMessages() {
+    return validationMessages;
+  }
 }

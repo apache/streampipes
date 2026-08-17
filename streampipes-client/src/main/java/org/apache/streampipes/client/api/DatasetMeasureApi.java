@@ -26,10 +26,10 @@ import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 import java.util.List;
 import java.util.Optional;
 
-public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
-    implements IDataLakeMeasureApi {
+public class DatasetMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
+    implements IDatasetMeasureApi {
 
-  public DataLakeMeasureApi(StreamPipesClientConfig clientConfig) {
+  public DatasetMeasureApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, DataLakeMeasure.class);
   }
 
@@ -74,7 +74,7 @@ public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
     return StreamPipesApiPath.fromStreamPipesBasePath()
         .addToPath("api")
         .addToPath("v4")
-        .addToPath("datalake")
+        .addToPath("dataset")
         .addToPath("measure");
   }
 }

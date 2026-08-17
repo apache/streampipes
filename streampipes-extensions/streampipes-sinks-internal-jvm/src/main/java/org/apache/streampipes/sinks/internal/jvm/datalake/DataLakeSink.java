@@ -166,7 +166,7 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
   private RetentionTimeConfig getRetentionTime(String measureName, IStreamPipesClient client){
 
     try {
-      var originalMeasure = client.dataLakeMeasureApi().getByDatasetName(measureName);
+      var originalMeasure = client.datasetMeasureApi().getByDatasetName(measureName);
       RetentionTimeConfig retentionTime = null;
 
       if (originalMeasure.isPresent()) {

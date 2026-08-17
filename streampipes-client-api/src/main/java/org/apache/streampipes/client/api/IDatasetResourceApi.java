@@ -16,22 +16,18 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake.importer;
+package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 
-import java.util.List;
+import java.util.Map;
 
-public class CsvImportValidationException extends RuntimeException {
+public interface IDatasetResourceApi {
+  
+  void delete(String measurementID, Long startDate, Long endDate);
 
-  private final List<CsvImportValidationMessage> validationMessages;
+  void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch);
 
-  public CsvImportValidationException(List<CsvImportValidationMessage> validationMessages) {
-    super(validationMessages.isEmpty() ? "CSV import validation failed" : validationMessages.get(0).getMessage());
-    this.validationMessages = validationMessages;
-  }
+  SpQueryResult get(String measurementID, Map<String, String> queryParams);
 
-  public List<CsvImportValidationMessage> getValidationMessages() {
-    return validationMessages;
-  }
 }

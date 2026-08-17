@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
@@ -47,12 +47,12 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/v4/datalake/measure")
-public class DataLakeMeasureResource extends AbstractDataLakeResource {
+@RequestMapping("/api/v4/dataset/measure")
+public class DatasetMeasureResource extends AbstractDatasetResource {
 
   private final SpResourceManager resourceManager;
 
-  public DataLakeMeasureResource(IChartStorage chartStorage,
+  public DatasetMeasureResource(IChartStorage chartStorage,
                                  SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
     this.resourceManager = resourceManager;
@@ -66,10 +66,10 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasWriteAuthority()")
-  public ResponseEntity<?> addDataLake(@RequestBody DataLakeMeasure dataLakeMeasure) {
+  public ResponseEntity<?> addDataset(@RequestBody DataLakeMeasure datasetMeasure) {
     try {
-      DataLakeMeasure result = this.dataLakeMeasureManagement.createOrUpdateMeasurement(
-          dataLakeMeasure,
+      DataLakeMeasure result = this.datasetMeasureManagement.createOrUpdateMeasurement(
+          datasetMeasure,
           getAuthenticatedUserSid()
       );
       return ok(result);
@@ -96,12 +96,12 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
       @PathVariable("id") String elementId,
       @Parameter(description = "The number of days from today where the count should start")
       @RequestParam(value = "daysBack", defaultValue = "-1") int daysBack) {
-    var measure = this.dataLakeMeasureManagement.getById(elementId);
+    var measure = this.datasetMeasureManagement.getById(elementId);
     if (Objects.isNull(measure)) {
       return notFound();
     }
 
-    var allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
+    var allMeasurements = this.datasetMeasureManagement.getAllMeasurements();
     return ok(new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getMeasurementCounter(
@@ -114,7 +114,7 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
 
   @Operation(
       summary = "Deprecated measurement count endpoint",
-      description = "Use /api/v4/datalake/measure/{id}/count instead.",
+      description = "Use /api/v4/dataset/measure/{id}/count instead.",
       deprecated = true
   )
   @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -125,14 +125,14 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
         .status(HttpStatus.GONE)
         .body(SpLogMessage.warn(
             "Deprecated endpoint",
-            "Use /api/v4/datalake/measure/{id}/count instead."
+            "Use /api/v4/dataset/measure/{id}/count instead."
         ));
   }
 
   @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority() and hasPermission(#elementId, 'READ')")
-  public ResponseEntity<?> getDataLakeMeasure(@PathVariable("id") String elementId) {
-    var measure = this.dataLakeMeasureManagement.getById(elementId);
+  public ResponseEntity<?> getDataset(@PathVariable("id") String elementId) {
+    var measure = this.datasetMeasureManagement.getById(elementId);
     if (Objects.nonNull(measure)) {
       return ok(measure);
     } else {
@@ -142,8 +142,8 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
 
   @GetMapping(path = "byName/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
  @PreAuthorize("this.hasReadAuthority() and this.checkPermissionByName(#measureName, 'READ')")
-  public ResponseEntity<?> getDataLakeMeasureName(@PathVariable("measureName") String measureName) {
-    var measureOpt = this.dataLakeMeasureManagement.getExistingMeasureByName(measureName);
+  public ResponseEntity<?> getDatasetByName(@PathVariable("measureName") String measureName) {
+    var measureOpt = this.datasetMeasureManagement.getExistingMeasureByName(measureName);
     if (measureOpt.isPresent()) {
       return ok(measureOpt.get());
     } else {
@@ -153,12 +153,12 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
 
   @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
    @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'WRITE')")
-  public ResponseEntity<?> updateDataLakeMeasure(
+  public ResponseEntity<?> updateDataset(
       @PathVariable("id") String elementId,
       @RequestBody DataLakeMeasure measure) {
     if (elementId.equals(measure.getElementId())) {
       try {
-        this.dataLakeMeasureManagement.updateMeasurement(measure);
+        this.datasetMeasureManagement.updateMeasurement(measure);
         return ok();
       } catch (IllegalArgumentException e) {
         return badRequest(e.getMessage());
@@ -169,9 +169,9 @@ public class DataLakeMeasureResource extends AbstractDataLakeResource {
 
   @DeleteMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
    @PreAuthorize("this.hasWriteAuthority() and hasPermission(#elementId, 'READ')")
-  public ResponseEntity<?> deleteDataLakeMeasure(@PathVariable("id") String elementId) {
+  public ResponseEntity<?> deleteDataset(@PathVariable("id") String elementId) {
     try {
-      this.dataLakeMeasureManagement.deleteMeasurement(elementId);
+      this.datasetMeasureManagement.deleteMeasurement(elementId);
       return ok();
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());

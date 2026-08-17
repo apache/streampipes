@@ -16,18 +16,28 @@
  *
  */
 
-package org.apache.streampipes.client.api;
+import { MissingValueBehaviour } from './data-lake-query-config.model';
 
-import org.apache.streampipes.model.datalake.SpQueryResult;
+export interface DatasetQueryParameters {
+    columns?: string;
+    startDate?: number;
+    endDate?: number;
+    page?: number;
+    limit?: number;
+    offset?: number;
+    groupBy?: string;
+    order?: string;
+    aggregationFunction?: string;
+    timeInterval?: string;
+    fill?: string | number;
+    countOnly?: boolean;
+    autoAggregate?: boolean;
+    filter?: string;
+    filterExpression?: string;
+    missingValueBehaviour?: MissingValueBehaviour;
+    maximumAmountOfEvents?: number;
 
-import java.util.Map;
-
-public interface IDataLakeResourceApi {
-  
-  void delete(String measurementID, Long startDate, Long endDate);
-
-  void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch);
-
-  SpQueryResult get(String measurementID, Map<String, String> queryParams);
-
+    // should be only used for multi-query requests
+    measureName?: string;
+    forId?: string;
 }

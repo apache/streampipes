@@ -16,7 +16,7 @@
  *
  */
 
-import { TimeSettings } from '../datalake/DateRange';
+import { TimeSettings } from '../dataset/DateRange';
 import {
     DataExplorerWidgetModel,
     DataLakeMeasure,

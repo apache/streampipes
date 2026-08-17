@@ -26,9 +26,9 @@ import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeResourceApi {
+public class DatasetResourceApi extends AbstractClientApi implements IDatasetResourceApi {
 
-  public DataLakeResourceApi(StreamPipesClientConfig clientConfig) {
+  public DatasetResourceApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig);
   }
 
@@ -36,7 +36,7 @@ public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeR
     return StreamPipesApiPath.fromStreamPipesBasePath()
         .addToPath("api")
         .addToPath("v4")
-        .addToPath("datalake")
+        .addToPath("dataset")
         .addToPath("measurements");
   }
 

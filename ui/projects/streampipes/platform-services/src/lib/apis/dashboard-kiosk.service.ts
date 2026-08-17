@@ -22,11 +22,11 @@ import { SpQueryResult } from '../model/gen/streampipes-model';
 import { Observable } from 'rxjs';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 import { PlatformServicesCommons } from './commons.service';
-import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
+import { DatasetQueryParameters } from '../model/dataset/DatasetQueryParameters';
 
 export interface DashboardKioskDataQuery {
     widgetId: string;
-    queryParams: DatalakeQueryParameters;
+    queryParams: DatasetQueryParameters;
 }
 
 @Injectable({
@@ -50,7 +50,7 @@ export class DashboardKioskRestService {
     private get dashboardKioskBasePath() {
         return (
             this.platformServicesCommons.basePath +
-            '/api/v3/datalake/dashboard/kiosk'
+            '/api/v3/dataset/dashboard/kiosk'
         );
     }
 }

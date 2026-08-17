@@ -22,17 +22,17 @@ import {
     FilterExpressionGroup,
     MissingValueBehaviour,
     SelectedFilter,
-} from '../model/datalake/data-lake-query-config.model';
-import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
+} from '../model/dataset/dataset-query-config.model';
+import { DatasetQueryParameters } from '../model/dataset/DatasetQueryParameters';
 
-export class DatalakeQueryParameterBuilder {
-    private queryParams: DatalakeQueryParameters;
+export class DatasetQueryParameterBuilder {
+    private queryParams: DatasetQueryParameters;
 
     static create(
         startTime?: number,
         endTime?: number,
-    ): DatalakeQueryParameterBuilder {
-        return new DatalakeQueryParameterBuilder(startTime, endTime);
+    ): DatasetQueryParameterBuilder {
+        return new DatasetQueryParameterBuilder(startTime, endTime);
     }
 
     private constructor(startTime?: number, endTime?: number) {
@@ -47,12 +47,12 @@ export class DatalakeQueryParameterBuilder {
 
     public withMaximumAmountOfEvents(
         maximumAmountOfEvents: number,
-    ): DatalakeQueryParameterBuilder {
+    ): DatasetQueryParameterBuilder {
         this.queryParams.maximumAmountOfEvents = maximumAmountOfEvents;
         return this;
     }
 
-    public withCountOnly(): DatalakeQueryParameterBuilder {
+    public withCountOnly(): DatasetQueryParameterBuilder {
         this.queryParams.countOnly = true;
 
         return this;
@@ -80,13 +80,13 @@ export class DatalakeQueryParameterBuilder {
         return this;
     }
 
-    public withFill(fill: string | number): DatalakeQueryParameterBuilder {
+    public withFill(fill: string | number): DatasetQueryParameterBuilder {
         this.queryParams.fill = fill;
 
         return this;
     }
 
-    public withGrouping(groupBy: FieldConfig[]): DatalakeQueryParameterBuilder {
+    public withGrouping(groupBy: FieldConfig[]): DatasetQueryParameterBuilder {
         const groupByRuntimeNames = groupBy.map(
             property => property.runtimeName,
         );
@@ -97,20 +97,20 @@ export class DatalakeQueryParameterBuilder {
     public withPaging(
         page: number,
         limit: number,
-    ): DatalakeQueryParameterBuilder {
+    ): DatasetQueryParameterBuilder {
         this.queryParams.page = page;
         this.queryParams.limit = limit;
 
         return this;
     }
 
-    public withLimit(limit: number): DatalakeQueryParameterBuilder {
+    public withLimit(limit: number): DatasetQueryParameterBuilder {
         this.queryParams.limit = limit;
 
         return this;
     }
 
-    public withOrdering(order: string): DatalakeQueryParameterBuilder {
+    public withOrdering(order: string): DatasetQueryParameterBuilder {
         this.queryParams.order = order;
 
         return this;
@@ -119,7 +119,7 @@ export class DatalakeQueryParameterBuilder {
     public withOffset(
         offset: number,
         limit: number,
-    ): DatalakeQueryParameterBuilder {
+    ): DatasetQueryParameterBuilder {
         this.queryParams.offset = offset;
         this.queryParams.limit = limit;
 
@@ -129,7 +129,7 @@ export class DatalakeQueryParameterBuilder {
     public withColumnFilter(
         columns: FieldConfig[],
         useAggregation: boolean,
-    ): DatalakeQueryParameterBuilder {
+    ): DatasetQueryParameterBuilder {
         const finalColumns = [];
         columns.forEach(column => {
             if (!column.alias && !useAggregation) {
@@ -162,7 +162,7 @@ export class DatalakeQueryParameterBuilder {
 
     public withFilters(
         filterConditions: SelectedFilter[],
-    ): DatalakeQueryParameterBuilder {
+    ): DatasetQueryParameterBuilder {
         const validFilters = filterConditions.filter(filter =>
             this.isValidFilter(filter),
         );
@@ -198,7 +198,7 @@ export class DatalakeQueryParameterBuilder {
 
     public withFilterExpression(
         filterExpression: FilterExpressionGroup,
-    ): DatalakeQueryParameterBuilder {
+    ): DatasetQueryParameterBuilder {
         this.queryParams.filterExpression = JSON.stringify(
             this.normalizeExpressionGroup(filterExpression),
         );
@@ -305,13 +305,13 @@ export class DatalakeQueryParameterBuilder {
 
     public withMissingValueBehaviour(
         missingValueBehaviour: MissingValueBehaviour,
-    ): DatalakeQueryParameterBuilder {
+    ): DatasetQueryParameterBuilder {
         this.queryParams.missingValueBehaviour = missingValueBehaviour;
 
         return this;
     }
 
-    public build(): DatalakeQueryParameters {
+    public build(): DatasetQueryParameters {
         return this.queryParams;
     }
 }
