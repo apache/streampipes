@@ -17,7 +17,7 @@
  */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, zip } from 'rxjs';
+import { BehaviorSubject, filter, skip, zip } from 'rxjs';
 import {
     AssetConstants,
     AssetManagementService,
@@ -34,6 +34,7 @@ import {
     FilterResult,
 } from './asset-browser.model';
 import { LocalStorageService } from '../../services/local-storage-settings.service';
+import { CurrentUserService } from '../../services/current-user.service';
 
 @Injectable({ providedIn: 'root' })
 export class SpAssetBrowserService {
@@ -54,9 +55,16 @@ export class SpAssetBrowserService {
     private typeService = inject(Isa95TypeService);
     private assetService = inject(AssetManagementService);
     private localStorageService = inject(LocalStorageService);
+    private currentUserService = inject(CurrentUserService);
 
     constructor() {
         this.listenForDataRefresh();
+        this.currentUserService.isLoggedIn$
+            .pipe(
+                skip(1),
+                filter(isLoggedIn => !isLoggedIn),
+            )
+            .subscribe(() => this.resetState());
         this.loadAssetData();
     }
 
@@ -134,6 +142,17 @@ export class SpAssetBrowserService {
     resetFilters(): void {
         this.assetData$.next(this.loadedAssetData);
         this.reloadFilters();
+    }
+
+    private resetState(): void {
+        this.loadedAssetData = undefined;
+        this.activeAssetLink = undefined;
+        this.assetData$.next(undefined);
+        this.filter$.next(undefined);
+        this.currentAssetFilter$.next({
+            filterActive: false,
+            filterDisabled: true,
+        });
     }
 
     applyFilters(filter: AssetFilter) {
