@@ -17,7 +17,7 @@
  */
 
 export class ChartBtns {
-    public static refreshDataLakeMeasures() {
+    public static refreshDatasetMeasures() {
         return cy.dataCy('refresh-data-lake-measures');
     }
 
