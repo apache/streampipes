@@ -17,7 +17,7 @@
  */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, filter, skip, zip } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, skip, zip } from 'rxjs';
 import {
     AssetConstants,
     AssetManagementService,
@@ -60,11 +60,14 @@ export class SpAssetBrowserService {
     constructor() {
         this.listenForDataRefresh();
         this.currentUserService.isLoggedIn$
-            .pipe(
-                skip(1),
-                filter(isLoggedIn => !isLoggedIn),
-            )
-            .subscribe(() => this.resetState());
+            .pipe(skip(1), distinctUntilChanged())
+            .subscribe(isLoggedIn => {
+                if (isLoggedIn) {
+                    this.loadAssetData();
+                } else {
+                    this.resetState();
+                }
+            });
         this.loadAssetData();
     }
 
@@ -146,7 +149,6 @@ export class SpAssetBrowserService {
 
     private resetState(): void {
         this.loadedAssetData = undefined;
-        this.activeAssetLink = undefined;
         this.assetData$.next(undefined);
         this.filter$.next(undefined);
         this.currentAssetFilter$.next({
