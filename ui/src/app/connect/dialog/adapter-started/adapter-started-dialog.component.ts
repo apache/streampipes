@@ -31,7 +31,7 @@ import {
     CompactPipeline,
     CompactPipelineElement,
     CompactPipelineService,
-    DatalakeRestService,
+    DatasetRestService,
     ErrorMessage,
     LinkageData,
     Message,
@@ -85,7 +85,7 @@ export class AdapterStartedDialog implements OnInit {
     private pipelineTemplateService = inject(PipelineTemplateService);
     private compactPipelineService = inject(CompactPipelineService);
     private assetSaveService = inject(AssetSaveService);
-    private dataLakeService = inject(DatalakeRestService);
+    private datasetRestService = inject(DatasetRestService);
     private permissionsService = inject(PermissionsService);
 
     adapterInstalled = false;
@@ -443,7 +443,7 @@ export class AdapterStartedDialog implements OnInit {
         });
 
         const res = await lastValueFrom(
-            this.dataLakeService.getMeasurementByName(adapter.name),
+            this.datasetRestService.getMeasurementByName(adapter.name),
         );
 
         linkageData.push({

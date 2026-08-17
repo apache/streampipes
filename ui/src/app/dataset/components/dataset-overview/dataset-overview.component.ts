@@ -40,7 +40,7 @@ import {
 } from '@angular/material/table';
 import { DatasetOverviewEntry } from './dataset-overview-entry';
 import {
-    DatalakeRestService,
+    DatasetRestService,
     DataLakeMeasure,
     DatasetSummaryDto,
     ExportProviderService,
@@ -138,7 +138,7 @@ export class DatasetOverviewComponent
     @ViewChild(SpTableComponent)
     spTable!: SpTableComponent<DatasetOverviewEntry>;
 
-    private datasetRestService = inject(DatalakeRestService);
+    private datasetRestService = inject(DatasetRestService);
     private dialogService = inject(DialogService);
     private breadcrumbService = inject(SpBreadcrumbService);
     private exportProviderRestService = inject(ExportProviderService);

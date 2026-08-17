@@ -55,7 +55,7 @@ import {
     CsvImportValidationMessage,
     CsvRuntimeType,
     DataType,
-    DatalakeRestService,
+    DatasetRestService,
     EventPropertyPrimitive,
     SemanticType,
 } from '@streampipes/platform-services';
@@ -103,7 +103,7 @@ export class CsvImportDialogComponent {
 
     private readonly fb = inject(FormBuilder);
     private readonly dialogRef = inject(DialogRef<CsvImportDialogComponent>);
-    private readonly datalakeRestService = inject(DatalakeRestService);
+    private readonly datasetRestService = inject(DatasetRestService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly translateService = inject(TranslateService);
 
@@ -375,7 +375,7 @@ export class CsvImportDialogComponent {
         this.previewLoading.set(true);
         const useMultipartUpload = !!this.selectedFile() && !this.uploadId();
 
-        this.datalakeRestService
+        this.datasetRestService
             .previewImport(
                 this.buildPreviewRequest(this.currentTarget()),
                 useMultipartUpload ? this.selectedFile() : undefined,
@@ -489,7 +489,7 @@ export class CsvImportDialogComponent {
         this.importLoading.set(true);
         this.importProcessedRows.set(0);
         this.importTotalRows.set(this.previewResult()?.totalRows ?? 0);
-        this.datalakeRestService
+        this.datasetRestService
             .importCsvData(this.buildImportRequest())
             .subscribe({
                 next: result => {
@@ -699,7 +699,7 @@ export class CsvImportDialogComponent {
         this.importPollingSubscription = timer(0, 1000)
             .pipe(
                 switchMap(() =>
-                    this.datalakeRestService.getCsvImportJobStatus(jobId),
+                    this.datasetRestService.getCsvImportJobStatus(jobId),
                 ),
             )
             .subscribe({
@@ -780,7 +780,7 @@ export class CsvImportDialogComponent {
             return;
         }
 
-        this.datalakeRestService.validateImportSchema(request).subscribe({
+        this.datasetRestService.validateImportSchema(request).subscribe({
             next: result => {
                 this.schemaValidationResult.set(result);
             },

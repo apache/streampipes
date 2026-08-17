@@ -16,7 +16,7 @@
  *
  */
 
-import { MissingValueBehaviour } from './data-lake-query-config.model';
+import { MissingValueBehaviour } from './dataset-query-config.model';
 
 export interface DatasetQueryParameters {
     columns?: string;

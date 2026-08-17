@@ -31,7 +31,7 @@ import {
     DataExplorerWidgetModel,
     DataLakeMeasure,
     DatasetSummaryDto,
-    DatalakeRestService,
+    DatasetRestService,
     SourceConfig,
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../../core-model/base/Tuple2';
@@ -116,7 +116,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class ChartDataSettingsComponent implements OnInit, OnDestroy {
-    private datalakeRestService = inject(DatalakeRestService);
+    private datasetRestService = inject(DatasetRestService);
     private widgetConfigService = inject(ChartConfigurationService);
     private fieldProviderService = inject(ChartFieldProviderService);
     private widgetTypeService = inject(ChartTypeService);
@@ -168,7 +168,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     }
 
     loadPipelinesAndDatasets() {
-        this.datalakeRestService.getMeasurementSummary().subscribe(response => {
+        this.datasetRestService.getMeasurementSummary().subscribe(response => {
             this.availableDatasets = response.resources.sort((a, b) =>
                 a.measureName.localeCompare(b.measureName),
             );
@@ -258,7 +258,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
         resetQueryConfig: boolean,
         refreshData: boolean,
     ): void {
-        this.datalakeRestService
+        this.datasetRestService
             .getMeasurementByName(measureName)
             .subscribe(measure =>
                 this.applySelectedMeasurement(
