@@ -25,7 +25,7 @@ import {
     HttpHeaders,
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { DataLakeMeasure, SpQueryResult } from '../model/gen/streampipes-model';
+import { DatasetMeasure, SpQueryResult } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { DatasetQueryParameters } from '../model/dataset/DatasetQueryParameters';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
@@ -79,13 +79,11 @@ export class DatasetRestService {
         );
     }
 
-    getAllMeasurementSeries(): Observable<DataLakeMeasure[]> {
+    getAllMeasurementSeries(): Observable<DatasetMeasure[]> {
         const url = this.datasetUrl + '/measurements';
         return this.http.get(url).pipe(
             map(response => {
-                return (response as any[]).map(p =>
-                    DataLakeMeasure.fromData(p),
-                );
+                return (response as any[]).map(p => DatasetMeasure.fromData(p));
             }),
         );
     }
@@ -96,16 +94,16 @@ export class DatasetRestService {
         );
     }
 
-    getMeasurement(id: string): Observable<DataLakeMeasure> {
+    getMeasurement(id: string): Observable<DatasetMeasure> {
         return this.http
             .get(`${this.datasetMeasureUrl}/${id}`)
-            .pipe(map(res => res as DataLakeMeasure));
+            .pipe(map(res => res as DatasetMeasure));
     }
 
-    getMeasurementByName(name: string): Observable<DataLakeMeasure> {
+    getMeasurementByName(name: string): Observable<DatasetMeasure> {
         return this.http
             .get(`${this.datasetMeasureUrl}/byName/${encodeURIComponent(name)}`)
-            .pipe(map(res => res as DataLakeMeasure));
+            .pipe(map(res => res as DatasetMeasure));
     }
 
     performMultiQuery(

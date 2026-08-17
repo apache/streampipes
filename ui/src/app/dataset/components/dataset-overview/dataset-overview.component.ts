@@ -41,7 +41,7 @@ import {
 import { DatasetOverviewEntry } from './dataset-overview-entry';
 import {
     DatasetRestService,
-    DataLakeMeasure,
+    DatasetMeasure,
     DatasetSummaryDto,
     ExportProviderService,
     ExportProviderSettings,
@@ -524,7 +524,7 @@ export class DatasetOverviewComponent
         return entry;
     }
 
-    private openRetentionLogDialog(dataset: DataLakeMeasure): void {
+    private openRetentionLogDialog(dataset: DatasetMeasure): void {
         const dialogRef: DialogRef<DataRetentionLogDialogComponent> =
             this.dialogService.open(DataRetentionLogDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,

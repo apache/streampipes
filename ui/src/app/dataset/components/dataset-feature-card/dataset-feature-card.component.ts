@@ -29,7 +29,7 @@ import {
 import {
     AssetConstants,
     AssetLinkType,
-    DataLakeMeasure,
+    DatasetMeasure,
     DatasetRestService,
     EventPropertyUnion,
     GenericStorageService,
@@ -68,7 +68,7 @@ export class DatasetFeatureCardComponent implements OnInit {
     @Input()
     onClose?: () => void;
 
-    dataset: DataLakeMeasure;
+    dataset: DatasetMeasure;
     assetLinkType: AssetLinkType;
     dataPreview: SpQueryResult;
     lastEventTs: number | undefined;

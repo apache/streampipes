@@ -29,7 +29,7 @@ import {
 import {
     DataExplorerDataConfig,
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DatasetMeasure,
     DatasetSummaryDto,
     DatasetRestService,
     SourceConfig,
@@ -124,16 +124,16 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     private route = inject(ActivatedRoute);
 
     @Input() dataConfig: DataExplorerDataConfig;
-    @Input() dataLakeMeasure: DataLakeMeasure;
+    @Input() dataLakeMeasure: DatasetMeasure;
     @Input() newWidgetMode: boolean;
     @Input() widgetId: string;
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
     @Output() createWidgetEmitter: EventEmitter<
-        Tuple2<DataLakeMeasure, DataExplorerWidgetModel>
-    > = new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
-    @Output() dataLakeMeasureChange: EventEmitter<DataLakeMeasure> =
-        new EventEmitter<DataLakeMeasure>();
+        Tuple2<DatasetMeasure, DataExplorerWidgetModel>
+    > = new EventEmitter<Tuple2<DatasetMeasure, DataExplorerWidgetModel>>();
+    @Output() dataLakeMeasureChange: EventEmitter<DatasetMeasure> =
+        new EventEmitter<DatasetMeasure>();
     @Output() configureVisualizationEmitter: EventEmitter<void> =
         new EventEmitter<void>();
 
@@ -270,7 +270,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     }
 
     private applySelectedMeasurement(
-        measure: DataLakeMeasure,
+        measure: DatasetMeasure,
         resetQueryConfig: boolean,
         refreshData: boolean,
     ): void {

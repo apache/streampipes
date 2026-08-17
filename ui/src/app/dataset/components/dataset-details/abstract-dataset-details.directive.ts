@@ -19,7 +19,7 @@
 import { Directive, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-    DataLakeMeasure,
+    DatasetMeasure,
     DatasetRestService,
 } from '@streampipes/platform-services';
 import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
@@ -34,7 +34,7 @@ export abstract class SpAbstractDatasetDetailsDirective {
 
     currentDatasetId: string;
     tabs: SpNavigationItem[] = [];
-    dataset: DataLakeMeasure;
+    dataset: DatasetMeasure;
     datasetNotFound = false;
 
     onInit(): void {
@@ -60,7 +60,7 @@ export abstract class SpAbstractDatasetDetailsDirective {
                     return;
                 }
 
-                this.dataset = DataLakeMeasure.fromData(dataset);
+                this.dataset = DatasetMeasure.fromData(dataset);
                 this.onDatasetLoaded();
             });
     }
