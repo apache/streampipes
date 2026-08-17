@@ -226,7 +226,7 @@ export class DatasetSeedUtils {
             return cy
                 .request<CsvImportPreviewResult>({
                     method: 'POST',
-                    url: '/streampipes-backend/api/v4/datalake/import/preview',
+                    url: '/streampipes-backend/api/v4/dataset/import/preview',
                     body: {
                         csvConfig: options.csvConfig,
                         headers: options.headers,
@@ -256,7 +256,7 @@ export class DatasetSeedUtils {
                     return cy
                         .request<CsvImportJobStartResult>({
                             method: 'POST',
-                            url: '/streampipes-backend/api/v4/datalake/import',
+                            url: '/streampipes-backend/api/v4/dataset/import',
                             body: request,
                             headers: {
                                 Authorization: `Bearer ${token}`,
@@ -291,7 +291,7 @@ export class DatasetSeedUtils {
         return cy
             .request<CsvImportJobStatus>({
                 method: 'GET',
-                url: `/streampipes-backend/api/v4/datalake/import/${encodeURIComponent(jobId)}`,
+                url: `/streampipes-backend/api/v4/dataset/import/${encodeURIComponent(jobId)}`,
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
