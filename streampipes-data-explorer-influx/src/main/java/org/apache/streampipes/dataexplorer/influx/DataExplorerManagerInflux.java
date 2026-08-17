@@ -24,8 +24,8 @@ import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
+import org.apache.streampipes.dataexplorer.api.IDatasetMeasurementCounter;
+import org.apache.streampipes.dataexplorer.api.IDatasetMeasurementSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.influx.sanitize.DatasetMeasurementSanitizerInflux;
@@ -43,7 +43,7 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   }
 
   @Override
-  public IDataLakeMeasurementCounter getMeasurementCounter(
+  public IDatasetMeasurementCounter getMeasurementCounter(
       List<DatasetMeasure> allMeasurements,
       List<String> measurementsToCount,
       int daysBack) {
@@ -81,7 +81,7 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   }
 
   @Override
-  public IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMeasure measure) {
+  public IDatasetMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMeasure measure) {
     return new DatasetMeasurementSanitizerInflux(client, measure);
   }
 }

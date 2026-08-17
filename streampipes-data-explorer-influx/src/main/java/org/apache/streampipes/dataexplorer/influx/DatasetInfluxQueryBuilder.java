@@ -20,9 +20,9 @@ package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
+import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
 import org.apache.streampipes.model.dataset.AggregationFunction;
-import org.apache.streampipes.model.dataset.DataLakeQueryOrdering;
+import org.apache.streampipes.model.dataset.DatasetQueryOrdering;
 import org.apache.streampipes.model.dataset.FilterCondition;
 import org.apache.streampipes.model.dataset.FilterExpressionCondition;
 import org.apache.streampipes.model.dataset.FilterExpressionGroup;
@@ -48,7 +48,7 @@ import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.asc;
 import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.desc;
 import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.select;
 
-public class DatasetInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> {
+public class DatasetInfluxQueryBuilder implements IDatasetQueryBuilder<Query> {
 
   private final String measurementId;
   private final SelectionQueryImpl selectionQuery;
@@ -106,7 +106,7 @@ public class DatasetInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> {
   }
 
   @Override
-  public IDataLakeQueryBuilder<Query> withAggregatedColumn(String columnName, AggregationFunction aggregationFunction) {
+  public IDatasetQueryBuilder<Query> withAggregatedColumn(String columnName, AggregationFunction aggregationFunction) {
     this.selectionQuery.function(aggregationFunction.toDbName(), escapeIdentifier(columnName));
 
     return this;
@@ -172,7 +172,7 @@ public class DatasetInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> {
   }
 
   @Override
-  public IDataLakeQueryBuilder<Query> withInclusiveFilter(List<FilterCondition> filterConditions) {
+  public IDatasetQueryBuilder<Query> withInclusiveFilter(List<FilterCondition> filterConditions) {
     List<ConjunctionClause> and = new ArrayList<>();
     filterConditions.forEach(c -> and
         .add(new AndConjunction(new SimpleClause(c.field(), c.operator(), c.condition()))));
@@ -183,7 +183,7 @@ public class DatasetInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> {
   }
 
   @Override
-  public IDataLakeQueryBuilder<Query> withFilterExpression(FilterExpressionGroup filterExpression) {
+  public IDatasetQueryBuilder<Query> withFilterExpression(FilterExpressionGroup filterExpression) {
     if (Objects.nonNull(filterExpression)
         && Objects.nonNull(filterExpression.children())
         && !filterExpression.children().isEmpty()) {
@@ -223,8 +223,8 @@ public class DatasetInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> {
   }
 
   @Override
-  public DatasetInfluxQueryBuilder withOrderBy(DataLakeQueryOrdering ordering) {
-    if (DataLakeQueryOrdering.ASC.equals(ordering)) {
+  public DatasetInfluxQueryBuilder withOrderBy(DatasetQueryOrdering ordering) {
+    if (DatasetQueryOrdering.ASC.equals(ordering)) {
       this.ordering = asc();
     } else {
       this.ordering = desc();
@@ -248,7 +248,7 @@ public class DatasetInfluxQueryBuilder implements IDataLakeQueryBuilder<Query> {
   }
 
   @Override
-  public IDataLakeQueryBuilder<Query> withFill(Object fill) {
+  public IDatasetQueryBuilder<Query> withFill(Object fill) {
     this.fill = fill;
 
     return this;

@@ -24,8 +24,8 @@ import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
+import org.apache.streampipes.dataexplorer.api.IDatasetMeasurementCounter;
+import org.apache.streampipes.dataexplorer.api.IDatasetMeasurementSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.iotdb.sanitize.DatasetMeasurementSanitizerIotDb;
 import org.apache.streampipes.manager.permission.DatasetPermissionManager;
@@ -39,7 +39,7 @@ import java.util.List;
 public class DataExplorerManagerIotDb implements IDataExplorerManager {
 
   @Override
-  public IDataLakeMeasurementCounter getMeasurementCounter(List<DatasetMeasure> allMeasurements,
+  public IDatasetMeasurementCounter getMeasurementCounter(List<DatasetMeasure> allMeasurements,
                                                            List<String> measurementsToCount,
                                                            int daysBack) {
     return new DatasetMeasurementCounterIotDb(allMeasurements, measurementsToCount, daysBack);
@@ -70,7 +70,7 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
   }
 
   @Override
-  public IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMeasure measure) {
+  public IDatasetMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMeasure measure) {
     return new DatasetMeasurementSanitizerIotDb(client, measure);
   }
 }
