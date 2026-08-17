@@ -16,20 +16,8 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.api;
+package org.apache.streampipes.model.dataset;
 
-import java.util.Map;
-
-/**
- * Interface for counting the number of events per measurement within the StreamPipes data storage.
- */
-public interface IDataLakeMeasurementCounter {
-
-  /**
-   * Counts the sizes of measurements within the StreamPipes data storage.
-   *
-   * @return A map where each key represents a measurement name and its corresponding value represents
-   *         the number of events contained by that measurement.
-   */
-  Map<String, Integer> countMeasurementSizes();
+public enum DatasetQueryOrdering {
+  ASC, DESC
 }

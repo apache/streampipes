@@ -29,14 +29,14 @@ import java.util.List;
 public interface IDataExplorerManager {
 
   /**
-   * Provide an instance of {@link IDataLakeMeasurementCounter} for counting the sizes of measurements within a data
-   * lake.
+   * Provide an instance of {@link IDatasetMeasurementCounter} for counting the sizes of measurements within a
+   * dataset.
    *
-   * @param allMeasurements     A list of {@link DatasetMeasure} objects representing all measurements in the data lake.
+   * @param allMeasurements     A list of {@link DatasetMeasure} objects representing all measurements in the dataset.
    * @param measurementsToCount A list of measurement names for which the sizes should be counted.
-   * @return An instance of {@link IDataLakeMeasurementCounter} configured to count the sizes of the specified measurements.
+   * @return An instance of {@link IDatasetMeasurementCounter} configured to count the sizes of the specified measurements.
    */
-  IDataLakeMeasurementCounter getMeasurementCounter(
+  IDatasetMeasurementCounter getMeasurementCounter(
       List<DatasetMeasure> allMeasurements,
       List<String> measurementsToCount,
       int daysBack
@@ -54,5 +54,5 @@ public interface IDataExplorerManager {
 
   ITimeSeriesStorage getTimeseriesStorage(DatasetMeasure measure, boolean ignoreDuplicates);
 
-  IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMeasure measure);
+  IDatasetMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMeasure measure);
 }

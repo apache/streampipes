@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.query;
 
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
+import org.apache.streampipes.dataexplorer.api.IDatasetMeasurementCounter;
 import org.apache.streampipes.model.dataset.DatasetMeasure;
 import org.apache.streampipes.model.dataset.SpQueryResult;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -35,7 +35,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public abstract class DatasetMeasurementCounter implements IDataLakeMeasurementCounter {
+public abstract class DatasetMeasurementCounter implements IDatasetMeasurementCounter {
 
   private static final Logger LOG = LoggerFactory.getLogger(DatasetMeasurementCounter.class);
 

@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
+import org.apache.streampipes.dataexplorer.api.IDatasetMeasurementSanitizer;
 import org.apache.streampipes.model.dataset.DatasetMeasure;
 import org.apache.streampipes.model.schema.EventProperty;
 
@@ -30,7 +30,7 @@ import java.util.List;
  * Base class with shared implementation that is common for all time series storage backends.
  * Leaves open the storage specific implementation
  */
-public abstract class DatasetMeasurementSanitizer implements IDataLakeMeasurementSanitizer {
+public abstract class DatasetMeasurementSanitizer implements IDatasetMeasurementSanitizer {
 
   protected final DatasetMeasure measure;
   protected final IStreamPipesClient client;

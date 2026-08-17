@@ -20,28 +20,28 @@ package org.apache.streampipes.dataexplorer.api;
 import org.apache.streampipes.model.dataset.DatasetMeasure;
 
 /**
- * The IDataLakeMeasurementSanitizer interface defines methods for sanitizing and registering or
- * updating data lake measures.
+ * The IDatasetMeasurementSanitizer interface defines methods for sanitizing and registering or
+ * updating dataset measures.
  * Implementations of this interface provide functionality to ensure that the measurement complies to
  * the requirements of the underlying time series storage, e.g., to not contain any reserved symbols.
  */
-public interface IDataLakeMeasurementSanitizer {
+public interface IDatasetMeasurementSanitizer {
 
   /**
-   * Sanitizes and registers a data lake measure.
+   * Sanitizes and registers a dataset measure.
    * This method should perform any necessary data validation and cleanup operations
-   * before registering the measure in the data lake.
+   * before registering the measure in the dataset storage.
    *
-   * @return The sanitized and registered data lake measure.
+   * @return The sanitized and registered dataset measure.
    */
   DatasetMeasure sanitizeAndRegister();
 
   /**
-   * Sanitizes and updates a data lake measure.
+   * Sanitizes and updates a dataset measure.
    * This method should perform any necessary data validation and cleanup operations
-   * before updating the measure in the data lake.
+   * before updating the measure in the dataset storage.
    *
-   * @return The sanitized and updated data lake measure.
+   * @return The sanitized and updated dataset measure.
    */
   DatasetMeasure sanitizeAndUpdate();
 

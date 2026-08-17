@@ -21,67 +21,67 @@ package org.apache.streampipes.dataexplorer.api;
 
 
 import org.apache.streampipes.model.dataset.AggregationFunction;
-import org.apache.streampipes.model.dataset.DataLakeQueryOrdering;
+import org.apache.streampipes.model.dataset.DatasetQueryOrdering;
 import org.apache.streampipes.model.dataset.FilterCondition;
 import org.apache.streampipes.model.dataset.FilterExpressionGroup;
 
 import java.util.List;
 
-public interface IDataLakeQueryBuilder<T> {
+public interface IDatasetQueryBuilder<T> {
 
-  IDataLakeQueryBuilder<T> withAllColumns();
+  IDatasetQueryBuilder<T> withAllColumns();
 
-  IDataLakeQueryBuilder<T> withSimpleColumn(String columnName);
+  IDatasetQueryBuilder<T> withSimpleColumn(String columnName);
 
-  IDataLakeQueryBuilder<T> withSimpleColumns(List<String> columnNames);
+  IDatasetQueryBuilder<T> withSimpleColumns(List<String> columnNames);
 
-  IDataLakeQueryBuilder<T> withAggregatedColumn(String columnName,
+  IDatasetQueryBuilder<T> withAggregatedColumn(String columnName,
                                             AggregationFunction aggregationFunction,
                                             String targetName);
 
-  IDataLakeQueryBuilder<T> withAggregatedColumn(String columnName,
+  IDatasetQueryBuilder<T> withAggregatedColumn(String columnName,
                                                 AggregationFunction aggregationFunction);
 
-  IDataLakeQueryBuilder<T> withStartTime(long startTime);
+  IDatasetQueryBuilder<T> withStartTime(long startTime);
 
-  IDataLakeQueryBuilder<T> withEndTime(long endTime);
+  IDatasetQueryBuilder<T> withEndTime(long endTime);
 
-  IDataLakeQueryBuilder<T> withEndTime(long endTime,
+  IDatasetQueryBuilder<T> withEndTime(long endTime,
                                    boolean includeEndTime);
 
-  IDataLakeQueryBuilder<T> withTimeBoundary(long startTime,
+  IDatasetQueryBuilder<T> withTimeBoundary(long startTime,
                                         long endTime);
 
-  IDataLakeQueryBuilder<T> withFilter(String field,
+  IDatasetQueryBuilder<T> withFilter(String field,
                                   String operator,
                                   Object value);
 
-  IDataLakeQueryBuilder<T> withExclusiveFilter(String field,
+  IDatasetQueryBuilder<T> withExclusiveFilter(String field,
                                            String operator,
                                            List<?> values);
 
-  IDataLakeQueryBuilder<T> withInclusiveFilter(String field,
+  IDatasetQueryBuilder<T> withInclusiveFilter(String field,
                                             String operator,
                                             List<?> values);
 
-  IDataLakeQueryBuilder<T> withInclusiveFilter(List<FilterCondition> filterConditions);
+  IDatasetQueryBuilder<T> withInclusiveFilter(List<FilterCondition> filterConditions);
 
-  IDataLakeQueryBuilder<T> withFilterExpression(FilterExpressionGroup filterExpression);
+  IDatasetQueryBuilder<T> withFilterExpression(FilterExpressionGroup filterExpression);
 
-  IDataLakeQueryBuilder<T> withGroupByTime(String timeInterval);
+  IDatasetQueryBuilder<T> withGroupByTime(String timeInterval);
 
-  IDataLakeQueryBuilder<T> withGroupByTime(String timeInterval,
+  IDatasetQueryBuilder<T> withGroupByTime(String timeInterval,
                                        String offsetInterval);
 
-  IDataLakeQueryBuilder<T> withGroupBy(String column);
+  IDatasetQueryBuilder<T> withGroupBy(String column);
 
-  IDataLakeQueryBuilder<T> withOrderBy(DataLakeQueryOrdering ordering);
+  IDatasetQueryBuilder<T> withOrderBy(DatasetQueryOrdering ordering);
 
-  IDataLakeQueryBuilder<T> withLimit(int limit);
+  IDatasetQueryBuilder<T> withLimit(int limit);
 
-  IDataLakeQueryBuilder<T> withOffset(int offset);
+  IDatasetQueryBuilder<T> withOffset(int offset);
 
-  IDataLakeQueryBuilder<T> withFill(Object fill);
+  IDatasetQueryBuilder<T> withFill(Object fill);
 
   T build();
 }
