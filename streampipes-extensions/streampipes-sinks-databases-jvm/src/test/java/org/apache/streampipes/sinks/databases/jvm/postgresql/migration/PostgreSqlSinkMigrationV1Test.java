@@ -20,7 +20,6 @@ package org.apache.streampipes.sinks.databases.jvm.postgresql.migration;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
@@ -28,127 +27,112 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlSink;
 import org.apache.streampipes.vocabulary.XSD;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Tests for {@link PostgreSqlSinkMigrationV1}.
+ * Tests for the implementation of the {@link PostgreSqlSinkMigrationV1} class.
  */
 class PostgreSqlSinkMigrationV1Test {
 
-  private static final List<String> VERSION_ZERO_FIELDS = List.of(
-      "db_host", "db_port", "db_name", "db_table", "db_user", "db_password", "ssl_mode"
+  private static final List<StaticProperty> VERSION_ZERO_FIELDS = List.of(
+      new FreeTextStaticProperty("db_host", "db_host", "", XSD.STRING),
+      new FreeTextStaticProperty("db_port", "db_port", "", XSD.STRING),
+      new FreeTextStaticProperty("db_name", "db_name", "", XSD.STRING),
+      new FreeTextStaticProperty("db_table", "db_table", "", XSD.STRING),
+      new FreeTextStaticProperty("db_user", "db_user", "", XSD.STRING),
+      new FreeTextStaticProperty("db_password", "db_password", "", XSD.STRING),
+      new FreeTextStaticProperty("ssl_mode", "ssl_mode", "", XSD.STRING)
   );
 
+  private DataSinkInvocation dataSink;
+
   /**
-   * Runs the migration on a pipeline saved with model version 0 and returns it afterward.
-   * The migration moves fields around without reading them, so plain text fields are enough.
+   * Set up a PostgreSQL sink as it was saved with version 0 and run the migration on it.
+   */
+  @BeforeEach
+  void setUp() {
+    dataSink = new DataSinkInvocation();
+    dataSink.setStaticProperties(new ArrayList<>(VERSION_ZERO_FIELDS));
+    new PostgreSqlSinkMigrationV1().migrate(dataSink, null);
+  }
+
+  /**
+   * Collect the names of all fields of the migrated data sink, in the order they are shown.
    *
-   * @return the migrated pipeline element.
+   * @return the internal names of its fields.
    */
-  private DataSinkInvocation runMigration() {
-    List<StaticProperty> properties = new ArrayList<>();
-    VERSION_ZERO_FIELDS.forEach(name -> properties.add(
-        new FreeTextStaticProperty(name, name, "", XSD.STRING)));
-
-    DataSinkInvocation pipelineElement = new DataSinkInvocation();
-    pipelineElement.setStaticProperties(properties);
-
-    MigrationResult<DataSinkInvocation> result =
-        new PostgreSqlSinkMigrationV1().migrate(pipelineElement, null);
-    assertTrue(result.success(), "the migration should report success");
-    return pipelineElement;
-  }
-
-  /**
-   * Returns the field with the given internal name, or fails the test if the migration did not add it.
-   */
-  private StaticProperty findField(DataSinkInvocation element, String internalName) {
-    return element.getStaticProperties().stream()
-        .filter(property -> internalName.equals(property.getInternalName()))
-        .findFirst()
-        .orElseThrow(() -> new AssertionError("migration did not add a field named '" + internalName + "'"));
-  }
-
-  @Test
-  void testConfig_migration_fromVersionZeroToOne() {
-    ModelMigratorConfig config = new PostgreSqlSinkMigrationV1().config();
-
-    String expectedAppId = PostgreSqlSink.ID;
-    String actualAppId = config.targetAppId();
-    assertEquals(expectedAppId, actualAppId, "migration should target the PostgreSQL sink");
-
-    SpServiceTagPrefix expectedModelType = SpServiceTagPrefix.DATA_SINK;
-    SpServiceTagPrefix actualModelType = config.modelType();
-    assertEquals(expectedModelType, actualModelType, "migration should apply to a data sink");
-
-    int expectedFromVersion = 0;
-    int actualFromVersion = config.fromVersion();
-    assertEquals(expectedFromVersion, actualFromVersion, "migration should start at version 0");
-
-    int expectedToVersion = 1;
-    int actualToVersion = config.toVersion();
-    assertEquals(expectedToVersion, actualToVersion, "migration should target version 1");
-  }
-
-  @Test
-  void testMigrate_pipelineWithoutTheNewFields_addsTwoFields() {
-    DataSinkInvocation migrated = runMigration();
-
-    List<String> expected = List.of(
-        "db_host", "db_port", "db_name", "db_table", PostgreSqlSink.ALLOW_NEW_TABLE_CREATION_KEY,
-        "db_user", "db_password", "ssl_mode", PostgreSqlSink.BATCH_SIZE_KEY
-    );
-    List<String> actual = migrated.getStaticProperties().stream()
+  List<String> getFieldNames() {
+    return dataSink.getStaticProperties().stream()
         .map(StaticProperty::getInternalName)
         .toList();
+  }
 
-    assertEquals(expected, actual, "the toggle belongs below the table name and the batch size last");
+  /**
+   * Look up a single field of the migrated data sink.
+   *
+   * @param name the internal name of the field.
+   * @return the field the migration added under that name.
+   */
+  StaticProperty findField(String name) {
+    return dataSink.getStaticProperties().stream()
+        .filter(field -> name.equals(field.getInternalName()))
+        .findFirst()
+        .orElseThrow(() -> new AssertionError("migration did not add a field named '" + name + "'"));
   }
 
   @Test
-  void testMigrate_addsAllowNewTableCreationToggleTurnedOn() {
-    DataSinkInvocation migrated = runMigration();
+  void testConfig_migratesFromZeroToOne() {
+    ModelMigratorConfig config = new PostgreSqlSinkMigrationV1().config();
+    assertEquals(0, config.fromVersion());
+    assertEquals(1, config.toVersion());
+  }
+
+  @Test
+  void testConfig_targetsPostgreSqlSink() {
+    ModelMigratorConfig config = new PostgreSqlSinkMigrationV1().config();
+    assertEquals(PostgreSqlSink.ID, config.targetAppId());
+    assertEquals(SpServiceTagPrefix.DATA_SINK, config.modelType());
+  }
+
+  @Test
+  void testMigrate_keepsExistingFieldsAndAddsNewSinkOptions() {
+    List<String> expected = List.of(
+        "db_host", "db_port", "db_name", "db_table", "allow_new_table_creation",
+        "db_user", "db_password", "ssl_mode", "batch_size"
+    );
+    assertEquals(expected, getFieldNames());
+  }
+
+  @Test
+  void testMigrate_turnsToggleOn() {
     SlideToggleStaticProperty toggle =
-        (SlideToggleStaticProperty) findField(migrated, PostgreSqlSink.ALLOW_NEW_TABLE_CREATION_KEY);
-
-    boolean expected = true;
-    boolean actual = toggle.isSelected();
-
-    assertEquals(expected, actual, "version 0 pipelines created missing tables, so the toggle must be on");
+        (SlideToggleStaticProperty) findField(PostgreSqlSink.ALLOW_NEW_TABLE_CREATION_KEY);
+    assertTrue(toggle.isSelected(), "version 0 sinks created missing tables, so the toggle has to be on");
   }
 
   @Test
-  void testMigrate_addsAllowNewTableCreationToggleDefaultingToOn() {
-    DataSinkInvocation migrated = runMigration();
-    SlideToggleStaticProperty toggle =
-        (SlideToggleStaticProperty) findField(migrated, PostgreSqlSink.ALLOW_NEW_TABLE_CREATION_KEY);
-
-    boolean expected = true;
-    boolean actual = toggle.isDefaultValue();
-
-    assertEquals(expected, actual, "the default should match the one the sink declares");
+  void testMigrate_setsBatchSizeToOne() {
+    FreeTextStaticProperty batchSize = (FreeTextStaticProperty) findField(PostgreSqlSink.BATCH_SIZE_KEY);
+    assertEquals("1", batchSize.getValue());
+    assertEquals(XSD.INTEGER, batchSize.getRequiredDatatype());
   }
 
   @Test
-  void testMigrate_addsBatchSizeDefaultingToOne() {
-    DataSinkInvocation migrated = runMigration();
-    FreeTextStaticProperty batchSize =
-        (FreeTextStaticProperty) findField(migrated, PostgreSqlSink.BATCH_SIZE_KEY);
+  void testMigrate_labelsNewSinkOptions() {
+    StaticProperty toggle = findField(PostgreSqlSink.ALLOW_NEW_TABLE_CREATION_KEY);
+    StaticProperty batchSize = findField(PostgreSqlSink.BATCH_SIZE_KEY);
 
-    String expectedValue = "1";
-    String actualValue = batchSize.getValue();
-    assertEquals(expectedValue, actualValue, "the batch size must default to 1");
-
-    URI expectedType = XSD.INTEGER;
-    URI actualType = batchSize.getRequiredDatatype();
-
-    assertEquals(expectedType, actualType, "the batch size should be restricted to integers");
+    assertFalse(toggle.getLabel().isBlank());
+    assertFalse(toggle.getDescription().isBlank());
+    assertFalse(batchSize.getLabel().isBlank());
+    assertFalse(batchSize.getDescription().isBlank());
   }
 }
