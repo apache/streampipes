@@ -20,11 +20,11 @@ package org.apache.streampipes.extensions.all.iiot;
 
 import org.apache.streampipes.connect.iiot.IIoTAdaptersExtensionModuleExport;
 import org.apache.streampipes.connectors.ros.RosConnectorsModuleExport;
-import org.apache.streampipes.extensions.connectors.cdc.CdcConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.filewatcher.FileWatcherConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.influx.InfluxConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.kafka.KafkaConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.mqtt.MqttConnectorsModuleExport;
+import org.apache.streampipes.extensions.connectors.mssql.MsSqlConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.nats.NatsConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.opcua.OpcUaConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.plc.PlcConnectorsModuleExport;
@@ -89,7 +89,7 @@ public class AllExtensionsIIoTInit extends StreamPipesExtensionsServiceBase {
             new InternalSinksExtensionModuleExports(),
             new NotificationsExtensionModuleExport(),
             new LlmExtensionModuleExport(),
-            new CdcConnectorsModuleExport()
+            new MsSqlConnectorsModuleExport()
         )
         .registerRuntimeProvider(new StandaloneStreamPipesRuntimeProvider())
         .registerMessagingProtocols(
