@@ -235,20 +235,20 @@
                         </button>
                         <button
                             mat-menu-item
+                            [attr.data-cy]="'open-manage-' + element.name"
+                            (click)="showPermissionsDialog(element)"
+                        >
+                            <mat-icon>share</mat-icon>
+                            <span>{{ 'Manage permissions' | translate }}</span>
+                        </button>
+                        <button
+                            mat-menu-item
                             data-cy="datalake-delete-btn"
                             [disabled]="!element.remove"
                             (click)="deleteDataset(element.name)"
                         >
                             <mat-icon>delete</mat-icon>
                             <span>{{ 'Delete dataset' | translate }}</span>
-                        </button>
-                        <button
-                            mat-menu-item
-                            data-cy="open-manage-permissions"
-                            (click)="showPermissionsDialog(element)"
-                        >
-                            <mat-icon>share</mat-icon>
-                            <span>{{ 'Manage permissions' | translate }}</span>
                         </button>
                     }
                 </ng-template>

@@ -519,7 +519,9 @@ export class ObjectManageDialogComponent<
         );
     }
 
-    private getResourceNameProperty(resource: TResource): 'title' | 'name' {
+    private getResourceNameProperty(
+        resource: TResource,
+    ): 'title' | 'name' | 'measureName' {
         return (
             this.resourceConfig.nameProperty ??
             (resource.title !== undefined ? 'title' : 'name')

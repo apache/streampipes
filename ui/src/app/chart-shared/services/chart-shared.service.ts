@@ -27,7 +27,6 @@ import {
 import {
     DataDownloadDialogComponent,
     DialogService,
-    ObjectPermissionDialogComponent,
     PanelType,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
@@ -54,25 +53,6 @@ export class ChartSharedService {
             );
             return chart.timeSettings as TimeSettings;
         }
-    }
-
-    openPermissionsDialog(
-        elementId: string,
-        headerTitle: string,
-        anonymousReadSupported: boolean = false,
-        publicLink: string = '',
-    ) {
-        return this.dialogService.open(ObjectPermissionDialogComponent, {
-            panelType: PanelType.SLIDE_IN_PANEL,
-            title: this.translateService.instant('Manage permissions'),
-            width: '50vw',
-            data: {
-                objectInstanceId: elementId,
-                headerTitle,
-                anonymousReadSupported,
-                publicLink,
-            },
-        });
     }
 
     downloadDataAsFile(

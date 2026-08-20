@@ -28,7 +28,6 @@ import {
     DialogService,
     ObjectManageDialogComponent,
     ObjectManageDialogResourceConfig,
-    ObjectPermissionDialogComponent,
     PanelType,
 } from '@streampipes/shared-ui';
 import { PipelineStatusDialogComponent } from '../dialog/pipeline-status/pipeline-status-dialog.component';
@@ -241,20 +240,27 @@ export class PipelineOperationsService {
         pipelineSummary: PipelineSummaryDto,
         refreshPipelinesEmitter: EventEmitter<boolean>,
     ) {
-        const dialogRef = this.dialogService.open(
-            ObjectPermissionDialogComponent,
-            {
-                panelType: PanelType.SLIDE_IN_PANEL,
-                title: 'Manage permissions',
-                width: '70vw',
-                data: {
-                    objectInstanceId: pipelineSummary.elementId,
-                    headerTitle:
-                        'Manage permissions for pipeline ' +
-                        pipelineSummary.name,
+        const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Manage',
+            width: '50vw',
+            data: {
+                objectInstanceId: pipelineSummary.elementId,
+                resource: {
+                    _id: pipelineSummary.elementId,
+                    name: pipelineSummary.name,
                 },
+                saveMode: 'immediate',
+                resourceConfig: {
+                    resourceLabel: 'Pipeline',
+                    nameLabel: 'Pipeline name',
+                    nameProperty: 'name',
+                    showResourceFields: false,
+                    showAssetLinking: false,
+                } as ObjectManageDialogResourceConfig<Pipeline>,
+                headerTitle: 'Manage Pipeline ' + pipelineSummary.name,
             },
-        );
+        });
 
         dialogRef.afterClosed().subscribe(refresh => {
             refreshPipelinesEmitter.emit(refresh);
