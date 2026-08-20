@@ -257,7 +257,8 @@ export class KeyboardShortcutService implements OnDestroy {
         const tag = element?.tagName;
         return (
             ['INPUT', 'TEXTAREA', 'SELECT'].includes(tag) ||
-            element?.isContentEditable
+            element?.isContentEditable ||
+            !!element?.closest?.('.monaco-editor')
         );
     }
 }

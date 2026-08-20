@@ -245,6 +245,66 @@ describe('KeyboardShortcutService', () => {
         document.body.removeChild(input);
     }));
 
+    it('should ignore shortcuts when a Monaco editor is focused', () => {
+        let fired = false;
+        service.register('test', [
+            {
+                key: 'a',
+                shift: true,
+                action: () => {
+                    fired = true;
+                },
+            },
+        ]);
+
+        const monacoEditor = document.createElement('div');
+        monacoEditor.classList.add('monaco-editor');
+        const editorSurface = document.createElement('div');
+        monacoEditor.appendChild(editorSurface);
+        document.body.appendChild(monacoEditor);
+
+        const event = new KeyboardEvent('keydown', {
+            key: 'A',
+            shiftKey: true,
+            bubbles: true,
+        });
+        Object.defineProperty(event, 'target', {
+            value: editorSurface,
+            enumerable: true,
+        });
+
+        editorSurface.dispatchEvent(event);
+
+        expect(fired).toBe(false);
+
+        document.body.removeChild(monacoEditor);
+    });
+
+    it('should not show shortcut hints when a Monaco editor is focused', fakeAsync(() => {
+        const monacoEditor = document.createElement('div');
+        monacoEditor.classList.add('monaco-editor');
+        const editorSurface = document.createElement('div');
+        monacoEditor.appendChild(editorSurface);
+        document.body.appendChild(monacoEditor);
+
+        const shiftEvent = new KeyboardEvent('keydown', {
+            key: 'Shift',
+            shiftKey: true,
+            bubbles: true,
+        });
+        Object.defineProperty(shiftEvent, 'target', {
+            value: editorSurface,
+            enumerable: true,
+        });
+
+        editorSurface.dispatchEvent(shiftEvent);
+        tick(200);
+
+        expect(service.shortcutHintsVisible()).toBe(false);
+
+        document.body.removeChild(monacoEditor);
+    }));
+
     it('should fire Shift shortcuts before hints appear', fakeAsync(() => {
         let fired = false;
         service.register('test', [

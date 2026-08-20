@@ -47,6 +47,7 @@ export interface AssetSummaryDto {
     elementId: string;
     assetName: string;
     assetDescription: string;
+    siteId?: string | null;
     removable: boolean;
 }
 
