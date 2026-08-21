@@ -455,7 +455,7 @@ export class DatasetOverviewComponent
     showPermissionsDialog(element: DatasetOverviewEntry): void {
         this.datasetRestService.getMeasurement(element.elementId).subscribe({
             next: dataset => {
-                const resourceConfig: ObjectManageDialogResourceConfig<DataLakeMeasure> =
+                const resourceConfig: ObjectManageDialogResourceConfig<DatasetMeasure> =
                     {
                         resourceLabel: 'Dataset',
                         nameLabel: 'Dataset name',
