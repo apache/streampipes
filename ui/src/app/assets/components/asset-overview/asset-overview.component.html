@@ -94,6 +94,14 @@
                             </div>
                         </td>
                     </ng-container>
+                    <ng-container matColumnDef="location">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                            {{ 'Location' | translate }}
+                        </th>
+                        <td mat-cell *matCellDef="let asset">
+                            {{ getLocationLabel(asset) }}
+                        </td>
+                    </ng-container>
                     <ng-template spTableActions let-element>
                         <button
                             mat-menu-item

@@ -234,7 +234,7 @@
                     refreshPipelinesEmitter
                 )
             "
-            data-cy="open-manage-pipeline"
+            [attr.data-cy]="'open-manage-' + element.name"
         >
             <mat-icon>share</mat-icon>
             <span>{{ 'Manage' | translate }}</span>

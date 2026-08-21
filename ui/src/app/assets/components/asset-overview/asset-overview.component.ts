@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
     MatCell,
     MatCellDef,
@@ -27,6 +27,7 @@ import {
 } from '@angular/material/table';
 import {
     AssetSummaryDto,
+    AssetSiteDesc,
     AssetManagementService,
     SpAssetModel,
 } from '@streampipes/platform-services';
@@ -94,7 +95,7 @@ type ManageableAsset = SpAssetModel & {
         TranslatePipe,
     ],
 })
-export class SpAssetOverviewComponent implements OnInit {
+export class SpAssetOverviewComponent implements OnInit, OnDestroy {
     private assetService = inject(AssetManagementService);
     private breadcrumbService = inject(SpBreadcrumbService);
     private dialogService = inject(DialogService);
@@ -107,8 +108,9 @@ export class SpAssetOverviewComponent implements OnInit {
 
     existingAssets: AssetSummaryDto[] = [];
     filteredAssets: AssetSummaryDto[] = [];
+    sitesById: Record<string, AssetSiteDesc> = {};
 
-    displayedColumns: string[] = ['assetName', 'actions'];
+    displayedColumns: string[] = ['assetName', 'location', 'actions'];
 
     @ViewChild(MatSort)
     sort: MatSort;
@@ -119,7 +121,8 @@ export class SpAssetOverviewComponent implements OnInit {
     hasWritePrivilege = false;
 
     assetFilter$: Subscription;
-    currentFilterIds = new Set<string>();
+    assetData$: Subscription;
+    currentFilterIds?: Set<string>;
 
     private assetFilterService = inject(SpAssetBrowserService);
 
@@ -129,6 +132,22 @@ export class SpAssetOverviewComponent implements OnInit {
         );
         this.breadcrumbService.updateBreadcrumb(
             this.breadcrumbService.getRootLink(SpAssetRoutes.BASE),
+        );
+
+        this.dataSource.sortingDataAccessor = (asset, column) => {
+            if (column === 'location') {
+                return this.getLocationLabel(asset);
+            }
+
+            return asset[column];
+        };
+
+        this.assetData$ = this.assetBrowserService.assetData$.subscribe(
+            assetData => {
+                this.sitesById = Object.fromEntries(
+                    (assetData?.sites ?? []).map(site => [site._id, site]),
+                );
+            },
         );
 
         this.loadAssets();
@@ -158,6 +177,11 @@ export class SpAssetOverviewComponent implements OnInit {
             });
     }
 
+    ngOnDestroy(): void {
+        this.assetFilter$?.unsubscribe();
+        this.assetData$?.unsubscribe();
+    }
+
     loadAssets(): void {
         this.assetService.getAssetSummary().subscribe(result => {
             this.existingAssets = result.resources.sort((a, b) =>
@@ -167,7 +191,7 @@ export class SpAssetOverviewComponent implements OnInit {
         });
     }
 
-    applyAssetFilters(elementIds: Set<string>): void {
+    applyAssetFilters(elementIds?: Set<string>): void {
         if (elementIds === undefined || elementIds.size === 0) {
             this.filteredAssets = this.existingAssets;
         } else {
@@ -177,6 +201,14 @@ export class SpAssetOverviewComponent implements OnInit {
         }
         this.dataSource.sort = this.sort;
         this.dataSource.data = this.filteredAssets;
+    }
+
+    getLocationLabel(asset: AssetSummaryDto): string {
+        if (asset.siteId) {
+            return this.sitesById[asset.siteId]?.label ?? '-';
+        }
+
+        return '-';
     }
 
     createNewAsset() {

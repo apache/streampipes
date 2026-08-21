@@ -385,7 +385,7 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
                 chart.healthStatus === 'REQUIRES_ATTENTION',
             showDataCyId: `show-chart-${sanitizedName}`,
             editDataCyId: `edit-chart-${sanitizedName}`,
-            manageDataCyId: `open-manage-permissions-${sanitizedName}`,
+            manageDataCyId: `open-manage-${chart.name}`,
             deleteDataCyId: `delete-chart-${chart.name}`,
         };
     }

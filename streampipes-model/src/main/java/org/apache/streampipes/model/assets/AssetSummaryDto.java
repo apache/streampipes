@@ -21,5 +21,6 @@ package org.apache.streampipes.model.assets;
 public record AssetSummaryDto(String elementId,
                               String assetName,
                               String assetDescription,
+                              String siteId,
                               boolean removable) {
 }

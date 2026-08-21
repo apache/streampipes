@@ -26,6 +26,7 @@ export interface ObjectManageDialogResource {
     elementId?: string;
     title?: string;
     name?: string;
+    measureName?: string;
     description?: string;
     updatedAt?: number;
     lastModified?: number;
@@ -38,7 +39,7 @@ export interface ObjectManageDialogResourceConfig<
     nameLabel?: string;
     descriptionLabel?: string;
     idProperty?: '_id' | 'elementId';
-    nameProperty?: 'title' | 'name';
+    nameProperty?: 'title' | 'name' | 'measureName';
     descriptionProperty?: string;
     showResourceFields?: boolean;
     showAssetLinking?: boolean;
