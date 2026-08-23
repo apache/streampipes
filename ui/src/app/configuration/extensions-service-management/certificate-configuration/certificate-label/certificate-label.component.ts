@@ -31,11 +31,14 @@ export class CertificateLabelComponent implements OnInit {
     certificate: Certificate;
 
     dnsNames: string[] = [];
+    applicationUri: string;
 
     ngOnInit(): void {
         this.dnsNames = this.certificate.subjectAlternativeNames.filter(san =>
             san.startsWith('DNS'),
         );
-        console.log(this.dnsNames);
+        this.applicationUri = this.certificate.subjectAlternativeNames.find(
+            san => san.startsWith('URI'),
+        );
     }
 }
