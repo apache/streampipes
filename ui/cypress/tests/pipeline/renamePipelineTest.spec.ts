@@ -26,15 +26,17 @@ describe('Test rename of running pipeline', () => {
     });
 
     it('Perform Test', () => {
+        const pipelineName = 'Pipeline Test';
+
         PipelineUtils.addSampleAdapterAndPipeline();
 
         PipelineUtils.verifyPipelineCount(1);
-        PipelineUtils.verifyPipelineName('Pipeline Test');
+        PipelineUtils.verifyPipelineName(pipelineName);
 
-        GeneralUtils.openMenuForRow('Pipeline Test');
+        GeneralUtils.openMenuForRow(pipelineName);
         cy.wait(1000);
 
-        PipelineBtns.managePipeline().click();
+        PipelineBtns.managePipeline(pipelineName).should('be.visible').click();
         PipelineUtils.renameManagedPipeline('Renamed Pipeline');
         PipelineBtns.editorSaveBtn().click();
 
