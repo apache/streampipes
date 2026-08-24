@@ -25,9 +25,8 @@ export class PermissionUtils {
 
         GeneralUtils.visibleMaterialMenu();
 
-        cy.dataCy('open-manage-' + resourceName)
-            .should('be.visible')
-            .click();
+        const selector = CSS.escape(`open-manage-${resourceName}`);
+        cy.dataCy(selector).should('be.visible').click();
     }
 
     public static changeOwnership(resourceName: string, email: string) {
@@ -76,23 +75,9 @@ export class PermissionUtils {
     }
 
     public static validateUserCanNotChangePermissions(resourceName: string) {
-        GeneralUtils.openMenuForRow(resourceName);
-        GeneralUtils.visibleMaterialMenu().then($menu => {
-            const managePermissionsButton = $menu.find(
-                `[data-cy="open-manage-permissions-${resourceName}"]`,
-            );
-
-            if (managePermissionsButton.length > 0) {
-                cy.wrap(managePermissionsButton).should('be.visible').click();
-                cy.dataCy('warning-permissions-managed-by-owner').should(
-                    'exist',
-                );
-                PermissionUtils.cancel();
-            } else {
-                cy.wrap(managePermissionsButton).should('not.exist');
-                GeneralUtils.closeVisibleMaterialMenu();
-            }
-        });
+        PermissionUtils.openManagePermissions(resourceName);
+        cy.dataCy('warning-permissions-managed-by-owner').should('exist');
+        PermissionUtils.cancel();
     }
 
     public static validateUserCanChangePermissions(resourceName: string) {
