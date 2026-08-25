@@ -25,8 +25,6 @@ import java.util.function.Supplier;
 
 public abstract class AbstractConfigFactory {
 
-  private static final String COLON = ":";
-
   protected KafkaTransportProtocol protocol;
 
   public AbstractConfigFactory(KafkaTransportProtocol protocol) {
@@ -41,7 +39,7 @@ public abstract class AbstractConfigFactory {
   }
 
   protected String getBrokerUrl() {
-    return protocol.getBrokerHostname() + COLON + protocol.getKafkaPort();
+    return protocol.resolveBootstrapServers();
   }
 
   public Properties buildProperties(List<KafkaConfigAppender> appenders) {

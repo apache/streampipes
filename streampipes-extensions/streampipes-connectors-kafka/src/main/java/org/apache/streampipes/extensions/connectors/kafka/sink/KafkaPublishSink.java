@@ -61,7 +61,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
         KafkaPublishSink::new,
-        DataSinkBuilder.create(ID, 2)
+        DataSinkBuilder.create(ID, 3)
             .category(DataSinkType.MESSAGING)
             .withLocales(Locales.EN)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
@@ -71,8 +71,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
                 .build())
 
             .requiredTextParameter(Labels.withId(KafkaConfigProvider.TOPIC_KEY), false, false)
-            .requiredTextParameter(Labels.withId(KafkaConfigProvider.HOST_KEY), false, false)
-            .requiredIntegerParameter(Labels.withId(KafkaConfigProvider.PORT_KEY), 9092)
+            .requiredTextParameter(Labels.withId(KafkaConfigProvider.BOOTSTRAP_SERVERS_KEY), false, false)
 
             .requiredAlternatives(Labels.withId(KafkaConfigProvider.ACCESS_MODE),
                 KafkaConfigProvider.getAlternativeUnauthenticatedPlain(),
@@ -96,7 +95,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
     this.extensionsLogger = runtimeContext.getLogger();
 
     this.producer = new SpKafkaProducer(
-        kafkaConfig.getKafkaHost() + ":" + kafkaConfig.getKafkaPort(),
+        kafkaConfig.getBootstrapServers(),
         kafkaConfig.getTopic(),
         kafkaConfig.getConfigAppenders());
   }

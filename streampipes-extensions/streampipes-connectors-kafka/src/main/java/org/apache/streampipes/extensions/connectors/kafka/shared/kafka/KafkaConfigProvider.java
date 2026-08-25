@@ -33,8 +33,7 @@ import java.util.List;
 public class KafkaConfigProvider {
 
   public static final String TOPIC_KEY = "topic";
-  public static final String HOST_KEY = "host";
-  public static final String PORT_KEY = "port";
+  public static final String BOOTSTRAP_SERVERS_KEY = "bootstrap-servers";
 
   public static final String ACCESS_MODE = "access-mode";
   public static final String UNAUTHENTICATED_PLAIN = "unauthenticated-plain";
@@ -73,12 +72,8 @@ public class KafkaConfigProvider {
     return HIDE_INTERNAL_TOPICS;
   }
 
-  public static Label getHostLabel() {
-    return Labels.withId(HOST_KEY);
-  }
-
-  public static Label getPortLabel() {
-    return Labels.withId(PORT_KEY);
+  public static Label getBootstrapServersLabel() {
+    return Labels.withId(BOOTSTRAP_SERVERS_KEY);
   }
 
   public static Label getAccessModeLabel() {

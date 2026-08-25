@@ -40,11 +40,10 @@ import java.util.stream.Collectors;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.ACCESS_MODE;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.ADDITIONAL_PROPERTIES;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.AUTO_OFFSET_RESET_CONFIG;
+import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.BOOTSTRAP_SERVERS_KEY;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.CONSUMER_GROUP;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.GROUP_ID_INPUT;
-import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.HOST_KEY;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.PASSWORD_KEY;
-import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.PORT_KEY;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.RANDOM_GROUP_ID;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.SECURITY_MECHANISM;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.TOPIC_KEY;
@@ -95,8 +94,8 @@ public class KafkaConfigExtractor {
                                                              T config) {
     var configAppenders = new ArrayList<KafkaConfigAppender>();
     var env = Environments.getEnvironment();
-    config.setKafkaHost(extractor.singleValueParameter(HOST_KEY, String.class));
-    config.setKafkaPort(extractor.singleValueParameter(PORT_KEY, Integer.class));
+    config.setBootstrapServers(KafkaBootstrapServersParser.parse(
+        extractor.singleValueParameter(BOOTSTRAP_SERVERS_KEY, String.class)));
 
     var authentication = extractor.selectedAlternativeInternalId(ACCESS_MODE);
     var securityProtocol = getSecurityProtocol(authentication);
