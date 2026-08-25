@@ -75,9 +75,20 @@ export class PermissionUtils {
     }
 
     public static validateUserCanNotChangePermissions(resourceName: string) {
-        PermissionUtils.openManagePermissions(resourceName);
-        cy.dataCy('warning-permissions-managed-by-owner').should('exist');
-        PermissionUtils.cancel();
+        GeneralUtils.openMenuForRow(resourceName);
+        GeneralUtils.visibleMaterialMenu().then($menu => {
+            const selector = CSS.escape(`open-manage-${resourceName}`);
+            const button = $menu.find(`[data-cy=${selector}]`);
+
+            if (!button.length) {
+                GeneralUtils.closeVisibleMaterialMenu();
+                return;
+            }
+
+            cy.wrap(button).should('be.visible').click();
+            cy.dataCy('warning-permissions-managed-by-owner').should('exist');
+            PermissionUtils.cancel();
+        });
     }
 
     public static validateUserCanChangePermissions(resourceName: string) {
