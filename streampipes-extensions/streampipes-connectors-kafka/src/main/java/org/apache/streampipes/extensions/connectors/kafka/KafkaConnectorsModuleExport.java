@@ -27,6 +27,7 @@ import org.apache.streampipes.extensions.connectors.kafka.migration.KafkaAdapter
 import org.apache.streampipes.extensions.connectors.kafka.migration.KafkaAdapterMigrationV2;
 import org.apache.streampipes.extensions.connectors.kafka.migration.KafkaSinkMigrationV1;
 import org.apache.streampipes.extensions.connectors.kafka.migration.KafkaSinkMigrationV2;
+import org.apache.streampipes.extensions.connectors.kafka.migration.KafkaSinkMigrationV3;
 import org.apache.streampipes.extensions.connectors.kafka.sink.KafkaPublishSink;
 
 import java.util.List;
@@ -52,7 +53,8 @@ public class KafkaConnectorsModuleExport implements IExtensionModuleExport {
         new KafkaAdapterMigrationV1(),
         new KafkaSinkMigrationV1(),
         new KafkaAdapterMigrationV2(),
-        new KafkaSinkMigrationV2()
+        new KafkaSinkMigrationV2(),
+        new KafkaSinkMigrationV3()
     );
   }
 }
