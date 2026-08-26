@@ -587,9 +587,12 @@ export class CsvImportDialogComponent {
     }
 
     private toColumnModel(column: CsvImportColumn): CsvImportColumnModel {
-        const initialType = this.toDefaultColumnType(
-            column.runtimeType || column.inferredType || 'STRING',
-        );
+        const sourceType =
+            column.runtimeType || column.inferredType || 'STRING';
+        const initialType =
+            this.targetMode() === 'EXISTING'
+                ? this.toSupportedColumnType(sourceType)
+                : this.toDefaultColumnType(sourceType);
         const property = new EventPropertyPrimitive();
         property['@class'] =
             'org.apache.streampipes.model.schema.EventPropertyPrimitive';
@@ -637,37 +640,54 @@ export class CsvImportDialogComponent {
         switch (type) {
             case 'BOOLEAN':
                 return DataType.BOOLEAN;
+            case 'INTEGER':
+                return DataType.INTEGER;
             case 'LONG':
                 return DataType.LONG;
             case 'FLOAT':
                 return DataType.FLOAT;
+            case 'DOUBLE':
+                return DataType.DOUBLE;
             default:
                 return DataType.STRING;
         }
     }
 
-    private fromRuntimeType(
-        type: string,
-    ): 'STRING' | 'BOOLEAN' | 'LONG' | 'FLOAT' {
+    private fromRuntimeType(type: string): CsvRuntimeType {
         if (type === DataType.BOOLEAN) {
             return 'BOOLEAN';
-        } else if (type === DataType.LONG || type === DataType.INTEGER) {
+        } else if (type === DataType.INTEGER) {
+            return 'INTEGER';
+        } else if (type === DataType.LONG) {
             return 'LONG';
-        } else if (type === DataType.FLOAT || type === DataType.DOUBLE) {
+        } else if (type === DataType.FLOAT) {
             return 'FLOAT';
+        } else if (type === DataType.DOUBLE) {
+            return 'DOUBLE';
         }
         return 'STRING';
     }
 
-    private toDefaultColumnType(
-        type: string,
-    ): 'STRING' | 'BOOLEAN' | 'LONG' | 'FLOAT' {
+    private toDefaultColumnType(type: string): CsvRuntimeType {
         if (type === 'BOOLEAN') {
             return 'BOOLEAN';
         } else if (type === 'STRING') {
             return 'STRING';
         }
         return 'FLOAT';
+    }
+
+    private toSupportedColumnType(type: string): CsvRuntimeType {
+        switch (type) {
+            case 'BOOLEAN':
+            case 'INTEGER':
+            case 'LONG':
+            case 'FLOAT':
+            case 'DOUBLE':
+                return type;
+            default:
+                return 'STRING';
+        }
     }
 
     private invalidatePreview(): void {
