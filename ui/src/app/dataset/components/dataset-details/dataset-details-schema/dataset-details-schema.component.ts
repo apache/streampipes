@@ -44,6 +44,11 @@ import {
 } from '@angular/material/table';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SpConfigurationRoutes } from '../../../../configuration/configuration.breadcrumb';
+import {
+    DataType,
+    EventPropertyPrimitive,
+    EventPropertyUnion,
+} from '@streampipes/platform-services';
 
 interface SchemaRow {
     runtimeName: string;
@@ -106,15 +111,28 @@ export class DatasetDetailsSchemaComponent
         const schemaRows = eventProperties.map(property => ({
             runtimeName: property.runtimeName || 'n/a',
             label: property.label || 'n/a',
-            dataType:
-                this.pipelineElementSchemaService.getFriendlyRuntimeType(
-                    property,
-                ),
+            dataType: this.getDataType(property),
             propertyScope: property.propertyScope,
             description: property.description || 'n/a',
         }));
 
         return [this.makeTimestampRow(), ...schemaRows];
+    }
+
+    private getDataType(property: EventPropertyUnion): string {
+        if (property instanceof EventPropertyPrimitive) {
+            const dataType = DataType.getAllTypes().find(
+                type => type.id === property.runtimeType,
+            );
+
+            if (dataType) {
+                return dataType.label;
+            }
+        }
+
+        return this.pipelineElementSchemaService.getFriendlyRuntimeType(
+            property,
+        );
     }
 
     private makeTimestampRow(): SchemaRow {
