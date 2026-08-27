@@ -34,6 +34,7 @@ import org.apache.streampipes.vocabulary.XSD;
 
 import java.io.IOException;
 import java.io.PushbackReader;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -379,9 +380,11 @@ class CsvImportParser {
       }
 
       return switch (finalRuntimeType(column, timestampColumn)) {
-        case "BOOLEAN" -> Boolean.parseBoolean(trimmed.toLowerCase(Locale.ENGLISH));
-        case "LONG" -> Long.parseLong(normalizeNumber(trimmed, config));
-        case "FLOAT" -> Double.parseDouble(normalizeNumber(trimmed, config));
+        case "BOOLEAN" -> parseBoolean(trimmed);
+        case "INTEGER" -> new BigDecimal(normalizeNumber(trimmed, config)).intValueExact();
+        case "LONG" -> new BigDecimal(normalizeNumber(trimmed, config)).longValueExact();
+        case "FLOAT" -> Float.parseFloat(normalizeNumber(trimmed, config));
+        case "DOUBLE" -> Double.parseDouble(normalizeNumber(trimmed, config));
         default -> trimmed;
       };
     } catch (RuntimeException e) {
@@ -413,6 +416,13 @@ class CsvImportParser {
 
   private boolean isBoolean(String value) {
     return "true".equalsIgnoreCase(value.trim()) || "false".equalsIgnoreCase(value.trim());
+  }
+
+  private boolean parseBoolean(String value) {
+    if (!isBoolean(value)) {
+      throw new IllegalArgumentException("Value is not a boolean");
+    }
+    return Boolean.parseBoolean(value);
   }
 
   private boolean isNumber(String value, CsvImportConfiguration config) {
@@ -477,8 +487,10 @@ class CsvImportParser {
   private String toRuntimeTypeUri(String runtimeType) {
     return switch (runtimeType) {
       case "BOOLEAN" -> XSD.BOOLEAN.toString();
+      case "INTEGER" -> XSD.INTEGER.toString();
       case "LONG" -> XSD.LONG.toString();
       case "FLOAT" -> XSD.FLOAT.toString();
+      case "DOUBLE" -> XSD.DOUBLE.toString();
       default -> XSD.STRING.toString();
     };
   }
