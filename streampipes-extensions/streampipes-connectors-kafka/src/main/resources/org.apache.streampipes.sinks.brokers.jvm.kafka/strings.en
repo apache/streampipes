@@ -58,3 +58,27 @@ username-group.title=Username and password
 
 additional-properties.title=Additional configurations
 additional-properties.description=Additional Kafka producer configurations in the form key=value
+
+message-key-mode.title=Message Key
+message-key-mode.description=Defines the key that is attached to each published record
+
+no-message-key.title=No key
+no-message-key.description=Records are published without a key
+
+static-message-key.title=Static value
+static-message-key.description=The same key is attached to every record
+
+static-message-key-value.title=Key value
+static-message-key-value.description=The key that is attached to every record
+
+field-message-key.title=Event field
+field-message-key.description=The value of an event field is used as key
+
+field-message-key-value.title=Key field
+field-message-key-value.description=The event field whose value is used as key
+
+expression-message-key.title=Expression
+expression-message-key.description=The key is built from text and event fields
+
+expression-message-key-value.title=Key expression
+expression-message-key-value.description=Text with field placeholders
