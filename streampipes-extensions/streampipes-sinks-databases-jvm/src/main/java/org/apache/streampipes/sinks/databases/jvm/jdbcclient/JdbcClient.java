@@ -50,6 +50,18 @@ public class JdbcClient {
 
   protected StatementHandler statementHandler;
 
+  /*
+   * Controls whether the sink may create the target table if it does not exist yet.
+   * If false, the sink only writes into a table provided by the user and fails if it is missing.
+   */
+  protected boolean allowNewTableCreation = true;
+
+  /*
+   * Number of events to buffer before one batch insert (one round trip to the database).
+   * The default value is 1 which means it sends one statement per event.
+   */
+  protected int batchSize = 1;
+
   /**
    * A wrapper class for all supported SQL data types (INT, BIGINT, FLOAT, DOUBLE, VARCHAR(255)).
    * If no matching type is found, it is interpreted as a String (VARCHAR(255))
@@ -172,19 +184,39 @@ public class JdbcClient {
       // Database should exist by now so we can establish a connection
       connection = DriverManager.getConnection(url + databaseName, this.dbDescription.getUsername(),
           this.dbDescription.getPassword());
+      prepareConnection();
       this.statementHandler.setStatement(connection.createStatement());
-      ResultSet rs = connection.getMetaData().getTables(null, null, this.tableDescription.getName(), null);
-      if (rs.next()) {
+      ResultSet rs = connection.getMetaData().getTables(
+          null,
+          getTableSchemaPattern(),
+          this.tableDescription.getName(),
+          null);
+      boolean tableAlreadyExists = rs.next();
+      rs.close();
+      if (tableAlreadyExists) {
         validateTable();
+      } else if (!this.allowNewTableCreation) {
+        // The user does not allow the sink to create tables, so the table has to be there already
+        throw new SpRuntimeException("Table '" + this.tableDescription.getName()
+            + "' does not exist and the option 'Allow New Table Creation' is disabled. "
+            + "Check that the table name matches an existing table in your database, "
+            + "or enable the option to let the sink create one automatically.");
       } else {
         createTable();
       }
       this.tableDescription.setTableExists();
-      rs.close();
     } catch (SQLException e) {
       closeAll();
       throw new SpRuntimeException(e.getMessage());
     }
+  }
+
+  protected void prepareConnection() throws SQLException {
+
+  }
+
+  protected String getTableSchemaPattern() throws SQLException {
+    return null;
   }
 
   /**
@@ -194,26 +226,41 @@ public class JdbcClient {
    * @throws SpRuntimeException When there was an error in the saving process
    */
   protected void save(final Event event) throws SpRuntimeException {
-    //TODO: Add batch support (https://stackoverflow.com/questions/3784197/efficient-way-to-do-batch-inserts-with-jdbc)
-    checkConnected();
-    Map<String, Object> eventMap = event.getRaw();
     if (event == null) {
       throw new SpRuntimeException("event is null");
     }
+    checkConnected();
+    Map<String, Object> eventMap = event.getRaw();
     if (!this.tableDescription.tableExists()) {
+      if (!this.allowNewTableCreation) {
+        throw new SpRuntimeException("Table '" + this.tableDescription.getName() + "' is not available.");
+      }
       // Creates the table
       createTable();
       this.tableDescription.setTableExists();
     }
     try {
       checkConnected();
-      this.statementHandler.executePreparedStatement(
-          this.dbDescription, this.tableDescription,
-          connection, eventMap);
+      if (this.batchSize > 1) {
+        // Collects events and sends them together in one batch insert
+        this.statementHandler.addToBatch(
+            this.dbDescription, this.tableDescription,
+            connection, eventMap);
+        if (this.statementHandler.getPendingBatchCount() >= this.batchSize) {
+          this.statementHandler.executeBatch();
+        }
+      } else {
+        // Sends one statement per event
+        this.statementHandler.executePreparedStatement(
+            this.dbDescription, this.tableDescription,
+            connection, eventMap);
+      }
     } catch (SQLException e) {
-      if (e.getSQLState().substring(0, 2).equals("42")) {
+      boolean tableMissing = e.getSQLState() != null && e.getSQLState().startsWith("42");
+      if (tableMissing && this.allowNewTableCreation && this.batchSize <= 1) {
         // If the table does not exists (because it got deleted or something, will cause the error
         // code "42") we will try to create a new one. Otherwise we do not handle the exception.
+        // Skipped when the user does not allow table creation, or when events are still waiting to be written.
         LOG.warn("Table '" + this.tableDescription.getName() + "' was unexpectedly not found and gets recreated.");
         this.tableDescription.setTableMissing();
         createTable();
@@ -259,6 +306,15 @@ public class JdbcClient {
    */
   protected void closeAll() {
     boolean error = false;
+    try {
+      // Write out any events still buffered in the batch before we close the connection
+      if (this.statementHandler != null) {
+        this.statementHandler.executeBatch();
+      }
+    } catch (SQLException e) {
+      error = true;
+      LOG.warn("Exception when flushing the batch: " + e.getMessage());
+    }
     try {
       if (this.statementHandler.statement != null) {
         this.statementHandler.statement.close();
