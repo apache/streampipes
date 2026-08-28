@@ -18,16 +18,16 @@
 
 package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.client.model.StreamPipesClientConfig;
+import org.apache.streampipes.model.dataset.SpQueryResult;
 
-/**
- * @deprecated Use {@link DatasetResourceApi} instead.
- */
-@Deprecated(since = "0.99.0", forRemoval = true)
-public class DataLakeResourceApi extends DatasetResourceApi implements IDataLakeResourceApi {
+import java.util.Map;
 
-  public DataLakeResourceApi(StreamPipesClientConfig clientConfig) {
-    super(clientConfig);
-  }
+public interface IDatasetResourceApi {
+
+  void delete(String measurementID, Long startDate, Long endDate);
+
+  void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch);
+
+  SpQueryResult get(String measurementID, Map<String, String> queryParams);
 
 }
