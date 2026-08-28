@@ -344,7 +344,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         Each path within the URL is defined as an own string.
         """
 
-        return "api", "v4", "datalake", "measurements"
+        return "api", "v4", "dataset", "measurements"
 
     def get(self, identifier: str, **kwargs: dict[str, Any] | None) -> QueryResult:
         """Queries the specified data lake measure from the API.

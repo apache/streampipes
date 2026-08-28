@@ -62,7 +62,7 @@
                 [rowsClickable]="true"
                 (rowClicked)="openDatasetDetails($event.elementId)"
                 matSort
-                data-cy="datalake-settings"
+                data-cy="dataset-settings"
             >
                 <ng-container matColumnDef="name">
                     <th mat-header-cell mat-sort-header *matHeaderCellDef>
@@ -88,7 +88,7 @@
                     </th>
                     <td
                         mat-cell
-                        data-cy="datalake-last-event"
+                        data-cy="dataset-last-event"
                         *matCellDef="let configurationEntry"
                     >
                         @if (configurationEntry.lastEventLoading) {
@@ -125,7 +125,7 @@
                                         [matTooltip]="
                                             'Set retention rate' | translate
                                         "
-                                        data-cy="datalake-retention-btn"
+                                        data-cy="dataset-retention-btn"
                                         matTooltipPosition="above"
                                         (click)="
                                             openRetentionDialog(
@@ -177,7 +177,7 @@
                                                           : 'yyyy-MM-dd HH:mm:ss')
                                                 : '')
                                         "
-                                        data-cy="datalake-retention-log-btn"
+                                        data-cy="dataset-retention-log-btn"
                                         matTooltipPosition="above"
                                         (click)="
                                             openRetentionLog(
@@ -218,7 +218,7 @@
                     </button>
                     <button
                         mat-menu-item
-                        data-cy="datalake-download-btn"
+                        data-cy="dataset-download-btn"
                         (click)="openDownloadDialog(element.name)"
                     >
                         <mat-icon>download</mat-icon>
@@ -227,7 +227,7 @@
                     @if (writeAccess) {
                         <button
                             mat-menu-item
-                            data-cy="datalake-truncate-btn"
+                            data-cy="dataset-truncate-btn"
                             (click)="truncateDataset(element.name)"
                         >
                             <mat-icon>local_fire_department</mat-icon>
@@ -243,7 +243,7 @@
                         </button>
                         <button
                             mat-menu-item
-                            data-cy="datalake-delete-btn"
+                            data-cy="dataset-delete-btn"
                             [disabled]="!element.remove"
                             (click)="deleteDataset(element.name)"
                         >

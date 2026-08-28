@@ -44,11 +44,20 @@ add_license_header() {
     mv "$temp_file" "$file"
 }
 
+mark_class_properties_as_declare() {
+    local file="$1"
+
+    sed -i'' "s/'@class':/declare '@class':/g" "$file"
+}
+
 # generate model
 mvn typescript-generator:generate -f streampipes-model/pom.xml
 
 # add license header to the generated model file
 add_license_header streampipes-model/target/typescript-generator/streampipes-model.ts
+
+# Avoid TS2612 errors for generated subclass '@class' properties in Angular partial compilation mode
+mark_class_properties_as_declare streampipes-model/target/typescript-generator/streampipes-model.ts
 
 # copy the model file to the UI project
 cp streampipes-model/target/typescript-generator/streampipes-model.ts ui/projects/streampipes/platform-services/src/lib/model/gen/

@@ -23,7 +23,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.TimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.influx.sanitize.InfluxNameSanitizer;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
@@ -39,7 +39,7 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
   private final PropertyHandler propertyHandler;
 
   public TimeSeriesStorageInflux(
-      DataLakeMeasure measure,
+      DatasetMeasure measure,
       Environment environment,
       InfluxClientProvider influxClientProvider
   ) throws SpRuntimeException {
@@ -47,7 +47,7 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
   }
 
   public TimeSeriesStorageInflux(
-      DataLakeMeasure measure,
+      DatasetMeasure measure,
       boolean ignoreDuplicates,
       Environment environment,
       InfluxClientProvider influxClientProvider

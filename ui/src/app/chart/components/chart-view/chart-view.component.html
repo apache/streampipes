@@ -98,7 +98,7 @@
                             <div fxLayout="column" fxFlex="100">
                                 <sp-chart-designer-panel
                                     [currentlyConfiguredWidget]="dataView"
-                                    [dataLakeMeasure]="dataLakeMeasure"
+                                    [datasetMeasure]="datasetMeasure"
                                     (addWidgetEmitter)="onAddWidget($event)"
                                     fxFlex="100"
                                 >
@@ -138,7 +138,7 @@
                                         [observableGenerator]="
                                             observableGenerator
                                         "
-                                        [dataLakeMeasure]="
+                                        [datasetMeasure]="
                                             dataView.dataConfig.sourceConfigs[0]
                                                 .measure
                                         "

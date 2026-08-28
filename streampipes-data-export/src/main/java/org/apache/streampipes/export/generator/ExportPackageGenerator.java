@@ -92,7 +92,7 @@ public class ExportPackageGenerator {
 
     var dashboardResourceManager = resourceManager.manageDashboards();
     var pipelineResourceManager = resourceManager.managePipelines();
-    var datasetResourceManager = resourceManager.manageDataLakeMeasures();
+    var datasetResourceManager = resourceManager.manageDatasetMeasures();
     var fileMetadataStorage = resourceManager.getFileMetadataStorage();
 
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {

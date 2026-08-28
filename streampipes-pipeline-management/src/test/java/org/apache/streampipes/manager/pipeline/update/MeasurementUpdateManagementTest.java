@@ -50,8 +50,8 @@ class MeasurementUpdateManagementTest {
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
     var pipelineStorage = mock(IPipelineStorage.class);
     var management = new MeasurementUpdateManagement(pipelineStorage, chartSchemaUpdateCoordinator);
-    var storedPipeline = makePipeline(makeDataLakeSink(makeSchema(property("temperature", XSD.INTEGER))));
-    var updatedPipeline = makePipeline(makeDataLakeSink(makeSchema(property("temperature", XSD.LONG))));
+    var storedPipeline = makePipeline(makeDatasetSink(makeSchema(property("temperature", XSD.INTEGER))));
+    var updatedPipeline = makePipeline(makeDatasetSink(makeSchema(property("temperature", XSD.LONG))));
     when(chartSchemaUpdateCoordinator.checkChartMigrations(Collections.singleton(any()), any())).thenReturn(List.of());
 
     var result = management.checkPipelineMigrations(storedPipeline, updatedPipeline);
@@ -64,8 +64,8 @@ class MeasurementUpdateManagementTest {
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
     var pipelineStorage = mock(IPipelineStorage.class);
     var management = new MeasurementUpdateManagement(pipelineStorage, chartSchemaUpdateCoordinator);
-    var storedPipeline = makePipeline(makeDataLakeSink(makeSchema(property("temperature", XSD.INTEGER))));
-    var updatedPipeline = makePipeline(makeDataLakeSink(makeSchema(property("temperature", XSD.STRING))));
+    var storedPipeline = makePipeline(makeDatasetSink(makeSchema(property("temperature", XSD.INTEGER))));
+    var updatedPipeline = makePipeline(makeDatasetSink(makeSchema(property("temperature", XSD.STRING))));
     when(chartSchemaUpdateCoordinator.checkChartMigrations(Collections.singleton(any()), any())).thenReturn(List.of());
 
     var result = management.checkPipelineMigrations(storedPipeline, updatedPipeline);
@@ -80,8 +80,8 @@ class MeasurementUpdateManagementTest {
     var chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
     var pipelineStorage = mock(IPipelineStorage.class);
     var management = new MeasurementUpdateManagement(pipelineStorage, chartSchemaUpdateCoordinator);
-    var storedPipeline = makePipeline(makeDataLakeSink(makeSchema(property("temperature", XSD.INTEGER))));
-    var updatedPipeline = makePipeline(makeDataLakeSink(makeSchema()));
+    var storedPipeline = makePipeline(makeDatasetSink(makeSchema(property("temperature", XSD.INTEGER))));
+    var updatedPipeline = makePipeline(makeDatasetSink(makeSchema()));
     var chartSchemaUpdateInfo = new ChartSchemaUpdateInfo();
     chartSchemaUpdateInfo.setChartId("chart-1");
     chartSchemaUpdateInfo.setChartTitle("Chart");
@@ -103,7 +103,7 @@ class MeasurementUpdateManagementTest {
     return pipeline;
   }
 
-  private DataSinkInvocation makeDataLakeSink(EventSchema eventSchema) {
+  private DataSinkInvocation makeDatasetSink(EventSchema eventSchema) {
     var stream = new SpDataStream();
     stream.setElementId("stream-1");
     stream.setEventSchema(eventSchema);

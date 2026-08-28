@@ -40,7 +40,7 @@ func NewDataLakeDashborad(clientConfig config.StreamPipesClientConfig) *DataLake
 }
 
 func (d *DataLakeDashboard) GetSingleDataLakeDashboard(dashboardId string) (data_lake.Dashboard, error) {
-	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/datalake/dashboard", []string{dashboardId})
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/dataset/dashboard", []string{dashboardId})
 	log.Printf("Get data from: %s", endPointUrl)
 
 	response, err := d.executeRequest("GET", endPointUrl, nil)
@@ -70,7 +70,7 @@ func (d *DataLakeDashboard) GetSingleDataLakeDashboard(dashboardId string) (data
 }
 
 func (d *DataLakeDashboard) GetAllDataLakeDashboard() ([]data_lake.Dashboard, error) {
-	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/datalake/dashboard", nil)
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/dataset/dashboard", nil)
 	log.Printf("Get data from: %s", endPointUrl)
 
 	response, err := d.executeRequest("GET", endPointUrl, nil)
@@ -100,7 +100,7 @@ func (d *DataLakeDashboard) GetAllDataLakeDashboard() ([]data_lake.Dashboard, er
 }
 
 func (d *DataLakeDashboard) DeleteSingleDataLakeDashboard(dashboardId string) error {
-	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/datalake/dashboard", []string{dashboardId})
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/dataset/dashboard", []string{dashboardId})
 	log.Printf("Delete data from: %s", endPointUrl)
 
 	response, err := d.executeRequest("DELETE", endPointUrl, nil)

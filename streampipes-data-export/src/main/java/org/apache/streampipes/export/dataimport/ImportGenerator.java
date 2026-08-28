@@ -100,7 +100,7 @@ public abstract class ImportGenerator<T> {
 
     for (String measurementId : manifest.getDataLakeMeasures()) {
       try {
-        handleDataLakeMeasure(asString(previewFiles.get(measurementId)), measurementId);
+        handleDataset(asString(previewFiles.get(measurementId)), measurementId);
       } catch (DocumentConflictException e) {
         LOG.warn("Skipping import of data lake measure {} (already present with the same id)", measurementId);
       }
@@ -156,7 +156,7 @@ public abstract class ImportGenerator<T> {
 
   protected abstract void handlePipeline(String document, String pipelineId) throws JsonProcessingException;
 
-  protected abstract void handleDataLakeMeasure(String document, String dataLakeMeasureId)
+  protected abstract void handleDataset(String document, String datasetMeasureId)
       throws JsonProcessingException;
 
   protected abstract void handleFile(String document, String fileMetadataId, Map<String, byte[]> zipContent)
@@ -168,7 +168,7 @@ public abstract class ImportGenerator<T> {
   protected abstract void handleSite(String document, String siteId)
       throws JsonProcessingException;
 
-  protected abstract void handleGenericStorageDocument(String document, String dataLakeMeasureId)
+  protected abstract void handleGenericStorageDocument(String document, String datasetMeasureId)
       throws JsonProcessingException;
 
   protected abstract T getReturnObject();

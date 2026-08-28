@@ -21,7 +21,7 @@ import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
 import {
     ClientDashboardItem,
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DatasetMeasure,
 } from '@streampipes/platform-services';
 import {
     FlexDirective,
@@ -51,7 +51,7 @@ export class DashboardSlideViewComponent
 {
     selectedWidgetIndex = 0;
     currentWidget: DataExplorerWidgetModel;
-    currentMeasure: DataLakeMeasure;
+    currentMeasure: DatasetMeasure;
     currentDashboardItem: ClientDashboardItem;
 
     displayWidget = false;
@@ -67,7 +67,7 @@ export class DashboardSlideViewComponent
         setTimeout(() => {
             this.selectedWidgetIndex = index;
             this.currentWidget = this.configuredWidgets.get(dataViewElementId);
-            this.currentMeasure = this.dataLakeMeasures.get(dataViewElementId);
+            this.currentMeasure = this.datasetMeasures.get(dataViewElementId);
             this.currentDashboardItem = this.dashboard.widgets[index];
             this.displayWidget = true;
         });
