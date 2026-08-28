@@ -29,7 +29,7 @@ StreamPipes Compose is a simple collection of user-friendly `docker-compose` fil
 ```bash
 docker-compose up -d
 ```
-Go to http://localhost to finish the installation in the browser. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://streampipes.apache.org/docs/user-guide-tour/) to learn how to create your first pipeline!
+Go to http://localhost to finish the installation in the browser. Once finished, switch to the pipeline editor and start the interactive tour or check the [online tour](https://streampipes.apache.org/docs/user-guide-introduction/) to learn how to create your first pipeline!
 
 ## Prerequisite
 * Docker >= 17.06.0

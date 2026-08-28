@@ -44,7 +44,7 @@ If Go is not installed, you can download and install it from the [official Go we
 
 Access to a running instance of Apache StreamPipes is required.
 
-If you do not have it set up yet, please refer to the [Apache StreamPipes installation guide](https://streampipes.apache.org/docs/try-installation/) for detailed instructions on how to install and configure it on your system.
+If you do not have it set up yet, please refer to the [Apache StreamPipes installation guide](https://streampipes.apache.org/docs/quick-start-guide/) for detailed instructions on how to install and configure it on your system.
 
 Once these requirements are met, you are ready to proceed with the next step Quickstart in the setup process!
 
