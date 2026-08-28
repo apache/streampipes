@@ -108,6 +108,62 @@ class CsvDatasetImportServiceTest {
   }
 
   @Test
+  void shouldPreserveAllPrimitiveTypesForExistingMeasurement() {
+    var schemaManagement = mock(IDataExplorerSchemaManagement.class);
+    var dataWriter = mock(DatasetDataWriter.class);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
+
+    var existingMeasure = new DatasetMeasure();
+    existingMeasure.setMeasureName("existing-measure");
+    existingMeasure.setTimestampField("s0::timestamp");
+    existingMeasure.setEventSchema(new EventSchema(List.of(
+        makePrimitive("integerValue", XSD.INTEGER.toString(), "MEASUREMENT_PROPERTY"),
+        makePrimitive("longValue", XSD.LONG.toString(), "MEASUREMENT_PROPERTY"),
+        makePrimitive("floatValue", XSD.FLOAT.toString(), "MEASUREMENT_PROPERTY"),
+        makePrimitive("doubleValue", XSD.DOUBLE.toString(), "MEASUREMENT_PROPERTY"),
+        makePrimitive("booleanValue", XSD.BOOLEAN.toString(), "DIMENSION_PROPERTY"),
+        makePrimitive("stringValue", XSD.STRING.toString(), "DIMENSION_PROPERTY")
+    )));
+    when(schemaManagement.getExistingMeasureByName("existing-measure"))
+        .thenReturn(Optional.of(existingMeasure));
+
+    var previewRequest = new CsvImportPreviewRequest();
+    previewRequest.setCsvConfig(makeCsvConfig());
+    previewRequest.setHeaders(List.of(
+        "timestamp",
+        "integerValue",
+        "longValue",
+        "floatValue",
+        "doubleValue",
+        "booleanValue",
+        "stringValue"
+    ));
+    previewRequest.setRows(List.of(List.of(
+        "1710000000000",
+        "17.0",
+        "2147483648.0",
+        "1.25",
+        "1.23456789012345",
+        "true",
+        "value"
+    )));
+    previewRequest.setTarget(makeTarget(CsvImportTargetMode.EXISTING, "existing-measure"));
+
+    var previewResult = service.preview(previewRequest);
+
+    assertTrue(previewResult.isValid());
+    assertEquals(List.of("LONG", "INTEGER", "LONG", "FLOAT", "DOUBLE", "BOOLEAN", "STRING"),
+        previewResult.getColumns().stream().map(CsvImportColumn::getRuntimeType).toList());
+
+    var schemaRequest = new CsvImportSchemaValidationRequest();
+    schemaRequest.setTarget(previewRequest.getTarget());
+    schemaRequest.setTimestampColumn("timestamp");
+    schemaRequest.setColumns(previewResult.getColumns());
+
+    assertTrue(service.validateSchema(schemaRequest).isValid());
+  }
+
+  @Test
   void shouldCreateNewMeasurementAndReuseSharedWriter() {
     var schemaManagement = mock(IDataExplorerSchemaManagement.class);
     var dataWriter = mock(DatasetDataWriter.class);
@@ -414,6 +470,14 @@ class CsvDatasetImportServiceTest {
     temperature.setPropertyScope("MEASUREMENT_PROPERTY");
 
     return new EventSchema(List.of(timestamp, temperature));
+  }
+
+  private EventPropertyPrimitive makePrimitive(String runtimeName, String runtimeType, String propertyScope) {
+    var property = new EventPropertyPrimitive();
+    property.setRuntimeName(runtimeName);
+    property.setRuntimeType(runtimeType);
+    property.setPropertyScope(propertyScope);
+    return property;
   }
 
   private CsvImportJobStatus awaitTerminalStatus(

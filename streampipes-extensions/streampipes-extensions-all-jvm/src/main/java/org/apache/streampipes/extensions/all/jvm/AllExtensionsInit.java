@@ -21,11 +21,11 @@ import org.apache.streampipes.connect.GeneralAdaptersExtensionModuleExport;
 import org.apache.streampipes.connect.iiot.IIoTAdaptersExtensionModuleExport;
 import org.apache.streampipes.connectors.ros.RosConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.camel.azure.CamelAzureConnectorsModuleExport;
-import org.apache.streampipes.extensions.connectors.cdc.CdcConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.filewatcher.FileWatcherConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.influx.InfluxConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.kafka.KafkaConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.mqtt.MqttConnectorsModuleExport;
+import org.apache.streampipes.extensions.connectors.mssql.MsSqlConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.nats.NatsConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.opcua.OpcUaConnectorsModuleExport;
 import org.apache.streampipes.extensions.connectors.plc.PlcConnectorsModuleExport;
@@ -72,7 +72,7 @@ public class AllExtensionsInit extends StreamPipesExtensionsServiceBase {
 
             new CamelAzureConnectorsModuleExport(),
             new FileWatcherConnectorsModuleExport(),
-            new CdcConnectorsModuleExport(),
+            new MsSqlConnectorsModuleExport(),
             new InfluxConnectorsModuleExport(),
             new KafkaConnectorsModuleExport(),
             new MqttConnectorsModuleExport(),

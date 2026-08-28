@@ -33,6 +33,10 @@ public class StatementHandler {
 
   public Statement statement;
   public PreparedStatement preparedStatement;
+
+  // Number of events currently buffered in the batch but not yet sent to the database
+  private int pendingBatchCount = 0;
+
   /**
    * The parameters in the prepared statement {@code ps} together with their index and data type
    */
@@ -136,6 +140,9 @@ public class StatementHandler {
       } else {
         if (!eventParameterMap.containsKey(newKey)) {
           //TODO: start the for loop all over again
+
+          // Write the collected events first, otherwise they are lost when the statement is rebuilt
+          executeBatch();
           generatePreparedStatement(dbDescription, tableDescription, connection, event);
         }
         ParameterInformation p = eventParameterMap.get(newKey);
@@ -163,6 +170,42 @@ public class StatementHandler {
     }
     fillPreparedStatement(dbDescription, tableDescription, connection, event, "");
     this.preparedStatement.executeUpdate();
+  }
+
+  /**
+   * Fills the prepared statement with the given event and adds it to the JDBC batch instead of
+   * executing it immediately. To send all buffered rows to the database in one round trip.
+   *
+   * @param event Data to be saved in the SQL table
+   * @throws SQLException       When the statement cannot be filled
+   * @throws SpRuntimeException When the table name is not allowed
+   */
+  public void addToBatch(DbDescription dbDescription, TableDescription tableDescription,
+                         Connection connection, final Map<String, Object> event)
+          throws SQLException, SpRuntimeException {
+    if (this.getPreparedStatement() != null) {
+      this.preparedStatement.clearParameters();
+    }
+    fillPreparedStatement(dbDescription, tableDescription, connection, event, "");
+    this.preparedStatement.addBatch();
+    this.pendingBatchCount++;
+  }
+
+  /**
+   * Sends all buffered rows to the database in a single round trip and resets the counter.
+   * Does nothing if there is no statement or nothing is buffered.
+   *
+   * @throws SQLException When the batch cannot be executed.
+   */
+  public void executeBatch() throws SQLException {
+    if (this.preparedStatement != null && this.pendingBatchCount > 0) {
+      this.preparedStatement.executeBatch();
+      this.pendingBatchCount = 0;
+    }
+  }
+
+  public int getPendingBatchCount() {
+    return this.pendingBatchCount;
   }
 
   public PreparedStatement getPreparedStatement() {

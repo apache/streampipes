@@ -204,7 +204,7 @@
 
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-connectors-cdc</artifactId>
+            <artifactId>streampipes-connectors-mssql</artifactId>
             <version>0.99.0-SNAPSHOT</version>
         </dependency>
 

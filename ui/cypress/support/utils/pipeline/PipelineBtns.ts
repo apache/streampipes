@@ -36,8 +36,9 @@ export class PipelineBtns {
         return cy.dataCy('clone-pipeline-btn');
     }
 
-    public static managePipeline() {
-        return cy.dataCy('open-manage-pipeline');
+    public static managePipeline(pipelineName: string) {
+        const selector = CSS.escape(`open-manage-${pipelineName}`);
+        return cy.dataCy(selector);
     }
 
     public static pipelineOptions() {

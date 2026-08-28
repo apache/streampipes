@@ -18,8 +18,13 @@
 
 <div fxLayout="column" class="pt-sm pb-sm">
     <span class="text-sm">
-        {{ certificate.issuerDn }}
+        {{ certificate.subjectDn }}
     </span>
+    @if (applicationUri) {
+        <span class="text-sm">
+            {{ applicationUri }}
+        </span>
+    }
     <div fxLayout="row wrap" class="mt-sm">
         @for (dnsName of dnsNames; track $index) {
             <sp-label

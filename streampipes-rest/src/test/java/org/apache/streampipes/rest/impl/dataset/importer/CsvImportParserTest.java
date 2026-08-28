@@ -21,6 +21,8 @@ package org.apache.streampipes.rest.impl.dataset.importer;
 import org.apache.streampipes.model.dataset.importer.CsvImportColumn;
 import org.apache.streampipes.model.dataset.importer.CsvImportConfiguration;
 import org.apache.streampipes.model.dataset.importer.CsvImportRequest;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.vocabulary.XSD;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -31,6 +33,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -101,6 +104,84 @@ class CsvImportParserTest {
     var exception = assertThrows(CsvImportValidationException.class, () -> parser.toImportRows(request));
 
     assertTrue(exception.getValidationMessages().get(0).getMessage().contains("missing a value for timestamp"));
+  }
+
+  @Test
+  void shouldBuildSchemaAndConvertAllPrimitiveTypes() {
+    var columns = List.of(
+        makeColumn("timestamp", "timestamp", "LONG"),
+        makeColumn("integerValue", "integerValue", "INTEGER"),
+        makeColumn("longValue", "longValue", "LONG"),
+        makeColumn("floatValue", "floatValue", "FLOAT"),
+        makeColumn("doubleValue", "doubleValue", "DOUBLE"),
+        makeColumn("booleanValue", "booleanValue", "BOOLEAN"),
+        makeColumn("stringValue", "stringValue", "STRING")
+    );
+    var request = new CsvImportRequest();
+    request.setCsvConfig(makeConfig(",", ".", true));
+    request.setTimestampColumn("timestamp");
+    request.setColumns(columns);
+    request.setRows(List.of(List.of(
+        "1710000000000",
+        "17.0",
+        "2147483648.0",
+        "1.25",
+        "1.23456789012345",
+        "true",
+        "value"
+    )));
+
+    var row = parser.toImportRows(request).get(0);
+
+    assertInstanceOf(Long.class, row.get(0));
+    assertEquals(17, row.get(1));
+    assertInstanceOf(Integer.class, row.get(1));
+    assertEquals(2147483648L, row.get(2));
+    assertInstanceOf(Long.class, row.get(2));
+    assertEquals(1.25F, row.get(3));
+    assertInstanceOf(Float.class, row.get(3));
+    assertEquals(1.23456789012345D, row.get(4));
+    assertInstanceOf(Double.class, row.get(4));
+    assertEquals(true, row.get(5));
+    assertEquals("value", row.get(6));
+
+    var schema = parser.buildConfiguredEventSchema(columns, "timestamp");
+    var runtimeTypes = schema.getEventProperties().stream()
+        .map(property -> ((EventPropertyPrimitive) property).getRuntimeType())
+        .toList();
+
+    assertEquals(List.of(
+        XSD.LONG.toString(),
+        XSD.INTEGER.toString(),
+        XSD.LONG.toString(),
+        XSD.FLOAT.toString(),
+        XSD.DOUBLE.toString(),
+        XSD.BOOLEAN.toString(),
+        XSD.STRING.toString()
+    ), runtimeTypes);
+  }
+
+  @Test
+  void shouldRejectValuesThatDoNotMatchConfiguredTypes() {
+    var request = new CsvImportRequest();
+    request.setCsvConfig(makeConfig(",", ".", true));
+    request.setTimestampColumn("timestamp");
+    request.setColumns(List.of(
+        makeColumn("timestamp", "timestamp", "LONG"),
+        makeColumn("integerValue", "integerValue", "INTEGER"),
+        makeColumn("booleanValue", "booleanValue", "BOOLEAN")
+    ));
+    request.setRows(List.of(List.of("1710000000000", "17.5", "not-a-boolean")));
+
+    var exception = assertThrows(CsvImportValidationException.class, () -> parser.toImportRows(request));
+
+    assertTrue(exception.getValidationMessages().get(0).getMessage().contains("integerValue"));
+
+    request.setRows(List.of(List.of("1710000000000", "17.0", "not-a-boolean")));
+
+    exception = assertThrows(CsvImportValidationException.class, () -> parser.toImportRows(request));
+
+    assertTrue(exception.getValidationMessages().get(0).getMessage().contains("booleanValue"));
   }
 
   private CsvImportConfiguration makeConfig(String delimiter, String decimalSeparator, boolean hasHeader) {

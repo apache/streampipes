@@ -20,6 +20,7 @@ package org.apache.streampipes.client;
 import org.apache.streampipes.client.api.AdapterApi;
 import org.apache.streampipes.client.api.AdminApi;
 import org.apache.streampipes.client.api.CustomRequestApi;
+import org.apache.streampipes.client.api.DataLakeResourceApi;
 import org.apache.streampipes.client.api.DataProcessorApi;
 import org.apache.streampipes.client.api.DataSinkApi;
 import org.apache.streampipes.client.api.DataStreamApi;
@@ -249,8 +250,18 @@ public class StreamPipesClient implements
 
   @Override
   @ExposedToScripts
-  public DatasetResourceApi datasetResourceApi () {
-    return new DatasetResourceApi (config);
+  public DatasetResourceApi datasetResourceApi() {
+    return new DatasetResourceApi(config);
+  }
+
+  /**
+   * @deprecated Use {@link #datasetResourceApi()} instead.
+   */
+  @Deprecated(since = "0.99.0", forRemoval = true)
+  @Override
+  @ExposedToScripts
+  public DataLakeResourceApi dataLakeResourceApi() {
+    return new DataLakeResourceApi(config);
   }
 
   @Override
