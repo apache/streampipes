@@ -47,6 +47,7 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import {
     PermissionsService,
+    SpAsset,
     SpAssetModel,
 } from '@streampipes/platform-services';
 import { MatDialog } from '@angular/material/dialog';
@@ -104,12 +105,7 @@ export class SpAssetDetailsComponent
     }
 
     cleanupEmpty(): void {
-        if (this.asset.additionalData?.customFields) {
-            this.asset.additionalData!.customFields =
-                this.asset.additionalData.customFields.filter(
-                    f => f.key?.trim() || f.value?.trim(),
-                );
-        }
+        this.cleanupEmptyCustomFields(this.asset);
     }
 
     manageAsset(): void {
@@ -363,5 +359,16 @@ export class SpAssetDetailsComponent
 
     private cloneAsset(asset: SpAssetModel): SpAssetModel {
         return SpAssetModel.fromData(asset);
+    }
+
+    private cleanupEmptyCustomFields(asset: SpAsset | SpAssetModel): void {
+        if (asset.additionalData?.customFields) {
+            asset.additionalData.customFields =
+                asset.additionalData.customFields.filter(
+                    f => f.key?.trim() || f.value?.trim(),
+                );
+        }
+
+        asset.assets?.forEach(child => this.cleanupEmptyCustomFields(child));
     }
 }

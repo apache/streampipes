@@ -67,7 +67,7 @@
                             fxFlex="100"
                         ></sp-view-asset-basics>
                     }
-                    @if (asset.additionalData.customFields) {
+                    @if (selectedAsset.additionalData?.customFields) {
                         <sp-split-section
                             [level]="2"
                             [title]="'Custom fields' | translate"

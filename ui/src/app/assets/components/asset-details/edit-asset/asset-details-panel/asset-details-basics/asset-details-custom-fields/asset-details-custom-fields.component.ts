@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+} from '@angular/core';
 import { SpAsset } from '@streampipes/platform-services';
 import { FormFieldComponent } from '@streampipes/shared-ui';
 import {
@@ -55,7 +61,7 @@ export interface CustomField {
         TranslatePipe,
     ],
 })
-export class AssetDetailsCustomFieldsComponent implements OnInit {
+export class AssetDetailsCustomFieldsComponent implements OnInit, OnChanges {
     @Input()
     asset: SpAsset;
 
@@ -63,10 +69,17 @@ export class AssetDetailsCustomFieldsComponent implements OnInit {
     editMode = false;
 
     ngOnInit() {
-        this.asset.additionalData.customFields ??= [];
+        this.initializeCustomFields();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['asset']) {
+            this.initializeCustomFields();
+        }
     }
 
     get customFields(): CustomField[] {
+        this.initializeCustomFields();
         return this.asset.additionalData!.customFields!;
     }
 
@@ -76,5 +89,14 @@ export class AssetDetailsCustomFieldsComponent implements OnInit {
 
     removeCustomField(index: number): void {
         this.customFields.splice(index, 1);
+    }
+
+    private initializeCustomFields(): void {
+        if (!this.asset) {
+            return;
+        }
+
+        this.asset.additionalData ??= {};
+        this.asset.additionalData.customFields ??= [];
     }
 }
