@@ -110,10 +110,10 @@ class CsvDatasetImportServiceTest {
   @Test
   void shouldPreserveAllPrimitiveTypesForExistingMeasurement() {
     var schemaManagement = mock(IDataExplorerSchemaManagement.class);
-    var dataWriter = mock(DataLakeDataWriter.class);
-    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+    var dataWriter = mock(DatasetDataWriter.class);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
 
-    var existingMeasure = new DataLakeMeasure();
+    var existingMeasure = new DatasetMeasure();
     existingMeasure.setMeasureName("existing-measure");
     existingMeasure.setTimestampField("s0::timestamp");
     existingMeasure.setEventSchema(new EventSchema(List.of(
