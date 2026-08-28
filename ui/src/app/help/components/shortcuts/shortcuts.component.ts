@@ -29,27 +29,6 @@ interface ShortcutDefinition {
     description: string;
 }
 
-const SHORTCUT_TRANSLATION_KEYS = {
-    anywhere: 'Anywhere',
-    title: 'Shortcuts',
-    saveContext:
-        "'Ctrl/Cmd + S' in chart/dashboard/pipeline edit view or asset link dialog",
-    saveDescription: 'Saves the current state',
-    editContext: "'E' in dashboard/pipeline panel",
-    editDescription: 'Enters edit mode.',
-    deleteContext: "'Delete/Backspace' in pipeline editor",
-    deleteDescription: 'Deletes the currently hovered pipeline element.',
-    filterContext:
-        "'Ctrl/Cmd + F' in table widget filter dropdown (charts type -> table)",
-    filterDescription: 'Focuses/selects the filter search input.',
-    escapeContext: "'Esc' Dialog keyboard behavior",
-    escapeDescription: 'Closes shared overlay dialogs/popups.',
-    navigateTo: 'Navigate to {{page}}',
-    outsideInputsAndDialogs: 'Outside inputs and dialogs',
-    showAll: 'Show all keyboard shortcuts',
-    toggleSidebar: 'Toggle sidebar menu',
-} as const;
-
 @Component({
     selector: 'sp-shortcuts-tab',
     templateUrl: './shortcuts.component.html',
@@ -65,64 +44,61 @@ export class ShortcutsTabComponent {
 
     constructor() {
         this.translateService
-            .stream(Object.values(SHORTCUT_TRANSLATION_KEYS))
+            .stream('Shortcuts')
             .pipe(takeUntilDestroyed())
-            .subscribe(translations => {
-                this.title = translations[SHORTCUT_TRANSLATION_KEYS.title];
+            .subscribe(title => {
+                this.title = title;
                 this.shortcuts = [
                     {
                         combo: 'Ctrl/Cmd + S',
-                        context:
-                            translations[SHORTCUT_TRANSLATION_KEYS.saveContext],
-                        description:
-                            translations[
-                                SHORTCUT_TRANSLATION_KEYS.saveDescription
-                            ],
+                        context: this.translateService.instant(
+                            "'Ctrl/Cmd + S' in chart/dashboard/pipeline edit view or asset link dialog",
+                        ),
+                        description: this.translateService.instant(
+                            'Saves the current state',
+                        ),
                     },
                     {
                         combo: 'E',
-                        context:
-                            translations[SHORTCUT_TRANSLATION_KEYS.editContext],
+                        context: this.translateService.instant(
+                            "'E' in dashboard/pipeline panel",
+                        ),
                         description:
-                            translations[
-                                SHORTCUT_TRANSLATION_KEYS.editDescription
-                            ],
+                            this.translateService.instant('Enters edit mode.'),
                     },
                     {
                         combo: 'Delete/Backspace',
-                        context:
-                            translations[
-                                SHORTCUT_TRANSLATION_KEYS.deleteContext
-                            ],
-                        description:
-                            translations[
-                                SHORTCUT_TRANSLATION_KEYS.deleteDescription
-                            ],
+                        context: this.translateService.instant(
+                            "'Delete/Backspace' in pipeline editor",
+                        ),
+                        description: this.translateService.instant(
+                            'Deletes the currently hovered pipeline element.',
+                        ),
                     },
                     {
                         combo: 'Ctrl/Cmd + F',
-                        context:
-                            translations[
-                                SHORTCUT_TRANSLATION_KEYS.filterContext
-                            ],
-                        description:
-                            translations[
-                                SHORTCUT_TRANSLATION_KEYS.filterDescription
-                            ],
+                        context: this.translateService.instant(
+                            "'Ctrl/Cmd + F' in table widget filter dropdown (charts type -> table)",
+                        ),
+                        description: this.translateService.instant(
+                            'Focuses/selects the filter search input.',
+                        ),
                     },
                     {
                         combo: 'Esc',
-                        context:
-                            translations[
-                                SHORTCUT_TRANSLATION_KEYS.escapeContext
-                            ],
-                        description:
-                            translations[
-                                SHORTCUT_TRANSLATION_KEYS.escapeDescription
-                            ],
+                        context: this.translateService.instant(
+                            "'Esc' Dialog keyboard behavior",
+                        ),
+                        description: this.translateService.instant(
+                            'Closes shared overlay dialogs/popups.',
+                        ),
                     },
                 ];
 
+                const outsideInputsAndDialogs = this.translateService.instant(
+                    'Outside inputs and dialogs',
+                );
+                const homeTitle = this.translateService.instant('Home');
                 this.shortcuts.push(
                     ...this.navMenuService.items
                         .filter(
@@ -131,38 +107,32 @@ export class ShortcutsTabComponent {
                         )
                         .map(item => ({
                             combo: `Shift + ${item.shortcutKey.toUpperCase()}`,
-                            context:
-                                translations[
-                                    SHORTCUT_TRANSLATION_KEYS
-                                        .outsideInputsAndDialogs
-                                ],
+                            context: outsideInputsAndDialogs,
                             description: this.translateService.instant(
-                                SHORTCUT_TRANSLATION_KEYS.navigateTo,
+                                'Navigate to {{page}}',
                                 {
-                                    page: this.translateService.instant(
-                                        item.title,
-                                    ),
+                                    page:
+                                        item.title === 'Home'
+                                            ? homeTitle
+                                            : this.translateService.instant(
+                                                  item.title,
+                                              ),
                                 },
                             ),
                         })),
                     {
                         combo: 'Shift + ?',
-                        context:
-                            translations[
-                                SHORTCUT_TRANSLATION_KEYS
-                                    .outsideInputsAndDialogs
-                            ],
-                        description:
-                            translations[SHORTCUT_TRANSLATION_KEYS.showAll],
+                        context: outsideInputsAndDialogs,
+                        description: this.translateService.instant(
+                            'Show all keyboard shortcuts',
+                        ),
                     },
                     {
                         combo: 'Ctrl + B / Alt + B',
-                        context:
-                            translations[SHORTCUT_TRANSLATION_KEYS.anywhere],
-                        description:
-                            translations[
-                                SHORTCUT_TRANSLATION_KEYS.toggleSidebar
-                            ],
+                        context: this.translateService.instant('Anywhere'),
+                        description: this.translateService.instant(
+                            'Toggle sidebar menu',
+                        ),
                     },
                 );
             });

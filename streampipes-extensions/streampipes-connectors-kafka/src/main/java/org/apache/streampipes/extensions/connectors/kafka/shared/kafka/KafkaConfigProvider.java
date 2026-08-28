@@ -18,8 +18,10 @@
 
 package org.apache.streampipes.extensions.connectors.kafka.shared.kafka;
 
+import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.Alternatives;
@@ -53,6 +55,14 @@ public class KafkaConfigProvider {
   public static final String GROUP_ID_INPUT = "group-id-input";
   public static final String ADDITIONAL_PROPERTIES = "additional-properties";
 
+  public static final String MESSAGE_KEY_MODE = "message-key-mode";
+  public static final String NO_MESSAGE_KEY = "no-message-key";
+  public static final String STATIC_MESSAGE_KEY = "static-message-key";
+  public static final String STATIC_MESSAGE_KEY_VALUE = "static-message-key-value";
+  public static final String FIELD_MESSAGE_KEY = "field-message-key";
+  public static final String FIELD_MESSAGE_KEY_VALUE = "field-message-key-value";
+  public static final String EXPRESSION_MESSAGE_KEY = "expression-message-key";
+  public static final String EXPRESSION_MESSAGE_KEY_VALUE = "expression-message-key-value";
 
   private static final String HIDE_INTERNAL_TOPICS = "hide-internal-topics";
 
@@ -83,6 +93,10 @@ public class KafkaConfigProvider {
 
   public static Label getAccessModeLabel() {
     return Labels.withId(ACCESS_MODE);
+  }
+
+  public static Label getMessageKeyModeLabel() {
+    return Labels.withId(MESSAGE_KEY_MODE);
   }
 
   public static Label getConsumerGroupLabel() {
@@ -121,6 +135,34 @@ public class KafkaConfigProvider {
         StaticProperties.stringFreeTextProperty(Labels.withId(KafkaConfigProvider.GROUP_ID_INPUT)));
   }
 
+  public static StaticPropertyAlternative getAlternativeNoMessageKey() {
+    return Alternatives.from(Labels.withId(NO_MESSAGE_KEY), true);
+  }
+
+  public static StaticPropertyAlternative getAlternativeStaticMessageKey() {
+    return Alternatives.from(Labels.withId(STATIC_MESSAGE_KEY),
+        StaticProperties.stringFreeTextProperty(Labels.withId(STATIC_MESSAGE_KEY_VALUE)));
+  }
+
+  public static StaticPropertyAlternative getAlternativeFieldMessageKey() {
+    return Alternatives.from(Labels.withId(FIELD_MESSAGE_KEY), makeMessageKeyFieldMapping());
+  }
+
+  public static StaticPropertyAlternative getAlternativeExpressionMessageKey() {
+    return Alternatives.from(Labels.withId(EXPRESSION_MESSAGE_KEY),
+        StaticProperties.stringFreeTextProperty(Labels.withId(EXPRESSION_MESSAGE_KEY_VALUE), false, true));
+  }
+
+  public static StaticPropertyAlternatives getMessageKeyAlternatives() {
+    return StaticProperties.alternatives(
+        getMessageKeyModeLabel(),
+        getAlternativeNoMessageKey(),
+        getAlternativeStaticMessageKey(),
+        getAlternativeFieldMessageKey(),
+        getAlternativeExpressionMessageKey()
+    );
+  }
+
   public static StaticPropertyAlternative getAlternativesLatest() {
     return Alternatives.from(Labels.withId(LATEST));
   }
@@ -142,6 +184,11 @@ public class KafkaConfigProvider {
         StaticProperties.secretValue(Labels.withId(KafkaConfigProvider.PASSWORD_KEY)));
     group.setHorizontalRendering(false);
     return group;
+  }
+
+  private static MappingPropertyUnary makeMessageKeyFieldMapping() {
+    var label = Labels.withId(FIELD_MESSAGE_KEY_VALUE);
+    return new MappingPropertyUnary(label.getInternalId(), label.getLabel(), label.getDescription());
   }
 
   public static List<Option> makeSecurityMechanism() {

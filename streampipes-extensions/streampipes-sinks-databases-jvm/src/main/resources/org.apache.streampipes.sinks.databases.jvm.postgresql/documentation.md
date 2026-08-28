@@ -54,6 +54,12 @@ The name of the database where events will be stored
 
 The name of the table where events will be stored (will be created if it does not exist)
 
+### Allow New Table Creation
+
+When enabled, the sink creates the table entered above if it does not exist yet.
+When disabled, the pipeline does not start and asks you to create the table first.
+Use this if the tables in your database have to be created by you.
+
 ### Username
 
 The username for the PostgreSQL Server.
@@ -61,6 +67,12 @@ The username for the PostgreSQL Server.
 ### Password
 
 The password for the PostgreSQL Server.
+
+### Batch Size
+
+The number of events collected before they are written together to the database. Use the value 1 to
+write each event on its own. Higher values are faster at high data rates. Buffered events are flushed
+when the pipeline stops.
 
 ## Output
 

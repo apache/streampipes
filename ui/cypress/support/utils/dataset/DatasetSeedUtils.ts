@@ -18,7 +18,13 @@
 
 import * as CSV from 'csv-string';
 
-type CsvRuntimeType = 'STRING' | 'BOOLEAN' | 'LONG' | 'FLOAT';
+type CsvRuntimeType =
+    | 'STRING'
+    | 'BOOLEAN'
+    | 'INTEGER'
+    | 'LONG'
+    | 'FLOAT'
+    | 'DOUBLE';
 type CsvImportTargetMode = 'NEW' | 'EXISTING';
 type CsvImportJobState = 'RUNNING' | 'SUCCEEDED' | 'FAILED';
 

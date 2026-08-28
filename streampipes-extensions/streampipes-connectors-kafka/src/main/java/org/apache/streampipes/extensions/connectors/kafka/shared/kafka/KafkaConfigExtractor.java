@@ -26,6 +26,7 @@ import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 import org.apache.streampipes.messaging.kafka.config.SimpleConfigAppender;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityProtocolConfigAppender;
 import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslConfigAppender;
+import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -35,18 +36,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.ACCESS_MODE;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.ADDITIONAL_PROPERTIES;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.AUTO_OFFSET_RESET_CONFIG;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.CONSUMER_GROUP;
+import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.EXPRESSION_MESSAGE_KEY_VALUE;
+import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.FIELD_MESSAGE_KEY_VALUE;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.GROUP_ID_INPUT;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.HOST_KEY;
+import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.MESSAGE_KEY_MODE;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.PASSWORD_KEY;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.PORT_KEY;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.RANDOM_GROUP_ID;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.SECURITY_MECHANISM;
+import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.STATIC_MESSAGE_KEY_VALUE;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.TOPIC_KEY;
 import static org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider.USERNAME_KEY;
 
@@ -84,9 +90,10 @@ public class KafkaConfigExtractor {
     return config;
   }
 
-  public KafkaBaseConfig extractSinkConfig(IParameterExtractor extractor) {
-    var config = extractCommonConfigs(extractor, new KafkaBaseConfig());
+  public KafkaSinkConfig extractSinkConfig(IParameterExtractor extractor) {
+    var config = extractCommonConfigs(extractor, new KafkaSinkConfig());
     config.setTopic(extractor.singleValueParameter(TOPIC_KEY, String.class));
+    config.setKeyResolver(extractKeyResolver(extractor));
 
     return config;
   }
@@ -116,6 +123,48 @@ public class KafkaConfigExtractor {
     config.setConfigAppenders(configAppenders);
 
     return config;
+  }
+
+  /**
+   * Work out how the message key is put together. A sink that has not been migrated yet does not
+   * have the configuration at all, and then records are published without a key.
+   *
+   * @param extractor gives access to what a user configured on the sink.
+   * @return a resolver that is asked for the key of every published record.
+   */
+  private KafkaKeyResolver extractKeyResolver(IParameterExtractor extractor) {
+    var alternatives = Optional.ofNullable(
+        extractor.getStaticPropertyByName(MESSAGE_KEY_MODE, StaticPropertyAlternatives.class));
+
+    if (alternatives.isEmpty()) {
+      return new KafkaKeyResolver();
+    }
+
+    var mode = KafkaMessageKeyMode.fromSelectedAlternative(
+        extractor.selectedAlternativeInternalId(MESSAGE_KEY_MODE));
+
+    return switch (mode) {
+      case NONE -> new KafkaKeyResolver();
+      case STATIC -> new KafkaKeyResolver(
+          mode, extractor.singleValueParameter(STATIC_MESSAGE_KEY_VALUE, String.class));
+      case FIELD -> new KafkaKeyResolver(
+          mode, extractSelectedKeyField(extractor));
+      case EXPRESSION -> new KafkaKeyResolver(
+          mode, extractor.singleValueParameter(EXPRESSION_MESSAGE_KEY_VALUE, String.class));
+    };
+  }
+
+  /**
+   * Read which event field a user picked as message key.
+   *
+   * @param extractor gives access to what a user configured on the sink.
+   * @return the selector of the picked field, or an empty text if none was picked.
+   */
+  private String extractSelectedKeyField(IParameterExtractor extractor) {
+    return Optional.ofNullable(
+        extractor.getStaticPropertyByName(FIELD_MESSAGE_KEY_VALUE, MappingPropertyUnary.class))
+        .map(MappingPropertyUnary::getSelectedProperty)
+        .orElse("");
   }
 
   private boolean isSaslSecurityMechanism(SecurityProtocol securityProtocol) {

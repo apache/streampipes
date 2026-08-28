@@ -28,6 +28,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -116,23 +117,91 @@ public class TableDescription {
   }
 
   public void validateTable() throws SpRuntimeException {
+    List<String> missingCols = new ArrayList<>();
+    List<String> typeMismatches = new ArrayList<>();
+
     for (EventProperty property : this.eventSchema.getEventProperties()) {
-      DbDataTypes existingType = this.getDataTypesHashMap().get(property.getRuntimeName());
-      if (existingType != null) {
-        if (property instanceof EventPropertyPrimitive) {
-          String expected = ((EventPropertyPrimitive) property).getRuntimeType();
-          String actual = DbDataTypeFactory.getDataType(existingType).toString();
-          if (!expected.equals(actual)) {
-            throw new SpRuntimeException("Column '" + property.getRuntimeName()
-                + "' in table '" + this.getName() + "' has type mismatch: expected "
-                + expected + " but got " + actual);
-          }
+      String columnName = property.getRuntimeName();
+      DbDataTypes existingType = this.getDataTypesHashMap().get(columnName);
+
+      if (existingType == null) {
+        // Column is missing in the table
+        missingCols.add("'" + columnName + "'");
+      } else if (property instanceof EventPropertyPrimitive) {
+        // Check the data type of existing columns
+        String expected = ((EventPropertyPrimitive) property).getRuntimeType();
+        String actual = DbDataTypeFactory.getDataType(existingType).toString();
+        if (!expected.equals(actual)) {
+          // Remember this mismatch and keep checking, so all problems are reported together later
+          typeMismatches.add("'" + columnName + "' (the data stream provides " + extractTypeName(expected)
+                  + " but the table column is " + existingType + ")");
         }
-      } else {
-        throw new SpRuntimeException("Column '" + property.getRuntimeName()
-            + "' is missing in table '" + this.getName() + "'");
       }
     }
+    reportMissingColumns(missingCols);
+    reportTypeMismatches(typeMismatches);
+  }
+
+  /**
+   * Shortens a runtime type URI such as "http://www.w3.org/2001/XMLSchema#float" to a name that is
+   * readable for users. Only the part after the '#' is kept, for example "float".
+   *
+   * @param runtimeType the runtime type of the event property.
+   * @return the type name without the namespace, or the unchanged input if it contains no '#'.
+   */
+  private String extractTypeName(String runtimeType) {
+    return runtimeType.substring(runtimeType.lastIndexOf('#') + 1);
+  }
+
+  /**
+   * Reports the columns that the data stream expects but that do not exist in the table, so the
+   * user knows which columns to add. Does nothing if no column is missing.
+   *
+   * @param missingCols the names of the missing columns, may be empty.
+   * @throws SpRuntimeException if at least one column is missing.
+   */
+  private void reportMissingColumns(List<String> missingCols) throws SpRuntimeException {
+    if (missingCols.isEmpty()) {
+      return;
+    }
+    String noun = missingCols.size() == 1 ? "Column " : "Columns ";
+    String verb = missingCols.size() == 1 ? " is" : " are";
+    throw new SpRuntimeException(noun + formatColumnEnumeration(missingCols) + verb
+            + " missing in table '" + this.getName() + "'");
+  }
+
+  /**
+   * Reports the columns whose data type in the table does not match the data stream, so the user
+   * knows which columns have the wrong type. Does nothing if all types match.
+   *
+   * @param typeMismatches the descriptions of the mismatching columns, may be empty.
+   * @throws SpRuntimeException if at least one column has a different data type.
+   */
+  private void reportTypeMismatches(List<String> typeMismatches) throws SpRuntimeException {
+    if (typeMismatches.isEmpty()) {
+      return;
+    }
+    String noun = typeMismatches.size() == 1 ? "column " : "columns ";
+    throw new SpRuntimeException("Type mismatch in table '" + this.getName() + "' for "
+            + noun + formatColumnEnumeration(typeMismatches));
+  }
+
+  /**
+   * Formats a list of column names or column problems as a readable enumeration for an error message
+   * to report every problem of the existing table in a single message.
+   *
+   * @param columns the column names or problem descriptions to enumerate.
+   * @return the entries joined into one phrase, using "and" before the last entry.
+   */
+  private String formatColumnEnumeration(List<String> columns) {
+    if (columns.size() == 1) {
+      return columns.get(0);
+    }
+    if (columns.size() == 2) {
+      return columns.get(0) + " and " + columns.get(1);
+    }
+    return String.join(", ", columns.subList(0, columns.size() - 1))
+            + ", and " + columns.get(columns.size() - 1);
   }
 
   public boolean tableExists() {
