@@ -31,9 +31,9 @@ describe('Test Data Set Details', () => {
         DatasetUtils.openDatasetDetails(adapterName);
 
         DatasetBtns.datasetDetailsSchemaTable().should('be.visible');
-        DatasetUtils.expectSchemaField('density', 'Number');
-        DatasetUtils.expectSchemaField('mass_flow', 'Number');
-        DatasetUtils.expectSchemaField('sensorId', 'Text');
+        DatasetUtils.expectSchemaField('density', 'Float');
+        DatasetUtils.expectSchemaField('mass_flow', 'Float');
+        DatasetUtils.expectSchemaField('sensorId', 'String');
         DatasetUtils.expectSchemaField('sensor_fault_flags', 'Boolean');
 
         DatasetUtils.openLatestEventsTab();
