@@ -28,18 +28,26 @@ import (
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
 )
 
-type DataLakeDashboard struct {
+type DatasetDashboard struct {
 	endpoint
 }
 
-func NewDataLakeDashborad(clientConfig config.StreamPipesClientConfig) *DataLakeDashboard {
+// Deprecated: use DatasetDashboard instead.
+type DataLakeDashboard = DatasetDashboard
 
-	return &DataLakeDashboard{
+func NewDatasetDashboard(clientConfig config.StreamPipesClientConfig) *DatasetDashboard {
+
+	return &DatasetDashboard{
 		endpoint{config: clientConfig},
 	}
 }
 
-func (d *DataLakeDashboard) GetSingleDataLakeDashboard(dashboardId string) (data_lake.Dashboard, error) {
+// Deprecated: use NewDatasetDashboard instead.
+func NewDataLakeDashborad(clientConfig config.StreamPipesClientConfig) *DatasetDashboard {
+	return NewDatasetDashboard(clientConfig)
+}
+
+func (d *DatasetDashboard) GetSingleDatasetDashboard(dashboardId string) (data_lake.Dashboard, error) {
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/dataset/dashboard", []string{dashboardId})
 	log.Printf("Get data from: %s", endPointUrl)
 
@@ -69,7 +77,12 @@ func (d *DataLakeDashboard) GetSingleDataLakeDashboard(dashboardId string) (data
 	return dataLakeDashboard, nil
 }
 
-func (d *DataLakeDashboard) GetAllDataLakeDashboard() ([]data_lake.Dashboard, error) {
+// Deprecated: use GetSingleDatasetDashboard instead.
+func (d *DatasetDashboard) GetSingleDataLakeDashboard(dashboardId string) (data_lake.Dashboard, error) {
+	return d.GetSingleDatasetDashboard(dashboardId)
+}
+
+func (d *DatasetDashboard) GetAllDatasetDashboards() ([]data_lake.Dashboard, error) {
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/dataset/dashboard", nil)
 	log.Printf("Get data from: %s", endPointUrl)
 
@@ -99,7 +112,12 @@ func (d *DataLakeDashboard) GetAllDataLakeDashboard() ([]data_lake.Dashboard, er
 	return dataLakeDashboard, nil
 }
 
-func (d *DataLakeDashboard) DeleteSingleDataLakeDashboard(dashboardId string) error {
+// Deprecated: use GetAllDatasetDashboards instead.
+func (d *DatasetDashboard) GetAllDataLakeDashboard() ([]data_lake.Dashboard, error) {
+	return d.GetAllDatasetDashboards()
+}
+
+func (d *DatasetDashboard) DeleteSingleDatasetDashboard(dashboardId string) error {
 	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/dataset/dashboard", []string{dashboardId})
 	log.Printf("Delete data from: %s", endPointUrl)
 
@@ -116,4 +134,9 @@ func (d *DataLakeDashboard) DeleteSingleDataLakeDashboard(dashboardId string) er
 	}
 
 	return nil
+}
+
+// Deprecated: use DeleteSingleDatasetDashboard instead.
+func (d *DatasetDashboard) DeleteSingleDataLakeDashboard(dashboardId string) error {
+	return d.DeleteSingleDatasetDashboard(dashboardId)
 }

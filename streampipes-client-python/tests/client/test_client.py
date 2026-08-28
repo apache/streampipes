@@ -24,6 +24,7 @@ from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 from streampipes.endpoint.api import (
     AdapterEndpoint,
     DataLakeMeasureEndpoint,
+    DatasetMeasureEndpoint,
     PipelineEndpoint,
 )
 
@@ -50,7 +51,8 @@ class TestStreamPipesClient(TestCase):
         result_headers = dict(result.request_session.headers)
         for key, value in expected_headers.items():
             self.assertEqual(result_headers.get(key), value)
-        self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
+        self.assertTrue(isinstance(result.datasetMeasureApi, DatasetMeasureEndpoint))
+        self.assertTrue(isinstance(result.dataLakeMeasureApi, DatasetMeasureEndpoint))
         self.assertTrue(isinstance(result.adapterApi, AdapterEndpoint))
         self.assertTrue(isinstance(result.pipelineApi, PipelineEndpoint))
         self.assertEqual(result.base_api_path, "http://localhost:80/streampipes-backend/")
@@ -77,7 +79,8 @@ class TestStreamPipesClient(TestCase):
         result_headers = dict(result.request_session.headers)
         for key, value in expected_headers.items():
             self.assertEqual(result_headers.get(key), value)
-        self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
+        self.assertTrue(isinstance(result.datasetMeasureApi, DatasetMeasureEndpoint))
+        self.assertTrue(isinstance(result.dataLakeMeasureApi, DatasetMeasureEndpoint))
         self.assertTrue(isinstance(result.adapterApi, AdapterEndpoint))
         self.assertTrue(isinstance(result.pipelineApi, PipelineEndpoint))
         self.assertEqual(result.base_api_path, "https://localhost:443/streampipes-backend/")
@@ -153,7 +156,7 @@ class TestStreamPipesClient(TestCase):
                     "\nHi there!\nYou are connected to a StreamPipes instance running at "
                     "https://localhost:443 with version SP-dev.\n"
                     "The following StreamPipes resources are available with this client:\n"
-                    "1x DataLakeMeasures\n1x DataStreams\n0x Adapters\n0x Pipelines"
+                    "1x DatasetMeasures\n1x DataStreams\n0x Adapters\n0x Pipelines"
                 ),
             ],
             any_order=True,

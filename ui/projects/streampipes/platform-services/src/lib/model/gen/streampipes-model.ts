@@ -573,6 +573,10 @@ export class AssetExportConfiguration {
     assetName: string;
     assets: ExportItem[];
     dashboards: ExportItem[];
+    datasetMeasures: ExportItem[];
+    /**
+     * @deprecated since 0.99.0, for removal
+     */
     dataLakeMeasures: ExportItem[];
     dataSources: ExportItem[];
     dataViews: ExportItem[];
@@ -601,8 +605,11 @@ export class AssetExportConfiguration {
         instance.dashboards = __getCopyArrayFn(ExportItem.fromData)(
             data.dashboards,
         );
+        instance.datasetMeasures = __getCopyArrayFn(ExportItem.fromData)(
+            data.datasetMeasures ?? data.dataLakeMeasures,
+        );
         instance.dataLakeMeasures = __getCopyArrayFn(ExportItem.fromData)(
-            data.dataLakeMeasures,
+            data.dataLakeMeasures ?? data.datasetMeasures,
         );
         instance.dataSources = __getCopyArrayFn(ExportItem.fromData)(
             data.dataSources,
@@ -4266,6 +4273,10 @@ export class StreamPipesApplicationPackage {
     adapters: string[];
     assets: string[];
     dashboards: string[];
+    datasetMeasures: string[];
+    /**
+     * @deprecated since 0.99.0, for removal
+     */
     dataLakeMeasures: string[];
     dataSources: string[];
     dataViews: string[];
@@ -4291,8 +4302,11 @@ export class StreamPipesApplicationPackage {
         instance.dashboards = __getCopyArrayFn(__identity<string>())(
             data.dashboards,
         );
+        instance.datasetMeasures = __getCopyArrayFn(__identity<string>())(
+            data.datasetMeasures ?? data.dataLakeMeasures,
+        );
         instance.dataLakeMeasures = __getCopyArrayFn(__identity<string>())(
-            data.dataLakeMeasures,
+            data.dataLakeMeasures ?? data.datasetMeasures,
         );
         instance.dataSources = __getCopyArrayFn(__identity<string>())(
             data.dataSources,

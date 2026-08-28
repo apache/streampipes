@@ -17,6 +17,7 @@
 
 from .adapters import Adapters
 from .data_lake_measures import DataLakeMeasures
+from .dataset_measures import DatasetMeasures
 from .data_streams import DataStreams
 from .pipelines import Pipelines
 from .summary_resource_container import SummaryResourceContainer
@@ -24,6 +25,7 @@ from .versions import Versions
 
 __all__ = [
     "Adapters",
+    "DatasetMeasures",
     "DataLakeMeasures",
     "DataStreams",
     "Pipelines",

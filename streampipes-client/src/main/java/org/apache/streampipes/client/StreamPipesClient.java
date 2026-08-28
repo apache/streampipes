@@ -20,6 +20,7 @@ package org.apache.streampipes.client;
 import org.apache.streampipes.client.api.AdapterApi;
 import org.apache.streampipes.client.api.AdminApi;
 import org.apache.streampipes.client.api.CustomRequestApi;
+import org.apache.streampipes.client.api.DataLakeMeasureApi;
 import org.apache.streampipes.client.api.DataLakeResourceApi;
 import org.apache.streampipes.client.api.DataProcessorApi;
 import org.apache.streampipes.client.api.DataSinkApi;
@@ -233,6 +234,16 @@ public class StreamPipesClient implements
   @ExposedToScripts
   public DatasetMeasureApi datasetMeasureApi() {
     return new DatasetMeasureApi(config);
+  }
+
+  /**
+   * @deprecated Use {@link #datasetMeasureApi()} instead.
+   */
+  @Deprecated(since = "0.99.0", forRemoval = true)
+  @Override
+  @ExposedToScripts
+  public DataLakeMeasureApi dataLakeMeasureApi() {
+    return new DataLakeMeasureApi(config);
   }
 
   @Override

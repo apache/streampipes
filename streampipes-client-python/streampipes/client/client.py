@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import logging
 import sys
+import warnings
 
 from requests import Session
 
@@ -32,7 +33,7 @@ from streampipes.client.config import StreamPipesClientConfig
 from streampipes.endpoint import APIEndpoint
 from streampipes.endpoint.api import (
     AdapterEndpoint,
-    DataLakeMeasureEndpoint,
+    DatasetMeasureEndpoint,
     DataStreamEndpoint,
     PipelineEndpoint,
     VersionEndpoint,
@@ -48,7 +49,7 @@ class StreamPipesClient:
     provides all the functionalities to interact with it.
 
     The client provides so-called "endpoints" each of which refers to
-    an endpoint of the StreamPipes API, e.g. `.dataLakeMeasureApi`.
+    an endpoint of the StreamPipes API, e.g. `.datasetMeasureApi`.
     An [endpoint][streampipes.endpoint.endpoint] provides the actual methods to interact with StreamPipes
     API.
 
@@ -61,8 +62,8 @@ class StreamPipesClient:
 
     Attributes
     ----------
-    dataLakeMeasureApi: DataLakeMeasureEndpoint
-        Instance of the data lake measure endpoint
+    datasetMeasureApi: DatasetMeasureEndpoint
+        Instance of the dataset measure endpoint
     dataStreamApi: DataStreamEndpoint
         Instance of the data stream endpoint
     adapterApi: AdapterEndpoint
@@ -108,7 +109,7 @@ class StreamPipesClient:
 
     To interact with an endpoint:
     ```python
-    data_lake_measures = client.dataLakeMeasureApi.all()
+    data_lake_measures = client.datasetMeasureApi.all()
     ```
 
     To inspect returned data as a pandas dataframe:
@@ -149,7 +150,7 @@ class StreamPipesClient:
         # provide all available endpoints here
         # name of the endpoint needs to be consistent with the Java client
         self.adapterApi = AdapterEndpoint(parent_client=self)
-        self.dataLakeMeasureApi = DataLakeMeasureEndpoint(parent_client=self)
+        self.datasetMeasureApi = DatasetMeasureEndpoint(parent_client=self)
         self.dataStreamApi = DataStreamEndpoint(parent_client=self)
         self.pipelineApi = PipelineEndpoint(parent_client=self)
         self.versionApi = VersionEndpoint(parent_client=self)
@@ -299,6 +300,7 @@ class StreamPipesClient:
         # this is mainly due to not providing the `all()` method
         available_endpoints = available_endpoints.symmetric_difference(
             {
+                "dataLakeMeasureApi",
                 "versionApi",
             }
         )
@@ -328,3 +330,14 @@ class StreamPipesClient:
         endpoint_stats_message = "\n".join(f"{count}x {name}" for name, count in sorted_endpoint_stats.items())
 
         logger.info(base_message + endpoint_stats_message)
+
+    @property
+    def dataLakeMeasureApi(self) -> DatasetMeasureEndpoint:
+        """DEPRECATED - use `datasetMeasureApi` instead."""
+
+        warnings.warn(
+            "deprecated since 0.99.0; please use datasetMeasureApi instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.datasetMeasureApi

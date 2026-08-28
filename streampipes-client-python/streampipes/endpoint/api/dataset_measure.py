@@ -15,22 +15,16 @@
 # limitations under the License.
 #
 
-from .adapter import AdapterSummary
-from .data_lake_measure import DataLakeMeasure
-from .dataset_measure import DatasetMeasure
-from .data_series import DataSeries
-from .data_stream import DataStream
-from .function_definition import FunctionDefinition
-from .pipeline import PipelineSummary
-from .version import Version
+from .data_lake_measure import (
+    DataLakeMeasureEndpoint,
+    DatasetMeasureEndpoint,
+    MeasurementGetQueryConfig,
+    StreamPipesQueryValidationError,
+)
 
 __all__ = [
-    "AdapterSummary",
-    "DatasetMeasure",
-    "DataLakeMeasure",
-    "DataSeries",
-    "DataStream",
-    "FunctionDefinition",
-    "PipelineSummary",
-    "Version",
+    "DatasetMeasureEndpoint",
+    "DataLakeMeasureEndpoint",
+    "MeasurementGetQueryConfig",
+    "StreamPipesQueryValidationError",
 ]

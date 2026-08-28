@@ -60,6 +60,10 @@ export interface Dashboard {
 
 export interface CompositeDashboard {
     dashboard: Dashboard;
+    datasetMeasures: DatasetMeasure[];
+    /**
+     * @deprecated since 0.99.0, for removal
+     */
     dataLakeMeasures: DatasetMeasure[];
     widgets: DataExplorerWidgetModel[];
     revisionHash: string;

@@ -28,7 +28,7 @@ import (
 
 // This is the central point of contact with StreamPipes and provides all the functionalities to interact with it.
 // The client provides so-called "API", each of which refers to the endpoint of the StreamPipes API.
-// e.g. `DataLakeMeasure` provides the actual methods to interact with StreamPipes API.
+// e.g. `DatasetMeasure` provides the actual methods to interact with StreamPipes API.
 
 type StreamPipesClient struct {
 	config config.StreamPipesClientConfig
@@ -63,9 +63,15 @@ func NewStreamPipesClient(c config.StreamPipesClientConfig) (*StreamPipesClient,
 
 }
 
-func (s *StreamPipesClient) DataLakeMeasures() *DataLakeMeasure {
+func (s *StreamPipesClient) DatasetMeasures() *DatasetMeasure {
 
-	return NewDataLakeMeasures(s.config)
+	return NewDatasetMeasures(s.config)
+}
+
+// Deprecated: use DatasetMeasures instead.
+func (s *StreamPipesClient) DataLakeMeasures() *DatasetMeasure {
+
+	return s.DatasetMeasures()
 }
 
 func (s *StreamPipesClient) StreamPipesVersion() *Versions {
@@ -82,14 +88,26 @@ func (s *StreamPipesClient) Adapter() *Adapter {
 	return NewAdapter(s.config)
 }
 
-func (s *StreamPipesClient) DataLakeDashboard() *DataLakeDashboard {
+func (s *StreamPipesClient) DatasetDashboard() *DatasetDashboard {
 
-	return NewDataLakeDashborad(s.config)
+	return NewDatasetDashboard(s.config)
 }
 
-func (s *StreamPipesClient) DataLakeWidget() *DataLakeWidget {
+// Deprecated: use DatasetDashboard instead.
+func (s *StreamPipesClient) DataLakeDashboard() *DatasetDashboard {
 
-	return NewDataLakeWidget(s.config)
+	return s.DatasetDashboard()
+}
+
+func (s *StreamPipesClient) DatasetWidget() *DatasetWidget {
+
+	return NewDatasetWidget(s.config)
+}
+
+// Deprecated: use DatasetWidget instead.
+func (s *StreamPipesClient) DataLakeWidget() *DatasetWidget {
+
+	return s.DatasetWidget()
 }
 
 func (s *StreamPipesClient) Function() *Functions {
