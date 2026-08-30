@@ -53,8 +53,5 @@ Once these requirements are met, you are ready to proceed with the next step Qui
 The StreamPipes Go library is meant to work with Go 1.21 and above. You can install the latest development version from GitHub, as so:
 
 ```shell
-go get https://github.com/apache/streampipes
-// if you want to have the current development state you can also execute
-go get https://github.com/apache/streampipes/streampipes-client-go
-// the corresponding documentation can be found here: https://streampipes.apache.org/docs/docs/python/dev/
+go get github.com/apache/streampipes/streampipes-client-go
 ```
