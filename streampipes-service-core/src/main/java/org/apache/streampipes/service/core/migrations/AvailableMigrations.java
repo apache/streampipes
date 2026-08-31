@@ -38,6 +38,7 @@ import org.apache.streampipes.service.core.migrations.v099.RemoveAssetUserRoleMi
 import org.apache.streampipes.service.core.migrations.v099.RemoveDuplicatedAssetPermissions;
 import org.apache.streampipes.service.core.migrations.v099.RemoveInternalNotificationSinkMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
+import org.apache.streampipes.service.core.migrations.v099.RenameDataLakeMetadataToDatasetMigration;
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigratePlc4xS7AdaptersToGenericAdapter;
@@ -98,6 +99,7 @@ public class AvailableMigrations {
         new MoveAssetContentMigration(),
         new CreateAssetPermissionMigration(permissionStorage, assetStorage),
         new CreateDatasetPermissionMigration(permissionStorage, pipelineStorage, datasetStorage),
+        new RenameDataLakeMetadataToDatasetMigration(permissionStorage),
         new RemoveObsoletePrivilegesMigration(privilegeStorage),
         new UniqueDashboardIdMigration(dashboardStorage),
         new AddScriptTemplateViewMigration(),
