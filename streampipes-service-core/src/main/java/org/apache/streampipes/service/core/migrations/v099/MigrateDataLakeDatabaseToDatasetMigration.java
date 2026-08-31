@@ -51,6 +51,7 @@ public class MigrateDataLakeDatabaseToDatasetMigration implements Migration {
   @Override
   public void executeMigration() throws IOException {
     copyDocuments(Utils.LEGACY_DATA_LAKE_DB_NAME, Utils.DATA_LAKE_DB_NAME);
+    removeDatabase(Utils.LEGACY_DATA_LAKE_DB_NAME);
   }
 
   @Override
@@ -135,6 +136,20 @@ public class MigrateDataLakeDatabaseToDatasetMigration implements Migration {
     if (!(statusCode == HttpStatus.SC_CREATED || statusCode == HttpStatus.SC_ACCEPTED
         || statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CONFLICT)) {
       throw new IOException("Unexpected response while copying document '" + documentId + "': " + statusCode);
+    }
+  }
+
+  protected void removeDatabase(String databaseName) throws IOException {
+    var response = Utils.deleteRequest(Utils.getDatabaseRoute(databaseName))
+        .execute()
+        .returnResponse();
+    int statusCode = response.getStatusLine().getStatusCode();
+
+    if (!(statusCode == HttpStatus.SC_OK
+        || statusCode == HttpStatus.SC_ACCEPTED
+        || statusCode == HttpStatus.SC_NOT_FOUND)) {
+      throw new IOException("Unexpected response while deleting legacy database '" + databaseName + "': "
+          + statusCode);
     }
   }
 

@@ -35,11 +35,13 @@ class MigrateDataLakeDatabaseToDatasetMigrationTest {
   private final Map<String, Boolean> existingDatabases = new HashMap<>();
   private final Map<String, Integer> documentCounts = new HashMap<>();
   private boolean replicated;
+  private boolean removedLegacyDatabase;
   private MigrateDataLakeDatabaseToDatasetMigration migration;
 
   @BeforeEach
   void setUp() {
     this.replicated = false;
+    this.removedLegacyDatabase = false;
     this.migration = new MigrateDataLakeDatabaseToDatasetMigration() {
       @Override
       protected boolean databaseExists(String databaseName) {
@@ -55,6 +57,11 @@ class MigrateDataLakeDatabaseToDatasetMigrationTest {
       protected void copyDocuments(String sourceDatabaseName,
                                    String targetDatabaseName) {
         MigrateDataLakeDatabaseToDatasetMigrationTest.this.replicated = true;
+      }
+
+      @Override
+      protected void removeDatabase(String databaseName) {
+        MigrateDataLakeDatabaseToDatasetMigrationTest.this.removedLegacyDatabase = true;
       }
     };
   }
@@ -99,5 +106,6 @@ class MigrateDataLakeDatabaseToDatasetMigrationTest {
     migration.executeMigration();
 
     assertTrue(replicated);
+    assertTrue(removedLegacyDatabase);
   }
 }
