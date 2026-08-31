@@ -73,7 +73,7 @@ public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig 
     return DataSinkConfiguration.create(
         DatasetSink::new,
         DataSinkBuilder
-            .create("org.apache.streampipes.sinks.internal.jvm.datalake", 3)
+            .create("org.apache.streampipes.sinks.internal.jvm.datalake", 2)
             .withLocales(Locales.EN)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .category(DataSinkType.INTERNAL)

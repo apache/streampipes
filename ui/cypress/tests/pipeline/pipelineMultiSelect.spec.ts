@@ -38,7 +38,7 @@ describe('Pipeline Overview Multi Select', () => {
             const pipelineInput = PipelineBuilder.create(pipelineName)
                 .addSource(adapterName)
                 .addSink(
-                    PipelineElementBuilder.create('dataset')
+                    PipelineElementBuilder.create('data_lake')
                         .addInput('input', 'db_measurement', 'demo')
                         .build(),
                 )

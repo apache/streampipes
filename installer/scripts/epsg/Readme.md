@@ -92,7 +92,7 @@ Unzip the folder and replace files
 in the `streampipes/installer/scripts/epsg` folder.
 
 For indexing the imported data and get better performance, go to 
-<a href="https://github.com/apache/sis/blob/main/optional/src/org.apache.sis.referencing.epsg/main/org/apache/sis/referencing/factory/sql/epsg/Finish.sql" target="_blank">this file</a>
+<a href="https://github.com/apache/sis/blob/master/core/sis-referencing/src/main/resources/org/apache/sis/referencing/factory/sql/EPSG_Finish.sql" target="_blank">this file</a>
 and replace it with the
 * EPSG_FINISH.sql
 

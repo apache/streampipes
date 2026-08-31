@@ -48,7 +48,7 @@ CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 ...            ...       ...       ...       ...       ...       ...
 ```
 Otherwise, you need to start docker first.
-Please read the full guide on how to start StreamPipes with `docker compose` [here](https://streampipes.apache.org/docs/configure-operate-deployment/).
+Please read the full guide on how to start StreamPipes with `docker compose` [here](https://streampipes.apache.org/docs/deploy-docker/).
 
 #### Setup StreamPipes with NATS as message broker
 The following shows how you can set up a StreamPipes instance that uses [NATS](https://docs.nats.io/) as messaging layer.
