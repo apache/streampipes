@@ -41,8 +41,8 @@ public class RenameAssetLinkTypesMigration implements Migration {
   );
 
   private static final Map<String, String> RENAMED_LINK_LABEL_BY_TYPE = Map.of(
-      "data-source", "Data Stream",
-      "measurement", "Dataset"
+      "data-stream", "Data Stream",
+      "dataset", "Dataset"
   );
 
   private final IGenericStorage genericStorage;
@@ -82,8 +82,8 @@ public class RenameAssetLinkTypesMigration implements Migration {
   }
 
   private boolean requiresRename(Map<String, Object> assetLinkType) {
-    String legacyLabel = LEGACY_LINK_LABEL_BY_TYPE.get(assetLinkType.get(FIELD_LINK_TYPE));
-    return legacyLabel != null && legacyLabel.equals(assetLinkType.get(FIELD_LINK_LABEL));
+    return LEGACY_LINK_LABEL_BY_TYPE.get(assetLinkType.get(FIELD_LINK_TYPE))
+        .equals(assetLinkType.get(FIELD_LINK_LABEL));
   }
 
   @Override
