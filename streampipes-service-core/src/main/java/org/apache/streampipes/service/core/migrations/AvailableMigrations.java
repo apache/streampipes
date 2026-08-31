@@ -34,6 +34,7 @@ import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermission
 import org.apache.streampipes.service.core.migrations.v099.CreateDatasetPermissionMigration;
 import org.apache.streampipes.service.core.migrations.v099.ModifyAssetLinkIconMigration;
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
+import org.apache.streampipes.service.core.migrations.v099.RenameDataLakeSinkLabelsMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveAssetUserRoleMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveDuplicatedAssetPermissions;
 import org.apache.streampipes.service.core.migrations.v099.RemoveInternalNotificationSinkMigration;
@@ -105,6 +106,7 @@ public class AvailableMigrations {
         new MigrateAdaptersToUseScript(adapterStorage),
         new MigratePlc4xS7AdaptersToGenericAdapter(adapterStorage),
         new ModifyAssetLinkIconMigration(),
+        new RenameDataLakeSinkLabelsMigration(pipelineStorage),
         new RemoveDuplicatedAssetPermissions(permissionStorage, assetStorage),
         new AddFunctionStateViewMigration(),
         new AddRefreshTokenViewsMigration(),
