@@ -17,9 +17,9 @@
     },
     {
       "resourceId": "sp:spdatastream:shyiYp",
-      "linkType": "data-source",
+      "linkType": "data-stream",
       "linkLabel": "adapter-1_0_asset-1_0",
-      "queryHint": "data-source",
+      "queryHint": "data-stream",
       "editingDisabled": false,
       "navigationActive": false
     },
@@ -33,9 +33,9 @@
     },
     {
       "resourceId": "f462bdbe-3746-4045-9c61-04255454a1a2",
-      "linkType": "measurement",
+      "linkType": "dataset",
       "linkLabel": "adapter-1_0_asset-1_0",
-      "queryHint": "measurement",
+      "queryHint": "dataset",
       "editingDisabled": false,
       "navigationActive": false
     },
@@ -73,9 +73,9 @@
         },
         {
           "resourceId": "sp:spdatastream:GfKHOr",
-          "linkType": "data-source",
+          "linkType": "data-stream",
           "linkLabel": "adapter-1_1_asset-1_0.asset-1_1",
-          "queryHint": "data-source",
+          "queryHint": "data-stream",
           "editingDisabled": false,
           "navigationActive": false
         },
@@ -89,9 +89,9 @@
         },
         {
           "resourceId": "8be10578-81f9-46f7-8c1c-b13a21d6297d",
-          "linkType": "measurement",
+          "linkType": "dataset",
           "linkLabel": "adapter-1_1_asset-1_0.asset-1_1",
-          "queryHint": "measurement",
+          "queryHint": "dataset",
           "editingDisabled": false,
           "navigationActive": false
         },
@@ -124,9 +124,9 @@
         },
         {
           "resourceId": "sp:spdatastream:ShPLfn",
-          "linkType": "data-source",
+          "linkType": "data-stream",
           "linkLabel": "adapter-1_2_asset-1_0.asset-1_2",
-          "queryHint": "data-source",
+          "queryHint": "data-stream",
           "editingDisabled": false,
           "navigationActive": false
         },
@@ -140,9 +140,9 @@
         },
         {
           "resourceId": "cb1aba54-b132-4952-b868-b41c04e335e4",
-          "linkType": "measurement",
+          "linkType": "dataset",
           "linkLabel": "adapter-1_2_asset-1_0.asset-1_2",
-          "queryHint": "measurement",
+          "queryHint": "dataset",
           "editingDisabled": false,
           "navigationActive": false
         },
