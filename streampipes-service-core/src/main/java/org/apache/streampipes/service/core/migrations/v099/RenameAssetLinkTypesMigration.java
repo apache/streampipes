@@ -34,15 +34,14 @@ public class RenameAssetLinkTypesMigration implements Migration {
   private static final String FIELD_ID = "_id";
   private static final String FIELD_LINK_LABEL = "linkLabel";
   private static final String FIELD_LINK_TYPE = "linkType";
+  private static final String FIELD_QUERY_HINT = "queryHint";
+  private static final String FIELD_LINK_QUERY_HINT = "linkQueryHint";
+  private static final String FIELD_ASSET_LINKS = "assetLinks";
+  private static final String FIELD_ASSETS = "assets";
 
-  private static final Map<String, String> LEGACY_LINK_LABEL_BY_TYPE = Map.of(
-      "data-source", "Data Source",
-      "measurement", "Data Lake Storage"
-  );
-
-  private static final Map<String, String> RENAMED_LINK_LABEL_BY_TYPE = Map.of(
-      "data-stream", "Data Stream",
-      "dataset", "Dataset"
+  private static final Map<String, RenamedLinkType> RENAMED_LINK_TYPES = Map.of(
+      "data-source", new RenamedLinkType("data-stream", "Data Stream"),
+      "measurement", new RenamedLinkType("dataset", "Dataset")
   );
 
   private final IGenericStorage genericStorage;
@@ -62,7 +61,10 @@ public class RenameAssetLinkTypesMigration implements Migration {
     try {
       return genericStorage.findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE)
           .stream()
-          .anyMatch(this::requiresRename);
+          .anyMatch(this::isLegacyLinkType)
+          || genericStorage.findAll(GenericDocTypes.DOC_ASSET_MANAGEMENT)
+          .stream()
+          .anyMatch(this::containsLegacyAssetLink);
     } catch (IOException e) {
       return false;
     }
@@ -70,24 +72,96 @@ public class RenameAssetLinkTypesMigration implements Migration {
 
   @Override
   public void executeMigration() throws IOException {
+    migrateAssetLinkTypes();
+    migrateAssetLinks();
+  }
+
+  private void migrateAssetLinkTypes() throws IOException {
     List<Map<String, Object>> assetLinkTypes = genericStorage.findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE);
     for (Map<String, Object> assetLinkType : assetLinkTypes) {
-      if (!requiresRename(assetLinkType)) {
+      RenamedLinkType renamedLinkType = renamedLinkType(assetLinkType);
+      if (renamedLinkType == null) {
         continue;
       }
 
-      assetLinkType.put(FIELD_LINK_LABEL, RENAMED_LINK_LABEL_BY_TYPE.get(assetLinkType.get(FIELD_LINK_TYPE)));
-      genericStorage.update(String.valueOf(assetLinkType.get(FIELD_ID)), mapper.writeValueAsString(assetLinkType));
+      assetLinkType.put(FIELD_LINK_TYPE, renamedLinkType.type());
+      assetLinkType.put(FIELD_LINK_LABEL, renamedLinkType.label());
+      assetLinkType.put(FIELD_LINK_QUERY_HINT, renamedLinkType.type());
+      update(assetLinkType);
     }
   }
 
-  private boolean requiresRename(Map<String, Object> assetLinkType) {
-    return LEGACY_LINK_LABEL_BY_TYPE.get(assetLinkType.get(FIELD_LINK_TYPE))
-        .equals(assetLinkType.get(FIELD_LINK_LABEL));
+  private void migrateAssetLinks() throws IOException {
+    List<Map<String, Object>> assets = genericStorage.findAll(GenericDocTypes.DOC_ASSET_MANAGEMENT);
+    for (Map<String, Object> asset : assets) {
+      if (migrateAssetLinks(asset)) {
+        update(asset);
+      }
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private boolean migrateAssetLinks(Map<String, Object> asset) {
+    boolean changed = false;
+    Object assetLinks = asset.get(FIELD_ASSET_LINKS);
+    if (assetLinks instanceof List<?> links) {
+      for (Object link : links) {
+        if (link instanceof Map<?, ?>) {
+          Map<String, Object> assetLink = (Map<String, Object>) link;
+          RenamedLinkType renamedLinkType = renamedLinkType(assetLink);
+          if (renamedLinkType != null) {
+            assetLink.put(FIELD_LINK_TYPE, renamedLinkType.type());
+            assetLink.put(FIELD_QUERY_HINT, renamedLinkType.type());
+            changed = true;
+          }
+        }
+      }
+    }
+
+    Object nestedAssets = asset.get(FIELD_ASSETS);
+    if (nestedAssets instanceof List<?> assets) {
+      for (Object nestedAsset : assets) {
+        if (nestedAsset instanceof Map<?, ?>) {
+          changed |= migrateAssetLinks((Map<String, Object>) nestedAsset);
+        }
+      }
+    }
+    return changed;
+  }
+
+  private boolean containsLegacyAssetLink(Map<String, Object> asset) {
+    return containsLegacyAssetLink(asset.get(FIELD_ASSET_LINKS))
+        || containsLegacyAssetLink(asset.get(FIELD_ASSETS));
+  }
+
+  @SuppressWarnings("unchecked")
+  private boolean containsLegacyAssetLink(Object value) {
+    if (!(value instanceof List<?> values)) {
+      return false;
+    }
+
+    return values.stream().anyMatch(valueItem -> valueItem instanceof Map<?, ?> map
+        && (isLegacyLinkType((Map<String, Object>) map)
+        || containsLegacyAssetLink((Map<String, Object>) map)));
+  }
+
+  private boolean isLegacyLinkType(Map<String, Object> assetLinkType) {
+    return renamedLinkType(assetLinkType) != null;
+  }
+
+  private RenamedLinkType renamedLinkType(Map<String, Object> assetLinkType) {
+    return RENAMED_LINK_TYPES.get(assetLinkType.get(FIELD_LINK_TYPE));
+  }
+
+  private void update(Map<String, Object> document) throws IOException {
+    genericStorage.update(String.valueOf(document.get(FIELD_ID)), mapper.writeValueAsString(document));
   }
 
   @Override
   public String getDescription() {
     return "Renaming asset link types for data streams and datasets";
+  }
+
+  private record RenamedLinkType(String type, String label) {
   }
 }
