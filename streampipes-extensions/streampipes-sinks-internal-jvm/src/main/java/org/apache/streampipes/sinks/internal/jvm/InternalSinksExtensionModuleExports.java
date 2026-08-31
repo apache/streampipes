@@ -25,6 +25,7 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
 import org.apache.streampipes.sinks.internal.jvm.datalake.migrations.DataLakeSinkMigrationV1;
 import org.apache.streampipes.sinks.internal.jvm.datalake.migrations.DataLakeSinkMigrationV2;
+import org.apache.streampipes.sinks.internal.jvm.datalake.migrations.DataLakeSinkMigrationV3;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +47,7 @@ public class InternalSinksExtensionModuleExports implements IExtensionModuleExpo
   public List<IModelMigrator<?, ?>> migrators() {
     return List.of(
         new DataLakeSinkMigrationV1(),
-        new DataLakeSinkMigrationV2());
+        new DataLakeSinkMigrationV2(),
+        new DataLakeSinkMigrationV3());
   }
 }
