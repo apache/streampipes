@@ -82,7 +82,7 @@ export class ProcessingElementTestUtils {
             .addSourceType('set')
             .addProcessingElement(pipelineElementTest.processor)
             .addSink(
-                PipelineElementBuilder.create('dataset')
+                PipelineElementBuilder.create('data_lake')
                     .addInput('input', 'db_measurement', dataLakeIndex)
                     .build(),
             )

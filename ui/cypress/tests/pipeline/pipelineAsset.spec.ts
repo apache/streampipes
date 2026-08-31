@@ -49,7 +49,7 @@ describe('Test Saving Pipeline with Asset Link', () => {
         const pipelineInput = PipelineBuilder.create(initialPipelineName)
             .addSource(adapterName)
             .addSink(
-                PipelineElementBuilder.create('dataset')
+                PipelineElementBuilder.create('data_lake')
                     .addInput('input', 'db_measurement', 'demo')
                     .build(),
             )

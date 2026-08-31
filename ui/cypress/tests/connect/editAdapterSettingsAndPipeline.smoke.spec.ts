@@ -43,7 +43,7 @@ describe('Test Edit Adapter and Pipeline', () => {
                     .build(),
             )
             .addSink(
-                PipelineElementBuilder.create('dataset')
+                PipelineElementBuilder.create('data_lake')
                     .addInput('input', 'db_measurement', 'demo')
                     .build(),
             )

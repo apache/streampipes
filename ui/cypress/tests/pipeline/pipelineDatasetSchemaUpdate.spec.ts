@@ -118,7 +118,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
             .addSource(dataStreamSelector)
             .addProcessingElement(processingElement)
             .addSink(
-                PipelineElementBuilder.create('dataset')
+                PipelineElementBuilder.create('data_lake')
                     .addInput('input', 'db_measurement', datasetName)
                     .build(),
             )
