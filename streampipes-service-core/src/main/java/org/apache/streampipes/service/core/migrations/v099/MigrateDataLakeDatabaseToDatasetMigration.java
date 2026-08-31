@@ -21,6 +21,8 @@ package org.apache.streampipes.service.core.migrations.v099;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.http.HttpStatus;
@@ -48,22 +50,7 @@ public class MigrateDataLakeDatabaseToDatasetMigration implements Migration {
 
   @Override
   public void executeMigration() throws IOException {
-    var payload = String.format(
-        "{\"source\":\"%s\",\"target\":\"%s\",\"create_target\":true}",
-        Utils.LEGACY_DATA_LAKE_DB_NAME,
-        Utils.DATA_LAKE_DB_NAME
-    );
-
-    var response = Utils.postRequest(Utils.getDatabaseRoute("") + "_replicate", payload)
-        .execute()
-        .returnResponse();
-
-    int statusCode = response.getStatusLine().getStatusCode();
-    if (statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_ACCEPTED) {
-      LOG.info("Legacy data lake database replicated to dataset database");
-    } else {
-      throw new IOException("Unexpected response while replicating legacy data lake database: " + statusCode);
-    }
+    copyDocuments(Utils.LEGACY_DATA_LAKE_DB_NAME, Utils.DATA_LAKE_DB_NAME);
   }
 
   @Override
@@ -96,5 +83,82 @@ public class MigrateDataLakeDatabaseToDatasetMigration implements Migration {
       LOG.warn("Could not determine document count for CouchDB database '{}'", databaseName, e);
       return 0;
     }
+  }
+
+  protected void copyDocuments(String sourceDatabaseName,
+                               String targetDatabaseName) throws IOException {
+    Utils.getCouchDbClient(targetDatabaseName, true);
+
+    JsonArray documents = getAllDocuments(sourceDatabaseName);
+    for (JsonElement document : documents) {
+      upsertDocument(targetDatabaseName, document.getAsJsonObject());
+    }
+
+    LOG.info("Copied {} documents from '{}' to '{}'",
+        documents.size(),
+        sourceDatabaseName,
+        targetDatabaseName);
+  }
+
+  protected JsonArray getAllDocuments(String databaseName) throws IOException {
+    var response = Utils.getRequest(Utils.getDatabaseRoute(databaseName) + "/_all_docs?include_docs=true")
+        .execute()
+        .returnContent()
+        .asString();
+    JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
+    JsonArray documents = new JsonArray();
+    JsonArray rows = jsonObject.getAsJsonArray("rows");
+    for (JsonElement row : rows) {
+      documents.add(row.getAsJsonObject().get("doc"));
+    }
+    return documents;
+  }
+
+  protected void upsertDocument(String databaseName,
+                                JsonObject document) throws IOException {
+    String documentId = document.get("_id").getAsString();
+
+    JsonObject documentToStore = document.deepCopy();
+    documentToStore.remove("_rev");
+
+    String targetRoute = Utils.getDatabaseRoute(databaseName) + "/" + Utils.escapePathSegment(documentId);
+    String currentRev = getDocumentRev(targetRoute);
+    if (currentRev != null) {
+      documentToStore.addProperty("_rev", currentRev);
+    }
+
+    var response = Utils.putRequest(targetRoute, documentToStore.toString())
+        .execute()
+        .returnResponse();
+
+    int statusCode = response.getStatusLine().getStatusCode();
+    if (!(statusCode == HttpStatus.SC_CREATED || statusCode == HttpStatus.SC_ACCEPTED
+        || statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CONFLICT)) {
+      throw new IOException("Unexpected response while copying document '" + documentId + "': " + statusCode);
+    }
+  }
+
+  protected String getDocumentRev(String documentRoute) {
+    try {
+      var response = Utils.getRequest(documentRoute)
+          .execute()
+          .returnResponse();
+      int statusCode = response.getStatusLine().getStatusCode();
+
+      if (statusCode == HttpStatus.SC_OK) {
+        var document = JsonParser.parseString(
+            Utils.getRequest(documentRoute).execute().returnContent().asString()
+        ).getAsJsonObject();
+        return document.get("_rev").getAsString();
+      }
+
+      if (statusCode == HttpStatus.SC_NOT_FOUND) {
+        return null;
+      }
+    } catch (IOException e) {
+      LOG.warn("Could not determine revision for document route '{}'", documentRoute, e);
+    }
+
+    return null;
   }
 }

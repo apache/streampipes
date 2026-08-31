@@ -52,7 +52,8 @@ class MigrateDataLakeDatabaseToDatasetMigrationTest {
       }
 
       @Override
-      public void executeMigration() {
+      protected void copyDocuments(String sourceDatabaseName,
+                                   String targetDatabaseName) {
         MigrateDataLakeDatabaseToDatasetMigrationTest.this.replicated = true;
       }
     };
