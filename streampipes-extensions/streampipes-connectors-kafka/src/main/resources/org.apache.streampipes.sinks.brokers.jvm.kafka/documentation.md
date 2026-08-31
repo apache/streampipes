@@ -63,6 +63,12 @@ This sink accepts any incoming event type and serializes it to JSON format befor
 ### Topic Settings
 * **Topic**: The Kafka topic where events will be published. If the topic doesn't exist, it will be created automatically with default settings.
 
+### Message Key
+* **No key**: Records are published without a key
+* **Static value**: A fixed text is attached to every record
+* **Event field**: The value of a selected event field is used, primitive fields only
+* **Expression**: Text combined with field placeholders in the form `#fieldName#`
+
 ### Advanced Settings
 * **Additional Configurations**: Add custom Kafka producer configurations in key=value format. Each configuration should be on a new line. For example:
   ```

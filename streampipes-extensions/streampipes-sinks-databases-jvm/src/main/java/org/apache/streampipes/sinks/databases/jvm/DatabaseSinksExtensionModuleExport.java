@@ -28,6 +28,7 @@ import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbSink;
 import org.apache.streampipes.sinks.databases.jvm.milvus.MilvusSink;
 import org.apache.streampipes.sinks.databases.jvm.parquet.ParquetSink;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlSink;
+import org.apache.streampipes.sinks.databases.jvm.postgresql.migration.PostgreSqlSinkMigrationV1;
 import org.apache.streampipes.sinks.databases.jvm.qdrant.QdrantSink;
 import org.apache.streampipes.sinks.databases.jvm.redis.RedisSink;
 import org.apache.streampipes.sinks.databases.jvm.tsfile.TsFileSink;
@@ -57,6 +58,6 @@ public class DatabaseSinksExtensionModuleExport implements IExtensionModuleExpor
 
   @Override
   public List<IModelMigrator<?, ?>> migrators() {
-    return Collections.emptyList();
+    return List.of(new PostgreSqlSinkMigrationV1());
   }
 }

@@ -27,6 +27,7 @@ import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigExtractor;
 import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider;
+import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaKeyResolver;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
@@ -51,6 +52,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
 
   private SpKafkaProducer producer;
   private IExtensionsLogger extensionsLogger;
+  private KafkaKeyResolver keyResolver;
 
   private JsonDataFormatDefinition dataFormatDefinition;
 
@@ -73,6 +75,12 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
             .requiredTextParameter(Labels.withId(KafkaConfigProvider.TOPIC_KEY), false, false)
             .requiredTextParameter(Labels.withId(KafkaConfigProvider.BOOTSTRAP_SERVERS_KEY), false, false)
 
+            .requiredAlternatives(KafkaConfigProvider.getMessageKeyModeLabel(),
+                KafkaConfigProvider.getAlternativeNoMessageKey(),
+                KafkaConfigProvider.getAlternativeStaticMessageKey(),
+                KafkaConfigProvider.getAlternativeFieldMessageKey(),
+                KafkaConfigProvider.getAlternativeExpressionMessageKey())
+
             .requiredAlternatives(Labels.withId(KafkaConfigProvider.ACCESS_MODE),
                 KafkaConfigProvider.getAlternativeUnauthenticatedPlain(),
                 KafkaConfigProvider.getAlternativeUnauthenticatedSSL(),
@@ -93,6 +101,7 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
     var kafkaConfig = new KafkaConfigExtractor().extractSinkConfig(parameters.extractor());
     this.dataFormatDefinition = new JsonDataFormatDefinition();
     this.extensionsLogger = runtimeContext.getLogger();
+    this.keyResolver = kafkaConfig.getKeyResolver();
 
     this.producer = new SpKafkaProducer(
         kafkaConfig.getBootstrapServers(),
@@ -104,7 +113,8 @@ public class KafkaPublishSink implements IStreamPipesDataSink {
   public void onEvent(Event event) throws SpRuntimeException {
     try {
       Map<String, Object> rawEvent = event.getRaw();
-      this.producer.publish(dataFormatDefinition.fromMap(rawEvent));
+      var messageKey = this.keyResolver.resolveKey(event).orElse(null);
+      this.producer.publish(dataFormatDefinition.fromMap(rawEvent), messageKey);
     } catch (SpRuntimeException e) {
       LOG.error(e.getMessage(), e);
       extensionsLogger.error(e);

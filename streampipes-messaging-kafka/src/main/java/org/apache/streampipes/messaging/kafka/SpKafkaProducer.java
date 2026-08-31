@@ -84,6 +84,12 @@ public class SpKafkaProducer implements EventProducer, Serializable {
     }
   }
 
+  public void publish(byte[] message, String key) {
+    if (connected) {
+      producer.send(new ProducerRecord<>(topic, key, message));
+    }
+  }
+
   private Properties makeProperties(KafkaTransportProtocol protocol,
                                     List<KafkaConfigAppender> appenders) {
     return new ProducerConfigFactory(protocol).buildProperties(appenders);

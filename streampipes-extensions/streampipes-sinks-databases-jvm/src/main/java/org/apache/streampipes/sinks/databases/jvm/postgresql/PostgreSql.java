@@ -26,9 +26,12 @@ import org.apache.streampipes.sinks.databases.jvm.jdbcclient.model.SupportedDbEn
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
+
 public class PostgreSql extends JdbcClient {
 
   private static final Logger LOG = LoggerFactory.getLogger(PostgreSql.class);
+  private static final String DEFAULT_SCHEMA = "public";
 
   private PostgreSqlParameters params;
 
@@ -36,6 +39,8 @@ public class PostgreSql extends JdbcClient {
       throws SpRuntimeException {
 
     this.params = parameters;
+    this.allowNewTableCreation = parameters.allowsNewTableCreation();
+    this.batchSize = parameters.getBatchSize();
 
     // get(0) because it is the only input stream of the sink (and not two)
     // See (https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)
@@ -47,9 +52,25 @@ public class PostgreSql extends JdbcClient {
   }
 
   @Override
+  protected void prepareConnection() throws SQLException {
+    try (var statement = this.connection.prepareStatement("SELECT current_schema()");
+         var resultSet = statement.executeQuery()) {
+      if (resultSet.next() && resultSet.getString(1) == null) {
+        this.connection.setSchema(DEFAULT_SCHEMA);
+      }
+    }
+  }
+
+  @Override
+  protected String getTableSchemaPattern() throws SQLException {
+    return this.connection.getSchema();
+  }
+
+  @Override
   protected void extractTableInformation() {
 
-    String query = "SELECT * FROM information_schema.columns WHERE table_name = ? ;";
+    String query = "SELECT * FROM information_schema.columns "
+        + "WHERE table_name = ? AND table_schema = current_schema() ;";
 
     String[] queryParameter = new String[]{params.getDbTable()};
 

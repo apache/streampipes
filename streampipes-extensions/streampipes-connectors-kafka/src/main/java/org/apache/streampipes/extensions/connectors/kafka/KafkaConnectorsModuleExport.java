@@ -34,6 +34,7 @@ import org.apache.streampipes.extensions.connectors.kafka.sink.KafkaPublishSink;
 import java.util.List;
 
 public class KafkaConnectorsModuleExport implements IExtensionModuleExport {
+
   @Override
   public List<StreamPipesAdapter> adapters() {
     return List.of(
