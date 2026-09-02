@@ -22,6 +22,7 @@ import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 
 import org.slf4j.Logger;
@@ -108,28 +109,32 @@ public abstract class DataLakeMeasurementCounter implements IDataLakeMeasurement
   }
 
   /**
-   * Retrieves the runtime name of the first measurement property from the event schema of the given DataLakeMeasure.
+   * Retrieves the runtime name of the first property that is stored as a field from the event schema of the given
+   * DataLakeMeasure.
    *
-   * @param measure The {@link DataLakeMeasure} from which to retrieve the first measurement property.
-   * @return The runtime name of the first measurement property, or null if no such property is found.
+   * @param measure The {@link DataLakeMeasure} from which to retrieve the first stored field.
+   * @return The runtime name of the first stored field, or null if no such property is found.
    */
-  protected String getFirstMeasurementProperty(DataLakeMeasure measure) {
+  protected String getFirstCountableProperty(DataLakeMeasure measure) {
     var propertyRuntimeName = measure
         .getEventSchema()
         .getEventProperties()
         .stream()
-        .filter(ep -> ep.getPropertyScope() != null
-            && ep.getPropertyScope()
-                 .equals(PropertyScope.MEASUREMENT_PROPERTY.name()))
+        .filter(this::isStoredAsField)
         .map(EventProperty::getRuntimeName)
         .findFirst()
         .orElse(null);
 
     if (propertyRuntimeName == null) {
-      LOG.error("No measurement property was found in the event schema found for measure {}", measure.getMeasureName());
+      LOG.error("No countable property was found in the event schema for measure {}", measure.getMeasureName());
     }
 
     return propertyRuntimeName;
+  }
+
+  private boolean isStoredAsField(EventProperty eventProperty) {
+    return !(eventProperty instanceof EventPropertyPrimitive)
+        || !PropertyScope.DIMENSION_PROPERTY.name().equals(eventProperty.getPropertyScope());
   }
 
   protected Integer extractResult(SpQueryResult queryResult, String fieldName) {
