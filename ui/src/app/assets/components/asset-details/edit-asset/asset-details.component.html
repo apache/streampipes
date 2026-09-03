@@ -18,6 +18,7 @@
 
 @if (asset) {
     <sp-asset-selection-panel
+        #assetSelectionPanel
         [editMode]="true"
         [assetModel]="asset"
         [selectedAsset]="selectedAsset"
@@ -32,6 +33,21 @@
                 "
                 [backLinkTarget]="['assets']"
             >
+                <button
+                    pageActions
+                    type="button"
+                    mat-flat-button
+                    class="mat-basic asset-selector-trigger"
+                    [attr.aria-label]="
+                        'Select asset to view details' | translate
+                    "
+                    (click)="
+                        assetSelectionPanel.openSelector($event.currentTarget)
+                    "
+                >
+                    <mat-icon aria-hidden="true">account_tree</mat-icon>
+                    <span>{{ 'Assets' | translate }}</span>
+                </button>
                 <button
                     pageActions
                     type="button"

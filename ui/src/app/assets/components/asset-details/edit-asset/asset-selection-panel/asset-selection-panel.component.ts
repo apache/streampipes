@@ -19,6 +19,7 @@
 import {
     Component,
     EventEmitter,
+    inject,
     Input,
     OnDestroy,
     OnInit,
@@ -46,7 +47,6 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
-    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { SpBasicViewComponent } from '@streampipes/shared-ui';
 import { MatIcon } from '@angular/material/icon';
@@ -54,6 +54,14 @@ import { MatIconButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import {
+    MatDrawer,
+    MatDrawerContainer,
+    MatDrawerContent,
+} from '@angular/material/sidenav';
+import { BreakpointObserver } from '@angular/cdk/layout';
+
+const COMPACT_ASSET_SELECTOR = '(max-width: 70rem)';
 
 const HOVER_EXPAND_DELAY_MS = 500;
 
@@ -66,7 +74,6 @@ const HOVER_EXPAND_DELAY_MS = 500;
         FlexDirective,
         SpBasicViewComponent,
         LayoutAlignDirective,
-        LayoutGapDirective,
         MatTree,
         MatTreeNodeDef,
         MatTreeNode,
@@ -83,6 +90,9 @@ const HOVER_EXPAND_DELAY_MS = 500;
         MatMenuTrigger,
         MatMenu,
         MatMenuItem,
+        MatDrawerContainer,
+        MatDrawer,
+        MatDrawerContent,
     ],
 })
 export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
@@ -104,12 +114,22 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
 
     @ViewChild('tree') tree;
 
+    @ViewChild(MatDrawer)
+    selectorDrawer: MatDrawer;
+
+    isCompact = false;
+
     hasChild = (_: number, node: SpAsset) =>
         this.editMode || (!!node.assets && node.assets.length > 0);
 
     dropTargetIds: string[] = [];
     activeDropTargetAssetId: string | undefined;
     private hoverExpandTimer: ReturnType<typeof setTimeout> | undefined;
+    private selectorTrigger: HTMLElement | undefined;
+    private breakpointObserver = inject(BreakpointObserver);
+    private breakpointSubscription = this.breakpointObserver
+        .observe(COMPACT_ASSET_SELECTOR)
+        .subscribe(result => (this.isCompact = result.matches));
 
     ngOnInit(): void {
         this.treeControl = new NestedTreeControl<SpAsset>(node => node.assets);
@@ -119,11 +139,30 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.cancelHoverExpand();
+        this.breakpointSubscription.unsubscribe();
     }
 
     selectNode(asset: SpAsset, rootNode: boolean) {
         this.selectedAssetEmitter.emit({ asset, rootNode });
         this.expandToAsset(asset.assetId);
+        if (this.isCompact) {
+            this.closeSelector();
+        }
+    }
+
+    openSelector(trigger: EventTarget | null): void {
+        this.selectorTrigger =
+            trigger instanceof HTMLElement ? trigger : undefined;
+        void this.selectorDrawer?.open();
+    }
+
+    closeSelector(): void {
+        void this.selectorDrawer?.close();
+    }
+
+    restoreSelectorTriggerFocus(): void {
+        this.selectorTrigger?.focus();
+        this.selectorTrigger = undefined;
     }
 
     addAsset(node: SpAsset) {

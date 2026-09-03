@@ -23,28 +23,31 @@
     min-width: 0;
     min-height: 0;
     box-sizing: border-box;
-    container-type: inline-size;
 }
 
 .asset-editor-layout {
+    height: 100%;
+    min-height: 0;
     width: 100%;
     min-width: 0;
-    display: grid;
-    grid-template-columns: minmax(18rem, 30%) minmax(0, 1fr);
-    align-items: start;
+    background: var(--color-bg-main-panel-content);
 }
 
 .designer-panel-content {
-    padding: 0;
-    overflow: hidden;
+    width: clamp(20rem, 28vw, 24rem);
     min-width: 0;
     min-height: 0;
+    overflow: hidden;
+    border-inline-end: 1px solid var(--color-border-subtle);
+    background: var(--color-bg-main-panel-content);
 }
 
 .asset-details-content {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    min-height: 100%;
+    overflow: visible;
 }
 
 .asset-selection-view {
@@ -54,31 +57,44 @@
     overflow: hidden;
 }
 
+.selector-title {
+    min-width: 0;
+    padding-inline: var(--space-md);
+    overflow: hidden;
+    color: var(--color-default-text);
+    font-family: var(--font-emphasized), sans-serif;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selector-close {
+    display: none;
+    flex: 0 0 auto;
+}
+
 .tree-content {
     min-height: 0;
     overflow: hidden;
 }
 
 .tree-wrapper {
-    padding: 5px 5px 10px 2px;
+    padding: var(--space-sm);
     overflow-y: auto;
     flex: 1 1 auto;
     min-height: 0;
 }
 
-@container (max-width: 56rem) {
-    .asset-editor-layout {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
+@media (max-width: 70rem) {
     .designer-panel-content {
-        max-height: min(18rem, 35vh);
-        overflow-y: auto;
+        width: min(22rem, calc(100vw - var(--space-xl)));
+        max-width: 100%;
+        box-shadow: var(--shadow-overlay);
     }
 
-    .asset-selection-view {
-        height: auto;
-        overflow: visible;
+    .selector-close {
+        display: inline-flex;
     }
 }
 
@@ -94,24 +110,25 @@
 }
 
 .sp-tree .mat-nested-tree-node div[role='group'] {
-    padding-left: 10px;
-    border-left: 1px solid var(--color-bg-2);
-    margin-left: 12px;
+    padding-inline-start: var(--space-md);
+    border-inline-start: 1px solid var(--color-border-subtle);
+    margin-inline-start: var(--space-md);
 }
 
 .sp-tree div[role='group'] > .mat-tree-node {
-    padding-left: 6px;
+    padding-inline-start: var(--space-xs);
 }
 
 .mat-tree-node,
 .tree-row {
-    min-height: 48px;
+    min-height: 3rem;
     font-family: inherit;
 }
 
 .tree-row {
     width: 100%;
-    border-radius: 10px;
+    min-width: 0;
+    border-radius: var(--radius-sm);
 }
 
 .tree-row:hover .asset-node {
@@ -119,23 +136,30 @@
 }
 
 .asset-node {
-    font-weight: normal;
-    cursor: pointer;
     width: 100%;
+    min-width: 0;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    border-radius: 10px;
-    padding: 8px 10px;
-    transition:
-        border-color 100ms ease,
-        box-shadow 100ms ease;
+    gap: var(--space-xs);
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: normal;
     background: var(--color-bg-0);
+    transition:
+        background-color 160ms ease-out,
+        box-shadow 160ms ease-out;
+}
+
+.asset-node.selected-node {
+    background: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg-0));
+    box-shadow: inset 0 0 0 1px
+        color-mix(in srgb, var(--color-primary) 32%, transparent);
 }
 
 .cdk-drag-preview .asset-node,
 .cdk-drag-preview.asset-node {
-    box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+    box-shadow: var(--shadow-overlay);
 }
 
 .cdk-drag-placeholder {
@@ -147,12 +171,8 @@
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.tree-row:hover .asset-node {
-    border-color: var(--color-primary);
-}
-
 .tree-row.drop-target-active .asset-node {
-    background: color-mix(in srgb, var(--color-primary) 12%, white);
+    background: color-mix(in srgb, var(--color-primary) 12%, var(--color-bg-0));
     box-shadow: inset 0 0 0 2px var(--color-primary);
 }
 
@@ -166,40 +186,52 @@
 }
 
 .root-node {
-    margin-left: -8px;
+    margin-inline-start: calc(-1 * var(--space-sm));
 }
 
 .badge {
+    flex: 0 0 auto;
     background: var(--color-primary);
-    color: #fff;
-    border-radius: 10px;
-    padding: 2px 8px;
+    color: var(--mat-sys-on-primary);
+    border-radius: var(--radius-pill);
+    padding: var(--space-2xs) var(--space-sm);
     font-size: var(--font-size-xs);
 }
 
 .node-main {
+    flex: 1 1 auto;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--space-sm);
     min-width: 0;
+    overflow: hidden;
 }
 
 .node-icon {
+    flex: 0 0 auto;
     background: var(--color-bg-2);
     color: var(--color-primary);
-    border-radius: 8px;
-    padding: 4px;
+    border-radius: var(--radius-sm);
+    padding: var(--space-2xs);
 }
 
 .node-icon-selected {
-    background: color-mix(in srgb, var(--color-primary) 30%, white);
+    background: color-mix(in srgb, var(--color-primary) 24%, var(--color-bg-0));
     color: var(--color-primary);
 }
 
 .node-text {
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     min-width: 0;
+}
+
+.node-title,
+.node-meta {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .node-title {
@@ -208,19 +240,29 @@
 
 .node-meta {
     font-size: var(--font-size-xs);
-    color: var(--fg-muted, #666);
+    color: var(--fg-muted);
 }
 
 .node-actions {
+    flex: 0 0 auto;
     display: flex;
-    gap: 6px;
 }
 
 .node-drag-handle {
     cursor: grab;
     flex: 0 0 auto;
+    color: var(--fg-muted);
 }
 
 .node-toggle {
-    margin-right: 6px;
+    flex: 0 0 auto;
+    margin-inline-end: var(--space-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .asset-node,
+    .cdk-drag-animating,
+    .cdk-drop-list-dragging .mat-tree-node:not(.cdk-drag-placeholder) {
+        transition: none;
+    }
 }
