@@ -19,108 +19,108 @@
 <sp-basic-nav-tabs
     [spNavigationItems]="tabs"
     [activeLink]="'extensions-installation'"
-    padding="0"
 >
-    <div class="page-container-nav">
-        <div
-            fxFlex="100"
-            fxLayoutAlign="start center"
-            fxLayout="row"
-            class="pl-10 form-field-small"
+    <div class="page-container-padding-inner">
+        <sp-split-section
+            [title]="'Available Extensions' | translate"
+            [subtitle]="
+                'Install, update, or remove extensions for this installation.'
+                    | translate
+            "
         >
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-                <button
-                    mat-button
-                    mat-flat-button
-                    color="accent"
-                    [disabled]="selectedEndpointItems.length === 0"
-                    (click)="installSelected()"
-                    class="mr-10"
-                >
-                    <i class="material-icons">cloud_download</i>
-                    &nbsp;{{ 'Install selected' | translate }}
-                </button>
-                <button
-                    mat-button
-                    mat-flat-button
-                    color="accent"
-                    [disabled]="selectedEndpointItems.length === 0"
-                    (click)="uninstallSelected()"
-                    class="mr-10"
-                >
-                    <i class="material-icons">delete</i>
-                    &nbsp;{{ 'Uninstall selected' | translate }}
-                </button>
-                <button
-                    mat-icon-button
-                    color="accent"
-                    class="mr-10"
-                    (click)="selectAll(true)"
-                    [matTooltip]="'Select all' | translate"
-                    matTooltipPosition="above"
-                >
-                    <i class="material-icons">queue</i>
-                </button>
-                <button
-                    mat-icon-button
-                    color="accent"
-                    class="mr-10"
-                    (click)="selectAll(false)"
-                    [matTooltip]="'Select none' | translate"
-                    matTooltipPosition="above"
-                >
-                    <i class="material-icons">filter_none</i>
-                </button>
-            </div>
-            <span fxFlex></span>
-            <div fxLayoutAlign="start center" fxLayout="row">
-                <div class="form-field-small">
-                    <mat-form-field color="accent" appearance="outline">
+            <div class="extensions-toolbar">
+                <div class="extensions-toolbar__actions">
+                    <button
+                        mat-flat-button
+                        color="accent"
+                        [disabled]="selectedEndpointItems.length === 0"
+                        (click)="installSelected()"
+                    >
+                        <mat-icon aria-hidden="true">cloud_download</mat-icon>
+                        {{ 'Install selected' | translate }}
+                    </button>
+                    <button
+                        mat-flat-button
+                        class="mat-basic"
+                        [disabled]="selectedEndpointItems.length === 0"
+                        (click)="uninstallSelected()"
+                    >
+                        <mat-icon aria-hidden="true">delete</mat-icon>
+                        {{ 'Uninstall selected' | translate }}
+                    </button>
+                    <span class="extensions-toolbar__divider"></span>
+                    <button
+                        mat-icon-button
+                        color="accent"
+                        (click)="selectAll(true)"
+                        [attr.aria-label]="'Select all' | translate"
+                        [matTooltip]="'Select all' | translate"
+                        matTooltipPosition="above"
+                    >
+                        <mat-icon aria-hidden="true">queue</mat-icon>
+                    </button>
+                    <button
+                        mat-icon-button
+                        color="accent"
+                        (click)="selectAll(false)"
+                        [attr.aria-label]="'Select none' | translate"
+                        [matTooltip]="'Select none' | translate"
+                        matTooltipPosition="above"
+                    >
+                        <mat-icon aria-hidden="true">filter_none</mat-icon>
+                    </button>
+                </div>
+
+                <div class="extensions-toolbar__filters form-field-small">
+                    <mat-form-field
+                        class="extensions-toolbar__field"
+                        color="accent"
+                        appearance="outline"
+                    >
                         <mat-select
                             [(value)]="selectedCategory"
                             (selectionChange)="filterByCategory($event)"
+                            [attr.aria-label]="'Type' | translate"
                         >
                             <mat-option value="all">
-                                {{ 'All' | translate }}</mat-option
-                            >
+                                {{ 'All' | translate }}
+                            </mat-option>
                             <mat-option value="ADAPTER">
-                                {{ 'Adapters' | translate }}</mat-option
-                            >
+                                {{ 'Adapters' | translate }}
+                            </mat-option>
                             <mat-option value="DATA_STREAM">
-                                {{ 'Data Streams' | translate }}</mat-option
-                            >
+                                {{ 'Data Streams' | translate }}
+                            </mat-option>
                             <mat-option value="DATA_PROCESSOR">
                                 {{ 'Data Processors' | translate }}
                             </mat-option>
                             <mat-option value="DATA_SINK">
-                                {{ 'Data Sinks' | translate }}</mat-option
-                            >
+                                {{ 'Data Sinks' | translate }}
+                            </mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
-            </div>
-            <div class="ml-10" fxLayoutAlign="start center" fxLayout="row">
-                <div class="form-field-small">
                     <mat-form-field
-                        class="form-style"
+                        class="extensions-toolbar__search"
                         color="accent"
                         appearance="outline"
                     >
                         <input
                             matInput
                             [placeholder]="'Find Element' | translate"
-                            value=""
                             [(ngModel)]="filterTerm"
-                            name="something"
+                            name="extension-search"
                         />
-                        <mat-icon matPrefix>search</mat-icon>
+                        <mat-icon matPrefix aria-hidden="true">search</mat-icon>
                     </mat-form-field>
-                </div>
-            </div>
-            <div fxLayoutAlign="start center" fxLayout="row" class="ml-10">
-                <div class="form-field-small">
-                    <mat-form-field color="accent" appearance="outline">
-                        <mat-select [(value)]="selectedInstallationStatus">
+                    <mat-form-field
+                        class="extensions-toolbar__status"
+                        color="accent"
+                        appearance="outline"
+                    >
+                        <mat-select
+                            [(value)]="selectedInstallationStatus"
+                            [attr.aria-label]="'Status' | translate"
+                        >
                             <mat-option [value]="'all'">
                                 {{ 'Available & Installed' | translate }}
                             </mat-option>
@@ -132,30 +132,21 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <button
+                        mat-icon-button
+                        color="accent"
+                        (click)="getEndpointItems()"
+                        [attr.aria-label]="'Reload items' | translate"
+                        [matTooltip]="'Reload items' | translate"
+                        matTooltipPosition="above"
+                    >
+                        <mat-icon aria-hidden="true">refresh</mat-icon>
+                    </button>
                 </div>
             </div>
-            <div fxLayoutAlign="start center" fxLayout="row" class="ml-10">
-                <button
-                    mat-icon-button
-                    color="accent"
-                    (click)="getEndpointItems()"
-                    [matTooltip]="'Reload items' | translate"
-                    matTooltipPosition="above"
-                >
-                    <mat-icon>refresh</mat-icon>
-                </button>
-            </div>
-        </div>
-    </div>
-    <div fxLayout="column" fxFlex="100" class="p-10">
-        @if (endpointItemsLoadingComplete) {
-            <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-                <div fxLayoutAlign="start start" fxLayout="column">
-                    <sp-basic-header-title-component
-                        [title]="'Available Extensions' | translate"
-                    ></sp-basic-header-title-component>
-                </div>
-                <div fxLayout="row wrap" class="w-100">
+
+            @if (endpointItemsLoadingComplete) {
+                <div class="extensions-grid">
                     @for (
                         endpointItem of endpointItems
                             | pipelineElementTypeFilter: selectedTab
@@ -166,32 +157,26 @@
                         track endpointItem
                     ) {
                         <sp-endpoint-item
-                            fxFlex="100"
-                            fxFlex.gt-xs="50"
-                            fxFlex.gt-sm="33"
-                            fxFlex.gt-lg="25"
                             [itemSelected]="endpointItem.selected"
                             [item]="endpointItem"
                             (triggerInstallation)="triggerInstallation($event)"
-                            class="p-15"
                             (click)="toggleSelected(endpointItem)"
                         ></sp-endpoint-item>
                     }
                 </div>
-            </div>
-        }
-        @if (!endpointItemsLoadingComplete) {
-            <div fxFlex="100" fxLayoutAlign="center center">
-                <sp-spinner
-                    [diameter]="20"
-                    layout="row"
-                    gap="8px"
-                    [text]="
-                        'Searching for available extensions, please wait...'
-                            | translate
-                    "
-                ></sp-spinner>
-            </div>
-        }
+            } @else {
+                <div class="extensions-loading">
+                    <sp-spinner
+                        [diameter]="20"
+                        layout="row"
+                        gap="8px"
+                        [text]="
+                            'Searching for available extensions, please wait...'
+                                | translate
+                        "
+                    ></sp-spinner>
+                </div>
+            }
+        </sp-split-section>
     </div>
 </sp-basic-nav-tabs>
