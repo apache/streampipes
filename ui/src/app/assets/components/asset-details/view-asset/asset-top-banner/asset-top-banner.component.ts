@@ -16,21 +16,15 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnChanges } from '@angular/core';
 import {
     Isa95TypeService,
     LocationConfig,
     SpAssetModel,
 } from '@streampipes/platform-services';
 import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
-    SpBasicHeaderTitleComponent,
     SpLabelComponent,
+    SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { ViewAssetLabelsComponent } from '../view-asset-labels/view-asset-labels.component';
 import { SingleMarkerMapComponent } from '../../../../../core-ui/single-marker-map/single-marker-map.component';
@@ -41,18 +35,14 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './asset-top-banner.component.html',
     styleUrls: ['./asset-top-banner.component.scss'],
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
-        FlexDirective,
-        SpBasicHeaderTitleComponent,
-        LayoutGapDirective,
+        SplitSectionComponent,
         SpLabelComponent,
         ViewAssetLabelsComponent,
         SingleMarkerMapComponent,
         TranslatePipe,
     ],
 })
-export class SpAssetTopBannerComponent implements OnInit {
+export class SpAssetTopBannerComponent implements OnChanges {
     @Input()
     assetModel: SpAssetModel;
 
@@ -63,7 +53,7 @@ export class SpAssetTopBannerComponent implements OnInit {
 
     private isa95TypeService = inject(Isa95TypeService);
 
-    ngOnInit() {
+    ngOnChanges() {
         this.assetType =
             this.isa95TypeService.toLabel(
                 this.assetModel.assetType.isa95AssetType,
