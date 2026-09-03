@@ -39,6 +39,7 @@ export * from './lib/components/basic-header-title/header-title.component';
 export * from './lib/components/basic-inner-panel/basic-inner-panel.component';
 export * from './lib/components/basic-field-description/basic-field-description.component';
 export * from './lib/components/basic-view/basic-view.component';
+export * from './lib/components/page-header/page-header.component';
 export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
 export * from './lib/components/date-input/date-input.component';
 export * from './lib/components/element-id/element-id.component';

@@ -25,12 +25,8 @@
             ></sp-spinner>
         </div>
     } @else {
-        <div fxLayout="row" fxFlex="100">
-            <sp-basic-view
-                style="width: 250px"
-                [hideNavbar]="true"
-                margin="10px 0 0 10px"
-            >
+        <div fxLayout="row" fxFlex="100" class="pipeline-editor__workspace">
+            <sp-basic-view class="pipeline-editor__palette" [hideNavbar]="true">
                 @if (allElementsLoaded) {
                     <sp-pipeline-element-icon-stand
                         id="shepherd-test"
@@ -42,8 +38,7 @@
             @if (allElementsLoaded && allMetadataLoaded) {
                 <sp-pipeline-assembly
                     fxFlex="100"
-                    class="w-100"
-                    style="margin-left: 10px"
+                    class="pipeline-editor__assembly w-100"
                     [rawPipelineModel]="rawPipelineModel"
                     [allElements]="allElements"
                     [originalPipeline]="originalPipeline"

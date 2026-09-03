@@ -16,14 +16,16 @@
  *
  */
 
-.page-container-padding-inner {
-    margin: 20px;
+.pipelines-page__tabs,
+.pipelines-page__content {
+    min-width: 0;
 }
 
-.mr-10 {
-    margin-right: 10px;
+.pipelines-page__tabs {
+    width: 100%;
 }
 
-.mt-20 {
-    margin-top: 20px;
+.pipelines-page__tab-content,
+.pipelines-page__content {
+    padding-top: var(--space-lg);
 }

@@ -39,8 +39,8 @@ import {
     ObjectManageDialogResourceConfig,
     ObjectManageDialogResult,
     PanelType,
-    SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
+    SpPageHeaderComponent,
 } from '@streampipes/shared-ui';
 import {
     FlexDirective,
@@ -65,7 +65,7 @@ import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
-        SpBasicHeaderTitleComponent,
+        SpPageHeaderComponent,
         MatIconButton,
         MatMenuTrigger,
         MatMenu,
@@ -104,9 +104,8 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
     private readonly emptyAssets: SpAssetTreeNode[] = [];
 
     ngOnInit() {
-        this.pageTitle = this.isEditMode
-            ? this.translate.instant('Edit adapter: ') + this.displayName
-            : this.translate.instant('New adapter: ') + this.displayName;
+        const titleKey = this.isEditMode ? 'Edit adapter' : 'New adapter';
+        this.pageTitle = `${this.translate.instant(titleKey)}: ${this.displayName}`;
 
         if (
             !this.adapterDescription.transformationConfig ||

@@ -16,56 +16,67 @@
 ~
 -->
 
-<sp-basic-view [showBackLink]="false" [padding]="true">
-    <div
-        nav
-        fxFlex="100"
-        fxLayoutAlign="start center"
-        fxLayout="row"
-        fxLayoutGap="10px"
-        class="pl-10"
+<sp-basic-view [hideNavbar]="true" [padding]="true">
+    @let pageHeaderAssetLinkType = pageHeaderAssetLinkType$ | async;
+    <sp-page-header
+        [title]="'Pipelines' | translate"
+        [icon]="pageHeaderAssetLinkType?.linkIcon ?? 'play_arrow'"
+        [iconColor]="
+            pageHeaderAssetLinkType?.linkColor ?? 'var(--color-primary)'
+        "
     >
         @if (hasPipelineWritePrivileges) {
             <button
-                mat-button
+                pageActions
+                type="button"
                 mat-flat-button
                 color="accent"
                 (click)="navigateToPipelineEditor()"
                 data-cy="pipelines-navigate-to-editor"
             >
-                <i class="material-icons">add</i>&nbsp;{{
+                <i class="material-icons" aria-hidden="true">add</i>&nbsp;{{
                     'New Pipeline' | translate
                 }}
             </button>
         }
-        <span fxFlex></span>
         <button
+            pageActions
+            type="button"
             mat-icon-button
             color="accent"
             (click)="startPipelineTour()"
-            [matTooltip]="'Tutorial'"
+            [attr.aria-label]="'Tutorial' | translate"
+            [matTooltip]="'Tutorial' | translate"
             [disabled]="tutorialActive"
         >
-            <i class="material-icons"> school </i>
+            <i class="material-icons" aria-hidden="true">school</i>
         </button>
         <button
+            pageActions
+            type="button"
             mat-icon-button
             color="accent"
             data-cy="refresh-pipelines"
-            matTooltip="Refresh pipelines"
+            [attr.aria-label]="'Refresh pipelines' | translate"
+            [matTooltip]="'Refresh pipelines' | translate"
             matTooltipPosition="above"
             (click)="getPipelines()"
         >
-            <i class="material-icons"> refresh </i>
+            <i class="material-icons" aria-hidden="true">refresh</i>
         </button>
-    </div>
-    <div fxFlex="100" fxLayout="column">
-        <div fxLayout="column">
-            <sp-basic-header-title-component
-                title="Pipelines"
-            ></sp-basic-header-title-component>
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
-                <div fxFlex="100">
+    </sp-page-header>
+
+    @if (isAdminRole) {
+        <mat-tab-group class="pipelines-page__tabs" color="accent">
+            <mat-tab
+                [label]="
+                    ('Pipelines' | translate) +
+                    ' (' +
+                    filteredPipelines.length +
+                    ')'
+                "
+            >
+                <div class="pipelines-page__tab-content">
                     @if (pipelinesReady) {
                         <sp-pipeline-overview
                             [pipelines]="filteredPipelines"
@@ -73,26 +84,29 @@
                         ></sp-pipeline-overview>
                     }
                 </div>
-            </div>
-            @if (isAdminRole) {
-                <div fxFlex="100" fxLayout="column" style="margin-top: 20px">
-                    <sp-basic-header-title-component
-                        title="Functions"
-                    ></sp-basic-header-title-component>
-                    <div
-                        fxFlex="100"
-                        fxLayout="row"
-                        fxLayoutAlign="center start"
-                    >
-                        <div fxFlex="100">
-                            @if (functionsReady) {
-                                <sp-functions-overview [functions]="functions">
-                                </sp-functions-overview>
-                            }
-                        </div>
-                    </div>
+            </mat-tab>
+            <mat-tab
+                [label]="
+                    ('Functions' | translate) + ' (' + functions.length + ')'
+                "
+            >
+                <div class="pipelines-page__tab-content">
+                    @if (functionsReady) {
+                        <sp-functions-overview
+                            [functions]="functions"
+                        ></sp-functions-overview>
+                    }
                 </div>
+            </mat-tab>
+        </mat-tab-group>
+    } @else {
+        <div class="pipelines-page__content">
+            @if (pipelinesReady) {
+                <sp-pipeline-overview
+                    [pipelines]="filteredPipelines"
+                    (refreshPipelinesEmitter)="getPipelines()"
+                ></sp-pipeline-overview>
             }
         </div>
-    </div>
+    }
 </sp-basic-view>

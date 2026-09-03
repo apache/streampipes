@@ -16,25 +16,26 @@
 ~
 -->
 
-<div fxLayout="column" class="page-container">
-    <div fxLayout="row" class="p-0 sp-bg-lightgray page-container-nav">
-        <div fxFlex="100" class="page-container-nav pr-5" fxLayout="row">
-            @if (showBackLink) {
-                <div
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                    style="border-right: 2px solid var(--color-bg-2)"
-                    class="pl-5 pr-5"
-                >
+<div
+    class="basic-nav-tabs"
+    [class.basic-nav-tabs--framed]="framed"
+    [style.margin]="margin"
+>
+    <header class="basic-nav-tabs__nav">
+        <div class="basic-nav-tabs__nav-content">
+            @if (showBackLink && backLinkTarget.length) {
+                <div class="basic-nav-tabs__back-action">
                     <button
+                        type="button"
                         mat-icon-button
                         color="accent"
-                        [matTooltip]="'Back' | translate"
+                        [attr.aria-label]="backLinkLabel | translate"
+                        [matTooltip]="backLinkLabel | translate"
                         (click)="navigateBack()"
                         class="edit-menu-btn"
                         data-cy="save-data-explorer-go-back-to-overview"
                     >
-                        <mat-icon>arrow_back</mat-icon>
+                        <mat-icon aria-hidden="true">arrow_back</mat-icon>
                     </button>
                 </div>
             }
@@ -43,30 +44,29 @@
                 [mat-stretch-tabs]="true"
                 color="accent"
                 [tabPanel]="tabPanel"
-                class="w-100"
+                class="basic-nav-tabs__tabs"
             >
-                @for (item of spNavigationItems; track item) {
+                @for (item of spNavigationItems; track item.itemId) {
                     <a
                         mat-tab-link
-                        (click)="navigateTo(item)"
+                        [routerLink]="item.itemLink"
+                        [relativeTo]="null"
                         [active]="activeLink === item.itemId"
                         [attr.data-cy]="'tab-' + item.itemTitle"
                     >
-                        <span>{{ item.itemTitle }}</span>
+                        <span>{{ item.itemTitle | translate }}</span>
                     </a>
                 }
             </nav>
-            <span fxFlex></span>
-            <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
         </div>
-    </div>
+    </header>
 
-    <div
-        class="fixed-height"
-        [ngStyle]="{ padding: padding }"
-        fxLayout="column"
-        fxFlex="100"
+    <mat-tab-nav-panel
+        #tabPanel
+        class="basic-nav-tabs__content"
+        [class.basic-nav-tabs__content--padded]="padding === undefined"
+        [style.padding]="padding"
     >
-        <ng-content fxFlex="100"></ng-content>
-    </div>
+        <ng-content></ng-content>
+    </mat-tab-nav-panel>
 </div>

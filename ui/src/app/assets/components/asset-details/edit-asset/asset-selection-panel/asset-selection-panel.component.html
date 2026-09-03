@@ -16,13 +16,15 @@
 ~
 -->
 
-<div fxLayout="row" fxFlex="100">
+<div class="asset-editor-layout">
     @if (assetModel) {
-        <div fxFlex="30" fxLayout="column" class="designer-panel-content">
+        <aside class="designer-panel-content">
             <sp-basic-view
                 class="w-100 asset-selection-view"
                 [showBackLink]="false"
                 [padding]="false"
+                [framed]="true"
+                margin="var(--space-sm)"
             >
                 <div nav fxLayout="row" fxLayoutAlign="space-between center">
                     <span class="txt-lg ml-md">{{
@@ -517,8 +519,8 @@
                     </div>
                 </div>
             </sp-basic-view>
-        </div>
-        <div fxFlex="70">
+        </aside>
+        <div class="asset-details-content">
             <ng-content></ng-content>
         </div>
     }

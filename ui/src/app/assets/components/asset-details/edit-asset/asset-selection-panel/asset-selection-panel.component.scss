@@ -19,32 +19,37 @@
 :host {
     display: block;
     height: 100%;
+    width: 100%;
+    min-width: 0;
     min-height: 0;
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+
+.asset-editor-layout {
+    width: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(18rem, 30%) minmax(0, 1fr);
+    align-items: start;
 }
 
 .designer-panel-content {
     padding: 0;
     overflow: hidden;
+    min-width: 0;
     min-height: 0;
+}
+
+.asset-details-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
 }
 
 .asset-selection-view {
     display: block;
     height: 100%;
-    min-height: 0;
-    overflow: hidden;
-}
-
-:host ::ng-deep .asset-selection-view .page-container {
-    height: calc(100vh - 76px);
-    min-height: 0;
-}
-
-:host
-    ::ng-deep
-    .asset-selection-view
-    .page-container
-    > div:not(.page-container-nav) {
     min-height: 0;
     overflow: hidden;
 }
@@ -59,6 +64,22 @@
     overflow-y: auto;
     flex: 1 1 auto;
     min-height: 0;
+}
+
+@container (max-width: 56rem) {
+    .asset-editor-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .designer-panel-content {
+        max-height: min(18rem, 35vh);
+        overflow-y: auto;
+    }
+
+    .asset-selection-view {
+        height: auto;
+        overflow: visible;
+    }
 }
 
 .sp-tree-invisible {

@@ -16,47 +16,88 @@
  *
  */
 
-.fixed-height {
-    flex-direction: row;
-    box-sizing: border-box;
+:host {
     display: flex;
-    flex: 1 1 100%;
-    max-height: 100%;
-    overflow-y: auto;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 100%;
 }
 
-.page-container-nav {
-    line-height: 24px;
-    height: 44px;
-    border-bottom: 1px solid var(--color-bg-3);
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+.basic-view {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    box-sizing: border-box;
+    container-type: inline-size;
+    background: var(--color-bg-main-panel-content);
 }
 
-.sp-bg-lightgray {
-    background-color: var(--color-bg-main-panel-header);
+.basic-view--framed {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
 }
 
-.sp-tab-bg {
-    background-color: var(--color-bg-main-panel-header);
+.basic-view--framed > .basic-view__nav {
+    border-start-start-radius: inherit;
+    border-start-end-radius: inherit;
 }
 
-.page-container {
-    margin: 10px;
-    border: 1px solid var(--color-bg-3);
-    min-height: calc(100vh - 76px);
-    background-color: var(--color-bg-main-panel-content);
-    border-radius: 6px;
+.basic-view__nav {
+    flex: 0 0 auto;
+    min-width: 0;
+    min-height: 44px;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-bg-main-panel-header);
 }
 
-.page-container-padding-inner {
-    margin: 20px;
+.basic-view__nav-content {
+    min-width: 0;
+    min-height: 44px;
+    padding-inline: var(--space-xs);
+    display: flex;
+    align-items: center;
 }
 
-.pl-5 {
-    padding-left: 5px;
+.basic-view__back-action {
+    align-self: stretch;
+    padding-inline: var(--space-xs);
+    border-inline-end: 1px solid var(--color-border-subtle);
+    display: flex;
+    align-items: center;
 }
 
-.pr-5 {
-    padding-right: 5px;
+.basic-view__actions {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+}
+
+.basic-view__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.basic-view__content--padded {
+    padding: var(--space-lg);
+}
+
+@container (max-width: 42rem) {
+    .basic-view__nav-content {
+        min-height: 44px;
+    }
+
+    .basic-view__actions {
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        scrollbar-width: thin;
+    }
+
+    .basic-view__content--padded {
+        padding: var(--space-md);
+    }
 }

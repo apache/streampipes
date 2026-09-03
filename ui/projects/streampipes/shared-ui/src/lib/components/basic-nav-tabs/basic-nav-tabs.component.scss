@@ -16,38 +16,78 @@
  *
  */
 
-.sp-bg-lightgray {
-    background-color: var(--color-bg-0);
+:host {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 100%;
 }
 
-.sp-tab-bg {
-    background-color: var(--color-bg-0);
+.basic-nav-tabs {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    container-type: inline-size;
+    background: var(--color-bg-main-panel-content);
 }
 
-.page-container {
-    margin: 10px;
-    border: 1px solid var(--color-bg-3);
-    min-height: calc(100vh - 76px);
-    border-radius: 10px;
+.basic-nav-tabs--framed {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
 }
 
-.page-container-nav {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+.basic-nav-tabs--framed > .basic-nav-tabs__nav {
+    border-start-start-radius: inherit;
+    border-start-end-radius: inherit;
 }
 
-.page-container-padding-inner {
-    margin: 10px;
+.basic-nav-tabs__nav {
+    flex: 0 0 auto;
+    min-width: 0;
+    min-height: 44px;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-bg-main-panel-header);
 }
 
-.upper-case {
-    text-transform: uppercase;
+.basic-nav-tabs__nav-content {
+    min-width: 0;
+    min-height: 44px;
+    padding-inline: var(--space-xs);
+    display: flex;
+    align-items: center;
 }
 
-.pr-5 {
-    padding-right: 5px;
+.basic-nav-tabs__back-action {
+    align-self: stretch;
+    padding-inline: var(--space-xs);
+    border-inline-end: 1px solid var(--color-border-subtle);
+    display: flex;
+    align-items: center;
 }
 
-.mat-mdc-tab-header {
-    flex-shrink: 1;
+.basic-nav-tabs__tabs {
+    flex: 1 1 auto;
+    min-width: 0;
+    --mat-tab-divider-color: transparent;
+}
+
+.basic-nav-tabs__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.basic-nav-tabs__content--padded {
+    padding: var(--space-lg);
+}
+
+@container (max-width: 42rem) {
+    .basic-nav-tabs__content--padded {
+        padding: var(--space-md);
+    }
 }

@@ -16,65 +16,43 @@
  *
  */
 
-import {
-    ChangeDetectionStrategy,
-    Component,
-    Input,
-    inject,
-} from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { SpNavigationItem } from '../../models/sp-navigation.model';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatIconButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { MatTabLink, MatTabNav, MatTabNavPanel } from '@angular/material/tabs';
+import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-    selector: 'sp-basic-nav-tabs',
-    templateUrl: './basic-nav-tabs.component.html',
-    styleUrls: ['./basic-nav-tabs.component.scss'],
+    selector: 'sp-page-header',
+    templateUrl: './page-header.component.html',
+    styleUrls: ['./page-header.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatIconButton,
-        MatTooltip,
-        MatIcon,
-        MatTabNav,
-        MatTabLink,
-        MatTabNavPanel,
-        RouterLink,
-        TranslatePipe,
-    ],
+    imports: [MatIconButton, MatIcon, MatTooltip, TranslatePipe],
 })
-export class SpBasicNavTabsComponent {
-    private router = inject(Router);
+export class SpPageHeaderComponent {
+    constructor(private router: Router) {}
+
+    @Input({ required: true })
+    title: string;
 
     @Input()
-    spNavigationItems: SpNavigationItem[];
+    description: string | undefined;
 
     @Input()
-    activeLink: string;
+    icon: string | undefined;
 
     @Input()
-    showBackLink = false;
+    iconColor = 'var(--color-primary)';
 
     @Input()
-    backLinkTarget: string[] = [];
+    backLinkTarget: string[] | undefined;
 
     @Input()
     backLinkLabel = 'Back';
 
-    @Input()
-    padding: string | undefined;
-
-    @Input()
-    margin: string | undefined;
-
-    @Input()
-    framed = false;
-
     navigateBack(): void {
-        if (this.backLinkTarget.length) {
+        if (this.backLinkTarget?.length) {
             this.router.navigate(this.backLinkTarget);
         }
     }
