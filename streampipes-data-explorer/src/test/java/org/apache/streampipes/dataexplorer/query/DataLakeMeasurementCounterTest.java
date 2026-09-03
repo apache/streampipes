@@ -19,6 +19,10 @@
 package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.schema.EventPropertyList;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.schema.PropertyScope;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -84,5 +89,36 @@ public class DataLakeMeasurementCounterTest {
 
     var result = counter.countMeasurementSizes();
     assertEquals(0, result.size());
+  }
+
+  @Test
+  void getCountableProperty_WithArrayProperty() {
+    var arrayProperty = new EventPropertyList();
+    arrayProperty.setRuntimeName("array");
+    var measure = new DataLakeMeasure(MEASURE_1_NAME, new EventSchema(List.of(arrayProperty)));
+    counter = new DataLakeMeasurementCounterTestImpl(List.of(measure), List.of(MEASURE_1_NAME));
+
+    assertEquals("array", counter.getCountableProperty(measure));
+  }
+
+  @Test
+  void getCountableProperty_WithUnscopedPrimitiveProperty() {
+    var primitiveProperty = new EventPropertyPrimitive();
+    primitiveProperty.setRuntimeName("value");
+    var measure = new DataLakeMeasure(MEASURE_1_NAME, new EventSchema(List.of(primitiveProperty)));
+    counter = new DataLakeMeasurementCounterTestImpl(List.of(measure), List.of(MEASURE_1_NAME));
+
+    assertEquals("value", counter.getCountableProperty(measure));
+  }
+
+  @Test
+  void getCountableProperty_IgnoresDimensionProperty() {
+    var dimensionProperty = new EventPropertyPrimitive();
+    dimensionProperty.setRuntimeName("dimension");
+    dimensionProperty.setPropertyScope(PropertyScope.DIMENSION_PROPERTY.name());
+    var measure = new DataLakeMeasure(MEASURE_1_NAME, new EventSchema(List.of(dimensionProperty)));
+    counter = new DataLakeMeasurementCounterTestImpl(List.of(measure), List.of(MEASURE_1_NAME));
+
+    assertNull(counter.getCountableProperty(measure));
   }
 }

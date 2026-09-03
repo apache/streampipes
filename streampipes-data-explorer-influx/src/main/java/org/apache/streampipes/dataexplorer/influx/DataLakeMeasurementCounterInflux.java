@@ -47,10 +47,10 @@ public class DataLakeMeasurementCounterInflux extends DataLakeMeasurementCounter
   @Override
   protected CompletableFuture<Integer> createQueryAsAsyncFuture(DataLakeMeasure measure) {
     return CompletableFuture.supplyAsync(() -> {
-      var firstColumn = getFirstMeasurementProperty(measure);
+      var firstColumn = getFirstCountableProperty(measure);
       if (firstColumn == null) {
         LOG.error(
-            "Could not count events in measurement: {}, because no measurement property was found in event schema",
+            "Could not count events in measurement: {}, because no countable property was found in event schema",
             measure.getMeasureName()
         );
         return 0;
