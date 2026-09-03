@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { UntypedFormControl } from '@angular/forms';
@@ -31,16 +31,13 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
-    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { SpBreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
-import { NgClass } from '@angular/common';
-import { ClassDirective } from '@ngbracket/ngx-layout/extended';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/divider';
-import { ShortenPipe } from '../../pipes/shorten.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-toolbar',
@@ -52,10 +49,7 @@ import { ShortenPipe } from '../../pipes/shorten.pipe';
         LayoutDirective,
         LayoutAlignDirective,
         SpBreadcrumbComponent,
-        LayoutGapDirective,
         AssetBrowserToolbarComponent,
-        NgClass,
-        ClassDirective,
         MatIconButton,
         MatTooltip,
         MatIcon,
@@ -63,17 +57,14 @@ import { ShortenPipe } from '../../pipes/shorten.pipe';
         MatMenu,
         MatDivider,
         MatMenuItem,
-        ShortenPipe,
+        TranslatePipe,
     ],
 })
 export class ToolbarComponent
     extends BaseNavigationComponent
     implements OnInit
 {
-    @ViewChild('feedbackOpen') feedbackOpen: MatMenuTrigger;
-    @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
-
-    userEmail;
+    userEmail: string;
     darkMode: boolean;
 
     appearanceControl: UntypedFormControl;
@@ -85,11 +76,7 @@ export class ToolbarComponent
     ngOnInit(): void {
         this.assetFilterService.applyAssetLinkType('');
         this.currentUserService.user$.subscribe(user => {
-            const displayName = user.displayName;
-            this.userEmail =
-                displayName.length > 33
-                    ? displayName.slice(0, 32) + '...'
-                    : displayName;
+            this.userEmail = user.displayName || user.username;
             this.profileService
                 .getUserProfile(user.username)
                 .subscribe(userInfo => {

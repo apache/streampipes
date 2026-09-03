@@ -16,55 +16,104 @@
  *
  */
 
-::ng-deep .cdk-overlay-pane .feedback-menu-content {
-    min-width: 500px;
-}
-
-.mat-mdc-icon-button {
-    height: 41px;
-}
-
-.sp-navbar-icon-selected {
-    color: var(--color-toolbar-icon-selected);
-}
-
-.sp-navbar-icon {
-    color: var(--color-toolbar-icon);
-}
-
-.sp-navbar-icon:hover {
-    color: var(--color-toolbar-icon-hover);
-}
-
-.current-user {
-    color: var(--color-default-text);
+:host {
     display: block;
-    line-height: 48px;
-    height: 48px;
-    padding: 0 16px;
-    text-align: left;
-    text-decoration: none;
-    max-width: 100%;
-    position: relative;
 }
 
 .toolbar {
-    background: var(--color-bg-1);
+    height: calc(var(--mat-toolbar-standard-height) + var(--space-sm));
+    padding-inline: var(--space-lg);
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-toolbar-bg);
     color: var(--color-navigation-text);
 }
 
 .sp-toolbar {
-    height: 40px;
-    max-height: 40px;
     width: 100%;
+    min-width: 0;
+    height: 100%;
+}
+
+.toolbar-breadcrumb {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.toolbar-actions {
+    flex: 0 0 auto;
+    height: 100%;
+    gap: var(--space-sm);
+}
+
+.account-trigger {
+    color: var(--color-toolbar-icon);
+}
+
+.account-trigger:hover {
+    color: var(--color-toolbar-icon-hover);
+}
+
+.account-trigger.sp-navbar-icon-button-selected {
+    color: var(--color-toolbar-icon-selected);
+}
+
+.sp-navbar-icon {
+    color: inherit;
+}
+
+.account-summary {
+    width: 17rem;
+    min-width: 0;
+    padding: var(--space-md) var(--space-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.account-avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    flex: 0 0 auto;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-selected);
+    color: var(--mat-sys-primary);
+    display: grid;
+    place-items: center;
+}
+
+.account-copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+}
+
+.account-label {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-normal);
+}
+
+.current-user {
+    overflow: hidden;
+    color: var(--mat-sys-on-surface);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 ::ng-deep .toolbar-menu {
-    background-color: var(--mat-sys-surface);
+    --mat-menu-container-color: var(--mat-sys-surface-container-lowest);
+    --mat-menu-container-shape: var(--radius-sm);
     --mat-menu-item-icon-color: var(--mat-sys-on-surface);
-    color: var(--mat-sys-on-surface);
 }
 
-::ng-deep .toolbar-menu .current-user {
-    color: var(--mat-sys-on-surface);
+@media (max-width: 48rem) {
+    .toolbar {
+        padding-inline: var(--space-md);
+    }
 }
