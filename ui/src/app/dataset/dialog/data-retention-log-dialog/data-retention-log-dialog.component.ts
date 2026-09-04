@@ -69,7 +69,7 @@ export class DataRetentionLogDialogComponent {
     private dialogRef = inject(DialogRef<DataRetentionLogDialogComponent>);
     private translateService = inject(TranslateService);
 
-    close(refreshDatasetIndex: boolean) {
-        this.dialogRef.close(refreshDatasetIndex);
+    close(refreshDataLakeIndex: boolean) {
+        this.dialogRef.close(refreshDataLakeIndex);
     }
 }

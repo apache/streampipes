@@ -16,9 +16,9 @@
  *
  */
 
-import { MissingValueBehaviour } from './dataset-query-config.model';
+import { MissingValueBehaviour } from './data-lake-query-config.model';
 
-export interface DatasetQueryParameters {
+export interface DatalakeQueryParameters {
     columns?: string;
     startDate?: number;
     endDate?: number;

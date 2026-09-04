@@ -18,7 +18,7 @@
 
 import { Component, Input, OnInit, inject } from '@angular/core';
 import {
-    DatasetRestService,
+    DatalakeRestService,
     FilterExpressionGroup,
     SelectedFilter,
     SourceConfig,
@@ -62,7 +62,7 @@ import { FilterExpressionPreviewService } from './filter-expression-preview.serv
 export class FilterSelectionPanelComponent implements OnInit {
     private widgetConfigService = inject(ChartConfigurationService);
     private fieldProviderService = inject(ChartFieldProviderService);
-    private datasetRestService = inject(DatasetRestService);
+    private dataLakeRestService = inject(DatalakeRestService);
     private dialogService = inject(DialogService);
     private filterExpressionPreviewService = inject(
         FilterExpressionPreviewService,
@@ -101,7 +101,7 @@ export class FilterSelectionPanelComponent implements OnInit {
                 ),
             )
             .map(f => f.runtimeName);
-        this.datasetRestService
+        this.dataLakeRestService
             .getTagValues(this.sourceConfig.measureName, fields)
             .subscribe(response => {
                 Object.keys(response).forEach(key => {

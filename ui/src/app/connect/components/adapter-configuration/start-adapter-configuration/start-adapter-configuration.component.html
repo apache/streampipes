@@ -241,10 +241,10 @@
                             | translate
                     "
                     optionIcon="save"
-                    dataCy="sp-store-in-dataset"
+                    dataCy="sp-store-in-datalake"
                     (optionSelectedEmitter)="handlePersistOption($event)"
                 >
-                    @if (saveInDataset) {
+                    @if (saveInDataLake) {
                         <sp-form-field
                             class="mt-md"
                             [level]="3"
@@ -252,9 +252,9 @@
                         >
                             <mat-form-field color="accent">
                                 <mat-select
-                                    [(ngModel)]="datasetTimestampField"
+                                    [(ngModel)]="dataLakeTimestampField"
                                     [ngModelOptions]="{ standalone: true }"
-                                    data-cy="sp-store-in-dataset-timestamp"
+                                    data-cy="sp-store-in-datalake-timestamp"
                                 >
                                     @for (
                                         timestampField of eventSchema.eventProperties

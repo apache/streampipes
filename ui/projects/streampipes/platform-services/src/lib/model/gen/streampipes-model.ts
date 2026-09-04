@@ -16,12 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-/* tslint:disable */
-/* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-08-17 11:51:26.
+
+// @ts-nocheck
+// Generated using typescript-generator version 3.2.1263 on 2026-05-18 14:42:00.
 
 export class NamedStreamPipesEntity implements Storable {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.SpDataStream'
         | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
         | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
@@ -73,7 +73,7 @@ export class NamedStreamPipesEntity implements Storable {
 }
 
 export class VersionedNamedStreamPipesEntity extends NamedStreamPipesEntity {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.base.VersionedNamedStreamPipesEntity'
         | 'org.apache.streampipes.model.connect.adapter.AdapterDescription'
         | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
@@ -96,7 +96,7 @@ export class VersionedNamedStreamPipesEntity extends NamedStreamPipesEntity {
 }
 
 export class AdapterDescription extends VersionedNamedStreamPipesEntity {
-    declare '@class': 'org.apache.streampipes.model.connect.adapter.AdapterDescription';
+    '@class': 'org.apache.streampipes.model.connect.adapter.AdapterDescription';
     'config': StaticPropertyUnion[];
     'correspondingDataStreamElementId': string;
     /**
@@ -156,7 +156,7 @@ export class AdapterDescription extends VersionedNamedStreamPipesEntity {
  * @deprecated since 0.99.0, for removal
  */
 export class TransformationRuleDescription {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription'
@@ -232,7 +232,7 @@ export class TransformationRuleDescription {
  * @deprecated since 0.99.0, for removal
  */
 export class ValueTransformationRuleDescription extends TransformationRuleDescription {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription'
@@ -283,7 +283,7 @@ export class ValueTransformationRuleDescription extends TransformationRuleDescri
  * @deprecated since 0.99.0, for removal
  */
 export class AddTimestampRuleDescription extends ValueTransformationRuleDescription {
-    declare '@class': 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription';
+    '@class': 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription';
     'propertyScope': PropertyScope;
     'runtimeKey': string;
 
@@ -306,7 +306,7 @@ export class AddTimestampRuleDescription extends ValueTransformationRuleDescript
  * @deprecated since 0.99.0, for removal
  */
 export class AddValueTransformationRuleDescription extends ValueTransformationRuleDescription {
-    declare '@class': 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription';
+    '@class': 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription';
     'datatype': string;
     'description': string;
     'label': string;
@@ -338,7 +338,7 @@ export class AddValueTransformationRuleDescription extends ValueTransformationRu
 }
 
 export class StaticProperty {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.staticproperty.CodeInputStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.CollectionStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty'
@@ -409,13 +409,9 @@ export class StaticProperty {
             case 'org.apache.streampipes.model.staticproperty.OneOfStaticProperty':
                 return OneOfStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty':
-                return RuntimeResolvableAnyStaticProperty.fromData(
-                    data as RuntimeResolvableAnyStaticProperty,
-                );
+                return RuntimeResolvableAnyStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty':
-                return RuntimeResolvableOneOfStaticProperty.fromData(
-                    data as RuntimeResolvableOneOfStaticProperty,
-                );
+                return RuntimeResolvableOneOfStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty':
                 return RuntimeResolvableTreeInputStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.SecretStaticProperty':
@@ -429,15 +425,13 @@ export class StaticProperty {
             case 'org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty':
                 return SlideToggleStaticProperty.fromData(data);
             case 'org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty':
-                return RuntimeResolvableGroupStaticProperty.fromData(
-                    data as RuntimeResolvableGroupStaticProperty,
-                );
+                return RuntimeResolvableGroupStaticProperty.fromData(data);
         }
     }
 }
 
 export class SelectionStaticProperty extends StaticProperty {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.staticproperty.SelectionStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.AnyStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty'
@@ -476,7 +470,7 @@ export class SelectionStaticProperty extends StaticProperty {
 }
 
 export class AnyStaticProperty extends SelectionStaticProperty {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.staticproperty.AnyStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty';
 
@@ -494,7 +488,7 @@ export class AnyStaticProperty extends SelectionStaticProperty {
 }
 
 export class OutputStrategy {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.output.AppendOutputStrategy'
         | 'org.apache.streampipes.model.output.CustomOutputStrategy'
         | 'org.apache.streampipes.model.output.CustomTransformOutputStrategy'
@@ -548,7 +542,7 @@ export class OutputStrategy {
 }
 
 export class AppendOutputStrategy extends OutputStrategy {
-    declare '@class': 'org.apache.streampipes.model.output.AppendOutputStrategy';
+    '@class': 'org.apache.streampipes.model.output.AppendOutputStrategy';
     'eventProperties': EventPropertyUnion[];
 
     static 'fromData'(
@@ -573,10 +567,6 @@ export class AssetExportConfiguration {
     assetName: string;
     assets: ExportItem[];
     dashboards: ExportItem[];
-    datasetMeasures: ExportItem[];
-    /**
-     * @deprecated since 0.99.0, for removal
-     */
     dataLakeMeasures: ExportItem[];
     dataSources: ExportItem[];
     dataViews: ExportItem[];
@@ -605,11 +595,8 @@ export class AssetExportConfiguration {
         instance.dashboards = __getCopyArrayFn(ExportItem.fromData)(
             data.dashboards,
         );
-        instance.datasetMeasures = __getCopyArrayFn(ExportItem.fromData)(
-            data.datasetMeasures ?? data.dataLakeMeasures,
-        );
         instance.dataLakeMeasures = __getCopyArrayFn(ExportItem.fromData)(
-            data.dataLakeMeasures ?? data.datasetMeasures,
+            data.dataLakeMeasures,
         );
         instance.dataSources = __getCopyArrayFn(ExportItem.fromData)(
             data.dataSources,
@@ -788,7 +775,7 @@ export class Certificate implements Storable {
  * @deprecated since 0.99.0, for removal
  */
 export class ChangeDatatypeTransformationRuleDescription extends ValueTransformationRuleDescription {
-    declare '@class': 'org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription';
+    '@class': 'org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription';
     'originalDatatypeXsd': string;
     'runtimeKey': string;
     'targetDatatypeXsd': string;
@@ -837,7 +824,7 @@ export class ChartSchemaUpdateInfo {
 }
 
 export class CodeInputStaticProperty extends StaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.CodeInputStaticProperty';
+    '@class': 'org.apache.streampipes.model.staticproperty.CodeInputStaticProperty';
     'codeTemplate': string;
     'language': string;
     'value': string;
@@ -859,7 +846,7 @@ export class CodeInputStaticProperty extends StaticProperty {
 }
 
 export class CollectionStaticProperty extends StaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.CollectionStaticProperty';
+    '@class': 'org.apache.streampipes.model.staticproperty.CollectionStaticProperty';
     'memberType': string;
     'members': StaticPropertyUnion[];
     'staticPropertyTemplate': StaticPropertyUnion;
@@ -885,7 +872,7 @@ export class CollectionStaticProperty extends StaticProperty {
 }
 
 export class ColorPickerStaticProperty extends StaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty';
+    '@class': 'org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty';
     'selectedColor': string;
 
     static 'fromData'(
@@ -1143,7 +1130,7 @@ export class ConsumedMessagesInfo extends MessagesInfo {
  * @deprecated since 0.99.0, for removal
  */
 export class CorrectionValueTransformationRuleDescription extends ValueTransformationRuleDescription {
-    declare '@class': 'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription';
+    '@class': 'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription';
     'correctionValue': number;
     'operator': string;
     'runtimeKey': string;
@@ -1204,7 +1191,7 @@ export class CriticalMeasurementFieldChange {
 }
 
 export class CustomOutputStrategy extends OutputStrategy {
-    declare '@class': 'org.apache.streampipes.model.output.CustomOutputStrategy';
+    '@class': 'org.apache.streampipes.model.output.CustomOutputStrategy';
     'availablePropertyKeys': string[];
     'outputRight': boolean;
     'selectedPropertyKeys': string[];
@@ -1230,7 +1217,7 @@ export class CustomOutputStrategy extends OutputStrategy {
 }
 
 export class CustomTransformOutputStrategy extends OutputStrategy {
-    declare '@class': 'org.apache.streampipes.model.output.CustomTransformOutputStrategy';
+    '@class': 'org.apache.streampipes.model.output.CustomTransformOutputStrategy';
     'eventProperties': EventPropertyUnion[];
 
     static 'fromData'(
@@ -1405,11 +1392,51 @@ export class DataExplorerWidgetModel extends DashboardEntity {
     }
 }
 
+export class DataLakeMeasure implements Storable {
+    '@class': 'org.apache.streampipes.model.datalake.DataLakeMeasure';
+    'elementId': string;
+    'eventSchema': EventSchema;
+    'measureName': string;
+    'pipelineId': string;
+    'pipelineIsRunning': boolean;
+    'pipelineName': string;
+    'retentionTime': RetentionTimeConfig;
+    'rev': string;
+    'schemaUpdateStrategy': DataLakeMeasureSchemaUpdateStrategy;
+    'schemaVersion': string;
+    'timestampField': string;
+
+    static 'fromData'(
+        data: DataLakeMeasure,
+        target?: DataLakeMeasure,
+    ): DataLakeMeasure {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new DataLakeMeasure();
+        instance['@class'] = data['@class'];
+        instance.elementId = data.elementId;
+        instance.eventSchema = EventSchema.fromData(data.eventSchema);
+        instance.measureName = data.measureName;
+        instance.pipelineId = data.pipelineId;
+        instance.pipelineIsRunning = data.pipelineIsRunning;
+        instance.pipelineName = data.pipelineName;
+        instance.retentionTime = RetentionTimeConfig.fromData(
+            data.retentionTime,
+        );
+        instance.rev = data.rev;
+        instance.schemaUpdateStrategy = data.schemaUpdateStrategy;
+        instance.schemaVersion = data.schemaVersion;
+        instance.timestampField = data.timestampField;
+        return instance;
+    }
+}
+
 export class InvocableStreamPipesEntity
     extends VersionedNamedStreamPipesEntity
     implements EndpointSelectable
 {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity'
         | 'org.apache.streampipes.model.graph.DataSinkInvocation'
         | 'org.apache.streampipes.model.graph.DataProcessorInvocation';
@@ -1458,7 +1485,7 @@ export class InvocableStreamPipesEntity
 }
 
 export class DataProcessorInvocation extends InvocableStreamPipesEntity {
-    declare '@class': 'org.apache.streampipes.model.graph.DataProcessorInvocation';
+    '@class': 'org.apache.streampipes.model.graph.DataProcessorInvocation';
     'category': string[];
     'outputStrategies': OutputStrategyUnion[];
     'outputStream': SpDataStream;
@@ -1545,7 +1572,7 @@ export class DataSeries {
 }
 
 export class DataSinkInvocation extends InvocableStreamPipesEntity {
-    declare '@class': 'org.apache.streampipes.model.graph.DataSinkInvocation';
+    '@class': 'org.apache.streampipes.model.graph.DataSinkInvocation';
     'category': string[];
 
     static 'fromData'(
@@ -1581,51 +1608,11 @@ export class DataSinkType {
     }
 }
 
-export class DatasetMeasure implements Storable {
-    declare '@class': 'org.apache.streampipes.model.dataset.DatasetMeasure';
-    'elementId': string;
-    'eventSchema': EventSchema;
-    'measureName': string;
-    'pipelineId': string;
-    'pipelineIsRunning': boolean;
-    'pipelineName': string;
-    'retentionTime': RetentionTimeConfig;
-    'rev': string;
-    'schemaUpdateStrategy': DatasetMeasureSchemaUpdateStrategy;
-    'schemaVersion': string;
-    'timestampField': string;
-
-    static 'fromData'(
-        data: DatasetMeasure,
-        target?: DatasetMeasure,
-    ): DatasetMeasure {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new DatasetMeasure();
-        instance['@class'] = data['@class'];
-        instance.elementId = data.elementId;
-        instance.eventSchema = EventSchema.fromData(data.eventSchema);
-        instance.measureName = data.measureName;
-        instance.pipelineId = data.pipelineId;
-        instance.pipelineIsRunning = data.pipelineIsRunning;
-        instance.pipelineName = data.pipelineName;
-        instance.retentionTime = RetentionTimeConfig.fromData(
-            data.retentionTime,
-        );
-        instance.rev = data.rev;
-        instance.schemaUpdateStrategy = data.schemaUpdateStrategy;
-        instance.schemaVersion = data.schemaVersion;
-        instance.timestampField = data.timestampField;
-        return instance;
-    }
-}
-
 /**
  * @deprecated since 0.99.0, for removal
  */
 export class SchemaTransformationRuleDescription extends TransformationRuleDescription {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription'
@@ -1648,7 +1635,7 @@ export class SchemaTransformationRuleDescription extends TransformationRuleDescr
  * @deprecated since 0.99.0, for removal
  */
 export class DeleteRuleDescription extends SchemaTransformationRuleDescription {
-    declare '@class': 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription';
+    '@class': 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription';
     'runtimeKey': string;
 
     static 'fromData'(
@@ -1694,7 +1681,7 @@ export interface EndpointSelectable {
 }
 
 export class ValueSpecification {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.schema.QuantitativeValue'
         | 'org.apache.streampipes.model.schema.Enumeration';
 
@@ -1726,7 +1713,7 @@ export class ValueSpecification {
 }
 
 export class Enumeration extends ValueSpecification {
-    declare '@class': 'org.apache.streampipes.model.schema.Enumeration';
+    '@class': 'org.apache.streampipes.model.schema.Enumeration';
     'description': string;
     'label': string;
     'runtimeValues': string[];
@@ -1795,7 +1782,7 @@ export class EventGrounding {
 }
 
 export class EventProperty {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.schema.EventPropertyList'
         | 'org.apache.streampipes.model.schema.EventPropertyNested'
         | 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
@@ -1846,7 +1833,7 @@ export class EventProperty {
 }
 
 export class EventPropertyList extends EventProperty {
-    declare '@class': 'org.apache.streampipes.model.schema.EventPropertyList';
+    '@class': 'org.apache.streampipes.model.schema.EventPropertyList';
     'eventProperty': EventPropertyUnion;
 
     static 'fromData'(
@@ -1866,7 +1853,7 @@ export class EventPropertyList extends EventProperty {
 }
 
 export class EventPropertyNested extends EventProperty {
-    declare '@class': 'org.apache.streampipes.model.schema.EventPropertyNested';
+    '@class': 'org.apache.streampipes.model.schema.EventPropertyNested';
     'eventProperties': EventPropertyUnion[];
 
     static 'fromData'(
@@ -1886,7 +1873,7 @@ export class EventPropertyNested extends EventProperty {
 }
 
 export class EventPropertyPrimitive extends EventProperty {
-    declare '@class': 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
+    '@class': 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
     'measurementUnit': string;
     'runtimeType': string;
     'valueSpecification': ValueSpecificationUnion;
@@ -1913,7 +1900,7 @@ export class EventPropertyPrimitive extends EventProperty {
  * @deprecated since 0.99.0, for removal
  */
 export class StreamTransformationRuleDescription extends TransformationRuleDescription {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription'
         | 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
@@ -1951,7 +1938,7 @@ export class StreamTransformationRuleDescription extends TransformationRuleDescr
  * @deprecated since 0.99.0, for removal
  */
 export class EventRateTransformationRuleDescription extends StreamTransformationRuleDescription {
-    declare '@class': 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription';
+    '@class': 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription';
     'aggregationTimeWindow': number;
     'aggregationType': string;
 
@@ -2193,7 +2180,7 @@ export class FileMetadata implements Storable {
 }
 
 export class FileStaticProperty extends StaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.FileStaticProperty';
+    '@class': 'org.apache.streampipes.model.staticproperty.FileStaticProperty';
     'endpointUrl': string;
     'locationPath': string;
     'requiredFiletypes': string[];
@@ -2217,7 +2204,7 @@ export class FileStaticProperty extends StaticProperty {
 }
 
 export class FixedOutputStrategy extends OutputStrategy {
-    declare '@class': 'org.apache.streampipes.model.output.FixedOutputStrategy';
+    '@class': 'org.apache.streampipes.model.output.FixedOutputStrategy';
     'eventProperties': EventPropertyUnion[];
 
     static 'fromData'(
@@ -2237,7 +2224,7 @@ export class FixedOutputStrategy extends OutputStrategy {
 }
 
 export class FreeTextStaticProperty extends StaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.FreeTextStaticProperty';
+    '@class': 'org.apache.streampipes.model.staticproperty.FreeTextStaticProperty';
     'htmlAllowed': boolean;
     'htmlFontFormat': boolean;
     'mapsTo': string;
@@ -2308,7 +2295,7 @@ export class FunctionId {
 }
 
 export class GuessSchema {
-    declare '@class': 'org.apache.streampipes.model.connect.guess.GuessSchema';
+    '@class': 'org.apache.streampipes.model.connect.guess.GuessSchema';
     'eventPreview': string[];
     'eventSchema': EventSchema;
     'fieldStatusInfo': { [index: string]: FieldStatusInfo };
@@ -2345,7 +2332,7 @@ export class GuessSchema {
 }
 
 export class TransportProtocol {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.grounding.KafkaTransportProtocol'
         | 'org.apache.streampipes.model.grounding.MqttTransportProtocol'
         | 'org.apache.streampipes.model.grounding.NatsTransportProtocol'
@@ -2391,7 +2378,7 @@ export class TransportProtocol {
 }
 
 export class KafkaTransportProtocol extends TransportProtocol {
-    declare '@class': 'org.apache.streampipes.model.grounding.KafkaTransportProtocol';
+    '@class': 'org.apache.streampipes.model.grounding.KafkaTransportProtocol';
     'acks': string;
     'batchSize': string;
     'groupId': string;
@@ -2423,7 +2410,7 @@ export class KafkaTransportProtocol extends TransportProtocol {
 }
 
 export class KeepOutputStrategy extends OutputStrategy {
-    declare '@class': 'org.apache.streampipes.model.output.KeepOutputStrategy';
+    '@class': 'org.apache.streampipes.model.output.KeepOutputStrategy';
     'eventName': string;
     'keepBoth': boolean;
 
@@ -2484,7 +2471,7 @@ export class LinkSettings {
 }
 
 export class ListOutputStrategy extends OutputStrategy {
-    declare '@class': 'org.apache.streampipes.model.output.ListOutputStrategy';
+    '@class': 'org.apache.streampipes.model.output.ListOutputStrategy';
     'propertyName': string;
 
     static 'fromData'(
@@ -2524,7 +2511,7 @@ export class LocationConfig {
 }
 
 export class MappingProperty extends StaticProperty {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.staticproperty.MappingProperty'
         | 'org.apache.streampipes.model.staticproperty.MappingPropertyUnary'
         | 'org.apache.streampipes.model.staticproperty.MappingPropertyNary';
@@ -2563,7 +2550,7 @@ export class MappingProperty extends StaticProperty {
 }
 
 export class MappingPropertyNary extends MappingProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.MappingPropertyNary';
+    '@class': 'org.apache.streampipes.model.staticproperty.MappingPropertyNary';
     'selectedProperties': string[];
 
     static 'fromData'(
@@ -2583,7 +2570,7 @@ export class MappingPropertyNary extends MappingProperty {
 }
 
 export class MappingPropertyUnary extends MappingProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.MappingPropertyUnary';
+    '@class': 'org.apache.streampipes.model.staticproperty.MappingPropertyUnary';
     'selectedProperty': string;
 
     static 'fromData'(
@@ -2601,7 +2588,7 @@ export class MappingPropertyUnary extends MappingProperty {
 }
 
 export class MatchingStaticProperty extends StaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.MatchingStaticProperty';
+    '@class': 'org.apache.streampipes.model.staticproperty.MatchingStaticProperty';
     'matchLeft': string;
     'matchRight': string;
 
@@ -2664,11 +2651,59 @@ export class MessageCounter {
     }
 }
 
+export class MessagingSettings {
+    acks: number;
+    batchSize: number;
+    jmsHost: string;
+    jmsPort: number;
+    kafkaHost: string;
+    kafkaPort: number;
+    lingerMs: number;
+    messageMaxBytes: number;
+    mqttHost: string;
+    mqttPort: number;
+    natsHost: string;
+    natsPort: number;
+    prioritizedProtocols: SpProtocol[];
+    pulsarUrl: string;
+    supportedProtocols: string[];
+
+    static fromData(
+        data: MessagingSettings,
+        target?: MessagingSettings,
+    ): MessagingSettings {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new MessagingSettings();
+        instance.acks = data.acks;
+        instance.batchSize = data.batchSize;
+        instance.jmsHost = data.jmsHost;
+        instance.jmsPort = data.jmsPort;
+        instance.kafkaHost = data.kafkaHost;
+        instance.kafkaPort = data.kafkaPort;
+        instance.lingerMs = data.lingerMs;
+        instance.messageMaxBytes = data.messageMaxBytes;
+        instance.mqttHost = data.mqttHost;
+        instance.mqttPort = data.mqttPort;
+        instance.natsHost = data.natsHost;
+        instance.natsPort = data.natsPort;
+        instance.prioritizedProtocols = __getCopyArrayFn(
+            __identity<SpProtocol>(),
+        )(data.prioritizedProtocols);
+        instance.pulsarUrl = data.pulsarUrl;
+        instance.supportedProtocols = __getCopyArrayFn(__identity<string>())(
+            data.supportedProtocols,
+        );
+        return instance;
+    }
+}
+
 /**
  * @deprecated since 0.99.0, for removal
  */
 export class MoveRuleDescription extends SchemaTransformationRuleDescription {
-    declare '@class': 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
+    '@class': 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
     'newRuntimeKey': string;
     'oldRuntimeKey': string;
 
@@ -2688,7 +2723,7 @@ export class MoveRuleDescription extends SchemaTransformationRuleDescription {
 }
 
 export class MqttTransportProtocol extends TransportProtocol {
-    declare '@class': 'org.apache.streampipes.model.grounding.MqttTransportProtocol';
+    '@class': 'org.apache.streampipes.model.grounding.MqttTransportProtocol';
     'port': number;
 
     static 'fromData'(
@@ -2706,7 +2741,7 @@ export class MqttTransportProtocol extends TransportProtocol {
 }
 
 export class NatsTransportProtocol extends TransportProtocol {
-    declare '@class': 'org.apache.streampipes.model.grounding.NatsTransportProtocol';
+    '@class': 'org.apache.streampipes.model.grounding.NatsTransportProtocol';
     'port': number;
     'token': string;
 
@@ -2743,7 +2778,7 @@ export class Notification {
 }
 
 export class OneOfStaticProperty extends SelectionStaticProperty {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.staticproperty.OneOfStaticProperty'
         | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty';
 
@@ -3404,7 +3439,7 @@ export class PropertyValueSpecification {
 }
 
 export class PulsarTransportProtocol extends TransportProtocol {
-    declare '@class': 'org.apache.streampipes.model.grounding.PulsarTransportProtocol';
+    '@class': 'org.apache.streampipes.model.grounding.PulsarTransportProtocol';
 
     static 'fromData'(
         data: PulsarTransportProtocol,
@@ -3420,7 +3455,7 @@ export class PulsarTransportProtocol extends TransportProtocol {
 }
 
 export class QuantitativeValue extends ValueSpecification {
-    declare '@class': 'org.apache.streampipes.model.schema.QuantitativeValue';
+    '@class': 'org.apache.streampipes.model.schema.QuantitativeValue';
     'maxValue': number;
     'minValue': number;
     'step': number;
@@ -3463,7 +3498,7 @@ export class ReduceEventRateRule {
  * @deprecated since 0.99.0, for removal
  */
 export class RegexTransformationRuleDescription extends ValueTransformationRuleDescription {
-    declare '@class': 'org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription';
+    '@class': 'org.apache.streampipes.model.connect.rules.value.RegexTransformationRuleDescription';
     'regex': string;
     'replaceAll': boolean;
     'replaceWith': string;
@@ -3506,7 +3541,7 @@ export class RemoveDuplicateRule {
  * @deprecated since 0.99.0, for removal
  */
 export class RemoveDuplicatesTransformationRuleDescription extends StreamTransformationRuleDescription {
-    declare '@class': 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
+    '@class': 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
     'filterTimeWindow': string;
 
     static 'fromData'(
@@ -3528,7 +3563,7 @@ export class RemoveDuplicatesTransformationRuleDescription extends StreamTransfo
  * @deprecated since 0.99.0, for removal
  */
 export class RenameRuleDescription extends SchemaTransformationRuleDescription {
-    declare '@class': 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription';
+    '@class': 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription';
     'newRuntimeKey': string;
     'oldRuntimeKey': string;
 
@@ -3631,7 +3666,7 @@ export class RetentionTimeConfig {
 }
 
 export class RuntimeOptionsRequest {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.runtime.RuntimeOptionsRequest'
         | 'org.apache.streampipes.model.runtime.RuntimeOptionsResponse';
     'appId': string;
@@ -3668,7 +3703,7 @@ export class RuntimeOptionsRequest {
 }
 
 export class RuntimeOptionsResponse extends RuntimeOptionsRequest {
-    declare '@class': 'org.apache.streampipes.model.runtime.RuntimeOptionsResponse';
+    '@class': 'org.apache.streampipes.model.runtime.RuntimeOptionsResponse';
     'staticProperty': StaticPropertyUnion;
 
     static 'fromData'(
@@ -3688,7 +3723,7 @@ export class RuntimeOptionsResponse extends RuntimeOptionsRequest {
 }
 
 export class RuntimeResolvableAnyStaticProperty extends AnyStaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty';
+    '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty';
     'dependsOn': string[];
 
     static 'fromData'(
@@ -3708,7 +3743,7 @@ export class RuntimeResolvableAnyStaticProperty extends AnyStaticProperty {
 }
 
 export class StaticPropertyGroup extends StaticProperty {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.staticproperty.StaticPropertyGroup'
         | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty';
     'horizontalRendering': boolean;
@@ -3734,7 +3769,7 @@ export class StaticPropertyGroup extends StaticProperty {
 }
 
 export class RuntimeResolvableGroupStaticProperty extends StaticPropertyGroup {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty';
+    '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableGroupStaticProperty';
     'dependsOn': string[];
 
     static 'fromData'(
@@ -3754,7 +3789,7 @@ export class RuntimeResolvableGroupStaticProperty extends StaticPropertyGroup {
 }
 
 export class RuntimeResolvableOneOfStaticProperty extends OneOfStaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty';
+    '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty';
     'dependsOn': string[];
 
     static 'fromData'(
@@ -3774,7 +3809,7 @@ export class RuntimeResolvableOneOfStaticProperty extends OneOfStaticProperty {
 }
 
 export class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty';
+    '@class': 'org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty';
     'dependsOn': string[];
     'latestFetchedNodes': TreeInputNode[];
     'multiSelection': boolean;
@@ -3850,7 +3885,7 @@ export class ScriptMetadata {
 }
 
 export class SecretStaticProperty extends StaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.SecretStaticProperty';
+    '@class': 'org.apache.streampipes.model.staticproperty.SecretStaticProperty';
     'encrypted': boolean;
     'value': string;
 
@@ -3892,7 +3927,7 @@ export class ShortUserInfo {
 }
 
 export class TopicDefinition {
-    declare '@class':
+    '@class':
         | 'org.apache.streampipes.model.grounding.SimpleTopicDefinition'
         | 'org.apache.streampipes.model.grounding.WildcardTopicDefinition';
     'actualTopicName': string;
@@ -3924,7 +3959,7 @@ export class TopicDefinition {
 }
 
 export class SimpleTopicDefinition extends TopicDefinition {
-    declare '@class': 'org.apache.streampipes.model.grounding.SimpleTopicDefinition';
+    '@class': 'org.apache.streampipes.model.grounding.SimpleTopicDefinition';
 
     static 'fromData'(
         data: SimpleTopicDefinition,
@@ -3940,7 +3975,7 @@ export class SimpleTopicDefinition extends TopicDefinition {
 }
 
 export class SlideToggleStaticProperty extends StaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty';
+    '@class': 'org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty';
     'defaultValue': boolean;
     'selected': boolean;
 
@@ -4015,7 +4050,7 @@ export class SpAssetModel extends SpAsset implements Storable {
 }
 
 export class SpDataStream extends NamedStreamPipesEntity {
-    declare '@class': 'org.apache.streampipes.model.SpDataStream';
+    '@class': 'org.apache.streampipes.model.SpDataStream';
     'category': string[];
     'correspondingAdapterId': string;
     'eventGrounding': EventGrounding;
@@ -4221,7 +4256,7 @@ export class SpServiceTag {
 }
 
 export class StaticPropertyAlternative extends StaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternative';
+    '@class': 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternative';
     'elementId': string;
     'selected': boolean;
     'staticProperty': StaticPropertyUnion;
@@ -4245,7 +4280,7 @@ export class StaticPropertyAlternative extends StaticProperty {
 }
 
 export class StaticPropertyAlternatives extends StaticProperty {
-    declare '@class': 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives';
+    '@class': 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives';
     'alternatives': StaticPropertyAlternative[];
 
     static 'fromData'(
@@ -4264,7 +4299,7 @@ export class StaticPropertyAlternatives extends StaticProperty {
     }
 }
 
-interface Storable {
+export interface Storable {
     elementId: string;
     rev: string;
 }
@@ -4272,13 +4307,11 @@ interface Storable {
 export class StreamPipesApplicationPackage {
     adapters: string[];
     assets: string[];
+    dashboardWidgets: string[];
     dashboards: string[];
-    datasetMeasures: string[];
-    /**
-     * @deprecated since 0.99.0, for removal
-     */
     dataLakeMeasures: string[];
     dataSources: string[];
+    dataViewWidgets: string[];
     dataViews: string[];
     files: string[];
     genericStorageDocuments: string[];
@@ -4299,17 +4332,20 @@ export class StreamPipesApplicationPackage {
             data.adapters,
         );
         instance.assets = __getCopyArrayFn(__identity<string>())(data.assets);
+        instance.dashboardWidgets = __getCopyArrayFn(__identity<string>())(
+            data.dashboardWidgets,
+        );
         instance.dashboards = __getCopyArrayFn(__identity<string>())(
             data.dashboards,
         );
-        instance.datasetMeasures = __getCopyArrayFn(__identity<string>())(
-            data.datasetMeasures ?? data.dataLakeMeasures,
-        );
         instance.dataLakeMeasures = __getCopyArrayFn(__identity<string>())(
-            data.dataLakeMeasures ?? data.datasetMeasures,
+            data.dataLakeMeasures,
         );
         instance.dataSources = __getCopyArrayFn(__identity<string>())(
             data.dataSources,
+        );
+        instance.dataViewWidgets = __getCopyArrayFn(__identity<string>())(
+            data.dataViewWidgets,
         );
         instance.dataViews = __getCopyArrayFn(__identity<string>())(
             data.dataViews,
@@ -4352,7 +4388,7 @@ export class SuccessMessage extends Message {
  * @deprecated since 0.99.0, for removal
  */
 export class TimestampTranfsformationRuleDescription extends ValueTransformationRuleDescription {
-    declare '@class': 'org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription';
+    '@class': 'org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription';
     'formatString': string;
     'mode': string;
     'multiplier': number;
@@ -4399,7 +4435,7 @@ export class TransformOperation {
 }
 
 export class TransformOutputStrategy extends OutputStrategy {
-    declare '@class': 'org.apache.streampipes.model.output.TransformOutputStrategy';
+    '@class': 'org.apache.streampipes.model.output.TransformOutputStrategy';
     'transformOperations': TransformOperation[];
 
     static 'fromData'(
@@ -4488,7 +4524,7 @@ export class TreeInputNode {
  * @deprecated since 0.99.0, for removal
  */
 export class UnitTransformRuleDescription extends ValueTransformationRuleDescription {
-    declare '@class': 'org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription';
+    '@class': 'org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription';
     'fromUnitRessourceURL': string;
     'runtimeKey': string;
     'toUnitRessourceURL': string;
@@ -4530,7 +4566,7 @@ export class UserDefinedOutput {
 }
 
 export class UserDefinedOutputStrategy extends OutputStrategy {
-    declare '@class': 'org.apache.streampipes.model.output.UserDefinedOutputStrategy';
+    '@class': 'org.apache.streampipes.model.output.UserDefinedOutputStrategy';
     'eventProperties': EventPropertyUnion[];
 
     static 'fromData'(
@@ -4575,7 +4611,7 @@ export class UserInfo {
 }
 
 export class WildcardTopicDefinition extends TopicDefinition {
-    declare '@class': 'org.apache.streampipes.model.grounding.WildcardTopicDefinition';
+    '@class': 'org.apache.streampipes.model.grounding.WildcardTopicDefinition';
     'wildcardTopicMappings': WildcardTopicMapping[];
     'wildcardTopicName': string;
 
@@ -4627,7 +4663,7 @@ export type ConfigurationScope =
 
 export type DataExplorerWidgetHealthStatus = 'OK' | 'REQUIRES_ATTENTION';
 
-export type DatasetMeasureSchemaUpdateStrategy =
+export type DataLakeMeasureSchemaUpdateStrategy =
     | 'UPDATE_SCHEMA'
     | 'EXTEND_EXISTING_SCHEMA';
 

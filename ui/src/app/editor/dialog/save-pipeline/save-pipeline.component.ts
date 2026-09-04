@@ -145,10 +145,10 @@ export class SavePipelineComponent implements OnInit {
     private async shouldPerformUpdatePreflight(
         skipPreflight: boolean,
     ): Promise<boolean> {
-        return !skipPreflight && this.updateExisting && this.hasDatasetSink();
+        return !skipPreflight && this.updateExisting && this.hasDataLakeSink();
     }
 
-    private hasDatasetSink(): boolean {
+    private hasDataLakeSink(): boolean {
         return this.pipeline.actions.some(
             action =>
                 action.appId ===

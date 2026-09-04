@@ -1152,7 +1152,7 @@
   "This measurement has charts that need manual review after the pipeline update.": null,
   "This measurement has datatype changes that must be handled before the pipeline can be updated.": null,
   "This operation cannot be undone.": null,
-  "This operation cannot be undone. Please ensure that the data provider is not used in a dataset retention.": null,
+  "This operation cannot be undone. Please ensure that the data provider is not used in a datalake retention.": null,
   "This pipeline cannot be updated because at least one data lake measurement field changed its datatype.": null,
   "This pipeline is still running.": null,
   "This pipeline update requires manual review.": null,

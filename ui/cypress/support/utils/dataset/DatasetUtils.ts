@@ -31,8 +31,8 @@ export class DatasetUtils {
         this.goToDatasets();
     }
 
-    public static refreshDatasetMeasures() {
-        DatasetBtns.refreshDatasetMeasures().should('be.visible').click();
+    public static refreshDataLakeMeasures() {
+        DatasetBtns.refreshDataLakeMeasures().should('be.visible').click();
         DatasetBtns.datasetTable().should('be.visible');
     }
 
@@ -146,7 +146,7 @@ export class DatasetUtils {
         datasetName?: string,
         attempts = 30,
     ): Cypress.Chainable<string> {
-        this.refreshDatasetMeasures();
+        this.refreshDataLakeMeasures();
         return this.getDatasetLastEventCell(datasetName).then($cell => {
             const lastEvent = this.getComparableLastEventValueFromElements(
                 Array.from($cell),
@@ -168,7 +168,7 @@ export class DatasetUtils {
     }
 
     public static expectDatasetEmpty(datasetName?: string) {
-        this.refreshDatasetMeasures();
+        this.refreshDataLakeMeasures();
         this.getDatasetLastEventCell(datasetName)
             .should('be.visible')
             .should($element => {
@@ -179,7 +179,7 @@ export class DatasetUtils {
     }
 
     public static expectDatasetNotEmpty(datasetName?: string) {
-        this.refreshDatasetMeasures();
+        this.refreshDataLakeMeasures();
         this.getDatasetLastEventCell(datasetName)
             .should('be.visible')
             .should($element => {
@@ -190,7 +190,7 @@ export class DatasetUtils {
     }
 
     public static expectDatasetDeleted(datasetName?: string) {
-        this.refreshDatasetMeasures();
+        this.refreshDataLakeMeasures();
         if (datasetName) {
             DatasetBtns.datasetRow(datasetName).should('not.exist');
             return;
@@ -209,7 +209,7 @@ export class DatasetUtils {
     private static getDatasetLastEventCell(datasetName?: string) {
         return datasetName
             ? DatasetBtns.datasetLastEventCell(datasetName)
-            : DatasetBtns.datasetLastEvent();
+            : DatasetBtns.datalakeLastEvent();
     }
 
     private static isDatasetEmptyValue(value: string) {
@@ -235,7 +235,7 @@ export class DatasetUtils {
         const previousComparableValue =
             this.getComparableLastEventValue(previousLastEvent);
 
-        this.refreshDatasetMeasures();
+        this.refreshDataLakeMeasures();
         return this.getDatasetLastEventCell(datasetName).then($cell => {
             const lastEvent = this.getComparableLastEventValueFromElements(
                 Array.from($cell),

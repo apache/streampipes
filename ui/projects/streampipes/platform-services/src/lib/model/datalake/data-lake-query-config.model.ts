@@ -16,7 +16,7 @@
  *
  */
 
-import { DatasetMeasure } from '../gen/streampipes-model';
+import { DataLakeMeasure } from '../gen/streampipes-model';
 
 export interface DataExplorerFieldCharacteristics {
     dimension: boolean;
@@ -83,7 +83,7 @@ export interface QueryConfig {
 
 export interface SourceConfig {
     measureName: string;
-    measure?: DatasetMeasure;
+    measure?: DataLakeMeasure;
     queryConfig: QueryConfig;
     queryType: 'raw' | 'aggregated' | 'single';
 }

@@ -29,8 +29,8 @@ import {
 import {
     AssetConstants,
     AssetLinkType,
-    DatasetMeasure,
-    DatasetRestService,
+    DataLakeMeasure,
+    DatalakeRestService,
     EventPropertyUnion,
     GenericStorageService,
     SpQueryResult,
@@ -68,21 +68,21 @@ export class DatasetFeatureCardComponent implements OnInit {
     @Input()
     onClose?: () => void;
 
-    dataset: DatasetMeasure;
+    dataset: DataLakeMeasure;
     assetLinkType: AssetLinkType;
     dataPreview: SpQueryResult;
     lastEventTs: number | undefined;
     totalEventCount: number | undefined;
     previewRows: PreviewRow[] = [];
 
-    private datasetRestService = inject(DatasetRestService);
+    private datalakeRestService = inject(DatalakeRestService);
     private genericStorageService = inject(GenericStorageService);
     private dateFormatService = inject(DateFormatService);
     private router = inject(Router);
 
     ngOnInit() {
         forkJoin([
-            this.datasetRestService.getMeasurement(this.resourceId),
+            this.datalakeRestService.getMeasurement(this.resourceId),
             this.genericStorageService.getAllDocuments(
                 AssetConstants.ASSET_LINK_TYPES_DOC_NAME,
             ),
@@ -95,7 +95,7 @@ export class DatasetFeatureCardComponent implements OnInit {
 
     loadSampleData(): void {
         forkJoin({
-            dataPreview: this.datasetRestService
+            dataPreview: this.datalakeRestService
                 .getData(this.dataset.measureName, {
                     endDate: new Date().getTime(),
                     startDate: 0,
@@ -128,7 +128,7 @@ export class DatasetFeatureCardComponent implements OnInit {
     }
 
     private loadTotalEventCount(): Observable<number> {
-        return this.datasetRestService
+        return this.datalakeRestService
             .getMeasurementEntryCount(this.dataset.elementId)
             .pipe(catchError(() => of(0)));
     }

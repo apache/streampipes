@@ -30,10 +30,6 @@ export class ChartUtils {
     public static ADAPTER_NAME = 'datalake_configuration';
 
     public static goToDatalake(discardUnsavedChanges: boolean = true) {
-        return this.goToDataset(discardUnsavedChanges);
-    }
-
-    public static goToDataset(discardUnsavedChanges: boolean = true) {
         cy.visit('#/chart');
         if (!discardUnsavedChanges) {
             return;
@@ -696,7 +692,7 @@ export class ChartUtils {
         return cy
             .request({
                 method: 'DELETE',
-                url: `/streampipes-backend/api/v4/dataset/measurements/${datasetName}`,
+                url: `/streampipes-backend/api/v4/datalake/measurements/${datasetName}`,
                 failOnStatusCode: false,
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -718,7 +714,7 @@ export class ChartUtils {
         return cy
             .request({
                 method: 'GET',
-                url: `/streampipes-backend/api/v4/dataset/measurements/${datasetName}/download?format=${fileType}&delimiter=semicolon`,
+                url: `/streampipes-backend/api/v4/datalake/measurements/${datasetName}/download?format=${fileType}&delimiter=semicolon`,
                 headers: {
                     'content-type': 'application/octet-stream',
                 },

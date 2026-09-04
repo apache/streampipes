@@ -19,8 +19,8 @@
 import { Directive, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-    DatasetMeasure,
-    DatasetRestService,
+    DataLakeMeasure,
+    DatalakeRestService,
 } from '@streampipes/platform-services';
 import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
 import { catchError, of } from 'rxjs';
@@ -29,12 +29,12 @@ import { SpDatasetDetailsTabs } from './dataset-details-tabs';
 @Directive()
 export abstract class SpAbstractDatasetDetailsDirective {
     protected activatedRoute = inject(ActivatedRoute);
-    protected datasetRestService = inject(DatasetRestService);
+    protected datalakeRestService = inject(DatalakeRestService);
     protected breadcrumbService = inject(SpBreadcrumbService);
 
     currentDatasetId: string;
     tabs: SpNavigationItem[] = [];
-    dataset: DatasetMeasure;
+    dataset: DataLakeMeasure;
     datasetNotFound = false;
 
     onInit(): void {
@@ -47,7 +47,7 @@ export abstract class SpAbstractDatasetDetailsDirective {
     }
 
     loadDataset(): void {
-        this.datasetRestService
+        this.datalakeRestService
             .getMeasurement(this.currentDatasetId)
             .pipe(
                 catchError(() => {
@@ -60,7 +60,7 @@ export abstract class SpAbstractDatasetDetailsDirective {
                     return;
                 }
 
-                this.dataset = DatasetMeasure.fromData(dataset);
+                this.dataset = DataLakeMeasure.fromData(dataset);
                 this.onDatasetLoaded();
             });
     }

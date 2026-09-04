@@ -102,7 +102,7 @@ export class DatasetDetailsEventsComponent
         }
 
         this.loadingEvents = true;
-        this.datasetRestService
+        this.datalakeRestService
             .getData(this.dataset.measureName, {
                 endDate: new Date().getTime(),
                 startDate: 0,

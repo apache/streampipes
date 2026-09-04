@@ -27,7 +27,7 @@ import {
 import {
     ChartService,
     DataExplorerWidgetModel,
-    DatasetMeasure,
+    DataLakeMeasure,
     EventPropertyUnion,
     FieldConfig,
     LinkageData,
@@ -124,7 +124,7 @@ export class ChartViewComponent
     editMode = true;
     dataView: DataExplorerWidgetModel;
     originalDataView: DataExplorerWidgetModel;
-    datasetMeasure: DatasetMeasure;
+    dataLakeMeasure: DataLakeMeasure;
     drawerWidth = 450;
 
     selectedAssets = [];
@@ -205,7 +205,7 @@ export class ChartViewComponent
         });
     }
 
-    onAddWidget(_event: Tuple2<DatasetMeasure, DataExplorerWidgetModel>) {
+    onAddWidget(_event: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>) {
         if (!this.originalDataView?.visualizationConfig) {
             this.setDefaultValuesOnOriginalDataViewForNewCharts();
         }
@@ -214,7 +214,7 @@ export class ChartViewComponent
     setDefaultValuesOnOriginalDataViewForNewCharts() {
         //Change original Data View if default Config does not exist
 
-        // Reset name as widget generation sets name to dataset name - chart
+        //Reset name as widget generation sets name to  datalakename - chart
         this.dataView.baseAppearanceConfig.widgetTitle =
             this.translateService.instant('New chart');
         this.originalDataView = JSON.parse(JSON.stringify(this.dataView));
@@ -404,7 +404,7 @@ export class ChartViewComponent
     createWidget() {
         this.dataView = new DataExplorerWidgetModel();
         this.dataView['@class'] =
-            'org.apache.streampipes.model.dataset.DataExplorerWidgetModel';
+            'org.apache.streampipes.model.datalake.DataExplorerWidgetModel';
         this.dataView.baseAppearanceConfig = {};
         this.dataView.baseAppearanceConfig.widgetTitle =
             this.translateService.instant('New chart');

@@ -33,7 +33,7 @@ import {
     DashboardService,
     ChartService,
     DataExplorerWidgetModel,
-    DatasetMeasure,
+    DataLakeMeasure,
     LinkageData,
     PermissionsService,
     TimeSelectionConstants,
@@ -161,7 +161,7 @@ export class DashboardPanelComponent
 
     public items: Dashboard[];
 
-    datasetMeasure: DatasetMeasure;
+    dataLakeMeasure: DataLakeMeasure;
     auth$: Subscription;
     refresh$: Subscription;
     private shortcutReg: ShortcutRegistration;

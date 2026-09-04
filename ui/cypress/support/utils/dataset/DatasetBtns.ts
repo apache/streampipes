@@ -18,10 +18,10 @@
 
 export class DatasetBtns {
     public static datasetTable() {
-        return cy.dataCy('dataset-settings', { timeout: 10000 });
+        return cy.dataCy('datalake-settings', { timeout: 10000 });
     }
 
-    public static refreshDatasetMeasures() {
+    public static refreshDataLakeMeasures() {
         return cy.dataCy('refresh-data-lake-measures', { timeout: 10000 });
     }
 
@@ -110,7 +110,7 @@ export class DatasetBtns {
     }
 
     public static datasetRow(name: string) {
-        return cy.contains('[data-cy="dataset-settings"] tbody tr', name, {
+        return cy.contains('[data-cy="datalake-settings"] tbody tr', name, {
             timeout: 10000,
         });
     }
@@ -150,19 +150,19 @@ export class DatasetBtns {
     }
 
     public static datasetLastEventCell(name: string) {
-        return this.datasetRow(name).find('[data-cy="dataset-last-event"]');
+        return this.datasetRow(name).find('[data-cy="datalake-last-event"]');
     }
 
-    public static datasetLastEvent() {
-        return cy.dataCy('dataset-last-event', { timeout: 30000 });
+    public static datalakeLastEvent() {
+        return cy.dataCy('datalake-last-event', { timeout: 30000 });
     }
 
-    public static datasetTruncateBtn() {
-        return cy.dataCy('dataset-truncate-btn');
+    public static dataLakeTruncateBtn() {
+        return cy.dataCy('datalake-truncate-btn');
     }
 
-    public static datasetDeleteBtn() {
-        return cy.dataCy('dataset-delete-btn');
+    public static dataLakeDeleteBtn() {
+        return cy.dataCy('datalake-delete-btn');
     }
 
     public static confirmDataLakeTruncateBtn() {

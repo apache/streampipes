@@ -25,7 +25,7 @@ import { Dashboard } from '../model/dashboard/dashboard.model';
 @Injectable({
     providedIn: 'root',
 })
-export class SharedDatasetRestService {
+export class SharedDatalakeRestService {
     private http = inject(HttpClient);
 
     getDashboards(dashboardUrl: string): Observable<Dashboard[]> {
