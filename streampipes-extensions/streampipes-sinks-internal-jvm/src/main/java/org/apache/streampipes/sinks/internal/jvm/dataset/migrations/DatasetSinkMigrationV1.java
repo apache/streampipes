@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake.migrations;
+package org.apache.streampipes.sinks.internal.jvm.dataset.migrations;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.extensions.api.migration.IDataSinkMigrator;
@@ -27,14 +27,14 @@ import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
+import org.apache.streampipes.sinks.internal.jvm.dataset.DatasetSink;
 
-public class DataLakeSinkMigrationV1 implements IDataSinkMigrator {
+public class DatasetSinkMigrationV1 implements IDataSinkMigrator {
 
   @Override
   public ModelMigratorConfig config() {
     return new ModelMigratorConfig(
-        "org.apache.streampipes.sinks.internal.jvm.datalake",
+        "org.apache.streampipes.sinks.internal.jvm.dataset",
         SpServiceTagPrefix.DATA_SINK,
         0,
         1
@@ -63,12 +63,12 @@ public class DataLakeSinkMigrationV1 implements IDataSinkMigrator {
   private boolean isSchemaUpdateStrategyPresent(DataSinkInvocation element) {
     return element.getStaticProperties()
         .stream()
-        .anyMatch(sp -> sp.getInternalName().equals(DataLakeSink.SCHEMA_UPDATE_KEY));
+        .anyMatch(sp -> sp.getInternalName().equals(DatasetSink.SCHEMA_UPDATE_KEY));
   }
 
   private static OneOfStaticProperty createDefaultSchemaUpdateStrategy() {
     var label = Labels.from(
-        DataLakeSink.SCHEMA_UPDATE_KEY,
+        DatasetSink.SCHEMA_UPDATE_KEY,
         "Schema Update",
         "Update existing schemas with the new one or extend the existing schema with new properties"
     );
@@ -78,7 +78,7 @@ public class DataLakeSinkMigrationV1 implements IDataSinkMigrator {
         label.getDescription()
     );
 
-    var options = Options.from(DataLakeSink.SCHEMA_UPDATE_OPTION, DataLakeSink.EXTEND_EXISTING_SCHEMA_OPTION);
+    var options = Options.from(DatasetSink.SCHEMA_UPDATE_OPTION, DatasetSink.EXTEND_EXISTING_SCHEMA_OPTION);
     options.get(0)
            .setSelected(true);
     schemaUpdateStaticProperty.setOptions(options);
