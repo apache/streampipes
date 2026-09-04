@@ -111,7 +111,7 @@ fi
 
 # datalake
 installRequestBody='{
-  "appId":"org.apache.streampipes.sinks.internal.jvm.dataset",
+  "appId":"org.apache.streampipes.sinks.internal.jvm.datalake",
   "publicElement":true,
   "serviceTagPrefix":"DATA_SINK"
   }'

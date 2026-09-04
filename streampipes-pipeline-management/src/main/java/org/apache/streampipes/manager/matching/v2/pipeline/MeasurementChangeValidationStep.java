@@ -43,7 +43,7 @@ public class MeasurementChangeValidationStep extends AbstractPipelineValidationS
                     InvocableStreamPipesEntity target,
                     Set<InvocableStreamPipesEntity> allTargets,
                     List<PipelineElementValidationInfo> validationInfos) {
-    if (target instanceof DataSinkInvocation dataSink && MeasurementUpdateUtils.isDatasetSink(dataSink)) {
+    if (target instanceof DataSinkInvocation dataSink && MeasurementUpdateUtils.isDataLakeSink(dataSink)) {
       var criticalFieldChanges = findCriticalMeasurementFieldChanges(source, dataSink);
       if (!criticalFieldChanges.isEmpty()) {
         validationInfos.add(PipelineElementValidationInfo.error(makeValidationMessage(criticalFieldChanges)));

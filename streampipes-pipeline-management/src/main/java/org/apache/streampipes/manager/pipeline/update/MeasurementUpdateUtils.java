@@ -30,29 +30,29 @@ import java.util.stream.Collectors;
 
 public final class MeasurementUpdateUtils {
 
-  public static final String DATASET_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
-  public static final String DATASET_MEASUREMENT_FIELD = "db_measurement";
+  public static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
+  public static final String DATA_LAKE_MEASUREMENT_FIELD = "db_measurement";
 
   private MeasurementUpdateUtils() {
   }
 
-  public static List<DataSinkInvocation> getDatasetSinks(Pipeline pipeline) {
+  public static List<DataSinkInvocation> getDataLakeSinks(Pipeline pipeline) {
     return pipeline.getActions()
         .stream()
-        .filter(MeasurementUpdateUtils::isDatasetSink)
+        .filter(MeasurementUpdateUtils::isDataLakeSink)
         .toList();
   }
 
-  public static Optional<DataSinkInvocation> getDatasetSinkById(Pipeline pipeline, String id) {
+  public static Optional<DataSinkInvocation> getDataLakeSinkById(Pipeline pipeline, String id) {
     return pipeline.getActions()
         .stream()
-        .filter(MeasurementUpdateUtils::isDatasetSink)
+        .filter(MeasurementUpdateUtils::isDataLakeSink)
         .filter(storedSink -> Objects.equals(storedSink.getElementId(), id))
         .findFirst();
   }
 
   public static Set<String> extractMeasureNames(Pipeline pipeline) {
-    return getDatasetSinks(pipeline)
+    return getDataLakeSinks(pipeline)
         .stream()
         .map(MeasurementUpdateUtils::extractMeasureName)
         .flatMap(Optional::stream)
@@ -64,7 +64,7 @@ public final class MeasurementUpdateUtils {
         .ofNullable(sink.getStaticProperties())
         .stream()
         .flatMap(List::stream)
-        .filter(property -> DATASET_MEASUREMENT_FIELD.equals(property.getInternalName()))
+        .filter(property -> DATA_LAKE_MEASUREMENT_FIELD.equals(property.getInternalName()))
         .filter(FreeTextStaticProperty.class::isInstance)
         .map(FreeTextStaticProperty.class::cast)
         .map(FreeTextStaticProperty::getValue)
@@ -72,7 +72,7 @@ public final class MeasurementUpdateUtils {
         .findFirst();
   }
 
-  public static boolean isDatasetSink(DataSinkInvocation dataSink) {
-    return DATASET_SINK_APP_ID.equals(dataSink.getAppId());
+  public static boolean isDataLakeSink(DataSinkInvocation dataSink) {
+    return DATA_LAKE_SINK_APP_ID.equals(dataSink.getAppId());
   }
 }

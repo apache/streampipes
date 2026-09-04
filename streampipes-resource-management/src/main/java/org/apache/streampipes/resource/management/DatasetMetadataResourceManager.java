@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 public class DatasetMetadataResourceManager extends AbstractResourceManager<IDatasetMetadataStorage> {
 
-  private static final String DATASET_APP_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
+  private static final String DATA_LAKE_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
   private static final String MEASURE_FIELD_INTERNAL_NAME = "db_measurement";
   private static final List<String> FORBIDDEN_MEASURE_NAME_CHARS = List.of("/", "?", "=", "\"");
 
@@ -108,7 +108,7 @@ public class DatasetMetadataResourceManager extends AbstractResourceManager<IDat
 
   private List<DataSinkInvocation> extractSinks(Pipeline pipeline) {
     return pipeline.getActions().stream()
-        .filter(sink -> DATASET_APP_ID.equals(sink.getAppId()))
+        .filter(sink -> DATA_LAKE_APP_ID.equals(sink.getAppId()))
         .toList();
   }
 
