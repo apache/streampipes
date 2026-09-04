@@ -94,7 +94,7 @@ import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParam
 
 @RestController
 @RequestMapping("/api/v4/datalake")
-public class DatasetResource extends AbstractDataLakeResource {
+public class DatasetResource extends AbstractDatasetResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DatasetResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;

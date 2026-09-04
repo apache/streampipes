@@ -28,7 +28,7 @@ import org.apache.streampipes.model.dataset.importer.CsvImportSchemaValidationRe
 import org.apache.streampipes.model.dataset.importer.CsvImportSchemaValidationResult;
 import org.apache.streampipes.model.dataset.importer.CsvImportTargetMode;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.rest.impl.dataset.AbstractDataLakeResource;
+import org.apache.streampipes.rest.impl.dataset.AbstractDatasetResource;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import org.springframework.http.HttpStatus;
@@ -48,7 +48,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v4/datalake/import")
-public class DataLakeImportResource extends AbstractDataLakeResource {
+public class DataLakeImportResource extends AbstractDatasetResource {
 
   private final CsvDatasetImportService importService;
 

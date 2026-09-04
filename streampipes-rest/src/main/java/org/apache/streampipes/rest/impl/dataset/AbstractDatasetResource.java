@@ -30,14 +30,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Objects;
 
-public class AbstractDataLakeResource extends AbstractAuthGuardedRestResource {
+public class AbstractDatasetResource extends AbstractAuthGuardedRestResource {
 
   final IDatasetMetadataManagement datasetMetadataManagement;
   private final IDatasetMetadataStorage datasetMetadataStorage;
   protected final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
   private final SpResourceManager resourceManager;
 
-  public AbstractDataLakeResource(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
+  public AbstractDatasetResource(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
                                   SpResourceManager resourceManager) {
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
     this.resourceManager = resourceManager;

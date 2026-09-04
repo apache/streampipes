@@ -48,7 +48,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v4/datalake/measure")
-public class DatasetMetadataResource extends AbstractDataLakeResource {
+public class DatasetMetadataResource extends AbstractDatasetResource {
 
   private final SpResourceManager resourceManager;
 
