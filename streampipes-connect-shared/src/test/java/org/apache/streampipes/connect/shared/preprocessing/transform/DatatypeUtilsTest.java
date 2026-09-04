@@ -256,4 +256,65 @@ public class DatatypeUtilsTest {
     assertEquals(String.class, result);
   }
 
+  // --- Tests for decimal separator support (issue #530) ---
+
+  @Test
+  public void getTypeClass_CommaDecimalSeparatorIsNumeric() {
+    var result = DatatypeUtils.getTypeClass("3,14", false, ',');
+    assertEquals(Float.class, result);
+  }
+
+  @Test
+  public void getTypeClass_CommaDecimalSeparatorWithPreferFloat() {
+    var result = DatatypeUtils.getTypeClass("3,14", true, ',');
+    assertEquals(Float.class, result);
+  }
+
+  @Test
+  public void getTypeClass_CommaSeparatorLeavesDotValueParsable() {
+    // Behavior is additive: configuring ',' as the decimal separator adds recognition of
+    // comma-decimals without rejecting values that are already valid with the default '.' separator.
+    var result = DatatypeUtils.getTypeClass("3.14", false, ',');
+    assertEquals(Float.class, result);
+  }
+
+  @Test
+  public void getTypeClass_CommaSeparatorMultipleCommasStaysString() {
+    // Ambiguous grouping usage (e.g. thousands separator) must not be normalized.
+    var result = DatatypeUtils.getTypeClass("1,000,000", false, ',');
+    assertEquals(String.class, result);
+  }
+
+  @Test
+  public void getTypeClass_DefaultSeparatorUnaffectedByCommaValue() {
+    var result = DatatypeUtils.getTypeClass("3,14", false);
+    assertEquals(String.class, result);
+  }
+
+  @Test
+  public void getXsdDatatype_CommaDecimalSeparatorReturnsFloat() {
+    var result = DatatypeUtils.getXsdDatatype("2,5", false, ',');
+    assertEquals(XSD.FLOAT.toString(), result);
+  }
+
+  @Test
+  public void convertValue_CommaSeparatorStringToFloat() {
+    var actualValue = DatatypeUtils.convertValue(
+        TEST_ADAPTER_NAME, "123,45", XSD.FLOAT.toString(), ',', new java.util.concurrent.atomic.AtomicBoolean(false));
+    assertEquals(123.45f, actualValue);
+  }
+
+  @Test
+  public void convertValue_CommaSeparatorStringToDouble() {
+    var actualValue = DatatypeUtils.convertValue(
+        TEST_ADAPTER_NAME, "123,45", XSD.DOUBLE.toString(), ',', new java.util.concurrent.atomic.AtomicBoolean(false));
+    assertEquals(123.45d, actualValue);
+  }
+
+  @Test
+  public void convertValue_DefaultSeparatorDotStillWorks() {
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, "123.45", XSD.FLOAT.toString());
+    assertEquals(123.45f, actualValue);
+  }
+
 }
