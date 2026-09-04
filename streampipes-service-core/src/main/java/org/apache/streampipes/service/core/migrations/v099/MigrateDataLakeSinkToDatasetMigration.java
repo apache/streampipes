@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.service.core.migrations.v099;
 
+import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.service.core.migrations.Migration;
@@ -54,7 +55,7 @@ public class MigrateDataLakeSinkToDatasetMigration implements Migration {
   @Override
   public void executeMigration() throws IOException {
     migratePipelineInvocations();
-    removeDataLakeSinkDescriptions();
+    migrateDataLakeSinkDescriptions();
   }
 
   @Override
@@ -99,8 +100,23 @@ public class MigrateDataLakeSinkToDatasetMigration implements Migration {
     action.setDescription(DATASET_SINK_DESCRIPTION);
   }
 
-  private void removeDataLakeSinkDescriptions() {
-    dataSinkStorage.getDataSinksByAppId(DATA_LAKE_SINK_APP_ID)
-        .forEach(dataSinkStorage::deleteElement);
+  private void migrateDataLakeSinkDescriptions() {
+    var legacySinkDescriptions = dataSinkStorage.getDataSinksByAppId(DATA_LAKE_SINK_APP_ID);
+    if (legacySinkDescriptions.isEmpty()) {
+      return;
+    }
+
+    if (dataSinkStorage.getDataSinksByAppId(DATASET_SINK_APP_ID).isEmpty()) {
+      legacySinkDescriptions.forEach(this::migrateDataLakeSinkDescription);
+    } else {
+      legacySinkDescriptions.forEach(dataSinkStorage::deleteElement);
+    }
+  }
+
+  private void migrateDataLakeSinkDescription(DataSinkDescription sinkDescription) {
+    sinkDescription.setAppId(DATASET_SINK_APP_ID);
+    sinkDescription.setName(DATASET_SINK_NAME);
+    sinkDescription.setDescription(DATASET_SINK_DESCRIPTION);
+    dataSinkStorage.updateElement(sinkDescription);
   }
 }

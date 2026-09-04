@@ -52,7 +52,7 @@ class MigrateDataLakeSinkToDatasetMigrationTest {
   }
 
   @Test
-  void migratesPipelineInvocationsAndRemovesDataLakeDescription() throws IOException {
+  void migratesPipelineInvocationsAndLegacyDataLakeDescription() throws IOException {
     var dataLakeSink = new DataSinkInvocation();
     dataLakeSink.setAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID);
     dataLakeSink.setName(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_NAME);
@@ -77,7 +77,11 @@ class MigrateDataLakeSinkToDatasetMigrationTest {
     assertEquals("org.apache.streampipes.sinks.notifications.jvm.email", otherSink.getAppId());
     verify(pipelineStorage).updateElement(affectedPipeline);
     verify(pipelineStorage, never()).updateElement(unaffectedPipeline);
-    verify(dataSinkStorage).deleteElement(dataLakeDescription);
+    assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID, dataLakeDescription.getAppId());
+    assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_NAME, dataLakeDescription.getName());
+    assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_DESCRIPTION,
+        dataLakeDescription.getDescription());
+    verify(dataSinkStorage).updateElement(dataLakeDescription);
   }
 
   @Test
@@ -107,6 +111,25 @@ class MigrateDataLakeSinkToDatasetMigrationTest {
     assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_NAME, datasetSink.getName());
     assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_DESCRIPTION, datasetSink.getDescription());
     verify(pipelineStorage).updateElement(pipeline);
+  }
+
+  @Test
+  void removesLegacyDescriptionWhenDatasetDescriptionExists() throws IOException {
+    var dataLakeDescription = new DataSinkDescription();
+    dataLakeDescription.setAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID);
+    var datasetDescription = new DataSinkDescription();
+    datasetDescription.setAppId(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID);
+
+    when(pipelineStorage.findAll()).thenReturn(List.of());
+    when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID))
+        .thenReturn(List.of(dataLakeDescription));
+    when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID))
+        .thenReturn(List.of(datasetDescription));
+
+    migration.executeMigration();
+
+    verify(dataSinkStorage).deleteElement(dataLakeDescription);
+    verify(dataSinkStorage, never()).updateElement(dataLakeDescription);
   }
 
   @Test
