@@ -28,28 +28,20 @@ import (
 	"github.com/apache/streampipes/streampipes-client-go/streampipes/model/data_lake"
 )
 
-type DatasetWidget struct {
+type DataLakeWidget struct {
 	endpoint
 }
 
-// Deprecated: use DatasetWidget instead.
-type DataLakeWidget = DatasetWidget
+func NewDataLakeWidget(clientConfig config.StreamPipesClientConfig) *DataLakeWidget {
 
-func NewDatasetWidget(clientConfig config.StreamPipesClientConfig) *DatasetWidget {
-
-	return &DatasetWidget{
+	return &DataLakeWidget{
 		endpoint{config: clientConfig},
 	}
 }
 
-// Deprecated: use NewDatasetWidget instead.
-func NewDataLakeWidget(clientConfig config.StreamPipesClientConfig) *DatasetWidget {
-	return NewDatasetWidget(clientConfig)
-}
+func (d *DataLakeWidget) GetSingleDataLakeWidget(widgetId string) (data_lake.DataExplorerWidgetModel, error) {
 
-func (d *DatasetWidget) GetSingleDatasetWidget(widgetId string) (data_lake.DataExplorerWidgetModel, error) {
-
-	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/dataset/dashboard/widgets", []string{widgetId})
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/datalake/dashboard/widgets", []string{widgetId})
 	log.Printf("Get data from: %s", endPointUrl)
 
 	response, err := d.executeRequest("GET", endPointUrl, nil)
@@ -78,14 +70,9 @@ func (d *DatasetWidget) GetSingleDatasetWidget(widgetId string) (data_lake.DataE
 	return dataLakeWidget, nil
 }
 
-// Deprecated: use GetSingleDatasetWidget instead.
-func (d *DatasetWidget) GetSingleDataLakeWidget(widgetId string) (data_lake.DataExplorerWidgetModel, error) {
-	return d.GetSingleDatasetWidget(widgetId)
-}
+func (d *DataLakeWidget) GetAllDataLakeWidget() ([]data_lake.DataExplorerWidgetModel, error) {
 
-func (d *DatasetWidget) GetAllDatasetWidgets() ([]data_lake.DataExplorerWidgetModel, error) {
-
-	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/dataset/dashboard/widgets", nil)
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/datalake/dashboard/widgets", nil)
 	log.Printf("Get data from: %s", endPointUrl)
 
 	response, err := d.executeRequest("GET", endPointUrl, nil)
@@ -114,13 +101,8 @@ func (d *DatasetWidget) GetAllDatasetWidgets() ([]data_lake.DataExplorerWidgetMo
 	return dataLakeWidget, nil
 }
 
-// Deprecated: use GetAllDatasetWidgets instead.
-func (d *DatasetWidget) GetAllDataLakeWidget() ([]data_lake.DataExplorerWidgetModel, error) {
-	return d.GetAllDatasetWidgets()
-}
-
-func (d *DatasetWidget) DeleteSingleDatasetWidget(widgetId string) error {
-	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/dataset/dashboard/widgets", []string{widgetId})
+func (d *DataLakeWidget) DeleteSingleDataLakeWidget(widgetId string) error {
+	endPointUrl := util.NewStreamPipesApiPath(d.config.Url, "streampipes-backend/api/v3/datalake/dashboard/widgets", []string{widgetId})
 	log.Printf("Delete data from: %s", endPointUrl)
 
 	response, err := d.executeRequest("DELETE", endPointUrl, nil)
@@ -136,9 +118,4 @@ func (d *DatasetWidget) DeleteSingleDatasetWidget(widgetId string) error {
 	}
 
 	return nil
-}
-
-// Deprecated: use DeleteSingleDatasetWidget instead.
-func (d *DatasetWidget) DeleteSingleDataLakeWidget(widgetId string) error {
-	return d.DeleteSingleDatasetWidget(widgetId)
 }
