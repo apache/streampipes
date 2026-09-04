@@ -2,11 +2,11 @@
   "actions": [
     {
       "@class": "org.apache.streampipes.model.graph.DataSinkInvocation",
-      "appId": "org.apache.streampipes.sinks.internal.jvm.datalake",
+      "appId": "org.apache.streampipes.sinks.internal.jvm.dataset",
       "connectedTo": [
         "jsplumb_1_j3BB"
       ],
-      "description": "Stores events in the internal data lake.",
+      "description": "Stores events in the internal dataset.",
       "dom": "jsplumb_2_Fahe",
       "elementId": "sp:datasinkinvocation:MZnKuj:qULqX",
       "includedAssets": [
@@ -19,10 +19,10 @@
       "includesAssets": true,
       "includesLocales": true,
       "internallyManaged": false,
-      "name": "Data Lake",
+      "name": "Dataset",
       "rev": null,
       "version": 2,
-      "belongsTo": "sp:org.apache.streampipes.sinks.internal.jvm.datalake",
+      "belongsTo": "sp:org.apache.streampipes.sinks.internal.jvm.dataset",
       "configured": true,
       "correspondingPipeline": null,
       "correspondingUser": null,

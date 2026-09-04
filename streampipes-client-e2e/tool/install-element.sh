@@ -109,9 +109,9 @@ fi
 
 ######################sinks######################
 
-# datalake
+# dataset
 installRequestBody='{
-  "appId":"org.apache.streampipes.sinks.internal.jvm.datalake",
+  "appId":"org.apache.streampipes.sinks.internal.jvm.dataset",
   "publicElement":true,
   "serviceTagPrefix":"DATA_SINK"
   }'
@@ -122,7 +122,7 @@ response=$(curl -s -X POST "http://$HOST:$PORT$INSTALL_ELEMENT_URL" \
    -d "$installRequestBody")
 if [ $? -ne 0 ]; then
     echo "$response"
-    echo "Error install datalake"
+    echo "Error install dataset"
     exit 1
 fi
 
