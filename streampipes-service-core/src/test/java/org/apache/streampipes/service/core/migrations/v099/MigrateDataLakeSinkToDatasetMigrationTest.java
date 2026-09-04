@@ -55,6 +55,7 @@ class MigrateDataLakeSinkToDatasetMigrationTest {
   void migratesPipelineInvocationsAndRemovesDataLakeDescription() throws IOException {
     var dataLakeSink = new DataSinkInvocation();
     dataLakeSink.setAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID);
+    dataLakeSink.setName(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_NAME);
     var otherSink = new DataSinkInvocation();
     otherSink.setAppId("org.apache.streampipes.sinks.notifications.jvm.email");
     var affectedPipeline = new Pipeline();
@@ -71,6 +72,8 @@ class MigrateDataLakeSinkToDatasetMigrationTest {
     migration.executeMigration();
 
     assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID, dataLakeSink.getAppId());
+    assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_NAME, dataLakeSink.getName());
+    assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_DESCRIPTION, dataLakeSink.getDescription());
     assertEquals("org.apache.streampipes.sinks.notifications.jvm.email", otherSink.getAppId());
     verify(pipelineStorage).updateElement(affectedPipeline);
     verify(pipelineStorage, never()).updateElement(unaffectedPipeline);
@@ -85,6 +88,25 @@ class MigrateDataLakeSinkToDatasetMigrationTest {
         .thenReturn(List.of(dataLakeDescription));
 
     assertTrue(migration.shouldExecute());
+  }
+
+  @Test
+  void migratesDatasetSinkWithLegacyName() throws IOException {
+    var datasetSink = new DataSinkInvocation();
+    datasetSink.setAppId(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID);
+    datasetSink.setName(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_NAME);
+    var pipeline = new Pipeline();
+    pipeline.setActions(List.of(datasetSink));
+
+    when(pipelineStorage.findAll()).thenReturn(List.of(pipeline));
+    when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID))
+        .thenReturn(List.of());
+
+    migration.executeMigration();
+
+    assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_NAME, datasetSink.getName());
+    assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_DESCRIPTION, datasetSink.getDescription());
+    verify(pipelineStorage).updateElement(pipeline);
   }
 
   @Test

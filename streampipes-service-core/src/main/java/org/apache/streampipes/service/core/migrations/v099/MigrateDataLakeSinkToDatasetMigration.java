@@ -32,6 +32,9 @@ public class MigrateDataLakeSinkToDatasetMigration implements Migration {
 
   static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
   static final String DATASET_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
+  static final String DATA_LAKE_SINK_NAME = "Data Lake";
+  static final String DATASET_SINK_NAME = "Dataset";
+  static final String DATASET_SINK_DESCRIPTION = "Stores events in the internal dataset.";
 
   private final IPipelineStorage pipelineStorage;
   private final IDataSinkStorage dataSinkStorage;
@@ -65,8 +68,7 @@ public class MigrateDataLakeSinkToDatasetMigration implements Migration {
         .map(Pipeline::getActions)
         .filter(Objects::nonNull)
         .flatMap(List::stream)
-        .map(DataSinkInvocation::getAppId)
-        .anyMatch(DATA_LAKE_SINK_APP_ID::equals);
+        .anyMatch(this::isLegacyDataLakeSink);
   }
 
   private void migratePipelineInvocations() {
@@ -76,15 +78,25 @@ public class MigrateDataLakeSinkToDatasetMigration implements Migration {
         return;
       }
 
-      var containsDataLakeSink = actions.stream()
-          .anyMatch(action -> DATA_LAKE_SINK_APP_ID.equals(action.getAppId()));
+      var containsDataLakeSink = actions.stream().anyMatch(this::isLegacyDataLakeSink);
       if (containsDataLakeSink) {
         actions.stream()
-            .filter(action -> DATA_LAKE_SINK_APP_ID.equals(action.getAppId()))
-            .forEach(action -> action.setAppId(DATASET_SINK_APP_ID));
+            .filter(this::isLegacyDataLakeSink)
+            .forEach(this::migrateDataLakeSink);
         pipelineStorage.updateElement(pipeline);
       }
     });
+  }
+
+  private boolean isLegacyDataLakeSink(DataSinkInvocation action) {
+    return DATA_LAKE_SINK_APP_ID.equals(action.getAppId())
+        || (DATASET_SINK_APP_ID.equals(action.getAppId()) && DATA_LAKE_SINK_NAME.equals(action.getName()));
+  }
+
+  private void migrateDataLakeSink(DataSinkInvocation action) {
+    action.setAppId(DATASET_SINK_APP_ID);
+    action.setName(DATASET_SINK_NAME);
+    action.setDescription(DATASET_SINK_DESCRIPTION);
   }
 
   private void removeDataLakeSinkDescriptions() {
