@@ -8,7 +8,7 @@
       "connectedTo": ["jsplumb_stream1"],
       "name": "Dataset",
       "description": "Stores events in the internal dataset.",
-      "appId": "org.apache.streampipes.sinks.internal.jvm.datalake",
+      "appId": "org.apache.streampipes.sinks.internal.jvm.dataset",
       "includesAssets": true,
       "includesLocales": true,
       "includedAssets": ["documentation.md", "icon.png"],
@@ -235,7 +235,7 @@
           "defaultValue": false
         }
       ],
-      "belongsTo": "sp:org.apache.streampipes.sinks.internal.jvm.datalake",
+      "belongsTo": "sp:org.apache.streampipes.sinks.internal.jvm.dataset",
       "correspondingPipeline": "persist-adapter-3_2_asset-3_0.asset-3_2-h7itcn",
       "correspondingUser": "83b1d4725ccc4f49a632d36b54dddc13",
       "streamRequirements": [

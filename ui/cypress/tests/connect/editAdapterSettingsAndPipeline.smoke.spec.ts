@@ -103,7 +103,7 @@ describe('Test Edit Adapter and Pipeline', () => {
 
         // Visit dashboard
         cy.wait(5000);
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.createAndEditChart();
 
         cy.dataCy('data-explorer-field-selection-panel').should(

@@ -22,10 +22,10 @@ import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
-import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
+import org.apache.streampipes.sinks.internal.jvm.dataset.DatasetSink;
 import org.apache.streampipes.sinks.internal.jvm.datalake.migrations.DataLakeSinkMigrationV1;
 import org.apache.streampipes.sinks.internal.jvm.datalake.migrations.DataLakeSinkMigrationV2;
-import org.apache.streampipes.sinks.internal.jvm.datalake.migrations.DataLakeSinkMigrationV3;
+import org.apache.streampipes.sinks.internal.jvm.dataset.migrations.DatasetSinkMigrationV3;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +39,7 @@ public class InternalSinksExtensionModuleExports implements IExtensionModuleExpo
   @Override
   public List<IStreamPipesPipelineElement<?>> pipelineElements() {
     return List.of(
-        new DataLakeSink()
+        new DatasetSink()
     );
   }
 
@@ -48,6 +48,6 @@ public class InternalSinksExtensionModuleExports implements IExtensionModuleExpo
     return List.of(
         new DataLakeSinkMigrationV1(),
         new DataLakeSinkMigrationV2(),
-        new DataLakeSinkMigrationV3());
+        new DatasetSinkMigrationV3());
   }
 }

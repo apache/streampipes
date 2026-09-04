@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake.migrations;
+package org.apache.streampipes.sinks.internal.jvm.dataset.migrations;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.extensions.api.migration.IDataSinkMigrator;
@@ -25,12 +25,12 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.migration.MigrationResult;
 import org.apache.streampipes.model.migration.ModelMigratorConfig;
 
-public class DataLakeSinkMigrationV3 implements IDataSinkMigrator {
+public class DatasetSinkMigrationV3 implements IDataSinkMigrator {
 
   @Override
   public ModelMigratorConfig config() {
     return new ModelMigratorConfig(
-        "org.apache.streampipes.sinks.internal.jvm.datalake",
+        "org.apache.streampipes.sinks.internal.jvm.dataset",
         SpServiceTagPrefix.DATA_SINK,
         2,
         3

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake.migrations;
+package org.apache.streampipes.sinks.internal.jvm.dataset.migrations;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
@@ -26,11 +26,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class DataLakeSinkMigrationV3Test {
+public class DatasetSinkMigrationV3Test {
 
   @Test
   void shouldExposeMigrationConfigAndPreserveInvocation() {
-    var migration = new DataLakeSinkMigrationV3();
+    var migration = new DatasetSinkMigrationV3();
     var config = migration.config();
     var invocation = Mockito.mock(DataSinkInvocation.class);
     var extractor = Mockito.mock(IDataSinkParameterExtractor.class);
@@ -39,7 +39,7 @@ public class DataLakeSinkMigrationV3Test {
 
     Assertions.assertTrue(actual.success());
     Assertions.assertSame(invocation, actual.element());
-    Assertions.assertEquals("org.apache.streampipes.sinks.internal.jvm.datalake", config.targetAppId());
+    Assertions.assertEquals("org.apache.streampipes.sinks.internal.jvm.dataset", config.targetAppId());
     Assertions.assertEquals(SpServiceTagPrefix.DATA_SINK, config.modelType());
     Assertions.assertEquals(2, config.fromVersion());
     Assertions.assertEquals(3, config.toVersion());

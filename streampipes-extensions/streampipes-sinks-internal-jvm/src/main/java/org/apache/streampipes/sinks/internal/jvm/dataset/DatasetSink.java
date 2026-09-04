@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake;
+package org.apache.streampipes.sinks.internal.jvm.dataset;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
@@ -30,9 +30,9 @@ import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
-import org.apache.streampipes.model.datalake.RetentionTimeConfig;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetMetadataSchemaUpdateStrategy;
+import org.apache.streampipes.model.dataset.RetentionTimeConfig;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
+public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
 
   private static final String DATABASE_MEASUREMENT_KEY = "db_measurement";
   private static final String TIMESTAMP_MAPPING_KEY = "timestamp_mapping";
@@ -63,7 +63,7 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
   public static final String SCHEMA_UPDATE_OPTION = "Update schema";
 
   public static final String EXTEND_EXISTING_SCHEMA_OPTION = "Extend existing schema";
-  private static final Logger LOG = LoggerFactory.getLogger(DataLakeSink.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DatasetSink.class);
 
   private TimeSeriesStore timeSeriesStore;
 
@@ -71,9 +71,9 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
   @Override
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
-        DataLakeSink::new,
+        DatasetSink::new,
         DataSinkBuilder
-            .create("org.apache.streampipes.sinks.internal.jvm.datalake", 3)
+            .create("org.apache.streampipes.sinks.internal.jvm.dataset", 3)
             .withLocales(Locales.EN)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .category(DataSinkType.INTERNAL)
@@ -115,14 +115,14 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
 
     var retentionTimeConfig = getRetentionTime(measureName, runtimeContext.getStreamPipesClient());
 
-    var measure = new DataLakeMeasure(measureName, timestampField, eventSchema, retentionTimeConfig);
+    var measure = new DatasetMetadata(measureName, timestampField, eventSchema, retentionTimeConfig);
 
     var schemaUpdateOptionString = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
 
     if (schemaUpdateOptionString.equals(EXTEND_EXISTING_SCHEMA_OPTION)) {
-      measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
+      measure.setSchemaUpdateStrategy(DatasetMetadataSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
     } else {
-      measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
+      measure.setSchemaUpdateStrategy(DatasetMetadataSchemaUpdateStrategy.UPDATE_SCHEMA);
     }
 
     var userSid = parameters.getModel().getCorrespondingUser();
@@ -159,14 +159,14 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
   ) {
     var staticProperty = extractor.getStaticPropertyByName(DIMENSIONS_KEY, RuntimeResolvableAnyStaticProperty.class);
     var inputFields = extractor.getInputEventProperties(0);
-    new DataLakeDimensionProvider().applyOptions(inputFields, staticProperty);
+    new DatasetDimensionProvider().applyOptions(inputFields, staticProperty);
     return staticProperty;
   }
 
   private RetentionTimeConfig getRetentionTime(String measureName, IStreamPipesClient client){
 
     try {
-      var originalMeasure = client.dataLakeMeasureApi().getByDatasetName(measureName);
+      var originalMeasure = client.datasetMetadataApi().getByDatasetName(measureName);
       RetentionTimeConfig retentionTime = null;
 
       if (originalMeasure.isPresent()) {

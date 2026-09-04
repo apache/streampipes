@@ -30,6 +30,10 @@ export class ChartUtils {
     public static ADAPTER_NAME = 'datalake_configuration';
 
     public static goToDatalake(discardUnsavedChanges: boolean = true) {
+        return this.goToDataset(discardUnsavedChanges);
+    }
+
+    public static goToDataset(discardUnsavedChanges: boolean = true) {
         cy.visit('#/chart');
         if (!discardUnsavedChanges) {
             return;
