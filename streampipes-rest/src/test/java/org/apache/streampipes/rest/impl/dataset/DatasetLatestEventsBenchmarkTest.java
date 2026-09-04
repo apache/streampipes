@@ -40,7 +40,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @Tag("benchmark")
-class DataLakeLatestEventsBenchmarkTest {
+class DatasetLatestEventsBenchmarkTest {
 
   private static final List<Integer> MEASUREMENT_COUNTS = List.of(10, 100, 1000);
   private static final int WARMUP_RUNS = 2;
