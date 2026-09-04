@@ -20,6 +20,8 @@ package org.apache.streampipes.client;
 import org.apache.streampipes.client.api.AdapterApi;
 import org.apache.streampipes.client.api.AdminApi;
 import org.apache.streampipes.client.api.CustomRequestApi;
+import org.apache.streampipes.client.api.DataLakeMeasureApi;
+import org.apache.streampipes.client.api.DataLakeResourceApi;
 import org.apache.streampipes.client.api.DataProcessorApi;
 import org.apache.streampipes.client.api.DataSinkApi;
 import org.apache.streampipes.client.api.DataStreamApi;
@@ -235,6 +237,13 @@ public class StreamPipesClient implements
   }
 
   @Override
+  @Deprecated(since = "0.99.0", forRemoval = false)
+  @ExposedToScripts
+  public DataLakeMeasureApi dataLakeMeasureApi() {
+    return new DataLakeMeasureApi(config);
+  }
+
+  @Override
   @ExposedToScripts
   public void deliverEmail(SpEmail email) {
     ICustomRequestApi api = customRequest();
@@ -251,6 +260,13 @@ public class StreamPipesClient implements
   @ExposedToScripts
   public DatasetResourceApi datasetResourceApi () {
     return new DatasetResourceApi (config);
+  }
+
+  @Override
+  @Deprecated(since = "0.99.0", forRemoval = false)
+  @ExposedToScripts
+  public DataLakeResourceApi dataLakeResourceApi() {
+    return new DataLakeResourceApi(config);
   }
 
   @Override
