@@ -28,7 +28,7 @@ import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.iotdb.sanitize.DatasetMetadataSanitizerIotDb;
-import org.apache.streampipes.manager.permission.DataLakePermissionManager;
+import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
@@ -59,7 +59,7 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
                                                            IDatasetMetadataStorage datasetStorage) {
     return new DatasetMetadataManagement(
         datasetStorage,
-        new DataLakePermissionManager(permissionStorage),
+        new DatasetPermissionManager(permissionStorage),
         chartSchemaUpdateCoordinator
     );
   }

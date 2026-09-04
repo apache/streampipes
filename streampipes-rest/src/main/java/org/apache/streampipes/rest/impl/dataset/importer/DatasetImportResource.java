@@ -48,11 +48,11 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v4/datalake/import")
-public class DataLakeImportResource extends AbstractDatasetResource {
+public class DatasetImportResource extends AbstractDatasetResource {
 
   private final CsvDatasetImportService importService;
 
-  public DataLakeImportResource(IChartStorage chartStorage,
+  public DatasetImportResource(IChartStorage chartStorage,
                                 SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
     this.importService = new CsvDatasetImportService(

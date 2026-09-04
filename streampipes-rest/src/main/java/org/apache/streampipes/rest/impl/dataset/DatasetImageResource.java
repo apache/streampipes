@@ -32,7 +32,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v4/datalake/images")
-public class DataLakeImageResource extends AbstractAuthGuardedRestResource {
+public class DatasetImageResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "{imageId}", produces = "image/jpeg")
   public ResponseEntity<byte[]> getImage(@PathVariable("imageId") String imageId) throws IOException {

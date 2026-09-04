@@ -45,11 +45,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v3/datalake/dashboard/widgets")
-public class DataLakeWidgetResource extends AbstractAuthGuardedRestResource {
+public class DatasetWidgetResource extends AbstractAuthGuardedRestResource {
 
   private final ChartResourceManager resourceManager;
 
-  public DataLakeWidgetResource(SpResourceManager resourceManager) {
+  public DatasetWidgetResource(SpResourceManager resourceManager) {
     this.resourceManager = resourceManager.manageCharts();
   }
 

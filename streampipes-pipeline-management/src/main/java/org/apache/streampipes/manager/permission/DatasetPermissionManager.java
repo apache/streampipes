@@ -22,11 +22,11 @@ import org.apache.streampipes.model.client.user.PermissionBuilder;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
-public class DataLakePermissionManager {
+public class DatasetPermissionManager {
 
   private final IPermissionStorage permissionStorage;
 
-  public DataLakePermissionManager(IPermissionStorage permissionStorage) {
+  public DatasetPermissionManager(IPermissionStorage permissionStorage) {
     this.permissionStorage = permissionStorage;
   }
 

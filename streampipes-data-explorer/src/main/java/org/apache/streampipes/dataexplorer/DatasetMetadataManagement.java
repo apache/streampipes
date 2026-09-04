@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeDetector;
-import org.apache.streampipes.manager.permission.DataLakePermissionManager;
+import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.DatasetMetadataSchemaUpdateStrategy;
@@ -40,11 +40,11 @@ import java.util.stream.Stream;
 public class DatasetMetadataManagement implements IDatasetMetadataManagement {
 
   CRUDStorage<DatasetMetadata> dataLakeStorage;
-  private final DataLakePermissionManager permissionManager;
+  private final DatasetPermissionManager permissionManager;
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
   public DatasetMetadataManagement(CRUDStorage<DatasetMetadata> dataLakeStorage,
-                               DataLakePermissionManager permissionManager,
+                               DatasetPermissionManager permissionManager,
                                ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.dataLakeStorage = dataLakeStorage;
     this.permissionManager = permissionManager;
