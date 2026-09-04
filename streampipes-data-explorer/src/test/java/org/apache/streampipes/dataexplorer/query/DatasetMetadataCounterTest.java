@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.dataexplorer.query;
 
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.model.dataset.DatasetMetadata;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,13 +35,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public class DataLakeMeasurementCounterTest {
+public class DatasetMetadataCounterTest {
 
   private static final String MEASURE_1_NAME = "measure1";
   private static final String MEASURE_2_NAME = "measure2";
   private static final String UNKNOWN_MEASURE_NAME = "unknownMeasureName";
 
-  private DataLakeMeasurementCounterTestImpl counter;
+  private DatasetMetadataCounterTestImpl counter;
 
   private List<DatasetMetadata> allMeasurements;
 
@@ -59,7 +59,7 @@ public class DataLakeMeasurementCounterTest {
   void countMeasurementSizes_WithTwoEntries() {
     var measurementNames = List.of(MEASURE_1_NAME, MEASURE_2_NAME);
 
-    counter = new DataLakeMeasurementCounterTestImpl(allMeasurements, measurementNames);
+    counter = new DatasetMetadataCounterTestImpl(allMeasurements, measurementNames);
     var result = counter.countMeasurementSizes();
     assertEquals(2, result.size());
     assertEquals(1, result.get(MEASURE_1_NAME));
@@ -69,7 +69,7 @@ public class DataLakeMeasurementCounterTest {
   @Test
   void countMeasurementSizes_WithNotExistingMeasureName() {
     var measurementNames = List.of(UNKNOWN_MEASURE_NAME);
-    counter = new DataLakeMeasurementCounterTestImpl(allMeasurements, measurementNames);
+    counter = new DatasetMetadataCounterTestImpl(allMeasurements, measurementNames);
 
     var result = counter.countMeasurementSizes();
     assertEquals(0, result.size());
@@ -77,7 +77,7 @@ public class DataLakeMeasurementCounterTest {
 
   @Test
   void countMeasurementSizes_WithEmptyMeasureNames() {
-    counter = new DataLakeMeasurementCounterTestImpl(allMeasurements, List.of());
+    counter = new DatasetMetadataCounterTestImpl(allMeasurements, List.of());
 
     var result = counter.countMeasurementSizes();
     assertEquals(0, result.size());
@@ -85,7 +85,7 @@ public class DataLakeMeasurementCounterTest {
 
   @Test
   void countMeasurementSizes_WithEmptyMeasurementsAndMeasureNames() {
-    counter = new DataLakeMeasurementCounterTestImpl(List.of(), List.of());
+    counter = new DatasetMetadataCounterTestImpl(List.of(), List.of());
 
     var result = counter.countMeasurementSizes();
     assertEquals(0, result.size());
@@ -96,7 +96,7 @@ public class DataLakeMeasurementCounterTest {
     var arrayProperty = new EventPropertyList();
     arrayProperty.setRuntimeName("array");
     var measure = new DatasetMetadata(MEASURE_1_NAME, new EventSchema(List.of(arrayProperty)));
-    counter = new DataLakeMeasurementCounterTestImpl(List.of(measure), List.of(MEASURE_1_NAME));
+    counter = new DatasetMetadataCounterTestImpl(List.of(measure), List.of(MEASURE_1_NAME));
 
     assertEquals("array", counter.getCountableProperty(measure));
   }
@@ -106,7 +106,7 @@ public class DataLakeMeasurementCounterTest {
     var primitiveProperty = new EventPropertyPrimitive();
     primitiveProperty.setRuntimeName("value");
     var measure = new DatasetMetadata(MEASURE_1_NAME, new EventSchema(List.of(primitiveProperty)));
-    counter = new DataLakeMeasurementCounterTestImpl(List.of(measure), List.of(MEASURE_1_NAME));
+    counter = new DatasetMetadataCounterTestImpl(List.of(measure), List.of(MEASURE_1_NAME));
 
     assertEquals("value", counter.getCountableProperty(measure));
   }
@@ -117,7 +117,7 @@ public class DataLakeMeasurementCounterTest {
     dimensionProperty.setRuntimeName("dimension");
     dimensionProperty.setPropertyScope(PropertyScope.DIMENSION_PROPERTY.name());
     var measure = new DatasetMetadata(MEASURE_1_NAME, new EventSchema(List.of(dimensionProperty)));
-    counter = new DataLakeMeasurementCounterTestImpl(List.of(measure), List.of(MEASURE_1_NAME));
+    counter = new DatasetMetadataCounterTestImpl(List.of(measure), List.of(MEASURE_1_NAME));
 
     assertNull(counter.getCountableProperty(measure));
   }

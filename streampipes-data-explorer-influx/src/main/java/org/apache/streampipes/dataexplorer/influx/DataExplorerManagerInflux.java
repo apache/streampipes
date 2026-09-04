@@ -23,8 +23,8 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.DatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataCounter;
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
@@ -43,11 +43,11 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   }
 
   @Override
-  public IDataLakeMeasurementCounter getMeasurementCounter(
+  public IDatasetMetadataCounter getMeasurementCounter(
       List<DatasetMetadata> allMeasurements,
       List<String> measurementsToCount,
       int daysBack) {
-    return new DataLakeMeasurementCounterInflux(allMeasurements, measurementsToCount, daysBack);
+    return new DatasetMetadataCounterInflux(allMeasurements, measurementsToCount, daysBack);
   }
 
   @Override

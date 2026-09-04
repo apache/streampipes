@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
-import org.apache.streampipes.dataexplorer.query.DataLakeMeasurementCounter;
+import org.apache.streampipes.dataexplorer.query.DatasetMetadataCounter;
 import org.apache.streampipes.model.dataset.AggregationFunction;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 
@@ -30,13 +30,13 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-public class DataLakeMeasurementCounterInflux extends DataLakeMeasurementCounter {
+public class DatasetMetadataCounterInflux extends DatasetMetadataCounter {
 
-  private static final Logger LOG = LoggerFactory.getLogger(DataLakeMeasurementCounterInflux.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DatasetMetadataCounterInflux.class);
 
   private static final String COUNT_FIELD = "count";
 
-  public DataLakeMeasurementCounterInflux(
+  public DatasetMetadataCounterInflux(
       List<DatasetMetadata> allMeasurements,
       List<String> measurementNames,
       int daysBack

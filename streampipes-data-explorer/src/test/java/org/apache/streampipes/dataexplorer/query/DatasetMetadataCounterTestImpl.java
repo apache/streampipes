@@ -16,20 +16,27 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.api;
+package org.apache.streampipes.dataexplorer.query;
 
-import java.util.Map;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 
-/**
- * Interface for counting the number of events per measurement within the StreamPipes data storage.
- */
-public interface IDataLakeMeasurementCounter {
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-  /**
-   * Counts the sizes of measurements within the StreamPipes data storage.
-   *
-   * @return A map where each key represents a measurement name and its corresponding value represents
-   *         the number of events contained by that measurement.
-   */
-  Map<String, Integer> countMeasurementSizes();
+public class DatasetMetadataCounterTestImpl extends DatasetMetadataCounter {
+  public DatasetMetadataCounterTestImpl(
+      List<DatasetMetadata> allMeasurements, List<String> measurementNames
+  ) {
+    super(allMeasurements, measurementNames, -1);
+  }
+
+  @Override
+  protected CompletableFuture<Integer> createQueryAsAsyncFuture(DatasetMetadata measure) {
+    // Mock implementation for testing
+    return CompletableFuture.completedFuture(1);
+  }
+
+  public String getCountableProperty(DatasetMetadata measure) {
+    return getFirstCountableProperty(measure);
+  }
 }

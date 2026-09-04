@@ -19,7 +19,7 @@
 package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.dataexplorer.query.DataLakeMeasurementCounter;
+import org.apache.streampipes.dataexplorer.query.DatasetMetadataCounter;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 
 import org.apache.iotdb.rpc.IoTDBConnectionException;
@@ -30,11 +30,11 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class DataLakeMeasurementCounterIotDb extends DataLakeMeasurementCounter {
+public class DatasetMetadataCounterIotDb extends DatasetMetadataCounter {
 
-  private static final Logger LOG = LoggerFactory.getLogger(DataLakeMeasurementCounterIotDb.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DatasetMetadataCounterIotDb.class);
 
-  public DataLakeMeasurementCounterIotDb(List<DatasetMetadata> allMeasurements,
+  public DatasetMetadataCounterIotDb(List<DatasetMetadata> allMeasurements,
                                          List<String> measurementNames,
                                          int daysBack) {
     super(allMeasurements, measurementNames, daysBack);
