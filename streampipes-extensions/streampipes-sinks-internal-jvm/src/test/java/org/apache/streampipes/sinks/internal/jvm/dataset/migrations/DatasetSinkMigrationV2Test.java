@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake.migrations;
+package org.apache.streampipes.sinks.internal.jvm.dataset.migrations;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -27,7 +27,7 @@ import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticPro
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.utils.Datatypes;
-import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
+import org.apache.streampipes.sinks.internal.jvm.dataset.DatasetSink;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -37,11 +37,11 @@ import java.util.List;
 
 import static org.mockito.Mockito.mock;
 
-public class DataLakeSinkMigrationV2Test {
+public class DatasetSinkMigrationV2Test {
 
   @Test
   public void migrate() {
-    var dataLakeSinkMigrationV2 = new DataLakeSinkMigrationV2();
+    var datasetSinkMigrationV2 = new DatasetSinkMigrationV2();
 
     var stream = new SpDataStream();
     stream.setEventSchema(makeSchema());
@@ -50,14 +50,14 @@ public class DataLakeSinkMigrationV2Test {
     invocation.setStaticProperties(new ArrayList<>());
     invocation.setInputStreams(List.of(stream));
 
-    var actual = dataLakeSinkMigrationV2.migrate(invocation, extractor);
+    var actual = datasetSinkMigrationV2.migrate(invocation, extractor);
 
     Assertions.assertTrue(actual.success());
     Assertions.assertEquals(actual.element()
         .getStaticProperties()
         .size(), 2);
     var dimensionConfig = getAnyStaticProperty(actual);
-    Assertions.assertEquals(dimensionConfig.getInternalName(), DataLakeSink.DIMENSIONS_KEY);
+    Assertions.assertEquals(dimensionConfig.getInternalName(), DatasetSink.DIMENSIONS_KEY);
     Assertions.assertEquals(dimensionConfig.getOptions().size(), 3);
     Assertions.assertTrue(dimensionConfig.getOptions().get(0).isSelected());
     Assertions.assertFalse(dimensionConfig.getOptions().get(1).isSelected());

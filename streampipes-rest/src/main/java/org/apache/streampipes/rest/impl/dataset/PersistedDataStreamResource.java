@@ -41,7 +41,7 @@ import java.util.List;
 @RequestMapping("/api/v3/datalake/pipelines")
 public class PersistedDataStreamResource extends AbstractPipelineExtractionResource<DatasetMetadata> {
 
-  private static final String DataLakeAppId = "org.apache.streampipes.sinks.internal.jvm.datalake";
+  private static final String DatasetAppId = "org.apache.streampipes.sinks.internal.jvm.dataset";
   private static final String MeasureFieldInternalName = "db_measurement";
 
   public PersistedDataStreamResource(SpResourceManager resourceManager) {
@@ -52,14 +52,14 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
   @PreAuthorize(AuthConstants.HAS_READ_DATASET_PRIVILEGE)
   @PostFilter("hasPermission(filterObject.pipelineId, 'READ') and hasPermission(filterObject.measureName, 'READ')")
   public List<DatasetMetadata> getPersistedDataStreams() {
-    return extract(new ArrayList<>(), DataLakeAppId);
+    return extract(new ArrayList<>(), DatasetAppId);
   }
 
   @GetMapping(path = "{pipelineId}/{measureName}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getVisualizablePipelineByPipelineIdAndVisualizationName(
       @PathVariable("pipelineId") String pipelineId,
       @PathVariable("measureName") String measureName) {
-    return getPipelineByIdAndFieldValue(DataLakeAppId, pipelineId, measureName);
+    return getPipelineByIdAndFieldValue(DatasetAppId, pipelineId, measureName);
   }
 
   @Override
