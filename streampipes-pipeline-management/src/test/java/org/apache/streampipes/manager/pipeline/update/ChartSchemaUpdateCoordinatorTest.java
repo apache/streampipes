@@ -51,8 +51,8 @@ import static org.mockito.Mockito.when;
 
 class ChartSchemaUpdateCoordinatorTest {
 
-  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
-  private static final String DATA_LAKE_MEASUREMENT_FIELD = "db_measurement";
+  private static final String DATASET_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
+  private static final String DATASET_MEASUREMENT_FIELD = "db_measurement";
   private static final String MEASURE_NAME = "measure";
   private static final ObjectMapper OBJECT_MAPPER = JacksonSerializer.getObjectMapper();
   private static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {
@@ -260,8 +260,8 @@ class ChartSchemaUpdateCoordinatorTest {
   private Pipeline makePipeline(String measureName) {
     var pipeline = new Pipeline();
     var sink = new DataSinkInvocation();
-    sink.setAppId(DATA_LAKE_SINK_APP_ID);
-    sink.setStaticProperties(List.of(FreeTextStaticProperty.of(DATA_LAKE_MEASUREMENT_FIELD, measureName)));
+    sink.setAppId(DATASET_SINK_APP_ID);
+    sink.setStaticProperties(List.of(FreeTextStaticProperty.of(DATASET_MEASUREMENT_FIELD, measureName)));
     pipeline.setActions(List.of(sink));
     return pipeline;
   }
