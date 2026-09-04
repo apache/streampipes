@@ -26,7 +26,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
-import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
@@ -102,7 +102,7 @@ public class ExtensionServiceRequestConfiguration {
                                              IDashboardStorage dashboardStorage,
                                              IAssetStorage assetStorage,
                                              IPipelineStorage pipelineStorage,
-                                             IDatasetMeasureStorage datasetStorage,
+                                             IDatasetMetadataStorage datasetStorage,
                                              ISpCoreConfigurationStorage coreConfigurationStorage,
                                              IFileMetadataStorage fileMetadataStorage,
                                              IRoleStorage roleStorage,

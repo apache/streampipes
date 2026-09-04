@@ -47,7 +47,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v4/dataset/import")
+@RequestMapping("/api/v4/datalake/import")
 public class DatasetImportResource extends AbstractDatasetResource {
 
   private final CsvDatasetImportService importService;
@@ -56,8 +56,8 @@ public class DatasetImportResource extends AbstractDatasetResource {
                                 SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
     this.importService = new CsvDatasetImportService(
-        getDatasetMeasureManagement(),
-        resourceManager.manageDatasetMeasures().getDb()
+        getDatasetMetadataManagement(),
+        resourceManager.manageDataLakeMeasures().getDb()
     );
   }
 
@@ -163,7 +163,7 @@ public class DatasetImportResource extends AbstractDatasetResource {
   private boolean hasWritePermission(org.apache.streampipes.model.dataset.importer.CsvImportTarget target) {
     return target == null
         || target.getMode() != CsvImportTargetMode.EXISTING
-        || getDatasetMeasureManagement().getExistingMeasureByName(target.getMeasurementName()).isEmpty()
+        || getDatasetMetadataManagement().getExistingMeasureByName(target.getMeasurementName()).isEmpty()
         || this.checkPermissionByName(target.getMeasurementName(), "WRITE");
   }
 }

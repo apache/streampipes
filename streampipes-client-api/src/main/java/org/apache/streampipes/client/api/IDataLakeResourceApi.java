@@ -21,6 +21,6 @@ package org.apache.streampipes.client.api;
 /**
  * @deprecated Use {@link IDatasetResourceApi} instead.
  */
-@Deprecated(since = "0.99.0", forRemoval = true)
+@Deprecated(since = "0.99.0", forRemoval = false)
 public interface IDataLakeResourceApi extends IDatasetResourceApi {
 }

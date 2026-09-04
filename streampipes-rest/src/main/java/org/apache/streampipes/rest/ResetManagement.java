@@ -31,7 +31,7 @@ import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManage
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -93,7 +93,7 @@ public class ResetManagement {
 
     deleteAllFiles();
 
-    removeAllDataInDataset();
+    removeAllDataInDataLake();
 
     removeAllDataViewWidgets();
 
@@ -155,22 +155,22 @@ public class ResetManagement {
     allFiles.forEach(fileMetadata -> fileManager.deleteFile(fileMetadata.getFileId()));
   }
 
-  private void removeAllDataInDataset() {
-    var datasetMeasureManagement = new DataExplorerDispatcher()
+  private void removeAllDataInDataLake() {
+    var datasetMetadataManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getSchemaManagement(
             chartSchemaUpdateCoordinator,
             resourceManager.managePermissions().getDb(),
-            resourceManager.manageDatasetMeasures().getDb());
+            resourceManager.manageDataLakeMeasures().getDb());
     var dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
-        .getQueryManagement(datasetMeasureManagement);
-    List<DatasetMeasure> allMeasurements = datasetMeasureManagement.getAllMeasurements();
+        .getQueryManagement(datasetMetadataManagement);
+    List<DatasetMetadata> allMeasurements = datasetMetadataManagement.getAllMeasurements();
     allMeasurements.forEach(measurement -> {
-      boolean isSuccessDataset = dataExplorerQueryManagement.deleteData(measurement.getMeasureName());
+      boolean isSuccessDataLake = dataExplorerQueryManagement.deleteData(measurement.getMeasureName());
 
-      if (isSuccessDataset) {
-        datasetMeasureManagement.deleteMeasurementByName(measurement.getMeasureName());
+      if (isSuccessDataLake) {
+        datasetMetadataManagement.deleteMeasurementByName(measurement.getMeasureName());
       }
     });
   }

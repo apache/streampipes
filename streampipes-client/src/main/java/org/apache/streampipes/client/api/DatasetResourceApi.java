@@ -26,8 +26,7 @@ import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DatasetResourceApi extends AbstractClientApi
-    implements IDatasetResourceApi, IDataLakeResourceApi {
+public class DatasetResourceApi extends AbstractClientApi implements IDatasetResourceApi {
 
   public DatasetResourceApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig);

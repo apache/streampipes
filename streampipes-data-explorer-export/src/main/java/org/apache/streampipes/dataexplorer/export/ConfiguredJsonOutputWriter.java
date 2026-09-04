@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.dataexplorer.export.item.ItemGenerator;
 import org.apache.streampipes.dataexplorer.export.item.JsonItemGenerator;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
@@ -45,7 +45,7 @@ public class ConfiguredJsonOutputWriter extends ConfiguredOutputWriter {
   }
 
   @Override
-  public void configure(DatasetMeasure schema,
+  public void configure(DatasetMetadata schema,
                         ProvidedRestQueryParams params,
                         boolean ignoreMissingValues) {
     // do nothing

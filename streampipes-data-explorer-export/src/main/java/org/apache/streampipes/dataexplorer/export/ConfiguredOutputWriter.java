@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.export;
 
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.schema.EventProperty;
 
@@ -32,7 +32,7 @@ public abstract class ConfiguredOutputWriter {
 
   private final DecimalFormat df = new DecimalFormat("#");
 
-  protected String getHeaderName(DatasetMeasure schema,
+  protected String getHeaderName(DatasetMetadata schema,
                                  String runtimeName,
                                  String headerColumnNameStrategy) {
     if (Objects.nonNull(schema) && headerColumnNameStrategy.equals("label")) {
@@ -58,7 +58,7 @@ public abstract class ConfiguredOutputWriter {
     }
   }
 
-  public abstract void configure(DatasetMeasure schema,
+  public abstract void configure(DatasetMetadata schema,
                                  ProvidedRestQueryParams params,
                                  boolean ignoreMissingValues);
 

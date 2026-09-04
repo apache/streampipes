@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 
@@ -39,7 +39,7 @@ public class ImageStore {
   private final List<EventProperty> imageProperties;
   private final CouchDbClient couchDbClient;
 
-  public ImageStore(DatasetMeasure measure,
+  public ImageStore(DatasetMetadata measure,
                     Environment environment) {
     this.couchDbClient = new CouchDbClient(from(environment));
     this.imageProperties = ImageStoreUtils.getImageProperties(measure);

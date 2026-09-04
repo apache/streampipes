@@ -23,11 +23,10 @@ import org.apache.streampipes.client.model.StreamPipesClientConfig;
 /**
  * @deprecated Use {@link DatasetResourceApi} instead.
  */
-@Deprecated(since = "0.99.0", forRemoval = true)
+@Deprecated(since = "0.99.0", forRemoval = false)
 public class DataLakeResourceApi extends DatasetResourceApi implements IDataLakeResourceApi {
 
   public DataLakeResourceApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig);
   }
-
 }

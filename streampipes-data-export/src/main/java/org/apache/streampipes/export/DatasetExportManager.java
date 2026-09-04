@@ -20,14 +20,14 @@ package org.apache.streampipes.export;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.export.objectstorage.ExportProviderFactory;
 import org.apache.streampipes.dataexplorer.export.objectstorage.IObjectStorage;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.model.configuration.ProviderType;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.RetentionAction;
 import org.apache.streampipes.model.dataset.RetentionLog;
 import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
@@ -50,24 +50,24 @@ public class DatasetExportManager {
     private static final Logger LOG = LoggerFactory.getLogger(DatasetExportManager.class);
     private static final Environment env = Environments.getEnvironment();
 
-    private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
+    private final IDatasetMetadataManagement datasetMetadataManagement;
     private final IDataExplorerQueryManagement dataExplorerQueryManagement;
     private final ISpCoreConfigurationStorage coreConfigurationStorage;
     private final ConfiguredOutputWriterFactory outputWriterFactory;
 
-    public DatasetExportManager(IDataExplorerSchemaManagement datasetSchemaManagement,
-                                 IDataExplorerQueryManagement datasetQueryManagement,
+    public DatasetExportManager(IDatasetMetadataManagement dataLakeSchemaManagement,
+                                 IDataExplorerQueryManagement dataLakeQueryManagement,
                                  ISpCoreConfigurationStorage coreConfigurationStorage,
                                  IFileMetadataStorage fileMetadataStorage) {
-        this.dataExplorerSchemaManagement = datasetSchemaManagement;
-        this.dataExplorerQueryManagement = datasetQueryManagement;
+        this.datasetMetadataManagement = dataLakeSchemaManagement;
+        this.dataExplorerQueryManagement = dataLakeQueryManagement;
         this.coreConfigurationStorage = coreConfigurationStorage;
         this.outputWriterFactory = new ConfiguredOutputWriterFactory(fileMetadataStorage, coreConfigurationStorage);
     }
 
     private String savePath = "";
 
-    private void exportMeasurement(DatasetMeasure datasetMeasure, Instant now, long endDate) throws Exception {
+    private void exportMeasurement(DatasetMetadata datasetMetadata, Instant now, long endDate) throws Exception {
 
         if (env.getRetentionLocalDir().getValueOrDefault() == null
                 || env.getRetentionLocalDir().getValueOrDefault().isEmpty()) {
@@ -75,31 +75,31 @@ public class DatasetExportManager {
         }
 
         var outputFormat = OutputFormat
-                .fromString(datasetMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
+                .fromString(datasetMetadata.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
 
         Map<String, String> params = new HashMap<>();
 
         params.put("delimiter",
-                datasetMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().csvDelimiter());
-        params.put("format", datasetMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
+                datasetMetadata.getRetentionTime().getRetentionExportConfig().getExportConfig().csvDelimiter());
+        params.put("format", datasetMetadata.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
         params.put("headerColumnName",
-                datasetMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().headerColumnName());
+                datasetMetadata.getRetentionTime().getRetentionExportConfig().getExportConfig().headerColumnName());
         params.put("missingValueBehaviour",
-                datasetMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig()
+                datasetMetadata.getRetentionTime().getRetentionExportConfig().getExportConfig()
                         .missingValueBehaviour());
         params.put("endDate", Long.toString(endDate));
 
-        ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(datasetMeasure.getMeasureName(), params);
+        ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(datasetMetadata.getMeasureName(), params);
         StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
                 sanitizedParams,
                 outputFormat,
                 outputWriterFactory,
                 "ignore".equals(
-                        datasetMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig()
+                        datasetMetadata.getRetentionTime().getRetentionExportConfig().getExportConfig()
                                 .missingValueBehaviour()),
                 output);
 
-        String exportProviderId = datasetMeasure.getRetentionTime().getRetentionExportConfig()
+        String exportProviderId = datasetMetadata.getRetentionTime().getRetentionExportConfig()
                 .getExportProviderId();
 
         // FInd Item in Document
@@ -126,8 +126,8 @@ public class DatasetExportManager {
         try {
 
             IObjectStorage exportProvider = ExportProviderFactory.createExportProvider(
-                    providerType, datasetMeasure.getMeasureName(), exportProviderSetting,
-                    datasetMeasure.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
+                    providerType, datasetMetadata.getMeasureName(), exportProviderSetting,
+                    datasetMetadata.getRetentionTime().getRetentionExportConfig().getExportConfig().format());
             exportProvider.store(streamingOutput);
             savePath = exportProvider.getFileName();
 
@@ -168,17 +168,17 @@ public class DatasetExportManager {
         }
     }
 
-    private void updateLastSync(DatasetMeasure datasetMeasure, Instant now, boolean success, String error) {
-        datasetMeasure.getRetentionTime().getRetentionExportConfig().setLastExport(now.toString());
-        datasetMeasure.getRetentionTime().getRetentionExportConfig()
+    private void updateLastSync(DatasetMetadata datasetMetadata, Instant now, boolean success, String error) {
+        datasetMetadata.getRetentionTime().getRetentionExportConfig().setLastExport(now.toString());
+        datasetMetadata.getRetentionTime().getRetentionExportConfig()
                 .addRetentionLog(new RetentionLog(success, this.savePath, now.toString(), error));
-        this.dataExplorerSchemaManagement.updateMeasurement(datasetMeasure);
+        this.datasetMetadataManagement.updateMeasurement(datasetMetadata);
 
     }
 
-    private void deleteMeasurement(DatasetMeasure datasetMeasure, Instant now, long endDate) {
+    private void deleteMeasurement(DatasetMetadata datasetMetadata, Instant now, long endDate) {
 
-        this.dataExplorerQueryManagement.deleteData(datasetMeasure.getMeasureName(), null, endDate);
+        this.dataExplorerQueryManagement.deleteData(datasetMetadata.getMeasureName(), null, endDate);
     }
 
     private Map<String, Object> getStartAndEndTime(int olderThanDays) {
@@ -193,33 +193,33 @@ public class DatasetExportManager {
         return result;
     }
 
-    public void cleanupSingleMeasurement(DatasetMeasure datasetMeasure) throws Exception {
+    public void cleanupSingleMeasurement(DatasetMetadata datasetMetadata) throws Exception {
         boolean success = false;
         Instant now = Instant.now();
-        if (datasetMeasure.getRetentionTime() != null) {
-            LOG.info("Measurement " + datasetMeasure.getMeasureName());
+        if (datasetMetadata.getRetentionTime() != null) {
+            LOG.info("Measurement " + datasetMetadata.getMeasureName());
 
             var result = getStartAndEndTime(
-                    datasetMeasure.getRetentionTime().getDataRetentionConfig().olderThanDays());
+                    datasetMetadata.getRetentionTime().getDataRetentionConfig().olderThanDays());
             now = (Instant) result.get("now");
             long endDate = (Long) result.get("endDate");
 
-            if (datasetMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.DELETE) {
+            if (datasetMetadata.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.DELETE) {
                 try {
-                    exportMeasurement(datasetMeasure, now, endDate);
+                    exportMeasurement(datasetMetadata, now, endDate);
                 } catch (Exception e) {
-                    updateLastSync(datasetMeasure, now, false, e.getMessage());
+                    updateLastSync(datasetMetadata, now, false, e.getMessage());
                     throw new Exception(e);
 
                 }
-                LOG.info("Measurements " + datasetMeasure.getMeasureName() + " successfully saved");
+                LOG.info("Measurements " + datasetMetadata.getMeasureName() + " successfully saved");
             }
-            if (datasetMeasure.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.SAVE) {
-                deleteMeasurement(datasetMeasure, now, endDate);
-                LOG.info("Measurements " + datasetMeasure.getMeasureName() + " successfully deleted");
+            if (datasetMetadata.getRetentionTime().getDataRetentionConfig().action() != RetentionAction.SAVE) {
+                deleteMeasurement(datasetMetadata, now, endDate);
+                LOG.info("Measurements " + datasetMetadata.getMeasureName() + " successfully deleted");
             }
             success = true;
-            updateLastSync(datasetMeasure, now, success, "-");
+            updateLastSync(datasetMetadata, now, success, "-");
 
         }
 

@@ -31,7 +31,7 @@ import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -50,7 +50,7 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final PipelineManager pipelineManager;
   private final SpResourceManager resourceManager;
-  private final IDatasetMeasureStorage datasetStorage;
+  private final IDatasetMetadataStorage datasetStorage;
 
   public PreviewImportGenerator(ExtensionServiceRequestManager extensionServiceRequestManager,
                                 SpResourceManager resourceManager,
@@ -60,7 +60,7 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.pipelineManager = pipelineManager;
     this.resourceManager = resourceManager;
-    this.datasetStorage = resourceManager.manageDatasetMeasures().getDb();
+    this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
 
   }
 
@@ -124,9 +124,9 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   }
 
   @Override
-  protected void handleDataset(String document, String measurementId) throws JsonProcessingException {
+  protected void handleDatasetMetadata(String document, String measurementId) throws JsonProcessingException {
     addExportItem(measurementId, new MeasurementResolver(datasetStorage).readDocument(document).getMeasureName(),
-        importConfig::addDataLakeMeasure);
+        importConfig::addDatasetMetadata);
   }
 
   @Override

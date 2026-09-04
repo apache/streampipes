@@ -96,7 +96,7 @@ public class AssetLinkResolver {
       );
       exportConfig.setDataLakeMeasures(
           new MeasurementResolver(
-              resourceManager.manageDatasetMeasures().getDb()
+              resourceManager.manageDataLakeMeasures().getDb()
           ).resolve(getLinks(assetLinks, ResolvableAssetLinks.MEASUREMENT)));
       exportConfig.setFiles(new FileResolver(resourceManager.getFileMetadataStorage())
           .resolve(getLinks(assetLinks, ResolvableAssetLinks.FILE)));

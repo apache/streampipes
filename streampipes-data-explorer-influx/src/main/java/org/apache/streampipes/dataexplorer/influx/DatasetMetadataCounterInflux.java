@@ -1,0 +1,74 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.streampipes.dataexplorer.influx;
+
+import org.apache.streampipes.dataexplorer.query.DatasetMetadataCounter;
+import org.apache.streampipes.model.dataset.AggregationFunction;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+public class DatasetMetadataCounterInflux extends DatasetMetadataCounter {
+
+  private static final Logger LOG = LoggerFactory.getLogger(DatasetMetadataCounterInflux.class);
+
+  private static final String COUNT_FIELD = "count";
+
+  public DatasetMetadataCounterInflux(
+      List<DatasetMetadata> allMeasurements,
+      List<String> measurementNames,
+      int daysBack
+  ) {
+    super(allMeasurements, measurementNames, daysBack);
+  }
+
+  @Override
+  protected CompletableFuture<Integer> createQueryAsAsyncFuture(DatasetMetadata measure) {
+    return CompletableFuture.supplyAsync(() -> {
+      var firstColumn = getFirstCountableProperty(measure);
+      if (firstColumn == null) {
+        LOG.error(
+            "Could not count events in measurement: {}, because no countable property was found in event schema",
+            measure.getMeasureName()
+        );
+        return 0;
+      }
+
+      var endTime = System.currentTimeMillis();
+      long startTime = endTime - TimeUnit.DAYS.toMillis(daysBack);
+      var builder = DatasetInfluxQueryBuilder
+          .create(measure.getMeasureName())
+          .withEndTime(endTime)
+          .withAggregatedColumn(firstColumn, AggregationFunction.COUNT);
+
+      if (daysBack > -1) {
+        builder.withStartTime(startTime);
+      }
+      var queryResult = new DataExplorerInfluxQueryExecutor().executeQuery(builder.build(), Optional.empty(), true);
+
+      return queryResult.getTotal() > 0 ? extractResult(queryResult, COUNT_FIELD) : 0;
+    });
+  }
+}

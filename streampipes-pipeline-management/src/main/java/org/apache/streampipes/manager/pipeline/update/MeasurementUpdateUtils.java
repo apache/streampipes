@@ -36,23 +36,23 @@ public final class MeasurementUpdateUtils {
   private MeasurementUpdateUtils() {
   }
 
-  public static List<DataSinkInvocation> getDatasetSinks(Pipeline pipeline) {
+  public static List<DataSinkInvocation> getDataLakeSinks(Pipeline pipeline) {
     return pipeline.getActions()
         .stream()
-        .filter(MeasurementUpdateUtils::isDatasetSink)
+        .filter(MeasurementUpdateUtils::isDataLakeSink)
         .toList();
   }
 
-  public static Optional<DataSinkInvocation> getDatasetSinkById(Pipeline pipeline, String id) {
+  public static Optional<DataSinkInvocation> getDataLakeSinkById(Pipeline pipeline, String id) {
     return pipeline.getActions()
         .stream()
-        .filter(MeasurementUpdateUtils::isDatasetSink)
+        .filter(MeasurementUpdateUtils::isDataLakeSink)
         .filter(storedSink -> Objects.equals(storedSink.getElementId(), id))
         .findFirst();
   }
 
   public static Set<String> extractMeasureNames(Pipeline pipeline) {
-    return getDatasetSinks(pipeline)
+    return getDataLakeSinks(pipeline)
         .stream()
         .map(MeasurementUpdateUtils::extractMeasureName)
         .flatMap(Optional::stream)
@@ -72,7 +72,7 @@ public final class MeasurementUpdateUtils {
         .findFirst();
   }
 
-  public static boolean isDatasetSink(DataSinkInvocation dataSink) {
+  public static boolean isDataLakeSink(DataSinkInvocation dataSink) {
     return DATA_LAKE_SINK_APP_ID.equals(dataSink.getAppId());
   }
 }

@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.connect.management.util.EventSchemaUtils;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.importer.CsvImportColumn;
 import org.apache.streampipes.model.dataset.importer.CsvImportConfiguration;
 import org.apache.streampipes.model.dataset.importer.CsvImportRequest;
@@ -28,7 +28,7 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.rest.impl.dataset.DatasetDataWriter;
+import org.apache.streampipes.rest.impl.dataset.DatasetWriter;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
@@ -153,8 +153,8 @@ class CsvImportParser {
   int importCsvFile(
       Path path,
       CsvImportRequest request,
-      DatasetMeasure measure,
-      DatasetDataWriter dataWriter
+      DatasetMetadata measure,
+      DatasetWriter dataWriter
   ) throws IOException {
     return importCsvFile(path, request, measure, dataWriter, importedRows -> {
     });
@@ -163,8 +163,8 @@ class CsvImportParser {
   int importCsvFile(
       Path path,
       CsvImportRequest request,
-      DatasetMeasure measure,
-      DatasetDataWriter dataWriter,
+      DatasetMetadata measure,
+      DatasetWriter dataWriter,
       IntConsumer progressConsumer
   ) throws IOException {
     var runtimeHeaders = request.getColumns().stream()

@@ -19,7 +19,7 @@
 package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.dataexplorer.export.item.CsvItemGenerator;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.dataset.param.SupportedRestQueryParams;
 
@@ -36,11 +36,11 @@ public class ConfiguredCsvOutputWriter extends ConfiguredOutputWriter {
 
   private CsvItemGenerator itemGenerator;
   private String delimiter = COMMA;
-  private DatasetMeasure schema;
+  private DatasetMetadata schema;
   private String headerColumnNameStrategy;
 
   @Override
-  public void configure(DatasetMeasure schema,
+  public void configure(DatasetMetadata schema,
                         ProvidedRestQueryParams params,
                         boolean ignoreMissingValues) {
     this.schema = schema;

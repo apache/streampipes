@@ -21,7 +21,7 @@ package org.apache.streampipes.dataexplorer;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.runtime.Event;
 
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ public class TimeSeriesStore {
 
   public TimeSeriesStore(
       ITimeSeriesStorage timeSeriesStorage,
-      DatasetMeasure measure,
+      DatasetMetadata measure,
       Environment environment,
       boolean enableImageStore
   ) {
