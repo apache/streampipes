@@ -19,11 +19,8 @@
 org.apache.streampipes.connect.iiot.protocol.stream.kafka.title=Apache Kafka
 org.apache.streampipes.connect.iiot.protocol.stream.kafka.description=Consumes messages from an Apache Kafka broker
 
-host.title=Broker Hostname
-host.description=Example: test.server.com (No protocol)
-
-port.title=Broker Port
-port.description=9092
+bootstrap-servers.title=Kafka Brokers
+bootstrap-servers.description=Example: broker1:9092,broker2:9092
 
 topic.title=Topic
 topic.description=Example: test.topic

@@ -31,16 +31,16 @@ describe('Test Kafka Integration', () => {
         const topicName = 'cypresstopic';
         const host: string = ParameterUtils.get('localhost', 'kafka');
         const port: string = ParameterUtils.get('9094', '9092');
+        const bootstrapServers = `${host}:${port}`;
 
         const sink: PipelineElementInput = PipelineElementBuilder.create(
             'kafka_publisher',
         )
             .addInput('radio', 'access-mode-plaintext', '')
-            .addInput('input', 'host', host)
             .addInput(
                 'input',
-                'port',
-                '{backspace}{backspace}{backspace}{backspace}' + port,
+                'bootstrap-servers',
+                '{selectall}{backspace}' + bootstrapServers,
             )
             .addInput('input', 'topic', topicName)
             .build();
@@ -49,8 +49,11 @@ describe('Test Kafka Integration', () => {
             .setName('Kafka4')
             .setTimestampProperty('timestamp')
             .addProtocolInput('radio', 'access-mode-plaintext', '')
-            .addProtocolInput('input', 'host', host)
-            .addProtocolInput('input', 'port', port)
+            .addProtocolInput(
+                'input',
+                'bootstrap-servers',
+                '{selectall}{backspace}' + bootstrapServers,
+            )
             .addProtocolInput('click', 'sp-reload', '')
             .addProtocolInput('radio', topicName, '')
             .setFormat('json')
