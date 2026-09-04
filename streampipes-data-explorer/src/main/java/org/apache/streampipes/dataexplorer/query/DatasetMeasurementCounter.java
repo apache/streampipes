@@ -22,6 +22,7 @@ import org.apache.streampipes.dataexplorer.api.IDatasetMeasurementCounter;
 import org.apache.streampipes.model.dataset.DatasetMeasure;
 import org.apache.streampipes.model.dataset.SpQueryResult;
 import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 
 import org.slf4j.Logger;
@@ -118,18 +119,21 @@ public abstract class DatasetMeasurementCounter implements IDatasetMeasurementCo
         .getEventSchema()
         .getEventProperties()
         .stream()
-        .filter(ep -> ep.getPropertyScope() != null
-            && ep.getPropertyScope()
-                 .equals(PropertyScope.MEASUREMENT_PROPERTY.name()))
+        .filter(this::isStoredAsField)
         .map(EventProperty::getRuntimeName)
         .findFirst()
         .orElse(null);
 
     if (propertyRuntimeName == null) {
-      LOG.error("No measurement property was found in the event schema found for measure {}", measure.getMeasureName());
+      LOG.error("No countable property was found in the event schema for measure {}", measure.getMeasureName());
     }
 
     return propertyRuntimeName;
+  }
+
+  private boolean isStoredAsField(EventProperty eventProperty) {
+    return !(eventProperty instanceof EventPropertyPrimitive)
+        || !PropertyScope.DIMENSION_PROPERTY.name().equals(eventProperty.getPropertyScope());
   }
 
   protected Integer extractResult(SpQueryResult queryResult, String fieldName) {

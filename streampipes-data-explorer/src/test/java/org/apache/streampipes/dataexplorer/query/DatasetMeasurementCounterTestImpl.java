@@ -35,4 +35,8 @@ public class DatasetMeasurementCounterTestImpl extends DatasetMeasurementCounter
     // Mock implementation for testing
     return CompletableFuture.completedFuture(1);
   }
+
+  public String getCountableProperty(DataLakeMeasure measure) {
+    return getFirstCountableProperty(measure);
+  }
 }
