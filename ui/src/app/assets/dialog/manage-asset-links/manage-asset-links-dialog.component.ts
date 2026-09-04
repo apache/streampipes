@@ -133,8 +133,8 @@ export class SpManageAssetLinksDialogComponent
                 this.makeResourceRow(
                     measure.elementId,
                     measure.measureName,
-                    'Data Lake Storage',
-                    'measurement',
+                    'Dataset',
+                    'dataset',
                 ),
             ),
             ...this.dataSources.map(source =>
@@ -142,7 +142,7 @@ export class SpManageAssetLinksDialogComponent
                     source.elementId,
                     source.name,
                     'Data Stream',
-                    'data-source',
+                    'data-stream',
                 ),
             ),
             ...this.files.map(file =>
