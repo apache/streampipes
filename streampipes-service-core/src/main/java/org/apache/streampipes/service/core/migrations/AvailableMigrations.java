@@ -32,6 +32,7 @@ import org.apache.streampipes.service.core.migrations.v099.AddScriptTemplateView
 import org.apache.streampipes.service.core.migrations.v099.ComputeCertificateThumbprintMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateDatasetPermissionMigration;
+import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakeSinkToDatasetMigration;
 import org.apache.streampipes.service.core.migrations.v099.ModifyAssetLinkIconMigration;
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveAssetUserRoleMigration;
@@ -45,6 +46,7 @@ import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
@@ -65,6 +67,7 @@ public class AvailableMigrations {
   private final IDashboardStorage dashboardStorage;
   private final IAssetStorage assetStorage;
   private final IPipelineStorage pipelineStorage;
+  private final IDataSinkStorage dataSinkStorage;
   private final IDatasetMeasureStorage datasetStorage;
   private final ISpCoreConfigurationStorage coreConfigStorage;
   private final IRoleStorage roleStorage;
@@ -79,6 +82,7 @@ public class AvailableMigrations {
     this.dashboardStorage = resourceManager.manageDashboards().getDb();
     this.assetStorage = resourceManager.manageAssets().getDb();
     this.pipelineStorage = resourceManager.managePipelines().getDb();
+    this.dataSinkStorage = resourceManager.manageDataSinks().getDb();
     this.datasetStorage = resourceManager.manageDatasetMeasures().getDb();
     this.coreConfigStorage = resourceManager.getCoreConfigurationStorage();
     this.roleStorage = resourceManager.getRoleStorage();
@@ -109,7 +113,8 @@ public class AvailableMigrations {
         new AddFunctionStateViewMigration(),
         new AddRefreshTokenViewsMigration(),
         new RemoveAssetUserRoleMigration(roleStorage, userGroupStorage, userStorage),
-        new RemoveInternalNotificationSinkMigration(pipelineStorage)
+        new RemoveInternalNotificationSinkMigration(pipelineStorage),
+        new MigrateDataLakeSinkToDatasetMigration(pipelineStorage, dataSinkStorage)
     );
   }
 }
