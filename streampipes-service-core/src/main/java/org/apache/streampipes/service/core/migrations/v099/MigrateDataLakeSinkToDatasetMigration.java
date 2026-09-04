@@ -56,7 +56,7 @@ public class MigrateDataLakeSinkToDatasetMigration implements Migration {
 
   @Override
   public String getDescription() {
-    return "Migrate the internal Data Lake sink to the Dataset sink";
+    return "Migrate legacy internal Data Lake sink references to the Dataset sink";
   }
 
   private boolean containsDataLakeSinkInPipelines() {
