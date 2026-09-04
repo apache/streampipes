@@ -36,14 +36,14 @@ import org.springframework.scheduling.support.CronTrigger;
 import java.util.List;
 
 @Configuration
-public class DataLakeScheduler implements SchedulingConfigurer {
+public class DatasetScheduler implements SchedulingConfigurer {
 
     private final DatasetExportManager datasetExportManager;
-    private static final Logger LOG = LoggerFactory.getLogger(DataLakeScheduler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DatasetScheduler.class);
 
   private final IDatasetMetadataManagement datasetMetadataManagement;
 
-    public DataLakeScheduler(IChartStorage chartStorage,
+    public DatasetScheduler(IChartStorage chartStorage,
                              SpResourceManager resourceManager) {
         var chartSchemaUpdateCoordinator = new ChartSchemaUpdateCoordinator(chartStorage);
         datasetMetadataManagement = new DataExplorerDispatcher()
