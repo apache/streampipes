@@ -145,14 +145,14 @@ export class SavePipelineComponent implements OnInit {
     private async shouldPerformUpdatePreflight(
         skipPreflight: boolean,
     ): Promise<boolean> {
-        return !skipPreflight && this.updateExisting && this.hasDataLakeSink();
+        return !skipPreflight && this.updateExisting && this.hasDatasetSink();
     }
 
-    private hasDataLakeSink(): boolean {
+    private hasDatasetSink(): boolean {
         return this.pipeline.actions.some(
             action =>
                 action.appId ===
-                'org.apache.streampipes.sinks.internal.jvm.datalake',
+                'org.apache.streampipes.sinks.internal.jvm.dataset',
         );
     }
 

@@ -26,29 +26,29 @@ import org.apache.streampipes.model.template.PipelinePlaceholders;
 import java.util.List;
 import java.util.Map;
 
-public class PersistDataLakePipelineTemplate implements DefaultPipelineTemplateProvider {
+public class PersistDatasetPipelineTemplate implements DefaultPipelineTemplateProvider {
 
-  public static final String DATA_LAKE_SINK_REF = "lake";
-  public static final String DATA_LAKE_SINK_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
-  public static final String DATA_LAKE_CONNECTOR_ID = "stream1";
-  public static final String DATA_LAKE_TEMPLATE_ID = "sp-internal-persist";
+  public static final String DATASET_SINK_REF = "lake";
+  public static final String DATASET_SINK_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
+  public static final String DATASET_CONNECTOR_ID = "stream1";
+  public static final String DATASET_TEMPLATE_ID = "sp-internal-persist";
 
-  public static final String DATA_LAKE_MEASUREMENT_FIELD = "db_measurement";
-  public static final String DATA_LAKE_TIMESTAMP_FIELD = "timestamp_mapping";
-  public static final String DATA_LAKE_DIMENSIONS_FIELD = "dimensions_selection";
+  public static final String DATASET_MEASUREMENT_FIELD = "db_measurement";
+  public static final String DATASET_TIMESTAMP_FIELD = "timestamp_mapping";
+  public static final String DATASET_DIMENSIONS_FIELD = "dimensions_selection";
 
   @Override
   public CompactPipelineTemplate getTemplate() {
     var template = new CompactPipelineTemplate();
-    template.setElementId(DATA_LAKE_TEMPLATE_ID);
+    template.setElementId(DATASET_TEMPLATE_ID);
     template.setName("Persist Data");
     template.setDescription("Use this template to persist an input data stream to the time-series storage");
     template.setPipeline(List.of(
             new CompactPipelineElement(
                 "sink",
-                DATA_LAKE_SINK_REF,
-                DATA_LAKE_SINK_ID,
-                List.of(DATA_LAKE_CONNECTOR_ID),
+                DATASET_SINK_REF,
+                DATASET_SINK_ID,
+                List.of(DATASET_CONNECTOR_ID),
                 List.of(
                     Map.of("schema_update", "Update schema"),
                     Map.of("ignore_duplicates", false)
@@ -60,9 +60,9 @@ public class PersistDataLakePipelineTemplate implements DefaultPipelineTemplateP
     template.setPlaceholders(new PipelinePlaceholders(
         List.of("stream1"),
         List.of(
-            new PipelinePlaceholderConfig(DATA_LAKE_SINK_REF, DATA_LAKE_MEASUREMENT_FIELD),
-            new PipelinePlaceholderConfig(DATA_LAKE_SINK_REF, DATA_LAKE_TIMESTAMP_FIELD),
-            new PipelinePlaceholderConfig(DATA_LAKE_SINK_REF, DATA_LAKE_DIMENSIONS_FIELD)
+            new PipelinePlaceholderConfig(DATASET_SINK_REF, DATASET_MEASUREMENT_FIELD),
+            new PipelinePlaceholderConfig(DATASET_SINK_REF, DATASET_TIMESTAMP_FIELD),
+            new PipelinePlaceholderConfig(DATASET_SINK_REF, DATASET_DIMENSIONS_FIELD)
         )
     ));
 

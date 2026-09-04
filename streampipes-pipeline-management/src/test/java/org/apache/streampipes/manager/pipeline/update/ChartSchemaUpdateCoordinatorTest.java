@@ -51,7 +51,7 @@ import static org.mockito.Mockito.when;
 
 class ChartSchemaUpdateCoordinatorTest {
 
-  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
+  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
   private static final String DATA_LAKE_MEASUREMENT_FIELD = "db_measurement";
   private static final String MEASURE_NAME = "measure";
   private static final ObjectMapper OBJECT_MAPPER = JacksonSerializer.getObjectMapper();

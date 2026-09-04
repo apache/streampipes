@@ -2,7 +2,7 @@
   "actions": [
     {
       "@class": "org.apache.streampipes.model.graph.DataSinkInvocation",
-      "appId": "org.apache.streampipes.sinks.internal.jvm.datalake",
+      "appId": "org.apache.streampipes.sinks.internal.jvm.dataset",
       "connectedTo": [
         "jsplumb_1_j3BB"
       ],
@@ -22,7 +22,7 @@
       "name": "Data Lake",
       "rev": null,
       "version": 2,
-      "belongsTo": "sp:org.apache.streampipes.sinks.internal.jvm.datalake",
+      "belongsTo": "sp:org.apache.streampipes.sinks.internal.jvm.dataset",
       "configured": true,
       "correspondingPipeline": null,
       "correspondingUser": null,

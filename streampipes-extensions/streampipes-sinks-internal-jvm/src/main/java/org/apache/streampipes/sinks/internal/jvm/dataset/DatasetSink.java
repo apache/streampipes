@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake;
+package org.apache.streampipes.sinks.internal.jvm.dataset;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
+public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig {
 
   private static final String DATABASE_MEASUREMENT_KEY = "db_measurement";
   private static final String TIMESTAMP_MAPPING_KEY = "timestamp_mapping";
@@ -63,7 +63,7 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
   public static final String SCHEMA_UPDATE_OPTION = "Update schema";
 
   public static final String EXTEND_EXISTING_SCHEMA_OPTION = "Extend existing schema";
-  private static final Logger LOG = LoggerFactory.getLogger(DataLakeSink.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DatasetSink.class);
 
   private TimeSeriesStore timeSeriesStore;
 
@@ -71,7 +71,7 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
   @Override
   public IDataSinkConfiguration declareConfig() {
     return DataSinkConfiguration.create(
-        DataLakeSink::new,
+        DatasetSink::new,
         DataSinkBuilder
             .create("org.apache.streampipes.sinks.internal.jvm.dataset", 3)
             .withLocales(Locales.EN)
@@ -159,7 +159,7 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
   ) {
     var staticProperty = extractor.getStaticPropertyByName(DIMENSIONS_KEY, RuntimeResolvableAnyStaticProperty.class);
     var inputFields = extractor.getInputEventProperties(0);
-    new DataLakeDimensionProvider().applyOptions(inputFields, staticProperty);
+    new DatasetDimensionProvider().applyOptions(inputFields, staticProperty);
     return staticProperty;
   }
 
@@ -191,14 +191,14 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
         .getEventProperties()
         .stream()
         .peek(ep -> {
-          // Set all properties to DIMENSION_PROPERTY when seleted in dimensions
+          // Set all properties to DIMENSION_PROPERTY when selected in dimensions
           if (dimensions.contains(ep.getRuntimeName())) {
             LOG.debug("Using {} as dimension", ep.getRuntimeName());
             ep.setPropertyScope(PropertyScope.DIMENSION_PROPERTY.name());
           }
         })
         .peek(ep -> {
-          // Remova all dimensions from DIMENSION_PROPERTY scope if not part of dimensions
+          // Remove all dimensions from DIMENSION_PROPERTY scope if not part of dimensions
           if (PropertyScope.DIMENSION_PROPERTY.name()
                 .equals(ep.getPropertyScope())) {
             if (!dimensions.contains(ep.getRuntimeName())) {
@@ -213,8 +213,8 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
 
   /**
    * Validates that not all properties in the given {@link EventSchema} are marked as dimensions.
-   * If that is the case, influx db is not able to query the data correclty.
-   * This validation is due to the usage of influxdb, if we change the dabtabase in the future, we can remove this
+   * If that is the case, InfluxDB is not able to query the data correctly.
+   * This validation is due to the usage of InfluxDB. If we change the database in the future, we can remove this
    * validation.
    *
    * @param eventSchema The event schema to validate.

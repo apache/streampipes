@@ -38,14 +38,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MeasurementChangeValidationStepTest {
 
-  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
+  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
 
   private final MeasurementChangeValidationStep step = new MeasurementChangeValidationStep();
 
   @Test
   void apply_ShouldAddValidationInfoForCriticalDatabaseMeasurementChange() {
     var source = makeStream(makeSchema(makeMeasurementProperty("temperature", XSD.STRING)));
-    var target = makeDataLakeSink(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
+    var target = makeDatasetSink(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
     var validationInfos = new ArrayList<PipelineElementValidationInfo>();
 
     step.apply(source, target, Set.of(target), validationInfos);
@@ -59,9 +59,9 @@ class MeasurementChangeValidationStepTest {
   }
 
   @Test
-  void apply_ShouldAddValidationInfoForDataLakeSinkMeasurementChange() {
+  void apply_ShouldAddValidationInfoForDatasetSinkMeasurementChange() {
     var source = makeStream(makeSchema(makeMeasurementProperty("temperature", XSD.STRING)));
-    var target = makeDataLakeSink(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
+    var target = makeDatasetSink(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
     var validationInfos = new ArrayList<PipelineElementValidationInfo>();
 
     step.apply(source, target, Set.of(target), validationInfos);
@@ -83,7 +83,7 @@ class MeasurementChangeValidationStepTest {
   @Test
   void apply_ShouldIgnoreNonCriticalStorageTypeChanges() {
     var source = makeStream(makeSchema(makeMeasurementProperty("temperature", XSD.LONG)));
-    var target = makeDataLakeSink(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
+    var target = makeDatasetSink(makeSchema(makeMeasurementProperty("temperature", XSD.INTEGER)));
     var validationInfos = new ArrayList<PipelineElementValidationInfo>();
 
     step.apply(source, target, Set.of(target), validationInfos);
@@ -106,7 +106,7 @@ class MeasurementChangeValidationStepTest {
     return sink;
   }
 
-  private DataSinkInvocation makeDataLakeSink(EventSchema inputSchema) {
+  private DataSinkInvocation makeDatasetSink(EventSchema inputSchema) {
     var sink = makeSink(inputSchema);
     sink.setAppId(DATA_LAKE_SINK_APP_ID);
     return sink;
