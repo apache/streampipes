@@ -109,7 +109,7 @@ public class ExportPackageGenerator {
       config.getDataLakeMeasures().forEach(item -> addDoc(builder,
           item,
           new MeasurementResolver(datasetResourceManager.getDb()),
-          manifest::addDataLakeMeasure));
+          manifest::addDatasetMetadata));
 
       config.getPipelines().forEach(item -> addDoc(builder,
           item,

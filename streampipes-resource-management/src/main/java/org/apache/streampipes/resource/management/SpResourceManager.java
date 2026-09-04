@@ -20,7 +20,7 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
@@ -40,7 +40,7 @@ public class SpResourceManager {
   private final IAssetStorage assetStorage;
   private final IDashboardStorage dashboardStorage;
   private final IPipelineStorage pipelineStorage;
-  private final IDataLakeMeasureStorage datasetStorage;
+  private final IDatasetMetadataStorage datasetStorage;
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
   private final IFileMetadataStorage fileMetadataStorage;
   private final IRoleStorage roleStorage;
@@ -54,7 +54,7 @@ public class SpResourceManager {
                            IAssetStorage assetStorage,
                            IDashboardStorage dashboardStorage,
                            IPipelineStorage pipelineStorage,
-                           IDataLakeMeasureStorage datasetStorage,
+                           IDatasetMetadataStorage datasetStorage,
                            ISpCoreConfigurationStorage coreConfigurationStorage,
                            IFileMetadataStorage fileMetadataStorage,
                            IRoleStorage roleStorage,
@@ -101,8 +101,8 @@ public class SpResourceManager {
     return new AdapterResourceManager(adapterStorage, certificateStorage, managePermissions());
   }
 
-  public DataLakeMeasureResourceManager manageDataLakeMeasures() {
-    return new DataLakeMeasureResourceManager(datasetStorage, pipelineStorage, managePermissions());
+  public DatasetMetadataResourceManager manageDataLakeMeasures() {
+    return new DatasetMetadataResourceManager(datasetStorage, pipelineStorage, managePermissions());
   }
 
   public PermissionResourceManager managePermissions() {

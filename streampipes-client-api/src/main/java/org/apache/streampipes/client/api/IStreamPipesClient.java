@@ -61,13 +61,29 @@ public interface IStreamPipesClient extends Serializable {
 
   IAdminApi adminApi();
 
-  IDataLakeMeasureApi dataLakeMeasureApi();
+  IDatasetMetadataApi datasetMetadataApi();
+
+  /**
+   * @deprecated Use {@link #datasetMetadataApi()} instead.
+   */
+  @Deprecated(since = "0.99.0", forRemoval = false)
+  default IDataLakeMeasureApi dataLakeMeasureApi() {
+    throw new UnsupportedOperationException("Data Lake measures are not supported by this client implementation");
+  }
 
   void deliverEmail(SpEmail email);
 
   IFileApi fileApi();
   
-  IDataLakeResourceApi dataLakeResourceApi();
+  IDatasetResourceApi datasetResourceApi();
+
+  /**
+   * @deprecated Use {@link #datasetResourceApi()} instead.
+   */
+  @Deprecated(since = "0.99.0", forRemoval = false)
+  default IDataLakeResourceApi dataLakeResourceApi() {
+    throw new UnsupportedOperationException("Data Lake resources are not supported by this client implementation");
+  }
 
   IStreamPipesClient onBehalfOf(String userSid);
 }

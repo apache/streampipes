@@ -18,14 +18,14 @@
 
 package org.apache.streampipes.service.core.migrations.v099;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
@@ -35,7 +35,7 @@ import java.util.Optional;
 
 public class CreateDatasetPermissionMigration implements Migration {
 
-  private final CRUDStorage<DataLakeMeasure> dataLakeStorage;
+  private final CRUDStorage<DatasetMetadata> dataLakeStorage;
   private final CRUDStorage<Pipeline> pipelineStorage;
   private final IPermissionStorage permissionStorage;
   private final PermissionResourceManager permissionResourceManager;
@@ -48,7 +48,7 @@ public class CreateDatasetPermissionMigration implements Migration {
 
   public CreateDatasetPermissionMigration(IPermissionStorage permissionStorage,
                                           IPipelineStorage pipelineStorage,
-                                          IDataLakeMeasureStorage datasetStorage) {
+                                          IDatasetMetadataStorage datasetStorage) {
     this.dataLakeStorage = datasetStorage;
     this.pipelineStorage = pipelineStorage;
     this.permissionStorage = permissionStorage;
@@ -69,7 +69,7 @@ public class CreateDatasetPermissionMigration implements Migration {
 
         permissionResourceManager.createDefault(
             measure.getElementId(),
-            DataLakeMeasure.class,
+            DatasetMetadata.class,
             findAssociatedPipelineOwner(measure),
             true
         );
@@ -77,7 +77,7 @@ public class CreateDatasetPermissionMigration implements Migration {
     });
   }
 
-  private String findAssociatedPipelineOwner(DataLakeMeasure measure) {
+  private String findAssociatedPipelineOwner(DatasetMetadata measure) {
     String measureName = measure.getMeasureName();
 
     return pipelineStorage.findAll().stream()
