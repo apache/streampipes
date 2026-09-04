@@ -25,6 +25,8 @@ import org.apache.streampipes.client.api.DataLakeResourceApi;
 import org.apache.streampipes.client.api.DataProcessorApi;
 import org.apache.streampipes.client.api.DataSinkApi;
 import org.apache.streampipes.client.api.DataStreamApi;
+import org.apache.streampipes.client.api.DatasetMeasureApi;
+import org.apache.streampipes.client.api.DatasetResourceApi;
 import org.apache.streampipes.client.api.ExternalRequestApi;
 import org.apache.streampipes.client.api.FileApi;
 import org.apache.streampipes.client.api.IAdapterApi;
@@ -230,6 +232,16 @@ public class StreamPipesClient implements
 
   @Override
   @ExposedToScripts
+  public DatasetMeasureApi datasetMeasureApi() {
+    return new DatasetMeasureApi(config);
+  }
+
+  /**
+   * @deprecated Use {@link #datasetMeasureApi()} instead.
+   */
+  @Deprecated(since = "0.99.0", forRemoval = true)
+  @Override
+  @ExposedToScripts
   public DataLakeMeasureApi dataLakeMeasureApi() {
     return new DataLakeMeasureApi(config);
   }
@@ -249,8 +261,18 @@ public class StreamPipesClient implements
 
   @Override
   @ExposedToScripts
-  public DataLakeResourceApi dataLakeResourceApi () {
-    return new DataLakeResourceApi (config);
+  public DatasetResourceApi datasetResourceApi() {
+    return new DatasetResourceApi(config);
+  }
+
+  /**
+   * @deprecated Use {@link #datasetResourceApi()} instead.
+   */
+  @Deprecated(since = "0.99.0", forRemoval = true)
+  @Override
+  @ExposedToScripts
+  public DataLakeResourceApi dataLakeResourceApi() {
+    return new DataLakeResourceApi(config);
   }
 
   @Override

@@ -1,0 +1,395 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+import { inject, Injectable } from '@angular/core';
+import {
+    HttpClient,
+    HttpContext,
+    HttpParams,
+    HttpRequest,
+    HttpHeaders,
+} from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { DatasetMeasure, SpQueryResult } from '../model/gen/streampipes-model';
+import { map } from 'rxjs/operators';
+import { DatasetQueryParameters } from '../model/dataset/DatasetQueryParameters';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
+import {
+    DatasetSummaryDto,
+    ResourceSummaryDto,
+} from '../model/resource/resource-summary.model';
+import {
+    CsvImportJobStartResult,
+    CsvImportJobStatus,
+    CsvImportPreviewRequest,
+    CsvImportPreviewResult,
+    CsvImportRequest,
+    CsvImportSchemaValidationRequest,
+    CsvImportSchemaValidationResult,
+} from '../model/dataset/csv-import.model';
+
+@Injectable({
+    providedIn: 'root',
+})
+export class DatasetRestService {
+    private http = inject(HttpClient);
+
+    private get baseUrl() {
+        return '/streampipes-backend';
+    }
+
+    public get datasetUrl() {
+        return this.baseUrl + '/api/v4' + '/dataset';
+    }
+
+    public get datasetMeasureUrl() {
+        return this.baseUrl + '/api/v4/dataset/measure';
+    }
+
+    public get datasetImportUrl() {
+        return this.baseUrl + '/api/v4/dataset/import';
+    }
+
+    getMeasurementEntryCount(
+        measurementId: string,
+        daysBack = -1,
+    ): Observable<number> {
+        return this.http.get<number>(
+            `${this.datasetMeasureUrl}/${encodeURIComponent(measurementId)}/count`,
+            {
+                params: {
+                    daysBack,
+                },
+            },
+        );
+    }
+
+    getAllMeasurementSeries(): Observable<DatasetMeasure[]> {
+        const url = this.datasetUrl + '/measurements';
+        return this.http.get(url).pipe(
+            map(response => {
+                return (response as any[]).map(p => DatasetMeasure.fromData(p));
+            }),
+        );
+    }
+
+    getMeasurementSummary(): Observable<ResourceSummaryDto<DatasetSummaryDto>> {
+        return this.http.get<ResourceSummaryDto<DatasetSummaryDto>>(
+            `${this.datasetMeasureUrl}/summary`,
+        );
+    }
+
+    getMeasurement(id: string): Observable<DatasetMeasure> {
+        return this.http
+            .get(`${this.datasetMeasureUrl}/${id}`)
+            .pipe(map(res => res as DatasetMeasure));
+    }
+
+    getMeasurementByName(name: string): Observable<DatasetMeasure> {
+        return this.http
+            .get(`${this.datasetMeasureUrl}/byName/${encodeURIComponent(name)}`)
+            .pipe(map(res => res as DatasetMeasure));
+    }
+
+    performMultiQuery(
+        queryParams: DatasetQueryParameters[],
+    ): Observable<SpQueryResult[]> {
+        return this.http
+            .post(`${this.datasetUrl}/query`, queryParams, {
+                headers: { ignoreLoadingBar: '' },
+            })
+            .pipe(map(response => response as SpQueryResult[]));
+    }
+
+    getLatestMeasurementEvents(
+        measurementNames: string[],
+    ): Observable<Record<string, number>> {
+        return this.http.post<Record<string, number>>(
+            `${this.datasetUrl}/measurements/latest-events`,
+            measurementNames,
+            {
+                context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true),
+            },
+        );
+    }
+
+    getData(
+        index: string,
+        queryParams: DatasetQueryParameters,
+        ignoreLoadingBar = false,
+    ): Observable<SpQueryResult> {
+        const columns = queryParams.columns;
+        const context = ignoreLoadingBar
+            ? new HttpContext().set(NGX_LOADING_BAR_IGNORED, true)
+            : undefined;
+        if (columns === '') {
+            const emptyQueryResult = new SpQueryResult();
+            emptyQueryResult.total = 0;
+            return of(emptyQueryResult);
+        } else {
+            const url =
+                this.datasetUrl + '/measurements/' + encodeURIComponent(index);
+            return this.http.get<SpQueryResult>(url, {
+                params: queryParams as unknown as HttpParams,
+                context,
+            });
+        }
+    }
+
+    getTagValues(
+        index: string,
+        fieldNames: string[],
+    ): Observable<Map<string, string[]>> {
+        if (fieldNames.length === 0) {
+            return of(new Map<string, string[]>());
+        } else {
+            return this.http
+                .get(
+                    this.datasetUrl +
+                        '/measurements/' +
+                        encodeURIComponent(index) +
+                        '/tags?fields=' +
+                        fieldNames.toString(),
+                )
+                .pipe(map(r => r as Map<string, string[]>));
+        }
+    }
+
+    downloadRawData(
+        index: string,
+        formatConfig: Record<string, any>,
+        missingValueBehaviour: string,
+        startTime?: number,
+        endTime?: number,
+    ) {
+        const queryParams =
+            startTime && endTime
+                ? { ...formatConfig, startDate: startTime, endDate: endTime }
+                : {
+                      ...formatConfig,
+                      missingValueBehaviour,
+                  };
+
+        return this.buildDownloadRequest(index, queryParams);
+    }
+
+    downloadQueriedData(
+        index: string,
+        formatConfig: Record<string, any>,
+        missingValueBehaviour: string,
+        queryParams: DatasetQueryParameters,
+    ) {
+        const qp = { ...formatConfig, ...queryParams, missingValueBehaviour };
+
+        return this.buildDownloadRequest(index, qp);
+    }
+
+    cleanup(index: string, config: any) {
+        const url = `${this.datasetUrl}/${encodeURIComponent(index)}/cleanup`;
+        const request = new HttpRequest('POST', url, config, {
+            headers: new HttpHeaders({ 'Content-Type': 'application/json' }), // optional if already handled globally
+        });
+
+        return this.http.request(request);
+    }
+
+    deleteData(
+        measurementName: string,
+        startTime: number,
+        endTime: number,
+    ): Observable<void> {
+        const params = new HttpParams()
+            .set('startDate', startTime.toString())
+            .set('endDate', endTime.toString());
+        return this.http.delete<void>(
+            `${this.datasetUrl}/measurements/${encodeURIComponent(measurementName)}`,
+            { params },
+        );
+    }
+
+    deleteCleanup(index: string) {
+        const url = `${this.datasetUrl}/${encodeURIComponent(index)}/cleanup`;
+        return this.http.delete(url);
+    }
+
+    runCleanupNow(index: string) {
+        const url = `${this.datasetUrl}/${encodeURIComponent(index)}/runSyncNow`;
+        const request = new HttpRequest('POST', url, {});
+
+        return this.http.request(request);
+    }
+
+    buildDownloadRequest(index: string, queryParams: any) {
+        const url =
+            this.datasetUrl +
+            '/measurements/' +
+            encodeURIComponent(index) +
+            '/download';
+        const request = new HttpRequest('GET', url, {
+            reportProgress: true,
+            responseType: 'blob',
+            params: this.toHttpParams(queryParams),
+        });
+
+        return this.http.request(request);
+    }
+
+    store(
+        measureName: string,
+        spQueryResult: SpQueryResult,
+        _ignoreSchemaMismatch = true,
+    ): Observable<void> {
+        return this.http.post<void>(
+            `${this.datasetUrl}/measurements/${encodeURIComponent(measureName)}`,
+            spQueryResult,
+            {},
+        );
+    }
+
+    toHttpParams(queryParamObject: any): HttpParams {
+        return new HttpParams({ fromObject: queryParamObject });
+    }
+
+    removeData(index: string) {
+        const url =
+            this.datasetUrl + '/measurements/' + encodeURIComponent(index);
+
+        return this.http.delete(url);
+    }
+
+    previewImport(
+        request: CsvImportPreviewRequest,
+        file?: File,
+    ): Observable<CsvImportPreviewResult> {
+        if (file) {
+            const formData = new FormData();
+            formData.append('file', file, file.name);
+            formData.append(
+                'request',
+                new Blob([JSON.stringify(request)], {
+                    type: 'application/json',
+                }),
+            );
+
+            return this.http.post<CsvImportPreviewResult>(
+                `${this.datasetImportUrl}/preview`,
+                formData,
+            );
+        }
+
+        return this.http.post<CsvImportPreviewResult>(
+            `${this.datasetImportUrl}/preview`,
+            request,
+        );
+    }
+
+    validateImportSchema(
+        request: CsvImportSchemaValidationRequest,
+    ): Observable<CsvImportSchemaValidationResult> {
+        return this.http.post<CsvImportSchemaValidationResult>(
+            `${this.datasetImportUrl}/validate-schema`,
+            request,
+        );
+    }
+
+    importCsvData(
+        request: CsvImportRequest,
+    ): Observable<CsvImportJobStartResult> {
+        return this.http.post<CsvImportJobStartResult>(
+            this.datasetImportUrl,
+            request,
+        );
+    }
+
+    getCsvImportJobStatus(jobId: string): Observable<CsvImportJobStatus> {
+        return this.http.get<CsvImportJobStatus>(
+            `${this.datasetImportUrl}/${encodeURIComponent(jobId)}`,
+        );
+    }
+
+    dropSingleMeasurementSeries(index: string) {
+        const url =
+            this.datasetUrl +
+            '/measurements/' +
+            encodeURIComponent(index) +
+            '/drop';
+        return this.http.delete(url);
+    }
+
+    dropAllMeasurementSeries() {
+        const url = this.datasetUrl + '/measurements/';
+        return this.http.delete(url);
+    }
+
+    private getQueryParameters(
+        columns?: string,
+        startDate?: number,
+        endDate?: number,
+        page?: number,
+        limit?: number,
+        offset?: number,
+        groupBy?: string,
+        order?: string,
+        aggregationFunction?: string,
+        timeInterval?: string,
+    ): DatasetQueryParameters {
+        const queryParams: DatasetQueryParameters = {};
+
+        if (columns) {
+            queryParams.columns = columns;
+        }
+
+        if (startDate) {
+            queryParams.startDate = startDate;
+        }
+
+        if (endDate) {
+            queryParams.endDate = endDate;
+        }
+
+        if (page) {
+            queryParams.page = page;
+        }
+
+        if (limit) {
+            queryParams.limit = limit;
+        }
+
+        if (offset) {
+            queryParams.offset = offset;
+        }
+
+        if (groupBy) {
+            queryParams.groupBy = groupBy;
+        }
+
+        if (order) {
+            queryParams.order = order;
+        }
+
+        if (aggregationFunction) {
+            queryParams.aggregationFunction = aggregationFunction;
+        }
+
+        if (timeInterval) {
+            queryParams.timeInterval = timeInterval;
+        }
+
+        return queryParams;
+    }
+}

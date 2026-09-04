@@ -19,62 +19,14 @@
 package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
-import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
-import java.util.List;
-import java.util.Optional;
-
-public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
-    implements IDataLakeMeasureApi {
+/**
+ * @deprecated Use {@link DatasetMeasureApi} instead.
+ */
+@Deprecated(since = "0.99.0", forRemoval = true)
+public class DataLakeMeasureApi extends DatasetMeasureApi implements IDataLakeMeasureApi {
 
   public DataLakeMeasureApi(StreamPipesClientConfig clientConfig) {
-    super(clientConfig, DataLakeMeasure.class);
-  }
-
-  @Override
-  @ExposedToScripts
-  public Optional<DataLakeMeasure> get(String id) {
-    return getSingle(getBaseResourcePath().addToPath(id));
-  }
-
-  @Override
-  @ExposedToScripts
-  public Optional<DataLakeMeasure> getByDatasetName(String datasetName) {
-    return getSingle(getBaseResourcePath().addToPath("byName").addToPath(datasetName));
-  }
-
-  @Override
-  @ExposedToScripts
-  public List<DataLakeMeasure> all() {
-    throw new IllegalArgumentException("Not yet implemented");
-  }
-
-  @Override
-  @ExposedToScripts
-  public void create(DataLakeMeasure element) {
-    post(getBaseResourcePath(), element);
-  }
-
-  @Override
-  @ExposedToScripts
-  public void delete(String elementId) {
-    throw new IllegalArgumentException("Not yet implemented");
-  }
-
-  @Override
-  @ExposedToScripts
-  public void update(DataLakeMeasure measure) {
-    put(getBaseResourcePath().addToPath(measure.getElementId()), measure);
-  }
-
-  @Override
-  protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromStreamPipesBasePath()
-        .addToPath("api")
-        .addToPath("v4")
-        .addToPath("datalake")
-        .addToPath("measure");
+    super(clientConfig);
   }
 }

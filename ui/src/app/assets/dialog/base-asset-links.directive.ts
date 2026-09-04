@@ -21,7 +21,7 @@ import {
     AdapterService,
     ChartService,
     DashboardService,
-    DatalakeRestService,
+    DatasetRestService,
     FileMetadata,
     FilesService,
     GenericStorageService,
@@ -43,7 +43,7 @@ export abstract class BaseAssetLinksDirective {
     protected pipelineService = inject(PipelineService);
     protected chartService = inject(ChartService);
     protected dashboardService = inject(DashboardService);
-    protected dataLakeService = inject(DatalakeRestService);
+    protected datasetRestService = inject(DatasetRestService);
     protected pipelineElementService = inject(PipelineElementService);
     protected adapterService = inject(AdapterService);
     protected filesService = inject(FilesService);
@@ -83,7 +83,7 @@ export abstract class BaseAssetLinksDirective {
                 .getDashboardSummary()
                 .pipe(map(summary => summary.resources)),
             this.pipelineElementService.getDataStreams(),
-            this.dataLakeService
+            this.datasetRestService
                 .getMeasurementSummary()
                 .pipe(map(summary => summary.resources)),
             this.filesService.getFileMetadata(),

@@ -30,8 +30,8 @@ import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.dataset.DatasetMetadata;
-import org.apache.streampipes.model.dataset.DatasetMetadataSchemaUpdateStrategy;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.dataset.RetentionTimeConfig;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
@@ -115,14 +115,14 @@ public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig 
 
     var retentionTimeConfig = getRetentionTime(measureName, runtimeContext.getStreamPipesClient());
 
-    var measure = new DatasetMetadata(measureName, timestampField, eventSchema, retentionTimeConfig);
+    var measure = new DatasetMeasure(measureName, timestampField, eventSchema, retentionTimeConfig);
 
     var schemaUpdateOptionString = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
 
     if (schemaUpdateOptionString.equals(EXTEND_EXISTING_SCHEMA_OPTION)) {
-      measure.setSchemaUpdateStrategy(DatasetMetadataSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
+      measure.setSchemaUpdateStrategy(DatasetMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
     } else {
-      measure.setSchemaUpdateStrategy(DatasetMetadataSchemaUpdateStrategy.UPDATE_SCHEMA);
+      measure.setSchemaUpdateStrategy(DatasetMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
     }
 
     var userSid = parameters.getModel().getCorrespondingUser();
@@ -166,7 +166,7 @@ public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig 
   private RetentionTimeConfig getRetentionTime(String measureName, IStreamPipesClient client){
 
     try {
-      var originalMeasure = client.datasetMetadataApi().getByDatasetName(measureName);
+      var originalMeasure = client.datasetMeasureApi().getByDatasetName(measureName);
       RetentionTimeConfig retentionTime = null;
 
       if (originalMeasure.isPresent()) {
@@ -191,14 +191,14 @@ public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig 
         .getEventProperties()
         .stream()
         .peek(ep -> {
-          // Set all properties to DIMENSION_PROPERTY when seleted in dimensions
+          // Set all properties to DIMENSION_PROPERTY when selected in dimensions
           if (dimensions.contains(ep.getRuntimeName())) {
             LOG.debug("Using {} as dimension", ep.getRuntimeName());
             ep.setPropertyScope(PropertyScope.DIMENSION_PROPERTY.name());
           }
         })
         .peek(ep -> {
-          // Remova all dimensions from DIMENSION_PROPERTY scope if not part of dimensions
+          // Remove all dimensions from DIMENSION_PROPERTY scope if not part of dimensions
           if (PropertyScope.DIMENSION_PROPERTY.name()
                 .equals(ep.getPropertyScope())) {
             if (!dimensions.contains(ep.getRuntimeName())) {
@@ -213,8 +213,8 @@ public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig 
 
   /**
    * Validates that not all properties in the given {@link EventSchema} are marked as dimensions.
-   * If that is the case, influx db is not able to query the data correclty.
-   * This validation is due to the usage of influxdb, if we change the dabtabase in the future, we can remove this
+   * If that is the case, InfluxDB is not able to query the data correctly.
+   * This validation is due to the usage of InfluxDB. If we change the database in the future, we can remove this
    * validation.
    *
    * @param eventSchema The event schema to validate.

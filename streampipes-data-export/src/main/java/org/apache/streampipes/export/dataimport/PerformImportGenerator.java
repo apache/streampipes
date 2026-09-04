@@ -34,14 +34,14 @@ import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
+import org.apache.streampipes.model.dataset.DatasetMeasure;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -61,7 +61,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final PipelineManager pipelineManager;
   private final SpResourceManager resourceManager;
-  private final IDataLakeMeasureStorage datasetStorage;
+  private final IDatasetMeasureStorage datasetStorage;
 
   public PerformImportGenerator(AssetExportConfiguration config,
                                 String ownerSid,
@@ -74,7 +74,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.resourceManager = resourceManager;
     this.pipelineManager = pipelineManager;
-    this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
+    this.datasetStorage = resourceManager.manageDatasetMeasures().getDb();
   }
 
   @Override
@@ -139,10 +139,10 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   }
 
   @Override
-  protected void handleDataLakeMeasure(String document, String dataLakeMeasureId) throws JsonProcessingException {
-    if (shouldStore(dataLakeMeasureId, config.getDataLakeMeasures())) {
+  protected void handleDataset(String document, String datasetMeasureId) throws JsonProcessingException {
+    if (shouldStore(datasetMeasureId, config.getDataLakeMeasures())) {
       writeDocument(document, new MeasurementResolver(datasetStorage));
-      permissionsToStore.add(new PermissionInfo(dataLakeMeasureId, DataLakeMeasure.class));
+      permissionsToStore.add(new PermissionInfo(datasetMeasureId, DatasetMeasure.class));
     }
   }
 

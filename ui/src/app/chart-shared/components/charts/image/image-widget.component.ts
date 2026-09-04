@@ -21,7 +21,7 @@ import { MatSort } from '@angular/material/sort';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import {
     DataExplorerField,
-    DatalakeRestService,
+    DatasetRestService,
     SpQueryResult,
 } from '@streampipes/platform-services';
 import { ImageWidgetModel } from './model/image-widget.model';
@@ -63,12 +63,12 @@ export class ImageWidgetComponent
     imagePreviewHeight;
 
     private securePipe = inject(SecurePipe);
-    private dataLakeRestService = inject(DatalakeRestService);
+    private datasetRestService = inject(DatasetRestService);
 
     ngOnInit(): void {
         super.ngOnInit();
         this.onResize(this.currentWidth, this.currentHeight - 53);
-        this.imageBaseUrl = this.dataLakeRestService.dataLakeUrl + '/images/';
+        this.imageBaseUrl = this.datasetRestService.datasetUrl + '/images/';
     }
 
     refreshView() {}

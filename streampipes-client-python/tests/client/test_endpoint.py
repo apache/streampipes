@@ -341,7 +341,7 @@ class TestStreamPipesEndpoints(TestCase):
             )
         )
 
-        result = client.dataLakeMeasureApi.all()
+        result = client.datasetMeasureApi.all()
         result_pd = result.to_pandas()
 
         self.assertEqual(
@@ -401,7 +401,7 @@ class TestStreamPipesEndpoints(TestCase):
         )
 
         with self.assertRaises(HTTPError) as http_error:
-            client.dataLakeMeasureApi.all()
+            client.datasetMeasureApi.all()
         self.assertMultiLineEqual(
             _error_code_to_message[405] + "url: localhost\nstatus code: 405",
             http_error.exception.args[0],
@@ -425,7 +425,7 @@ class TestStreamPipesEndpoints(TestCase):
         )
 
         with self.assertRaises(StreamPipesResourceContainerJSONError):
-            client.dataLakeMeasureApi.all()
+            client.datasetMeasureApi.all()
 
     @patch("streampipes.client.client.Session", autospec=True)
     @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
@@ -445,7 +445,7 @@ class TestStreamPipesEndpoints(TestCase):
         )
 
         with self.assertRaises(StreamPipesDataModelError) as err:
-            client.dataLakeMeasureApi.all()
+            client.datasetMeasureApi.all()
 
         self.assertTrue(isinstance(err.exception.validation_error, ValidationError))
 

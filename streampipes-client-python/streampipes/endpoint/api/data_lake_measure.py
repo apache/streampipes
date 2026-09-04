@@ -23,16 +23,18 @@ from datetime import datetime
 from json import dumps
 from math import ceil
 from typing import Any, Literal
+from typing_extensions import deprecated
 
 from pandas import DataFrame
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, ValidationError, field_validator
 
 from streampipes.endpoint.endpoint import APIEndpoint
-from streampipes.model.container import DataLakeMeasures
+from streampipes.model.container import DatasetMeasures
 from streampipes.model.container.resource_container import ResourceContainer
 from streampipes.model.resource.query_result import QueryResult
 
 __all__ = [
+    "DatasetMeasureEndpoint",
     "DataLakeMeasureEndpoint",
 ]
 
@@ -194,13 +196,13 @@ class MeasurementGetQueryConfig(BaseModel):
         return query_param_string
 
 
-class DataLakeMeasureEndpoint(APIEndpoint):
-    """Implementation of the DataLakeMeasure endpoint.
+class DatasetMeasureEndpoint(APIEndpoint):
+    """Implementation of the DatasetMeasure endpoint.
 
-    This endpoint provides an interface to all data stored in the StreamPipes data lake.
+    This endpoint provides an interface to all data stored in the StreamPipes dataset storage.
 
     Consequently, it allows querying metadata about available data sets (see `all()` method).
-    The metadata is returned as an instance of [`DataLakeMeasures`][streampipes.model.container.DataLakeMeasures].
+    The metadata is returned as an instance of [`DatasetMeasures`][streampipes.model.container.DatasetMeasures].
 
     In addition, the endpoint provides direct access to the data stored in the data lake by querying a
     specific data lake measure using the `get()` method.
@@ -226,10 +228,10 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
     ```
     # get all existing data lake measures from StreamPipes
-    data_lake_measures = client.dataLakeMeasureApi.all()
+    dataset_measures = client.datasetMeasureApi.all()
 
     # let's take a look how many we got
-    len(data_lake_measures)
+    len(dataset_measures)
     ```
     ```
     5
@@ -237,7 +239,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
     ```python
     # Retrieve a specific data lake measure as a pandas DataFrame
-    flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate").to_pandas()
+    flow_rate_pd = client.datasetMeasureApi.get(identifier="flow-rate").to_pandas()
     flow_rate_pd
     ```
     ```
@@ -258,7 +260,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     As you can see, the returned amount of rows per default is `1000`.
     We can modify this behavior by passing the `limit` parameter.
     ```python
-    flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", limit=10).to_pandas()
+    flow_rate_pd = client.datasetMeasureApi.get(identifier="flow-rate", limit=10).to_pandas()
     len(flow_rate_pd)
     ```
     ```
@@ -268,7 +270,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     If we are only interested in the values for `density`,
     `columns` allows us to select the columns to be returned:
     ```python
-    flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", columns='density', limit=3).to_pandas()
+    flow_rate_pd = client.datasetMeasureApi.get(identifier="flow-rate", columns='density', limit=3).to_pandas()
     flow_rate_pd
     ```
     ```
@@ -334,17 +336,17 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
         Returns
         -------
-        [DataLakeMeasures][streampipes.model.container.DataLakeMeasures]
+        [DatasetMeasures][streampipes.model.container.DatasetMeasures]
         """
-        return DataLakeMeasures
+        return DatasetMeasures
 
     @property
     def _relative_api_path(self) -> tuple[str, ...]:
-        """Defines the relative api path to the DataLakeMeasurement endpoint.
+        """Defines the relative api path to the dataset measurement endpoint.
         Each path within the URL is defined as an own string.
         """
 
-        return "api", "v4", "datalake", "measurements"
+        return "api", "v4", "dataset", "measurements"
 
     def get(self, identifier: str, **kwargs: dict[str, Any] | None) -> QueryResult:
         """Queries the specified data lake measure from the API.
@@ -369,7 +371,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
         Examples
         --------
-        see directly at [DataLakeMeasureEndpoint][streampipes.endpoint.api.data_lake_measure.DataLakeMeasureEndpoint].
+        see directly at [DatasetMeasureEndpoint][streampipes.endpoint.api.dataset_measure.DatasetMeasureEndpoint].
         """
 
         # build base URL for resource
@@ -417,7 +419,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
             "timestamp": [1672531200000, 1672531260000],
             "value": [42, 43],
         })
-        client.dataLakeMeasureApi.storeDataToMeasurement("my-measure-id", df)
+        client.datasetMeasureApi.storeDataToMeasurement("my-measure-id", df)
         ```
         """
 
@@ -434,3 +436,8 @@ class DataLakeMeasureEndpoint(APIEndpoint):
                 data=dumps(query_result.to_dict(use_source_names=True)),
                 headers={"Content-type": "application/json"},
             )
+
+
+@deprecated("deprecated since 0.99.0; please use DatasetMeasureEndpoint instead.")
+class DataLakeMeasureEndpoint(DatasetMeasureEndpoint):
+    """DEPRECATED - use DatasetMeasureEndpoint instead."""

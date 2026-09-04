@@ -22,7 +22,7 @@ import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
 import { DatasetUtils } from '../../support/utils/dataset/DatasetUtils';
 import { DatasetBtns } from '../../support/utils/dataset/DatasetBtns';
 
-describe('Test Truncate data in datalake', () => {
+describe('Test Truncate data in dataset', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         ChartUtils.loadRandomDataSetIntoDataLake();
@@ -36,7 +36,7 @@ describe('Test Truncate data in datalake', () => {
 
         // Truncate data
         GeneralUtils.openMenuForRow(PrepareTestDataUtils.dataName);
-        DatasetBtns.dataLakeTruncateBtn().should('be.visible').click();
+        DatasetBtns.datasetTruncateBtn().should('be.visible').click();
         DatasetBtns.confirmDataLakeTruncateBtn().should('be.visible').click();
 
         // Check if there are no events left
@@ -44,7 +44,7 @@ describe('Test Truncate data in datalake', () => {
     });
 });
 
-describe('Delete data in datalake', () => {
+describe('Delete data in dataset', () => {
     before('Setup Test', () => {
         cy.initStreamPipesTest();
         ChartUtils.loadRandomDataSetIntoDataLake();
@@ -58,7 +58,7 @@ describe('Delete data in datalake', () => {
 
         // Delete data
         GeneralUtils.openMenuForRow(PrepareTestDataUtils.dataName);
-        DatasetBtns.dataLakeDeleteBtn().should('be.visible').click();
+        DatasetBtns.datasetDeleteBtn().should('be.visible').click();
         DatasetBtns.confirmDataLakeDeleteBtn().should('be.visible').click();
 
         // Check if the dataset row is gone

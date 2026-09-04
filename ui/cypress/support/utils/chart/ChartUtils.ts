@@ -696,7 +696,7 @@ export class ChartUtils {
         return cy
             .request({
                 method: 'DELETE',
-                url: `/streampipes-backend/api/v4/datalake/measurements/${datasetName}`,
+                url: `/streampipes-backend/api/v4/dataset/measurements/${datasetName}`,
                 failOnStatusCode: false,
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -718,7 +718,7 @@ export class ChartUtils {
         return cy
             .request({
                 method: 'GET',
-                url: `/streampipes-backend/api/v4/datalake/measurements/${datasetName}/download?format=${fileType}&delimiter=semicolon`,
+                url: `/streampipes-backend/api/v4/dataset/measurements/${datasetName}/download?format=${fileType}&delimiter=semicolon`,
                 headers: {
                     'content-type': 'application/octet-stream',
                 },
