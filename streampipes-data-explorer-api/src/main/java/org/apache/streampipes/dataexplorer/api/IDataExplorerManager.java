@@ -54,5 +54,5 @@ public interface IDataExplorerManager {
 
   ITimeSeriesStorage getTimeseriesStorage(DatasetMetadata measure, boolean ignoreDuplicates);
 
-  IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMetadata measure);
+  IDatasetMetadataSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMetadata measure);
 }

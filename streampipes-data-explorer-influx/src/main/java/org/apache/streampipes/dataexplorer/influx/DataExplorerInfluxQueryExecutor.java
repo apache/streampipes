@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
-import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
+import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
@@ -103,8 +103,8 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
     return result;
   }
 
-  private IDataLakeQueryBuilder<Query> getQueryBuilder(String measurementId) {
-    return DataLakeInfluxQueryBuilder.create(measurementId);
+  private IDatasetQueryBuilder<Query> getQueryBuilder(String measurementId) {
+    return DatasetInfluxQueryBuilder.create(measurementId);
   }
 
   @Override

@@ -58,7 +58,7 @@ public class DatasetMetadataCounterInflux extends DatasetMetadataCounter {
 
       var endTime = System.currentTimeMillis();
       long startTime = endTime - TimeUnit.DAYS.toMillis(daysBack);
-      var builder = DataLakeInfluxQueryBuilder
+      var builder = DatasetInfluxQueryBuilder
           .create(measure.getMeasureName())
           .withEndTime(endTime)
           .withAggregatedColumn(firstColumn, AggregationFunction.COUNT);

@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DataLakeMeasurementSanitizerInfluxTest {
+public class DatasetMetadataSanitizerInfluxTest {
 
   private IStreamPipesClient clientMock;
 
@@ -68,7 +68,7 @@ public class DataLakeMeasurementSanitizerInfluxTest {
                             .build()
     );
 
-    var result = new DataLakeMeasurementSanitizerInflux(clientMock, measure).sanitizeAndRegister();
+    var result = new DatasetMetadataSanitizerInflux(clientMock, measure).sanitizeAndRegister();
 
     assertEquals("test_Measurement", result.getMeasureName());
     assertEquals(2, result.getEventSchema().getEventProperties().size());
@@ -88,6 +88,6 @@ public class DataLakeMeasurementSanitizerInfluxTest {
                                                                     .build());
 
     assertThrows(SpRuntimeException.class,
-                 () -> new DataLakeMeasurementSanitizerInflux(clientMock, measure).sanitizeAndRegister());
+                 () -> new DatasetMetadataSanitizerInflux(clientMock, measure).sanitizeAndRegister());
   }
 }

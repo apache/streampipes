@@ -20,11 +20,11 @@ package org.apache.streampipes.dataexplorer.influx.sanitize;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.DataLakeMeasurementSanitizer;
+import org.apache.streampipes.dataexplorer.DatasetMetadataSanitizer;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 
-public class DataLakeMeasurementSanitizerInflux extends DataLakeMeasurementSanitizer {
-  public DataLakeMeasurementSanitizerInflux(
+public class DatasetMetadataSanitizerInflux extends DatasetMetadataSanitizer {
+  public DatasetMetadataSanitizerInflux(
     IStreamPipesClient client,
     DatasetMetadata measure
   ) {

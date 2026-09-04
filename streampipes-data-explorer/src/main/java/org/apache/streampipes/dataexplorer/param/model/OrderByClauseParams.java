@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.param.model;
 
-import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
+import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
 import org.apache.streampipes.model.dataset.DataLakeQueryOrdering;
 
@@ -34,7 +34,7 @@ public class OrderByClauseParams implements IQueryStatement {
   }
 
   @Override
-  public void buildStatement(IDataLakeQueryBuilder<?> builder) {
+  public void buildStatement(IDatasetQueryBuilder<?> builder) {
     builder.withOrderBy(DataLakeQueryOrdering.valueOf(ordering));
   }
 }

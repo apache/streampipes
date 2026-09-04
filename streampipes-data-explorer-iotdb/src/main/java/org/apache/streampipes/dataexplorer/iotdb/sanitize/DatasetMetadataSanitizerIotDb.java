@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer.iotdb.sanitize;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.DataLakeMeasurementSanitizer;
+import org.apache.streampipes.dataexplorer.DatasetMetadataSanitizer;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 
 /**
@@ -32,8 +32,8 @@ import org.apache.streampipes.model.dataset.DatasetMetadata;
  *
  * @see <a href="https://iotdb.apache.org/UserGuide/latest/Basic-Concept/Data-Model-and-Terminology.html#path">IotDB Path Spec</a>
  */
-public class DataLakeMeasurementSanitizerIotDb extends DataLakeMeasurementSanitizer {
-  public DataLakeMeasurementSanitizerIotDb(IStreamPipesClient client, DatasetMetadata measure) {
+public class DatasetMetadataSanitizerIotDb extends DatasetMetadataSanitizer {
+  public DatasetMetadataSanitizerIotDb(IStreamPipesClient client, DatasetMetadata measure) {
     super(client, measure);
   }
 
