@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer;
 
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.vocabulary.SPSensor;
 
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 public class ImageStoreUtils {
 
-  public static List<EventProperty> getImageProperties(DatasetMeasure measure) {
+  public static List<EventProperty> getImageProperties(DataLakeMeasure measure) {
     return measure.getEventSchema().getEventProperties().stream()
         .filter(eventProperty -> SPSensor.IMAGE.equalsIgnoreCase(eventProperty.getSemanticType()))
         .collect(Collectors.toList());

@@ -26,9 +26,9 @@ import org.apache.streampipes.dataexplorer.param.model.OffsetClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.OrderByClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.SelectClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.WhereClauseParams;
-import org.apache.streampipes.model.dataset.FilterExpressionGroup;
-import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
-import org.apache.streampipes.model.dataset.param.SupportedRestQueryParams;
+import org.apache.streampipes.model.datalake.FilterExpressionGroup;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

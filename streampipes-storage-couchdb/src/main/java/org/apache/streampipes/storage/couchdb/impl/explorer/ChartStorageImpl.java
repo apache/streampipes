@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.storage.couchdb.impl.explorer;
 
-import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;

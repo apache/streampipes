@@ -20,10 +20,10 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeDetector;
-import org.apache.streampipes.manager.permission.DatasetPermissionManager;
+import org.apache.streampipes.manager.permission.DataLakePermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
-import org.apache.streampipes.model.dataset.DatasetMeasureSchemaUpdateStrategy;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
@@ -39,26 +39,26 @@ import java.util.stream.Stream;
 
 public class DataExplorerSchemaManagement implements IDataExplorerSchemaManagement {
 
-  CRUDStorage<DatasetMeasure> datasetStorage;
-  private final DatasetPermissionManager permissionManager;
+  CRUDStorage<DataLakeMeasure> dataLakeStorage;
+  private final DataLakePermissionManager permissionManager;
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
-  public DataExplorerSchemaManagement(CRUDStorage<DatasetMeasure> datasetStorage,
-                               DatasetPermissionManager permissionManager,
+  public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage,
+                               DataLakePermissionManager permissionManager,
                                ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
-    this.datasetStorage = datasetStorage;
+    this.dataLakeStorage = dataLakeStorage;
     this.permissionManager = permissionManager;
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
   }
 
   @Override
-  public List<DatasetMeasure> getAllMeasurements() {
-    return datasetStorage.findAll();
+  public List<DataLakeMeasure> getAllMeasurements() {
+    return dataLakeStorage.findAll();
   }
 
   @Override
-  public DatasetMeasure getById(String elementId) {
-    return datasetStorage.getElementById(elementId);
+  public DataLakeMeasure getById(String elementId) {
+    return dataLakeStorage.getElementById(elementId);
   }
 
   /**
@@ -67,7 +67,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    * according to the update strategy defined by the measurement.
    */
   @Override
-  public DatasetMeasure createOrUpdateMeasurement(DatasetMeasure measure,
+  public DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure,
                                                    String principalSid) {
 
     setDefaultUpdateStrategyIfNoneProvided(measure);
@@ -77,7 +77,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
     if (existingMeasure.isEmpty()) {
       measure.setElementId(UUID.randomUUID().toString());
       setSchemaVersionAndStoreMeasurement(measure);
-      permissionManager.makeAndPersistDatasetPermission(measure.getElementId(), principalSid);
+      permissionManager.makeAndPersistDataLakePermission(measure.getElementId(), principalSid);
 
     } else {
       handleExistingMeasurement(measure, existingMeasure.get());
@@ -90,11 +90,11 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    * Distinguishes between the update strategy for existing measurements
    */
   private void handleExistingMeasurement(
-      DatasetMeasure measure,
-      DatasetMeasure existingMeasure) {
+      DataLakeMeasure measure,
+      DataLakeMeasure existingMeasure) {
     measure.setElementId(existingMeasure.getElementId());
     checkFieldChanges(existingMeasure.getEventSchema(), measure.getEventSchema());
-    if (DatasetMeasureSchemaUpdateStrategy.UPDATE_SCHEMA.equals(measure.getSchemaUpdateStrategy())) {
+    if (DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA.equals(measure.getSchemaUpdateStrategy())) {
       // For the update schema strategy the old schema is overwritten with the new one
       updateMeasurement(measure);
     } else {
@@ -109,24 +109,24 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    * Returns the existing measure that has the provided measure name
    */
   @Override
-  public Optional<DatasetMeasure> getExistingMeasureByName(String measureName) {
-    return datasetStorage.findAll()
+  public Optional<DataLakeMeasure> getExistingMeasureByName(String measureName) {
+    return dataLakeStorage.findAll()
         .stream()
         .filter(m -> m.getMeasureName()
             .equals(measureName))
         .findFirst();
   }
 
-  private static void setDefaultUpdateStrategyIfNoneProvided(DatasetMeasure measure) {
+  private static void setDefaultUpdateStrategyIfNoneProvided(DataLakeMeasure measure) {
     if (measure.getSchemaUpdateStrategy() == null) {
-      measure.setSchemaUpdateStrategy(DatasetMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
+      measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
     }
   }
 
   @Override
   public void deleteMeasurement(String elementId) {
-    if (datasetStorage.getElementById(elementId) != null) {
-      datasetStorage.deleteElementById(elementId);
+    if (dataLakeStorage.getElementById(elementId) != null) {
+      dataLakeStorage.deleteElementById(elementId);
     } else {
       throw new IllegalArgumentException("Could not find measure with this ID");
     }
@@ -134,32 +134,32 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public boolean deleteMeasurementByName(String measureName) {
-    var measureToDeleteOpt = datasetStorage.findAll()
+    var measureToDeleteOpt = dataLakeStorage.findAll()
         .stream()
         .filter(measurement -> measurement.getMeasureName()
             .equals(measureName))
         .findFirst();
 
     return measureToDeleteOpt.map(measure -> {
-      datasetStorage.deleteElementById(measure.getElementId());
+      dataLakeStorage.deleteElementById(measure.getElementId());
       return true;
     }).orElse(false);
   }
 
   @Override
-  public void updateMeasurement(DatasetMeasure measure) {
-    var existingMeasure = datasetStorage.getElementById(measure.getElementId());
+  public void updateMeasurement(DataLakeMeasure measure) {
+    var existingMeasure = dataLakeStorage.getElementById(measure.getElementId());
     if (existingMeasure != null) {
       measure.setRev(existingMeasure.getRev());
-      datasetStorage.updateElement(measure);
+      dataLakeStorage.updateElement(measure);
     } else {
-      datasetStorage.persist(measure);
+      dataLakeStorage.persist(measure);
     }
   }
 
-  private void setSchemaVersionAndStoreMeasurement(DatasetMeasure measure) {
-    measure.setSchemaVersion(DatasetMeasure.CURRENT_SCHEMA_VERSION);
-    datasetStorage.persist(measure);
+  private void setSchemaVersionAndStoreMeasurement(DataLakeMeasure measure) {
+    measure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
+    dataLakeStorage.persist(measure);
   }
 
   /**
@@ -167,8 +167,8 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    * is updated in the database
    */
   private void unifyEventSchemaAndUpdateMeasure(
-      DatasetMeasure measure,
-      DatasetMeasure existingMeasure) {
+      DataLakeMeasure measure,
+      DataLakeMeasure existingMeasure) {
     var properties = getUnifiedEventProperties(
         existingMeasure,
         measure);
@@ -185,8 +185,8 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    * They are unique by runtime name.
    */
   private List<EventProperty> getUnifiedEventProperties(
-      DatasetMeasure measure1,
-      DatasetMeasure measure2) {
+      DataLakeMeasure measure1,
+      DataLakeMeasure measure2) {
     // Combine the event properties from both measures into a single Stream
     var allMeasurementProperties = Stream.concat(
         measure1.getEventSchema()

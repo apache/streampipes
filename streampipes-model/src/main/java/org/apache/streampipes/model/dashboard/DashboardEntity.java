@@ -20,7 +20,7 @@ package org.apache.streampipes.model.dashboard;
 
 import org.apache.streampipes.model.ResourceMetadata;
 import org.apache.streampipes.model.api.SpResource;
-import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.shared.api.Storable;
 
 import com.fasterxml.jackson.annotation.JsonAlias;

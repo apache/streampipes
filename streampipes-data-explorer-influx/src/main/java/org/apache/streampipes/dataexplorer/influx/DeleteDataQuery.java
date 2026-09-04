@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer.influx;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Query;
@@ -28,9 +28,9 @@ import org.influxdb.dto.QueryResult;
 
 public class DeleteDataQuery {
 
-  private final DatasetMeasure measure;
+  private final DataLakeMeasure measure;
 
-  public DeleteDataQuery(DatasetMeasure measure) {
+  public DeleteDataQuery(DataLakeMeasure measure) {
     this.measure = measure;
   }
 

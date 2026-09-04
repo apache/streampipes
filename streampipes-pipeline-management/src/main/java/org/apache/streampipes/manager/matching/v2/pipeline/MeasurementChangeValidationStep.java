@@ -22,7 +22,7 @@ import org.apache.streampipes.manager.pipeline.update.MeasurementUpdateUtils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.dataset.CriticalMeasurementFieldChange;
+import org.apache.streampipes.model.datalake.CriticalMeasurementFieldChange;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
@@ -43,7 +43,7 @@ public class MeasurementChangeValidationStep extends AbstractPipelineValidationS
                     InvocableStreamPipesEntity target,
                     Set<InvocableStreamPipesEntity> allTargets,
                     List<PipelineElementValidationInfo> validationInfos) {
-    if (target instanceof DataSinkInvocation dataSink && MeasurementUpdateUtils.isDatasetSink(dataSink)) {
+    if (target instanceof DataSinkInvocation dataSink && MeasurementUpdateUtils.isDataLakeSink(dataSink)) {
       var criticalFieldChanges = findCriticalMeasurementFieldChanges(source, dataSink);
       if (!criticalFieldChanges.isEmpty()) {
         validationInfos.add(PipelineElementValidationInfo.error(makeValidationMessage(criticalFieldChanges)));

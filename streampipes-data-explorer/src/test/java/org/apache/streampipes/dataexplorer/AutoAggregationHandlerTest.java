@@ -19,10 +19,10 @@
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.model.dataset.DataSeries;
-import org.apache.streampipes.model.dataset.SpQueryResult;
-import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
-import org.apache.streampipes.model.dataset.param.SupportedRestQueryParams;
+import org.apache.streampipes.model.datalake.DataSeries;
+import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

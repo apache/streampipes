@@ -21,8 +21,8 @@ package org.apache.streampipes.manager.pipeline.update;
 import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeDetector;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.ChartSchemaUpdateInfo;
-import org.apache.streampipes.model.dataset.CriticalMeasurementFieldChange;
-import org.apache.streampipes.model.dataset.MeasurementUpdateInfo;
+import org.apache.streampipes.model.datalake.CriticalMeasurementFieldChange;
+import org.apache.streampipes.model.datalake.MeasurementUpdateInfo;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -52,7 +52,7 @@ public class MeasurementUpdateManagement {
 
   List<MeasurementUpdateInfo> checkPipelineMigrations(Pipeline storedPipeline,
                                                       Pipeline updatedPipeline) {
-    return MeasurementUpdateUtils.getDatasetSinks(updatedPipeline)
+    return MeasurementUpdateUtils.getDataLakeSinks(updatedPipeline)
         .stream()
         .map(updatedSink -> makeUpdateInfo(storedPipeline, updatedSink))
         .flatMap(Optional::stream)
@@ -77,7 +77,7 @@ public class MeasurementUpdateManagement {
 
   private List<CriticalMeasurementFieldChange> findCriticalMeasurementFieldChanges(Pipeline storedPipeline,
                                                                                    DataSinkInvocation updatedSink) {
-    return MeasurementUpdateUtils.getDatasetSinkById(storedPipeline, updatedSink.getElementId())
+    return MeasurementUpdateUtils.getDataLakeSinkById(storedPipeline, updatedSink.getElementId())
         .flatMap(storedSink -> getFirstInputStreamSchema(storedSink)
             .flatMap(existingSchema -> getFirstInputStreamSchema(updatedSink)
                 .map(updatedSchema -> MeasurementChangeDetector.findCriticalMeasurementFieldChanges(

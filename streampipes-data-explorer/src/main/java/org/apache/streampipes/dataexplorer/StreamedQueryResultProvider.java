@@ -23,10 +23,10 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
-import org.apache.streampipes.model.dataset.SpQueryResult;
-import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
-import org.apache.streampipes.model.dataset.param.SupportedRestQueryParams;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -100,7 +100,7 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
     }
   }
 
-  private Optional<DatasetMeasure> findByMeasurementName(String measurementName) {
+  private Optional<DataLakeMeasure> findByMeasurementName(String measurementName) {
     return schemaManagement.getAllMeasurements()
         .stream()
         .filter(measurement -> measurement.getMeasureName().equals(measurementName))
@@ -113,7 +113,7 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
    * @param measurement contains the actual timestamp name value
    * @param dataResult  the query result of the database with 'time' as timestamp field name
    */
-  private void changeTimestampHeader(DatasetMeasure measurement,
+  private void changeTimestampHeader(DataLakeMeasure measurement,
                                      SpQueryResult dataResult) {
     var timeFieldIndex = dataResult.getHeaders().indexOf(TIME_FIELD);
     if (timeFieldIndex > -1) {

@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.manager.setup.design.UserDesignDocument;
 import org.apache.streampipes.manager.setup.tasks.AddAssetManagementViewTask;
-import org.apache.streampipes.manager.setup.tasks.AddDatasetMeasureViewTask;
+import org.apache.streampipes.manager.setup.tasks.AddDataLakeMeasureViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddDefaultPipelineTemplatesTask;
 import org.apache.streampipes.manager.setup.tasks.AddFunctionStateViewTask;
 import org.apache.streampipes.manager.setup.tasks.AddScriptTemplateViewTask;
@@ -75,7 +75,7 @@ public class CouchDbInstallationStep extends InstallationStep {
   private void createViews() {
     addUserView();
     addPipelineView();
-    new AddDatasetMeasureViewTask().execute();
+    new AddDataLakeMeasureViewTask().execute();
     new AddAssetManagementViewTask().execute();
     new AddScriptTemplateViewTask().execute();
     new AddFunctionStateViewTask().execute();

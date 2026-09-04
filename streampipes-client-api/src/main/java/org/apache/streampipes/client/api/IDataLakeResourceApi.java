@@ -18,9 +18,16 @@
 
 package org.apache.streampipes.client.api;
 
-/**
- * @deprecated Use {@link IDatasetResourceApi} instead.
- */
-@Deprecated(since = "0.99.0", forRemoval = true)
-public interface IDataLakeResourceApi extends IDatasetResourceApi {
+import org.apache.streampipes.model.datalake.SpQueryResult;
+
+import java.util.Map;
+
+public interface IDataLakeResourceApi {
+  
+  void delete(String measurementID, Long startDate, Long endDate);
+
+  void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch);
+
+  SpQueryResult get(String measurementID, Map<String, String> queryParams);
+
 }

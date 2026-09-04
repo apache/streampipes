@@ -18,24 +18,24 @@
 
 package org.apache.streampipes.dataexplorer.api;
 
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface IDataExplorerSchemaManagement {
 
-  List<DatasetMeasure> getAllMeasurements();
+  List<DataLakeMeasure> getAllMeasurements();
 
-  DatasetMeasure getById(String elementId);
+  DataLakeMeasure getById(String elementId);
 
-  Optional<DatasetMeasure> getExistingMeasureByName(String measureName);
+  Optional<DataLakeMeasure> getExistingMeasureByName(String measureName);
 
-  DatasetMeasure createOrUpdateMeasurement(DatasetMeasure measure,String principalSid);
+  DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure,String principalSid);
 
   void deleteMeasurement(String elementId);
 
   boolean deleteMeasurementByName(String measureName);
 
-  void updateMeasurement(DatasetMeasure measure);
+  void updateMeasurement(DataLakeMeasure measure);
 }

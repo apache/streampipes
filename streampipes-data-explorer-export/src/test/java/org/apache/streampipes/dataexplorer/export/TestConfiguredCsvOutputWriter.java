@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.export;
 
-import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
 
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_CSV_DELIMITER;
+import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_CSV_DELIMITER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestConfiguredCsvOutputWriter extends TestConfiguredOutputWriter {

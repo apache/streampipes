@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.storage.api.explorer;
 
-import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface IChartStorage extends CRUDStorage<DataExplorerWidgetModel> {

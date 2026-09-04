@@ -19,9 +19,9 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.param.model.SelectColumn;
-import org.apache.streampipes.model.dataset.SpQueryResult;
-import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
-import org.apache.streampipes.model.dataset.param.SupportedRestQueryParams;
+import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class AutoAggregationHandler {
   // Date format for ISO 8601 timestamps without milliseconds
   private final SimpleDateFormat isoFormatOnlySeconds = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-  private final IDataExplorerQueryManagement datasetQueryManagement;
+  private final IDataExplorerQueryManagement dataLakeQueryManagement;
   private final ProvidedRestQueryParams queryParams;
   private final boolean ignoreMissingData;
 
@@ -53,7 +53,7 @@ public class AutoAggregationHandler {
                                 IDataExplorerQueryManagement dataExplorerQueryManagement,
                                 boolean ignoreMissingData) {
     this.queryParams = params;
-    this.datasetQueryManagement = dataExplorerQueryManagement;
+    this.dataLakeQueryManagement = dataExplorerQueryManagement;
     this.ignoreMissingData = ignoreMissingData;
   }
 
@@ -94,7 +94,7 @@ public class AutoAggregationHandler {
   }
 
   private SpQueryResult fireQuery(ProvidedRestQueryParams params) {
-    return datasetQueryManagement.getData(params, ignoreMissingData);
+    return dataLakeQueryManagement.getData(params, ignoreMissingData);
   }
 
   private long getAggregationValue(SpQueryResult newest,

@@ -20,10 +20,10 @@ package org.apache.streampipes.dataexplorer.api;
 
 
 
-import org.apache.streampipes.model.dataset.AggregationFunction;
-import org.apache.streampipes.model.dataset.DataLakeQueryOrdering;
-import org.apache.streampipes.model.dataset.FilterCondition;
-import org.apache.streampipes.model.dataset.FilterExpressionGroup;
+import org.apache.streampipes.model.datalake.AggregationFunction;
+import org.apache.streampipes.model.datalake.DataLakeQueryOrdering;
+import org.apache.streampipes.model.datalake.FilterCondition;
+import org.apache.streampipes.model.datalake.FilterExpressionGroup;
 
 import java.util.List;
 

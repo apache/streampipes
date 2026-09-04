@@ -54,7 +54,7 @@ Additional configs are separated by `&`.
 
 Example address: `192.68.34.56?remote-rack=0&remote-slot=3&controller-type=S7_400`
 
-See the <a href="https://plc4x.apache.org/users/protocols/s7.html">Apache PLC4X documentation</a> for more information.
+See the <a href="https://plc4x.apache.org/plc4x/latest/users/protocols/s7.html">Apache PLC4X documentation</a> for more information.
 
 ### Polling Interval
 

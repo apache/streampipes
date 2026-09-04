@@ -18,14 +18,14 @@
 
 package org.apache.streampipes.service.core.migrations.v099;
 
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
-import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
@@ -35,7 +35,7 @@ import java.util.Optional;
 
 public class CreateDatasetPermissionMigration implements Migration {
 
-  private final CRUDStorage<DatasetMeasure> datasetStorage;
+  private final CRUDStorage<DataLakeMeasure> dataLakeStorage;
   private final CRUDStorage<Pipeline> pipelineStorage;
   private final IPermissionStorage permissionStorage;
   private final PermissionResourceManager permissionResourceManager;
@@ -48,8 +48,8 @@ public class CreateDatasetPermissionMigration implements Migration {
 
   public CreateDatasetPermissionMigration(IPermissionStorage permissionStorage,
                                           IPipelineStorage pipelineStorage,
-                                          IDatasetMeasureStorage datasetStorage) {
-    this.datasetStorage = datasetStorage;
+                                          IDataLakeMeasureStorage datasetStorage) {
+    this.dataLakeStorage = datasetStorage;
     this.pipelineStorage = pipelineStorage;
     this.permissionStorage = permissionStorage;
     this.permissionResourceManager = new PermissionResourceManager(permissionStorage);
@@ -62,14 +62,14 @@ public class CreateDatasetPermissionMigration implements Migration {
 
   @Override
   public void executeMigration() throws IOException {
-    datasetStorage.findAll().forEach(measure -> {
+    dataLakeStorage.findAll().forEach(measure -> {
       var existingPermission = permissionStorage.getUserPermissionsForObject(measure.getElementId());
 
       if (existingPermission.isEmpty()) {
 
         permissionResourceManager.createDefault(
             measure.getElementId(),
-            DatasetMeasure.class,
+            DataLakeMeasure.class,
             findAssociatedPipelineOwner(measure),
             true
         );
@@ -77,7 +77,7 @@ public class CreateDatasetPermissionMigration implements Migration {
     });
   }
 
-  private String findAssociatedPipelineOwner(DatasetMeasure measure) {
+  private String findAssociatedPipelineOwner(DataLakeMeasure measure) {
     String measureName = measure.getMeasureName();
 
     return pipelineStorage.findAll().stream()

@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.service.core.storage;
 
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
-import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
@@ -36,7 +36,7 @@ import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.ChartStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.DashboardStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.explorer.DatasetMeasureStorage;
+import org.apache.streampipes.storage.couchdb.impl.explorer.DataLakeMeasureStorage;
 import org.apache.streampipes.storage.couchdb.impl.function.FunctionStateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.AssetStorageImpl;
@@ -64,7 +64,7 @@ public class StorageApiConfiguration {
   private final boolean adapterCacheEnabled;
   private final boolean dashboardCacheEnabled;
   private final boolean pipelineCacheEnabled;
-  private final boolean datasetMeasureCacheEnabled;
+  private final boolean dataLakeMeasureCacheEnabled;
   private final boolean roleCacheEnabled;
   private final boolean userGroupCacheEnabled;
   private final boolean privilegeCacheEnabled;
@@ -77,7 +77,7 @@ public class StorageApiConfiguration {
       @Value("${streampipes.storage.cache.adapters.enabled:true}") boolean adapterCacheEnabled,
       @Value("${streampipes.storage.cache.dashboards.enabled:true}") boolean dashboardCacheEnabled,
       @Value("${streampipes.storage.cache.pipelines.enabled:true}") boolean pipelineCacheEnabled,
-      @Value("${streampipes.storage.cache.data-lake-measures.enabled:true}") boolean datasetMeasureCacheEnabled,
+      @Value("${streampipes.storage.cache.data-lake-measures.enabled:true}") boolean dataLakeMeasureCacheEnabled,
       @Value("${streampipes.storage.cache.roles.enabled:true}") boolean roleCacheEnabled,
       @Value("${streampipes.storage.cache.user-groups.enabled:true}") boolean userGroupCacheEnabled,
       @Value("${streampipes.storage.cache.privileges.enabled:true}") boolean privilegeCacheEnabled,
@@ -88,7 +88,7 @@ public class StorageApiConfiguration {
     this.adapterCacheEnabled = adapterCacheEnabled;
     this.dashboardCacheEnabled = dashboardCacheEnabled;
     this.pipelineCacheEnabled = pipelineCacheEnabled;
-    this.datasetMeasureCacheEnabled = datasetMeasureCacheEnabled;
+    this.dataLakeMeasureCacheEnabled = dataLakeMeasureCacheEnabled;
     this.roleCacheEnabled = roleCacheEnabled;
     this.userGroupCacheEnabled = userGroupCacheEnabled;
     this.privilegeCacheEnabled = privilegeCacheEnabled;
@@ -148,12 +148,12 @@ public class StorageApiConfiguration {
   }
 
   @Bean
-  public IDatasetMeasureStorage datasetStorage(CacheManager cacheManager) {
-    IDatasetMeasureStorage delegate = new DatasetMeasureStorage(
+  public IDataLakeMeasureStorage datasetStorage(CacheManager cacheManager) {
+    IDataLakeMeasureStorage delegate = new DataLakeMeasureStorage(
         () -> Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME),
-        DatasetMeasure.class
+        DataLakeMeasure.class
     );
-    return datasetMeasureCacheEnabled ? new CachedDatasetMeasureStorage(delegate, cacheManager) : delegate;
+    return dataLakeMeasureCacheEnabled ? new CachedDataLakeMeasureStorage(delegate, cacheManager) : delegate;
   }
 
   @Bean

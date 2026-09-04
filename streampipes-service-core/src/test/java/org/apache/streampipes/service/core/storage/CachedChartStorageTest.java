@@ -18,7 +18,7 @@
 package org.apache.streampipes.service.core.storage;
 
 import org.apache.streampipes.model.Tuple2;
-import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import org.junit.jupiter.api.BeforeEach;

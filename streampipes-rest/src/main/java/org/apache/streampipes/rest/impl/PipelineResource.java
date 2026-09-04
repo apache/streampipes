@@ -29,7 +29,7 @@ import org.apache.streampipes.manager.pipeline.update.MeasurementUpdateManagemen
 import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.storage.PipelineStorageService;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
-import org.apache.streampipes.model.dataset.MeasurementUpdateInfo;
+import org.apache.streampipes.model.datalake.MeasurementUpdateInfo;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;

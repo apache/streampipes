@@ -20,18 +20,16 @@ package org.apache.streampipes.client;
 import org.apache.streampipes.client.api.AdapterApi;
 import org.apache.streampipes.client.api.AdminApi;
 import org.apache.streampipes.client.api.CustomRequestApi;
+import org.apache.streampipes.client.api.DataLakeMeasureApi;
 import org.apache.streampipes.client.api.DataLakeResourceApi;
 import org.apache.streampipes.client.api.DataProcessorApi;
 import org.apache.streampipes.client.api.DataSinkApi;
 import org.apache.streampipes.client.api.DataStreamApi;
-import org.apache.streampipes.client.api.DatasetMeasureApi;
-import org.apache.streampipes.client.api.DatasetResourceApi;
 import org.apache.streampipes.client.api.ExternalRequestApi;
 import org.apache.streampipes.client.api.FileApi;
 import org.apache.streampipes.client.api.IAdapterApi;
 import org.apache.streampipes.client.api.IAdminApi;
 import org.apache.streampipes.client.api.ICustomRequestApi;
-import org.apache.streampipes.client.api.IDatasetResourceApi;
 import org.apache.streampipes.client.api.IExternalRequestApi;
 import org.apache.streampipes.client.api.IPipelineElementTemplateApi;
 import org.apache.streampipes.client.api.IStreamPipesClient;
@@ -232,8 +230,8 @@ public class StreamPipesClient implements
 
   @Override
   @ExposedToScripts
-  public DatasetMeasureApi datasetMeasureApi() {
-    return new DatasetMeasureApi(config);
+  public DataLakeMeasureApi dataLakeMeasureApi() {
+    return new DataLakeMeasureApi(config);
   }
 
   @Override
@@ -251,18 +249,8 @@ public class StreamPipesClient implements
 
   @Override
   @ExposedToScripts
-  public IDatasetResourceApi datasetResourceApi() {
-    return new DatasetResourceApi(config);
-  }
-
-  /**
-   * @deprecated Use {@link #datasetResourceApi()} instead.
-   */
-  @Override
-  @Deprecated(since = "0.99.0", forRemoval = true)
-  @ExposedToScripts
-  public DataLakeResourceApi dataLakeResourceApi() {
-    return new DataLakeResourceApi(config);
+  public DataLakeResourceApi dataLakeResourceApi () {
+    return new DataLakeResourceApi (config);
   }
 
   @Override

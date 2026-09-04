@@ -36,11 +36,11 @@ import org.apache.streampipes.vocabulary.SO;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.streampipes.manager.template.instances.PersistDatasetPipelineTemplate.DATASET_CONNECTOR_ID;
-import static org.apache.streampipes.manager.template.instances.PersistDatasetPipelineTemplate.DATASET_DIMENSIONS_FIELD;
-import static org.apache.streampipes.manager.template.instances.PersistDatasetPipelineTemplate.DATASET_MEASUREMENT_FIELD;
-import static org.apache.streampipes.manager.template.instances.PersistDatasetPipelineTemplate.DATASET_TEMPLATE_ID;
-import static org.apache.streampipes.manager.template.instances.PersistDatasetPipelineTemplate.DATASET_TIMESTAMP_FIELD;
+import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_CONNECTOR_ID;
+import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_DIMENSIONS_FIELD;
+import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_MEASUREMENT_FIELD;
+import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_TEMPLATE_ID;
+import static org.apache.streampipes.manager.template.instances.PersistDataLakePipelineTemplate.DATA_LAKE_TIMESTAMP_FIELD;
 
 public class PersistPipelineHandler {
 
@@ -82,21 +82,21 @@ public class PersistPipelineHandler {
   }
 
   private CompactPipelineTemplate getTemplate() {
-    return this.templateStorage.getElementById(DATASET_TEMPLATE_ID);
+    return this.templateStorage.getElementById(DATA_LAKE_TEMPLATE_ID);
   }
 
   private List<CompactPipelineElement> makeTemplateConfig(AdapterDescription adapterDescription,
                                                           List<CompactPipelineElement> pipelineElements) {
     pipelineElements.get(0).configuration().addAll(
         List.of(
-            Map.of(DATASET_MEASUREMENT_FIELD, adapterDescription.getName()),
-            Map.of(DATASET_TIMESTAMP_FIELD, String.format("s0::%s", getTimestampField(adapterDescription))),
-            Map.of(DATASET_DIMENSIONS_FIELD, getDimensions(adapterDescription))
+            Map.of(DATA_LAKE_MEASUREMENT_FIELD, adapterDescription.getName()),
+            Map.of(DATA_LAKE_TIMESTAMP_FIELD, String.format("s0::%s", getTimestampField(adapterDescription))),
+            Map.of(DATA_LAKE_DIMENSIONS_FIELD, getDimensions(adapterDescription))
         )
     );
     pipelineElements.add(new CompactPipelineElement(
         "stream",
-        DATASET_CONNECTOR_ID,
+        DATA_LAKE_CONNECTOR_ID,
         adapterDescription.getCorrespondingDataStreamElementId(),
         null,
         null,

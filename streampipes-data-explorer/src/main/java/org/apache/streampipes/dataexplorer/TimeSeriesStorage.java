@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
@@ -38,12 +38,12 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
 
   private static final Logger LOG = LoggerFactory.getLogger(TimeSeriesStorage.class);
 
-  protected final DatasetMeasure measure;
+  protected final DataLakeMeasure measure;
   protected final List<EventProperty> allEventProperties;
   protected final Map<String, String> sanitizedRuntimeNames = new HashMap<>();
   private final AtomicBoolean warnedNullFields = new AtomicBoolean(false);
 
-  public TimeSeriesStorage(DatasetMeasure measure) {
+  public TimeSeriesStorage(DataLakeMeasure measure) {
     this.measure = measure;
     storeSanitizedRuntimeNames();
     allEventProperties = getAllEventPropertiesExceptTimestamp();

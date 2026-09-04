@@ -61,21 +61,13 @@ public interface IStreamPipesClient extends Serializable {
 
   IAdminApi adminApi();
 
-  IDatasetMeasureApi datasetMeasureApi();
-
-  IDatasetResourceApi datasetResourceApi();
+  IDataLakeMeasureApi dataLakeMeasureApi();
 
   void deliverEmail(SpEmail email);
 
   IFileApi fileApi();
-
-  /**
-   * @deprecated Use {@link #datasetResourceApi()} instead.
-   */
-  @Deprecated(since = "0.99.0", forRemoval = true)
-  default IDataLakeResourceApi dataLakeResourceApi() {
-    return (IDataLakeResourceApi) datasetResourceApi();
-  }
+  
+  IDataLakeResourceApi dataLakeResourceApi();
 
   IStreamPipesClient onBehalfOf(String userSid);
 }
