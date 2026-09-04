@@ -18,11 +18,11 @@
 package org.apache.streampipes.service.core.scheduler;
 
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
-import org.apache.streampipes.export.DataLakeExportManager;
+import org.apache.streampipes.export.DatasetExportManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
@@ -38,38 +38,38 @@ import java.util.List;
 @Configuration
 public class DataLakeScheduler implements SchedulingConfigurer {
 
-    private final DataLakeExportManager dataLakeExportManager;
+    private final DatasetExportManager datasetExportManager;
     private static final Logger LOG = LoggerFactory.getLogger(DataLakeScheduler.class);
 
-  private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
+  private final IDatasetMetadataManagement datasetMetadataManagement;
 
     public DataLakeScheduler(IChartStorage chartStorage,
                              SpResourceManager resourceManager) {
         var chartSchemaUpdateCoordinator = new ChartSchemaUpdateCoordinator(chartStorage);
-        dataExplorerSchemaManagement = new DataExplorerDispatcher()
+        datasetMetadataManagement = new DataExplorerDispatcher()
             .getDataExplorerManager()
             .getSchemaManagement(
                 chartSchemaUpdateCoordinator,
                 resourceManager.managePermissions().getDb(),
                 resourceManager.manageDataLakeMeasures().getDb());
-        this.dataLakeExportManager = new DataLakeExportManager(
-            dataExplorerSchemaManagement,
+        this.datasetExportManager = new DatasetExportManager(
+            datasetMetadataManagement,
             new DataExplorerDispatcher().getDataExplorerManager()
-                .getQueryManagement(dataExplorerSchemaManagement),
+                .getQueryManagement(datasetMetadataManagement),
             resourceManager.getCoreConfigurationStorage(),
             resourceManager.getFileMetadataStorage());
     }
 
     public void cleanupMeasurements() {
         LOG.info("Retention CRON Job triggered.");
-        List<DataLakeMeasure> allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
+        List<DatasetMetadata> allMeasurements = this.datasetMetadataManagement.getAllMeasurements();
         LOG.debug("GET ALL Measurements");
-        for (DataLakeMeasure dataLakeMeasure : allMeasurements) {
+        for (DatasetMetadata datasetMetadata : allMeasurements) {
             try {
-                dataLakeExportManager.cleanupSingleMeasurement(dataLakeMeasure);
+                datasetExportManager.cleanupSingleMeasurement(datasetMetadata);
             } catch (Exception e) {
                 LOG.error(String.format("An unexpected error occurred during export. Data Measure: %s. Error: %s",
-                        dataLakeMeasure, e.getMessage()), e);
+                        datasetMetadata, e.getMessage()), e);
             }
 
         }

@@ -20,7 +20,7 @@
 package org.apache.streampipes.service.core.migrations;
 
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.service.core.migrations.v0980.AddDataLakeMeasureViewMigration;
+import org.apache.streampipes.service.core.migrations.v0980.AddDatasetMetadataViewMigration;
 import org.apache.streampipes.service.core.migrations.v0980.AddDefaultExportProviderMigration;
 import org.apache.streampipes.service.core.migrations.v0980.FixImportedPermissionsMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinkTypesMigration;
@@ -44,7 +44,7 @@ import org.apache.streampipes.service.core.migrations.v099.connect.MigratePlc4xS
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
@@ -65,7 +65,7 @@ public class AvailableMigrations {
   private final IDashboardStorage dashboardStorage;
   private final IAssetStorage assetStorage;
   private final IPipelineStorage pipelineStorage;
-  private final IDataLakeMeasureStorage datasetStorage;
+  private final IDatasetMetadataStorage datasetStorage;
   private final ISpCoreConfigurationStorage coreConfigStorage;
   private final IRoleStorage roleStorage;
   private final IUserGroupStorage userGroupStorage;
@@ -91,7 +91,7 @@ public class AvailableMigrations {
     return Arrays.asList(
         new ModifyAssetLinksMigration(),
         new ModifyAssetLinkTypesMigration(),
-        new AddDataLakeMeasureViewMigration(),
+        new AddDatasetMetadataViewMigration(),
         new AddDefaultExportProviderMigration(coreConfigStorage),
         new FixImportedPermissionsMigration(chartStorage, dashboardStorage, permissionStorage),
         new AddAssetManagementViewMigration(),

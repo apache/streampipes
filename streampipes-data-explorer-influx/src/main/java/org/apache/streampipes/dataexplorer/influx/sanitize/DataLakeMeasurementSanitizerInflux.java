@@ -21,18 +21,18 @@ package org.apache.streampipes.dataexplorer.influx.sanitize;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.DataLakeMeasurementSanitizer;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 
 public class DataLakeMeasurementSanitizerInflux extends DataLakeMeasurementSanitizer {
   public DataLakeMeasurementSanitizerInflux(
     IStreamPipesClient client,
-    DataLakeMeasure measure
+    DatasetMetadata measure
   ) {
     super(client, measure);
   }
 
   @Override
-  protected void cleanDataLakeMeasure() throws SpRuntimeException {
+  protected void cleanDatasetMetadata() throws SpRuntimeException {
     // Sanitize the data lake measure name
     measure.setMeasureName(new MeasureNameSanitizer().sanitize(measure.getMeasureName()));
 

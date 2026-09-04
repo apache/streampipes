@@ -18,20 +18,20 @@
 
 package org.apache.streampipes.dataexplorer.query;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class DataLakeMeasurementCounterTestImpl extends DataLakeMeasurementCounter {
   public DataLakeMeasurementCounterTestImpl(
-      List<DataLakeMeasure> allMeasurements, List<String> measurementNames
+      List<DatasetMetadata> allMeasurements, List<String> measurementNames
   ) {
     super(allMeasurements, measurementNames, -1);
   }
 
   @Override
-  protected CompletableFuture<Integer> createQueryAsAsyncFuture(DataLakeMeasure measure) {
+  protected CompletableFuture<Integer> createQueryAsAsyncFuture(DatasetMetadata measure) {
     // Mock implementation for testing
     return CompletableFuture.completedFuture(1);
   }

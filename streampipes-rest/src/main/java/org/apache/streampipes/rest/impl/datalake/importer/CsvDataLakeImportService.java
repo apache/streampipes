@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.rest.impl.datalake.importer;
 
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
 import org.apache.streampipes.model.datalake.importer.CsvImportJobStartResult;
 import org.apache.streampipes.model.datalake.importer.CsvImportJobStatus;
@@ -34,8 +34,8 @@ import org.apache.streampipes.model.datalake.importer.CsvImportTarget;
 import org.apache.streampipes.model.datalake.importer.CsvImportTargetMode;
 import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.rest.impl.datalake.DataLakeDataWriter;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.rest.impl.datalake.DatasetWriter;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,38 +57,38 @@ public class CsvDataLakeImportService {
   private static final int MAX_ANALYSIS_ROWS = 200;
   private static final String STREAM_PREFIX = "s0::";
 
-  private final DataLakeDataWriter dataWriter;
+  private final DatasetWriter dataWriter;
   private final CsvImportUploadStorage uploadStorage;
   private final CsvImportParser parser;
   private final CsvImportValidationService validationService;
-  private final IDataExplorerSchemaManagement schemaManagement;
+  private final IDatasetMetadataManagement schemaManagement;
   private final CsvImportJobManager jobManager;
 
-  public CsvDataLakeImportService(IDataExplorerSchemaManagement schemaManagement,
-                                  IDataLakeMeasureStorage datasetStorage) {
+  public CsvDataLakeImportService(IDatasetMetadataManagement schemaManagement,
+                                  IDatasetMetadataStorage datasetStorage) {
     this(
         schemaManagement,
-        new DataLakeDataWriter(false, true, datasetStorage),
+        new DatasetWriter(false, true, datasetStorage),
         new CsvImportUploadStorage(),
         new CsvImportParser());
   }
 
   CsvDataLakeImportService(
-      IDataExplorerSchemaManagement schemaManagement,
-      DataLakeDataWriter dataWriter) {
+      IDatasetMetadataManagement schemaManagement,
+      DatasetWriter dataWriter) {
     this(schemaManagement, dataWriter, new CsvImportUploadStorage(), new CsvImportParser());
   }
 
   CsvDataLakeImportService(
-      IDataExplorerSchemaManagement schemaManagement,
-      DataLakeDataWriter dataWriter,
+      IDatasetMetadataManagement schemaManagement,
+      DatasetWriter dataWriter,
       CsvImportUploadStorage uploadStorage) {
     this(schemaManagement, dataWriter, uploadStorage, new CsvImportParser());
   }
 
   CsvDataLakeImportService(
-      IDataExplorerSchemaManagement schemaManagement,
-      DataLakeDataWriter dataWriter,
+      IDatasetMetadataManagement schemaManagement,
+      DatasetWriter dataWriter,
       CsvImportUploadStorage uploadStorage,
       CsvImportParser parser) {
     this.schemaManagement = schemaManagement;
@@ -374,7 +374,7 @@ public class CsvDataLakeImportService {
       String principalSid,
       EventSchema eventSchema) {
     if (request.getTarget().getMode() == CsvImportTargetMode.NEW) {
-      var measure = new DataLakeMeasure();
+      var measure = new DatasetMetadata();
       measure.setMeasureName(request.getTarget().getMeasurementName().trim());
       measure.setTimestampField(STREAM_PREFIX + request.getTimestampColumn());
       measure.setEventSchema(removeTimestampProperty(eventSchema, request.getTimestampColumn()));
@@ -405,6 +405,6 @@ public class CsvDataLakeImportService {
     return sanitizedSchema;
   }
 
-  private record StoredMeasure(DataLakeMeasure measure, boolean createdNewMeasurement) {
+  private record StoredMeasure(DatasetMetadata measure, boolean createdNewMeasurement) {
   }
 }

@@ -68,7 +68,7 @@ class DataLakeLatestEventsBenchmarkTest {
     var queryManagement = mock(IDataExplorerQueryManagement.class);
     var measurementNames = measurementNames(measurementCount);
     when(queryManagement.getLatestTimestamps(measurementNames)).thenReturn(latestTimestamps(measurementNames));
-    var resource = dataLakeResource(queryManagement);
+    var resource = datasetResource(queryManagement);
 
     long startNanos = System.nanoTime();
     var response = resource.getLatestEvents(measurementNames);
@@ -92,16 +92,16 @@ class DataLakeLatestEventsBenchmarkTest {
     return latestTimestamps;
   }
 
-  private static DataLakeResource dataLakeResource(IDataExplorerQueryManagement queryManagement) throws Exception {
-    var resource = mock(DataLakeResource.class, CALLS_REAL_METHODS);
+  private static DatasetResource datasetResource(IDataExplorerQueryManagement queryManagement) throws Exception {
+    var resource = mock(DatasetResource.class, CALLS_REAL_METHODS);
     doReturn(true).when(resource).checkPermissionByName(any(), eq("READ"));
     setQueryManagement(resource, queryManagement);
     return resource;
   }
 
-  private static void setQueryManagement(DataLakeResource resource,
+  private static void setQueryManagement(DatasetResource resource,
                                          IDataExplorerQueryManagement queryManagement) throws Exception {
-    Field field = DataLakeResource.class.getDeclaredField("dataExplorerQueryManagement");
+    Field field = DatasetResource.class.getDeclaredField("dataExplorerQueryManagement");
     field.setAccessible(true);
     field.set(resource, queryManagement);
   }

@@ -30,7 +30,7 @@ import com.google.gson.annotations.SerializedName;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
-public class DataLakeMeasure implements Storable {
+public class DatasetMetadata implements Storable {
 
   public static final String CURRENT_SCHEMA_VERSION = "1.1";
   public static final String ASSERTION_ERROR_MESSAGE = "timestamp field requires a stream prefix (e.g. s0::timestamp)";
@@ -51,33 +51,33 @@ public class DataLakeMeasure implements Storable {
 
   private String schemaVersion;
 
-  private DataLakeMeasureSchemaUpdateStrategy schemaUpdateStrategy = DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA;
+  private DatasetMetadataSchemaUpdateStrategy schemaUpdateStrategy = DatasetMetadataSchemaUpdateStrategy.UPDATE_SCHEMA;
 
   private RetentionTimeConfig retentionTime;
 
-  public DataLakeMeasure() {
+  public DatasetMetadata() {
     super();
   }
 
-  public DataLakeMeasure(DataLakeMeasure other) {
+  public DatasetMetadata(DatasetMetadata other) {
     this.measureName = other.getMeasureName();
     this.eventSchema = new EventSchema(other.getEventSchema());
 
   }
 
-  public DataLakeMeasure(String measureName, EventSchema eventSchema) {
+  public DatasetMetadata(String measureName, EventSchema eventSchema) {
     this.measureName = measureName;
     this.eventSchema = eventSchema;
   }
 
-  public DataLakeMeasure(String measureName, String timestampField, EventSchema eventSchema) {
+  public DatasetMetadata(String measureName, String timestampField, EventSchema eventSchema) {
     this.measureName = measureName;
     this.eventSchema = eventSchema;
     this.timestampField = timestampField;
   }
 
 
-  public DataLakeMeasure(String measureName, String timestampField, EventSchema eventSchema, RetentionTimeConfig retentionTime) {
+  public DatasetMetadata(String measureName, String timestampField, EventSchema eventSchema, RetentionTimeConfig retentionTime) {
     this.measureName = measureName;
     this.eventSchema = eventSchema;
     this.timestampField = timestampField;
@@ -141,11 +141,11 @@ public class DataLakeMeasure implements Storable {
     this.timestampField = timestampField;
   }
 
-  public DataLakeMeasureSchemaUpdateStrategy getSchemaUpdateStrategy() {
+  public DatasetMetadataSchemaUpdateStrategy getSchemaUpdateStrategy() {
     return schemaUpdateStrategy;
   }
 
-  public void setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy schemaUpdateStrategy) {
+  public void setSchemaUpdateStrategy(DatasetMetadataSchemaUpdateStrategy schemaUpdateStrategy) {
     this.schemaUpdateStrategy = schemaUpdateStrategy;
   }
 

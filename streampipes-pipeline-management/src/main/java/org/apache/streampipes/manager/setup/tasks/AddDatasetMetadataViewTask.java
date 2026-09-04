@@ -27,7 +27,7 @@ import java.util.Map;
 
 import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
 
-public class AddDataLakeMeasureViewTask implements InstallationTask {
+public class AddDatasetMetadataViewTask implements InstallationTask {
 
   public static final String MEASUREMENT_BY_NAME_VIEW = "_design/measurement";
 
@@ -37,13 +37,13 @@ public class AddDataLakeMeasureViewTask implements InstallationTask {
   @Override
   public void execute() {
     DesignDocument dataLakeDoc = prepareDocument(MEASUREMENT_BY_NAME_VIEW);
-    Map<String, DesignDocument.MapReduce> dataLakeMeasureViews = new HashMap<>();
+    Map<String, DesignDocument.MapReduce> datasetMetadataViews = new HashMap<>();
 
     DesignDocument.MapReduce byNameFn = new DesignDocument.MapReduce();
     byNameFn.setMap(MAP_FUNCTION);
 
-    dataLakeMeasureViews.put(VIEW_NAME, byNameFn);
-    dataLakeDoc.setViews(dataLakeMeasureViews);
+    datasetMetadataViews.put(VIEW_NAME, byNameFn);
+    dataLakeDoc.setViews(datasetMetadataViews);
     Utils.getCouchDbGsonClient(Utils.DATA_LAKE_DB_NAME).design().synchronizeWithDb(dataLakeDoc);
   }
 }

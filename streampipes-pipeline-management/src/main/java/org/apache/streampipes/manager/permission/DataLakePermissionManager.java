@@ -19,7 +19,7 @@ package org.apache.streampipes.manager.permission;
 
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionBuilder;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 public class DataLakePermissionManager {
@@ -32,7 +32,7 @@ public class DataLakePermissionManager {
 
   private Permission createDataLakePermission(String measurement, String principalSid) {
     return PermissionBuilder
-        .create(measurement, DataLakeMeasure.class, principalSid)
+        .create(measurement, DatasetMetadata.class, principalSid)
         .build();
   }
 

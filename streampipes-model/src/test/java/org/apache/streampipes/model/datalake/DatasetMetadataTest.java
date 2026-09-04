@@ -21,19 +21,19 @@ package org.apache.streampipes.model.datalake;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class DataLakeMeasureTest {
+public class DatasetMetadataTest {
 
   private static final String TIMESTAMP_FIELD = "testTimestamp";
   private static final String STREAM_PREFIX = "s0::";
   private static final String TIMESTAMP_FIELD_NAME = STREAM_PREFIX + TIMESTAMP_FIELD;
 
-  private DataLakeMeasure dataLakeMeasure = new DataLakeMeasure();
+  private DatasetMetadata datasetMetadata = new DatasetMetadata();
 
   @Test
   public void setTimestampFieldSuccess() {
-    dataLakeMeasure.setTimestampField(TIMESTAMP_FIELD_NAME);
+    datasetMetadata.setTimestampField(TIMESTAMP_FIELD_NAME);
 
-    var result = dataLakeMeasure.getTimestampField();
+    var result = datasetMetadata.getTimestampField();
 
     Assertions.assertEquals(TIMESTAMP_FIELD_NAME, result);
   }
@@ -41,17 +41,17 @@ public class DataLakeMeasureTest {
   @Test
   public void setTimestampFieldAssertionError() {
     try {
-      dataLakeMeasure.setTimestampField(TIMESTAMP_FIELD);
+      datasetMetadata.setTimestampField(TIMESTAMP_FIELD);
     } catch (AssertionError assertionError) {
-      Assertions.assertEquals(DataLakeMeasure.ASSERTION_ERROR_MESSAGE, assertionError.getMessage());
+      Assertions.assertEquals(DatasetMetadata.ASSERTION_ERROR_MESSAGE, assertionError.getMessage());
     }
   }
 
   @Test
   public void getTimestampFieldName() {
-    dataLakeMeasure.setTimestampField(TIMESTAMP_FIELD_NAME);
+    datasetMetadata.setTimestampField(TIMESTAMP_FIELD_NAME);
 
-    var result = dataLakeMeasure.getTimestampFieldName();
+    var result = datasetMetadata.getTimestampFieldName();
 
     Assertions.assertEquals(TIMESTAMP_FIELD, result);
   }

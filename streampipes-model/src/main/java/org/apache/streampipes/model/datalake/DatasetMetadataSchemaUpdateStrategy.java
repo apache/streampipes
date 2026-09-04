@@ -16,18 +16,19 @@
  *
  */
 
-package org.apache.streampipes.client.api;
+package org.apache.streampipes.model.datalake;
 
-import org.apache.streampipes.model.datalake.SpQueryResult;
-
-import java.util.Map;
-
-public interface IDataLakeResourceApi {
-  
-  void delete(String measurementID, Long startDate, Long endDate);
-
-  void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch);
-
-  SpQueryResult get(String measurementID, Map<String, String> queryParams);
+/**
+ * This enum contains the different options that are available for the update strategy of the data lake measure
+ */
+public enum DatasetMetadataSchemaUpdateStrategy {
+  /**
+   * This strategy will update the schema of the data lake measure when it changes
+   */
+  UPDATE_SCHEMA,
+  /**
+   * This strategy will extend the schema of the data lake measure when it changes and keep the old fields
+   */
+  EXTEND_EXISTING_SCHEMA
 
 }

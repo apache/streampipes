@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.dataexplorer;
 
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeDetector;
 import org.apache.streampipes.manager.permission.DataLakePermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.datalake.DatasetMetadataSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
@@ -37,13 +37,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DataExplorerSchemaManagement implements IDataExplorerSchemaManagement {
+public class DatasetMetadataManagement implements IDatasetMetadataManagement {
 
-  CRUDStorage<DataLakeMeasure> dataLakeStorage;
+  CRUDStorage<DatasetMetadata> dataLakeStorage;
   private final DataLakePermissionManager permissionManager;
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
-  public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage,
+  public DatasetMetadataManagement(CRUDStorage<DatasetMetadata> dataLakeStorage,
                                DataLakePermissionManager permissionManager,
                                ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.dataLakeStorage = dataLakeStorage;
@@ -52,12 +52,12 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   }
 
   @Override
-  public List<DataLakeMeasure> getAllMeasurements() {
+  public List<DatasetMetadata> getAllMeasurements() {
     return dataLakeStorage.findAll();
   }
 
   @Override
-  public DataLakeMeasure getById(String elementId) {
+  public DatasetMetadata getById(String elementId) {
     return dataLakeStorage.getElementById(elementId);
   }
 
@@ -67,7 +67,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    * according to the update strategy defined by the measurement.
    */
   @Override
-  public DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure,
+  public DatasetMetadata createOrUpdateMeasurement(DatasetMetadata measure,
                                                    String principalSid) {
 
     setDefaultUpdateStrategyIfNoneProvided(measure);
@@ -90,11 +90,11 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    * Distinguishes between the update strategy for existing measurements
    */
   private void handleExistingMeasurement(
-      DataLakeMeasure measure,
-      DataLakeMeasure existingMeasure) {
+      DatasetMetadata measure,
+      DatasetMetadata existingMeasure) {
     measure.setElementId(existingMeasure.getElementId());
     checkFieldChanges(existingMeasure.getEventSchema(), measure.getEventSchema());
-    if (DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA.equals(measure.getSchemaUpdateStrategy())) {
+    if (DatasetMetadataSchemaUpdateStrategy.UPDATE_SCHEMA.equals(measure.getSchemaUpdateStrategy())) {
       // For the update schema strategy the old schema is overwritten with the new one
       updateMeasurement(measure);
     } else {
@@ -109,7 +109,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    * Returns the existing measure that has the provided measure name
    */
   @Override
-  public Optional<DataLakeMeasure> getExistingMeasureByName(String measureName) {
+  public Optional<DatasetMetadata> getExistingMeasureByName(String measureName) {
     return dataLakeStorage.findAll()
         .stream()
         .filter(m -> m.getMeasureName()
@@ -117,9 +117,9 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
         .findFirst();
   }
 
-  private static void setDefaultUpdateStrategyIfNoneProvided(DataLakeMeasure measure) {
+  private static void setDefaultUpdateStrategyIfNoneProvided(DatasetMetadata measure) {
     if (measure.getSchemaUpdateStrategy() == null) {
-      measure.setSchemaUpdateStrategy(DataLakeMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
+      measure.setSchemaUpdateStrategy(DatasetMetadataSchemaUpdateStrategy.UPDATE_SCHEMA);
     }
   }
 
@@ -147,7 +147,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
   }
 
   @Override
-  public void updateMeasurement(DataLakeMeasure measure) {
+  public void updateMeasurement(DatasetMetadata measure) {
     var existingMeasure = dataLakeStorage.getElementById(measure.getElementId());
     if (existingMeasure != null) {
       measure.setRev(existingMeasure.getRev());
@@ -157,8 +157,8 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
     }
   }
 
-  private void setSchemaVersionAndStoreMeasurement(DataLakeMeasure measure) {
-    measure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
+  private void setSchemaVersionAndStoreMeasurement(DatasetMetadata measure) {
+    measure.setSchemaVersion(DatasetMetadata.CURRENT_SCHEMA_VERSION);
     dataLakeStorage.persist(measure);
   }
 
@@ -167,8 +167,8 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    * is updated in the database
    */
   private void unifyEventSchemaAndUpdateMeasure(
-      DataLakeMeasure measure,
-      DataLakeMeasure existingMeasure) {
+      DatasetMetadata measure,
+      DatasetMetadata existingMeasure) {
     var properties = getUnifiedEventProperties(
         existingMeasure,
         measure);
@@ -185,8 +185,8 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    * They are unique by runtime name.
    */
   private List<EventProperty> getUnifiedEventProperties(
-      DataLakeMeasure measure1,
-      DataLakeMeasure measure2) {
+      DatasetMetadata measure1,
+      DatasetMetadata measure2) {
     // Combine the event properties from both measures into a single Stream
     var allMeasurementProperties = Stream.concat(
         measure1.getEventSchema()

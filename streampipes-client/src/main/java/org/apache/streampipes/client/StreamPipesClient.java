@@ -20,11 +20,11 @@ package org.apache.streampipes.client;
 import org.apache.streampipes.client.api.AdapterApi;
 import org.apache.streampipes.client.api.AdminApi;
 import org.apache.streampipes.client.api.CustomRequestApi;
-import org.apache.streampipes.client.api.DataLakeMeasureApi;
-import org.apache.streampipes.client.api.DataLakeResourceApi;
 import org.apache.streampipes.client.api.DataProcessorApi;
 import org.apache.streampipes.client.api.DataSinkApi;
 import org.apache.streampipes.client.api.DataStreamApi;
+import org.apache.streampipes.client.api.DatasetMetadataApi;
+import org.apache.streampipes.client.api.DatasetResourceApi;
 import org.apache.streampipes.client.api.ExternalRequestApi;
 import org.apache.streampipes.client.api.FileApi;
 import org.apache.streampipes.client.api.IAdapterApi;
@@ -230,8 +230,8 @@ public class StreamPipesClient implements
 
   @Override
   @ExposedToScripts
-  public DataLakeMeasureApi dataLakeMeasureApi() {
-    return new DataLakeMeasureApi(config);
+  public DatasetMetadataApi datasetMetadataApi() {
+    return new DatasetMetadataApi(config);
   }
 
   @Override
@@ -249,8 +249,8 @@ public class StreamPipesClient implements
 
   @Override
   @ExposedToScripts
-  public DataLakeResourceApi dataLakeResourceApi () {
-    return new DataLakeResourceApi (config);
+  public DatasetResourceApi datasetResourceApi () {
+    return new DatasetResourceApi (config);
   }
 
   @Override

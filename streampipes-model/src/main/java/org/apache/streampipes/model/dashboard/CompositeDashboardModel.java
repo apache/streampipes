@@ -19,7 +19,7 @@
 package org.apache.streampipes.model.dashboard;
 
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 public record CompositeDashboardModel(DashboardModel dashboard,
                                       List<DataExplorerWidgetModel> widgets,
-                                      List<DataLakeMeasure> dataLakeMeasures) {
+                                      List<DatasetMetadata> dataLakeMeasures) {
 
   public String getRevisionHash() {
 

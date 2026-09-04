@@ -20,8 +20,8 @@ package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.SpQueryStatus;
 
@@ -107,5 +107,5 @@ public abstract class DataExplorerQueryExecutor<X, W> {
   protected abstract X makeSelectQuery(SelectQueryParams params);
 
   public abstract Map<String, Object> getTagValues(String measurementId, String fields);
-  public abstract boolean deleteData(DataLakeMeasure measure);
+  public abstract boolean deleteData(DatasetMetadata measure);
 }

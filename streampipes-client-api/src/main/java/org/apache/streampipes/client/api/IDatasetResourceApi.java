@@ -16,12 +16,18 @@
  *
  */
 
-package org.apache.streampipes.storage.api.explorer;
+package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.storage.api.core.CRUDStorage;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 
-public interface IDataLakeMeasureStorage extends CRUDStorage<DataLakeMeasure> {
+import java.util.Map;
 
-  DataLakeMeasure getByMeasureName(String measureName);
+public interface IDatasetResourceApi {
+  
+  void delete(String measurementID, Long startDate, Long endDate);
+
+  void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch);
+
+  SpQueryResult get(String measurementID, Map<String, String> queryParams);
+
 }

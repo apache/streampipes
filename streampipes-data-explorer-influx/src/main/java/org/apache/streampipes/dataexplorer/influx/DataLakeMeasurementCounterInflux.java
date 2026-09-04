@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.dataexplorer.query.DataLakeMeasurementCounter;
 import org.apache.streampipes.model.datalake.AggregationFunction;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class DataLakeMeasurementCounterInflux extends DataLakeMeasurementCounter
   private static final String COUNT_FIELD = "count";
 
   public DataLakeMeasurementCounterInflux(
-      List<DataLakeMeasure> allMeasurements,
+      List<DatasetMetadata> allMeasurements,
       List<String> measurementNames,
       int daysBack
   ) {
@@ -45,7 +45,7 @@ public class DataLakeMeasurementCounterInflux extends DataLakeMeasurementCounter
   }
 
   @Override
-  protected CompletableFuture<Integer> createQueryAsAsyncFuture(DataLakeMeasure measure) {
+  protected CompletableFuture<Integer> createQueryAsAsyncFuture(DatasetMetadata measure) {
     return CompletableFuture.supplyAsync(() -> {
       var firstColumn = getFirstMeasurementProperty(measure);
       if (firstColumn == null) {

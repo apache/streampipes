@@ -19,7 +19,7 @@
 package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.model.datalake.SpQueryResult;
@@ -37,11 +37,11 @@ public class DataExplorerQueryManagementIotDb implements IDataExplorerQueryManag
   private static final Logger LOG = LoggerFactory.getLogger(DataExplorerIotDbQueryExecutor.class);
 
   private final DataExplorerIotDbQueryExecutor queryExecutor;
-  private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
+  private final IDatasetMetadataManagement datasetMetadataManagement;
 
-  public DataExplorerQueryManagementIotDb(IDataExplorerSchemaManagement dataExplorerSchemaManagement,
+  public DataExplorerQueryManagementIotDb(IDatasetMetadataManagement datasetMetadataManagement,
                                           DataExplorerIotDbQueryExecutor queryExecutor) {
-    this.dataExplorerSchemaManagement = dataExplorerSchemaManagement;
+    this.datasetMetadataManagement = datasetMetadataManagement;
     this.queryExecutor = queryExecutor;
   }
 
@@ -61,7 +61,7 @@ public class DataExplorerQueryManagementIotDb implements IDataExplorerQueryManag
 
   @Override
   public boolean deleteData(String measurementID) {
-    var allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
+    var allMeasurements = this.datasetMetadataManagement.getAllMeasurements();
 
     var measureToDeleteOpt = allMeasurements.stream()
         .filter(measure -> measure.getMeasureName().equals(measurementID))
@@ -77,7 +77,7 @@ public class DataExplorerQueryManagementIotDb implements IDataExplorerQueryManag
 
   @Override
   public boolean deleteAllData() {
-    var allMeasurements = this.dataExplorerSchemaManagement.getAllMeasurements();
+    var allMeasurements = this.datasetMetadataManagement.getAllMeasurements();
 
     return allMeasurements.stream()
                           .allMatch(queryExecutor::deleteData); // Check if all results are true else return false

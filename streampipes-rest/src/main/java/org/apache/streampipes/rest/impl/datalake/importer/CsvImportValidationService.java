@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.rest.impl.datalake.importer;
 
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.model.datalake.importer.CsvImportConfiguration;
 import org.apache.streampipes.model.datalake.importer.CsvImportPreviewRequest;
 import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
 
 class CsvImportValidationService {
 
-  private final IDataExplorerSchemaManagement schemaManagement;
+  private final IDatasetMetadataManagement schemaManagement;
 
-  CsvImportValidationService(IDataExplorerSchemaManagement schemaManagement) {
+  CsvImportValidationService(IDatasetMetadataManagement schemaManagement) {
     this.schemaManagement = schemaManagement;
   }
 
@@ -217,7 +217,7 @@ class CsvImportValidationService {
     return messages;
   }
 
-  DataLakeMeasure requireExistingMeasurement(String measurementName) {
+  DatasetMetadata requireExistingMeasurement(String measurementName) {
     return schemaManagement.getExistingMeasureByName(measurementName)
         .orElseThrow(() -> new CsvImportValidationException(List.of(
             message("target.measurementName", "The selected measurement does not exist.")
@@ -225,7 +225,7 @@ class CsvImportValidationService {
   }
 
   private List<CsvImportSchemaIssue> compareSchemas(
-      DataLakeMeasure existingMeasure,
+      DatasetMetadata existingMeasure,
       EventSchema importSchema,
       String timestampColumn
   ) {

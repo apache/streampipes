@@ -18,39 +18,39 @@
 
 package org.apache.streampipes.export.resolver;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
+public class MeasurementResolver extends AbstractResolver<DatasetMetadata> {
 
-  private final IDataLakeMeasureStorage datasetStorage;
+  private final IDatasetMetadataStorage datasetStorage;
 
-  public MeasurementResolver(IDataLakeMeasureStorage datasetStorage) {
+  public MeasurementResolver(IDatasetMetadataStorage datasetStorage) {
     this.datasetStorage = datasetStorage;
   }
 
   @Override
-  public DataLakeMeasure findDocument(String resourceId) {
+  public DatasetMetadata findDocument(String resourceId) {
     return datasetStorage.getElementById(resourceId);
   }
 
   @Override
-  public DataLakeMeasure modifyDocumentForExport(DataLakeMeasure doc) {
+  public DatasetMetadata modifyDocumentForExport(DatasetMetadata doc) {
     doc.setRev(null);
     return doc;
   }
 
   @Override
-  public DataLakeMeasure readDocument(String serializedDoc) throws JsonProcessingException {
-    return this.defaultMapper.readValue(serializedDoc, DataLakeMeasure.class);
+  public DatasetMetadata readDocument(String serializedDoc) throws JsonProcessingException {
+    return this.defaultMapper.readValue(serializedDoc, DatasetMetadata.class);
   }
 
   @Override
-  public ExportItem convert(DataLakeMeasure document) {
+  public ExportItem convert(DatasetMetadata document) {
     return new ExportItem(document.getElementId(), document.getMeasureName(), true);
   }
 
@@ -60,8 +60,8 @@ public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
   }
 
   @Override
-  public DataLakeMeasure deserializeDocument(String document) throws JsonProcessingException {
-    return this.spMapper.readValue(document, DataLakeMeasure.class);
+  public DatasetMetadata deserializeDocument(String document) throws JsonProcessingException {
+    return this.spMapper.readValue(document, DatasetMetadata.class);
   }
 
   @Override

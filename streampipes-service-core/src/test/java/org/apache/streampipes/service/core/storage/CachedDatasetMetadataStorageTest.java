@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.service.core.storage;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,19 +33,19 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class CachedDataLakeMeasureStorageTest {
+class CachedDatasetMetadataStorageTest {
 
   private static final String MEASURE_ID = "measure-id";
   private static final String MEASURE_NAME = "measure-name";
 
-  private IDataLakeMeasureStorage delegate;
-  private CachedDataLakeMeasureStorage storage;
+  private IDatasetMetadataStorage delegate;
+  private CachedDatasetMetadataStorage storage;
 
   @BeforeEach
   void setUp() {
-    delegate = mock(IDataLakeMeasureStorage.class);
-    var cacheManager = new ConcurrentMapCacheManager(CachedDataLakeMeasureStorage.CACHE_NAME);
-    storage = new CachedDataLakeMeasureStorage(delegate, cacheManager);
+    delegate = mock(IDatasetMetadataStorage.class);
+    var cacheManager = new ConcurrentMapCacheManager(CachedDatasetMetadataStorage.CACHE_NAME);
+    storage = new CachedDatasetMetadataStorage(delegate, cacheManager);
   }
 
   @Test
@@ -99,8 +99,8 @@ class CachedDataLakeMeasureStorageTest {
     verify(delegate, times(2)).getByMeasureName(MEASURE_NAME);
   }
 
-  private DataLakeMeasure makeMeasure(String pipelineName) {
-    var measure = new DataLakeMeasure();
+  private DatasetMetadata makeMeasure(String pipelineName) {
+    var measure = new DatasetMetadata();
     measure.setElementId(MEASURE_ID);
     measure.setMeasureName(MEASURE_NAME);
     measure.setPipelineName(pipelineName);

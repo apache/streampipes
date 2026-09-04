@@ -23,10 +23,10 @@ import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
-import org.apache.streampipes.export.DataLakeExportManager;
+import org.apache.streampipes.export.DatasetExportManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.model.datalake.RetentionTimeConfig;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
@@ -36,7 +36,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -94,26 +94,26 @@ import static org.apache.streampipes.model.datalake.param.SupportedRestQueryPara
 
 @RestController
 @RequestMapping("/api/v4/datalake")
-public class DataLakeResource extends AbstractDataLakeResource {
+public class DatasetResource extends AbstractDataLakeResource {
 
-  private static final Logger LOG = LoggerFactory.getLogger(DataLakeResource.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DatasetResource.class);
   private final IDataExplorerQueryManagement dataExplorerQueryManagement;
-  private final DataLakeExportManager dataLakeExportManager;
-  private final IDataLakeMeasureStorage datasetStorage;
+  private final DatasetExportManager datasetExportManager;
+  private final IDatasetMetadataStorage datasetStorage;
   private final ConfiguredOutputWriterFactory outputWriterFactory;
 
-  public DataLakeResource(IChartStorage chartStorage,
+  public DatasetResource(IChartStorage chartStorage,
                           SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
     this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
-        .getQueryManagement(this.dataLakeMeasureManagement);
+        .getQueryManagement(this.datasetMetadataManagement);
     this.outputWriterFactory = new ConfiguredOutputWriterFactory(
         resourceManager.getFileMetadataStorage(),
         resourceManager.getCoreConfigurationStorage());
-    this.dataLakeExportManager = new DataLakeExportManager(
-        this.dataLakeMeasureManagement,
+    this.datasetExportManager = new DatasetExportManager(
+        this.datasetMetadataManagement,
         dataExplorerQueryManagement,
         resourceManager.getCoreConfigurationStorage(),
         resourceManager.getFileMetadataStorage());
@@ -153,7 +153,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
     boolean isSuccessDataLake = this.dataExplorerQueryManagement.deleteData(measurementID);
 
     if (isSuccessDataLake) {
-      boolean isSuccessEventProperty = this.dataLakeMeasureManagement.deleteMeasurementByName(measurementID);
+      boolean isSuccessEventProperty = this.datasetMetadataManagement.deleteMeasurementByName(measurementID);
       if (isSuccessEventProperty) {
         return ok();
       } else {
@@ -170,11 +170,11 @@ public class DataLakeResource extends AbstractDataLakeResource {
   
   @GetMapping(path = "/measurements", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all measurement series", tags = { "Data Lake" }, responses = {
-      @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class)))) })
+      @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DatasetMetadata.class)))) })
    @PreAuthorize("this.hasReadAuthority()")
      @PostFilter("hasPermission(filterObject.elementId, 'READ')")
-      public  List<DataLakeMeasure> getAll() {
-    List<DataLakeMeasure> allMeasurements = this.dataLakeMeasureManagement.getAllMeasurements();
+      public  List<DatasetMetadata> getAll() {
+    List<DatasetMetadata> allMeasurements = this.datasetMetadataManagement.getAllMeasurements();
     return allMeasurements;
   }
 
@@ -346,7 +346,7 @@ public class DataLakeResource extends AbstractDataLakeResource {
       @PathVariable String measureName,
       @RequestBody SpQueryResult queryResult,
       @Parameter(in = ParameterIn.QUERY, description = "should not identical schemas be stored") @RequestParam(value = "ignoreSchemaMismatch", required = false) boolean ignoreSchemaMismatch) {
-    var dataWriter = new DataLakeDataWriter(ignoreSchemaMismatch, datasetStorage);
+    var dataWriter = new DatasetWriter(ignoreSchemaMismatch, datasetStorage);
     try {
       dataWriter.writeData(measureName, queryResult);
     } catch (SpRuntimeException e) {
@@ -383,10 +383,10 @@ public class DataLakeResource extends AbstractDataLakeResource {
   public ResponseEntity<?> setDataLakeRetention(
       @PathVariable String elementId,
       @RequestBody RetentionTimeConfig retention) {
-    var measure = this.dataLakeMeasureManagement.getById(elementId);
+    var measure = this.datasetMetadataManagement.getById(elementId);
     measure.setRetentionTime(retention);
     try {
-      this.dataLakeMeasureManagement.updateMeasurement(measure);
+      this.datasetMetadataManagement.updateMeasurement(measure);
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());
     }
@@ -397,10 +397,10 @@ public class DataLakeResource extends AbstractDataLakeResource {
   @DeleteMapping(path = "/{elementId}/cleanup")
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public ResponseEntity<?> deleteDataLakeRetention(@PathVariable String elementId) {
-    var measure = this.dataLakeMeasureManagement.getById(elementId);
+    var measure = this.datasetMetadataManagement.getById(elementId);
     measure.deleteRetentionTime();
     try {
-      this.dataLakeMeasureManagement.updateMeasurement(measure);
+      this.datasetMetadataManagement.updateMeasurement(measure);
     } catch (IllegalArgumentException e) {
       return badRequest(e.getMessage());
     }
@@ -415,8 +415,8 @@ public class DataLakeResource extends AbstractDataLakeResource {
       @PathVariable String elementId) {
 
     try {
-      var measure = this.dataLakeMeasureManagement.getById(elementId);
-      dataLakeExportManager.cleanupSingleMeasurement(measure);
+      var measure = this.datasetMetadataManagement.getById(elementId);
+      datasetExportManager.cleanupSingleMeasurement(measure);
       return ok();
 
     } catch (Exception e) {

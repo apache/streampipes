@@ -20,40 +20,40 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import java.util.List;
 import java.util.Optional;
 
-public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
-    implements IDataLakeMeasureApi {
+public class DatasetMetadataApi extends AbstractTypedClientApi<DatasetMetadata>
+    implements IDatasetMetadataApi {
 
-  public DataLakeMeasureApi(StreamPipesClientConfig clientConfig) {
-    super(clientConfig, DataLakeMeasure.class);
+  public DatasetMetadataApi(StreamPipesClientConfig clientConfig) {
+    super(clientConfig, DatasetMetadata.class);
   }
 
   @Override
   @ExposedToScripts
-  public Optional<DataLakeMeasure> get(String id) {
+  public Optional<DatasetMetadata> get(String id) {
     return getSingle(getBaseResourcePath().addToPath(id));
   }
 
   @Override
   @ExposedToScripts
-  public Optional<DataLakeMeasure> getByDatasetName(String datasetName) {
+  public Optional<DatasetMetadata> getByDatasetName(String datasetName) {
     return getSingle(getBaseResourcePath().addToPath("byName").addToPath(datasetName));
   }
 
   @Override
   @ExposedToScripts
-  public List<DataLakeMeasure> all() {
+  public List<DatasetMetadata> all() {
     throw new IllegalArgumentException("Not yet implemented");
   }
 
   @Override
   @ExposedToScripts
-  public void create(DataLakeMeasure element) {
+  public void create(DatasetMetadata element) {
     post(getBaseResourcePath(), element);
   }
 
@@ -65,7 +65,7 @@ public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
 
   @Override
   @ExposedToScripts
-  public void update(DataLakeMeasure measure) {
+  public void update(DatasetMetadata measure) {
     put(getBaseResourcePath().addToPath(measure.getElementId()), measure);
   }
 

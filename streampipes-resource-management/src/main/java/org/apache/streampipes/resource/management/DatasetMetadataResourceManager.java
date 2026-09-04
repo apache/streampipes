@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.resource.management;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.model.datalake.DatasetSummaryDto;
 import org.apache.streampipes.model.datalake.RetentionTimeConfig;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -26,7 +26,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
 import org.springframework.security.core.Authentication;
@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class DataLakeMeasureResourceManager extends AbstractResourceManager<IDataLakeMeasureStorage> {
+public class DatasetMetadataResourceManager extends AbstractResourceManager<IDatasetMetadataStorage> {
 
   private static final String DATA_LAKE_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
   private static final String MEASURE_FIELD_INTERNAL_NAME = "db_measurement";
@@ -45,7 +45,7 @@ public class DataLakeMeasureResourceManager extends AbstractResourceManager<IDat
   private final IPipelineStorage pipelineStorage;
   private final SpPermissionEvaluator permissionEvaluator;
 
-  public DataLakeMeasureResourceManager(IDataLakeMeasureStorage datasetStorage,
+  public DatasetMetadataResourceManager(IDatasetMetadataStorage datasetStorage,
                                         IPipelineStorage pipelineStorage,
                                         PermissionResourceManager permissionResourceManager) {
     super(datasetStorage);
@@ -65,7 +65,7 @@ public class DataLakeMeasureResourceManager extends AbstractResourceManager<IDat
   }
 
   private DatasetSummaryDto toSummary(
-      DataLakeMeasure measure,
+      DatasetMetadata measure,
       Map<String, List<PipelineInfo>> pipelinesByMeasure
   ) {
     var pipelineInfos = pipelinesByMeasure.getOrDefault(measure.getMeasureName(), List.of());
@@ -100,7 +100,7 @@ public class DataLakeMeasureResourceManager extends AbstractResourceManager<IDat
             Collectors.mapping(PipelineMeasure::pipelineInfo, Collectors.toList())));
   }
 
-  private boolean canReadMeasure(Authentication auth, DataLakeMeasure measure) {
+  private boolean canReadMeasure(Authentication auth, DatasetMetadata measure) {
     return measure != null
         && measure.getElementId() != null
         && permissionEvaluator.hasPermission(auth, measure.getElementId(), "READ");

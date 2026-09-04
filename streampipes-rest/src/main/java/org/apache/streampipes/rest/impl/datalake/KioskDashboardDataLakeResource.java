@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
@@ -56,7 +56,7 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
 
   public KioskDashboardDataLakeResource(IChartStorage dataExplorerWidgetStorage,
                                         SpResourceManager resourceManager) {
-    IDataExplorerSchemaManagement dataExplorerSchemaManagement = new DataExplorerDispatcher()
+    IDatasetMetadataManagement datasetMetadataManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getSchemaManagement(
             new ChartSchemaUpdateCoordinator(dataExplorerWidgetStorage),
@@ -66,7 +66,7 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
     this.dashboardStorage = resourceManager.manageDashboards().getDb();
     this.dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
-        .getQueryManagement(dataExplorerSchemaManagement);
+        .getQueryManagement(datasetMetadataManagement);
     this.dataExplorerWidgetStorage = dataExplorerWidgetStorage;
     this.permissionStorage = resourceManager.managePermissions().getDb();
   }

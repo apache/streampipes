@@ -19,7 +19,7 @@
 package org.apache.streampipes.dataexplorer.iotdb.sanitize;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
 import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
 
@@ -39,7 +39,7 @@ public class DataLakeMeasurementSanitizerIotDbTest {
   }
 
   @Test
-  public void cleanDataLakeMeasure() {
+  public void cleanDatasetMetadata() {
     var eventSchema = EventSchemaTestBuilder.create()
         .withEventProperty(
             EventPropertyPrimitiveTestBuilder
@@ -57,14 +57,14 @@ public class DataLakeMeasurementSanitizerIotDbTest {
                 .withRuntimeName("pressure")
                 .build())
         .build();
-    var measure = new DataLakeMeasure(
+    var measure = new DatasetMetadata(
         "invalid.Measure",
         "s0::%s".formatted("timestamp"),
         eventSchema
     );
     var sanitizer = new DataLakeMeasurementSanitizerIotDb(clientMock, measure);
 
-    sanitizer.cleanDataLakeMeasure();
+    sanitizer.cleanDatasetMetadata();
     var result = sanitizer.getMeasure();
 
     assertEquals("invalid_Measure", result.getMeasureName());

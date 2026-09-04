@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.dataexplorer.influx.sanitize;
 
-import org.apache.streampipes.client.api.IDataLakeMeasureApi;
+import org.apache.streampipes.client.api.IDatasetMetadataApi;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
 import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
 
@@ -43,14 +43,14 @@ public class DataLakeMeasurementSanitizerInfluxTest {
   public void setUp() {
     clientMock = mock(IStreamPipesClient.class);
 
-    var apiMock = mock(IDataLakeMeasureApi.class);
-    when(clientMock.dataLakeMeasureApi()).thenReturn(apiMock);
+    var apiMock = mock(IDatasetMetadataApi.class);
+    when(clientMock.datasetMetadataApi()).thenReturn(apiMock);
 
   }
 
   @Test
-  public void cleanDataLakeMeasure() {
-    var measure = new DataLakeMeasure(
+  public void cleanDatasetMetadata() {
+    var measure = new DatasetMetadata(
       "test?Measurement",
       "timestamp",
       EventSchemaTestBuilder.create()
@@ -77,8 +77,8 @@ public class DataLakeMeasurementSanitizerInfluxTest {
   }
 
   @Test
-  public void cleanDataLakeMeasureNoTimestampField() {
-    var measure = new DataLakeMeasure("test", EventSchemaTestBuilder.create()
+  public void cleanDatasetMetadataNoTimestampField() {
+    var measure = new DatasetMetadata("test", EventSchemaTestBuilder.create()
                                                                     .withEventProperties(List.of(
                                                                       EventPropertyPrimitiveTestBuilder.create()
                                                                                                        .withRuntimeName(

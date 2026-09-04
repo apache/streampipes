@@ -56,7 +56,7 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
                                 SpResourceManager resourceManager) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
     this.importService = new CsvDataLakeImportService(
-        getDataLakeMeasureManagement(),
+        getDatasetMetadataManagement(),
         resourceManager.manageDataLakeMeasures().getDb()
     );
   }
@@ -163,7 +163,7 @@ public class DataLakeImportResource extends AbstractDataLakeResource {
   private boolean hasWritePermission(org.apache.streampipes.model.datalake.importer.CsvImportTarget target) {
     return target == null
         || target.getMode() != CsvImportTargetMode.EXISTING
-        || getDataLakeMeasureManagement().getExistingMeasureByName(target.getMeasurementName()).isEmpty()
+        || getDatasetMetadataManagement().getExistingMeasureByName(target.getMeasurementName()).isEmpty()
         || this.checkPermissionByName(target.getMeasurementName(), "WRITE");
   }
 }

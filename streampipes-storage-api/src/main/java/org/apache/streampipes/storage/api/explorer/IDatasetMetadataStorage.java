@@ -16,26 +16,12 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.api;
+package org.apache.streampipes.storage.api.explorer;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.storage.api.core.CRUDStorage;
 
-import java.util.List;
-import java.util.Optional;
+public interface IDatasetMetadataStorage extends CRUDStorage<DatasetMetadata> {
 
-public interface IDataExplorerSchemaManagement {
-
-  List<DataLakeMeasure> getAllMeasurements();
-
-  DataLakeMeasure getById(String elementId);
-
-  Optional<DataLakeMeasure> getExistingMeasureByName(String measureName);
-
-  DataLakeMeasure createOrUpdateMeasurement(DataLakeMeasure measure,String principalSid);
-
-  void deleteMeasurement(String elementId);
-
-  boolean deleteMeasurementByName(String measureName);
-
-  void updateMeasurement(DataLakeMeasure measure);
+  DatasetMetadata getByMeasureName(String measureName);
 }

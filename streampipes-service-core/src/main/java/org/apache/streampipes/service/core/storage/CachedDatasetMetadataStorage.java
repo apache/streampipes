@@ -17,49 +17,49 @@
  */
 package org.apache.streampipes.service.core.storage;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cache.CacheManager;
 
-public class CachedDataLakeMeasureStorage
-    extends AbstractCachedCrudStorage<DataLakeMeasure, IDataLakeMeasureStorage>
-    implements IDataLakeMeasureStorage {
+public class CachedDatasetMetadataStorage
+    extends AbstractCachedCrudStorage<DatasetMetadata, IDatasetMetadataStorage>
+    implements IDatasetMetadataStorage {
 
   static final String CACHE_NAME = "dataLakeMeasures";
 
   private static final String MEASURE_NAME_KEY_PREFIX = "name:";
 
-  public CachedDataLakeMeasureStorage(IDataLakeMeasureStorage delegate,
+  public CachedDatasetMetadataStorage(IDatasetMetadataStorage delegate,
                                       CacheManager cacheManager) {
     this(delegate, cacheManager, JacksonSerializer.getObjectMapper());
   }
 
-  CachedDataLakeMeasureStorage(IDataLakeMeasureStorage delegate,
+  CachedDatasetMetadataStorage(IDatasetMetadataStorage delegate,
                                CacheManager cacheManager,
                                ObjectMapper objectMapper) {
     super(
         delegate,
         cacheManager,
         CACHE_NAME,
-        objectMapper.copy().addMixIn(DataLakeMeasure.class, DataLakeMeasureCacheMixin.class),
-        DataLakeMeasure.class
+        objectMapper.copy().addMixIn(DatasetMetadata.class, DatasetMetadataCacheMixin.class),
+        DatasetMetadata.class
     );
   }
 
   @Override
-  public DataLakeMeasure getByMeasureName(String measureName) {
+  public DatasetMetadata getByMeasureName(String measureName) {
     return getOrLoad(
         key(MEASURE_NAME_KEY_PREFIX, measureName),
-        type(DataLakeMeasure.class),
+        type(DatasetMetadata.class),
         () -> delegate.getByMeasureName(measureName)
     );
   }
 
-  private abstract static class DataLakeMeasureCacheMixin {
+  private abstract static class DatasetMetadataCacheMixin {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     abstract String getTimestampField();

@@ -22,12 +22,12 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.TimeSeriesStore;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataSeries;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,20 +37,20 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DataLakeDataWriter {
+public class DatasetWriter {
 
   private final boolean ignoreSchemaMismatch;
   private final boolean allowMissingFields;
-  private final IDataLakeMeasureStorage datasetStorage;
+  private final IDatasetMetadataStorage datasetStorage;
 
-  public DataLakeDataWriter(boolean ignoreSchemaMismatch,
-                            IDataLakeMeasureStorage datasetStorage) {
+  public DatasetWriter(boolean ignoreSchemaMismatch,
+                            IDatasetMetadataStorage datasetStorage) {
     this(ignoreSchemaMismatch, false, datasetStorage);
   }
 
-  public DataLakeDataWriter(boolean ignoreSchemaMismatch,
+  public DatasetWriter(boolean ignoreSchemaMismatch,
                             boolean allowMissingFields,
-                            IDataLakeMeasureStorage datasetStorage) {
+                            IDatasetMetadataStorage datasetStorage) {
     this.ignoreSchemaMismatch = ignoreSchemaMismatch;
     this.allowMissingFields = allowMissingFields;
     this.datasetStorage = datasetStorage;
@@ -64,12 +64,12 @@ public class DataLakeDataWriter {
     writeData(measure, queryResult);
   }
 
-  public void writeData(DataLakeMeasure measure, SpQueryResult queryResult) {
+  public void writeData(DatasetMetadata measure, SpQueryResult queryResult) {
     var dataSeries = getDataSeries(queryResult);
     getTimeSeriesStoreAndPersistQueryResult(dataSeries, measure);
   }
 
-  public void writeData(DataLakeMeasure measure, List<String> headers, List<List<Object>> rows) {
+  public void writeData(DatasetMetadata measure, List<String> headers, List<List<Object>> rows) {
     var dataSeries = new DataSeries();
     dataSeries.setHeaders(headers);
     dataSeries.setRows(rows);
@@ -78,7 +78,7 @@ public class DataLakeDataWriter {
   }
 
   private void getTimeSeriesStoreAndPersistQueryResult(DataSeries dataSeries,
-                                                       DataLakeMeasure measure){
+                                                       DatasetMetadata measure){
     var timeSeriesStore = getTimeSeriesStore(measure);
     var runtimeNames = getRuntimeNames(measure);
     for (var row : dataSeries.getRows()) {
@@ -94,7 +94,7 @@ public class DataLakeDataWriter {
     timeSeriesStore.close();
   }
 
-  private TimeSeriesStore getTimeSeriesStore(DataLakeMeasure measure){
+  private TimeSeriesStore getTimeSeriesStore(DatasetMetadata measure){
     return new TimeSeriesStore(
         new DataExplorerDispatcher().getDataExplorerManager()
             .getTimeseriesStorage(measure, false),
@@ -137,7 +137,7 @@ public class DataLakeDataWriter {
     return expectedRuntimeNames.equals(actualRuntimeNames);
   }
 
-  private List<String> getRuntimeNames(DataLakeMeasure measure) {
+  private List<String> getRuntimeNames(DatasetMetadata measure) {
     var runtimeNames = new ArrayList<String>();
     runtimeNames.add(measure.getTimestampFieldName());
     for (var eventProperties: measure.getEventSchema().getEventProperties()) {

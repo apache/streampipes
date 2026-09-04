@@ -20,19 +20,19 @@ package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.DatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.influx.sanitize.DataLakeMeasurementSanitizerInflux;
 import org.apache.streampipes.manager.permission.DataLakePermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
 
   @Override
   public IDataLakeMeasurementCounter getMeasurementCounter(
-      List<DataLakeMeasure> allMeasurements,
+      List<DatasetMetadata> allMeasurements,
       List<String> measurementsToCount,
       int daysBack) {
     return new DataLakeMeasurementCounterInflux(allMeasurements, measurementsToCount, daysBack);
@@ -52,16 +52,16 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
 
   @Override
   public IDataExplorerQueryManagement getQueryManagement(
-      IDataExplorerSchemaManagement dataExplorerSchemaManagement
+      IDatasetMetadataManagement datasetMetadataManagement
   ) {
-    return new DataExplorerQueryManagementInflux(dataExplorerSchemaManagement);
+    return new DataExplorerQueryManagementInflux(datasetMetadataManagement);
   }
 
   @Override
-  public IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
+  public IDatasetMetadataManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
                                                            IPermissionStorage permissionStorage,
-                                                           IDataLakeMeasureStorage datasetStorage) {
-    return new DataExplorerSchemaManagement(
+                                                           IDatasetMetadataStorage datasetStorage) {
+    return new DatasetMetadataManagement(
         datasetStorage,
         new DataLakePermissionManager(
             permissionStorage
@@ -71,7 +71,7 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   }
 
   @Override
-  public ITimeSeriesStorage getTimeseriesStorage(DataLakeMeasure measure, boolean ignoreDuplicates) {
+  public ITimeSeriesStorage getTimeseriesStorage(DatasetMetadata measure, boolean ignoreDuplicates) {
     return new TimeSeriesStorageInflux(
         measure,
         ignoreDuplicates,
@@ -81,7 +81,7 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   }
 
   @Override
-  public IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DataLakeMeasure measure) {
+  public IDataLakeMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMetadata measure) {
     return new DataLakeMeasurementSanitizerInflux(client, measure);
   }
 }

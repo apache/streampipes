@@ -16,19 +16,27 @@
  *
  */
 
-package org.apache.streampipes.model.datalake;
+package org.apache.streampipes.client.api;
 
-/**
- * This enum contains the different options that are available for the update strategy of the data lake measure
- */
-public enum DataLakeMeasureSchemaUpdateStrategy {
-  /**
-   * This strategy will update the schema of the data lake measure when it changes
-   */
-  UPDATE_SCHEMA,
-  /**
-   * This strategy will extend the schema of the data lake measure when it changes and keep the old fields
-   */
-  EXTEND_EXISTING_SCHEMA
+import org.apache.streampipes.model.datalake.DatasetMetadata;
 
+import java.util.List;
+import java.util.Optional;
+
+public interface IDatasetMetadataApi extends CRUDApi<String, DatasetMetadata> {
+  Optional<DatasetMetadata> get(String id);
+
+  Optional<DatasetMetadata> getByDatasetName(String datasetName);
+
+  @Override
+  List<DatasetMetadata> all();
+
+  @Override
+  void create(DatasetMetadata element);
+
+  @Override
+  void delete(String elementId);
+
+  @Override
+  void update(DatasetMetadata measure);
 }
