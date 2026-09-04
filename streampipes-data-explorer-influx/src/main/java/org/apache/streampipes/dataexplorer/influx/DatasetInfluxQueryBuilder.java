@@ -22,7 +22,7 @@ import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
 import org.apache.streampipes.model.dataset.AggregationFunction;
-import org.apache.streampipes.model.dataset.DatasetQueryOrdering;
+import org.apache.streampipes.model.dataset.DataLakeQueryOrdering;
 import org.apache.streampipes.model.dataset.FilterCondition;
 import org.apache.streampipes.model.dataset.FilterExpressionCondition;
 import org.apache.streampipes.model.dataset.FilterExpressionGroup;
@@ -223,8 +223,8 @@ public class DatasetInfluxQueryBuilder implements IDatasetQueryBuilder<Query> {
   }
 
   @Override
-  public DatasetInfluxQueryBuilder withOrderBy(DatasetQueryOrdering ordering) {
-    if (DatasetQueryOrdering.ASC.equals(ordering)) {
+  public DatasetInfluxQueryBuilder withOrderBy(DataLakeQueryOrdering ordering) {
+    if (DataLakeQueryOrdering.ASC.equals(ordering)) {
       this.ordering = asc();
     } else {
       this.ordering = desc();

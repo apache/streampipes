@@ -74,7 +74,7 @@ public class DatasetMetadataApi extends AbstractTypedClientApi<DatasetMetadata>
     return StreamPipesApiPath.fromStreamPipesBasePath()
         .addToPath("api")
         .addToPath("v4")
-        .addToPath("dataset")
+        .addToPath("datalake")
         .addToPath("measure");
   }
 }

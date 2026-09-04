@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v4/dataset/images")
+@RequestMapping("/api/v4/datalake/images")
 public class DatasetImageResource extends AbstractAuthGuardedRestResource {
 
   @GetMapping(path = "{imageId}", produces = "image/jpeg")

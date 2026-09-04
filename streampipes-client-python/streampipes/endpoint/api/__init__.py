@@ -17,14 +17,12 @@
 
 from .adapter import AdapterEndpoint
 from .data_lake_measure import DataLakeMeasureEndpoint
-from .dataset_measure import DatasetMeasureEndpoint
 from .data_stream import DataStreamEndpoint
 from .pipeline import PipelineEndpoint
 from .version import VersionEndpoint
 
 __all__ = [
     "AdapterEndpoint",
-    "DatasetMeasureEndpoint",
     "DataLakeMeasureEndpoint",
     "DataStreamEndpoint",
     "PipelineEndpoint",

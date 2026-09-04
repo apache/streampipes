@@ -74,7 +74,7 @@ public interface IStreamPipesClient extends Serializable {
   void deliverEmail(SpEmail email);
 
   IFileApi fileApi();
-
+  
   IDatasetResourceApi datasetResourceApi();
 
   /**

@@ -36,13 +36,14 @@ public class DatasetResourceApi extends AbstractClientApi implements IDatasetRes
     return StreamPipesApiPath.fromStreamPipesBasePath()
         .addToPath("api")
         .addToPath("v4")
-        .addToPath("dataset")
+        .addToPath("datalake")
         .addToPath("measurements");
   }
 
   @Override
   @ExposedToScripts
   public void delete(String measurementID, Long startDate, Long endDate) {
+
     Map<String, String> queryParams = new HashMap<>();
     if (startDate != null) {
       queryParams.put("startDate", startDate.toString());
@@ -51,6 +52,7 @@ public class DatasetResourceApi extends AbstractClientApi implements IDatasetRes
       queryParams.put("endDate", endDate.toString());
     }
     delete(getBaseResourcePath().addToPath(measurementID).withQueryParameters(queryParams), Void.class);
+
   }
 
   @Override

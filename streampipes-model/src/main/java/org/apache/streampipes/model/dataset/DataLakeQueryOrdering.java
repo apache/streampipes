@@ -18,6 +18,6 @@
 
 package org.apache.streampipes.model.dataset;
 
-public enum DatasetQueryOrdering {
+public enum DataLakeQueryOrdering {
   ASC, DESC
 }

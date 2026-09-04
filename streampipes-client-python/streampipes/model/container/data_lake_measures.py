@@ -19,23 +19,20 @@
 Implementation of a resource container for the data lake measures endpoint.
 """
 
-from typing_extensions import deprecated
-
 from streampipes.model.container.resource_container import ResourceContainer
-from streampipes.model.resource.data_lake_measure import DatasetMeasure
+from streampipes.model.resource.data_lake_measure import DataLakeMeasure
 from streampipes.model.resource.resource import Resource
 
 __all__ = [
-    "DatasetMeasures",
     "DataLakeMeasures",
 ]
 
 
-class DatasetMeasures(ResourceContainer):
-    """Implementation of the resource container for the dataset measures endpoint.
+class DataLakeMeasures(ResourceContainer):
+    """Implementation of the resource container for the data lake measures endpoint.
 
-    This resource container is a collection of dataset measures returned by the StreamPipes API.
-    It is capable of parsing the response content directly into a list of queried `DatasetMeasure`.
+    This resource container is a collection of data lake measures returned by the StreamPipes API.
+    It is capable of parsing the response content directly into a list of queried `DataLakeMeasure`.
     Furthermore, the resource container makes them accessible in a pythonic manner.
 
     """
@@ -46,12 +43,7 @@ class DatasetMeasures(ResourceContainer):
 
         Returns
         -------
-        type: DatasetMeasure
+        type: DataLakeMeasure
             class that describes an individual resource
         """
-        return DatasetMeasure
-
-
-@deprecated("deprecated since 0.99.0; please use DatasetMeasures instead.")
-class DataLakeMeasures(DatasetMeasures):
-    """DEPRECATED - use DatasetMeasures instead."""
+        return DataLakeMeasure

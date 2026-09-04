@@ -93,7 +93,7 @@ import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParam
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.SUPPORTED_PARAMS;
 
 @RestController
-@RequestMapping("/api/v4/dataset")
+@RequestMapping("/api/v4/datalake")
 public class DatasetResource extends AbstractDatasetResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DatasetResource.class);
@@ -328,7 +328,7 @@ public class DatasetResource extends AbstractDatasetResource {
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
       headers.setContentDispositionFormData("attachment",
-          "dataset." + outputFormat.toString().toLowerCase());
+          "datalake." + outputFormat.toString().toLowerCase());
 
       return ResponseEntity.ok()
           .headers(headers)
