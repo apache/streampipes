@@ -48,7 +48,8 @@ jobs:
       - name: Build UI
         working-directory: ./ui
         run: |
-          npm ci
+          rm -rf node_modules package-lock.json
+          npm install
           npm run build
         env:
           DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
