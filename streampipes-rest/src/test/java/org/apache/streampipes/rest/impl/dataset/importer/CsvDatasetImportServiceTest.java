@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.datalake.importer;
+package org.apache.streampipes.rest.impl.dataset.importer;
 
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
@@ -32,7 +32,7 @@ import org.apache.streampipes.model.dataset.importer.CsvImportTarget;
 import org.apache.streampipes.model.dataset.importer.CsvImportTargetMode;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.rest.impl.datalake.DatasetWriter;
+import org.apache.streampipes.rest.impl.dataset.DatasetWriter;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
@@ -55,13 +55,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class CsvDataLakeImportServiceTest {
+class CsvDatasetImportServiceTest {
 
   @Test
   void shouldInferTypesAndRejectDuplicateNewMeasurementNames() {
     var schemaManagement = mock(IDatasetMetadataManagement.class);
     var dataWriter = mock(DatasetWriter.class);
-    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
 
     var existingMeasure = new DatasetMetadata();
     existingMeasure.setMeasureName("existing-measure");
@@ -83,7 +83,7 @@ class CsvDataLakeImportServiceTest {
   void shouldReportSchemaMismatchInDedicatedValidationCall() {
     var schemaManagement = mock(IDatasetMetadataManagement.class);
     var dataWriter = mock(DatasetWriter.class);
-    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
 
     var existingMeasure = new DatasetMetadata();
     existingMeasure.setMeasureName("existing-measure");
@@ -111,7 +111,7 @@ class CsvDataLakeImportServiceTest {
   void shouldPreserveAllPrimitiveTypesForExistingMeasurement() {
     var schemaManagement = mock(IDatasetMetadataManagement.class);
     var dataWriter = mock(DatasetWriter.class);
-    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
 
     var existingMeasure = new DatasetMetadata();
     existingMeasure.setMeasureName("existing-measure");
@@ -167,7 +167,7 @@ class CsvDataLakeImportServiceTest {
   void shouldCreateNewMeasurementAndReuseSharedWriter() {
     var schemaManagement = mock(IDatasetMetadataManagement.class);
     var dataWriter = mock(DatasetWriter.class);
-    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
 
     when(schemaManagement.getExistingMeasureByName("new-measure"))
         .thenReturn(Optional.empty());
@@ -190,7 +190,7 @@ class CsvDataLakeImportServiceTest {
   void shouldStoreNewMeasurementWithoutTimestampPropertyInEventSchema() {
     var schemaManagement = mock(IDatasetMetadataManagement.class);
     var dataWriter = mock(DatasetWriter.class);
-    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
 
     when(schemaManagement.getExistingMeasureByName("new-measure"))
         .thenReturn(Optional.empty());
@@ -212,7 +212,7 @@ class CsvDataLakeImportServiceTest {
     var schemaManagement = mock(IDatasetMetadataManagement.class);
     var dataWriter = mock(DatasetWriter.class);
     var uploadStorage = new CsvImportUploadStorage();
-    var service = new CsvDataLakeImportService(schemaManagement, dataWriter, uploadStorage);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter, uploadStorage);
 
     when(schemaManagement.getExistingMeasureByName("uploaded-measure"))
         .thenReturn(Optional.empty());
@@ -262,7 +262,7 @@ class CsvDataLakeImportServiceTest {
   void shouldStartImportJobAndExposeSucceededStatus() throws Exception {
     var schemaManagement = mock(IDatasetMetadataManagement.class);
     var dataWriter = mock(DatasetWriter.class);
-    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
 
     when(schemaManagement.getExistingMeasureByName("new-measure"))
         .thenReturn(Optional.empty());
@@ -288,7 +288,7 @@ class CsvDataLakeImportServiceTest {
   void shouldExposeFailedImportJobValidationMessages() throws Exception {
     var schemaManagement = mock(IDatasetMetadataManagement.class);
     var dataWriter = mock(DatasetWriter.class);
-    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
 
     var request = makeImportRequest(CsvImportTargetMode.NEW, "new-measure");
     request.setTimestampColumn(null);
@@ -307,7 +307,7 @@ class CsvDataLakeImportServiceTest {
     var schemaManagement = mock(IDatasetMetadataManagement.class);
     var dataWriter = mock(DatasetWriter.class);
     var uploadStorage = new CsvImportUploadStorage();
-    var service = new CsvDataLakeImportService(schemaManagement, dataWriter, uploadStorage);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter, uploadStorage);
 
     when(schemaManagement.getExistingMeasureByName("uploaded-measure"))
         .thenReturn(Optional.empty());
@@ -351,7 +351,7 @@ class CsvDataLakeImportServiceTest {
   void shouldRejectSchemaMismatchForExistingMeasurement() {
     var schemaManagement = mock(IDatasetMetadataManagement.class);
     var dataWriter = mock(DatasetWriter.class);
-    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
 
     var existingMeasure = new DatasetMetadata();
     existingMeasure.setMeasureName("existing-measure");
@@ -378,7 +378,7 @@ class CsvDataLakeImportServiceTest {
   void shouldImportIntoExistingMeasurementWhenOnlyTimestampColumnDiffers() {
     var schemaManagement = mock(IDatasetMetadataManagement.class);
     var dataWriter = mock(DatasetWriter.class);
-    var service = new CsvDataLakeImportService(schemaManagement, dataWriter);
+    var service = new CsvDatasetImportService(schemaManagement, dataWriter);
 
     var existingMeasure = new DatasetMetadata();
     existingMeasure.setMeasureName("existing-measure");
@@ -481,7 +481,7 @@ class CsvDataLakeImportServiceTest {
   }
 
   private CsvImportJobStatus awaitTerminalStatus(
-      CsvDataLakeImportService service,
+      CsvDatasetImportService service,
       String jobId,
       String sid
   ) throws Exception {

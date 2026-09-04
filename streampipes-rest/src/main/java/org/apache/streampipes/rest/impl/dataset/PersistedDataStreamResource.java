@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.impl.datalake;
+package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.dataexplorer.influx.sanitize.MeasureNameSanitizer;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
