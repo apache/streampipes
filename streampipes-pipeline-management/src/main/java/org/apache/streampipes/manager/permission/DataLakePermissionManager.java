@@ -19,7 +19,7 @@ package org.apache.streampipes.manager.permission;
 
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionBuilder;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 public class DataLakePermissionManager {

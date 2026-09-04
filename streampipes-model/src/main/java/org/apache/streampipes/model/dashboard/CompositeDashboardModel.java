@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.model.dashboard;
 
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -19,9 +19,9 @@
 package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.dataexplorer.export.item.CsvItemGenerator;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
-import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.dataset.param.SupportedRestQueryParams;
 
 import java.io.IOException;
 import java.io.OutputStream;

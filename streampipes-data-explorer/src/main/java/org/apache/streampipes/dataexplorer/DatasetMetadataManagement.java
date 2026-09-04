@@ -22,8 +22,8 @@ import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeDetector;
 import org.apache.streampipes.manager.permission.DataLakePermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
-import org.apache.streampipes.model.datalake.DatasetMetadataSchemaUpdateStrategy;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetMetadataSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
@@ -158,7 +158,7 @@ public class DatasetMetadataManagement implements IDatasetMetadataManagement {
   }
 
   private void setSchemaVersionAndStoreMeasurement(DatasetMetadata measure) {
-    measure.setSchemaVersion(DatasetMetadata.CURRENT_SCHEMA_VERSION);
+    measure.setSchemaVersion("1.1");
     dataLakeStorage.persist(measure);
   }
 

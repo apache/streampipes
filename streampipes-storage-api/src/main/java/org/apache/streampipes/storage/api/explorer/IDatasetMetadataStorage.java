@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.storage.api.explorer;
 
-import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
 
 public interface IDatasetMetadataStorage extends CRUDStorage<DatasetMetadata> {

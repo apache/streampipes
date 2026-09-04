@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.service.core.storage;
 
-import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 

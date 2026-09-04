@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.dataexplorer.export;
 
-import org.apache.streampipes.model.datalake.DatasetMetadata;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.schema.EventProperty;
 
 import java.io.IOException;

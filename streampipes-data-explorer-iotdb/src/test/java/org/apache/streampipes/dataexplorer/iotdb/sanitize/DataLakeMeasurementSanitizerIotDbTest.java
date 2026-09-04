@@ -19,7 +19,7 @@
 package org.apache.streampipes.dataexplorer.iotdb.sanitize;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
 import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
 

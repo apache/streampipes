@@ -19,11 +19,11 @@
 package org.apache.streampipes.rest.impl.datalake.importer;
 
 import org.apache.streampipes.connect.management.util.EventSchemaUtils;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
-import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
-import org.apache.streampipes.model.datalake.importer.CsvImportConfiguration;
-import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
-import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.importer.CsvImportColumn;
+import org.apache.streampipes.model.dataset.importer.CsvImportConfiguration;
+import org.apache.streampipes.model.dataset.importer.CsvImportRequest;
+import org.apache.streampipes.model.dataset.importer.CsvImportValidationMessage;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;

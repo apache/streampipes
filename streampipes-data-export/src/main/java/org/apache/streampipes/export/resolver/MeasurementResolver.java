@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.export.resolver;
 
-import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;

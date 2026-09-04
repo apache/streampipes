@@ -20,10 +20,10 @@ package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
-import org.apache.streampipes.model.datalake.DataSeries;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
-import org.apache.streampipes.model.datalake.SpQueryResult;
-import org.apache.streampipes.model.datalake.SpQueryStatus;
+import org.apache.streampipes.model.dataset.DataSeries;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.SpQueryResult;
+import org.apache.streampipes.model.dataset.SpQueryStatus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

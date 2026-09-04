@@ -19,9 +19,9 @@
 package org.apache.streampipes.manager.pipeline.update;
 
 import org.apache.streampipes.model.connect.adapter.ChartSchemaUpdateInfo;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetHealthStatus;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetHealthStatus;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -182,7 +182,7 @@ public class ChartSchemaUpdateCoordinator {
       datasetMetadata.setMeasureName(measureName);
     }
     if (datasetMetadata.getSchemaVersion() == null) {
-      datasetMetadata.setSchemaVersion(DatasetMetadata.CURRENT_SCHEMA_VERSION);
+      datasetMetadata.setSchemaVersion("1.1");
     }
     return datasetMetadata;
   }

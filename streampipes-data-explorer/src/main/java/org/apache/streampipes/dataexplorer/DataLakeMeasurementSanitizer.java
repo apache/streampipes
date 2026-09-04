@@ -21,7 +21,7 @@ package org.apache.streampipes.dataexplorer;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementSanitizer;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.schema.EventProperty;
 
 import java.util.List;

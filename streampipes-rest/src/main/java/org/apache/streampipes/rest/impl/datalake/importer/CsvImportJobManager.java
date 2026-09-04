@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.rest.impl.datalake.importer;
 
-import org.apache.streampipes.model.datalake.importer.CsvImportJobStartResult;
-import org.apache.streampipes.model.datalake.importer.CsvImportJobState;
-import org.apache.streampipes.model.datalake.importer.CsvImportJobStatus;
-import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
-import org.apache.streampipes.model.datalake.importer.CsvImportResult;
-import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
+import org.apache.streampipes.model.dataset.importer.CsvImportJobStartResult;
+import org.apache.streampipes.model.dataset.importer.CsvImportJobState;
+import org.apache.streampipes.model.dataset.importer.CsvImportJobStatus;
+import org.apache.streampipes.model.dataset.importer.CsvImportRequest;
+import org.apache.streampipes.model.dataset.importer.CsvImportResult;
+import org.apache.streampipes.model.dataset.importer.CsvImportValidationMessage;
 
 import java.time.Duration;
 import java.time.Instant;

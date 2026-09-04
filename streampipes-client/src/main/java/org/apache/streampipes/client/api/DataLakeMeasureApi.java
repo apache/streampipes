@@ -20,7 +20,7 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DataLakeMeasure;
 import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
 import java.util.List;

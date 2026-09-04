@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.rest.impl.datalake.importer;
 
-import org.apache.streampipes.model.datalake.importer.CsvImportColumn;
-import org.apache.streampipes.model.datalake.importer.CsvImportConfiguration;
-import org.apache.streampipes.model.datalake.importer.CsvImportRequest;
+import org.apache.streampipes.model.dataset.importer.CsvImportColumn;
+import org.apache.streampipes.model.dataset.importer.CsvImportConfiguration;
+import org.apache.streampipes.model.dataset.importer.CsvImportRequest;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.vocabulary.XSD;
 

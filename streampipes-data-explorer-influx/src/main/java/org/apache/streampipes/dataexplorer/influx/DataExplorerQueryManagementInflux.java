@@ -26,10 +26,10 @@ import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
-import org.apache.streampipes.model.datalake.SpQueryResult;
-import org.apache.streampipes.model.datalake.SpQueryStatus;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.SpQueryResult;
+import org.apache.streampipes.model.dataset.SpQueryStatus;
+import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
@@ -44,11 +44,11 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_END_DATE;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_LIMIT;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_ORDER;
-import static org.apache.streampipes.model.datalake.param.SupportedRestQueryParams.QP_START_DATE;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_END_DATE;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_LIMIT;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_MISSING_VALUE_BEHAVIOUR;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_ORDER;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_START_DATE;
 
 public class DataExplorerQueryManagementInflux implements IDataExplorerQueryManagement {
 

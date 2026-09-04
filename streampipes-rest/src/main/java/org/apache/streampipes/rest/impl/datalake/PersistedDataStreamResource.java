@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.dataexplorer.influx.sanitize.MeasureNameSanitizer;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -73,8 +73,6 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
     measure.setPipelineId(pipeline.getPipelineId());
     measure.setPipelineName(pipeline.getName());
     measure.setMeasureName(sanitizedMeasureName);
-    measure.setPipelineIsRunning(pipeline.isRunning());
-
     return measure;
   }
 

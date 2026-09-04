@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl.datalake.importer;
 
-import org.apache.streampipes.model.datalake.importer.CsvImportValidationMessage;
+import org.apache.streampipes.model.dataset.importer.CsvImportValidationMessage;
 
 import java.util.List;
 

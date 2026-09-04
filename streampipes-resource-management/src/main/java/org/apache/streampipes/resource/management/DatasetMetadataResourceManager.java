@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.resource.management;
 
-import org.apache.streampipes.model.datalake.DatasetMetadata;
-import org.apache.streampipes.model.datalake.DatasetSummaryDto;
-import org.apache.streampipes.model.datalake.RetentionTimeConfig;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetSummaryDto;
+import org.apache.streampipes.model.dataset.RetentionTimeConfig;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;

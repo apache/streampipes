@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.storage.couchdb.impl.explorer;
 
-import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.couchdb.impl.core.DefaultCrudStorage;
 

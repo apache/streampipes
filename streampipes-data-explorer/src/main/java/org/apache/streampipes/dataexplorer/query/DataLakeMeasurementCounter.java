@@ -19,8 +19,8 @@
 package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.dataexplorer.api.IDataLakeMeasurementCounter;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
-import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.SpQueryResult;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;

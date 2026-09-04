@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.manager.pipeline.update;
 
-import org.apache.streampipes.model.datalake.DataExplorerWidgetHealthStatus;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetHealthStatus;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -222,7 +222,7 @@ class ChartSchemaUpdateCoordinatorTest {
 
   private Map<String, Object> makeMeasure(EventSchema eventSchema) {
     var measure = new DatasetMetadata(MEASURE_NAME, "s0::timestamp", eventSchema);
-    measure.setSchemaVersion(DatasetMetadata.CURRENT_SCHEMA_VERSION);
+    measure.setSchemaVersion("1.1");
     return OBJECT_MAPPER.convertValue(measure, MAP_TYPE);
   }
 

@@ -21,7 +21,7 @@ package org.apache.streampipes.dataexplorer.iotdb.sanitize;
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.DataLakeMeasurementSanitizer;
-import org.apache.streampipes.model.datalake.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 
 /**
  * Ensures proper sanitization of data lake measurements with respect to Apache IoTDB specifics.
