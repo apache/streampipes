@@ -107,33 +107,22 @@
                                 [level]="3"
                                 [label]="'Existing dataset' | translate"
                             >
-                                <mat-form-field
-                                    appearance="outline"
-                                    class="w-100"
+                                <sp-search-select
+                                    [items]="measurementNames"
+                                    [value]="
+                                        targetForm.controls
+                                            .existingMeasurementName.value ||
+                                        undefined
+                                    "
+                                    [placeholder]="
+                                        'Search datasets' | translate
+                                    "
+                                    dataCy="csv-import-existing-measurement"
+                                    (valueChange)="
+                                        onExistingMeasurementChange($event)
+                                    "
                                 >
-                                    <mat-select
-                                        [formControl]="
-                                            targetForm.controls
-                                                .existingMeasurementName
-                                        "
-                                        data-cy="csv-import-existing-measurement"
-                                    >
-                                        @for (
-                                            measurementName of measurementNames;
-                                            track measurementName
-                                        ) {
-                                            <mat-option
-                                                [value]="measurementName"
-                                                [attr.data-cy]="
-                                                    'csv-import-existing-measurement-option-' +
-                                                    measurementName
-                                                "
-                                            >
-                                                {{ measurementName }}
-                                            </mat-option>
-                                        }
-                                    </mat-select>
-                                </mat-form-field>
+                                </sp-search-select>
                             </sp-form-field>
                         }
                     </div>
