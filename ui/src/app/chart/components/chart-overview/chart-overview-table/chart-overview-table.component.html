@@ -17,9 +17,6 @@
 -->
 
 <div fxFlex="100" fxLayout="column">
-    <sp-basic-header-title-component
-        [title]="'Charts' | translate"
-    ></sp-basic-header-title-component>
     @if (isLoading && !hasLoadedCharts) {
         <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">
             <sp-spinner

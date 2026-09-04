@@ -16,44 +16,57 @@
   ~
   -->
 
-<div class="asset-root-banner" fxLayout="row" fxLayoutAlign="start center">
-    <div fxLayout="row" fxLayoutAlign="start stretch" fxFlex="100">
-        <div fxLayout="column" fxFlex="60">
-            <sp-basic-header-title-component
-                [level]="1"
-                [title]="assetModel.assetName"
-                [description]="assetModel.assetDescription"
-            >
-            </sp-basic-header-title-component>
-            <div class="banner-meta" fxLayout="row" fxLayoutGap="10px">
-                <sp-label
-                    shape="badge"
-                    [labelText]="assetType"
-                    tone="neutral"
-                    icon="precision_manufacturing"
-                    size="small"
-                >
-                </sp-label>
-                @if (assetModel.assetSite?.siteId) {
+<sp-split-section [level]="2" [title]="'Details' | translate">
+    <div class="asset-overview">
+        <dl class="asset-overview__metadata">
+            <div class="asset-overview__item">
+                <dt>{{ 'Asset ID' | translate }}</dt>
+                <dd class="asset-overview__identifier">
+                    {{ assetModel.assetId }}
+                </dd>
+            </div>
+            <div class="asset-overview__item">
+                <dt>{{ 'Type' | translate }}</dt>
+                <dd>
                     <sp-label
                         shape="badge"
-                        [labelText]="assetModel.assetSite?.area"
+                        [labelText]="assetType"
                         tone="neutral"
-                        icon="location_on"
+                        icon="precision_manufacturing"
                         size="small"
                     >
                     </sp-label>
-                }
-                @if (assetModel.labelIds?.length > 0) {
-                    <sp-view-asset-labels
-                        [asset]="assetModel"
-                        size="small"
-                    ></sp-view-asset-labels>
-                }
+                </dd>
             </div>
-        </div>
-        <span fxFlex></span>
-        <div class="map-wrapper" fxFlex="40">
+            @if (assetModel.assetSite?.siteId) {
+                <div class="asset-overview__item">
+                    <dt>{{ 'Location' | translate }}</dt>
+                    <dd>
+                        <sp-label
+                            shape="badge"
+                            [labelText]="assetModel.assetSite?.area"
+                            tone="neutral"
+                            icon="location_on"
+                            size="small"
+                        >
+                        </sp-label>
+                    </dd>
+                </div>
+            }
+            @if (assetModel.labelIds?.length > 0) {
+                <div class="asset-overview__item">
+                    <dt>{{ 'Labels' | translate }}</dt>
+                    <dd>
+                        <sp-view-asset-labels
+                            [asset]="assetModel"
+                            size="small"
+                        ></sp-view-asset-labels>
+                    </dd>
+                </div>
+            }
+        </dl>
+
+        <div class="map-wrapper">
             @if (locationConfig && assetModel.assetSite?.location) {
                 <sp-single-marker-map
                     class="h-100"
@@ -69,4 +82,4 @@
             }
         </div>
     </div>
-</div>
+</sp-split-section>

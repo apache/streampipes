@@ -19,8 +19,10 @@
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
     CurrentUserService,
+    SpAssetBrowserService,
     SpBasicViewComponent,
     SpBreadcrumbService,
+    SpPageHeaderComponent,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
@@ -29,12 +31,8 @@ import { DashboardOverviewTableComponent } from './dashboard-overview-table/dash
 import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { MatButton } from '@angular/material/button';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'sp-dashboard-overview',
@@ -42,12 +40,11 @@ import { ChartRoutingService } from '../../../chart-shared/services/chart-routin
     styleUrls: ['./dashboard-overview.component.scss'],
     imports: [
         SpBasicViewComponent,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
+        SpPageHeaderComponent,
         MatButton,
         DashboardOverviewTableComponent,
         TranslatePipe,
+        AsyncPipe,
     ],
 })
 export class DashboardOverviewComponent implements OnInit, OnDestroy {
@@ -61,6 +58,10 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
     private currentUserService = inject(CurrentUserService);
     private breadcrumbService = inject(SpBreadcrumbService);
     private routingService = inject(ChartRoutingService);
+    private assetFilterService = inject(SpAssetBrowserService);
+
+    readonly pageHeaderAssetLinkType$ =
+        this.assetFilterService.getAssetLinkType$('dashboard');
 
     private user$: Subscription;
 

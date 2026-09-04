@@ -20,12 +20,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import {
     SpBasicViewComponent,
     SpBreadcrumbService,
+    SpPageHeaderComponent,
 } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { LoginSettingsService } from '../login/services/login-settings.service';
 import { InfoTabComponent } from './components/info/info.component';
@@ -39,9 +36,9 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     styleUrls: ['./help.component.scss'],
     imports: [
         SpBasicViewComponent,
+        SpPageHeaderComponent,
         FlexDirective,
         LayoutDirective,
-        LayoutAlignDirective,
         MatTabGroup,
         MatTab,
         TranslatePipe,

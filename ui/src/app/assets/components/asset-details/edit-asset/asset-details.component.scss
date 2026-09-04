@@ -16,21 +16,12 @@
  *
  */
 
-.mat-mdc-header-cell {
-    font-weight: bold;
+.asset-selector-trigger {
+    display: none;
 }
 
-.adapter-icon {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    max-height: 35px;
-}
-
-.real-time {
-    cursor: pointer;
-    color: #ffeb3b;
-}
-
-.icon {
-    max-width: 60px;
+@media (max-width: 70rem) {
+    .asset-selector-trigger {
+        display: inline-flex;
+    }
 }

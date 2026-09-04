@@ -42,9 +42,9 @@ import {
     ObjectManageDialogResourceConfig,
     PanelType,
     SpAssetBrowserService,
-    SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBreadcrumbService,
+    SpPageHeaderComponent,
     SpExceptionDetailsDialogComponent,
     SpLabelComponent,
     SpTableAssetContextConfig,
@@ -75,7 +75,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { AdapterStatusLightComponent } from './adapter-status-light/adapter-status-light.component';
 import { MatMenuItem } from '@angular/material/menu';
-import { DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -91,7 +91,7 @@ import { DatePipe } from '@angular/common';
         MatIcon,
         MatIconButton,
         MatTooltip,
-        SpBasicHeaderTitleComponent,
+        SpPageHeaderComponent,
         SpTableComponent,
         MatSort,
         MatColumnDef,
@@ -107,6 +107,7 @@ import { DatePipe } from '@angular/common';
         MatMenuItem,
         DatePipe,
         TranslatePipe,
+        AsyncPipe,
     ],
 })
 export class ExistingAdaptersComponent implements OnInit, OnDestroy {
@@ -161,6 +162,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     private translate = inject(TranslateService);
     private adapterMonitoringService = inject(AdapterMonitoringService);
     private assetFilterService = inject(SpAssetBrowserService);
+
+    readonly pageHeaderAssetLinkType$ =
+        this.assetFilterService.getAssetLinkType$('adapter');
 
     constructor() {
         this.dataSource.sortingDataAccessor = (adapter, column) => {

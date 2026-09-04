@@ -19,8 +19,10 @@
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
     CurrentUserService,
+    SpAssetBrowserService,
     SpBasicViewComponent,
     SpBreadcrumbService,
+    SpPageHeaderComponent,
 } from '@streampipes/shared-ui';
 import { AuthService } from '../../../services/auth.service';
 import { SpChartRoutes } from '../../chart.breadcrumb';
@@ -28,13 +30,9 @@ import { ChartRoutingService } from '../../../chart-shared/services/chart-routin
 import { ChartOverviewTableComponent } from './chart-overview-table/chart-overview-table.component';
 import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { Subscription } from 'rxjs';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'sp-chart-overview',
@@ -42,12 +40,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./chart-overview.component.scss'],
     imports: [
         SpBasicViewComponent,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
+        SpPageHeaderComponent,
         MatButton,
         ChartOverviewTableComponent,
         TranslatePipe,
+        AsyncPipe,
     ],
 })
 export class ChartOverviewComponent implements OnInit, OnDestroy {
@@ -61,6 +58,10 @@ export class ChartOverviewComponent implements OnInit, OnDestroy {
     private routingService = inject(ChartRoutingService);
     private currentUserService = inject(CurrentUserService);
     private authService = inject(AuthService);
+    private assetFilterService = inject(SpAssetBrowserService);
+
+    readonly pageHeaderAssetLinkType$ =
+        this.assetFilterService.getAssetLinkType$('chart');
 
     ngOnInit(): void {
         this.breadcrumbService.updateBreadcrumb(

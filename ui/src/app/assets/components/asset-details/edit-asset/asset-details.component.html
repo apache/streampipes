@@ -18,70 +18,80 @@
 
 @if (asset) {
     <sp-asset-selection-panel
+        #assetSelectionPanel
         [editMode]="true"
         [assetModel]="asset"
         [selectedAsset]="selectedAsset"
         (selectedAssetEmitter)="applySelectedAsset($event)"
     >
-        <sp-basic-view
-            [showBackLink]="true"
-            [backLinkTarget]="['assets']"
-            [padding]="false"
-        >
-            <div
-                nav
-                fxFlex="100"
-                fxLayoutAlign="start center"
-                fxLayout="row"
-                class="pl-10"
+        <sp-basic-view [hideNavbar]="true" [padding]="true">
+            <sp-page-header
+                [title]="
+                    isNewAsset
+                        ? ('New asset' | translate)
+                        : selectedAsset?.assetName || ('Asset' | translate)
+                "
+                [backLinkTarget]="['assets']"
             >
-                <div fxLayout="row" fxLayoutAlign="start center">
-                    <div fxFlex>
-                        <button
-                            mat-button
-                            mat-flat-button
-                            data-cy="save-asset"
-                            color="accent"
-                            (click)="saveAsset()"
-                        >
-                            <i class="material-icons">save</i
-                            ><span>&nbsp;{{ 'Save' | translate }}</span>
-                        </button>
-                    </div>
-                </div>
+                <button
+                    pageActions
+                    type="button"
+                    mat-flat-button
+                    class="mat-basic asset-selector-trigger"
+                    [attr.aria-label]="
+                        'Select asset to view details' | translate
+                    "
+                    (click)="
+                        assetSelectionPanel.openSelector($event.currentTarget)
+                    "
+                >
+                    <mat-icon aria-hidden="true">account_tree</mat-icon>
+                    <span>{{ 'Assets' | translate }}</span>
+                </button>
+                <button
+                    pageActions
+                    type="button"
+                    mat-flat-button
+                    data-cy="save-asset"
+                    color="accent"
+                    (click)="saveAsset()"
+                >
+                    <i class="material-icons" aria-hidden="true">save</i>
+                    <span>{{ 'Save' | translate }}</span>
+                </button>
                 @if (!isNewAsset) {
-                    <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-                        <button
-                            mat-icon-button
-                            [matMenuTriggerFor]="optMenu"
-                            [attr.aria-label]="'Options' | translate"
-                            data-cy="options-asset"
-                        >
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #optMenu="matMenu">
-                            <button
-                                mat-menu-item
-                                (click)="manageAsset()"
-                                data-cy="manage-asset-btn"
-                            >
-                                <mat-icon>settings</mat-icon>
-                                <span>{{ 'Manage' | translate }}</span>
-                            </button>
-                            <button
-                                mat-menu-item
-                                (click)="deleteAsset()"
-                                data-cy="delete-asset-btn"
-                            >
-                                <mat-icon>clear</mat-icon>
-                                <span>{{ 'Delete' | translate }}</span>
-                            </button>
-                        </mat-menu>
-                    </div>
+                    <button
+                        pageActions
+                        type="button"
+                        mat-icon-button
+                        [matMenuTriggerFor]="optMenu"
+                        [attr.aria-label]="'Options' | translate"
+                        data-cy="options-asset"
+                    >
+                        <mat-icon aria-hidden="true">more_vert</mat-icon>
+                    </button>
                 }
-            </div>
+            </sp-page-header>
+            <mat-menu #optMenu="matMenu">
+                <button
+                    mat-menu-item
+                    (click)="manageAsset()"
+                    data-cy="manage-asset-btn"
+                >
+                    <mat-icon>settings</mat-icon>
+                    <span>{{ 'Manage' | translate }}</span>
+                </button>
+                <button
+                    mat-menu-item
+                    (click)="deleteAsset()"
+                    data-cy="delete-asset-btn"
+                >
+                    <mat-icon>clear</mat-icon>
+                    <span>{{ 'Delete' | translate }}</span>
+                </button>
+            </mat-menu>
             @if (asset) {
-                <div fxFlex="100" fxLayout="column" class="p-10">
+                <div fxLayout="column">
                     <sp-asset-details-basics
                         (reloadSites)="reloadSites()"
                         [asset]="selectedAsset"

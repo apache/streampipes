@@ -16,38 +16,41 @@
 ~
 -->
 
-<sp-basic-view [showBackLink]="false" [padding]="true">
-    <div fxLayout="column" fxLayoutAlign="start start">
-        <div
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            fxFlex="100"
-            class="w-100"
-        >
-            <sp-basic-header-title-component
-                [title]="'Datasets' | translate"
-            ></sp-basic-header-title-component>
-            <span fxFlex></span>
-            @if (writeAccess) {
-                <button
-                    color="accent"
-                    mat-flat-button
-                    data-cy="open-csv-import-dialog"
-                    (click)="openCsvImportDialog()"
-                >
-                    {{ 'Import CSV' | translate }}
-                </button>
-            }
+<sp-basic-view [hideNavbar]="true" [padding]="true">
+    @let pageHeaderAssetLinkType = pageHeaderAssetLinkType$ | async;
+    <sp-page-header
+        [title]="'Datasets' | translate"
+        [icon]="pageHeaderAssetLinkType?.linkIcon ?? 'dataset'"
+        [iconColor]="
+            pageHeaderAssetLinkType?.linkColor ?? 'var(--color-primary)'
+        "
+    >
+        @if (writeAccess) {
             <button
+                pageActions
+                type="button"
                 color="accent"
-                mat-icon-button
-                [matTooltip]="'Refresh' | translate"
-                data-cy="refresh-data-lake-measures"
-                (click)="loadAvailableDatasets()"
+                mat-flat-button
+                data-cy="open-csv-import-dialog"
+                (click)="openCsvImportDialog()"
             >
-                <mat-icon>refresh</mat-icon>
+                {{ 'Import CSV' | translate }}
             </button>
-        </div>
+        }
+        <button
+            pageActions
+            type="button"
+            color="accent"
+            mat-icon-button
+            [attr.aria-label]="'Refresh' | translate"
+            [matTooltip]="'Refresh' | translate"
+            data-cy="refresh-data-lake-measures"
+            (click)="loadAvailableDatasets()"
+        >
+            <mat-icon aria-hidden="true">refresh</mat-icon>
+        </button>
+    </sp-page-header>
+    <div fxLayout="column" fxLayoutAlign="start start">
         <div fxLayout="column" class="w-100" fxLayoutGap="10px">
             <sp-table
                 featureCardId="measurement"

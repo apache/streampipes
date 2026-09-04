@@ -23,12 +23,11 @@
 }
 
 .menubar {
+    flex: 0 0 auto;
     background: var(--color-bg-1);
     color: var(--color-default-text);
     display: flex;
     flex-direction: column;
-    border-right: 1px solid var(--color-bg-3);
-    box-shadow: 0 -4px 0 0 #000;
 }
 
 .menu-header {
@@ -58,6 +57,8 @@
 
 /* Right side layout */
 .main-section {
+    flex: 1 1 auto;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -69,7 +70,9 @@
 }
 
 .content {
-    flex-grow: 1;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
     overflow-y: auto;
     background: var(--color-bg-1);
     color: var(--color-default-text);

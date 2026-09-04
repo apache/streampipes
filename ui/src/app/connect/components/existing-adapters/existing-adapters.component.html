@@ -16,57 +16,53 @@
 ~
 -->
 
-<sp-basic-view [showBackLink]="false" [padding]="true">
-    <div
-        nav
-        fxFlex="100"
-        fxLayoutAlign="start center"
-        fxLayout="row"
-        fxLayoutGap="10px"
-        class="pl-10"
+<sp-basic-view [hideNavbar]="true" [padding]="true">
+    @let pageHeaderAssetLinkType = pageHeaderAssetLinkType$ | async;
+    <sp-page-header
+        [title]="'Adapters' | translate"
+        [icon]="pageHeaderAssetLinkType?.linkIcon ?? 'power'"
+        [iconColor]="
+            pageHeaderAssetLinkType?.linkColor ?? 'var(--color-primary)'
+        "
     >
         <button
+            pageActions
+            type="button"
             mat-flat-button
             data-cy="connect-create-new-adapter-button"
             (click)="createNewAdapter()"
         >
-            <i class="material-icons">add</i>&nbsp;{{
+            <i class="material-icons" aria-hidden="true">add</i>&nbsp;{{
                 'New adapter' | translate
             }}
         </button>
-        <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-            <div
-                fxFlex="100"
-                fxLayout="row"
-                fxLayoutAlign="end center"
-                class="page-container-nav"
-            >
-                <button
-                    mat-icon-button
-                    color="accent"
-                    id="startAdapterTutorial3"
-                    (click)="startAdapterTutorial()"
-                    matTooltip="Tutorial: Generic Adapter"
-                    [disabled]="tutorialActive"
-                >
-                    <mat-icon>school</mat-icon>
-                </button>
-            </div>
-            <button
-                mat-icon-button
-                [matTooltip]="'Refresh adapters' | translate"
-                matTooltipPosition="below"
-                color="accent"
-                (click)="getAdaptersRunning()"
-            >
-                <i class="material-icons"> refresh </i>
-            </button>
-        </div>
-    </div>
+        <button
+            pageActions
+            type="button"
+            mat-icon-button
+            color="accent"
+            id="startAdapterTutorial3"
+            (click)="startAdapterTutorial()"
+            [attr.aria-label]="'Tutorial: Generic Adapter' | translate"
+            [matTooltip]="'Tutorial: Generic Adapter' | translate"
+            [disabled]="tutorialActive"
+        >
+            <mat-icon aria-hidden="true">school</mat-icon>
+        </button>
+        <button
+            pageActions
+            type="button"
+            mat-icon-button
+            [attr.aria-label]="'Refresh adapters' | translate"
+            [matTooltip]="'Refresh adapters' | translate"
+            matTooltipPosition="below"
+            color="accent"
+            (click)="getAdaptersRunning()"
+        >
+            <i class="material-icons" aria-hidden="true">refresh</i>
+        </button>
+    </sp-page-header>
     <div fxFlex="100" fxLayout="column">
-        <sp-basic-header-title-component
-            [title]="'Adapters' | translate"
-        ></sp-basic-header-title-component>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
             <sp-table
                 fxFlex="100"

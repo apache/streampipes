@@ -27,6 +27,7 @@ import {
     PanelType,
     SpAssetBrowserService,
     SpBasicViewComponent,
+    SpPageHeaderComponent,
 } from '@streampipes/shared-ui';
 import {
     ActivatedRouteSnapshot,
@@ -63,9 +64,11 @@ type ManageableAsset = SpAssetModel & {
 @Component({
     selector: 'sp-asset-details',
     templateUrl: './asset-details.component.html',
+    styleUrls: ['./asset-details.component.scss'],
     imports: [
         SpAssetSelectionPanelComponent,
         SpBasicViewComponent,
+        SpPageHeaderComponent,
         FlexDirective,
         LayoutAlignDirective,
         LayoutDirective,

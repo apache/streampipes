@@ -16,31 +16,30 @@
 ~
 -->
 
-<sp-basic-view [showBackLink]="false" [padding]="true">
-    <div
-        nav
-        fxFlex="100"
-        fxLayoutAlign="start center"
-        fxLayout="row"
-        class="pl-10"
+<sp-basic-view [hideNavbar]="true" [padding]="true">
+    @let pageHeaderAssetLinkType = pageHeaderAssetLinkType$ | async;
+    <sp-page-header
+        [title]="'Dashboards' | translate"
+        [icon]="pageHeaderAssetLinkType?.linkIcon ?? 'dashboard'"
+        [iconColor]="
+            pageHeaderAssetLinkType?.linkColor ?? 'var(--color-primary)'
+        "
     >
         @if (hasDashboardWritePrivileges) {
             <button
-                mat-button
+                pageActions
+                type="button"
                 mat-flat-button
                 color="accent"
                 data-cy="open-new-dashboard-dialog"
                 (click)="openNewDashboardDialog()"
-                class="mr-10"
             >
-                <i class="material-icons">add</i>
+                <i class="material-icons" aria-hidden="true">add</i>
                 <span>{{ 'New dashboard' | translate }}</span>
             </button>
         }
-    </div>
-    <div fxFlex="100" fxLayout="column">
-        <sp-dashboard-overview-table
-            [hasDashboardWritePrivileges]="hasDashboardWritePrivileges"
-        ></sp-dashboard-overview-table>
-    </div>
+    </sp-page-header>
+    <sp-dashboard-overview-table
+        [hasDashboardWritePrivileges]="hasDashboardWritePrivileges"
+    ></sp-dashboard-overview-table>
 </sp-basic-view>

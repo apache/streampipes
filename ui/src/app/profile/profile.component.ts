@@ -20,12 +20,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import {
     SpBasicViewComponent,
     SpBreadcrumbService,
+    SpPageHeaderComponent,
 } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { GeneralProfileSettingsComponent } from './components/general/general-profile-settings.component';
 import { TokenManagementSettingsComponent } from './components/token/token-management-settings.component';
@@ -37,9 +34,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./profile.component.scss'],
     imports: [
         SpBasicViewComponent,
+        SpPageHeaderComponent,
         FlexDirective,
         LayoutDirective,
-        LayoutAlignDirective,
         MatTabGroup,
         MatTab,
         GeneralProfileSettingsComponent,

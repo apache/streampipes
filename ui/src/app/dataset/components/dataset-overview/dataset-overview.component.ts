@@ -61,6 +61,7 @@ import {
     SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBreadcrumbService,
+    SpPageHeaderComponent,
     SpTableAssetContextConfig,
     SpTableActionsDirective,
     SpTableComponent,
@@ -87,7 +88,7 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { NgStyle } from '@angular/common';
+import { AsyncPipe, NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
 import { catchError, of, Subscription } from 'rxjs';
@@ -127,8 +128,10 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         SpTableComponent,
         SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
+        SpPageHeaderComponent,
         SpTableActionsDirective,
         DatasetLastEventLabelComponent,
+        AsyncPipe,
     ],
 })
 export class DatasetOverviewComponent
@@ -147,6 +150,9 @@ export class DatasetOverviewComponent
     private currentUserService = inject(CurrentUserService);
     private assetFilterService = inject(SpAssetBrowserService);
     private router = inject(Router);
+
+    readonly pageHeaderAssetLinkType$ =
+        this.assetFilterService.getAssetLinkType$('measurement');
     dataSource: MatTableDataSource<DatasetOverviewEntry> =
         new MatTableDataSource([]);
     availableDatasets: DatasetOverviewEntry[] = [];

@@ -15,43 +15,40 @@
 ~ limitations under the License.
 ~
 -->
-<sp-basic-view [showBackLink]="false" [padding]="true">
-    <div
-        nav
-        fxFlex="100"
-        fxLayoutAlign="start center"
-        fxLayout="row"
-        class="pl-10"
+<sp-basic-view [hideNavbar]="true" [padding]="true">
+    <sp-page-header
+        [title]="'Assets' | translate"
+        icon="precision_manufacturing"
+        iconColor="var(--color-primary)"
+        data-cy="asset-title"
     >
         @if (hasWritePrivilege) {
             <button
-                mat-button
+                pageActions
+                type="button"
                 mat-flat-button
                 color="accent"
                 data-cy="create-new-asset-button"
                 (click)="createNewAsset()"
             >
-                <i class="material-icons">add</i>&nbsp;
+                <i class="material-icons" aria-hidden="true">add</i>&nbsp;
                 {{ 'New asset' | translate }}
             </button>
         }
-        <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-            <button
-                mat-icon-button
-                matTooltip="Refresh assets"
-                matTooltipPosition="below"
-                color="accent"
-                (click)="loadAssets()"
-            >
-                <i class="material-icons"> refresh </i>
-            </button>
-        </div>
-    </div>
+        <button
+            pageActions
+            type="button"
+            mat-icon-button
+            [attr.aria-label]="'Refresh assets' | translate"
+            [matTooltip]="'Refresh assets' | translate"
+            matTooltipPosition="below"
+            color="accent"
+            (click)="loadAssets()"
+        >
+            <i class="material-icons" aria-hidden="true">refresh</i>
+        </button>
+    </sp-page-header>
     <div fxFlex="100" fxLayout="column">
-        <sp-basic-header-title-component
-            title="Assets"
-            data-cy="asset-title"
-        ></sp-basic-header-title-component>
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
             <div fxFlex="100" fxLayout="column">
                 <sp-table

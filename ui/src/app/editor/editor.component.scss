@@ -16,29 +16,34 @@
  *
  */
 
+:host {
+    display: flex;
+    min-width: 0;
+    min-height: 0;
+}
+
 .pipeline-editor-outer {
+    height: calc(100vh - 56px);
     min-height: calc(100vh - 56px);
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
 }
 
-.text-color {
-    color: var(--color-primary);
+.pipeline-editor__workspace {
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
 }
 
-.page-container {
-    border: 0;
-    min-height: calc(100% - 20px);
-    margin: 10px;
+.pipeline-editor__palette {
+    flex: 0 0 15.625rem;
+    min-width: 0;
+    min-height: 0;
+    border-inline-end: 1px solid var(--color-border-subtle);
 }
 
-.border {
-    border: 1px solid var(--color-bg-2);
-}
-
-.editor-canvas-options {
-    padding: 0;
-    background-color: var(--color-bg-1);
-}
-
-.editor-container-inner {
-    background-color: var(--color-bg-1);
+.pipeline-editor__assembly {
+    min-width: 0;
+    min-height: 0;
 }

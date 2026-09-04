@@ -16,31 +16,19 @@
 ~
 -->
 
-<sp-basic-view>
-    <div fxLayout="row" nav>
-        <div fxFlex="100">
-            <div fxFlex="100" fxLayout="row">
-                <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
-                    <mat-tab-group
-                        [selectedIndex]="selectedIndex"
-                        (selectedIndexChange)="selectedIndexChange($event)"
-                        color="accent"
-                    >
-                        <mat-tab
-                            [label]="'General Settings' | translate"
-                        ></mat-tab>
-                        <mat-tab label="API"></mat-tab>
-                    </mat-tab-group>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div
-        class="fixed-height page-container-padding-inner"
-        fxLayout="column"
-        fxFlex="100"
+<sp-basic-view [hideNavbar]="true" [padding]="true">
+    <sp-page-header [title]="'Profile' | translate"></sp-page-header>
+    <mat-tab-group
+        id="profileTabs"
+        [selectedIndex]="selectedIndex"
+        (selectedIndexChange)="selectedIndexChange($event)"
+        color="accent"
     >
+        <mat-tab [label]="'General Settings' | translate"></mat-tab>
+        <mat-tab label="API"></mat-tab>
+    </mat-tab-group>
+
+    <div class="fixed-height page-tab-content" fxLayout="column" fxFlex="100">
         @if (selectedIndex === 0) {
             <div class="fixed-height" fxLayout="column" fxFlex="100">
                 <sp-general-profile-settings
