@@ -62,6 +62,7 @@ import {
 import {
     DialogRef,
     FormFieldComponent,
+    SearchSelectComponent,
     SplitSectionComponent,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
@@ -80,6 +81,7 @@ import { CsvImportUploadStateComponent } from './csv-import-upload-state/csv-imp
         MatButton,
         MatCheckbox,
         FormFieldComponent,
+        SearchSelectComponent,
         SplitSectionComponent,
         MatFormField,
         MatInput,
@@ -300,6 +302,14 @@ export class CsvImportDialogComponent {
         this.uploadId.set(undefined);
         this.timestampFormat.set('');
         this.invalidatePreview();
+    }
+
+    onExistingMeasurementChange(
+        measurementName: string | string[] | undefined,
+    ): void {
+        this.targetForm.controls.existingMeasurementName.setValue(
+            typeof measurementName === 'string' ? measurementName : '',
+        );
     }
 
     nextStep(): void {
