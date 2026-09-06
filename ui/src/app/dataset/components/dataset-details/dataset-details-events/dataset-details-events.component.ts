@@ -19,12 +19,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { SpQueryResult } from '@streampipes/platform-services';
-import {
-    SpBasicHeaderTitleComponent,
-    SpBasicNavTabsComponent,
-    SpElementIdComponent,
-    SpSpinnerComponent,
-} from '@streampipes/shared-ui';
+import { SpSpinnerComponent } from '@streampipes/shared-ui';
 import { SpAbstractDatasetDetailsDirective } from '../abstract-dataset-details.directive';
 import {
     FlexDirective,
@@ -42,6 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { catchError, finalize, of } from 'rxjs';
 import { SpConfigurationRoutes } from '../../../../configuration/configuration.breadcrumb';
 import { DatePipe } from '@angular/common';
+import { SpDatasetDetailsLayoutComponent } from '../dataset-details-layout/dataset-details-layout.component';
 
 type PreviewRow = Record<string, unknown>;
 
@@ -50,9 +46,7 @@ type PreviewRow = Record<string, unknown>;
     templateUrl: './dataset-details-events.component.html',
     styleUrls: ['./dataset-details-events.component.scss'],
     imports: [
-        SpBasicNavTabsComponent,
-        SpBasicHeaderTitleComponent,
-        SpElementIdComponent,
+        SpDatasetDetailsLayoutComponent,
         LayoutDirective,
         LayoutAlignDirective,
         LayoutGapDirective,

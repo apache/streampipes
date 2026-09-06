@@ -65,7 +65,7 @@
 
 /* Header */
 .menubar-header {
-    min-height: calc(var(--mat-toolbar-standard-height) + var(--space-sm));
+    min-height: var(--size-app-toolbar);
     padding: 0 var(--space-sm) 0 var(--space-md);
     border-bottom: 1px solid var(--mb-outline);
     display: flex;
@@ -74,7 +74,7 @@
 }
 
 .brand {
-    height: var(--mat-toolbar-standard-height);
+    height: calc(var(--size-app-toolbar) - var(--space-sm));
     min-width: 0;
     flex: 1 1 auto;
     display: flex;

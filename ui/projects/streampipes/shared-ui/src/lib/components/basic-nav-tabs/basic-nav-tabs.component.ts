@@ -22,13 +22,13 @@ import {
     Input,
     inject,
 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { SpNavigationItem } from '../../models/sp-navigation.model';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { MatTabLink, MatTabNav, MatTabNavPanel } from '@angular/material/tabs';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpPageNavTabsComponent } from '../page-nav-tabs/page-nav-tabs.component';
 
 @Component({
     selector: 'sp-basic-nav-tabs',
@@ -39,10 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatIconButton,
         MatTooltip,
         MatIcon,
-        MatTabNav,
-        MatTabLink,
-        MatTabNavPanel,
-        RouterLink,
+        SpPageNavTabsComponent,
         TranslatePipe,
     ],
 })

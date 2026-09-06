@@ -21,7 +21,7 @@
 }
 
 .toolbar {
-    height: calc(var(--mat-toolbar-standard-height) + var(--space-sm));
+    height: var(--size-app-toolbar);
     padding-inline: var(--space-lg);
     box-sizing: border-box;
     border-bottom: 1px solid var(--color-border-subtle);

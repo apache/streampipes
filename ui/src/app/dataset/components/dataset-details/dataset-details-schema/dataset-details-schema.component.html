@@ -16,30 +16,14 @@
 ~
 -->
 
-<sp-basic-nav-tabs
-    [spNavigationItems]="tabs"
-    [activeLink]="'schema'"
-    [showBackLink]="true"
-    [backLinkTarget]="['datasets']"
+<sp-dataset-details-layout
+    [dataset]="dataset"
+    [datasetNotFound]="datasetNotFound"
+    [tabs]="tabs"
+    activeLink="schema"
 >
-    @if (datasetNotFound) {
-        <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
-            {{ 'The desired dataset was not found!' | translate }}
-        </div>
-    } @else if (dataset) {
+    @if (dataset) {
         <div fxLayout="column" fxFlex="100">
-            <div fxLayout="row" fxLayoutAlign="start center">
-                <sp-basic-header-title-component
-                    [title]="dataset.measureName + ' - Event schema'"
-                ></sp-basic-header-title-component>
-                <span fxFlex></span>
-                <sp-element-id
-                    fxLayoutAlign="end start"
-                    [value]="dataset.elementId"
-                >
-                </sp-element-id>
-            </div>
-
             @if (schemaRows.length > 0) {
                 <div data-cy="dataset-details-schema-table">
                     <table mat-table [dataSource]="schemaRows" class="w-100">
@@ -119,4 +103,4 @@
             }
         </div>
     }
-</sp-basic-nav-tabs>
+</sp-dataset-details-layout>

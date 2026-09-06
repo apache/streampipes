@@ -1,0 +1,117 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+:host {
+    display: block;
+    min-width: 0;
+}
+
+.page-nav-tabs {
+    min-width: 0;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    border-bottom: 1px solid
+        var(--page-nav-tabs-border-color, var(--color-border-subtle));
+    scrollbar-width: thin;
+}
+
+.page-nav-tabs__inner {
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+    min-height: 2.75rem;
+    align-items: stretch;
+    gap: var(--space-lg);
+}
+
+.page-nav-tabs__item {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding-inline: var(--space-sm);
+    color: var(--color-text-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold, 600);
+    line-height: 1.15;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+        background-color 140ms ease,
+        color 140ms ease;
+}
+
+.page-nav-tabs__item::after {
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    content: '';
+    background: transparent;
+}
+
+.page-nav-tabs__item:hover {
+    background: color-mix(in srgb, var(--color-primary) 7%, transparent);
+    color: var(--color-primary);
+}
+
+.page-nav-tabs__item--active {
+    color: var(--color-primary);
+}
+
+.page-nav-tabs__item--active::after {
+    background: var(--color-primary);
+}
+
+.page-nav-tabs__item:focus-visible {
+    z-index: 1;
+    outline: 3px solid color-mix(in srgb, var(--color-primary) 38%, transparent);
+    outline-offset: -3px;
+}
+
+.page-nav-tabs__item mat-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex: 0 0 1.25rem;
+    font-size: 1.25rem;
+}
+
+.page-nav-tabs__inner--stretched .page-nav-tabs__item {
+    flex: 1 1 0;
+}
+
+@media (max-width: 40rem) {
+    .page-nav-tabs__inner {
+        gap: 0;
+    }
+
+    .page-nav-tabs__item {
+        min-width: 6rem;
+        flex: 1 0 auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-nav-tabs__item {
+        transition: none;
+    }
+}

@@ -20,10 +20,8 @@ import { Component, OnInit, inject } from '@angular/core';
 import {
     DialogService,
     PanelType,
-    SpBasicNavTabsComponent,
     SpBreadcrumbService,
     SplitSectionComponent,
-    SpNavigationItem,
 } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
@@ -62,7 +60,6 @@ interface AssetReferenceExportItems {
     templateUrl: './data-export-import.component.html',
     styleUrls: ['./data-export-import.component.scss'],
     imports: [
-        SpBasicNavTabsComponent,
         LayoutDirective,
         FlexDirective,
         LayoutAlignDirective,
@@ -82,13 +79,10 @@ export class SpDataExportImportComponent implements OnInit {
     private tabService = inject(SpConfigurationTabsService);
     private translateService = inject(TranslateService);
 
-    tabs: SpNavigationItem[] = [];
-
     assets: SpAssetModel[] = [];
     selectedAssets: string[] = [];
 
     ngOnInit(): void {
-        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: this.tabService.getTabTitle('export') },

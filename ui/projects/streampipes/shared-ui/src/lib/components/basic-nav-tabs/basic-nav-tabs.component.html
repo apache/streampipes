@@ -39,34 +39,20 @@
                     </button>
                 </div>
             }
-            <nav
-                mat-tab-nav-bar
-                [mat-stretch-tabs]="true"
-                color="accent"
-                [tabPanel]="tabPanel"
+            <sp-page-nav-tabs
                 class="basic-nav-tabs__tabs"
-            >
-                @for (item of spNavigationItems; track item.itemId) {
-                    <a
-                        mat-tab-link
-                        [routerLink]="item.itemLink"
-                        [relativeTo]="null"
-                        [active]="activeLink === item.itemId"
-                        [attr.data-cy]="'tab-' + item.itemTitle"
-                    >
-                        <span>{{ item.itemTitle | translate }}</span>
-                    </a>
-                }
-            </nav>
+                [spNavigationItems]="spNavigationItems"
+                [activeLink]="activeLink"
+                [stretchTabs]="true"
+            ></sp-page-nav-tabs>
         </div>
     </header>
 
-    <mat-tab-nav-panel
-        #tabPanel
+    <div
         class="basic-nav-tabs__content"
         [class.basic-nav-tabs__content--padded]="padding === undefined"
         [style.padding]="padding"
     >
         <ng-content></ng-content>
-    </mat-tab-nav-panel>
+    </div>
 </div>

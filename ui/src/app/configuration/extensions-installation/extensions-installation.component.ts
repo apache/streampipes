@@ -21,9 +21,7 @@ import {
     DialogRef,
     DialogService,
     PanelType,
-    SpBasicNavTabsComponent,
     SpBreadcrumbService,
-    SpNavigationItem,
     SplitSectionComponent,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
@@ -55,7 +53,6 @@ import { PipelineElementTypeFilter } from './filter/pipeline-element-type.pipe';
     templateUrl: './extensions-installation.component.html',
     styleUrls: ['./extensions-installation.component.scss'],
     imports: [
-        SpBasicNavTabsComponent,
         SplitSectionComponent,
         MatButton,
         MatIconButton,
@@ -84,8 +81,6 @@ export class SpExtensionsInstallationComponent implements OnInit {
     private tabService = inject(SpConfigurationTabsService);
     private translateService = inject(TranslateService);
 
-    tabs: SpNavigationItem[] = [];
-
     activeLink: string;
 
     results: any[];
@@ -108,7 +103,6 @@ export class SpExtensionsInstallationComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: this.tabService.getTabTitle('extensions-installation') },

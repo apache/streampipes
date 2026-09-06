@@ -18,36 +18,23 @@
 
 import { Component, OnInit, inject } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
-import {
-    PipelineElementRuntimeInfoComponent,
-    SpBasicHeaderTitleComponent,
-    SpBasicNavTabsComponent,
-    SpElementIdComponent,
-} from '@streampipes/shared-ui';
+import { PipelineElementRuntimeInfoComponent } from '@streampipes/shared-ui';
 import {
     PipelineElementService,
     SpDataStream,
 } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
-import { TranslatePipe } from '@ngx-translate/core';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { SpAdapterDetailsLayoutComponent } from '../adapter-details-layout/adapter-details-layout.component';
 
 @Component({
     selector: 'sp-adapter-details-data',
     templateUrl: './adapter-details-data.component.html',
     styleUrl: './adapter-details-data.component.scss',
     imports: [
-        SpBasicNavTabsComponent,
+        SpAdapterDetailsLayoutComponent,
         LayoutDirective,
         FlexDirective,
-        LayoutAlignDirective,
-        SpBasicHeaderTitleComponent,
         PipelineElementRuntimeInfoComponent,
-        SpElementIdComponent,
-        TranslatePipe,
     ],
 })
 export class AdapterDetailsDataComponent

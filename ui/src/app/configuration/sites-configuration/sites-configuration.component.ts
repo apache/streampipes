@@ -24,9 +24,7 @@ import {
 } from '@streampipes/platform-services';
 import {
     CurrentUserService,
-    SpBasicNavTabsComponent,
     SpBreadcrumbService,
-    SpNavigationItem,
 } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { UserRole } from '../../core/auth/user-role.enum';
@@ -38,15 +36,12 @@ import { SiteAreaConfigurationComponent } from './site-area-configuration/site-a
     selector: 'sp-sites-configuration',
     templateUrl: './sites-configuration.component.html',
     imports: [
-        SpBasicNavTabsComponent,
         LayoutDirective,
         LocationFeaturesConfigurationComponent,
         SiteAreaConfigurationComponent,
     ],
 })
 export class SitesConfigurationComponent implements OnInit {
-    tabs: SpNavigationItem[] = [];
-
     locationConfig: LocationConfig;
     isAdminUser = false;
 
@@ -56,7 +51,6 @@ export class SitesConfigurationComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
 
     ngOnInit() {
-        this.tabs = this.tabService.getTabs();
         this.isAdminUser = this.currentUserService.hasRole(UserRole.ROLE_ADMIN);
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,

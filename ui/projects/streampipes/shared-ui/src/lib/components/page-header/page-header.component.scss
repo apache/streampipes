@@ -30,7 +30,7 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: var(--space-md) var(--space-lg);
-    padding-block: var(--space-sm) var(--space-lg);
+    padding-block: var(--space-xs) var(--space-md);
 }
 
 .page-header--with-back {
