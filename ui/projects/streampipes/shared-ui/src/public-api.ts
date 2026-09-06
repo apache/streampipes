@@ -41,7 +41,6 @@ export * from './lib/components/basic-field-description/basic-field-description.
 export * from './lib/components/basic-view/basic-view.component';
 export * from './lib/components/page-header/page-header.component';
 export * from './lib/components/page-nav-tabs/page-nav-tabs.component';
-export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
 export * from './lib/components/date-input/date-input.component';
 export * from './lib/components/element-id/element-id.component';
 export * from './lib/components/form-field/form-field.component';
