@@ -17,7 +17,7 @@
  */
 
 :host {
-    --status-box-color: #2c3e50;
+    --status-box-color: var(--color-primary);
     --status-box-bg: color-mix(
         in srgb,
         var(--status-box-color) 14%,
@@ -29,19 +29,19 @@
     width: 100%;
     box-sizing: border-box;
 
-    min-height: 112px;
+    min-height: 7rem;
     height: auto;
 
-    border-radius: 14px;
-    margin-bottom: 20px;
+    border-radius: var(--radius-md);
 
     background: var(--status-box-bg);
     color: var(--status-box-color);
 
     transition:
-        transform 160ms ease,
-        box-shadow 160ms ease,
-        border-color 160ms ease;
+        transform var(--motion-duration-fast, 160ms)
+            var(--motion-easing-standard, ease),
+        opacity var(--motion-duration-fast, 160ms)
+            var(--motion-easing-standard, ease);
     position: relative;
     overflow: hidden;
 }
@@ -52,13 +52,13 @@
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
-    gap: 16px;
+    gap: var(--space-lg);
 }
 
 /* Left column */
 .status-main {
     display: grid;
-    gap: 6px;
+    gap: var(--space-xs);
     align-content: center;
     min-width: 0; /* allows text truncation */
 }
@@ -85,9 +85,9 @@
 .status-action {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-xs);
 
-    margin-top: 6px;
+    margin-top: var(--space-xs);
     width: fit-content;
 
     color: var(--status-box-color);
@@ -95,17 +95,23 @@
 
     font-weight: 600;
     font-size: 0.9rem;
+    font-family: inherit;
     opacity: 0.9;
+    cursor: pointer;
 
-    padding: 6px 10px;
-    border-radius: 999px;
+    padding: var(--space-xs) var(--space-sm);
+    border: 0;
+    border-radius: var(--radius-pill);
 
     /* subtle “chip” feel without changing colors */
     background: color-mix(in srgb, var(--status-box-color) 8%, transparent);
     transition:
-        transform 160ms ease,
-        opacity 160ms ease,
-        background 160ms ease;
+        transform var(--motion-duration-fast, 160ms)
+            var(--motion-easing-standard, ease),
+        opacity var(--motion-duration-fast, 160ms)
+            var(--motion-easing-standard, ease),
+        background var(--motion-duration-fast, 160ms)
+            var(--motion-easing-standard, ease);
 }
 
 .status-action .material-icons {
@@ -115,7 +121,7 @@
 
 /* Right icon */
 .status-icon {
-    font-size: 52px; /* big but not overpowering */
+    font-size: 3.25rem;
     color: var(--status-box-color);
     opacity: 0.5;
     line-height: 1;
@@ -135,7 +141,12 @@
 
 .status-container:active {
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.status-container:focus-visible {
+    outline: 3px solid
+        color-mix(in srgb, var(--status-box-color) 38%, transparent);
+    outline-offset: 2px;
 }
 
 /* Action hover */
@@ -143,4 +154,16 @@
     opacity: 1;
     transform: translateY(-1px);
     background: color-mix(in srgb, var(--status-box-color) 12%, transparent);
+}
+
+.status-action:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .status-container,
+    .status-action {
+        transition: none;
+    }
 }

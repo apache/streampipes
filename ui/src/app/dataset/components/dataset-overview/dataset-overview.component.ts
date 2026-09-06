@@ -66,6 +66,7 @@ import {
     SpTableActionsDirective,
     SpTableComponent,
     SpSpinnerComponent,
+    SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { DeleteDatasetDialogComponent } from '../../dialog/delete-dataset/delete-dataset-dialog.component';
 import { SpConfigurationRoutes } from '../../../configuration/configuration.breadcrumb';
@@ -132,6 +133,7 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         SpTableActionsDirective,
         DatasetLastEventLabelComponent,
         AsyncPipe,
+        SplitSectionComponent,
     ],
 })
 export class DatasetOverviewComponent
