@@ -120,7 +120,7 @@ components:
 
 # Design System: Apache StreamPipes
 
-## 1. Overview
+## Overview
 
 **Creative North Star: "The Calm Control Room"**
 
@@ -150,7 +150,7 @@ embedding the default hex values documented here.
 - Familiar Angular Material interaction patterns refined through shared tokens.
 - Responsive structure, visible focus, reduced-motion support, and translatable copy.
 
-## 2. Colors
+## Colors
 
 The default palette pairs grounded indigo with clear operational green and a
 telemetry-blue tertiary, set against neutral tonal layers. These are default
@@ -206,7 +206,7 @@ default brand hex values in components.
 semantic colors communicate state; domain colors identify object types. Do not
 collapse these three vocabularies into one ambiguous accent system.
 
-## 3. Typography
+## Typography
 
 **Display Font:** Roboto (with Arial and sans-serif fallback)  
 **Body Font:** Roboto Regular (with Arial and sans-serif fallback)  
@@ -233,7 +233,27 @@ decorative font pairing—create emphasis.
 across labels, data, navigation, and headings. Do not introduce display fonts or
 component-local type scales into product workflows.
 
-## 4. Elevation
+## Layout
+
+Page-level working views follow one stable vertical hierarchy: `sp-page-header`
+establishes identity and global actions, optional `sp-page-nav-tabs` provides
+sibling-view navigation directly beneath it, and the active content follows
+after one `--space-lg` interval. The composition lives inside
+`sp-basic-view` with `hideNavbar` and token-driven padding; do not add an outer
+page margin or a second padded navigation shell.
+
+Pages that share identity across routes—details, settings, and monitoring
+views—should provide a small feature layout component that owns the header,
+tabs, loading and not-found states, and responsive behavior. Route components
+then supply only their content and projected `pageActions`. On narrow
+containers, header actions wrap below the identity, tabs scroll horizontally,
+and the content interval reduces to `--space-md` without changing DOM order.
+
+**The One Page Identity Rule.** A working view has one page header. Page-wide
+status, identifiers, and actions belong in its action area; route names belong
+in the tab row; section titles belong in `sp-split-section`.
+
+## Elevation & Depth
 
 The system is tonal and structural by default. Most hierarchy comes from
 surface-container steps, one-pixel dividers, and selected-state tints. Shadows
@@ -254,7 +274,7 @@ menus, popovers, and persistent navigation—not ordinary cards or buttons.
 layers or a border for structure; use a shadow only when the element is spatially
 above adjacent content.
 
-## 5. Components
+## Components
 
 Shared components are compact, dependable, and familiar. Prefer the existing
 `sp-*` and Angular Material patterns before creating a feature-local equivalent.
@@ -302,6 +322,18 @@ and uses icons, labels, hover fills, and `aria-current` for orientation. Motion 
 short (`120–220ms`) and state-driven. Preserve collapse behavior and ensure the
 operator-configured navigation colors retain readable foregrounds.
 
+Within a page, use `sp-page-nav-tabs` directly below `sp-page-header`. Tabs may
+include established Material icons, use the primary theme role for active and
+focus states, and scroll horizontally when space is constrained.
+When the same position switches local content instead of navigating between
+routes, use `mat-tab-group` with the shared `sp-page-tabs` class and disable
+stretched tabs. This preserves the same height, spacing, typography, divider,
+active indicator, focus treatment, and narrow-screen behavior without making
+local state look like route navigation.
+`sp-basic-nav-tabs` is a legacy compatibility wrapper and must not be introduced
+in new page-level work or retained when that page is migrated to the current
+shell.
+
 ### Tables
 
 Use `sp-table` for paging, sorting, grouping, selection, and action menus. Headers
@@ -314,15 +346,18 @@ Use `sp-alert-banner` for info, success, warning, and error messages. Each alert
 combines a tinted background, semantic foreground, one-pixel border, icon, title,
 and optional description or action.
 
-## 6. Do's and Don'ts
+## Do's and Don'ts
 
 ### Do:
 
 - **Do** use shared spacing, typography, radius, motion, surface, and semantic tokens.
 - **Do** treat `ui/deployment/theme/` as the source of default theme values and
   preserve operator overrides through the prebuild pipeline.
-- **Do** use `sp-basic-view`, `sp-basic-header-title-component`, `sp-split-section`,
-  `sp-form-field`, `sp-table`, and alert components where their patterns apply.
+- **Do** compose page-level views from `sp-basic-view`, `sp-page-header`, and,
+  when needed, `sp-page-nav-tabs`; use `sp-split-section`, `sp-form-field`,
+  `sp-table`, and alert components within page content.
+- **Do** place page-wide actions, status, and identifiers in `pageActions` and
+  keep section-specific actions with their section.
 - **Do** keep controls keyboard-operable, focus-visible, translatable, and clear
   without color; target WCAG 2.2 AA.
 - **Do** communicate loading, empty, success, and error states without removing
@@ -341,3 +376,5 @@ and optional description or action.
   oversized rounding, or ornamental motion.
 - **Don't** bypass shared components with one-off local versions of buttons,
   fields, tables, navigation, alerts, or loading indicators.
+- **Don't** use `sp-basic-nav-tabs` for new or migrated page-level views, or add
+  a second title beneath `sp-page-header`.

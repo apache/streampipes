@@ -20,9 +20,10 @@
     <sp-page-header [title]="'Profile' | translate"></sp-page-header>
     <mat-tab-group
         id="profileTabs"
+        class="sp-page-tabs"
         [selectedIndex]="selectedIndex"
         (selectedIndexChange)="selectedIndexChange($event)"
-        color="accent"
+        [mat-stretch-tabs]="false"
     >
         <mat-tab [label]="'General Settings' | translate"></mat-tab>
         <mat-tab label="API"></mat-tab>

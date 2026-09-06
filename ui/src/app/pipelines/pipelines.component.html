@@ -67,7 +67,10 @@
     </sp-page-header>
 
     @if (isAdminRole) {
-        <mat-tab-group class="pipelines-page__tabs" color="accent">
+        <mat-tab-group
+            class="sp-page-tabs pipelines-page__tabs"
+            [mat-stretch-tabs]="false"
+        >
             <mat-tab
                 [label]="
                     ('Pipelines' | translate) +

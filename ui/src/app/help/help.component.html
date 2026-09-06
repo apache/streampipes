@@ -20,9 +20,10 @@
     <sp-page-header [title]="'Help' | translate"></sp-page-header>
     <mat-tab-group
         id="helpTabs"
+        class="sp-page-tabs"
         [selectedIndex]="selectedIndex"
         (selectedIndexChange)="selectedIndexChange($event)"
-        color="accent"
+        [mat-stretch-tabs]="false"
     >
         <mat-tab [label]="'Info' | translate"></mat-tab>
         @if (showDocumentationTab) {
