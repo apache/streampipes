@@ -103,7 +103,7 @@ public class AvailableMigrations {
         new MoveAssetContentMigration(),
         new CreateAssetPermissionMigration(permissionStorage, assetStorage),
         new CreateDatasetPermissionMigration(permissionStorage, pipelineStorage, datasetStorage),
-        new MigrateDataLakeSinkToDatasetMigration(pipelineStorage, dataSinkStorage),
+        new MigrateDataLakeSinkToDatasetMigration(pipelineStorage, dataSinkStorage, permissionStorage),
         new RemoveObsoletePrivilegesMigration(privilegeStorage),
         new UniqueDashboardIdMigration(dashboardStorage),
         new AddScriptTemplateViewMigration(),
