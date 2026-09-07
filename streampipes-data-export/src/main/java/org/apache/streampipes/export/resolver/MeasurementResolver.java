@@ -18,39 +18,39 @@
 
 package org.apache.streampipes.export.resolver;
 
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
-import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class MeasurementResolver extends AbstractResolver<DatasetMeasure> {
+public class MeasurementResolver extends AbstractResolver<DatasetMetadata> {
 
-  private final IDatasetMeasureStorage datasetStorage;
+  private final IDatasetMetadataStorage datasetStorage;
 
-  public MeasurementResolver(IDatasetMeasureStorage datasetStorage) {
+  public MeasurementResolver(IDatasetMetadataStorage datasetStorage) {
     this.datasetStorage = datasetStorage;
   }
 
   @Override
-  public DatasetMeasure findDocument(String resourceId) {
+  public DatasetMetadata findDocument(String resourceId) {
     return datasetStorage.getElementById(resourceId);
   }
 
   @Override
-  public DatasetMeasure modifyDocumentForExport(DatasetMeasure doc) {
+  public DatasetMetadata modifyDocumentForExport(DatasetMetadata doc) {
     doc.setRev(null);
     return doc;
   }
 
   @Override
-  public DatasetMeasure readDocument(String serializedDoc) throws JsonProcessingException {
-    return this.defaultMapper.readValue(serializedDoc, DatasetMeasure.class);
+  public DatasetMetadata readDocument(String serializedDoc) throws JsonProcessingException {
+    return this.defaultMapper.readValue(serializedDoc, DatasetMetadata.class);
   }
 
   @Override
-  public ExportItem convert(DatasetMeasure document) {
+  public ExportItem convert(DatasetMetadata document) {
     return new ExportItem(document.getElementId(), document.getMeasureName(), true);
   }
 
@@ -60,8 +60,8 @@ public class MeasurementResolver extends AbstractResolver<DatasetMeasure> {
   }
 
   @Override
-  public DatasetMeasure deserializeDocument(String document) throws JsonProcessingException {
-    return this.spMapper.readValue(document, DatasetMeasure.class);
+  public DatasetMetadata deserializeDocument(String document) throws JsonProcessingException {
+    return this.spMapper.readValue(document, DatasetMetadata.class);
   }
 
   @Override

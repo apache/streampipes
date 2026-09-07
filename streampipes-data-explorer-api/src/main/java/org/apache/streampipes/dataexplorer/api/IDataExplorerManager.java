@@ -20,8 +20,8 @@ package org.apache.streampipes.dataexplorer.api;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
-import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.List;
@@ -29,30 +29,30 @@ import java.util.List;
 public interface IDataExplorerManager {
 
   /**
-   * Provide an instance of {@link IDatasetMeasurementCounter} for counting the sizes of measurements within a
-   * dataset.
+   * Provide an instance of {@link IDatasetMetadataCounter} for counting the sizes of measurements within a data
+   * lake.
    *
-   * @param allMeasurements     A list of {@link DatasetMeasure} objects representing all measurements in the dataset.
+   * @param allMeasurements     A list of {@link DatasetMetadata} objects representing all measurements in the data lake.
    * @param measurementsToCount A list of measurement names for which the sizes should be counted.
-   * @return An instance of {@link IDatasetMeasurementCounter} configured to count the sizes of the specified measurements.
+   * @return An instance of {@link IDatasetMetadataCounter} configured to count the sizes of the specified measurements.
    */
-  IDatasetMeasurementCounter getMeasurementCounter(
-      List<DatasetMeasure> allMeasurements,
+  IDatasetMetadataCounter getMeasurementCounter(
+      List<DatasetMetadata> allMeasurements,
       List<String> measurementsToCount,
       int daysBack
   );
 
-  IDataExplorerQueryManagement getQueryManagement(IDataExplorerSchemaManagement dataExplorerSchemaManagement);
+  IDataExplorerQueryManagement getQueryManagement(IDatasetMetadataManagement datasetMetadataManagement);
 
-  IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
+  IDatasetMetadataManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
                                                     IPermissionStorage permissionStorage,
-                                                    IDatasetMeasureStorage datasetStorage);
+                                                    IDatasetMetadataStorage datasetStorage);
 
-  default ITimeSeriesStorage getTimeseriesStorage(DatasetMeasure measure) {
+  default ITimeSeriesStorage getTimeseriesStorage(DatasetMetadata measure) {
     return getTimeseriesStorage(measure, false);
   }
 
-  ITimeSeriesStorage getTimeseriesStorage(DatasetMeasure measure, boolean ignoreDuplicates);
+  ITimeSeriesStorage getTimeseriesStorage(DatasetMetadata measure, boolean ignoreDuplicates);
 
-  IDatasetMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMeasure measure);
+  IDatasetMetadataSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMetadata measure);
 }

@@ -61,7 +61,7 @@ import static org.mockito.Mockito.when;
 
 class PipelineUpdateCoordinatorTest {
 
-  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
+  private static final String DATASET_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
 
   @Test
   void updatePipelines_ShouldRestartRunningPipelinesForDataStreamUpdates() {
@@ -333,7 +333,7 @@ class PipelineUpdateCoordinatorTest {
 
   private DataSinkInvocation makeDatasetSink() {
     var sink = new DataSinkInvocation();
-    sink.setAppId(DATA_LAKE_SINK_APP_ID);
+    sink.setAppId(DATASET_SINK_APP_ID);
     return sink;
   }
 

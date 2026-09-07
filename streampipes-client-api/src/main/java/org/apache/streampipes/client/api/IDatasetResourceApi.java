@@ -23,7 +23,7 @@ import org.apache.streampipes.model.dataset.SpQueryResult;
 import java.util.Map;
 
 public interface IDatasetResourceApi {
-
+  
   void delete(String measurementID, Long startDate, Long endDate);
 
   void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch);

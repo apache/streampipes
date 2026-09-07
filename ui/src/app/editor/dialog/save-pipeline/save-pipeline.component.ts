@@ -152,7 +152,7 @@ export class SavePipelineComponent implements OnInit {
         return this.pipeline.actions.some(
             action =>
                 action.appId ===
-                'org.apache.streampipes.sinks.internal.jvm.datalake',
+                'org.apache.streampipes.sinks.internal.jvm.dataset',
         );
     }
 

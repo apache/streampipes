@@ -30,8 +30,8 @@ import org.apache.streampipes.extensions.api.pe.context.EventSinkRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataSinkParameters;
 import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.model.DataSinkType;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
-import org.apache.streampipes.model.dataset.DatasetMeasureSchemaUpdateStrategy;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.DatasetMetadataSchemaUpdateStrategy;
 import org.apache.streampipes.model.dataset.RetentionTimeConfig;
 import org.apache.streampipes.model.extensions.ExtensionAssetType;
 import org.apache.streampipes.model.runtime.Event;
@@ -73,7 +73,7 @@ public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig 
     return DataSinkConfiguration.create(
         DatasetSink::new,
         DataSinkBuilder
-            .create("org.apache.streampipes.sinks.internal.jvm.datalake", 2)
+            .create("org.apache.streampipes.sinks.internal.jvm.dataset", 3)
             .withLocales(Locales.EN)
             .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
             .category(DataSinkType.INTERNAL)
@@ -115,14 +115,14 @@ public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig 
 
     var retentionTimeConfig = getRetentionTime(measureName, runtimeContext.getStreamPipesClient());
 
-    var measure = new DatasetMeasure(measureName, timestampField, eventSchema, retentionTimeConfig);
+    var measure = new DatasetMetadata(measureName, timestampField, eventSchema, retentionTimeConfig);
 
     var schemaUpdateOptionString = extractor.selectedSingleValue(SCHEMA_UPDATE_KEY, String.class);
 
     if (schemaUpdateOptionString.equals(EXTEND_EXISTING_SCHEMA_OPTION)) {
-      measure.setSchemaUpdateStrategy(DatasetMeasureSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
+      measure.setSchemaUpdateStrategy(DatasetMetadataSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
     } else {
-      measure.setSchemaUpdateStrategy(DatasetMeasureSchemaUpdateStrategy.UPDATE_SCHEMA);
+      measure.setSchemaUpdateStrategy(DatasetMetadataSchemaUpdateStrategy.UPDATE_SCHEMA);
     }
 
     var userSid = parameters.getModel().getCorrespondingUser();
@@ -166,7 +166,7 @@ public class DatasetSink implements IStreamPipesDataSink, SupportsRuntimeConfig 
   private RetentionTimeConfig getRetentionTime(String measureName, IStreamPipesClient client){
 
     try {
-      var originalMeasure = client.datasetMeasureApi().getByDatasetName(measureName);
+      var originalMeasure = client.datasetMetadataApi().getByDatasetName(measureName);
       RetentionTimeConfig retentionTime = null;
 
       if (originalMeasure.isPresent()) {

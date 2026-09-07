@@ -29,7 +29,7 @@ import { ConnectBtns } from '../connect/ConnectBtns';
 export class ChartUtils {
     public static ADAPTER_NAME = 'datalake_configuration';
 
-    public static goToDatalake(discardUnsavedChanges: boolean = true) {
+    public static goToDataset(discardUnsavedChanges: boolean = true) {
         cy.visit('#/chart');
         if (!discardUnsavedChanges) {
             return;
@@ -51,7 +51,7 @@ export class ChartUtils {
     }
 
     public static checkAmountOfCharts(amount: number) {
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         this.checkAmount(amount);
     }
 
@@ -134,7 +134,7 @@ export class ChartUtils {
         widgetType: string,
         ignoreTimeSelection = false,
     ) {
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.createAndEditChart();
 
         if (!ignoreTimeSelection) {
@@ -214,7 +214,7 @@ export class ChartUtils {
     }
 
     public static createDashboardWithLinkedAssets(chart, name, assetNameList) {
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
 
         ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
 
@@ -692,7 +692,7 @@ export class ChartUtils {
         return cy
             .request({
                 method: 'DELETE',
-                url: `/streampipes-backend/api/v4/dataset/measurements/${datasetName}`,
+                url: `/streampipes-backend/api/v4/datalake/measurements/${datasetName}`,
                 failOnStatusCode: false,
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -714,7 +714,7 @@ export class ChartUtils {
         return cy
             .request({
                 method: 'GET',
-                url: `/streampipes-backend/api/v4/dataset/measurements/${datasetName}/download?format=${fileType}&delimiter=semicolon`,
+                url: `/streampipes-backend/api/v4/datalake/measurements/${datasetName}/download?format=${fileType}&delimiter=semicolon`,
                 headers: {
                     'content-type': 'application/octet-stream',
                 },

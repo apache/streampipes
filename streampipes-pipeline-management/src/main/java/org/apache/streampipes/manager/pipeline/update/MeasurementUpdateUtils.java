@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 
 public final class MeasurementUpdateUtils {
 
-  public static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
-  public static final String DATA_LAKE_MEASUREMENT_FIELD = "db_measurement";
+  public static final String DATASET_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
+  public static final String DATASET_MEASUREMENT_FIELD = "db_measurement";
 
   private MeasurementUpdateUtils() {
   }
@@ -64,7 +64,7 @@ public final class MeasurementUpdateUtils {
         .ofNullable(sink.getStaticProperties())
         .stream()
         .flatMap(List::stream)
-        .filter(property -> DATA_LAKE_MEASUREMENT_FIELD.equals(property.getInternalName()))
+        .filter(property -> DATASET_MEASUREMENT_FIELD.equals(property.getInternalName()))
         .filter(FreeTextStaticProperty.class::isInstance)
         .map(FreeTextStaticProperty.class::cast)
         .map(FreeTextStaticProperty::getValue)
@@ -73,6 +73,6 @@ public final class MeasurementUpdateUtils {
   }
 
   public static boolean isDatasetSink(DataSinkInvocation dataSink) {
-    return DATA_LAKE_SINK_APP_ID.equals(dataSink.getAppId());
+    return DATASET_SINK_APP_ID.equals(dataSink.getAppId());
   }
 }

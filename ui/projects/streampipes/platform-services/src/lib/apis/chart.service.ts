@@ -22,7 +22,7 @@ import { map } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 import {
     DataExplorerWidgetModel,
-    DatasetMeasure,
+    DataLakeMeasure,
 } from '../model/gen/streampipes-model';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -116,26 +116,28 @@ export class ChartService {
     }
 
     private get persistedDataStreamsUrl() {
-        return `${this.baseUrl}/api/v3/dataset/pipelines`;
+        return `${this.baseUrl}/api/v3/datalake/pipelines`;
     }
 
     private get dashboardWidgetUrl() {
-        return `${this.baseUrl}/api/v3/dataset/dashboard/widgets`;
+        return `${this.baseUrl}/api/v3/datalake/dashboard/widgets`;
     }
 
     getPersistedDataStream(
         pipelineId: string,
         measureName: string,
-    ): Observable<DatasetMeasure> {
+    ): Observable<DataLakeMeasure> {
         return this.http
             .get(`${this.persistedDataStreamsUrl}/${pipelineId}/${measureName}`)
-            .pipe(map(response => DatasetMeasure.fromData(response as any)));
+            .pipe(map(response => DataLakeMeasure.fromData(response as any)));
     }
 
-    getAllPersistedDataStreams(): Observable<DatasetMeasure[]> {
+    getAllPersistedDataStreams(): Observable<DataLakeMeasure[]> {
         return this.http.get(this.persistedDataStreamsUrl).pipe(
             map(response => {
-                return (response as any[]).map(p => DatasetMeasure.fromData(p));
+                return (response as any[]).map(p =>
+                    DataLakeMeasure.fromData(p),
+                );
             }),
         );
     }

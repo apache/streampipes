@@ -20,7 +20,7 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
 import { DataRetentionDialogModel } from './model/data-retention-dialog.model';
 import {
-    DatasetRestService,
+    DatalakeRestService,
     ExportProviderSettings,
     RetentionTimeConfig,
 } from '@streampipes/platform-services';
@@ -60,10 +60,10 @@ export class DataRetentionDialogComponent implements OnInit {
     dialogRef = inject(DialogRef<DataRetentionDialogComponent>);
     translateService = inject(TranslateService);
     dialogService = inject(DialogService);
-    datasetRestService = inject(DatasetRestService);
+    datalakeRestService = inject(DatalakeRestService);
 
     ngOnInit() {
-        this.datasetRestService
+        this.datalakeRestService
             .getMeasurement(this.measurementIndex)
             .subscribe({
                 next: measure => {
@@ -102,12 +102,12 @@ export class DataRetentionDialogComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    close(refreshDatasetIndex: boolean) {
-        this.dialogRef.close(refreshDatasetIndex);
+    close(refreshDataLakeIndex: boolean) {
+        this.dialogRef.close(refreshDataLakeIndex);
     }
 
     setCleanUp() {
-        this.datasetRestService
+        this.datalakeRestService
             .cleanup(this.measurementIndex, this.retentionConfig)
             .subscribe({
                 next: _data => {
@@ -120,7 +120,7 @@ export class DataRetentionDialogComponent implements OnInit {
     }
 
     deleteCleanUp() {
-        this.datasetRestService
+        this.datalakeRestService
             .deleteCleanup(this.measurementIndex)
             .subscribe(_data => {
                 this.close(true);

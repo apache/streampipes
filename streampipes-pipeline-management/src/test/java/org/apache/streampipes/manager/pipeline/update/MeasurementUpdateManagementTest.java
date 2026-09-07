@@ -42,8 +42,8 @@ import static org.mockito.Mockito.when;
 
 class MeasurementUpdateManagementTest {
 
-  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
-  private static final String DATA_LAKE_MEASUREMENT_FIELD = "db_measurement";
+  private static final String DATASET_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
+  private static final String DATASET_MEASUREMENT_FIELD = "db_measurement";
 
   @Test
   void checkPipelineMigrations_ShouldReturnEmptyListWhenNoWarningsExist() {
@@ -110,10 +110,10 @@ class MeasurementUpdateManagementTest {
 
     var sink = new DataSinkInvocation();
     sink.setElementId("sink-1");
-    sink.setName("Data Lake");
-    sink.setAppId(DATA_LAKE_SINK_APP_ID);
+    sink.setName("Dataset");
+    sink.setAppId(DATASET_SINK_APP_ID);
     sink.setInputStreams(List.of(stream));
-    sink.setStaticProperties(List.of(FreeTextStaticProperty.of(DATA_LAKE_MEASUREMENT_FIELD, "measure")));
+    sink.setStaticProperties(List.of(FreeTextStaticProperty.of(DATASET_MEASUREMENT_FIELD, "measure")));
     return sink;
   }
 

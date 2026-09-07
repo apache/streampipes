@@ -17,7 +17,6 @@
 
 from .adapter import AdapterSummary
 from .data_lake_measure import DataLakeMeasure
-from .dataset_measure import DatasetMeasure
 from .data_series import DataSeries
 from .data_stream import DataStream
 from .function_definition import FunctionDefinition
@@ -26,7 +25,6 @@ from .version import Version
 
 __all__ = [
     "AdapterSummary",
-    "DatasetMeasure",
     "DataLakeMeasure",
     "DataSeries",
     "DataStream",

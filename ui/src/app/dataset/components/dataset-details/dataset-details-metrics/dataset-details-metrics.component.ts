@@ -113,13 +113,13 @@ export class DatasetDetailsMetricsComponent
     }
 
     private loadTotalEventCount(): Observable<number> {
-        return this.datasetRestService
+        return this.datalakeRestService
             .getMeasurementEntryCount(this.dataset.elementId)
             .pipe(catchError(() => of(0)));
     }
 
     private loadLatestEventTimestamp(): Observable<number> {
-        return this.datasetRestService
+        return this.datalakeRestService
             .getLatestMeasurementEvents([this.dataset.measureName])
             .pipe(
                 map(result => result[this.dataset.measureName] ?? 0),
@@ -136,7 +136,7 @@ export class DatasetDetailsMetricsComponent
             return of(dayBuckets);
         }
 
-        return this.datasetRestService
+        return this.datalakeRestService
             .getData(this.dataset.measureName, {
                 endDate: now.getTime(),
                 startDate: dayBuckets[0].timestamp,

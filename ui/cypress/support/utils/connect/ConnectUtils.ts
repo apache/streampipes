@@ -253,13 +253,13 @@ export class ConnectUtils {
         ConnectBtns.adapterNameInput().type(adapterInput.adapterName);
 
         if (adapterInput.storeInDataLake) {
-            cy.dataCy('sp-store-in-dataset', {
+            cy.dataCy('sp-store-in-datalake', {
                 timeout: 5000,
             })
                 .should('be.visible')
                 .children()
                 .click();
-            cy.dataCy('sp-store-in-dataset-timestamp')
+            cy.dataCy('sp-store-in-datalake-timestamp')
                 .click()
                 .get('mat-option')
                 .contains(adapterInput.timestampProperty)

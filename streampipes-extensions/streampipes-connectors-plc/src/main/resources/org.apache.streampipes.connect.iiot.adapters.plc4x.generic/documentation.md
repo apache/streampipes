@@ -72,7 +72,7 @@ PROTOCOL_METADATA_ADVANCED
 
 ### Tags
 
-The syntax to define tags is based on the PLC4X syntax, see https://plc4x.apache.org/users/protocols/s7.html.
+The syntax to define tags is based on the PLC4X syntax, see https://plc4x.apache.org/plc4x/latest/users/protocols/s7.html.
 Address Pattern:
 
 ```

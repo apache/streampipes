@@ -40,7 +40,7 @@ describe('Test auto aggregate table result size', () => {
     it('Aggregates large one-second series to the client limit', () => {
         cy.intercept(
             'GET',
-            '**/streampipes-backend/api/v4/dataset/measurements/datalake_configuration*',
+            '**/streampipes-backend/api/v4/datalake/measurements/datalake_configuration*',
             req => {
                 if (req.query.autoAggregate === 'true') {
                     req.alias = 'autoAggregateQuery';

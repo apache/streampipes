@@ -20,18 +20,18 @@ package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.DatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.api.IDatasetMeasurementCounter;
-import org.apache.streampipes.dataexplorer.api.IDatasetMeasurementSanitizer;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataCounter;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
-import org.apache.streampipes.dataexplorer.iotdb.sanitize.DatasetMeasurementSanitizerIotDb;
+import org.apache.streampipes.dataexplorer.iotdb.sanitize.DatasetMetadataSanitizerIotDb;
 import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
-import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.List;
@@ -39,25 +39,25 @@ import java.util.List;
 public class DataExplorerManagerIotDb implements IDataExplorerManager {
 
   @Override
-  public IDatasetMeasurementCounter getMeasurementCounter(List<DatasetMeasure> allMeasurements,
+  public IDatasetMetadataCounter getMeasurementCounter(List<DatasetMetadata> allMeasurements,
                                                            List<String> measurementsToCount,
                                                            int daysBack) {
-    return new DatasetMeasurementCounterIotDb(allMeasurements, measurementsToCount, daysBack);
+    return new DatasetMetadataCounterIotDb(allMeasurements, measurementsToCount, daysBack);
   }
 
   @Override
-  public IDataExplorerQueryManagement getQueryManagement(IDataExplorerSchemaManagement dataExplorerSchemaManagement) {
+  public IDataExplorerQueryManagement getQueryManagement(IDatasetMetadataManagement datasetMetadataManagement) {
     return new DataExplorerQueryManagementIotDb(
-        dataExplorerSchemaManagement,
+        datasetMetadataManagement,
         new DataExplorerIotDbQueryExecutor(new IotDbSessionProvider().getSessionPool(Environments.getEnvironment()))
     );
   }
 
   @Override
-  public IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
+  public IDatasetMetadataManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
                                                            IPermissionStorage permissionStorage,
-                                                           IDatasetMeasureStorage datasetStorage) {
-    return new DataExplorerSchemaManagement(
+                                                           IDatasetMetadataStorage datasetStorage) {
+    return new DatasetMetadataManagement(
         datasetStorage,
         new DatasetPermissionManager(permissionStorage),
         chartSchemaUpdateCoordinator
@@ -65,12 +65,12 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
   }
 
   @Override
-  public ITimeSeriesStorage getTimeseriesStorage(DatasetMeasure measure, boolean ignoreDuplicates) {
+  public ITimeSeriesStorage getTimeseriesStorage(DatasetMetadata measure, boolean ignoreDuplicates) {
     return new TimeSeriesStorageIotDb(measure, new IotDbPropertyConverter(), new IotDbSessionProvider());
   }
 
   @Override
-  public IDatasetMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMeasure measure) {
-    return new DatasetMeasurementSanitizerIotDb(client, measure);
+  public IDatasetMetadataSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMetadata measure) {
+    return new DatasetMetadataSanitizerIotDb(client, measure);
   }
 }

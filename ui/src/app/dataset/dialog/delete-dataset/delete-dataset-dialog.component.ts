@@ -18,7 +18,7 @@
 
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { DialogRef, SpSpinnerComponent } from '@streampipes/shared-ui';
-import { DatasetRestService } from '@streampipes/platform-services';
+import { DatalakeRestService } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
     FlexDirective,
@@ -52,7 +52,7 @@ export class DeleteDatasetDialogComponent implements OnInit {
     currentStatus: any;
 
     private dialogRef = inject(DialogRef<DeleteDatasetDialogComponent>);
-    private datasetRestService = inject(DatasetRestService);
+    private datalakeRestService = inject(DatalakeRestService);
     private translateService = inject(TranslateService);
 
     confirmDeleteMessage = '';
@@ -69,15 +69,15 @@ export class DeleteDatasetDialogComponent implements OnInit {
         );
     }
 
-    close(refreshDatasetIndex: boolean) {
-        this.dialogRef.close(refreshDatasetIndex);
+    close(refreshDataLakeIndex: boolean) {
+        this.dialogRef.close(refreshDataLakeIndex);
     }
 
     truncateData() {
         this.isInProgress = true;
         this.currentStatus =
             this.translateService.instant('Truncating data...');
-        this.datasetRestService
+        this.datalakeRestService
             .removeData(this.datasetName)
             .subscribe(_data => {
                 this.close(true);
@@ -88,8 +88,8 @@ export class DeleteDatasetDialogComponent implements OnInit {
         this.isInProgress = true;
         this.currentStatus = this.translateService.instant('Deleting data...');
 
-        // this.datasetRestService.dropSingleMeasurementSeries(measurmentIndex);
-        this.datasetRestService
+        // this.datalakeRestService.dropSingleMeasurementSeries(measurmentIndex);
+        this.datalakeRestService
             .dropSingleMeasurementSeries(this.datasetName)
             .subscribe(_data => {
                 this.close(true);

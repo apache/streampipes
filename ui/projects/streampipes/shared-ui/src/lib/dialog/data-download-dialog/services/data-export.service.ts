@@ -19,8 +19,8 @@
 import { EventEmitter, Injectable, inject } from '@angular/core';
 import { ExportConfig } from '../model/export-config.model';
 import {
-    DatasetQueryParameters,
-    DatasetRestService,
+    DatalakeQueryParameters,
+    DatalakeRestService,
     DataViewQueryGeneratorService,
 } from '@streampipes/platform-services';
 import { HttpEventType } from '@angular/common/http';
@@ -32,7 +32,7 @@ import { FileNameService } from './file-name.service';
     providedIn: 'root',
 })
 export class DataExportService {
-    datasetRestService = inject(DatasetRestService);
+    dataLakeRestService = inject(DatalakeRestService);
     dataViewQueryGeneratorService = inject(DataViewQueryGeneratorService);
     fileNameService = inject(FileNameService);
 
@@ -48,7 +48,7 @@ export class DataExportService {
         if (
             exportConfig.dataExportConfig.dataRangeConfiguration === 'visible'
         ) {
-            downloadRequest = this.datasetRestService.downloadQueriedData(
+            downloadRequest = this.dataLakeRestService.downloadQueriedData(
                 exportConfig.dataExportConfig.measurement,
                 exportConfig.formatExportConfig,
                 exportConfig.dataExportConfig.missingValueBehaviour,
@@ -70,7 +70,7 @@ export class DataExportService {
                 endTime =
                     exportConfig.dataExportConfig.dateRange.endDate.getTime();
             }
-            downloadRequest = this.datasetRestService.downloadRawData(
+            downloadRequest = this.dataLakeRestService.downloadRawData(
                 exportConfig.dataExportConfig.measurement,
                 exportConfig.formatExportConfig,
                 exportConfig.dataExportConfig.missingValueBehaviour,
@@ -106,7 +106,7 @@ export class DataExportService {
         exportConfig: ExportConfig,
         dataDownloadDialogModel: DataDownloadDialogModel,
         selectedQueryIndex: number = 0,
-    ): DatasetQueryParameters {
+    ): DatalakeQueryParameters {
         return this.dataViewQueryGeneratorService.generateQuery(
             exportConfig.dataExportConfig.dateRange.startDate.getTime(),
             exportConfig.dataExportConfig.dateRange.endDate.getTime(),

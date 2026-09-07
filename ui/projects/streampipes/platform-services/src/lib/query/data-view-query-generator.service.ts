@@ -18,21 +18,21 @@
 
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DatasetRestService } from '../apis/dataset-rest.service';
+import { DatalakeRestService } from '../apis/datalake-rest.service';
 import {
     DataExplorerDataConfig,
     SourceConfig,
-} from '../model/dataset/dataset-query-config.model';
+} from '../model/datalake/data-lake-query-config.model';
 import { SpQueryResult } from '../model/gen/streampipes-model';
-import { DatasetQueryParameters } from '../model/dataset/DatasetQueryParameters';
-import { DatasetQueryParameterBuilder } from './DatasetQueryParameterBuilder';
+import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
+import { DatalakeQueryParameterBuilder } from './DatalakeQueryParameterBuilder';
 import { DashboardDataRequestCoordinatorService } from './dashboard-data-request-coordinator.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DataViewQueryGeneratorService {
-    protected datasetRestService = inject(DatasetRestService);
+    protected dataLakeRestService = inject(DatalakeRestService);
     protected dashboardDataRequestCoordinator = inject(
         DashboardDataRequestCoordinatorService,
     );
@@ -44,7 +44,7 @@ export class DataViewQueryGeneratorService {
         maximumResultingEvents: number = -1,
     ): Observable<SpQueryResult>[] {
         return dataConfig.sourceConfigs.map(sourceConfig => {
-            const datasetConfiguration = this.generateQuery(
+            const dataLakeConfiguration = this.generateQuery(
                 startTime,
                 endTime,
                 sourceConfig,
@@ -52,9 +52,9 @@ export class DataViewQueryGeneratorService {
                 maximumResultingEvents,
             );
 
-            return this.datasetRestService.getData(
+            return this.dataLakeRestService.getData(
                 sourceConfig.measureName,
-                datasetConfiguration,
+                dataLakeConfiguration,
                 true,
             );
         });
@@ -67,7 +67,7 @@ export class DataViewQueryGeneratorService {
         maximumResultingEvents: number = -1,
     ): Observable<SpQueryResult>[] {
         return dataConfig.sourceConfigs.map(sourceConfig => {
-            const datasetConfiguration = this.generateQuery(
+            const dataLakeConfiguration = this.generateQuery(
                 startTime,
                 endTime,
                 sourceConfig,
@@ -76,8 +76,8 @@ export class DataViewQueryGeneratorService {
                 true,
             );
 
-            return this.dashboardDataRequestCoordinator.queueDatasetQuery(
-                datasetConfiguration,
+            return this.dashboardDataRequestCoordinator.queueDataLakeQuery(
+                dataLakeConfiguration,
             );
         });
     }
@@ -91,7 +91,7 @@ export class DataViewQueryGeneratorService {
         maximumResultingEvents = -1,
     ): Observable<SpQueryResult>[] {
         return dataConfig.sourceConfigs.map(sourceConfig => {
-            const datasetConfiguration = this.generateQuery(
+            const dataLakeConfiguration = this.generateQuery(
                 startTime,
                 endTime,
                 sourceConfig,
@@ -103,7 +103,7 @@ export class DataViewQueryGeneratorService {
             return this.dashboardDataRequestCoordinator.queueKioskQuery(
                 dashboardId,
                 widgetId,
-                datasetConfiguration,
+                dataLakeConfiguration,
             );
         });
     }
@@ -115,8 +115,8 @@ export class DataViewQueryGeneratorService {
         ignoreEventsWithMissingValues: boolean,
         maximumResultingEvents: number = -1,
         includeMeasureName = false,
-    ): DatasetQueryParameters {
-        const queryBuilder = DatasetQueryParameterBuilder.create(
+    ): DatalakeQueryParameters {
+        const queryBuilder = DatalakeQueryParameterBuilder.create(
             startTime,
             endTime,
         );
@@ -178,12 +178,12 @@ export class DataViewQueryGeneratorService {
             queryBuilder.withMaximumAmountOfEvents(maximumResultingEvents);
         }
 
-        const datasetQueryParameter = queryBuilder.build();
+        const dataLakeQueryParameter = queryBuilder.build();
 
         if (includeMeasureName) {
-            datasetQueryParameter.measureName = sourceConfig.measureName;
+            dataLakeQueryParameter.measureName = sourceConfig.measureName;
         }
 
-        return datasetQueryParameter;
+        return dataLakeQueryParameter;
     }
 }

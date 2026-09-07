@@ -19,17 +19,17 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject, of } from 'rxjs';
 import { bufferTime, filter } from 'rxjs/operators';
-import { DatasetRestService } from '../apis/dataset-rest.service';
+import { DatalakeRestService } from '../apis/datalake-rest.service';
 import { DashboardKioskRestService } from '../apis/dashboard-kiosk.service';
-import { DatasetQueryParameters } from '../model/dataset/DatasetQueryParameters';
+import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
 import { SpQueryResult } from '../model/gen/streampipes-model';
 
-interface PendingDatasetRequest {
-    queryParams: DatasetQueryParameters;
+interface PendingDataLakeRequest {
+    queryParams: DatalakeQueryParameters;
     result$: ReplaySubject<SpQueryResult>;
 }
 
-interface PendingKioskRequest extends PendingDatasetRequest {
+interface PendingKioskRequest extends PendingDataLakeRequest {
     dashboardId: string;
     widgetId: string;
 }
@@ -40,19 +40,19 @@ interface PendingKioskRequest extends PendingDatasetRequest {
 export class DashboardDataRequestCoordinatorService {
     private readonly batchWindowMs = 20;
 
-    private datasetRestService = inject(DatasetRestService);
+    private dataLakeRestService = inject(DatalakeRestService);
     private dashboardKioskRestService = inject(DashboardKioskRestService);
 
-    private datasetQueue$ = new Subject<PendingDatasetRequest>();
+    private dataLakeQueue$ = new Subject<PendingDataLakeRequest>();
     private kioskQueue$ = new Subject<PendingKioskRequest>();
 
     constructor() {
-        this.datasetQueue$
+        this.dataLakeQueue$
             .pipe(
                 bufferTime(this.batchWindowMs),
                 filter(requests => requests.length > 0),
             )
-            .subscribe(requests => this.executeDatasetBatch(requests));
+            .subscribe(requests => this.executeDataLakeBatch(requests));
 
         this.kioskQueue$
             .pipe(
@@ -62,22 +62,22 @@ export class DashboardDataRequestCoordinatorService {
             .subscribe(requests => this.executeKioskBatches(requests));
     }
 
-    queueDatasetQuery(
-        queryParams: DatasetQueryParameters,
+    queueDataLakeQuery(
+        queryParams: DatalakeQueryParameters,
     ): Observable<SpQueryResult> {
         if (queryParams.columns === '') {
             return of(this.makeEmptyQueryResult());
         }
 
         const result$ = new ReplaySubject<SpQueryResult>(1);
-        this.datasetQueue$.next({ queryParams, result$ });
+        this.dataLakeQueue$.next({ queryParams, result$ });
         return result$.asObservable();
     }
 
     queueKioskQuery(
         dashboardId: string,
         widgetId: string,
-        queryParams: DatasetQueryParameters,
+        queryParams: DatalakeQueryParameters,
     ): Observable<SpQueryResult> {
         if (queryParams.columns === '') {
             return of(this.makeEmptyQueryResult());
@@ -93,8 +93,8 @@ export class DashboardDataRequestCoordinatorService {
         return result$.asObservable();
     }
 
-    private executeDatasetBatch(requests: PendingDatasetRequest[]): void {
-        this.datasetRestService
+    private executeDataLakeBatch(requests: PendingDataLakeRequest[]): void {
+        this.dataLakeRestService
             .performMultiQuery(requests.map(request => request.queryParams))
             .subscribe({
                 next: results =>
@@ -134,7 +134,7 @@ export class DashboardDataRequestCoordinatorService {
     }
 
     private completeRequestsWithResults(
-        requests: PendingDatasetRequest[],
+        requests: PendingDataLakeRequest[],
         results: SpQueryResult[],
     ): void {
         requests.forEach((request, index) => {
@@ -144,7 +144,7 @@ export class DashboardDataRequestCoordinatorService {
     }
 
     private errorRequests(
-        requests: PendingDatasetRequest[],
+        requests: PendingDataLakeRequest[],
         error: unknown,
     ): void {
         requests.forEach(request => request.result$.error(error));

@@ -36,7 +36,7 @@ import {
 import {
     ClientDashboardItem,
     DataExplorerWidgetModel,
-    DatasetMeasure,
+    DataLakeMeasure,
     ExtendedTimeSettings,
     QuickTimeSelection,
     SpLogMessage,
@@ -135,7 +135,7 @@ export class ChartContainerComponent
     configuredWidget: DataExplorerWidgetModel;
 
     @Input()
-    datasetMeasure: DatasetMeasure;
+    dataLakeMeasure: DataLakeMeasure;
 
     @Input()
     editMode: boolean;
@@ -267,7 +267,7 @@ export class ChartContainerComponent
             );
         });
         this.widgetLoaded = true;
-        this.title = this.datasetMeasure?.measureName;
+        this.title = this.dataLakeMeasure?.measureName;
         this.widgetTypeChanged$ =
             this.widgetTypeService.chartTypeChangeSubject.subscribe(
                 typeChange => {

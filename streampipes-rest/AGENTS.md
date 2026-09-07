@@ -4,7 +4,7 @@
 Applies to `streampipes-rest/`.
 
 ## Module Intent
-- HTTP API/resource layer (`impl`, `impl/admin`, `impl/connect`, `impl/dataset`, `impl/runtime`).
+- HTTP API/resource layer (`impl`, `impl/admin`, `impl/connect`, `impl/datalake`, `impl/runtime`).
 - Security-related endpoint behavior (`rest/security`).
 
 ## Best Practices

@@ -21,12 +21,12 @@ package org.apache.streampipes.dataexplorer.influx;
 import org.apache.streampipes.dataexplorer.QueryResultProvider;
 import org.apache.streampipes.dataexplorer.StreamedQueryResultProvider;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.SpQueryResult;
 import org.apache.streampipes.model.dataset.SpQueryStatus;
 import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
@@ -52,10 +52,10 @@ import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParam
 
 public class DataExplorerQueryManagementInflux implements IDataExplorerQueryManagement {
 
-  private final IDataExplorerSchemaManagement dataExplorerSchemaManagement;
+  private final IDatasetMetadataManagement datasetMetadataManagement;
 
-  public DataExplorerQueryManagementInflux(IDataExplorerSchemaManagement dataExplorerSchemaManagement) {
-    this.dataExplorerSchemaManagement = dataExplorerSchemaManagement;
+  public DataExplorerQueryManagementInflux(IDatasetMetadataManagement datasetMetadataManagement) {
+    this.datasetMetadataManagement = datasetMetadataManagement;
   }
 
   @Override
@@ -64,7 +64,7 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
     return new QueryResultProvider(queryParams,
                                    this,
                                    new DataExplorerInfluxQueryExecutor(),
-                                   dataExplorerSchemaManagement,
+                                   datasetMetadataManagement,
                                    ignoreMissingData
     ).getData();
   }
@@ -79,17 +79,17 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
     new StreamedQueryResultProvider(params, format, outputWriterFactory,
                                     this,
                                     new DataExplorerInfluxQueryExecutor(),
-                                    dataExplorerSchemaManagement,
+                                    datasetMetadataManagement,
                                     ignoreMissingValues
     ).getDataAsStream(outputStream);
   }
 
   @Override
   public boolean deleteAllData() {
-    List<DatasetMeasure> allMeasurements = getAllMeasurements();
+    List<DatasetMetadata> allMeasurements = getAllMeasurements();
     var queryExecutor = new DataExplorerInfluxQueryExecutor();
 
-    for (DatasetMeasure measure : allMeasurements) {
+    for (DatasetMetadata measure : allMeasurements) {
       boolean success = queryExecutor.deleteData(measure);
       if (!success) {
         return false;
@@ -100,7 +100,7 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
 
   @Override
   public boolean deleteData(String measurementID) {
-    List<DatasetMeasure> allMeasurements = getAllMeasurements();
+    List<DatasetMetadata> allMeasurements = getAllMeasurements();
 
     var measureToDeleteOpt = allMeasurements.stream()
                                             .filter(measure -> measure.getMeasureName().equals(measurementID))
@@ -159,9 +159,9 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
 
   private Map<String, String> getLatestTimestampFields(List<String> measurementNames) {
     Map<String, String> measurementFields = new HashMap<>();
-    Map<String, DatasetMeasure> measuresByName = getAllMeasurements()
+    Map<String, DatasetMetadata> measuresByName = getAllMeasurements()
         .stream()
-        .collect(Collectors.toMap(DatasetMeasure::getMeasureName, Function.identity(), (left, right) -> left));
+        .collect(Collectors.toMap(DatasetMetadata::getMeasureName, Function.identity(), (left, right) -> left));
 
     measurementNames.forEach(measurementName -> findLatestTimestampField(measuresByName.get(measurementName))
         .ifPresent(field -> measurementFields.put(measurementName, field)));
@@ -169,7 +169,7 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
     return measurementFields;
   }
 
-  private Optional<String> findLatestTimestampField(DatasetMeasure measure) {
+  private Optional<String> findLatestTimestampField(DatasetMetadata measure) {
     if (measure == null || measure.getEventSchema() == null || measure.getEventSchema().getEventProperties() == null) {
       return Optional.empty();
     }
@@ -200,7 +200,7 @@ public class DataExplorerQueryManagementInflux implements IDataExplorerQueryMana
     }
   }
 
-  private List<DatasetMeasure> getAllMeasurements() {
-    return this.dataExplorerSchemaManagement.getAllMeasurements();
+  private List<DatasetMetadata> getAllMeasurements() {
+    return this.datasetMetadataManagement.getAllMeasurements();
   }
 }

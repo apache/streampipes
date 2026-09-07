@@ -20,19 +20,19 @@ package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.dataexplorer.DataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.DatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.dataexplorer.api.IDatasetMeasurementCounter;
-import org.apache.streampipes.dataexplorer.api.IDatasetMeasurementSanitizer;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataCounter;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
-import org.apache.streampipes.dataexplorer.influx.sanitize.DatasetMeasurementSanitizerInflux;
+import org.apache.streampipes.dataexplorer.influx.sanitize.DatasetMetadataSanitizerInflux;
 import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
-import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.List;
@@ -43,25 +43,25 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   }
 
   @Override
-  public IDatasetMeasurementCounter getMeasurementCounter(
-      List<DatasetMeasure> allMeasurements,
+  public IDatasetMetadataCounter getMeasurementCounter(
+      List<DatasetMetadata> allMeasurements,
       List<String> measurementsToCount,
       int daysBack) {
-    return new DatasetMeasurementCounterInflux(allMeasurements, measurementsToCount, daysBack);
+    return new DatasetMetadataCounterInflux(allMeasurements, measurementsToCount, daysBack);
   }
 
   @Override
   public IDataExplorerQueryManagement getQueryManagement(
-      IDataExplorerSchemaManagement dataExplorerSchemaManagement
+      IDatasetMetadataManagement datasetMetadataManagement
   ) {
-    return new DataExplorerQueryManagementInflux(dataExplorerSchemaManagement);
+    return new DataExplorerQueryManagementInflux(datasetMetadataManagement);
   }
 
   @Override
-  public IDataExplorerSchemaManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
+  public IDatasetMetadataManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
                                                            IPermissionStorage permissionStorage,
-                                                           IDatasetMeasureStorage datasetStorage) {
-    return new DataExplorerSchemaManagement(
+                                                           IDatasetMetadataStorage datasetStorage) {
+    return new DatasetMetadataManagement(
         datasetStorage,
         new DatasetPermissionManager(
             permissionStorage
@@ -71,7 +71,7 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   }
 
   @Override
-  public ITimeSeriesStorage getTimeseriesStorage(DatasetMeasure measure, boolean ignoreDuplicates) {
+  public ITimeSeriesStorage getTimeseriesStorage(DatasetMetadata measure, boolean ignoreDuplicates) {
     return new TimeSeriesStorageInflux(
         measure,
         ignoreDuplicates,
@@ -81,7 +81,7 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   }
 
   @Override
-  public IDatasetMeasurementSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMeasure measure) {
-    return new DatasetMeasurementSanitizerInflux(client, measure);
+  public IDatasetMetadataSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMetadata measure) {
+    return new DatasetMetadataSanitizerInflux(client, measure);
   }
 }

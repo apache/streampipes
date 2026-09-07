@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MeasurementChangeValidationStepTest {
 
-  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
+  private static final String DATASET_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
 
   private final MeasurementChangeValidationStep step = new MeasurementChangeValidationStep();
 
@@ -108,7 +108,7 @@ class MeasurementChangeValidationStepTest {
 
   private DataSinkInvocation makeDatasetSink(EventSchema inputSchema) {
     var sink = makeSink(inputSchema);
-    sink.setAppId(DATA_LAKE_SINK_APP_ID);
+    sink.setAppId(DATASET_SINK_APP_ID);
     return sink;
   }
 

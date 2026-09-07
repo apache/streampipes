@@ -19,11 +19,11 @@
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.SpQueryResult;
 import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.dataset.param.SupportedRestQueryParams;
@@ -46,7 +46,7 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
                                      ConfiguredOutputWriterFactory outputWriterFactory,
                                      IDataExplorerQueryManagement dataExplorerQueryManagement,
                                      DataExplorerQueryExecutor<?, ?> queryExecutor,
-                                     IDataExplorerSchemaManagement schemaManagement,
+                                     IDatasetMetadataManagement schemaManagement,
                                      boolean ignoreMissingValues) {
     super(params, dataExplorerQueryManagement, queryExecutor, schemaManagement, ignoreMissingValues);
     this.format = format;
@@ -100,7 +100,7 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
     }
   }
 
-  private Optional<DatasetMeasure> findByMeasurementName(String measurementName) {
+  private Optional<DatasetMetadata> findByMeasurementName(String measurementName) {
     return schemaManagement.getAllMeasurements()
         .stream()
         .filter(measurement -> measurement.getMeasureName().equals(measurementName))
@@ -113,7 +113,7 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
    * @param measurement contains the actual timestamp name value
    * @param dataResult  the query result of the database with 'time' as timestamp field name
    */
-  private void changeTimestampHeader(DatasetMeasure measurement,
+  private void changeTimestampHeader(DatasetMetadata measurement,
                                      SpQueryResult dataResult) {
     var timeFieldIndex = dataResult.getHeaders().indexOf(TIME_FIELD);
     if (timeFieldIndex > -1) {

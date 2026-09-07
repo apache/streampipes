@@ -40,8 +40,8 @@ import {
 } from '@angular/material/table';
 import { DatasetOverviewEntry } from './dataset-overview-entry';
 import {
-    DatasetRestService,
-    DatasetMeasure,
+    DatalakeRestService,
+    DataLakeMeasure,
     DatasetSummaryDto,
     ExportProviderService,
     ExportProviderSettings,
@@ -139,7 +139,7 @@ export class DatasetOverviewComponent
     @ViewChild(SpTableComponent)
     spTable!: SpTableComponent<DatasetOverviewEntry>;
 
-    private datasetRestService = inject(DatasetRestService);
+    private datasetRestService = inject(DatalakeRestService);
     private dialogService = inject(DialogService);
     private breadcrumbService = inject(SpBreadcrumbService);
     private exportProviderRestService = inject(ExportProviderService);
@@ -455,7 +455,7 @@ export class DatasetOverviewComponent
     showPermissionsDialog(element: DatasetOverviewEntry): void {
         this.datasetRestService.getMeasurement(element.elementId).subscribe({
             next: dataset => {
-                const resourceConfig: ObjectManageDialogResourceConfig<DatasetMeasure> =
+                const resourceConfig: ObjectManageDialogResourceConfig<DataLakeMeasure> =
                     {
                         resourceLabel: 'Dataset',
                         nameLabel: 'Dataset name',
@@ -540,7 +540,7 @@ export class DatasetOverviewComponent
         return entry;
     }
 
-    private openRetentionLogDialog(dataset: DatasetMeasure): void {
+    private openRetentionLogDialog(dataset: DataLakeMeasure): void {
         const dialogRef: DialogRef<DataRetentionLogDialogComponent> =
             this.dialogService.open(DataRetentionLogDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,

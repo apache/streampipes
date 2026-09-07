@@ -1152,7 +1152,7 @@
   "This measurement has charts that need manual review after the pipeline update.": "Ta miara ma wykresy, które po aktualizacji strumienia wymagają ręcznego sprawdzenia.",
   "This measurement has datatype changes that must be handled before the pipeline can be updated.": "Ta miara zawiera zmiany typów danych, które trzeba obsłużyć przed aktualizacją strumienia.",
   "This operation cannot be undone.": "Tego działania nie można cofnąć.",
-  "This operation cannot be undone. Please ensure that the data provider is not used in a dataset retention.": "Tej operacji nie można cofnąć. Należy upewnić się, że dostawca danych nie jest wykorzystywany w ramach przechowywania zbioru danych.",
+  "This operation cannot be undone. Please ensure that the data provider is not used in a datalake retention.": "Tego działania nie można cofnąć. Upewnij się, że dostawca nie jest używany w retencji Data Lake.",
   "This pipeline cannot be updated because at least one data lake measurement field changed its datatype.": "Nie można zaktualizować tego strumienia, ponieważ co najmniej jedno pole miary Data Lake zmieniło typ danych.",
   "This pipeline is still running.": "Ten strumień nadal działa.",
   "This pipeline update requires manual review.": "Ta aktualizacja strumienia wymaga ręcznego sprawdzenia.",

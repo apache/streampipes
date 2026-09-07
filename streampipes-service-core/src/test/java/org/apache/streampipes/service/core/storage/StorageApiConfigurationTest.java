@@ -38,7 +38,7 @@ class StorageApiConfigurationTest {
       CachedAdapterStorage.CACHE_NAME,
       CachedDashboardStorage.CACHE_NAME,
       CachedPipelineStorage.CACHE_NAME,
-      CachedDatasetMeasureStorage.CACHE_NAME,
+      CachedDatasetMetadataStorage.CACHE_NAME,
       CachedRoleStorage.CACHE_NAME,
       CachedUserGroupStorage.CACHE_NAME,
       CachedPrivilegeStorage.CACHE_NAME,
@@ -55,7 +55,7 @@ class StorageApiConfigurationTest {
     assertInstanceOf(CachedAdapterStorage.class, configuration.adapterStorage(cacheManager));
     assertInstanceOf(CachedDashboardStorage.class, configuration.dashboardStorage(cacheManager));
     assertInstanceOf(CachedPipelineStorage.class, configuration.pipelineStorage(cacheManager));
-    assertInstanceOf(CachedDatasetMeasureStorage.class, configuration.datasetStorage(cacheManager));
+    assertInstanceOf(CachedDatasetMetadataStorage.class, configuration.datasetStorage(cacheManager));
     assertInstanceOf(CachedRoleStorage.class, configuration.roleStorage(cacheManager));
     assertInstanceOf(CachedUserGroupStorage.class, configuration.userGroupStorage(cacheManager));
     assertInstanceOf(CachedPrivilegeStorage.class, configuration.privilegeStorage(cacheManager));
@@ -72,7 +72,7 @@ class StorageApiConfigurationTest {
     assertInstanceOf(AdapterInstanceStorageImpl.class, configuration.adapterStorage(cacheManager));
     assertInstanceOf(CachedDashboardStorage.class, configuration.dashboardStorage(cacheManager));
     assertInstanceOf(PipelineStorageImpl.class, configuration.pipelineStorage(cacheManager));
-    assertInstanceOf(CachedDatasetMeasureStorage.class, configuration.datasetStorage(cacheManager));
+    assertInstanceOf(CachedDatasetMetadataStorage.class, configuration.datasetStorage(cacheManager));
     assertInstanceOf(RoleStorageImpl.class, configuration.roleStorage(cacheManager));
     assertInstanceOf(CachedUserGroupStorage.class, configuration.userGroupStorage(cacheManager));
     assertInstanceOf(PrivilegeStorageImpl.class, configuration.privilegeStorage(cacheManager));

@@ -101,7 +101,7 @@ public class FileManager {
 
   private InputStream validateFileNameAndCleanFile(String filename,
                                                   String filetype,
-                                                  InputStream fileInputStream) {
+                                                  InputStream fileInputStream) throws IOException {
     if (!validateFileType(filename)) {
       throw new IllegalArgumentException("Filetype for file %s not allowed".formatted(filename));
     }
@@ -116,9 +116,11 @@ public class FileManager {
    * @param filetype file of type
    * @return input stream without BOM
    */
-  protected InputStream cleanFile(InputStream fileInputStream, String filetype) {
+  protected InputStream cleanFile(InputStream fileInputStream, String filetype) throws IOException {
     if (Filetypes.CSV.getFileExtensions().contains(filetype.toLowerCase())) {
-      fileInputStream = new BOMInputStream(fileInputStream);
+      fileInputStream = BOMInputStream.builder()
+          .setInputStream(fileInputStream)
+          .get();
     }
 
     return fileInputStream;

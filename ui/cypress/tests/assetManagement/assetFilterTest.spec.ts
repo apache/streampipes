@@ -314,7 +314,7 @@ describe('Test asset filters', () => {
         //sekect one asset
         FilterUtils.clearFilter();
         FilterUtils.filterAssets(['asset-1_0']);
-        checkTableResources('dataset-settings', [
+        checkTableResources('datalake-settings', [
             adapter1,
             adapter1_1,
             adapter1_2,
@@ -322,7 +322,7 @@ describe('Test asset filters', () => {
         // Select asset 1 & asset 2
         FilterUtils.clearFilter();
         FilterUtils.filterAssets(['asset-1_0', 'asset-2_0']);
-        checkTableResources('dataset-settings', [
+        checkTableResources('datalake-settings', [
             adapter1,
             adapter1_1,
             adapter1_2,
@@ -333,7 +333,7 @@ describe('Test asset filters', () => {
         //select one label
         FilterUtils.clearFilter();
         FilterUtils.filterLabels(['label3']);
-        checkTableResources('dataset-settings', [
+        checkTableResources('datalake-settings', [
             adapter1_2,
             adapter2_2,
             adapter3_2,
@@ -341,7 +341,7 @@ describe('Test asset filters', () => {
         //Select label 2 & 3
         FilterUtils.clearFilter();
         FilterUtils.filterLabels(['label2', 'label3']);
-        checkTableResources('dataset-settings', [
+        checkTableResources('datalake-settings', [
             adapter1_1,
             adapter1_2,
             adapter2_1,
@@ -352,7 +352,7 @@ describe('Test asset filters', () => {
         //Select site 1
         FilterUtils.clearFilter();
         FilterUtils.filterSites(['site1']);
-        checkTableResources('dataset-settings', [
+        checkTableResources('datalake-settings', [
             adapter1,
             adapter1_1,
             adapter1_2,
@@ -360,7 +360,7 @@ describe('Test asset filters', () => {
 
         FilterUtils.clearFilter();
         FilterUtils.filterSites(['site1', 'site2']);
-        checkTableResources('dataset-settings', [
+        checkTableResources('datalake-settings', [
             adapter1,
             adapter1_1,
             adapter1_2,
@@ -371,7 +371,7 @@ describe('Test asset filters', () => {
         //select one type
         FilterUtils.clearFilter();
         FilterUtils.filterTypes(['WORK_CELL']);
-        checkTableResources('dataset-settings', [
+        checkTableResources('datalake-settings', [
             adapter1_1,
             adapter1_2,
             adapter2_1,
@@ -385,7 +385,7 @@ describe('Test asset filters', () => {
         FilterUtils.filterAssets(['asset-1_0']);
         FilterUtils.filterSites(['site1']);
         FilterUtils.filterLabels(['label2']);
-        checkTableResources('dataset-settings', [adapter1_1]);
+        checkTableResources('datalake-settings', [adapter1_1]);
     });
 
     function checkTableResources(tableDataCy: string, resources: string[]) {

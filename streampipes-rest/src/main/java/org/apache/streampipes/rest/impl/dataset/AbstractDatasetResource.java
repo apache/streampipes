@@ -17,14 +17,14 @@
  */
 package org.apache.streampipes.rest.impl.dataset;
 
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -32,8 +32,8 @@ import java.util.Objects;
 
 public class AbstractDatasetResource extends AbstractAuthGuardedRestResource {
 
-  final IDataExplorerSchemaManagement datasetMeasureManagement;
-  private final IDatasetMeasureStorage datasetMeasureStorage;
+  final IDatasetMetadataManagement datasetMetadataManagement;
+  private final IDatasetMetadataStorage datasetMetadataStorage;
   protected final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
   private final SpResourceManager resourceManager;
 
@@ -41,12 +41,12 @@ public class AbstractDatasetResource extends AbstractAuthGuardedRestResource {
                                   SpResourceManager resourceManager) {
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
     this.resourceManager = resourceManager;
-    this.datasetMeasureStorage = resourceManager.manageDatasetMeasures().getDb();
-    this.datasetMeasureManagement = new DataExplorerDispatcher().getDataExplorerManager()
+    this.datasetMetadataStorage = resourceManager.manageDataLakeMeasures().getDb();
+    this.datasetMetadataManagement = new DataExplorerDispatcher().getDataExplorerManager()
         .getSchemaManagement(
             chartSchemaUpdateCoordinator,
             resourceManager.managePermissions().getDb(),
-            resourceManager.manageDatasetMeasures().getDb());
+            resourceManager.manageDataLakeMeasures().getDb());
   }
 
   /**
@@ -63,8 +63,8 @@ public class AbstractDatasetResource extends AbstractAuthGuardedRestResource {
     return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_DATASET_VALUE);
   }
 
-  protected IDataExplorerSchemaManagement getDatasetMeasureManagement() {
-    return datasetMeasureManagement;
+  protected IDatasetMetadataManagement getDatasetMetadataManagement() {
+    return datasetMetadataManagement;
   }
 
   /**
@@ -76,7 +76,7 @@ public class AbstractDatasetResource extends AbstractAuthGuardedRestResource {
   public boolean checkPermissionByName(String measurementName,
                                        String permission) {
 
-    var measure = datasetMeasureStorage.getByMeasureName(measurementName);
+    var measure = datasetMetadataStorage.getByMeasureName(measurementName);
     if (Objects.nonNull(measure)) {
       var spPermissionEvaluator = new SpPermissionEvaluator(resourceManager.managePermissions().getDb());
       var authentication = SecurityContextHolder.getContext()

@@ -26,8 +26,7 @@ import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DatasetResourceApi extends AbstractClientApi
-    implements IDatasetResourceApi, IDataLakeResourceApi {
+public class DatasetResourceApi extends AbstractClientApi implements IDatasetResourceApi {
 
   public DatasetResourceApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig);
@@ -37,13 +36,14 @@ public class DatasetResourceApi extends AbstractClientApi
     return StreamPipesApiPath.fromStreamPipesBasePath()
         .addToPath("api")
         .addToPath("v4")
-        .addToPath("dataset")
+        .addToPath("datalake")
         .addToPath("measurements");
   }
 
   @Override
   @ExposedToScripts
   public void delete(String measurementID, Long startDate, Long endDate) {
+
     Map<String, String> queryParams = new HashMap<>();
     if (startDate != null) {
       queryParams.put("startDate", startDate.toString());
@@ -52,6 +52,7 @@ public class DatasetResourceApi extends AbstractClientApi
       queryParams.put("endDate", endDate.toString());
     }
     delete(getBaseResourcePath().addToPath(measurementID).withQueryParameters(queryParams), Void.class);
+
   }
 
   @Override

@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.rest.impl.dataset.importer;
 
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.importer.CsvImportColumn;
 import org.apache.streampipes.model.dataset.importer.CsvImportConfiguration;
 import org.apache.streampipes.model.dataset.importer.CsvImportRequest;
@@ -48,7 +48,7 @@ class CsvImportValidationServiceTest {
 
   @Test
   void shouldRequireUploadIdOrInlineRowsForStoredImportRequest() {
-    var service = new CsvImportValidationService(mock(IDataExplorerSchemaManagement.class));
+    var service = new CsvImportValidationService(mock(IDatasetMetadataManagement.class));
     var request = new CsvImportRequest();
     request.setCsvConfig(makeConfig());
     request.setTarget(makeTarget(CsvImportTargetMode.NEW, "new-measure"));
@@ -63,8 +63,8 @@ class CsvImportValidationServiceTest {
 
   @Test
   void shouldRejectDuplicateMeasurementDuringPreviewValidation() {
-    var schemaManagement = mock(IDataExplorerSchemaManagement.class);
-    var existingMeasure = new DatasetMeasure();
+    var schemaManagement = mock(IDatasetMetadataManagement.class);
+    var existingMeasure = new DatasetMetadata();
     existingMeasure.setMeasureName("existing-measure");
     when(schemaManagement.getExistingMeasureByName("existing-measure"))
         .thenReturn(Optional.of(existingMeasure));
@@ -79,8 +79,8 @@ class CsvImportValidationServiceTest {
 
   @Test
   void shouldReportSchemaIssuesForExistingMeasurement() {
-    var schemaManagement = mock(IDataExplorerSchemaManagement.class);
-    var existingMeasure = new DatasetMeasure();
+    var schemaManagement = mock(IDatasetMetadataManagement.class);
+    var existingMeasure = new DatasetMetadata();
     existingMeasure.setMeasureName("existing-measure");
     existingMeasure.setTimestampField("s0::timestamp");
     existingMeasure.setEventSchema(new EventSchema(List.of(
@@ -112,7 +112,7 @@ class CsvImportValidationServiceTest {
 
   @Test
   void shouldThrowWhenExistingMeasurementIsMissing() {
-    var schemaManagement = mock(IDataExplorerSchemaManagement.class);
+    var schemaManagement = mock(IDatasetMetadataManagement.class);
     when(schemaManagement.getExistingMeasureByName("missing-measure"))
         .thenReturn(Optional.empty());
 

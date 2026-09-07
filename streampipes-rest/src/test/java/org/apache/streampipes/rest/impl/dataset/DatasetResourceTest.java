@@ -39,7 +39,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class DatasetResourceTest {
+class DataLakeResourceTest {
 
   @Test
   void storeDataToMeasurementRequiresWritePermissionForMeasurement() throws Exception {

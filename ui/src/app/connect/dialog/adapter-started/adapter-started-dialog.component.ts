@@ -31,7 +31,7 @@ import {
     CompactPipeline,
     CompactPipelineElement,
     CompactPipelineService,
-    DatasetRestService,
+    DatalakeRestService,
     ErrorMessage,
     LinkageData,
     Message,
@@ -85,7 +85,7 @@ export class AdapterStartedDialog implements OnInit {
     private pipelineTemplateService = inject(PipelineTemplateService);
     private compactPipelineService = inject(CompactPipelineService);
     private assetSaveService = inject(AssetSaveService);
-    private datasetRestService = inject(DatasetRestService);
+    private dataLakeService = inject(DatalakeRestService);
     private permissionsService = inject(PermissionsService);
 
     adapterInstalled = false;
@@ -109,12 +109,12 @@ export class AdapterStartedDialog implements OnInit {
     /**
      * Indicates if a pipeline to store the adapter events should be started
      */
-    @Input() saveInDataset: boolean;
+    @Input() saveInDataLake: boolean;
 
     /**
      * Timestamp field of event. Required when storing events in the data lake.
      */
-    @Input() datasetTimestampField: string;
+    @Input() dataLakeTimestampField: string;
 
     /**
      * When true a user edited an existing AdapterDescription
@@ -258,8 +258,8 @@ export class AdapterStartedDialog implements OnInit {
                 if (status.success) {
                     const adapterElementId = status.notifications[0].title;
                     this.adapterElementId = adapterElementId;
-                    if (this.saveInDataset) {
-                        this.startSaveInDatasetPipeline(adapterElementId);
+                    if (this.saveInDataLake) {
+                        this.startSaveInDataLakePipeline(adapterElementId);
                     } else {
                         this.startAdapter(adapterElementId, true, () =>
                             this.addToAsset(),
@@ -389,8 +389,8 @@ export class AdapterStartedDialog implements OnInit {
             const adapter = await this.getAdapter();
             linkageData = this.createLinkageData(adapter);
 
-            if (this.saveInDataset && pipelineId !== '') {
-                await this.addDatasetLinkageData(
+            if (this.saveInDataLake && pipelineId !== '') {
+                await this.addDataLakeLinkageData(
                     adapter,
                     linkageData,
                     pipelineId,
@@ -431,7 +431,7 @@ export class AdapterStartedDialog implements OnInit {
         ];
     }
 
-    private async addDatasetLinkageData(
+    private async addDataLakeLinkageData(
         adapter: AdapterDescription,
         linkageData: LinkageData[],
         pipelineId: string,
@@ -443,7 +443,7 @@ export class AdapterStartedDialog implements OnInit {
         });
 
         const res = await lastValueFrom(
-            this.datasetRestService.getMeasurementByName(adapter.name),
+            this.dataLakeService.getMeasurementByName(adapter.name),
         );
 
         linkageData.push({
@@ -495,7 +495,7 @@ export class AdapterStartedDialog implements OnInit {
         return `${list.join(', ')}, and ${lastItem}`;
     }
 
-    private startSaveInDatasetPipeline(adapterElementId: string) {
+    private startSaveInDataLakePipeline(adapterElementId: string) {
         this.loadingText = this.translateService.instant(
             'Creating pipeline to persist data stream',
         );
@@ -548,7 +548,7 @@ export class AdapterStartedDialog implements OnInit {
                 db_measurement: this.adapter.name,
             },
             {
-                timestamp_mapping: 's0::' + this.datasetTimestampField,
+                timestamp_mapping: 's0::' + this.dataLakeTimestampField,
             },
             {
                 dimensions_selection: adapter.eventSchema.eventProperties

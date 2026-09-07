@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.rest.impl.dataset.importer;
 
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.importer.CsvImportColumn;
 import org.apache.streampipes.model.dataset.importer.CsvImportJobStartResult;
 import org.apache.streampipes.model.dataset.importer.CsvImportJobStatus;
@@ -34,8 +34,8 @@ import org.apache.streampipes.model.dataset.importer.CsvImportTarget;
 import org.apache.streampipes.model.dataset.importer.CsvImportTargetMode;
 import org.apache.streampipes.model.dataset.importer.CsvImportValidationMessage;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.rest.impl.dataset.DatasetDataWriter;
-import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
+import org.apache.streampipes.rest.impl.dataset.DatasetWriter;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,38 +57,38 @@ public class CsvDatasetImportService {
   private static final int MAX_ANALYSIS_ROWS = 200;
   private static final String STREAM_PREFIX = "s0::";
 
-  private final DatasetDataWriter dataWriter;
+  private final DatasetWriter dataWriter;
   private final CsvImportUploadStorage uploadStorage;
   private final CsvImportParser parser;
   private final CsvImportValidationService validationService;
-  private final IDataExplorerSchemaManagement schemaManagement;
+  private final IDatasetMetadataManagement schemaManagement;
   private final CsvImportJobManager jobManager;
 
-  public CsvDatasetImportService(IDataExplorerSchemaManagement schemaManagement,
-                                  IDatasetMeasureStorage datasetStorage) {
+  public CsvDatasetImportService(IDatasetMetadataManagement schemaManagement,
+                                  IDatasetMetadataStorage datasetStorage) {
     this(
         schemaManagement,
-        new DatasetDataWriter(false, true, datasetStorage),
+        new DatasetWriter(false, true, datasetStorage),
         new CsvImportUploadStorage(),
         new CsvImportParser());
   }
 
   CsvDatasetImportService(
-      IDataExplorerSchemaManagement schemaManagement,
-      DatasetDataWriter dataWriter) {
+      IDatasetMetadataManagement schemaManagement,
+      DatasetWriter dataWriter) {
     this(schemaManagement, dataWriter, new CsvImportUploadStorage(), new CsvImportParser());
   }
 
   CsvDatasetImportService(
-      IDataExplorerSchemaManagement schemaManagement,
-      DatasetDataWriter dataWriter,
+      IDatasetMetadataManagement schemaManagement,
+      DatasetWriter dataWriter,
       CsvImportUploadStorage uploadStorage) {
     this(schemaManagement, dataWriter, uploadStorage, new CsvImportParser());
   }
 
   CsvDatasetImportService(
-      IDataExplorerSchemaManagement schemaManagement,
-      DatasetDataWriter dataWriter,
+      IDatasetMetadataManagement schemaManagement,
+      DatasetWriter dataWriter,
       CsvImportUploadStorage uploadStorage,
       CsvImportParser parser) {
     this.schemaManagement = schemaManagement;
@@ -374,7 +374,7 @@ public class CsvDatasetImportService {
       String principalSid,
       EventSchema eventSchema) {
     if (request.getTarget().getMode() == CsvImportTargetMode.NEW) {
-      var measure = new DatasetMeasure();
+      var measure = new DatasetMetadata();
       measure.setMeasureName(request.getTarget().getMeasurementName().trim());
       measure.setTimestampField(STREAM_PREFIX + request.getTimestampColumn());
       measure.setEventSchema(removeTimestampProperty(eventSchema, request.getTimestampColumn()));
@@ -405,6 +405,6 @@ public class CsvDatasetImportService {
     return sanitizedSchema;
   }
 
-  private record StoredMeasure(DatasetMeasure measure, boolean createdNewMeasurement) {
+  private record StoredMeasure(DatasetMetadata measure, boolean createdNewMeasurement) {
   }
 }

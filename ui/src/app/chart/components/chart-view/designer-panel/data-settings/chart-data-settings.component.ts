@@ -29,9 +29,9 @@ import {
 import {
     DataExplorerDataConfig,
     DataExplorerWidgetModel,
-    DatasetMeasure,
+    DataLakeMeasure,
     DatasetSummaryDto,
-    DatasetRestService,
+    DatalakeRestService,
     SourceConfig,
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../../core-model/base/Tuple2';
@@ -116,7 +116,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     ],
 })
 export class ChartDataSettingsComponent implements OnInit, OnDestroy {
-    private datasetRestService = inject(DatasetRestService);
+    private datalakeRestService = inject(DatalakeRestService);
     private widgetConfigService = inject(ChartConfigurationService);
     private fieldProviderService = inject(ChartFieldProviderService);
     private widgetTypeService = inject(ChartTypeService);
@@ -124,16 +124,16 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     private route = inject(ActivatedRoute);
 
     @Input() dataConfig: DataExplorerDataConfig;
-    @Input() datasetMeasure: DatasetMeasure;
+    @Input() dataLakeMeasure: DataLakeMeasure;
     @Input() newWidgetMode: boolean;
     @Input() widgetId: string;
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
     @Output() createWidgetEmitter: EventEmitter<
-        Tuple2<DatasetMeasure, DataExplorerWidgetModel>
-    > = new EventEmitter<Tuple2<DatasetMeasure, DataExplorerWidgetModel>>();
-    @Output() datasetMeasureChange: EventEmitter<DatasetMeasure> =
-        new EventEmitter<DatasetMeasure>();
+        Tuple2<DataLakeMeasure, DataExplorerWidgetModel>
+    > = new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
+    @Output() dataLakeMeasureChange: EventEmitter<DataLakeMeasure> =
+        new EventEmitter<DataLakeMeasure>();
     @Output() configureVisualizationEmitter: EventEmitter<void> =
         new EventEmitter<void>();
 
@@ -168,7 +168,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     }
 
     loadPipelinesAndDatasets() {
-        this.datasetRestService.getMeasurementSummary().subscribe(response => {
+        this.datalakeRestService.getMeasurementSummary().subscribe(response => {
             this.availableDatasets = response.resources.sort((a, b) =>
                 a.measureName.localeCompare(b.measureName),
             );
@@ -258,7 +258,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
         resetQueryConfig: boolean,
         refreshData: boolean,
     ): void {
-        this.datasetRestService
+        this.datalakeRestService
             .getMeasurementByName(measureName)
             .subscribe(measure =>
                 this.applySelectedMeasurement(
@@ -270,7 +270,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
     }
 
     private applySelectedMeasurement(
-        measure: DatasetMeasure,
+        measure: DataLakeMeasure,
         resetQueryConfig: boolean,
         refreshData: boolean,
     ): void {
@@ -279,8 +279,8 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.datasetMeasure = measure;
-        this.datasetMeasureChange.emit(measure);
+        this.dataLakeMeasure = measure;
+        this.dataLakeMeasureChange.emit(measure);
         sourceConfig.measureName = measure.measureName;
         sourceConfig.measure = measure;
         this.selectedDataset = this.findDatasetSummary(measure.measureName);
@@ -307,8 +307,8 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
 
     private syncCurrentMeasure(): void {
         if (this.sourceConfig?.measure) {
-            this.datasetMeasure = this.sourceConfig.measure;
-            this.datasetMeasureChange.emit(this.sourceConfig.measure);
+            this.dataLakeMeasure = this.sourceConfig.measure;
+            this.dataLakeMeasureChange.emit(this.sourceConfig.measure);
             this.selectedDataset = this.findDatasetSummary(
                 this.sourceConfig.measure.measureName,
             );
@@ -394,7 +394,7 @@ export class ChartDataSettingsComponent implements OnInit, OnDestroy {
             });
 
             this.createWidgetEmitter.emit({
-                a: this.datasetMeasure,
+                a: this.dataLakeMeasure,
                 b: this.currentlyConfiguredWidget,
             });
 

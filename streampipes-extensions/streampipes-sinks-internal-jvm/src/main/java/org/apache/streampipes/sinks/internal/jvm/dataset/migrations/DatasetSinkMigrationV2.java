@@ -34,7 +34,7 @@ public class DatasetSinkMigrationV2 implements IDataSinkMigrator {
   @Override
   public ModelMigratorConfig config() {
     return new ModelMigratorConfig(
-        "org.apache.streampipes.sinks.internal.jvm.datalake",
+        "org.apache.streampipes.sinks.internal.jvm.dataset",
         SpServiceTagPrefix.DATA_SINK,
         1,
         2

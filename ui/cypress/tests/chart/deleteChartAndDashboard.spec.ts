@@ -27,7 +27,7 @@ describe('Test Deletion of Chart and Dashboard', () => {
         const dashboard = 'TestDashboard';
         const chart = 'TestView';
 
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
 
         ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
 
@@ -50,7 +50,7 @@ describe('Test Deletion of Chart and Dashboard', () => {
 
         ChartUtils.checkRowsDashboardTable(1);
 
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
 
         ChartUtils.cancelDeleteChart(chart);
 

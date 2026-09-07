@@ -24,7 +24,7 @@ import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
 import org.apache.streampipes.model.dataset.DataSeries;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.SpQueryResult;
 
 import org.influxdb.InfluxDB;
@@ -255,7 +255,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   }
 
   @Override
-  public boolean deleteData(DatasetMeasure measure) {
+  public boolean deleteData(DatasetMetadata measure) {
     QueryResult queryResult = new DeleteDataQuery(measure).executeQuery();
 
     return !queryResult.hasError() && (queryResult.getResults() == null || queryResult.getResults()

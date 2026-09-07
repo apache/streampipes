@@ -16,10 +16,10 @@
  *
  */
 
-import { TimeSettings } from '../dataset/DateRange';
+import { TimeSettings } from '../datalake/DateRange';
 import {
     DataExplorerWidgetModel,
-    DatasetMeasure,
+    DataLakeMeasure,
     ResourceMetadata,
 } from '../gen/streampipes-model';
 
@@ -60,11 +60,7 @@ export interface Dashboard {
 
 export interface CompositeDashboard {
     dashboard: Dashboard;
-    datasetMeasures: DatasetMeasure[];
-    /**
-     * @deprecated since 0.99.0, for removal
-     */
-    dataLakeMeasures: DatasetMeasure[];
+    dataLakeMeasures: DataLakeMeasure[];
     widgets: DataExplorerWidgetModel[];
     revisionHash: string;
 }

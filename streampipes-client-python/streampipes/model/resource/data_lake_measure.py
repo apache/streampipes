@@ -15,23 +15,20 @@
 # limitations under the License.
 #
 
-from typing_extensions import deprecated
-
 from pydantic import StrictBool, StrictStr
 
 from streampipes.model.common import EventSchema
 from streampipes.model.resource.resource import Resource
 
 __all__ = [
-    "DatasetMeasure",
     "DataLakeMeasure",
 ]
 
 
-class DatasetMeasure(Resource):
-    """Implementation of a resource for dataset measures.
+class DataLakeMeasure(Resource):
+    """Implementation of a resource for data lake measures.
 
-    This resource defines the data model used by resource container (`model.container.DatasetMeasures`).
+    This resource defines the data model used by resource container (`model.container.DataLakeMeasures`).
     It inherits from Pydantic's BaseModel to get all its superpowers,
     which are used to parse, validate the API response, and to easily switch between
     the Python representation (both serialized and deserialized) and Java representation (serialized only).
@@ -66,8 +63,3 @@ class DatasetMeasure(Resource):
     pipeline_name: StrictStr | None = None
     pipeline_is_running: StrictBool
     schema_version: StrictStr | None = None
-
-
-@deprecated("deprecated since 0.99.0; please use DatasetMeasure instead.")
-class DataLakeMeasure(DatasetMeasure):
-    """DEPRECATED - use DatasetMeasure instead."""

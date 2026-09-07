@@ -35,13 +35,13 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
-import org.apache.streampipes.storage.api.explorer.IDatasetMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -61,7 +61,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final PipelineManager pipelineManager;
   private final SpResourceManager resourceManager;
-  private final IDatasetMeasureStorage datasetStorage;
+  private final IDatasetMetadataStorage datasetStorage;
 
   public PerformImportGenerator(AssetExportConfiguration config,
                                 String ownerSid,
@@ -74,7 +74,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.resourceManager = resourceManager;
     this.pipelineManager = pipelineManager;
-    this.datasetStorage = resourceManager.manageDatasetMeasures().getDb();
+    this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
   }
 
   @Override
@@ -139,10 +139,10 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   }
 
   @Override
-  protected void handleDataset(String document, String datasetMeasureId) throws JsonProcessingException {
-    if (shouldStore(datasetMeasureId, config.getDataLakeMeasures())) {
+  protected void handleDatasetMetadata(String document, String datasetMetadataId) throws JsonProcessingException {
+    if (shouldStore(datasetMetadataId, config.getDataLakeMeasures())) {
       writeDocument(document, new MeasurementResolver(datasetStorage));
-      permissionsToStore.add(new PermissionInfo(datasetMeasureId, DatasetMeasure.class));
+      permissionsToStore.add(new PermissionInfo(datasetMetadataId, DatasetMetadata.class));
     }
   }
 

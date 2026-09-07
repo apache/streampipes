@@ -92,7 +92,7 @@ public class ExportPackageGenerator {
 
     var dashboardResourceManager = resourceManager.manageDashboards();
     var pipelineResourceManager = resourceManager.managePipelines();
-    var datasetResourceManager = resourceManager.manageDatasetMeasures();
+    var datasetResourceManager = resourceManager.manageDataLakeMeasures();
     var fileMetadataStorage = resourceManager.getFileMetadataStorage();
 
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {
@@ -109,7 +109,7 @@ public class ExportPackageGenerator {
       config.getDataLakeMeasures().forEach(item -> addDoc(builder,
           item,
           new MeasurementResolver(datasetResourceManager.getDb()),
-          manifest::addDataLakeMeasure));
+          manifest::addDatasetMetadata));
 
       config.getPipelines().forEach(item -> addDoc(builder,
           item,

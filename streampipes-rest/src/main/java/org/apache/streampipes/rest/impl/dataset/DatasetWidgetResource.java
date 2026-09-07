@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v3/dataset/dashboard/widgets")
+@RequestMapping("/api/v3/datalake/dashboard/widgets")
 public class DatasetWidgetResource extends AbstractAuthGuardedRestResource {
 
   private final ChartResourceManager resourceManager;

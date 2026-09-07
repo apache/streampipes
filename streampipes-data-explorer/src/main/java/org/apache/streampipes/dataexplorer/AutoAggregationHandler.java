@@ -45,7 +45,7 @@ public class AutoAggregationHandler {
   // Date format for ISO 8601 timestamps without milliseconds
   private final SimpleDateFormat isoFormatOnlySeconds = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-  private final IDataExplorerQueryManagement datasetQueryManagement;
+  private final IDataExplorerQueryManagement dataLakeQueryManagement;
   private final ProvidedRestQueryParams queryParams;
   private final boolean ignoreMissingData;
 
@@ -53,7 +53,7 @@ public class AutoAggregationHandler {
                                 IDataExplorerQueryManagement dataExplorerQueryManagement,
                                 boolean ignoreMissingData) {
     this.queryParams = params;
-    this.datasetQueryManagement = dataExplorerQueryManagement;
+    this.dataLakeQueryManagement = dataExplorerQueryManagement;
     this.ignoreMissingData = ignoreMissingData;
   }
 
@@ -94,7 +94,7 @@ public class AutoAggregationHandler {
   }
 
   private SpQueryResult fireQuery(ProvidedRestQueryParams params) {
-    return datasetQueryManagement.getData(params, ignoreMissingData);
+    return dataLakeQueryManagement.getData(params, ignoreMissingData);
   }
 
   private long getAggregationValue(SpQueryResult newest,

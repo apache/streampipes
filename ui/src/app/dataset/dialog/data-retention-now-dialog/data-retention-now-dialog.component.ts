@@ -22,7 +22,7 @@ import {
     SpExceptionDetailsComponent,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
-import { DatasetRestService } from '@streampipes/platform-services';
+import { DatalakeRestService } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 import {
@@ -49,7 +49,7 @@ export class DataRetentionNowDialogComponent implements OnInit {
     @Input()
     measurementIndex: string;
 
-    datasetRestService = inject(DatasetRestService);
+    datalakeRestService = inject(DatalakeRestService);
     private dialogRef = inject(DialogRef<DataRetentionNowDialogComponent>);
     private translateService = inject(TranslateService);
 
@@ -64,7 +64,7 @@ export class DataRetentionNowDialogComponent implements OnInit {
         this.isInProgress = true;
         this.isError = false;
 
-        this.datasetRestService
+        this.datalakeRestService
             .runCleanupNow(this.measurementIndex)
             .pipe(finalize(() => (this.isInProgress = false)))
             .subscribe(
@@ -84,7 +84,7 @@ export class DataRetentionNowDialogComponent implements OnInit {
             );
     }
 
-    close(refreshDatasetIndex: boolean) {
-        this.dialogRef.close(refreshDatasetIndex);
+    close(refreshDataLakeIndex: boolean) {
+        this.dialogRef.close(refreshDataLakeIndex);
     }
 }

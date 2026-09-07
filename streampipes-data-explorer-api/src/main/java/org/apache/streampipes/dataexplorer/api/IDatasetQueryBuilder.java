@@ -21,7 +21,7 @@ package org.apache.streampipes.dataexplorer.api;
 
 
 import org.apache.streampipes.model.dataset.AggregationFunction;
-import org.apache.streampipes.model.dataset.DatasetQueryOrdering;
+import org.apache.streampipes.model.dataset.DataLakeQueryOrdering;
 import org.apache.streampipes.model.dataset.FilterCondition;
 import org.apache.streampipes.model.dataset.FilterExpressionGroup;
 
@@ -75,7 +75,7 @@ public interface IDatasetQueryBuilder<T> {
 
   IDatasetQueryBuilder<T> withGroupBy(String column);
 
-  IDatasetQueryBuilder<T> withOrderBy(DatasetQueryOrdering ordering);
+  IDatasetQueryBuilder<T> withOrderBy(DataLakeQueryOrdering ordering);
 
   IDatasetQueryBuilder<T> withLimit(int limit);
 

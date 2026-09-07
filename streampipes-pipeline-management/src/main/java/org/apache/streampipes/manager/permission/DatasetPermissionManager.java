@@ -19,7 +19,7 @@ package org.apache.streampipes.manager.permission;
 
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.PermissionBuilder;
-import org.apache.streampipes.model.dataset.DatasetMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 public class DatasetPermissionManager {
@@ -30,16 +30,16 @@ public class DatasetPermissionManager {
     this.permissionStorage = permissionStorage;
   }
 
-  private Permission createDatasetPermission(String measurement, String principalSid) {
+  private Permission createDataLakePermission(String measurement, String principalSid) {
     return PermissionBuilder
-        .create(measurement, DatasetMeasure.class, principalSid)
+        .create(measurement, DatasetMetadata.class, principalSid)
         .build();
   }
 
-  public void makeAndPersistDatasetPermission(String measurement,
+  public void makeAndPersistDataLakePermission(String measurement,
                                                String ownerSid) {
 
-    Permission p = createDatasetPermission(measurement, ownerSid);
+    Permission p = createDataLakePermission(measurement, ownerSid);
     permissionStorage.persist(p);
 
   }

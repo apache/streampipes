@@ -19,7 +19,7 @@
 import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SharedDatasetRestService } from './shared-dashboard.service';
+import { SharedDatalakeRestService } from './shared-dashboard.service';
 import {
     CompositeDashboard,
     Dashboard,
@@ -35,10 +35,10 @@ import {
 })
 export class DashboardService {
     private http = inject(HttpClient);
-    private sharedDatasetRestService = inject(SharedDatasetRestService);
+    private sharedDatalakeRestService = inject(SharedDatalakeRestService);
 
     getDashboards(): Observable<Dashboard[]> {
-        return this.sharedDatasetRestService.getDashboards(this.dashboardUrl);
+        return this.sharedDatalakeRestService.getDashboards(this.dashboardUrl);
     }
 
     getDashboardSummary(): Observable<ResourceSummaryDto<DashboardSummaryDto>> {
@@ -67,14 +67,14 @@ export class DashboardService {
     }
 
     updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
-        return this.sharedDatasetRestService.updateDashboard(
+        return this.sharedDatalakeRestService.updateDashboard(
             this.dashboardUrl,
             dashboard,
         );
     }
 
     deleteDashboard(dashboard: Dashboard): Observable<any> {
-        return this.sharedDatasetRestService.deleteDashboard(
+        return this.sharedDatalakeRestService.deleteDashboard(
             this.dashboardUrl,
             dashboard,
         );
@@ -85,7 +85,7 @@ export class DashboardService {
     }
 
     saveDashboard(dashboard: Dashboard): Observable<any> {
-        return this.sharedDatasetRestService.saveDashboard(
+        return this.sharedDatalakeRestService.saveDashboard(
             this.dashboardUrl,
             dashboard,
         );
@@ -96,6 +96,6 @@ export class DashboardService {
     }
 
     private get dashboardUrl() {
-        return `${this.baseUrl}/api/v3/dataset/dashboard`;
+        return `${this.baseUrl}/api/v3/datalake/dashboard`;
     }
 }

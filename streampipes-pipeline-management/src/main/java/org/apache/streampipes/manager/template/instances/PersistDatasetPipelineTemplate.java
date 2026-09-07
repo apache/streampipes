@@ -29,7 +29,7 @@ import java.util.Map;
 public class PersistDatasetPipelineTemplate implements DefaultPipelineTemplateProvider {
 
   public static final String DATASET_SINK_REF = "lake";
-  public static final String DATASET_SINK_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
+  public static final String DATASET_SINK_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
   public static final String DATASET_CONNECTOR_ID = "stream1";
   public static final String DATASET_TEMPLATE_ID = "sp-internal-persist";
 
