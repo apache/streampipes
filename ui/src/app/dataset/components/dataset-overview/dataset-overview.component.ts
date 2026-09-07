@@ -40,8 +40,8 @@ import {
 } from '@angular/material/table';
 import { DatasetOverviewEntry } from './dataset-overview-entry';
 import {
-    DatalakeRestService,
     DataLakeMeasure,
+    DatalakeRestService,
     DatasetSummaryDto,
     ExportProviderService,
     ExportProviderSettings,
@@ -58,15 +58,14 @@ import {
     ObjectManageDialogResourceConfig,
     PanelType,
     SpAssetBrowserService,
-    SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBreadcrumbService,
-    SpPageHeaderComponent,
-    SpTableAssetContextConfig,
-    SpTableActionsDirective,
-    SpTableComponent,
-    SpSpinnerComponent,
     SplitSectionComponent,
+    SpPageHeaderComponent,
+    SpSpinnerComponent,
+    SpTableActionsDirective,
+    SpTableAssetContextConfig,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
 import { DeleteDatasetDialogComponent } from '../../dialog/delete-dataset/delete-dataset-dialog.component';
 import { SpConfigurationRoutes } from '../../../configuration/configuration.breadcrumb';
@@ -127,7 +126,6 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         MatRow,
         TranslatePipe,
         SpTableComponent,
-        SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
         SpPageHeaderComponent,
         SpTableActionsDirective,

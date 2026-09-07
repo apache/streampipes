@@ -28,7 +28,6 @@ import {
 } from '@streampipes/shared-ui';
 import { MatToolbar } from '@angular/material/toolbar';
 import {
-    FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
@@ -45,7 +44,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./toolbar.component.scss'],
     imports: [
         MatToolbar,
-        FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
         SpBreadcrumbComponent,

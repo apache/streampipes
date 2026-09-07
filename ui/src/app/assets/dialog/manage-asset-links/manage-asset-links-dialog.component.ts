@@ -16,15 +16,11 @@
  *
  */
 
-import { Component, HostListener, Input, OnInit, inject } from '@angular/core';
+import { Component, HostListener, inject, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -39,8 +35,6 @@ import { AssetLinkTableComponent } from './asset-link-table/asset-link-table.com
     templateUrl: './manage-asset-links-dialog.component.html',
     imports: [
         FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
         MatButton,
         MatDivider,
         AssetLinkTableComponent,

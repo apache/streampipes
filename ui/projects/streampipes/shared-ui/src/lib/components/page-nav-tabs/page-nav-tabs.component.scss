@@ -24,6 +24,7 @@
 .page-nav-tabs {
     min-width: 0;
     overflow-x: auto;
+    overflow-y: hidden;
     overscroll-behavior-inline: contain;
     border-bottom: 1px solid
         var(--page-nav-tabs-border-color, var(--color-border-subtle));
@@ -62,7 +63,7 @@
 .page-nav-tabs__item::after {
     position: absolute;
     right: 0;
-    bottom: -1px;
+    bottom: 0;
     left: 0;
     height: 2px;
     content: '';

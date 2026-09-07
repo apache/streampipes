@@ -36,11 +36,7 @@ import {
 } from '@angular/router';
 import { BaseAssetDetailsDirective } from '../base-asset-details.directive';
 import { SpAssetSelectionPanelComponent } from './asset-selection-panel/asset-selection-panel.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { AssetDetailsBasicsComponent } from './asset-details-panel/asset-details-basics/asset-details-basics.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -69,8 +65,6 @@ type ManageableAsset = SpAssetModel & {
         SpAssetSelectionPanelComponent,
         SpBasicViewComponent,
         SpPageHeaderComponent,
-        FlexDirective,
-        LayoutAlignDirective,
         LayoutDirective,
         MatButton,
         MatIconButton,

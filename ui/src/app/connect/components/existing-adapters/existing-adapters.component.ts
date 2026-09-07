@@ -44,15 +44,15 @@ import {
     SpAssetBrowserService,
     SpBasicViewComponent,
     SpBreadcrumbService,
-    SpPageHeaderComponent,
     SpExceptionDetailsDialogComponent,
     SpLabelComponent,
+    SpPageHeaderComponent,
+    SpSpinnerComponent,
+    SpTableActionsDirective,
     SpTableAssetContextConfig,
+    SpTableComponent,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
-    SpTableActionsDirective,
-    SpTableComponent,
-    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { AdapterCodeDialogComponent } from '../../dialog/adapter-code-dialog/adapter-code-dialog.component';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
@@ -68,7 +68,6 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
-    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -86,7 +85,6 @@ import { AsyncPipe, DatePipe } from '@angular/common';
         FlexDirective,
         LayoutAlignDirective,
         LayoutDirective,
-        LayoutGapDirective,
         MatButton,
         MatIcon,
         MatIconButton,

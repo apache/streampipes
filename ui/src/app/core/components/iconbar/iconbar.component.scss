@@ -45,6 +45,16 @@
         var(--color-menubar-bg-menu-item-selected) 72%,
         var(--color-menubar-text-menu-item) 28%
     );
+    --mb-scrollbar-thumb: color-mix(
+        in srgb,
+        var(--color-menubar-text-menu-item) 32%,
+        transparent
+    );
+    --mb-scrollbar-thumb-hover: color-mix(
+        in srgb,
+        var(--color-menubar-text-menu-item) 50%,
+        transparent
+    );
 
     position: sticky;
     top: 0;
@@ -139,6 +149,27 @@
     padding: var(--space-md) var(--space-sm) var(--space-lg);
     overflow-y: auto;
     overscroll-behavior: contain;
+    scrollbar-color: var(--mb-scrollbar-thumb) transparent;
+    scrollbar-width: thin;
+}
+
+.menubar-scroll::-webkit-scrollbar {
+    width: var(--space-sm);
+}
+
+.menubar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.menubar-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--mb-scrollbar-thumb);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+}
+
+.menubar-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: var(--mb-scrollbar-thumb-hover);
 }
 
 /* Ungrouped items */
