@@ -537,16 +537,12 @@ export class ChartUtils {
     ) {
         cy.dataCy('design-panel-data-settings-filter-operator')
             .click()
-            .should('have.attr', 'aria-expanded', 'true');
-
-        cy.get('.cdk-overlay-container [data-cy^="operator-"]', {
-            timeout: 10000,
-        }).should('have.length', expectedFilterOptions.length);
+            .dataCy('operator-', {}, true)
+            .should('have.length', expectedFilterOptions.length);
 
         expectedFilterOptions.forEach(option => {
-            cy.get(
-                `.cdk-overlay-container [data-cy="operator-${option}"]`,
-            ).should('be.visible');
+            const escapedOption = option.replace(/([=<>!])/g, '\\$1');
+            cy.dataCy('operator-' + escapedOption).should('be.visible');
         });
 
         cy.dataCy('design-panel-data-settings-filter-operator').click({
