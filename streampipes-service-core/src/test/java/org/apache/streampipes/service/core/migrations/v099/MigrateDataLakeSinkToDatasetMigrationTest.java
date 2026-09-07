@@ -18,11 +18,13 @@
 
 package org.apache.streampipes.service.core.migrations.v099;
 
+import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -42,13 +47,15 @@ class MigrateDataLakeSinkToDatasetMigrationTest {
 
   private IPipelineStorage pipelineStorage;
   private IDataSinkStorage dataSinkStorage;
+  private IPermissionStorage permissionStorage;
   private MigrateDataLakeSinkToDatasetMigration migration;
 
   @BeforeEach
   void setUp() {
     pipelineStorage = mock(IPipelineStorage.class);
     dataSinkStorage = mock(IDataSinkStorage.class);
-    migration = new MigrateDataLakeSinkToDatasetMigration(pipelineStorage, dataSinkStorage);
+    permissionStorage = mock(IPermissionStorage.class);
+    migration = new MigrateDataLakeSinkToDatasetMigration(pipelineStorage, dataSinkStorage, permissionStorage);
   }
 
   @Test
@@ -64,24 +71,30 @@ class MigrateDataLakeSinkToDatasetMigrationTest {
     unaffectedPipeline.setActions(List.of(otherSink));
     var dataLakeDescription = new DataSinkDescription();
     dataLakeDescription.setAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID);
+    dataLakeDescription.setElementId("sp:org.apache.streampipes.sinks.internal.jvm.datalake");
 
     when(pipelineStorage.findAll()).thenReturn(List.of(affectedPipeline, unaffectedPipeline));
     when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID))
         .thenReturn(List.of(dataLakeDescription));
+    when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID))
+        .thenReturn(List.of());
+    when(permissionStorage.getUserPermissionsForObject(any())).thenReturn(List.of());
 
     migration.executeMigration();
 
     assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID, dataLakeSink.getAppId());
+    assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_ELEMENT_ID, dataLakeSink.getBelongsTo());
     assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_NAME, dataLakeSink.getName());
     assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_DESCRIPTION, dataLakeSink.getDescription());
     assertEquals("org.apache.streampipes.sinks.notifications.jvm.email", otherSink.getAppId());
     verify(pipelineStorage).updateElement(affectedPipeline);
     verify(pipelineStorage, never()).updateElement(unaffectedPipeline);
-    assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID, dataLakeDescription.getAppId());
-    assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_NAME, dataLakeDescription.getName());
-    assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_DESCRIPTION,
-        dataLakeDescription.getDescription());
-    verify(dataSinkStorage).updateElement(dataLakeDescription);
+    verify(dataSinkStorage).persist(argThat(description ->
+        MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID.equals(description.getAppId())
+            && MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_ELEMENT_ID.equals(description.getElementId())
+            && MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_NAME.equals(description.getName())
+            && MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_DESCRIPTION.equals(description.getDescription())));
+    verify(dataSinkStorage).deleteElement(dataLakeDescription);
   }
 
   @Test
@@ -90,6 +103,8 @@ class MigrateDataLakeSinkToDatasetMigrationTest {
     when(pipelineStorage.findAll()).thenReturn(List.of());
     when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID))
         .thenReturn(List.of(dataLakeDescription));
+    when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID))
+        .thenReturn(List.of());
 
     assertTrue(migration.shouldExecute());
   }
@@ -105,6 +120,8 @@ class MigrateDataLakeSinkToDatasetMigrationTest {
     when(pipelineStorage.findAll()).thenReturn(List.of(pipeline));
     when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID))
         .thenReturn(List.of());
+    when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID))
+        .thenReturn(List.of());
 
     migration.executeMigration();
 
@@ -117,19 +134,22 @@ class MigrateDataLakeSinkToDatasetMigrationTest {
   void removesLegacyDescriptionWhenDatasetDescriptionExists() throws IOException {
     var dataLakeDescription = new DataSinkDescription();
     dataLakeDescription.setAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID);
+    dataLakeDescription.setElementId("sp:org.apache.streampipes.sinks.internal.jvm.datalake");
     var datasetDescription = new DataSinkDescription();
     datasetDescription.setAppId(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID);
+    datasetDescription.setElementId(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_ELEMENT_ID);
 
     when(pipelineStorage.findAll()).thenReturn(List.of());
     when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID))
         .thenReturn(List.of(dataLakeDescription));
     when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID))
         .thenReturn(List.of(datasetDescription));
+    when(permissionStorage.getUserPermissionsForObject(any())).thenReturn(List.of());
 
     migration.executeMigration();
 
     verify(dataSinkStorage).deleteElement(dataLakeDescription);
-    verify(dataSinkStorage, never()).updateElement(dataLakeDescription);
+    verify(dataSinkStorage, never()).persist(any());
   }
 
   @Test
@@ -137,7 +157,36 @@ class MigrateDataLakeSinkToDatasetMigrationTest {
     when(pipelineStorage.findAll()).thenReturn(List.of());
     when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID))
         .thenReturn(List.of());
+    when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID))
+        .thenReturn(List.of());
 
     assertFalse(migration.shouldExecute());
+  }
+
+  @Test
+  void repairsPreviouslyMigratedDatasetDescriptionAndPermissions() throws IOException {
+    var legacyDatasetDescription = new DataSinkDescription();
+    legacyDatasetDescription.setAppId(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID);
+    legacyDatasetDescription.setElementId("sp:org.apache.streampipes.sinks.internal.jvm.datalake");
+    var permission = new Permission();
+    permission.setObjectInstanceId(legacyDatasetDescription.getElementId());
+
+    when(pipelineStorage.findAll()).thenReturn(List.of());
+    when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATA_LAKE_SINK_APP_ID))
+        .thenReturn(List.of());
+    when(dataSinkStorage.getDataSinksByAppId(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_APP_ID))
+        .thenReturn(List.of(legacyDatasetDescription));
+    when(permissionStorage.getUserPermissionsForObject(eq(legacyDatasetDescription.getElementId())))
+        .thenReturn(List.of(permission));
+
+    assertTrue(migration.shouldExecute());
+    migration.executeMigration();
+
+    verify(dataSinkStorage).persist(argThat(description ->
+        MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_ELEMENT_ID.equals(description.getElementId())));
+    verify(dataSinkStorage).deleteElement(legacyDatasetDescription);
+    assertEquals(MigrateDataLakeSinkToDatasetMigration.DATASET_SINK_ELEMENT_ID,
+        permission.getObjectInstanceId());
+    verify(permissionStorage).updateElement(permission);
   }
 }
