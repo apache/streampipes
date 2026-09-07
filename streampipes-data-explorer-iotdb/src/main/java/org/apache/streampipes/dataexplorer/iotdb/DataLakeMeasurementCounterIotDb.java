@@ -51,10 +51,10 @@ public class DataLakeMeasurementCounterIotDb extends DataLakeMeasurementCounter 
     var sessionPool = new IotDbSessionProvider().getSessionPool(Environments.getEnvironment());
     return CompletableFuture.supplyAsync(() -> {
 
-      // We want to apply the count query to only one property of the measurement, as this is sufficient and
+      // We want to apply the count query to only one stored property of the measurement, as this is sufficient and
       // significantly reduces the complexity of the query compared to counting all available properties.
-      // So we can just take the first measurement
-      var propertyName = getFirstMeasurementProperty(measure);
+      // So we can just take the first countable property.
+      var propertyName = getFirstCountableProperty(measure);
 
       try (var result = new DataExplorerIotDbQueryExecutor(sessionPool).executeQuery(
           "Select count(%s) from root.streampipes.%s".formatted(propertyName, measure.getMeasureName())
