@@ -17,14 +17,20 @@
  */
 
 .adapter-description {
-    padding: 10px;
+    min-width: 0;
 }
 
 .marketplace-container {
     width: 100%;
 }
 
-.filter-bar-margin {
-    margin-left: 10px;
-    padding-left: 10px;
+.adapter-catalog__filter {
+    display: block;
+    margin-bottom: var(--space-lg);
+}
+
+.adapter-catalog__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(17.5rem, 100%), 1fr));
+    gap: var(--space-md);
 }

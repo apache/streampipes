@@ -32,10 +32,8 @@ import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import {
     FormFieldComponent,
     SpAlertBannerComponent,
-    SpBasicNavTabsComponent,
     SpBreadcrumbService,
     SplitSectionComponent,
-    SpNavigationItem,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -56,7 +54,6 @@ import { MatDivider } from '@angular/material/divider';
     selector: 'sp-email-configuration',
     templateUrl: './email-configuration.component.html',
     imports: [
-        SpBasicNavTabsComponent,
         LayoutDirective,
         FlexDirective,
         LayoutAlignDirective,
@@ -85,8 +82,6 @@ export class EmailConfigurationComponent implements OnInit {
     private tabService = inject(SpConfigurationTabsService);
     private translateService = inject(TranslateService);
 
-    tabs: SpNavigationItem[] = [];
-
     parentForm: UntypedFormGroup;
 
     mailConfig: EmailConfig;
@@ -99,7 +94,6 @@ export class EmailConfigurationComponent implements OnInit {
     sendingEmailErrorMessage = '';
 
     ngOnInit(): void {
-        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: this.tabService.getTabTitle('email') },

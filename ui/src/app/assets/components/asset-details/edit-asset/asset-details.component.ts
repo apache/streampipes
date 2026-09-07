@@ -27,6 +27,7 @@ import {
     PanelType,
     SpAssetBrowserService,
     SpBasicViewComponent,
+    SpPageHeaderComponent,
 } from '@streampipes/shared-ui';
 import {
     ActivatedRouteSnapshot,
@@ -35,11 +36,7 @@ import {
 } from '@angular/router';
 import { BaseAssetDetailsDirective } from '../base-asset-details.directive';
 import { SpAssetSelectionPanelComponent } from './asset-selection-panel/asset-selection-panel.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { AssetDetailsBasicsComponent } from './asset-details-panel/asset-details-basics/asset-details-basics.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -63,11 +60,11 @@ type ManageableAsset = SpAssetModel & {
 @Component({
     selector: 'sp-asset-details',
     templateUrl: './asset-details.component.html',
+    styleUrls: ['./asset-details.component.scss'],
     imports: [
         SpAssetSelectionPanelComponent,
         SpBasicViewComponent,
-        FlexDirective,
-        LayoutAlignDirective,
+        SpPageHeaderComponent,
         LayoutDirective,
         MatButton,
         MatIconButton,

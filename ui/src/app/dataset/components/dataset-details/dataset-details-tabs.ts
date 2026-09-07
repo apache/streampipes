@@ -25,16 +25,19 @@ export class SpDatasetDetailsTabs {
                 itemId: 'schema',
                 itemTitle: 'Event schema',
                 itemLink: ['datasets', elementId, 'schema'],
+                itemIcon: 'account_tree',
             },
             {
                 itemId: 'metrics',
                 itemTitle: 'Metrics',
                 itemLink: ['datasets', elementId, 'metrics'],
+                itemIcon: 'monitoring',
             },
             {
                 itemId: 'events',
                 itemTitle: 'Latest events',
                 itemLink: ['datasets', elementId, 'events'],
+                itemIcon: 'table_view',
             },
         ];
     }

@@ -20,16 +20,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import {
     PipelineElementSchemaService,
     PropertyScopeBadgeComponent,
-    SpBasicHeaderTitleComponent,
-    SpBasicNavTabsComponent,
-    SpElementIdComponent,
 } from '@streampipes/shared-ui';
 import { SpAbstractDatasetDetailsDirective } from '../abstract-dataset-details.directive';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
     MatCell,
     MatCellDef,
@@ -49,6 +42,7 @@ import {
     EventPropertyPrimitive,
     EventPropertyUnion,
 } from '@streampipes/platform-services';
+import { SpDatasetDetailsLayoutComponent } from '../dataset-details-layout/dataset-details-layout.component';
 
 interface SchemaRow {
     runtimeName: string;
@@ -63,12 +57,9 @@ interface SchemaRow {
     templateUrl: './dataset-details-schema.component.html',
     styleUrls: ['./dataset-details-schema.component.scss'],
     imports: [
-        SpBasicNavTabsComponent,
-        SpBasicHeaderTitleComponent,
-        SpElementIdComponent,
+        SpDatasetDetailsLayoutComponent,
         PropertyScopeBadgeComponent,
         LayoutDirective,
-        LayoutAlignDirective,
         FlexDirective,
         MatTable,
         MatColumnDef,

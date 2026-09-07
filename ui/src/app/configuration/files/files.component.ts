@@ -20,10 +20,8 @@ import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import {
     DialogService,
     PanelType,
-    SpBasicNavTabsComponent,
     SpBreadcrumbService,
     SplitSectionComponent,
-    SpNavigationItem,
 } from '@streampipes/shared-ui';
 import { FileUploadDialogComponent } from '../dialog/file-upload/file-upload-dialog.component';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
@@ -42,7 +40,6 @@ import { FileOverviewComponent } from './file-overview/file-overview.component';
     templateUrl: './files.component.html',
     styleUrls: ['./files.component.scss'],
     imports: [
-        SpBasicNavTabsComponent,
         SplitSectionComponent,
         LayoutDirective,
         LayoutAlignDirective,
@@ -59,12 +56,9 @@ export class FilesComponent implements OnInit {
     private tabService = inject(SpConfigurationTabsService);
     private translateService = inject(TranslateService);
 
-    tabs: SpNavigationItem[] = [];
-
     @ViewChild('fileOverviewComponent') fileOverviewComponent;
 
     ngOnInit() {
-        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: this.tabService.getTabTitle('files') },

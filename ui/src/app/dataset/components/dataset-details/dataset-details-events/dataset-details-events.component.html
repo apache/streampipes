@@ -16,35 +16,19 @@
 ~
 -->
 
-<sp-basic-nav-tabs
-    [spNavigationItems]="tabs"
-    [activeLink]="'events'"
-    [showBackLink]="true"
-    [backLinkTarget]="['datasets']"
+<sp-dataset-details-layout
+    [dataset]="dataset"
+    [datasetNotFound]="datasetNotFound"
+    [tabs]="tabs"
+    activeLink="events"
 >
-    @if (datasetNotFound) {
-        <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
-            {{ 'The desired dataset was not found!' | translate }}
-        </div>
-    } @else if (dataset) {
+    @if (dataset) {
         <div
             fxLayout="column"
             fxFlex="100"
             fxLayoutGap="1rem"
             class="events-tab-content"
         >
-            <div fxLayout="row" fxLayoutAlign="start center">
-                <sp-basic-header-title-component
-                    [title]="dataset.measureName + ' - Latest events'"
-                ></sp-basic-header-title-component>
-                <span fxFlex></span>
-                <sp-element-id
-                    fxLayoutAlign="end start"
-                    [value]="dataset.elementId"
-                >
-                </sp-element-id>
-            </div>
-
             <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0.5rem">
                 <mat-form-field
                     appearance="outline"
@@ -65,12 +49,15 @@
                 <button
                     mat-icon-button
                     color="accent"
+                    [attr.aria-label]="'Refresh' | translate"
                     [matTooltip]="'Refresh' | translate"
                     [disabled]="loadingEvents"
                     data-cy="dataset-details-refresh-events"
                     (click)="refreshLatestEvents()"
                 >
-                    <mat-icon>refresh</mat-icon>
+                    <mat-icon aria-hidden="true">{{
+                        loadingEvents ? 'hourglass_top' : 'refresh'
+                    }}</mat-icon>
                 </button>
             </div>
 
@@ -199,4 +186,4 @@
             </div>
         </div>
     }
-</sp-basic-nav-tabs>
+</sp-dataset-details-layout>

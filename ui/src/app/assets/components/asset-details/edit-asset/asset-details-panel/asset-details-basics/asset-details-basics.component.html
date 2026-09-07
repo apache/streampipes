@@ -17,10 +17,7 @@
 -->
 
 <div class="page-container-padding-inner" fxLayout="column">
-    <sp-split-section
-        [level]="2"
-        [title]="('Basics' | translate) + ': ' + asset.assetName"
-    >
+    <sp-split-section [level]="2" [title]="'Basics' | translate">
         @if (!rootNode || isNewAsset) {
             <sp-form-field
                 [level]="2"

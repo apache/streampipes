@@ -19,27 +19,25 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractFunctionDetailsDirective } from '../abstract-function-details.directive';
 import { SpLogEntry } from '@streampipes/platform-services';
-import { SpBasicNavTabsComponent } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { SpSimpleLogsComponent } from '../../../../core-ui/monitoring/simple-logs/simple-logs.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpFunctionDetailsLayoutComponent } from '../function-details-layout/function-details-layout.component';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'sp-functions-logs',
     templateUrl: './functions-logs.component.html',
     styleUrls: [],
     imports: [
-        SpBasicNavTabsComponent,
+        SpFunctionDetailsLayoutComponent,
         FlexDirective,
         LayoutDirective,
-        LayoutAlignDirective,
         MatIconButton,
+        MatIcon,
         MatTooltip,
         SpSimpleLogsComponent,
         TranslatePipe,
@@ -62,6 +60,7 @@ export class SpFunctionsLogsComponent
     loadLogs(): void {
         this.functionsService
             .getFunctionLogs(this.activeFunction.functionId.id)
+            .pipe(finalize(() => (this.refreshing = false)))
             .subscribe(logs => {
                 this.logs = logs;
                 this.contentReady = true;

@@ -25,21 +25,25 @@ export class SpAdapterDetailsTabs {
                 itemId: 'data',
                 itemTitle: 'Data',
                 itemLink: ['connect', 'details', elementId, 'data'],
+                itemIcon: 'table_view',
             },
             {
                 itemId: 'metrics',
                 itemTitle: 'Metrics',
                 itemLink: ['connect', 'details', elementId, 'metrics'],
+                itemIcon: 'monitoring',
             },
             {
                 itemId: 'logs',
                 itemTitle: 'Logs',
                 itemLink: ['connect', 'details', elementId, 'logs'],
+                itemIcon: 'receipt_long',
             },
             {
                 itemId: 'code',
                 itemTitle: 'Code',
                 itemLink: ['connect', 'details', elementId, 'code'],
+                itemIcon: 'code',
             },
         ];
     }

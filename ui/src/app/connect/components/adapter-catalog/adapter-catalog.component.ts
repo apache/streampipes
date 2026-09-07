@@ -22,9 +22,9 @@ import {
     AdapterService,
 } from '@streampipes/platform-services';
 import {
-    SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBreadcrumbService,
+    SpPageHeaderComponent,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
@@ -49,7 +49,7 @@ import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
         LayoutAlignDirective,
         LayoutDirective,
         SpConnectFilterToolbarComponent,
-        SpBasicHeaderTitleComponent,
+        SpPageHeaderComponent,
         SpSpinnerComponent,
         AdapterCatalogItemComponent,
         TranslatePipe,

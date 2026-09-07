@@ -17,74 +17,63 @@
 -->
 
 @if (asset) {
-    <div fxLayout="column">
-        <sp-asset-top-banner
-            [assetModel]="asset"
-            [locationConfig]="locationConfig"
-        ></sp-asset-top-banner>
-
-        <sp-basic-view
-            [showBackLink]="true"
+    <sp-basic-view [hideNavbar]="true" [padding]="true">
+        <sp-page-header
+            [title]="selectedAsset?.assetName || asset.assetName"
+            [description]="
+                selectedAsset?.assetDescription || asset.assetDescription
+            "
+            icon="precision_manufacturing"
+            iconColor="var(--color-primary)"
             [backLinkTarget]="['assets']"
-            [padding]="false"
-            fxFlex="100"
         >
-            <div nav fxLayoutAlign="start center" fxFlex="100">
-                @if (asset) {
-                    <span fxFlex></span>
-                    <button
-                        mat-flat-button
-                        class="mat-basic ml-md"
-                        color="secondary"
-                        data-cy="filter-button"
-                        [matMenuTriggerFor]="menu"
-                        #menuTrigger="matMenuTrigger"
-                        [matTooltip]="'Show subassets' | translate"
-                        (menuClosed)="menuTrigger.closeMenu()"
-                    >
-                        <span>{{ selectedAsset.assetName }}</span>
-                        <mat-icon>expand_circle_down</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu" fxFlex="100" class="large-menu">
-                        <sp-asset-selection-menu
-                            (assetSelected)="applySelectedAsset($event)"
-                            [assetModel]="asset"
-                            [selectedAsset]="selectedAsset"
-                        >
-                        </sp-asset-selection-menu>
-                    </mat-menu>
-                }
-            </div>
-            @if (selectedAsset) {
-                <div
-                    fxLayout="column"
-                    class="page-container-padding-inner p-10"
+            <button
+                pageActions
+                type="button"
+                mat-flat-button
+                class="mat-basic"
+                data-cy="filter-button"
+                [disabled]="!selectedAsset"
+                [matMenuTriggerFor]="menu"
+                #menuTrigger="matMenuTrigger"
+                [matTooltip]="'Show subassets' | translate"
+                (menuClosed)="menuTrigger.closeMenu()"
+            >
+                <mat-icon aria-hidden="true">account_tree</mat-icon>
+                <span>{{ selectedAsset?.assetName || asset.assetName }}</span>
+                <mat-icon aria-hidden="true">expand_more</mat-icon>
+            </button>
+        </sp-page-header>
+
+        <mat-menu #menu="matMenu" class="large-menu">
+            <sp-asset-selection-menu
+                (assetSelected)="applySelectedAsset($event)"
+                [assetModel]="asset"
+                [selectedAsset]="selectedAsset"
+            >
+            </sp-asset-selection-menu>
+        </mat-menu>
+
+        @if (selectedAsset) {
+            <sp-asset-top-banner
+                [assetModel]="selectedAsset"
+                [locationConfig]="locationConfig"
+            ></sp-asset-top-banner>
+
+            @if (selectedAsset.additionalData?.customFields) {
+                <sp-split-section
+                    [level]="2"
+                    [title]="'Custom fields' | translate"
                 >
-                    @if (selectedAsset.assetId !== asset.assetId) {
-                        <sp-view-asset-basics
-                            [sites]="sites"
-                            [selectedAsset]="selectedAsset"
-                            fxFlex="100"
-                        ></sp-view-asset-basics>
-                    }
-                    @if (selectedAsset.additionalData?.customFields) {
-                        <sp-split-section
-                            [level]="2"
-                            [title]="'Custom fields' | translate"
-                        >
-                            <sp-asset-details-custom-fields
-                                [asset]="selectedAsset"
-                                [editMode]="false"
-                            ></sp-asset-details-custom-fields>
-                        </sp-split-section>
-                    }
-                    <sp-view-asset-links
-                        [selectedAsset]="selectedAsset"
-                        class="w-100"
-                    >
-                    </sp-view-asset-links>
-                </div>
+                    <sp-asset-details-custom-fields
+                        [asset]="selectedAsset"
+                        [editMode]="false"
+                    ></sp-asset-details-custom-fields>
+                </sp-split-section>
             }
-        </sp-basic-view>
-    </div>
+
+            <sp-view-asset-links [selectedAsset]="selectedAsset" class="w-100">
+            </sp-view-asset-links>
+        }
+    </sp-basic-view>
 }

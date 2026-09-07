@@ -43,6 +43,7 @@ export abstract class SpAbstractAdapterDetailsDirective {
     tabs: SpNavigationItem[] = [];
     adapter: AdapterDescription;
     adapterNotFound = false;
+    refreshing = false;
 
     onInit(): void {
         this.currentUserService.user$.subscribe(_user => {
@@ -75,11 +76,11 @@ export abstract class SpAbstractAdapterDetailsDirective {
     }
 
     triggerUpdate(): void {
-        this.adapterMonitoringService
-            .triggerMonitoringUpdate()
-            .subscribe(() => {
-                this.onAdapterLoaded();
-            });
+        this.refreshing = true;
+        this.adapterMonitoringService.triggerMonitoringUpdate().subscribe({
+            next: () => this.onAdapterLoaded(),
+            error: () => (this.refreshing = false),
+        });
     }
 
     abstract onAdapterLoaded(): void;

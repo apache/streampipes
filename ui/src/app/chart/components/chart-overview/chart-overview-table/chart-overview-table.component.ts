@@ -48,7 +48,6 @@ import {
     PanelType,
     SpAssetBrowserService,
     SpTableAssetContextConfig,
-    SpBasicHeaderTitleComponent,
     SpTableActionsDirective,
     SpTableComponent,
     SpSpinnerComponent,
@@ -94,7 +93,6 @@ type ChartOverviewRow = ChartSummaryDto & {
     imports: [
         FlexDirective,
         LayoutDirective,
-        SpBasicHeaderTitleComponent,
         LayoutAlignDirective,
         SpTableComponent,
         MatSort,

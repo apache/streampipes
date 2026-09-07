@@ -68,3 +68,110 @@
     padding: 5px;
     white-space: nowrap;
 }
+
+.time-range-selector--emphasized {
+    align-items: center;
+}
+
+.time-range-selector--emphasized .time-range-selector__selection {
+    min-height: 2.25rem;
+    padding-inline: var(--space-sm);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: color-mix(
+        in srgb,
+        var(--color-primary) 8%,
+        var(--color-bg-main-panel-content)
+    );
+}
+
+.time-range-selector--emphasized .time-range-selector__selection:hover {
+    background: color-mix(
+        in srgb,
+        var(--color-primary) 14%,
+        var(--color-bg-main-panel-content)
+    );
+}
+
+.time-range-selector--emphasized .time-range-selector__selection:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-primary) 38%, transparent);
+    outline-offset: 2px;
+}
+
+.time-range-selector--emphasized
+    .time-range-selector__selection
+    .mat-mdc-button-touch-target {
+    height: 2.75rem;
+}
+
+.time-range-selector--emphasized .time-range-selector__selection-content {
+    display: flex;
+    align-items: center;
+}
+
+.time-range-selector--emphasized .time-range-selector__selection-copy {
+    display: inline-flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin-inline: var(--space-xs);
+    line-height: 1.15;
+}
+
+.time-range-selector--emphasized .time-range-selector__label {
+    color: var(--fg-muted);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+}
+
+.time-range-selector--emphasized .formatted-datetime {
+    display: block;
+    max-width: 18rem;
+    overflow: hidden;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--color-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-overflow: ellipsis;
+}
+
+.time-range-selector--emphasized .formatted-date {
+    font-weight: var(--font-weight-semibold);
+}
+
+.time-range-selector--emphasized .time-range-selector__calendar,
+.time-range-selector--emphasized .time-range-selector__expand {
+    display: block;
+    flex: 0 0 auto;
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--color-primary);
+    font-size: 1.125rem;
+    line-height: 1.125rem;
+}
+
+.time-range-selector--emphasized .time-range-selector__step,
+.time-range-selector--emphasized .time-range-selector__refresh {
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+}
+
+.time-range-selector--emphasized .time-range-selector__step .mat-icon,
+.time-range-selector--emphasized .time-range-selector__refresh .mat-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    font-size: 1.125rem;
+    line-height: 1.125rem;
+}
+
+.time-range-selector--emphasized .time-range-selector__step {
+    width: 2rem;
+}
+
+.time-range-selector--emphasized .time-range-selector__refresh {
+    margin-inline-start: var(--space-sm);
+}

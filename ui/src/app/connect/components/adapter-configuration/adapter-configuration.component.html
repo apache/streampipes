@@ -16,48 +16,43 @@
 ~
 -->
 
-<sp-basic-view
-    [padding]="true"
-    [showBackLink]="true"
-    [backLinkTarget]="['connect']"
->
-    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+<sp-basic-view [padding]="true" [hideNavbar]="true">
+    <sp-page-header [title]="pageTitle" [backLinkTarget]="['connect']">
         @if (isEditMode) {
             <button
+                pageActions
+                type="button"
                 mat-icon-button
                 [matMenuTriggerFor]="optMenu"
                 [attr.aria-label]="'Options' | translate"
                 data-cy="options-adapter"
             >
-                <mat-icon>more_vert</mat-icon>
+                <mat-icon aria-hidden="true">more_vert</mat-icon>
             </button>
-            <mat-menu #optMenu="matMenu">
-                <button
-                    mat-menu-item
-                    (click)="manageAdapter()"
-                    data-cy="manage-adapter-btn"
-                >
-                    <mat-icon>settings</mat-icon>
-                    <span>{{ 'Manage' | translate }}</span>
-                </button>
-                <button
-                    mat-menu-item
-                    (click)="deleteAdapter()"
-                    data-cy="delete-adapter-btn"
-                >
-                    <mat-icon>clear</mat-icon>
-                    <span>{{ 'Delete' | translate }}</span>
-                </button>
-            </mat-menu>
         }
-    </div>
+    </sp-page-header>
+    <mat-menu #optMenu="matMenu">
+        <button
+            mat-menu-item
+            (click)="manageAdapter()"
+            data-cy="manage-adapter-btn"
+        >
+            <mat-icon>settings</mat-icon>
+            <span>{{ 'Manage' | translate }}</span>
+        </button>
+        <button
+            mat-menu-item
+            (click)="deleteAdapter()"
+            data-cy="delete-adapter-btn"
+        >
+            <mat-icon>clear</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </mat-menu>
     @let adapterConfigurationState = state();
     @if (adapterConfigurationState) {
         @if (adapterConfigurationState.adapterDescription) {
             <div fxLayout="column" fxLayoutAlign="center stretch">
-                <sp-basic-header-title-component
-                    [title]="pageTitle"
-                ></sp-basic-header-title-component>
                 <mat-horizontal-stepper
                     [linear]="true"
                     #stepper

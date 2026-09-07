@@ -16,7 +16,12 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+<div
+    fxFlex="100"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    class="assembly-options"
+>
     <sp-split-button
         dataCy="sp-editor-save-pipeline"
         [label]="'Store and Start' | translate"
@@ -59,7 +64,7 @@
     <button
         mat-flat-button
         [matTooltip]="'Add pipeline element' | translate"
-        class="mat-basic mr-10"
+        class="mat-basic assembly-options__button--spaced"
         [matTooltipPosition]="'above'"
         (click)="openDiscoverDialog()"
         data-cy="sp-editor-add-pipeline-element"

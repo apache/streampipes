@@ -16,10 +16,25 @@
  *
  */
 
+.assembly-options {
+    min-width: max-content;
+    white-space: nowrap;
+}
+
+.assembly-options > button,
+.assembly-options > sp-split-button,
+.assembly-options > sp-pipeline-assembly-options-pipeline-cache,
+.assembly-options-divider {
+    flex-shrink: 0;
+}
+
 .assembly-options-divider {
     width: 1px;
     height: 70%;
-    margin-left: 10px;
-    margin-right: 10px;
-    background: var(--color-bg-3);
+    margin-inline: var(--space-sm);
+    background: var(--color-border-subtle);
+}
+
+.assembly-options__button--spaced {
+    margin-inline-end: var(--space-sm);
 }

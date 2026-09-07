@@ -16,6 +16,11 @@
  *
  */
 
+:host {
+    display: flex;
+    min-height: 0;
+}
+
 .menu-text-color {
     color: var(--color-primary);
     display: flex;
@@ -23,48 +28,54 @@
 }
 
 .icon-stand {
-    max-height: calc(100vh - 126px);
+    flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
-    margin-top: 5px;
+}
+
+.pipeline-element-palette__header {
+    flex: 0 0 44px;
+    padding-inline: var(--space-xs);
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-bg-main-panel-header);
 }
 
 .pe-row {
-    padding: 1px var(--space-xs);
+    padding: var(--space-2xs) var(--space-xs);
 }
 
 .panel-header {
-    padding: 3px;
+    padding: var(--space-2xs);
 }
 
 .panel-title {
-    padding-left: 5px;
+    padding-inline-start: var(--space-xs);
 }
 
 .panel-options {
-    margin-top: 10px;
-    margin-bottom: 5px;
-    margin-right: 5px;
+    margin-block: var(--space-sm) var(--space-xs);
+    margin-inline-end: var(--space-xs);
 }
 
 .panel-content {
-    margin-top: 10px;
+    margin-top: var(--space-sm);
 }
 
 .sort-selected {
-    padding: 3px;
+    padding: var(--space-2xs);
     background: var(--color-primary);
     color: white;
 }
 
 .sort-unselected {
-    padding: 3px;
+    padding: var(--space-2xs);
     color: var(--color-primary);
 }
 
 .panel-outer {
-    margin-bottom: 10px;
-    margin-left: 0;
-    margin-right: 0;
+    margin-block-end: var(--space-sm);
 }
 
 .search-field {
@@ -72,15 +83,13 @@
 }
 
 .group-outer {
-    margin-top: 15px;
-    margin-bottom: 10px;
-    margin-left: 5px;
+    margin-block: var(--space-md) var(--space-sm);
+    margin-inline-start: var(--space-xs);
 }
 
 .group-title {
-    padding-left: 5px;
-    padding-right: 5px;
-    border-radius: 3px;
+    padding-inline: var(--space-xs);
+    border-radius: var(--radius-xs);
     background: var(--color-secondary);
     color: var(--color-bg-0);
 }

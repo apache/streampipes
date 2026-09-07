@@ -17,9 +17,6 @@
 -->
 
 <div fxFlex="100" fxLayout="column">
-    <sp-basic-header-title-component
-        [title]="elementName + ' - Logs'"
-    ></sp-basic-header-title-component>
     @if (!logs || logs.length === 0) {
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
             <h5 class="text-center">

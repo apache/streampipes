@@ -28,6 +28,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-data-explorer-refresh-interval-settings-component',
     templateUrl: './refresh-interval-settings.component.html',
+    styleUrl: './refresh-interval-settings.component.scss',
     imports: [
         DefaultLayoutDirective,
         MatButton,
@@ -41,6 +42,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class DataExplorerRefreshIntervalSettingsComponent implements OnInit {
     @Input() liveSettings: DashboardLiveSettings;
+
+    @Input() appearance: 'default' | 'emphasized' = 'default';
 
     @Output()
     intervalSettingsChangedEmitter: EventEmitter<DashboardLiveSettings> =

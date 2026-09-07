@@ -30,9 +30,9 @@ import {
     DialogService,
     PanelType,
     SpAssetBrowserService,
-    SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBreadcrumbService,
+    SpPageHeaderComponent,
 } from '@streampipes/shared-ui';
 import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/start-all-pipelines-dialog.component';
 import { Router } from '@angular/router';
@@ -42,17 +42,13 @@ import { SpPipelineRoutes } from './pipelines.breadcrumb';
 import { UserRole } from '../core/auth/user-role.enum';
 import { ShepherdService } from '../services/tour/shepherd.service';
 import { Subscription } from 'rxjs';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { PipelineOverviewComponent } from './components/pipeline-overview/pipeline-overview.component';
 import { FunctionsOverviewComponent } from './components/functions-overview/functions-overview.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'sp-pipelines',
@@ -60,17 +56,16 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./pipelines.component.scss'],
     imports: [
         SpBasicViewComponent,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
-        LayoutGapDirective,
         MatButton,
         MatIconButton,
         MatTooltip,
-        SpBasicHeaderTitleComponent,
+        SpPageHeaderComponent,
         PipelineOverviewComponent,
         FunctionsOverviewComponent,
         TranslatePipe,
+        MatTab,
+        MatTabGroup,
+        AsyncPipe,
     ],
 })
 export class PipelinesComponent implements OnInit, OnDestroy {
@@ -102,6 +97,9 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     private breadcrumbService = inject(SpBreadcrumbService);
     private shepherdService = inject(ShepherdService);
     private assetFilterService = inject(SpAssetBrowserService);
+
+    readonly pageHeaderAssetLinkType$ =
+        this.assetFilterService.getAssetLinkType$('pipeline');
 
     ngOnInit() {
         this.assetFilterService.applyAssetLinkType('pipeline');

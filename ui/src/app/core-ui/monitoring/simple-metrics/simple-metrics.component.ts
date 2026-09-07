@@ -23,7 +23,6 @@ import {
     LayoutDirective,
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { SpBasicHeaderTitleComponent } from '@streampipes/shared-ui';
 import { StatusWidgetComponent } from '../../status/status-widget.component';
 import { DatePipe } from '@angular/common';
 
@@ -33,7 +32,6 @@ import { DatePipe } from '@angular/common';
     styleUrls: ['./simple-metrics.component.scss'],
     imports: [
         LayoutDirective,
-        SpBasicHeaderTitleComponent,
         LayoutAlignDirective,
         LayoutGapDirective,
         FlexDirective,

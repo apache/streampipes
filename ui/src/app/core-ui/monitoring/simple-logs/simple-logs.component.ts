@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */
+ // */
 
 import { Component, Input } from '@angular/core';
 import { SpLogEntry } from '@streampipes/platform-services';
@@ -23,10 +23,7 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import {
-    SpBasicHeaderTitleComponent,
-    SpExceptionMessageComponent,
-} from '@streampipes/shared-ui';
+import { SpExceptionMessageComponent } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -36,7 +33,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         FlexDirective,
         LayoutDirective,
-        SpBasicHeaderTitleComponent,
         LayoutAlignDirective,
         SpExceptionMessageComponent,
         TranslatePipe,

@@ -16,66 +16,112 @@
  *
  */
 
+:host {
+    display: flex;
+    min-width: 0;
+    width: 100%;
+}
+
 .panel-outer {
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-
-.general-panel {
-    border-bottom: 1px solid var(--color-bg-2);
-    border-left: 1px solid var(--color-bg-2);
-    border-right: 1px solid var(--color-bg-2);
-}
-
-.general-panel-header {
-    margin-top: -1px;
-    min-height: 40px;
-    max-height: 40px;
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
-    padding: 10px 12px;
-}
-
-.header-collapsed {
-    border-bottom-left-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
-}
-
-.bg-highlight {
-    background: var(--color-bg-2);
-}
-
-.bg-no-highlight {
-    border-left: 1px solid var(--color-bg-2);
-    border-right: 1px solid var(--color-bg-2);
-    border-top: 1px solid var(--color-bg-2);
-}
-
-.content-box-title {
-    white-space: nowrap;
-}
-
-.general-panel {
+    background: var(--color-bg-0);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    min-width: 0;
     overflow: hidden;
 }
 
+.general-panel {
+    box-sizing: border-box;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.general-panel-header {
+    border-bottom: 1px solid var(--color-border-subtle);
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    min-width: 0;
+    padding: var(--space-xs) var(--space-md);
+    transition:
+        background-color var(--motion-duration-fast)
+            var(--motion-easing-standard),
+        border-color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.bg-highlight {
+    background: var(--color-surface-subtle);
+}
+
+.bg-no-highlight {
+    background: transparent;
+}
+
+.panel-header-content {
+    min-width: 0;
+}
+
+.panel-collapsed .general-panel-header {
+    border-bottom-color: transparent;
+}
+
+.content-box-title {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
 .general-panel-wrapper {
+    min-width: 0;
     overflow: hidden;
 }
 
 .collapse-btn {
     border: none;
+    border-radius: var(--radius-xs);
     background: transparent;
+    color: var(--mat-sys-on-surface-variant);
     cursor: pointer;
     display: flex;
     align-items: center;
-    padding: 0 0.5rem;
+    justify-content: center;
+    flex: 0 0 auto;
+    height: var(--size-icon-button-compact);
+    margin-inline-start: var(--space-xs);
+    padding: 0;
+    width: var(--size-icon-button-compact);
+    transition:
+        background-color var(--motion-duration-fast)
+            var(--motion-easing-standard),
+        color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.collapse-btn:hover {
+    background: var(--color-surface-interactive-hover);
+    color: var(--mat-sys-on-surface);
+}
+
+.collapse-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
 }
 
 .chevron-icon {
-    transition: transform 200ms ease;
+    font-size: var(--size-icon-compact);
+    height: var(--size-icon-compact);
+    line-height: var(--size-icon-compact);
+    transition: transform var(--motion-duration-standard)
+        var(--motion-easing-standard);
+    width: var(--size-icon-compact);
 }
 
 .chevron-icon.collapsed {
     transform: rotate(-180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .general-panel-header,
+    .collapse-btn,
+    .chevron-icon {
+        transition: none;
+    }
 }

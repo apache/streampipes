@@ -23,14 +23,10 @@ import {
     LocationConfigService,
     SpAsset,
 } from '@streampipes/platform-services';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { SpAssetTopBannerComponent } from './asset-top-banner/asset-top-banner.component';
 import {
     SpBasicViewComponent,
+    SpPageHeaderComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { MatButton } from '@angular/material/button';
@@ -38,7 +34,6 @@ import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { SpAssetSelectionMenuComponent } from '../edit-asset/asset-selection-menu/asset-selection-menu.component';
-import { ViewAssetBasicsComponent } from './view-asset-basics/view-assset-basics.component';
 import { AssetDetailsCustomFieldsComponent } from '../edit-asset/asset-details-panel/asset-details-basics/asset-details-custom-fields/asset-details-custom-fields.component';
 import { ViewAssetLinksComponent } from './view-asset-links/view-asset-links.component';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -47,18 +42,15 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-view-asset',
     templateUrl: './view-asset.component.html',
     imports: [
-        LayoutDirective,
         SpAssetTopBannerComponent,
         SpBasicViewComponent,
-        FlexDirective,
-        LayoutAlignDirective,
+        SpPageHeaderComponent,
         MatButton,
         MatMenuTrigger,
         MatTooltip,
         MatIcon,
         MatMenu,
         SpAssetSelectionMenuComponent,
-        ViewAssetBasicsComponent,
         SplitSectionComponent,
         AssetDetailsCustomFieldsComponent,
         ViewAssetLinksComponent,

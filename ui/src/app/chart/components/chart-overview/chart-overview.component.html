@@ -16,33 +16,30 @@
 ~
 -->
 
-<sp-basic-view [showBackLink]="false" [padding]="true">
-    <div
-        nav
-        fxFlex="100"
-        fxLayoutAlign="start center"
-        fxLayout="row"
-        class="pl-10"
+<sp-basic-view [hideNavbar]="true" [padding]="true">
+    @let pageHeaderAssetLinkType = pageHeaderAssetLinkType$ | async;
+    <sp-page-header
+        [title]="'Charts' | translate"
+        [icon]="pageHeaderAssetLinkType?.linkIcon ?? 'query_stats'"
+        [iconColor]="
+            pageHeaderAssetLinkType?.linkColor ?? 'var(--color-primary)'
+        "
     >
         @if (hasDataExplorerWritePrivileges) {
             <button
-                mat-button
+                pageActions
+                type="button"
                 mat-flat-button
                 color="accent"
                 data-cy="open-new-chart"
                 (click)="createNewChart()"
-                class="mr-10"
             >
-                <i class="material-icons">add</i>
+                <i class="material-icons" aria-hidden="true">add</i>
                 <span>{{ 'New chart' | translate }}</span>
             </button>
         }
-    </div>
-    <div fxFlex="100" fxLayout="column">
-        <sp-data-explorer-overview-table
-            fxLayout="column"
-            fxFlex="100"
-            [hasDataExplorerWritePrivileges]="hasDataExplorerWritePrivileges"
-        ></sp-data-explorer-overview-table>
-    </div>
+    </sp-page-header>
+    <sp-data-explorer-overview-table
+        [hasDataExplorerWritePrivileges]="hasDataExplorerWritePrivileges"
+    ></sp-data-explorer-overview-table>
 </sp-basic-view>

@@ -42,17 +42,17 @@ import {
     ObjectManageDialogResourceConfig,
     PanelType,
     SpAssetBrowserService,
-    SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBreadcrumbService,
     SpExceptionDetailsDialogComponent,
     SpLabelComponent,
+    SpPageHeaderComponent,
+    SpSpinnerComponent,
+    SpTableActionsDirective,
     SpTableAssetContextConfig,
+    SpTableComponent,
     SpTableMultiActionExecuteEvent,
     SpTableMultiActionOption,
-    SpTableActionsDirective,
-    SpTableComponent,
-    SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { AdapterCodeDialogComponent } from '../../dialog/adapter-code-dialog/adapter-code-dialog.component';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
@@ -68,14 +68,13 @@ import {
     FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
-    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { AdapterStatusLightComponent } from './adapter-status-light/adapter-status-light.component';
 import { MatMenuItem } from '@angular/material/menu';
-import { DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
     selector: 'sp-existing-adapters',
@@ -86,12 +85,11 @@ import { DatePipe } from '@angular/common';
         FlexDirective,
         LayoutAlignDirective,
         LayoutDirective,
-        LayoutGapDirective,
         MatButton,
         MatIcon,
         MatIconButton,
         MatTooltip,
-        SpBasicHeaderTitleComponent,
+        SpPageHeaderComponent,
         SpTableComponent,
         MatSort,
         MatColumnDef,
@@ -107,6 +105,7 @@ import { DatePipe } from '@angular/common';
         MatMenuItem,
         DatePipe,
         TranslatePipe,
+        AsyncPipe,
     ],
 })
 export class ExistingAdaptersComponent implements OnInit, OnDestroy {
@@ -161,6 +160,9 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
     private translate = inject(TranslateService);
     private adapterMonitoringService = inject(AdapterMonitoringService);
     private assetFilterService = inject(SpAssetBrowserService);
+
+    readonly pageHeaderAssetLinkType$ =
+        this.assetFilterService.getAssetLinkType$('adapter');
 
     constructor() {
         this.dataSource.sortingDataAccessor = (adapter, column) => {

@@ -16,7 +16,12 @@
   ~
   -->
 
-<div class="menubar-root" [class.collapsed]="collapsed()" fxLayout="column">
+<nav
+    class="menubar-root"
+    [class.collapsed]="collapsed()"
+    [attr.aria-label]="appConstants.APP_NAME"
+    fxLayout="column"
+>
     <!-- Header / brand -->
     <div
         class="menubar-header"
@@ -24,17 +29,27 @@
         fxLayoutAlign="space-between center"
     >
         <div class="brand" [class.hidden]="collapsed()">
-            <img alt="logo" src="assets/img/sp/logo-navigation.png" />
+            <img
+                alt="Apache StreamPipes"
+                src="assets/img/sp/logo-navigation.png"
+            />
         </div>
 
         <button
             type="button"
             class="collapse-btn"
             (click)="toggleMenubar()"
-            [attr.aria-label]="collapsed() ? 'Expand menu' : 'Collapse menu'"
-            [title]="collapsed() ? 'Expand' : 'Collapse'"
+            [attr.aria-label]="
+                (collapsed() ? 'Expand menu' : 'Collapse menu') | translate
+            "
+            [title]="
+                (collapsed() ? 'Expand menu' : 'Collapse menu') | translate
+            "
         >
-            <mat-icon class="collapse-icon" [class.rotated]="collapsed()"
+            <mat-icon
+                aria-hidden="true"
+                class="collapse-icon"
+                [class.rotated]="collapsed()"
                 >chevron_left</mat-icon
             >
         </button>
@@ -43,12 +58,11 @@
     <!-- Scrollable content -->
     <div class="menubar-scroll" fxFlex fxLayout="column">
         <!-- Top items (no group) -->
-        <div class="top-items" role="list">
+        <div class="top-items">
             @for (item of topItems; track item.title) {
                 @if (item.visible !== false) {
                     <button
                         type="button"
-                        role="listitem"
                         class="menu-item"
                         [class.menu-item-selected]="item.link === activePage"
                         [attr.data-cy]="'navigation-icon-' + item.link"
@@ -58,11 +72,13 @@
                             item.link === activePage ? 'page' : null
                         "
                     >
-                        <mat-icon class="item-icon">{{ item.icon }}</mat-icon>
+                        <mat-icon aria-hidden="true" class="item-icon">{{
+                            item.icon
+                        }}</mat-icon>
                         <span
                             class="item-title text-ellipsis text-md"
                             [class.hidden]="collapsed()"
-                            >{{ item.title }}</span
+                            >{{ item.title | translate }}</span
                         >
                         @if (shortcutHintsVisible() && !!item.shortcutKey) {
                             <kbd class="shortcut-key">{{
@@ -85,12 +101,12 @@
                         class="menu-group-title text-sm"
                         (click)="toggleGroup(group)"
                         [attr.aria-expanded]="!group.collapsed"
-                        [title]="collapsed() ? group.title : null"
+                        [attr.aria-controls]="'menu-group-' + group.title"
                     >
                         <span
                             class="group-title-text text-ellipsis"
                             [class.hidden]="collapsed()"
-                            >{{ group.title }}</span
+                            >{{ group.title | translate }}</span
                         >
                         <mat-icon
                             class="chevron"
@@ -111,13 +127,12 @@
                                 : '500px'
                         "
                         [class.instant]="collapsed()"
-                        role="list"
+                        [id]="'menu-group-' + group.title"
                     >
                         @for (item of group.items; track item.title) {
                             @if (item.visible !== false) {
                                 <button
                                     type="button"
-                                    role="listitem"
                                     class="menu-item"
                                     [class.menu-item-selected]="
                                         item.link === activePage
@@ -128,12 +143,14 @@
                                     (click)="go(item.link)"
                                     [title]="collapsed() ? item.title : null"
                                     [attr.aria-current]="
-                                        item.link === activePage ? 'page' : ''
+                                        item.link === activePage ? 'page' : null
                                     "
                                 >
-                                    <mat-icon class="item-icon">{{
-                                        item.icon
-                                    }}</mat-icon>
+                                    <mat-icon
+                                        aria-hidden="true"
+                                        class="item-icon"
+                                        >{{ item.icon }}</mat-icon
+                                    >
                                     <span
                                         class="item-title text-md text-ellipsis"
                                         [class.hidden]="collapsed()"
@@ -158,4 +175,4 @@
             }
         </div>
     </div>
-</div>
+</nav>

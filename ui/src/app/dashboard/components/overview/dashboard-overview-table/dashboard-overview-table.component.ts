@@ -45,7 +45,6 @@ import {
     ObjectManageDialogResourceConfig,
     PanelType,
     SpAssetBrowserService,
-    SpBasicHeaderTitleComponent,
     SpTableActionsDirective,
     SpTableAssetContextConfig,
     SpTableComponent,
@@ -76,7 +75,6 @@ import { MatIcon } from '@angular/material/icon';
     imports: [
         FlexDirective,
         LayoutDirective,
-        SpBasicHeaderTitleComponent,
         LayoutAlignDirective,
         SpTableComponent,
         MatSort,
