@@ -433,6 +433,10 @@ export class ConnectBtns {
         return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-header-1';
     }
 
+    public static csvDecimalSeparator() {
+        return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-decimalSeparator-2';
+    }
+
     public static jsonArrayFieldKey() {
         return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.json-0-json_options-0-arrayFieldConfig-2-key-0';
     }

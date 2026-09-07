@@ -271,11 +271,25 @@ public class DatatypeUtilsTest {
   }
 
   @Test
-  public void getTypeClass_CommaSeparatorLeavesDotValueParsable() {
-    // Behavior is additive: configuring ',' as the decimal separator adds recognition of
-    // comma-decimals without rejecting values that are already valid with the default '.' separator.
+  public void getTypeClass_CommaSeparatorTreatsDotValueAsString() {
+    // Strict behavior: when ',' is the configured decimal separator, a value using '.' is not a
+    // valid number in that locale and must stay a string.
     var result = DatatypeUtils.getTypeClass("3.14", false, ',');
-    assertEquals(Float.class, result);
+    assertEquals(String.class, result);
+  }
+
+  @Test
+  public void getTypeClass_CommaSeparatorDotGroupingStaysString() {
+    // Regression for review of PR #4878: "100.000" must not be parsed as float when ',' is selected.
+    var result = DatatypeUtils.getTypeClass("100.000", false, ',');
+    assertEquals(String.class, result);
+  }
+
+  @Test
+  public void getTypeClass_CommaSeparatorPlainIntegerStillNumeric() {
+    // An integer without any separator is still a valid number regardless of the configured separator.
+    var result = DatatypeUtils.getTypeClass("42", false, ',');
+    assertEquals(Integer.class, result);
   }
 
   @Test
@@ -315,6 +329,14 @@ public class DatatypeUtilsTest {
   public void convertValue_DefaultSeparatorDotStillWorks() {
     var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, "123.45", XSD.FLOAT.toString());
     assertEquals(123.45f, actualValue);
+  }
+
+  @Test
+  public void convertValue_CommaSeparatorKeepsDotValueAsString() {
+    // With ',' selected, "100.000" is not numeric and the raw value is returned unchanged.
+    var actualValue = DatatypeUtils.convertValue(
+        TEST_ADAPTER_NAME, "100.000", XSD.STRING.toString(), ',', new java.util.concurrent.atomic.AtomicBoolean(false));
+    assertEquals("100.000", actualValue);
   }
 
 }

@@ -432,7 +432,8 @@ export class ConnectUtils {
                 .setName('Adapter to test rules')
                 .setFormat('csv')
                 .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
-                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
+                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
+                .addFormatInput('input', ConnectBtns.csvDecimalSeparator(), '.');
         }
 
         if (overwriteTimestamp) {

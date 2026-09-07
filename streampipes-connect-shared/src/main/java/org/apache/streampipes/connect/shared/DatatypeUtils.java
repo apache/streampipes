@@ -64,9 +64,10 @@ public class DatatypeUtils {
 
   /**
    * Converts the given value to a specified XSD datatype using the provided decimal separator.
-   * When the input is a string representing a floating point number that uses a decimal separator
-   * other than {@code '.'} (e.g. the {@code ','} common in many European locales), the separator
-   * is normalized before parsing so that the value is treated as numeric rather than as a string.
+   * When a non-default decimal separator is configured (e.g. the {@code ','} common in many
+   * European locales), it is normalized to {@code '.'} before parsing. Values that use a different
+   * separator than the configured one (e.g. {@code "100.000"} when {@code ','} is selected) are
+   * treated as strings and left unchanged.
    *
    * @param adapterName The adapter whose event value should be converted.
    * @param value The value to be converted.
@@ -100,8 +101,14 @@ public class DatatypeUtils {
       return value;
     }
 
+    var normalized = normalizeDecimalSeparator(String.valueOf(value), decimalSeparator);
+    if (normalized == null) {
+      // The value is not a valid number under the configured decimal separator; keep it unchanged.
+      return value;
+    }
+
     try {
-      return convertString(normalizeDecimalSeparator(String.valueOf(value), decimalSeparator), targetDatatypeXsd);
+      return convertString(normalized, targetDatatypeXsd);
     } catch (NumberFormatException e) {
       logConversionError(adapterName, value, targetDatatypeXsd, loggedConversionError);
       return value;
@@ -212,9 +219,11 @@ public class DatatypeUtils {
     }
 
     var originalValue = value;
+    // Returns null when the value is not a valid number under the configured decimal separator
+    // (e.g. it uses a different separator), in which case it must be treated as a string.
     value = normalizeDecimalSeparator(value, decimalSeparator);
 
-    if (NumberUtils.isParsable(value)) {
+    if (value != null && NumberUtils.isParsable(value)) {
       Class<?> numberClass;
       try {
         long longValue = Long.parseLong(value);
@@ -264,27 +273,39 @@ public class DatatypeUtils {
    * occurrence of the separator.</p>
    *
    * @param value the raw string value
-   * @param decimalSeparator the decimal separator used in the value
-   * @return the value with its decimal separator replaced by {@code '.'}, or the original value
-   *         when no normalization is applicable
+   * @param decimalSeparator the decimal separator configured for the data source
+   * @return a string parseable with {@code '.'} as decimal separator, or {@code null} if the value
+   *         must not be interpreted as a number under the configured separator
    */
   private static String normalizeDecimalSeparator(String value,
                                                   char decimalSeparator) {
-    if (value == null || decimalSeparator == DEFAULT_DECIMAL_SEPARATOR) {
+    if (value == null) {
+      return null;
+    }
+
+    // Default separator: keep the historical behavior (values are parsed as-is).
+    if (decimalSeparator == DEFAULT_DECIMAL_SEPARATOR) {
       return value;
     }
 
-    // Do not normalize when the separator appears more than once, since it is then ambiguous
-    // (e.g. used as a grouping separator) and normalization could corrupt the value.
-    var firstIndex = value.indexOf(decimalSeparator);
-    if (firstIndex < 0 || firstIndex != value.lastIndexOf(decimalSeparator)) {
-      return value;
-    }
-
-    // Only normalize genuine numeric candidates; a value already containing '.' is not a
-    // single-separator decimal in the target locale and must be left untouched.
+    // A non-default separator is configured. A value that uses the default '.' is therefore not a
+    // valid number in the configured locale and must stay a string (e.g. "100.000" with ',').
     if (value.indexOf(DEFAULT_DECIMAL_SEPARATOR) >= 0) {
+      return null;
+    }
+
+    var firstIndex = value.indexOf(decimalSeparator);
+
+    // No configured separator present: it is a plain integer-like token (e.g. "42") and can be
+    // parsed as-is.
+    if (firstIndex < 0) {
       return value;
+    }
+
+    // The configured separator appears more than once, so it is ambiguous (e.g. a grouping
+    // separator like "1,000,000"); do not treat it as a single decimal number.
+    if (firstIndex != value.lastIndexOf(decimalSeparator)) {
+      return null;
     }
 
     return value.replace(decimalSeparator, DEFAULT_DECIMAL_SEPARATOR);
