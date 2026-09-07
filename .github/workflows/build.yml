@@ -87,7 +87,7 @@ jobs:
       - name: Build UI
         working-directory: ./ui
         run: |
-          npm install
+          npm ci
           npm run build
         env:
           DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
