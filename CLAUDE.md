@@ -4,11 +4,11 @@
 
 ## Nested guides
 
-Claude Code loads this file and the root `AGENTS.md` it imports. It does **not** automatically
-load the nested `AGENTS.md` files. Before editing inside any directory listed in the
-"Guide index" at the end of `AGENTS.md`, read that directory's `AGENTS.md` first — they
-contain the recipes (how to add a migration, an endpoint, an extension) and the
-module-specific rules.
+Every directory with its own `AGENTS.md` also has a one-line `CLAUDE.md` containing
+`@AGENTS.md`, so the module guide loads automatically when you work inside that directory.
+The "Guide index" at the end of `AGENTS.md` lists them. If a task spans a module you have
+not touched yet, read its `AGENTS.md` before editing — the recipes (how to add a migration,
+an endpoint, an extension) and module-specific rules live there, not here.
 
 ## Skills
 
