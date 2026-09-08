@@ -451,7 +451,7 @@ export class ObjectManageDialogComponent<
         if (this.shouldSaveAssetLinks(result)) {
             await this.assetSaveService.saveSelectedAssets(
                 result.selectedAssets,
-                this.createLinkageData(result.resource),
+                await this.resolveAssetLinks(result.resource),
                 result.deselectedAssets,
                 result.originalAssets,
             );
@@ -460,7 +460,13 @@ export class ObjectManageDialogComponent<
         return true;
     }
 
-    private createLinkageData(resource: TResource): LinkageData[] {
+    private async resolveAssetLinks(
+        resource: TResource,
+    ): Promise<LinkageData[]> {
+        if (this.resourceConfig.resolveAssetLinks) {
+            return this.resourceConfig.resolveAssetLinks(resource);
+        }
+
         const resourceId = this.getResourceId(resource);
 
         return [
