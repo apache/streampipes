@@ -25,6 +25,7 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
 import org.apache.streampipes.extensions.connectors.kafka.adapter.KafkaProtocol;
 import org.apache.streampipes.extensions.connectors.kafka.migration.KafkaAdapterMigrationV1;
 import org.apache.streampipes.extensions.connectors.kafka.migration.KafkaAdapterMigrationV2;
+import org.apache.streampipes.extensions.connectors.kafka.migration.KafkaAdapterMigrationV3;
 import org.apache.streampipes.extensions.connectors.kafka.migration.KafkaSinkMigrationV1;
 import org.apache.streampipes.extensions.connectors.kafka.migration.KafkaSinkMigrationV2;
 import org.apache.streampipes.extensions.connectors.kafka.migration.KafkaSinkMigrationV3;
@@ -33,6 +34,7 @@ import org.apache.streampipes.extensions.connectors.kafka.sink.KafkaPublishSink;
 import java.util.List;
 
 public class KafkaConnectorsModuleExport implements IExtensionModuleExport {
+
   @Override
   public List<StreamPipesAdapter> adapters() {
     return List.of(
@@ -54,6 +56,7 @@ public class KafkaConnectorsModuleExport implements IExtensionModuleExport {
         new KafkaSinkMigrationV1(),
         new KafkaAdapterMigrationV2(),
         new KafkaSinkMigrationV2(),
+        new KafkaAdapterMigrationV3(),
         new KafkaSinkMigrationV3()
     );
   }

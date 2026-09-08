@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.connectors.kafka.migration;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.extensions.api.migration.IDataSinkMigrator;
+import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaBootstrapServersMerger;
 import org.apache.streampipes.extensions.connectors.kafka.shared.kafka.KafkaConfigProvider;
 import org.apache.streampipes.extensions.connectors.kafka.sink.KafkaPublishSink;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
@@ -31,11 +32,6 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import java.util.List;
 import java.util.stream.IntStream;
 
-/**
- * Adds the message key configuration to existing Kafka sinks.
- * The alternative which publishes records without a key is preselected,
- * so that existing pipelines keep their current behavior.
- */
 public class KafkaSinkMigrationV3 implements IDataSinkMigrator {
 
   @Override
@@ -53,9 +49,14 @@ public class KafkaSinkMigrationV3 implements IDataSinkMigrator {
                                                      IDataSinkParameterExtractor extractor)
       throws RuntimeException {
     var staticProperties = element.getStaticProperties();
+    if (!KafkaBootstrapServersMerger.merge(staticProperties)) {
+      return MigrationResult.failure(
+          element, "Could not merge the broker of the Kafka sink, no former host was found.");
+    }
     staticProperties.add(
         indexOfAccessMode(staticProperties),
         KafkaConfigProvider.getMessageKeyAlternatives());
+
     return MigrationResult.success(element);
   }
 
