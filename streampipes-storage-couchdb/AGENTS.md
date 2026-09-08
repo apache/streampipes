@@ -1,22 +1,30 @@
 # AGENTS Guide (Storage CouchDB)
 
 ## Scope
-Applies to `streampipes-storage-couchdb/`.
 
-## Module Intent
-- CouchDB implementation of storage interfaces (`impl/*`, `dao/*`, `serializer/*`).
-- Central wiring via `CouchDbStorageManager`.
+Applies to `streampipes-storage-couchdb/`. Root `AGENTS.md` applies as well; build and
+validation commands live there.
 
-## High-Risk Areas
-- DAO/query/view behavior (`dao`, `CouchDbViewGenerator`).
-- Serialization compatibility (`serializer/*`).
-- Storage manager wiring and interface coverage.
+## Module intent
 
-## Best Practices
-- Keep implementations aligned with `streampipes-storage-api` contracts.
-- Preserve document and view compatibility unless migrations are included.
-- When adding a storage type, wire it through `CouchDbStorageManager` and corresponding API abstractions.
-- Keep serializer changes backward compatible for persisted entities.
+- CouchDB implementation of the `streampipes-storage-api` interfaces (`impl/*`, `dao/*`,
+  `serializer/*`), wired centrally in `CouchDbStorageManager`.
 
-## Validation
-- `mvn -pl streampipes-storage-couchdb -am test`
+## High-risk areas
+
+- DAO, query and view behaviour (`dao`, `CouchDbViewGenerator`). Views are created on
+  startup; a changed view needs a migration in `streampipes-service-core` (see
+  `AddDataLakeMeasureViewMigration` and the other `Add*ViewMigration` classes).
+- Serialization compatibility (`serializer/*`) for already-persisted documents.
+
+## Recipe: add a storage type
+
+1. Define the interface in `streampipes-storage-api`.
+2. Implement it under `impl/` (DAO under `dao/` if it needs custom queries or views).
+3. Expose it through `CouchDbStorageManager` and the matching `streampipes-storage-api`
+   abstraction so management modules obtain it through the manager, never directly.
+
+## Rules
+
+- Keep persisted documents and views readable by the previous version unless the change
+  ships with a migration.
