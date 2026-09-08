@@ -35,6 +35,7 @@ import {
 import { MatButton } from '@angular/material/button';
 import { SecurityAuthenticationConfigurationComponent } from './authentication-configuration/authentication-configuration.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-security-configuration',
@@ -52,6 +53,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         SecurityRoleConfigComponent,
         SecurityAuthenticationConfigurationComponent,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class SecurityConfigurationComponent implements OnInit {

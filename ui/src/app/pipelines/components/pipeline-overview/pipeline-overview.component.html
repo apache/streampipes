@@ -91,8 +91,8 @@
                                 }}"
                                 data-cy="pipeline-warning-icon"
                             >
-                                <i class="material-icons pipeline-notification"
-                                    >warning</i
+                                <mat-icon class="pipeline-notification"
+                                    >warning</mat-icon
                                 >
                             </button>
                         }
@@ -141,7 +141,7 @@
                             !pipeline.valid
                         "
                     >
-                        <i class="material-icons">play_arrow</i>
+                        <mat-icon>play_arrow</mat-icon>
                     </button>
                 }
                 @if (pipeline.running) {
@@ -160,7 +160,7 @@
                         "
                         [disabled]="!hasPipelineWritePrivileges || stopping"
                     >
-                        <i class="material-icons">stop</i>
+                        <mat-icon>stop</mat-icon>
                     </button>
                 }
             </div>

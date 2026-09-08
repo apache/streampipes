@@ -137,14 +137,13 @@
                                             $event.stopPropagation()
                                         "
                                     >
-                                        <i
-                                            class="material-icons"
+                                        <mat-icon
                                             [ngStyle]="{
                                                 color: configurationEntry.retentionConfigured
                                                     ? 'var(--color-success)'
                                                     : 'var(--color-neutral)',
                                             }"
-                                            >history</i
+                                            >history</mat-icon
                                         >
                                     </button>
                                 } @else {
@@ -188,8 +187,7 @@
                                             )
                                         "
                                     >
-                                        <i
-                                            class="material-icons"
+                                        <mat-icon
                                             [ngStyle]="{
                                                 color:
                                                     configurationEntry.lastRetentionStatus ===
@@ -199,7 +197,7 @@
                                                           ? 'green'
                                                           : 'red',
                                             }"
-                                            >list_alt</i
+                                            >list_alt</mat-icon
                                         >
                                     </button>
                                 } @else {
@@ -355,9 +353,7 @@
                                                     )
                                                 "
                                             >
-                                                <i class="material-icons"
-                                                    >edit</i
-                                                >
+                                                <mat-icon>edit</mat-icon>
                                             </button>
                                         </span>
                                     </div>
@@ -395,9 +391,7 @@
                                                     )
                                                 "
                                             >
-                                                <i class="material-icons"
-                                                    >delete</i
-                                                >
+                                                <mat-icon>delete</mat-icon>
                                             </button>
                                         </span>
                                     </div>
@@ -434,9 +428,7 @@
                                                 )
                                             "
                                         >
-                                            <i class="material-icons"
-                                                >bug_report</i
-                                            >
+                                            <mat-icon>bug_report</mat-icon>
                                         </button>
                                     </span>
                                 </div>
