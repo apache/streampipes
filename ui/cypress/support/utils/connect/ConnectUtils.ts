@@ -433,7 +433,11 @@ export class ConnectUtils {
                 .setFormat('csv')
                 .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
                 .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
-                .addFormatInput('input', ConnectBtns.csvDecimalSeparator(), '.');
+                .addFormatInput(
+                    'input',
+                    ConnectBtns.csvDecimalSeparator(),
+                    '.',
+                );
         }
 
         if (overwriteTimestamp) {

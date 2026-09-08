@@ -63,7 +63,11 @@ export class ProcessingElementTestUtils {
             adapterInputBuilder
                 .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
                 .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
-                .addFormatInput('input', ConnectBtns.csvDecimalSeparator(), '.');
+                .addFormatInput(
+                    'input',
+                    ConnectBtns.csvDecimalSeparator(),
+                    '.',
+                );
         } else if (formatType === 'json') {
             adapterInputBuilder.addFormatInput(
                 'radio',
