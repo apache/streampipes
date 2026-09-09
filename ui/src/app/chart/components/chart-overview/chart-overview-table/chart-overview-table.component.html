@@ -143,6 +143,16 @@
                             <mat-icon>edit</mat-icon>
                             <span>{{ 'Edit chart' | translate }}</span>
                         </button>
+                        <button
+                            mat-menu-item
+                            (click)="createFromExisting(element)"
+                            data-cy="create-chart-from-existing"
+                        >
+                            <mat-icon>content_copy</mat-icon>
+                            <span>{{
+                                'Create from existing' | translate
+                            }}</span>
+                        </button>
                     }
                     @if (hasDataExplorerWritePrivileges) {
                         <button
@@ -152,12 +162,6 @@
                         >
                             <mat-icon>settings</mat-icon>
                             <span>{{ 'Manage' | translate }}</span>
-                        </button>
-                    }
-                    @if (hasDataExplorerWritePrivileges) {
-                        <button mat-menu-item (click)="cloneChart(element)">
-                            <mat-icon>flip_to_front</mat-icon>
-                            <span>{{ 'Clone chart' | translate }}</span>
                         </button>
                     }
                     @if (hasDataExplorerWritePrivileges) {
