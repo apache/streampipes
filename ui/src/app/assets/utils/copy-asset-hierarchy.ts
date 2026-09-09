@@ -19,13 +19,12 @@
 import { SpAsset, SpAssetModel } from '@streampipes/platform-services';
 import cloneDeep from 'lodash.clonedeep';
 
-/** Creates an independent draft and resolves links after all IDs are known. */
+/** Creates an independent hierarchy draft without resource links. */
 export function copyAssetHierarchy(
     source: SpAssetModel,
     generateId: (length: number) => string,
 ): SpAssetModel {
     const copy = cloneDeep(source);
-    const ids = new Map<string, string>();
     const nodes: SpAsset[] = [];
     const collect = (asset: SpAsset): void => {
         nodes.push(asset);
@@ -45,17 +44,10 @@ export function copyAssetHierarchy(
         return id;
     };
     copy.elementId = freshId(24);
-    ids.set(source.elementId, copy.elementId);
     copy.rev = undefined;
     nodes.forEach(asset => {
-        const id = freshId(6);
-        ids.set(asset.assetId, id);
-        asset.assetId = id;
-    });
-    nodes.forEach(asset => {
-        asset.assetLinks?.forEach(link => {
-            link.resourceId = ids.get(link.resourceId) ?? link.resourceId;
-        });
+        asset.assetId = freshId(6);
+        asset.assetLinks = [];
     });
     return copy;
 }
