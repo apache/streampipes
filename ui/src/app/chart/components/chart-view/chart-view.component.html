@@ -18,6 +18,7 @@
 
 @if (dataViewLoaded) {
     <sp-basic-view [hideNavbar]="true" [padding]="true">
+        @let pageHeaderAssetLinkType = pageHeaderAssetLinkType$ | async;
         <sp-page-header
             variant="workspace"
             [title]="
@@ -25,7 +26,9 @@
                 ('Chart' | translate)
             "
             icon="query_stats"
-            iconColor="var(--color-primary)"
+            [iconColor]="
+                pageHeaderAssetLinkType?.linkColor ?? 'var(--color-primary)'
+            "
             [backLinkTarget]="['chart']"
         >
             <sp-chart-view-toolbar

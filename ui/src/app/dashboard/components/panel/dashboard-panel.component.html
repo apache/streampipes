@@ -18,11 +18,14 @@
 
 @if (dashboardLoaded || dashboardNotFound) {
     <sp-basic-view [hideNavbar]="true" [padding]="true">
+        @let pageHeaderAssetLinkType = pageHeaderAssetLinkType$ | async;
         <sp-page-header
             variant="workspace"
             [title]="dashboard?.name || ('Dashboard' | translate)"
             icon="dashboard"
-            iconColor="var(--color-primary)"
+            [iconColor]="
+                pageHeaderAssetLinkType?.linkColor ?? 'var(--color-primary)'
+            "
             [backLinkTarget]="['dashboard']"
         >
             @if (!dashboardNotFound) {

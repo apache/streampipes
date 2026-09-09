@@ -101,9 +101,7 @@
 .selection-toolbar,
 .grouping-toolbar {
     border-bottom: 1px solid var(--color-border-subtle);
-    margin-bottom: var(--space-md);
     padding: var(--space-sm);
-    padding-bottom: calc(var(--space-sm) + var(--space-xs));
 }
 
 .selection-toolbar__left {

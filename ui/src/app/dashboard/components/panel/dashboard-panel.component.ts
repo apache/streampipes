@@ -59,6 +59,7 @@ import {
     ObjectManageDialogResult,
     PanelType,
     ShortcutRegistration,
+    SpAssetBrowserService,
     SpBasicViewComponent,
     SpPageHeaderComponent,
     SpWorkspaceContainerComponent,
@@ -99,6 +100,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 
+import { AsyncPipe } from '@angular/common';
+
 @Component({
     selector: 'sp-dashboard-panel',
     templateUrl: './dashboard-panel.component.html',
@@ -107,6 +110,7 @@ import { MatTooltip } from '@angular/material/tooltip';
         '../../../chart/components/chart-view/designer-panel/chart-designer-panel.component.scss',
     ],
     imports: [
+        AsyncPipe,
         SpBasicViewComponent,
         SpPageHeaderComponent,
         SpWorkspaceContainerComponent,
@@ -175,6 +179,9 @@ export class DashboardPanelComponent
     private dialog = inject(MatDialog);
     private dialogService = inject(DialogService);
     private assetSaveService = inject(AssetSaveService);
+    readonly pageHeaderAssetLinkType$ = inject(
+        SpAssetBrowserService,
+    ).getAssetLinkType$('dashboard');
     private permissionsService = inject(PermissionsService);
     private chartService = inject(ChartService);
     private timeSelectionService = inject(TimeSelectionService);
