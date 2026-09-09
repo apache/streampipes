@@ -213,8 +213,12 @@ export class ConnectUtils {
         }
 
         // For file adapters, wait until the file selection state is rendered to reduce test flakiness.
+        // Scroll it into view first, since additional format options (e.g. the decimal separator)
+        // can push this element into a scrollable area.
         if (adapterInput?.adapterType === 'File_Stream') {
-            ConnectBtns.fileInputSelected().should('be.visible');
+            ConnectBtns.fileInputSelected()
+                .scrollIntoView()
+                .should('be.visible');
         }
     }
 
