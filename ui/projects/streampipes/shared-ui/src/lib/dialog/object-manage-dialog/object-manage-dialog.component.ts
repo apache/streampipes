@@ -241,6 +241,14 @@ export class ObjectManageDialogComponent<
         return this.resourceConfig.showResourceFields !== false;
     }
 
+    get resourceNameReadonly(): boolean {
+        return this.resourceConfig.resourceNameReadonly === true;
+    }
+
+    get showResourceDescription(): boolean {
+        return this.resourceConfig.showResourceDescription !== false;
+    }
+
     get showAssetLinking(): boolean {
         return this.resourceConfig.showAssetLinking !== false;
     }
