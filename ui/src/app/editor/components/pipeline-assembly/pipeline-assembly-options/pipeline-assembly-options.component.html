@@ -22,16 +22,28 @@
     fxLayoutAlign="start center"
     class="assembly-options"
 >
-    <sp-split-button
-        dataCy="sp-editor-save-pipeline"
-        [label]="'Store and Start' | translate"
-        icon="save"
-        [actions]="savePipelineActions"
-        [disabled]="!pipelineValidationService.pipelineValid"
-        [menuAriaLabel]="'Select save action'"
-        (primaryAction)="emitSavePipeline(true)"
-        (actionSelected)="onSavePipelineActionSelected($event)"
-    ></sp-split-button>
+    @if (editMode && pipelineRunning) {
+        <button
+            mat-flat-button
+            color="accent"
+            data-cy="sp-editor-save-pipeline"
+            [disabled]="!pipelineValidationService.pipelineValid"
+            (click)="emitSavePipeline(true)"
+        >
+            {{ 'Store and Restart' | translate }}
+        </button>
+    } @else {
+        <sp-split-button
+            dataCy="sp-editor-save-pipeline"
+            [label]="'Store and Start' | translate"
+            icon="save"
+            [actions]="savePipelineActions"
+            [disabled]="!pipelineValidationService.pipelineValid"
+            [menuAriaLabel]="'Select action' | translate"
+            (primaryAction)="emitSavePipeline(true)"
+            (actionSelected)="onSavePipelineActionSelected($event)"
+        ></sp-split-button>
+    }
     <span class="assembly-options-divider"></span>
     <button
         mat-flat-button
