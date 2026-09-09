@@ -22,7 +22,6 @@
         [title]="pipeline?.name || ('Pipeline' | translate)"
         icon="play_arrow"
         iconColor="var(--color-pipeline)"
-        [backLinkTarget]="['pipelines']"
     >
         @if (pipelineAvailable && !pipelineNotFound) {
             <sp-label

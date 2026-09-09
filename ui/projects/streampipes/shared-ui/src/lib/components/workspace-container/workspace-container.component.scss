@@ -23,8 +23,7 @@
     min-width: 0;
     min-height: 0;
     overflow: hidden;
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-sm);
+    border-top: 1px solid var(--color-border-subtle);
     background: var(--color-bg-0);
 }
 
@@ -45,4 +44,7 @@
     min-width: 0;
     min-height: 0;
     overflow: auto;
+    border-left: 1px solid var(--color-border-subtle);
+    border-right: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border-subtle);
 }

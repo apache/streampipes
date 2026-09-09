@@ -19,20 +19,20 @@
 <sp-basic-view [hideNavbar]="true" [padding]="true">
     @if (datasetNotFound) {
         <sp-page-header
+            variant="workspace"
             [title]="'Dataset' | translate"
             icon="dataset"
             iconColor="var(--color-measurement)"
-            [backLinkTarget]="['datasets']"
         ></sp-page-header>
         <div class="dataset-details-layout__message" role="status">
             {{ 'The desired dataset was not found!' | translate }}
         </div>
     } @else if (dataset) {
         <sp-page-header
+            variant="workspace"
             [title]="dataset.measureName"
             icon="dataset"
             iconColor="var(--color-measurement)"
-            [backLinkTarget]="['datasets']"
         >
             <div pageActions class="dataset-details-layout__actions">
                 <sp-element-id [value]="dataset.elementId"></sp-element-id>

@@ -40,6 +40,10 @@
     border: none;
 }
 
+.no-padding-top {
+    padding-top: 0;
+}
+
 .paginator-container {
     border-top: 1px solid var(--table-divider-color);
     background: var(--mat-sys-surface);
@@ -100,8 +104,13 @@
 
 .selection-toolbar,
 .grouping-toolbar {
+    border-top: 1px solid var(--color-border-subtle);
     border-bottom: 1px solid var(--color-border-subtle);
     padding: var(--space-sm);
+}
+
+.no-toolbar-border-top {
+    border-top: none;
 }
 
 .selection-toolbar__left {

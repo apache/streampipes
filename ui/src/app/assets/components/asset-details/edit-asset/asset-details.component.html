@@ -26,12 +26,12 @@
     >
         <sp-basic-view [hideNavbar]="true" [padding]="true">
             <sp-page-header
+                variant="workspace"
                 [title]="
                     isNewAsset
                         ? ('New asset' | translate)
                         : selectedAsset?.assetName || ('Asset' | translate)
                 "
-                [backLinkTarget]="['assets']"
             >
                 <button
                     pageActions

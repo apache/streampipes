@@ -16,13 +16,19 @@
   ~
   -->
 
-<div fxLayout="column" class="table-outer" [class.no-border]="noBorder">
+<div
+    fxLayout="column"
+    class="table-outer"
+    [class.no-border]="noBorder"
+    [class.no-padding-top]="noToolbarBorderTop"
+>
     @if (
         (shouldShowGroupingControls || shouldShowNameSearch) &&
         !showSelectionCheckboxes
     ) {
         <div
             class="grouping-toolbar"
+            [class.no-toolbar-border-top]="noToolbarBorderTop"
             fxLayout="row wrap"
             fxLayoutAlign="space-between center"
             fxLayoutGap="12px"
@@ -49,6 +55,7 @@
     @if (showSelectionCheckboxes) {
         <div
             class="selection-toolbar"
+            [class.no-toolbar-border-top]="noToolbarBorderTop"
             data-cy="sp-table-selection-toolbar"
             fxLayout="row wrap"
             fxLayoutAlign="space-between center"

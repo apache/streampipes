@@ -19,21 +19,21 @@
 <sp-basic-view [hideNavbar]="true" [padding]="true">
     @if (adapterNotFound) {
         <sp-page-header
+            [variant]="'workspace'"
             [title]="'Adapter' | translate"
             icon="power"
             iconColor="var(--color-adapter)"
-            [backLinkTarget]="['connect']"
         ></sp-page-header>
         <div class="adapter-details-layout__message" role="status">
             {{ 'The desired adapter was not found!' | translate }}
         </div>
     } @else if (adapter) {
         <sp-page-header
+            [variant]="'workspace'"
             [title]="adapter.name"
             [description]="adapter.description"
             icon="power"
             iconColor="var(--color-adapter)"
-            [backLinkTarget]="['connect']"
         >
             <div pageActions class="adapter-details-layout__actions">
                 <div class="adapter-details-layout__meta" role="status">
