@@ -36,6 +36,7 @@ import {
 import { ObjectProvider } from '../../services/object-provider.service';
 import {
     AssetSaveService,
+    PipelineAssetLinkService,
     DialogService,
     KeyboardShortcutService,
     ObjectManageDialogComponent,
@@ -94,6 +95,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private shortcutService = inject(KeyboardShortcutService);
     private permissionsService = inject(PermissionsService);
     private assetSaveService = inject(AssetSaveService);
+    private pipelineAssetLinkService = inject(PipelineAssetLinkService);
     private pipelineOperationsService = inject(PipelineOperationsService);
     private idGeneratorService = inject(IdGeneratorService);
 
@@ -229,6 +231,8 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
             assetLinkType: 'pipeline',
             assetLinkCheckboxLabel:
                 'Add the current pipeline to an existing asset',
+            resolveAssetLinks: resource =>
+                this.pipelineAssetLinkService.getLinkageData([resource]),
             saveResource: async resource => {
                 const saveSuccessful = await this.savePipelineResource(
                     resource,
