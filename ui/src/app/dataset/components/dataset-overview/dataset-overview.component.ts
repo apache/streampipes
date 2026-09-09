@@ -466,23 +466,29 @@ export class DatasetOverviewComponent
                         resourceLabel: 'Dataset',
                         nameLabel: 'Dataset name',
                         nameProperty: 'measureName',
-                        showResourceFields: false,
-                        showAssetLinking: false,
+                        resourceNameReadonly: true,
+                        showResourceDescription: false,
+                        assetLinkType: 'measurement',
                     };
 
-                this.dialogService.open(ObjectManageDialogComponent, {
-                    panelType: PanelType.SLIDE_IN_PANEL,
-                    title: this.translateService.instant('Manage'),
-                    width: '50vw',
-                    data: {
-                        objectInstanceId: element.elementId,
-                        resource: dataset,
-                        saveMode: 'immediate',
-                        resourceConfig,
-                        headerTitle:
-                            this.translateService.instant('Manage Dataset ') +
-                            element.name,
+                const dialogRef = this.dialogService.open(
+                    ObjectManageDialogComponent,
+                    {
+                        panelType: PanelType.SLIDE_IN_PANEL,
+                        title: this.translateService.instant('Manage'),
+                        width: '50vw',
+                        data: {
+                            objectInstanceId: element.elementId,
+                            resource: dataset,
+                            saveMode: 'immediate',
+                            resourceConfig,
+                        },
                     },
+                );
+                dialogRef.afterClosed().subscribe(refresh => {
+                    if (refresh) {
+                        this.loadAvailableDatasets();
+                    }
                 });
             },
         });

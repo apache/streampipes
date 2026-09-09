@@ -46,6 +46,8 @@ export interface ObjectManageDialogResourceConfig<
     nameProperty?: 'title' | 'name' | 'measureName';
     descriptionProperty?: string;
     showResourceFields?: boolean;
+    resourceNameReadonly?: boolean;
+    showResourceDescription?: boolean;
     showAssetLinking?: boolean;
     assetLinkType?: string;
     assetLinkCheckboxLabel?: string;
