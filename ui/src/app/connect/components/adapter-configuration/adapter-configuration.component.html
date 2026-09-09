@@ -17,7 +17,19 @@
 -->
 
 <sp-basic-view [padding]="true" [hideNavbar]="true">
-    <sp-page-header [title]="pageTitle" [backLinkTarget]="['connect']">
+    <sp-page-header
+        [title]="pageTitle"
+        [description]="displayName"
+        icon="power"
+        iconColor="var(--color-adapter)"
+        [backLinkTarget]="['connect']"
+    >
+        <img
+            pageActions
+            class="adapter-configuration__logo"
+            [src]="adapterIconUrl"
+            alt=""
+        />
         @if (isEditMode) {
             <button
                 pageActions

@@ -27,6 +27,7 @@ import {
 import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
 import {
     AdapterDescription,
+    PipelineElementAssetService,
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
@@ -87,6 +88,7 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
     private translate = inject(TranslateService);
     private stateService = inject(AdapterConfigurationStateService);
     private dialogService = inject(DialogService);
+    private assetService = inject(PipelineElementAssetService);
 
     @Input() adapterDescription: AdapterDescription;
 
@@ -100,12 +102,16 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
 
     myStepper: MatStepper;
     pageTitle = '';
+    adapterIconUrl = '';
     private pendingManageAdapterResult?: ObjectManageDialogResult<AdapterDescription>;
     private readonly emptyAssets: SpAssetTreeNode[] = [];
 
     ngOnInit() {
         const titleKey = this.isEditMode ? 'Edit adapter' : 'New adapter';
-        this.pageTitle = `${this.translate.instant(titleKey)}: ${this.displayName}`;
+        this.pageTitle = this.translate.instant(titleKey);
+        this.adapterIconUrl =
+            this.assetService.getAssetUrl(this.adapterDescription.appId) +
+            '/icon';
 
         if (
             !this.adapterDescription.transformationConfig ||
@@ -184,8 +190,6 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
                 );
                 this.adapterDescription = currentAdapter;
                 this.displayName = currentAdapter.name;
-                this.pageTitle =
-                    this.translate.instant('Edit adapter: ') + this.displayName;
             }
         });
     }

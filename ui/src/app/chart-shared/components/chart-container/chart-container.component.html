@@ -44,11 +44,13 @@
                 >
                     @if (!isEditingName) {
                         <ng-container>
-                            {{
-                                dashboardItem?.name ||
-                                    configuredWidget.baseAppearanceConfig
-                                        .widgetTitle
-                            }}
+                            @if (!dataViewMode) {
+                                {{
+                                    dashboardItem?.name ||
+                                        configuredWidget.baseAppearanceConfig
+                                            .widgetTitle
+                                }}
+                            }
                             @if (!dataViewMode && editMode) {
                                 <button
                                     class="ml-xs"
