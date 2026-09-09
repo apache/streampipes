@@ -32,6 +32,7 @@ import org.apache.streampipes.service.core.migrations.v099.AddScriptTemplateView
 import org.apache.streampipes.service.core.migrations.v099.ComputeCertificateThumbprintMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateDatasetPermissionMigration;
+import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakeDatabaseToDatasetMigration;
 import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakeSinkToDatasetMigration;
 import org.apache.streampipes.service.core.migrations.v099.MigrateDatasetMetadataMigration;
 import org.apache.streampipes.service.core.migrations.v099.ModifyAssetLinkIconMigration;
@@ -102,6 +103,7 @@ public class AvailableMigrations {
         new AddAssetManagementViewMigration(),
         new MoveAssetContentMigration(),
         new CreateAssetPermissionMigration(permissionStorage, assetStorage),
+        new MigrateDataLakeDatabaseToDatasetMigration(),
         new CreateDatasetPermissionMigration(permissionStorage, pipelineStorage, datasetStorage),
         new MigrateDataLakeSinkToDatasetMigration(pipelineStorage, dataSinkStorage, permissionStorage),
         new RemoveObsoletePrivilegesMigration(privilegeStorage),
