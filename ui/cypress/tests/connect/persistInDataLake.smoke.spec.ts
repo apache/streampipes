@@ -37,6 +37,7 @@ describe('Test File Stream Adapter', () => {
             .setFormat('csv')
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
             .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
+            .addFormatInput('input', ConnectBtns.csvDecimalSeparator(), '.')
             .build();
 
         ConnectUtils.testAdapter(adapterInput);
