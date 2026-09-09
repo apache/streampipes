@@ -26,6 +26,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
+import { PipelineStartService } from '../../services/pipeline-start.service';
 
 @Component({
     selector: 'sp-start-all-pipelines-dialog',
@@ -51,6 +52,7 @@ export class StartAllPipelinesDialogComponent implements OnInit {
 
     translateService = inject(TranslateService);
     pipelineService = inject(PipelineService);
+    pipelineStartService = inject(PipelineStartService);
     dialogRef = inject(DialogRef<StartAllPipelinesDialogComponent>);
 
     successStr = this.translateService.instant('success');
@@ -111,7 +113,7 @@ export class StartAllPipelinesDialogComponent implements OnInit {
     }
 
     startPipeline(pipeline: PipelineSummaryDto, index) {
-        this.pipelineService
+        this.pipelineStartService
             .startPipeline(pipeline.elementId)
             .subscribe(
                 data => {

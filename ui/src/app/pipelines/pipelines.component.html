@@ -34,9 +34,8 @@
                 (click)="navigateToPipelineEditor()"
                 data-cy="pipelines-navigate-to-editor"
             >
-                <i class="material-icons" aria-hidden="true">add</i>&nbsp;{{
-                    'New Pipeline' | translate
-                }}
+                <mat-icon aria-hidden="true">add</mat-icon
+                >{{ 'New Pipeline' | translate }}
             </button>
         }
         <button
@@ -49,7 +48,7 @@
             [matTooltip]="'Tutorial' | translate"
             [disabled]="tutorialActive"
         >
-            <i class="material-icons" aria-hidden="true">school</i>
+            <mat-icon aria-hidden="true">school</mat-icon>
         </button>
         <button
             pageActions
@@ -62,7 +61,7 @@
             matTooltipPosition="above"
             (click)="getPipelines()"
         >
-            <i class="material-icons" aria-hidden="true">refresh</i>
+            <mat-icon aria-hidden="true">refresh</mat-icon>
         </button>
     </sp-page-header>
 

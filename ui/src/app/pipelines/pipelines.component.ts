@@ -49,6 +49,7 @@ import { FunctionsOverviewComponent } from './components/functions-overview/func
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-pipelines',
@@ -66,6 +67,7 @@ import { AsyncPipe } from '@angular/common';
         MatTab,
         MatTabGroup,
         AsyncPipe,
+        MatIcon,
     ],
 })
 export class PipelinesComponent implements OnInit, OnDestroy {

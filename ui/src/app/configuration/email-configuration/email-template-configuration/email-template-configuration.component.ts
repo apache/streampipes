@@ -37,6 +37,7 @@ import {
 import { MatButton } from '@angular/material/button';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import type { editor as MonacoEditor } from 'monaco-editor';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-email-template-configuration',
@@ -53,6 +54,7 @@ import type { editor as MonacoEditor } from 'monaco-editor';
         MonacoEditorModule,
         FormsModule,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class SpEmailTemplateConfigurationComponent implements OnInit {

@@ -37,8 +37,7 @@
                 data-cy="new-label-button"
                 (click)="createLabelMode.set(true)"
             >
-                <i class="material-icons">add</i
-                ><span>&nbsp;{{ 'New' | translate }}</span>
+                <mat-icon>add</mat-icon><span>{{ 'New' | translate }}</span>
             </button>
         </div>
         @if (createLabelMode()) {

@@ -49,6 +49,7 @@ import {
 import { MatButton } from '@angular/material/button';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { MatIcon } from '@angular/material/icon';
 
 interface AssetReferenceExportItems {
     referencedLabels: Record<string, ExportItem[]>;
@@ -68,6 +69,7 @@ interface AssetReferenceExportItems {
         MatCheckbox,
         MatButton,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class SpDataExportImportComponent implements OnInit {

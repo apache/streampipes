@@ -42,12 +42,12 @@
         [disabled]="isPipelineAssemblyEmpty()"
     >
         <div fxLayoutAlign="start center" fxLayout="row">
-            <i class="material-icons">visibility</i>
+            <mat-icon>visibility</mat-icon>
             @if (!previewModeActive) {
-                <span>&nbsp;{{ 'Enable live preview' | translate }}</span>
+                <span>{{ 'Enable live preview' | translate }}</span>
             }
             @if (previewModeActive) {
-                <span>&nbsp;{{ 'Disable live preview' | translate }}</span>
+                <span>{{ 'Disable live preview' | translate }}</span>
             }
         </div>
     </button>
@@ -58,7 +58,7 @@
         [matTooltipPosition]="'above'"
         (click)="autoLayout()"
     >
-        <i class="material-icons">settings_overscan</i>
+        <mat-icon>settings_overscan</mat-icon>
     </button>
     <span class="assembly-options-divider"></span>
     <button
@@ -69,8 +69,8 @@
         (click)="openDiscoverDialog()"
         data-cy="sp-editor-add-pipeline-element"
     >
-        <i class="material-icons">add</i>
-        <span>&nbsp;{{ 'Element' | translate }}</span>
+        <mat-icon>add</mat-icon>
+        <span>{{ 'Element' | translate }}</span>
     </button>
     <button
         mat-flat-button
@@ -80,8 +80,8 @@
         (click)="openAddTemplateDialog()"
         data-cy="sp-editor-add-template"
     >
-        <i class="material-icons">add</i>
-        <span>&nbsp;{{ 'From template' | translate }}</span>
+        <mat-icon>add</mat-icon>
+        <span>{{ 'From template' | translate }}</span>
     </button>
     <sp-pipeline-assembly-options-pipeline-cache
         [rawPipelineModel]="rawPipelineModel"
@@ -127,6 +127,6 @@
         (click)="showClearAssemblyConfirmDialog($event)"
         data-cy="clear-assembly-area"
     >
-        <i class="material-icons">clear</i>
+        <mat-icon>clear</mat-icon>
     </button>
 </div>

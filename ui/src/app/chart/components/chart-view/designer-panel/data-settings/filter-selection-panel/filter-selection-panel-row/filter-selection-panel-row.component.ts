@@ -30,6 +30,7 @@ import { FilterSelectionPanelRowValueAutocompleteComponent } from './panel-row-v
 import { MatIconButton } from '@angular/material/button';
 import { MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-filter-selection-panel-row',
@@ -46,6 +47,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
         MatFormField,
         MatSelect,
         MatOption,
+        MatIcon,
     ],
 })
 export class FilterSelectionPanelRowComponent {

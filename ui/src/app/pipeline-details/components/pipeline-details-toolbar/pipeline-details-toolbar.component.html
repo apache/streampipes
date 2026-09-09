@@ -25,12 +25,12 @@
         (click)="togglePreviewEmitter.emit()"
     >
         <div fxLayoutAlign="start center" fxLayout="row">
-            <i class="material-icons">visibility</i>
+            <mat-icon>visibility</mat-icon>
             @if (!previewModeActive) {
-                <span>&nbsp;{{ 'Enable live preview' | translate }}</span>
+                <span>{{ 'Enable live preview' | translate }}</span>
             }
             @if (previewModeActive) {
-                <span>&nbsp;{{ 'Disable live preview' | translate }}</span>
+                <span>{{ 'Disable live preview' | translate }}</span>
             }
         </div>
     </button>
@@ -43,8 +43,8 @@
             (click)="openCodeDialogEmitter.emit()"
         >
             <div fxLayoutAlign="start center" fxLayout="row">
-                <i class="material-icons">code</i>
-                <span>&nbsp;{{ 'View pipeline as code' | translate }}</span>
+                <mat-icon>code</mat-icon>
+                <span>{{ 'View pipeline as code' | translate }}</span>
             </div>
         </button>
     }
@@ -57,8 +57,8 @@
             matTooltip="Refresh"
             (click)="reloadMetricsEmitter.emit()"
         >
-            <i class="material-icons">refresh</i>
-            &nbsp;{{ 'Refresh metrics' | translate }}
+            <mat-icon>refresh</mat-icon>
+            {{ 'Refresh metrics' | translate }}
         </button>
         <mat-slide-toggle
             [(ngModel)]="autoRefresh"

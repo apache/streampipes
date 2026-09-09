@@ -49,6 +49,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatButton } from '@angular/material/button';
 import { SpEmailTemplateConfigurationComponent } from './email-template-configuration/email-template-configuration.component';
 import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-email-configuration',
@@ -73,6 +74,7 @@ import { MatDivider } from '@angular/material/divider';
         SpEmailTemplateConfigurationComponent,
         MatDivider,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class EmailConfigurationComponent implements OnInit {

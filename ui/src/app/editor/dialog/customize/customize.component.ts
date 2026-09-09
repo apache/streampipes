@@ -68,6 +68,7 @@ import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LayoutGapDirective } from '@ngbracket/ngx-layout';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-customize-pipeline-element',
@@ -94,6 +95,7 @@ import { LayoutGapDirective } from '@ngbracket/ngx-layout';
         MatButton,
         TranslatePipe,
         LayoutGapDirective,
+        MatIcon,
     ],
 })
 export class CustomizeComponent implements OnInit, AfterViewInit {

@@ -50,6 +50,7 @@ import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-change-password-dialog',
@@ -68,6 +69,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         FormFieldComponent,
         TranslatePipe,
         SpAlertBannerComponent,
+        MatIcon,
     ],
 })
 export class ChangePasswordDialogComponent implements OnInit {
