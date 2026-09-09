@@ -76,6 +76,13 @@
     min-width: 0;
 }
 
+.page-header__title-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
 .page-header__title {
     margin: 0;
     color: var(--color-default-text);
@@ -106,6 +113,25 @@
 
 .page-header__actions:empty {
     display: none;
+}
+
+@media (width > 100rem) {
+    :host(:not(.page-header-workspace)) {
+        margin-block-end: var(--space-lg);
+    }
+}
+
+:host(.page-header-workspace) {
+    .page-header__title {
+        font-size: var(--font-size-xl);
+        overflow-wrap: anywhere;
+    }
+
+    .page-header__icon {
+        width: 2.25rem;
+        height: 2.25rem;
+        flex-basis: 2.25rem;
+    }
 }
 
 @container (max-width: 42rem) {

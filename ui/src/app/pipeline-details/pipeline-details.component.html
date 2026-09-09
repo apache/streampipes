@@ -16,43 +16,86 @@
 ~
 -->
 
-<sp-basic-view
-    [showBackLink]="true"
-    [backLinkTarget]="['pipelines']"
-    [padding]="false"
->
-    <div nav fxFlex="100" fxLayoutAlign="start center" class="mr-5">
-        <sp-pipeline-details-toolbar
-            fxFlex="100"
-            [hasPipelineWritePrivileges]="hasPipelineWritePrivileges"
-            [autoRefresh]="autoRefresh"
-            [previewModeActive]="previewModeActive"
-            (togglePreviewEmitter)="toggleLivePreview()"
-            (autoRefreshChange)="autoRefresh = $event"
-            (reloadMetricsEmitter)="triggerReload()"
-            (openCodeDialogEmitter)="openPipelineAsCodeDialog()"
-            (editPipelineEmitter)="editPipeline()"
-            (deletePipelineEmitter)="deletePipeline()"
-        >
-        </sp-pipeline-details-toolbar>
-    </div>
-    <div fxFlex="100" fxLayout="column">
-        @if (pipelineNotFound) {
-            <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
-                {{ 'The desired pipeline was not found!' | translate }}
+<sp-basic-view [hideNavbar]="true" [padding]="true">
+    <sp-page-header
+        variant="workspace"
+        [title]="pipeline?.name || ('Pipeline' | translate)"
+        icon="play_arrow"
+        iconColor="var(--color-pipeline)"
+        [backLinkTarget]="['pipelines']"
+    >
+        @if (pipelineAvailable && !pipelineNotFound) {
+            <sp-label
+                pageMeta
+                role="status"
+                [labelText]="
+                    (pipeline.running ? 'Running' : 'Stopped') | translate
+                "
+                [tone]="pipeline.running ? 'success' : 'neutral'"
+                size="small"
+            ></sp-label>
+        }
+        @if (pipelineAvailable && !pipelineNotFound) {
+            <div pageActions class="pipeline-details__actions">
+                @if (hasPipelineWritePrivileges) {
+                    <button
+                        type="button"
+                        mat-flat-button
+                        (click)="editPipeline()"
+                        data-cy="options-edit-pipeline"
+                    >
+                        <mat-icon>edit</mat-icon>
+                        {{ 'Edit pipeline' | translate }}
+                    </button>
+                    <button
+                        type="button"
+                        mat-icon-button
+                        [matMenuTriggerFor]="pipelineOptions"
+                        [attr.aria-label]="'Options' | translate"
+                        data-cy="pipeline-details-options"
+                    >
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #pipelineOptions="matMenu">
+                        <button
+                            mat-menu-item
+                            (click)="deletePipeline()"
+                            data-cy="options-delete-pipeline"
+                        >
+                            <mat-icon>delete</mat-icon>
+                            {{ 'Delete pipeline' | translate }}
+                        </button>
+                    </mat-menu>
+                }
             </div>
         }
+    </sp-page-header>
 
-        @if (pipelineAvailable) {
+    @if (pipelineNotFound) {
+        <div class="pipeline-details__message" role="status">
+            {{ 'The desired pipeline was not found!' | translate }}
+        </div>
+    } @else if (pipelineAvailable) {
+        <sp-workspace-container>
+            <sp-pipeline-details-toolbar
+                workspaceToolbar
+                [hasPipelineWritePrivileges]="hasPipelineWritePrivileges"
+                (openCodeDialogEmitter)="openPipelineAsCodeDialog()"
+                [autoRefresh]="autoRefresh"
+                [previewModeActive]="previewModeActive"
+                (togglePreviewEmitter)="toggleLivePreview()"
+                (autoRefreshChange)="autoRefresh = $event"
+                (reloadMetricsEmitter)="triggerReload()"
+            ></sp-pipeline-details-toolbar>
             <sp-pipeline-preview
                 #pipelinePreviewComponent
+                class="pipeline-details__preview"
                 [metricsInfo]="metricsInfo"
                 [pipeline]="pipeline"
                 [pipelineCanvasMetadata]="pipelineCanvasMetadata"
                 (selectedElementEmitter)="selectElement($event)"
-                style="display: flex; flex: 1 1"
             >
-                <div class="expansion-panel" fxFlex="100" fxLayout="column">
+                <div class="expansion-panel" fxLayout="column">
                     <sp-pipeline-details-expansion-panel
                         [hasWritePipelinePrivileges]="
                             hasPipelineWritePrivileges
@@ -60,10 +103,13 @@
                         (reloadPipelineEmitter)="loadPipeline()"
                         [logInfo]="logInfo"
                         [pipeline]="pipeline"
-                    >
-                    </sp-pipeline-details-expansion-panel>
+                    ></sp-pipeline-details-expansion-panel>
                 </div>
             </sp-pipeline-preview>
-        }
-    </div>
+        </sp-workspace-container>
+    } @else {
+        <div class="pipeline-details__message" role="status">
+            <sp-spinner [text]="'Loading' | translate"></sp-spinner>
+        </div>
+    }
 </sp-basic-view>

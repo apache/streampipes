@@ -18,49 +18,11 @@
 
 <div
     fxFlex="100"
-    fxLayout="row"
+    fxLayout="row wrap"
     fxLayoutAlign="start center"
     class="assembly-options"
 >
-    <sp-split-button
-        dataCy="sp-editor-save-pipeline"
-        [label]="'Store and Start' | translate"
-        icon="save"
-        [actions]="savePipelineActions"
-        [disabled]="!pipelineValidationService.pipelineValid"
-        [menuAriaLabel]="'Select save action'"
-        (primaryAction)="emitSavePipeline(true)"
-        (actionSelected)="onSavePipelineActionSelected($event)"
-    ></sp-split-button>
-    <span class="assembly-options-divider"></span>
-    <button
-        mat-flat-button
-        class="mat-basic"
-        [matTooltip]="'Data Preview' | translate"
-        matTooltipPosition="above"
-        (click)="togglePreviewEmitter.emit()"
-        [disabled]="isPipelineAssemblyEmpty()"
-    >
-        <div fxLayoutAlign="start center" fxLayout="row">
-            <mat-icon>visibility</mat-icon>
-            @if (!previewModeActive) {
-                <span>{{ 'Enable live preview' | translate }}</span>
-            }
-            @if (previewModeActive) {
-                <span>{{ 'Disable live preview' | translate }}</span>
-            }
-        </div>
-    </button>
-    <span class="assembly-options-divider"></span>
-    <button
-        mat-icon-button
-        [matTooltip]="'Auto Layout' | translate"
-        [matTooltipPosition]="'above'"
-        (click)="autoLayout()"
-    >
-        <mat-icon>settings_overscan</mat-icon>
-    </button>
-    <span class="assembly-options-divider"></span>
+    <ng-content></ng-content>
     <button
         mat-flat-button
         [matTooltip]="'Add pipeline element' | translate"
@@ -69,8 +31,8 @@
         (click)="openDiscoverDialog()"
         data-cy="sp-editor-add-pipeline-element"
     >
-        <mat-icon>add</mat-icon>
-        <span>{{ 'Element' | translate }}</span>
+        <i class="material-icons">add</i>
+        <span>&nbsp;{{ 'Element' | translate }}</span>
     </button>
     <button
         mat-flat-button
@@ -80,8 +42,8 @@
         (click)="openAddTemplateDialog()"
         data-cy="sp-editor-add-template"
     >
-        <mat-icon>add</mat-icon>
-        <span>{{ 'From template' | translate }}</span>
+        <i class="material-icons">add</i>
+        <span>&nbsp;{{ 'From template' | translate }}</span>
     </button>
     <sp-pipeline-assembly-options-pipeline-cache
         [rawPipelineModel]="rawPipelineModel"
@@ -90,43 +52,50 @@
     >
     </sp-pipeline-assembly-options-pipeline-cache>
 
-    <span fxFlex></span>
-    @if (editMode) {
+    <div
+        class="assembly-options__view-controls"
+        fxLayout="row"
+        fxLayoutAlign="end center"
+    >
+        <button
+            mat-flat-button
+            class="mat-basic"
+            [matTooltip]="'Data Preview' | translate"
+            matTooltipPosition="above"
+            [attr.aria-pressed]="previewModeActive"
+            (click)="togglePreviewEmitter.emit()"
+            [disabled]="isPipelineAssemblyEmpty()"
+        >
+            <div fxLayoutAlign="start center" fxLayout="row">
+                <i class="material-icons">visibility</i>
+                @if (!previewModeActive) {
+                    <span>&nbsp;{{ 'Enable live preview' | translate }}</span>
+                }
+                @if (previewModeActive) {
+                    <span>&nbsp;{{ 'Disable live preview' | translate }}</span>
+                }
+            </div>
+        </button>
+        <span class="assembly-options-divider"></span>
         <button
             mat-icon-button
-            [matMenuTriggerFor]="pipelineOptionsMenu"
-            [attr.aria-label]="'Options' | translate"
-            data-cy="options-pipeline"
+            [attr.aria-label]="'Auto Layout' | translate"
+            [matTooltip]="'Auto Layout' | translate"
+            [matTooltipPosition]="'above'"
+            (click)="autoLayout()"
         >
-            <mat-icon>more_vert</mat-icon>
+            <i class="material-icons">settings_overscan</i>
         </button>
-        <mat-menu #pipelineOptionsMenu="matMenu">
-            <button
-                mat-menu-item
-                (click)="managePipelineEmitter.emit()"
-                data-cy="manage-pipeline-btn"
-            >
-                <mat-icon>settings</mat-icon>
-                <span>{{ 'Manage pipeline' | translate }}</span>
-            </button>
-            <button
-                mat-menu-item
-                (click)="deletePipelineEmitter.emit()"
-                data-cy="delete-pipeline-btn"
-            >
-                <mat-icon>clear</mat-icon>
-                <span>{{ 'Delete pipeline' | translate }}</span>
-            </button>
-        </mat-menu>
-    }
-    <button
-        mat-icon-button
-        [matTooltip]="'Clear Assembly Area' | translate"
-        [matTooltipPosition]="'above'"
-        [disabled]="editorService.pipelineAssemblyEmpty"
-        (click)="showClearAssemblyConfirmDialog($event)"
-        data-cy="clear-assembly-area"
-    >
-        <mat-icon>clear</mat-icon>
-    </button>
+        <button
+            mat-icon-button
+            [attr.aria-label]="'Clear Assembly Area' | translate"
+            [matTooltip]="'Clear Assembly Area' | translate"
+            [matTooltipPosition]="'above'"
+            [disabled]="editorService.pipelineAssemblyEmpty"
+            (click)="showClearAssemblyConfirmDialog($event)"
+            data-cy="clear-assembly-area"
+        >
+            <i class="material-icons">clear</i>
+        </button>
+    </div>
 </div>

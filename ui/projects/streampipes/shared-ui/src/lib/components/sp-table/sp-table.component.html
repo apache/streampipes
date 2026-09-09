@@ -16,13 +16,13 @@
   ~
   -->
 
-<div fxLayout="column">
+<div fxLayout="column" class="table-outer" [class.no-border]="noBorder">
     @if (
         (shouldShowGroupingControls || shouldShowNameSearch) &&
         !showSelectionCheckboxes
     ) {
         <div
-            class="grouping-toolbar grouping-toolbar--standalone"
+            class="grouping-toolbar"
             fxLayout="row wrap"
             fxLayoutAlign="space-between center"
             fxLayoutGap="12px"

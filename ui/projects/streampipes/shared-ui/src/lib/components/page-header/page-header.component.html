@@ -44,7 +44,10 @@
             </div>
         }
         <div class="page-header__copy">
-            <h1 class="page-header__title">{{ title }}</h1>
+            <div class="page-header__title-row">
+                <h1 class="page-header__title">{{ title }}</h1>
+                <ng-content select="[pageMeta]"></ng-content>
+            </div>
             @if (description) {
                 <p class="page-header__description">{{ description }}</p>
             }

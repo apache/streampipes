@@ -16,43 +16,113 @@
 ~
 -->
 
-<sp-basic-view class="pipeline-assembly__view">
-    <div nav fxFlex="100">
+<sp-basic-view
+    class="pipeline-assembly__view"
+    [hideNavbar]="true"
+    [padding]="true"
+>
+    <sp-page-header
+        variant="workspace"
+        [title]="originalPipeline?.name || ('New Pipeline' | translate)"
+        icon="play_arrow"
+        iconColor="var(--color-pipeline)"
+        [backLinkTarget]="['pipelines']"
+    >
+        @if (cloneMode) {
+            <sp-label
+                pageMeta
+                [labelText]="'Clone' | translate"
+                tone="neutral"
+                size="small"
+            ></sp-label>
+        }
+        <div pageActions class="pipeline-assembly__actions">
+            <sp-split-button
+                dataCy="sp-editor-save-pipeline"
+                [label]="'Store and Start' | translate"
+                icon="save"
+                [actions]="savePipelineActions"
+                [disabled]="!pipelineValidationService.pipelineValid"
+                [menuAriaLabel]="'Select save action'"
+                (primaryAction)="submit({ startPipelineAfterStorage: true })"
+                (actionSelected)="
+                    submit({
+                        startPipelineAfterStorage:
+                            $event.action === 'store-and-start',
+                    })
+                "
+            ></sp-split-button>
+            @if (originalPipeline) {
+                <button
+                    type="button"
+                    mat-icon-button
+                    [matMenuTriggerFor]="pipelineOptionsMenu"
+                    [attr.aria-label]="'Options' | translate"
+                    data-cy="options-pipeline"
+                >
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #pipelineOptionsMenu="matMenu">
+                    <button
+                        mat-menu-item
+                        (click)="managePipeline()"
+                        data-cy="manage-pipeline-btn"
+                    >
+                        <mat-icon>settings</mat-icon>
+                        {{ 'Manage pipeline' | translate }}
+                    </button>
+                    <button
+                        mat-menu-item
+                        (click)="deletePipeline()"
+                        data-cy="delete-pipeline-btn"
+                    >
+                        <mat-icon>delete</mat-icon>
+                        {{ 'Delete pipeline' | translate }}
+                    </button>
+                </mat-menu>
+            }
+        </div>
+    </sp-page-header>
+    <sp-workspace-container>
         <sp-pipeline-assembly-options
-            fxFlex="100"
+            workspaceToolbar
             #assemblyOptionsComponent
             [rawPipelineModel]="rawPipelineModel"
             [pipelineCanvasMetadata]="pipelineCanvasMetadata"
             [allElements]="allElements"
             [jsplumbBridge]="jsplumbBridge"
             [previewModeActive]="previewModeActive"
-            [editMode]="!!originalPipeline"
             (clearAssemblyEmitter)="clearAssembly()"
             (togglePreviewEmitter)="togglePreview()"
-            (savePipelineEmitter)="submit($event)"
-            (managePipelineEmitter)="managePipeline()"
-            (deletePipelineEmitter)="deletePipeline()"
             (displayPipelineTemplateEmitter)="displayPipelineTemplate($event)"
         >
+            <ng-content select="[editorSearch]"></ng-content>
         </sp-pipeline-assembly-options>
-    </div>
-    <div id="outerAssemblyArea" class="outerAssembly">
-        @if (rawPipelineModel) {
-            <sp-pipeline-assembly-drawing-area
-                #drawingAreaComponent
-                fxFlex="100"
-                style="position: relative"
-                (triggerPipelineCacheUpdateEmitter)="triggerCacheUpdate()"
-                [readonly]="readonly"
-                [allElements]="allElements"
-                [rawPipelineModel]="rawPipelineModel"
-                [pipelineCanvasMetadata]="pipelineCanvasMetadata"
-                [pipelineCanvasMetadataAvailable]="
-                    pipelineCanvasMetadataAvailable
-                "
-                [jsplumbBridge]="jsplumbBridge"
-            >
-            </sp-pipeline-assembly-drawing-area>
-        }
-    </div>
+        <div class="pipeline-assembly__workspace" fxLayout="row">
+            <div class="pipeline-assembly__palette" fxLayout="column">
+                <ng-content select="[editorPalette]"></ng-content>
+            </div>
+            <div id="outerAssemblyArea" class="outerAssembly">
+                @if (rawPipelineModel) {
+                    <sp-pipeline-assembly-drawing-area
+                        #drawingAreaComponent
+                        fxFlex="100"
+                        class="pipeline-assembly__drawing"
+                        (triggerPipelineCacheUpdateEmitter)="
+                            triggerCacheUpdate()
+                        "
+                        [readonly]="readonly"
+                        [allElements]="allElements"
+                        [rawPipelineModel]="rawPipelineModel"
+                        [pipelineCanvasMetadata]="pipelineCanvasMetadata"
+                        [pipelineCanvasMetadataAvailable]="
+                            pipelineCanvasMetadataAvailable
+                        "
+                        [jsplumbBridge]="jsplumbBridge"
+                    >
+                    </sp-pipeline-assembly-drawing-area>
+                }
+            </div>
+        </div>
+    </sp-workspace-container>
 </sp-basic-view>

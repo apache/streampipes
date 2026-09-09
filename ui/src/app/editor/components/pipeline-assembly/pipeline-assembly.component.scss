@@ -44,3 +44,36 @@
 .color-warn {
     color: var(--color-warn);
 }
+
+.pipeline-assembly__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.pipeline-assembly__workspace {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.pipeline-assembly__palette {
+    flex: 0 0 15.625rem;
+    min-width: 0;
+    min-height: 0;
+    border-inline-end: 1px solid var(--color-border-subtle);
+}
+
+.pipeline-assembly__drawing {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+}
+
+@media (max-width: 60rem) {
+    .pipeline-assembly__palette {
+        flex-basis: 12rem;
+    }
+}

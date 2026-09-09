@@ -33,15 +33,6 @@
     overflow-y: auto;
 }
 
-.pipeline-element-palette__header {
-    flex: 0 0 44px;
-    padding-inline: var(--space-xs);
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid var(--color-border-subtle);
-    background: var(--color-bg-main-panel-header);
-}
-
 .pe-row {
     padding: var(--space-2xs) var(--space-xs);
 }
