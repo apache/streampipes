@@ -119,6 +119,19 @@
                                 <mat-icon>edit</mat-icon>
                                 <span>{{ 'Edit' | translate }}</span>
                             </button>
+                            <button
+                                mat-menu-item
+                                [attr.data-cy]="
+                                    'create-from-existing-asset-' +
+                                    element.assetName
+                                "
+                                (click)="createFromExisting(element)"
+                            >
+                                <mat-icon>content_copy</mat-icon>
+                                <span>{{
+                                    'Create from existing' | translate
+                                }}</span>
+                            </button>
                         }
                         <button
                             mat-menu-item
