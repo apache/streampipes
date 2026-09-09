@@ -41,6 +41,7 @@ import { MatDivider } from '@angular/material/divider';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-asset-browser-filter',
@@ -59,6 +60,7 @@ import { MatTooltip } from '@angular/material/tooltip';
         TranslatePipe,
         MatIconButton,
         MatTooltip,
+        MatIcon,
     ],
 })
 export class AssetBrowserFilterComponent implements OnInit, OnDestroy {

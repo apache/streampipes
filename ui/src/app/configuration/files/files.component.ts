@@ -35,6 +35,7 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { FileOverviewComponent } from './file-overview/file-overview.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     templateUrl: './files.component.html',
@@ -48,6 +49,7 @@ import { FileOverviewComponent } from './file-overview/file-overview.component';
         FlexDirective,
         FileOverviewComponent,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class FilesComponent implements OnInit {

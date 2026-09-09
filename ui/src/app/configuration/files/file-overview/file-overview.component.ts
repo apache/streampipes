@@ -42,6 +42,7 @@ import {
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-file-overview',
@@ -62,6 +63,7 @@ import { DatePipe } from '@angular/common';
         MatTooltip,
         DatePipe,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class FileOverviewComponent implements OnInit {

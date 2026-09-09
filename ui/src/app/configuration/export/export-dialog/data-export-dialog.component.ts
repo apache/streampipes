@@ -46,6 +46,7 @@ import { FormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatIcon } from '@angular/material/icon';
 
 interface SectionAssetConfiguration {
     assetId: string;
@@ -84,6 +85,7 @@ type ExportSectionKey =
         SplitSectionComponent,
         TranslatePipe,
         SpAlertBannerComponent,
+        MatIcon,
     ],
 })
 export class SpDataExportDialogComponent implements OnInit {

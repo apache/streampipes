@@ -32,9 +32,8 @@
             data-cy="connect-create-new-adapter-button"
             (click)="createNewAdapter()"
         >
-            <i class="material-icons" aria-hidden="true">add</i>&nbsp;{{
-                'New adapter' | translate
-            }}
+            <mat-icon aria-hidden="true">add</mat-icon
+            >{{ 'New adapter' | translate }}
         </button>
         <button
             pageActions
@@ -59,7 +58,7 @@
             color="accent"
             (click)="getAdaptersRunning()"
         >
-            <i class="material-icons" aria-hidden="true">refresh</i>
+            <mat-icon aria-hidden="true">refresh</mat-icon>
         </button>
     </sp-page-header>
     <div fxFlex="100" fxLayout="column">
@@ -125,7 +124,7 @@
                                     $event.stopPropagation()
                                 "
                             >
-                                <i class="material-icons">play_arrow</i>
+                                <mat-icon>play_arrow</mat-icon>
                             </button>
                         } @else if (adapter.running) {
                             <button
@@ -139,7 +138,7 @@
                                     $event.stopPropagation()
                                 "
                             >
-                                <i class="material-icons">stop</i>
+                                <mat-icon>stop</mat-icon>
                             </button>
                         }
                     </td>

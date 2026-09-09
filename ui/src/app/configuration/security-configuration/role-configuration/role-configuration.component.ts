@@ -46,6 +46,7 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-security-role-config',
@@ -68,6 +69,7 @@ import { MatTooltip } from '@angular/material/tooltip';
         MatButton,
         MatTooltip,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class SecurityRoleConfigComponent implements OnInit {

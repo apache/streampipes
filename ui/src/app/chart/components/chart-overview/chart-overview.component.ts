@@ -33,6 +33,7 @@ import { Subscription } from 'rxjs';
 import { MatButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-chart-overview',
@@ -45,6 +46,7 @@ import { AsyncPipe } from '@angular/common';
         ChartOverviewTableComponent,
         TranslatePipe,
         AsyncPipe,
+        MatIcon,
     ],
 })
 export class ChartOverviewComponent implements OnInit, OnDestroy {

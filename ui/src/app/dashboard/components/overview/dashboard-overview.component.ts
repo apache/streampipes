@@ -33,6 +33,7 @@ import { Subscription } from 'rxjs';
 import { MatButton } from '@angular/material/button';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
 import { AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-dashboard-overview',
@@ -45,6 +46,7 @@ import { AsyncPipe } from '@angular/common';
         DashboardOverviewTableComponent,
         TranslatePipe,
         AsyncPipe,
+        MatIcon,
     ],
 })
 export class DashboardOverviewComponent implements OnInit, OnDestroy {
