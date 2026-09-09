@@ -60,6 +60,8 @@ import {
     PanelType,
     ShortcutRegistration,
     SpBasicViewComponent,
+    SpPageHeaderComponent,
+    SpWorkspaceContainerComponent,
     SpBreadcrumbService,
     TimeSelectionService,
     AssetSaveService,
@@ -106,6 +108,8 @@ import { MatTooltip } from '@angular/material/tooltip';
     ],
     imports: [
         SpBasicViewComponent,
+        SpPageHeaderComponent,
+        SpWorkspaceContainerComponent,
         FlexDirective,
         FlexFillDirective,
         LayoutDirective,

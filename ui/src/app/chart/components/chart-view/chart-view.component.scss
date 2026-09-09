@@ -16,8 +16,17 @@
  *
  */
 
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
 .designer-panel {
-    border: 1px solid var(--color-tab-border);
+    border: 0;
+    border-inline-start: 1px solid var(--color-border-subtle);
     width: auto;
     flex: 0 0 auto;
     display: inline-block;

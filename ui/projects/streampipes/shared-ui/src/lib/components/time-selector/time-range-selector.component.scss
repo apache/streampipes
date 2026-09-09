@@ -116,7 +116,7 @@
     align-items: flex-start;
     justify-content: center;
     margin-inline: var(--space-xs);
-    line-height: 1.15;
+    line-height: 1.125rem;
 }
 
 .time-range-selector--emphasized .time-range-selector__label {
@@ -144,7 +144,9 @@
 
 .time-range-selector--emphasized .time-range-selector__calendar,
 .time-range-selector--emphasized .time-range-selector__expand {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex: 0 0 auto;
     width: 1.125rem;
     height: 1.125rem;
@@ -155,6 +157,9 @@
 
 .time-range-selector--emphasized .time-range-selector__step,
 .time-range-selector--emphasized .time-range-selector__refresh {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 2.25rem;
     height: 2.25rem;
     padding: 0;

@@ -57,6 +57,8 @@ import {
     SidebarResizeComponent,
     SpAlertBannerComponent,
     SpBasicViewComponent,
+    SpPageHeaderComponent,
+    SpWorkspaceContainerComponent,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
@@ -100,6 +102,8 @@ type ManageableChart = DataExplorerWidgetModel & {
     styleUrls: ['./chart-view.component.scss'],
     imports: [
         SpBasicViewComponent,
+        SpPageHeaderComponent,
+        SpWorkspaceContainerComponent,
         SpAlertBannerComponent,
         FlexDirective,
         LayoutAlignDirective,

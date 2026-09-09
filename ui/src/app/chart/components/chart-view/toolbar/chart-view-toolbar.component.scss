@@ -16,10 +16,14 @@
  *
  */
 
-.widget-outer {
-    border: 1px solid var(--color-bg-2);
+:host {
+    min-width: 0;
 }
 
-.dashboard-outer {
-    width: 100%;
+.chart-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
 }

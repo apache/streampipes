@@ -16,89 +16,66 @@
 ~
 -->
 
-<div fxLayout="row" fxFlex="100">
-    @if (configuredWidget) {
-        <div
-            class="data-explorer-options-item"
-            fxLayoutAlign="start center"
-            fxLayout="row"
-            fxLayoutGap="10px"
-            fxFlex="100"
-        >
+@if (configuredWidget) {
+    <div class="chart-header-actions">
+        @if (editMode) {
+            <button
+                mat-flat-button
+                [matTooltip]="(createMode ? 'Create' : 'Save') | translate"
+                (click)="saveDataViewEmitter.emit()"
+                data-cy="save-chart-btn"
+            >
+                <mat-icon>save</mat-icon>
+                {{ (createMode ? 'Create' : 'Save') | translate }}
+            </button>
+        }
+        @if (editMode || timeRangeVisible) {
+            <sp-time-range-selector
+                appearance="emphasized"
+                (dateRangeEmitter)="updateDateRangeEmitter.emit($event)"
+                [timeSettings]="timeSettings"
+            ></sp-time-range-selector>
+        }
+        @if (
+            editMode ||
+            (configuredWidget.elementId && hasDataExplorerWritePrivileges)
+        ) {
+            <button
+                mat-icon-button
+                [matMenuTriggerFor]="optMenu"
+                [attr.aria-label]="'Options' | translate"
+                data-cy="options-chart"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        }
+        <mat-menu #optMenu="matMenu">
             @if (editMode) {
                 <button
-                    mat-flat-button
-                    [matTooltip]="(createMode ? 'Create' : 'Save') | translate"
-                    class="edit-menu-btn"
-                    (click)="saveDataViewEmitter.emit()"
-                    data-cy="save-chart-btn"
-                >
-                    <mat-icon>save</mat-icon>
-                    {{ (createMode ? 'Create' : 'Save') | translate }}
-                </button>
-            }
-            @if (editMode) {
-                <button
-                    mat-icon-button
-                    color="accent"
-                    [matTooltip]="'Download data' | translate"
+                    mat-menu-item
                     (click)="downloadFileEmitter.emit()"
                     data-cy="data-view-data-download-btn"
                 >
                     <mat-icon>get_app</mat-icon>
+                    <span>{{ 'Download data' | translate }}</span>
                 </button>
             }
-
-            <span fxFlex></span>
-            <div
-                class="data-explorer-options-item"
-                style="margin-right: 0"
-                fxLayoutAlign="end center"
-                fxFlex
-                fxLayout="row"
-            >
-                @if (editMode || timeRangeVisible) {
-                    <sp-time-range-selector
-                        (dateRangeEmitter)="updateDateRangeEmitter.emit($event)"
-                        [timeSettings]="timeSettings"
-                    >
-                    </sp-time-range-selector>
-                }
-                @if (
-                    configuredWidget.elementId && hasDataExplorerWritePrivileges
-                ) {
+            @if (configuredWidget.elementId && hasDataExplorerWritePrivileges) {
+                @if (editMode) {
                     <button
-                        mat-icon-button
-                        [matMenuTriggerFor]="optMenu"
-                        [attr.aria-label]="'Options' | translate"
-                        data-cy="options-chart"
+                        mat-menu-item
+                        (click)="manageChartEmitter.emit()"
+                        data-cy="manage-chart-btn"
                     >
-                        <mat-icon>more_vert</mat-icon>
+                        <mat-icon>settings</mat-icon>
+                        <span>{{ 'Manage chart' | translate }}</span>
                     </button>
                 }
-                <mat-menu #optMenu="matMenu">
-                    @if (editMode && hasDataExplorerWritePrivileges) {
-                        <button
-                            mat-menu-item
-                            (click)="manageChartEmitter.emit()"
-                            data-cy="manage-chart-btn"
-                        >
-                            <mat-icon>settings</mat-icon>
-                            <span>{{ 'Manage chart' | translate }}</span>
-                        </button>
-                    }
-
-                    @if (hasDataExplorerWritePrivileges) {
-                        <button
-                            mat-menu-item
-                            (click)="deleteChartEmitter.emit()"
-                        >
-                            <mat-icon>clear</mat-icon>
-                            <span>{{ 'Delete Chart' | translate }}</span>
-                        </button>
-                    }
-                </mat-menu>
-            </div>
-        </div>
-    }
-</div>
+                <button mat-menu-item (click)="deleteChartEmitter.emit()">
+                    <mat-icon>clear</mat-icon>
+                    <span>{{ 'Delete Chart' | translate }}</span>
+                </button>
+            }
+        </mat-menu>
+    </div>
+}

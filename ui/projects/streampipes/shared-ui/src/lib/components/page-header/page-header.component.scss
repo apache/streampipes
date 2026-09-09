@@ -30,11 +30,15 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: var(--space-md) var(--space-lg);
-    padding-block: var(--space-xs) var(--space-md);
+    padding-block: var(--space-xs) calc(var(--space-md) + var(--space-xs));
 }
 
 .page-header--with-back {
     grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+:host(:not(.page-header-workspace)) .page-header {
+    padding-block-end: calc(2 * (var(--space-md) + var(--space-xs)));
 }
 
 .page-header__navigation {
@@ -113,12 +117,6 @@
 
 .page-header__actions:empty {
     display: none;
-}
-
-@media (width > 100rem) {
-    :host(:not(.page-header-workspace)) {
-        margin-block-end: var(--space-lg);
-    }
 }
 
 :host(.page-header-workspace) {
