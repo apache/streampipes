@@ -26,8 +26,8 @@
 
 ## Description
 
-Stores events in the internal data lake so that data can be visualized in the live dashboard or in the data explorer.
-Simply create a pipeline with a data lake sink, switch to one of the data exploration tool and start exploring your
+Stores events in the internal dataset so that data can be visualized in the live dashboard or in the data explorer.
+Simply create a pipeline with a dataset sink, switch to one of the data exploration tool and start exploring your
 data!
 
 ***
@@ -62,7 +62,7 @@ The Schema Update Options dictate the behavior when encountering a measurement (
 #### Option 1: Update Schema
 
 - **Description:** Overrides the existing schema.
-- **Effect on Data:** The data remains in the data lake, but accessing old data is restricted to file export.
+- **Effect on Data:** The data remains in the dataset, but accessing old data is restricted to file export.
 - **Impact on Features:** Other StreamPipes features, such as the Data Explorer, will only display the new event schema.
 
 #### Option 2: Extend Existing Schema

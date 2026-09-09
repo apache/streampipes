@@ -15,8 +15,8 @@
 # limitations under the License.
 #
 
-org.apache.streampipes.sinks.internal.jvm.datalake.title=Data Lake
-org.apache.streampipes.sinks.internal.jvm.datalake.description=Stores events in the internal data lake.
+org.apache.streampipes.sinks.internal.jvm.dataset.title=Dataset
+org.apache.streampipes.sinks.internal.jvm.dataset.description=Stores events in the internal dataset.
 
 db_measurement.title=Identifier
 db_measurement.description=The name of the identifier under which the data is to be stored.

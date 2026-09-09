@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake.migrations;
+package org.apache.streampipes.sinks.internal.jvm.dataset.migrations;
 
 import org.apache.streampipes.extensions.api.extractor.IDataSinkParameterExtractor;
 import org.apache.streampipes.extensions.api.migration.IDataSinkMigrator;
@@ -27,14 +27,14 @@ import org.apache.streampipes.model.migration.ModelMigratorConfig;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
 import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
 import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeDimensionProvider;
-import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
+import org.apache.streampipes.sinks.internal.jvm.dataset.DatasetDimensionProvider;
+import org.apache.streampipes.sinks.internal.jvm.dataset.DatasetSink;
 
-public class DataLakeSinkMigrationV2 implements IDataSinkMigrator {
+public class DatasetSinkMigrationV2 implements IDataSinkMigrator {
   @Override
   public ModelMigratorConfig config() {
     return new ModelMigratorConfig(
-        "org.apache.streampipes.sinks.internal.jvm.datalake",
+        "org.apache.streampipes.sinks.internal.jvm.dataset",
         SpServiceTagPrefix.DATA_SINK,
         1,
         2
@@ -51,7 +51,7 @@ public class DataLakeSinkMigrationV2 implements IDataSinkMigrator {
 
   private void addDimensionSelection(DataSinkInvocation element) {
     var label = Labels.from(
-        DataLakeSink.DIMENSIONS_KEY,
+        DatasetSink.DIMENSIONS_KEY,
         "Dimensions",
         "Selected fields will be stored as dimensions."
     );
@@ -61,14 +61,14 @@ public class DataLakeSinkMigrationV2 implements IDataSinkMigrator {
         label.getDescription()
     );
     var inputFields = element.getInputStreams().get(0).getEventSchema().getEventProperties();
-    new DataLakeDimensionProvider().applyOptions(inputFields, staticProperty);
+    new DatasetDimensionProvider().applyOptions(inputFields, staticProperty);
 
     element.getStaticProperties().add(staticProperty);
   }
 
   private void addDuplicateToggle(DataSinkInvocation element) {
     var label = Labels.from(
-        DataLakeSink.IGNORE_DUPLICATES_KEY,
+        DatasetSink.IGNORE_DUPLICATES_KEY,
         "Ignore duplicates",
         "Fields having the same value than the previous event are not stored."
     );

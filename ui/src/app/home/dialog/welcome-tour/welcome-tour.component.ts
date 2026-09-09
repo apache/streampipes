@@ -67,7 +67,7 @@ export class WelcomeTourComponent implements OnInit {
     private static readonly REQUIRED_PROCESSOR_FOR_TUTORIAL_APP_ID =
         'org.apache.streampipes.processors.filters.jvm.numericalfilter';
     private static readonly REQUIRED_SINK_FOR_TUTORIAL_APP_ID =
-        'org.apache.streampipes.sinks.internal.jvm.datalake';
+        'org.apache.streampipes.sinks.internal.jvm.dataset';
 
     private authService = inject(AuthService);
     private dialogRef = inject<DialogRef<WelcomeTourComponent>>(DialogRef);

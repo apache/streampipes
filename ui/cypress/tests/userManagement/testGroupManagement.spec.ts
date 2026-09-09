@@ -41,7 +41,7 @@ describe('Test Group Management for Pipelines', () => {
                     .build(),
             )
             .addSink(
-                PipelineElementBuilder.create('data_lake')
+                PipelineElementBuilder.create('dataset')
                     .addInput('input', 'db_measurement', 'demo')
                     .build(),
             )

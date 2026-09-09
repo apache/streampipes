@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake;
+package org.apache.streampipes.sinks.internal.jvm.dataset;
 
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
@@ -28,7 +28,7 @@ import org.apache.streampipes.vocabulary.SO;
 
 import java.util.List;
 
-public class DataLakeDimensionProvider {
+public class DatasetDimensionProvider {
 
   public void applyOptions(List<EventProperty> inputFields,
                            RuntimeResolvableAnyStaticProperty staticProperty) {

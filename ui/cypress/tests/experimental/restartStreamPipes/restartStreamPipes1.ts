@@ -35,7 +35,7 @@ describe('Prepare StreamPipes for restart test', () => {
         const pipelineInput = PipelineBuilder.create(pipelineName)
             .addSource(adapterName)
             .addSink(
-                PipelineElementBuilder.create('data_lake')
+                PipelineElementBuilder.create('dataset')
                     .addInput('input', 'db_measurement', 'demo')
                     .build(),
             )

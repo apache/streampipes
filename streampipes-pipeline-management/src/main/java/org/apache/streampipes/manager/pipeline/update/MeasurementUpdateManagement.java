@@ -52,7 +52,7 @@ public class MeasurementUpdateManagement {
 
   List<MeasurementUpdateInfo> checkPipelineMigrations(Pipeline storedPipeline,
                                                       Pipeline updatedPipeline) {
-    return MeasurementUpdateUtils.getDataLakeSinks(updatedPipeline)
+    return MeasurementUpdateUtils.getDatasetSinks(updatedPipeline)
         .stream()
         .map(updatedSink -> makeUpdateInfo(storedPipeline, updatedSink))
         .flatMap(Optional::stream)
@@ -77,7 +77,7 @@ public class MeasurementUpdateManagement {
 
   private List<CriticalMeasurementFieldChange> findCriticalMeasurementFieldChanges(Pipeline storedPipeline,
                                                                                    DataSinkInvocation updatedSink) {
-    return MeasurementUpdateUtils.getDataLakeSinkById(storedPipeline, updatedSink.getElementId())
+    return MeasurementUpdateUtils.getDatasetSinkById(storedPipeline, updatedSink.getElementId())
         .flatMap(storedSink -> getFirstInputStreamSchema(storedSink)
             .flatMap(existingSchema -> getFirstInputStreamSchema(updatedSink)
                 .map(updatedSchema -> MeasurementChangeDetector.findCriticalMeasurementFieldChanges(
