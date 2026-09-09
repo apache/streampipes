@@ -50,10 +50,8 @@ import {
     SpTableComponent,
 } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
-import { DataExplorerDashboardService } from '../../../../dashboard-shared/services/dashboard.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { CloneDashboardDialogComponent } from '../../../dialogs/clone-dashboard/clone-dashboard-dialog.component';
 import { Subscription } from 'rxjs';
 import { ChartRoutingService } from '../../../../chart-shared/services/chart-routing.service';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -115,7 +113,6 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
     filteredDashboards: DashboardSummaryDto[] = [];
 
     private dashboardService = inject(DashboardService);
-    private dataExplorerDashboardService = inject(DataExplorerDashboardService);
     private dialog = inject(MatDialog);
     protected translateService = inject(TranslateService);
     protected dateFormatService = inject(DateFormatService);
@@ -263,24 +260,9 @@ export class DashboardOverviewTableComponent implements OnInit, OnDestroy {
         return `${window.location.protocol}//${window.location.host}/#/dashboard-kiosk/${dashboardId}`;
     }
 
-    openCloneDialog(dashboardSummary: DashboardSummaryDto): void {
-        this.withDashboard(dashboardSummary, dashboard => {
-            const dialogRef = this.dialogService.open(
-                CloneDashboardDialogComponent,
-                {
-                    panelType: PanelType.SLIDE_IN_PANEL,
-                    title: this.translateService.instant('Clone dashboard'),
-                    width: '50vw',
-                    data: {
-                        dashboard: dashboard,
-                    },
-                },
-            );
-            dialogRef.afterClosed().subscribe(result => {
-                if (result) {
-                    this.getDashboards();
-                }
-            });
+    createFromExisting(dashboard: DashboardSummaryDto): void {
+        this.router.navigate(['dashboard', 'create'], {
+            queryParams: { sourceDashboardId: dashboard.elementId },
         });
     }
 

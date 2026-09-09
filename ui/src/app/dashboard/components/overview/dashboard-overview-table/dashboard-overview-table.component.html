@@ -105,11 +105,13 @@
                     </button>
                     <button
                         mat-menu-item
-                        [attr.data-cy]="'clone-dashboard-' + element.name"
-                        (click)="openCloneDialog(element)"
+                        [attr.data-cy]="
+                            'create-from-existing-dashboard-' + element.name
+                        "
+                        (click)="createFromExisting(element)"
                     >
-                        <mat-icon>flip_to_front</mat-icon>
-                        <span>{{ 'Clone' | translate }}</span>
+                        <mat-icon>content_copy</mat-icon>
+                        <span>{{ 'Create from existing' | translate }}</span>
                     </button>
                 }
                 <button
