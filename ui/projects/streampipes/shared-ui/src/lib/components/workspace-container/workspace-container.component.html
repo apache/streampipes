@@ -16,9 +16,9 @@
 ~
 -->
 
-<div class="workspace-container__toolbar">
+<sp-secondary-toolbar [padding]="false">
     <ng-content select="[workspaceToolbar]"></ng-content>
-</div>
-<div class="workspace-container__content">
+</sp-secondary-toolbar>
+<div class="workspace-container__content" [class.top-border]="topBorder">
     <ng-content></ng-content>
 </div>
