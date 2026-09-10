@@ -424,6 +424,14 @@ export class ExistingAdaptersComponent implements OnInit, OnDestroy {
         this.router.navigate(['connect', 'edit', adapter.elementId]);
     }
 
+    createFromExisting(adapter: AdapterSummaryDto): void {
+        this.router.navigate([
+            'connect',
+            'create-from-existing',
+            adapter.elementId,
+        ]);
+    }
+
     deleteAdapter(adapter: AdapterSummaryDto): void {
         const dialogRef: DialogRef<DeleteAdapterDialogComponent> =
             this.dialogService.open(DeleteAdapterDialogComponent, {

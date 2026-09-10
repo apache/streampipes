@@ -73,6 +73,16 @@
                                 }
                             }
 
+                            @if (resourceOptionsTemplate) {
+                                <div class="mt-10" fxLayout="column">
+                                    <ng-container
+                                        [ngTemplateOutlet]="
+                                            resourceOptionsTemplate
+                                        "
+                                    ></ng-container>
+                                </div>
+                            }
+
                             @if (isAssetAdmin && showAssetLinking) {
                                 <div class="mt-10" fxLayout="column">
                                     <mat-checkbox

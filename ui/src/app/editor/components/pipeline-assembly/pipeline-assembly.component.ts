@@ -425,7 +425,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private prepareClonedPipeline(pipeline: Pipeline): void {
         pipeline._id = undefined;
         pipeline._rev = undefined;
-        pipeline.name = `${this.originalPipeline.name}_cloned`;
+        pipeline.name = `${this.originalPipeline.name} (${this.translateService.instant('Copy')})`;
         pipeline.description = this.originalPipeline.description;
         pipeline.running = false;
         pipeline.actions.forEach(element =>

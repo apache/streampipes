@@ -44,6 +44,10 @@ export const CONNECT_ROUTES: Routes = [
                 component: CreateAdapterComponent,
             },
             {
+                path: 'create-from-existing/:elementId',
+                component: CreateAdapterComponent,
+            },
+            {
                 path: 'edit/:elementId',
                 component: EditAdapterComponent,
             },

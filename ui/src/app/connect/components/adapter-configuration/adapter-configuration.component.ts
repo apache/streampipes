@@ -97,6 +97,7 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
      */
     @Input() displayName = '';
     @Input() isEditMode: boolean;
+    @Input() hasExistingConfiguration = false;
 
     myStepper: MatStepper;
     pageTitle = '';
@@ -122,7 +123,7 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
             };
         }
         if (this.adapterDescription) {
-            if (!this.isEditMode) {
+            if (!this.isEditMode && !this.hasExistingConfiguration) {
                 this.stateService.initializeCreateMode(this.adapterDescription);
             } else {
                 this.stateService.initializeEditMode(this.adapterDescription);

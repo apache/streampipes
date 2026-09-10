@@ -262,6 +262,14 @@
                     </button>
                     <button
                         mat-menu-item
+                        data-cy="create-from-existing-adapter"
+                        (click)="createFromExisting(element)"
+                    >
+                        <mat-icon>content_copy</mat-icon>
+                        <span>{{ 'Create from existing' | translate }}</span>
+                    </button>
+                    <button
+                        mat-menu-item
                         [attr.data-cy]="'open-manage-' + element.name"
                         (click)="showManageDialog(element)"
                     >

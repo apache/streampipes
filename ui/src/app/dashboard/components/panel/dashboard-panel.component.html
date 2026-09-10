@@ -392,3 +392,13 @@
         </div>
     </sp-basic-view>
 }
+
+<ng-template #createOptions>
+    <mat-checkbox
+        data-cy="also-copy-charts"
+        [(ngModel)]="alsoCopyCharts"
+        [ngModelOptions]="{ standalone: true }"
+    >
+        {{ 'Create copies for every chart' | translate }}
+    </mat-checkbox>
+</ng-template>
