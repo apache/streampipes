@@ -17,15 +17,21 @@
 -->
 
 @if (dataViewLoaded) {
-    <sp-basic-view [backLinkTarget]="['chart']" [showBackLink]="true">
-        <div
-            nav
-            fxFlex="100"
-            fxLayoutAlign="start center"
-            fxLayout="row"
-            class="pl-10"
+    <sp-basic-view [hideNavbar]="true" [padding]="true">
+        @let pageHeaderAssetLinkType = pageHeaderAssetLinkType$ | async;
+        <sp-page-header
+            variant="workspace"
+            [title]="
+                dataView?.baseAppearanceConfig?.widgetTitle ||
+                ('Chart' | translate)
+            "
+            icon="query_stats"
+            [iconColor]="
+                pageHeaderAssetLinkType?.linkColor ?? 'var(--color-primary)'
+            "
         >
             <sp-chart-view-toolbar
+                pageActions
                 [timeSettings]="timeSettings"
                 [editMode]="editMode"
                 [createMode]="createMode"
@@ -40,11 +46,10 @@
                 (addToAssetEmitter)="addAssetDialog()"
                 (manageChartEmitter)="manageChart()"
                 (deleteChartEmitter)="deleteChart()"
-                fxFlex="100"
             >
             </sp-chart-view-toolbar>
-        </div>
-        <div fxFlex="100" fxLayout="column">
+        </sp-page-header>
+        <sp-workspace-container>
             @if (chartNotFound) {
                 <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
                     {{ 'The desired chart was not found!' | translate }}
@@ -160,6 +165,6 @@
                     </mat-drawer-content>
                 </mat-drawer-container>
             }
-        </div>
+        </sp-workspace-container>
     </sp-basic-view>
 }

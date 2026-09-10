@@ -16,87 +16,62 @@
 ~
 -->
 
-<div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-    <button
-        mat-button
-        color="accent"
-        [matTooltip]="'Data Preview' | translate"
-        [matTooltipPosition]="'above'"
-        (click)="togglePreviewEmitter.emit()"
+<div
+    class="pipeline-details-toolbar"
+    fxLayout="row wrap"
+    fxLayoutAlign="space-between center"
+>
+    <div
+        class="pipeline-details-toolbar__views"
+        fxLayout="row wrap"
+        fxLayoutAlign="start center"
     >
-        <div fxLayoutAlign="start center" fxLayout="row">
-            <mat-icon>visibility</mat-icon>
-            @if (!previewModeActive) {
-                <span>{{ 'Enable live preview' | translate }}</span>
-            }
-            @if (previewModeActive) {
-                <span>{{ 'Disable live preview' | translate }}</span>
-            }
-        </div>
-    </button>
-    @if (hasPipelineWritePrivileges) {
         <button
-            mat-button
-            color="accent"
-            [matTooltip]="'Pipeline as code' | translate"
-            [matTooltipPosition]="'above'"
-            (click)="openCodeDialogEmitter.emit()"
+            type="button"
+            mat-flat-button
+            class="btn-secondary"
+            [attr.aria-pressed]="previewModeActive"
+            (click)="togglePreviewEmitter.emit()"
         >
-            <div fxLayoutAlign="start center" fxLayout="row">
-                <mat-icon>code</mat-icon>
-                <span>{{ 'View pipeline as code' | translate }}</span>
-            </div>
+            <mat-icon>visibility</mat-icon>
+            {{
+                (previewModeActive
+                    ? 'Disable live preview'
+                    : 'Enable live preview'
+                ) | translate
+            }}
         </button>
-    }
-    <div fxFlex></div>
-    <div fxLayoutAlign="end center">
+        @if (hasPipelineWritePrivileges) {
+            <button
+                type="button"
+                mat-flat-button
+                class="btn-secondary"
+                (click)="openCodeDialogEmitter.emit()"
+                data-cy="pipeline-details-view-code"
+            >
+                <mat-icon>code</mat-icon>
+                {{ 'View pipeline as code' | translate }}
+            </button>
+        }
+    </div>
+    <div
+        class="pipeline-details-toolbar__refresh"
+        fxLayout="row wrap"
+        fxLayoutAlign="end center"
+    >
         <button
-            mat-button
-            color="accent"
-            class="mr-10"
-            matTooltip="Refresh"
+            type="button"
+            mat-icon-button
+            [matTooltip]="'Refresh metrics' | translate"
+            [attr.aria-label]="'Refresh metrics' | translate"
             (click)="reloadMetricsEmitter.emit()"
         >
             <mat-icon>refresh</mat-icon>
-            {{ 'Refresh metrics' | translate }}
         </button>
         <mat-slide-toggle
             [(ngModel)]="autoRefresh"
             (ngModelChange)="autoRefreshChange.emit($event)"
-            color="accent"
-            >{{ 'Auto refresh' | translate }}
-        </mat-slide-toggle>
-        @if (hasPipelineWritePrivileges) {
-            <button
-                mat-icon-button
-                [matMenuTriggerFor]="optMenu"
-                [attr.aria-label]="'Options' | translate"
-                data-cy="pipeline-details-options"
-            >
-                <mat-icon>more_vert</mat-icon>
-            </button>
-        }
-        <mat-menu #optMenu="matMenu">
-            @if (hasPipelineWritePrivileges) {
-                <button
-                    mat-menu-item
-                    (click)="editPipelineEmitter.emit()"
-                    data-cy="options-edit-pipeline"
-                >
-                    <mat-icon>edit</mat-icon>
-                    <span>{{ 'Edit pipeline' | translate }}</span>
-                </button>
-            }
-            @if (hasPipelineWritePrivileges) {
-                <button
-                    mat-menu-item
-                    (click)="deletePipelineEmitter.emit()"
-                    data-cy="options-delete-pipeline"
-                >
-                    <mat-icon>clear</mat-icon>
-                    <span>{{ 'Delete pipeline' | translate }}</span>
-                </button>
-            }
-        </mat-menu>
+            >{{ 'Auto refresh' | translate }}</mat-slide-toggle
+        >
     </div>
 </div>

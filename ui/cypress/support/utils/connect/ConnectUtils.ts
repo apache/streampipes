@@ -228,7 +228,7 @@ export class ConnectUtils {
     }
 
     public static selectAdapter(name: string) {
-        cy.get('#' + name).click();
+        ConnectBtns.createCatalogAdapter(name).click();
     }
 
     public static configureAdapter(adapterInput: AdapterInput) {

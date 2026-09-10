@@ -66,7 +66,10 @@ import {
     ObjectManageDialogResult,
     PanelType,
     ShortcutRegistration,
+    SpAssetBrowserService,
     SpBasicViewComponent,
+    SpPageHeaderComponent,
+    SpWorkspaceContainerComponent,
     SpBreadcrumbService,
     TimeSelectionService,
     AssetSaveService,
@@ -106,6 +109,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DashboardCopyService } from '../../services/dashboard-copy.service';
 
+import { AsyncPipe } from '@angular/common';
+
 @Component({
     selector: 'sp-dashboard-panel',
     templateUrl: './dashboard-panel.component.html',
@@ -115,7 +120,10 @@ import { DashboardCopyService } from '../../services/dashboard-copy.service';
     ],
     providers: [DashboardCopyService],
     imports: [
+        AsyncPipe,
         SpBasicViewComponent,
+        SpPageHeaderComponent,
+        SpWorkspaceContainerComponent,
         FlexDirective,
         FlexFillDirective,
         LayoutDirective,
@@ -185,6 +193,9 @@ export class DashboardPanelComponent
     private dialog = inject(MatDialog);
     private dialogService = inject(DialogService);
     private assetSaveService = inject(AssetSaveService);
+    readonly pageHeaderAssetLinkType$ = inject(
+        SpAssetBrowserService,
+    ).getAssetLinkType$('dashboard');
     private permissionsService = inject(PermissionsService);
     private chartService = inject(ChartService);
     private snackBar = inject(MatSnackBar);

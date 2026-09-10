@@ -18,8 +18,10 @@
 
 <sp-basic-view [hideNavbar]="true" [padding]="true">
     <sp-page-header
+        variant="workspace"
         [title]="'Select Adapter' | translate"
-        [backLinkTarget]="['connect']"
+        icon="power"
+        iconColor="var(--color-adapter)"
     ></sp-page-header>
     <sp-connect-filter-toolbar
         class="adapter-catalog__filter"
@@ -70,6 +72,10 @@
                                 class="adapter-description"
                                 [adapter]="adapterDescription"
                             ></sp-adapter-catalog-item>
+                        } @empty {
+                            <p class="adapter-catalog__empty">
+                                {{ 'No results found' | translate }}
+                            </p>
                         }
                     </div>
                 </div>

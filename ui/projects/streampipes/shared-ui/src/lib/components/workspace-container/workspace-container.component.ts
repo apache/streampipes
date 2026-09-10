@@ -16,24 +16,12 @@
  *
  */
 
-:host {
-    display: flex;
-    height: 100%;
-    min-width: 0;
-    min-height: 0;
-}
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-.pipeline-editor-outer {
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-}
-
-.pipeline-editor__finder {
-    width: 13.625rem;
-    max-width: 100%;
-}
-
-.pipeline-editor__finder mat-form-field {
-    margin-bottom: 0;
-}
+@Component({
+    selector: 'sp-workspace-container',
+    templateUrl: './workspace-container.component.html',
+    styleUrls: ['./workspace-container.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SpWorkspaceContainerComponent {}

@@ -56,7 +56,10 @@ import {
     ShortcutRegistration,
     SidebarResizeComponent,
     SpAlertBannerComponent,
+    SpAssetBrowserService,
     SpBasicViewComponent,
+    SpPageHeaderComponent,
+    SpWorkspaceContainerComponent,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
@@ -94,12 +97,17 @@ type ManageableChart = DataExplorerWidgetModel & {
     description: string;
 };
 
+import { AsyncPipe } from '@angular/common';
+
 @Component({
     selector: 'sp-chart-data-view',
     templateUrl: './chart-view.component.html',
     styleUrls: ['./chart-view.component.scss'],
     imports: [
+        AsyncPipe,
         SpBasicViewComponent,
+        SpPageHeaderComponent,
+        SpWorkspaceContainerComponent,
         SpAlertBannerComponent,
         FlexDirective,
         LayoutAlignDirective,
@@ -150,6 +158,9 @@ export class ChartViewComponent
     private authService = inject(AuthService);
     private fieldProvider = inject(ChartFieldProviderService);
     private assetSaveService = inject(AssetSaveService);
+    readonly pageHeaderAssetLinkType$ = inject(
+        SpAssetBrowserService,
+    ).getAssetLinkType$('chart');
     private permissionsService = inject(PermissionsService);
 
     currentUser$: Subscription;

@@ -35,6 +35,7 @@ import {
 } from '../../model/editor.model';
 import { ObjectProvider } from '../../services/object-provider.service';
 import {
+    SpSplitButtonAction,
     AssetSaveService,
     PipelineAssetLinkService,
     DialogService,
@@ -45,6 +46,10 @@ import {
     PanelType,
     ShortcutRegistration,
     SpBasicViewComponent,
+    SpPageHeaderComponent,
+    SpWorkspaceContainerComponent,
+    SpSplitButtonComponent,
+    SpLabelComponent,
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../services/editor.service';
 import {
@@ -62,8 +67,11 @@ import {
     PipelineAssemblySaveOptions,
 } from './pipeline-assembly-options/pipeline-assembly-options.component';
 import { JsplumbService } from '../../services/jsplumb.service';
-import { TranslateService } from '@ngx-translate/core';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 import {
@@ -77,9 +85,19 @@ import {
     styleUrls: ['./pipeline-assembly.component.scss'],
     imports: [
         SpBasicViewComponent,
+        SpPageHeaderComponent,
+        SpWorkspaceContainerComponent,
+        SpSplitButtonComponent,
+        SpLabelComponent,
         FlexDirective,
+        LayoutDirective,
+        TranslatePipe,
+        MatIconButton,
+        MatIcon,
+        MatMenuModule,
         PipelineAssemblyOptionsComponent,
         PipelineAssemblyDrawingAreaComponent,
+        MatButton,
     ],
 })
 export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
@@ -116,6 +134,10 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     allElements: PipelineElementUnion[];
+
+    savePipelineActions: SpSplitButtonAction[] = [
+        { label: 'Store', action: 'store', icon: 'save' },
+    ];
 
     previewModeActive = false;
     readonly: boolean;

@@ -178,6 +178,8 @@ export class SpTableComponent<T>
     >;
 
     @Input() columns: string[];
+    @Input() noBorder = false;
+    @Input() noToolbarBorderTop = false;
     @Input() rowsClickable = false;
     @Input() showActionsMenu = false;
     @Input() showSelectionCheckboxes = false;

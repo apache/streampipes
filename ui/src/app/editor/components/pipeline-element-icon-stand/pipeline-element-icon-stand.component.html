@@ -20,30 +20,6 @@
     fxLayout="column"
     [attr.data-cy]="'sp-pipeline-element-selection'"
 >
-    <div class="pipeline-element-palette__header">
-        <div class="form-field-small mw-100">
-            <mat-form-field color="accent" class="w-100" appearance="outline">
-                <input
-                    matInput
-                    type="text"
-                    (keyup)="makeDraggable()"
-                    [placeholder]="'Find element' | translate"
-                    [(ngModel)]="elementFilter"
-                />
-                <mat-icon matPrefix color="accent">search</mat-icon>
-                @if (elementFilter) {
-                    <button
-                        matSuffix
-                        mat-icon-button
-                        aria-label="Find element"
-                        (click)="clearInput()"
-                    >
-                        <mat-icon>close</mat-icon>
-                    </button>
-                }
-            </mat-form-field>
-        </div>
-    </div>
     @if (allElements) {
         <div id="editor-icon-stand" class="icon-stand">
             <div fxFlex="100" fxLayout="column">

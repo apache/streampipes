@@ -103,6 +103,10 @@ export class ChartBtns {
         return cy.dataCy('options-chart');
     }
 
+    public static downloadChartDataBtn() {
+        return cy.dataCy('data-view-data-download-btn');
+    }
+
     public static manageChartBtn() {
         return cy.dataCy('manage-chart-btn');
     }

@@ -17,17 +17,19 @@
 -->
 
 @if (dashboardLoaded || dashboardNotFound) {
-    <sp-basic-view [backLinkTarget]="['dashboard']" [showBackLink]="true">
-        <div
-            nav
-            fxFlex="100"
-            class="ml-10"
-            fxLayout="row"
-            fxLayoutAlign="start center"
+    <sp-basic-view [hideNavbar]="true" [padding]="true">
+        @let pageHeaderAssetLinkType = pageHeaderAssetLinkType$ | async;
+        <sp-page-header
+            variant="workspace"
+            [title]="dashboard?.name || ('Dashboard' | translate)"
+            icon="dashboard"
+            [iconColor]="
+                pageHeaderAssetLinkType?.linkColor ?? 'var(--color-primary)'
+            "
         >
             @if (!dashboardNotFound) {
                 <sp-dashboard-toolbar
-                    fxFlex="100"
+                    pageActions
                     [dashboard]="dashboard"
                     [editMode]="editMode"
                     [createMode]="createMode"
@@ -47,8 +49,8 @@
                 >
                 </sp-dashboard-toolbar>
             }
-        </div>
-        <div fxFlex="100" fxLayout="column">
+        </sp-page-header>
+        <sp-workspace-container>
             @if (dashboardNotFound) {
                 @if (dashboardNotFound) {
                     <div
@@ -389,7 +391,7 @@
                     </mat-drawer-content>
                 </mat-drawer-container>
             }
-        </div>
+        </sp-workspace-container>
     </sp-basic-view>
 }
 

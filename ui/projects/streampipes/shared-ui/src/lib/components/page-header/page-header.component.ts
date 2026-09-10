@@ -28,6 +28,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './page-header.component.html',
     styleUrls: ['./page-header.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[class.page-header-workspace]': "variant === 'workspace'",
+    },
     imports: [MatIconButton, MatIcon, MatTooltip, TranslatePipe],
 })
 export class SpPageHeaderComponent {
@@ -35,6 +38,9 @@ export class SpPageHeaderComponent {
 
     @Input({ required: true })
     title: string;
+
+    @Input()
+    variant: 'standard' | 'workspace' = 'standard';
 
     @Input()
     description: string | undefined;

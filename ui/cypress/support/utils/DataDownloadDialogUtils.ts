@@ -18,6 +18,7 @@
 
 import { ExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/model/export-config.model';
 import { ChartUtils } from './chart/ChartUtils';
+import { ChartBtns } from './chart/ChartBtns';
 import { FileNameService } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/services/file-name.service';
 import { CsvFormatExportConfig } from '../../../projects/streampipes/shared-ui/src/lib/dialog/data-download-dialog/model/format-export-config.model';
 
@@ -33,8 +34,9 @@ export class DataDownloadDialogUtils {
         // select data view in edit mode
         ChartUtils.editChart(dataViewName);
 
-        // select download button
-        cy.dataCy('data-view-data-download-btn').click();
+        // Open the chart actions menu before selecting download.
+        ChartBtns.chartOptionsBtn().click();
+        ChartBtns.downloadChartDataBtn().click();
 
         // download-customInterval, download-all, download-visible
         cy.dataCy(

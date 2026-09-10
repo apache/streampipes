@@ -26,13 +26,10 @@ import {
 } from '@angular/core';
 import { JsplumbBridge } from '../../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../../services/pipeline-positioning.service';
-import { PipelineValidationService } from '../../../services/pipeline-validation.service';
 import {
     ConfirmDialogComponent,
     DialogService,
     PanelType,
-    SpSplitButtonAction,
-    SpSplitButtonComponent,
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../../services/editor.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -53,8 +50,6 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -71,27 +66,14 @@ export interface PipelineAssemblySaveOptions {
         LayoutDirective,
         LayoutAlignDirective,
         MatButton,
-        MatIcon,
         MatTooltip,
         MatIconButton,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuItem,
         PipelineAssemblyOptionsPipelineCacheComponent,
-        SpSplitButtonComponent,
         TranslatePipe,
     ],
 })
 export class PipelineAssemblyOptionsComponent {
-    savePipelineActions: SpSplitButtonAction[] = [
-        {
-            label: 'Store',
-            action: 'store',
-            icon: 'save',
-        },
-    ];
     editorService = inject(EditorService);
-    pipelineValidationService = inject(PipelineValidationService);
     private pipelinePositioningService = inject(PipelinePositioningService);
     private dialog = inject(MatDialog);
     private dialogService = inject(DialogService);
@@ -111,16 +93,6 @@ export class PipelineAssemblyOptionsComponent {
     @Input()
     previewModeActive: boolean;
 
-    @Input()
-    editMode = false;
-
-    @Input()
-    pipelineRunning = false;
-
-    @Output()
-    savePipelineEmitter: EventEmitter<PipelineAssemblySaveOptions> =
-        new EventEmitter<PipelineAssemblySaveOptions>();
-
     @Output()
     clearAssemblyEmitter: EventEmitter<void> = new EventEmitter<void>();
 
@@ -130,12 +102,6 @@ export class PipelineAssemblyOptionsComponent {
     @Output()
     displayPipelineTemplateEmitter: EventEmitter<Pipeline> =
         new EventEmitter<Pipeline>();
-
-    @Output()
-    managePipelineEmitter: EventEmitter<void> = new EventEmitter<void>();
-
-    @Output()
-    deletePipelineEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     @ViewChild('assemblyOptionsPipelineCacheComponent')
     assemblyOptionsCacheComponent: PipelineAssemblyOptionsPipelineCacheComponent;
@@ -199,16 +165,6 @@ export class PipelineAssemblyOptionsComponent {
             this.rawPipelineModel.length === 0 ||
             this.rawPipelineModel.every(pe => pe.settings.disabled)
         );
-    }
-
-    emitSavePipeline(startPipelineAfterStorage: boolean): void {
-        this.savePipelineEmitter.emit({
-            startPipelineAfterStorage,
-        });
-    }
-
-    onSavePipelineActionSelected(action: SpSplitButtonAction): void {
-        this.emitSavePipeline(action.action === 'store-and-start');
     }
 
     triggerCacheUpdate(): void {

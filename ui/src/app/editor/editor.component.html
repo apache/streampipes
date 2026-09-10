@@ -17,39 +17,57 @@
 -->
 
 <div fxLayout="column" fxFlex="100" class="pipeline-editor-outer">
-    @if (!allElementsLoaded) {
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
+    @if (!allElementsLoaded || !allMetadataLoaded) {
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+            role="status"
+        >
             <sp-spinner
                 [diameter]="30"
                 [text]="'Preparing pipeline editor...' | translate"
             ></sp-spinner>
         </div>
     } @else {
-        <div fxLayout="row" fxFlex="100" class="pipeline-editor__workspace">
-            <sp-basic-view class="pipeline-editor__palette" [hideNavbar]="true">
-                @if (allElementsLoaded) {
-                    <sp-pipeline-element-icon-stand
-                        id="shepherd-test"
-                        [allElements]="allElements"
-                    >
-                    </sp-pipeline-element-icon-stand>
-                }
-            </sp-basic-view>
-            @if (allElementsLoaded && allMetadataLoaded) {
-                <sp-pipeline-assembly
-                    fxFlex="100"
-                    class="pipeline-editor__assembly w-100"
-                    [rawPipelineModel]="rawPipelineModel"
-                    [allElements]="allElements"
-                    [originalPipeline]="originalPipeline"
-                    [cloneMode]="cloneMode"
-                    [pipelineCanvasMetadata]="pipelineCanvasMetadata"
-                    [pipelineCanvasMetadataAvailable]="
-                        pipelineCanvasMetadataAvailable
-                    "
-                >
-                </sp-pipeline-assembly>
-            }
-        </div>
+        <sp-pipeline-assembly
+            fxFlex="100"
+            [rawPipelineModel]="rawPipelineModel"
+            [allElements]="allElements"
+            [originalPipeline]="originalPipeline"
+            [cloneMode]="cloneMode"
+            [pipelineCanvasMetadata]="pipelineCanvasMetadata"
+            [pipelineCanvasMetadataAvailable]="pipelineCanvasMetadataAvailable"
+        >
+            <div editorSearch class="pipeline-editor__finder form-field-small">
+                <mat-form-field class="w-100" appearance="outline">
+                    <input
+                        matInput
+                        type="text"
+                        [placeholder]="'Find element' | translate"
+                        [attr.aria-label]="'Find element' | translate"
+                        [(ngModel)]="elementFilter"
+                    />
+                    <mat-icon matPrefix>search</mat-icon>
+                    @if (elementFilter) {
+                        <button
+                            type="button"
+                            matSuffix
+                            mat-icon-button
+                            [attr.aria-label]="'Clear' | translate"
+                            (click)="elementFilter = ''"
+                        >
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    }
+                </mat-form-field>
+            </div>
+            <sp-pipeline-element-icon-stand
+                editorPalette
+                [elementFilter]="elementFilter"
+                id="shepherd-test"
+                [allElements]="allElements"
+            ></sp-pipeline-element-icon-stand>
+        </sp-pipeline-assembly>
     }
 </div>

@@ -16,6 +16,14 @@
  *
  */
 
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
 .fixed-height {
     height: 50px;
 }
@@ -31,11 +39,14 @@
 .dashboard-grid {
     display: flex;
     flex-direction: column;
-    flex: 1 1 100%;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
 }
 
 .dashboard-content {
     position: relative;
+    background: var(--color-bg-0);
 }
 
 .designer-panel-container {
@@ -44,7 +55,8 @@
 }
 
 .designer-panel {
-    width: 350px;
+    width: 21.875rem;
+    border-inline-start: 1px solid var(--color-border-subtle);
     overflow: hidden;
 }
 

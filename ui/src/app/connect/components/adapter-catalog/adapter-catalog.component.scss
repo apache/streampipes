@@ -31,6 +31,14 @@
 
 .adapter-catalog__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(17.5rem, 100%), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
     gap: var(--space-md);
+}
+
+.adapter-catalog__empty {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: var(--space-lg);
+    color: var(--fg-muted);
+    text-align: center;
 }

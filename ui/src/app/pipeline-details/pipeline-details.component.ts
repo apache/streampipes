@@ -37,6 +37,10 @@ import {
     ShortcutRegistration,
     SpBasicViewComponent,
     SpBreadcrumbService,
+    SpPageHeaderComponent,
+    SpLabelComponent,
+    SpSpinnerComponent,
+    SpWorkspaceContainerComponent,
 } from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../pipelines/pipelines.breadcrumb';
 import { UserPrivilege } from '../core/auth/user-privilege.enum';
@@ -46,13 +50,12 @@ import { PipelinePreviewComponent } from './components/preview/pipeline-preview.
 import { HttpContext } from '@angular/common/http';
 import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 import { PipelineCodeDialogComponent } from './dialogs/pipeline-code/pipeline-code-dialog.component';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { PipelineDetailsToolbarComponent } from './components/pipeline-details-toolbar/pipeline-details-toolbar.component';
 import { PipelineDetailsExpansionPanelComponent } from './components/pipeline-details-expansion-panel/pipeline-details-expansion-panel.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PipelineOperationsService } from '../pipelines/services/pipeline-operations.service';
 import { MeasurementUpdateDialogComponent } from '../pipelines/dialog/measurement-update/measurement-update-dialog.component';
@@ -64,8 +67,13 @@ import { MeasurementUpdateAction } from '../pipelines/model/pipeline-model';
     styleUrls: ['./pipeline-details.component.scss'],
     imports: [
         SpBasicViewComponent,
-        FlexDirective,
-        LayoutAlignDirective,
+        SpPageHeaderComponent,
+        SpLabelComponent,
+        SpSpinnerComponent,
+        SpWorkspaceContainerComponent,
+        MatButtonModule,
+        MatIcon,
+        MatMenuModule,
         PipelineDetailsToolbarComponent,
         LayoutDirective,
         PipelinePreviewComponent,
@@ -286,7 +294,11 @@ export class SpPipelineDetailsComponent implements OnInit, OnDestroy {
     }
 
     private onShortcutEdit(): void {
-        if (this.hasPipelineWritePrivileges) {
+        if (
+            this.hasPipelineWritePrivileges &&
+            this.pipelineAvailable &&
+            !this.pipelineNotFound
+        ) {
             this.editPipeline();
         }
     }

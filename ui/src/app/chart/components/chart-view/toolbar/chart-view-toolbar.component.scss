@@ -17,23 +17,13 @@
  */
 
 :host {
+    min-width: 0;
+}
+
+.chart-header-actions {
     display: flex;
-    height: 100%;
-    min-width: 0;
-    min-height: 0;
-}
-
-.pipeline-editor-outer {
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-}
-
-.pipeline-editor__finder {
-    width: 13.625rem;
-    max-width: 100%;
-}
-
-.pipeline-editor__finder mat-form-field {
-    margin-bottom: 0;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
 }

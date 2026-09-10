@@ -83,7 +83,7 @@
 }
 
 .basic-view__content--padded {
-    padding: var(--space-lg);
+    padding: var(--space-md);
 }
 
 @container (max-width: 42rem) {
@@ -98,6 +98,6 @@
     }
 
     .basic-view__content--padded {
-        padding: var(--space-md);
+        padding: var(--space-sm);
     }
 }

@@ -1,4 +1,4 @@
-/*
+/*!
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -17,23 +17,21 @@
  */
 
 :host {
-    display: flex;
-    height: 100%;
-    min-width: 0;
-    min-height: 0;
+    display: block;
+    flex: 0 0 auto;
+    background: var(--color-bg-0);
 }
 
-.pipeline-editor-outer {
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
+.pipeline-details-toolbar {
+    padding: var(--space-xs) var(--space-md);
+    gap: var(--space-sm) var(--space-lg);
 }
 
-.pipeline-editor__finder {
-    width: 13.625rem;
-    max-width: 100%;
+.pipeline-details-toolbar__refresh {
+    gap: var(--space-sm);
+    margin-left: auto;
 }
 
-.pipeline-editor__finder mat-form-field {
-    margin-bottom: 0;
+.pipeline-details-toolbar__views {
+    gap: var(--space-sm);
 }

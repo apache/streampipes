@@ -19,13 +19,13 @@
 @if (asset) {
     <sp-basic-view [hideNavbar]="true" [padding]="true">
         <sp-page-header
+            variant="workspace"
             [title]="selectedAsset?.assetName || asset.assetName"
             [description]="
                 selectedAsset?.assetDescription || asset.assetDescription
             "
             icon="precision_manufacturing"
             iconColor="var(--color-primary)"
-            [backLinkTarget]="['assets']"
         >
             <button
                 pageActions
