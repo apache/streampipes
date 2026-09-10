@@ -18,6 +18,12 @@
 import { GeneralUtils } from '../GeneralUtils';
 
 export class ConnectBtns {
+    public static createCatalogAdapter(adapterType: string) {
+        return cy
+            .get(`[id="${adapterType}"]`)
+            .find('[data-cy="adapter-catalog-create"]');
+    }
+
     public static detailsAdapter() {
         return cy.dataCy('details-adapter', { timeout: 10000 });
     }

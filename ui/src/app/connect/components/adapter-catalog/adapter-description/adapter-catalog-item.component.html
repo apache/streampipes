@@ -28,6 +28,7 @@
     <div class="adapter-catalog-item__actions">
         <button
             mat-flat-button
+            data-cy="adapter-catalog-create"
             (click)="selectAdapter(adapter.appId)"
             [matTooltip]="'Create adapter' | translate"
             [attr.aria-label]="
