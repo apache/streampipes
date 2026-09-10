@@ -28,8 +28,11 @@ describe('Test update of running pipeline', () => {
         const pipelineName = 'Pipeline Test';
         PipelineUtils.addSampleAdapterAndPipeline();
         PipelineUtils.editPipeline(pipelineName);
-        cy.wait(1000);
-        PipelineBtns.savePipelineBtn().click();
+        PipelineBtns.savePipelineBtn()
+            .should('have.length', 1)
+            .and('contain.text', 'Store and Restart')
+            .and('be.enabled')
+            .click();
         PipelineBtns.savePipelineStatusClose().click();
         cy.dataCy('more-options', { timeout: 10000 }).should('have.length', 1);
 
