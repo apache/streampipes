@@ -34,6 +34,18 @@ export class ConnectBtns {
         return cy.dataCy('edit-adapter', { timeout: 10000 });
     }
 
+    public static createAdapterFromExisting() {
+        return cy.dataCy('create-from-existing-adapter', { timeout: 10000 });
+    }
+
+    public static adapterNameCells() {
+        return cy.dataCy('adapter-name', { timeout: 10000 });
+    }
+
+    public static adapterConfigInput(propertyName: string) {
+        return cy.dataCy(propertyName, { timeout: 10000 });
+    }
+
     public static stopAdapter() {
         return cy.dataCy('stop-adapter');
     }
