@@ -114,6 +114,9 @@ export class PipelineAssemblyOptionsComponent {
     @Input()
     editMode = false;
 
+    @Input()
+    pipelineRunning = false;
+
     @Output()
     savePipelineEmitter: EventEmitter<PipelineAssemblySaveOptions> =
         new EventEmitter<PipelineAssemblySaveOptions>();

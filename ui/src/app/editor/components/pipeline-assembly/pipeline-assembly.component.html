@@ -27,6 +27,7 @@
             [jsplumbBridge]="jsplumbBridge"
             [previewModeActive]="previewModeActive"
             [editMode]="!!originalPipeline"
+            [pipelineRunning]="!!originalPipeline?.running"
             (clearAssemblyEmitter)="clearAssembly()"
             (togglePreviewEmitter)="togglePreview()"
             (savePipelineEmitter)="submit($event)"
