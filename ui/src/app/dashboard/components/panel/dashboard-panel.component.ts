@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+} from '@angular/core';
 import {
     firstValueFrom,
     from,
@@ -99,6 +106,8 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DashboardCopyService } from '../../services/dashboard-copy.service';
 
 import { AsyncPipe } from '@angular/common';
 
@@ -109,6 +118,7 @@ import { AsyncPipe } from '@angular/common';
         './dashboard-panel.component.scss',
         '../../../chart/components/chart-view/designer-panel/chart-designer-panel.component.scss',
     ],
+    providers: [DashboardCopyService],
     imports: [
         AsyncPipe,
         SpBasicViewComponent,
@@ -157,6 +167,10 @@ export class DashboardPanelComponent
     viewMode = 'grid';
 
     createMode = false;
+    createFromExisting = false;
+    alsoCopyCharts = false;
+    @ViewChild('createOptions', { static: true })
+    createOptions: TemplateRef<unknown>;
     editMode = false;
     chartSelectionPanelExpanded = false;
     timeRangeVisible = true;
@@ -184,6 +198,8 @@ export class DashboardPanelComponent
     ).getAssetLinkType$('dashboard');
     private permissionsService = inject(PermissionsService);
     private chartService = inject(ChartService);
+    private snackBar = inject(MatSnackBar);
+    private dashboardCopyService = inject(DashboardCopyService);
     private timeSelectionService = inject(TimeSelectionService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
@@ -219,7 +235,16 @@ export class DashboardPanelComponent
 
         this.createMode = params.id === 'create';
         if (this.createMode) {
-            this.initializeNewDashboard();
+            this.createFromExisting = !!queryParams.sourceDashboardId;
+            if (this.createFromExisting) {
+                this.getDashboard(
+                    queryParams.sourceDashboardId,
+                    undefined,
+                    undefined,
+                );
+            } else {
+                this.initializeNewDashboard();
+            }
         } else {
             this.getDashboard(params.id, startTime, endTime);
         }
@@ -335,6 +360,12 @@ export class DashboardPanelComponent
     }
 
     setShouldShowConfirm(): boolean {
+        if (!this.dashboardLoaded) {
+            return false;
+        }
+        if (this.createFromExisting && this.createMode) {
+            return true;
+        }
         const originalTimeSettings = this.originalDashboard
             .dashboardTimeSettings as TimeSettings;
         const currentTimeSettings = this.dashboard
@@ -375,12 +406,17 @@ export class DashboardPanelComponent
             assetLinkCheckboxLabel:
                 'Add the current dashboard to an existing asset',
             saveResource: resource =>
-                this.dashboardService.saveDashboard(resource).pipe(
-                    tap(savedDashboard => {
-                        Object.assign(resource, savedDashboard);
-                        Object.assign(this.dashboard, savedDashboard);
-                    }),
-                ),
+                this.dashboardCopyService
+                    .save(
+                        resource,
+                        this.createFromExisting && this.alsoCopyCharts,
+                    )
+                    .pipe(
+                        tap(savedDashboard => {
+                            Object.assign(resource, savedDashboard);
+                            Object.assign(this.dashboard, savedDashboard);
+                        }),
+                    ),
         };
         const dialogRef = this.dialogService.open(ObjectManageDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
@@ -390,6 +426,9 @@ export class DashboardPanelComponent
                 createMode: true,
                 resource: this.dashboard,
                 saveMode: 'immediate',
+                resourceOptionsTemplate: this.createFromExisting
+                    ? this.createOptions
+                    : undefined,
                 resourceConfig,
                 headerTitle: this.translateService.instant('New dashboard'),
             },
@@ -452,6 +491,15 @@ export class DashboardPanelComponent
     }
 
     startEditMode(widgetModel: DataExplorerWidgetModel) {
+        if (this.createFromExisting && this.createMode && this.alsoCopyCharts) {
+            this.snackBar.open(
+                this.translateService.instant(
+                    'Save the dashboard before editing copied charts.',
+                ),
+                this.translateService.instant('Close'),
+            );
+            return;
+        }
         this.routingService.navigateToChart(true, widgetModel.elementId, true);
     }
 
@@ -543,6 +591,12 @@ export class DashboardPanelComponent
                 }
                 if (resp.ok) {
                     const compositeDashboard = resp.body;
+                    if (this.createFromExisting) {
+                        compositeDashboard.dashboard =
+                            this.dashboardCopyService.createDraft(
+                                compositeDashboard.dashboard,
+                            );
+                    }
                     compositeDashboard.dashboard.widgets.forEach(w => {
                         w.id ??=
                             this.dataExplorerDashboardService.makeUniqueWidgetId();
@@ -618,6 +672,10 @@ export class DashboardPanelComponent
             return dialogRef.afterClosed().pipe(
                 switchMap((dialogResult: ConfirmDialogAction | undefined) => {
                     if (dialogResult === 'confirm') {
+                        if (this.createMode) {
+                            this.openCreateDashboardDialog();
+                            return of(false);
+                        }
                         this.dashboard.dashboardGeneralSettings.defaultViewMode =
                             this.viewMode;
                         return this.saveDashboardChanges().pipe(

@@ -199,9 +199,12 @@ export class ChartViewComponent
         });
 
         this.createMode = !dataViewId;
+        const sourceId = this.createMode
+            ? this.route.snapshot.queryParams.from
+            : undefined;
 
-        if (dataViewId) {
-            this.loadDataView(dataViewId);
+        if (dataViewId || sourceId) {
+            this.loadDataView(dataViewId ?? sourceId);
         } else {
             this.createWidget();
             this.timeSettings =
@@ -276,6 +279,17 @@ export class ChartViewComponent
                     return;
                 } else {
                     this.dataView = res;
+                    if (this.createMode) {
+                        this.dataView = JSON.parse(JSON.stringify(res));
+                        this.dataView.elementId = undefined;
+                        this.dataView.rev = undefined;
+                        this.dataView.widgetId = undefined;
+                        this.dataView.baseAppearanceConfig.widgetTitle = `${res.baseAppearanceConfig.widgetTitle} (${this.translateService.instant('Copy')})`;
+                        this.dataView.metadata = {
+                            createdAtEpochMs: Date.now(),
+                            lastModifiedEpochMs: Date.now(),
+                        };
+                    }
                     this.originalDataView = JSON.parse(
                         JSON.stringify(this.dataView),
                     );
@@ -399,6 +413,7 @@ export class ChartViewComponent
         }
         const currentTimeSettings = this.dataView.timeSettings as TimeSettings;
         return (
+            (this.createMode && !!this.route.snapshot.queryParams.from) ||
             this.pendingManageChartResult !== undefined ||
             this.detectChangesService.shouldShowConfirm(
                 this.originalDataView,
@@ -630,6 +645,10 @@ export class ChartViewComponent
             return dialogRef.afterClosed().pipe(
                 switchMap((dialogResult: ConfirmDialogAction | undefined) => {
                     if (dialogResult === 'confirm') {
+                        if (this.createMode) {
+                            this.openCreateChartDialog();
+                            return of(false);
+                        }
                         if (this.legacyMultiSourceChart) {
                             return of(true);
                         }

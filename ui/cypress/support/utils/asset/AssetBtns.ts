@@ -66,6 +66,16 @@ export class AssetBtns {
         return cy.dataCy('edit-asset-' + assetName, { timeout: 10000 });
     }
 
+    public static assetNameCells() {
+        return cy.dataCy('asset-name-cell', { timeout: 10000 });
+    }
+
+    public static createAssetFromExistingBtn(assetName: string) {
+        return cy.dataCy('create-from-existing-asset-' + assetName, {
+            timeout: 10000,
+        });
+    }
+
     public static manageAssetBtn(assetName: string) {
         return cy.dataCy('open-manage-' + assetName, { timeout: 10000 });
     }

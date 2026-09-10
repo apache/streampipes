@@ -171,7 +171,11 @@ export class EditorComponent implements OnInit {
                     this.breadcrumbService.updateBreadcrumb([
                         SpPipelineRoutes.BASE,
                         { label: this.originalPipeline.name },
-                        { label: this.cloneMode ? 'Clone' : 'Modify' },
+                        {
+                            label: this.cloneMode
+                                ? 'Create from existing'
+                                : 'Modify',
+                        },
                     ]);
                     this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
                         this.originalPipeline,

@@ -23,8 +23,10 @@ import {
     Input,
     OnDestroy,
     OnInit,
+    TemplateRef,
     ViewChild,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { DialogRef } from '../../dialog/base-dialog/dialog-ref';
 import { SplitSectionComponent } from '../../components/split-section/split-section.component';
 import { FormFieldComponent } from '../../components/form-field/form-field.component';
@@ -83,6 +85,7 @@ import { SearchSelectComponent } from '../../components/search-select/search-sel
     templateUrl: './object-manage-dialog.component.html',
     styleUrls: ['./object-manage-dialog.component.scss'],
     imports: [
+        NgTemplateOutlet,
         FlexDirective,
         LayoutAlignDirective,
         LayoutDirective,
@@ -115,6 +118,9 @@ export class ObjectManageDialogComponent<
 {
     @Input()
     createMode: boolean = false;
+
+    @Input()
+    resourceOptionsTemplate?: TemplateRef<unknown>;
 
     @Input()
     objectInstanceId: string;
