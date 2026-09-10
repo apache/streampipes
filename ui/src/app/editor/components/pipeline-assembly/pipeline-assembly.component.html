@@ -37,21 +37,35 @@
             ></sp-label>
         }
         <div pageActions class="pipeline-assembly__actions">
-            <sp-split-button
-                dataCy="sp-editor-save-pipeline"
-                [label]="'Store and Start' | translate"
-                icon="save"
-                [actions]="savePipelineActions"
-                [disabled]="!pipelineValidationService.pipelineValid"
-                [menuAriaLabel]="'Select save action'"
-                (primaryAction)="submit({ startPipelineAfterStorage: true })"
-                (actionSelected)="
-                    submit({
-                        startPipelineAfterStorage:
-                            $event.action === 'store-and-start',
-                    })
-                "
-            ></sp-split-button>
+            @if (originalPipeline && !!originalPipeline?.running) {
+                <button
+                    mat-flat-button
+                    color="accent"
+                    data-cy="sp-editor-save-pipeline"
+                    [disabled]="!pipelineValidationService.pipelineValid"
+                    (click)="submit({ startPipelineAfterStorage: true })"
+                >
+                    {{ 'Store and Restart' | translate }}
+                </button>
+            } @else {
+                <sp-split-button
+                    dataCy="sp-editor-save-pipeline"
+                    [label]="'Store and Start' | translate"
+                    icon="save"
+                    [actions]="savePipelineActions"
+                    [disabled]="!pipelineValidationService.pipelineValid"
+                    [menuAriaLabel]="'Select action' | translate"
+                    (primaryAction)="
+                        submit({ startPipelineAfterStorage: true })
+                    "
+                    (actionSelected)="
+                        submit({
+                            startPipelineAfterStorage:
+                                $event.action === 'store-and-start',
+                        })
+                    "
+                ></sp-split-button>
+            }
             @if (originalPipeline) {
                 <button
                     type="button"

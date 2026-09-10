@@ -69,7 +69,7 @@ import {
 import { JsplumbService } from '../../services/jsplumb.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
-import { MatIconButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
@@ -97,6 +97,7 @@ import {
         MatMenuModule,
         PipelineAssemblyOptionsComponent,
         PipelineAssemblyDrawingAreaComponent,
+        MatButton,
     ],
 })
 export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
