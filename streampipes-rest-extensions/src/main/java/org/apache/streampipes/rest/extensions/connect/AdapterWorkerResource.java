@@ -31,13 +31,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/v1/worker")
@@ -54,12 +51,6 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
   public AdapterWorkerResource(AdapterWorkerRequestManagement adapterRequestManagement) {
     this.adapterRequestManagement = adapterRequestManagement;
   }
-
-  @GetMapping(path = "/running", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Collection<AdapterDescription>> getRunningAdapterInstances() {
-    return ok(adapterRequestManagement.getRunningAdapterInstances());
-  }
-
 
   @PostMapping(
       path = "/stream/invoke",
