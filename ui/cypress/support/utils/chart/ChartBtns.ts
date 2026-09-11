@@ -38,7 +38,7 @@ export class ChartBtns {
     }
 
     public static discardDashboard() {
-        return cy.dataCy('save-data-explorer-go-back-to-overview');
+        return cy.visit('#/dashboard');
     }
 
     public static deleteDashboardBtn(dashboardName) {
@@ -186,11 +186,11 @@ export class ChartBtns {
     }
 
     public static goBackToOverviewBtn() {
-        return cy.dataCy('save-data-explorer-go-back-to-overview');
+        return cy.visit('#/chart');
     }
 
     public static discardChartBtn() {
-        return cy.dataCy('save-data-explorer-go-back-to-overview');
+        return cy.visit('#/chart');
     }
 
     public static chartDataPreview() {
