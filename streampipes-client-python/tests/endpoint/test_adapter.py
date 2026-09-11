@@ -24,7 +24,7 @@ from streampipes.client.config import StreamPipesClientConfig
 from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
 from streampipes.model.compact import CompactAdapter
 from streampipes.model.container import Adapters
-from streampipes.model.resource import AdapterSummary, DataStream
+from streampipes.model.resource import AdapterDescription, AdapterSummary, DataStream
 
 
 class TestAdapterEndpoint(TestCase):
@@ -69,19 +69,33 @@ class TestAdapterEndpoint(TestCase):
         self.assertIsInstance(adapters, Adapters)
         self.assertEqual(adapters.total_count, 1)
         self.assertIsInstance(adapters[0], AdapterSummary)
-        self.request_session.get.assert_called_with(url=f"{self.base_url}/summary")
+        self.request_session.get.assert_called_once_with(url=f"{self.base_url}/summary")
+
+    def test_get_returns_complete_adapter_description(self):
+        description = {
+            **self.summary,
+            "@class": "org.apache.streampipes.model.connect.adapter.AdapterDescription",
+            "dataStream": {"elementId": "stream-1", "name": "Adapter stream"},
+            "config": [
+                {
+                    "@class": "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty",
+                    "internalName": "server",
+                    "value": "opc.tcp://server-a",
+                }
+            ],
+            "selectedEndpointUrl": "http://worker:8090",
+            "selectedServiceId": "worker-1",
+        }
+        self.request_session.get.return_value.json.return_value = description
 
         adapter = self.client.adapterApi.get("adapter-1")
 
-        self.assertIsInstance(adapter, AdapterSummary)
-        self.assertEqual(adapter.element_id, "adapter-1")
-        self.request_session.get.assert_called_with(url=f"{self.base_url}/summary")
-
-    def test_get_missing_summary(self):
-        self.request_session.get.return_value.text = json.dumps({"resources": [], "totalCount": 0})
-
-        with self.assertRaises(KeyError):
-            self.client.adapterApi.get("missing")
+        self.assertIsInstance(adapter, AdapterDescription)
+        self.assertEqual(adapter.data_stream, description["dataStream"])
+        self.assertEqual(adapter.config, description["config"])
+        self.assertEqual(adapter.selected_endpoint_url, "http://worker:8090")
+        self.assertEqual(adapter.model_dump(by_alias=True)["selectedServiceId"], "worker-1")
+        self.request_session.get.assert_called_once_with(url=f"{self.base_url}/adapter-1")
 
     def test_compact_post(self):
         compact_adapter = CompactAdapter(
