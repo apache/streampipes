@@ -40,7 +40,7 @@ describe('Validate that filter works for numerical dimension property', () => {
     });
 
     it('Perform Test', () => {
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.createAndEditChart();
 
         // Create table chart and select time range

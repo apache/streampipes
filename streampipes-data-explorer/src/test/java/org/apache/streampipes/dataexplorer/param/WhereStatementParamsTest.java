@@ -19,7 +19,7 @@
 package org.apache.streampipes.dataexplorer.param;
 
 import org.apache.streampipes.dataexplorer.param.model.WhereClauseParams;
-import org.apache.streampipes.model.datalake.FilterCondition;
+import org.apache.streampipes.model.dataset.FilterCondition;
 
 import org.junit.jupiter.api.Test;
 

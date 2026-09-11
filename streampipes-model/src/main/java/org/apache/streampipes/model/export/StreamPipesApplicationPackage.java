@@ -124,8 +124,8 @@ public class StreamPipesApplicationPackage {
     this.dataLakeMeasures = dataLakeMeasures;
   }
 
-  public void addDataLakeMeasure(String dataLakeMeasure) {
-    this.dataLakeMeasures.add(dataLakeMeasure);
+  public void addDatasetMetadata(String datasetMetadata) {
+    this.dataLakeMeasures.add(datasetMetadata);
   }
 
   public Set<String> getDataSources() {

@@ -19,9 +19,9 @@
 package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.dataexplorer.export.item.CsvItemGenerator;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
-import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.dataset.param.SupportedRestQueryParams;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,11 +36,11 @@ public class ConfiguredCsvOutputWriter extends ConfiguredOutputWriter {
 
   private CsvItemGenerator itemGenerator;
   private String delimiter = COMMA;
-  private DataLakeMeasure schema;
+  private DatasetMetadata schema;
   private String headerColumnNameStrategy;
 
   @Override
-  public void configure(DataLakeMeasure schema,
+  public void configure(DatasetMetadata schema,
                         ProvidedRestQueryParams params,
                         boolean ignoreMissingValues) {
     this.schema = schema;

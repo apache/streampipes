@@ -98,7 +98,7 @@ describe('Test Dataset Permissions', () => {
 
         assertDatasetAvailabilityInCharts(true);
 
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
 
         PermissionUtils.authorizeUser(
             'test',
@@ -166,7 +166,7 @@ describe('Test Dataset Permissions', () => {
     });
 
     function assertDatasetAvailabilityInCharts(available: boolean) {
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartBtns.openNewChartBtn().click();
         if (!available) {
             cy.get('sp-alert-banner').should('be.visible');

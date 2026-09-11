@@ -19,55 +19,14 @@
 package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
-import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.model.datalake.SpQueryResult;
-import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class DataLakeResourceApi extends AbstractClientApi implements IDataLakeResourceApi {
+/**
+ * @deprecated Use {@link DatasetResourceApi} instead.
+ */
+@Deprecated(since = "0.99.0", forRemoval = false)
+public class DataLakeResourceApi extends DatasetResourceApi implements IDataLakeResourceApi {
 
   public DataLakeResourceApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig);
   }
-
-  protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromStreamPipesBasePath()
-        .addToPath("api")
-        .addToPath("v4")
-        .addToPath("datalake")
-        .addToPath("measurements");
-  }
-
-  @Override
-  @ExposedToScripts
-  public void delete(String measurementID, Long startDate, Long endDate) {
-
-    Map<String, String> queryParams = new HashMap<>();
-    if (startDate != null) {
-      queryParams.put("startDate", startDate.toString());
-    }
-    if (endDate != null) {
-      queryParams.put("endDate", endDate.toString());
-    }
-    delete(getBaseResourcePath().addToPath(measurementID).withQueryParameters(queryParams), Void.class);
-
-  }
-
-  @Override
-  @ExposedToScripts
-  public void update(String measurementID, SpQueryResult queryResult, boolean ignoreSchemaMismatch) {
-    Map<String, String> queryParams = new HashMap<>();
-    queryParams.put("ignoreSchemaMismatch", String.valueOf(ignoreSchemaMismatch));
-    post(getBaseResourcePath().addToPath(measurementID).withQueryParameters(queryParams), queryResult);
-  }
-
-  @Override
-  @ExposedToScripts
-  public SpQueryResult get(String measurementID, Map<String, String> queryParams) {
-    return getSingle(getBaseResourcePath().addToPath(measurementID).withQueryParameters(queryParams),
-        SpQueryResult.class);
-  }
-
 }

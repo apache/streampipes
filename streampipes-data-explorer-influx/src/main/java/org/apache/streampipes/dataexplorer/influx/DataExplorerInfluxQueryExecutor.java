@@ -18,14 +18,14 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
-import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
+import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.DataSeries;
-import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.dataset.DataSeries;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.SpQueryResult;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Query;
@@ -103,8 +103,8 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
     return result;
   }
 
-  private IDataLakeQueryBuilder<Query> getQueryBuilder(String measurementId) {
-    return DataLakeInfluxQueryBuilder.create(measurementId);
+  private IDatasetQueryBuilder<Query> getQueryBuilder(String measurementId) {
+    return DatasetInfluxQueryBuilder.create(measurementId);
   }
 
   @Override
@@ -255,7 +255,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   }
 
   @Override
-  public boolean deleteData(DataLakeMeasure measure) {
+  public boolean deleteData(DatasetMetadata measure) {
     QueryResult queryResult = new DeleteDataQuery(measure).executeQuery();
 
     return !queryResult.hasError() && (queryResult.getResults() == null || queryResult.getResults()

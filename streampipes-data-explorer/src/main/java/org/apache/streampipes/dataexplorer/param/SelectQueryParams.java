@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.dataexplorer.param;
 
-import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
+import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
 import org.apache.streampipes.dataexplorer.param.model.FillClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.GroupByTagsClauseParams;
 import org.apache.streampipes.dataexplorer.param.model.GroupByTimeClauseParams;
@@ -87,7 +87,7 @@ public class SelectQueryParams {
     this.orderByClauseParams = params;
   }
 
-  public <T> T toQuery(IDataLakeQueryBuilder<T> builder) {
+  public <T> T toQuery(IDatasetQueryBuilder<T> builder) {
     this.selectParams.buildStatement(builder);
     prepareBuilder(builder);
     return builder.build();
@@ -101,7 +101,7 @@ public class SelectQueryParams {
     }
   }
 
-  private <T> void prepareBuilder(IDataLakeQueryBuilder<T> builder) {
+  private <T> void prepareBuilder(IDatasetQueryBuilder<T> builder) {
     if (Objects.nonNull(this.whereParams)) {
       this.whereParams.buildStatement(builder);
     }

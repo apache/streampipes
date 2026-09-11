@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.param.model;
 
-import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
+import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
 
 public class FillClauseParams implements IQueryStatement {
@@ -45,7 +45,7 @@ public class FillClauseParams implements IQueryStatement {
   }
 
   @Override
-  public void buildStatement(IDataLakeQueryBuilder<?> builder) {
+  public void buildStatement(IDatasetQueryBuilder<?> builder) {
     builder.withFill(fill);
   }
 }

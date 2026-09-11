@@ -31,7 +31,7 @@ import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManage
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -156,7 +156,7 @@ public class ResetManagement {
   }
 
   private void removeAllDataInDataLake() {
-    var dataLakeMeasureManagement = new DataExplorerDispatcher()
+    var datasetMetadataManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
         .getSchemaManagement(
             chartSchemaUpdateCoordinator,
@@ -164,13 +164,13 @@ public class ResetManagement {
             resourceManager.manageDataLakeMeasures().getDb());
     var dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDataExplorerManager()
-        .getQueryManagement(dataLakeMeasureManagement);
-    List<DataLakeMeasure> allMeasurements = dataLakeMeasureManagement.getAllMeasurements();
+        .getQueryManagement(datasetMetadataManagement);
+    List<DatasetMetadata> allMeasurements = datasetMetadataManagement.getAllMeasurements();
     allMeasurements.forEach(measurement -> {
       boolean isSuccessDataLake = dataExplorerQueryManagement.deleteData(measurement.getMeasureName());
 
       if (isSuccessDataLake) {
-        dataLakeMeasureManagement.deleteMeasurementByName(measurement.getMeasureName());
+        datasetMetadataManagement.deleteMeasurementByName(measurement.getMeasureName());
       }
     });
   }

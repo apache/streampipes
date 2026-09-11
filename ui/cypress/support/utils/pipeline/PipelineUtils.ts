@@ -70,7 +70,7 @@ export class PipelineUtils {
                     .build(),
             )
             .addSink(
-                PipelineElementBuilder.create('data_lake')
+                PipelineElementBuilder.create('dataset')
                     .addInput('input', 'db_measurement', 'demo')
                     .build(),
             )

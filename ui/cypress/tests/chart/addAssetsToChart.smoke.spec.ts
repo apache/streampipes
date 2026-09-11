@@ -55,7 +55,7 @@ describe('Creates a new adapter with a linked asset', () => {
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(assetName2, 1);
 
         // Go To Chart and Edit
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         cy.wait(1000);
         ChartUtils.manageChart('NewWidget');
         ChartUtils.renameChart('Rename');
