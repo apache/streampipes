@@ -128,6 +128,7 @@ services:
       - "backend"
     environment:
       - SP_HOST=${svc_name}
+      - SP_CLIENT_SECRET=\${SP_SERVICE_SECRET:-streampipes-development-only-service-secret}
     logging:
       driver: "json-file"
       options:
