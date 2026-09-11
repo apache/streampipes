@@ -22,9 +22,9 @@ public class ResolvableAssetLinks {
 
   public static final String CHART = "chart";
   public static final String DASHBOARD = "dashboard";
-  public static final String MEASUREMENT = "measurement";
+  public static final String DATASET = "dataset";
   public static final String ADAPTER = "adapter";
-  public static final String DATA_SOURCE = "data-source";
+  public static final String DATA_STREAM = "data-stream";
   public static final String PIPELINE = "pipeline";
   public static final String FILE = "file";
 }

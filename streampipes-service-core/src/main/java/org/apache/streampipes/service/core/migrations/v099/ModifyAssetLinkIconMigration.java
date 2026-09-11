@@ -46,7 +46,9 @@ public class ModifyAssetLinkIconMigration implements Migration {
   private static final Map<String, String> ICON_BY_LINK_TYPE = Map.of(
       "file", "folder",
       "data-source", "sensors",
-      "measurement", "dataset"
+      "data-stream", "sensors",
+      "measurement", "dataset",
+      "dataset", "dataset"
   );
 
   private final IGenericStorage genericStorage;
