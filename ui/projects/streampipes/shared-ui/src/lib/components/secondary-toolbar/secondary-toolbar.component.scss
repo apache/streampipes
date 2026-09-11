@@ -16,18 +16,19 @@
  *
  */
 
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+:host {
+    display: block;
+    flex: 0 0 auto;
+    min-width: 0;
+    background: var(--color-bg-0);
+    border-top: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border-subtle);
+}
 
-import { SpSecondaryToolbarComponent } from '../secondary-toolbar/secondary-toolbar.component';
+:host(.secondary-toolbar--padded) {
+    padding: var(--space-xs) var(--space-md);
+}
 
-@Component({
-    selector: 'sp-workspace-container',
-    templateUrl: './workspace-container.component.html',
-    styleUrls: ['./workspace-container.component.scss'],
-    imports: [SpSecondaryToolbarComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class SpWorkspaceContainerComponent {
-    @Input()
-    topBorder = false;
+:host(:empty) {
+    display: none;
 }

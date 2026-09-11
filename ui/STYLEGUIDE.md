@@ -95,6 +95,34 @@ Reserve `sp-page-tabs` for the primary tab row directly below
 `sp-page-header`. Tabs embedded in dialogs, editors, or panels keep the default
 compact Material styling.
 
+#### Secondary Toolbar
+
+Use `sp-secondary-toolbar` below `sp-page-header` (and page navigation, when
+present) for content controls such as filters, view options, or selection actions.
+Import `SpSecondaryToolbarComponent` from `@streampipes/shared-ui` into the
+consuming component. It works without a workspace and projects arbitrary content:
+
+```html
+<sp-secondary-toolbar>
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="start center"
+    fxLayoutGap="var(--space-sm)"
+  >
+    <button mat-flat-button class="btn-secondary" (click)="resetFilters()">
+      {{ 'Reset filters' | translate }}
+    </button>
+    <!-- Additional filters or view controls -->
+  </div>
+</sp-secondary-toolbar>
+```
+
+The toolbar supplies the shared surface, bottom divider, and compact spacing.
+The consumer owns control layout, accessible labels, and behavior. Set
+`[padding]="false"` when projecting a component that already supplies spacing.
+An empty toolbar is hidden. `sp-workspace-container` uses this component internally;
+existing content marked with `workspaceToolbar` needs no changes.
+
 #### Headers and Titles
 
 Use `sp-page-header` for the single page-level title. Give top-level domain

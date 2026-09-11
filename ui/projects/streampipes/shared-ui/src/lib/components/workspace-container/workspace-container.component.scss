@@ -23,18 +23,11 @@
     min-width: 0;
     min-height: 0;
     overflow: hidden;
-    border-top: 1px solid var(--color-border-subtle);
     background: var(--color-bg-0);
 }
 
-.workspace-container__toolbar {
-    flex: 0 0 auto;
-    min-width: 0;
-    border-bottom: 1px solid var(--color-border-subtle);
-}
-
-.workspace-container__toolbar:empty {
-    display: none;
+.top-border {
+    border-top: 1px solid var(--color-border-subtle);
 }
 
 .workspace-container__content {

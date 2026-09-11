@@ -18,16 +18,18 @@
 
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { SpSecondaryToolbarComponent } from '../secondary-toolbar/secondary-toolbar.component';
-
+/** A content toolbar for use below a page header or inside a workspace. */
 @Component({
-    selector: 'sp-workspace-container',
-    templateUrl: './workspace-container.component.html',
-    styleUrls: ['./workspace-container.component.scss'],
-    imports: [SpSecondaryToolbarComponent],
+    selector: 'sp-secondary-toolbar',
+    template: '<ng-content></ng-content>',
+    styleUrls: ['./secondary-toolbar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[class.secondary-toolbar--padded]': 'padding',
+    },
 })
-export class SpWorkspaceContainerComponent {
+export class SpSecondaryToolbarComponent {
+    /** Disable when projected content already provides its own toolbar spacing. */
     @Input()
-    topBorder = false;
+    padding = true;
 }
