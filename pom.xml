@@ -1311,6 +1311,8 @@
 
                         <!-- Exclude AI agent guidance files -->
                         <exclude>**/AGENTS.md</exclude>
+                        <exclude>**/CLAUDE.md</exclude>
+                        <exclude>.claude/**</exclude>
 
 
 

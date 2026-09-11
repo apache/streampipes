@@ -2,22 +2,29 @@
 
 ## Scope
 
-Applies to `ui/projects/streampipes/shared-ui/`.
+Applies to `ui/projects/streampipes/shared-ui/`. `ui/AGENTS.md` and the root guide apply
+as well.
 
-## Module Intent
+## Module intent
 
-- Reusable, cross-feature UI components/dialogs/services.
-- Public surface is exported via `ui/projects/streampipes/shared-ui/src/public-api.ts`.
+Reusable, cross-feature components, dialogs and services (`sp-basic-view`, `sp-page-header`,
+`sp-page-nav-tabs`, `sp-split-section`, `sp-form-field`, `sp-table`, `sp-label`,
+`sp-alert-banner`, dialog base classes). Public surface: `src/public-api.ts`.
 
-## Best Practices
+## Rules
 
-- Keep components generic and reusable; avoid feature-specific business logic.
-- Reuse existing shared primitives (`sp-table`, `sp-form-field`, `basic-*`, dialog base components) before adding new ones.
-- Preserve UX and visual consistency with `ui/STYLEGUIDE.md`.
-- Keep component APIs translation-friendly and accessibility-aware.
-- Treat `src/public-api.ts` exports as a compatibility boundary.
+- Components here are generic: no feature-specific business logic, no feature imports.
+- Visual behaviour follows `DESIGN.md` (normative) and is documented for consumers in
+  `ui/STYLEGUIDE.md`; a new page-level pattern gets a styleguide entry.
+- Consume semantic CSS variables from the theme; never embed default brand values.
+- Inputs and outputs must be translation-friendly (accept keys or translated strings, never
+  hard-coded English) and accessible (labels, `aria-*`, keyboard operation).
+- Treat `src/public-api.ts` as a compatibility boundary: export new components there;
+  do not remove or rename exports without updating every consumer.
 
-## Validation
+## Validate
 
-- `ng build @streampipes/shared-ui`
-- `ng test @streampipes/shared-ui`
+```bash
+ng build @streampipes/shared-ui && ng test @streampipes/shared-ui
+npm run build-libraries      # so the app picks up the change
+```

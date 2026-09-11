@@ -1,22 +1,26 @@
 # AGENTS Guide (Pipeline Management)
 
 ## Scope
-Applies to `streampipes-pipeline-management/`.
 
-## Module Intent
-- Core pipeline domain behavior: matching, verification, graph construction, execution orchestration, migrations, setup tasks, permission handling.
+Applies to `streampipes-pipeline-management/`. Root `AGENTS.md` applies as well; build and
+validation commands live there.
 
-## High-Risk Areas
-- Verification/matching pipelines (`manager/verification`, `manager/matching`, `manager/matching/v2`).
-- Graph logic (`manager/data/PipelineGraph*`).
-- Execution task pipeline and status updates (`manager/execution`).
-- Pipeline element migrations (`manager/migration`).
+## Module intent
 
-## Best Practices
-- Keep verification deterministic and side-effect free where intended.
-- Keep pipeline graph and output schema behavior backward compatible.
-- Treat migration failures explicitly; do not hide partial migration states.
-- Preserve permission and ownership behavior when creating/updating/deleting pipelines.
+Core pipeline domain behaviour: element matching, pipeline verification, graph construction,
+execution orchestration, pipeline-element migrations, setup tasks, permission handling.
 
-## Validation
-- `mvn -pl streampipes-pipeline-management -am test`
+## High-risk areas
+
+- Verification and matching (`manager/verification`, `manager/matching`, `manager/matching/v2`).
+  Keep these deterministic and side-effect free.
+- Graph construction and output schemas (`manager/data/PipelineGraph*`). Output schema
+  behaviour is user-visible in the pipeline editor; keep it backward compatible.
+- Execution tasks and status updates (`manager/execution`).
+- Pipeline-element migrations (`manager/migration`). Surface partial failures; do not leave
+  a pipeline in an unknown migration state.
+
+## Rules
+
+- Creating, updating and deleting pipelines must keep the permission and ownership
+  behaviour that already exists; permissions are created and removed alongside the entity.

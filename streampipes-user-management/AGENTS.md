@@ -1,21 +1,26 @@
 # AGENTS Guide (User Management)
 
 ## Scope
-Applies to `streampipes-user-management/`.
 
-## Module Intent
-- Authentication, token handling, role/privilege resolution, and user principal composition.
+Applies to `streampipes-user-management/`. Root `AGENTS.md` applies as well; build and
+validation commands live there.
 
-## High-Risk Areas
-- JWT/token creation and validation (`jwt/*`, `service/TokenService`).
+## Module intent
+
+Authentication, token handling, role and privilege resolution, user principal composition.
+
+## High-risk areas
+
+- JWT creation and validation (`jwt/*`, `service/TokenService`).
 - Password and secret handling (`authentication/*`, `util/PasswordUtil`, `encryption/*`).
-- Default role/privilege definitions (`authorization/RoleManager`, `authorization/PrivilegeManager`).
+- Default roles and privileges (`authorization/RoleManager`, `authorization/PrivilegeManager`).
+  Changing defaults affects existing installations through the setup and migration flows in
+  `streampipes-service-core`; a new privilege usually needs a migration there.
 
-## Best Practices
-- Treat security changes as high-risk and preserve secure defaults.
-- Never store or log raw secrets/tokens/passwords.
-- Keep role/privilege updates consistent with existing permission model and setup flows.
-- Preserve compatibility with storage-backed user/group/role resolution.
+## Rules
 
-## Validation
-- `mvn -pl streampipes-user-management -am test`
+- Never store or log raw secrets, tokens or passwords — not even at debug level.
+- Preserve secure defaults; a change that relaxes a check needs an explicit reason in the
+  pull request.
+- Keep user, group and role resolution compatible with the storage-backed representation
+  in `streampipes-storage-couchdb`.

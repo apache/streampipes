@@ -21,6 +21,11 @@
 Welcome to the UI Styleguide for Apache StreamPipes.  
 This guide defines the visual language, interaction patterns, components, and coding standards that ensure a consistent and scalable user experience.
 
+This guide is the place for concrete component usage and markup. Tokens, colour roles, the
+typography scale, elevation and the named design rules are defined in the repository-root
+`DESIGN.md`, which is normative when the two disagree; product intent and anti-references
+are in `PRODUCT.md`.
+
 ---
 
 ### Design Tokens
