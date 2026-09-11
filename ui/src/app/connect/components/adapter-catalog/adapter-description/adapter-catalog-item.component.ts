@@ -26,12 +26,6 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { SpAdapterDocumentationDialogComponent } from '../../../dialog/adapter-documentation/adapter-documentation-dialog.component';
 import { Router } from '@angular/router';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -41,16 +35,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-adapter-catalog-item',
     templateUrl: './adapter-catalog-item.component.html',
     styleUrls: ['./adapter-catalog-item.component.scss'],
-    imports: [
-        FlexDirective,
-        LayoutDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        MatButton,
-        MatTooltip,
-        MatIcon,
-        TranslatePipe,
-    ],
+    imports: [MatButton, MatTooltip, MatIcon, TranslatePipe],
 })
 export class AdapterCatalogItemComponent implements OnInit {
     private pipelineElementAssetService = inject(PipelineElementAssetService);

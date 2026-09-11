@@ -45,29 +45,42 @@
                                         <input
                                             required
                                             matInput
+                                            [readonly]="resourceNameReadonly"
                                             formControlName="resourceName"
                                             data-cy="managed-resource-name"
                                         />
                                     </mat-form-field>
                                 </sp-form-field>
-                                <sp-form-field
-                                    [level]="3"
-                                    [label]="
-                                        resourceDescriptionLabel | translate
-                                    "
-                                >
-                                    <mat-form-field
-                                        class="w-100"
-                                        floatLabel="auto"
-                                        color="accent"
+                                @if (showResourceDescription) {
+                                    <sp-form-field
+                                        [level]="3"
+                                        [label]="
+                                            resourceDescriptionLabel | translate
+                                        "
                                     >
-                                        <input
-                                            matInput
-                                            formControlName="resourceDescription"
-                                            data-cy="managed-resource-description"
-                                        />
-                                    </mat-form-field>
-                                </sp-form-field>
+                                        <mat-form-field
+                                            class="w-100"
+                                            floatLabel="auto"
+                                            color="accent"
+                                        >
+                                            <input
+                                                matInput
+                                                formControlName="resourceDescription"
+                                                data-cy="managed-resource-description"
+                                            />
+                                        </mat-form-field>
+                                    </sp-form-field>
+                                }
+                            }
+
+                            @if (resourceOptionsTemplate) {
+                                <div class="mt-10" fxLayout="column">
+                                    <ng-container
+                                        [ngTemplateOutlet]="
+                                            resourceOptionsTemplate
+                                        "
+                                    ></ng-container>
+                                </div>
                             }
 
                             @if (isAssetAdmin && showAssetLinking) {
@@ -285,8 +298,8 @@
                     "
                     data-cy="sp-manage-save"
                 >
-                    <i class="material-icons">save</i>
-                    <span>&nbsp;{{ saveButtonLabel | translate }}</span>
+                    <mat-icon>save</mat-icon>
+                    <span>{{ saveButtonLabel | translate }}</span>
                 </button>
             }
             <button

@@ -19,13 +19,13 @@
 import { Component, inject, Input } from '@angular/core';
 import { UserInfo } from '@streampipes/platform-services';
 import { TranslateService } from '@ngx-translate/core';
-import { SpBasicHeaderTitleComponent } from '@streampipes/shared-ui';
+import { SpPageHeaderComponent } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-welcome',
     templateUrl: './welcome.component.html',
     styleUrls: ['./welcome.component.scss'],
-    imports: [SpBasicHeaderTitleComponent],
+    imports: [SpPageHeaderComponent],
 })
 export class WelcomeComponent {
     @Input()
@@ -46,5 +46,11 @@ export class WelcomeComponent {
         if (hour < 12) return this.translate.instant('Good morning');
         if (hour < 18) return this.translate.instant('Good afternoon');
         return this.translate.instant('Good evening');
+    }
+
+    get title(): string {
+        return `${this.greeting}${this.displayName ? ',' : ''} ${
+            this.displayName || this.email
+        }!`;
     }
 }

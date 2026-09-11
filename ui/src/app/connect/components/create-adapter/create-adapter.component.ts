@@ -24,6 +24,8 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { SpConnectRoutes } from '../../connect.breadcrumb';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { TranslateService } from '@ngx-translate/core';
+import { createAdapterFromExisting } from './create-adapter-from-existing';
 import { AdapterConfigurationComponent } from '../adapter-configuration/adapter-configuration.component';
 
 @Component({
@@ -36,12 +38,25 @@ export class CreateAdapterComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private adapterService = inject(AdapterService);
     private route = inject(ActivatedRoute);
+    private translateService = inject(TranslateService);
 
     initialized = false;
+    fromExisting = false;
     adapterTypeName = '';
     adapter: AdapterDescription = undefined;
 
     ngOnInit(): void {
+        const elementId = this.route.snapshot.params.elementId;
+        if (elementId) {
+            this.fromExisting = true;
+            this.adapterService.getAdapter(elementId).subscribe(adapter => {
+                this.updateAdapterTypeAndBreadcrumb(adapter);
+                this.adapter = createAdapterFromExisting(adapter);
+                this.adapter.name = `${adapter.name} (${this.translateService.instant('Copy')})`;
+                this.initialized = true;
+            });
+            return;
+        }
         this.adapterService.getAdapterDescriptions().subscribe(adapters => {
             const adapter = this.findAdapterWithAppIdFromRoute(adapters);
 

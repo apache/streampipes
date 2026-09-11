@@ -44,6 +44,7 @@ import { MatDivider } from '@angular/material/divider';
 import { PipelineStartedStatusComponent } from '../../../core-ui/pipeline/pipeline-started-status/pipeline-started-status.component';
 import { MatButton } from '@angular/material/button';
 import { SavePipelineUpdateMigrationComponent } from './save-pipeline-update-migration/save-pipeline-update-migration.component';
+import { PipelineStartService } from '../../../pipelines/services/pipeline-start.service';
 
 export interface SavePipelineDialogResult {
     success: boolean;
@@ -69,6 +70,7 @@ export interface SavePipelineDialogResult {
 export class SavePipelineComponent implements OnInit {
     private dialogRef = inject(DialogRef<SavePipelineComponent>);
     private pipelineService = inject(PipelineService);
+    private pipelineStartService = inject(PipelineStartService);
     private pipelineCanvasService = inject(PipelineCanvasMetadataService);
     private translateService = inject(TranslateService);
 
@@ -252,7 +254,7 @@ export class SavePipelineComponent implements OnInit {
             Status.PROGRESS,
         );
         const startResult = await firstValueFrom(
-            this.pipelineService.startPipeline(this.pipelineId),
+            this.pipelineStartService.startPipeline(this.pipelineId),
         );
         if (!startResult.success) {
             this.handlePipelineOperationError(

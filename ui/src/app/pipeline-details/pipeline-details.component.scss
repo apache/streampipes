@@ -16,14 +16,33 @@
  *
  */
 
-.md-padding {
-    padding: 10px;
+.pipeline-details__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.pipeline-details__preview {
+    display: flex;
+    flex: 1 1 0;
+    min-height: 0;
+    min-width: 0;
+}
+
+.pipeline-details__message {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
 }
 
 .expansion-panel {
     position: absolute;
-    right: 10px;
-    top: 10px;
-    width: 300px;
-    height: 97%;
+    right: var(--space-md);
+    top: var(--space-md);
+    bottom: var(--space-md);
+    width: min(18.75rem, calc(100% - 2 * var(--space-md)));
+    overflow: auto;
 }

@@ -17,18 +17,81 @@
  */
 
 .breadcrumb-outer {
-    max-height: 20px;
-    height: 20px;
+    min-width: 0;
+    overflow: hidden;
     color: var(--color-toolbar-text);
 }
 
+.breadcrumb-list,
+.breadcrumb-entry {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    list-style: none;
+}
+
+.breadcrumb-list {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.breadcrumb-entry:last-child {
+    overflow: hidden;
+}
+
+.bc-item {
+    min-height: 44px;
+    padding: 0 var(--space-xs);
+    border: 0;
+    border-radius: var(--radius-xs);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    cursor: pointer;
+    transition:
+        background-color var(--motion-duration-fast)
+            var(--motion-easing-standard),
+        color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.bc-item mat-icon,
 .divider {
-    font-size: 10pt;
-    width: 10pt;
-    height: 10pt;
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.divider {
+    flex: 0 0 auto;
+    color: var(--mat-sys-on-surface-variant);
 }
 
 .bc-item:hover {
+    background: color-mix(in srgb, currentColor 7%, transparent);
     color: var(--color-toolbar-text-hover);
-    cursor: pointer;
+}
+
+.bc-item:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+}
+
+.bc-current {
+    overflow: hidden;
+    padding-inline: var(--space-xs);
+    color: var(--mat-sys-on-surface-variant);
+    font-weight: var(--font-weight-medium);
+    text-overflow: ellipsis;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bc-item {
+        transition: none;
+    }
 }

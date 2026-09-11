@@ -1,4 +1,4 @@
-/*!
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,6 +16,35 @@
  *
  */
 
-.border-1 {
-    border: 1px solid var(--color-bg-2);
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    border-top: 1px solid var(--color-border-subtle);
+    background: var(--color-bg-0);
+}
+
+.workspace-container__toolbar {
+    flex: 0 0 auto;
+    min-width: 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.workspace-container__toolbar:empty {
+    display: none;
+}
+
+.workspace-container__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
+    border-left: 1px solid var(--color-border-subtle);
+    border-right: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border-subtle);
 }

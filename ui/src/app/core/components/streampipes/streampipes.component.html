@@ -25,19 +25,14 @@
             <sp-iconbar></sp-iconbar>
         </div>
 
-        <div
-            class="main-section"
-            [style.width]="
-                collapsed() ? 'calc(100vw - 62px)' : 'calc(100vw - 260px)'
-            "
-        >
+        <div class="main-section">
             <div class="sp-toolbar-outer">
                 <sp-toolbar></sp-toolbar>
             </div>
 
-            <div class="content">
+            <main class="content">
                 <router-outlet></router-outlet>
-            </div>
+            </main>
         </div>
     </div>
 </div>

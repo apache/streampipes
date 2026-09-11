@@ -42,6 +42,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ColorMappingOptionsConfigComponent } from '../../color-mapping-options-config/color-mapping-options-config.component';
 import { LayoutDirective } from '@ngbracket/ngx-layout';
 import { ResultLabelService } from '../../../../services/result-label.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-time-series-item-config',
@@ -66,6 +67,7 @@ import { ResultLabelService } from '../../../../services/result-label.service';
         TranslatePipe,
         ColorMappingOptionsConfigComponent,
         LayoutDirective,
+        MatIcon,
     ],
 })
 export class SpTimeseriesItemConfigComponent {

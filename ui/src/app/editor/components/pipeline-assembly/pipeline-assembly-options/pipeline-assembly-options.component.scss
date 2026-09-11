@@ -16,10 +16,30 @@
  *
  */
 
+.assembly-options {
+    min-width: 0;
+    padding: var(--space-xs) var(--space-md);
+    gap: var(--space-sm);
+}
+
+.assembly-options > button,
+.assembly-options > sp-pipeline-assembly-options-pipeline-cache,
+.assembly-options-divider {
+    flex-shrink: 0;
+}
+
 .assembly-options-divider {
     width: 1px;
-    height: 70%;
-    margin-left: 10px;
-    margin-right: 10px;
-    background: var(--color-bg-3);
+    height: var(--space-xl);
+
+    background: var(--color-border-subtle);
+}
+
+.assembly-options__button--spaced {
+    margin-inline-end: var(--space-sm);
+}
+
+.assembly-options__view-controls {
+    margin-left: auto;
+    gap: var(--space-sm);
 }

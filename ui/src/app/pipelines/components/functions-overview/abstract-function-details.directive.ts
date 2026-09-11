@@ -26,7 +26,7 @@ import {
 } from '@streampipes/platform-services';
 import { Directive } from '@angular/core';
 import { Observable, zip } from 'rxjs';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpBreadcrumbService, SpNavigationItem } from '@streampipes/shared-ui';
 import { SpPipelineRoutes } from '../../pipelines.breadcrumb';
 
 @Directive()
@@ -34,8 +34,10 @@ export abstract class AbstractFunctionDetailsDirective {
     public activeFunction: FunctionDefinition;
 
     contentReady = false;
-    tabs = [];
+    tabs: SpNavigationItem[] = [];
     streamNames: Record<string, string> = {};
+    functionNotFound = false;
+    refreshing = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -57,11 +59,13 @@ export abstract class AbstractFunctionDetailsDirective {
                 itemId: 'metrics',
                 itemTitle: 'Metrics',
                 itemLink: ['pipelines', 'functions', functionId, 'metrics'],
+                itemIcon: 'monitoring',
             },
             {
                 itemId: 'logs',
                 itemTitle: 'Logs',
                 itemLink: ['pipelines', 'functions', functionId, 'logs'],
+                itemIcon: 'receipt_long',
             },
         ];
         this.loadFunctions(functionId);
@@ -72,12 +76,20 @@ export abstract class AbstractFunctionDetailsDirective {
             this.activeFunction = functions.find(
                 f => f.functionId.id === functionId,
             );
+            if (!this.activeFunction) {
+                this.functionNotFound = true;
+                return;
+            }
             this.loadStreams(this.activeFunction.consumedStreams);
         });
     }
 
     loadStreams(relatedStreams: string[]) {
         this.streamNames = {};
+        if (relatedStreams.length === 0) {
+            this.afterFunctionLoaded();
+            return;
+        }
         const observables = this.getStreamObservables(relatedStreams);
         zip(...observables).subscribe(streams => {
             streams.forEach(
@@ -94,11 +106,11 @@ export abstract class AbstractFunctionDetailsDirective {
     }
 
     triggerUpdate() {
-        this.adapterMonitoringService
-            .triggerMonitoringUpdate()
-            .subscribe(() => {
-                this.afterFunctionLoaded();
-            });
+        this.refreshing = true;
+        this.adapterMonitoringService.triggerMonitoringUpdate().subscribe({
+            next: () => this.afterFunctionLoaded(),
+            error: () => (this.refreshing = false),
+        });
     }
 
     abstract afterFunctionLoaded(): void;

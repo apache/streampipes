@@ -225,7 +225,7 @@
                         [disabled]="!hasInput"
                         data-cy="next-import-button"
                     >
-                        <span>&nbsp;{{ 'Next' | translate }}</span>
+                        <span>{{ 'Next' | translate }}</span>
                     </button>
                 }
                 @if (currentImportStep === 1) {
@@ -237,8 +237,8 @@
                         (click)="performImport()"
                         data-cy="import-button"
                     >
-                        <i class="material-icons">file_download</i
-                        ><span>&nbsp;{{ 'Import data' | translate }}</span>
+                        <mat-icon>file_download</mat-icon
+                        ><span>{{ 'Import data' | translate }}</span>
                     </button>
                 }
                 @if (currentImportStep > 0) {

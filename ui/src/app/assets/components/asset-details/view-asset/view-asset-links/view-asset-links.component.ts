@@ -24,10 +24,6 @@ import {
     SpAsset,
 } from '@streampipes/platform-services';
 import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
-import {
     SpAlertBannerComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
@@ -39,8 +35,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './view-asset-links.component.html',
     styleUrls: ['./view-asset-links.component.scss'],
     imports: [
-        LayoutDirective,
-        LayoutAlignDirective,
         SplitSectionComponent,
         AssetLinkTableComponent,
         SpAlertBannerComponent,

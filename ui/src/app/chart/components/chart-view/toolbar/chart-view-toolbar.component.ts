@@ -34,13 +34,6 @@ import {
     TimeRangeSelectorComponent,
 } from '@streampipes/shared-ui';
 import { UserRole } from '../../../../core/auth/user-role.enum';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-    LayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
-import { FormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -50,13 +43,8 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 @Component({
     selector: 'sp-chart-view-toolbar',
     templateUrl: './chart-view-toolbar.component.html',
-    styleUrls: ['../chart-view.component.scss'],
+    styleUrls: ['./chart-view-toolbar.component.scss'],
     imports: [
-        LayoutDirective,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutGapDirective,
-        FormsModule,
         MatButton,
         MatTooltip,
         MatIcon,

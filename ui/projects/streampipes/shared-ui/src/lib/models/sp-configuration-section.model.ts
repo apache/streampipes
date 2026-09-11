@@ -21,6 +21,7 @@ import { Type } from '@angular/core';
 interface SpConfigurationSectionBase {
     itemId: string;
     itemTitle: string;
+    itemIcon?: string;
     roles: string[];
     order?: number;
 }

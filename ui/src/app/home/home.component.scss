@@ -16,6 +16,40 @@
  *
  */
 
+:host {
+    display: flex;
+    min-width: 0;
+    min-height: 100%;
+    flex-direction: column;
+}
+
+.home-content {
+    display: flex;
+    min-width: 0;
+    min-height: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.status-grid {
+    display: grid;
+    min-width: 0;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    gap: var(--space-md);
+}
+
+.status-grid > sp-status {
+    min-width: 0;
+}
+
+.home-loading {
+    display: flex;
+    min-height: 12rem;
+    align-items: center;
+    justify-content: center;
+}
+
 .assets-wrapper,
 .assets-content {
     flex: 1 1 auto;
@@ -36,4 +70,11 @@
 .map {
     flex: 1 1 auto;
     min-height: 0;
+}
+
+@container (max-width: 42rem) {
+    .home-content {
+        gap: var(--space-md);
+        padding-top: var(--space-md);
+    }
 }

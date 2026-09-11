@@ -25,6 +25,7 @@ import {
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-static-tree-input-selected-nodes',
@@ -40,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatIconButton,
         MatTooltip,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class StaticTreeInputSelectedNodesComponent {

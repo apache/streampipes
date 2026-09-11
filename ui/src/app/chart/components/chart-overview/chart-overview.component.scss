@@ -20,18 +20,6 @@
     font-weight: bold;
 }
 
-.w-100 {
-    width: 100%;
-}
-
 .p-2 {
-    padding: 2px;
-}
-
-.m-20 {
-    margin: 20px;
-}
-
-.mr-10 {
-    margin-right: 10px;
+    padding: var(--space-2xs);
 }

@@ -40,8 +40,8 @@ import {
 } from '@angular/material/table';
 import { DatasetOverviewEntry } from './dataset-overview-entry';
 import {
-    DatalakeRestService,
     DataLakeMeasure,
+    DatalakeRestService,
     DatasetSummaryDto,
     ExportProviderService,
     ExportProviderSettings,
@@ -58,13 +58,14 @@ import {
     ObjectManageDialogResourceConfig,
     PanelType,
     SpAssetBrowserService,
-    SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBreadcrumbService,
-    SpTableAssetContextConfig,
-    SpTableActionsDirective,
-    SpTableComponent,
+    SplitSectionComponent,
+    SpPageHeaderComponent,
     SpSpinnerComponent,
+    SpTableActionsDirective,
+    SpTableAssetContextConfig,
+    SpTableComponent,
 } from '@streampipes/shared-ui';
 import { DeleteDatasetDialogComponent } from '../../dialog/delete-dataset/delete-dataset-dialog.component';
 import { SpConfigurationRoutes } from '../../../configuration/configuration.breadcrumb';
@@ -87,7 +88,7 @@ import {
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { NgStyle } from '@angular/common';
+import { AsyncPipe, NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { MatMenuItem } from '@angular/material/menu';
 import { catchError, of, Subscription } from 'rxjs';
@@ -125,10 +126,12 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
         MatRow,
         TranslatePipe,
         SpTableComponent,
-        SpBasicHeaderTitleComponent,
         SpBasicViewComponent,
+        SpPageHeaderComponent,
         SpTableActionsDirective,
         DatasetLastEventLabelComponent,
+        AsyncPipe,
+        SplitSectionComponent,
     ],
 })
 export class DatasetOverviewComponent
@@ -147,6 +150,9 @@ export class DatasetOverviewComponent
     private currentUserService = inject(CurrentUserService);
     private assetFilterService = inject(SpAssetBrowserService);
     private router = inject(Router);
+
+    readonly pageHeaderAssetLinkType$ =
+        this.assetFilterService.getAssetLinkType$('measurement');
     dataSource: MatTableDataSource<DatasetOverviewEntry> =
         new MatTableDataSource([]);
     availableDatasets: DatasetOverviewEntry[] = [];
@@ -460,23 +466,29 @@ export class DatasetOverviewComponent
                         resourceLabel: 'Dataset',
                         nameLabel: 'Dataset name',
                         nameProperty: 'measureName',
-                        showResourceFields: false,
-                        showAssetLinking: false,
+                        resourceNameReadonly: true,
+                        showResourceDescription: false,
+                        assetLinkType: 'measurement',
                     };
 
-                this.dialogService.open(ObjectManageDialogComponent, {
-                    panelType: PanelType.SLIDE_IN_PANEL,
-                    title: this.translateService.instant('Manage'),
-                    width: '50vw',
-                    data: {
-                        objectInstanceId: element.elementId,
-                        resource: dataset,
-                        saveMode: 'immediate',
-                        resourceConfig,
-                        headerTitle:
-                            this.translateService.instant('Manage Dataset ') +
-                            element.name,
+                const dialogRef = this.dialogService.open(
+                    ObjectManageDialogComponent,
+                    {
+                        panelType: PanelType.SLIDE_IN_PANEL,
+                        title: this.translateService.instant('Manage'),
+                        width: '50vw',
+                        data: {
+                            objectInstanceId: element.elementId,
+                            resource: dataset,
+                            saveMode: 'immediate',
+                            resourceConfig,
+                        },
                     },
+                );
+                dialogRef.afterClosed().subscribe(refresh => {
+                    if (refresh) {
+                        this.loadAvailableDatasets();
+                    }
                 });
             },
         });

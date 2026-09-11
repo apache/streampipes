@@ -16,45 +16,40 @@
   ~
   -->
 
-<div fxLayout="column" class="links-wrapper">
-    <div class="link-header" fxLayout="row" fxLayoutAlign="space-between">
-        <sp-split-section
-            [level]="2"
-            [title]="'Linked Resources' | translate"
-            [subtitle]="
-                'Adapters, dashboards, and other entries connected to this asset.'
+<sp-split-section
+    [level]="2"
+    [title]="'Linked Resources' | translate"
+    [subtitle]="
+        'Adapters, dashboards, and other entries connected to this asset.'
+            | translate
+    "
+>
+    <div section-actions>
+        @if (selectedAsset.assetLinks?.length > 0) {
+            <div class="link-pill">
+                {{ selectedAsset.assetLinks.length }} linked
+            </div>
+        }
+    </div>
+    @if (
+        assetLinkTypesLoading ||
+        (assetLinkTypes.length > 0 && selectedAsset.assetLinks?.length > 0)
+    ) {
+        <sp-asset-link-table
+            [asset]="selectedAsset"
+            [assetLinkTypes]="assetLinkTypes"
+            [loading]="assetLinkTypesLoading"
+        >
+        </sp-asset-link-table>
+    } @else {
+        <sp-alert-banner
+            type="info"
+            [title]="'No linked resources found.' | translate"
+            [description]="
+                'Attach adapters, dashboards, or pipelines in the asset editor to surface them here.'
                     | translate
             "
         >
-            <div section-actions>
-                @if (selectedAsset.assetLinks?.length > 0) {
-                    <div class="link-pill">
-                        {{ selectedAsset.assetLinks.length }} linked
-                    </div>
-                }
-            </div>
-            @if (
-                assetLinkTypesLoading ||
-                (assetLinkTypes.length > 0 &&
-                    selectedAsset.assetLinks?.length > 0)
-            ) {
-                <sp-asset-link-table
-                    [asset]="selectedAsset"
-                    [assetLinkTypes]="assetLinkTypes"
-                    [loading]="assetLinkTypesLoading"
-                >
-                </sp-asset-link-table>
-            } @else {
-                <sp-alert-banner
-                    type="info"
-                    [title]="'No linked resources found.' | translate"
-                    [description]="
-                        'Attach adapters, dashboards, or pipelines in the asset editor to surface them here.'
-                            | translate
-                    "
-                >
-                </sp-alert-banner>
-            }
-        </sp-split-section>
-    </div>
-</div>
+        </sp-alert-banner>
+    }
+</sp-split-section>

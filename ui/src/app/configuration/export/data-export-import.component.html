@@ -16,86 +16,74 @@
 ~
 -->
 
-<sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'export'">
-    <div fxLayout="column" class="page-container-padding-inner">
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-            <sp-split-section
-                [title]="'Export' | translate"
-                [subtitle]="
-                    'Export assets and all linked resources' | translate
-                "
-            >
-                <div section-actions fxLayout="row" fxLayoutGap="10px">
-                    <button
-                        mat-button
-                        mat-flat-button
-                        (click)="selectAllAssets(true)"
+<div fxLayout="column">
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+        <sp-split-section
+            [title]="'Export' | translate"
+            [subtitle]="'Export assets and all linked resources' | translate"
+        >
+            <div section-actions fxLayout="row" fxLayoutGap="10px">
+                <button
+                    mat-button
+                    mat-flat-button
+                    (click)="selectAllAssets(true)"
+                >
+                    {{ 'Select all' | translate }}
+                </button>
+                <button
+                    mat-button
+                    mat-flat-button
+                    class="mat-basic"
+                    (click)="selectAllAssets(false)"
+                >
+                    {{ 'Select none' | translate }}
+                </button>
+            </div>
+            @for (asset of assets; track asset) {
+                <div fxLayout="column">
+                    <mat-checkbox
+                        [checked]="isSelected(asset.elementId)"
+                        (change)="
+                            handleSelectionChange($event, asset.elementId)
+                        "
+                        ><span class="text-md">{{
+                            asset.assetName
+                        }}</span></mat-checkbox
                     >
-                        {{ 'Select all' | translate }}
-                    </button>
-                    <button
-                        mat-button
-                        mat-flat-button
-                        class="mat-basic"
-                        (click)="selectAllAssets(false)"
-                    >
-                        {{ 'Select none' | translate }}
-                    </button>
                 </div>
-                @for (asset of assets; track asset) {
-                    <div fxLayout="column">
-                        <mat-checkbox
-                            [checked]="isSelected(asset.elementId)"
-                            (change)="
-                                handleSelectionChange($event, asset.elementId)
-                            "
-                            ><span class="text-md">{{
-                                asset.assetName
-                            }}</span></mat-checkbox
-                        >
-                    </div>
-                }
-                <div class="mt-10">
-                    <button
-                        mat-button
-                        mat-flat-button
-                        color="accent"
-                        [disabled]="selectedAssets.length === 0"
-                        (click)="openExportDialog()"
-                        data-cy="export-asset-button"
-                    >
-                        <i class="material-icons">cloud_download</i
-                        ><span
-                            >&nbsp;{{
-                                'Start export process' | translate
-                            }}</span
-                        >
-                    </button>
-                </div>
-            </sp-split-section>
-        </div>
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-            <sp-split-section
-                [title]="'Import' | translate"
-                [subtitle]="'Import from application package' | translate"
-            >
-                <div class="mt-10">
-                    <button
-                        mat-button
-                        mat-flat-button
-                        color="accent"
-                        (click)="openImportDialog()"
-                        data-cy="import-application-data-button"
-                    >
-                        <i class="material-icons">cloud_upload</i
-                        ><span
-                            >&nbsp;{{
-                                'Start import process' | translate
-                            }}</span
-                        >
-                    </button>
-                </div>
-            </sp-split-section>
-        </div>
+            }
+            <div class="mt-10">
+                <button
+                    mat-button
+                    mat-flat-button
+                    color="accent"
+                    [disabled]="selectedAssets.length === 0"
+                    (click)="openExportDialog()"
+                    data-cy="export-asset-button"
+                >
+                    <mat-icon>cloud_download</mat-icon
+                    ><span>{{ 'Start export process' | translate }}</span>
+                </button>
+            </div>
+        </sp-split-section>
     </div>
-</sp-basic-nav-tabs>
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+        <sp-split-section
+            [title]="'Import' | translate"
+            [subtitle]="'Import from application package' | translate"
+        >
+            <div class="mt-10">
+                <button
+                    mat-button
+                    mat-flat-button
+                    color="accent"
+                    (click)="openImportDialog()"
+                    data-cy="import-application-data-button"
+                >
+                    <mat-icon>cloud_upload</mat-icon
+                    ><span>{{ 'Start import process' | translate }}</span>
+                </button>
+            </div>
+        </sp-split-section>
+    </div>
+</div>

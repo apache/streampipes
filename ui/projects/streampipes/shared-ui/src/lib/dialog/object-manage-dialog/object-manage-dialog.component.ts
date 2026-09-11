@@ -23,8 +23,10 @@ import {
     Input,
     OnDestroy,
     OnInit,
+    TemplateRef,
     ViewChild,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { DialogRef } from '../../dialog/base-dialog/dialog-ref';
 import { SplitSectionComponent } from '../../components/split-section/split-section.component';
 import { FormFieldComponent } from '../../components/form-field/form-field.component';
@@ -83,6 +85,7 @@ import { SearchSelectComponent } from '../../components/search-select/search-sel
     templateUrl: './object-manage-dialog.component.html',
     styleUrls: ['./object-manage-dialog.component.scss'],
     imports: [
+        NgTemplateOutlet,
         FlexDirective,
         LayoutAlignDirective,
         LayoutDirective,
@@ -115,6 +118,9 @@ export class ObjectManageDialogComponent<
 {
     @Input()
     createMode: boolean = false;
+
+    @Input()
+    resourceOptionsTemplate?: TemplateRef<unknown>;
 
     @Input()
     objectInstanceId: string;
@@ -239,6 +245,14 @@ export class ObjectManageDialogComponent<
 
     get showResourceFields(): boolean {
         return this.resourceConfig.showResourceFields !== false;
+    }
+
+    get resourceNameReadonly(): boolean {
+        return this.resourceConfig.resourceNameReadonly === true;
+    }
+
+    get showResourceDescription(): boolean {
+        return this.resourceConfig.showResourceDescription !== false;
     }
 
     get showAssetLinking(): boolean {
@@ -451,7 +465,7 @@ export class ObjectManageDialogComponent<
         if (this.shouldSaveAssetLinks(result)) {
             await this.assetSaveService.saveSelectedAssets(
                 result.selectedAssets,
-                this.createLinkageData(result.resource),
+                await this.resolveAssetLinks(result.resource),
                 result.deselectedAssets,
                 result.originalAssets,
             );
@@ -460,7 +474,13 @@ export class ObjectManageDialogComponent<
         return true;
     }
 
-    private createLinkageData(resource: TResource): LinkageData[] {
+    private async resolveAssetLinks(
+        resource: TResource,
+    ): Promise<LinkageData[]> {
+        if (this.resourceConfig.resolveAssetLinks) {
+            return this.resourceConfig.resolveAssetLinks(resource);
+        }
+
         const resourceId = this.getResourceId(resource);
 
         return [

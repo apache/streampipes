@@ -16,7 +16,11 @@
  *
  */
 
-import { Permission, SpAssetTreeNode } from '@streampipes/platform-services';
+import {
+    LinkageData,
+    Permission,
+    SpAssetTreeNode,
+} from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 
 export type ObjectManageDialogSaveMode = 'deferred' | 'immediate';
@@ -42,9 +46,12 @@ export interface ObjectManageDialogResourceConfig<
     nameProperty?: 'title' | 'name' | 'measureName';
     descriptionProperty?: string;
     showResourceFields?: boolean;
+    resourceNameReadonly?: boolean;
+    showResourceDescription?: boolean;
     showAssetLinking?: boolean;
     assetLinkType?: string;
     assetLinkCheckboxLabel?: string;
+    resolveAssetLinks?: (resource: TResource) => Promise<LinkageData[]>;
     saveResource?: (
         resource: TResource,
     ) => Observable<unknown> | Promise<unknown>;

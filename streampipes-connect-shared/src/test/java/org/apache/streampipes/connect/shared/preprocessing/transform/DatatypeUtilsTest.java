@@ -256,4 +256,87 @@ public class DatatypeUtilsTest {
     assertEquals(String.class, result);
   }
 
+  // --- Tests for decimal separator support (issue #530) ---
+
+  @Test
+  public void getTypeClass_CommaDecimalSeparatorIsNumeric() {
+    var result = DatatypeUtils.getTypeClass("3,14", false, ',');
+    assertEquals(Float.class, result);
+  }
+
+  @Test
+  public void getTypeClass_CommaDecimalSeparatorWithPreferFloat() {
+    var result = DatatypeUtils.getTypeClass("3,14", true, ',');
+    assertEquals(Float.class, result);
+  }
+
+  @Test
+  public void getTypeClass_CommaSeparatorTreatsDotValueAsString() {
+    // Strict behavior: when ',' is the configured decimal separator, a value using '.' is not a
+    // valid number in that locale and must stay a string.
+    var result = DatatypeUtils.getTypeClass("3.14", false, ',');
+    assertEquals(String.class, result);
+  }
+
+  @Test
+  public void getTypeClass_CommaSeparatorDotGroupingStaysString() {
+    // Regression for review of PR #4878: "100.000" must not be parsed as float when ',' is selected.
+    var result = DatatypeUtils.getTypeClass("100.000", false, ',');
+    assertEquals(String.class, result);
+  }
+
+  @Test
+  public void getTypeClass_CommaSeparatorPlainIntegerStillNumeric() {
+    // An integer without any separator is still a valid number regardless of the configured separator.
+    var result = DatatypeUtils.getTypeClass("42", false, ',');
+    assertEquals(Integer.class, result);
+  }
+
+  @Test
+  public void getTypeClass_CommaSeparatorMultipleCommasStaysString() {
+    // Ambiguous grouping usage (e.g. thousands separator) must not be normalized.
+    var result = DatatypeUtils.getTypeClass("1,000,000", false, ',');
+    assertEquals(String.class, result);
+  }
+
+  @Test
+  public void getTypeClass_DefaultSeparatorUnaffectedByCommaValue() {
+    var result = DatatypeUtils.getTypeClass("3,14", false);
+    assertEquals(String.class, result);
+  }
+
+  @Test
+  public void getXsdDatatype_CommaDecimalSeparatorReturnsFloat() {
+    var result = DatatypeUtils.getXsdDatatype("2,5", false, ',');
+    assertEquals(XSD.FLOAT.toString(), result);
+  }
+
+  @Test
+  public void convertValue_CommaSeparatorStringToFloat() {
+    var actualValue = DatatypeUtils.convertValue(
+        TEST_ADAPTER_NAME, "123,45", XSD.FLOAT.toString(), ',', new java.util.concurrent.atomic.AtomicBoolean(false));
+    assertEquals(123.45f, actualValue);
+  }
+
+  @Test
+  public void convertValue_CommaSeparatorStringToDouble() {
+    var actualValue = DatatypeUtils.convertValue(
+        TEST_ADAPTER_NAME, "123,45", XSD.DOUBLE.toString(), ',', new java.util.concurrent.atomic.AtomicBoolean(false));
+    assertEquals(123.45d, actualValue);
+  }
+
+  @Test
+  public void convertValue_DefaultSeparatorDotStillWorks() {
+    var actualValue = DatatypeUtils.convertValue(TEST_ADAPTER_NAME, "123.45", XSD.FLOAT.toString());
+    assertEquals(123.45f, actualValue);
+  }
+
+  @Test
+  public void convertValue_CommaSeparatorKeepsDotValueAsString() {
+    // With ',' selected, "100.000" is not numeric and the raw value is returned unchanged.
+    var actualValue = DatatypeUtils.convertValue(
+        TEST_ADAPTER_NAME, "100.000", XSD.STRING.toString(), ',', new java.util.concurrent.atomic.AtomicBoolean(false));
+    assertEquals("100.000", actualValue);
+  }
+
 }

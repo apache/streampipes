@@ -56,7 +56,10 @@ import {
     ShortcutRegistration,
     SidebarResizeComponent,
     SpAlertBannerComponent,
+    SpAssetBrowserService,
     SpBasicViewComponent,
+    SpPageHeaderComponent,
+    SpWorkspaceContainerComponent,
     TimeSelectionService,
 } from '@streampipes/shared-ui';
 import { ChartRoutingService } from '../../../chart-shared/services/chart-routing.service';
@@ -94,12 +97,17 @@ type ManageableChart = DataExplorerWidgetModel & {
     description: string;
 };
 
+import { AsyncPipe } from '@angular/common';
+
 @Component({
     selector: 'sp-chart-data-view',
     templateUrl: './chart-view.component.html',
     styleUrls: ['./chart-view.component.scss'],
     imports: [
+        AsyncPipe,
         SpBasicViewComponent,
+        SpPageHeaderComponent,
+        SpWorkspaceContainerComponent,
         SpAlertBannerComponent,
         FlexDirective,
         LayoutAlignDirective,
@@ -150,6 +158,9 @@ export class ChartViewComponent
     private authService = inject(AuthService);
     private fieldProvider = inject(ChartFieldProviderService);
     private assetSaveService = inject(AssetSaveService);
+    readonly pageHeaderAssetLinkType$ = inject(
+        SpAssetBrowserService,
+    ).getAssetLinkType$('chart');
     private permissionsService = inject(PermissionsService);
 
     currentUser$: Subscription;
@@ -188,9 +199,12 @@ export class ChartViewComponent
         });
 
         this.createMode = !dataViewId;
+        const sourceId = this.createMode
+            ? this.route.snapshot.queryParams.from
+            : undefined;
 
-        if (dataViewId) {
-            this.loadDataView(dataViewId);
+        if (dataViewId || sourceId) {
+            this.loadDataView(dataViewId ?? sourceId);
         } else {
             this.createWidget();
             this.timeSettings =
@@ -265,6 +279,17 @@ export class ChartViewComponent
                     return;
                 } else {
                     this.dataView = res;
+                    if (this.createMode) {
+                        this.dataView = JSON.parse(JSON.stringify(res));
+                        this.dataView.elementId = undefined;
+                        this.dataView.rev = undefined;
+                        this.dataView.widgetId = undefined;
+                        this.dataView.baseAppearanceConfig.widgetTitle = `${res.baseAppearanceConfig.widgetTitle} (${this.translateService.instant('Copy')})`;
+                        this.dataView.metadata = {
+                            createdAtEpochMs: Date.now(),
+                            lastModifiedEpochMs: Date.now(),
+                        };
+                    }
                     this.originalDataView = JSON.parse(
                         JSON.stringify(this.dataView),
                     );
@@ -388,6 +413,7 @@ export class ChartViewComponent
         }
         const currentTimeSettings = this.dataView.timeSettings as TimeSettings;
         return (
+            (this.createMode && !!this.route.snapshot.queryParams.from) ||
             this.pendingManageChartResult !== undefined ||
             this.detectChangesService.shouldShowConfirm(
                 this.originalDataView,
@@ -619,6 +645,10 @@ export class ChartViewComponent
             return dialogRef.afterClosed().pipe(
                 switchMap((dialogResult: ConfirmDialogAction | undefined) => {
                     if (dialogResult === 'confirm') {
+                        if (this.createMode) {
+                            this.openCreateChartDialog();
+                            return of(false);
+                        }
                         if (this.legacyMultiSourceChart) {
                             return of(true);
                         }

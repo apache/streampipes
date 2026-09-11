@@ -17,9 +17,6 @@
 -->
 
 <div fxFlex="100" fxLayout="column">
-    <sp-basic-header-title-component
-        [title]="'Charts' | translate"
-    ></sp-basic-header-title-component>
     @if (isLoading && !hasLoadedCharts) {
         <div fxLayout="column" fxFlex="100" fxLayoutAlign="center center">
             <sp-spinner
@@ -88,7 +85,9 @@
                                 >
                             }
                             <div fxLayout="column" fxLayoutAlign="start start">
-                                <span class="text-sm">{{ element.name }}</span>
+                                <span class="text-sm" data-cy="chart-name">{{
+                                    element.name
+                                }}</span>
                             </div>
                         </div>
                     </td>
@@ -146,6 +145,16 @@
                             <mat-icon>edit</mat-icon>
                             <span>{{ 'Edit chart' | translate }}</span>
                         </button>
+                        <button
+                            mat-menu-item
+                            (click)="createFromExisting(element)"
+                            data-cy="create-chart-from-existing"
+                        >
+                            <mat-icon>content_copy</mat-icon>
+                            <span>{{
+                                'Create from existing' | translate
+                            }}</span>
+                        </button>
                     }
                     @if (hasDataExplorerWritePrivileges) {
                         <button
@@ -155,12 +164,6 @@
                         >
                             <mat-icon>settings</mat-icon>
                             <span>{{ 'Manage' | translate }}</span>
-                        </button>
-                    }
-                    @if (hasDataExplorerWritePrivileges) {
-                        <button mat-menu-item (click)="cloneChart(element)">
-                            <mat-icon>flip_to_front</mat-icon>
-                            <span>{{ 'Clone chart' | translate }}</span>
                         </button>
                     }
                     @if (hasDataExplorerWritePrivileges) {

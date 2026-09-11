@@ -23,6 +23,7 @@ import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 import org.apache.streampipes.messaging.kafka.config.ProducerConfigFactory;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
@@ -47,9 +48,6 @@ import java.util.concurrent.ExecutionException;
 
 public class SpKafkaProducer implements EventProducer, Serializable {
 
-
-  private static final String COLON = ":";
-
   private String brokerUrl;
   private String topic;
   private Producer<String, byte[]> producer;
@@ -67,9 +65,9 @@ public class SpKafkaProducer implements EventProducer, Serializable {
   public SpKafkaProducer(String url,
                          String topic,
                          List<KafkaConfigAppender> appenders) {
-    String[] urlParts = url.split(COLON);
-    KafkaTransportProtocol protocol = new KafkaTransportProtocol(urlParts[0],
-        Integer.parseInt(urlParts[1]), topic);
+    KafkaTransportProtocol protocol = new KafkaTransportProtocol();
+    protocol.setBootstrapServers(url);
+    protocol.setTopicDefinition(new SimpleTopicDefinition(topic));
     this.brokerUrl = url;
     this.topic = topic;
     this.producer = new KafkaProducer<>(makeProperties(protocol, appenders));
@@ -100,7 +98,7 @@ public class SpKafkaProducer implements EventProducer, Serializable {
   @Override
   public void connect() {
     LOG.debug("Kafka producer: Connecting to " + protocol.getTopicDefinition().getActualTopicName());
-    this.brokerUrl = protocol.getBrokerHostname() + ":" + protocol.getKafkaPort();
+    this.brokerUrl = protocol.resolveBootstrapServers();
     this.topic = protocol.getTopicDefinition().getActualTopicName();
 
     try {

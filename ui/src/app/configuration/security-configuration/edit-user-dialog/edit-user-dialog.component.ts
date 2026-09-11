@@ -64,6 +64,7 @@ import { MatInput } from '@angular/material/input';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-edit-user-dialog',
@@ -86,6 +87,7 @@ import { AsyncPipe } from '@angular/common';
         MatButton,
         AsyncPipe,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class EditUserDialogComponent implements OnInit {

@@ -21,10 +21,8 @@ import {
     DialogRef,
     DialogService,
     PanelType,
-    SpBasicHeaderTitleComponent,
-    SpBasicNavTabsComponent,
     SpBreadcrumbService,
-    SpNavigationItem,
+    SplitSectionComponent,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { ExtensionItemDescription } from '@streampipes/platform-services';
@@ -38,11 +36,6 @@ import { SpExtensionsInstallationDialogComponent } from '../dialog/extensions-in
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatFormField, MatPrefix } from '@angular/material/form-field';
@@ -60,10 +53,7 @@ import { PipelineElementTypeFilter } from './filter/pipeline-element-type.pipe';
     templateUrl: './extensions-installation.component.html',
     styleUrls: ['./extensions-installation.component.scss'],
     imports: [
-        SpBasicNavTabsComponent,
-        FlexDirective,
-        LayoutAlignDirective,
-        LayoutDirective,
+        SplitSectionComponent,
         MatButton,
         MatIconButton,
         MatTooltip,
@@ -74,7 +64,6 @@ import { PipelineElementTypeFilter } from './filter/pipeline-element-type.pipe';
         FormsModule,
         MatIcon,
         MatPrefix,
-        SpBasicHeaderTitleComponent,
         EndpointItemComponent,
         SpSpinnerComponent,
         TranslatePipe,
@@ -91,8 +80,6 @@ export class SpExtensionsInstallationComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private tabService = inject(SpConfigurationTabsService);
     private translateService = inject(TranslateService);
-
-    tabs: SpNavigationItem[] = [];
 
     activeLink: string;
 
@@ -116,7 +103,6 @@ export class SpExtensionsInstallationComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: this.tabService.getTabTitle('extensions-installation') },

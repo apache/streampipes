@@ -338,6 +338,101 @@ export class ChartUtils {
         });
     }
 
+    /**
+     * Opens the 'Create from existing' flow for a chart shown in the overview.
+     */
+    public static createChartFromExisting(chartName: string) {
+        GeneralUtils.openMenuForRow(chartName);
+        GeneralUtils.visibleMaterialMenu().within(() => {
+            ChartBtns.createChartFromExistingBtn().click();
+        });
+        cy.location('hash', { timeout: 10000 }).should(
+            'include',
+            '/chart/create',
+        );
+        cy.location('hash').should('include', 'from=');
+    }
+
+    /**
+     * Saves a chart opened via 'Create from existing'.
+     * Asserts that the title is prefilled as a copy of the source name and
+     * optionally renames the copy before storing it.
+     */
+    public static saveChartFromExisting(sourceName: string, newName?: string) {
+        ChartBtns.saveChartButton().click({ force: true });
+        ChartUtils.assertCopyNameAndRename(sourceName, newName);
+        ChartBtns.saveChartBtn().should('be.visible').click();
+        ChartBtns.openNewChartBtn().should('be.visible');
+    }
+
+    /**
+     * Saves a dashboard opened via 'Create from existing'.
+     * Asserts that the title is prefilled as a copy of the source name and
+     * optionally creates copies of all charts of the dashboard.
+     */
+    public static saveDashboardFromExisting(
+        sourceName: string,
+        copyCharts = false,
+        newName?: string,
+    ) {
+        ChartBtns.saveDashboardConfigurationBtn().click();
+        ChartUtils.assertCopyNameAndRename(sourceName, newName);
+        if (copyCharts) {
+            ChartBtns.alsoCopyChartsCheckbox().check({ force: true });
+        }
+        ChartBtns.saveChartBtn().should('be.visible').click();
+        ChartBtns.newDashboardDialogBtn().should('be.visible');
+    }
+
+    private static assertCopyNameAndRename(
+        sourceName: string,
+        newName?: string,
+    ) {
+        ChartBtns.managedResourceName()
+            .invoke('val')
+            .should('match', GeneralUtils.copyNamePattern(sourceName));
+        if (newName) {
+            ChartBtns.managedResourceName().clear().type(newName);
+        }
+    }
+
+    public static checkChartListed(chartName: string) {
+        GeneralUtils.checkNameCellsContain(
+            ChartBtns.chartNameCells(),
+            chartName,
+        );
+    }
+
+    public static checkDashboardListed(dashboardName: string) {
+        GeneralUtils.checkNameCellsContain(
+            ChartBtns.dashboardNameCells(),
+            dashboardName,
+        );
+    }
+
+    /**
+     * Leaves the chart editor of a copy without saving it.
+     */
+    public static discardChartFromExisting() {
+        ChartBtns.discardChartBtn().click();
+        SharedBtns.confirmDialogCancelBtn().should('be.visible').click();
+        ChartBtns.openNewChartBtn().should('be.visible');
+    }
+
+    /**
+     * Opens the 'Create from existing' flow for a dashboard shown in the overview.
+     */
+    public static createDashboardFromExisting(dashboardName: string) {
+        GeneralUtils.openMenuForRow(dashboardName);
+        GeneralUtils.visibleMaterialMenu().within(() => {
+            ChartBtns.createDashboardFromExistingBtn(dashboardName).click();
+        });
+        cy.location('hash', { timeout: 10000 }).should(
+            'include',
+            'sourceDashboardId=',
+        );
+    }
+
     public static manageChart(chartName: string) {
         // Click edit button
         // following only works if single view is available

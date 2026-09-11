@@ -20,6 +20,7 @@ export interface SpNavigationItem {
     itemId: string;
     itemTitle: string;
     itemLink: string[];
+    itemIcon?: string;
     roles?: string[];
 }
 

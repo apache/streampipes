@@ -37,6 +37,7 @@ describe('Test File Replay Adapter', () => {
             .setFormat('csv')
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
             .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
+            .addFormatInput('input', ConnectBtns.csvDecimalSeparator(), '.')
             .build();
 
         ConnectUtils.testAdapter(adapterInput);
@@ -101,6 +102,7 @@ describe('Test File Replay Adapter', () => {
             .setFormat('csv')
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
             .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
+            .addFormatInput('input', ConnectBtns.csvDecimalSeparator(), '.')
             .setStartAdapter(false)
             .build();
 

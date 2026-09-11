@@ -29,7 +29,6 @@ import {
     PipelineElementUnion,
 } from './model/editor.model';
 import {
-    SpBasicViewComponent,
     SpBreadcrumbService,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
@@ -46,6 +45,15 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { PipelineElementIconStandComponent } from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
 import { PipelineAssemblyComponent } from './components/pipeline-assembly/pipeline-assembly.component';
+import { FormsModule } from '@angular/forms';
+import {
+    MatFormField,
+    MatPrefix,
+    MatSuffix,
+} from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -57,10 +65,16 @@ import { TranslatePipe } from '@ngx-translate/core';
         FlexDirective,
         LayoutAlignDirective,
         SpSpinnerComponent,
-        SpBasicViewComponent,
         PipelineElementIconStandComponent,
         PipelineAssemblyComponent,
         TranslatePipe,
+        FormsModule,
+        MatFormField,
+        MatPrefix,
+        MatSuffix,
+        MatInput,
+        MatIcon,
+        MatIconButton,
     ],
 })
 export class EditorComponent implements OnInit {
@@ -79,6 +93,7 @@ export class EditorComponent implements OnInit {
     rawPipelineModel: PipelineElementConfig[] = [];
     originalPipeline: Pipeline;
     cloneMode = false;
+    elementFilter = '';
 
     allElementsLoaded = false;
     allMetadataLoaded = false;
@@ -156,7 +171,11 @@ export class EditorComponent implements OnInit {
                     this.breadcrumbService.updateBreadcrumb([
                         SpPipelineRoutes.BASE,
                         { label: this.originalPipeline.name },
-                        { label: this.cloneMode ? 'Clone' : 'Modify' },
+                        {
+                            label: this.cloneMode
+                                ? 'Create from existing'
+                                : 'Modify',
+                        },
                     ]);
                     this.rawPipelineModel = this.jsplumbService.makeRawPipeline(
                         this.originalPipeline,

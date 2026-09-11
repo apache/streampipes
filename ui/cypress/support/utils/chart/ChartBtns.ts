@@ -103,6 +103,10 @@ export class ChartBtns {
         return cy.dataCy('options-chart');
     }
 
+    public static downloadChartDataBtn() {
+        return cy.dataCy('data-view-data-download-btn');
+    }
+
     public static manageChartBtn() {
         return cy.dataCy('manage-chart-btn');
     }
@@ -123,6 +127,34 @@ export class ChartBtns {
         return cy
             .dataCy('sp-show-asset-checkbox')
             .find('input[type="checkbox"]');
+    }
+
+    public static createChartFromExistingBtn() {
+        return cy.dataCy('create-chart-from-existing', { timeout: 10000 });
+    }
+
+    public static createDashboardFromExistingBtn(dashboardName: string) {
+        return cy.dataCy('create-from-existing-dashboard-' + dashboardName, {
+            timeout: 10000,
+        });
+    }
+
+    public static alsoCopyChartsCheckbox() {
+        return cy
+            .dataCy('also-copy-charts', { timeout: 10000 })
+            .find('input[type="checkbox"]');
+    }
+
+    public static chartNameCells() {
+        return cy.dataCy('chart-name', { timeout: 10000 });
+    }
+
+    public static dashboardNameCells() {
+        return cy.dataCy('dashboard-name', { timeout: 10000 });
+    }
+
+    public static managedResourceName() {
+        return cy.dataCy('managed-resource-name', { timeout: 10000 });
     }
 
     public static editChartButton(chartName: string) {

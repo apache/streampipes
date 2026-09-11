@@ -16,29 +16,24 @@
  *
  */
 
+:host {
+    display: flex;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
 .pipeline-editor-outer {
-    min-height: calc(100vh - 56px);
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
 }
 
-.text-color {
-    color: var(--color-primary);
+.pipeline-editor__finder {
+    width: 13.625rem;
+    max-width: 100%;
 }
 
-.page-container {
-    border: 0;
-    min-height: calc(100% - 20px);
-    margin: 10px;
-}
-
-.border {
-    border: 1px solid var(--color-bg-2);
-}
-
-.editor-canvas-options {
-    padding: 0;
-    background-color: var(--color-bg-1);
-}
-
-.editor-container-inner {
-    background-color: var(--color-bg-1);
+.pipeline-editor__finder mat-form-field {
+    margin-bottom: 0;
 }

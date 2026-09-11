@@ -17,88 +17,75 @@
  */
 
 :host {
-    width: 100%;
     display: flex;
-    --accent: hsl(221 83% 53%);
-    --divider: color-mix(in oklab, currentColor 18%, transparent);
-    margin-bottom: 1rem;
-}
-
-.section-header {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto auto;
-    column-gap: 0.75rem;
-    align-items: start;
-}
-
-.section-outline {
-    border: 1px solid var(--color-bg-3);
-    border-radius: 10px;
-    padding: 5px 15px;
-}
-
-.section-outline-compact {
-    border-radius: 5px;
-}
-
-.section-outer-compact {
-    padding: 5px 5px;
+    margin-block-end: var(--space-lg);
+    min-width: 0;
+    width: 100%;
 }
 
 .section-outer {
+    box-sizing: border-box;
     display: flex;
-    flex-direction: column;
     flex: 1 1 auto;
+    flex-direction: column;
+    margin: 0;
     min-height: 0;
     min-width: 0;
-    margin: 0;
+    background: var(--color-bg-0);
 }
 
-.title {
-    margin: 0;
-    letter-spacing: -0.01em;
+.section-header {
+    align-items: start;
+    column-gap: var(--space-md);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+}
+
+.section-outline {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    padding: var(--space-xs) var(--space-lg);
+}
+
+.section-outline-compact {
+    border-radius: var(--radius-xs);
+}
+
+.section-outer-compact {
+    padding: var(--space-xs);
 }
 
 .header-actions {
-    grid-column: 2 / 3;
-    grid-row: 1 / 3;
-    display: flex;
-    gap: 0.5rem;
     align-items: center;
     align-self: center;
-}
-
-.description {
-    grid-column: 1 / 2;
-    grid-row: 2 / 3;
-    margin: 0;
-    color: var(--fg-muted);
-    font-weight: 300;
+    display: flex;
+    gap: var(--space-sm);
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
 }
 
 .section-body {
-    flex: 1 1 auto;
-    min-height: 0;
-    min-width: 0;
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     margin: 0;
-    padding: 1rem 0;
+    min-height: 0;
+    min-width: 0;
+    padding: var(--space-lg) 0;
 }
 
 .section-body-compact {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    margin-left: 0;
+    margin-block: var(--space-sm);
+    margin-inline: 0;
     padding: 0;
 }
 
-.section.compact {
-    padding-top: 0.5rem;
-    padding-bottom: 0.75rem;
+.section-outer.compact {
+    padding-block-end: var(--space-sm);
+    padding-block-start: var(--space-xs);
 }
 
-.section.compact .description {
-    font-size: 0.875rem;
+.section-outer.compact .section-body {
+    padding-block: var(--space-sm);
 }

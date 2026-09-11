@@ -35,7 +35,9 @@ import {
 } from '../../model/editor.model';
 import { ObjectProvider } from '../../services/object-provider.service';
 import {
+    SpSplitButtonAction,
     AssetSaveService,
+    PipelineAssetLinkService,
     DialogService,
     KeyboardShortcutService,
     ObjectManageDialogComponent,
@@ -44,6 +46,10 @@ import {
     PanelType,
     ShortcutRegistration,
     SpBasicViewComponent,
+    SpPageHeaderComponent,
+    SpWorkspaceContainerComponent,
+    SpSplitButtonComponent,
+    SpLabelComponent,
 } from '@streampipes/shared-ui';
 import { EditorService } from '../../services/editor.service';
 import {
@@ -61,8 +67,11 @@ import {
     PipelineAssemblySaveOptions,
 } from './pipeline-assembly-options/pipeline-assembly-options.component';
 import { JsplumbService } from '../../services/jsplumb.service';
-import { TranslateService } from '@ngx-translate/core';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 import {
@@ -76,9 +85,19 @@ import {
     styleUrls: ['./pipeline-assembly.component.scss'],
     imports: [
         SpBasicViewComponent,
+        SpPageHeaderComponent,
+        SpWorkspaceContainerComponent,
+        SpSplitButtonComponent,
+        SpLabelComponent,
         FlexDirective,
+        LayoutDirective,
+        TranslatePipe,
+        MatIconButton,
+        MatIcon,
+        MatMenuModule,
         PipelineAssemblyOptionsComponent,
         PipelineAssemblyDrawingAreaComponent,
+        MatButton,
     ],
 })
 export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
@@ -94,6 +113,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private shortcutService = inject(KeyboardShortcutService);
     private permissionsService = inject(PermissionsService);
     private assetSaveService = inject(AssetSaveService);
+    private pipelineAssetLinkService = inject(PipelineAssetLinkService);
     private pipelineOperationsService = inject(PipelineOperationsService);
     private idGeneratorService = inject(IdGeneratorService);
 
@@ -114,6 +134,10 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     allElements: PipelineElementUnion[];
+
+    savePipelineActions: SpSplitButtonAction[] = [
+        { label: 'Store', action: 'store', icon: 'save' },
+    ];
 
     previewModeActive = false;
     readonly: boolean;
@@ -229,6 +253,8 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
             assetLinkType: 'pipeline',
             assetLinkCheckboxLabel:
                 'Add the current pipeline to an existing asset',
+            resolveAssetLinks: resource =>
+                this.pipelineAssetLinkService.getLinkageData([resource]),
             saveResource: async resource => {
                 const saveSuccessful = await this.savePipelineResource(
                     resource,
@@ -421,7 +447,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private prepareClonedPipeline(pipeline: Pipeline): void {
         pipeline._id = undefined;
         pipeline._rev = undefined;
-        pipeline.name = `${this.originalPipeline.name}_cloned`;
+        pipeline.name = `${this.originalPipeline.name} (${this.translateService.instant('Copy')})`;
         pipeline.description = this.originalPipeline.description;
         pipeline.running = false;
         pipeline.actions.forEach(element =>

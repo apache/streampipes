@@ -19,10 +19,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
-    SpBasicNavTabsComponent,
     SpBreadcrumbService,
     SplitSectionComponent,
-    SpNavigationItem,
 } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import {
@@ -39,7 +37,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-extensions-service-management',
     templateUrl: './extensions-service-management.component.html',
     imports: [
-        SpBasicNavTabsComponent,
         LayoutDirective,
         FlexDirective,
         LayoutAlignDirective,
@@ -54,10 +51,7 @@ export class ExtensionsServiceManagementComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private tabService = inject(SpConfigurationTabsService);
 
-    tabs: SpNavigationItem[] = [];
-
     ngOnInit() {
-        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: this.tabService.getTabTitle('extensions-services') },

@@ -243,6 +243,38 @@ export class AssetUtils {
         AssetBtns.editAssetBtn(assetName).click({ force: true });
     }
 
+    /**
+     * Opens the 'Create from existing' flow for an asset shown in the overview and
+     * asserts that the name of the copy is derived from the source asset.
+     */
+    public static createAssetFromExisting(assetName: string) {
+        GeneralUtils.openMenuForRow(assetName);
+        AssetBtns.createAssetFromExistingBtn(assetName)
+            .should('be.visible')
+            .click();
+        cy.location('hash', { timeout: 10000 }).should('include', '/edit');
+        AssetBtns.assetNameInput()
+            .invoke('val')
+            .should('match', GeneralUtils.copyNamePattern(assetName));
+    }
+
+    public static renameAsset(newName: string) {
+        AssetBtns.assetNameInput().clear().type(newName);
+    }
+
+    public static checkAssetListed(assetName: string) {
+        GeneralUtils.checkNameCellsContain(
+            AssetBtns.assetNameCells(),
+            assetName,
+        );
+    }
+
+    public static checkSubAssetExists(assetName: string) {
+        cy.dataCy('select-asset-' + assetName, { timeout: 10000 }).should(
+            'exist',
+        );
+    }
+
     public static addAssetWithOneAdapter(assetName: string) {
         const adapterName = 'Machine_Data_Simulator';
         ConnectUtils.addMachineDataSimulator(adapterName);

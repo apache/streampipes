@@ -19,10 +19,8 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
-    SpBasicNavTabsComponent,
     SpBreadcrumbService,
     SplitSectionComponent,
-    SpNavigationItem,
 } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { SecurityUserConfigComponent } from './security-user-configuration/security-user-config.component';
@@ -37,13 +35,13 @@ import {
 import { MatButton } from '@angular/material/button';
 import { SecurityAuthenticationConfigurationComponent } from './authentication-configuration/authentication-configuration.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-security-configuration',
     templateUrl: './security-configuration.component.html',
     styleUrls: ['./security-configuration.component.scss'],
     imports: [
-        SpBasicNavTabsComponent,
         LayoutDirective,
         FlexDirective,
         LayoutAlignDirective,
@@ -55,11 +53,10 @@ import { TranslatePipe } from '@ngx-translate/core';
         SecurityRoleConfigComponent,
         SecurityAuthenticationConfigurationComponent,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class SecurityConfigurationComponent implements OnInit {
-    tabs: SpNavigationItem[] = [];
-
     private breadcrumbService = inject(SpBreadcrumbService);
     private tabService = inject(SpConfigurationTabsService);
 
@@ -73,7 +70,6 @@ export class SecurityConfigurationComponent implements OnInit {
     groupConfig!: SecurityUserGroupConfigComponent;
 
     ngOnInit(): void {
-        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: this.tabService.getTabTitle('security') },
