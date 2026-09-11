@@ -219,6 +219,26 @@
                                                                 | translate
                                                         }}</span>
                                                     </button>
+                                                    <button
+                                                        mat-menu-item
+                                                        [attr.data-cy]="
+                                                            'move-asset-' +
+                                                            node.assetName
+                                                        "
+                                                        (click)="
+                                                            requestMoveAsset(
+                                                                node
+                                                            );
+                                                            $event.stopPropagation()
+                                                        "
+                                                    >
+                                                        <mat-icon
+                                                            >drive_file_move</mat-icon
+                                                        >
+                                                        <span>{{
+                                                            'Move' | translate
+                                                        }}</span>
+                                                    </button>
                                                 }
                                                 @if (canDeleteAsset(node)) {
                                                     <button
@@ -448,6 +468,27 @@
                                                             >
                                                             <span>{{
                                                                 'Move asset down'
+                                                                    | translate
+                                                            }}</span>
+                                                        </button>
+                                                        <button
+                                                            mat-menu-item
+                                                            [attr.data-cy]="
+                                                                'move-asset-' +
+                                                                node.assetName
+                                                            "
+                                                            (click)="
+                                                                requestMoveAsset(
+                                                                    node
+                                                                );
+                                                                $event.stopPropagation()
+                                                            "
+                                                        >
+                                                            <mat-icon
+                                                                >drive_file_move</mat-icon
+                                                            >
+                                                            <span>{{
+                                                                'Move'
                                                                     | translate
                                                             }}</span>
                                                         </button>

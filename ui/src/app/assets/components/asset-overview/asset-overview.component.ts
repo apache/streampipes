@@ -314,6 +314,7 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
                         result.targetAsset,
                         result.targetParentAssetId,
                         asset,
+                        result.removeMovedAssetSite,
                     );
                     if (!assetWasMoved) {
                         return;

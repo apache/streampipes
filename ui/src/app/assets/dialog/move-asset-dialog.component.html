@@ -105,7 +105,7 @@
             <p class="site-warning" role="alert">
                 <mat-icon aria-hidden="true">warning</mat-icon>
                 <span>{{
-                    'Asset sites are not consistent. Select assets with the same site before saving.'
+                    'Sites do not match. The site of the moved asset will be removed.'
                         | translate
                 }}</span>
             </p>
@@ -126,7 +126,7 @@
         mat-flat-button
         color="accent"
         type="button"
-        [disabled]="!selectedTarget || !sitesAreConsistent()"
+        [disabled]="!selectedTarget"
         (click)="save()"
     >
         {{ 'Save' | translate }}

@@ -45,13 +45,14 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 
 export interface MoveAssetDialogData {
-    assetToMove: SpAssetModel;
+    assetToMove: SpAsset;
     availableAssets: AssetSummaryDto[];
 }
 
 export interface MoveAssetDialogResult {
     targetAsset: SpAssetModel;
     targetParentAssetId: string;
+    removeMovedAssetSite: boolean;
 }
 
 @Component({
@@ -89,11 +90,7 @@ export class MoveAssetDialogComponent {
 
     openAsset(asset: AssetSummaryDto): void {
         this.assetService.getAsset(asset.elementId).subscribe(targetAsset => {
-            this.selectedTargetAsset = targetAsset;
-            this.selectedTarget = undefined;
-            this.dataSource.data = [targetAsset];
-            this.treeControl.dataNodes = [targetAsset];
-            this.treeControl.expandAll();
+            this.showAssetTree(targetAsset);
         });
     }
 
@@ -115,17 +112,14 @@ export class MoveAssetDialogComponent {
     }
 
     save(): void {
-        if (
-            !this.selectedTargetAsset ||
-            !this.selectedTarget ||
-            !this.sitesAreConsistent()
-        ) {
+        if (!this.selectedTargetAsset || !this.selectedTarget) {
             return;
         }
 
         this.dialogRef.close({
             targetAsset: this.selectedTargetAsset,
             targetParentAssetId: this.selectedTarget.assetId,
+            removeMovedAssetSite: !this.sitesAreConsistent(),
         } satisfies MoveAssetDialogResult);
     }
 
@@ -138,5 +132,13 @@ export class MoveAssetDialogComponent {
             asset,
             ...(asset.assets?.flatMap(child => this.getAllAssets(child)) ?? []),
         ];
+    }
+
+    private showAssetTree(asset: SpAssetModel): void {
+        this.selectedTargetAsset = asset;
+        this.selectedTarget = undefined;
+        this.dataSource.data = [asset];
+        this.treeControl.dataNodes = [asset];
+        this.treeControl.expandAll();
     }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import {
     ConfirmDialogAction,
     ConfirmDialogComponent,
@@ -49,8 +49,23 @@ import {
 } from '@streampipes/platform-services';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom, from, Observable, of } from 'rxjs';
-import { finalize, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import {
+    concatMap,
+    finalize,
+    map,
+    shareReplay,
+    switchMap,
+    tap,
+} from 'rxjs/operators';
 import { SupportsUnsavedChangeDialog } from '../../../../chart-shared/models/dataview-dashboard.model';
+import {
+    MoveAssetDialogComponent,
+    MoveAssetDialogResult,
+} from '../../../dialog/move-asset-dialog.component';
+import {
+    moveAssetToParent,
+    removeAssetFromParent,
+} from '../../../utils/move-asset';
 
 type ManageableAsset = SpAssetModel & {
     name: string;
@@ -92,6 +107,8 @@ export class SpAssetDetailsComponent
     private initialGeneratedAssetId?: string;
     private initialGeneratedElementId?: string;
     private pendingConfirmLeaveDialog?: Observable<boolean>;
+    @ViewChild(SpAssetSelectionPanelComponent)
+    assetSelectionPanel: SpAssetSelectionPanelComponent;
 
     async saveAsset() {
         await this.saveAssetChanges();
@@ -141,6 +158,64 @@ export class SpAssetDetailsComponent
                         });
                     });
             }
+        });
+    }
+
+    moveSubAsset(assetToMove: SpAsset): void {
+        this.assetService.getAssetSummary().subscribe(summary => {
+            const dialogRef = this.dialog.open(MoveAssetDialogComponent, {
+                width: '600px',
+                maxWidth: '90vw',
+                data: {
+                    assetToMove,
+                    availableAssets: summary.resources.filter(
+                        candidate =>
+                            candidate.elementId !== this.asset.elementId,
+                    ),
+                },
+            });
+
+            dialogRef
+                .afterClosed()
+                .subscribe((result: MoveAssetDialogResult | undefined) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    const assetWasMoved = moveAssetToParent(
+                        result.targetAsset,
+                        result.targetParentAssetId,
+                        assetToMove,
+                        result.removeMovedAssetSite,
+                    );
+                    if (
+                        !assetWasMoved ||
+                        !removeAssetFromParent(this.asset, assetToMove.assetId)
+                    ) {
+                        return;
+                    }
+
+                    this.applySelectedAsset({
+                        asset: this.asset,
+                        rootNode: true,
+                    });
+                    this.assetSelectionPanel.rerenderTree();
+                    this.assetService
+                        .updateAsset(result.targetAsset)
+                        .pipe(
+                            concatMap(() =>
+                                this.assetService.updateAsset(this.asset),
+                            ),
+                        )
+                        .subscribe(() => {
+                            this.originalAsset =
+                                this.normalizeAssetForComparison(this.asset);
+                            this.assetBrowserService.refreshBrowserAssetData();
+                            this.router.navigate(['assets'], {
+                                state: { omitConfirm: true },
+                            });
+                        });
+                });
         });
     }
 
