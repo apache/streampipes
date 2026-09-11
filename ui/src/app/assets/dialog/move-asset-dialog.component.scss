@@ -1,0 +1,30 @@
+.asset-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+}
+
+.tree-node-row {
+    display: flex;
+    align-items: center;
+}
+
+.tree-node {
+    justify-content: flex-start;
+}
+
+.selected-target {
+    outline: 2px solid var(--color-primary);
+}
+
+.tree-invisible {
+    display: none;
+}
+
+.site-warning {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-warn);
+}
