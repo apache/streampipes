@@ -21,6 +21,7 @@ package org.apache.streampipes.security.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.SigningKeyResolver;
+import io.jsonwebtoken.UnsupportedJwtException;
 
 import java.io.IOException;
 import java.security.Key;
@@ -29,11 +30,13 @@ public class PublicKeyResolver implements SigningKeyResolver {
 
   @Override
   public Key resolveSigningKey(JwsHeader jwsHeader, Claims claims) {
+    if (!"RS256".equals(jwsHeader.getAlgorithm())) {
+      throw new UnsupportedJwtException("Extensions require backend-issued RS256 tokens");
+    }
     try {
-      return new KeyGenerator().makeKeyForSecret(jwsHeader.getAlgorithm(), "");
+      return new KeyGenerator().makeKeyForSecret("RS256", null);
     } catch (IOException e) {
-      e.printStackTrace();
-      return null;
+      throw new IllegalStateException("Could not read configured JWT public key", e);
     }
   }
 

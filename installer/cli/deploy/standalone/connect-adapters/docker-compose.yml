@@ -16,6 +16,8 @@
 services:
   connect-adapters:
     image: ${SP_DOCKER_REGISTRY}/connect-adapters:${SP_VERSION}
+    environment:
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:-streampipes-development-only-service-secret}
     volumes:
       - connect:/data/
     logging:

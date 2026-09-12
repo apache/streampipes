@@ -35,9 +35,9 @@ services:
       - SP_SELECTOR=WeightedRandomSelector
       - SP_MIGRATOR=ThresholdMigrator
       - SP_INITIAL_SERVICE_USER=sp-service-client
-      - SP_INITIAL_SERVICE_USER_SECRET=my-apache-streampipes-secret-key-change-me
+      - SP_INITIAL_SERVICE_USER_SECRET=${SP_SERVICE_SECRET:?Generate and export SP_SERVICE_SECRET before starting}
       - SP_CLIENT_USER=sp-service-client
-      - SP_CLIENT_SECRET=my-apache-streampipes-secret-key-change-me
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Generate and export SP_SERVICE_SECRET before starting}
       # Other selector options:
       # - SP_SELECTOR=WeightedRandomSelector
       # - SP_SELECTOR=MinimumLoadSelector
@@ -67,7 +67,7 @@ services:
       - SP_CORE_HOST=backend
       - SP_CORE_PORT=8030
       - SP_CLIENT_USER=sp-service-client
-      - SP_CLIENT_SECRET=my-apache-streampipes-secret-key-change-me
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Generate and export SP_SERVICE_SECRET before starting}
     restart: on-failure
     healthcheck:
       test: ["CMD-SHELL", "nc -z localhost 8090"]
@@ -90,7 +90,7 @@ services:
       - SP_CORE_HOST=backend
       - SP_CORE_PORT=8030
       - SP_CLIENT_USER=sp-service-client
-      - SP_CLIENT_SECRET=my-apache-streampipes-secret-key-change-me
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Generate and export SP_SERVICE_SECRET before starting}
     restart: on-failure
     healthcheck:
       test: ["CMD-SHELL", "nc -z localhost 8090"]
@@ -113,7 +113,7 @@ services:
       - SP_CORE_HOST=backend
       - SP_CORE_PORT=8030
       - SP_CLIENT_USER=sp-service-client
-      - SP_CLIENT_SECRET=my-apache-streampipes-secret-key-change-me
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Generate and export SP_SERVICE_SECRET before starting}
     restart: on-failure
     healthcheck:
       test: ["CMD-SHELL", "nc -z localhost 8090"]

@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.setup;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.environment.variable.StringEnvironmentVariable;
+import org.apache.streampipes.commons.security.ServiceAccountSecret;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -93,7 +94,8 @@ public class AutoInstallation implements BackgroundTaskNotifier {
   }
 
   private String findServiceAccountSecret() {
-    return env.getInitialServiceUserSecret().getValueOrDefault();
+    return ServiceAccountSecret.requireValid(
+        env.getInitialServiceUserSecret().getValue(), "SP_INITIAL_SERVICE_USER_SECRET");
   }
 
   private String findServiceAccountName() {

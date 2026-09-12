@@ -16,6 +16,8 @@
 services:
   pipeline-elements-all-jvm:
     image: ${SP_DOCKER_REGISTRY}/pipeline-elements-all-jvm:${SP_VERSION}
+    environment:
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:-streampipes-development-only-service-secret}
     logging:
       driver: "json-file"
       options:

@@ -29,6 +29,13 @@ services:
     depends_on:
       - couchdb
     environment:
+      - SP_JWT_SECRET=${SP_JWT_SECRET:?Run the Compose configure helper first}
+      - SP_INITIAL_ADMIN_PASSWORD=${SP_INITIAL_ADMIN_PASSWORD:?Run the Compose configure helper first}
+      - SP_INITIAL_SERVICE_USER_SECRET=${SP_SERVICE_SECRET:?Run the Compose configure helper first}
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Run the Compose configure helper first}
+      - SP_COUCHDB_PASSWORD=${SP_COUCHDB_PASSWORD:?Run the Compose configure helper first}
+      - SP_TS_STORAGE_TOKEN=${SP_TS_STORAGE_TOKEN:?Run the Compose configure helper first}
+      - SP_ENCRYPTION_PASSCODE=${SP_ENCRYPTION_PASSCODE:?Run the Compose configure helper first}
       - SP_PRIORITIZED_PROTOCOL=nats
     volumes:
       - backend:/root/.streampipes
@@ -57,7 +64,7 @@ services:
     image: couchdb:3.3.1
     environment:
       - COUCHDB_USER=admin
-      - COUCHDB_PASSWORD=admin
+      - COUCHDB_PASSWORD=${SP_COUCHDB_PASSWORD:?Run the Compose configure helper first}
     volumes:
       - couchdb:/opt/couchdb/data
     logging: *default-logging
@@ -72,8 +79,8 @@ services:
       - INFLUXDB_REPORTING_DISABLED=false
       - INFLUXDB_ADMIN_ENABLED=true
       - DOCKER_INFLUXDB_INIT_USERNAME=admin
-      - DOCKER_INFLUXDB_INIT_PASSWORD=sp-admin
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=sp-admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${SP_INFLUXDB_ADMIN_PASSWORD:?Run the Compose configure helper first}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${SP_TS_STORAGE_TOKEN:?Run the Compose configure helper first}
       - DOCKER_INFLUXDB_INIT_ORG=sp
       - DOCKER_INFLUXDB_INIT_BUCKET=sp
       - DOCKER_INFLUXDB_INIT_MODE=${SP_INFLUX_INIT_MODE}
@@ -94,6 +101,11 @@ services:
   # Lite version pipeline elements
   extensions-all-iiot:
     image: "${SP_DOCKER_REGISTRY}/extensions-all-iiot:${SP_VERSION}"
+    environment:
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Run the Compose configure helper first}
+      - SP_COUCHDB_PASSWORD=${SP_COUCHDB_PASSWORD:?Run the Compose configure helper first}
+      - SP_TS_STORAGE_TOKEN=${SP_TS_STORAGE_TOKEN:?Run the Compose configure helper first}
+      - SP_ENCRYPTION_PASSCODE=${SP_ENCRYPTION_PASSCODE:?Run the Compose configure helper first}
     logging: *default-logging
     restart: unless-stopped
     networks:

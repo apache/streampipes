@@ -60,7 +60,9 @@ jobs:
           DEVELOCITY_ACCESS_KEY: ${{ secrets.STREAMPIPES_DEVELOCITY_ACCESS_KEY }}
 
       - name: Build and run streampipes
-        run: docker compose up --build -d
+        run: |
+          ./installer/compose/configure
+          docker compose up --build -d
 
       - name: Wait 80 seconds
         working-directory: ./installer/compose

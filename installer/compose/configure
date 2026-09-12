@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Prepare persistent Compose credentials without executing dotenv contents."""
+
+import os
+from pathlib import Path
+import re
+import secrets
+import sys
+import tempfile
+
+
+LEGACY_SECRET = "my-apache-streampipes-secret-key-change-me"
+SETTINGS = (
+    "SP_SERVICE_SECRET",
+    "SP_COUCHDB_PASSWORD",
+    "SP_TS_STORAGE_TOKEN",
+    "SP_INFLUXDB_ADMIN_PASSWORD",
+    "SP_ENCRYPTION_PASSCODE",
+    "SP_INITIAL_ADMIN_PASSWORD",
+    "SP_NATS_TOKEN",
+    "SP_JWT_SECRET",
+)
+SETTING = re.compile(r"^\s*(?:export\s+)?(" + "|".join(SETTINGS) + r")\s*=\s*(.*?)\s*$")
+
+
+def parse_value(name, value):
+    if value.startswith(("\"", "'")):
+        quote = value[0]
+        end = value.find(quote, 1)
+        if end < 0 or (value[end + 1:].strip() and not value[end + 1:].strip().startswith("#")):
+            raise ValueError("Invalid quoted " + name + " assignment")
+        return value[1:end]
+    return re.split(r"\s+#", value, maxsplit=1)[0].rstrip()
+
+
+def configure():
+    path = Path(".env")
+    if path.is_symlink():
+        raise ValueError("Refusing to modify a symbolic-link .env file")
+    existed = path.exists()
+    template = Path(__file__).resolve().with_name(".env.example")
+    content = path.read_text() if existed else template.read_text()
+    lines = content.splitlines(keepends=True)
+    assignments = {}
+    for index, line in enumerate(lines):
+        match = SETTING.match(line)
+        if match:
+            name, value = match.groups()
+            if name in assignments:
+                raise ValueError("Keep only one " + name + " assignment in .env")
+            assignments[name] = (index, parse_value(name, value))
+    service_secret = assignments.get("SP_SERVICE_SECRET", (None, ""))[1]
+    if service_secret and service_secret != LEGACY_SECRET and len(service_secret.encode()) < 32:
+        raise ValueError("SP_SERVICE_SECRET must contain at least 32 bytes")
+    jwt_secret = assignments.get("SP_JWT_SECRET", (None, ""))[1]
+    if jwt_secret and len(jwt_secret.encode()) < 32:
+        raise ValueError("SP_JWT_SECRET must contain at least 32 bytes")
+    updated = False
+    for name in SETTINGS:
+        index, value = assignments.get(name, (None, ""))
+        if value and not (name == "SP_SERVICE_SECRET" and value == LEGACY_SECRET):
+            continue
+        value = secrets.token_hex(32)
+        assignment = name + "=" + value + "\n"
+        if index is None:
+            if lines and not lines[-1].endswith("\n"):
+                lines[-1] += "\n"
+            lines.append(assignment)
+        else:
+            lines[index] = assignment
+        updated = True
+    if updated:
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(mode="w", dir=path.parent, delete=False) as output:
+                temporary = Path(output.name)
+                os.chmod(temporary, 0o600)
+                output.write("".join(lines))
+            os.replace(temporary, path)
+        finally:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
+    else:
+        os.chmod(path, 0o600)
+    print("Credentials saved in .env. Keep this file with your deployment backups; do not commit or share it.")
+    print("For a new installation, find the initial admin password in SP_INITIAL_ADMIN_PASSWORD in .env.")
+
+
+if __name__ == "__main__":
+    try:
+        configure()
+    except (OSError, ValueError) as error:
+        print("Configuration failed: " + str(error), file=sys.stderr)
+        sys.exit(1)
