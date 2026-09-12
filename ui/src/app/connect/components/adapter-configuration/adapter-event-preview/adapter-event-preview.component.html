@@ -17,13 +17,15 @@
 -->
 
 <section class="jv p-sm">
-    <div class="jv__content" [class.is-empty]="!hasValue()">
+    <div
+        class="jv__content"
+        [class.is-empty]="!hasValue()"
+        [attr.data-cy]="hasValue() ? dataCy : null"
+    >
         @if (hasValue()) {
             @switch (mode) {
                 @case ('raw') {
-                    <pre
-                        class="raw"
-                    ><code [attr.data-cy]="dataCy">{{ prettyJson() }}</code></pre>
+                    <pre class="raw"><code>{{ prettyJson() }}</code></pre>
                 }
                 @case ('tree') {
                     <div class="tree">

@@ -399,6 +399,14 @@ export class ConnectBtns {
         });
     }
 
+    public static configureSchemaOriginalRawModeBtn() {
+        return cy.dataCy('configure-schema-original-mode-raw');
+    }
+
+    public static configureSchemaResultRawModeBtn() {
+        return cy.dataCy('configure-schema-result-mode-raw');
+    }
+
     public static configureSchemaEventPreviewResult() {
         return cy.dataCy('configure-schema-event-preview-result', {
             timeout: 10000,

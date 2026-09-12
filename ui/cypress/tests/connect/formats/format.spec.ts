@@ -161,7 +161,7 @@ const makeAdapterInputTemplate = (): AdapterBuilder => {
 };
 
 const validateResult = expected => {
-    //ConnectBtns.formatSelectionNextBtn().click();
+    ConnectBtns.configureSchemaOriginalRawModeBtn().click();
     ConnectBtns.configureSchemaEventPreviewOriginal().then(value => {
         const jsonResult = removeWhitespaceExceptInQuotes(value.text());
         expect(jsonResult).to.deep.equal(expected);

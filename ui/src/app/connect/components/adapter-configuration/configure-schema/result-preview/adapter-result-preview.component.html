@@ -35,9 +35,11 @@
             <mat-button-toggle value="tree">{{
                 'Tree' | translate
             }}</mat-button-toggle>
-            <mat-button-toggle value="raw">{{
-                'Raw' | translate
-            }}</mat-button-toggle>
+            <mat-button-toggle
+                value="raw"
+                data-cy="configure-schema-result-mode-raw"
+                >{{ 'Raw' | translate }}</mat-button-toggle
+            >
         </mat-button-toggle-group>
     </header>
     <sp-schema-preview-status
