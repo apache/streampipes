@@ -567,6 +567,7 @@ export class ConnectUtils {
         script: string,
     ) {
         ConnectUtils.replaceAdapterScript(script);
+        ConnectBtns.scriptActionsBtn().click();
         ConnectBtns.addScriptTemplateBtn().click();
 
         ConnectBtns.scriptTemplateName().type(templateName);

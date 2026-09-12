@@ -365,6 +365,10 @@ export class ConnectBtns {
         });
     }
 
+    public static scriptActionsBtn() {
+        return cy.dataCy('configure-schema-script-actions');
+    }
+
     public static addScriptTemplateBtn() {
         return cy.dataCy('add-script-template-button', {
             timeout: 10000,
