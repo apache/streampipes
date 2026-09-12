@@ -55,6 +55,7 @@ describe('Connect delete rule transformation', () => {
         );
 
         ConnectBtns.configureSchemaRunScriptBtn().click();
+        ConnectBtns.configureSchemaResultRawModeBtn().click();
 
         ConnectBtns.configureSchemaEventPreviewResult()
             .invoke('text')
