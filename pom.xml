@@ -47,7 +47,7 @@
         <bcprov-jdk18on.version>1.84</bcprov-jdk18on.version>
         <boofcv.version>1.1.0</boofcv.version>
         <classindex.version>3.9</classindex.version>
-        <camel.version>4.18.0</camel.version>
+        <camel.version>4.22.0</camel.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commoms-collection4.version>4.4</commoms-collection4.version>
         <commons-compress.version>1.27.1</commons-compress.version>
@@ -111,6 +111,7 @@
 
 
         <!-- dependency convergence -->
+        <commons-net.version>3.13.0</commons-net.version>
         <javassist.version>3.30.1-GA</javassist.version>
         <woodstox.version>7.1.1</woodstox.version>
         <hdrhistogram.version>2.2.2</hdrhistogram.version>
@@ -124,6 +125,7 @@
         <javax-websocket-api.version>1.1</javax-websocket-api.version>
         <jetbrains.version>26.1.0</jetbrains.version>
         <snakeyaml.version>3.0.1</snakeyaml.version>
+        <vertx.version>4.5.31</vertx.version>
 
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
@@ -863,6 +865,21 @@
                 <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>
                 <version>${javassist.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-core</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-web-client</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>${commons-net.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
