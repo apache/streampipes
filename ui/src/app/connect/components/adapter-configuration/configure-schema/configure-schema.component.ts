@@ -39,6 +39,7 @@ import {
     DialogService,
     PanelType,
     SpAlertBannerComponent,
+    SpSecondaryToolbarComponent,
 } from '@streampipes/shared-ui';
 import { CreateAdapterTransformationTemplateDialogComponent } from '../../../dialog/create-adapter-transformation-template-dialog/create-adapter-transformation-template-dialog.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -56,6 +57,10 @@ import {
 import { AdapterScriptEditorComponent } from './script-editor/adapter-script-editor.component';
 import { AdapterSamplePreviewComponent } from './sample-preview/adapter-sample-preview.component';
 import { AdapterResultPreviewComponent } from './result-preview/adapter-result-preview.component';
+import { FormsModule } from '@angular/forms';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatIcon } from '@angular/material/icon';
+import { TransformationScriptDocumentationDialogComponent } from '../../../dialog/transformation-script-documentation/transformation-script-documentation-dialog.component';
 import { MatButton } from '@angular/material/button';
 import type { editor as MonacoEditor } from 'monaco-editor';
 import { validateFieldNames } from './field-name-validation';
@@ -75,6 +80,10 @@ import { validateFieldNames } from './field-name-validation';
         MatButton,
         TranslatePipe,
         SpAlertBannerComponent,
+        SpSecondaryToolbarComponent,
+        FormsModule,
+        MatSlideToggle,
+        MatIcon,
     ],
 })
 export class ConfigureSchemaComponent implements OnInit {
@@ -166,6 +175,25 @@ export class ConfigureSchemaComponent implements OnInit {
         () => this.fieldNameValidation().warningFieldNames,
     );
 
+    previewOutdated = this.stateService.previewOutdated;
+    hasPreview = this.stateService.hasScriptPreview;
+    hasInputEvents = computed(
+        () =>
+            !!this.stateService.state().adapterDescription?.transformationConfig
+                ?.inputs?.length,
+    );
+
+    openDocumentation(): void {
+        this.dialogService.open(
+            TransformationScriptDocumentationDialogComponent,
+            {
+                panelType: PanelType.SLIDE_IN_PANEL,
+                title: this.translateService.instant('Documentation'),
+                width: '50vw',
+            },
+        );
+    }
+
     isNextDisabled = computed(() => {
         const state = this.stateService.state();
         const hasInputEvents =
@@ -176,7 +204,8 @@ export class ConfigureSchemaComponent implements OnInit {
             state.isGettingSample ||
             state.isRunningScript ||
             !!state.sampleError ||
-            !!state.scriptError ||
+            (this.scriptActive() &&
+                (!!state.scriptError || this.previewOutdated())) ||
             !hasInputEvents ||
             this.invalidFieldNames().length > 0
         );
@@ -254,7 +283,10 @@ export class ConfigureSchemaComponent implements OnInit {
     }
 
     runScript(): void {
-        this.stateService.runScript(this.adapterDescription);
+        this.stateService.runScript(
+            this.stateService.state().adapterDescription ??
+                this.adapterDescription,
+        );
         this.shepherdService.trigger('configure-schema-script-run');
     }
 

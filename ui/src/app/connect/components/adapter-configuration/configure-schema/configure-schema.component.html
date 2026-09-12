@@ -66,27 +66,58 @@
         </sp-alert-banner>
     }
 
-    <div fxFlex="100" fxLayout="column">
+    <sp-secondary-toolbar>
+        <div
+            fxLayout="row wrap"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="8px"
+        >
+            <mat-slide-toggle
+                data-cy="toggle-script-active"
+                [ngModel]="scriptActive()"
+                (ngModelChange)="toggleScriptActive()"
+            >
+                {{ 'Transformation enabled' | translate }}
+            </mat-slide-toggle>
+            <button
+                mat-button
+                data-cy="open-documentation"
+                (click)="openDocumentation()"
+            >
+                <mat-icon>menu_book</mat-icon>
+                {{ 'Documentation' | translate }}
+            </button>
+        </div>
+    </sp-secondary-toolbar>
+
+    <div class="schema-workspace" fxLayout="row" fxLayout.lt-lg="column">
         <sp-adapter-script-editor
-            [scriptActive]="scriptActive()"
+            fxFlex="50"
+            fxFlex.lt-lg="none"
             [selectedScriptMetadata]="selectedScriptMetadata()"
             [availableScripts]="availableScripts()"
             [loadingAvailableScriptsError]="loadingAvailableScriptsError()"
             [script]="script()"
             [eventPropertyNames]="eventPropertyNames()"
             [editorOptions]="editorOptions"
+            [scriptActive]="scriptActive()"
+            [isRunningScript]="isRunningScript()"
+            [runDisabled]="
+                isSampleLoading() ||
+                !!sampleErrorMessage() ||
+                !hasInputEvents() ||
+                !selectedScriptMetadata()
+            "
+            [previewOutdated]="previewOutdated()"
+            [scriptError]="!!scriptError()"
             (codeChange)="onCodeChange($event)"
             (languageChange)="onLanguageChange($event)"
             (selectTemplate)="openSelectScriptTemplateDialog()"
             (resetScript)="resetScript()"
-            (toggleScriptActive)="toggleScriptActive()"
             (runScript)="runScript()"
             (createTemplate)="openCreateScriptTemplateDialog()"
         ></sp-adapter-script-editor>
-    </div>
-
-    <div fxFlex="100" fxLayout="row" fxLayoutGap="15px">
-        <div fxFlex="50" fxLayout="column">
+        <div class="schema-previews" fxFlex fxLayout="column">
             <sp-adapter-sample-preview
                 [isSampleLoading]="isSampleLoading()"
                 [sampleErrorMessage]="sampleErrorMessage()"
@@ -97,22 +128,22 @@
                 (getSample)="getSampleEvent()"
                 (uploadSample)="openUploadSampleDialog()"
             ></sp-adapter-sample-preview>
-        </div>
-
-        @if (scriptActive()) {
-            <div fxFlex="50" fxLayout="column">
+            @if (scriptActive()) {
                 <sp-adapter-result-preview
                     [isRunningScript]="isRunningScript()"
                     [scriptError]="scriptError()"
                     [output]="output()"
+                    [original]="input()"
+                    [previewOutdated]="previewOutdated()"
+                    [hasPreview]="hasPreview()"
                     [resultViewMode]="resultViewMode()"
                     (resultViewModeChange)="setResultViewMode($event)"
                 ></sp-adapter-result-preview>
-            </div>
-        }
+            }
+        </div>
     </div>
 
-    <div fxLayoutAlign="end" class="mt-10">
+    <div fxLayoutAlign="end" class="schema-navigation">
         <button class="mat-basic" mat-flat-button (click)="cancel()">
             {{ 'Cancel' | translate }}
         </button>
@@ -132,7 +163,7 @@
             [disabled]="isNextDisabled()"
             (click)="next()"
         >
-            {{ 'Next' | translate }}
+            {{ 'Next: Configure fields' | translate }}
         </button>
     </div>
 </div>
