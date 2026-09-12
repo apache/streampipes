@@ -20,9 +20,16 @@ import { provideZoneChangeDetection } from '@angular/core';
 // needed so that maplibre attaches to leaflet upon startup
 import 'leaflet';
 import '@maplibre/maplibre-gl-leaflet';
+import { setWorkerUrl } from 'maplibre-gl';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
+
+// MapLibre's default relative worker URL does not survive dependency bundling.
+// angular.json copies the worker and its shared module to the same directory.
+setWorkerUrl(
+    new URL('assets/maplibre/maplibre-gl-worker.mjs', document.baseURI).href,
+);
 
 import * as echarts from 'echarts';
 import * as transform from 'echarts-simple-transform';

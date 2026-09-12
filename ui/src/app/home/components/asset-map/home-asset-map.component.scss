@@ -27,7 +27,6 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    height: 100%;
     gap: 8px;
     min-height: 0;
     width: 100%;
@@ -35,8 +34,9 @@
 
 .leaflet-host {
     flex: 1 1 auto;
-    height: 100%;
-    min-height: 0;
+    // The homepage section has no definite height for percentage sizing.
+    // MapLibre requires a non-zero viewport to calculate its matrices.
+    min-height: clamp(20rem, 50vh, 40rem);
     width: 100%;
 }
 

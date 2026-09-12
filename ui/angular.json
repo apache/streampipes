@@ -21,6 +21,11 @@
             "assets": [
               "src/assets",
               {
+                "glob": "maplibre-gl-{worker,shared}.mjs",
+                "input": "node_modules/maplibre-gl/dist",
+                "output": "assets/maplibre"
+              },
+              {
                 "glob": "**/*",
                 "input": "node_modules/leaflet/dist/images",
                 "output": "assets/img"
