@@ -28,7 +28,7 @@ import {
     output,
     signal,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, TitleCasePipe } from '@angular/common';
 import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import {
@@ -55,13 +55,14 @@ import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { MatTooltip } from '@angular/material/tooltip';
-import { TitleCasePipe } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type * as monacoType from 'monaco-editor';
 import {
     JavaScriptEventField,
     EditorAutocompletionService,
 } from '../../../../../services/editor-autocompletion.service';
+
+import { SchemaPreviewStatusComponent } from '../schema-preview-status.component';
 
 declare const monaco: typeof monacoType;
 
@@ -71,6 +72,7 @@ declare const monaco: typeof monacoType;
     styleUrl: './adapter-script-editor.component.scss',
     host: { '[class.editor-fullscreen]': 'fullscreen()' },
     imports: [
+        SchemaPreviewStatusComponent,
         SpAlertBannerComponent,
         LayoutAlignDirective,
         LayoutDirective,
@@ -107,17 +109,6 @@ export class AdapterScriptEditorComponent implements OnDestroy {
     isRunningScript = input(false);
     runDisabled = input(false);
     previewOutdated = input(false);
-    previewStatus = computed(() =>
-        !this.scriptActive()
-            ? 'neutral'
-            : this.isRunningScript()
-              ? 'info'
-              : this.scriptError()
-                ? 'error'
-                : this.previewOutdated()
-                  ? 'warning'
-                  : 'success',
-    );
     scriptError = input(false);
     selectedScriptMetadata = input<ScriptMetadata>();
     availableScripts = input<ScriptMetadata[]>([]);
@@ -125,7 +116,8 @@ export class AdapterScriptEditorComponent implements OnDestroy {
     script = input('');
     eventPropertyNames = input<string[]>([]);
     eventFields = input<JavaScriptEventField[]>([]);
-    editorOptions = input<any>();
+    editorOptions =
+        input<monacoType.editor.IStandaloneEditorConstructionOptions>();
     effectiveEditorOptions = computed(() => ({
         ...this.editorOptions(),
         readOnly: !this.scriptActive() || this.editorOptions()?.readOnly,

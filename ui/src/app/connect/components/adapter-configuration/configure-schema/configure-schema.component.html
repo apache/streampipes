@@ -124,7 +124,7 @@
                 [fieldStatusInfos]="fieldStatusInfos()"
                 [input]="input()"
                 [sourceViewMode]="sourceViewMode()"
-                (sourceViewModeChange)="setSourceViewMode($event)"
+                (sourceViewModeChange)="sourceViewMode.set($event)"
                 (getSample)="getSampleEvent()"
                 (uploadSample)="openUploadSampleDialog()"
             ></sp-adapter-sample-preview>
@@ -137,7 +137,7 @@
                     [previewOutdated]="previewOutdated()"
                     [hasPreview]="hasPreview()"
                     [resultViewMode]="resultViewMode()"
-                    (resultViewModeChange)="setResultViewMode($event)"
+                    (resultViewModeChange)="resultViewMode.set($event)"
                 ></sp-adapter-result-preview>
             }
         </div>

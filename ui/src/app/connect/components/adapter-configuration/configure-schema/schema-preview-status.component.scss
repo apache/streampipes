@@ -16,6 +16,15 @@
  *
  */
 
+:host {
+    display: block;
+    min-width: 0;
+}
+
+:host(.inline-status) {
+    max-width: 100%;
+}
+
 .schema-status {
     padding: var(--space-sm) var(--space-md);
     gap: var(--space-sm);

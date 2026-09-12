@@ -37,11 +37,14 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { SchemaPreviewStatusComponent } from '../schema-preview-status.component';
+
 @Component({
     selector: 'sp-adapter-result-preview',
     templateUrl: './adapter-result-preview.component.html',
     styleUrl: '../schema-preview.scss',
     imports: [
+        SchemaPreviewStatusComponent,
         LayoutAlignDirective,
         MatButtonToggleGroup,
         MatButtonToggle,
@@ -51,7 +54,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         SpExceptionMessageComponent,
         AdapterEventPreviewComponent,
         TranslatePipe,
-        SpLabelComponent,
         MatIcon,
     ],
 })
@@ -61,15 +63,6 @@ export class AdapterResultPreviewComponent {
     output = input<any>();
     original = input<Record<string, unknown>>({});
     previewOutdated = input(false);
-    previewStatus = computed(() =>
-        this.isRunningScript()
-            ? 'info'
-            : this.scriptError()
-              ? 'error'
-              : this.previewOutdated()
-                ? 'warning'
-                : 'success',
-    );
     hasPreview = input(false);
     changedFields = computed(() => {
         const original = this.original() ?? {};

@@ -104,18 +104,10 @@
                     mat-icon-button
                     (click)="toggleFullscreen()"
                     data-cy="configure-schema-toggle-fullscreen"
-                    [attr.aria-label]="
-                        (fullscreen() ? 'Exit fullscreen' : 'Open fullscreen')
-                            | translate
-                    "
-                    [matTooltip]="
-                        (fullscreen() ? 'Exit fullscreen' : 'Open fullscreen')
-                            | translate
-                    "
+                    [attr.aria-label]="'Open fullscreen' | translate"
+                    [matTooltip]="'Open fullscreen' | translate"
                 >
-                    <mat-icon>{{
-                        fullscreen() ? 'fullscreen_exit' : 'fullscreen'
-                    }}</mat-icon>
+                    <mat-icon>fullscreen</mat-icon>
                 </button>
             </div>
         </div>
@@ -166,44 +158,13 @@
         fxLayoutAlign="space-between center"
         fxLayoutGap="8px"
     >
-        <span
-            class="schema-status script-status text-sm"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            [class.status-success]="previewStatus() === 'success'"
-            [class.status-warning]="previewStatus() === 'warning'"
-            [class.status-error]="previewStatus() === 'error'"
-            [class.status-info]="previewStatus() === 'info'"
-            aria-live="polite"
-        >
-            <mat-icon aria-hidden="true">{{
-                previewStatus() === 'success'
-                    ? 'check_circle'
-                    : previewStatus() === 'warning'
-                      ? 'warning_amber'
-                      : previewStatus() === 'error'
-                        ? 'error_outline'
-                        : previewStatus() === 'info'
-                          ? 'hourglass_top'
-                          : 'pause_circle_outline'
-            }}</mat-icon>
-            <span>
-                @if (!scriptActive()) {
-                    {{ 'Transformation disabled' | translate }}
-                } @else if (isRunningScript()) {
-                    {{ 'Running script' | translate }}
-                } @else if (scriptError()) {
-                    {{
-                        'Script failed. Check the preview for details.'
-                            | translate
-                    }}
-                } @else if (previewOutdated()) {
-                    {{ 'Run the script to update the preview.' | translate }}
-                } @else {
-                    {{ 'Preview is up to date' | translate }}
-                }
-            </span>
-        </span>
+        <sp-schema-preview-status
+            [inline]="true"
+            [active]="scriptActive()"
+            [running]="isRunningScript()"
+            [error]="scriptError()"
+            [outdated]="previewOutdated()"
+        ></sp-schema-preview-status>
         <button
             mat-flat-button
             data-cy="configure-schema-run-script-button"

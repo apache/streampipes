@@ -16,8 +16,6 @@
  *
  */
 
-@use '../schema-status';
-
 :host {
     display: block;
     min-width: 0;
@@ -111,10 +109,4 @@
 // ngx-monaco-editor-v2 sets its inner container to 98%, leaving a visible strip.
 :host ::ng-deep .code-editor .editor-container {
     height: 100%;
-}
-
-.script-status {
-    border-radius: var(--radius-xs);
-    min-width: 0;
-    max-width: 100%;
 }

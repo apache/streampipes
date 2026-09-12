@@ -40,48 +40,12 @@
             }}</mat-button-toggle>
         </mat-button-toggle-group>
     </header>
-    <div
-        class="schema-status text-sm"
-        fxLayout="row"
-        fxLayoutAlign="start center"
-        [class.status-success]="previewStatus() === 'success'"
-        [class.status-warning]="previewStatus() === 'warning'"
-        [class.status-error]="previewStatus() === 'error'"
-        [class.status-info]="previewStatus() === 'info'"
-        [class.status-success-bg]="previewStatus() === 'success'"
-        [class.status-warning-bg]="previewStatus() === 'warning'"
-        [class.status-error-bg]="previewStatus() === 'error'"
-        [class.status-info-bg]="previewStatus() === 'info'"
-        aria-live="polite"
+    <sp-schema-preview-status
+        [running]="isRunningScript()"
+        [error]="!!scriptError()"
+        [outdated]="previewOutdated()"
         data-cy="configure-schema-preview-status"
-    >
-        <mat-icon aria-hidden="true">{{
-            previewStatus() === 'success'
-                ? 'check_circle'
-                : previewStatus() === 'warning'
-                  ? 'warning_amber'
-                  : previewStatus() === 'error'
-                    ? 'error_outline'
-                    : 'hourglass_top'
-        }}</mat-icon>
-        <span>
-            @if (isRunningScript()) {
-                {{ 'Running script' | translate }}
-            } @else if (scriptError()) {
-                {{
-                    'Script failed. Review the error and run it again.'
-                        | translate
-                }}
-            } @else if (previewOutdated()) {
-                {{
-                    'Preview is out of date. Run the script to update it.'
-                        | translate
-                }}
-            } @else {
-                {{ 'Preview is up to date' | translate }}
-            }
-        </span>
-    </div>
+    ></sp-schema-preview-status>
     <div class="preview-body">
         @if (isRunningScript()) {
             <div fxLayoutAlign="center center" class="m-lg">

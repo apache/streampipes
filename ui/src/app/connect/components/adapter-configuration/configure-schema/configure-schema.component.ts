@@ -196,8 +196,6 @@ export class ConfigureSchemaComponent implements OnInit {
 
     isNextDisabled = computed(() => {
         const state = this.stateService.state();
-        const hasInputEvents =
-            !!state.adapterDescription?.transformationConfig?.inputs?.length;
 
         return (
             state.adapterSettingsChanged ||
@@ -206,7 +204,7 @@ export class ConfigureSchemaComponent implements OnInit {
             !!state.sampleError ||
             (this.scriptActive() &&
                 (!!state.scriptError || this.previewOutdated())) ||
-            !hasInputEvents ||
+            !this.hasInputEvents() ||
             this.invalidFieldNames().length > 0
         );
     });
@@ -242,16 +240,8 @@ export class ConfigureSchemaComponent implements OnInit {
     onLanguageChange(newLanguage: ScriptMetadata) {
         this.stateService.updateState({
             selectedScriptMetadata: newLanguage,
-            currentScript: newLanguage.template, // Or keep existing if logic allows
+            currentScript: newLanguage.template,
         });
-    }
-
-    setSourceViewMode(mode: Mode) {
-        this.sourceViewMode.set(mode);
-    }
-
-    setResultViewMode(mode: Mode) {
-        this.resultViewMode.set(mode);
     }
 
     resetScript(): void {
@@ -411,6 +401,4 @@ export class ConfigureSchemaComponent implements OnInit {
     public goBack() {
         this.goBackEmitter.emit();
     }
-
-    protected readonly Error = Error;
 }
