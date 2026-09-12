@@ -126,8 +126,8 @@ export class ConfigureSchemaComponent implements OnInit {
         () => this.stateService.state().loadingAvailableScriptsError,
     );
 
-    resultViewMode = signal<Mode>('raw');
-    sourceViewMode = signal<Mode>('raw');
+    resultViewMode = signal<Mode>('tree');
+    sourceViewMode = signal<Mode>('tree');
 
     script = computed(() => this.stateService.state().currentScript);
 
