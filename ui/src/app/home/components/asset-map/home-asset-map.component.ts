@@ -43,8 +43,6 @@ import {
 } from 'leaflet';
 import { MapLayerProviderService } from '../../../core-ui/services/map-layer-provider.service';
 import { LeafletDirective } from '@bluehalo/ngx-leaflet';
-import { NgStyle } from '@angular/common';
-import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 import { TranslatePipe } from '@ngx-translate/core';
 import Supercluster from 'supercluster';
 import { HomeAssetMapPopupService } from './home-asset-map-popup.service';
@@ -72,7 +70,7 @@ import {
     selector: 'sp-home-asset-map',
     templateUrl: './home-asset-map.component.html',
     styleUrls: ['./home-asset-map.component.scss'],
-    imports: [LeafletDirective, NgStyle, StyleDirective, TranslatePipe],
+    imports: [LeafletDirective, TranslatePipe],
     providers: [HomeAssetMapPopupService],
 })
 export class HomeAssetMapComponent implements OnInit, OnChanges, OnDestroy {
@@ -118,7 +116,7 @@ export class HomeAssetMapComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if ((changes['assets'] || changes['sites']) && this.map) {
+        if (changes['assets'] || changes['sites']) {
             this.refreshMarkersAndView();
         }
     }
@@ -162,10 +160,11 @@ export class HomeAssetMapComponent implements OnInit, OnChanges, OnDestroy {
         this.popupService.destroyPopup();
         this.clearSpiderfy();
 
-        const assetPoints = buildClusterPoints(this.assets, this.sites);
+        const assets = this.assets ?? [];
+        const assetPoints = buildClusterPoints(assets, this.sites);
         this.assetsWithLocationCount = assetPoints.length;
         this.assetsWithoutLocationCount = Math.max(
-            this.assets.length - this.assetsWithLocationCount,
+            assets.length - this.assetsWithLocationCount,
             0,
         );
         this.clusterIndex =
@@ -177,6 +176,10 @@ export class HomeAssetMapComponent implements OnInit, OnChanges, OnDestroy {
                       },
                   ).load(assetPoints)
                 : null;
+
+        if (!this.map) {
+            return;
+        }
 
         this.updateViewport(assetPoints);
 
