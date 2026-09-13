@@ -23,6 +23,14 @@
 .standalone-outer {
     background: var(--color-bg-1);
     min-height: 100vh;
+    position: relative;
+}
+
+.system-notification-outer {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    height: 60px;
 }
 
 .dashboard-grid {

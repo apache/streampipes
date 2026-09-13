@@ -31,6 +31,7 @@ import {
     GeneralConfigService,
     MailConfigService,
     Role,
+    SystemNotificationService,
 } from '@streampipes/platform-services';
 import { Observable, zip } from 'rxjs';
 import { AvailableRolesService } from '../../services/available-roles.service';
@@ -65,6 +66,7 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpSystemNotificationConfigurationComponent } from './system-notification/system-notification-configuration.component';
 
 @Component({
     selector: 'sp-general-configuration',
@@ -93,6 +95,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatIcon,
         AsyncPipe,
         TranslatePipe,
+        SpSystemNotificationConfigurationComponent,
     ],
 })
 export class GeneralConfigurationComponent implements OnInit {
@@ -103,6 +106,7 @@ export class GeneralConfigurationComponent implements OnInit {
     private appConstants = inject(AppConstants);
     private breadcrumbService = inject(SpBreadcrumbService);
     private tabService = inject(SpConfigurationTabsService);
+    private systemNotificationService = inject(SystemNotificationService);
 
     parentForm: UntypedFormGroup;
     formReady = false;
@@ -146,6 +150,11 @@ export class GeneralConfigurationComponent implements OnInit {
                         required: false,
                         title: '',
                         text: '',
+                    },
+                    systemNotification: {
+                        enabled: false,
+                        message: '',
+                        type: 'INFO',
                     },
                 };
             }
@@ -260,6 +269,34 @@ export class GeneralConfigurationComponent implements OnInit {
                 ),
             );
 
+            this.parentForm.addControl(
+                'notificationEnabled',
+                new UntypedFormControl(
+                    this.generalConfig.systemNotification?.enabled || false,
+                ),
+            );
+
+            this.parentForm.addControl(
+                'notificationMessage',
+                new UntypedFormControl(
+                    this.generalConfig.systemNotification?.message || '',
+                ),
+            );
+
+            this.parentForm.addControl(
+                'notificationType',
+                new UntypedFormControl(
+                    this.generalConfig.systemNotification?.type || 'INFO',
+                ),
+            );
+
+            this.parentForm.addControl(
+                'notificationExpiresAtMillis',
+                new UntypedFormControl(
+                    this.generalConfig.systemNotification?.expiresAtMillis,
+                ),
+            );
+
             this.formReady = true;
         });
     }
@@ -305,11 +342,18 @@ export class GeneralConfigurationComponent implements OnInit {
                 title: formValue.termsAcknowledgmentTitle,
                 text: formValue.termsAcknowledgmentText,
             },
+            systemNotification: {
+                enabled: formValue.notificationEnabled,
+                message: formValue.notificationMessage,
+                type: formValue.notificationType,
+                expiresAtMillis: formValue.notificationExpiresAtMillis,
+            },
         };
 
         this.generalConfigService
             .updateGeneralConfig(this.generalConfig)
             .subscribe(_result => {
+                this.systemNotificationService.notifyChanged();
                 this.loadConfig();
             });
     }

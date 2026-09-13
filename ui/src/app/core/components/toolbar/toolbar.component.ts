@@ -37,6 +37,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/divider';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpSystemNotificationComponent } from '../system-notification/system-notification.component';
 
 @Component({
     selector: 'sp-toolbar',
@@ -56,6 +57,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatDivider,
         MatMenuItem,
         TranslatePipe,
+        SpSystemNotificationComponent,
     ],
 })
 export class ToolbarComponent
