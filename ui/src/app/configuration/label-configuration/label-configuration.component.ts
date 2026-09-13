@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ViewChild,
+    inject,
+    signal,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import { LabelsService, SpLabel } from '@streampipes/platform-services';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
@@ -52,6 +59,7 @@ import { MatDialog } from '@angular/material/dialog';
     selector: 'sp-label-configuration',
     templateUrl: './label-configuration.component.html',
     styleUrls: ['./label-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         SplitSectionComponent,

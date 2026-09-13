@@ -17,7 +17,14 @@
  */
 
 import { FeatureCardRouteData } from './feature-card.model';
-import { Component, inject, Input, OnInit, Type } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    Type,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef } from '../../dialog/base-dialog/dialog-ref';
 import { NgComponentOutlet } from '@angular/common';
 
@@ -25,6 +32,7 @@ import { NgComponentOutlet } from '@angular/common';
     selector: 'sp-feature-card-host',
     templateUrl: './feature-card-host.component.html',
     styleUrls: ['./feature-card-host.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgComponentOutlet],
 })
 export class FeatureCardHostComponent implements OnInit {

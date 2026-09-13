@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AdapterDescription,
     PipelineElementAssetService,
@@ -35,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-adapter-catalog-item',
     templateUrl: './adapter-catalog-item.component.html',
     styleUrls: ['./adapter-catalog-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatButton, MatTooltip, MatIcon, TranslatePipe],
 })
 export class AdapterCatalogItemComponent implements OnInit {

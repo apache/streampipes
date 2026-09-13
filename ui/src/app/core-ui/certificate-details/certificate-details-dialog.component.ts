@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef, SpLabelComponent } from '@streampipes/shared-ui';
 import { Certificate } from '@streampipes/platform-services';
 import {
@@ -31,6 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-certificate-details-dialog',
     templateUrl: './certificate-details-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,

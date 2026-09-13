@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
@@ -53,6 +59,7 @@ import { MatDivider } from '@angular/material/divider';
     selector: 'sp-pipeline-element-topics',
     templateUrl: './topics.component.html',
     styleUrls: ['./topics.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

@@ -24,6 +24,7 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { BaseRuntimeResolvableInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-input';
 import {
@@ -59,6 +60,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-static-runtime-resolvable-tree-input',
     templateUrl: './static-runtime-resolvable-tree-input.component.html',
     styleUrls: ['./static-runtime-resolvable-tree-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutAlignDirective,

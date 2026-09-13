@@ -16,16 +16,13 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { MapVisConfig, MapWidgetModel } from '../model/map-widget.model';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { SpVisualizationConfigOuterComponent } from '../../../chart-config/visualization-config-outer/visualization-config-outer.component';
-import {
-    DefaultFlexDirective,
-    DefaultLayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
     FormFieldComponent,
     SplitSectionComponent,
@@ -41,13 +38,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-data-explorer-map-widget-config',
     templateUrl: './map-widget-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
-        DefaultLayoutDirective,
+        LayoutDirective,
         SplitSectionComponent,
         FormFieldComponent,
         SelectSinglePropertyConfigComponent,
-        DefaultFlexDirective,
+        FlexDirective,
         MatFormField,
         MatInput,
         FormsModule,

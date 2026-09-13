@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     LayoutAlignDirective,
     LayoutDirective,
@@ -35,6 +41,7 @@ import { PipelineHealthStatus } from '@streampipes/platform-services';
     selector: 'sp-pipeline-preview-meta',
     templateUrl: './pipeline-preview-meta.component.html',
     styleUrls: ['./pipeline-preview-meta.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatIcon,
         TranslatePipe,

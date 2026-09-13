@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     Content,
     icon,
@@ -53,6 +58,7 @@ import { StyleDirective } from '@ngbracket/ngx-layout/extended';
     selector: 'sp-data-explorer-map-widget',
     templateUrl: './map-widget.component.html',
     styleUrls: ['./map-widget.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutAlignDirective,

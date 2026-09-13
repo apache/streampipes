@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     FormsModule,
@@ -61,6 +62,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-edit-event-property',
     templateUrl: './edit-event-property.component.html',
     styleUrls: ['./edit-event-property.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogRef,
     SpExceptionDetailsComponent,
@@ -34,6 +40,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'sp-export-provider-connection-test',
     templateUrl: './export-provider-connection-test.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutAlignDirective,
         LayoutDirective,

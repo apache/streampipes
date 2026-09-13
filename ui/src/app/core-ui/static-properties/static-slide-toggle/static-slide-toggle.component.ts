@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SlideToggleStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -26,6 +26,7 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 @Component({
     selector: 'sp-static-slide-toggle',
     templateUrl: './static-slide-toggle.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

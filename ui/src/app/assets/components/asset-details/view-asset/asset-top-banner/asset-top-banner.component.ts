@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnChanges } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnChanges,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     Isa95TypeService,
     LocationConfig,
@@ -34,6 +40,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-asset-top-banner',
     templateUrl: './asset-top-banner.component.html',
     styleUrls: ['./asset-top-banner.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         SpLabelComponent,

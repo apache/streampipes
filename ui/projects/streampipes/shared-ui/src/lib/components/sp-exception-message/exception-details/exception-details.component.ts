@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SpLogMessage } from '@streampipes/platform-services';
 import {
     FlexDirective,
@@ -30,6 +30,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-exception-details',
     templateUrl: './exception-details.component.html',
     styleUrl: './exception-details.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

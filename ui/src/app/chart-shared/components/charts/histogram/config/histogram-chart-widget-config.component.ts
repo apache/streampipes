@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     HistogramChartVisConfig,
@@ -38,6 +38,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-histogram-widget-config',
     templateUrl: './histogram-chart-widget-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
         SplitSectionComponent,

@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FunctionId,
     FunctionsService,
@@ -55,6 +61,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-pipelines',
     templateUrl: './pipelines.component.html',
     styleUrls: ['./pipelines.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         MatButton,

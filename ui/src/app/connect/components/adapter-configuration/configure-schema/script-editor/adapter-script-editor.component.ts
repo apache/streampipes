@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, input, OnDestroy, output } from '@angular/core';
+import {
+    Component,
+    inject,
+    input,
+    OnDestroy,
+    output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { ScriptMetadata } from '@streampipes/platform-services';
 import {
     DialogService,
@@ -51,6 +58,7 @@ declare const monaco: typeof monacoType;
     selector: 'sp-adapter-script-editor',
     templateUrl: './adapter-script-editor.component.html',
     styleUrl: './adapter-script-editor.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicInnerPanelComponent,
         SpAlertBannerComponent,

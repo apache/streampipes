@@ -22,6 +22,7 @@ import {
     Input,
     Output,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DataExplorerWidgetModel,
@@ -45,6 +46,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-chart-designer-panel',
     templateUrl: './chart-designer-panel.component.html',
     styleUrls: ['./chart-designer-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexFillDirective,
         LayoutDirective,

@@ -130,7 +130,7 @@ export class DatalakeQueryParameterBuilder {
         columns: FieldConfig[],
         useAggregation: boolean,
     ): DatalakeQueryParameterBuilder {
-        const finalColumns = [];
+        const finalColumns: string[] = [];
         columns.forEach(column => {
             if (!column.alias && !useAggregation) {
                 finalColumns.push(column.runtimeName);
@@ -139,7 +139,7 @@ export class DatalakeQueryParameterBuilder {
                 const displayName =
                     column.runtimeName === '*' ? 'all' : column.runtimeName;
 
-                column.aggregations.forEach(agg => {
+                column.aggregations?.forEach(agg => {
                     finalColumns.push(
                         '[' +
                             column.runtimeName +

@@ -22,6 +22,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     AdapterDescription,
@@ -73,6 +74,7 @@ import { MatButton } from '@angular/material/button';
     selector: 'sp-start-adapter-configuration',
     templateUrl: './start-adapter-configuration.component.html',
     styleUrls: ['./start-adapter-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

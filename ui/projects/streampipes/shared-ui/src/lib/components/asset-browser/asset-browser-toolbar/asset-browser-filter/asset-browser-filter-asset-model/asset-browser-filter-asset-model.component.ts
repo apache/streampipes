@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Isa95TypeDesc, SpAsset } from '@streampipes/platform-services';
 import { AssetFilter } from '../../../asset-browser.model';
 import { AssetBrowserFilterOuterComponent } from '../asset-browser-filter-outer/asset-browser-filter-outer.component';
@@ -28,6 +28,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'sp-asset-browser-filter-asset-model',
     templateUrl: 'asset-browser-filter-asset-model.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AssetBrowserFilterOuterComponent,
         MatFormField,

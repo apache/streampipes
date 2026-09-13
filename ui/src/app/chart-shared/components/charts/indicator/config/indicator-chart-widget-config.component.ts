@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     IndicatorChartVisConfig,
@@ -39,6 +39,7 @@ import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 @Component({
     selector: 'sp-data-explorer-indicator-chart-widget-config',
     templateUrl: './indicator-chart-widget-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
         SplitSectionComponent,

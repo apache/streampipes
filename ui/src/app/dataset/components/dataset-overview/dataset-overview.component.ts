@@ -23,6 +23,7 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -98,6 +99,7 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
     selector: 'sp-dataset-overview',
     templateUrl: './dataset-overview.component.html',
     styleUrls: ['./dataset-overview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

@@ -25,6 +25,7 @@ import {
     Output,
     ViewChild,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     Pipeline,
@@ -44,6 +45,7 @@ import { FlexDirective } from '@ngbracket/ngx-layout/flex';
     selector: 'sp-pipeline-preview',
     templateUrl: './pipeline-preview.component.html',
     styleUrls: ['./pipeline-preview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FlexDirective, PipelineAssemblyDrawingAreaComponent],
 })
 export class PipelinePreviewComponent implements OnInit, AfterViewInit {

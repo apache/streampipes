@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { StaticPropertyUtilService } from '../../static-property-util.service';
 import {
     FreeTextStaticProperty,
@@ -25,10 +32,7 @@ import {
 } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import {
-    DefaultFlexDirective,
-    DefaultLayoutGapDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { FlexDirective, LayoutGapDirective } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -43,11 +47,12 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     selector: 'sp-add-to-collection',
     templateUrl: './add-to-collection.component.html',
     styleUrls: ['./add-to-collection.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        DefaultLayoutGapDirective,
+        LayoutGapDirective,
         MatButton,
         MatIcon,
-        DefaultFlexDirective,
+        FlexDirective,
         MatFormField,
         MatInput,
         MatProgressBar,

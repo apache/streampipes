@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseOutputStrategy } from '../base/BaseOutputStrategy';
 import {
     DataType,
@@ -43,6 +48,7 @@ import { FormFieldComponent } from '@streampipes/shared-ui';
     selector: 'sp-user-defined-output-strategy',
     templateUrl: './user-defined-output.component.html',
     styleUrls: ['./user-defined-output.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

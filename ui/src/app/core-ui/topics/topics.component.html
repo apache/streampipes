@@ -50,7 +50,10 @@
                     <table
                         mat-table
                         [dataSource]="
-                            pipelineElement?.eventGrounding?.transportProtocols
+                            $safeNavigationMigration(
+                                pipelineElement?.eventGrounding
+                                    ?.transportProtocols
+                            )
                         "
                     >
                         <ng-container matColumnDef="outputTopics">
@@ -94,7 +97,11 @@
                 @if (isDataProcessorInvocation()) {
                     <table
                         mat-table
-                        [dataSource]="pipelineElement?.inputStreams"
+                        [dataSource]="
+                            $safeNavigationMigration(
+                                pipelineElement?.inputStreams
+                            )
+                        "
                     >
                         <ng-container matColumnDef="inputTopics">
                             <th mat-header-cell *matHeaderCellDef>
@@ -115,10 +122,12 @@
                                     <button
                                         mat-icon-button
                                         [cdkCopyToClipboard]="
-                                            element?.eventGrounding
-                                                ?.transportProtocols?.[0]
-                                                ?.topicDefinition
-                                                ?.actualTopicName
+                                            $safeNavigationMigration(
+                                                element?.eventGrounding
+                                                    ?.transportProtocols?.[0]
+                                                    ?.topicDefinition
+                                                    ?.actualTopicName
+                                            )
                                         "
                                         [matTooltip]="'Copy' | translate"
                                     >
@@ -139,8 +148,10 @@
                     <table
                         mat-table
                         [dataSource]="
-                            pipelineElement?.outputStream?.eventGrounding
-                                ?.transportProtocols
+                            $safeNavigationMigration(
+                                pipelineElement?.outputStream?.eventGrounding
+                                    ?.transportProtocols
+                            )
                         "
                     >
                         <ng-container matColumnDef="outputTopics">
@@ -161,8 +172,10 @@
                                     <button
                                         mat-icon-button
                                         [cdkCopyToClipboard]="
-                                            element?.topicDefinition
-                                                ?.actualTopicName
+                                            $safeNavigationMigration(
+                                                element?.topicDefinition
+                                                    ?.actualTopicName
+                                            )
                                         "
                                         [matTooltip]="'Copy' | translate"
                                     >
@@ -184,7 +197,11 @@
                 @if (isDataSinkInvocation()) {
                     <table
                         mat-table
-                        [dataSource]="pipelineElement?.inputStreams"
+                        [dataSource]="
+                            $safeNavigationMigration(
+                                pipelineElement?.inputStreams
+                            )
+                        "
                     >
                         <ng-container matColumnDef="inputTopics">
                             <th mat-header-cell *matHeaderCellDef>
@@ -205,10 +222,12 @@
                                     <button
                                         mat-icon-button
                                         [cdkCopyToClipboard]="
-                                            element?.eventGrounding
-                                                ?.transportProtocols?.[0]
-                                                ?.topicDefinition
-                                                ?.actualTopicName
+                                            $safeNavigationMigration(
+                                                element?.eventGrounding
+                                                    ?.transportProtocols?.[0]
+                                                    ?.topicDefinition
+                                                    ?.actualTopicName
+                                            )
                                         "
                                         [matTooltip]="'Copy' | translate"
                                     >

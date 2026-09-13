@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { DataLakeMeasure } from '@streampipes/platform-services';
 import {
     SpBasicViewComponent,
@@ -32,6 +32,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-dataset-details-layout',
     templateUrl: './dataset-details-layout.component.html',
     styleUrl: './dataset-details-layout.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         SpElementIdComponent,

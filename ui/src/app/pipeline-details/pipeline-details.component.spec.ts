@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -42,6 +42,7 @@ import { PipelineDetailsExpansionPanelComponent } from './components/pipeline-de
 
 @Component({
     selector: 'sp-pipeline-preview',
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<ng-content />',
 })
 class PreviewStubComponent {
@@ -52,6 +53,7 @@ class PreviewStubComponent {
 
 @Component({
     selector: 'sp-pipeline-details-expansion-panel',
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '',
 })
 class InspectorStubComponent {

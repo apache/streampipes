@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     TimeSeriesChartVisConfig,
@@ -34,6 +34,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-data-explorer-time-series-chart-widget-config',
     templateUrl: './time-series-chart-widget-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
         SelectColorPropertiesConfigComponent,

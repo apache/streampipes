@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    Input,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import {
@@ -28,6 +34,7 @@ import {
     selector: 'sp-image-container',
     templateUrl: './image-container.component.html',
     styleUrls: ['./image-container.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LayoutAlignDirective, FlexDirective],
 })
 export class SpImageContainerComponent {

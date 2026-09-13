@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AssetBrowserData } from '../asset-browser.model';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { Subscription } from 'rxjs';
@@ -36,6 +43,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-asset-browser-toolbar',
     templateUrl: 'asset-browser-toolbar.component.html',
     styleUrls: ['asset-browser-toolbar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutAlignDirective,
         MatButton,

@@ -23,6 +23,7 @@ import {
     HostListener,
     Output,
     ViewEncapsulation,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     animate,
@@ -64,6 +65,7 @@ import { MatIcon } from '@angular/material/icon';
             transition('* => *', animate(300)),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatIconButton, CdkPortalOutlet, MatIcon],
 })
 export class PanelDialogComponent<T> extends BaseDialogComponent<T> {

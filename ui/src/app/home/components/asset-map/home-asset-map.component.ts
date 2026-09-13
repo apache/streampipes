@@ -25,6 +25,7 @@ import {
     OnDestroy,
     OnInit,
     SimpleChanges,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     AssetLinkType,
@@ -71,6 +72,7 @@ import {
     templateUrl: './home-asset-map.component.html',
     styleUrls: ['./home-asset-map.component.scss'],
     imports: [LeafletDirective, TranslatePipe],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [HomeAssetMapPopupService],
 })
 export class HomeAssetMapComponent implements OnInit, OnChanges, OnDestroy {

@@ -16,10 +16,11 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'sp-feature-card-meta-section',
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './feature-card-meta-section.component.html',
 })
 export class FeatureCardMetaSectionComponent {

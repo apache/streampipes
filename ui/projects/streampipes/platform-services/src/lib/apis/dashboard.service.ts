@@ -53,9 +53,13 @@ export class DashboardService {
 
     getCompositeDashboard(
         dashboardId: string,
-        eTag = undefined,
-    ): Observable<HttpResponse<any>> {
-        const headers = eTag ? { 'If-None-Match': eTag } : {};
+        eTag?: string,
+    ): Observable<HttpResponse<CompositeDashboard>> {
+        const headers: Record<string, string> = {};
+
+        if (eTag !== undefined) {
+            headers['If-None-Match'] = eTag;
+        }
         return this.http.get<CompositeDashboard>(
             `${this.dashboardUrl}/${dashboardId}/composite`,
             {

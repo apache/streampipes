@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -47,6 +53,7 @@ import { MatChip } from '@angular/material/chips';
     selector: 'sp-app-static-free-input',
     templateUrl: './static-free-input.component.html',
     styleUrls: ['./static-free-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

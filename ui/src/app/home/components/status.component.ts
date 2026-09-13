@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, HostBinding, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    HostBinding,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { AssetLinkType, UserInfo } from '@streampipes/platform-services';
 import { StatusBox } from '../models/home.model';
@@ -28,6 +35,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-status',
     templateUrl: './status.component.html',
     styleUrls: ['./status.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslatePipe],
 })
 export class StatusComponent implements OnInit {

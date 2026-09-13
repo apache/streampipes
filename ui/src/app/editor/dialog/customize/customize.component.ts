@@ -24,6 +24,7 @@ import {
     OnInit,
     ViewEncapsulation,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     InvocablePipelineElementUnion,
@@ -75,6 +76,7 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './customize.component.html',
     styleUrls: ['./customize.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

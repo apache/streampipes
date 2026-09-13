@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     MatCell,
     MatCellDef,
@@ -73,6 +80,7 @@ type ManageableAsset = SpAssetModel & {
     selector: 'sp-asset-overview',
     templateUrl: './asset-overview.component.html',
     styleUrls: ['./asset-overview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         FlexDirective,

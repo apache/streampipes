@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
@@ -32,6 +37,7 @@ import { AdapterConfigurationComponent } from '../adapter-configuration/adapter-
     selector: 'sp-create-adapter',
     templateUrl: './create-adapter.component.html',
     styleUrls: ['./create-adapter.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [AdapterConfigurationComponent],
 })
 export class CreateAdapterComponent implements OnInit {

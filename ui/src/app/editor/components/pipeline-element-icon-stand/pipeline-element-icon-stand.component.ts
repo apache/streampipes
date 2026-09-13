@@ -24,6 +24,7 @@ import {
     OnChanges,
     SimpleChanges,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     PeCategory,
@@ -53,6 +54,7 @@ import { PipelineElementTypeFilterPipe } from '../../services/pipeline-element-t
     selector: 'sp-pipeline-element-icon-stand',
     templateUrl: './pipeline-element-icon-stand.component.html',
     styleUrls: ['./pipeline-element-icon-stand.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

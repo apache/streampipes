@@ -30,6 +30,7 @@ import {
     HostListener,
     ViewChild,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -101,6 +102,7 @@ const TIMESTAMP_MASK = 'yyyy-mm-dd HH:mm:ss.SSS';
     selector: 'sp-data-explorer-table-widget',
     templateUrl: './table-widget.component.html',
     styleUrls: ['./table-widget.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

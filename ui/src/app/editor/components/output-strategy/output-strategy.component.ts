@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DataProcessorInvocation,
     OutputStrategy,
@@ -31,6 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-output-strategy',
     templateUrl: './output-strategy.component.html',
     styleUrls: ['./output-strategy.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

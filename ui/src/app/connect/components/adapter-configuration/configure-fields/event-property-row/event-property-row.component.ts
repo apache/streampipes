@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DataType,
@@ -53,6 +54,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-event-property-row',
     templateUrl: './event-property-row.component.html',
     styleUrls: ['./event-property-row.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

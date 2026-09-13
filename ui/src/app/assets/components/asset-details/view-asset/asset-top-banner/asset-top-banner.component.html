@@ -44,7 +44,11 @@
                     <dd>
                         <sp-label
                             shape="badge"
-                            [labelText]="assetModel.assetSite?.area"
+                            [labelText]="
+                                $safeNavigationMigration(
+                                    assetModel.assetSite?.area
+                                )
+                            "
                             tone="neutral"
                             icon="location_on"
                             size="small"

@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, computed, input } from '@angular/core';
+import {
+    Component,
+    computed,
+    input,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { FieldStatusInfo } from '@streampipes/platform-services';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SpAlertBannerComponent } from '@streampipes/shared-ui';
@@ -25,6 +30,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-show-field-status-infos',
     templateUrl: './show-field-status-infos.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

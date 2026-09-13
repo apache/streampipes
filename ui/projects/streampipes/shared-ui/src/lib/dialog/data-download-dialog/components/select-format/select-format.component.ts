@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormatExportConfig } from '../../model/format-export-config.model';
 import { FileMetadata, FilesService } from '@streampipes/platform-services';
 import { CurrentUserService } from '../../../../services/current-user.service';
@@ -38,6 +44,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         './select-format.component.scss',
         '../../data-download-dialog.component.scss',
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatStepLabel,
         SplitSectionComponent,

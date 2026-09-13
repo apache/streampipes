@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     ExtensionDeploymentConfiguration,
     ServiceTagService,
@@ -38,6 +44,7 @@ import {
 @Component({
     selector: 'sp-adapter-deployment-settings',
     templateUrl: './adapter-deployment-settings.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, input, output } from '@angular/core';
+import {
+    Component,
+    input,
+    output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AdapterEventPreviewComponent,
     Mode,
@@ -43,6 +48,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-adapter-sample-preview',
     templateUrl: './adapter-sample-preview.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicInnerPanelComponent,
         LayoutAlignDirective,

@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ViewChild,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
 import { DialogRef } from '../base-dialog/dialog-ref';
 import { ExportConfig } from './model/export-config.model';
@@ -34,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-data-download-dialog',
     templateUrl: 'data-download-dialog.component.html',
     styleUrls: ['./data-download-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         MatStepper,

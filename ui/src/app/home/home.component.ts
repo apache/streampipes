@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    signal,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { HomeService } from './home.service';
 import { Router } from '@angular/router';
 import { AppConstants } from '../services/app.constants';
@@ -66,6 +73,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         WelcomeComponent,
