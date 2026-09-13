@@ -16,6 +16,7 @@
  *
  */
 
+import { SpLogMessage } from '@streampipes/platform-services';
 import {
     Component,
     inject,
@@ -62,7 +63,7 @@ export class DataRetentionNowDialogComponent implements OnInit {
 
     isInProgress = true;
     currentStatus: string = '';
-    errorMessage = '';
+    errorMessage: SpLogMessage;
     isError = false;
     message = '';
     filePath = '';

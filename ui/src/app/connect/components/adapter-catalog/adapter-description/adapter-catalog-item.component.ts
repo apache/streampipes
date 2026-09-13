@@ -25,6 +25,7 @@ import {
 } from '@angular/core';
 import {
     AdapterDescription,
+    AdapterSummaryDto,
     PipelineElementAssetService,
 } from '@streampipes/platform-services';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -52,7 +53,7 @@ export class AdapterCatalogItemComponent implements OnInit {
     private shepherdService = inject(ShepherdService);
 
     @Input()
-    adapter: AdapterDescription;
+    adapter: AdapterDescription | AdapterSummaryDto;
 
     iconUrl: SafeUrl;
 

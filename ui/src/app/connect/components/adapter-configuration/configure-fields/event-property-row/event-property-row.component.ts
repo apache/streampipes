@@ -148,7 +148,9 @@ export class EventPropertyRowComponent implements OnInit {
         return runtimeType.split('#')[1].toUpperCase();
     }
 
-    private isEventPropertyPrimitive(instance: EventProperty): boolean {
+    protected isEventPropertyPrimitive(
+        instance: EventProperty,
+    ): instance is EventPropertyPrimitive {
         return instance instanceof EventPropertyPrimitive;
     }
 

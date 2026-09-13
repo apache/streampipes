@@ -291,4 +291,9 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
             }
         }
     }
+    isProcessor(
+        element: InvocablePipelineElementUnion,
+    ): element is DataProcessorInvocation {
+        return element instanceof DataProcessorInvocation;
+    }
 }

@@ -26,7 +26,7 @@ import {
 import {
     Isa95TypeService,
     LocationConfig,
-    SpAssetModel,
+    SpAsset,
 } from '@streampipes/platform-services';
 import {
     SpLabelComponent,
@@ -51,7 +51,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class SpAssetTopBannerComponent implements OnChanges {
     @Input()
-    assetModel: SpAssetModel;
+    assetModel: SpAsset;
 
     @Input()
     locationConfig: LocationConfig;

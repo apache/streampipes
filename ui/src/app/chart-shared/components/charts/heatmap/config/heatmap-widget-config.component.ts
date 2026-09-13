@@ -55,9 +55,9 @@ export class HeatmapWidgetConfigComponent extends BaseWidgetConfig<
     HeatmapWidgetModel,
     HeatmapVisConfig
 > {
-    setShowLabelsProperty(field: DataExplorerField) {
+    setShowLabelsProperty(checked: boolean) {
         this.currentlyConfiguredWidget.visualizationConfig.showLabelsProperty =
-            field['checked'];
+            checked;
         this.triggerDataRefresh();
     }
 

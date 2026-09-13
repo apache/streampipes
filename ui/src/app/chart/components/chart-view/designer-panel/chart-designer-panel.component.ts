@@ -26,6 +26,7 @@ import {
 } from '@angular/core';
 import {
     DataExplorerWidgetModel,
+    DataExplorerDataConfig,
     DataLakeMeasure,
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
@@ -104,5 +105,9 @@ export class ChartDesignerPanelComponent {
     @ViewChild('dataSettingsPanel')
     public set content(dataSettingsPanel: ChartDataSettingsComponent) {
         this.dataSettingsPanel = dataSettingsPanel;
+    }
+    get dataConfig(): DataExplorerDataConfig {
+        return this.currentlyConfiguredWidget
+            .dataConfig as DataExplorerDataConfig;
     }
 }

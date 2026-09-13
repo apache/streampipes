@@ -84,7 +84,9 @@
     "stream-browserify": "3.0.0",
     "swagger-ui-dist": "5.15.1",
     "tslib": "^2.6.2",
-    "zone.js": "~0.15.1"
+    "zone.js": "~0.15.1",
+    "katex": "^0.16.47",
+    "marked-katex-extension": "^5.1.12"
   },
   "devDependencies": {
     "@angular-eslint/builder": "^22.5.0",
@@ -118,6 +120,7 @@
     "ng-packagr": "^22.1.1",
     "prettier": "3.7.4",
     "typescript": "6.0.3",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "angular-eslint": "^22.5.0"
   }
 }

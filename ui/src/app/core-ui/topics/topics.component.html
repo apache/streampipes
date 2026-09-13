@@ -46,7 +46,7 @@
 
         @if (selectedTabIndex === 0) {
             <div>
-                @if (isSpDataStream()) {
+                @if (isSpDataStream(pipelineElement)) {
                     <table
                         mat-table
                         [dataSource]="
@@ -94,7 +94,7 @@
                         ></tr>
                     </table>
                 }
-                @if (isDataProcessorInvocation()) {
+                @if (isDataProcessorInvocation(pipelineElement)) {
                     <table
                         mat-table
                         [dataSource]="
@@ -194,7 +194,7 @@
                         ></tr>
                     </table>
                 }
-                @if (isDataSinkInvocation()) {
+                @if (isDataSinkInvocation(pipelineElement)) {
                     <table
                         mat-table
                         [dataSource]="

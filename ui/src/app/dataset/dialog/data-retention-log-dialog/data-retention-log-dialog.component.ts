@@ -22,6 +22,7 @@ import {
     Input,
     ChangeDetectionStrategy,
 } from '@angular/core';
+import { RetentionLog } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
@@ -68,7 +69,7 @@ import { DatePipe } from '@angular/common';
 })
 export class DataRetentionLogDialogComponent {
     @Input()
-    retentionLog: string;
+    retentionLog: RetentionLog[];
 
     displayedColumns: string[] = ['date', 'path', 'state', 'error'];
 

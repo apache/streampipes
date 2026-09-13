@@ -84,7 +84,7 @@ export class SpImageContainerComponent {
     }
 
     @Input()
-    set imageSrc(src: Observable<Blob>) {
+    set imageSrc(src: Observable<SafeUrl>) {
         src.subscribe(url => {
             this.imagePath = url;
             this.showImage = true;

@@ -183,6 +183,8 @@
                                 {{ 'Select none' | translate }}
                             </button>
                         </div>
+                    }
+                    @if (getGenericStorageAppDocTypes().length > 0) {
                         <div fxLayout="column" class="mt-md">
                             @for (
                                 exportItem of getGenericStorageAppDocTypes();

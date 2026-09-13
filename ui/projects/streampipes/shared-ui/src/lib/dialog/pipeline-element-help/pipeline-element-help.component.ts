@@ -99,11 +99,13 @@ export class PipelineElementHelpComponent implements OnInit {
 
     isDataStream: boolean;
     assetContext?: SpTableResolvedAssetContext;
+    dataStream: SpDataStream;
 
     ngOnInit() {
         if (this.pipelineElement instanceof SpDataStream) {
             this.tabs = this.availableTabs;
             this.isDataStream = true;
+            this.dataStream = this.pipelineElement as SpDataStream;
             this.assetBrowserService.assetData$
                 .pipe(
                     map(assetData =>

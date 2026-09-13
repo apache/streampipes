@@ -19,7 +19,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, ActivatedRoute } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { EMPTY } from 'rxjs';
 import {
@@ -65,8 +65,9 @@ class InspectorStubComponent {
 describe('Pipeline details workspace', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SpPipelineDetailsComponent, TranslateModule.forRoot()],
+            imports: [SpPipelineDetailsComponent],
             providers: [
+                provideTranslateService(),
                 provideRouter([]),
                 ...[
                     ActivatedRoute,

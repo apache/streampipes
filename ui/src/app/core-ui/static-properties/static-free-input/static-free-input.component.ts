@@ -47,7 +47,7 @@ import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatError, MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSlider, MatSliderThumb } from '@angular/material/slider';
-import { MatChip } from '@angular/material/chips';
+import { MatChip, MatChipSet } from '@angular/material/chips';
 
 @Component({
     selector: 'sp-app-static-free-input',
@@ -65,6 +65,7 @@ import { MatChip } from '@angular/material/chips';
         MatSlider,
         MatSliderThumb,
         MatChip,
+        MatChipSet,
         QuillEditorComponent,
         TranslatePipe,
     ],
@@ -178,6 +179,6 @@ export class StaticFreeInputComponent
         if (!Number.isInteger(value)) {
             value = Number(value.toFixed(1));
         }
-        return value;
+        return String(value);
     }
 }

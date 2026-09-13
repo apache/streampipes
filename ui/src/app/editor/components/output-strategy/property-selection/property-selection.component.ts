@@ -94,4 +94,9 @@ export class PropertySelectionComponent implements OnInit {
     triggerFormValidation() {
         this.validateForm.emit(true);
     }
+    isNestedEventProperty(
+        property: EventPropertyUnion,
+    ): property is EventPropertyNested {
+        return property instanceof EventPropertyNested;
+    }
 }

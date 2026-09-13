@@ -192,4 +192,9 @@ export class EditEventPropertyComponent implements OnInit {
             (this.cachedProperty as EventPropertyPrimitive).runtimeType,
         );
     }
+    isPrimitiveProperty(
+        property: EventProperty,
+    ): property is EventPropertyPrimitive {
+        return property instanceof EventPropertyPrimitive;
+    }
 }

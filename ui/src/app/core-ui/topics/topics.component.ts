@@ -115,16 +115,20 @@ export class TopicsComponent implements OnInit {
         }
     }
 
-    isSpDataStream(): boolean {
-        return this.pipelineElement instanceof SpDataStream;
+    isSpDataStream(element: PipelineElementUnion): element is SpDataStream {
+        return element instanceof SpDataStream;
     }
 
-    isDataProcessorInvocation(): boolean {
-        return this.pipelineElement instanceof DataProcessorInvocation;
+    isDataProcessorInvocation(
+        element: PipelineElementUnion,
+    ): element is DataProcessorInvocation {
+        return element instanceof DataProcessorInvocation;
     }
 
-    isDataSinkInvocation(): boolean {
-        return this.pipelineElement instanceof DataSinkInvocation;
+    isDataSinkInvocation(
+        element: PipelineElementUnion,
+    ): element is DataSinkInvocation {
+        return element instanceof DataSinkInvocation;
     }
 
     close() {

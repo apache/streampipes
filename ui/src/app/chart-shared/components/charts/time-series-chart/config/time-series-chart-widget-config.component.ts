@@ -122,9 +122,8 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<
         this.triggerViewRefresh();
     }
 
-    setShowSpikeProperty(field: DataExplorerField) {
-        this.currentlyConfiguredWidget.visualizationConfig.showSpike =
-            field['checked'];
+    setShowSpikeProperty(checked: boolean) {
+        this.currentlyConfiguredWidget.visualizationConfig.showSpike = checked;
         this.triggerViewRefresh();
     }
 

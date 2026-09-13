@@ -59,7 +59,7 @@ export class AssetDialogComponent implements OnInit {
     @Input() originalAssets: SpAssetTreeNode[];
     @Input() dataViewId: string;
     // TODO why is this a string and not a boolean
-    @Input() editMode: string;
+    @Input() editMode: boolean;
     @Input() cancelTitle: string;
     @Input() okTitle: string;
 

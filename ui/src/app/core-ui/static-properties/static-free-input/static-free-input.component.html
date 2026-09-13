@@ -62,7 +62,7 @@
                 <div fxFlex="100" fxLayout="column">
                     <h5>{{ 'Possible placeholders:' | translate }}</h5>
                     <div fxFlex="100" fxLayout="row" style="background: white">
-                        <mat-chip-list style="margin-bottom: 10px">
+                        <mat-chip-set style="margin-bottom: 10px">
                             @for (
                                 property of eventSchemas[0].eventProperties;
                                 track property
@@ -79,7 +79,7 @@
                                     >#{{ property.runtimeName }}#
                                 </mat-chip>
                             }
-                        </mat-chip-list>
+                        </mat-chip-set>
                     </div>
                 </div>
             }

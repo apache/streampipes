@@ -45,6 +45,7 @@ import {
     SecretStaticProperty,
     SlideToggleStaticProperty,
     StaticProperty,
+    StaticPropertyUnion,
     StaticPropertyAlternatives,
     StaticPropertyGroup,
 } from '@streampipes/platform-services';
@@ -105,7 +106,7 @@ export class StaticPropertyComponent implements OnInit {
     staticProperty: StaticProperty;
 
     @Input()
-    staticProperties: StaticProperty[];
+    staticProperties: StaticPropertyUnion[];
 
     @Input()
     adapterId: string;

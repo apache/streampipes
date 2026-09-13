@@ -16,6 +16,7 @@
  *
  */
 
+import { DatePipe } from '@angular/common';
 import {
     AfterViewInit,
     Component,
@@ -101,6 +102,7 @@ import { DatasetLastEventLabelComponent } from './dataset-last-event-label/datas
     styleUrls: ['./dataset-overview.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
+        DatePipe,
         LayoutDirective,
         LayoutAlignDirective,
         FlexDirective,

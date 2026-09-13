@@ -16,6 +16,7 @@
  *
  */
 
+import { SpLogMessage } from '@streampipes/platform-services';
 import {
     Component,
     inject,
@@ -66,7 +67,7 @@ export class ExportProviderConnectionTestComponent implements OnInit {
 
     isInProgress = false;
     currentStatus: string;
-    errorMessage = '';
+    errorMessage: SpLogMessage;
     isError = false;
     message = '';
     filePath = '';

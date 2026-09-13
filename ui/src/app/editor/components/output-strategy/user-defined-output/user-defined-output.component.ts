@@ -26,6 +26,7 @@ import { BaseOutputStrategy } from '../base/BaseOutputStrategy';
 import {
     DataType,
     EventPropertyPrimitive,
+    EventPropertyUnion,
     UserDefinedOutputStrategy,
 } from '@streampipes/platform-services';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
@@ -135,5 +136,13 @@ export class UserDefinedOutputStrategyComponent
         } else {
             this.parentForm.controls['output-strategy'].setErrors(undefined);
         }
+    }
+    isPrimitiveProperty(
+        property: EventPropertyUnion,
+    ): property is EventPropertyPrimitive {
+        return (
+            property['@class'] ===
+            'org.apache.streampipes.model.schema.EventPropertyPrimitive'
+        );
     }
 }

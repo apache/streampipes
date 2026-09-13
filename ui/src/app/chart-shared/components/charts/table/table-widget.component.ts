@@ -1289,4 +1289,11 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
         const start = this.pageIndex * this.pageSize;
         this.pagedRows = this.filteredRows.slice(start, start + this.pageSize);
     }
+    asTimestamp(value: unknown): string | number | Date | null {
+        return typeof value === 'string' ||
+            typeof value === 'number' ||
+            value instanceof Date
+            ? value
+            : null;
+    }
 }

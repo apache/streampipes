@@ -63,9 +63,9 @@ export class PipelinePreviewMetaComponent implements OnInit {
     @Input() dataOutLabel?: string;
 
     statusString: string;
-    statusTone: string;
+    statusTone: SpLabelComponent['tone'];
 
-    healthStatusTone: string;
+    healthStatusTone: SpLabelComponent['tone'];
 
     private translate = inject(TranslateService);
 

@@ -64,7 +64,7 @@ export class ServiceConfigsPasswordComponent {
     password: string;
     show: boolean;
     className: string;
-    private hide: boolean;
+    protected hide: boolean;
 
     constructor() {
         this.password = hiddenPasswordString;
