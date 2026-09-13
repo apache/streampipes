@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.configuration.GeneralConfig;
+import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 import org.apache.streampipes.model.configuration.SystemNotificationConfig;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
@@ -57,11 +58,12 @@ public class SystemNotificationResource {
   /**
    * Reads the stored notification without checking whether it should be shown right now.
    *
-   * @return the notification, or empty if none is stored, for example on installations set up
-   *     before this feature existed.
+   * @return the notification, or empty if none is stored, for example on a fresh installation
+   *     or on installations set up before this feature existed.
    */
   private Optional<SystemNotificationConfig> findConfiguredNotification() {
-    return Optional.ofNullable(configStorage.get().getGeneralConfig())
+    return Optional.ofNullable(configStorage.get())
+        .map(SpCoreConfiguration::getGeneralConfig)
         .map(GeneralConfig::getSystemNotification);
   }
 }

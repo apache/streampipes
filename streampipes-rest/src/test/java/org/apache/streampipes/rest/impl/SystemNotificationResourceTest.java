@@ -65,6 +65,16 @@ class SystemNotificationResourceTest {
     return new SystemNotificationResource(configStorage);
   }
 
+  /**
+   * Checks that a fresh installation, where nothing is stored yet, leads to no notification
+   * instead of a NullPointerException on this public endpoint.
+   */
+  @Test
+  void testGetActiveNotification_nothingStored_returnsDisabled() {
+    var resource = newResource(null);
+    assertEquals(SystemNotificationConfig.disabled(), resource.getActiveNotification());
+  }
+
   @Test
   void testGetActiveNotification_noGeneralConfig_returnsDisabled() {
     var resource = newResource(new SpCoreConfiguration());
