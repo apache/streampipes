@@ -110,8 +110,10 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
           var field = event.getOptionalFieldByRuntimeName(runtimeName);
 
           return field.isPresent() && field.get()
-                                           .getAsPrimitive()
-                                           .getRawValue() == null;
+                                           .isPrimitive()
+                                 && field.get()
+                                         .getAsPrimitive()
+                                         .getRawValue() == null;
         })
         .map(EventProperty::getRuntimeName)
         .collect(Collectors.toList());
