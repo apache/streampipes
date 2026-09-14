@@ -34,11 +34,12 @@ export class ChartUtils {
         if (!discardUnsavedChanges) {
             return;
         }
-        cy.location('hash', { timeout: 10000 }).then(hash => {
-            if (hash.startsWith('#/chart/')) {
-                SharedBtns.confirmDialogCancelBtn()
-                    .should('be.visible')
-                    .click();
+
+        cy.get('sp-chart-overview, [data-cy="cancel-delete"]:visible', {
+            timeout: 10000,
+        }).then($elements => {
+            if ($elements.filter('[data-cy="cancel-delete"]').length > 0) {
+                SharedBtns.confirmDialogCancelBtn().click();
             }
         });
         cy.location('hash', { timeout: 10000 }).should('eq', '#/chart');
@@ -414,7 +415,7 @@ export class ChartUtils {
      * Leaves the chart editor of a copy without saving it.
      */
     public static discardChartFromExisting() {
-        ChartBtns.discardChartBtn().click();
+        ChartBtns.goBackToOverviewBtn();
         SharedBtns.confirmDialogCancelBtn().should('be.visible').click();
         ChartBtns.openNewChartBtn().should('be.visible');
     }
@@ -581,7 +582,7 @@ export class ChartUtils {
     }
 
     public static goBackToOverview() {
-        ChartBtns.goBackToOverviewBtn().click();
+        ChartUtils.goToDatalake();
     }
 
     public static addNewChart() {

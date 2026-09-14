@@ -42,12 +42,14 @@ This folder contains a WIP framework for automated E2E tests of StreamPipes.
 
 > **Note:** To configure the base URL set the environment variable CYPRESS_BASE_URL (e.g. CYPRESS_BASE_URL=http://localhost:8082)
 
-## Design guidlines
+## Writing tests
 
-- Before each test the whole system is cleaned to have a fresh environment
-- Each test sets up its own test environment (e.g. upload files)
-- There should not be any dependencies between tests
-- Ensure that all services required for the test are running (e.g. external data sources, external databases, ...)
+Authoring rules — selector placement, spec structure, interaction style — are in
+[AGENTS.md](AGENTS.md) in this directory. Two environment facts to keep in mind:
+
+- `cy.initStreamPipesTest()` cleans the whole system before each test, and each test sets up
+  its own data (for example by uploading files).
+- Make sure every external service a test needs (data sources, databases, ...) is running.
 
 ## Automated test runs
 
