@@ -323,7 +323,7 @@ public class TimeSeriesStorageInfluxTest {
   }
 
   @Test
-  public void onEventWithJsonValueForPrimitivePropertyIgnoresMalformedProperty() {
+  public void onEventWithJsonValueForPrimitivePropertyReportsThenIgnoresMalformedProperty() {
     var expected = getPointBuilderWithTimestamp()
         .addField("valid", "value")
         .build();
@@ -345,7 +345,11 @@ public class TimeSeriesStorageInfluxTest {
 
     var event = getEvent(eventSchema, Map.of(FIELD_NAME, Map.of("key", "value"), "valid", "value"));
 
-    var actualPoint = executeOnEvent(getInfluxStore(eventSchema), event);
+    var influxStore = getInfluxStore(eventSchema);
+
+    assertThrows(SpRuntimeException.class, () -> influxStore.onEvent(event));
+
+    var actualPoint = executeOnEvent(influxStore, event);
 
     assertEquals(expected, actualPoint);
   }

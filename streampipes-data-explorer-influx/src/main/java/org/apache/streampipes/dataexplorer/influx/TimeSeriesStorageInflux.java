@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TimeSeriesStorageInflux extends TimeSeriesStorage {
 
@@ -41,6 +42,8 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
   private final InfluxDB influxDb;
 
   private final PropertyHandler propertyHandler;
+
+  private final AtomicBoolean reportedInvalidPrimitiveFields = new AtomicBoolean(false);
 
   public TimeSeriesStorageInflux(
       DataLakeMeasure measure,
@@ -80,11 +83,7 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
       fieldOptional.ifPresent(field -> {
         if (ep instanceof EventPropertyPrimitive) {
           if (!field.isPrimitive()) {
-            LOG.warn(
-                "Ignoring event property '{}' because its schema declares a primitive value but received {}.",
-                runtimeName,
-                field.getClass().getSimpleName()
-            );
+            handleInvalidPrimitiveField(runtimeName, field.getClass().getSimpleName());
             return;
           }
 
@@ -103,6 +102,21 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
         }
       });
     });
+  }
+
+  private void handleInvalidPrimitiveField(String runtimeName, String actualFieldType) {
+    if (reportedInvalidPrimitiveFields.compareAndSet(false, true)) {
+      throw new SpRuntimeException(
+          "Event property '%s' is declared as primitive in the schema but received %s."
+              .formatted(runtimeName, actualFieldType)
+      );
+    } else {
+      LOG.debug(
+          "Ignoring event property '{}' because its schema declares a primitive value but received {}.",
+          runtimeName,
+          actualFieldType
+      );
+    }
   }
 
   /**
