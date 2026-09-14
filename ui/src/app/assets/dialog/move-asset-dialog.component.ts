@@ -136,7 +136,7 @@ export class MoveAssetDialogComponent {
 
     private showAssetTree(asset: SpAssetModel): void {
         this.selectedTargetAsset = asset;
-        this.selectedTarget = undefined;
+        this.selectedTarget = asset;
         this.dataSource.data = [asset];
         this.treeControl.dataNodes = [asset];
         this.treeControl.expandAll();

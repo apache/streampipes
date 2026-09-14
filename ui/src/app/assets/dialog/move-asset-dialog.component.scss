@@ -39,6 +39,16 @@
     display: none;
 }
 
+.move-asset-tree .mat-nested-tree-node div[role='group'] {
+    margin-inline-start: var(--space-md);
+    padding-inline-start: var(--space-md);
+    border-inline-start: 1px solid var(--color-border-subtle);
+}
+
+.move-asset-tree div[role='group'] > .mat-tree-node {
+    padding-inline-start: var(--space-xs);
+}
+
 .site-warning {
     display: flex;
     align-items: center;

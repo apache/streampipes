@@ -51,7 +51,11 @@
                     | translate
             }}
         </p>
-        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+        <mat-tree
+            class="move-asset-tree"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
             <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
                 <button
                     mat-flat-button
