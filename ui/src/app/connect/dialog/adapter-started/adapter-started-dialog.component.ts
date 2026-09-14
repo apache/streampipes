@@ -424,7 +424,7 @@ export class AdapterStartedDialog implements OnInit {
                 name: adapter.name,
             },
             {
-                type: 'data-source',
+                type: 'data-stream',
                 id: adapter.correspondingDataStreamElementId,
                 name: adapter.name,
             },
@@ -447,7 +447,7 @@ export class AdapterStartedDialog implements OnInit {
         );
 
         linkageData.push({
-            type: 'measurement',
+            type: 'dataset',
             id: res.elementId,
             name: adapter.name,
         });
