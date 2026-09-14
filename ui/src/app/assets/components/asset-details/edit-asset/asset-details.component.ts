@@ -163,17 +163,21 @@ export class SpAssetDetailsComponent
 
     moveSubAsset(assetToMove: SpAsset): void {
         this.assetService.getAssetSummary().subscribe(summary => {
-            const dialogRef = this.dialog.open(MoveAssetDialogComponent, {
-                width: '600px',
-                maxWidth: '90vw',
-                data: {
-                    assetToMove,
-                    availableAssets: summary.resources.filter(
-                        candidate =>
-                            candidate.elementId !== this.asset.elementId,
-                    ),
+            const dialogRef = this.dialogService.open(
+                MoveAssetDialogComponent,
+                {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translateService.instant('Move asset'),
+                    width: '42rem',
+                    data: {
+                        assetToMove,
+                        availableAssets: summary.resources.filter(
+                            candidate =>
+                                candidate.elementId !== this.asset.elementId,
+                        ),
+                    },
                 },
-            });
+            );
 
             dialogRef
                 .afterClosed()

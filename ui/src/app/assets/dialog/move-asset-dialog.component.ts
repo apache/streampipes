@@ -17,14 +17,13 @@
  */
 
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import {
-    MAT_DIALOG_DATA,
-    MatDialogActions,
-    MatDialogContent,
-    MatDialogRef,
-    MatDialogTitle,
-} from '@angular/material/dialog';
+    FlexDirective,
+    LayoutAlignDirective,
+    LayoutDirective,
+    LayoutGapDirective,
+} from '@ngbracket/ngx-layout/flex';
 import {
     MatNestedTreeNode,
     MatTree,
@@ -43,11 +42,7 @@ import {
     SpAssetModel,
 } from '@streampipes/platform-services';
 import { TranslatePipe } from '@ngx-translate/core';
-
-export interface MoveAssetDialogData {
-    assetToMove: SpAsset;
-    availableAssets: AssetSummaryDto[];
-}
+import { DialogRef } from '@streampipes/shared-ui';
 
 export interface MoveAssetDialogResult {
     targetAsset: SpAssetModel;
@@ -69,30 +64,34 @@ export interface MoveAssetDialogResult {
         MatButton,
         MatIconButton,
         MatIcon,
-        MatDialogTitle,
-        MatDialogContent,
-        MatDialogActions,
+        FlexDirective,
+        LayoutDirective,
+        LayoutAlignDirective,
+        LayoutGapDirective,
         TranslatePipe,
     ],
 })
 export class MoveAssetDialogComponent {
-    private dialogRef = inject(MatDialogRef<MoveAssetDialogComponent>);
+    private dialogRef = inject<DialogRef<MoveAssetDialogComponent>>(DialogRef);
     private assetService = inject(AssetManagementService);
-    readonly data = inject<MoveAssetDialogData>(MAT_DIALOG_DATA);
 
     readonly treeControl = new NestedTreeControl<SpAsset>(node => node.assets);
     readonly dataSource = new MatTreeNestedDataSource<SpAsset>();
 
-    selectedTarget?: SpAsset;
-    selectedTargetAsset?: SpAssetModel;
-    private loadedRootAssetIds = new Set<string>();
+    @Input()
+    assetToMove: SpAsset;
 
-    constructor() {
-        this.dataSource.data = this.data.availableAssets.map(asset =>
+    @Input()
+    set availableAssets(assets: AssetSummaryDto[]) {
+        this.dataSource.data = assets.map(asset =>
             this.makeRootAssetPlaceholder(asset),
         );
         this.treeControl.dataNodes = this.dataSource.data;
     }
+
+    selectedTarget?: SpAsset;
+    selectedTargetAsset?: SpAssetModel;
+    private loadedRootAssetIds = new Set<string>();
 
     hasChild = (_: number, node: SpAsset): boolean =>
         this.isRootAsset(node) || !!node.assets?.length;
@@ -136,7 +135,7 @@ export class MoveAssetDialogComponent {
             return true;
         }
 
-        const siteIds = this.getAllAssets(this.data.assetToMove)
+        const siteIds = this.getAllAssets(this.assetToMove)
             .concat(this.getAllAssets(this.selectedTargetAsset))
             .map(asset => asset.assetSite?.siteId ?? '')
             .filter((siteId, index, ids) => ids.indexOf(siteId) === index);

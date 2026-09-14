@@ -15,53 +15,22 @@
   ~ limitations under the License.
   ~
 -->
-<h2 mat-dialog-title>{{ 'Move asset' | translate }}</h2>
-
-<mat-dialog-content>
-    <p>
-        {{
-            'Select the asset below which the asset should be moved.'
-                | translate
-        }}
+<div class="move-asset-content" fxLayout="column">
+    <p class="move-intro">
+        {{ 'Select the asset that will become the new parent.' | translate }}
     </p>
-    <mat-tree
-        class="move-asset-tree"
-        [dataSource]="dataSource"
-        [treeControl]="treeControl"
-    >
-        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-            <button
-                mat-flat-button
-                class="btn-secondary tree-node"
-                type="button"
-                (click)="selectTarget(node)"
-                [class.selected-target]="
-                    selectedTarget?.assetId === node.assetId
-                "
-            >
-                <mat-icon aria-hidden="true">account_tree</mat-icon>
-                <span>{{ node.assetName }}</span>
-            </button>
-        </mat-tree-node>
-        <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
-            <div class="tree-node-row">
-                <button
-                    mat-icon-button
-                    type="button"
-                    [attr.aria-label]="'Toggle ' + node.assetName"
-                    (click)="toggleAssetTree(node)"
-                >
-                    <mat-icon aria-hidden="true">{{
-                        treeControl.isExpanded(node)
-                            ? 'expand_more'
-                            : 'chevron_right'
-                    }}</mat-icon>
-                </button>
+    <div class="tree-section">
+        <mat-tree
+            class="move-asset-tree"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
                 <button
                     mat-flat-button
                     class="btn-secondary tree-node"
                     type="button"
-                    (click)="selectTarget(node); toggleAssetTree(node)"
+                    (click)="selectTarget(node)"
                     [class.selected-target]="
                         selectedTarget?.assetId === node.assetId
                     "
@@ -69,15 +38,43 @@
                     <mat-icon aria-hidden="true">account_tree</mat-icon>
                     <span>{{ node.assetName }}</span>
                 </button>
-            </div>
-            <div
-                [class.tree-invisible]="!treeControl.isExpanded(node)"
-                role="group"
-            >
-                <ng-container matTreeNodeOutlet></ng-container>
-            </div>
-        </mat-nested-tree-node>
-    </mat-tree>
+            </mat-tree-node>
+            <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                <div class="tree-node-row">
+                    <button
+                        mat-icon-button
+                        type="button"
+                        [attr.aria-label]="'Toggle ' + node.assetName"
+                        (click)="toggleAssetTree(node)"
+                    >
+                        <mat-icon aria-hidden="true">{{
+                            treeControl.isExpanded(node)
+                                ? 'expand_more'
+                                : 'chevron_right'
+                        }}</mat-icon>
+                    </button>
+                    <button
+                        mat-flat-button
+                        class="btn-secondary tree-node"
+                        type="button"
+                        (click)="selectTarget(node); toggleAssetTree(node)"
+                        [class.selected-target]="
+                            selectedTarget?.assetId === node.assetId
+                        "
+                    >
+                        <mat-icon aria-hidden="true">account_tree</mat-icon>
+                        <span>{{ node.assetName }}</span>
+                    </button>
+                </div>
+                <div
+                    [class.tree-invisible]="!treeControl.isExpanded(node)"
+                    role="group"
+                >
+                    <ng-container matTreeNodeOutlet></ng-container>
+                </div>
+            </mat-nested-tree-node>
+        </mat-tree>
+    </div>
     @if (selectedTargetAsset && !sitesAreConsistent()) {
         <p class="site-warning" role="alert">
             <mat-icon aria-hidden="true">warning</mat-icon>
@@ -87,9 +84,14 @@
             }}</span>
         </p>
     }
-</mat-dialog-content>
+</div>
 
-<mat-dialog-actions align="end">
+<div
+    fxLayout="row"
+    fxLayoutAlign="end center"
+    fxLayoutGap="var(--space-sm)"
+    class="dialog-actions"
+>
     <button
         mat-flat-button
         class="btn-secondary"
@@ -107,4 +109,4 @@
     >
         {{ 'Save' | translate }}
     </button>
-</mat-dialog-actions>
+</div>

@@ -292,16 +292,21 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
 
     moveAsset(assetSummary: AssetSummaryDto): void {
         this.assetService.getAsset(assetSummary.elementId).subscribe(asset => {
-            const dialogRef = this.dialog.open(MoveAssetDialogComponent, {
-                width: '600px',
-                maxWidth: '90vw',
-                data: {
-                    assetToMove: asset,
-                    availableAssets: this.existingAssets.filter(
-                        candidate => candidate.elementId !== asset.elementId,
-                    ),
+            const dialogRef = this.dialogService.open(
+                MoveAssetDialogComponent,
+                {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translateService.instant('Move asset'),
+                    width: '42rem',
+                    data: {
+                        assetToMove: asset,
+                        availableAssets: this.existingAssets.filter(
+                            candidate =>
+                                candidate.elementId !== asset.elementId,
+                        ),
+                    },
                 },
-            });
+            );
 
             dialogRef
                 .afterClosed()
