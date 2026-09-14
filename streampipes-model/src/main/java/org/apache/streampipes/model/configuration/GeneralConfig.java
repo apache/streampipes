@@ -33,6 +33,7 @@ public class GeneralConfig {
   private List<String> defaultUserRoles;
   private LinkSettings linkSettings;
   private UserAcknowledgment userAcknowledgment;
+  private SystemNotificationConfig systemNotification;
 
   public GeneralConfig() {
   }
@@ -121,5 +122,13 @@ public class GeneralConfig {
 
   public void setUserAcknowledgment(UserAcknowledgment userAcknowledgment) {
     this.userAcknowledgment = userAcknowledgment;
+  }
+
+  public SystemNotificationConfig getSystemNotification() {
+    return systemNotification;
+  }
+
+  public void setSystemNotification(SystemNotificationConfig systemNotification) {
+    this.systemNotification = systemNotification;
   }
 }

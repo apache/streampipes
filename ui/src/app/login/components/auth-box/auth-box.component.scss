@@ -20,6 +20,16 @@
     background: var(--color-menubar-bg);
 }
 
+.full-background {
+    position: relative;
+}
+
+.system-notification-outer {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
 .auth-box-footer {
     margin-bottom: 20px;
     margin-right: 20px;
