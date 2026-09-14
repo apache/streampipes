@@ -45,6 +45,7 @@
 
     --button-border-radius: 5px;
     --iconbar-width: 35px;
+    --size-app-toolbar: 3.25rem;
     --navbar-icon-border-radius: 0;
     --navbar-icon-padding: 0;
 
@@ -184,7 +185,7 @@
     --color-bg-outer: var(--color-bg-1);
     --color-bg-page-container: var(--color-bg-0);
     --color-bg-main-panel-header: var(--color-bg-0);
-    --color-bg-main-panel-content: var(--color-bg-0);
+    --color-bg-main-panel-content: var(--color-bg-1);
     --color-bg-navbar-icon: inherit;
     --color-bg-navbar-icon-selected: inherit;
     --color-bg-dialog: rgb(66, 66, 66);

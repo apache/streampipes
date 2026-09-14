@@ -18,15 +18,12 @@
 
 import { Component, Input } from '@angular/core';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
-import {
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { LayoutAlignDirective } from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-adapter-started-loading',
     templateUrl: './adapter-started-loading.component.html',
-    imports: [LayoutDirective, LayoutAlignDirective, SpSpinnerComponent],
+    imports: [LayoutAlignDirective, SpSpinnerComponent],
 })
 export class SpAdapterStartedLoadingComponent {
     @Input()

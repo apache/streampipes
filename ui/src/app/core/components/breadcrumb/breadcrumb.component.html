@@ -16,36 +16,43 @@
 ~
 -->
 
-<div
-    fxLayout="column"
-    fxFlex="100"
+<nav
     class="breadcrumb-outer text-sm"
-    fxLayoutAlign="center start"
+    [attr.aria-label]="'Breadcrumb' | translate"
 >
-    <div fxLayout="row" fxLayoutAlign="start center">
-        <div
-            [ngClass]="currentNavItems.length > 0 ? 'bc-item' : 'mat-hint'"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            (click)="navigateTo([''])"
-        >
-            <mat-icon fxLayoutAlign="start center" class="divider"
-                >home</mat-icon
+    <ol class="breadcrumb-list">
+        <li class="breadcrumb-entry">
+            <button
+                type="button"
+                class="bc-item"
+                (click)="navigateTo([''])"
+                [attr.aria-current]="
+                    currentNavItems.length === 0 ? 'page' : null
+                "
             >
-            <div>&nbsp;Home</div>
-        </div>
+                <mat-icon aria-hidden="true">home</mat-icon>
+                <span>{{ 'Home' | translate }}</span>
+            </button>
+        </li>
         @for (bcItem of currentNavItems; track bcItem) {
-            <div fxLayout="row" fxLayoutAlign="start center">
-                <mat-icon fxLayoutAlign="start center" class="divider mat-hint"
-                    >arrow_right</mat-icon
+            <li class="breadcrumb-entry">
+                <mat-icon aria-hidden="true" class="divider"
+                    >chevron_right</mat-icon
                 >
-                <div
-                    [ngClass]="bcItem.link ? 'bc-item' : 'mat-hint'"
-                    (click)="navigateTo(bcItem.link)"
-                >
-                    {{ bcItem.label }}
-                </div>
-            </div>
+                @if (bcItem.link) {
+                    <button
+                        type="button"
+                        class="bc-item"
+                        (click)="navigateTo(bcItem.link)"
+                    >
+                        {{ bcItem.label }}
+                    </button>
+                } @else {
+                    <span class="bc-current" aria-current="page">{{
+                        bcItem.label
+                    }}</span>
+                }
+            </li>
         }
-    </div>
-</div>
+    </ol>
+</nav>

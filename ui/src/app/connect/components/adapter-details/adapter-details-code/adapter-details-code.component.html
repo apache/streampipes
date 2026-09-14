@@ -16,29 +16,16 @@
   ~
   -->
 
-<sp-basic-nav-tabs
-    [spNavigationItems]="tabs"
-    [activeLink]="'code'"
-    [showBackLink]="true"
-    [backLinkTarget]="['connect']"
+<sp-adapter-details-layout
+    [adapter]="adapter"
+    [adapterNotFound]="adapterNotFound"
+    [tabs]="tabs"
+    activeLink="code"
 >
-    <div fxLayout="column" fxFlex="100">
-        @if (adapterNotFound) {
-            <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
-                {{ 'The desired adapter was not found!' | translate }}
-            </div>
-        } @else {
-            @if (adapter) {
-                <div fxLayout="column">
-                    <sp-basic-header-title-component
-                        [title]="adapter.name + ' - ' + 'Data' | translate"
-                    ></sp-basic-header-title-component>
-                    <sp-adapter-code-panel
-                        [adapterDescription]="adapter"
-                        maxHeight="none"
-                    ></sp-adapter-code-panel>
-                </div>
-            }
-        }
-    </div>
-</sp-basic-nav-tabs>
+    @if (adapter) {
+        <sp-adapter-code-panel
+            [adapterDescription]="adapter"
+            maxHeight="none"
+        ></sp-adapter-code-panel>
+    }
+</sp-adapter-details-layout>

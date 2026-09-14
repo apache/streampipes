@@ -42,6 +42,7 @@ import {
 } from '@ngbracket/ngx-layout';
 import { MatDivider } from '@angular/material/list';
 import { FilterExpressionPreviewService } from '../filter-expression-preview.service';
+import { MatIcon } from '@angular/material/icon';
 
 export interface AdvancedFilterDialogResult {
     action: 'save' | 'clear';
@@ -68,6 +69,7 @@ export interface AdvancedFilterDialogResult {
         FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
+        MatIcon,
     ],
 })
 export class AdvancedFilterDialogComponent implements OnInit {

@@ -35,6 +35,7 @@ export class SpConfigurationSectionsService {
             itemId: section.itemId,
             itemTitle: this.translateService.instant(section.itemTitle),
             itemLink: ['configuration', section.itemId],
+            itemIcon: section.itemIcon,
             roles: section.roles,
         }));
     }

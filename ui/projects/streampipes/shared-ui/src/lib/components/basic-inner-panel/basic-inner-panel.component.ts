@@ -29,10 +29,10 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { NgClass, NgStyle } from '@angular/common';
-import { ClassDirective, StyleDirective } from '@ngbracket/ngx-layout/extended';
+import { NgStyle } from '@angular/common';
 import { SpBasicHeaderTitleComponent } from '../basic-header-title/header-title.component';
 import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-basic-inner-panel',
@@ -56,22 +56,27 @@ import { MatIcon } from '@angular/material/icon';
                     transform: 'translateY(-4px)',
                 }),
             ),
-            transition('expanded <=> collapsed', animate('200ms ease-in-out')),
+            transition(
+                'expanded <=> collapsed',
+                animate('180ms cubic-bezier(0.2, 0, 0, 1)'),
+            ),
         ]),
     ],
     imports: [
         LayoutDirective,
         FlexDirective,
         NgStyle,
-        StyleDirective,
         LayoutAlignDirective,
-        NgClass,
-        ClassDirective,
         SpBasicHeaderTitleComponent,
         MatIcon,
+        TranslatePipe,
     ],
 })
 export class SpBasicInnerPanelComponent {
+    private static nextId = 0;
+
+    readonly contentId = `sp-basic-inner-panel-content-${SpBasicInnerPanelComponent.nextId++}`;
+
     @Input()
     panelTitle: string;
 
@@ -96,7 +101,11 @@ export class SpBasicInnerPanelComponent {
     @Input()
     collapsible = false;
 
-    @Input() collapsed = false;
+    @Input()
+    collapsed = false;
+
+    @Input()
+    collapseButtonAriaLabel = 'Toggle panel';
 
     toggleCollapse(): void {
         if (!this.collapsible) return;

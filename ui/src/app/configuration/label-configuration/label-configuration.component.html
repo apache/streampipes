@@ -16,123 +16,120 @@
 ~
 -->
 
-<sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'labels'">
-    <div fxLayout="column" class="page-container-padding-inner">
-        <sp-split-section
-            [title]="'Labels' | translate"
-            [subtitle]="
-                'Configure labels which can be assigned to assets and other resources'
-                    | translate
-            "
+<div fxLayout="column">
+    <sp-split-section
+        [title]="'Labels' | translate"
+        [subtitle]="
+            'Configure labels which can be assigned to assets and other resources'
+                | translate
+        "
+    >
+        <div
+            fxLayout="row"
+            fxLayoutAlign="start start"
+            fxLayoutGap="10px"
+            section-actions
         >
-            <div
-                fxLayout="row"
-                fxLayoutAlign="start start"
-                fxLayoutGap="10px"
-                section-actions
+            <button
+                mat-button
+                mat-flat-button
+                color="accent"
+                data-cy="new-label-button"
+                (click)="createLabelMode.set(true)"
             >
-                <button
-                    mat-button
-                    mat-flat-button
-                    color="accent"
-                    data-cy="new-label-button"
-                    (click)="createLabelMode.set(true)"
-                >
-                    <i class="material-icons">add</i
-                    ><span>&nbsp;{{ 'New' | translate }}</span>
-                </button>
+                <mat-icon>add</mat-icon><span>{{ 'New' | translate }}</span>
+            </button>
+        </div>
+        @if (createLabelMode()) {
+            <div class="mb-10">
+                <sp-edit-label
+                    (cancelEmitter)="createLabelMode.set(false)"
+                    (saveEmitter)="saveLabel($event)"
+                ></sp-edit-label>
             </div>
-            @if (createLabelMode()) {
-                <div class="mb-10">
-                    <sp-edit-label
-                        (cancelEmitter)="createLabelMode.set(false)"
-                        (saveEmitter)="saveLabel($event)"
-                    ></sp-edit-label>
-                </div>
-            }
+        }
 
-            <sp-table
-                class="mt-10"
-                [dataSource]="dataSource"
-                [columns]="['label', 'description', 'actions']"
-                matSort
-                data-cy="available-labels-list"
-            >
-                <ng-container matColumnDef="label">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                        <b>{{ 'Label' | translate }}</b>
-                    </th>
-                    <td mat-cell *matCellDef="let label">
-                        <sp-label
-                            [labelText]="label.label"
-                            [color]="label.color"
-                            variant="solid"
-                            shape="pill"
-                            size="small"
-                            data-cy="label-text"
-                        >
-                        </sp-label>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="description">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
-                        <b>{{ 'Description' | translate }}</b>
-                    </th>
+        <sp-table
+            class="mt-10"
+            [dataSource]="dataSource"
+            [columns]="['label', 'description', 'actions']"
+            matSort
+            data-cy="available-labels-list"
+        >
+            <ng-container matColumnDef="label">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    <b>{{ 'Label' | translate }}</b>
+                </th>
+                <td mat-cell *matCellDef="let label">
+                    <sp-label
+                        [labelText]="label.label"
+                        [color]="label.color"
+                        variant="solid"
+                        shape="pill"
+                        size="small"
+                        data-cy="label-text"
+                    >
+                    </sp-label>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="description">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                    <b>{{ 'Description' | translate }}</b>
+                </th>
 
-                    <td mat-cell *matCellDef="let label">
+                <td mat-cell *matCellDef="let label">
+                    @if (!isEditMode(label._id)) {
+                        {{ label.description }}
+                    }
+                    @if (isEditMode(label._id)) {
+                        <sp-edit-label
+                            [editMode]="true"
+                            [showPreview]="false"
+                            [label]="label"
+                            (cancelEmitter)="removeEditedLabel(label._id)"
+                            (saveEmitter)="updateLabel($event)"
+                        ></sp-edit-label>
+                    }
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let label">
+                    <div fxLayout="row" fxLayoutAlign="end center">
                         @if (!isEditMode(label._id)) {
-                            {{ label.description }}
-                        }
-                        @if (isEditMode(label._id)) {
-                            <sp-edit-label
-                                [editMode]="true"
-                                [showPreview]="false"
-                                [label]="label"
-                                (cancelEmitter)="removeEditedLabel(label._id)"
-                                (saveEmitter)="updateLabel($event)"
-                            ></sp-edit-label>
-                        }
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let label">
-                        <div fxLayout="row" fxLayoutAlign="end center">
-                            @if (!isEditMode(label._id)) {
-                                <button
-                                    mat-icon-button
-                                    color="accent"
-                                    [matTooltip]="'Edit label' | translate"
-                                    (click)="addEditedLabel(label._id)"
-                                >
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                            }
-                            <div
-                                matTooltip="{{
-                                    labelsinUse.includes(label._id)
-                                        ? ('To delete a label, please remove the label from all assets'
-                                          | translate)
-                                        : ('Delete label' | translate)
-                                }}"
-                                [matTooltipShowDelay]="0"
-                                [matTooltipHideDelay]="0"
-                                class="tooltip-container"
+                            <button
+                                mat-icon-button
+                                color="accent"
+                                [matTooltip]="'Edit label' | translate"
+                                (click)="addEditedLabel(label._id)"
                             >
-                                <button
-                                    mat-icon-button
-                                    class="btn-warn"
-                                    color="accent"
-                                    (click)="deleteLabel(label)"
-                                    data-cy="delete-label-button"
-                                >
-                                    <mat-icon>delete</mat-icon>
-                                </button>
-                            </div>
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        }
+                        <div
+                            matTooltip="{{
+                                labelsinUse.includes(label._id)
+                                    ? ('To delete a label, please remove the label from all assets'
+                                      | translate)
+                                    : ('Delete label' | translate)
+                            }}"
+                            [matTooltipShowDelay]="0"
+                            [matTooltipHideDelay]="0"
+                            class="tooltip-container"
+                        >
+                            <button
+                                mat-icon-button
+                                class="btn-warn"
+                                color="accent"
+                                (click)="deleteLabel(label)"
+                                data-cy="delete-label-button"
+                            >
+                                <mat-icon>delete</mat-icon>
+                            </button>
                         </div>
-                    </td>
-                </ng-container>
-            </sp-table>
-        </sp-split-section>
-    </div>
-</sp-basic-nav-tabs>
+                    </div>
+                </td>
+            </ng-container>
+        </sp-table>
+    </sp-split-section>
+</div>

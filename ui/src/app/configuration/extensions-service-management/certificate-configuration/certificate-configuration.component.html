@@ -100,8 +100,8 @@
                         "
                         (click)="openDetailsDialog(certificate)"
                     >
-                        <i class="material-icons">search</i>
-                        <span>&nbsp;{{ 'Details' | translate }}</span>
+                        <mat-icon>search</mat-icon>
+                        <span>{{ 'Details' | translate }}</span>
                     </button>
                     <button
                         mat-flat-button
@@ -112,16 +112,14 @@
                         "
                         data-cy="trust-certificate-button"
                     >
-                        <i class="material-icons">{{
+                        <mat-icon>{{
                             certificate.state === 'TRUSTED' ? 'cancel' : 'check'
-                        }}</i>
-                        <span
-                            >&nbsp;{{
-                                certificate.state === 'TRUSTED'
-                                    ? ('Reject' | translate)
-                                    : ('Trust' | translate)
-                            }}</span
-                        >
+                        }}</mat-icon>
+                        <span>{{
+                            certificate.state === 'TRUSTED'
+                                ? ('Reject' | translate)
+                                : ('Trust' | translate)
+                        }}</span>
                     </button>
                     <button
                         mat-flat-button
@@ -133,8 +131,8 @@
                         "
                         (click)="onDelete(certificate)"
                     >
-                        <i class="material-icons">delete</i>
-                        <span>&nbsp;{{ 'Delete' | translate }}</span>
+                        <mat-icon>delete</mat-icon>
+                        <span>{{ 'Delete' | translate }}</span>
                     </button>
                 </div>
             </td>

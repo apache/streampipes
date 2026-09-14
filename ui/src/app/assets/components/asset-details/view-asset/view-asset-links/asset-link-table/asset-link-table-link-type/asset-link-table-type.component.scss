@@ -19,9 +19,9 @@
 .chip {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 3px 10px;
-    border-radius: 10px;
+    gap: var(--space-xs);
+    padding: var(--space-2xs) var(--space-sm);
+    border-radius: var(--radius-sm);
     font-weight: 600;
 }
 

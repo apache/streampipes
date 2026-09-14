@@ -21,6 +21,11 @@
 Welcome to the UI Styleguide for Apache StreamPipes.  
 This guide defines the visual language, interaction patterns, components, and coding standards that ensure a consistent and scalable user experience.
 
+This guide is the place for concrete component usage and markup. Tokens, colour roles, the
+typography scale, elevation and the named design rules are defined in the repository-root
+`DESIGN.md`, which is normative when the two disagree; product intent and anti-references
+are in `PRODUCT.md`.
+
 ---
 
 ### Design Tokens
@@ -35,24 +40,116 @@ This guide defines the visual language, interaction patterns, components, and co
 
 #### Basic Layouts
 
-Each page either starts with one of the following components:
+Page-level views use `sp-basic-view` as their full-height shell. Hide its
+legacy toolbar when the page has a title and compose the page identity,
+navigation, and content in this order:
 
 ```html
-<sp-basic-view></sp-basic-view> <sp-basic-nav-tabs></sp-basic-nav-tabs>
+<sp-basic-view [hideNavbar]="true" [padding]="true">
+  <sp-page-header
+    [title]="pageTitle"
+    [description]="pageDescription"
+    icon="settings"
+    iconColor="var(--color-primary)"
+    [backLinkTarget]="['overview']"
+  >
+    <div pageActions>
+      <!-- Page-wide status, identifiers, and actions belong here. -->
+    </div>
+  </sp-page-header>
+
+  <sp-page-nav-tabs
+    [spNavigationItems]="tabs"
+    [activeLink]="activeLink"
+    [ariaLabel]="'Details' | translate"
+  ></sp-page-nav-tabs>
+
+  <div class="page-content">
+    <!-- Active view content -->
+  </div>
+</sp-basic-view>
 ```
 
-The basic view renders a full-height panel. It also has a navbar.
+The page header leads, optional sibling-view navigation follows immediately,
+and the active content starts after one deliberate spacing interval. Use
+`--space-lg` above the content and reduce it to `--space-md` in narrow
+containers. Do not add an outer page margin or another padded navigation
+wrapper inside `sp-basic-view`; its `padding` input owns the page inset.
+
+When multiple routes share the same identity and tabs, create a small feature
+layout component around this composition and project route-specific content and
+`pageActions` into it. This keeps loading, not-found, responsive, and header
+metadata behavior consistent across sibling views.
+
+`sp-basic-nav-tabs` is a legacy compatibility wrapper. Do not use it for new
+page-level views or when migrating an existing view. Use `sp-page-nav-tabs`
+below `sp-page-header` instead. It scrolls horizontally on narrow screens;
+do not compress, wrap, or duplicate the tab row.
+
+If the tabs switch local content rather than sibling routes, use Angular
+Material tabs with the shared page-navigation treatment:
+
+```html
+<mat-tab-group class="sp-page-tabs" [mat-stretch-tabs]="false">
+  <mat-tab [label]="'Overview' | translate"></mat-tab>
+  <mat-tab [label]="'Details' | translate"></mat-tab>
+</mat-tab-group>
+```
+
+Reserve `sp-page-tabs` for the primary tab row directly below
+`sp-page-header`. Tabs embedded in dialogs, editors, or panels keep the default
+compact Material styling.
+
+#### Secondary Toolbar
+
+Use `sp-secondary-toolbar` below `sp-page-header` (and page navigation, when
+present) for content controls such as filters, view options, or selection actions.
+Import `SpSecondaryToolbarComponent` from `@streampipes/shared-ui` into the
+consuming component. It works without a workspace and projects arbitrary content:
+
+```html
+<sp-secondary-toolbar>
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="start center"
+    fxLayoutGap="var(--space-sm)"
+  >
+    <button mat-flat-button class="btn-secondary" (click)="resetFilters()">
+      {{ 'Reset filters' | translate }}
+    </button>
+    <!-- Additional filters or view controls -->
+  </div>
+</sp-secondary-toolbar>
+```
+
+The toolbar supplies the shared surface, bottom divider, and compact spacing.
+The consumer owns control layout, accessible labels, and behavior. Set
+`[padding]="false"` when projecting a component that already supplies spacing.
+An empty toolbar is hidden. `sp-workspace-container` uses this component internally;
+existing content marked with `workspaceToolbar` needs no changes.
 
 #### Headers and Titles
 
-There is a predefined component for showing page titles:
+Use `sp-page-header` for the single page-level title. Give top-level domain
+pages their established Material icon and semantic color variable. Colors must
+come from the deployment theme; never resolve or hard-code a domain color in a
+feature component.
+
+Place page-wide actions, compact status labels, and copyable identifiers in the
+`pageActions` slot. Repeated utility actions such as refresh should be icon-only
+buttons with an accessible label and tooltip. Keep section-specific actions in
+the corresponding `sp-split-section` action slot.
+
+Use `sp-basic-header-title-component` only for embedded headings where a
+`sp-split-section` is not appropriate:
 
 ```html
 <sp-basic-header-title-component [title]="A" [description]="B" [level]="1">
 </sp-basic-header-title-component>
 ```
 
-Level can be either 1, 2 or 3. Use level 1 for page titles, level 2 for pages with multiple headers such as the configuration page.
+Level can be either 1, 2 or 3. Do not use level 1 as a second page title below
+`sp-page-header`. Prefer `sp-split-section` for titled content groups.
 
 #### Sections
 

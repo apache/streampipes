@@ -38,6 +38,7 @@ import {
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-security-service-config',
@@ -59,6 +60,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatButton,
         MatTooltip,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class SecurityServiceConfigComponent extends AbstractSecurityPrincipalConfig<ServiceAccount> {

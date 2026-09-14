@@ -16,23 +16,26 @@
 ~
 -->
 
-<sp-basic-nav-tabs
-    [spNavigationItems]="tabs"
-    [activeLink]="'logs'"
-    [showBackLink]="true"
-    [backLinkTarget]="['pipelines']"
+<sp-function-details-layout
+    [functionDefinition]="activeFunction"
+    [functionNotFound]="functionNotFound"
+    [tabs]="tabs"
+    activeLink="logs"
 >
-    <div nav fxLayout="row" fxLayoutAlign="end center">
-        <button
-            mat-icon-button
-            color="accent"
-            class="mr-10"
-            [matTooltip]="'Refresh' | translate"
-            (click)="triggerUpdate()"
-        >
-            <i class="material-icons">refresh</i>
-        </button>
-    </div>
+    <button
+        pageActions
+        type="button"
+        mat-icon-button
+        color="accent"
+        [disabled]="refreshing"
+        [attr.aria-label]="'Refresh' | translate"
+        [matTooltip]="'Refresh' | translate"
+        (click)="triggerUpdate()"
+    >
+        <mat-icon aria-hidden="true">{{
+            refreshing ? 'hourglass_top' : 'refresh'
+        }}</mat-icon>
+    </button>
     @if (activeFunction && contentReady) {
         <div fxFlex="100" fxLayout="column">
             <sp-simple-logs
@@ -44,4 +47,4 @@
             </sp-simple-logs>
         </div>
     }
-</sp-basic-nav-tabs>
+</sp-function-details-layout>

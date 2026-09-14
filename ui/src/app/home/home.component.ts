@@ -27,7 +27,9 @@ import {
     PanelType,
     SpAlertBannerComponent,
     SpAssetBrowserService,
+    SpBasicViewComponent,
     SpBreadcrumbService,
+    SpSpinnerComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
 import { UserRole } from '../core/auth/user-role.enum';
@@ -49,9 +51,7 @@ import { StatusBox } from './models/home.model';
 import {
     FlexDirective,
     FlexFillDirective,
-    LayoutAlignDirective,
     LayoutDirective,
-    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { StatusComponent } from './components/status.component';
@@ -69,10 +69,10 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         LayoutDirective,
         WelcomeComponent,
-        LayoutAlignDirective,
-        LayoutGapDirective,
         StatusComponent,
         FlexFillDirective,
+        SpBasicViewComponent,
+        SpSpinnerComponent,
         SplitSectionComponent,
         MatButtonToggleGroup,
         MatButtonToggle,

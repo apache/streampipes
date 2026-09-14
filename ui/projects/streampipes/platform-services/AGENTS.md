@@ -2,21 +2,37 @@
 
 ## Scope
 
-Applies to `ui/projects/streampipes/platform-services/`.
+Applies to `ui/projects/streampipes/platform-services/`. `ui/AGENTS.md` and the root guide
+apply as well.
 
-## Module Intent
+## Module intent
 
-- API client and platform-level model/query/service layer for the UI.
-- Public surface is exported via `ui/projects/streampipes/platform-services/src/public-api.ts`.
+API client and platform-level model, query and service layer for the UI. Public surface:
+`src/public-api.ts`.
 
-## Best Practices
+## Generated models — do not edit by hand
 
-- Keep services transport-focused (HTTP/query/model mapping), not feature-UI specific.
-- Treat exports in `src/public-api.ts` as compatibility-sensitive.
-- Keep generated model files in `src/lib/model/gen/` stable; avoid manual edits unless regeneration is part of the task.
-- Prefer typed request/response objects and explicit model mapping over `any`.
+`src/lib/model/gen/streampipes-model.ts` and `streampipes-model-client.ts` are generated
+from the Java model by `typescript-generator-maven-plugin`. When the Java model changes,
+regenerate from the repository root:
 
-## Validation
+```bash
+./create-client-model.sh     # runs the generator for streampipes-model and streampipes-model-client and copies the output here
+```
 
-- `ng build @streampipes/platform-services`
-- `ng test @streampipes/platform-services`
+Commit the regenerated files together with the Java change.
+
+## Rules
+
+- Services stay transport-focused: HTTP calls, query building, model mapping. Feature UI
+  logic belongs in `ui/src/app`.
+- Typed request and response objects; no `any` in public signatures.
+- `src/public-api.ts` is a compatibility boundary: export new services there; do not remove
+  or rename exports without updating every consumer.
+
+## Validate
+
+```bash
+ng build @streampipes/platform-services && ng test @streampipes/platform-services
+npm run build-libraries      # so the app picks up the change
+```

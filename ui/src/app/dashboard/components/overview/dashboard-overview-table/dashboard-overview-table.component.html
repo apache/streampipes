@@ -17,9 +17,6 @@
 -->
 
 <div fxFlex="100" fxLayout="column">
-    <sp-basic-header-title-component
-        [title]="'Dashboards' | translate"
-    ></sp-basic-header-title-component>
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
         <sp-table
             fxFlex="100"
@@ -51,7 +48,9 @@
                         fxLayoutGap="5px"
                     >
                         <div fxLayout="column" fxLayoutAlign="start start">
-                            <span class="text-sm">{{ element.name }}</span>
+                            <span class="text-sm" data-cy="dashboard-name">{{
+                                element.name
+                            }}</span>
                             <small> {{ element.description }}</small>
                         </div>
                     </div>
@@ -108,11 +107,13 @@
                     </button>
                     <button
                         mat-menu-item
-                        [attr.data-cy]="'clone-dashboard-' + element.name"
-                        (click)="openCloneDialog(element)"
+                        [attr.data-cy]="
+                            'create-from-existing-dashboard-' + element.name
+                        "
+                        (click)="createFromExisting(element)"
                     >
-                        <mat-icon>flip_to_front</mat-icon>
-                        <span>{{ 'Clone' | translate }}</span>
+                        <mat-icon>content_copy</mat-icon>
+                        <span>{{ 'Create from existing' | translate }}</span>
                     </button>
                 }
                 <button

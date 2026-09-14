@@ -32,10 +32,8 @@ import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import {
     FormFieldComponent,
     SpAlertBannerComponent,
-    SpBasicNavTabsComponent,
     SpBreadcrumbService,
     SplitSectionComponent,
-    SpNavigationItem,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -51,12 +49,12 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatButton } from '@angular/material/button';
 import { SpEmailTemplateConfigurationComponent } from './email-template-configuration/email-template-configuration.component';
 import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-email-configuration',
     templateUrl: './email-configuration.component.html',
     imports: [
-        SpBasicNavTabsComponent,
         LayoutDirective,
         FlexDirective,
         LayoutAlignDirective,
@@ -76,6 +74,7 @@ import { MatDivider } from '@angular/material/divider';
         SpEmailTemplateConfigurationComponent,
         MatDivider,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class EmailConfigurationComponent implements OnInit {
@@ -84,8 +83,6 @@ export class EmailConfigurationComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private tabService = inject(SpConfigurationTabsService);
     private translateService = inject(TranslateService);
-
-    tabs: SpNavigationItem[] = [];
 
     parentForm: UntypedFormGroup;
 
@@ -99,7 +96,6 @@ export class EmailConfigurationComponent implements OnInit {
     sendingEmailErrorMessage = '';
 
     ngOnInit(): void {
-        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: this.tabService.getTabTitle('email') },

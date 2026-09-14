@@ -16,51 +16,18 @@
   ~
   -->
 
-<sp-basic-nav-tabs
-    [spNavigationItems]="tabs"
-    [activeLink]="'data'"
-    [showBackLink]="true"
-    [backLinkTarget]="['connect']"
+<sp-adapter-details-layout
+    [adapter]="adapter"
+    [adapterNotFound]="adapterNotFound"
+    [tabs]="tabs"
+    activeLink="data"
 >
-    <div fxLayout="column" fxFlex="100">
-        @if (adapterNotFound) {
-            <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
-                {{ 'The desired adapter was not found!' | translate }}
-            </div>
-        } @else {
-            @if (adapter) {
-                <div fxLayout="row">
-                    <sp-basic-header-title-component
-                        [title]="adapter.name + ' - Data'"
-                    ></sp-basic-header-title-component>
-                    <div fxFlex fxLayoutAlign="end center">
-                        <sp-element-id
-                            fxLayoutAlign="end start"
-                            [value]="stream.elementId"
-                        >
-                        </sp-element-id>
-                        @if (adapter.running) {
-                            <div class="adapter-status status-running">
-                                {{ 'Adapter running' | translate }}
-                            </div>
-                        } @else {
-                            <div class="adapter-status status-stopped">
-                                {{ 'Adapter stopped' | translate }}
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
-
-            @if (stream) {
-                <div fxLayout="column" fxFlex="100">
-                    <sp-pipeline-element-runtime-info
-                        [showTitle]="false"
-                        [streamDescription]="stream"
-                    ></sp-pipeline-element-runtime-info>
-                </div>
-            }
-        }
-        ‚
-    </div>
-</sp-basic-nav-tabs>
+    @if (stream) {
+        <div fxLayout="column" fxFlex="100">
+            <sp-pipeline-element-runtime-info
+                [showTitle]="false"
+                [streamDescription]="stream"
+            ></sp-pipeline-element-runtime-info>
+        </div>
+    }
+</sp-adapter-details-layout>

@@ -56,6 +56,12 @@ export class ChartRoutingService {
         return this.navigate(editMode, path, dataViewElementId, newTab);
     }
 
+    navigateToCreateChartFromExisting(sourceId: string) {
+        return this.router.navigate([...this.chartPath, 'create'], {
+            queryParams: { editMode: true, from: sourceId },
+        });
+    }
+
     navigateToDashboard(
         editMode: boolean,
         dashboardElementId?: string,

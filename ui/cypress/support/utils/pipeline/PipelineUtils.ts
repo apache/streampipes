@@ -213,6 +213,33 @@ export class PipelineUtils {
         }
     }
 
+    public static checkPipelineListed(pipelineName: string) {
+        GeneralUtils.checkNameCellsContain(
+            PipelineBtns.pipelineNameCells(),
+            pipelineName,
+        );
+    }
+
+    /**
+     * Opens the 'Create from existing' flow for a pipeline shown in the overview
+     * and asserts the prefilled name of the copy in the save dialog.
+     */
+    public static createPipelineFromExisting(
+        pipelineName: string,
+        newName?: string,
+    ) {
+        GeneralUtils.openMenuForRow(pipelineName);
+        PipelineBtns.clonePipeline().first().should('be.visible').click();
+        PipelineBtns.savePipelineBtn().should('be.visible').click();
+
+        PipelineBtns.managedResourceName()
+            .invoke('val')
+            .should('match', GeneralUtils.copyNamePattern(pipelineName));
+        if (newName) {
+            PipelineBtns.managedResourceName().clear().type(newName);
+        }
+    }
+
     public static updatePipeline(newPipelineName: string) {
         PipelineBtns.managedResourceName().type(newPipelineName);
     }

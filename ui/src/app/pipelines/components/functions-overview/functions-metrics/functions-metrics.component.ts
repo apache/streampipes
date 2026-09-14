@@ -19,28 +19,26 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractFunctionDetailsDirective } from '../abstract-function-details.directive';
 import { SpMetricsEntry } from '@streampipes/platform-services';
-import { SpBasicNavTabsComponent } from '@streampipes/shared-ui';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { KeyValuePipe } from '@angular/common';
 import { SpSimpleMetricsComponent } from '../../../../core-ui/monitoring/simple-metrics/simple-metrics.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpFunctionDetailsLayoutComponent } from '../function-details-layout/function-details-layout.component';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'sp-functions-metrics',
     templateUrl: './functions-metrics.component.html',
     styleUrls: [],
     imports: [
-        SpBasicNavTabsComponent,
+        SpFunctionDetailsLayoutComponent,
         FlexDirective,
         LayoutDirective,
-        LayoutAlignDirective,
         MatIconButton,
+        MatIcon,
         MatTooltip,
         KeyValuePipe,
         SpSimpleMetricsComponent,
@@ -64,6 +62,7 @@ export class SpFunctionsMetricsComponent
     loadMetrics() {
         this.functionsService
             .getFunctionMetrics(this.activeFunction.functionId.id)
+            .pipe(finalize(() => (this.refreshing = false)))
             .subscribe(metrics => {
                 this.metrics = metrics;
                 this.contentReady = true;

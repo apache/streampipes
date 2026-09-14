@@ -26,6 +26,7 @@ const CORE_CONFIGURATION_SECTIONS: SpConfigurationSection[] = [
     {
         itemId: 'general',
         itemTitle: 'General',
+        itemIcon: 'tune',
         roles: ['ROLE_ADMIN'],
         loadComponent: () =>
             import('./general-configuration/general-configuration.component').then(
@@ -36,6 +37,7 @@ const CORE_CONFIGURATION_SECTIONS: SpConfigurationSection[] = [
     {
         itemId: 'export',
         itemTitle: 'Export/Import',
+        itemIcon: 'import_export',
         roles: ['ROLE_ADMIN'],
         loadComponent: () =>
             import('./export/data-export-import.component').then(
@@ -46,6 +48,7 @@ const CORE_CONFIGURATION_SECTIONS: SpConfigurationSection[] = [
     {
         itemId: 'extensions-installation',
         itemTitle: 'Extensions',
+        itemIcon: 'extension',
         roles: ['ROLE_ADMIN'],
         loadComponent: () =>
             import('./extensions-installation/extensions-installation.component').then(
@@ -56,6 +59,7 @@ const CORE_CONFIGURATION_SECTIONS: SpConfigurationSection[] = [
     {
         itemId: 'extensions-services',
         itemTitle: 'Extension Services',
+        itemIcon: 'dns',
         roles: ['ROLE_ADMIN'],
         loadComponent: () =>
             import('./extensions-service-management/extensions-service-management.component').then(
@@ -66,6 +70,7 @@ const CORE_CONFIGURATION_SECTIONS: SpConfigurationSection[] = [
     {
         itemId: 'files',
         itemTitle: 'Files',
+        itemIcon: 'folder',
         roles: ['PRIVILEGE_WRITE_FILES'],
         loadComponent: () =>
             import('./files/files.component').then(m => m.FilesComponent),
@@ -74,6 +79,7 @@ const CORE_CONFIGURATION_SECTIONS: SpConfigurationSection[] = [
     {
         itemId: 'labels',
         itemTitle: 'Labels',
+        itemIcon: 'label',
         roles: ['PRIVILEGE_WRITE_LABELS'],
         loadComponent: () =>
             import('./label-configuration/label-configuration.component').then(
@@ -84,6 +90,7 @@ const CORE_CONFIGURATION_SECTIONS: SpConfigurationSection[] = [
     {
         itemId: 'email',
         itemTitle: 'Mail',
+        itemIcon: 'mail',
         roles: ['ROLE_ADMIN'],
         loadComponent: () =>
             import('./email-configuration/email-configuration.component').then(
@@ -94,6 +101,7 @@ const CORE_CONFIGURATION_SECTIONS: SpConfigurationSection[] = [
     {
         itemId: 'security',
         itemTitle: 'Security',
+        itemIcon: 'security',
         roles: ['ROLE_ADMIN'],
         loadComponent: () =>
             import('./security-configuration/security-configuration.component').then(
@@ -104,6 +112,7 @@ const CORE_CONFIGURATION_SECTIONS: SpConfigurationSection[] = [
     {
         itemId: 'sites',
         itemTitle: 'Sites',
+        itemIcon: 'location_on',
         roles: ['PRIVILEGE_WRITE_ASSETS'],
         loadComponent: () =>
             import('./sites-configuration/sites-configuration.component').then(

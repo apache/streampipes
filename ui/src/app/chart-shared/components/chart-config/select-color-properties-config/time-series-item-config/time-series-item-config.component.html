@@ -50,9 +50,7 @@
             (click)="toggleExpand()"
             [disabled]="!isSelected(field)"
         >
-            <i class="material-icons">{{
-                expanded ? 'expand_less' : 'expand_more'
-            }}</i>
+            <mat-icon>{{ expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
         </button>
     </div>
     @if (isSelected(field) && expanded) {

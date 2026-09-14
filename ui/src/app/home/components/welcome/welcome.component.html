@@ -16,9 +16,8 @@
   ~
   -->
 
-<sp-basic-header-title-component
-    [level]="1"
-    title="{{ greeting }}{{ displayName ? ',' : '' }} {{
-        displayName || email
-    }}!"
-></sp-basic-header-title-component>
+<sp-page-header
+    [title]="title"
+    icon="home"
+    iconColor="var(--color-primary)"
+></sp-page-header>

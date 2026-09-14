@@ -104,7 +104,8 @@ describe('Test adapter formats', () => {
         template
             .setFormat('csv')
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
-            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
+            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
+            .addFormatInput('input', ConnectBtns.csvDecimalSeparator(), '.');
 
         createAdapterUntilEventSchemaConfiguration(template.build());
 
@@ -118,7 +119,8 @@ describe('Test adapter formats', () => {
         const template = makeAdapterInputTemplate();
         template
             .setFormat('csv')
-            .addFormatInput('input', ConnectBtns.csvDelimiter(), ';');
+            .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
+            .addFormatInput('input', ConnectBtns.csvDecimalSeparator(), '.');
 
         createAdapterUntilEventSchemaConfiguration(template.build());
 
@@ -141,7 +143,8 @@ describe('Test adapter formats', () => {
         template
             .setFormat('csv')
             .addFormatInput('input', ConnectBtns.csvDelimiter(), ',')
-            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
+            .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
+            .addFormatInput('input', ConnectBtns.csvDecimalSeparator(), '.');
 
         createAdapterUntilEventSchemaConfiguration(template.build());
 

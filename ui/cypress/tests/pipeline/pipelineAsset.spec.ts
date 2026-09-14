@@ -29,7 +29,11 @@ describe('Test Saving Pipeline with Asset Link', () => {
     const assetName3 = 'Test3';
     const initialPipelineName = 'Pipeline Test';
     const renamedPipelineName = 'Renamed Pipeline';
-    const linkedPipelineResources = 1;
+    const datasetName = 'demo';
+    // Assets linked during pipeline creation receive the pipeline and the dataset created by its data lake sink
+    const linkedResourcesOnCreate = 2;
+    // Assets linked while editing a pipeline only receive the pipeline itself
+    const linkedResourcesOnEdit = 1;
 
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
@@ -49,8 +53,8 @@ describe('Test Saving Pipeline with Asset Link', () => {
         const pipelineInput = PipelineBuilder.create(initialPipelineName)
             .addSource(adapterName)
             .addSink(
-                PipelineElementBuilder.create('dataset')
-                    .addInput('input', 'db_measurement', 'demo')
+                PipelineElementBuilder.create('data_lake')
+                    .addInput('input', 'db_measurement', datasetName)
                     .build(),
             )
             .build();
@@ -66,11 +70,16 @@ describe('Test Saving Pipeline with Asset Link', () => {
         AssetUtils.goToAssets();
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(
             assetName1,
-            linkedPipelineResources,
+            linkedResourcesOnCreate,
         );
+        AssetUtils.checkResourceNamingByAssetName(
+            assetName1,
+            initialPipelineName,
+        );
+        AssetUtils.checkResourceNamingByAssetName(assetName1, datasetName);
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(
             assetName2,
-            linkedPipelineResources,
+            linkedResourcesOnCreate,
         );
     });
 
@@ -86,12 +95,12 @@ describe('Test Saving Pipeline with Asset Link', () => {
 
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(
             assetName2,
-            linkedPipelineResources,
+            linkedResourcesOnCreate,
         );
 
         AssetUtils.checkAmountOfLinkedResourcesByAssetName(
             assetName3,
-            linkedPipelineResources,
+            linkedResourcesOnEdit,
         );
 
         AssetUtils.checkResourceNamingByAssetName(

@@ -16,38 +16,20 @@
  *
  */
 
-.sp-bg-lightgray {
-    background-color: var(--color-bg-0);
-}
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-.sp-tab-bg {
-    background-color: var(--color-bg-0);
-}
-
-.page-container {
-    margin: 10px;
-    border: 1px solid var(--color-bg-3);
-    min-height: calc(100vh - 76px);
-    border-radius: 10px;
-}
-
-.page-container-nav {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-.page-container-padding-inner {
-    margin: 10px;
-}
-
-.upper-case {
-    text-transform: uppercase;
-}
-
-.pr-5 {
-    padding-right: 5px;
-}
-
-.mat-mdc-tab-header {
-    flex-shrink: 1;
+/** A content toolbar for use below a page header or inside a workspace. */
+@Component({
+    selector: 'sp-secondary-toolbar',
+    template: '<ng-content></ng-content>',
+    styleUrls: ['./secondary-toolbar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[class.secondary-toolbar--padded]': 'padding',
+    },
+})
+export class SpSecondaryToolbarComponent {
+    /** Disable when projected content already provides its own toolbar spacing. */
+    @Input()
+    padding = true;
 }

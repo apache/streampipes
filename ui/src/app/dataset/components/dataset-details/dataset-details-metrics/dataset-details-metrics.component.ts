@@ -19,10 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SpAbstractDatasetDetailsDirective } from '../abstract-dataset-details.directive';
 import { SpQueryResult } from '@streampipes/platform-services';
-import {
-    SpBasicNavTabsComponent,
-    SpSpinnerComponent,
-} from '@streampipes/shared-ui';
+import { SpSpinnerComponent } from '@streampipes/shared-ui';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -30,6 +27,7 @@ import {
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SpSimpleMetricsComponent } from '../../../../core-ui/monitoring/simple-metrics/simple-metrics.component';
@@ -39,6 +37,7 @@ import {
     DailyEventCount,
     DailyEventCountsChartComponent,
 } from './daily-event-counts-chart/daily-event-counts-chart.component';
+import { SpDatasetDetailsLayoutComponent } from '../dataset-details-layout/dataset-details-layout.component';
 
 interface DayBucket extends DailyEventCount {
     timestamp: number;
@@ -50,12 +49,13 @@ interface DayBucket extends DailyEventCount {
     templateUrl: './dataset-details-metrics.component.html',
     styleUrls: ['./dataset-details-metrics.component.scss'],
     imports: [
-        SpBasicNavTabsComponent,
+        SpDatasetDetailsLayoutComponent,
         LayoutDirective,
         LayoutAlignDirective,
         LayoutGapDirective,
         FlexDirective,
         MatIconButton,
+        MatIcon,
         MatTooltip,
         SpSpinnerComponent,
         TranslatePipe,

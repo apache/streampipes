@@ -16,29 +16,28 @@
 ~
 -->
 
-<sp-basic-nav-tabs
-    [spNavigationItems]="tabs"
-    [activeLink]="'metrics'"
-    [showBackLink]="true"
-    [backLinkTarget]="['datasets']"
+<sp-dataset-details-layout
+    [dataset]="dataset"
+    [datasetNotFound]="datasetNotFound"
+    [tabs]="tabs"
+    activeLink="metrics"
 >
-    <div nav fxLayout="row" fxLayoutAlign="end center">
-        <button
-            mat-icon-button
-            color="accent"
-            class="mr-10"
-            [matTooltip]="'Refresh' | translate"
-            (click)="triggerUpdate()"
-        >
-            <i class="material-icons">refresh</i>
-        </button>
-    </div>
+    <button
+        pageActions
+        type="button"
+        mat-icon-button
+        color="accent"
+        [disabled]="loadingMetrics"
+        [attr.aria-label]="'Refresh' | translate"
+        [matTooltip]="'Refresh' | translate"
+        (click)="triggerUpdate()"
+    >
+        <mat-icon aria-hidden="true">{{
+            loadingMetrics ? 'hourglass_top' : 'refresh'
+        }}</mat-icon>
+    </button>
 
-    @if (datasetNotFound) {
-        <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
-            {{ 'The desired dataset was not found!' | translate }}
-        </div>
-    } @else if (dataset) {
+    @if (dataset) {
         <div
             fxFlex="100"
             fxLayout="column"
@@ -72,4 +71,4 @@
             ></sp-daily-event-counts-chart>
         </div>
     }
-</sp-basic-nav-tabs>
+</sp-dataset-details-layout>

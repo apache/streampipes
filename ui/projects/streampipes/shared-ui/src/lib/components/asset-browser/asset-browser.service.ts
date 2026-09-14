@@ -17,9 +17,17 @@
  */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, skip, zip } from 'rxjs';
+import {
+    BehaviorSubject,
+    distinctUntilChanged,
+    map,
+    Observable,
+    skip,
+    zip,
+} from 'rxjs';
 import {
     AssetConstants,
+    AssetLinkType,
     AssetManagementService,
     AssetSiteDesc,
     GenericStorageService,
@@ -76,6 +84,15 @@ export class SpAssetBrowserService {
         if (this.filter$.getValue() !== undefined) {
             this.applyFilters(this.filter$.getValue());
         }
+    }
+
+    getAssetLinkType$(linkType: string): Observable<AssetLinkType | undefined> {
+        return this.assetData$.pipe(
+            map(data =>
+                data?.assetLinks.find(link => link.linkType === linkType),
+            ),
+            distinctUntilChanged(),
+        );
     }
 
     loadAssetData(): void {

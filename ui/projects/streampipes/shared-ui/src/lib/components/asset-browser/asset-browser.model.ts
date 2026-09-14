@@ -17,7 +17,7 @@
  */
 
 import {
-    AssetLink,
+    AssetLinkType,
     AssetSiteDesc,
     Isa95TypeDesc,
     SpAsset,
@@ -26,7 +26,7 @@ import {
 
 export interface AssetBrowserData {
     assets: SpAsset[];
-    assetLinks: AssetLink[];
+    assetLinks: AssetLinkType[];
     sites: AssetSiteDesc[];
     labels: SpLabel[];
 }

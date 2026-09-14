@@ -20,33 +20,41 @@
     fxLayout="column"
     fxFlex="100"
     class="panel-outer"
+    [class.panel-collapsed]="collapsible && collapsed"
     [ngStyle]="{ margin: outerMargin }"
 >
     @if (!hideToolbar) {
-        <div
+        <header
             class="general-panel-header"
-            [class.header-collapsed]="collapsed"
-            [ngClass]="headerBackground ? 'bg-highlight' : 'bg-no-highlight'"
+            [class.bg-highlight]="headerBackground"
+            [class.bg-no-highlight]="!headerBackground"
             [style.height]="headerHeight"
             fxLayout="row"
             fxLayoutAlign="start center"
         >
-            <div fxLayout="fill" fxFlex="100">
-                <div fxLayoutAlign="start center" fxLayout="row">
-                    @if (showTitle) {
-                        <sp-basic-header-title-component
-                            [title]="panelTitle"
-                            [level]="3"
-                            class="content-box-title"
-                        ></sp-basic-header-title-component>
-                    }
-                </div>
-                <ng-content select="[header]" class="pr-5"></ng-content>
+            <div
+                class="panel-header-content"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxFlex="100"
+            >
+                @if (showTitle) {
+                    <sp-basic-header-title-component
+                        [title]="panelTitle"
+                        [level]="3"
+                        [margin]="'0'"
+                        class="content-box-title"
+                    ></sp-basic-header-title-component>
+                }
+                <ng-content select="[header]"></ng-content>
                 <div fxFlex></div>
                 @if (collapsible) {
                     <button
                         type="button"
                         class="collapse-btn"
+                        [attr.aria-controls]="contentId"
+                        [attr.aria-expanded]="!collapsed"
+                        [attr.aria-label]="collapseButtonAriaLabel | translate"
                         (click)="toggleCollapse(); $event.stopPropagation()"
                     >
                         <mat-icon
@@ -58,11 +66,14 @@
                     </button>
                 }
             </div>
-        </div>
+        </header>
     }
 
     <div
+        [id]="contentId"
         class="general-panel-wrapper"
+        [attr.aria-hidden]="collapsible && collapsed"
+        [attr.inert]="collapsible && collapsed ? '' : null"
         [@collapseExpand]="
             collapsible ? (collapsed ? 'collapsed' : 'expanded') : 'expanded'
         "

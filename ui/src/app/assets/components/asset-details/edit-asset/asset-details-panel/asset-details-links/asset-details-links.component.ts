@@ -49,6 +49,7 @@ import {
     LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-asset-details-links',
@@ -61,6 +62,7 @@ import { MatButton } from '@angular/material/button';
         FlexDirective,
         AssetLinkTableComponent,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class AssetDetailsLinksComponent implements OnInit {

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import {
     FormFieldComponent,
     SplitSectionComponent,
@@ -26,7 +26,6 @@ import { SpNumberFormatConfigComponent } from '../../../chart-config/number-form
 import { ProgressBarAppearanceConfig } from '../model/progress-bar-widget.model';
 import { ChartConfigurationService } from '../../../../services/chart-configuration.service';
 import { ColorPickerDirective } from 'ngx-color-picker';
-import { FlexDirective } from '@ngbracket/ngx-layout/flex';
 
 @Component({
     selector: 'sp-progress-bar-widget-appearance-config',
@@ -38,7 +37,6 @@ import { FlexDirective } from '@ngbracket/ngx-layout/flex';
         TranslatePipe,
         SpNumberFormatConfigComponent,
         ColorPickerDirective,
-        FlexDirective,
     ],
 })
 export class ProgressBarWidgetAppearanceConfigComponent implements OnInit {

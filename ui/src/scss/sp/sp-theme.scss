@@ -177,7 +177,8 @@ html {
         line-height: 1;
     }
 
-    .mat-mdc-menu-item-text {
+    .mat-mdc-menu-content .mat-mdc-menu-item .mat-mdc-menu-item-text {
+        min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

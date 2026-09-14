@@ -150,7 +150,7 @@ describe('Test Dataset Permissions', () => {
 
         assertAlertBanner(true);
 
-        ChartBtns.discardDashboard().click();
+        ChartBtns.discardDashboard();
 
         SharedBtns.confirmDialogCancelBtn().click();
 
@@ -170,10 +170,10 @@ describe('Test Dataset Permissions', () => {
         ChartBtns.openNewChartBtn().click();
         if (!available) {
             cy.get('sp-alert-banner').should('be.visible');
-            ChartBtns.discardChartBtn().click();
+            ChartUtils.goToDatalake();
         } else {
             ChartUtils.selectDataSet(datasetName);
-            ChartBtns.discardChartBtn().click();
+            ChartUtils.goToDatalake();
             ChartUtils.createTableChart(datasetName, true);
             ChartUtils.saveChartConfiguration(false, false, 'test');
         }

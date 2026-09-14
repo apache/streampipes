@@ -116,6 +116,12 @@ export class TimeRangeSelectorComponent
     @Input()
     labels: TimeSelectorLabel;
 
+    @Input()
+    appearance: 'default' | 'emphasized' = 'default';
+
+    @Input()
+    selectionLabel?: string;
+
     simpleTimeString: string = '';
     timeString: TimeString;
     timeStringMode: 'simple' | 'advanced' = 'simple';

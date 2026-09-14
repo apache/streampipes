@@ -39,6 +39,35 @@ export class GeneralUtils {
         GeneralUtils.visibleMaterialMenu().should('be.visible');
     }
 
+    /**
+     * Matches the name a resource copy is prefilled with, e.g. 'My chart (Copy)'.
+     * The suffix itself is translated, so only its shape is asserted.
+     */
+    public static copyNamePattern(sourceName: string): RegExp {
+        return new RegExp(
+            `^${GeneralUtils.escapeRegExp(sourceName)} \\(.+\\)$`,
+        );
+    }
+
+    private static escapeRegExp(value: string): string {
+        return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    /**
+     * Asserts that a set of name cells (selected via data-cy) contains the given name.
+     */
+    public static checkNameCellsContain(
+        nameCells: Cypress.Chainable<JQuery<HTMLElement>>,
+        name: string,
+    ) {
+        nameCells.should($cells => {
+            const names = $cells
+                .toArray()
+                .map(cell => cell.textContent?.trim());
+            expect(names).to.include(name);
+        });
+    }
+
     public static closeVisibleMaterialMenu() {
         cy.get('body').type('{esc}', { force: true });
         GeneralUtils.visibleMaterialMenu().should('not.exist');

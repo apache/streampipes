@@ -16,59 +16,39 @@
 ~
 -->
 
-<div
-    class="adapter-catalog-item"
-    fxFlex="100"
-    fxLayout="column"
-    (click)="selectAdapter(adapter.appId)"
->
-    <div fxLayout="column">
-        <div
-            class="type"
-            fxLayout="row"
-            fxLayoutAlign="start start"
-            fxFlex="100"
-        >
-            <div class="adapter-icon large-icon">
-                @if (iconUrl) {
-                    <img [src]="iconUrl" class="icon" />
-                }
-            </div>
-            <div
-                class="p-5 ml-10 h-100"
-                fxFlex
-                fxLayoutAlign="start start"
-                fxLayout="column"
-            >
-                <div fxLayout="column" fxLayoutAlign="end start">
-                    <span class="adapter-name">{{ adapter.name }}</span>
-                </div>
-                <div
-                    fxFlex="100"
-                    fxLayout="row wrap"
-                    fxLayoutGap="10px"
-                    fxLayoutAlign="end end"
-                >
-                    <button
-                        fxFlex
-                        mat-flat-button
-                        (click)="selectAdapter(adapter.appId)"
-                        [matTooltip]="'Create adapter' | translate"
-                    >
-                        <span>{{ 'Create' | translate }}</span>
-                        <mat-icon>add</mat-icon>
-                    </button>
-                    <button
-                        mat-flat-button
-                        class="mat-basic"
-                        (click)="openDocumentation($event)"
-                        [matTooltip]="'Show documentation' | translate"
-                    >
-                        <span>{{ 'Docs' | translate }}</span>
-                        <mat-icon>menu_book</mat-icon>
-                    </button>
-                </div>
-            </div>
+<article class="adapter-catalog-item">
+    <div class="adapter-catalog-item__identity">
+        <div class="adapter-icon">
+            @if (iconUrl) {
+                <img [src]="iconUrl" class="icon" alt="" />
+            }
         </div>
+        <h2 class="adapter-name">{{ adapter.name }}</h2>
     </div>
-</div>
+    <div class="adapter-catalog-item__actions">
+        <button
+            mat-flat-button
+            data-cy="adapter-catalog-create"
+            (click)="selectAdapter(adapter.appId)"
+            [matTooltip]="'Create adapter' | translate"
+            [attr.aria-label]="
+                ('Create adapter' | translate) + ': ' + adapter.name
+            "
+        >
+            <mat-icon>add</mat-icon>
+            <span>{{ 'Create' | translate }}</span>
+        </button>
+        <button
+            mat-flat-button
+            class="mat-basic"
+            (click)="openDocumentation($event)"
+            [matTooltip]="'Show documentation' | translate"
+            [attr.aria-label]="
+                ('Show documentation' | translate) + ': ' + adapter.name
+            "
+        >
+            <mat-icon>menu_book</mat-icon>
+            <span>{{ 'Docs' | translate }}</span>
+        </button>
+    </div>
+</article>

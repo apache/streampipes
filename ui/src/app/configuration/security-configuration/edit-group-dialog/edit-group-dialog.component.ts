@@ -49,6 +49,7 @@ import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-edit-group-dialog',
@@ -70,6 +71,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatButton,
         AsyncPipe,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class EditGroupDialogComponent implements OnInit {

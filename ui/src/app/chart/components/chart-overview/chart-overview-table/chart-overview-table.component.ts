@@ -48,7 +48,6 @@ import {
     PanelType,
     SpAssetBrowserService,
     SpTableAssetContextConfig,
-    SpBasicHeaderTitleComponent,
     SpTableActionsDirective,
     SpTableComponent,
     SpSpinnerComponent,
@@ -94,7 +93,6 @@ type ChartOverviewRow = ChartSummaryDto & {
     imports: [
         FlexDirective,
         LayoutDirective,
-        SpBasicHeaderTitleComponent,
         LayoutAlignDirective,
         SpTableComponent,
         MatSort,
@@ -311,12 +309,10 @@ export class ChartOverviewTableComponent implements OnInit, OnDestroy {
         });
     }
 
-    cloneChart(chartSummary: ChartSummaryDto) {
-        this.withChart(chartSummary, chart => {
-            this.dataViewService.cloneChart(chart).subscribe(() => {
-                this.getCharts();
-            });
-        });
+    createFromExisting(chartSummary: ChartSummaryDto) {
+        this.routingService.navigateToCreateChartFromExisting(
+            chartSummary.elementId,
+        );
     }
 
     applyChartFilters(elementIds?: Set<string>): void {

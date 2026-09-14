@@ -19,27 +19,25 @@
 import { Component, OnInit } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import { SpMetricsEntry } from '@streampipes/platform-services';
-import { SpBasicNavTabsComponent } from '@streampipes/shared-ui';
 import { SpConnectRoutes } from '../../../connect.breadcrumb';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { SpSimpleMetricsComponent } from '../../../../core-ui/monitoring/simple-metrics/simple-metrics.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpAdapterDetailsLayoutComponent } from '../adapter-details-layout/adapter-details-layout.component';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'sp-adapter-details-metrics',
     templateUrl: './adapter-details-metrics.component.html',
     styleUrls: [],
     imports: [
-        SpBasicNavTabsComponent,
+        SpAdapterDetailsLayoutComponent,
         LayoutDirective,
-        LayoutAlignDirective,
         MatIconButton,
+        MatIcon,
         MatTooltip,
         FlexDirective,
         SpSimpleMetricsComponent,
@@ -59,6 +57,7 @@ export class SpAdapterDetailsMetricsComponent
     loadMetrics(): void {
         this.adapterMonitoringService
             .getMetricsInfoForAdapter(this.currentAdapterId)
+            .pipe(finalize(() => (this.refreshing = false)))
             .subscribe(res => {
                 this.adapterMetrics = res;
             });

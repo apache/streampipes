@@ -16,97 +16,65 @@
 ~
 -->
 
-<mat-toolbar class="md-primary md-hue-2 toolbar">
-    <div class="md-toolbar-tools sp-toolbar">
-        <div fxFlex="100" fxLayout fxLayoutAlign="start center">
-            <sp-breadcrumb></sp-breadcrumb>
-            @if (authenticated) {
-                <div
-                    fxFlex
-                    fxLayout
-                    fxLayoutAlign="end center"
-                    fxLayoutGap="10px"
-                    style="height: 100%"
+<mat-toolbar class="toolbar">
+    <div class="sp-toolbar" fxLayout fxLayoutAlign="start center">
+        <sp-breadcrumb class="toolbar-breadcrumb"></sp-breadcrumb>
+        @if (authenticated) {
+            <div class="toolbar-actions" fxLayout fxLayoutAlign="end center">
+                <sp-asset-browser-toolbar></sp-asset-browser-toolbar>
+                <button
+                    mat-icon-button
+                    class="account-trigger"
+                    [class.sp-navbar-icon-button-selected]="
+                        accountMenuOpen.menuOpen
+                    "
+                    [attr.aria-label]="'User preferences' | translate"
+                    [attr.aria-expanded]="accountMenuOpen.menuOpen"
+                    [matMenuTriggerFor]="menu"
+                    #accountMenuOpen="matMenuTrigger"
+                    [matTooltip]="'User preferences' | translate"
+                    matTooltipPosition="below"
+                    data-cy="sp-user-preferences"
                 >
-                    <!-- uncomment this to quickly investigate layout issues between dark and light mode -->
-                    <!--                <div>-->
-                    <!--                    <mat-slide-toggle-->
-                    <!--                        color="accent"-->
-                    <!--                        [formControl]="appearanceControl"-->
-                    <!--                        >Dark Mode</mat-slide-toggle-->
-                    <!--                    >-->
-                    <!--                </div>-->
-                    <sp-asset-browser-toolbar> </sp-asset-browser-toolbar>
-                    <div style="height: 100%">
-                        <div
-                            [ngClass]="
-                                accountMenuOpen.menuOpen
-                                    ? 'sp-navbar-item-selected'
-                                    : 'sp-navbar-item'
-                            "
-                            fxLayout
-                            fxLayoutAlign="center center"
-                            style="height: 100%"
-                        >
-                            <button
-                                mat-icon-button
-                                fxLayout
-                                fxLayoutAlign="center center"
-                                [class.sp-navbar-icon-button-selected]="
-                                    accountMenuOpen.menuOpen
-                                "
-                                style="min-width: 0"
-                                [matMenuTriggerFor]="menu"
-                                #accountMenuOpen="matMenuTrigger"
-                                matTooltip="User Preferences"
-                                matTooltipPosition="below"
-                                data-cy="sp-user-preferences"
-                            >
-                                <mat-icon
-                                    class="sp-navbar-icon"
-                                    [class.sp-navbar-icon-selected]="
-                                        accountMenuOpen
-                                    "
-                                    >account_circle</mat-icon
-                                >
-                            </button>
-                        </div>
+                    <mat-icon aria-hidden="true" class="sp-navbar-icon"
+                        >account_circle</mat-icon
+                    >
+                </button>
+                <mat-menu #menu="matMenu" id="account" class="toolbar-menu">
+                    <div class="account-summary">
+                        <span class="account-avatar" aria-hidden="true">
+                            <mat-icon>account_circle</mat-icon>
+                        </span>
+                        <span class="account-copy">
+                            <span class="account-label">{{
+                                'Account' | translate
+                            }}</span>
+                            <span class="current-user" [title]="userEmail">{{
+                                userEmail
+                            }}</span>
+                        </span>
                     </div>
-                    <mat-menu #menu="matMenu" id="account" class="toolbar-menu">
-                        <div class="current-user">
-                            <span>{{ userEmail | shorten: 30 }}</span>
-                        </div>
-                        <mat-divider></mat-divider>
-                        <button
-                            mat-menu-item
-                            (click)="openProfile()"
-                            style="min-width: 0px"
-                        >
-                            <mat-icon aria-label="Info">perm_identity</mat-icon>
-                            Profile
-                        </button>
-                        <button
-                            mat-menu-item
-                            (click)="openHelp()"
-                            style="min-width: 0px"
-                        >
-                            <mat-icon aria-label="Info">help</mat-icon>
-                            Help
-                        </button>
-                        <mat-divider></mat-divider>
-                        <button
-                            mat-menu-item
-                            id="sp_logout"
-                            (click)="logout()"
-                            style="min-width: 0px"
-                            data-cy="sp-logout"
-                        >
-                            <mat-icon aria-label="Logout">exit_to_app</mat-icon>
-                            Logout
-                        </button>
-                    </mat-menu>
-                </div>
-            }
-        </div>
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item (click)="openProfile()">
+                        <mat-icon aria-hidden="true">perm_identity</mat-icon>
+                        <span>{{ 'Profile' | translate }}</span>
+                    </button>
+                    <button mat-menu-item (click)="openHelp()">
+                        <mat-icon aria-hidden="true">help</mat-icon>
+                        <span>{{ 'Help' | translate }}</span>
+                    </button>
+                    <mat-divider></mat-divider>
+                    <button
+                        mat-menu-item
+                        id="sp_logout"
+                        (click)="logout()"
+                        data-cy="sp-logout"
+                    >
+                        <mat-icon aria-hidden="true">exit_to_app</mat-icon>
+                        <span>{{ 'Logout' | translate }}</span>
+                    </button>
+                </mat-menu>
+            </div>
+        }
     </div>
 </mat-toolbar>

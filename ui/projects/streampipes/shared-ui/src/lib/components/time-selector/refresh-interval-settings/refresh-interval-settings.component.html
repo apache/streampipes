@@ -16,16 +16,24 @@
 ~
 -->
 
-<div fxLayout="row">
+<div fxLayout="row" class="refresh-interval-settings">
     <button
         mat-button
         color="accent"
+        class="refresh-interval-trigger"
+        [class.refresh-interval-trigger--emphasized]="
+            appearance === 'emphasized'
+        "
         [matMenuTriggerFor]="menu"
-        [attr.aria-label]="'Refresh interval' | translate"
-        [matTooltip]="'Refresh interval' | translate"
+        [attr.aria-label]="
+            ('Refresh interval' | translate) + ': ' + liveSettings.label
+        "
+        [matTooltip]="
+            ('Refresh interval' | translate) + ': ' + liveSettings.label
+        "
         [disabled]="!liveRefreshEnabled"
     >
-        <mat-icon>autorenew</mat-icon>
+        <mat-icon aria-hidden="true">autorenew</mat-icon>
         {{ liveSettings.label }}
     </button>
     <mat-menu #menu="matMenu">

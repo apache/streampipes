@@ -34,6 +34,7 @@ import {
 import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
 import { MatIconButton } from '@angular/material/button';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-panel-dialog-container',
@@ -63,7 +64,7 @@ import { CdkPortalOutlet } from '@angular/cdk/portal';
             transition('* => *', animate(300)),
         ]),
     ],
-    imports: [MatIconButton, CdkPortalOutlet],
+    imports: [MatIconButton, CdkPortalOutlet, MatIcon],
 })
 export class PanelDialogComponent<T> extends BaseDialogComponent<T> {
     constructor() {

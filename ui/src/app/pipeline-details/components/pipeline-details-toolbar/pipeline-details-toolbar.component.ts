@@ -18,43 +18,40 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
-    FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
     selector: 'sp-pipeline-details-toolbar',
     templateUrl: './pipeline-details-toolbar.component.html',
+    styleUrls: ['./pipeline-details-toolbar.component.scss'],
     imports: [
-        FlexDirective,
         LayoutDirective,
         LayoutAlignDirective,
-        MatButton,
-        MatIconButton,
+        MatButtonModule,
         MatTooltip,
         MatSlideToggle,
         FormsModule,
         TranslatePipe,
         MatIcon,
-        MatMenuTrigger,
-        MatMenu,
-        MatMenuItem,
     ],
 })
 export class PipelineDetailsToolbarComponent {
     @Input()
-    autoRefresh: boolean;
+    hasPipelineWritePrivileges = false;
+
+    @Output()
+    openCodeDialogEmitter = new EventEmitter<void>();
 
     @Input()
-    hasPipelineWritePrivileges: boolean;
+    autoRefresh: boolean;
 
     @Input()
     previewModeActive: boolean;
@@ -67,13 +64,4 @@ export class PipelineDetailsToolbarComponent {
 
     @Output()
     togglePreviewEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    openCodeDialogEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    editPipelineEmitter: EventEmitter<void> = new EventEmitter();
-
-    @Output()
-    deletePipelineEmitter: EventEmitter<void> = new EventEmitter();
 }

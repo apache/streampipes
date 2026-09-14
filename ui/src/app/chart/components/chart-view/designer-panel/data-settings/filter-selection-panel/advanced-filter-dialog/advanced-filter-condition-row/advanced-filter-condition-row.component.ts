@@ -34,6 +34,7 @@ import { FilterSelectionPanelRowOperationSelectionComponent } from '../../filter
 import { FilterSelectionPanelRowValueInputComponent } from '../../filter-selection-panel-row/panel-row-value-input/filter-selection-panel-row-value-input.component';
 import { FilterSelectionPanelRowValueAutocompleteComponent } from '../../filter-selection-panel-row/panel-row-value-input-autocomplete/filter-selection-panel-row-value-autocomplete.component';
 import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-advanced-filter-condition-row',
@@ -44,6 +45,7 @@ import { MatIconButton } from '@angular/material/button';
         FilterSelectionPanelRowValueInputComponent,
         FilterSelectionPanelRowValueAutocompleteComponent,
         MatIconButton,
+        MatIcon,
     ],
 })
 export class AdvancedFilterConditionRowComponent implements OnChanges {

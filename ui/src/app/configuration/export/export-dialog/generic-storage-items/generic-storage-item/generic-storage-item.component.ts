@@ -25,6 +25,7 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-generic-storage-item',
@@ -35,6 +36,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
         FlexDirective,
         MatIconButton,
         MatCheckbox,
+        MatIcon,
     ],
 })
 export class GenericStorageItemComponent {

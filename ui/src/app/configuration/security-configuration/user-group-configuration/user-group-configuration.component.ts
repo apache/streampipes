@@ -44,6 +44,7 @@ import {
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-security-user-group-config',
@@ -65,6 +66,7 @@ import { MatTooltip } from '@angular/material/tooltip';
         MatButton,
         MatTooltip,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class SecurityUserGroupConfigComponent implements OnInit {

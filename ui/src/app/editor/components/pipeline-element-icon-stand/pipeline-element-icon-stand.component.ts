@@ -16,7 +16,15 @@
  *
  */
 
-import { AfterViewInit, Component, Input, OnInit, inject } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    Input,
+    OnInit,
+    OnChanges,
+    SimpleChanges,
+    inject,
+} from '@angular/core';
 import {
     PeCategory,
     PipelineElementType,
@@ -30,13 +38,6 @@ import {
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
-import {
-    MatFormField,
-    MatPrefix,
-    MatSuffix,
-} from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { NgClass, NgStyle } from '@angular/common';
@@ -55,13 +56,8 @@ import { PipelineElementTypeFilterPipe } from '../../services/pipeline-element-t
     imports: [
         FlexDirective,
         LayoutDirective,
-        MatFormField,
-        MatInput,
-        FormsModule,
         MatIcon,
-        MatPrefix,
         MatIconButton,
-        MatSuffix,
         LayoutAlignDirective,
         NgStyle,
         StyleDirective,
@@ -76,7 +72,7 @@ import { PipelineElementTypeFilterPipe } from '../../services/pipeline-element-t
     ],
 })
 export class PipelineElementIconStandComponent
-    implements OnInit, AfterViewInit
+    implements OnInit, AfterViewInit, OnChanges
 {
     private editorService = inject(EditorService);
     private router = inject(Router);
@@ -108,6 +104,7 @@ export class PipelineElementIconStandComponent
     @Input()
     allElements: PipelineElementUnion[];
 
+    @Input()
     elementFilter = '';
     allCategories: Map<PipelineElementType, PeCategory[]> = new Map();
     categoriesReady = false;
@@ -119,6 +116,12 @@ export class PipelineElementIconStandComponent
 
     ngOnInit(): void {
         this.loadOptions();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.elementFilter && !changes.elementFilter.firstChange) {
+            this.makeDraggable();
+        }
     }
 
     ngAfterViewInit() {
@@ -206,11 +209,6 @@ export class PipelineElementIconStandComponent
 
     changeSorting(availableType: any, sortMode: string) {
         availableType.sort = sortMode;
-        this.makeDraggable();
-    }
-
-    clearInput() {
-        this.elementFilter = '';
         this.makeDraggable();
     }
 

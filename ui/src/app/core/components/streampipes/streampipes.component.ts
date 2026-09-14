@@ -72,8 +72,6 @@ export class StreampipesComponent implements OnInit, OnDestroy {
     user$: Subscription;
     private shortcutReg: ShortcutRegistration;
 
-    collapsed = this.collapseService.isCollapsed;
-
     ngOnInit(): void {
         this.darkMode$ = this.currentUserService.darkMode$.subscribe(dm => {
             this.darkMode = dm;

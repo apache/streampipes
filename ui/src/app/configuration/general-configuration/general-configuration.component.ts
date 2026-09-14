@@ -40,10 +40,8 @@ import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
     FormFieldComponent,
     SpAlertBannerComponent,
-    SpBasicNavTabsComponent,
     SpBreadcrumbService,
     SplitSectionComponent,
-    SpNavigationItem,
 } from '@streampipes/shared-ui';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import { map } from 'rxjs/operators';
@@ -73,7 +71,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './general-configuration.component.html',
     styleUrls: ['./general-configuration.component.scss'],
     imports: [
-        SpBasicNavTabsComponent,
         LayoutDirective,
         FlexDirective,
         LayoutAlignDirective,
@@ -107,8 +104,6 @@ export class GeneralConfigurationComponent implements OnInit {
     private breadcrumbService = inject(SpBreadcrumbService);
     private tabService = inject(SpConfigurationTabsService);
 
-    tabs: SpNavigationItem[] = [];
-
     parentForm: UntypedFormGroup;
     formReady = false;
 
@@ -118,7 +113,6 @@ export class GeneralConfigurationComponent implements OnInit {
     availableRoles$: Observable<Role[]>;
 
     ngOnInit(): void {
-        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: this.tabService.getTabTitle('general') },

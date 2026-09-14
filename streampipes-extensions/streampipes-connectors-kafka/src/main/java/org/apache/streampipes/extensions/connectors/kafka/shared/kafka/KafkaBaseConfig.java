@@ -25,8 +25,7 @@ import java.util.List;
 
 public class KafkaBaseConfig {
 
-  private String kafkaHost;
-  private Integer kafkaPort;
+  private String bootstrapServers;
   private String topic;
   private List<KafkaConfigAppender> configAppenders;
 
@@ -34,20 +33,12 @@ public class KafkaBaseConfig {
     this.configAppenders = new ArrayList<>();
   }
 
-  public String getKafkaHost() {
-    return kafkaHost;
+  public String getBootstrapServers() {
+    return bootstrapServers;
   }
 
-  public void setKafkaHost(String kafkaHost) {
-    this.kafkaHost = kafkaHost;
-  }
-
-  public Integer getKafkaPort() {
-    return kafkaPort;
-  }
-
-  public void setKafkaPort(Integer kafkaPort) {
-    this.kafkaPort = kafkaPort;
+  public void setBootstrapServers(String bootstrapServers) {
+    this.bootstrapServers = bootstrapServers;
   }
 
   public String getTopic() {

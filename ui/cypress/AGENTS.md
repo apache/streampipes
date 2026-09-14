@@ -2,61 +2,64 @@
 
 ## Scope
 
-Applies to everything under `ui/cypress/`.
+Applies to everything under `ui/cypress/`. `ui/AGENTS.md` and the root guide apply as well.
+`ui/cypress/README.md` covers running the suite, test-run scheduling and fixture generation;
+this file covers how to write tests.
 
-## Inheritance
+## Primary goal
 
-- Also follow `AGENTS.md` at repository root.
-- Also follow `ui/AGENTS.md`.
+Keep specs readable by centralising selectors and flows in `support/` classes.
 
-## Primary Goal
+## Running
 
-Keep tests readable and maintainable by centralizing selectors and common flows in `support/` classes.
+- `npm run test-cypress-open` against a UI on port 8082 (**Open Cypress** in
+  `.vscode/launch.json`).
+- Name a spec `*.smoke.spec.ts` to run it on every pull request; `*.spec.ts` runs nightly.
+  Prefer the smoke suffix for a test that guards a user-facing flow.
 
-## Authoring Rules For New/Generated Tests
+## Authoring rules
 
-- Prefer existing helpers from `ui/cypress/support/utils/**` and `ui/cypress/support/builder/**`.
-- Do not introduce new inline selector strings in spec files when a selector can be reused.
-- If a new selector is needed, add it to a fitting support class first, then consume it from the spec.
-- Keep specs focused on scenario intent and assertions, not low-level UI wiring.
+- Use the helpers in `support/utils/**` (grouped by domain: `connect`, `pipeline`, `chart`,
+  `dashboard`, `dataset`, `asset`, `configuration`, `user`, ...) and the builders in
+  `support/builder/**` (`AdapterBuilder`, `PipelineBuilder`, `PipelineElementBuilder`,
+  `UserBuilder`, ...).
+- No new inline selector strings in specs when a selector can be reused. If a new selector
+  is needed, add it to the fitting support class first, then consume it from the spec.
+- Specs express scenario intent and assertions, not UI wiring.
 
-## Selector Placement Rules
+## Selector placement
 
-- Put `data-cy` element accessors in domain `*Btns` classes (for example `PipelineBtns`, `ConnectBtns`, `ChartBtns`).
-- Put multi-step user flows in domain `*Utils` classes (for example `PipelineUtils`, `ConnectUtils`, `ChartUtils`).
-- For dynamic selectors, use typed helper methods with parameters instead of string concatenation in specs.
-- Reuse existing selector constants/patterns when already present (for example `SiteUtils` constants).
-- Keep direct `cy.get(...)` in specs to a minimum; if reused, move it behind a support helper.
-- Do not probe UI state via `cy.get('body')`/`$body.find(...)` conditional patterns.
-- If a reliable element is hard to target, add a dedicated `data-cy` in the Angular template and expose it through the matching `*Btns` helper.
+- `data-cy` accessors go in the domain `*Btns` classes (`PipelineBtns`, `ConnectBtns`,
+  `ChartBtns`, ...), as verb/noun methods returning Cypress chains.
+- Multi-step user flows go in the domain `*Utils` classes (`PipelineUtils`, `ConnectUtils`,
+  `ChartUtils`, ...).
+- Dynamic selectors use typed helper methods with parameters, not string concatenation in specs.
+- Keep direct `cy.get(...)` in specs to a minimum; if it is reused, move it behind a helper.
+- Do not probe UI state with `cy.get('body')` / `$body.find(...)` conditionals.
+- If a reliable element is hard to target, add a `data-cy` in the Angular template and
+  expose it through the matching `*Btns` helper.
 
-## Spec Structure
+## Spec structure
 
-- Initialize test state with `cy.initStreamPipesTest()` unless a test explicitly requires different setup.
-- Reuse builders for test objects (`AdapterBuilder`, `PipelineBuilder`, `PipelineElementBuilder`, ...).
-- Avoid fixed `cy.wait(...)` where possible; prefer state-based waits/assertions via helpers.
-- Keep each test independent: no inter-test dependencies.
+- Start with `cy.initStreamPipesTest()` unless the test needs a different setup; it resets
+  the system so every test starts clean.
+- Each test sets up its own data with the builders; no dependencies between tests.
+- Avoid fixed `cy.wait(...)`; prefer state-based waits and assertions through helpers.
 
-## Interaction Style For E2E Steps
+## Interaction style
 
-- Prefer simple, deterministic Cypress steps that mirror user flows.
-- Prefer explicit navigation/toolbar actions to leave pages in a clean state instead of conditional dialog handling.
-- Avoid `force: true` clicks unless there is no feasible deterministic interaction path.
-- When overlays/dialogs block interaction repeatedly, fix selectors/flow with stable `data-cy` hooks in UI code rather than adding DOM-probing workarounds in specs.
+- Simple, deterministic steps that mirror user flows.
+- Explicit navigation and toolbar actions to leave pages clean, not conditional dialog handling.
+- No `force: true` clicks unless there is no deterministic path.
+- When overlays or dialogs block interaction repeatedly, fix the flow with stable `data-cy`
+  hooks in the UI, not DOM-probing workarounds in the spec.
 
-## Refactoring Expectations
+## Refactoring
 
-- When touching an existing spec with many inline selectors, opportunistically move touched selectors to the matching `*Btns`/`*Utils` class.
-- Do not do broad cross-module rewrites; keep refactors scoped to the test area being changed.
-
-## Naming And Organization
-
-- Follow existing naming style:
-  - UI accessors: verb/noun methods in `*Btns` returning Cypress chains.
-  - Flows/assertions: descriptive methods in `*Utils`.
-- Place new helpers in the closest domain folder under `support/utils/` (connect, pipeline, chart, ...).
+- When touching a spec with many inline selectors, move the touched selectors into the
+  matching `*Btns` / `*Utils` class. Keep the refactor scoped to that test area.
 
 ## Validation
 
-- For Cypress changes, run targeted specs when feasible (for example via smoke selection).
-- If execution is not possible, document what was not run.
+- Run the affected specs (smoke selection where feasible). If they cannot be run, say so in
+  the pull request.

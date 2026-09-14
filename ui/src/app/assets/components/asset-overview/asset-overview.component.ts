@@ -39,12 +39,13 @@ import {
     ObjectManageDialogResourceConfig,
     PanelType,
     SpAssetBrowserService,
-    SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBreadcrumbService,
+    SpPageHeaderComponent,
     SpTableActionsDirective,
     SpTableComponent,
 } from '@streampipes/shared-ui';
+import { copyAssetHierarchy } from '../../utils/copy-asset-hierarchy';
 import { SpAssetRoutes } from '../../assets.breadcrumb';
 import { Router } from '@angular/router';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
@@ -80,7 +81,7 @@ type ManageableAsset = SpAssetModel & {
         MatButton,
         MatIconButton,
         MatTooltip,
-        SpBasicHeaderTitleComponent,
+        SpPageHeaderComponent,
         SpTableComponent,
         MatSort,
         MatColumnDef,
@@ -236,6 +237,22 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
                 },
             },
         );
+    }
+
+    createFromExisting(asset: AssetSummaryDto): void {
+        if (!this.hasWritePrivilege) {
+            return;
+        }
+        this.assetService.getAsset(asset.elementId).subscribe(source => {
+            const assetModel = copyAssetHierarchy(source, length =>
+                this.idGeneratorService.generate(length),
+            );
+            assetModel.assetName = `${source.assetName} (${this.translateService.instant('Copy')})`;
+            this.router.navigate(
+                ['assets', 'details', assetModel.elementId, 'edit'],
+                { state: { assetModel, isNewAsset: true } },
+            );
+        });
     }
 
     goToDetailsView(asset: AssetSummaryDto, editMode = false) {

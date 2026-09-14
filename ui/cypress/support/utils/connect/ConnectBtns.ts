@@ -18,6 +18,12 @@
 import { GeneralUtils } from '../GeneralUtils';
 
 export class ConnectBtns {
+    public static createCatalogAdapter(adapterType: string) {
+        return cy
+            .get(`[id="${adapterType}"]`)
+            .find('[data-cy="adapter-catalog-create"]');
+    }
+
     public static detailsAdapter() {
         return cy.dataCy('details-adapter', { timeout: 10000 });
     }
@@ -32,6 +38,18 @@ export class ConnectBtns {
 
     public static editAdapter() {
         return cy.dataCy('edit-adapter', { timeout: 10000 });
+    }
+
+    public static createAdapterFromExisting() {
+        return cy.dataCy('create-from-existing-adapter', { timeout: 10000 });
+    }
+
+    public static adapterNameCells() {
+        return cy.dataCy('adapter-name', { timeout: 10000 });
+    }
+
+    public static adapterConfigInput(propertyName: string) {
+        return cy.dataCy(propertyName, { timeout: 10000 });
     }
 
     public static stopAdapter() {
@@ -431,6 +449,10 @@ export class ConnectBtns {
 
     public static csvHeader() {
         return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-header-1';
+    }
+
+    public static csvDecimalSeparator() {
+        return 'format-org.apache.streampipes.extensions.management.connect.adapter.parser.csv-1-decimalSeparator-2';
     }
 
     public static jsonArrayFieldKey() {

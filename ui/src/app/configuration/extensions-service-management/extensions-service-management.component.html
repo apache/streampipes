@@ -16,39 +16,32 @@
   ~
   -->
 
-<sp-basic-nav-tabs
-    [spNavigationItems]="tabs"
-    [activeLink]="'extensions-services'"
->
-    <div fxLayout="row" class="page-container-padding-inner">
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
-            <sp-split-section
-                [title]="'Registered services' | translate"
-                [subtitle]="
-                    'Inspect currently registered extensions services'
-                        | translate
-                "
-            >
-                <sp-registered-extensions-services></sp-registered-extensions-services>
-            </sp-split-section>
-            <sp-split-section
-                [title]="'Service configurations' | translate"
-                [subtitle]="
-                    'Configure basic settings of core and extensions services'
-                        | translate
-                "
-            >
-                <sp-extensions-service-configuration></sp-extensions-service-configuration>
-            </sp-split-section>
-            <sp-split-section
-                [title]="'Certificates' | translate"
-                [subtitle]="
-                    'Configure trusted and rejected OPC-UA certificates'
-                        | translate
-                "
-            >
-                <sp-certificate-configuration></sp-certificate-configuration>
-            </sp-split-section>
-        </div>
+<div fxLayout="row">
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+        <sp-split-section
+            [title]="'Registered services' | translate"
+            [subtitle]="
+                'Inspect currently registered extensions services' | translate
+            "
+        >
+            <sp-registered-extensions-services></sp-registered-extensions-services>
+        </sp-split-section>
+        <sp-split-section
+            [title]="'Service configurations' | translate"
+            [subtitle]="
+                'Configure basic settings of core and extensions services'
+                    | translate
+            "
+        >
+            <sp-extensions-service-configuration></sp-extensions-service-configuration>
+        </sp-split-section>
+        <sp-split-section
+            [title]="'Certificates' | translate"
+            [subtitle]="
+                'Configure trusted and rejected OPC-UA certificates' | translate
+            "
+        >
+            <sp-certificate-configuration></sp-certificate-configuration>
+        </sp-split-section>
     </div>
-</sp-basic-nav-tabs>
+</div>

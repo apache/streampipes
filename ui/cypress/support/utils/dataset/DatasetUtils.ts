@@ -75,7 +75,9 @@ export class DatasetUtils {
     public static useExistingDatasetForCsvImport(datasetName: string) {
         DatasetBtns.csvImportTargetMode().click();
         DatasetBtns.csvImportTargetModeExisting().click();
-        DatasetBtns.csvImportExistingMeasurement().click({ force: true });
+        DatasetBtns.csvImportExistingMeasurement()
+            .click({ force: true })
+            .type(datasetName);
         cy.get('mat-option', { timeout: 10000 })
             .contains(datasetName)
             .click({ force: true });

@@ -16,15 +16,26 @@
 ~
 -->
 
-<div fxLayout="row">
+<div
+    fxLayout="row"
+    class="time-range-selector"
+    [class.time-range-selector--emphasized]="appearance === 'emphasized'"
+>
     @if (showTimeSelector) {
-        <div fxFlex fxLayoutAlign="center center">
+        <div
+            fxFlex
+            fxLayoutAlign="center center"
+            class="time-range-selector__navigation"
+        >
             <button
                 mat-icon-button
                 color="accent"
+                class="time-range-selector__step"
+                [attr.aria-label]="'Previous' | translate"
+                [matTooltip]="'Previous' | translate"
                 (click)="applyPreviousInterval()"
             >
-                <i class="material-icons">navigate_before</i>
+                <mat-icon aria-hidden="true">navigate_before</mat-icon>
             </button>
             <button
                 mat-button
@@ -32,52 +43,123 @@
                 [matMenuTriggerFor]="menu"
                 #menuTrigger="matMenuTrigger"
                 [matTooltip]="labels.timeRangeSelectorTooltip"
+                class="time-range-selector__selection"
                 data-cy="time-selector-menu"
                 (menuClosed)="menuTrigger.closeMenu()"
             >
-                @if (timeStringMode === 'advanced') {
-                    <div class="formatted-datetime">
-                        <span class="formatted-date">{{
-                            timeString.startDate
-                        }}</span>
-                        @if (enableTimePicker) {
-                            <span>
-                                &nbsp;<span class="formatted-time">{{
-                                    timeString.startTime
+                @if (appearance === 'emphasized') {
+                    <span class="time-range-selector__selection-content">
+                        <mat-icon
+                            class="time-range-selector__calendar"
+                            aria-hidden="true"
+                            >calendar_today</mat-icon
+                        >
+                        <span class="time-range-selector__selection-copy">
+                            @if (selectionLabel) {
+                                <span class="time-range-selector__label">{{
+                                    selectionLabel
                                 }}</span>
-                            </span>
-                        }
-                        @if (enableTimePicker || !timeString.sameDay) {
-                            <div>
-                                <span class="formatted-date"
-                                    >&nbsp;-&nbsp;</span
-                                >
-                                <span class="formatted-date">{{
-                                    timeString.endDate
-                                }}</span>
-                                @if (enableTimePicker) {
-                                    <span>
-                                        &nbsp;<span class="formatted-time">{{
-                                            timeString.endTime
-                                        }}</span>
-                                    </span>
-                                }
-                            </div>
-                        }
-                    </div>
-                }
-                @if (timeStringMode === 'simple') {
-                    <div class="formatted-datetime">
-                        {{ simpleTimeString }}
-                    </div>
+                            }
+                            @if (timeStringMode === 'advanced') {
+                                <span class="formatted-datetime">
+                                    <span class="formatted-date">{{
+                                        timeString.startDate
+                                    }}</span>
+                                    @if (enableTimePicker) {
+                                        <span>
+                                            &nbsp;<span
+                                                class="formatted-time"
+                                                >{{
+                                                    timeString.startTime
+                                                }}</span
+                                            >
+                                        </span>
+                                    }
+                                    @if (
+                                        enableTimePicker || !timeString.sameDay
+                                    ) {
+                                        <span>
+                                            <span class="formatted-date"
+                                                >&nbsp;-&nbsp;</span
+                                            >
+                                            <span class="formatted-date">{{
+                                                timeString.endDate
+                                            }}</span>
+                                            @if (enableTimePicker) {
+                                                <span>
+                                                    &nbsp;<span
+                                                        class="formatted-time"
+                                                        >{{
+                                                            timeString.endTime
+                                                        }}</span
+                                                    >
+                                                </span>
+                                            }
+                                        </span>
+                                    }
+                                </span>
+                            }
+                            @if (timeStringMode === 'simple') {
+                                <span class="formatted-datetime">
+                                    {{ simpleTimeString }}
+                                </span>
+                            }
+                        </span>
+                        <mat-icon
+                            class="time-range-selector__expand"
+                            aria-hidden="true"
+                            >arrow_drop_down</mat-icon
+                        >
+                    </span>
+                } @else {
+                    @if (timeStringMode === 'advanced') {
+                        <div class="formatted-datetime">
+                            <span class="formatted-date">{{
+                                timeString.startDate
+                            }}</span>
+                            @if (enableTimePicker) {
+                                <span>
+                                    &nbsp;<span class="formatted-time">{{
+                                        timeString.startTime
+                                    }}</span>
+                                </span>
+                            }
+                            @if (enableTimePicker || !timeString.sameDay) {
+                                <div>
+                                    <span class="formatted-date"
+                                        >&nbsp;-&nbsp;</span
+                                    >
+                                    <span class="formatted-date">{{
+                                        timeString.endDate
+                                    }}</span>
+                                    @if (enableTimePicker) {
+                                        <span>
+                                            &nbsp;<span
+                                                class="formatted-time"
+                                                >{{ timeString.endTime }}</span
+                                            >
+                                        </span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                    @if (timeStringMode === 'simple') {
+                        <div class="formatted-datetime">
+                            {{ simpleTimeString }}
+                        </div>
+                    }
                 }
             </button>
             <button
                 mat-icon-button
                 color="accent"
+                class="time-range-selector__step"
+                [attr.aria-label]="'Next' | translate"
+                [matTooltip]="'Next' | translate"
                 (click)="applyNextInterval()"
             >
-                <i class="material-icons">navigate_next</i>
+                <mat-icon aria-hidden="true">navigate_next</mat-icon>
             </button>
             <mat-menu #menu="matMenu" fxFlex="100" class="large-menu">
                 <sp-time-selector-menu
@@ -97,11 +179,13 @@
     <div fxLayoutAlign="end center">
         <button
             mat-icon-button
+            class="time-range-selector__refresh"
             [matTooltip]="'Refresh' | translate"
+            [attr.aria-label]="'Refresh' | translate"
             color="accent"
             (click)="updateTimeSettingsAndReload()"
         >
-            <mat-icon>refresh</mat-icon>
+            <mat-icon aria-hidden="true">refresh</mat-icon>
         </button>
     </div>
     <div fxLayoutAlign="end center">
@@ -113,6 +197,7 @@
                     intervalSettingsChangedEmitter.emit($event)
                 "
                 [availableOptions]="availableOptions"
+                [appearance]="appearance"
             >
             </sp-data-explorer-refresh-interval-settings-component>
         }

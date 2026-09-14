@@ -20,31 +20,45 @@ import { NgComponentOutlet } from '@angular/common';
 import { Component, Type, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import {
+    SpBasicViewComponent,
+    SpNavigationItem,
+    SpPageHeaderComponent,
+    SpPageNavTabsComponent,
+} from '@streampipes/shared-ui';
 import { map } from 'rxjs/operators';
 import { SpConfigurationTabsService } from './configuration-tabs.service';
 
 @Component({
     selector: 'sp-configuration-section-host',
-    template: `
-        @if (sectionComponent) {
-            <ng-container *ngComponentOutlet="sectionComponent"></ng-container>
-        }
-    `,
-    imports: [NgComponentOutlet],
+    templateUrl: './configuration-section-host.component.html',
+    styleUrls: ['./configuration-section-host.component.scss'],
+    imports: [
+        NgComponentOutlet,
+        SpBasicViewComponent,
+        SpPageHeaderComponent,
+        SpPageNavTabsComponent,
+        TranslatePipe,
+    ],
 })
 export class ConfigurationSectionHostComponent {
     sectionComponent?: Type<unknown>;
+    tabs: SpNavigationItem[] = [];
+    activeLink = '';
 
     private route = inject(ActivatedRoute);
     private tabService = inject(SpConfigurationTabsService);
 
     constructor() {
+        this.tabs = this.tabService.getTabs();
         this.route.paramMap
             .pipe(
                 map(params => params.get('configurationSectionId')),
                 takeUntilDestroyed(),
             )
             .subscribe(sectionId => {
+                this.activeLink = sectionId ?? '';
                 void this.updateSectionComponent(sectionId);
             });
     }

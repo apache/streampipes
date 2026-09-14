@@ -33,6 +33,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
 import { PipelineStartedStatusComponent } from '../../../core-ui/pipeline/pipeline-started-status/pipeline-started-status.component';
+import { PipelineStartService } from '../../services/pipeline-start.service';
 
 @Component({
     selector: 'sp-pipeline-status-dialog',
@@ -63,6 +64,7 @@ export class PipelineStatusDialogComponent implements OnInit {
 
     private translateService = inject(TranslateService);
     private pipelineService = inject(PipelineService);
+    private pipelineStartService = inject(PipelineStartService);
     private dialogRef = inject(DialogRef<PipelineStatusDialogComponent>);
 
     constructor() {}
@@ -80,7 +82,7 @@ export class PipelineStatusDialogComponent implements OnInit {
     }
 
     startPipeline() {
-        this.pipelineService.startPipeline(this.pipelineId).subscribe(
+        this.pipelineStartService.startPipeline(this.pipelineId).subscribe(
             msg => {
                 this.pipelineOperationStatus = msg;
                 this.operationInProgress = false;

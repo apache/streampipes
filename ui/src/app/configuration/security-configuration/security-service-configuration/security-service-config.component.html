@@ -57,12 +57,8 @@
                                         data-cy="service-edit-btn"
                                         (click)="editService(account)"
                                     >
-                                        <i class="material-icons">edit</i>
-                                        <span
-                                            >&nbsp;{{
-                                                'Edit' | translate
-                                            }}</span
-                                        >
+                                        <mat-icon>edit</mat-icon>
+                                        <span>{{ 'Edit' | translate }}</span>
                                     </button>
                                 </div>
                                 <button
@@ -73,10 +69,8 @@
                                     data-cy="service-delete-btn"
                                     (click)="deleteUser(account)"
                                 >
-                                    <i class="material-icons">delete</i>
-                                    <span
-                                        >&nbsp;{{ 'Delete' | translate }}</span
-                                    >
+                                    <mat-icon>delete</mat-icon>
+                                    <span>{{ 'Delete' | translate }}</span>
                                 </button>
                             </span>
                         </div>

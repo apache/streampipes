@@ -22,11 +22,9 @@ import { LabelsService, SpLabel } from '@streampipes/platform-services';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 import {
     ConfirmDialogComponent,
-    SpBasicNavTabsComponent,
     SpBreadcrumbService,
     SpLabelComponent,
     SplitSectionComponent,
-    SpNavigationItem,
     SpTableComponent,
 } from '@streampipes/shared-ui';
 import {
@@ -55,7 +53,6 @@ import { MatDialog } from '@angular/material/dialog';
     templateUrl: './label-configuration.component.html',
     styleUrls: ['./label-configuration.component.scss'],
     imports: [
-        SpBasicNavTabsComponent,
         LayoutDirective,
         SplitSectionComponent,
         LayoutAlignDirective,
@@ -84,8 +81,6 @@ export class SpLabelConfigurationComponent implements OnInit {
     private dialog = inject(MatDialog);
     private translateService = inject(TranslateService);
 
-    tabs: SpNavigationItem[] = [];
-
     allLabels: SpLabel[] = [];
     readonly createLabelMode = signal(false);
 
@@ -100,7 +95,6 @@ export class SpLabelConfigurationComponent implements OnInit {
     readonly editedLabels = signal<string[]>([]);
 
     ngOnInit(): void {
-        this.tabs = this.tabService.getTabs();
         this.breadcrumbService.updateBreadcrumb([
             SpConfigurationRoutes.BASE,
             { label: this.tabService.getTabTitle('labels') },

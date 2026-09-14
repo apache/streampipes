@@ -100,6 +100,51 @@ export class ConnectUtils {
         ConnectUtils.finishConfigureFieldsConfiguration();
     }
 
+    /**
+     * Opens the 'Create from existing' flow for an adapter shown in the overview.
+     */
+    public static createAdapterFromExisting(adapterName: string) {
+        ConnectUtils.goToConnect();
+        ConnectBtns.openActionsMenu(adapterName);
+        ConnectBtns.createAdapterFromExisting().should('be.visible').click();
+        cy.location('hash', { timeout: 10000 }).should(
+            'include',
+            '/connect/create-from-existing/',
+        );
+    }
+
+    public static checkAdapterListed(adapterName: string) {
+        GeneralUtils.checkNameCellsContain(
+            ConnectBtns.adapterNameCells(),
+            adapterName,
+        );
+    }
+
+    /**
+     * Walks through the prefilled wizard of a copied adapter and stores it.
+     * Asserts that the name is prefilled as a copy of the source name and
+     * optionally renames the copy before storing it.
+     */
+    public static storeAdapterFromExisting(
+        sourceName: string,
+        newName?: string,
+    ) {
+        ConnectUtils.finishAdapterSettings();
+        ConnectUtils.finishEventSchemaConfiguration();
+        ConnectUtils.finishConfigureFieldsConfiguration();
+
+        ConnectBtns.adapterNameInput()
+            .invoke('val')
+            .should('match', GeneralUtils.copyNamePattern(sourceName));
+        if (newName) {
+            ConnectBtns.adapterNameInput().clear().type(newName);
+        }
+
+        ConnectBtns.storeNewAdapter().click();
+        ConnectBtns.connectAdapterAddedSuccessfully().should('be.visible');
+        ConnectUtils.closeAdapterPreview();
+    }
+
     public static addAdapterWithLinkedAssets(
         adapterConfiguration: AdapterInput,
         assetNameList,
@@ -183,7 +228,7 @@ export class ConnectUtils {
     }
 
     public static selectAdapter(name: string) {
-        cy.get('#' + name).click();
+        ConnectBtns.createCatalogAdapter(name).click();
     }
 
     public static configureAdapter(adapterInput: AdapterInput) {
@@ -213,8 +258,12 @@ export class ConnectUtils {
         }
 
         // For file adapters, wait until the file selection state is rendered to reduce test flakiness.
+        // Scroll it into view first, since additional format options (e.g. the decimal separator)
+        // can push this element into a scrollable area.
         if (adapterInput?.adapterType === 'File_Stream') {
-            ConnectBtns.fileInputSelected().should('be.visible');
+            ConnectBtns.fileInputSelected()
+                .scrollIntoView()
+                .should('be.visible');
         }
     }
 
@@ -432,7 +481,12 @@ export class ConnectUtils {
                 .setName('Adapter to test rules')
                 .setFormat('csv')
                 .addFormatInput('input', ConnectBtns.csvDelimiter(), ';')
-                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check');
+                .addFormatInput('checkbox', ConnectBtns.csvHeader(), 'check')
+                .addFormatInput(
+                    'input',
+                    ConnectBtns.csvDecimalSeparator(),
+                    '.',
+                );
         }
 
         if (overwriteTimestamp) {

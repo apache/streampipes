@@ -62,12 +62,16 @@ public class CsvParser implements IParser {
 
   public static final String DELIMITER = "delimiter";
   public static final String HEADER = "header";
+  public static final String DECIMAL_SEPARATOR = "decimalSeparator";
 
   public static final String DESCRIPTION = "Can be used to read CSV";
+
+  private static final char DEFAULT_DECIMAL_SEPARATOR = '.';
 
 
   private boolean header;
   private char delimiter;
+  private char decimalSeparator = DEFAULT_DECIMAL_SEPARATOR;
   private final AtomicBoolean loggedConversionError = new AtomicBoolean(false);
 
   public CsvParser() {
@@ -75,9 +79,14 @@ public class CsvParser implements IParser {
   }
 
   public CsvParser(boolean header, char delimiter) {
+    this(header, delimiter, DEFAULT_DECIMAL_SEPARATOR);
+  }
+
+  public CsvParser(boolean header, char delimiter, char decimalSeparator) {
     this();
     this.header = header;
     this.delimiter = delimiter;
+    this.decimalSeparator = decimalSeparator;
   }
 
   @Override
@@ -91,7 +100,18 @@ public class CsvParser implements IParser {
                               .stream()
                               .anyMatch("Header"::equals);
 
-    return new CsvParser(header, delimiter);
+    char decimalSeparator = DEFAULT_DECIMAL_SEPARATOR;
+    try {
+      var separatorValue = extractor.singleValueParameter(DECIMAL_SEPARATOR, String.class);
+      if (separatorValue != null && !separatorValue.isEmpty()) {
+        decimalSeparator = separatorValue.charAt(0);
+      }
+    } catch (RuntimeException e) {
+      // Keep backwards compatibility with adapter descriptions persisted before this option existed.
+      LOG.debug("No decimal separator configured, falling back to default '{}'", DEFAULT_DECIMAL_SEPARATOR);
+    }
+
+    return new CsvParser(header, delimiter, decimalSeparator);
   }
 
 
@@ -109,6 +129,10 @@ public class CsvParser implements IParser {
                                        ),
                                        List.of(new Option("Header", "Header"))
                                    )
+                                   .requiredTextParameter(Labels.from(
+                                       DECIMAL_SEPARATOR, "Decimal separator",
+                                       "The decimal separator used for numeric values, e.g. . or ,"
+                                   ))
                                    .build();
   }
 
@@ -164,8 +188,9 @@ public class CsvParser implements IParser {
 
     var event = new HashMap<String, Object>();
     for (int i = 0; i < header.length; i++) {
-      var runtimeType = DatatypeUtils.getXsdDatatype(values[i], preferFloat);
-      var convertedValue = DatatypeUtils.convertValue(ID, values[i], runtimeType, loggedConversionError);
+      var runtimeType = DatatypeUtils.getXsdDatatype(values[i], preferFloat, decimalSeparator);
+      var convertedValue =
+          DatatypeUtils.convertValue(ID, values[i], runtimeType, decimalSeparator, loggedConversionError);
       event.put(header[i], convertedValue);
     }
 

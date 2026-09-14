@@ -16,11 +16,14 @@
  *
  */
 
-.data-explorer-options {
-    padding: 0;
+:host {
+    min-width: 0;
 }
 
-.data-explorer-options-item {
-    display: inline;
-    margin-right: 10px;
+.dashboard-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
 }

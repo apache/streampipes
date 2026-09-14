@@ -37,12 +37,14 @@ import { PipelineAction } from '../model/pipeline-model';
 import { PipelineNotificationsComponent } from '../dialog/pipeline-notifications/pipeline-notifications.component';
 import { PipelineCodeDialogComponent } from '../../pipeline-details/dialogs/pipeline-code/pipeline-code-dialog.component';
 import { firstValueFrom } from 'rxjs';
+import { PipelineStartService } from './pipeline-start.service';
 
 @Injectable({ providedIn: 'root' })
 export class PipelineOperationsService {
     private dialogService = inject(DialogService);
     private router = inject(Router);
     private pipelineService = inject(PipelineService);
+    private pipelineStartService = inject(PipelineStartService);
 
     starting: any;
     stopping: any;
@@ -203,7 +205,7 @@ export class PipelineOperationsService {
 
                             if (shouldRestart) {
                                 const startResult = await firstValueFrom(
-                                    this.pipelineService.startPipeline(
+                                    this.pipelineStartService.startPipeline(
                                         resource._id,
                                     ),
                                 );

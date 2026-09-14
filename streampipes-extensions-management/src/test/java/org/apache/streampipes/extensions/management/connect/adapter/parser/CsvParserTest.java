@@ -106,4 +106,19 @@ public class CsvParserTest extends ParserTest {
     verify(mockEventHandler).handle(expectedEvent);
   }
 
+  @Test
+  public void parseCommaDecimalSeparatorWithSemicolonDelimiter() {
+    // Column delimiter ';' frees ',' to act as the decimal separator (issue #530).
+    var event = toStream("k1;k2\nv1;2,5");
+    var mockEventHandler = mock(IParserEventHandler.class);
+
+    var parser = new CsvParser(true, ';', ',');
+    parser.parse(event, mockEventHandler);
+
+    Map<String, Object> expectedEvent = new HashMap<>();
+    expectedEvent.put(K1, "v1");
+    expectedEvent.put(K2, 2.5f);
+    verify(mockEventHandler).handle(expectedEvent);
+  }
+
 }

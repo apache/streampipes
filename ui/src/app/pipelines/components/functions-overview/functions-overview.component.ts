@@ -35,6 +35,7 @@ import {
 } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'sp-functions-overview',
@@ -53,6 +54,7 @@ import { MatTooltip } from '@angular/material/tooltip';
         LayoutDirective,
         MatIconButton,
         MatTooltip,
+        MatIcon,
     ],
 })
 export class FunctionsOverviewComponent implements OnInit {

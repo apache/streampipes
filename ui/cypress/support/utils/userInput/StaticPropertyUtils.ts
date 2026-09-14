@@ -69,6 +69,7 @@ export class StaticPropertyUtils {
                     });
             } else if (config.type === 'input') {
                 cy.dataCy(config.selector, { timeout: 2000 })
+                    .scrollIntoView()
                     .clear()
                     .type(config.value)
                     .blur();
@@ -104,9 +105,11 @@ export class StaticPropertyUtils {
     }
 
     private static clickSelectionInput(selector: string, cssClassName: string) {
-        cy.dataCy(selector, { timeout: 2000 }).within(() => {
-            cy.get(cssClassName).click();
-        });
+        cy.dataCy(selector, { timeout: 2000 })
+            .scrollIntoView()
+            .within(() => {
+                cy.get(cssClassName).click();
+            });
     }
 
     private static preserveClosingTemplateSuffix(

@@ -27,6 +27,7 @@
 }
 
 .pipeline-element-box {
+    box-sizing: border-box;
     height: 100%;
     width: 100%;
     cursor: pointer;
@@ -34,8 +35,8 @@
     border: 1px solid
         color-mix(in srgb, var(--endpoint-type-color) 28%, transparent);
     box-shadow: 0 1px 2px color-mix(in srgb, #000 16%, transparent);
-    padding: 12px;
-    margin-bottom: 10px;
+    padding: var(--space-md);
+    margin: 0;
     background: var(--color-bg-0);
     transition:
         transform 160ms ease,

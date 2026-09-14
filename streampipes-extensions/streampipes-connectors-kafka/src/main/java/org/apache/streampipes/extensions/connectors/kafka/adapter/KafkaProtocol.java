@@ -61,7 +61,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -88,8 +87,7 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
 
     kafkaConfig.getConfigAppenders().forEach(c -> c.appendConfig(props));
 
-    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-        kafkaConfig.getKafkaHost() + ":" + kafkaConfig.getKafkaPort());
+    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfig.getBootstrapServers());
 
     props.put(ConsumerConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, 6000);
 
@@ -107,10 +105,10 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
       throws SpConfigurationException {
     RuntimeResolvableOneOfStaticProperty config = extractor
         .getStaticPropertyByName(KafkaConfigProvider.TOPIC_KEY, RuntimeResolvableOneOfStaticProperty.class);
-    var kafkaConfig = new KafkaConfigExtractor().extractAdapterConfig(extractor, false);
     boolean hideInternalTopics = extractor.slideToggleValue(KafkaConfigProvider.getHideInternalTopicsKey());
 
     try {
+      var kafkaConfig = new KafkaConfigExtractor().extractAdapterConfig(extractor, false);
       var consumer = createConsumer(kafkaConfig);
       List<String> topics = new ArrayList<>(consumer.listTopics().keySet()).stream().sorted().toList();
       consumer.close();
@@ -139,7 +137,7 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
     latestAlternative.setSelected(true);
 
     return AdapterConfigurationBuilder
-        .create(ID, 2, KafkaProtocol::new)
+        .create(ID, 3, KafkaProtocol::new)
         .withSupportedParsers(Parsers.defaultParsers())
         .withAssets(ExtensionAssetType.DOCUMENTATION, ExtensionAssetType.ICON)
         .withLocales(Locales.EN)
@@ -150,8 +148,7 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
             KafkaConfigProvider.getAlternativesSaslPlain(),
             KafkaConfigProvider.getAlternativesSaslSSL())
 
-        .requiredTextParameter(KafkaConfigProvider.getHostLabel())
-        .requiredIntegerParameter(KafkaConfigProvider.getPortLabel())
+        .requiredTextParameter(KafkaConfigProvider.getBootstrapServersLabel())
 
         .requiredAlternatives(KafkaConfigProvider.getConsumerGroupLabel(),
             KafkaConfigProvider.getAlternativesRandomGroupId(),
@@ -159,9 +156,8 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
 
         .requiredSlideToggle(KafkaConfigProvider.getHideInternalTopicsLabel(), true)
 
-        .requiredSingleValueSelectionFromContainer(KafkaConfigProvider.getTopicLabel(), Arrays.asList(
-            KafkaConfigProvider.HOST_KEY,
-            KafkaConfigProvider.PORT_KEY))
+        .requiredSingleValueSelectionFromContainer(KafkaConfigProvider.getTopicLabel(), List.of(
+            KafkaConfigProvider.BOOTSTRAP_SERVERS_KEY))
         .requiredAlternatives(KafkaConfigProvider.getAutoOffsetResetConfigLabel(),
             KafkaConfigProvider.getAlternativesEarliest(),
             latestAlternative,
@@ -179,8 +175,7 @@ public class KafkaProtocol implements StreamPipesAdapter, SupportsRuntimeConfig 
                                IAdapterRuntimeContext adapterRuntimeContext) throws AdapterException {
     KafkaTransportProtocol protocol = new KafkaTransportProtocol();
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
-    protocol.setKafkaPort(config.getKafkaPort());
-    protocol.setBrokerHostname(config.getKafkaHost());
+    protocol.setBootstrapServers(config.getBootstrapServers());
     protocol.setTopicDefinition(new SimpleTopicDefinition(config.getTopic()));
 
     this.kafkaConsumer = new SpKafkaConsumer(protocol,

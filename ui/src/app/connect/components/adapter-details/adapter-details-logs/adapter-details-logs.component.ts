@@ -19,27 +19,25 @@
 import { Component, OnInit } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import { SpLogEntry } from '@streampipes/platform-services';
-import { SpBasicNavTabsComponent } from '@streampipes/shared-ui';
 import { SpConnectRoutes } from '../../../connect.breadcrumb';
-import {
-    FlexDirective,
-    LayoutAlignDirective,
-    LayoutDirective,
-} from '@ngbracket/ngx-layout/flex';
+import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { SpSimpleLogsComponent } from '../../../../core-ui/monitoring/simple-logs/simple-logs.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SpAdapterDetailsLayoutComponent } from '../adapter-details-layout/adapter-details-layout.component';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'sp-adapter-details-logs',
     templateUrl: './adapter-details-logs.component.html',
     styleUrls: ['./adapter-details-logs.component.scss'],
     imports: [
-        SpBasicNavTabsComponent,
+        SpAdapterDetailsLayoutComponent,
         LayoutDirective,
-        LayoutAlignDirective,
         MatIconButton,
+        MatIcon,
         MatTooltip,
         FlexDirective,
         SpSimpleLogsComponent,
@@ -59,6 +57,7 @@ export class SpAdapterDetailsLogsComponent
     loadLogs(): void {
         this.adapterMonitoringService
             .getLogInfoForAdapter(this.currentAdapterId)
+            .pipe(finalize(() => (this.refreshing = false)))
             .subscribe(res => {
                 this.adapterLogs = res;
             });
