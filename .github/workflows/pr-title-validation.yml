@@ -27,16 +27,26 @@ jobs:
     name: Validate PR title
     runs-on: ubuntu-latest
     steps:
-      - name: Check Conventional Commit title
+      - uses: amannn/action-semantic-pull-request@e32d7e603df1aa1ba07e981f2a23455dee596825 # v5
         env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-        run: |
-          pattern='^(build|chore|ci|deps|docs|feat|fix|perf|refactor|revert|style|test)(\(#[0-9]+\))?!?: .{1,50}$'
-
-          if [[ ! "$PR_TITLE" =~ $pattern || "$PR_TITLE" == *. ]]; then
-            echo "Invalid pull request title: $PR_TITLE"
-            echo "Use: type(#issue): subject"
-            echo "The issue number and ! are optional; the subject must be 1-50 characters and must not end in a period."
-            echo "Allowed types: build, chore, ci, deps, docs, feat, fix, perf, refactor, revert, style, test"
-            exit 1
-          fi
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            build
+            chore
+            ci
+            deps
+            docs
+            feat
+            fix
+            perf
+            refactor
+            revert
+            style
+            test
+          scopes: |
+            \#[0-9]+
+            deps(-dev)?
+          headerPattern: '^(\w*)(?:\(([\w$#.\-*/ ]*)\))?!?: (.*)$'
+          headerPatternCorrespondence: type, scope, subject
+          subjectPattern: '^(?=.{1,50}$)(?!.*\.$).+$'
