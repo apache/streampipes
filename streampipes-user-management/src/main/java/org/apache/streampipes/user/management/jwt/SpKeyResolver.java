@@ -17,17 +17,21 @@
  */
 package org.apache.streampipes.user.management.jwt;
 
+import org.apache.streampipes.commons.security.ServiceAccountSecret;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.model.configuration.JwtSigningMode;
 import org.apache.streampipes.security.jwt.KeyGenerator;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
-import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
+import org.apache.streampipes.user.management.service.ServiceAccountSecretManager;
+import org.apache.streampipes.user.management.util.PrincipalStatus;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.SigningKeyResolver;
+import io.jsonwebtoken.UnsupportedJwtException;
 
 import java.security.Key;
 
@@ -47,16 +51,31 @@ public class SpKeyResolver implements SigningKeyResolver {
 
   @Override
   public Key resolveSigningKey(JwsHeader jwsHeader, Claims claims) {
-    String subject = claims.getSubject();
-    Principal principal = getPrincipal(subject);
-    if (principal == null) {
-      return null;
-    } else if (isRealUser(principal)) {
-      return new KeyGenerator().makeKeyForSecret(jwsHeader.getAlgorithm(), this.tokenSecret, getPublicKeyFromConfig());
-    } else {
-      String decryptedSecret = SecretEncryptionManager.decrypt(((ServiceAccount) principal).getClientSecret());
-      return new KeyGenerator().makeKeyForSecret(jwsHeader.getAlgorithm(), decryptedSecret, getPublicKeyFromConfig());
+    Principal principal = getPrincipal(claims.getSubject());
+    if (!PrincipalStatus.canAuthenticate(principal)) {
+      throw new UnsupportedJwtException("Principal cannot authenticate");
     }
+    var keys = new KeyGenerator();
+    var config = coreConfigStorage.get().getLocalAuthConfig();
+    String algorithm = jwsHeader.getAlgorithm();
+    if (principal instanceof ServiceAccount account) {
+      String secret = ServiceAccountSecretManager.readSecret(account);
+      if (!ServiceAccountSecret.isValid(secret)) {
+        throw new UnsupportedJwtException("Service credential must be replaced");
+      }
+      // Service clients sign with their own HMAC key, including in RSA deployments.
+      if (!"RS256".equals(algorithm)) {
+        return keys.makeKeyForSecret(algorithm, secret, null);
+      }
+    } else if (!(principal instanceof UserAccount)) {
+      throw new UnsupportedJwtException("Unsupported principal type");
+    }
+    if (config.getJwtSigningMode() == JwtSigningMode.HMAC && !"RS256".equals(algorithm)) {
+      return keys.makeKeyForSecret(algorithm, tokenSecret, null);
+    } else if (config.getJwtSigningMode() == JwtSigningMode.RSA && "RS256".equals(algorithm)) {
+      return keys.makeKeyForSecret(algorithm, null, getPublicKeyFromConfig());
+    }
+    throw new UnsupportedJwtException("JWT algorithm is not allowed for this principal");
   }
 
   @Override
@@ -65,11 +84,7 @@ public class SpKeyResolver implements SigningKeyResolver {
   }
 
   private Principal getPrincipal(String username) {
-    return userStorage.getUser(username);
-  }
-
-  private boolean isRealUser(Principal principal) {
-    return principal instanceof UserAccount;
+    return username == null || username.isBlank() ? null : userStorage.getUser(username);
   }
 
   public String getPublicKeyFromConfig() {
