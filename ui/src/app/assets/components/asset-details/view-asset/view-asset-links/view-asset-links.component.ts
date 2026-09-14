@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AssetConstants,
     AssetLinkType,
@@ -34,6 +40,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-view-asset-links',
     templateUrl: './view-asset-links.component.html',
     styleUrls: ['./view-asset-links.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         AssetLinkTableComponent,

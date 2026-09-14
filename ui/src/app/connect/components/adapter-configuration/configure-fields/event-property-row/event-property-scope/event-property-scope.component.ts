@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DataType,
@@ -47,6 +48,7 @@ type PropertyScope =
 @Component({
     selector: 'sp-event-property-scope',
     templateUrl: './event-property-scope.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatFormField, MatSelect, MatOption, TranslatePipe],
 })
 export class EventPropertyScopeComponent implements OnInit {

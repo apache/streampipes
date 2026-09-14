@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -30,6 +30,7 @@ import { DatePipe } from '@angular/common';
     selector: 'sp-simple-metrics',
     templateUrl: './simple-metrics.component.html',
     styleUrls: ['./simple-metrics.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

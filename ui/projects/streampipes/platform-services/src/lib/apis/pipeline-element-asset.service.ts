@@ -25,7 +25,7 @@ import { PlatformServicesCommons } from './commons.service';
 export class PipelineElementAssetService {
     private platformServicesCommons = inject(PlatformServicesCommons);
 
-    getAssetUrl(appId) {
+    getAssetUrl(appId: string) {
         return (
             this.platformServicesCommons.apiBasePath +
             '/pe/' +

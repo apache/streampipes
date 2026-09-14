@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BaseLoginPageDirective } from '../base-login-page.directive';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrentUserService } from '@streampipes/shared-ui';
@@ -39,6 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-terms',
     templateUrl: './terms.component.html',
     styleUrls: ['./terms.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AuthBoxComponent,
         LayoutDirective,

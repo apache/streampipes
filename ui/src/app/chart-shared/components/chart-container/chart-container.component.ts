@@ -19,7 +19,6 @@
 import {
     AfterViewInit,
     Component,
-    ComponentFactoryResolver,
     ComponentRef,
     ElementRef,
     EventEmitter,
@@ -32,6 +31,7 @@ import {
     ViewChild,
     inject,
     NgZone,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     ClientDashboardItem,
@@ -87,6 +87,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-chart-container',
     templateUrl: './chart-container.component.html',
     styleUrls: ['./chart-container.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgStyle,
         StyleDirective,
@@ -115,7 +116,6 @@ export class ChartContainerComponent
 {
     private chartRegistryService = inject(ChartRegistry);
     private dashboardService = inject(ChartSharedService);
-    private componentFactoryResolver = inject(ComponentFactoryResolver);
     private widgetTypeService = inject(ChartTypeService);
     private authService = inject(AuthService);
     private currentUserService = inject(CurrentUserService);
@@ -352,17 +352,13 @@ export class ChartContainerComponent
             width: container.clientWidth,
             height: container.clientHeight,
         };
-        const componentFactory =
-            this.componentFactoryResolver.resolveComponentFactory<
-                BaseWidgetData<any>
-            >(widgetToDisplay);
 
         const viewContainerRef = this.widgetHost.viewContainerRef;
         viewContainerRef.clear();
 
         this.componentRef =
             viewContainerRef.createComponent<BaseWidgetData<any>>(
-                componentFactory,
+                widgetToDisplay,
             );
         this.componentRef.instance.dataExplorerWidget = this.configuredWidget;
         this.componentRef.instance.initialSize = initialSize;

@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     ConnectScriptTemplatesService,
     ConnectTransformationScriptTemplate,
@@ -50,6 +55,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl:
         './select-adapter-transformation-template-dialog.component.html',
     styleUrl: './select-adapter-transformation-template-dialog.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormFieldComponent,
         SpAlertBannerComponent,

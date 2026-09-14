@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -28,6 +28,7 @@ import { SpSpinnerComponent } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-configure-fields-loading-message',
     templateUrl: './configure-fields-loading-message.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutAlignDirective,

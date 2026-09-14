@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Status, StatusIndicator } from './multi-step-status-indicator.model';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
 import {
@@ -30,6 +30,7 @@ import {
     selector: 'sp-multi-step-status-indicator',
     templateUrl: './multi-step-status-indicator.component.html',
     styleUrls: ['./multi-step-status-indicator.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,

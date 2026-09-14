@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     Dashboard,
     DashboardLiveSettings,
@@ -33,6 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-dashboard-toolbar',
     templateUrl: './dashboard-toolbar.component.html',
     styleUrls: ['./dashboard-toolbar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatButton,
         MatTooltip,

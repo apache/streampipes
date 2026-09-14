@@ -17,7 +17,13 @@
  */
 
 import { NgStyle } from '@angular/common';
-import { Component, inject, LOCALE_ID, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    LOCALE_ID,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
@@ -43,6 +49,7 @@ import {
     selector: 'sp-data-explorer-indicator-widget',
     templateUrl: './indicator-widget.component.html',
     styleUrls: ['./indicator-widget.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

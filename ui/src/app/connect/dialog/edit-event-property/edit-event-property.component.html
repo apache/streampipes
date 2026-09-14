@@ -102,7 +102,11 @@
                     >
                     </sp-edit-schema-transformation>
 
-                    @if (!isTimestampProperty && isEventPropertyPrimitive) {
+                    @if (
+                        !isTimestampProperty &&
+                        isPrimitiveProperty(cachedProperty) &&
+                        isPrimitiveProperty(eventProperty)
+                    ) {
                         <sp-edit-unit-transformation
                             [cachedProperty]="cachedProperty"
                             [originalProperty]="eventProperty"

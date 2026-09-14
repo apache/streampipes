@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     ValueCardVisConfig,
@@ -40,6 +40,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 @Component({
     selector: 'sp-data-explorer-value-card-widget-config',
     templateUrl: './value-card-widget-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
         SplitSectionComponent,

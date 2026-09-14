@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AdapterDescription } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -28,6 +33,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-adapter-code-dialog',
     templateUrl: './adapter-code-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

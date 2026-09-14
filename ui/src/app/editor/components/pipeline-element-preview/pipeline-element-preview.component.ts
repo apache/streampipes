@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnDestroy,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { KeyValue, KeyValuePipe } from '@angular/common';
 import {
@@ -35,6 +42,7 @@ import { SpSpinnerComponent } from '@streampipes/shared-ui';
     selector: 'sp-pipeline-element-preview',
     templateUrl: './pipeline-element-preview.component.html',
     styleUrls: ['./pipeline-element-preview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

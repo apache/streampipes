@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -34,6 +39,7 @@ import { MatInput } from '@angular/material/input';
     selector: 'sp-app-static-secret-input',
     templateUrl: './static-secret-input.component.html',
     styleUrls: ['./static-secret-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

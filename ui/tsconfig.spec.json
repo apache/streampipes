@@ -2,7 +2,16 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
-    "types": ["node"]
+    "types": ["node", "jquery"]
   },
-  "include": ["src/**/*.spec.ts", "src/**/*.d.ts", "src/test-setup.ts"]
+  "include": ["src/**/*.spec.ts", "src/**/*.d.ts", "src/test-setup.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    },
+    "strictTemplates": true
+  }
 }

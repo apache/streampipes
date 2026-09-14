@@ -22,13 +22,13 @@ import { Injectable } from '@angular/core';
 export class PipelineElementIconTextService {
     constructor() {}
 
-    getElementIconText(s) {
+    getElementIconText(s: string) {
         let result = '';
         if (s.length <= 3) {
             result = s;
         } else {
             const words = s.split(' ');
-            words.forEach((word, i) => {
+            words.forEach((word: string, i: number) => {
                 if (i < 3) {
                     result += word.charAt(0);
                 }

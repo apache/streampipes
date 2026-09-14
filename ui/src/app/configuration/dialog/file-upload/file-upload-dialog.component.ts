@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DialogRef, SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { FilesService } from '@streampipes/platform-services';
@@ -42,6 +42,7 @@ import { MatDivider } from '@angular/material/divider';
     selector: 'sp-file-upload-dialog-component',
     templateUrl: './file-upload-dialog.component.html',
     styleUrls: ['./file-upload-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         SpAlertBannerComponent,

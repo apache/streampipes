@@ -34,6 +34,7 @@ import {
     SimpleChanges,
     TemplateRef,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
@@ -122,6 +123,7 @@ type SpTableRenderedRow<T> = T | SpTableGroupHeaderRow;
     selector: 'sp-table',
     templateUrl: './sp-table.component.html',
     styleUrls: ['./sp-table.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         MatTable,

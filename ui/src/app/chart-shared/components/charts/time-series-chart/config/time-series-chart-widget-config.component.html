@@ -57,7 +57,7 @@
             [(ngModel)]="
                 currentlyConfiguredWidget.visualizationConfig.showSpike
             "
-            (change)="setShowSpikeProperty($event)"
+            (change)="setShowSpikeProperty($event.checked)"
             >{{ 'Enable' | translate }}
         </mat-checkbox>
     </sp-split-section>

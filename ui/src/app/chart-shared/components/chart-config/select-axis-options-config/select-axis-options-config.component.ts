@@ -23,6 +23,7 @@ import {
     OnChanges,
     Output,
     SimpleChanges,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { AxisConfig } from '../../../models/dataview-dashboard.model';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -37,6 +38,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-select-axis-options-config',
     templateUrl: './select-axis-options-config.component.html',
     styleUrls: ['./select-axis-options-config.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         MatCheckbox,

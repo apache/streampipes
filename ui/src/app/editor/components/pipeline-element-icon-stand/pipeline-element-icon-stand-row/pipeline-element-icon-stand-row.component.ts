@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    DestroyRef,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     PipelineElementType,
     PipelineElementUnion,
@@ -42,6 +49,7 @@ import { map } from 'rxjs';
     selector: 'sp-pe-icon-stand-row',
     templateUrl: './pipeline-element-icon-stand-row.component.html',
     styleUrls: ['./pipeline-element-icon-stand-row.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatTooltip,
         NgClass,

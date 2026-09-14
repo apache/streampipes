@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { AccountActivationService } from '../../services/account-activation.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BaseLoginPageDirective } from '../base-login-page.directive';
@@ -31,6 +31,7 @@ import {
     selector: 'sp-activate-account',
     templateUrl: './activate-account.component.html',
     styleUrls: ['../login/login.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AuthBoxComponent,
         FlexDirective,

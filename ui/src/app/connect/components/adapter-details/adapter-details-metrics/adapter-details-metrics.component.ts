@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import { SpMetricsEntry } from '@streampipes/platform-services';
 import { SpConnectRoutes } from '../../../connect.breadcrumb';
@@ -33,6 +33,7 @@ import { finalize } from 'rxjs';
     selector: 'sp-adapter-details-metrics',
     templateUrl: './adapter-details-metrics.component.html',
     styleUrls: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpAdapterDetailsLayoutComponent,
         LayoutDirective,

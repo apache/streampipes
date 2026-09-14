@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import { PipelineElementRuntimeInfoComponent } from '@streampipes/shared-ui';
 import {
@@ -30,6 +35,7 @@ import { SpAdapterDetailsLayoutComponent } from '../adapter-details-layout/adapt
     selector: 'sp-adapter-details-data',
     templateUrl: './adapter-details-data.component.html',
     styleUrl: './adapter-details-data.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpAdapterDetailsLayoutComponent,
         LayoutDirective,

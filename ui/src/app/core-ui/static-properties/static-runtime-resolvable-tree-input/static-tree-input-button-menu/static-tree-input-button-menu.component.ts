@@ -15,7 +15,13 @@
  * limitations under the License.
  *
  */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -36,6 +42,7 @@ import { SpSpinnerComponent } from '@streampipes/shared-ui';
     selector: 'sp-static-tree-input-button-menu',
     templateUrl: './static-tree-input-button-menu.component.html',
     styleUrl: './static-tree-input-button-menu.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
     Option,
     RuntimeResolvableAnyStaticProperty,
@@ -39,6 +39,7 @@ import { SpSpinnerComponent } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-app-static-runtime-resolvable-any-input',
     templateUrl: './static-runtime-resolvable-any-input.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

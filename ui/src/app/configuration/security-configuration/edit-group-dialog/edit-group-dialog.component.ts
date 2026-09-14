@@ -22,6 +22,7 @@ import {
     OnInit,
     ViewEncapsulation,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { Group, Role, UserGroupService } from '@streampipes/platform-services';
 import {
@@ -56,6 +57,7 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './edit-group-dialog.component.html',
     styleUrls: ['./edit-group-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,
