@@ -29,10 +29,14 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Point;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
 public class TimeSeriesStorageInflux extends TimeSeriesStorage {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TimeSeriesStorageInflux.class);
 
   private final InfluxDB influxDb;
 
@@ -75,6 +79,15 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
 
       fieldOptional.ifPresent(field -> {
         if (ep instanceof EventPropertyPrimitive) {
+          if (!field.isPrimitive()) {
+            LOG.warn(
+                "Ignoring event property '{}' because its schema declares a primitive value but received {}.",
+                runtimeName,
+                field.getClass().getSimpleName()
+            );
+            return;
+          }
+
           propertyHandler.handlePrimitiveProperty(
               point,
               (EventPropertyPrimitive) ep,
