@@ -21,6 +21,7 @@ import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
@@ -124,6 +125,10 @@ public class SpResourceManager {
 
   public ISpCoreConfigurationStorage getCoreConfigurationStorage() {
     return coreConfigurationStorage;
+  }
+
+  public ICompactPipelineTemplateStorage getPipelineTemplateStorage() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineTemplateStorage();
   }
 
   public IFileMetadataStorage getFileMetadataStorage() {

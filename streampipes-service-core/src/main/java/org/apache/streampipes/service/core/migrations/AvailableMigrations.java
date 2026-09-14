@@ -33,6 +33,7 @@ import org.apache.streampipes.service.core.migrations.v099.ComputeCertificateThu
 import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateDatasetPermissionMigration;
 import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakeDatabaseToDatasetMigration;
+import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakePersistPipelineTemplateMigration;
 import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakeSinkToDatasetMigration;
 import org.apache.streampipes.service.core.migrations.v099.MigrateDatasetMetadataMigration;
 import org.apache.streampipes.service.core.migrations.v099.ModifyAssetLinkIconMigration;
@@ -48,6 +49,7 @@ import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
@@ -69,6 +71,7 @@ public class AvailableMigrations {
   private final IDashboardStorage dashboardStorage;
   private final IAssetStorage assetStorage;
   private final IDataSinkStorage dataSinkStorage;
+  private final ICompactPipelineTemplateStorage pipelineTemplateStorage;
   private final IPipelineStorage pipelineStorage;
   private final IDatasetMetadataStorage datasetStorage;
   private final ISpCoreConfigurationStorage coreConfigStorage;
@@ -84,6 +87,7 @@ public class AvailableMigrations {
     this.dashboardStorage = resourceManager.manageDashboards().getDb();
     this.assetStorage = resourceManager.manageAssets().getDb();
     this.dataSinkStorage = resourceManager.manageDataSinks().getDb();
+    this.pipelineTemplateStorage = resourceManager.getPipelineTemplateStorage();
     this.pipelineStorage = resourceManager.managePipelines().getDb();
     this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
     this.coreConfigStorage = resourceManager.getCoreConfigurationStorage();
@@ -118,7 +122,8 @@ public class AvailableMigrations {
         new AddRefreshTokenViewsMigration(),
         new RemoveAssetUserRoleMigration(roleStorage, userGroupStorage, userStorage),
         new RemoveInternalNotificationSinkMigration(pipelineStorage),
-        new MigrateDatasetMetadataMigration(datasetStorage, permissionStorage)
+        new MigrateDatasetMetadataMigration(datasetStorage, permissionStorage),
+        new MigrateDataLakePersistPipelineTemplateMigration(pipelineTemplateStorage)
     );
   }
 }
