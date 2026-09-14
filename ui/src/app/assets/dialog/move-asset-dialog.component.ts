@@ -85,17 +85,50 @@ export class MoveAssetDialogComponent {
 
     selectedTarget?: SpAsset;
     selectedTargetAsset?: SpAssetModel;
+    private loadedRootAssetIds = new Set<string>();
 
-    hasChild = (_: number, node: SpAsset): boolean => !!node.assets?.length;
-
-    openAsset(asset: AssetSummaryDto): void {
-        this.assetService.getAsset(asset.elementId).subscribe(targetAsset => {
-            this.showAssetTree(targetAsset);
-        });
+    constructor() {
+        this.dataSource.data = this.data.availableAssets.map(asset =>
+            this.makeRootAssetPlaceholder(asset),
+        );
+        this.treeControl.dataNodes = this.dataSource.data;
     }
 
+    hasChild = (_: number, node: SpAsset): boolean =>
+        this.isRootAsset(node) || !!node.assets?.length;
+
     selectTarget(asset: SpAsset): void {
+        const rootAsset = this.findRootAsset(asset);
+        if (!rootAsset || !this.loadedRootAssetIds.has(rootAsset.elementId)) {
+            return;
+        }
+
         this.selectedTarget = asset;
+        this.selectedTargetAsset = rootAsset;
+    }
+
+    toggleAssetTree(asset: SpAsset): void {
+        if (!this.isRootAsset(asset)) {
+            this.treeControl.toggle(asset);
+            return;
+        }
+
+        if (this.treeControl.isExpanded(asset)) {
+            this.treeControl.collapse(asset);
+            return;
+        }
+
+        const rootAsset = asset as SpAssetModel;
+        if (this.loadedRootAssetIds.has(rootAsset.elementId)) {
+            this.treeControl.expand(asset);
+            return;
+        }
+
+        this.assetService
+            .getAsset(rootAsset.elementId)
+            .subscribe(targetAsset => {
+                this.showAssetTree(targetAsset);
+            });
     }
 
     sitesAreConsistent(): boolean {
@@ -135,10 +168,44 @@ export class MoveAssetDialogComponent {
     }
 
     private showAssetTree(asset: SpAssetModel): void {
+        const rootAssetIndex = this.dataSource.data.findIndex(
+            rootAsset =>
+                (rootAsset as SpAssetModel).elementId === asset.elementId,
+        );
+        this.dataSource.data.splice(rootAssetIndex, 1, asset);
+        this.dataSource.data = [...this.dataSource.data];
+        this.loadedRootAssetIds.add(asset.elementId);
         this.selectedTargetAsset = asset;
         this.selectedTarget = asset;
-        this.dataSource.data = [asset];
-        this.treeControl.dataNodes = [asset];
-        this.treeControl.expandAll();
+        this.treeControl.dataNodes = this.dataSource.data;
+        this.treeControl.expand(asset);
+    }
+
+    private makeRootAssetPlaceholder(asset: AssetSummaryDto): SpAssetModel {
+        return {
+            elementId: asset.elementId,
+            assetId: asset.elementId,
+            assetName: asset.assetName,
+            assetDescription: asset.assetDescription,
+            assets: [],
+        } as SpAssetModel;
+    }
+
+    private isRootAsset(asset: SpAsset): boolean {
+        return this.dataSource.data.includes(asset);
+    }
+
+    private findRootAsset(asset: SpAsset): SpAssetModel | undefined {
+        return this.dataSource.data.find(rootAsset =>
+            this.containsAsset(rootAsset, asset.assetId),
+        ) as SpAssetModel | undefined;
+    }
+
+    private containsAsset(asset: SpAsset, assetId: string): boolean {
+        return (
+            asset.assetId === assetId ||
+            (asset.assets?.some(child => this.containsAsset(child, assetId)) ??
+                false)
+        );
     }
 }
