@@ -18,12 +18,17 @@
 
 package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DataLakeMeasure;
 
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @deprecated Use {@link IDatasetMetadataApi} instead.
+ */
+@Deprecated(since = "0.99.0", forRemoval = false)
 public interface IDataLakeMeasureApi extends CRUDApi<String, DataLakeMeasure> {
+
   Optional<DataLakeMeasure> get(String id);
 
   Optional<DataLakeMeasure> getByDatasetName(String datasetName);

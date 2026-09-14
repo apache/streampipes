@@ -29,7 +29,7 @@ export class DataDownloadDialogUtils {
         dataViewName: string,
     ) {
         // const exportDate: Date;
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
 
         // select data view in edit mode
         ChartUtils.editChart(dataViewName);

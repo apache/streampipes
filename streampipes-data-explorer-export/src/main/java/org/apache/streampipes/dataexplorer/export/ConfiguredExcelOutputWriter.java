@@ -19,9 +19,9 @@
 package org.apache.streampipes.dataexplorer.export;
 
 import org.apache.streampipes.manager.file.FileManager;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
-import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.dataset.param.SupportedRestQueryParams;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
@@ -46,7 +46,7 @@ public class ConfiguredExcelOutputWriter extends ConfiguredOutputWriter {
   private boolean useTemplate = false;
   private int startRow = 0;
   private String templateId;
-  private DataLakeMeasure schema;
+  private DatasetMetadata schema;
   private String headerColumnNameStrategy;
 
   public ConfiguredExcelOutputWriter(IFileMetadataStorage fileMetadataStorage,
@@ -56,7 +56,7 @@ public class ConfiguredExcelOutputWriter extends ConfiguredOutputWriter {
   }
 
   @Override
-  public void configure(DataLakeMeasure schema,
+  public void configure(DatasetMetadata schema,
                         ProvidedRestQueryParams params,
                         boolean ignoreMissingValues) {
     var qp = params.getProvidedParams();
