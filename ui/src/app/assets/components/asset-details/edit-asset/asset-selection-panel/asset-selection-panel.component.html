@@ -146,6 +146,10 @@
                                     @if (editMode) {
                                         <div class="node-actions">
                                             <button
+                                                [attr.data-cy]="
+                                                    'asset-tree-menu-' +
+                                                    node.assetName
+                                                "
                                                 mat-icon-button
                                                 type="button"
                                                 [matMenuTriggerFor]="assetMenu"
@@ -386,6 +390,10 @@
                                         @if (editMode) {
                                             <div class="node-actions">
                                                 <button
+                                                    [attr.data-cy]="
+                                                        'asset-tree-menu-' +
+                                                        node.assetName
+                                                    "
                                                     mat-icon-button
                                                     type="button"
                                                     [matMenuTriggerFor]="

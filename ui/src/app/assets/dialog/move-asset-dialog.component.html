@@ -29,6 +29,7 @@
                 <button
                     mat-flat-button
                     class="btn-secondary tree-node"
+                    [attr.data-cy]="'move-asset-target-' + node.assetName"
                     type="button"
                     (click)="selectTarget(node)"
                     [class.selected-target]="
@@ -56,6 +57,7 @@
                     <button
                         mat-flat-button
                         class="btn-secondary tree-node"
+                        [attr.data-cy]="'move-asset-target-' + node.assetName"
                         type="button"
                         (click)="selectTarget(node); toggleAssetTree(node)"
                         [class.selected-target]="
@@ -76,7 +78,7 @@
         </mat-tree>
     </div>
     @if (selectedTargetAsset && !sitesAreConsistent()) {
-        <p class="site-warning" role="alert">
+        <p class="site-warning" role="alert" data-cy="move-asset-site-warning">
             <mat-icon aria-hidden="true">warning</mat-icon>
             <span>{{
                 'Sites do not match. The site of the moved asset will be removed.'
@@ -96,6 +98,7 @@
         mat-flat-button
         class="btn-secondary"
         type="button"
+        data-cy="move-asset-cancel"
         (click)="cancel()"
     >
         {{ 'Cancel' | translate }}
@@ -105,6 +108,7 @@
         color="accent"
         type="button"
         [disabled]="!selectedTarget"
+        data-cy="move-asset-save"
         (click)="save()"
     >
         {{ 'Save' | translate }}

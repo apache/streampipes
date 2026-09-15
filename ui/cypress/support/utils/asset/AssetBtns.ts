@@ -84,6 +84,34 @@ export class AssetBtns {
         return cy.dataCy('delete-asset-' + assetName, { timeout: 10000 });
     }
 
+    public static treeMenuBtn(assetName: string) {
+        return cy.dataCy(`asset-tree-menu-${assetName}`);
+    }
+
+    public static treeAsset(assetName: string) {
+        return cy.dataCy(`select-asset-${assetName}`);
+    }
+
+    public static moveAssetBtn(assetName: string) {
+        return cy.dataCy(`move-asset-${assetName}`);
+    }
+
+    public static moveTarget(assetName: string) {
+        return cy.dataCy(`move-asset-target-${assetName}`);
+    }
+
+    public static saveMoveBtn() {
+        return cy.dataCy('move-asset-save');
+    }
+
+    public static cancelMoveBtn() {
+        return cy.dataCy('move-asset-cancel');
+    }
+
+    public static moveSiteWarning() {
+        return cy.dataCy('move-asset-site-warning');
+    }
+
     public static basicTab() {
         return cy.dataCy('basic-tab', { timeout: 10000 });
     }
