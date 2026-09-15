@@ -20,7 +20,10 @@ import { AssetBtns } from './AssetBtns';
 import { ConnectUtils } from '../connect/ConnectUtils';
 import { GeneralUtils } from '../GeneralUtils';
 import { Asset } from '../../model/Asset';
-import { Isa95Type } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import {
+    Isa95Type,
+    SpAssetModel,
+} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { AssetBuilder } from '../../builder/AssetBuilder';
 import { PermissionUtils } from '../user/PermissionUtils';
 
@@ -110,11 +113,14 @@ export class AssetUtils {
             this.selectSubAsset('New\\ Asset');
             AssetBtns.assetNameInput().clear().type(subAsset.name);
             this.selectAssetType(subAsset.assetType);
-            this.addLabels(subAsset.labels);
+            if (subAsset.labels.length > 0) {
+                this.addLabels(subAsset.labels);
+            }
         }
     }
 
     public static clickAddSubAssetBtn(assetName: string) {
+        AssetBtns.treeMenuBtn(assetName).should('be.visible').click();
         cy.dataCy(`add-asset-${assetName}`).click();
     }
 
@@ -256,6 +262,45 @@ export class AssetUtils {
         AssetBtns.assetNameInput()
             .invoke('val')
             .should('match', GeneralUtils.copyNamePattern(assetName));
+    }
+
+    public static getStoredAssets() {
+        return cy.then(() =>
+            cy
+                .request<SpAssetModel[]>({
+                    url: '/streampipes-backend/api/v2/assets',
+                    headers: {
+                        Authorization: `Bearer ${window.localStorage.getItem('auth-token')}`,
+                    },
+                })
+                .its('body'),
+        );
+    }
+
+    public static openMoveAsset(assetName: string) {
+        GeneralUtils.openMenuForRow(assetName);
+        AssetBtns.moveAssetBtn(assetName).should('be.visible').click();
+        AssetBtns.saveMoveBtn().should('be.disabled');
+    }
+
+    public static openMoveSubAsset(assetName: string) {
+        AssetBtns.treeMenuBtn(assetName).should('be.visible').click();
+        AssetBtns.moveAssetBtn(assetName).should('be.visible').click();
+        AssetBtns.saveMoveBtn().should('be.disabled');
+    }
+
+    public static selectMoveTarget(rootName: string, parentName?: string) {
+        AssetBtns.moveTarget(rootName).should('be.visible').click();
+        AssetBtns.saveMoveBtn().should('be.enabled');
+        if (parentName) {
+            AssetBtns.moveTarget(parentName).should('be.visible').click();
+        }
+    }
+
+    public static saveMove() {
+        AssetBtns.saveMoveBtn().should('be.enabled').click();
+        AssetBtns.saveMoveBtn().should('not.exist');
+        AssetBtns.createAssetBtn().should('be.visible');
     }
 
     public static renameAsset(newName: string) {

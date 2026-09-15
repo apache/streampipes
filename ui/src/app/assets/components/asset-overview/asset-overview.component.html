@@ -134,6 +134,16 @@
                                     'Create from existing' | translate
                                 }}</span>
                             </button>
+                            <button
+                                mat-menu-item
+                                [attr.data-cy]="
+                                    'move-asset-' + element.assetName
+                                "
+                                (click)="moveAsset(element)"
+                            >
+                                <mat-icon>drive_file_move</mat-icon>
+                                <span>{{ 'Move' | translate }}</span>
+                            </button>
                         }
                         <button
                             mat-menu-item
