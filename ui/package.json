@@ -117,7 +117,7 @@
     "mustache": "^4.2.0",
     "ng-packagr": "^21.2.7",
     "prettier": "3.7.4",
-    "typescript": "5.9.3",
+    "typescript": "7.0.2",
     "vitest": "^4.1.11"
   }
 }
