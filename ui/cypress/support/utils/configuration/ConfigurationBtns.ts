@@ -32,6 +32,20 @@ export class ConfigurationBtns {
         return cy.dataCy('sp-element-general-config-save');
     }
 
+    public static systemNotificationEnabledCheckbox() {
+        return cy
+            .dataCy('system-notification-enabled')
+            .find('input[type="checkbox"]');
+    }
+
+    public static systemNotificationMessageInput() {
+        return cy.dataCy('system-notification-message');
+    }
+
+    public static systemNotification() {
+        return cy.dataCy('system-notification');
+    }
+
     public static newUserGroupBtn() {
         return cy.dataCy('new-user-group-btn');
     }

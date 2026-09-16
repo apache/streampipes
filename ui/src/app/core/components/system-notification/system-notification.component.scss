@@ -16,14 +16,14 @@
  *
  */
 
-package org.apache.streampipes.model.configuration;
+:host {
+    display: flex;
+}
 
-public class DefaultGeneralConfig {
-
-  public GeneralConfig make() {
-    var generalConfig = new GeneralConfig();
-    generalConfig.setLinkSettings(new DefaultLinkSettings().make());
-    generalConfig.setSystemNotification(SystemNotificationConfig.disabled());
-    return generalConfig;
-  }
+.notification-text {
+    display: block;
+    max-width: min(60ch, 40vw);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
