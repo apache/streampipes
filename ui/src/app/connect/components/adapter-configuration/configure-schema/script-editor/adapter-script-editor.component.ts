@@ -219,7 +219,7 @@ export class AdapterScriptEditorComponent implements OnDestroy {
     }
 
     @HostListener('keydown.escape', ['$event'])
-    onEscape(event: KeyboardEvent): void {
+    onEscape(event: Event): void {
         if (this.fullscreen() && !event.defaultPrevented) {
             event.preventDefault();
             event.stopPropagation();

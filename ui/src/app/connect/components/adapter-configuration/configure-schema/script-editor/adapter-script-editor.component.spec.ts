@@ -18,7 +18,7 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { AdapterScriptEditorComponent } from './adapter-script-editor.component';
@@ -32,8 +32,9 @@ describe('Script editor fullscreen', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [AdapterScriptEditorComponent, TranslateModule.forRoot()],
+            imports: [AdapterScriptEditorComponent],
             providers: [
+                provideTranslateService(),
                 provideNoopAnimations(),
                 { provide: EditorAutocompletionService, useValue: {} },
             ],
