@@ -64,7 +64,7 @@ Use `-bm avgt -tu us` for average input-to-output time. Keep results under `targ
 A prebuilt JSON byte array enters the first real input collector. Every processor
 runs the production admission, JSON decoding, event construction, monitoring, and
 callback path. The callback increments a counter and emits through the real output
-collector, including conversion to a map and JSON encoding. Bytes are delivered
+collector, including direct JSON encoding of the Event fields. Bytes are delivered
 synchronously in memory to the next input collector. The terminal sink checks the
 counter and retains the final Event, which JMH consumes. Each operation verifies
 exactly one result; setup also checks that the complete payload survives unchanged
