@@ -24,6 +24,7 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -35,7 +36,8 @@ public class JsonDataFormatDefinition implements SpDataFormatDefinition {
 
   public JsonDataFormatDefinition() {
     this.objectMapper = JacksonSerializer.getObjectMapper(Map.of(
-      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
+      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
+      SerializationFeature.INDENT_OUTPUT, false
     ));
   }
 
