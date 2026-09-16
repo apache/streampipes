@@ -18,6 +18,7 @@
 
 import {
     Component,
+    computed,
     input,
     output,
     ChangeDetectionStrategy,
@@ -27,12 +28,11 @@ import {
     Mode,
 } from '../../adapter-event-preview/adapter-event-preview.component';
 import {
-    SpBasicInnerPanelComponent,
     SpExceptionMessageComponent,
     SpSpinnerComponent,
+    SpLabelComponent,
 } from '@streampipes/shared-ui';
 import {
-    FlexDirective,
     LayoutAlignDirective,
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
@@ -40,30 +40,49 @@ import {
     MatButtonToggle,
     MatButtonToggleGroup,
 } from '@angular/material/button-toggle';
+import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { SchemaPreviewStatusComponent } from '../schema-preview-status.component';
 
 @Component({
     selector: 'sp-adapter-result-preview',
     templateUrl: './adapter-result-preview.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: '../schema-preview.scss',
     imports: [
-        SpBasicInnerPanelComponent,
-        FlexDirective,
+        SchemaPreviewStatusComponent,
         LayoutAlignDirective,
         MatButtonToggleGroup,
         MatButtonToggle,
         LayoutDirective,
         SpSpinnerComponent,
+        SpLabelComponent,
         SpExceptionMessageComponent,
         AdapterEventPreviewComponent,
         TranslatePipe,
+        MatIcon,
     ],
 })
 export class AdapterResultPreviewComponent {
     isRunningScript = input(false);
     scriptError = input<any>();
     output = input<any>();
-    resultViewMode = input<Mode>('raw');
+    original = input<Record<string, unknown>>({});
+    previewOutdated = input(false);
+    hasPreview = input(false);
+    changedFields = computed(() => {
+        const original = this.original() ?? {};
+        const result = this.output() ?? {};
+        return [...new Set([...Object.keys(original), ...Object.keys(result)])]
+            .filter(
+                key =>
+                    JSON.stringify(original[key]) !==
+                    JSON.stringify(result[key]),
+            )
+            .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    });
+    resultViewMode = input<Mode>('tree');
 
     resultViewModeChange = output<Mode>();
 }
