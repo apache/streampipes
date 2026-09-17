@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { CdkDrag, CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
 import { MatDrawerContainer } from '@angular/material/sidenav';
 
@@ -24,6 +31,7 @@ import { MatDrawerContainer } from '@angular/material/sidenav';
     selector: 'sp-sidebar-resize',
     templateUrl: './sidebar-resize.component.html',
     styleUrls: ['./sidebar-resize.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CdkDrag],
 })
 export class SidebarResizeComponent {

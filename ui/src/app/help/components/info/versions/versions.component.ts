@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { VersionInfo } from './service/version-info.model';
 import { SystemInfo } from './service/system-info.model';
 import { RestApi } from '../../../../services/rest-api.service';
@@ -34,6 +34,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-versions',
     templateUrl: './versions.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,

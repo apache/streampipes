@@ -23,6 +23,7 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     ChartService,
@@ -103,6 +104,7 @@ import { AsyncPipe } from '@angular/common';
     selector: 'sp-chart-data-view',
     templateUrl: './chart-view.component.html',
     styleUrls: ['./chart-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AsyncPipe,
         SpBasicViewComponent,

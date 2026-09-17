@@ -16,12 +16,19 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { format } from 'date-fns';
 
 @Component({
     selector: 'sp-date-input',
     templateUrl: './date-input.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./date-input.component.scss'],
 })
 export class DateInputComponent {

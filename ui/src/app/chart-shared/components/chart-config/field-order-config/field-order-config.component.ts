@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import {
     CdkDrag,
@@ -39,6 +45,7 @@ import { SplitSectionComponent } from '@streampipes/shared-ui';
     selector: 'sp-field-order-config',
     templateUrl: './field-order-config.component.html',
     styleUrls: ['./field-order-config.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         CdkDropList,

@@ -17,14 +17,15 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 import { SchemaPreviewStatusComponent } from './schema-preview-status.component';
 
 describe('Schema preview status', () => {
     it('prioritizes disabled, running, and failed states over preview freshness', () => {
         TestBed.configureTestingModule({
-            imports: [SchemaPreviewStatusComponent, TranslateModule.forRoot()],
+            imports: [SchemaPreviewStatusComponent],
+            providers: [provideTranslateService()],
         });
         const fixture = TestBed.createComponent(SchemaPreviewStatusComponent);
         const status = () => {
@@ -55,7 +56,8 @@ describe('Schema preview status', () => {
 
     it('keeps the editor status concise without a tinted background', () => {
         TestBed.configureTestingModule({
-            imports: [SchemaPreviewStatusComponent, TranslateModule.forRoot()],
+            imports: [SchemaPreviewStatusComponent],
+            providers: [provideTranslateService()],
         });
         const fixture = TestBed.createComponent(SchemaPreviewStatusComponent);
         fixture.componentRef.setInput('inline', true);

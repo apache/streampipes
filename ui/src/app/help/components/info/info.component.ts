@@ -16,12 +16,13 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { VersionsComponent } from './versions/versions.component';
 
 @Component({
     selector: 'sp-info-tab',
     templateUrl: './info.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [VersionsComponent],
 })
 export class InfoTabComponent {}

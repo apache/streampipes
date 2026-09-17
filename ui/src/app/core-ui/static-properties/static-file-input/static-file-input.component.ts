@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import {
     FileMetadata,
@@ -55,6 +60,7 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     selector: 'sp-static-file-input',
     templateUrl: './static-file-input.component.html',
     styleUrls: ['./static-file-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

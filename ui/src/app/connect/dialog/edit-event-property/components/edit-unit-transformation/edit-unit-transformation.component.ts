@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -53,6 +59,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-edit-unit-transformation',
     templateUrl: './edit-unit-transformation.component.html',
     styleUrls: ['./edit-unit-transformation.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         FormFieldComponent,

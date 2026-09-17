@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import {
     TimeSeriesChartWidgetModel,
@@ -48,6 +54,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-time-series-item-config',
     templateUrl: './time-series-item-config.component.html',
     styleUrls: ['./time-series-item-config.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutGapDirective,
         LayoutAlignDirective,

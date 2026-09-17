@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ConfigurationService } from '../../shared/configuration.service';
 import * as FileSaver from 'file-saver';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -27,6 +27,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-authentication-configuration',
     templateUrl: './authentication-configuration.component.html',
     styleUrls: ['./authentication-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FlexDirective, LayoutDirective, MatButton, TranslatePipe],
 })
 export class SecurityAuthenticationConfigurationComponent {

@@ -16,13 +16,20 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { FeatureCardService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-asset-table-link-preview',
     templateUrl: './asset-table-link-preview.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./asset-table-link-preview.component.scss'],
 })
 export class AssetTableLinkPreviewComponent implements OnInit {

@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { FileMetadata, FilesService } from '@streampipes/platform-services';
 import {
     MatCell,
@@ -48,6 +53,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-file-overview',
     templateUrl: './file-overview.component.html',
     styleUrls: ['./file-overview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpTableComponent,
         FlexDirective,

@@ -47,7 +47,7 @@
                                 .numberOfBins
                         "
                         matInput
-                        (input)="onNumBinChange($event.target.value)"
+                        (input)="onNumBinChange($event.target.valueAsNumber)"
                     />
                 </mat-form-field>
             </sp-form-field>
@@ -69,7 +69,7 @@
                                 .domainMin
                         "
                         matInput
-                        (input)="onDomainMinChange($event.target.value)"
+                        (input)="onDomainMinChange($event.target.valueAsNumber)"
                     />
                 </mat-form-field>
             </sp-form-field>
@@ -83,7 +83,7 @@
                                 .domainMax
                         "
                         matInput
-                        (input)="onDomainMaxChange($event.target.value)"
+                        (input)="onDomainMaxChange($event.target.valueAsNumber)"
                     />
                 </mat-form-field>
             </sp-form-field>

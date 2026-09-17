@@ -24,6 +24,7 @@ import {
     OnDestroy,
     ViewChild,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../services/pipeline-positioning.service';
@@ -83,6 +84,7 @@ import {
     selector: 'sp-pipeline-assembly',
     templateUrl: './pipeline-assembly.component.html',
     styleUrls: ['./pipeline-assembly.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         SpPageHeaderComponent,

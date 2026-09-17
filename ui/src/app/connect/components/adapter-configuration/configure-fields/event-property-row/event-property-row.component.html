@@ -89,7 +89,7 @@
                     </div>
                 }
             </div>
-            @if (isPrimitive) {
+            @if (isEventPropertyPrimitive(eventProperty)) {
                 <div fxLayoutAlign="center center">
                     <sp-event-property-scope
                         [eventProperty]="eventProperty"

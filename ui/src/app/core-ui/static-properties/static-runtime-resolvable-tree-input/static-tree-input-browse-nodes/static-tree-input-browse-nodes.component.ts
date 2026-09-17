@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     RuntimeResolvableTreeInputStaticProperty,
@@ -55,6 +56,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         './static-tree-input-browse-nodes.component.scss',
         '../static-runtime-resolvable-tree-input.component.scss',
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutAlignDirective,
         LayoutDirective,

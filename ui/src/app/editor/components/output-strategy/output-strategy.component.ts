@@ -16,10 +16,15 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DataProcessorInvocation,
-    OutputStrategy,
+    OutputStrategyUnion,
 } from '@streampipes/platform-services';
 import { UntypedFormGroup } from '@angular/forms';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -31,6 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-output-strategy',
     templateUrl: './output-strategy.component.html',
     styleUrls: ['./output-strategy.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,
@@ -44,7 +50,7 @@ export class OutputStrategyComponent implements OnInit {
     parentForm: UntypedFormGroup;
 
     @Input()
-    outputStrategy: OutputStrategy;
+    outputStrategy: OutputStrategyUnion;
 
     @Input()
     selectedElement: DataProcessorInvocation;

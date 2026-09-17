@@ -15,7 +15,13 @@
  * limitations under the License.
  *
  */
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AbstractControl,
     FormBuilder,
@@ -45,6 +51,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-export-provider-dialog',
     templateUrl: './export-provider-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         ReactiveFormsModule,

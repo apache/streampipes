@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -29,6 +29,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-documentation-tab',
     templateUrl: './documentation.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

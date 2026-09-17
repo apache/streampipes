@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SpLogMessage } from '@streampipes/platform-services';
 import { DialogRef } from '../../../dialog/base-dialog/dialog-ref';
 import { SpExceptionDetailsComponent } from '../exception-details/exception-details.component';
@@ -32,6 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         './exception-details-dialog.component.scss',
         '../../../../../../../../src/scss/sp/sp-dialog.scss',
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpExceptionDetailsComponent,
         MatDivider,

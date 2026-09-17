@@ -22,7 +22,13 @@ import {
     PipelineService,
     PipelineSummaryDto,
 } from '@streampipes/platform-services';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
@@ -33,6 +39,7 @@ import { LayoutAlignDirective } from '@ngbracket/ngx-layout';
     selector: 'sp-pipeline-notifications',
     templateUrl: './pipeline-notifications.component.html',
     styleUrls: ['./pipeline-notifications.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

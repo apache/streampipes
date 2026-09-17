@@ -23,6 +23,7 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { MatStep, MatStepLabel, MatStepper } from '@angular/material/stepper';
 import {
@@ -61,6 +62,7 @@ import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog
     selector: 'sp-adapter-configuration',
     templateUrl: './adapter-configuration.component.html',
     styleUrls: ['./adapter-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         FlexDirective,

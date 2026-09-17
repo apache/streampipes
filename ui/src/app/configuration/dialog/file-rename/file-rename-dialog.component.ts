@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DialogRef } from '@angular/cdk/dialog';
 import { MAT_DIALOG_DATA, MatDialogClose } from '@angular/material/dialog';
 import {
@@ -35,6 +35,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-file-rename-dialog-component',
     templateUrl: './file-rename-dialog.component.html',
     styleUrls: ['./file-rename-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

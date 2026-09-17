@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     AdapterDescription,
@@ -31,6 +37,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'sp-start-all-adapters-dialog',
     templateUrl: './all-adapter-actions-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FlexDirective, MatDivider, MatButton, TranslatePipe],
 })
 export class AllAdapterActionsComponent implements OnInit {

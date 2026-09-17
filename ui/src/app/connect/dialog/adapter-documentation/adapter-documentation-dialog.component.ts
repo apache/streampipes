@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogRef,
     PipelineElementDocumentationComponent,
@@ -27,6 +32,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'sp-adapter-documentation-dialog',
     templateUrl: './adapter-documentation-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [PipelineElementDocumentationComponent, MatDivider, MatButton],
 })
 export class SpAdapterDocumentationDialogComponent {

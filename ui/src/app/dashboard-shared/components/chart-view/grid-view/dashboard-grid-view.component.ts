@@ -24,6 +24,7 @@ import {
     OnInit,
     SimpleChanges,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
 import { GridStack, GridStackOptions } from 'gridstack';
@@ -38,6 +39,7 @@ import { ChartContainerComponent } from '../../../../chart-shared/components/cha
     selector: 'sp-dashboard-grid-view',
     templateUrl: './dashboard-grid-view.component.html',
     styleUrls: ['./dashboard-grid-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         GridstackComponent,
         GridstackItemComponent,
