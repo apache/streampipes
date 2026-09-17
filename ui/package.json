@@ -120,7 +120,7 @@
     "ng-packagr": "^22.1.1",
     "prettier": "3.7.4",
     "typescript": "6.0.3",
-    "vitest": "^4.1.11",
+    "vitest": "^5.0.0",
     "angular-eslint": "^22.5.0"
   }
 }
