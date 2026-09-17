@@ -17,7 +17,25 @@
 import os
 from abc import ABC, abstractmethod
 
+from streampipes.model.common import TransportProtocol
 from streampipes.model.resource.data_stream import DataStream
+
+
+def resolve_transport_protocol(data_stream: DataStream) -> TransportProtocol:
+    """Resolve channel-only streams using locally configured internal broker settings."""
+    grounding = data_stream.event_grounding
+    if grounding.topic_definition is None:
+        return grounding.transport_protocols[0]
+    protocol_id = os.environ.get("SP_PRIORITIZED_PROTOCOL")
+    if protocol_id not in ("nats", "kafka"):
+        raise ValueError("Set SP_PRIORITIZED_PROTOCOL to nats or kafka for live channel subscriptions")
+    prefix = protocol_id.upper()
+    return TransportProtocol(
+        class_name=f"org.apache.streampipes.model.grounding.{protocol_id.capitalize()}TransportProtocol",
+        broker_hostname=os.environ.get(f"SP_{prefix}_HOST", protocol_id),
+        port=int(os.environ.get(f"SP_{prefix}_PORT", "4222" if protocol_id == "nats" else "9092")),
+        topic_definition=grounding.topic_definition,
+    )
 
 
 class Broker(ABC):
@@ -39,7 +57,7 @@ class Broker(ABC):
         None
         """
         self.stream_id = data_stream.element_id
-        transport_protocol = data_stream.event_grounding.transport_protocols[0]
+        transport_protocol = resolve_transport_protocol(data_stream)
         self.topic_name = transport_protocol.topic_definition.actual_topic_name
         hostname = transport_protocol.broker_hostname
         port = transport_protocol.port

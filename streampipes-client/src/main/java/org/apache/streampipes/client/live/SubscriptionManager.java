@@ -24,9 +24,12 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
 import org.apache.streampipes.messaging.EventConsumer;
+import org.apache.streampipes.messaging.InternalBrokerProvider;
+import org.apache.streampipes.messaging.InternalBrokerSettings;
 import org.apache.streampipes.messaging.SpProtocolDefinition;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.grounding.InternalTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.runtime.Event;
@@ -36,7 +39,14 @@ import java.util.NoSuchElementException;
 
 public class SubscriptionManager {
 
+  private InternalBrokerSettings internalBroker;
   private final EventGrounding grounding;
+
+  public SubscriptionManager withInternalBroker(InternalBrokerSettings settings) {
+    this.internalBroker = settings;
+    return this;
+  }
+
   private final EventProcessor callback;
 
   private IBrokerConfigOverride brokerConfigOverride;
@@ -96,6 +106,8 @@ public class SubscriptionManager {
   }
 
   private TransportProtocol getTransportProtocol() {
-    return this.grounding.getTransportProtocol();
+    var channel = this.grounding.getTransportProtocol();
+    return internalBroker == null ? InternalBrokerProvider.resolve(channel)
+        : internalBroker.bind((InternalTransportProtocol) channel);
   }
 }

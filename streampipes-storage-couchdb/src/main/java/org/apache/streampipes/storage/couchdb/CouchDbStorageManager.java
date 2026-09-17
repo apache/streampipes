@@ -30,6 +30,7 @@ import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceConfigurationStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
+import org.apache.streampipes.storage.api.system.IGroundingMigrationStorage;
 import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
@@ -47,6 +48,7 @@ import org.apache.streampipes.storage.couchdb.impl.system.CertificateStorageImpl
 import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.GenericStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.system.GroundingMigrationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ImageStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
@@ -58,6 +60,11 @@ public class CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IAdapterStorage getAdapterDescriptionStorage() {
     return new AdapterDescriptionStorageImpl();
+  }
+
+  @Override
+  public IGroundingMigrationStorage getGroundingMigrationStorage() {
+    return new GroundingMigrationStorageImpl();
   }
 
   @Override

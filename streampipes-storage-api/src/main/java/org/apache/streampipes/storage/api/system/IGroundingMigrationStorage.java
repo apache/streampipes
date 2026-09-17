@@ -16,23 +16,19 @@
  *
  */
 
-package org.apache.streampipes.wrapper.kafka;
+package org.apache.streampipes.storage.api.system;
 
-import org.apache.streampipes.extensions.api.pe.runtime.IDataProcessorRuntime;
-import org.apache.streampipes.extensions.api.pe.runtime.IDataSinkRuntime;
-import org.apache.streampipes.extensions.api.pe.runtime.IStreamPipesRuntimeProvider;
+import java.io.IOException;
+import java.util.List;
 
-import java.util.function.Supplier;
+/** Revision-preserving access to resources containing concrete event groundings. */
+public interface IGroundingMigrationStorage {
+  List<String> collections() throws IOException;
 
-public class KafkaStreamRuntimeProvider implements IStreamPipesRuntimeProvider {
+  List<String> readPage(String collection, String afterId, int limit) throws IOException;
 
-  @Override
-  public Supplier<IDataProcessorRuntime> getDataProcessorRuntime() {
-    return KafkaStreamsDataProcessorRuntime::new;
-  }
+  String read(String collection, String id) throws IOException;
 
-  @Override
-  public Supplier<IDataSinkRuntime> getDataSinkRuntime() {
-    return KafkaStreamsDataSinkRuntime::new;
-  }
+  /** Returns false on a revision conflict; other failures propagate. */
+  boolean update(String collection, String id, String document) throws IOException;
 }

@@ -16,19 +16,37 @@
  *
  */
 
-package org.apache.streampipes.extensions.management.util;
+package org.apache.streampipes.model.grounding;
 
-import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.TransportProtocol;
+public class BrokerConfiguration {
 
-public class GroundingDebugUtils {
+  private String protocolId;
 
-  public static void modifyGrounding(EventGrounding grounding) {
-    TransportProtocol protocol = grounding.getTransportProtocol();
-    protocol.setBrokerHostname("localhost");
-    if (protocol instanceof KafkaTransportProtocol) {
-      ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
-    }
+  private String url;
+
+  private String token;
+
+  public String getProtocolId() {
+    return protocolId;
+  }
+
+  public void setProtocolId(String protocolId) {
+    this.protocolId = protocolId;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 }

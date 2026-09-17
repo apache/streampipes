@@ -18,7 +18,9 @@
  */
 
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-05-18 14:42:00.
+/* tslint:disable */
+/* eslint-disable */
+// Generated using typescript-generator version 3.2.1263 on 2026-09-17 19:20:41.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1764,7 +1766,8 @@ export class ErrorMessage extends Message {
 }
 
 export class EventGrounding {
-    transportProtocols: TransportProtocolUnion[];
+    options: { [index: string]: string };
+    topicDefinition: TopicDefinitionUnion;
 
     static fromData(
         data: EventGrounding,
@@ -1774,9 +1777,12 @@ export class EventGrounding {
             return data;
         }
         const instance = target || new EventGrounding();
-        instance.transportProtocols = __getCopyArrayFn(
-            TransportProtocol.fromDataUnion,
-        )(data.transportProtocols);
+        instance.options = __getCopyObjectFn(__identity<string>())(
+            data.options,
+        );
+        instance.topicDefinition = TopicDefinition.fromDataUnion(
+            data.topicDefinition,
+        );
         return instance;
     }
 }
@@ -2331,84 +2337,6 @@ export class GuessSchema {
     }
 }
 
-export class TransportProtocol {
-    '@class':
-        | 'org.apache.streampipes.model.grounding.KafkaTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.MqttTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.NatsTransportProtocol'
-        | 'org.apache.streampipes.model.grounding.PulsarTransportProtocol';
-    'brokerHostname': string;
-    'elementId': string;
-    'topicDefinition': TopicDefinitionUnion;
-
-    static 'fromData'(
-        data: TransportProtocol,
-        target?: TransportProtocol,
-    ): TransportProtocol {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new TransportProtocol();
-        instance['@class'] = data['@class'];
-        instance.brokerHostname = data.brokerHostname;
-        instance.elementId = data.elementId;
-        instance.topicDefinition = TopicDefinition.fromDataUnion(
-            data.topicDefinition,
-        );
-        return instance;
-    }
-
-    static 'fromDataUnion'(
-        data: TransportProtocolUnion,
-    ): TransportProtocolUnion {
-        if (!data) {
-            return data;
-        }
-        switch (data['@class']) {
-            case 'org.apache.streampipes.model.grounding.KafkaTransportProtocol':
-                return KafkaTransportProtocol.fromData(data);
-            case 'org.apache.streampipes.model.grounding.MqttTransportProtocol':
-                return MqttTransportProtocol.fromData(data);
-            case 'org.apache.streampipes.model.grounding.NatsTransportProtocol':
-                return NatsTransportProtocol.fromData(data);
-            case 'org.apache.streampipes.model.grounding.PulsarTransportProtocol':
-                return PulsarTransportProtocol.fromData(data);
-        }
-    }
-}
-
-export class KafkaTransportProtocol extends TransportProtocol {
-    '@class': 'org.apache.streampipes.model.grounding.KafkaTransportProtocol';
-    'acks': string;
-    'batchSize': string;
-    'groupId': string;
-    'kafkaPort': number;
-    'lingerMs': number;
-    'maxRequestSize': string;
-    'messageMaxBytes': string;
-    'offset': string;
-
-    static 'fromData'(
-        data: KafkaTransportProtocol,
-        target?: KafkaTransportProtocol,
-    ): KafkaTransportProtocol {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new KafkaTransportProtocol();
-        super.fromData(data, instance);
-        instance.acks = data.acks;
-        instance.batchSize = data.batchSize;
-        instance.groupId = data.groupId;
-        instance.kafkaPort = data.kafkaPort;
-        instance.lingerMs = data.lingerMs;
-        instance.maxRequestSize = data.maxRequestSize;
-        instance.messageMaxBytes = data.messageMaxBytes;
-        instance.offset = data.offset;
-        return instance;
-    }
-}
-
 export class KeepOutputStrategy extends OutputStrategy {
     '@class': 'org.apache.streampipes.model.output.KeepOutputStrategy';
     'eventName': string;
@@ -2651,54 +2579,6 @@ export class MessageCounter {
     }
 }
 
-export class MessagingSettings {
-    acks: number;
-    batchSize: number;
-    jmsHost: string;
-    jmsPort: number;
-    kafkaHost: string;
-    kafkaPort: number;
-    lingerMs: number;
-    messageMaxBytes: number;
-    mqttHost: string;
-    mqttPort: number;
-    natsHost: string;
-    natsPort: number;
-    prioritizedProtocols: SpProtocol[];
-    pulsarUrl: string;
-    supportedProtocols: string[];
-
-    static fromData(
-        data: MessagingSettings,
-        target?: MessagingSettings,
-    ): MessagingSettings {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new MessagingSettings();
-        instance.acks = data.acks;
-        instance.batchSize = data.batchSize;
-        instance.jmsHost = data.jmsHost;
-        instance.jmsPort = data.jmsPort;
-        instance.kafkaHost = data.kafkaHost;
-        instance.kafkaPort = data.kafkaPort;
-        instance.lingerMs = data.lingerMs;
-        instance.messageMaxBytes = data.messageMaxBytes;
-        instance.mqttHost = data.mqttHost;
-        instance.mqttPort = data.mqttPort;
-        instance.natsHost = data.natsHost;
-        instance.natsPort = data.natsPort;
-        instance.prioritizedProtocols = __getCopyArrayFn(
-            __identity<SpProtocol>(),
-        )(data.prioritizedProtocols);
-        instance.pulsarUrl = data.pulsarUrl;
-        instance.supportedProtocols = __getCopyArrayFn(__identity<string>())(
-            data.supportedProtocols,
-        );
-        return instance;
-    }
-}
-
 /**
  * @deprecated since 0.99.0, for removal
  */
@@ -2718,44 +2598,6 @@ export class MoveRuleDescription extends SchemaTransformationRuleDescription {
         super.fromData(data, instance);
         instance.newRuntimeKey = data.newRuntimeKey;
         instance.oldRuntimeKey = data.oldRuntimeKey;
-        return instance;
-    }
-}
-
-export class MqttTransportProtocol extends TransportProtocol {
-    '@class': 'org.apache.streampipes.model.grounding.MqttTransportProtocol';
-    'port': number;
-
-    static 'fromData'(
-        data: MqttTransportProtocol,
-        target?: MqttTransportProtocol,
-    ): MqttTransportProtocol {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new MqttTransportProtocol();
-        super.fromData(data, instance);
-        instance.port = data.port;
-        return instance;
-    }
-}
-
-export class NatsTransportProtocol extends TransportProtocol {
-    '@class': 'org.apache.streampipes.model.grounding.NatsTransportProtocol';
-    'port': number;
-    'token': string;
-
-    static 'fromData'(
-        data: NatsTransportProtocol,
-        target?: NatsTransportProtocol,
-    ): NatsTransportProtocol {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new NatsTransportProtocol();
-        super.fromData(data, instance);
-        instance.port = data.port;
-        instance.token = data.token;
         return instance;
     }
 }
@@ -3434,22 +3276,6 @@ export class PropertyValueSpecification {
         instance.maxValue = data.maxValue;
         instance.minValue = data.minValue;
         instance.step = data.step;
-        return instance;
-    }
-}
-
-export class PulsarTransportProtocol extends TransportProtocol {
-    '@class': 'org.apache.streampipes.model.grounding.PulsarTransportProtocol';
-
-    static 'fromData'(
-        data: PulsarTransportProtocol,
-        target?: PulsarTransportProtocol,
-    ): PulsarTransportProtocol {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new PulsarTransportProtocol();
-        super.fromData(data, instance);
         return instance;
     }
 }
@@ -4201,6 +4027,7 @@ export class SpServiceRegistration implements Storable {
     rev: string;
     scheme: string;
     status: SpServiceStatus;
+    supportedProtocols: string[];
     supportedScriptLanguages: ScriptMetadata[];
     svcGroup: string;
     svcId: string;
@@ -4228,6 +4055,9 @@ export class SpServiceRegistration implements Storable {
         instance.rev = data.rev;
         instance.scheme = data.scheme;
         instance.status = data.status;
+        instance.supportedProtocols = __getCopyArrayFn(__identity<string>())(
+            data.supportedProtocols,
+        );
         instance.supportedScriptLanguages = __getCopyArrayFn(
             ScriptMetadata.fromData,
         )(data.supportedScriptLanguages);
@@ -4307,11 +4137,9 @@ export interface Storable {
 export class StreamPipesApplicationPackage {
     adapters: string[];
     assets: string[];
-    dashboardWidgets: string[];
     dashboards: string[];
     dataLakeMeasures: string[];
     dataSources: string[];
-    dataViewWidgets: string[];
     dataViews: string[];
     files: string[];
     genericStorageDocuments: string[];
@@ -4332,9 +4160,6 @@ export class StreamPipesApplicationPackage {
             data.adapters,
         );
         instance.assets = __getCopyArrayFn(__identity<string>())(data.assets);
-        instance.dashboardWidgets = __getCopyArrayFn(__identity<string>())(
-            data.dashboardWidgets,
-        );
         instance.dashboards = __getCopyArrayFn(__identity<string>())(
             data.dashboards,
         );
@@ -4343,9 +4168,6 @@ export class StreamPipesApplicationPackage {
         );
         instance.dataSources = __getCopyArrayFn(__identity<string>())(
             data.dataSources,
-        );
-        instance.dataViewWidgets = __getCopyArrayFn(__identity<string>())(
-            data.dataViewWidgets,
         );
         instance.dataViews = __getCopyArrayFn(__identity<string>())(
             data.dataViews,
@@ -4806,12 +4628,6 @@ export type TransformationRuleDescriptionUnion =
     | MoveRuleDescription
     | ChangeDatatypeTransformationRuleDescription
     | CorrectionValueTransformationRuleDescription;
-
-export type TransportProtocolUnion =
-    | KafkaTransportProtocol
-    | MqttTransportProtocol
-    | NatsTransportProtocol
-    | PulsarTransportProtocol;
 
 export type ValidationInfoLevel = 'INFO' | 'ERROR';
 

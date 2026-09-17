@@ -32,6 +32,7 @@ import org.apache.streampipes.service.core.migrations.v099.AddScriptTemplateView
 import org.apache.streampipes.service.core.migrations.v099.ComputeCertificateThumbprintMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateDatasetPermissionMigration;
+import org.apache.streampipes.service.core.migrations.v099.ExtractBrokerConfigurationMigration;
 import org.apache.streampipes.service.core.migrations.v099.ModifyAssetLinkIconMigration;
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveAssetUserRoleMigration;
@@ -48,6 +49,7 @@ import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.IGroundingMigrationStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
@@ -60,6 +62,7 @@ import java.util.List;
 
 public class AvailableMigrations {
 
+  private final IGroundingMigrationStorage groundingStorage;
   private final IChartStorage chartStorage;
   private final IPermissionStorage permissionStorage;
   private final IAdapterStorage adapterStorage;
@@ -74,6 +77,7 @@ public class AvailableMigrations {
   private final IUserStorage userStorage;
 
   public AvailableMigrations(SpResourceManager resourceManager) {
+    this.groundingStorage = resourceManager.getGroundingMigrationStorage();
     this.chartStorage = resourceManager.manageCharts().getDb();
     this.permissionStorage = resourceManager.managePermissions().getDb();
     this.adapterStorage = resourceManager.manageAdapters().getDb();
@@ -111,7 +115,11 @@ public class AvailableMigrations {
         new AddRefreshTokenViewsMigration(),
         new RemoveAssetUserRoleMigration(roleStorage, userGroupStorage, userStorage),
         new RemoveInternalNotificationSinkMigration(pipelineStorage),
-        new ReplaceDefaultServiceSecretMigration(userStorage)
+        new ReplaceDefaultServiceSecretMigration(userStorage),
+        new ExtractBrokerConfigurationMigration(
+            groundingStorage,
+            org.apache.streampipes.commons.environment.Environments.getEnvironment()
+                .getPrioritizedProtocol().getValueOrDefault())
     );
   }
 }

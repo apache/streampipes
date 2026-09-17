@@ -18,11 +18,13 @@
 
 package org.apache.streampipes.messaging;
 
+import org.apache.streampipes.model.grounding.InternalTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public enum SpProtocolManager {
 
@@ -38,7 +40,31 @@ public enum SpProtocolManager {
     availableProtocols.add(protocolDefinition);
   }
 
+  public Set<String> supportedProtocolIds() {
+    return availableProtocols.stream().map(factory -> factory.getTransportProtocol().protocolId())
+        .collect(java.util.stream.Collectors.toUnmodifiableSet());
+  }
+
   public <T extends TransportProtocol> Optional<SpProtocolDefinition<T>> findDefinition(T transportProtocol) {
+    if (transportProtocol instanceof InternalTransportProtocol) {
+      var resolved = InternalBrokerProvider.resolve(transportProtocol);
+      return findDefinition(resolved).map(delegate -> new SpProtocolDefinition<T>() {
+        @Override
+        public void validateConnection(T ignored) {
+          delegate.validateConnection(resolved);
+        }
+
+        @Override
+        public EventConsumer getConsumer(T ignored) {
+          return delegate.getConsumer(resolved);
+        }
+
+        @Override
+        public EventProducer getProducer(T ignored) {
+          return delegate.getProducer(resolved);
+        }
+      });
+    }
     return this.availableProtocols
         .stream()
         .filter

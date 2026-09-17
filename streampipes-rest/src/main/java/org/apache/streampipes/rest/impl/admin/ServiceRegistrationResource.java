@@ -24,7 +24,7 @@ import org.apache.streampipes.health.monitoring.ServiceRegistrationManager;
 import org.apache.streampipes.health.monitoring.model.RunningExtensionInstances;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
-import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
+import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistrationResponse;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
@@ -113,10 +113,14 @@ public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> registerService(@RequestBody SpServiceRegistration serviceRegistration) {
-    new ServiceRegistrationManager(extensionsServiceStorage).addService(serviceRegistration,
-                                                                        SpServiceStatus.REGISTERED);
-    return ok();
+  public ResponseEntity<SpServiceRegistrationResponse> registerService(
+      @RequestBody SpServiceRegistration serviceRegistration) {
+    try {
+      return ok(new ServiceRegistrationManager(extensionsServiceStorage)
+          .registerService(serviceRegistration));
+    } catch (IllegalArgumentException e) {
+      throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
+    }
   }
 
   @PostMapping(path = "/{serviceId}", produces = MediaType.APPLICATION_JSON_VALUE)

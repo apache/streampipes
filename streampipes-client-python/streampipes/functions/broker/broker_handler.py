@@ -23,6 +23,7 @@ from streampipes.functions.broker import (
     NatsConsumer,
     NatsPublisher,
 )
+from streampipes.functions.broker.broker import resolve_transport_protocol
 from streampipes.model.resource.data_stream import DataStream
 
 
@@ -61,7 +62,7 @@ def get_broker(
     UnsupportedBrokerError
         Is raised when the given data stream belongs to a broker that is currently not supported by StreamPipes Python.
     """
-    broker_name = data_stream.event_grounding.transport_protocols[0].class_name
+    broker_name = resolve_transport_protocol(data_stream).class_name
     if SupportedBroker.NATS.value in broker_name:
         if is_publisher:
             return NatsPublisher()
@@ -92,7 +93,7 @@ def get_broker_description(data_stream: DataStream) -> SupportedBroker:
     UnsupportedBrokerError
         Is raised when the given data stream belongs to a broker that is currently not supported by StreamPipes Python.
     """
-    broker_name = data_stream.event_grounding.transport_protocols[0].class_name
+    broker_name = resolve_transport_protocol(data_stream).class_name
     for b in SupportedBroker:
         if b.value in broker_name:
             return b

@@ -21,12 +21,21 @@ package org.apache.streampipes.client.live;
 import org.apache.streampipes.client.api.live.IConfiguredEventProducer;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
 import org.apache.streampipes.messaging.EventProducer;
+import org.apache.streampipes.messaging.InternalBrokerSettings;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.grounding.InternalTransportProtocol;
 
 public class ProducerManager {
 
+  private InternalBrokerSettings internalBroker;
   private final EventGrounding grounding;
+
+  public ProducerManager withInternalBroker(InternalBrokerSettings settings) {
+    this.internalBroker = settings;
+    return this;
+  }
+
 
   public ProducerManager(EventGrounding grounding) {
     this.grounding = grounding;
@@ -43,7 +52,8 @@ public class ProducerManager {
   }
 
   private EventProducer findProducer() {
-    var protocol = grounding.getTransportProtocol();
+    var channel = grounding.getTransportProtocol();
+    var protocol = internalBroker == null ? channel : internalBroker.bind((InternalTransportProtocol) channel);
     return SpProtocolManager
         .INSTANCE
         .findDefinition(protocol)
