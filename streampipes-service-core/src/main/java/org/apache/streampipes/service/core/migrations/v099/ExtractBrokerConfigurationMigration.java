@@ -32,15 +32,13 @@ public class ExtractBrokerConfigurationMigration implements Migration {
   private static final Logger LOG = LoggerFactory.getLogger(ExtractBrokerConfigurationMigration.class);
   private static final int PAGE_SIZE = 100;
   private final GroundingMigrationStorage storage;
-  private final String protocolId;
 
-  public ExtractBrokerConfigurationMigration(String protocolId) {
-    this(new GroundingMigrationStorage(), protocolId);
+  public ExtractBrokerConfigurationMigration() {
+    this(new GroundingMigrationStorage());
   }
 
-  ExtractBrokerConfigurationMigration(GroundingMigrationStorage storage, String protocolId) {
+  ExtractBrokerConfigurationMigration(GroundingMigrationStorage storage) {
     this.storage = storage;
-    this.protocolId = protocolId;
   }
 
   @Override
@@ -82,7 +80,7 @@ public class ExtractBrokerConfigurationMigration implements Migration {
 
   private boolean convert(JsonObject document, String collection, String id) {
     try {
-      return ResourceGroundingConverter.convert(document, protocolId);
+      return ResourceGroundingConverter.convert(document);
     } catch (RuntimeException e) {
       throw new IllegalStateException("Invalid event grounding in " + collection + "/" + id
           + "; resolve the resource before restarting");

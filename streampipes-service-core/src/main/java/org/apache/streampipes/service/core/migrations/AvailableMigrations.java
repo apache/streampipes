@@ -113,9 +113,7 @@ public class AvailableMigrations {
         new RemoveAssetUserRoleMigration(roleStorage, userGroupStorage, userStorage),
         new RemoveInternalNotificationSinkMigration(pipelineStorage),
         new ReplaceDefaultServiceSecretMigration(userStorage),
-        new ExtractBrokerConfigurationMigration(
-            org.apache.streampipes.commons.environment.Environments.getEnvironment()
-                .getPrioritizedProtocol().getValueOrDefault())
+        new ExtractBrokerConfigurationMigration()
     );
   }
 }

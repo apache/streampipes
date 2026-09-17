@@ -65,6 +65,14 @@ public final class InternalBrokerProvider {
     if (!(protocol instanceof InternalTransportProtocol channel)) {
       return protocol;
     }
+    return effectiveSettings().bind(channel);
+  }
+
+  public static BrokerConfiguration configuration() {
+    return effectiveSettings().configuration();
+  }
+
+  private static InternalBrokerSettings effectiveSettings() {
     if (restartRequired) {
       throw new IllegalStateException("Internal broker configuration changed; restart the extension service");
     }
@@ -75,6 +83,6 @@ public final class InternalBrokerProvider {
       }
       effective = InternalBrokerSettings.fromEnvironment(Environments.getEnvironment());
     }
-    return effective.bind(channel);
+    return effective;
   }
 }

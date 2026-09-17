@@ -20,7 +20,7 @@
 // @ts-nocheck
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-09-17 19:20:41.
+// Generated using typescript-generator version 3.2.1263 on 2026-09-17 23:18:19.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -575,7 +575,6 @@ export class AssetExportConfiguration {
     files: ExportItem[];
     genericStorageDocuments: ExportItem[];
     labels: ExportItem[];
-    overrideBrokerSettings: boolean;
     overwriteExistingDocuments: boolean;
     pipelines: ExportItem[];
     sites: ExportItem[];
@@ -611,7 +610,6 @@ export class AssetExportConfiguration {
             ExportItem.fromData,
         )(data.genericStorageDocuments);
         instance.labels = __getCopyArrayFn(ExportItem.fromData)(data.labels);
-        instance.overrideBrokerSettings = data.overrideBrokerSettings;
         instance.overwriteExistingDocuments = data.overwriteExistingDocuments;
         instance.pipelines = __getCopyArrayFn(ExportItem.fromData)(
             data.pipelines,

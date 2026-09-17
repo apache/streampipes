@@ -36,7 +36,7 @@ public final class LegacyGroundingConverter {
   private LegacyGroundingConverter() {
   }
 
-  public static boolean convert(JsonObject grounding, String configuredProtocol) {
+  public static boolean convert(JsonObject grounding) {
     if (!grounding.has("transportProtocols")) {
       return false;
     }

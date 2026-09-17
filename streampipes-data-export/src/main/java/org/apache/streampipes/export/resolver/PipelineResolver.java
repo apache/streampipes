@@ -76,23 +76,6 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
   public void writeDocument(String document,
                             AssetExportConfiguration config) throws JsonProcessingException {
     var pipeline = deserializeDocument(document);
-    if (config.isOverrideBrokerSettings()) {
-      pipeline.setSepas(pipeline.getSepas().stream().peek(processor -> {
-        processor.getInputStreams()
-            .forEach(is -> overrideProtocol(is.getEventGrounding()));
-        overrideProtocol(processor.getOutputStream().getEventGrounding());
-      }).collect(Collectors.toList()));
-
-      pipeline.setStreams(pipeline.getStreams().stream().peek(stream -> {
-        overrideProtocol(stream.getEventGrounding());
-      }).collect(Collectors.toList()));
-
-      pipeline.setActions(pipeline.getActions().stream().peek(sink -> {
-        sink.getInputStreams()
-            .forEach(is -> overrideProtocol(is.getEventGrounding()));
-      }).collect(Collectors.toList()));
-
-    }
     SecretProvider.getEncryptionService().apply(pipeline);
     resourceManager.getDb().persist(pipeline);
   }

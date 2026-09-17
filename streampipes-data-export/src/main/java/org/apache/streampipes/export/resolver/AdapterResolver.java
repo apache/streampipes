@@ -78,9 +78,6 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
   public void writeDocument(String document,
                             AssetExportConfiguration config) throws JsonProcessingException {
     var adapterDescription = deserializeDocument(document);
-    if (config.isOverrideBrokerSettings()) {
-      overrideProtocol(adapterDescription.getEventGrounding());
-    }
     SecretProvider.getEncryptionService().apply(adapterDescription);
     adapterStorage.persist(adapterDescription);
   }

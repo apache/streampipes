@@ -165,7 +165,8 @@ public abstract class StreamPipesExtensionsServiceBase extends StreamPipesServic
           Environments.getEnvironment()
               .getExtensionRequestTopicPrefix()
               .getValueOrReturn(ExtensionServiceBrokerTopics.DEFAULT_REQUEST_TOPIC_PREFIX),
-          this::onNatsReconnect
+          this::onNatsReconnect,
+          InternalBrokerProvider.configuration()
       );
     } else {
       LOG.info("Starting Extension Service on HTTP Mode");

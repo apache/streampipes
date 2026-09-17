@@ -43,19 +43,13 @@ class EventGroundingTest {
   @Test
   void convertsEveryProtocolAndPreservesTopic() {
     for (var protocol : List.of("Nats", "Kafka", "Mqtt", "Pulsar")) {
-      assertConvertsToEveryDeploymentProtocol(protocol);
-    }
-  }
-
-  private void assertConvertsToEveryDeploymentProtocol(String protocol) {
-    for (var deploymentProtocol : List.of("nats", "kafka", "mqtt", "pulsar")) {
       var grounding = legacy(protocol);
       var topic = grounding.getAsJsonArray("transportProtocols").get(0).getAsJsonObject().get("topicDefinition");
-      assertTrue(LegacyGroundingConverter.convert(grounding, deploymentProtocol));
+      assertTrue(LegacyGroundingConverter.convert(grounding));
       assertEquals(topic, grounding.get("topicDefinition"));
       assertFalse(grounding.toString().contains("private-host"));
       assertFalse(grounding.toString().contains("secret"));
-      assertFalse(LegacyGroundingConverter.convert(grounding, deploymentProtocol));
+      assertFalse(LegacyGroundingConverter.convert(grounding));
     }
   }
 
@@ -63,21 +57,21 @@ class EventGroundingTest {
   void rejectsAmbiguousUnsupportedAndConflictingGroundings() {
     var ambiguous = legacy("Nats");
     ambiguous.getAsJsonArray("transportProtocols").add(ambiguous.getAsJsonArray("transportProtocols").get(0).deepCopy());
-    assertThrows(IllegalArgumentException.class, () -> LegacyGroundingConverter.convert(ambiguous, "nats"));
-    assertThrows(IllegalArgumentException.class, () -> LegacyGroundingConverter.convert(legacy("Unknown"), "nats"));
+    assertThrows(IllegalArgumentException.class, () -> LegacyGroundingConverter.convert(ambiguous));
+    assertThrows(IllegalArgumentException.class, () -> LegacyGroundingConverter.convert(legacy("Unknown")));
     var conflicting = legacy("Nats");
     conflicting.add("topicDefinition", new JsonObject());
-    assertThrows(IllegalArgumentException.class, () -> LegacyGroundingConverter.convert(conflicting, "nats"));
+    assertThrows(IllegalArgumentException.class, () -> LegacyGroundingConverter.convert(conflicting));
   }
 
   @Test
   void handlesEmptyGroundingButRejectsMissingTopic() {
     var empty = JsonParser.parseString("{\"transportProtocols\":[]}").getAsJsonObject();
-    assertTrue(LegacyGroundingConverter.convert(empty, "nats"));
+    assertTrue(LegacyGroundingConverter.convert(empty));
     assertFalse(empty.has("topicDefinition"));
     var missing = legacy("Nats");
     missing.getAsJsonArray("transportProtocols").get(0).getAsJsonObject().remove("topicDefinition");
-    assertThrows(IllegalArgumentException.class, () -> LegacyGroundingConverter.convert(missing, "nats"));
+    assertThrows(IllegalArgumentException.class, () -> LegacyGroundingConverter.convert(missing));
   }
 
   @Test
@@ -106,7 +100,7 @@ class EventGroundingTest {
     var topic = grounding.getAsJsonArray("transportProtocols").get(0).getAsJsonObject()
         .getAsJsonObject("properties").get("topicDefinition").deepCopy();
     grounding.add("topicDefinition", topic.deepCopy());
-    assertTrue(LegacyGroundingConverter.convert(grounding, "nats"));
+    assertTrue(LegacyGroundingConverter.convert(grounding));
     assertEquals(topic, grounding.get("topicDefinition"));
     assertEquals("3", grounding.getAsJsonObject("options").get("lingerMs").getAsString());
     assertEquals("group", grounding.getAsJsonObject("options").get("groupId").getAsString());
@@ -124,11 +118,11 @@ class EventGroundingTest {
       root.add(path, stream.deepCopy());
       root.add("config", stream.deepCopy());
       var config = root.get("config").deepCopy();
-      assertTrue(ResourceGroundingConverter.convert(root, "nats"));
+      assertTrue(ResourceGroundingConverter.convert(root));
       assertEquals(config, root.get("config"));
       assertEquals("keep-id", root.getAsJsonObject(path).get("elementId").getAsString());
       assertEquals("keep-me", root.getAsJsonObject(path).get("unknownField").getAsString());
-      assertFalse(ResourceGroundingConverter.convert(root, "nats"));
+      assertFalse(ResourceGroundingConverter.convert(root));
     }
   }
 }

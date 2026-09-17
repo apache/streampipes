@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.util;
 
-import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.InternalTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
@@ -36,7 +35,7 @@ public class GroundingUtils {
     return grounding;
   }
 
-  public static TransportProtocol makeProtocol(Environment env, String prioritizedProtocol, String topic) {
+  public static TransportProtocol makeProtocol(String topic) {
     return new InternalTransportProtocol(
         new SimpleTopicDefinition(topic), java.util.Map.of());
   }

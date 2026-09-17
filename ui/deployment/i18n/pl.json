@@ -1253,7 +1253,6 @@
   "Uploading CSV data": "Przesyłanie danych CSV",
   "Upper Limit": "Górna granica",
   "Upper bound of the gauge value range.": "Górna granica zakresu wartości wskaźnika.",
-  "Use broker settings from this instance": "Użyj ustawień brokera z tej instancji",
   "Use existing dataset": "Użyj istniejącego zbioru danych",
   "Use field key (runtime name) as header column": "Użyj klucza pola (nazwy czasu wykonania) jako kolumny nagłówka",
   "Use field label as header column if available": "Użyj etykiety pola jako kolumny nagłówka, jeśli jest dostępna",

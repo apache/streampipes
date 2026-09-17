@@ -38,6 +38,7 @@ import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerR
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerResponseEnvelope;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceTransportMode;
+import org.apache.streampipes.model.grounding.BrokerConfiguration;
 import org.apache.streampipes.nats.extensions.operation.ExtensionBrokerResponseFactory;
 import org.apache.streampipes.nats.extensions.operation.connect.AdapterAssetOperationHandler;
 import org.apache.streampipes.nats.extensions.operation.connect.AdapterStateChangeOperationHandler;
@@ -129,6 +130,14 @@ public class ExtensionBrokerRequestReceiver {
                                     ExtensionServiceTransportMode mode,
                                     String topicPrefix,
                                     Runnable reconnectHandler) {
+    return start(serviceId, mode, topicPrefix, reconnectHandler, null);
+  }
+
+  public synchronized boolean start(String serviceId,
+                                    ExtensionServiceTransportMode mode,
+                                    String topicPrefix,
+                                    Runnable reconnectHandler,
+                                    BrokerConfiguration brokerConfiguration) {
     if (!mode.supportsNats()) {
       return false;
     }
@@ -146,8 +155,14 @@ public class ExtensionBrokerRequestReceiver {
       });
       String natsUrl = "nats://" + natsHost
           + ":" + env.getNatsPort().getValueOrDefault();
-      var optionsBuilder = Options.builder().server(natsUrl).maxReconnects(-1);
       var natsToken = env.getNatsToken().getValueOrDefault();
+      // A NATS deployment shares its resolved endpoint and credentials with the control plane.
+      // Other event brokers retain independently configured NATS request transport.
+      if (brokerConfiguration != null && "nats".equals(brokerConfiguration.getProtocolId())) {
+        natsUrl = brokerConfiguration.getUrl();
+        natsToken = brokerConfiguration.getToken();
+      }
+      var optionsBuilder = Options.builder().server(natsUrl).maxReconnects(-1);
       if (natsToken != null && !natsToken.isBlank()) {
         Properties props = new Properties();
         props.setProperty(Options.PROP_TOKEN, natsToken);
@@ -170,6 +185,12 @@ public class ExtensionBrokerRequestReceiver {
     } catch (Exception e) {
       LOG.warn("Could not start extension broker receiver", e);
       stop();
+      if (e instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
+      if (mode == ExtensionServiceTransportMode.NATS) {
+        throw new IllegalStateException("NATS request transport could not start", e);
+      }
       return false;
     }
   }

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.storage.couchdb.serializer;
 
-import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.LegacyGroundingConverter;
 import org.apache.streampipes.model.grounding.TopicDefinition;
@@ -34,8 +33,7 @@ public class EventGroundingDeserializer implements JsonDeserializer<EventGroundi
   @Override
   public EventGrounding deserialize(JsonElement json, Type type, JsonDeserializationContext context) {
     var converted = json.getAsJsonObject().deepCopy();
-    LegacyGroundingConverter.convert(converted,
-        Environments.getEnvironment().getPrioritizedProtocol().getValueOrDefault());
+    LegacyGroundingConverter.convert(converted);
     var grounding = new EventGrounding();
     grounding.setTopicDefinition(context.deserialize(converted.get("topicDefinition"), TopicDefinition.class));
     if (converted.has("options") && converted.get("options").isJsonObject()) {

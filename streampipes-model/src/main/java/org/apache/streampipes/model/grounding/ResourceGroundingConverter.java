@@ -31,26 +31,26 @@ public final class ResourceGroundingConverter {
   private ResourceGroundingConverter() {
   }
 
-  public static boolean convert(JsonElement resource, String protocolId) {
+  public static boolean convert(JsonElement resource) {
     if (resource == null || resource.isJsonNull()) {
       return false;
     }
     boolean changed = false;
     if (resource.isJsonArray()) {
       for (var element : resource.getAsJsonArray()) {
-        changed |= convert(element, protocolId);
+        changed |= convert(element);
       }
     } else if (resource.isJsonObject()) {
       JsonObject object = resource.getAsJsonObject();
       // CouchDB polymorphic resources use a type/properties envelope.
       if ((object.has("type") || object.has("field_type")) && object.has("properties")) {
-        changed |= convert(object.get("properties"), protocolId);
+        changed |= convert(object.get("properties"));
       }
       if (object.has("eventGrounding") && !object.get("eventGrounding").isJsonNull()) {
-        changed |= LegacyGroundingConverter.convert(object.getAsJsonObject("eventGrounding"), protocolId);
+        changed |= LegacyGroundingConverter.convert(object.getAsJsonObject("eventGrounding"));
       }
       for (var field : CHILDREN) {
-        changed |= convert(object.get(field), protocolId);
+        changed |= convert(object.get(field));
       }
     }
     return changed;

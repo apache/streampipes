@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.model.grounding;
 
-import org.apache.streampipes.commons.environment.Environments;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -34,7 +32,7 @@ public class EventGroundingDeserializer extends JsonDeserializer<EventGrounding>
     JsonNode node = parser.getCodec().readTree(parser);
     if (node.has("transportProtocols")) {
       var json = com.google.gson.JsonParser.parseString(node.toString()).getAsJsonObject();
-      LegacyGroundingConverter.convert(json, Environments.getEnvironment().getPrioritizedProtocol().getValueOrDefault());
+      LegacyGroundingConverter.convert(json);
       try (var convertedParser = parser.getCodec().getFactory().createParser(json.toString())) {
         node = parser.getCodec().readTree(convertedParser);
       }

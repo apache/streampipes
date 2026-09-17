@@ -20,7 +20,7 @@
 // @ts-nocheck
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2026-09-17 19:20:44.
+// Generated using typescript-generator version 3.2.1263 on 2026-09-17 23:18:42.
 
 import { Storable } from './streampipes-model';
 
