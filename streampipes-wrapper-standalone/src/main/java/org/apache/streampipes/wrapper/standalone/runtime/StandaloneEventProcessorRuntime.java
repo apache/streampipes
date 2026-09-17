@@ -20,15 +20,13 @@ package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.extractor.IDataProcessorParameterExtractor;
-import org.apache.streampipes.extensions.api.limiter.SpRateLimiter;
-import org.apache.streampipes.extensions.api.memorymanager.SpMemoryManager;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesDataProcessor;
 import org.apache.streampipes.extensions.api.pe.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.extensions.api.pe.param.IDataProcessorParameters;
-import org.apache.streampipes.extensions.api.pe.routing.RawDataProcessor;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
 import org.apache.streampipes.extensions.api.pe.runtime.IDataProcessorRuntime;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.generator.DataProcessorContextGenerator;
 import org.apache.streampipes.wrapper.params.generator.DataProcessorParameterGenerator;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
@@ -36,19 +34,16 @@ import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRuntime<
     IStreamPipesDataProcessor,
     DataProcessorInvocation,
     EventProcessorRuntimeContext,
     IDataProcessorParameterExtractor,
-    IDataProcessorParameters> implements IDataProcessorRuntime, RawDataProcessor {
+    IDataProcessorParameters> implements IDataProcessorRuntime {
 
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneEventProcessorRuntime.class);
 
   protected SpOutputCollector outputCollector;
-  private boolean pipelineStarted;
 
   public StandaloneEventProcessorRuntime() {
     super(new DataProcessorContextGenerator(), new DataProcessorParameterGenerator());
@@ -65,25 +60,17 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
   }
 
   @Override
-  public void process(Map<String, Object> rawEvent, long size, String sourceInfo) {
-    try {
-      SpRateLimiter.INSTANCE.limit(size);
-      SpMemoryManager.INSTANCE.allocate(size);
-      monitoringManager.increaseInCounter(instanceId, sourceInfo, size, System.currentTimeMillis());
-      var event = this.internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, sourceInfo);
-      pipelineElement
-          .onEvent(event, outputCollector);
-    } catch (IllegalArgumentException e) {
+  protected void processEvent(Event event) {
+    pipelineElement.onEvent(event, outputCollector);
+  }
+
+  @Override
+  protected void handleProcessingException(RuntimeException e) {
+    if (e instanceof IllegalArgumentException) {
       LOG.warn("A key could not be found - this can be due to an operation on a missing field.");
       addLogEntry(e);
-    } catch (RuntimeException e) {
-      LOG.error("RuntimeException while processing event in {}", pipelineElement.getClass().getCanonicalName(), e);
-      addLogEntry(e);
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      LOG.warn("Event processing interrupted", e);
-    } finally {
-      SpMemoryManager.INSTANCE.free(size);
+    } else {
+      super.handleProcessingException(e);
     }
   }
 
@@ -96,65 +83,18 @@ public class StandaloneEventProcessorRuntime extends StandalonePipelineElementRu
   @Override
   protected void beforeStart() {
     this.outputCollector = getOutputCollector();
-    pipelineElement.onPipelineStarted(runtimeParameters, outputCollector, runtimeContext);
-    pipelineStarted = true;
+    startPipeline(() -> pipelineElement.onPipelineStarted(runtimeParameters, outputCollector, runtimeContext));
     prepareRuntime();
   }
 
   @Override
   protected void afterStop() {
-    RuntimeException stopException = null;
-    try {
-      disconnectInputCollectors();
-    } catch (RuntimeException e) {
-      stopException = collectCleanupException(stopException, e);
-    }
-    try {
-      pipelineElement.onPipelineStopped();
-    } catch (RuntimeException e) {
-      stopException = collectCleanupException(stopException, e);
-    } finally {
-      pipelineStarted = false;
-    }
-    try {
-      outputCollector.disconnect();
-    } catch (RuntimeException e) {
-      stopException = collectCleanupException(stopException, e);
-    }
-
-    if (stopException != null) {
-      throw stopException;
-    }
+    runCleanup(this::disconnectInputCollectors,
+        () -> stopPipeline(pipelineElement::onPipelineStopped),
+        () -> {
+          if (outputCollector != null) {
+            outputCollector.disconnect();
+          }
+        });
   }
-
-  @Override
-  protected void afterStartFailed() {
-    RuntimeException cleanupException = null;
-    try {
-      super.afterStartFailed();
-    } catch (RuntimeException e) {
-      cleanupException = collectCleanupException(cleanupException, e);
-    }
-    try {
-      if (pipelineStarted) {
-        pipelineElement.onPipelineStopped();
-      }
-    } catch (RuntimeException e) {
-      cleanupException = collectCleanupException(cleanupException, e);
-    } finally {
-      pipelineStarted = false;
-    }
-    try {
-      if (outputCollector != null) {
-        outputCollector.disconnect();
-      }
-    } catch (RuntimeException e) {
-      cleanupException = collectCleanupException(cleanupException, e);
-    }
-
-    if (cleanupException != null) {
-      throw cleanupException;
-    }
-  }
-
 }

@@ -47,7 +47,7 @@ public enum SpRateLimiter {
   private static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.MILLISECONDS;
   private final Environment env = Environments.getEnvironment();
 
-  private RateLimiter rateLimiter;
+  private volatile RateLimiter rateLimiter;
 
   private double rateLimiterAverageWaitTime = 0.0;
   
@@ -117,7 +117,9 @@ public enum SpRateLimiter {
   public void createRateLimiter(double permitsPerSecond, long warmupPeriod, TimeUnit unit) {
     if (this.rateLimiter == null) {
       validateParameters(permitsPerSecond, warmupPeriod, unit);
-      this.rateLimiter = RateLimiter.create(permitsPerSecond, warmupPeriod, unit);
+      this.rateLimiter = warmupPeriod == 0
+          ? RateLimiter.create(permitsPerSecond)
+          : RateLimiter.create(permitsPerSecond, warmupPeriod, unit);
       LOG.info("RateLimiter created with {} permits per second, warmup period: {} {}",
           permitsPerSecond, warmupPeriod, unit);
     } else {
@@ -127,16 +129,22 @@ public enum SpRateLimiter {
 
   /**
    * Acquires a permit from the rate limiter for processing data, with timeout.
-   * Each request consumes exactly 1 permit regardless of data size.
-   * This provides simple and fair rate limiting based on request count.
+   * Each request consumes one permit per byte.
    *
-   * @param bytes The number of bytes to process (for logging purposes only)
+   * @param bytes The number of bytes to process, between 1 and Integer.MAX_VALUE
    * @return true if permit was acquired successfully, false if timeout occurred
    * @throws InterruptedException if the current thread is interrupted while waiting
    */
   public boolean limit(long bytes) throws InterruptedException {
+    if (bytes <= 0 || bytes > Integer.MAX_VALUE) {
+      throw new IllegalArgumentException("Byte count must be between 1 and Integer.MAX_VALUE");
+    }
+    if (Thread.interrupted()) {
+      throw new InterruptedException("Rate limiter interrupted");
+    }
     var timeOutMs = env.getRateLimiterTimeoutMs().getValueOrDefault();
-    if (this.rateLimiter == null) {
+    var limiter = this.rateLimiter;
+    if (limiter == null) {
       LOG.warn("RateLimiter has not been initialized. Please call createRateLimiter() first.");
       return false;
     }
@@ -147,23 +155,61 @@ public enum SpRateLimiter {
     
     try {
       int permits = (int) bytes;
-      long timeoutMs = timeOutMs;
-      boolean acquired = rateLimiter.tryAcquire(permits, timeoutMs, TimeUnit.MILLISECONDS);
+      long timeoutMs = Math.max(0, timeOutMs);
+      long timeoutNanos = TimeUnit.MILLISECONDS.toNanos(timeoutMs);
+      long started = System.nanoTime();
+      boolean acquired;
+      do {
+        long remaining = Math.max(0, timeoutNanos - (System.nanoTime() - started));
+        // Guava sleeps until the reserved permit is ready, rather than rounding
+        // every short wait up to a polling interval. Bound its uninterruptible
+        // sleep so cancellation is observed within at most one short attempt.
+        long attemptNanos = Math.min(remaining, TimeUnit.MILLISECONDS.toNanos(10));
+        acquired = limiter.tryAcquire(permits, attemptNanos, TimeUnit.NANOSECONDS);
+        if (Thread.interrupted()) {
+          throw new InterruptedException("Rate limiter interrupted");
+        }
+        if (acquired) {
+          break;
+        }
+        remaining = timeoutNanos - (System.nanoTime() - started);
+        if (remaining <= 0) {
+          break;
+        }
+        TimeUnit.NANOSECONDS.sleep(Math.min(remaining, TimeUnit.MILLISECONDS.toNanos(10)));
+      } while (true);
 
       long waitTime = System.currentTimeMillis() - startTime;
       updateAverageWaitTime(waitTime);
 
       if (!acquired) {
         LOG.warn("Failed to acquire permit for {} bytes within {} ms timeout (rate: {} requests/sec)",
-                 bytes, timeoutMs, rateLimiter.getRate());
+                 bytes, timeoutMs, limiter.getRate());
       } else {
         LOG.debug("Successfully acquired permit for {} bytes in {} ms (rate: {} requests/sec)",
-                 bytes, waitTime, rateLimiter.getRate()); 
+                 bytes, waitTime, limiter.getRate());
       }
       return acquired;
     } finally {
       currentQueueSize.decrementAndGet();
     }
+  }
+
+  /**
+   * Waits for admission without dropping the event when a timed attempt expires.
+   * No memory reservation should be held while waiting here.
+   */
+  public void acquire(long bytes) throws InterruptedException {
+    do {
+      if (!isInitialized()) {
+        throw new IllegalStateException("Rate limiter has not been initialized");
+      }
+      if (limit(bytes)) {
+        return;
+      }
+      // Also avoid busy waiting if the configured timeout is zero.
+      TimeUnit.MILLISECONDS.sleep(10);
+    } while (true);
   }
 
     /**
