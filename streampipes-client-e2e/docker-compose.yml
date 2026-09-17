@@ -28,6 +28,8 @@ services:
     ports:
       - "8030:8030"
     environment:
+      - SP_INITIAL_SERVICE_USER_SECRET=${SP_SERVICE_SECRET:?Generate and export SP_SERVICE_SECRET before starting}
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Generate and export SP_SERVICE_SECRET before starting}
       - SP_PRIORITIZED_PROTOCOL=kafka
     depends_on:
       - couchdb
@@ -39,6 +41,8 @@ services:
 
   extensions-all-jvm:
     image: streampipes_pipeline-elements-all-jvm:release-validation
+    environment:
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Generate and export SP_SERVICE_SECRET before starting}
     logging: *default-logging
     networks:
       spnet:

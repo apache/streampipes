@@ -16,6 +16,8 @@
 services:
   connect-adapters-iiot:
     image: ${SP_DOCKER_REGISTRY}/connect-adapters-iiot:${SP_VERSION}
+    environment:
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:-streampipes-development-only-service-secret}
     volumes:
       - connect:/data/
     logging:

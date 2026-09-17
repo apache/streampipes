@@ -15,21 +15,17 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.commons.constants;
+package org.apache.streampipes.user.management.util;
 
-public class DefaultEnvValues {
+import org.apache.streampipes.model.client.user.Principal;
 
-  public static final String INITIAL_ADMIN_EMAIL_DEFAULT = "admin@streampipes.apache.org";
-  public static final String INITIAL_ADMIN_PW_DEFAULT = "admin";
-  public static final String INITIAL_CLIENT_USER_DEFAULT = "sp-service-client";
-  // Legacy value retained for upgrade detection and rejection, never as a configuration fallback.
-  public static final String INITIAL_CLIENT_SECRET_DEFAULT = "my-apache-streampipes-secret-key-change-me";
+public final class PrincipalStatus {
 
-  public static final String INSTALL_PIPELINE_ELEMENTS = "true";
+  private PrincipalStatus() {
+  }
 
-  public static final String DEFAULT_ENCRYPTION_PASSCODE = "eGgemyGBoILAu3xckoIp";
-
-  public static final String SP_KAFKA_RETENTION_MS_DEFAULT = "600000";
-
-  public static final String LOCALHOST = "localhost";
+  public static boolean canAuthenticate(Principal principal) {
+    return principal != null && principal.isAccountEnabled()
+        && !principal.isAccountLocked() && !principal.isAccountExpired();
+  }
 }
