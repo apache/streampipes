@@ -78,7 +78,7 @@ services:
       spnet:
 
   couchdb:
-    image: couchdb:3.3.1
+    image: couchdb:3.5.2.1
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=admin
@@ -95,7 +95,7 @@ services:
       spnet:
 
   influxdb:
-    image: influxdb:2.6
+    image: influxdb:2.9
     environment:
       - INFLUXDB_DATA_ENGINE=tsm1
       - INFLUXDB_REPORTING_DISABLED=false
@@ -126,7 +126,7 @@ services:
       spnet:
 
   kafka:
-    image: apache/kafka:4.1.0
+    image: apache/kafka:4.3.1
     hostname: kafka
     environment:
       - KAFKA_NODE_ID=0

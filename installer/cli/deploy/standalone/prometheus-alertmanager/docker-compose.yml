@@ -15,7 +15,7 @@
 
 services:
   prometheus-alertmanager:
-    image: prom/alertmanager:v0.26.0
+    image: prom/alertmanager:v0.34.1
     networks:
       spnet:
     volumes:
