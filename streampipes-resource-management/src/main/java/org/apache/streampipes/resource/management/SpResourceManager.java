@@ -24,7 +24,6 @@ import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
-import org.apache.streampipes.storage.api.system.IGroundingMigrationStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
@@ -121,10 +120,6 @@ public class SpResourceManager {
   public PipelineResourceManager managePipelines() {
     return new PipelineResourceManager(pipelineStorage, managePermissions()
     );
-  }
-
-  public IGroundingMigrationStorage getGroundingMigrationStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getGroundingMigrationStorage();
   }
 
   public ISpCoreConfigurationStorage getCoreConfigurationStorage() {

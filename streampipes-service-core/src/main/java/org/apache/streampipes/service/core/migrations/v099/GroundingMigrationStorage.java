@@ -16,11 +16,11 @@
  *
  */
 
-package org.apache.streampipes.storage.couchdb.impl.system;
+package org.apache.streampipes.service.core.migrations.v099;
 
-import org.apache.streampipes.storage.api.system.IGroundingMigrationStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import org.apache.http.client.HttpResponseException;
@@ -28,16 +28,58 @@ import org.apache.http.client.HttpResponseException;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroundingMigrationStorageImpl implements IGroundingMigrationStorage {
+/** Raw document access scoped to the broker grounding migration. */
+class GroundingMigrationStorage {
+  private static final String MARKER_ID = "migration:extract-broker-configuration-v1";
+
+  boolean isCompleted() throws IOException {
+    var marker = readMarker();
+    return marker != null && marker.has("completed") && marker.get("completed").getAsBoolean();
+  }
+
+  void markCompleted() throws IOException {
+    var marker = readMarker();
+    if (marker == null) {
+      marker = new JsonObject();
+      marker.addProperty("_id", MARKER_ID);
+    }
+    marker.addProperty("completed", true);
+    marker.addProperty("completedAt", Instant.now().toString());
+    try {
+      Utils.putRequest(markerRoute(), marker.toString()).execute().returnContent();
+    } catch (HttpResponseException e) {
+      // Another core may have completed the same migration concurrently.
+      if (e.getStatusCode() != 409 || !isCompleted()) {
+        throw e;
+      }
+    }
+  }
+
+  private JsonObject readMarker() throws IOException {
+    try {
+      var response = Utils.getRequest(markerRoute()).execute().returnContent().asString(StandardCharsets.UTF_8);
+      return JsonParser.parseString(response).getAsJsonObject();
+    } catch (HttpResponseException e) {
+      if (e.getStatusCode() == 404) {
+        return null;
+      }
+      throw e;
+    }
+  }
+
+  private String markerRoute() {
+    return Utils.getDatabaseRoute("general-configuration") + "/" + Utils.escapePathSegment(MARKER_ID);
+  }
+
   // Templates contain static properties/IDs only, not concrete streams.
   private static final List<String> COLLECTIONS = List.of(
       "adapterdescription", "adapterinstance", "data-stream", "data-processor", "data-sink", "pipeline");
 
-  @Override
-  public List<String> collections() throws IOException {
+  List<String> collections() throws IOException {
     var response = Utils.getRequest(Utils.getDatabaseRoute("_all_dbs"))
         .execute().returnContent().asString(StandardCharsets.UTF_8);
     var available = new ArrayList<String>();
@@ -49,8 +91,7 @@ public class GroundingMigrationStorageImpl implements IGroundingMigrationStorage
     return available;
   }
 
-  @Override
-  public List<String> readPage(String collection, String afterId, int limit) throws IOException {
+  List<String> readPage(String collection, String afterId, int limit) throws IOException {
     String query = route(collection) + "/_all_docs?include_docs=true&limit=" + (afterId == null ? limit : limit + 1);
     if (afterId != null) {
       query += "&startkey=" + URLEncoder.encode(new JsonPrimitive(afterId).toString(), StandardCharsets.UTF_8);
@@ -66,14 +107,13 @@ public class GroundingMigrationStorageImpl implements IGroundingMigrationStorage
     return result;
   }
 
-  @Override
-  public String read(String collection, String id) throws IOException {
+  String read(String collection, String id) throws IOException {
     return Utils.getRequest(route(collection) + "/" + Utils.escapePathSegment(id))
         .execute().returnContent().asString(StandardCharsets.UTF_8);
   }
 
-  @Override
-  public boolean update(String collection, String id, String document) throws IOException {
+  /** Returns false on a revision conflict; other failures propagate. */
+  boolean update(String collection, String id, String document) throws IOException {
     try {
       Utils.putRequest(route(collection) + "/" + Utils.escapePathSegment(id), document).execute().returnContent();
       return true;

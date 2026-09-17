@@ -940,8 +940,6 @@
         <module>streampipes-user-management</module>
         <module>streampipes-vocabulary</module>
         <module>streampipes-wrapper</module>
-        <module>streampipes-wrapper-distributed</module>
-        <module>streampipes-wrapper-kafka-streams</module>
         <module>streampipes-wrapper-siddhi</module>
         <module>streampipes-wrapper-standalone</module>
         <module>streampipes-connect-transformer-api</module>

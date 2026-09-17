@@ -20,7 +20,6 @@ package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.model.grounding.ResourceGroundingConverter;
 import org.apache.streampipes.service.core.migrations.Migration;
-import org.apache.streampipes.storage.api.system.IGroundingMigrationStorage;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -32,25 +31,29 @@ import java.io.IOException;
 public class ExtractBrokerConfigurationMigration implements Migration {
   private static final Logger LOG = LoggerFactory.getLogger(ExtractBrokerConfigurationMigration.class);
   private static final int PAGE_SIZE = 100;
-  private final IGroundingMigrationStorage storage;
+  private final GroundingMigrationStorage storage;
   private final String protocolId;
 
-  public ExtractBrokerConfigurationMigration(IGroundingMigrationStorage storage, String protocolId) {
+  public ExtractBrokerConfigurationMigration(String protocolId) {
+    this(new GroundingMigrationStorage(), protocolId);
+  }
+
+  ExtractBrokerConfigurationMigration(GroundingMigrationStorage storage, String protocolId) {
     this.storage = storage;
     this.protocolId = protocolId;
   }
 
   @Override
   public boolean shouldExecute() {
-    return visit(false);
+    try {
+      return !storage.isCompleted();
+    } catch (IOException e) {
+      throw new IllegalStateException("Could not read broker grounding migration completion marker", e);
+    }
   }
 
   @Override
   public void executeMigration() {
-    visit(true);
-  }
-
-  private boolean visit(boolean write) {
     try {
       for (var collection : storage.collections()) {
         String after = null;
@@ -64,16 +67,13 @@ public class ExtractBrokerConfigurationMigration implements Migration {
             String id = document.get("_id").getAsString();
             after = id;
             if (!id.startsWith("_design/") && convert(document, collection, id)) {
-              if (!write) {
-                return true;
-              }
               update(collection, id, document);
               LOG.info("Migrated event grounding in {}/{}", collection, id);
             }
           }
         }
       }
-      return false;
+      storage.markCompleted();
     } catch (IOException e) {
       // Startup must not restore workloads after a partial cleanup.
       throw new IllegalStateException("Broker grounding migration failed; resolve the storage failure and restart", e);

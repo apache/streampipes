@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.service.core.migrations.v099;
 
-import org.apache.streampipes.storage.api.system.IGroundingMigrationStorage;
-
 import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Test;
 
@@ -31,9 +29,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 class ExtractBrokerConfigurationMigrationTest {
@@ -44,8 +46,8 @@ class ExtractBrokerConfigurationMigrationTest {
       "actualTopicName":"original.topic"}}]},"schema":{"unchanged":true}}
       """;
 
-  private IGroundingMigrationStorage storage() throws IOException {
-    var storage = mock(IGroundingMigrationStorage.class);
+  private GroundingMigrationStorage storage() throws IOException {
+    var storage = mock(GroundingMigrationStorage.class);
     when(storage.collections()).thenReturn(List.of("data-stream"));
     when(storage.readPage("data-stream", null, 100)).thenReturn(List.of(LEGACY));
     when(storage.readPage("data-stream", "resource", 100)).thenReturn(List.of());
@@ -68,7 +70,10 @@ class ExtractBrokerConfigurationMigrationTest {
     assertTrue(finalDocument.contains("2-r"));
     assertTrue(finalDocument.contains("original.topic"));
     assertFalse(finalDocument.contains("brokerHostname"));
-    when(storage.readPage("data-stream", null, 100)).thenReturn(List.of(finalDocument));
+    var order = inOrder(storage);
+    order.verify(storage).readPage("data-stream", "resource", 100);
+    order.verify(storage).markCompleted();
+    when(storage.isCompleted()).thenReturn(true);
     assertFalse(migration.shouldExecute());
   }
 
@@ -78,6 +83,7 @@ class ExtractBrokerConfigurationMigrationTest {
     when(storage.update(eq("data-stream"), eq("resource"), anyString())).thenThrow(new IOException("unavailable"));
     var migration = new ExtractBrokerConfigurationMigration(storage, "nats");
     assertThrows(IllegalStateException.class, migration::executeMigration);
+    verify(storage, never()).markCompleted();
     assertTrue(migration.shouldExecute());
   }
 
@@ -89,6 +95,7 @@ class ExtractBrokerConfigurationMigrationTest {
     when(storage.readPage("data-stream", null, 100)).thenReturn(List.of(document.toString()));
     var migration = new ExtractBrokerConfigurationMigration(storage, "nats");
     assertThrows(IllegalStateException.class, migration::executeMigration);
+    verify(storage, never()).markCompleted();
     verify(storage, times(0)).update(anyString(), anyString(), anyString());
   }
 
@@ -98,6 +105,55 @@ class ExtractBrokerConfigurationMigrationTest {
     when(storage.read("data-stream", "resource")).thenReturn(LEGACY);
     var migration = new ExtractBrokerConfigurationMigration(storage, "nats");
     assertThrows(IllegalStateException.class, migration::executeMigration);
+    verify(storage, never()).markCompleted();
     verify(storage, times(3)).update(anyString(), anyString(), anyString());
   }
+
+  @Test
+  void completedMigrationDoesNotScanDocuments() throws IOException {
+    var storage = mock(GroundingMigrationStorage.class);
+    when(storage.isCompleted()).thenReturn(true);
+    assertFalse(new ExtractBrokerConfigurationMigration(storage, "nats").shouldExecute());
+    verify(storage).isCompleted();
+    verifyNoMoreInteractions(storage);
+  }
+
+  @Test
+  void emptyDatabaseIsMarkedCompleted() throws IOException {
+    var storage = mock(GroundingMigrationStorage.class);
+    var migration = new ExtractBrokerConfigurationMigration(storage, "nats");
+    assertTrue(migration.shouldExecute());
+    migration.executeMigration();
+    verify(storage).markCompleted();
+  }
+
+  @Test
+  void alreadyConvertedDocumentsAreNotRewrittenButMigrationIsMarkedCompleted() throws IOException {
+    var storage = storage();
+    when(storage.readPage("data-stream", null, 100))
+        .thenReturn(List.of("{\"_id\":\"resource\",\"eventGrounding\":{}}"));
+    new ExtractBrokerConfigurationMigration(storage, "nats").executeMigration();
+    verify(storage, never()).update(anyString(), anyString(), anyString());
+    verify(storage).markCompleted();
+  }
+
+  @Test
+  void markerReadFailureStopsStartupWithoutScanning() throws IOException {
+    var storage = mock(GroundingMigrationStorage.class);
+    when(storage.isCompleted()).thenThrow(new IOException("unavailable"));
+    var migration = new ExtractBrokerConfigurationMigration(storage, "nats");
+    assertThrows(IllegalStateException.class, migration::shouldExecute);
+    verify(storage).isCompleted();
+    verifyNoMoreInteractions(storage);
+  }
+
+  @Test
+  void markerWriteFailureStopsStartupAndAllowsRetry() throws IOException {
+    var storage = mock(GroundingMigrationStorage.class);
+    doThrow(new IOException("unavailable")).when(storage).markCompleted();
+    var migration = new ExtractBrokerConfigurationMigration(storage, "nats");
+    assertThrows(IllegalStateException.class, migration::executeMigration);
+    assertTrue(migration.shouldExecute());
+  }
+
 }
