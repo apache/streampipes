@@ -32,8 +32,10 @@ import org.influxdb.dto.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 
 public class TimeSeriesStorageInflux extends TimeSeriesStorage {
 
@@ -43,7 +45,9 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
 
   private final PropertyHandler propertyHandler;
 
-  private final AtomicBoolean reportedInvalidPrimitiveFields = new AtomicBoolean(false);
+  private final BiConsumer<String, String> warningReporter;
+
+  private final Set<String> reportedInvalidPrimitiveFields = ConcurrentHashMap.newKeySet();
 
   public TimeSeriesStorageInflux(
       DataLakeMeasure measure,
@@ -59,7 +63,19 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
       Environment environment,
       InfluxClientProvider influxClientProvider
   ) throws SpRuntimeException {
+    this(measure, ignoreDuplicates, environment, influxClientProvider,
+        (title, details) -> LOG.warn("{}: {}", title, details));
+  }
+
+  public TimeSeriesStorageInflux(
+      DataLakeMeasure measure,
+      boolean ignoreDuplicates,
+      Environment environment,
+      InfluxClientProvider influxClientProvider,
+      BiConsumer<String, String> warningReporter
+  ) throws SpRuntimeException {
     super(measure);
+    this.warningReporter = warningReporter;
     this.influxDb = influxClientProvider.getSetUpInfluxDBClient(environment);
     propertyHandler = new PropertyHandler(new PropertyDuplicateFilter(ignoreDuplicates));
   }
@@ -67,7 +83,9 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
   protected void writeToTimeSeriesStorage(Event event) throws SpRuntimeException {
     var point = initializePointWithTimestamp(event);
     iterateOverallEventProperties(event, point);
-    influxDb.write(point.build());
+    if (point.hasFields()) {
+      influxDb.write(point.build());
+    }
   }
 
   private void iterateOverallEventProperties(
@@ -105,8 +123,9 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
   }
 
   private void handleInvalidPrimitiveField(String runtimeName, String actualFieldType) {
-    if (reportedInvalidPrimitiveFields.compareAndSet(false, true)) {
-      throw new SpRuntimeException(
+    if (reportedInvalidPrimitiveFields.add(runtimeName)) {
+      warningReporter.accept(
+          "Invalid field ignored",
           "Event property '%s' is declared as primitive in the schema but received %s."
               .formatted(runtimeName, actualFieldType)
       );
