@@ -114,7 +114,7 @@ services:
       spnet:
 
   mosquitto:
-    image: eclipse-mosquitto:1.5.4
+    image: eclipse-mosquitto:2.0.0
     logging: *default-logging
     networks:
       spnet:
