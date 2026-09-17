@@ -15,49 +15,108 @@
 ~ limitations under the License.
 ~
 -->
-<sp-basic-inner-panel
-    [showTitle]="true"
-    innerPadding="0"
-    [panelTitle]="'Result' | translate"
-    fxFlex="100"
+<section
+    class="preview-panel"
     data-cy="connect-schema-update-preview"
+    [attr.aria-label]="'Preview' | translate"
 >
-    <div header fxFlex="100" fxLayoutAlign="end center">
+    <header
+        class="preview-toolbar"
+        fxLayout="row wrap"
+        fxLayoutAlign="space-between center"
+    >
+        <span class="font-bold">{{ 'Preview' | translate }}</span>
         <mat-button-toggle-group
             [value]="resultViewMode()"
+            [attr.aria-label]="'Preview display' | translate"
             [hideSingleSelectionIndicator]="true"
             (valueChange)="resultViewModeChange.emit($event)"
         >
-            <mat-button-toggle value="tree"
-                >{{ 'Tree' | translate }}
-            </mat-button-toggle>
-            <mat-button-toggle value="raw"
-                >{{ 'Raw' | translate }}
-            </mat-button-toggle>
+            <mat-button-toggle value="tree">{{
+                'Tree' | translate
+            }}</mat-button-toggle>
+            <mat-button-toggle
+                value="raw"
+                data-cy="configure-schema-result-mode-raw"
+                >{{ 'Raw' | translate }}</mat-button-toggle
+            >
         </mat-button-toggle-group>
-    </div>
-    @if (isRunningScript()) {
-        <div class="m-lg">
-            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+    </header>
+    <sp-schema-preview-status
+        [running]="isRunningScript()"
+        [error]="!!scriptError()"
+        [outdated]="previewOutdated()"
+        data-cy="configure-schema-preview-status"
+    ></sp-schema-preview-status>
+    <div class="preview-body">
+        @if (isRunningScript()) {
+            <div fxLayoutAlign="center center" class="m-lg">
                 <sp-spinner
                     [diameter]="25"
                     [text]="'Loading' | translate"
                 ></sp-spinner>
             </div>
-        </div>
-    } @else {
-        @if (scriptError()) {
-            <sp-exception-message
-                class="p-xs"
-                [message]="scriptError()"
-                [showDetails]="true"
-            ></sp-exception-message>
-        } @else {
+        } @else if (scriptError()) {
+            <div fxLayoutAlign="center center" class="m-xs">
+                <sp-exception-message
+                    [message]="scriptError()"
+                    [showDetails]="true"
+                ></sp-exception-message>
+            </div>
+        } @else if (hasPreview()) {
             <sp-adapter-event-preview
                 dataCy="configure-schema-event-preview-result"
                 [mode]="resultViewMode()"
                 [value]="output()"
             ></sp-adapter-event-preview>
+        } @else {
+            <p class="p-sm text-sm">
+                {{
+                    'Run the script to preview the transformed event.'
+                        | translate
+                }}
+            </p>
         }
+    </div>
+    @if (
+        hasPreview() &&
+        !previewOutdated() &&
+        !isRunningScript() &&
+        !scriptError()
+    ) {
+        <div class="changed-fields text-sm">
+            @if (changedFields().length) {
+                <div
+                    class="changed-fields-heading"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                >
+                    <mat-icon aria-hidden="true">difference</mat-icon>
+                    <span>{{ 'Changed fields' | translate }}</span>
+                    <sp-label
+                        [labelText]="changedFields().length"
+                        size="small"
+                        tone="neutral"
+                    ></sp-label>
+                </div>
+                <ul
+                    class="changed-fields-list"
+                    fxLayout="row wrap"
+                    [attr.aria-label]="'Changed fields' | translate"
+                >
+                    @for (field of changedFields(); track field) {
+                        <li>
+                            <sp-label size="small" variant="soft" tone="neutral"
+                                ><code>{{ field }}</code></sp-label
+                            >
+                        </li>
+                    }
+                </ul>
+            } @else {
+                <span>{{
+                    'No changes to the original event' | translate
+                }}</span>
+            }
+        </div>
     }
-</sp-basic-inner-panel>
+</section>

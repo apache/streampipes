@@ -21,5 +21,9 @@ import java.util.Map;
 
 public interface RawDataProcessor {
 
+  /**
+   * Processes an isolated mutable payload synchronously. The input collector owns
+   * transport admission and releases its memory reservation after dispatch returns.
+   */
   void process(Map<String, Object> rawEvent, long size, String sourceInfo);
 }

@@ -32,12 +32,18 @@ import org.apache.streampipes.extensions.api.pe.routing.RawDataProcessor;
 import org.apache.streampipes.extensions.api.pe.routing.SpInputCollector;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.params.InternalRuntimeParameters;
 import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public abstract class StandalonePipelineElementRuntime<
     PeT extends IStreamPipesPipelineElement<?>,
@@ -46,6 +52,9 @@ public abstract class StandalonePipelineElementRuntime<
     ExT extends IParameterExtractor,
     PepT extends IPipelineElementParameters<IvT, ExT>>
     extends PipelineElementRuntime<PeT, IvT, RcT, ExT, PepT> implements RawDataProcessor {
+
+  private final Logger log = LoggerFactory.getLogger(getClass());
+  private boolean pipelineStarted;
 
   protected List<SpInputCollector> inputCollectors;
 
@@ -74,41 +83,61 @@ public abstract class StandalonePipelineElementRuntime<
     this.runtimeParameters = runtimeParameters;
     this.runtimeContext = runtimeContext;
     this.instanceId = pipelineElementInvocation.getElementId();
-    this.inputCollectors = getInputCollectors(pipelineElementInvocation.getInputStreams());
     try {
+      this.inputCollectors = getInputCollectors(pipelineElementInvocation.getInputStreams());
       this.beforeStart();
     } catch (RuntimeException e) {
       try {
         this.afterStartFailed();
       } catch (RuntimeException cleanupException) {
-        e.addSuppressed(cleanupException);
+        collectCleanupException(e, cleanupException);
       }
       throw e;
     }
   }
 
   @Override
-  public void stopRuntime() {
-    RuntimeException stopException = null;
+  public void process(Map<String, Object> rawEvent, long size, String sourceInfo) {
     try {
-      unregisterInputCollectors();
+      monitoringManager.increaseInCounter(instanceId, sourceInfo, size, System.currentTimeMillis());
+      processEvent(internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, sourceInfo));
     } catch (RuntimeException e) {
-      stopException = collectCleanupException(stopException, e);
+      handleProcessingException(e);
     }
-    try {
-      afterStop();
-    } catch (RuntimeException e) {
-      stopException = collectCleanupException(stopException, e);
-    }
-    try {
-      removeMonitoring(instanceId);
-    } catch (RuntimeException e) {
-      stopException = collectCleanupException(stopException, e);
-    }
+  }
 
-    if (stopException != null) {
-      throw stopException;
+  /**
+   * Typed dispatch hook for the shared processing path. Existing runtimes may
+   * continue to override process directly.
+   */
+  protected void processEvent(Event event) {
+    throw new UnsupportedOperationException("Runtime must implement event dispatch");
+  }
+
+  protected void handleProcessingException(RuntimeException e) {
+    log.error("RuntimeException while processing event in {}", pipelineElement.getClass().getCanonicalName(), e);
+    addLogEntry(e);
+  }
+
+  protected void startPipeline(Runnable startCallback) {
+    startCallback.run();
+    pipelineStarted = true;
+  }
+
+  protected void stopPipeline(Runnable stopCallback) {
+    if (pipelineStarted) {
+      pipelineStarted = false;
+      stopCallback.run();
     }
+  }
+
+  @Override
+  public void stopRuntime() {
+    cleanupRuntime();
+  }
+
+  private void cleanupRuntime() {
+    runCleanup(this::unregisterInputCollectors, this::afterStop, () -> removeMonitoring(instanceId));
   }
 
   protected void removeMonitoring(String resourceId) throws SpRuntimeException {
@@ -134,7 +163,7 @@ public abstract class StandalonePipelineElementRuntime<
   }
 
   protected void disconnectInputCollectors() {
-    inputCollectors.forEach(PipelineElementCollector::disconnect);
+    cleanupInputCollectors(PipelineElementCollector::disconnect);
   }
 
   protected void registerInputCollectors() {
@@ -142,31 +171,32 @@ public abstract class StandalonePipelineElementRuntime<
   }
 
   protected void unregisterInputCollectors() {
-    if (this.inputCollectors != null) {
-      this.inputCollectors.forEach(is -> is.unregisterConsumer(instanceId));
+    cleanupInputCollectors(collector -> collector.unregisterConsumer(instanceId));
+  }
+
+  private void cleanupInputCollectors(Consumer<SpInputCollector> cleanup) {
+    if (inputCollectors != null) {
+      runCleanup(inputCollectors.stream()
+          .<Runnable>map(collector -> () -> cleanup.accept(collector))
+          .toArray(Runnable[]::new));
     }
   }
 
   protected void afterStartFailed() {
-    RuntimeException cleanupException = null;
-    try {
-      unregisterInputCollectors();
-    } catch (RuntimeException e) {
-      cleanupException = collectCleanupException(cleanupException, e);
-    }
-    try {
-      disconnectInputCollectors();
-    } catch (RuntimeException e) {
-      cleanupException = collectCleanupException(cleanupException, e);
-    }
-    try {
-      removeMonitoring(instanceId);
-    } catch (RuntimeException e) {
-      cleanupException = collectCleanupException(cleanupException, e);
-    }
+    cleanupRuntime();
+  }
 
-    if (cleanupException != null) {
-      throw cleanupException;
+  protected void runCleanup(Runnable... actions) {
+    RuntimeException failure = null;
+    for (Runnable action : actions) {
+      try {
+        action.run();
+      } catch (RuntimeException e) {
+        failure = collectCleanupException(failure, e);
+      }
+    }
+    if (failure != null) {
+      throw failure;
     }
   }
 
@@ -174,10 +204,11 @@ public abstract class StandalonePipelineElementRuntime<
                                                     RuntimeException nextException) {
     if (cleanupException == null) {
       return nextException;
-    } else {
-      cleanupException.addSuppressed(nextException);
-      return cleanupException;
     }
+    if (cleanupException != nextException) {
+      cleanupException.addSuppressed(nextException);
+    }
+    return cleanupException;
   }
 
   protected abstract void beforeStart();
