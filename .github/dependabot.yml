@@ -13,61 +13,69 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Conventions used by every entry below:
+# - Patch and minor updates are bundled into one grouped PR per entry; majors
+#   arrive as individual PRs so they get a proper review.
+# - Majors of frameworks and runtimes that require a coordinated migration
+#   (Angular, Spring Boot, JDK, databases) are ignored and upgraded by hand.
+# - Cooldown delays new releases to protect against broken or compromised
+#   versions. It does not apply to security updates.
+
 version: 2
 updates:
-  - package-ecosystem: "docker"
-    directory: "/"
-    labels:
-      - "dependencies"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 1
-    cooldown:
-      default-days: 7
-  - package-ecosystem: "docker"
-    directories:
-    - "/installer/compose"
-    - "/installer/cli/deploy/standalone/grafana"
-    - "/installer/cli/deploy/standalone/prometheus"
-    - "/installer/cli/deploy/standalone/prometheus-alertmanager"
-    labels:
-      - "dependencies"
-      - "installer"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 1
-    cooldown:
-      default-days: 7
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    labels:
-      - "gh-actions"
-      - "dependencies"
-    schedule:
-      interval: "daily"
-    cooldown:
-      default-days: 7
-
+  # ---------------------------------------------------------------------------
+  # Backend
+  # ---------------------------------------------------------------------------
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
       interval: "daily"
+    labels:
+      - "dependencies"
+      - "java"
+    groups:
+      maven-minor-patch:
+        update-types: [ "minor", "patch" ]
     ignore:
-      - dependency-name: "*"
-        update-types: [ "version-update:semver-patch" ]
-    open-pull-requests-limit: 2
+      # Spring Boot majors (and springdoc, which follows them) are migrated by hand
+      - dependency-name: "org.springframework.boot:*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "org.springdoc:*"
+        update-types: [ "version-update:semver-major" ]
+    open-pull-requests-limit: 5
     cooldown:
       default-days: 7
+      semver-major-days: 14
 
+  # ---------------------------------------------------------------------------
+  # UI
+  # ---------------------------------------------------------------------------
   - package-ecosystem: "npm"
     directory: "/ui"
     schedule:
       interval: "daily"
+    labels:
+      - "dependencies"
+      - "javascript"
+    groups:
+      ui-minor-patch:
+        update-types: [ "minor", "patch" ]
     ignore:
-      - dependency-name: "*"
-        update-types: [ "version-update:semver-patch" ]
-    open-pull-requests-limit: 1
+      # Angular majors are migrated by hand with `ng update`
+      - dependency-name: "@angular/*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "@angular-eslint/*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "@ngbracket/ngx-layout"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "ng-packagr"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "typescript"
+        update-types: [ "version-update:semver-major" ]
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
 
   - package-ecosystem: "npm"
     directories:
@@ -75,20 +83,126 @@ updates:
       - "/ui/projects/streampipes/shared-ui"
     schedule:
       interval: "daily"
+    labels:
+      - "dependencies"
+      - "javascript"
+    groups:
+      ui-libs-minor-patch:
+        update-types: [ "minor", "patch" ]
     ignore:
-      - dependency-name: "*"
-        update-types: [ "version-update:semver-patch" ]
-    open-pull-requests-limit: 1
+      # Angular majors are migrated by hand with `ng update`
+      - dependency-name: "@angular/*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "@angular-eslint/*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "@ngbracket/ngx-layout"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "ng-packagr"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "typescript"
+        update-types: [ "version-update:semver-major" ]
+    open-pull-requests-limit: 3
     cooldown:
       default-days: 7
+      semver-major-days: 14
 
+  # ---------------------------------------------------------------------------
+  # Clients
+  # ---------------------------------------------------------------------------
   - package-ecosystem: "pip"
     directory: "/streampipes-client-python"
     schedule:
       interval: "daily"
+    labels:
+      - "dependencies"
+      - "python"
+    groups:
+      python-minor-patch:
+        update-types: [ "minor", "patch" ]
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+
+  - package-ecosystem: "gomod"
+    directories:
+      - "/streampipes-client-go"
+      - "/streampipes-client-e2e/go-client-e2e"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+      - "go"
+    groups:
+      go-minor-patch:
+        update-types: [ "minor", "patch" ]
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+
+  # ---------------------------------------------------------------------------
+  # CI
+  # ---------------------------------------------------------------------------
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+      - "gh-actions"
+    groups:
+      gh-actions-minor-patch:
+        update-types: [ "minor", "patch" ]
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+
+  # ---------------------------------------------------------------------------
+  # Container images
+  # ---------------------------------------------------------------------------
+  - package-ecosystem: "docker"
+    directories:
+      - "/ui"
+      - "/streampipes-service-core"
+      - "/streampipes-service-core-minimal"
+      - "/streampipes-extensions/*"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+    groups:
+      docker-minor-patch:
+        update-types: [ "minor", "patch" ]
     ignore:
-      - dependency-name: "*"
-        update-types: [ "version-update:semver-patch" ]
-    open-pull-requests-limit: 2
+      # JDK runtime majors are chosen deliberately (LTS releases only)
+      - dependency-name: "eclipse-temurin"
+        update-types: [ "version-update:semver-major" ]
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: "docker-compose"
+    directories:
+      - "/"
+      - "/installer/compose"
+      - "/installer/cli/deploy/standalone/*"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+      - "installer"
+    groups:
+      compose-minor-patch:
+        update-types: [ "minor", "patch" ]
+    ignore:
+      # Majors of stateful services need data migrations and are upgraded by hand
+      - dependency-name: "couchdb"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "influxdb"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "apache/kafka"
+        update-types: [ "version-update:semver-major" ]
+    open-pull-requests-limit: 3
     cooldown:
       default-days: 7
