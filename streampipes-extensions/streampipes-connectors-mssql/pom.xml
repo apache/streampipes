@@ -31,7 +31,7 @@
     <artifactId>streampipes-connectors-mssql</artifactId>
 
     <properties>
-        <debezium.version>3.5.2.Final</debezium.version>
+        <debezium.version>3.6.2.Final</debezium.version>
     </properties>
 
     <dependencies>

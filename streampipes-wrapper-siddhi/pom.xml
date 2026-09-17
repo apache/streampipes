@@ -82,7 +82,7 @@
         <dependency>
             <groupId>io.siddhi.extension.execution.list</groupId>
             <artifactId>siddhi-execution-list</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
