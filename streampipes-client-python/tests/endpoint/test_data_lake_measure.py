@@ -16,12 +16,21 @@
 #
 
 from datetime import datetime, timezone
+from json import loads
 from unittest import TestCase
 from urllib.parse import parse_qs
+
+from pydantic import ValidationError
 
 from streampipes.endpoint.api.data_lake_measure import (
     DataLakeMeasureEndpoint,
     StreamPipesQueryValidationError,
+)
+from streampipes.model.query import (
+    AggregationFunction,
+    Column,
+    FilterCondition,
+    FilterGroup,
 )
 
 
@@ -251,3 +260,141 @@ class TestMeasurementGetQueryConfig(TestCase):
         ]:
             with self.subTest(params=params), self.assertRaises(StreamPipesQueryValidationError):
                 DataLakeMeasureEndpoint._validate_query_params(params)
+
+    def test_typed_columns(self):
+        columns = [
+            "sensorId",
+            Column(name="mass_flow"),
+            Column(name="temperature", aggregation=AggregationFunction.MAX, alias="peak_temperature"),
+            Column(name="temperature", aggregation=AggregationFunction.MEAN),
+            "[mass_flow;SUM;total_flow]",
+        ]
+        config = DataLakeMeasureEndpoint._validate_query_params({"columns": columns})
+        self.assertEqual(
+            parse_qs(config.build_query_string()[1:])["columns"],
+            ["sensorId,mass_flow,[temperature;MAX;peak_temperature],[temperature;MEAN],[mass_flow;SUM;total_flow]"],
+        )
+        self.assertIsInstance(columns[1], Column)
+
+    def test_aggregation_enum(self):
+        for function in AggregationFunction:
+            with self.subTest(function=function):
+                config = DataLakeMeasureEndpoint._validate_query_params(
+                    {
+                        "columns": [Column(name="temperature")],
+                        "aggregation_function": function,
+                    }
+                )
+                self.assertEqual(parse_qs(config.build_query_string()[1:])["aggregationFunction"], [function.value])
+                self.assertEqual(
+                    Column(name="temperature", aggregation=function).to_query_string(),
+                    f"[temperature;{function.value}]",
+                )
+
+    def test_invalid_typed_columns(self):
+        for options in [
+            {"name": "temperature", "alias": "renamed"},
+            {"name": ""},
+            {"name": "temperature;MAX"},
+            {"name": "temperature", "aggregation": "UNKNOWN"},
+            {"name": "temperature", "aggregation": "MAX", "alias": "bad;alias"},
+            {"name": "temperature", "aggregation": "MAX", "alias": ""},
+        ]:
+            with self.subTest(options=options), self.assertRaises(ValidationError):
+                Column.model_validate(options)
+        with self.assertRaises(StreamPipesQueryValidationError):
+            DataLakeMeasureEndpoint._validate_query_params({"group_by": [Column(name="sensorId")]})
+
+    def test_typed_column_string_function(self):
+        column = Column.model_validate({"name": "temperature", "aggregation": "MAX", "alias": "peak"})
+        self.assertEqual(column.aggregation, AggregationFunction.MAX)
+        self.assertEqual(column.to_query_string(), "[temperature;MAX;peak]")
+
+    def test_nested_typed_filter(self):
+        expression = FilterGroup.all_of(
+            FilterCondition(field="temperature", operator=">", value=45),
+            FilterGroup.any_of(
+                FilterCondition(field="mass_flow", operator="<", value=2.5),
+                FilterCondition(field="sensorId", operator="=", value="A&B + #ü%"),
+            ),
+        )
+        config = DataLakeMeasureEndpoint._validate_query_params({"filter_expression": expression})
+        payload = loads(parse_qs(config.build_query_string()[1:])["filterExpression"][0])
+        self.assertEqual(
+            payload,
+            {
+                "type": "group",
+                "operator": "AND",
+                "children": [
+                    {"type": "condition", "field": "temperature", "operator": ">", "condition": 45},
+                    {
+                        "type": "group",
+                        "operator": "OR",
+                        "children": [
+                            {"type": "condition", "field": "mass_flow", "operator": "<", "condition": 2.5},
+                            {"type": "condition", "field": "sensorId", "operator": "=", "condition": "A&B + #ü%"},
+                        ],
+                    },
+                ],
+            },
+        )
+
+    def test_single_typed_filter_preserves_value_types(self):
+        for value in [True, False, 123, 1.5, "123", "true", "'123'"]:
+            with self.subTest(value=value):
+                condition = FilterCondition(field="value", operator="=", value=value)
+                config = DataLakeMeasureEndpoint._validate_query_params({"filterExpression": condition})
+                payload = loads(parse_qs(config.build_query_string()[1:])["filterExpression"][0])
+                self.assertEqual(payload["operator"], "AND")
+                actual = payload["children"][0]["condition"]
+                self.assertEqual(actual, value)
+                self.assertIs(type(actual), type(value))
+
+    def test_invalid_typed_filters(self):
+        for options in [
+            {"field": "", "operator": "=", "value": 1},
+            {"field": "x", "operator": "INVALID", "value": 1},
+            {"field": "x", "operator": "=", "value": None},
+            {"field": "x", "operator": "=", "value": []},
+            {"field": "x", "operator": "=", "value": float("nan")},
+            {"field": "x", "operator": "=", "value": float("inf")},
+        ]:
+            with self.subTest(options=options), self.assertRaises(ValidationError):
+                FilterCondition.model_validate(options)
+        for options in [
+            {"operator": "AND", "children": []},
+            {"operator": "XOR", "children": [{"field": "x", "operator": "=", "value": 1}]},
+            {"operator": "OR", "children": ["invalid"]},
+        ]:
+            with self.subTest(options=options), self.assertRaises(ValidationError):
+                FilterGroup.model_validate(options)
+
+    def test_typed_legacy_filter(self):
+        for value, expected in [
+            (45, "45"),
+            (2.5, "2.5"),
+            (True, "true"),
+            (False, "false"),
+            (1e-7, "0.0000001"),
+            ("A&B + #ü%", "A&B + #ü%"),
+            ("'123'", "'123'"),
+            ("", "''"),
+        ]:
+            with self.subTest(value=value):
+                config = DataLakeMeasureEndpoint._validate_query_params(
+                    {
+                        "filter": FilterCondition(field="value", operator="=", value=value),
+                    }
+                )
+                self.assertEqual(parse_qs(config.build_query_string()[1:])["filter"], [f"[value;=;{expected}]"])
+
+    def test_typed_legacy_filter_rejects_delimiters(self):
+        for delimiter in ",;[]":
+            for field, value in [("sensor", f"a{delimiter}b"), (f"a{delimiter}b", "sensor")]:
+                condition = FilterCondition(field=field, operator="=", value=value)
+                with self.subTest(field=field, value=value):
+                    with self.assertRaisesRegex(StreamPipesQueryValidationError, "require filter_expression"):
+                        DataLakeMeasureEndpoint._validate_query_params({"filter": condition})
+                    config = DataLakeMeasureEndpoint._validate_query_params({"filter_expression": condition})
+                    payload = loads(parse_qs(config.build_query_string()[1:])["filterExpression"][0])
+                    self.assertEqual(payload["children"][0]["condition"], value)
