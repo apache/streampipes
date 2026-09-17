@@ -49,4 +49,7 @@ jobs:
             deps(-dev)?
           headerPattern: '^(\w*)(?:\(([\w$#.\-*/ ]*)\))?!?: (.*)$'
           headerPatternCorrespondence: type, scope, subject
-          subjectPattern: '^(?=.{1,50}$)(?!.*\.$).+$'
+          subjectPattern: '^(?=.{1,100}$)(?!.*\.$).+$'
+          subjectPatternError: >-
+            The PR title subject must contain 1–100 characters and must not
+            end with a period. The type and scope (e.g. "fix(#4937): ") do not count toward this limit.

@@ -15,72 +15,73 @@
 ~ limitations under the License.
 ~
 -->
-<sp-basic-inner-panel
-    innerPadding="0"
-    [showTitle]="true"
-    [panelTitle]="'Source' | translate"
->
-    <div header fxLayoutAlign="end center" fxFlex="100">
-        <button
-            data-cy="connect-get-new-sample-button"
-            mat-button
-            (click)="getSample.emit()"
-            [disabled]="isSampleLoading()"
-        >
-            <mat-icon>refresh</mat-icon>
-            <span>{{ 'Get new sample' | translate }}</span>
-        </button>
-        <button
-            data-cy="connect-upload-sample-button"
-            mat-button
-            (click)="uploadSample.emit()"
-        >
-            <mat-icon>file_upload</mat-icon>
-            <span>{{ 'Upload sample' | translate }}</span>
-        </button>
-        <mat-button-toggle-group
-            [value]="sourceViewMode()"
-            [hideSingleSelectionIndicator]="true"
-            (valueChange)="sourceViewModeChange.emit($event)"
-        >
-            <mat-button-toggle value="tree"
-                >{{ 'Tree' | translate }}
-            </mat-button-toggle>
-            <mat-button-toggle value="raw"
-                >{{ 'Raw' | translate }}
-            </mat-button-toggle>
-        </mat-button-toggle-group>
-    </div>
-
-    @if (isSampleLoading()) {
-        <div
-            fxFlex="100"
-            fxLayoutAlign="center center"
-            fxLayout="column"
-            class="m-lg"
-        >
-            <sp-spinner
-                [diameter]="25"
-                [text]="'Loading' | translate"
-            ></sp-spinner>
+<section class="preview-panel" [attr.aria-label]="'Original event' | translate">
+    <header
+        class="preview-toolbar"
+        fxLayout="row wrap"
+        fxLayoutAlign="space-between center"
+    >
+        <span class="font-bold">{{ 'Original event' | translate }}</span>
+        <div fxLayout="row" fxLayoutAlign="end center">
+            <button
+                mat-icon-button
+                data-cy="connect-get-new-sample-button"
+                (click)="getSample.emit()"
+                [disabled]="isSampleLoading()"
+                [matTooltip]="'Get new sample' | translate"
+                [attr.aria-label]="'Get new sample' | translate"
+            >
+                <mat-icon>refresh</mat-icon>
+            </button>
+            <button
+                mat-icon-button
+                data-cy="connect-upload-sample-button"
+                (click)="uploadSample.emit()"
+                [disabled]="isSampleLoading()"
+                [matTooltip]="'Upload sample' | translate"
+                [attr.aria-label]="'Upload sample' | translate"
+            >
+                <mat-icon>file_upload</mat-icon>
+            </button>
+            <mat-button-toggle-group
+                [value]="sourceViewMode()"
+                [attr.aria-label]="'Original event display' | translate"
+                [hideSingleSelectionIndicator]="true"
+                (valueChange)="sourceViewModeChange.emit($event)"
+            >
+                <mat-button-toggle value="tree">{{
+                    'Tree' | translate
+                }}</mat-button-toggle>
+                <mat-button-toggle
+                    value="raw"
+                    data-cy="configure-schema-original-mode-raw"
+                    >{{ 'Raw' | translate }}</mat-button-toggle
+                >
+            </mat-button-toggle-group>
         </div>
-    } @else {
-        @if (sampleErrorMessage()) {
+    </header>
+    <div class="preview-body">
+        @if (isSampleLoading()) {
+            <div fxLayoutAlign="center center" class="m-lg">
+                <sp-spinner
+                    [diameter]="25"
+                    [text]="'Loading' | translate"
+                ></sp-spinner>
+            </div>
+        } @else if (sampleErrorMessage()) {
             <sp-exception-message
                 [message]="sampleErrorMessage()"
                 [showDetails]="true"
             ></sp-exception-message>
         } @else {
-            <div fxLayout="column" class="w-100 p-sm">
-                <sp-show-field-status-infos
-                    [fieldStatusInfos]="fieldStatusInfos()"
-                ></sp-show-field-status-infos>
-                <sp-adapter-event-preview
-                    dataCy="configure-schema-event-preview-original"
-                    [mode]="sourceViewMode()"
-                    [value]="input()"
-                ></sp-adapter-event-preview>
-            </div>
+            <sp-show-field-status-infos
+                [fieldStatusInfos]="fieldStatusInfos()"
+            ></sp-show-field-status-infos>
+            <sp-adapter-event-preview
+                dataCy="configure-schema-event-preview-original"
+                [mode]="sourceViewMode()"
+                [value]="input()"
+            ></sp-adapter-event-preview>
         }
-    }
-</sp-basic-inner-panel>
+    </div>
+</section>

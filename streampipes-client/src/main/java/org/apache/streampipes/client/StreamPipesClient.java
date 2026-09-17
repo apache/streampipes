@@ -254,7 +254,6 @@ public class StreamPipesClient implements
   }
 
   @Override
-  @ExposedToScripts
   public IStreamPipesClient onBehalfOf(String userSid) {
     var scoped = new StreamPipesClient(config.getConnectionConfig());
     scoped.config.addCustomHeader(HttpConstants.X_ON_BEHALF_OF, userSid);
