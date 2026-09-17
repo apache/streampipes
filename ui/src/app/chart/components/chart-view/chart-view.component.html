@@ -49,7 +49,7 @@
             >
             </sp-chart-view-toolbar>
         </sp-page-header>
-        <sp-workspace-container>
+        <sp-workspace-container [topBorder]="true">
             @if (chartNotFound) {
                 <div class="text-xl" fxFlex="100" fxLayoutAlign="center center">
                     {{ 'The desired chart was not found!' | translate }}

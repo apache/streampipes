@@ -16,12 +16,18 @@
  *
  */
 
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+
+import { SpSecondaryToolbarComponent } from '../secondary-toolbar/secondary-toolbar.component';
 
 @Component({
     selector: 'sp-workspace-container',
     templateUrl: './workspace-container.component.html',
     styleUrls: ['./workspace-container.component.scss'],
+    imports: [SpSecondaryToolbarComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SpWorkspaceContainerComponent {}
+export class SpWorkspaceContainerComponent {
+    @Input()
+    topBorder = false;
+}

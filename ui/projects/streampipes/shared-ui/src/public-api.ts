@@ -40,6 +40,7 @@ export * from './lib/components/basic-inner-panel/basic-inner-panel.component';
 export * from './lib/components/basic-field-description/basic-field-description.component';
 export * from './lib/components/basic-view/basic-view.component';
 export * from './lib/components/page-header/page-header.component';
+export * from './lib/components/secondary-toolbar/secondary-toolbar.component';
 export * from './lib/components/workspace-container/workspace-container.component';
 export * from './lib/components/page-nav-tabs/page-nav-tabs.component';
 export * from './lib/components/date-input/date-input.component';

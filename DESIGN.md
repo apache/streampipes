@@ -120,6 +120,12 @@ components:
 
 # Design System: Apache StreamPipes
 
+**Related documents.** `PRODUCT.md` states who this product is for, its brand personality
+and the anti-references these rules serve. `ui/STYLEGUIDE.md` holds the concrete component
+markup. This file is normative for tokens, colour roles, typography, layout, elevation and
+the named rules; where `ui/STYLEGUIDE.md` and this file disagree, this file wins and the
+styleguide is corrected. Agents working under `ui/` reach this file from `ui/AGENTS.md`.
+
 ## Overview
 
 **Creative North Star: "The Calm Control Room"**
@@ -367,9 +373,7 @@ and optional description or action.
 
 - **Don't** hard-code the default indigo or green in feature components; users
   can supply their own styles through `THEME_VARIABLES` and `THEME_COLORS`.
-- **Don't** create flashy consumer-product styling, decorative complexity, dense
-  legacy enterprise interfaces, or unfamiliar controls that obscure standard actions.
-- **Don't** trade clarity, consistency, or useful information density for visual novelty.
+- **Don't** build against the anti-references in `PRODUCT.md`; they apply here verbatim.
 - **Don't** pair a decorative one-pixel card border with a broad soft shadow;
   ordinary content belongs on the flat working plane.
 - **Don't** use colored side stripes, gradient text, decorative glass cards,

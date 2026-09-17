@@ -18,6 +18,11 @@
 
 # Product
 
+**Related documents.** `DESIGN.md` turns the principles below into tokens and design rules;
+`ui/STYLEGUIDE.md` holds component markup. The anti-references in this file are the single
+source for what the interface must not look like — `DESIGN.md` refers here instead of
+repeating them.
+
 ## Register
 
 product

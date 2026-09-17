@@ -47,7 +47,7 @@
         <bcprov-jdk18on.version>1.84</bcprov-jdk18on.version>
         <boofcv.version>1.1.0</boofcv.version>
         <classindex.version>3.9</classindex.version>
-        <camel.version>4.18.0</camel.version>
+        <camel.version>4.22.0</camel.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commoms-collection4.version>4.4</commoms-collection4.version>
         <commons-compress.version>1.27.1</commons-compress.version>
@@ -71,14 +71,14 @@
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
-        <influxdb.version>2.24</influxdb.version>
-        <inlong.version>1.13.0</inlong.version>
+        <influxdb.version>2.25</influxdb.version>
+        <inlong.version>2.4.0</inlong.version>
         <iotdb.version>1.3.0</iotdb.version>
         <jts-core.version>1.20.0</jts-core.version>
         <milvus-sdk-java.version>2.5.10</milvus-sdk-java.version>
         <mqtt-client.version>1.3.0</mqtt-client.version>
         <nats.version>2.25.2</nats.version>
-        <okhttp.version>3.13.1</okhttp.version>
+        <okhttp.version>4.12.0</okhttp.version>
         <opencsv.version>5.9</opencsv.version>
         <opennlp.version>2.5.9</opennlp.version>
         <parquet.version>1.16.0</parquet.version>
@@ -111,10 +111,11 @@
 
 
         <!-- dependency convergence -->
+        <commons-net.version>3.13.0</commons-net.version>
         <javassist.version>3.30.1-GA</javassist.version>
         <woodstox.version>7.1.1</woodstox.version>
         <hdrhistogram.version>2.2.2</hdrhistogram.version>
-        <istack-runtime.version>4.1.2</istack-runtime.version>
+        <istack-runtime.version>4.2.0</istack-runtime.version>
         <javax.xml.bind.version>2.3.1</javax.xml.bind.version>
         <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
         <jaxb-runtime.version>2.3.9</jaxb-runtime.version>
@@ -124,6 +125,7 @@
         <javax-websocket-api.version>1.1</javax-websocket-api.version>
         <jetbrains.version>26.1.0</jetbrains.version>
         <snakeyaml.version>3.0.1</snakeyaml.version>
+        <vertx.version>4.5.31</vertx.version>
 
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
@@ -864,6 +866,21 @@
                 <artifactId>javassist</artifactId>
                 <version>${javassist.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-core</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-web-client</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>${commons-net.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -933,6 +950,12 @@
     </modules>
 
     <profiles>
+        <profile>
+            <id>benchmarks</id>
+            <modules>
+                <module>streampipes-benchmarks</module>
+            </modules>
+        </profile>
         <profile>
             <id>apache-release</id>
             <build>
@@ -1311,6 +1334,8 @@
 
                         <!-- Exclude AI agent guidance files -->
                         <exclude>**/AGENTS.md</exclude>
+                        <exclude>**/CLAUDE.md</exclude>
+                        <exclude>.claude/**</exclude>
 
 
 
