@@ -216,6 +216,36 @@ export class AdapterConfigurationStateService {
                 script: activeScript,
             },
         });
+
+        this.restoreStoredPreview(adapter, activeScriptMetadata);
+    }
+
+    /**
+     * An adapter opened for editing or copying already carries the outputs its
+     * stored script produced. Treat them as a valid preview so the user is not
+     * forced to re-run an unchanged script before continuing.
+     */
+    private restoreStoredPreview(
+        adapter: AdapterDescription,
+        activeScriptMetadata: ScriptMetadata,
+    ): void {
+        const config = adapter.transformationConfig;
+        const hasStoredResult =
+            config?.scriptActive &&
+            !!config.script &&
+            config.language === activeScriptMetadata.language &&
+            config.inputs?.length > 0 &&
+            config.outputs?.length > 0;
+
+        if (hasStoredResult && this.successfulTransformation() === null) {
+            this.successfulTransformation.set(
+                this.transformationSignature(
+                    config.script,
+                    config.language,
+                    config.inputs,
+                ),
+            );
+        }
     }
 
     resetScriptToInitial(): void {
