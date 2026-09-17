@@ -20,6 +20,7 @@ package org.apache.streampipes.extensions.api.memorymanager;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.prometheus.spmemorymanager.SpMemoryManagerStats;
 
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.LockSupport;
 
@@ -122,55 +124,67 @@ public enum SpMemoryManager {
    * @throws IllegalArgumentException if bytes is non-positive
    */
   public void allocate(long bytes) {
-    if (bytes <= 0) {
-      LOG.warn("Attempted to allocate non-positive memory: {} bytes", bytes);
-      return;
+    try {
+      allocateInterruptibly(bytes);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new SpRuntimeException("Memory allocation interrupted", e);
     }
-    
-    // Check if memory is blocked due to threshold
-    if (memoryBlocked) {
-      LOG.warn("Memory allocation blocked due to high memory usage threshold. "
-              + "Current usage: {}%", getMemoryUsagePercentage());
-      return;
-    }
+  }
 
-    // Loop until enough memory is available
+  /**
+   * Reserves bytes until the returned handle is closed. Failed or interrupted
+   * acquisitions do not return a handle and must not be freed by the caller.
+   */
+  public MemoryReservation reserve(long bytes) throws InterruptedException {
+    allocateInterruptibly(bytes);
+    return new MemoryReservation(bytes);
+  }
+
+  private void allocateInterruptibly(long bytes) throws InterruptedException {
+    long capacity = env.getMemoryManagerDefaultInitialMemory().getValueOrDefault();
+    if (bytes <= 0 || bytes > capacity) {
+      throw new IllegalArgumentException("Reservation must be positive and cannot exceed the memory budget");
+    }
     while (true) {
+      if (Thread.interrupted()) {
+        throw new InterruptedException("Memory allocation interrupted");
+      }
       long currentFree = freeMemory.get();
-      long newFreeMemory = currentFree - bytes;
-
-      if (newFreeMemory >= 0) {
-        // Try to atomically update the free memory
+      if (!memoryBlocked && currentFree >= bytes) {
+        long newFreeMemory = currentFree - bytes;
         if (freeMemory.compareAndSet(currentFree, newFreeMemory)) {
-          // Successfully allocated memory
-          long allocatedMemory = env.getMemoryManagerDefaultInitialMemory().getValueOrDefault() - newFreeMemory;
-          memoryUsedBytes = (double) allocatedMemory;
-          
+          memoryUsedBytes = (double) (capacity - newFreeMemory);
           updateAllocationRate(bytes);
           return;
         }
       } else {
-        // Insufficient memory, block and wait
-        LOG.warn("Not enough free memory to allocate {} bytes. Current free memory: {} bytes. "
-            + "Blocking allocation.", bytes, currentFree);
+        // Recheck promptly after releases instead of sleeping for the full retry timeout.
+        LockSupport.parkNanos(1_000_000);
+      }
+    }
+  }
 
-        // Use LockSupport for non-blocking wait
-        long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime
-                < env.getMemoryManagerWaitTimeoutMs().getValueOrDefault()) {
-          LockSupport.parkNanos(1_000_000); // 1ms
-          if (Thread.currentThread().isInterrupted()) {
-            LOG.warn("Memory allocation blocking was interrupted");
-            return;
-          }
-        }
+  public final class MemoryReservation implements AutoCloseable {
+
+    private final long bytes;
+    private final AtomicBoolean closed = new AtomicBoolean();
+
+    private MemoryReservation(long bytes) {
+      this.bytes = bytes;
+    }
+
+    @Override
+    public void close() {
+      if (closed.compareAndSet(false, true)) {
+        free(bytes);
       }
     }
   }
 
   /**
    * Frees the specified amount of memory.
-   * This will notify any threads waiting for memory allocation.
+   * Waiting allocations observe the released bytes on their next retry.
    *
    * @param bytes The number of bytes to free
    * @throws IllegalArgumentException if bytes is non-positive
@@ -185,6 +199,9 @@ public enum SpMemoryManager {
     
     long allocatedMemory = env.getMemoryManagerDefaultInitialMemory().getValueOrDefault() - newFreeMemory;
     memoryUsedBytes = (double) allocatedMemory;
+    if (memoryBlocked) {
+      checkMemoryThresholds();
+    }
   }
 
   /**

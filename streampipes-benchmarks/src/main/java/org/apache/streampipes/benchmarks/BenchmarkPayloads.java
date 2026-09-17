@@ -15,15 +15,28 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.extensions.api.pe.routing;
 
+
+package org.apache.streampipes.benchmarks;
+
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-public interface RawDataProcessor {
+public final class BenchmarkPayloads {
 
-  /**
-   * Processes an isolated mutable payload synchronously. The input collector owns
-   * transport admission and releases its memory reservation after dispatch returns.
-   */
-  void process(Map<String, Object> rawEvent, long size, String sourceInfo);
+  private BenchmarkPayloads() {
+  }
+
+  public static Map<String, Object> create(int fields, int depth) {
+    Map<String, Object> values = new LinkedHashMap<>();
+    for (int i = 0; i < fields; i++) {
+      values.put("field" + i, i + 0.5);
+    }
+    values.put("samples", List.of(1.0, 2.0, 3.0, 4.0));
+    for (int i = 0; i < depth; i++) {
+      values = new LinkedHashMap<>(Map.of("nested", values));
+    }
+    return values;
+  }
 }

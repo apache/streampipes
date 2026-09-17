@@ -951,6 +951,12 @@
 
     <profiles>
         <profile>
+            <id>benchmarks</id>
+            <modules>
+                <module>streampipes-benchmarks</module>
+            </modules>
+        </profile>
+        <profile>
             <id>apache-release</id>
             <build>
                 <plugins>
