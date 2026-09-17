@@ -28,8 +28,6 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-
 public class AdapterWorkerRequestManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerRequestManagement.class);
@@ -50,10 +48,6 @@ public class AdapterWorkerRequestManagement {
 
   public AdapterWorkerRequestManagement(AdapterWorkerManagement adapterManagement) {
     this.adapterManagement = adapterManagement;
-  }
-
-  public Collection<AdapterDescription> getRunningAdapterInstances() {
-    return adapterManagement.getAllRunningAdapterInstances();
   }
 
   public SuccessMessage invokeAdapter(AdapterDescription adapterStreamDescription) throws AdapterException {

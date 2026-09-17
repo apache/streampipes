@@ -38,6 +38,7 @@ describe('Upload sample event during schema configuration', () => {
 
         uploadSample();
 
+        ConnectBtns.configureSchemaOriginalRawModeBtn().click();
         ConnectBtns.configureSchemaEventPreviewOriginal().should(
             'contain.text',
             '"uploadedSample": true',

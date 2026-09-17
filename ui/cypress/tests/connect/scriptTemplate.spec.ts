@@ -56,6 +56,7 @@ describe('Validate Warning Pops For Configuration Changes ', () => {
             'contain.text',
             'event.b',
         );
+        ConnectBtns.scriptActionsBtn().click();
         ConnectBtns.resetScriptBtn().click();
         ConnectBtns.configureSchemaScriptEditor().should(
             'not.contain',
