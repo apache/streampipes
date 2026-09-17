@@ -17,6 +17,8 @@
 from unittest import TestCase
 from unittest.mock import MagicMock, call, patch
 
+from pydantic import ValidationError
+
 from streampipes.client import StreamPipesClient
 from streampipes.client.config import StreamPipesClientConfig
 from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
@@ -272,9 +274,13 @@ class TestDataLakeSeries(TestCase):
             self.assertEqual(series.model_dump()["tags"], expected_tags)
 
     def test_data_series_tag_compatibility(self):
-        for tags in (None, {}, "sensorId=flowrate01"):
+        for tags in (None, {}, {"sensorId": "flowrate01"}):
             with self.subTest(tags=tags):
                 series = DataSeries.model_validate({**self.data_series, "tags": tags})
                 self.assertEqual(series.tags, tags)
         without_tags = {key: value for key, value in self.data_series.items() if key != "tags"}
         self.assertIsNone(DataSeries.model_validate(without_tags).tags)
+
+    def test_data_series_rejects_string_tags(self):
+        with self.assertRaises(ValidationError):
+            DataSeries.model_validate({**self.data_series, "tags": "sensorId=flowrate01"})
