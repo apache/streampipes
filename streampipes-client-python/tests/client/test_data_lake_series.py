@@ -20,7 +20,9 @@ from unittest.mock import MagicMock, call, patch
 from streampipes.client import StreamPipesClient
 from streampipes.client.config import StreamPipesClientConfig
 from streampipes.client.credential_provider import StreamPipesApiKeyCredentials
+from streampipes.model.resource.data_series import DataSeries
 from streampipes.model.resource.exceptions import StreamPipesUnsupportedDataSeries
+from streampipes.model.resource.query_result import QueryResult
 
 
 class TestDataLakeSeries(TestCase):
@@ -160,3 +162,119 @@ class TestDataLakeSeries(TestCase):
 
         with self.assertRaises(StreamPipesUnsupportedDataSeries):
             self.get_result_as_panda(http_session, query_result)
+
+    @patch("streampipes.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_empty_result_to_pandas(self, server_version: MagicMock, http_session: MagicMock):
+        server_version.return_value = {"backendVersion": "0.x.y"}
+        for headers in (None, [], ["time", "mean_temperature"]):
+            with self.subTest(headers=headers):
+                result = self.get_result_as_panda(
+                    http_session,
+                    {
+                        "total": 0,
+                        "headers": headers,
+                        "spQueryStatus": "OK",
+                        "allDataSeries": [],
+                        "sourceIndex": 0,
+                        "forId": None,
+                        "lastTimestamp": 0,
+                    },
+                )
+                self.assertTrue(result.empty)
+                self.assertEqual(list(result.columns), ["timestamp", "mean_temperature"] if headers else [])
+
+    def test_too_much_data_preserves_status(self):
+        result = QueryResult.model_validate(
+            {
+                "total": 2000,
+                "headers": None,
+                "spQueryStatus": "TOO_MUCH_DATA",
+                "allDataSeries": [],
+                "sourceIndex": 0,
+                "lastTimestamp": 0,
+            }
+        )
+        self.assertEqual(result.query_status, "TOO_MUCH_DATA")
+        self.assertEqual(result.total, 2000)
+        self.assertTrue(result.to_pandas().empty)
+
+    def test_to_pandas_preserves_headers(self):
+        result = QueryResult.model_validate(
+            {
+                "total": 2,
+                "headers": self.headers,
+                "spQueryStatus": "OK",
+                "allDataSeries": [self.data_series],
+                "sourceIndex": 0,
+                "lastTimestamp": 0,
+            }
+        )
+        first = result.to_pandas()
+        self.assertTrue(first.equals(result.to_pandas()))
+        self.assertEqual(result.headers, self.headers)
+        self.assertEqual(result.all_data_series[0].headers, self.headers)
+
+    def test_nonempty_result_without_headers_is_rejected(self):
+        result = QueryResult.model_validate(
+            {
+                "total": 2,
+                "headers": None,
+                "spQueryStatus": "OK",
+                "allDataSeries": [self.data_series],
+                "sourceIndex": 0,
+                "lastTimestamp": 0,
+            }
+        )
+        with self.assertRaises(StreamPipesUnsupportedDataSeries):
+            result.to_pandas()
+
+    @patch("streampipes.client.client.Session", autospec=True)
+    @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
+    def test_grouped_response_preserves_tag_maps(self, server_version: MagicMock, http_session: MagicMock):
+        server_version.return_value = {"backendVersion": "0.x.y"}
+        headers = ["time", "mean_temperature"]
+        rows = [["2023-02-24T17:20:00Z", 45.0]]
+        tags = [{"sensorId": "flowrate01"}, {"sensorId": "flowrate02", "location": "factory"}]
+        http_session.return_value = MagicMock()
+        http_session.return_value.get.return_value.json.return_value = {
+            "total": 2,
+            "headers": headers,
+            "spQueryStatus": "OK",
+            "allDataSeries": [{"total": 1, "headers": headers, "rows": rows, "tags": group} for group in tags],
+            "sourceIndex": 0,
+            "lastTimestamp": 0,
+        }
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+        result = client.dataLakeMeasureApi.get(
+            identifier="Flowrate",
+            columns=["temperature"],
+            aggregation_function="MEAN",
+            group_by=["sensorId"],
+            time_interval="5m",
+            fill="none",
+            limit=2000,
+        )
+        self.assertEqual([series.tags for series in result.all_data_series], tags)
+        for series, expected_tags in zip(result.all_data_series, tags):
+            self.assertEqual(
+                series.to_pandas().to_dict("list"),
+                {
+                    "time": ["2023-02-24T17:20:00Z"],
+                    "mean_temperature": [45.0],
+                },
+            )
+            self.assertEqual(series.model_dump()["tags"], expected_tags)
+
+    def test_data_series_tag_compatibility(self):
+        for tags in (None, {}, "sensorId=flowrate01"):
+            with self.subTest(tags=tags):
+                series = DataSeries.model_validate({**self.data_series, "tags": tags})
+                self.assertEqual(series.tags, tags)
+        without_tags = {key: value for key, value in self.data_series.items() if key != "tags"}
+        self.assertIsNone(DataSeries.model_validate(without_tags).tags)
