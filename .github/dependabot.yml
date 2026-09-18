@@ -14,8 +14,9 @@
 # limitations under the License.
 
 # Conventions used by every entry below:
-# - Patch and minor updates are bundled into one grouped PR per entry; majors
-#   arrive as individual PRs so they get a proper review.
+# - Every update arrives as an individual PR so it can be reviewed on its own.
+#   Patch releases of libraries (Maven, npm, pip) are skipped to keep the
+#   number of PRs manageable; they come along with the next minor.
 # - Majors of frameworks and runtimes that require a coordinated migration
 #   (Angular, Spring Boot, JDK, databases) are ignored and upgraded by hand.
 # - Cooldown delays new releases to protect against broken or compromised
@@ -33,10 +34,9 @@ updates:
     labels:
       - "dependencies"
       - "java"
-    groups:
-      maven-minor-patch:
-        update-types: [ "minor", "patch" ]
     ignore:
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-patch" ]
       # Spring Boot majors (and springdoc, which follows them) are migrated by hand
       - dependency-name: "org.springframework.boot:*"
         update-types: [ "version-update:semver-major" ]
@@ -57,10 +57,9 @@ updates:
     labels:
       - "dependencies"
       - "javascript"
-    groups:
-      ui-minor-patch:
-        update-types: [ "minor", "patch" ]
     ignore:
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-patch" ]
       # Angular majors are migrated by hand with `ng update`
       - dependency-name: "@angular/*"
         update-types: [ "version-update:semver-major" ]
@@ -86,10 +85,9 @@ updates:
     labels:
       - "dependencies"
       - "javascript"
-    groups:
-      ui-libs-minor-patch:
-        update-types: [ "minor", "patch" ]
     ignore:
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-patch" ]
       # Angular majors are migrated by hand with `ng update`
       - dependency-name: "@angular/*"
         update-types: [ "version-update:semver-major" ]
@@ -116,9 +114,9 @@ updates:
     labels:
       - "dependencies"
       - "python"
-    groups:
-      python-minor-patch:
-        update-types: [ "minor", "patch" ]
+    ignore:
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-patch" ]
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
@@ -133,9 +131,6 @@ updates:
     labels:
       - "dependencies"
       - "go"
-    groups:
-      go-minor-patch:
-        update-types: [ "minor", "patch" ]
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7
@@ -151,9 +146,6 @@ updates:
     labels:
       - "dependencies"
       - "gh-actions"
-    groups:
-      gh-actions-minor-patch:
-        update-types: [ "minor", "patch" ]
     open-pull-requests-limit: 5
     cooldown:
       default-days: 7
@@ -171,9 +163,6 @@ updates:
       interval: "daily"
     labels:
       - "dependencies"
-    groups:
-      docker-minor-patch:
-        update-types: [ "minor", "patch" ]
     ignore:
       # JDK runtime majors are chosen deliberately (LTS releases only)
       - dependency-name: "eclipse-temurin"
@@ -192,9 +181,6 @@ updates:
     labels:
       - "dependencies"
       - "installer"
-    groups:
-      compose-minor-patch:
-        update-types: [ "minor", "patch" ]
     ignore:
       # Majors of stateful services need data migrations and are upgraded by hand
       - dependency-name: "couchdb"
