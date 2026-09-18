@@ -39,6 +39,8 @@ export class StaticPropertyUtils {
                 cy.dataCy(config.selector, { timeout: 2000 }).click({
                     force: true,
                 });
+            } else if (config.type === 'reload') {
+                this.reloadRuntimeResolvableOptions(config.selector);
             } else if (config.type === 'code-input') {
                 cy.dataCy('reset-code-' + config.selector, {
                     timeout: 2000,
@@ -93,6 +95,27 @@ export class StaticPropertyUtils {
      */
     public static clickCheckbox(selector: string) {
         this.clickSelectionInput(selector, '.mdc-checkbox');
+    }
+
+    /**
+     * Clicks the reload button of a runtime-resolvable static property and
+     * waits until the options request triggered by the click has completed.
+     * The button is disabled while options are loading, so waiting for it to
+     * be enabled first ensures that a load triggered by a dependency change
+     * has finished and that the intercept only matches the reload request.
+     * Without this wait, the options list can be re-rendered while a
+     * following command interacts with it.
+     * @param selector data-cy selector of the reload button
+     */
+    public static reloadRuntimeResolvableOptions(selector: string) {
+        cy.dataCy(selector, { timeout: 10000 }).should('not.be.disabled');
+        cy.intercept(
+            'POST',
+            /\/(resolvable\/[^/]+\/configurations|pe\/options)$/,
+        ).as('runtimeResolvableOptions');
+        cy.dataCy(selector).click();
+        cy.wait('@runtimeResolvableOptions');
+        cy.dataCy(selector, { timeout: 10000 }).should('not.be.disabled');
     }
 
     private static clickRadio(input: UserInput) {
