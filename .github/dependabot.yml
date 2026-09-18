@@ -171,11 +171,12 @@ updates:
     cooldown:
       default-days: 7
 
+  # The CLI under /installer/cli is deprecated (see installer/cli/README.md) and
+  # deliberately not covered here; its images are not kept up to date.
   - package-ecosystem: "docker-compose"
     directories:
       - "/"
       - "/installer/compose"
-      - "/installer/cli/deploy/standalone/*"
     schedule:
       interval: "daily"
     labels:
