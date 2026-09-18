@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnDestroy,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { BasicProfileSettings } from '../basic-profile-settings';
 import {
     DialogRef,
@@ -46,6 +52,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-general-profile-settings',
     templateUrl: './general-profile-settings.component.html',
     styleUrls: ['./general-profile-settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

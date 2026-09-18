@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SpLogMessage } from '@streampipes/platform-services';
 import {
     FlexDirective,
@@ -30,6 +30,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-configure-fields-error-message',
     templateUrl: './configure-fields-error-message.component.html',
     styleUrls: ['./configure-fields-error-message.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

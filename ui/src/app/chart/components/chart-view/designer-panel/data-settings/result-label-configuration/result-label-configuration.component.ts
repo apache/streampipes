@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DataExplorerField,
     SourceConfig,
@@ -40,6 +45,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-result-label-configuration',
     templateUrl: './result-label-configuration.component.html',
     styleUrls: ['./result-label-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         LayoutDirective,

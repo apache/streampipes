@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
@@ -32,6 +32,7 @@ import {
     selector: 'sp-csv-import-upload-state',
     templateUrl: './csv-import-upload-state.component.html',
     styleUrls: ['./csv-import-upload-state.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatIcon,
         ProgressBarComponent,

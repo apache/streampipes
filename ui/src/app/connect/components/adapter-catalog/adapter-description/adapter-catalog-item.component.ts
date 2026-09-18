@@ -16,9 +16,16 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AdapterDescription,
+    AdapterSummaryDto,
     PipelineElementAssetService,
 } from '@streampipes/platform-services';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -35,6 +42,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-adapter-catalog-item',
     templateUrl: './adapter-catalog-item.component.html',
     styleUrls: ['./adapter-catalog-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatButton, MatTooltip, MatIcon, TranslatePipe],
 })
 export class AdapterCatalogItemComponent implements OnInit {
@@ -45,7 +53,7 @@ export class AdapterCatalogItemComponent implements OnInit {
     private shepherdService = inject(ShepherdService);
 
     @Input()
-    adapter: AdapterDescription;
+    adapter: AdapterDescription | AdapterSummaryDto;
 
     iconUrl: SafeUrl;
 

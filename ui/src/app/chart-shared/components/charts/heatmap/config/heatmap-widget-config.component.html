@@ -38,7 +38,7 @@
             [(ngModel)]="
                 currentlyConfiguredWidget.visualizationConfig.showLabelsProperty
             "
-            (change)="setShowLabelsProperty($event)"
+            (change)="setShowLabelsProperty($event.checked)"
         >
             {{ 'Show values as labels' | translate }}
         </mat-checkbox>

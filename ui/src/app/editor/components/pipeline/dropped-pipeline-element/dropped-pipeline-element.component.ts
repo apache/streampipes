@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     PipelineElementConfig,
     PipelineElementUnion,
@@ -39,6 +46,7 @@ import { PipelineElementPreviewComponent } from '../../pipeline-element-preview/
 @Component({
     selector: 'sp-dropped-pipeline-element',
     templateUrl: './dropped-pipeline-element.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgClass,
         ClassDirective,

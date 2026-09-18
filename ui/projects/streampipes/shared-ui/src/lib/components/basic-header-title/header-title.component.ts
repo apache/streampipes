@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 
@@ -24,6 +29,7 @@ import { StyleDirective } from '@ngbracket/ngx-layout/extended';
     selector: 'sp-basic-header-title-component',
     templateUrl: './header-title.component.html',
     styleUrls: ['./header-title.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgStyle, StyleDirective],
 })
 export class SpBasicHeaderTitleComponent implements OnInit {

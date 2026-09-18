@@ -22,9 +22,11 @@ import {
     Input,
     Output,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DataExplorerWidgetModel,
+    DataExplorerDataConfig,
     DataLakeMeasure,
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
@@ -45,6 +47,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-chart-designer-panel',
     templateUrl: './chart-designer-panel.component.html',
     styleUrls: ['./chart-designer-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexFillDirective,
         LayoutDirective,
@@ -102,5 +105,9 @@ export class ChartDesignerPanelComponent {
     @ViewChild('dataSettingsPanel')
     public set content(dataSettingsPanel: ChartDataSettingsComponent) {
         this.dataSettingsPanel = dataSettingsPanel;
+    }
+    get dataConfig(): DataExplorerDataConfig {
+        return this.currentlyConfiguredWidget
+            .dataConfig as DataExplorerDataConfig;
     }
 }

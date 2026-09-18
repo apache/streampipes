@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, signal } from '@angular/core';
+import {
+    Component,
+    inject,
+    signal,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogRef,
     FormFieldComponent,
@@ -34,6 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-upload-sample-event-dialog',
     templateUrl: './upload-sample-event-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormFieldComponent,
         MatFormField,

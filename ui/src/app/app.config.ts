@@ -24,6 +24,7 @@ import {
     HTTP_INTERCEPTORS,
     provideHttpClient,
     withInterceptorsFromDi,
+    withXhr,
 } from '@angular/common/http';
 import { HttpInterceptorProvider } from './http-interceptor';
 import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
@@ -44,7 +45,7 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { MarkdownModule } from 'ngx-markdown';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -58,12 +59,6 @@ export const appConfig: ApplicationConfig = {
             MatNativeDateModule,
             LoadingBarHttpClientModule,
             MarkdownModule.forRoot(),
-            TranslateModule.forRoot({
-                loader: provideTranslateHttpLoader({
-                    prefix: './assets/i18n/',
-                    suffix: '.json',
-                }),
-            }),
             NgxEchartsModule.forRoot({
                 echarts: () => import('echarts'),
             }),
@@ -71,7 +66,14 @@ export const appConfig: ApplicationConfig = {
                 baseUrl: window.location.origin + '/assets/monaco/min/vs',
             }),
         ),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideTranslateService({
+            loader: provideTranslateHttpLoader({
+                prefix: './assets/i18n/',
+                suffix: '.json',
+            }),
+            fallbackLang: 'en',
+        }),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideRouter(routes, withHashLocation()),
         {
             provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,

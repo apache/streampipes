@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     CustomOutputStrategy,
     EventPropertyNested,
@@ -29,6 +36,7 @@ import { MatHint } from '@angular/material/form-field';
 @Component({
     selector: 'sp-property-selection',
     templateUrl: './property-selection.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LayoutDirective, MatCheckbox, MatHint],
 })
 export class PropertySelectionComponent implements OnInit {
@@ -85,5 +93,10 @@ export class PropertySelectionComponent implements OnInit {
 
     triggerFormValidation() {
         this.validateForm.emit(true);
+    }
+    isNestedEventProperty(
+        property: EventPropertyUnion,
+    ): property is EventPropertyNested {
+        return property instanceof EventPropertyNested;
     }
 }

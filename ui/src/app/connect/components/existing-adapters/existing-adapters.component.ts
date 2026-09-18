@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AdapterDescription,
     AdapterMonitoringService,
@@ -80,6 +87,7 @@ import { AsyncPipe, DatePipe } from '@angular/common';
     selector: 'sp-existing-adapters',
     templateUrl: './existing-adapters.component.html',
     styleUrls: ['./existing-adapters.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         FlexDirective,

@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AlertType } from '@streampipes/platform-services';
 import { NgClass } from '@angular/common';
 import { ClassDirective } from '@ngbracket/ngx-layout/extended';
@@ -33,6 +39,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-alert-banner',
     templateUrl: './alert-banner.component.html',
     styleUrls: ['./alert-banner.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgClass,
         ClassDirective,

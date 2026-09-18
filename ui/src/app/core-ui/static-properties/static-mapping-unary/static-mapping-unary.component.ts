@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -34,6 +34,7 @@ import { DisplayRecommendedPipe } from '../filter/display-recommended.pipe';
     selector: 'sp-app-static-mapping-unary',
     templateUrl: './static-mapping-unary.component.html',
     styleUrls: ['./static-mapping-unary.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         ReactiveFormsModule,

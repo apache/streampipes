@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { DataExportConfig } from '../../../model/data-export-config.model';
 import { SplitSectionComponent } from '../../../../../components/split-section/split-section.component';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
@@ -30,6 +30,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         './select-data-missing-values.component.scss',
         '../select-data.component.scss',
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         MatRadioGroup,

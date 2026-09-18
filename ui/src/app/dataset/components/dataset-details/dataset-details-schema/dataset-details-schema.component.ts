@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     PipelineElementSchemaService,
     PropertyScopeBadgeComponent,
@@ -56,6 +61,7 @@ interface SchemaRow {
     selector: 'sp-dataset-details-schema',
     templateUrl: './dataset-details-schema.component.html',
     styleUrls: ['./dataset-details-schema.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpDatasetDetailsLayoutComponent,
         PropertyScopeBadgeComponent,

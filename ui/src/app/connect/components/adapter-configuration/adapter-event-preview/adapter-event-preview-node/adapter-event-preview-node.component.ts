@@ -16,12 +16,19 @@
  *
  */
 
-import { Component, Input, OnInit, signal } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    signal,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 
 @Component({
     selector: 'sp-adapter-event-preview-node',
     templateUrl: './adapter-event-preview-node.component.html',
     styleUrl: './adapter-event-preview-node.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [],
 })
 export class AdapterEventPreviewNodeComponent implements OnInit {

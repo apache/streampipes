@@ -10,5 +10,14 @@
     "types": [],
     "lib": ["dom", "es2018"]
   },
-  "exclude": ["src/test.ts", "**/*.spec.ts"]
+  "exclude": ["src/test.ts", "**/*.spec.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    },
+    "strictTemplates": true
+  }
 }

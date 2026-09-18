@@ -23,6 +23,7 @@ import {
     OnInit,
     SimpleChanges,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     LabelsService,
@@ -48,6 +49,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-asset-details-labels',
     templateUrl: './asset-details-labels.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,

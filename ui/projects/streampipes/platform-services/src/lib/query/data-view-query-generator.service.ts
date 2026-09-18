@@ -122,7 +122,7 @@ export class DataViewQueryGeneratorService {
         );
         const queryConfig = sourceConfig.queryConfig;
         queryBuilder.withColumnFilter(
-            queryConfig.fields.filter(f => f.selected),
+            queryConfig.fields?.filter(f => f.selected) || [],
             sourceConfig.queryType === 'aggregated' ||
                 sourceConfig.queryType === 'single',
         );
@@ -151,16 +151,26 @@ export class DataViewQueryGeneratorService {
             queryBuilder.withLimit(1);
         } else if (sourceConfig.queryType === 'raw') {
             // raw query with paging
-            queryBuilder.withPaging(queryConfig.page - 1, queryConfig.limit);
+            if (queryConfig.page && queryConfig.limit) {
+                queryBuilder.withPaging(
+                    queryConfig.page - 1,
+                    queryConfig.limit,
+                );
+            }
         } else {
             // aggregated query
             if (queryConfig.autoAggregate) {
                 queryBuilder.withAutoAggregation();
             } else {
-                queryBuilder.withAggregation(
-                    queryConfig.aggregationTimeUnit,
-                    queryConfig.aggregationValue,
-                );
+                if (
+                    queryConfig.aggregationTimeUnit &&
+                    queryConfig.aggregationValue
+                ) {
+                    queryBuilder.withAggregation(
+                        queryConfig.aggregationTimeUnit,
+                        queryConfig.aggregationValue,
+                    );
+                }
             }
 
             if (queryConfig.fill !== undefined) {

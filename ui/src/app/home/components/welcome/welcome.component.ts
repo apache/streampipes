@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { UserInfo } from '@streampipes/platform-services';
 import { TranslateService } from '@ngx-translate/core';
 import { SpPageHeaderComponent } from '@streampipes/shared-ui';
@@ -25,6 +30,7 @@ import { SpPageHeaderComponent } from '@streampipes/shared-ui';
     selector: 'sp-welcome',
     templateUrl: './welcome.component.html',
     styleUrls: ['./welcome.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SpPageHeaderComponent],
 })
 export class WelcomeComponent {

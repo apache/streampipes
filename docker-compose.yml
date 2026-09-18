@@ -35,6 +35,8 @@ services:
       dockerfile: Dockerfile
     image: streampipes_backend:release-validation
     environment:
+      - SP_INITIAL_SERVICE_USER_SECRET=${SP_SERVICE_SECRET:?Run the Compose configure helper first}
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Run the Compose configure helper first}
       - SP_PRIORITIZED_PROTOCOL=nats
       - SP_SETUP_PROMETHEUS_ENDPOINT=true
       - SP_RESET_ENDPOINT_ENABLED=true
@@ -69,6 +71,8 @@ services:
       context: ./streampipes-extensions/streampipes-extensions-all-iiot
       dockerfile: Dockerfile
     image: streampipes_pipeline-elements-all-iiot:release-validation
+    environment:
+      - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Run the Compose configure helper first}
     logging: *default-logging
     networks:
       spnet:

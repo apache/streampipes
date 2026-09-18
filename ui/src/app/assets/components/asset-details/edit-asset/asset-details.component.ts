@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
     ConfirmDialogAction,
     ConfirmDialogComponent,
@@ -77,6 +77,7 @@ type ManageableAsset = SpAssetModel & {
     selector: 'sp-asset-details',
     templateUrl: './asset-details.component.html',
     styleUrls: ['./asset-details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpAssetSelectionPanelComponent,
         SpBasicViewComponent,

@@ -153,7 +153,7 @@
                     track endpointItem
                 ) {
                     <sp-endpoint-item
-                        [itemSelected]="endpointItem.selected"
+                        [itemSelected]="isSelected(endpointItem)"
                         [item]="endpointItem"
                         (triggerInstallation)="triggerInstallation($event)"
                         (click)="toggleSelected(endpointItem)"

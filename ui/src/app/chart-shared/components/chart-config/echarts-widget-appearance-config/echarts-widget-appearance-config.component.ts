@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { WidgetEchartsAppearanceConfig } from '../../../models/dataview-dashboard.model';
 import { ChartConfigurationService } from '../../../services/chart-configuration.service';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
@@ -28,6 +34,7 @@ import { SpNumberFormatConfigComponent } from '../number-format-config/number-fo
 @Component({
     selector: 'sp-echarts-widget-appearance-config',
     templateUrl: './echarts-widget-appearance-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         MatCheckbox,

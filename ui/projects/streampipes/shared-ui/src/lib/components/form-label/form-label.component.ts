@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     LayoutAlignDirective,
     LayoutDirective,
@@ -29,6 +34,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     selector: 'sp-form-label',
     templateUrl: './form-label.component.html',
     styleUrls: ['./form-label.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RestorePasswordService } from '../../services/restore-password.service';
 import {
     FormsModule,
@@ -50,6 +50,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-set-new-password',
     templateUrl: './set-new-password.component.html',
     styleUrls: ['../login/login.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AuthBoxComponent,
         FlexDirective,

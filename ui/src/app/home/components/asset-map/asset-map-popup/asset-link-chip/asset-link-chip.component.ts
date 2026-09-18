@@ -16,13 +16,20 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { FeatureCardService } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-asset-map-link-chip',
     templateUrl: './asset-link-chip.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./asset-link-chip.component.scss'],
 })
 export class AssetLinkChipComponent implements OnInit {

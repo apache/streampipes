@@ -25,6 +25,7 @@ import {
     Output,
     ViewChild,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DataExplorerDataConfig,
@@ -81,6 +82,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-chart-data-settings',
     templateUrl: './chart-data-settings.component.html',
     styleUrls: ['./chart-data-settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

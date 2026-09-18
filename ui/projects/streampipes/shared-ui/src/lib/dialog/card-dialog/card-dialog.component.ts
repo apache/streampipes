@@ -23,6 +23,7 @@ import {
     HostListener,
     Output,
     ViewEncapsulation,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     animate,
@@ -65,6 +66,7 @@ import { CdkPortalOutlet } from '@angular/cdk/portal';
             transition('* => *', animate('300ms ease-out')),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CdkPortalOutlet],
 })
 export class CardDialogComponent<T> extends BaseDialogComponent<T> {

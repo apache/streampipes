@@ -23,6 +23,8 @@
     "types": ["node"],
     "lib": ["es2021", "dom"],
     "baseUrl": "./",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "ignoreDeprecations": "6.0",
+    "strict": false
   }
 }
