@@ -73,7 +73,7 @@ services:
       spnet:
 
   kafka:
-    image: apache/kafka:4.1.0
+    image: apache/kafka:4.3.1
     hostname: kafka
     environment:
       - KAFKA_NODE_ID=0
