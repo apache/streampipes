@@ -30,11 +30,13 @@ def resolve_transport_protocol(data_stream: DataStream) -> TransportProtocol:
     if protocol_id not in ("nats", "kafka"):
         raise ValueError("Set SP_PRIORITIZED_PROTOCOL to nats or kafka for live channel subscriptions")
     prefix = protocol_id.upper()
-    return TransportProtocol(
-        class_name=f"org.apache.streampipes.model.grounding.{protocol_id.capitalize()}TransportProtocol",
-        broker_hostname=os.environ.get(f"SP_{prefix}_HOST", protocol_id),
-        port=int(os.environ.get(f"SP_{prefix}_PORT", "4222" if protocol_id == "nats" else "9092")),
-        topic_definition=grounding.topic_definition,
+    return TransportProtocol.model_validate(
+        {
+            "@class": f"org.apache.streampipes.model.grounding.{protocol_id.capitalize()}TransportProtocol",
+            "brokerHostname": os.environ.get(f"SP_{prefix}_HOST", protocol_id),
+            "kafkaPort": int(os.environ.get(f"SP_{prefix}_PORT", "4222" if protocol_id == "nats" else "9092")),
+            "topicDefinition": grounding.topic_definition,
+        }
     )
 
 
