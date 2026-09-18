@@ -89,7 +89,7 @@ public class AssetLinkResolver {
           resourceManager.manageDashboards()
       ).resolve(getLinks(assetLinks, ResolvableAssetLinks.DASHBOARD)));
       exportConfig.setDataSources(
-          new DataSourceResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_SOURCE)));
+          new DataSourceResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_STREAM)));
       exportConfig.setPipelines(
           new PipelineResolver(extensionServiceRequestManager, pipelineManager, resourceManager.managePipelines())
           .resolve(getLinks(assetLinks, ResolvableAssetLinks.PIPELINE))
@@ -97,7 +97,7 @@ public class AssetLinkResolver {
       exportConfig.setDataLakeMeasures(
           new MeasurementResolver(
               resourceManager.manageDataLakeMeasures().getDb()
-          ).resolve(getLinks(assetLinks, ResolvableAssetLinks.MEASUREMENT)));
+          ).resolve(getLinks(assetLinks, ResolvableAssetLinks.DATASET)));
       exportConfig.setFiles(new FileResolver(resourceManager.getFileMetadataStorage())
           .resolve(getLinks(assetLinks, ResolvableAssetLinks.FILE)));
 

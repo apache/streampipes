@@ -94,7 +94,7 @@ export class EditAssetLinkDialogComponent
         switch (this.selectedLinkType.linkQueryHint) {
             case 'pipeline':
                 return this.translateService.instant('Pipelines');
-            case 'data-source':
+            case 'data-stream':
                 return this.translateService.instant('Data Stream');
             case 'dashboard':
                 return this.translateService.instant('Dashboard');
@@ -102,7 +102,7 @@ export class EditAssetLinkDialogComponent
                 return this.translateService.instant('Chart');
             case 'adapter':
                 return this.translateService.instant('Adapter');
-            case 'measurement':
+            case 'dataset':
                 return this.translateService.instant('Dataset');
             case 'file':
                 return this.translateService.instant('Files');
@@ -118,7 +118,7 @@ export class EditAssetLinkDialogComponent
             case 'pipeline':
                 resources = this.pipelines ?? [];
                 break;
-            case 'data-source':
+            case 'data-stream':
                 resources = this.dataSources ?? [];
                 break;
             case 'dashboard':
@@ -130,7 +130,7 @@ export class EditAssetLinkDialogComponent
             case 'adapter':
                 resources = this.adapters ?? [];
                 break;
-            case 'measurement':
+            case 'dataset':
                 resources = this.dataLakeMeasures ?? [];
                 break;
             case 'file':
@@ -205,7 +205,7 @@ export class EditAssetLinkDialogComponent
                 currentResource.filename,
                 currentResource,
             );
-        } else if (this.selectedLinkType.linkQueryHint === 'measurement') {
+        } else if (this.selectedLinkType.linkQueryHint === 'dataset') {
             this.changeLabel(
                 currentResource.elementId,
                 currentResource.measureName,
