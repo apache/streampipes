@@ -15,7 +15,7 @@
 
 services:
   epsg:
-    image: postgres:14.4-alpine
+    image: postgres:18.4-alpine
     volumes:
       - ./../../../../scripts/epsg/PostgreSQL_Table_Script.sql:/docker-entrypoint-initdb.d/01_PostgreSQL_Table_Script.sql
       - ./../../../../scripts/epsg/PostgreSQL_Data_Script.sql:/docker-entrypoint-initdb.d/02_PostgreSQL_Data_Scr  ipt.sql
