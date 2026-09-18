@@ -100,6 +100,10 @@ export class AssetBtns {
         return cy.dataCy(`move-asset-target-${assetName}`);
     }
 
+    public static moveToTopLevel() {
+        return cy.dataCy('move-asset-top-level');
+    }
+
     public static saveMoveBtn() {
         return cy.dataCy('move-asset-save');
     }

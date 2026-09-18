@@ -238,8 +238,18 @@ export class SpAssetDetailsComponent
     }
 
     promoteSubAsset(assetToPromote: SpAsset): void {
+        const formerParent = this.findParentAsset(
+            this.asset,
+            assetToPromote.assetId,
+        );
+        if (!formerParent) {
+            return;
+        }
+
         const promotedAsset: SpAssetModel = {
             ...assetToPromote,
+            assetType: formerParent.assetType,
+            assetSite: formerParent.assetSite,
             elementId: this.idGeneratorService.generate(24),
             appDocType: 'asset-management',
             removable: true,
@@ -267,6 +277,24 @@ export class SpAssetDetailsComponent
                     state: { omitConfirm: true },
                 });
             });
+    }
+
+    private findParentAsset(
+        asset: SpAsset,
+        childAssetId: string,
+    ): SpAsset | undefined {
+        if (asset.assets?.some(child => child.assetId === childAssetId)) {
+            return asset;
+        }
+
+        for (const child of asset.assets ?? []) {
+            const parent = this.findParentAsset(child, childAssetId);
+            if (parent) {
+                return parent;
+            }
+        }
+
+        return undefined;
     }
 
     private openManageAssetDialog(saveAfterClose = false): void {

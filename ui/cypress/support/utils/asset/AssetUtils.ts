@@ -297,6 +297,11 @@ export class AssetUtils {
         }
     }
 
+    public static selectMoveToTopLevel() {
+        AssetBtns.moveToTopLevel().should('be.visible').click();
+        AssetBtns.saveMoveBtn().should('be.enabled');
+    }
+
     public static saveMove() {
         AssetBtns.saveMoveBtn().should('be.enabled').click();
         AssetBtns.saveMoveBtn().should('not.exist');

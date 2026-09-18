@@ -79,6 +79,7 @@ describe('Move assets between hierarchies', () => {
     it('Moves a sub-asset to another root while retaining the source and its siblings', () => {
         AssetUtils.addAndSaveAsset(
             AssetBuilder.create(source)
+                .setAssetType('PRODUCTION_LINE')
                 .addSubAssetBuilder(AssetBuilder.create(child))
                 .addSubAssetBuilder(AssetBuilder.create('Sibling'))
                 .build(),
@@ -107,6 +108,58 @@ describe('Move assets between hierarchies', () => {
             AssetUtils.editAsset(source);
             AssetBtns.treeAsset(child).should('not.exist');
             AssetUtils.checkSubAssetExists('Sibling');
+        });
+    });
+
+    it('Moves a sub-asset to the top level while retaining its asset information', () => {
+        AssetUtils.addAndSaveAsset(
+            AssetBuilder.create(source)
+                .addSubAssetBuilder(AssetBuilder.create(child))
+                .addSubAssetBuilder(AssetBuilder.create('Sibling'))
+                .build(),
+        );
+        AssetUtils.getStoredAssets().then(before => {
+            const original = before.find(asset => asset.assetName === source)!
+                .assets[0];
+            AssetUtils.editAsset(source);
+            AssetUtils.openMoveSubAsset(child);
+            AssetUtils.selectMoveToTopLevel();
+            AssetUtils.saveMove();
+            AssetUtils.checkAmountOfAssets(2);
+            AssetUtils.getStoredAssets().then(assets => {
+                const sourceAsset = assets.find(
+                    asset => asset.assetName === source,
+                )!;
+                const promotedAsset = assets.find(
+                    asset => asset.assetName === child,
+                )!;
+
+                expect(
+                    sourceAsset.assets.map(asset => asset.assetName),
+                ).to.deep.equal(['Sibling']);
+                expect(promotedAsset).to.include({
+                    assetDescription: original.assetDescription,
+                    assetId: original.assetId,
+                    assetName: original.assetName,
+                });
+
+                expect(promotedAsset.assetType).to.deep.equal(
+                    sourceAsset.assetType,
+                );
+
+                expect(promotedAsset.additionalData).to.deep.equal(
+                    original.additionalData,
+                );
+                expect(promotedAsset.assetLinks).to.deep.equal(
+                    original.assetLinks,
+                );
+                expect(promotedAsset.assetSite).to.deep.equal(
+                    sourceAsset.assetSite,
+                );
+
+                expect(promotedAsset.assets).to.deep.equal(original.assets);
+                expect(promotedAsset.labelIds).to.deep.equal(original.labelIds);
+            });
         });
     });
 
