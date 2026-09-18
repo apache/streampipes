@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    inject,
+    ChangeDetectionStrategy,
+    ViewChild,
+} from '@angular/core';
 import {
     ConfirmDialogAction,
     ConfirmDialogComponent,
