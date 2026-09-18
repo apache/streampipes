@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
+import org.apache.tsfile.enums.TSDataType;
 
 /**
  * Represents a record containing a measurement and its associated metadata
