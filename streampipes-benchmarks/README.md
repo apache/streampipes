@@ -23,7 +23,7 @@ StreamPipes instance is required. The module is excluded from the default reacto
 
 ## Build and run
 
-From the repository root (JDK 25 is the CI toolchain; sources target Java 17):
+From the repository root (JDK 25 is required; sources target Java 25):
 
 ```sh
 mvn -Pbenchmarks -pl streampipes-benchmarks -am -DskipTests package

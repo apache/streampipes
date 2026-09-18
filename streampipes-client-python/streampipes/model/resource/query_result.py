@@ -59,18 +59,22 @@ class QueryResult(Resource):
             if self.headers != series.headers:
                 raise StreamPipesUnsupportedDataSeries("Headers of series does not match query result headers")
 
-        if self.headers[0] == "time":
-            self.headers[0] = "timestamp"
+        headers = list(self.headers or [])
+        if not headers:
+            if any(series.rows for series in self.all_data_series):
+                raise StreamPipesUnsupportedDataSeries("Nonempty query result has no headers")
+        elif headers[0] == "time":
+            headers[0] = "timestamp"
         else:
             raise StreamPipesUnsupportedDataSeries(f"Unsupported headers {self.headers}")
 
         return {
-            "headers": self.headers,
+            "headers": headers,
             "rows": list(chain.from_iterable([series.rows for series in self.all_data_series])),
         }
 
     total: StrictInt
-    headers: list[StrictStr]
+    headers: list[StrictStr] | None
     all_data_series: list[DataSeries]
     query_status: Literal["OK", "TOO_MUCH_DATA"] = Field(alias="spQueryStatus")
     source_index: StrictInt
