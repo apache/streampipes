@@ -26,6 +26,10 @@ import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @deprecated Use {@link DatasetMetadataApi} instead.
+ */
+@Deprecated(since = "0.99.0", forRemoval = false)
 public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
     implements IDataLakeMeasureApi {
 

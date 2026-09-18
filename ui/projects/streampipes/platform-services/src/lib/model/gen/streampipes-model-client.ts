@@ -16,9 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-01-15 16:03:19.
+// Generated using typescript-generator version 3.2.1263 on 2026-09-18 15:38:46.
 
 import { Storable } from './streampipes-model';
 
@@ -336,7 +335,6 @@ export type DefaultRole =
     | 'ROLE_DATA_EXPLORER_ADMIN'
     | 'ROLE_DATA_EXPLORER_USER'
     | 'ROLE_CONNECT_ADMIN'
-    | 'ROLE_ASSET_USER'
     | 'ROLE_ASSET_ADMIN';
 
 export type PrincipalType = 'USER_ACCOUNT' | 'SERVICE_ACCOUNT' | 'GROUP';

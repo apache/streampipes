@@ -27,7 +27,7 @@ import {
 import {
     DataExplorerWidgetModel,
     DataExplorerDataConfig,
-    DataLakeMeasure,
+    DatasetMetadata,
 } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
 import { ChartDataSettingsComponent } from './data-settings/chart-data-settings.component';
@@ -65,12 +65,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class ChartDesignerPanelComponent {
     @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
-    @Input() dataLakeMeasure: DataLakeMeasure;
+    @Input() dataLakeMeasure: DatasetMetadata;
     @Input() newWidgetMode = false;
 
     @Output() addWidgetEmitter: EventEmitter<
-        Tuple2<DataLakeMeasure, DataExplorerWidgetModel>
-    > = new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
+        Tuple2<DatasetMetadata, DataExplorerWidgetModel>
+    > = new EventEmitter<Tuple2<DatasetMetadata, DataExplorerWidgetModel>>();
 
     @Output() closeDesignerPanelEmitter = new EventEmitter();
 

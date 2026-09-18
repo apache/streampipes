@@ -25,7 +25,7 @@ import { PipelineElementBuilder } from '../../support/builder/PipelineElementBui
 import { PipelineElementInput } from '../../support/model/PipelineElementInput';
 import { CompactAdapterUtils } from '../../support/utils/connect/CompactAdapterUtils';
 
-describe('Test pipeline updates with data lake schema changes', () => {
+describe('Test pipeline updates with dataset schema changes', () => {
     const dataStreamSelector = 'test';
     const chartName = 'Chart Density';
     const pipelineName = 'Pipeline Test';
@@ -83,7 +83,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
 
         PipelineUtils.closePipelineSaveStatus();
 
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartBtns.chartSyncProblemIcon().should('be.visible');
     });
 
@@ -109,7 +109,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
         PipelineBtns.pipelineEditWarning().should('not.exist');
         PipelineBtns.pipelineStartedSuccess().should('be.visible');
 
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartBtns.chartSyncProblemIcon().should('not.exist');
     });
 
@@ -118,7 +118,7 @@ describe('Test pipeline updates with data lake schema changes', () => {
             .addSource(dataStreamSelector)
             .addProcessingElement(processingElement)
             .addSink(
-                PipelineElementBuilder.create('data_lake')
+                PipelineElementBuilder.create('dataset')
                     .addInput('input', 'db_measurement', datasetName)
                     .build(),
             )

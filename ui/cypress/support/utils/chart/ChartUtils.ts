@@ -29,7 +29,7 @@ import { ConnectBtns } from '../connect/ConnectBtns';
 export class ChartUtils {
     public static ADAPTER_NAME = 'datalake_configuration';
 
-    public static goToDatalake(discardUnsavedChanges: boolean = true) {
+    public static goToDataset(discardUnsavedChanges: boolean = true) {
         cy.visit('#/chart');
         if (!discardUnsavedChanges) {
             return;
@@ -52,7 +52,7 @@ export class ChartUtils {
     }
 
     public static checkAmountOfCharts(amount: number) {
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         this.checkAmount(amount);
     }
 
@@ -135,7 +135,7 @@ export class ChartUtils {
         widgetType: string,
         ignoreTimeSelection = false,
     ) {
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.createAndEditChart();
 
         if (!ignoreTimeSelection) {
@@ -215,7 +215,7 @@ export class ChartUtils {
     }
 
     public static createDashboardWithLinkedAssets(chart, name, assetNameList) {
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
 
         ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
 

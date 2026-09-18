@@ -84,7 +84,7 @@ describe('Test adapter updates with data lake schema changes', () => {
         ConnectBtns.connectAdapterAddedSuccessfully().should('be.visible');
         ConnectUtils.closeAdapterPreview();
 
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartBtns.chartSyncProblemIcon().should('be.visible');
         ChartBtns.chartSyncProblemIcon().click();
 
@@ -110,7 +110,7 @@ describe('Test adapter updates with data lake schema changes', () => {
         PipelineBtns.pipelineSyncProblemIcon().should('not.exist');
         PipelineBtns.pipelineWarningIcon().should('not.exist');
 
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartBtns.chartSyncProblemIcon().should('not.exist');
     });
 

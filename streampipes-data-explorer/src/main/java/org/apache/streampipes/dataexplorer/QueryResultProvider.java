@@ -19,13 +19,13 @@
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerSchemaManagement;
+import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
 import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
-import org.apache.streampipes.model.datalake.SpQueryResult;
-import org.apache.streampipes.model.datalake.param.ProvidedRestQueryParams;
-import org.apache.streampipes.model.datalake.param.SupportedRestQueryParams;
+import org.apache.streampipes.model.dataset.SpQueryResult;
+import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
+import org.apache.streampipes.model.dataset.param.SupportedRestQueryParams;
 
 import java.util.Optional;
 
@@ -35,14 +35,14 @@ public class QueryResultProvider {
   public static final String FOR_ID_KEY = "forId";
   protected final boolean ignoreMissingData;
   protected final IDataExplorerQueryManagement dataExplorerQueryManagement;
-  protected final IDataExplorerSchemaManagement schemaManagement;
+  protected final IDatasetMetadataManagement schemaManagement;
   protected final DataExplorerQueryExecutor<?, ?> queryExecutor;
   protected ProvidedRestQueryParams queryParams;
 
   public QueryResultProvider(ProvidedRestQueryParams queryParams,
                              IDataExplorerQueryManagement dataExplorerQueryManagement,
                              DataExplorerQueryExecutor<?, ?> queryExecutor,
-                             IDataExplorerSchemaManagement schemaManagement,
+                             IDatasetMetadataManagement schemaManagement,
                              boolean ignoreMissingData) {
     this.queryParams = queryParams;
     this.ignoreMissingData = ignoreMissingData;
