@@ -20,8 +20,11 @@ package org.apache.streampipes.client.api;
 
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
+import org.apache.streampipes.commons.exceptions.SpHttpErrorStatusCode;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.shared.annotation.ExposedToScripts;
+
+import org.apache.http.HttpStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +45,14 @@ public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
   @Override
   @ExposedToScripts
   public Optional<DataLakeMeasure> getByDatasetName(String datasetName) {
-    return getSingle(getBaseResourcePath().addToPath("byName").addToPath(datasetName));
+    try {
+      return getSingle(getBaseResourcePath().addToPath("byName").addToPath(datasetName));
+    } catch (SpHttpErrorStatusCode e) {
+      if (e.getHttpStatusCode() == HttpStatus.SC_FORBIDDEN) {
+        return Optional.empty();
+      }
+      throw e;
+    }
   }
 
   @Override
