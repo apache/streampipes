@@ -76,7 +76,10 @@ function readProcessingElements(): ProcessorTest[] {
 }
 
 module.exports = (on, config) => {
-    config.env.processingElements = readProcessingElements();
+    config.expose = {
+        ...config.expose,
+        processingElements: readProcessingElements(),
+    };
 
     on('task', {
         deleteFolder(folderName) {
