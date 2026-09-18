@@ -23,6 +23,7 @@
         [assetModel]="asset"
         [selectedAsset]="selectedAsset"
         (selectedAssetEmitter)="applySelectedAsset($event)"
+        (moveAssetRequested)="moveSubAsset($event)"
     >
         <sp-basic-view [hideNavbar]="true" [padding]="true">
             <sp-page-header
