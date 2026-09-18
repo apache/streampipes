@@ -30,7 +30,7 @@ services:
     environment:
       - SP_INITIAL_SERVICE_USER_SECRET=${SP_SERVICE_SECRET:?Generate and export SP_SERVICE_SECRET before starting}
       - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Generate and export SP_SERVICE_SECRET before starting}
-      - SP_PRIORITIZED_PROTOCOL=kafka
+      - SP_PRIORITIZED_PROTOCOL=nats
     depends_on:
       - couchdb
     volumes:

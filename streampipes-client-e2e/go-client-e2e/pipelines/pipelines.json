@@ -44,27 +44,10 @@
           "category": null,
           "correspondingAdapterId": null,
           "eventGrounding": {
-            "transportProtocols": [
-              {
-                "@class": "org.apache.streampipes.model.grounding.KafkaTransportProtocol",
-                "brokerHostname": "kafka",
-                "elementId": null,
-                "topicDefinition": {
-                  "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-                  "actualTopicName": "org-apache-streampipes-internal-prbfXSLBvVHpoeX"
-                },
-                "acks": null,
-                "batchSize": null,
-                "groupId": null,
-                "kafkaPort": 9092,
-                "lingerMs": null,
-                "maxRequestSize": null,
-                "messageMaxBytes": null,
-                "offset": null,
-                "zookeeperHost": "zookeeper",
-                "zookeeperPort": 2181
-              }
-            ]
+            "topicDefinition": {
+              "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
+              "actualTopicName": "org-apache-streampipes-internal-prbfXSLBvVHpoeX"
+            }
           },
           "eventSchema": {
             "eventProperties": [
@@ -360,27 +343,10 @@
           "category": null,
           "correspondingAdapterId": null,
           "eventGrounding": {
-            "transportProtocols": [
-              {
-                "@class": "org.apache.streampipes.model.grounding.KafkaTransportProtocol",
-                "brokerHostname": "kafka",
-                "elementId": "sp:transportprotocol:KoHuzT",
-                "topicDefinition": {
-                  "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-                  "actualTopicName": "e2e-adapter-out-topic-name"
-                },
-                "acks": null,
-                "batchSize": null,
-                "groupId": null,
-                "kafkaPort": 9092,
-                "lingerMs": null,
-                "maxRequestSize": null,
-                "messageMaxBytes": null,
-                "offset": null,
-                "zookeeperHost": null,
-                "zookeeperPort": 0
-              }
-            ]
+            "topicDefinition": {
+              "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
+              "actualTopicName": "e2e-adapter-out-topic-name"
+            }
           },
           "eventSchema": {
             "eventProperties": [
@@ -579,27 +545,10 @@
         "category": null,
         "correspondingAdapterId": null,
         "eventGrounding": {
-          "transportProtocols": [
-            {
-              "@class": "org.apache.streampipes.model.grounding.KafkaTransportProtocol",
-              "brokerHostname": "kafka",
-              "elementId": null,
-              "topicDefinition": {
-                "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-                "actualTopicName": "org-apache-streampipes-internal-prbfXSLBvVHpoeX"
-              },
-              "acks": null,
-              "batchSize": null,
-              "groupId": null,
-              "kafkaPort": 9092,
-              "lingerMs": null,
-              "maxRequestSize": null,
-              "messageMaxBytes": null,
-              "offset": null,
-              "zookeeperHost": "zookeeper",
-              "zookeeperPort": 2181
-            }
-          ]
+          "topicDefinition": {
+            "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
+            "actualTopicName": "org-apache-streampipes-internal-prbfXSLBvVHpoeX"
+          }
         },
         "eventSchema": {
           "eventProperties": [
@@ -730,27 +679,10 @@
       "category": null,
       "correspondingAdapterId": "sp:adapterdescription:OiTAHK",
       "eventGrounding": {
-        "transportProtocols": [
-          {
-            "@class": "org.apache.streampipes.model.grounding.KafkaTransportProtocol",
-            "brokerHostname": "kafka",
-            "elementId": "sp:transportprotocol:KoHuzT",
-            "topicDefinition": {
-              "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-              "actualTopicName": "e2e-adapter-out-topic-name"
-            },
-            "acks": null,
-            "batchSize": null,
-            "groupId": null,
-            "kafkaPort": 9092,
-            "lingerMs": null,
-            "maxRequestSize": null,
-            "messageMaxBytes": null,
-            "offset": null,
-            "zookeeperHost": null,
-            "zookeeperPort": 0
-          }
-        ]
+        "topicDefinition": {
+          "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
+          "actualTopicName": "e2e-adapter-out-topic-name"
+        }
       },
       "eventSchema": {
         "eventProperties": [
