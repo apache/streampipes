@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { slideInAnimation } from './animation';
 import { Title } from '@angular/platform-browser';
@@ -28,6 +33,7 @@ import { LoadingBarModule } from '@ngx-loading-bar/core';
     selector: 'sp-app-root',
     templateUrl: './app.component.html',
     animations: [slideInAnimation],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LoadingBarModule, RouterOutlet],
 })
 export class AppComponent implements OnInit {
@@ -41,7 +47,7 @@ export class AppComponent implements OnInit {
         const supportedLanguages = ['de', 'en', 'pl'];
         const defaultLanguage = 'en';
         this.translate.addLangs(supportedLanguages);
-        this.translate.setDefaultLang(defaultLanguage);
+        this.translate.setFallbackLang(defaultLanguage);
         const browserLang = translate.getBrowserLang();
 
         this.translate.use(

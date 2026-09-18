@@ -21,6 +21,7 @@ import {
     HostListener,
     Input,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     FlexDirective,
@@ -36,6 +37,7 @@ import { ImageBarPreviewComponent } from './image-bar-preview/image-bar-preview.
     selector: 'sp-image-bar',
     templateUrl: './image-bar.component.html',
     styleUrls: ['./image-bar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

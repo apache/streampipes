@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogRef,
     SpAlertBannerComponent,
@@ -68,6 +74,7 @@ type ExportSectionKey =
 @Component({
     selector: 'sp-data-export-dialog',
     templateUrl: './data-export-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SpConfigurationTabsService } from '../configuration-tabs.service';
 import {
     SpBreadcrumbService,
@@ -41,6 +47,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-security-configuration',
     templateUrl: './security-configuration.component.html',
     styleUrls: ['./security-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

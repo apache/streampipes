@@ -27,6 +27,7 @@ import {
     Input,
     Output,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -43,6 +44,7 @@ export interface SpSplitButtonAction {
     selector: 'sp-split-button',
     templateUrl: './split-button.component.html',
     styleUrls: ['./split-button.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CdkOverlayOrigin,
         CdkConnectedOverlay,

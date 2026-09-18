@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
     DataExplorerDataConfig,
     RetentionTimeConfig,
@@ -31,6 +31,7 @@ import { SplitSectionComponent } from '@streampipes/shared-ui';
     selector: 'sp-select-retention-action',
     templateUrl: './select-retention-action.component.html',
     styleUrls: ['./select-retention-action.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatRadioGroup,
         LayoutDirective,

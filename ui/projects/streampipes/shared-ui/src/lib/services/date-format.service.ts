@@ -29,7 +29,7 @@ export class DateFormatService {
             return '–';
         }
 
-        const currentLang = this.translateService.currentLang;
+        const currentLang = this.translateService.currentLang() ?? 'en';
         return new Intl.DateTimeFormat(currentLang, {
             dateStyle: 'medium',
             timeStyle: 'short',

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ExportItem } from '@streampipes/platform-services';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { GenericStorageItemComponent } from './generic-storage-item/generic-storage-item.component';
@@ -34,6 +34,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-generic-storage-items',
     templateUrl: './generic-storage-items.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         GenericStorageItemComponent,

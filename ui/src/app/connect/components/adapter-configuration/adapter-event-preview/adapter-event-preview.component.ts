@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, computed, Input, signal } from '@angular/core';
+import {
+    Component,
+    computed,
+    Input,
+    signal,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { AdapterEventPreviewNodeComponent } from './adapter-event-preview-node/adapter-event-preview-node.component';
 
@@ -26,6 +32,7 @@ export type Mode = 'tree' | 'raw';
     selector: 'sp-adapter-event-preview',
     templateUrl: './adapter-event-preview.component.html',
     styleUrl: './adapter-event-preview.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [AdapterEventPreviewNodeComponent],
 })
 export class AdapterEventPreviewComponent {

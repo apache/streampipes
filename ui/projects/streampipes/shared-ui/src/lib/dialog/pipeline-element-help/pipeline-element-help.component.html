@@ -75,10 +75,10 @@
             }
         </mat-tab-group>
 
-        @if (selectedTabIndex === 0) {
+        @if (selectedTabIndex === 0 && pipelineElement) {
             <sp-pipeline-element-runtime-info
                 [showTitle]="false"
-                [streamDescription]="pipelineElement"
+                [streamDescription]="dataStream"
             ></sp-pipeline-element-runtime-info>
         }
         @if (selectedTabIndex === 1) {

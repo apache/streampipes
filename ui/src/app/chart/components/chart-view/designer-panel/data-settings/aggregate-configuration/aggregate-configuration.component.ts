@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { QueryConfig } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -35,6 +40,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'sp-aggregate-configuration',
     templateUrl: './aggregate-configuration.component.html',
     styleUrls: ['./aggregate-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

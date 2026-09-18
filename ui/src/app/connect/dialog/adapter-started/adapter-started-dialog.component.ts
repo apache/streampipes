@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
@@ -63,6 +64,7 @@ import { LayoutGapDirective } from '@ngbracket/ngx-layout';
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
     templateUrl: './adapter-started-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

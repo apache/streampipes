@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, TemplateRef } from '@angular/core';
+import {
+    Component,
+    Input,
+    TemplateRef,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     CollectionStaticProperty,
     ExtensionDeploymentConfiguration,
@@ -43,6 +48,7 @@ export type CollectionRenderCtx = {
     selector: 'sp-static-collection',
     templateUrl: './static-collection.component.html',
     styleUrls: ['./static-collection.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

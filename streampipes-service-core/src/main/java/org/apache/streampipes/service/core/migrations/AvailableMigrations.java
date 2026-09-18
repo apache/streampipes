@@ -39,6 +39,7 @@ import org.apache.streampipes.service.core.migrations.v099.RemoveDuplicatedAsset
 import org.apache.streampipes.service.core.migrations.v099.RemoveInternalNotificationSinkMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
 import org.apache.streampipes.service.core.migrations.v099.RenameAssetLinkTypesMigration;
+import org.apache.streampipes.service.core.migrations.v099.ReplaceDefaultServiceSecretMigration;
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigratePlc4xS7AdaptersToGenericAdapter;
@@ -112,6 +113,7 @@ public class AvailableMigrations {
         new RemoveAssetUserRoleMigration(roleStorage, userGroupStorage, userStorage),
         new RemoveInternalNotificationSinkMigration(pipelineStorage),
         new RenameAssetLinkTypesMigration()
+        new ReplaceDefaultServiceSecretMigration(userStorage)
     );
   }
 }

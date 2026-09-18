@@ -26,7 +26,6 @@ import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.model.runtime.EventConverter;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
 import org.slf4j.Logger;
@@ -53,9 +52,8 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
   }
 
   public void collect(Event event) {
-    Map<String, Object> outEvent = new EventConverter(event).toMap();
     try {
-      byte[] data = dataFormatDefinition.fromMap(outEvent);
+      byte[] data = dataFormatDefinition.fromEvent(event);
       producer.publish(data);
       SpMonitoringManager.INSTANCE.increaseOutCounter(resourceId, data.length, System.currentTimeMillis());
     } catch (SpRuntimeException e) {

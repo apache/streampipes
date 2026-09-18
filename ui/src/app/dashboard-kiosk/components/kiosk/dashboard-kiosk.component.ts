@@ -22,6 +22,7 @@ import {
     inject,
     OnDestroy,
     OnInit,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -52,6 +53,7 @@ import { LastUpdatedFormatterService } from '../../../core-services/time-formatt
     selector: 'sp-dashboard-kiosk',
     templateUrl: './dashboard-kiosk.component.html',
     styleUrl: './dashboard-kiosk.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         MatToolbar,

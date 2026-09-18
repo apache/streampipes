@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
     ErrorMessage,
     PipelineOperationStatus,
@@ -35,6 +35,7 @@ import { SpExceptionDetailsComponent } from '@streampipes/shared-ui';
     selector: 'sp-adapter-started-success',
     templateUrl: './adapter-started-success.component.html',
     styleUrls: ['./adapter-started-success.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

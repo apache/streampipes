@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
@@ -53,6 +59,7 @@ import { MatDivider } from '@angular/material/divider';
     selector: 'sp-pipeline-element-topics',
     templateUrl: './topics.component.html',
     styleUrls: ['./topics.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,
@@ -108,16 +115,20 @@ export class TopicsComponent implements OnInit {
         }
     }
 
-    isSpDataStream(): boolean {
-        return this.pipelineElement instanceof SpDataStream;
+    isSpDataStream(element: PipelineElementUnion): element is SpDataStream {
+        return element instanceof SpDataStream;
     }
 
-    isDataProcessorInvocation(): boolean {
-        return this.pipelineElement instanceof DataProcessorInvocation;
+    isDataProcessorInvocation(
+        element: PipelineElementUnion,
+    ): element is DataProcessorInvocation {
+        return element instanceof DataProcessorInvocation;
     }
 
-    isDataSinkInvocation(): boolean {
-        return this.pipelineElement instanceof DataSinkInvocation;
+    isDataSinkInvocation(
+        element: PipelineElementUnion,
+    ): element is DataSinkInvocation {
+        return element instanceof DataSinkInvocation;
     }
 
     close() {

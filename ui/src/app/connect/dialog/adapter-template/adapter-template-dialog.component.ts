@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     PipelineElementTemplate,
     PipelineElementTemplateService,
@@ -31,6 +37,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'sp-adapter-template-dialog',
     templateUrl: './adapter-template-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

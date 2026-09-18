@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AdapterDescription,
     AdapterSummaryDto,
@@ -36,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-delete-adapter-dialog',
     templateUrl: './delete-adapter-dialog.component.html',
     styleUrls: ['./delete-adapter-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

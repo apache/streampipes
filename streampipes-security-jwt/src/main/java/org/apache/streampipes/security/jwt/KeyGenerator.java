@@ -20,9 +20,9 @@ package org.apache.streampipes.security.jwt;
 
 import org.apache.streampipes.commons.environment.Environments;
 
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -37,8 +37,6 @@ import java.security.spec.X509EncodedKeySpec;
 
 public class KeyGenerator {
 
-  private static final Logger LOG = LoggerFactory.getLogger(KeyGenerator.class);
-
   public Key makeKeyForSecret(String tokenSecret) {
     return Keys.hmacShaKeyFor(tokenSecret.getBytes(StandardCharsets.UTF_8));
   }
@@ -51,18 +49,21 @@ public class KeyGenerator {
   public Key makeKeyForSecret(String alg,
                               String tokenSecret,
                               String pkContent) {
-    if (alg.equals("RS256")) {
+    if ("RS256".equals(alg)) {
       try {
         return makeKeyForRsa(pkContent);
-      } catch (IOException | InvalidKeySpecException | NoSuchAlgorithmException e) {
-        LOG.error(
-            "Could not properly create the provided key, defaulting to an HMAC token, "
-                + "which will almost certainly lead to problems");
-        return makeKeyForSecret(tokenSecret);
+      } catch (IOException | InvalidKeySpecException | NoSuchAlgorithmException | IllegalArgumentException e) {
+        throw new IllegalStateException("Could not load configured JWT public key", e);
       }
-    } else {
-      return makeKeyForSecret(tokenSecret);
     }
+    if (!"HS256".equals(alg) && !"HS384".equals(alg) && !"HS512".equals(alg)) {
+      throw new UnsupportedJwtException("Unsupported JWT algorithm");
+    }
+    Key key = makeKeyForSecret(tokenSecret);
+    if (!SignatureAlgorithm.forSigningKey(key).getValue().equals(alg)) {
+      throw new UnsupportedJwtException("JWT algorithm does not match the configured key");
+    }
+    return key;
   }
 
   public String readKey() throws IOException {

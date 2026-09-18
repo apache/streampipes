@@ -16,11 +16,17 @@
  *
  */
 
-import { Component, inject, Input, OnChanges } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnChanges,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     Isa95TypeService,
     LocationConfig,
-    SpAssetModel,
+    SpAsset,
 } from '@streampipes/platform-services';
 import {
     SpLabelComponent,
@@ -34,6 +40,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-asset-top-banner',
     templateUrl: './asset-top-banner.component.html',
     styleUrls: ['./asset-top-banner.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         SpLabelComponent,
@@ -44,7 +51,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class SpAssetTopBannerComponent implements OnChanges {
     @Input()
-    assetModel: SpAssetModel;
+    assetModel: SpAsset;
 
     @Input()
     locationConfig: LocationConfig;

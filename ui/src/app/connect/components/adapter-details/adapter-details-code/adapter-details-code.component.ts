@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.directive';
 import { AdapterCodePanelComponent } from '../../adapter-code-panel/adapter-code-panel.component';
 import { SpAdapterDetailsLayoutComponent } from '../adapter-details-layout/adapter-details-layout.component';
@@ -24,6 +24,7 @@ import { SpAdapterDetailsLayoutComponent } from '../adapter-details-layout/adapt
 @Component({
     selector: 'sp-adapter-details-code',
     templateUrl: './adapter-details-code.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SpAdapterDetailsLayoutComponent, AdapterCodePanelComponent],
 })
 export class AdapterDetailsCodeComponent

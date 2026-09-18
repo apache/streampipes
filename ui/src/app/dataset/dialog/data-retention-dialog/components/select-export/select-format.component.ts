@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DataExplorerDataConfig,
     ExportProviderService,
@@ -38,6 +44,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-data-export',
     templateUrl: './select-format.component.html',
     styleUrls: ['./select-format.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatRadioGroup,
         FormsModule,

@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogRef,
     FormFieldComponent,
@@ -40,6 +46,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 @Component({
     selector: 'sp-edit-asset-link-dialog-component',
     templateUrl: './edit-asset-link-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

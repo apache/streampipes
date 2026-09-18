@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SpNumberFormatConfigComponent } from '../../../chart-config/number-format-config/number-format-config.component';
@@ -31,6 +37,7 @@ import { ChartConfigurationService } from '../../../../services/chart-configurat
 @Component({
     selector: 'sp-value-card-widget-appearance-config',
     templateUrl: './value-card-appearance-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         TranslatePipe,

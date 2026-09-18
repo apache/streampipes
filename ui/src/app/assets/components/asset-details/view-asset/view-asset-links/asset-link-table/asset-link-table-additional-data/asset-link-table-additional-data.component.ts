@@ -22,6 +22,7 @@ import {
     Input,
     OnChanges,
     SimpleChanges,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { AssetLink, Certificate } from '@streampipes/platform-services';
 import { CertificateDetailsDialogComponent } from '../../../../../../../core-ui/certificate-details/certificate-details-dialog.component';
@@ -33,6 +34,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'sp-asset-link-table-additional-data',
     templateUrl: './asset-link-table-additional-data.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatIconButton, MatIcon],
 })
 export class AssetLinkTableAdditionalDataComponent implements OnChanges {

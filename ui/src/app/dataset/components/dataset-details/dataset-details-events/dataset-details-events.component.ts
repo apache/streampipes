@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { SpQueryResult } from '@streampipes/platform-services';
 import { SpSpinnerComponent } from '@streampipes/shared-ui';
@@ -45,6 +50,7 @@ type PreviewRow = Record<string, unknown>;
     selector: 'sp-dataset-details-events',
     templateUrl: './dataset-details-events.component.html',
     styleUrls: ['./dataset-details-events.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpDatasetDetailsLayoutComponent,
         LayoutDirective,

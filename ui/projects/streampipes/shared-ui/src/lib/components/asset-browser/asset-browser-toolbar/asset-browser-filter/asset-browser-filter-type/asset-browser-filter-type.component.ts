@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     Isa95TypeDesc,
     Isa95TypeService,
@@ -31,6 +37,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'sp-asset-browser-filter-type',
     templateUrl: 'asset-browser-filter-type.component.html',
     styleUrls: ['../asset-browser-filter.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AssetBrowserFilterOuterComponent,
         MatFormField,

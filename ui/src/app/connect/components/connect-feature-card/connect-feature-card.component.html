@@ -21,9 +21,9 @@
         <sp-feature-card-header
             [title]="adapter.name"
             [description]="adapter.description"
-            [icon]="assetLinkType?.linkIcon"
-            [iconColor]="assetLinkType?.linkColor"
-            [detailsLink]="assetLinkType?.navPaths"
+            [icon]="$safeNavigationMigration(assetLinkType?.linkIcon)"
+            [iconColor]="$safeNavigationMigration(assetLinkType?.linkColor)"
+            [detailsLink]="$safeNavigationMigration(assetLinkType?.navPaths)"
             (closeClick)="onClose?.()"
             (detailsClick)="navigateToAdapter()"
         >

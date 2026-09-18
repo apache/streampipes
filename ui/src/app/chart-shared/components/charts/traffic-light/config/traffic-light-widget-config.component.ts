@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import {
     TrafficLightVisConfig,
@@ -40,6 +40,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
     selector: 'sp-data-explorer-traffic-light-widget-config',
     templateUrl: './traffic-light-widget-config.component.html',
     styleUrls: ['./traffic-light-widget-config.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpVisualizationConfigOuterComponent,
         SplitSectionComponent,

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -28,6 +28,7 @@ import { FormLabelComponent } from '../form-label/form-label.component';
     selector: 'sp-form-field',
     templateUrl: './form-field.component.html',
     styleUrls: ['./form-field.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

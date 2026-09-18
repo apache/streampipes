@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
     FormFieldComponent,
@@ -32,6 +32,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-user-acknowledgment',
     templateUrl: './user-acknowledgment.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         FormsModule,

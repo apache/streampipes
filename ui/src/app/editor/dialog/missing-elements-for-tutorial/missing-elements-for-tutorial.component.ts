@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { MatDivider } from '@angular/material/divider';
@@ -26,6 +31,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-missing-elements-for-tutorial',
     templateUrl: './missing-elements-for-tutorial.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

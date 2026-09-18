@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     PipelineElementTemplate,
     PipelineElementTemplateService,
@@ -45,6 +51,7 @@ import { PipelineElementTemplatePipe } from './pipeline-element-template.pipe';
     selector: 'sp-pipeline-element-template-config',
     templateUrl: './pipeline-element-template-config.component.html',
     styleUrls: ['./pipeline-element-template-config.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AssetConstants,
     AssetLinkType,
@@ -42,6 +48,7 @@ import { PipelinePreviewComponent } from '../../../pipeline-details/components/p
     selector: 'sp-pipeline-feature-card',
     templateUrl: './pipeline-feature-card.component.html',
     styleUrls: ['./pipeline-feature-card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         PipelinePreviewMetaComponent,
         FlexFillDirective,

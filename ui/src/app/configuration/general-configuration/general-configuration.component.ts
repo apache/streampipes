@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -70,6 +75,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-general-configuration',
     templateUrl: './general-configuration.component.html',
     styleUrls: ['./general-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

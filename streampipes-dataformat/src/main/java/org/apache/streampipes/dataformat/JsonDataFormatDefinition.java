@@ -19,16 +19,20 @@
 package org.apache.streampipes.dataformat;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.StreamReadFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class JsonDataFormatDefinition implements SpDataFormatDefinition {
 
@@ -39,6 +43,12 @@ public class JsonDataFormatDefinition implements SpDataFormatDefinition {
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true,
       SerializationFeature.INDENT_OUTPUT, false
     ));
+    objectMapper.getFactory().enable(StreamReadFeature.USE_FAST_DOUBLE_PARSER.mappedFeature());
+    var module = new SimpleModule();
+    // Register an internal envelope so fromMap retains its existing serialization
+    // of arbitrary values, including values whose Java type happens to be Event.
+    module.addSerializer(EventJsonSerializer.Payload.class, new EventJsonSerializer());
+    objectMapper.registerModule(module);
   }
 
   @Override
@@ -47,6 +57,16 @@ public class JsonDataFormatDefinition implements SpDataFormatDefinition {
       return objectMapper.readValue(event, HashMap.class);
     } catch (IOException e) {
       throw new SpRuntimeException("Could not convert event to map data structure");
+    }
+  }
+
+  @Override
+  public byte[] fromEvent(Event event) throws SpRuntimeException {
+    Objects.requireNonNull(event);
+    try {
+      return objectMapper.writeValueAsBytes(new EventJsonSerializer.Payload(event));
+    } catch (JsonProcessingException e) {
+      throw new SpRuntimeException("Could not convert event to JSON string", e);
     }
   }
 

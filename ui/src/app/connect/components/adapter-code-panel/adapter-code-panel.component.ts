@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AdapterDescription,
     AdapterService,
@@ -29,6 +35,7 @@ import { ConfigurationCodePanelComponent } from '../../../core-ui/configuration-
     selector: 'sp-adapter-code-panel',
     templateUrl: './adapter-code-panel.component.html',
     styleUrls: ['./adapter-code-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FlexDirective, ConfigurationCodePanelComponent],
 })
 export class AdapterCodePanelComponent implements OnInit {

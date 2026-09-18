@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ViewChild,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { Role, RoleService } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -52,6 +58,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-security-role-config',
     templateUrl: './role-configuration.component.html',
     styleUrls: ['./role-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

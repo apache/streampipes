@@ -26,6 +26,7 @@ import {
     OnInit,
     Output,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { StartAllPipelinesDialogComponent } from '../../dialog/start-all-pipelines/start-all-pipelines-dialog.component';
 import { PipelineOperationsService } from '../../services/pipeline-operations.service';
@@ -69,6 +70,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-pipeline-overview',
     templateUrl: './pipeline-overview.component.html',
     styleUrls: ['./pipeline-overview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpTableComponent,
         MatSort,

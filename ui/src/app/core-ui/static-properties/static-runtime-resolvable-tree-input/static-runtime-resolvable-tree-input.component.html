@@ -142,7 +142,11 @@
                                 [selectedNodesInternalNames]="
                                     staticProperty.selectedNodesInternalNames
                                 "
-                                [activeNodeId]="nodeDetails?.internalNodeName"
+                                [activeNodeId]="
+                                    $safeNavigationMigration(
+                                        nodeDetails?.internalNodeName
+                                    )
+                                "
                                 (removeSelectedNode)="
                                     removeSelectedNode($event)
                                 "

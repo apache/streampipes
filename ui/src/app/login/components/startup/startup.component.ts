@@ -17,7 +17,12 @@
  */
 
 import { AuthService } from '../../../services/auth.service';
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { AppConstants } from '../../../services/app.constants';
 import {
@@ -31,6 +36,7 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     selector: 'sp-startup',
     templateUrl: './startup.component.html',
     styleUrls: ['./startup.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

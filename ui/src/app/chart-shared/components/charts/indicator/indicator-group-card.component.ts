@@ -17,7 +17,7 @@
  */
 
 import { NgStyle } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import {
     FlexDirective,
@@ -46,6 +46,7 @@ export interface IndicatorGroupCardView {
     selector: 'sp-indicator-group-card',
     templateUrl: './indicator-group-card.component.html',
     styleUrls: ['./indicator-group-card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,
