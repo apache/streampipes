@@ -124,7 +124,7 @@ public class AvailableMigrations {
         new RemoveAssetUserRoleMigration(roleStorage, userGroupStorage, userStorage),
         new RemoveInternalNotificationSinkMigration(pipelineStorage),
         new MigrateDatasetMetadataMigration(datasetStorage, permissionStorage),
-        new MigrateDataLakePersistPipelineTemplateMigration(pipelineTemplateStorage)
+        new MigrateDataLakePersistPipelineTemplateMigration(pipelineTemplateStorage),
         new ReplaceDefaultServiceSecretMigration(userStorage)
     );
   }
