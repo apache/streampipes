@@ -9,10 +9,10 @@ file is the map.
 
 ## Toolchain (read this before running anything)
 
-- **Java:** CI builds with **JDK 25** (Temurin). The compiler runs with `<release>17</release>`
-  (`pom.xml`), so the **language level is Java 17** — do not use syntax newer than 17.
-  `.java-version` pins 17 for local tooling; the `maven.compiler.source/target=25` properties
-  in `pom.xml` are overridden by the `release` flag and can be ignored.
+- **Java:** **JDK 25** (Temurin) everywhere: CI, the dev container, the Docker images and the
+  compiler (`<release>25</release>` in `pom.xml`). The enforcer plugin rejects older JDKs, so the
+  language level is Java 25. `.java-version` is gitignored; if you use jenv or similar, point
+  it at a local JDK 25.
 - **Maven** 3.8+. **Node** 22 with npm for `ui/`. **Docker + Compose** for the service stack.
 - **Python client:** Poetry — see `streampipes-client-python/AGENTS.md`.
 - **Go client:** Go 1.21 — see `streampipes-client-go/AGENTS.md`.
