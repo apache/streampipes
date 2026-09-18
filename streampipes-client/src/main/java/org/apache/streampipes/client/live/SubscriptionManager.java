@@ -67,12 +67,11 @@ public class SubscriptionManager {
   }
 
   public ISubscription subscribe() {
-
+    var protocol = getTransportProtocol();
     try {
-      SpProtocolDefinition<TransportProtocol> protocolDefinition = findProtocol(getTransportProtocol());
+      SpProtocolDefinition<TransportProtocol> protocolDefinition = findProtocol(protocol);
       final SpDataFormatDefinition converter = SpDataFormatManager.getFormatDefinition();
 
-      var protocol = getTransportProtocol();
       if (overrideSettings) {
         if (protocol instanceof KafkaTransportProtocol) {
           brokerConfigOverride.overrideKafkaHostname((KafkaTransportProtocol) protocol);
@@ -95,7 +94,7 @@ public class SubscriptionManager {
     } catch (NoSuchElementException e) {
       throw new SpRuntimeException(
           "Could not find an implementation for messaging protocol "
-              + this.grounding.getTransportProtocol().getClass().getCanonicalName()
+              + protocol.getClass().getCanonicalName()
               + "- please add the corresponding module (streampipes-messaging-*) to your project dependencies.");
 
     }
