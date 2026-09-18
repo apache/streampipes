@@ -15,7 +15,7 @@
 
 services:
   influxdb:
-    image: influxdb:2.6
+    image: influxdb:2.9
     environment:
       - INFLUXDB_DATA_ENGINE=tsm1
       - INFLUXDB_REPORTING_DISABLED=false
