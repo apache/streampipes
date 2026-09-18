@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogRef,
     FormLabelComponent,
@@ -41,6 +47,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-compatible-elements',
     templateUrl: './compatible-elements.component.html',
     styleUrls: ['./compatible-elements.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

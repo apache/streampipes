@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
     LayoutAlignDirective,
     LayoutDirective,
@@ -25,6 +25,7 @@ import {
 @Component({
     selector: 'sp-adapter-status-light',
     templateUrl: './adapter-status-light.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LayoutDirective, LayoutAlignDirective],
 })
 export class AdapterStatusLightComponent {

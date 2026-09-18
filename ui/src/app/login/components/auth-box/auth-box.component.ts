@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AppConstants } from '../../../services/app.constants';
 import { LinkSettings } from '@streampipes/platform-services';
 import {
@@ -31,6 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-auth-box',
     templateUrl: './auth-box.component.html',
     styleUrls: ['./auth-box.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

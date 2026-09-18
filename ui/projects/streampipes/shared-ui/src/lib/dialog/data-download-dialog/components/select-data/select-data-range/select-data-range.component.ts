@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DataExplorerDataConfig,
     DateRange,
@@ -26,8 +31,8 @@ import { SplitSectionComponent } from '../../../../../components/split-section/s
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import {
-    DefaultLayoutDirective,
-    DefaultLayoutGapDirective,
+    LayoutDirective,
+    LayoutGapDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { DateInputComponent } from '../../../../../components/date-input/date-input.component';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -39,13 +44,14 @@ import { TranslatePipe } from '@ngx-translate/core';
         './select-data-range.component.scss',
         '../select-data.component.scss',
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         MatRadioGroup,
         FormsModule,
         MatRadioButton,
-        DefaultLayoutDirective,
-        DefaultLayoutGapDirective,
+        LayoutDirective,
+        LayoutGapDirective,
         DateInputComponent,
         TranslatePipe,
     ],

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { WidgetNumberAppearanceConfig } from '../../../../models/dataview-dashboard.model';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -25,6 +25,7 @@ import { SpNumberFormatConfigComponent } from '../../../chart-config/number-form
 @Component({
     selector: 'sp-table-widget-appearance-config',
     templateUrl: './table-widget-appearance-config.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         TranslatePipe,

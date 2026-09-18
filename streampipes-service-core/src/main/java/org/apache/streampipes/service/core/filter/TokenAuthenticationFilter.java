@@ -19,19 +19,21 @@
 package org.apache.streampipes.service.core.filter;
 
 import org.apache.streampipes.commons.constants.HttpConstants;
+import org.apache.streampipes.commons.security.ServiceAccountSecret;
 import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.user.IUserStorage;
-import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.model.ServiceAccountDetails;
 import org.apache.streampipes.user.management.model.UserAccountDetails;
+import org.apache.streampipes.user.management.service.ServiceAccountSecretManager;
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.PasswordUtil;
+import org.apache.streampipes.user.management.util.PrincipalStatus;
 import org.apache.streampipes.user.management.util.TokenUtil;
 
 import org.slf4j.Logger;
@@ -136,7 +138,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     if (principal instanceof UserAccount) {
       return PasswordUtil.validatePassword(passphrase, ((UserAccount) principal).getPassword());
     } else if (principal instanceof ServiceAccount) {
-      return passphrase.equals(SecretEncryptionManager.decrypt(((ServiceAccount) principal).getClientSecret()));
+      String secret = ServiceAccountSecretManager.readSecret((ServiceAccount) principal);
+      return ServiceAccountSecret.isValid(secret) && passphrase.equals(secret);
     } else {
       throw new IllegalArgumentException("Unknown user instance");
     }
@@ -149,13 +152,17 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
   private void applySuccessfulAuth(HttpServletRequest request,
                                    String username) {
     Principal user = userStorage.getUser(username);
+    if (!PrincipalStatus.canAuthenticate(user)) {
+      return;
+    }
     PrincipalUserDetails<?> userDetails = makeDetails(user);
     var onBehalfOfHeader = request.getHeader(HttpConstants.X_ON_BEHALF_OF);
     if (canActOnBehalfOf(userDetails.getAuthorities()) && onBehalfOfHeader != null) {
       var onBehalfOf = userStorage.getUserById(onBehalfOfHeader);
-      if (onBehalfOf != null) {
-        userDetails = makeDetails(onBehalfOf);
+      if (!PrincipalStatus.canAuthenticate(onBehalfOf)) {
+        return;
       }
+      userDetails = makeDetails(onBehalfOf);
     }
     UsernamePasswordAuthenticationToken authentication =
         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

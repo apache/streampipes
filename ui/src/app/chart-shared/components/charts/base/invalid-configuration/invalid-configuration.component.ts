@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -29,6 +29,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-invalid-configuration',
     templateUrl: './invalid-configuration.component.html',
     styleUrls: ['../no-data/no-data-in-date-range.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

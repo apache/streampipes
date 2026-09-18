@@ -23,6 +23,7 @@ import {
     input,
     output,
     signal,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { SpLabel } from '@streampipes/platform-services';
 import {
@@ -49,6 +50,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-edit-label',
     templateUrl: './edit-label.component.html',
     styleUrls: ['./edit-label.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         NgClass,

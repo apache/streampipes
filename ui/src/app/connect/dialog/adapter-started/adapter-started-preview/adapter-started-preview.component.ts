@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AdapterService, SpDataStream } from '@streampipes/platform-services';
 import { RestService } from '../../../services/rest.service';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -25,6 +31,7 @@ import { PipelineElementRuntimeInfoComponent } from '@streampipes/shared-ui';
 @Component({
     selector: 'sp-adapter-started-preview',
     templateUrl: './adapter-started-preview.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

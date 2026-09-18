@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { stringify } from 'yaml';
 import { MatTab, MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
 import { MatIconButton } from '@angular/material/button';
@@ -33,6 +38,7 @@ import { YamlPrettyPrintPipe } from '../pipes/yaml-pretty-print.pipe';
     selector: 'sp-configuration-code-panel',
     templateUrl: './configuration-code-panel.component.html',
     styleUrls: ['./configuration-code-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatTabGroup,
         MatTab,

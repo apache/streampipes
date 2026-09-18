@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { PipelineElementConfig } from '../../../../model/editor.model';
 import { forkJoin } from 'rxjs';
 import { PipelinePositioningService } from '../../../../services/pipeline-positioning.service';
@@ -34,6 +39,7 @@ import { SpSpinnerComponent } from '@streampipes/shared-ui';
     selector: 'sp-pipeline-assembly-options-pipeline-cache',
     templateUrl: './pipeline-assembly-options-pipeline-cache.component.html',
     styleUrls: ['./pipeline-assembly-options-pipeline-cache.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

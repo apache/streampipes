@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import {
@@ -39,6 +45,7 @@ import { StyleDirective } from '@ngbracket/ngx-layout/extended';
 @Component({
     selector: 'sp-data-explorer-image-widget',
     templateUrl: './image-widget.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutAlignDirective,

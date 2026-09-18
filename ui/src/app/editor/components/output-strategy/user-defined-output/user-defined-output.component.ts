@@ -16,11 +16,17 @@
  *
  */
 
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { BaseOutputStrategy } from '../base/BaseOutputStrategy';
 import {
     DataType,
     EventPropertyPrimitive,
+    EventPropertyUnion,
     UserDefinedOutputStrategy,
 } from '@streampipes/platform-services';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
@@ -43,6 +49,7 @@ import { FormFieldComponent } from '@streampipes/shared-ui';
     selector: 'sp-user-defined-output-strategy',
     templateUrl: './user-defined-output.component.html',
     styleUrls: ['./user-defined-output.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,
@@ -129,5 +136,13 @@ export class UserDefinedOutputStrategyComponent
         } else {
             this.parentForm.controls['output-strategy'].setErrors(undefined);
         }
+    }
+    isPrimitiveProperty(
+        property: EventPropertyUnion,
+    ): property is EventPropertyPrimitive {
+        return (
+            property['@class'] ===
+            'org.apache.streampipes.model.schema.EventPropertyPrimitive'
+        );
     }
 }

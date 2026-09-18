@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef, SpSpinnerComponent } from '@streampipes/shared-ui';
 import { DatalakeRestService } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -31,6 +37,7 @@ import { MatDivider } from '@angular/material/divider';
 @Component({
     selector: 'sp-delete-dataset-dialog',
     templateUrl: './delete-dataset-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

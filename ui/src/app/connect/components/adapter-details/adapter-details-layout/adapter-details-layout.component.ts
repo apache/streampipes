@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { AdapterDescription } from '@streampipes/platform-services';
 import {
     SpBasicViewComponent,
@@ -33,6 +33,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-adapter-details-layout',
     templateUrl: './adapter-details-layout.component.html',
     styleUrl: './adapter-details-layout.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         SpElementIdComponent,

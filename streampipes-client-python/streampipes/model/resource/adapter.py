@@ -15,11 +15,15 @@
 # limitations under the License.
 #
 
-"""Summary representation of an adapter."""
+"""Representations of adapters returned by the adapter APIs."""
+
+from typing import Any
+
+from pydantic import ConfigDict, Field
 
 from streampipes.model.resource.resource import Resource
 
-__all__ = ["AdapterSummary"]
+__all__ = ["AdapterDescription", "AdapterSummary"]
 
 
 class AdapterSummary(Resource):
@@ -41,3 +45,14 @@ class AdapterSummary(Resource):
             **self.model_dump(exclude={"included_assets"}),
             "num_included_assets": len(self.included_assets) if self.included_assets is not None else 0,
         }
+
+
+class AdapterDescription(AdapterSummary):
+    """Complete adapter representation returned by the detail endpoint."""
+
+    model_config = ConfigDict(extra="allow")
+
+    class_name: str | None = Field(default=None, alias="@class")
+    data_stream: dict[str, Any] | None = None
+    config: list[dict[str, Any]] = Field(default_factory=list)
+    selected_endpoint_url: str | None = None

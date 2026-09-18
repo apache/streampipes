@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { PipelineUpdateInfo } from '@streampipes/platform-services';
 import {
     LayoutAlignDirective,
@@ -30,6 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-adapter-started-update-migration',
     templateUrl: './adapter-started-update-migration.component.html',
     styleUrls: ['./adapter-started-update-migration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

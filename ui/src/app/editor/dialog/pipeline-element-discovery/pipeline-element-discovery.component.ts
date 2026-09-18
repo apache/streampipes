@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DialogRef,
     FormLabelComponent,
@@ -44,6 +50,7 @@ import { MatButton } from '@angular/material/button';
     selector: 'sp-pipeline-element-discovery',
     templateUrl: './pipeline-element-discovery.component.html',
     styleUrls: ['./pipeline-element-discovery.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

@@ -24,6 +24,7 @@ import {
     Output,
     ViewChild,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     AssetConstants,
@@ -54,6 +55,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'sp-asset-details-links',
     templateUrl: './asset-details-links.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         LayoutGapDirective,

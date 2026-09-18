@@ -23,6 +23,7 @@ import {
     OnDestroy,
     OnInit,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     LivePreviewService,
@@ -39,6 +40,7 @@ import { LivePreviewErrorComponent } from './live-preview-error/live-preview-err
 @Component({
     selector: 'sp-pipeline-element-runtime-info',
     templateUrl: './pipeline-element-runtime-info.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LivePreviewTableComponent, LivePreviewErrorComponent],
 })
 export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {

@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
 import { MatFormField, MatSuffix } from '@angular/material/form-field';
@@ -30,6 +35,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     selector: 'sp-service-configs-text',
     templateUrl: './service-configs-text.component.html',
     providers: [ConfigurationService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatFormField,
         FlexDirective,

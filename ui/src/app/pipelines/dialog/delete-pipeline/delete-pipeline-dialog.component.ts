@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { PipelineService } from '@streampipes/platform-services';
 import { DialogRef, SpSpinnerComponent } from '@streampipes/shared-ui';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -31,6 +36,7 @@ import { MatDivider } from '@angular/material/divider';
 @Component({
     selector: 'sp-delete-pipeline-dialog',
     templateUrl: './delete-pipeline-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

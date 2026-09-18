@@ -31,6 +31,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     InvocablePipelineElementUnion,
@@ -85,6 +86,7 @@ import { EnabledPipelineElementFilter } from '../../filter/enabled-pipeline-elem
     selector: 'sp-pipeline',
     templateUrl: './pipeline.component.html',
     styleUrls: ['./pipeline.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgStyle,
         StyleDirective,

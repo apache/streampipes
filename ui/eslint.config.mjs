@@ -19,6 +19,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import js from '@eslint/js';
+import angular from 'angular-eslint';
 import { FlatCompat } from '@eslint/eslintrc';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -41,12 +42,14 @@ export default defineConfig([
     {
         files: ['**/*.ts'],
 
-        extends: compat.extends(
-            'prettier',
-            'plugin:@angular-eslint/recommended',
-            'plugin:@typescript-eslint/recommended',
-            'plugin:@angular-eslint/template/process-inline-templates',
-        ),
+        extends: [
+            ...compat.extends(
+                'prettier',
+                'plugin:@typescript-eslint/recommended',
+            ),
+            ...angular.configs.tsRecommended,
+        ],
+        processor: angular.processInlineTemplates,
 
         languageOptions: {
             ecmaVersion: 5,
@@ -74,6 +77,8 @@ export default defineConfig([
             '@typescript-eslint/ban-types': 'off',
             '@typescript-eslint/ban-ts-comment': 'off',
             '@angular-eslint/prefer-inject': 'off',
+            // Preserve the change detection strategy retained by the Angular 22 migration.
+            '@angular-eslint/prefer-on-push-component-change-detection': 'off',
 
             '@angular-eslint/component-selector': [
                 'error',
@@ -123,7 +128,7 @@ export default defineConfig([
     },
     {
         files: ['**/*.html'],
-        extends: compat.extends('plugin:@angular-eslint/template/recommended'),
+        extends: angular.configs.templateRecommended,
         rules: {},
     },
 ]);

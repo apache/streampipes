@@ -24,6 +24,7 @@ import {
     OnInit,
     SimpleChanges,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     AssetLinkType,
@@ -51,6 +52,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-home-asset-table',
     templateUrl: './home-asset-table.component.html',
     styleUrls: ['./home-asset-table.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpTableComponent,
         FlexDirective,

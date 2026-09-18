@@ -25,6 +25,7 @@ import {
     OnInit,
     TemplateRef,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { DialogRef } from '../../dialog/base-dialog/dialog-ref';
@@ -84,6 +85,7 @@ import { SearchSelectComponent } from '../../components/search-select/search-sel
     selector: 'sp-object-manage-dialog',
     templateUrl: './object-manage-dialog.component.html',
     styleUrls: ['./object-manage-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgTemplateOutlet,
         FlexDirective,

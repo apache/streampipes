@@ -37,7 +37,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v6.0.0
+        uses: actions/setup-java@v6.0.1
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -52,6 +52,9 @@ jobs:
         run: |
           docker build -t streampipes_pipeline-elements-all-jvm:release-validation ./streampipes-extensions/streampipes-extensions-all-jvm
           docker build -t streampipes_backend:release-validation ./streampipes-service-core
+
+      - name: Generate service credential for client tests
+        run: echo "SP_SERVICE_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
 
       - name: Run Java client single-instance test
         run: |

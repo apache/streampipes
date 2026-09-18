@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { FunctionId } from '@streampipes/platform-services';
 import {
     MatCell,
@@ -41,6 +47,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-functions-overview',
     templateUrl: './functions-overview.component.html',
     styleUrls: ['./functions-overview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpTableComponent,
         MatSort,

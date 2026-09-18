@@ -22,6 +22,7 @@ import {
     OnChanges,
     OnInit,
     SimpleChanges,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { SpAsset } from '@streampipes/platform-services';
 import { FormFieldComponent } from '@streampipes/shared-ui';
@@ -46,6 +47,7 @@ export interface CustomField {
 @Component({
     selector: 'sp-asset-details-custom-fields',
     templateUrl: './asset-details-custom-fields.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormFieldComponent,
         LayoutDirective,

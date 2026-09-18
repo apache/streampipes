@@ -39,9 +39,7 @@ import org.apache.streampipes.wrapper.params.generator.DataProcessorParameterGen
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.ValueMapper;
 
-import java.util.Map;
 import java.util.regex.Pattern;
 
 public class KafkaStreamsDataProcessorRuntime extends KafkaStreamsRuntime<
@@ -81,8 +79,7 @@ public class KafkaStreamsDataProcessorRuntime extends KafkaStreamsRuntime<
       }
 
       stream
-          .flatMapValues((ValueMapper<String, Iterable<Map<String, Object>>>) s ->
-              new JsonToMapFormat(pipelineElementInvocation).apply(s))
+          .flatMapValues(new JsonToMapFormat(pipelineElementInvocation))
           .foreach((key, rawEvent) -> {
             var event = internalRuntimeParameters.makeEvent(runtimeParameters, rawEvent, getTopic(inputStream));
             pipelineElement.onEvent(event, outputCollector);

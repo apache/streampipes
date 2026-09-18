@@ -59,7 +59,7 @@
                                 .selectedInterval
                         "
                         matInput
-                        (input)="selectInterval($event.target.value)"
+                        (input)="selectInterval($event.target.valueAsNumber)"
                         min="0"
                     />
                 </mat-form-field>
@@ -68,8 +68,7 @@
             <mat-checkbox
                 color="accent"
                 [(ngModel)]="
-                    currentlyConfiguredWidget.visualizationConfig
-                        .selectedLastSeen
+                    currentlyConfiguredWidget.visualizationConfig.showLastSeen
                 "
                 (ngModelChange)="showLastSeen($event)"
             >

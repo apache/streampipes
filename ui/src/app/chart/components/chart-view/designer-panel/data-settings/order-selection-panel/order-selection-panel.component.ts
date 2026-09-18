@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SourceConfig } from '@streampipes/platform-services';
 import { ChartConfigurationService } from '../../../../../../chart-shared/services/chart-configuration.service';
 import { SplitSectionComponent } from '@streampipes/shared-ui';
@@ -28,6 +34,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-order-selection-panel',
     templateUrl: './order-selection-panel.component.html',
     styleUrls: ['./order-selection-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         MatRadioGroup,

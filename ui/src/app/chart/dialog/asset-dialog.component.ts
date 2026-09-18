@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { SpAssetTreeNode } from '@streampipes/platform-services';
 import {
     AssetLinkConfigurationComponent,
@@ -35,6 +41,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'sp-asset-dialog',
     templateUrl: './asset-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,
@@ -52,7 +59,7 @@ export class AssetDialogComponent implements OnInit {
     @Input() originalAssets: SpAssetTreeNode[];
     @Input() dataViewId: string;
     // TODO why is this a string and not a boolean
-    @Input() editMode: string;
+    @Input() editMode: boolean;
     @Input() cancelTitle: string;
     @Input() okTitle: string;
 

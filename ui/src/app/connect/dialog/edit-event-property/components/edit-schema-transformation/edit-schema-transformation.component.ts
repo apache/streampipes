@@ -23,6 +23,7 @@ import {
     OnInit,
     Output,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     debounceTime,
@@ -65,6 +66,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-edit-schema-transformation',
     templateUrl: './edit-schema-transformation.component.html',
     styleUrls: ['../../edit-event-property.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         FormFieldComponent,

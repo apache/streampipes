@@ -26,6 +26,7 @@ import { SpServiceConfiguration } from '@streampipes/platform-services';
 import {
     provideHttpClient,
     withInterceptorsFromDi,
+    withXhr,
 } from '@angular/common/http';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -38,7 +39,7 @@ describe('ConfigurationService', () => {
             imports: [],
             providers: [
                 ConfigurationService,
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(withXhr(), withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
         });

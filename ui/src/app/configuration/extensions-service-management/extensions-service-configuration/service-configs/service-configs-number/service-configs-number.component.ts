@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { ConfigurationService } from '../../../../shared/configuration.service';
 import { ConfigItem } from '@streampipes/platform-services';
 import { MatFormField } from '@angular/material/form-field';
@@ -27,6 +32,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
     selector: 'sp-service-configs-number',
     templateUrl: './service-configs-number.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatFormField, FlexDirective, MatInput, FormsModule],
 })
 export class ServiceConfigsNumberComponent {

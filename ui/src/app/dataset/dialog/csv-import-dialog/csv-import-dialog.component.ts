@@ -24,6 +24,7 @@ import {
     Input,
     signal,
     viewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -75,6 +76,7 @@ import { CsvImportUploadStateComponent } from './csv-import-upload-state/csv-imp
     selector: 'sp-csv-import-dialog',
     templateUrl: './csv-import-dialog.component.html',
     styleUrls: ['./csv-import-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         ReactiveFormsModule,

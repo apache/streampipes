@@ -193,7 +193,7 @@
                                         >
                                             @if (column === 'time') {
                                                 {{
-                                                    row[column]
+                                                    asTimestamp(row[column])
                                                         | date
                                                             : 'yyyy-MM-dd HH:mm:ss.SSS'
                                                 }}

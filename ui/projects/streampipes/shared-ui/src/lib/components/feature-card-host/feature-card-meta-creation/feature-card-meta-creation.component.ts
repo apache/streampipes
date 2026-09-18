@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FeatureCardMetaSectionComponent } from '../feature-card-meta-section/feature-card-meta-section.component';
 import {
     LayoutDirective,
@@ -29,6 +29,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-feature-card-meta-creation',
     templateUrl: './feature-card-meta-creation.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FeatureCardMetaSectionComponent,
         LayoutDirective,

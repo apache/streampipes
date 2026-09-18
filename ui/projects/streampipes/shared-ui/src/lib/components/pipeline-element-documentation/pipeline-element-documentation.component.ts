@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { PipelineElementService } from '@streampipes/platform-services';
 import { Lexer, Parser } from 'marked';
 import { MarkdownComponent } from 'ngx-markdown';
@@ -28,6 +34,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-pipeline-element-documentation',
     templateUrl: './pipeline-element-documentation.component.html',
     styleUrls: ['./pipeline-element-documentation.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MarkdownComponent, NgClass, ClassDirective, TranslatePipe],
 })
 export class PipelineElementDocumentationComponent implements OnInit {

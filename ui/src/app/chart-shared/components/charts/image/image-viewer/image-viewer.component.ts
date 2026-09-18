@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { NgStyle } from '@angular/common';
@@ -28,6 +28,7 @@ import { ImageBarComponent } from '../image-bar/image-bar.component';
     selector: 'sp-image-viewer',
     templateUrl: './image-viewer.component.html',
     styleUrls: ['./image-viewer.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgStyle,
         StyleDirective,

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -49,6 +49,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-register-user',
     templateUrl: './register.component.html',
     styleUrls: ['../login/login.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AuthBoxComponent,
         FlexDirective,

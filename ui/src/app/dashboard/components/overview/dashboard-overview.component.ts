@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     CurrentUserService,
     SpAssetBrowserService,
@@ -39,6 +46,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-dashboard-overview',
     templateUrl: './dashboard-overview.component.html',
     styleUrls: ['./dashboard-overview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpBasicViewComponent,
         SpPageHeaderComponent,

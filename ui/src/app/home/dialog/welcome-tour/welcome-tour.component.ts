@@ -23,7 +23,13 @@ import {
     SpAlertBannerComponent,
     SpSpinnerComponent,
 } from '@streampipes/shared-ui';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AppConstants } from '../../../services/app.constants';
 import { AuthService } from '../../../services/auth.service';
 import {
@@ -50,6 +56,7 @@ import { LayoutGapDirective } from '@ngbracket/ngx-layout';
     selector: 'sp-welcome-tour',
     templateUrl: './welcome-tour.component.html',
     styleUrls: ['./welcome-tour.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,
