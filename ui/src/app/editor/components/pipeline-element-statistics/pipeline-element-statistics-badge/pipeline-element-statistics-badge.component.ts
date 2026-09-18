@@ -16,11 +16,12 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'sp-pipeline-element-statistics-badge',
     templateUrl: './pipeline-element-statistics-badge.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./pipeline-element-statistics-badge.component.scss'],
 })
 export class PipelineElementStatisticsBadgeComponent {

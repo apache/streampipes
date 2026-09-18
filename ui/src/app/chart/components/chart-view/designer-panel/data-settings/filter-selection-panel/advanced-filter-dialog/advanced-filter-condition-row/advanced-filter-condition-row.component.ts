@@ -23,6 +23,7 @@ import {
     OnChanges,
     Output,
     SimpleChanges,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     FieldConfig,
@@ -39,6 +40,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'sp-advanced-filter-condition-row',
     templateUrl: './advanced-filter-condition-row.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FilterSelectionPanelRowPropertySelectionComponent,
         FilterSelectionPanelRowOperationSelectionComponent,

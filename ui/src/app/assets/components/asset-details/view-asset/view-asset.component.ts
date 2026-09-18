@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BaseAssetDetailsDirective } from '../base-asset-details.directive';
 import {
     LocationConfig,
@@ -41,6 +41,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-view-asset',
     templateUrl: './view-asset.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpAssetTopBannerComponent,
         SpBasicViewComponent,

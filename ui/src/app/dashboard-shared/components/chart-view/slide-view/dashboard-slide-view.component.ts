@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
 import {
     ClientDashboardItem,
@@ -36,6 +42,7 @@ import { ChartContainerComponent } from '../../../../chart-shared/components/cha
     selector: 'sp-dashboard-slide-view',
     templateUrl: './dashboard-slide-view.component.html',
     styleUrls: ['./dashboard-slide-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

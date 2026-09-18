@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, Input } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
     DataProcessorInvocation,
@@ -32,6 +37,7 @@ import { ClassDirective } from '@ngbracket/ngx-layout/extended';
     selector: 'sp-pipeline-element',
     templateUrl: './pipeline-element.component.html',
     styleUrls: ['./pipeline-element.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, ClassDirective],
 })
 export class PipelineElementComponent {

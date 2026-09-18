@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { DataExplorerField } from '@streampipes/platform-services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -35,6 +36,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
     selector: 'sp-select-properties-config',
     templateUrl: './select-multiple-properties-config.component.html',
     styleUrls: ['./select-multiple-properties-config.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         MatButton,

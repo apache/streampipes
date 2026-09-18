@@ -23,6 +23,7 @@ import {
     Output,
     ViewChild,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { JsplumbBridge } from '../../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../../services/pipeline-positioning.service';
@@ -61,6 +62,7 @@ export interface PipelineAssemblySaveOptions {
     selector: 'sp-pipeline-assembly-options',
     templateUrl: './pipeline-assembly-options.component.html',
     styleUrls: ['./pipeline-assembly-options.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

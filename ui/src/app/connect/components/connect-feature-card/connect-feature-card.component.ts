@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { FlexFillDirective } from '@ngbracket/ngx-layout';
 import {
@@ -49,6 +55,7 @@ import {
     selector: 'sp-connect-feature-card',
     templateUrl: './connect-feature-card.component.html',
     styleUrls: ['./connect-feature-card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexFillDirective,
         FlexDirective,

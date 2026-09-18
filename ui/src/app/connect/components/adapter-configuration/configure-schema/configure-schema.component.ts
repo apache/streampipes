@@ -26,6 +26,7 @@ import {
     OnInit,
     Output,
     signal,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import {
@@ -69,6 +70,7 @@ import { validateFieldNames } from './field-name-validation';
     selector: 'sp-configure-schema',
     templateUrl: './configure-schema.component.html',
     styleUrl: './configure-schema.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

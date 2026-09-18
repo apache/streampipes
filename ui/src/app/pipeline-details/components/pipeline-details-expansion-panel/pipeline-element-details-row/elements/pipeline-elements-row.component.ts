@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { PipelineElementUnion } from '../../../../../editor/model/editor.model';
 import { PipelineElementTypeUtils } from '../../../../../editor/utils/editor.utils';
 import {
@@ -34,6 +39,7 @@ import { PipelineElementComponent } from '@streampipes/shared-ui';
     styleUrls: [
         '../../../../../editor/components/pipeline-element-icon-stand/pipeline-element-icon-stand-row/pipeline-element-icon-stand-row.component.scss',
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

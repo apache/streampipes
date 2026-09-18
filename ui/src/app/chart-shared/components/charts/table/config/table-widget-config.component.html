@@ -23,7 +23,7 @@
 >
     <sp-select-properties-config
         [label]="'Select Fields' | translate"
-        multiple="true"
+        [multiple]="true"
         (changeSelectedProperties)="setSelectedColumn($event)"
         [availableProperties]="fieldProvider.allFields"
         [selectedProperties]="

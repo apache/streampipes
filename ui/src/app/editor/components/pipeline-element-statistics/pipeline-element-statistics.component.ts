@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { SpMetricsEntry } from '@streampipes/platform-services';
 import {
@@ -36,6 +41,7 @@ import { KeyValuePipe } from '@angular/common';
     selector: 'sp-pipeline-element-statistics',
     templateUrl: './pipeline-element-statistics.component.html',
     styleUrls: ['./pipeline-element-statistics.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,

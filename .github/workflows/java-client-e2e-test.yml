@@ -53,6 +53,9 @@ jobs:
           docker build -t streampipes_pipeline-elements-all-jvm:release-validation ./streampipes-extensions/streampipes-extensions-all-jvm
           docker build -t streampipes_backend:release-validation ./streampipes-service-core
 
+      - name: Generate service credential for client tests
+        run: echo "SP_SERVICE_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+
       - name: Run Java client single-instance test
         run: |
           docker compose -f ./streampipes-client-e2e/docker-compose.yml -p streampipes-client-e2e-single up -d

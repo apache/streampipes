@@ -22,6 +22,7 @@ import {
     Input,
     OnInit,
     ViewEncapsulation,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DialogRef,
@@ -53,6 +54,7 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './change-email-dialog.component.html',
     styleUrls: ['./change-email-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FlexDirective,
     FlexFillDirective,
@@ -47,6 +53,7 @@ import { DashboardGridViewComponent } from '../../../dashboard-shared/components
     selector: 'sp-dashboard-feature-card',
     templateUrl: './dashboard-feature-card.component.html',
     styleUrls: ['./dashboard-feature-card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexFillDirective,
         MatDivider,

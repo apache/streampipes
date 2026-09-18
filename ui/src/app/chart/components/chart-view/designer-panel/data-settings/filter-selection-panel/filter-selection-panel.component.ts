@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DatalakeRestService,
     FilterExpressionGroup,
@@ -48,6 +54,7 @@ import { FilterExpressionPreviewService } from './filter-expression-preview.serv
 @Component({
     selector: 'sp-filter-selection-panel',
     templateUrl: './filter-selection-panel.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         LayoutAlignDirective,

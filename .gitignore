@@ -157,3 +157,7 @@ __pycache__
 
 # Develocity
 .mvn/.develocity
+
+# Generated Compose credentials
+/installer/compose/.env
+/.env

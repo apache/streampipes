@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import {
@@ -31,6 +36,7 @@ import { AdapterConfigurationComponent } from '../adapter-configuration/adapter-
     selector: 'sp-edit-adapter',
     templateUrl: './edit-adapter.component.html',
     styleUrls: ['./edit-adapter.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [AdapterConfigurationComponent],
 })
 export class EditAdapterComponent implements OnInit {

@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef, SpAlertBannerComponent } from '@streampipes/shared-ui';
 import { Notification } from '@streampipes/platform-services';
 import { LayoutDirective } from '@ngbracket/ngx-layout/flex';
@@ -27,6 +32,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-matching-error',
     templateUrl: './matching-error.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         MatButton,

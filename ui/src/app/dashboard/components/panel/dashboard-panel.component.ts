@@ -23,6 +23,7 @@ import {
     OnInit,
     TemplateRef,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     firstValueFrom,
@@ -119,6 +120,7 @@ import { AsyncPipe } from '@angular/common';
         '../../../chart/components/chart-view/designer-panel/chart-designer-panel.component.scss',
     ],
     providers: [DashboardCopyService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AsyncPipe,
         SpBasicViewComponent,

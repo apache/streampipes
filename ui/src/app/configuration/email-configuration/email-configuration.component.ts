@@ -17,7 +17,12 @@
  */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, inject } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -54,6 +59,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
     selector: 'sp-email-configuration',
     templateUrl: './email-configuration.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

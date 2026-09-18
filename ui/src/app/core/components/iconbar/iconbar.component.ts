@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
 import {
     FlexDirective,
@@ -32,6 +32,7 @@ import { UpperCasePipe } from '@angular/common';
     selector: 'sp-iconbar',
     templateUrl: './iconbar.component.html',
     styleUrls: ['./iconbar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutAlignDirective,

@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule, UntypedFormBuilder } from '@angular/forms';
 import {
     EmailTemplate,
@@ -43,6 +48,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'sp-email-template-configuration',
     templateUrl: './email-template-configuration.component.html',
     styleUrls: ['./email-template-configuration.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         SplitSectionComponent,

@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, Input, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { PipelineElementUnion } from '../../../../editor/model/editor.model';
 import { SpLogEntry } from '@streampipes/platform-services';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
@@ -35,6 +40,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'sp-pipeline-element-details-row',
     templateUrl: './pipeline-element-details-row.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

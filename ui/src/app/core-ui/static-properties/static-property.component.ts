@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { ConfigurationInfo } from '../../connect/model/ConfigurationInfo';
 import {
@@ -38,6 +45,7 @@ import {
     SecretStaticProperty,
     SlideToggleStaticProperty,
     StaticProperty,
+    StaticPropertyUnion,
     StaticPropertyAlternatives,
     StaticPropertyGroup,
 } from '@streampipes/platform-services';
@@ -68,6 +76,7 @@ import { MatDivider } from '@angular/material/divider';
     selector: 'sp-app-static-property',
     templateUrl: './static-property.component.html',
     styleUrls: ['./static-property.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,
@@ -97,7 +106,7 @@ export class StaticPropertyComponent implements OnInit {
     staticProperty: StaticProperty;
 
     @Input()
-    staticProperties: StaticProperty[];
+    staticProperties: StaticPropertyUnion[];
 
     @Input()
     adapterId: string;

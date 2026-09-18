@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ViewChild,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AssetConstants,
     AssetSiteDesc,
@@ -60,6 +67,7 @@ interface AssetWithSite {
 @Component({
     selector: 'sp-site-area-configuration',
     templateUrl: './site-area-configuration.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         MatButton,

@@ -23,6 +23,7 @@ import {
     Output,
     ViewChild,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     ExtendedTimeSettings,
@@ -45,6 +46,7 @@ import { MatDivider } from '@angular/material/divider';
     selector: 'sp-time-selector-menu',
     templateUrl: 'time-selector-menu.component.html',
     styleUrls: ['./time-selector-menu.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         LayoutGapDirective,

@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, computed, input, output } from '@angular/core';
+import {
+    Component,
+    computed,
+    input,
+    output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     AdapterEventPreviewComponent,
     Mode,
@@ -42,6 +48,7 @@ import { SchemaPreviewStatusComponent } from '../schema-preview-status.component
 @Component({
     selector: 'sp-adapter-result-preview',
     templateUrl: './adapter-result-preview.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: '../schema-preview.scss',
     imports: [
         SchemaPreviewStatusComponent,

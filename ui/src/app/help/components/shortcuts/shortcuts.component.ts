@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import { SpBasicHeaderTitleComponent } from '@streampipes/shared-ui';
@@ -33,6 +33,7 @@ interface ShortcutDefinition {
     selector: 'sp-shortcuts-tab',
     templateUrl: './shortcuts.component.html',
     styleUrl: './shortcuts.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [LayoutDirective, FlexDirective, SpBasicHeaderTitleComponent],
 })
 export class ShortcutsTabComponent {

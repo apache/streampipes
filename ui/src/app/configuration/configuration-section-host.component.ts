@@ -17,7 +17,12 @@
  */
 
 import { NgComponentOutlet } from '@angular/common';
-import { Component, Type, inject } from '@angular/core';
+import {
+    Component,
+    Type,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -34,6 +39,7 @@ import { SpConfigurationTabsService } from './configuration-tabs.service';
     selector: 'sp-configuration-section-host',
     templateUrl: './configuration-section-host.component.html',
     styleUrls: ['./configuration-section-host.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgComponentOutlet,
         SpBasicViewComponent,

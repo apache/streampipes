@@ -24,6 +24,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     AssetLinkType,
@@ -43,6 +44,7 @@ export type PopupAction = 'details' | 'pipelines' | 'dashboards';
     selector: 'sp-asset-map-popup',
     templateUrl: './asset-map-popup.component.html',
     styleUrls: ['./asset-map-popup.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SpLabelComponent,
         AssetLinkChipComponent,

@@ -23,6 +23,7 @@ import {
     Input,
     OnInit,
     Output,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
     DataType,
@@ -53,6 +54,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-event-property-row',
     templateUrl: './event-property-row.component.html',
     styleUrls: ['./event-property-row.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,
@@ -146,7 +148,9 @@ export class EventPropertyRowComponent implements OnInit {
         return runtimeType.split('#')[1].toUpperCase();
     }
 
-    private isEventPropertyPrimitive(instance: EventProperty): boolean {
+    protected isEventPropertyPrimitive(
+        instance: EventProperty,
+    ): instance is EventPropertyPrimitive {
         return instance instanceof EventPropertyPrimitive;
     }
 

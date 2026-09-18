@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, HostListener, inject } from '@angular/core';
+import {
+    Component,
+    HostListener,
+    inject,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     MAT_DIALOG_DATA,
     MatDialogActions,
@@ -35,6 +40,7 @@ import { ConfirmDialogAction, ConfirmDialogData } from './confirm-dialog.model';
     selector: 'sp-confirm-dialog',
     templateUrl: './confirm-dialog.component.html',
     styleUrls: ['./confirm-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
         LayoutDirective,

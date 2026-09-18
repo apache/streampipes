@@ -20,6 +20,7 @@ package org.apache.streampipes.security.jwt;
 
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
@@ -87,11 +88,10 @@ public class JwtTokenGenerator {
   private static JwtBuilder prepareJwtToken(String subject,
                                             Key key,
                                             Date expirationDate) {
-    return Jwts
-        .builder()
+    JwtBuilder builder = Jwts.builder()
         .setSubject(subject)
         .setIssuedAt(new Date())
-        .setExpiration(expirationDate)
-        .signWith(key);
+        .setExpiration(expirationDate);
+    return key instanceof RSAPrivateKey ? builder.signWith(key, SignatureAlgorithm.RS256) : builder.signWith(key);
   }
 }

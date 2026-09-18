@@ -17,6 +17,7 @@
  */
 
 import {
+    ChangeDetectionStrategy,
     Component,
     computed,
     ElementRef,
@@ -70,6 +71,7 @@ declare const monaco: typeof monacoType;
     selector: 'sp-adapter-script-editor',
     templateUrl: './adapter-script-editor.component.html',
     styleUrl: './adapter-script-editor.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: { '[class.editor-fullscreen]': 'fullscreen()' },
     imports: [
         SchemaPreviewStatusComponent,
@@ -217,7 +219,7 @@ export class AdapterScriptEditorComponent implements OnDestroy {
     }
 
     @HostListener('keydown.escape', ['$event'])
-    onEscape(event: KeyboardEvent): void {
+    onEscape(event: Event): void {
         if (this.fullscreen() && !event.defaultPrevented) {
             event.preventDefault();
             event.stopPropagation();

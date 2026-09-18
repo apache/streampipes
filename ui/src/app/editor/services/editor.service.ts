@@ -73,7 +73,9 @@ export class EditorService {
         );
     }
 
-    updatePartialPipeline(pipeline): Observable<PipelineModificationMessage> {
+    updatePartialPipeline(
+        pipeline: Pipeline,
+    ): Observable<PipelineModificationMessage> {
         return this.pipelineService.validatePipeline(pipeline);
     }
 

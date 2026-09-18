@@ -25,6 +25,7 @@ import {
     OnInit,
     Output,
     ViewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { SpAsset, SpAssetModel } from '@streampipes/platform-services';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -69,6 +70,7 @@ const HOVER_EXPAND_DELAY_MS = 500;
     selector: 'sp-asset-selection-panel',
     templateUrl: './asset-selection-panel.component.html',
     styleUrls: ['./asset-selection-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,

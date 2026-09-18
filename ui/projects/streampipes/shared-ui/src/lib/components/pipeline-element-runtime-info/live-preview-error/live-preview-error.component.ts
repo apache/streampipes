@@ -16,13 +16,14 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-live-preview-error',
     templateUrl: './live-preview-error.component.html',
     styleUrls: ['./live-preview-error.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslatePipe],
 })
 export class LivePreviewErrorComponent {}

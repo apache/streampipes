@@ -30,6 +30,7 @@ import {
     HostListener,
     ViewChild,
     inject,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -101,6 +102,7 @@ const TIMESTAMP_MASK = 'yyyy-mm-dd HH:mm:ss.SSS';
     selector: 'sp-data-explorer-table-widget',
     templateUrl: './table-widget.component.html',
     styleUrls: ['./table-widget.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,
@@ -1286,5 +1288,12 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
     private updatePagedRows(): void {
         const start = this.pageIndex * this.pageSize;
         this.pagedRows = this.filteredRows.slice(start, start + this.pageSize);
+    }
+    asTimestamp(value: unknown): string | number | Date | null {
+        return typeof value === 'string' ||
+            typeof value === 'number' ||
+            value instanceof Date
+            ? value
+            : null;
     }
 }

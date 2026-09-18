@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
     PipelineService,
@@ -31,6 +37,7 @@ import { PipelineStartService } from '../../services/pipeline-start.service';
 @Component({
     selector: 'sp-start-all-pipelines-dialog',
     templateUrl: './start-all-pipelines-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FlexDirective, MatDivider, MatButton, TranslatePipe],
 })
 export class StartAllPipelinesDialogComponent implements OnInit {

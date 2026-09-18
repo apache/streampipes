@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, computed, input } from '@angular/core';
+import {
+    Component,
+    computed,
+    input,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     PipelineElementStatus,
     PipelineOperationStatus,
@@ -32,6 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'sp-pipeline-operation-status',
     templateUrl: './pipeline-operation-status.component.html',
     styleUrls: ['./pipeline-operation-status.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatIcon, SpAlertBannerComponent, SpLabelComponent, TranslatePipe],
 })
 export class PipelineOperationStatusComponent {

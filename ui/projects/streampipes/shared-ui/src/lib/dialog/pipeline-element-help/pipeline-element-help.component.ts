@@ -16,7 +16,14 @@
  *
  */
 
-import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    DestroyRef,
+    inject,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
@@ -48,6 +55,7 @@ import { map } from 'rxjs';
     selector: 'sp-pipeline-element-help',
     templateUrl: './pipeline-element-help.component.html',
     styleUrls: ['./pipeline-element-help.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LayoutDirective,
         FlexDirective,
@@ -91,11 +99,13 @@ export class PipelineElementHelpComponent implements OnInit {
 
     isDataStream: boolean;
     assetContext?: SpTableResolvedAssetContext;
+    dataStream: SpDataStream;
 
     ngOnInit() {
         if (this.pipelineElement instanceof SpDataStream) {
             this.tabs = this.availableTabs;
             this.isDataStream = true;
+            this.dataStream = this.pipelineElement as SpDataStream;
             this.assetBrowserService.assetData$
                 .pipe(
                     map(assetData =>
