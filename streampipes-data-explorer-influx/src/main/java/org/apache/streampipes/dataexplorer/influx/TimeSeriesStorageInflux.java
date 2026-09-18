@@ -68,7 +68,7 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
   }
 
   public TimeSeriesStorageInflux(
-      DataLakeMeasure measure,
+      DatasetMetadata measure,
       boolean ignoreDuplicates,
       Environment environment,
       InfluxClientProvider influxClientProvider,
