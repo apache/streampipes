@@ -28,7 +28,7 @@
     <artifactId>streampipes-processors-llm-jvm</artifactId>
 
     <properties>
-      <langchain.version>1.20.0</langchaing.version>
+      <langchain.version>1.20.0</langchain.version>
     </properties>
 
     <dependencies>
