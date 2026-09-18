@@ -113,7 +113,9 @@ services:
       spnet:
 
   mosquitto:
-    image: eclipse-mosquitto:1.5.4
+    image: eclipse-mosquitto:2.0.22
+    volumes:
+      - ../installer/cli/deploy/standalone/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
     logging: *default-logging
     networks:
       spnet:
