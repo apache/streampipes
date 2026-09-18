@@ -113,7 +113,7 @@
     "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.0.1",
     "husky": "^8.0.2",
-    "jsdom": "^28.0.0",
+    "jsdom": "^30.0.1",
     "js-yaml": "^5.4.1",
     "lint-staged": "^15.2.0",
     "mustache": "^4.2.0",
