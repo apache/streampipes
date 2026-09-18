@@ -112,9 +112,6 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
     @Output()
     moveAssetRequested = new EventEmitter<SpAsset>();
 
-    @Output()
-    promoteAssetRequested = new EventEmitter<SpAsset>();
-
     treeControl = new NestedTreeControl<SpAsset>(node => node.assets);
     dataSource = new MatTreeNestedDataSource<SpAsset>();
 
@@ -206,12 +203,6 @@ export class SpAssetSelectionPanelComponent implements OnInit, OnDestroy {
     requestMoveAsset(node: SpAsset): void {
         if (!this.isRootNode(node)) {
             this.moveAssetRequested.emit(node);
-        }
-    }
-
-    requestPromoteAsset(node: SpAsset): void {
-        if (!this.isRootNode(node)) {
-            this.promoteAssetRequested.emit(node);
         }
     }
 

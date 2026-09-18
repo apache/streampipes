@@ -315,6 +315,10 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
                         return;
                     }
 
+                    if (result.destination !== 'parent') {
+                        return;
+                    }
+
                     const assetWasMoved = moveAssetToParent(
                         result.targetAsset,
                         result.targetParentAssetId,

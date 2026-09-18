@@ -17,8 +17,29 @@
 -->
 <div class="move-asset-content" fxLayout="column">
     <p class="move-intro">
-        {{ 'Select the asset that will become the new parent.' | translate }}
+        {{ 'Choose the new location for this asset.' | translate }}
     </p>
+    @if (allowTopLevelMove) {
+        <button
+            mat-flat-button
+            class="btn-secondary top-level-destination"
+            type="button"
+            data-cy="move-asset-top-level"
+            (click)="selectTopLevel()"
+            [class.selected-target]="moveToTopLevel"
+        >
+            <mat-icon aria-hidden="true">vertical_align_top</mat-icon>
+            <span class="top-level-destination-copy">
+                <span>{{ 'Move to top level' | translate }}</span>
+                <span class="top-level-destination-description">{{
+                    'Save this asset without a parent.' | translate
+                }}</span>
+            </span>
+        </button>
+        <p class="tree-section-label">
+            {{ 'Or move it under another asset.' | translate }}
+        </p>
+    }
     <div class="tree-section">
         <mat-tree
             class="move-asset-tree"
@@ -107,7 +128,7 @@
         mat-flat-button
         color="accent"
         type="button"
-        [disabled]="!selectedTarget"
+        [disabled]="!canSave()"
         data-cy="move-asset-save"
         (click)="save()"
     >

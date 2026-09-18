@@ -44,11 +44,20 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 import { DialogRef } from '@streampipes/shared-ui';
 
-export interface MoveAssetDialogResult {
+export interface MoveAssetToParentDialogResult {
+    destination: 'parent';
     targetAsset: SpAssetModel;
     targetParentAssetId: string;
     removeMovedAssetSite: boolean;
 }
+
+export interface MoveAssetToTopLevelDialogResult {
+    destination: 'top-level';
+}
+
+export type MoveAssetDialogResult =
+    | MoveAssetToParentDialogResult
+    | MoveAssetToTopLevelDialogResult;
 
 @Component({
     selector: 'sp-move-asset-dialog',
@@ -82,6 +91,9 @@ export class MoveAssetDialogComponent {
     assetToMove: SpAsset;
 
     @Input()
+    allowTopLevelMove = false;
+
+    @Input()
     set availableAssets(assets: AssetSummaryDto[]) {
         this.dataSource.data = assets.map(asset =>
             this.makeRootAssetPlaceholder(asset),
@@ -91,6 +103,7 @@ export class MoveAssetDialogComponent {
 
     selectedTarget?: SpAsset;
     selectedTargetAsset?: SpAssetModel;
+    moveToTopLevel = false;
     private loadedRootAssetIds = new Set<string>();
 
     hasChild = (_: number, node: SpAsset): boolean =>
@@ -104,6 +117,17 @@ export class MoveAssetDialogComponent {
 
         this.selectedTarget = asset;
         this.selectedTargetAsset = rootAsset;
+        this.moveToTopLevel = false;
+    }
+
+    selectTopLevel(): void {
+        this.moveToTopLevel = true;
+        this.selectedTarget = undefined;
+        this.selectedTargetAsset = undefined;
+    }
+
+    canSave(): boolean {
+        return this.moveToTopLevel || !!this.selectedTarget;
     }
 
     toggleAssetTree(asset: SpAsset): void {
@@ -144,11 +168,17 @@ export class MoveAssetDialogComponent {
     }
 
     save(): void {
+        if (this.moveToTopLevel) {
+            this.dialogRef.close({ destination: 'top-level' });
+            return;
+        }
+
         if (!this.selectedTargetAsset || !this.selectedTarget) {
             return;
         }
 
         this.dialogRef.close({
+            destination: 'parent',
             targetAsset: this.selectedTargetAsset,
             targetParentAssetId: this.selectedTarget.assetId,
             removeMovedAssetSite: !this.sitesAreConsistent(),

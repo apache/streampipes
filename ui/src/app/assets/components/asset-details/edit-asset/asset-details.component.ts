@@ -173,6 +173,7 @@ export class SpAssetDetailsComponent
                     width: '42rem',
                     data: {
                         assetToMove,
+                        allowTopLevelMove: true,
                         availableAssets: summary.resources.filter(
                             candidate =>
                                 candidate.elementId !== this.asset.elementId,
@@ -185,6 +186,11 @@ export class SpAssetDetailsComponent
                 .afterClosed()
                 .subscribe((result: MoveAssetDialogResult | undefined) => {
                     if (!result) {
+                        return;
+                    }
+
+                    if (result.destination === 'top-level') {
+                        this.promoteSubAsset(assetToMove);
                         return;
                     }
 
