@@ -171,11 +171,13 @@ updates:
     cooldown:
       default-days: 7
 
+  # The CLI under /installer/cli is deprecated (see installer/cli/README.md) and
+  # deliberately not covered here; its images are not kept up to date.
   - package-ecosystem: "docker-compose"
     directories:
       - "/"
       - "/installer/compose"
-      - "/installer/cli/deploy/standalone/*"
+      - "/streampipes-client-e2e"
     schedule:
       interval: "daily"
     labels:
@@ -189,6 +191,12 @@ updates:
         update-types: [ "version-update:semver-major" ]
       - dependency-name: "apache/kafka"
         update-types: [ "version-update:semver-major" ]
+    groups:
+      # The same image is pinned in several compose files; bump them together
+      # so one version decision arrives as one PR instead of one per directory
+      kafka:
+        patterns:
+          - "apache/kafka"
     open-pull-requests-limit: 3
     cooldown:
       default-days: 7

@@ -25,6 +25,7 @@ import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public interface IDataExplorerManager {
 
@@ -53,6 +54,16 @@ public interface IDataExplorerManager {
   }
 
   ITimeSeriesStorage getTimeseriesStorage(DatasetMetadata measure, boolean ignoreDuplicates);
+
+  /**
+   * Creates storage with a reporter for recoverable warnings (title and details).
+   * Implementations that do not report warnings retain their existing behavior.
+   */
+  default ITimeSeriesStorage getTimeseriesStorage(DatasetMetadata measure,
+                                                  boolean ignoreDuplicates,
+                                                  BiConsumer<String, String> warningReporter) {
+    return getTimeseriesStorage(measure, ignoreDuplicates);
+  }
 
   IDatasetMetadataSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMetadata measure);
 }

@@ -36,6 +36,7 @@ import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class DataExplorerManagerInflux implements IDataExplorerManager {
 
@@ -77,6 +78,19 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
         ignoreDuplicates,
         Environments.getEnvironment(),
         new InfluxClientProvider()
+    );
+  }
+
+  @Override
+  public ITimeSeriesStorage getTimeseriesStorage(DatasetMetadata measure,
+                                                 boolean ignoreDuplicates,
+                                                 BiConsumer<String, String> warningReporter) {
+    return new TimeSeriesStorageInflux(
+        measure,
+        ignoreDuplicates,
+        Environments.getEnvironment(),
+        new InfluxClientProvider(),
+        warningReporter
     );
   }
 
