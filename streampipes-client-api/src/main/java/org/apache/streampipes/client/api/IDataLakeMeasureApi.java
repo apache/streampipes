@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.model.dataset.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
 import java.util.List;
 import java.util.Optional;

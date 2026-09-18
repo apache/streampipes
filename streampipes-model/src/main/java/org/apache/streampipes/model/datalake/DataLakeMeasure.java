@@ -16,8 +16,10 @@
  *
  */
 
-package org.apache.streampipes.model.dataset;
+package org.apache.streampipes.model.datalake;
 
+import org.apache.streampipes.model.dataset.DatasetMetadata;
+import org.apache.streampipes.model.dataset.RetentionTimeConfig;
 import org.apache.streampipes.model.schema.EventSchema;
 
 /**
