@@ -243,6 +243,27 @@
                                                             'Move' | translate
                                                         }}</span>
                                                     </button>
+                                                    <button
+                                                        mat-menu-item
+                                                        [attr.data-cy]="
+                                                            'promote-asset-' +
+                                                            node.assetName
+                                                        "
+                                                        (click)="
+                                                            requestPromoteAsset(
+                                                                node
+                                                            );
+                                                            $event.stopPropagation()
+                                                        "
+                                                    >
+                                                        <mat-icon
+                                                            >vertical_align_top</mat-icon
+                                                        >
+                                                        <span>{{
+                                                            'Make top-level asset'
+                                                                | translate
+                                                        }}</span>
+                                                    </button>
                                                 }
                                                 @if (canDeleteAsset(node)) {
                                                     <button
@@ -497,6 +518,27 @@
                                                             >
                                                             <span>{{
                                                                 'Move'
+                                                                    | translate
+                                                            }}</span>
+                                                        </button>
+                                                        <button
+                                                            mat-menu-item
+                                                            [attr.data-cy]="
+                                                                'promote-asset-' +
+                                                                node.assetName
+                                                            "
+                                                            (click)="
+                                                                requestPromoteAsset(
+                                                                    node
+                                                                );
+                                                                $event.stopPropagation()
+                                                            "
+                                                        >
+                                                            <mat-icon
+                                                                >vertical_align_top</mat-icon
+                                                            >
+                                                            <span>{{
+                                                                'Promote to top-level asset'
                                                                     | translate
                                                             }}</span>
                                                         </button>

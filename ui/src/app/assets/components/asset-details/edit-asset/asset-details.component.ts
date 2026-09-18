@@ -66,6 +66,7 @@ import {
     moveAssetToParent,
     removeAssetFromParent,
 } from '../../../utils/move-asset';
+import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
 
 type ManageableAsset = SpAssetModel & {
     name: string;
@@ -101,6 +102,7 @@ export class SpAssetDetailsComponent
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
     private permissionsService = inject(PermissionsService);
+    private idGeneratorService = inject(IdGeneratorService);
 
     private pendingManageAssetResult?: ObjectManageDialogResult<ManageableAsset>;
     private originalAsset: SpAssetModel;
@@ -221,6 +223,38 @@ export class SpAssetDetailsComponent
                         });
                 });
         });
+    }
+
+    promoteSubAsset(assetToPromote: SpAsset): void {
+        const promotedAsset: SpAssetModel = {
+            ...assetToPromote,
+            elementId: this.idGeneratorService.generate(24),
+            appDocType: 'asset-management',
+            removable: true,
+            rev: undefined,
+        };
+
+        if (!removeAssetFromParent(this.asset, assetToPromote.assetId)) {
+            return;
+        }
+
+        this.applySelectedAsset({
+            asset: this.asset,
+            rootNode: true,
+        });
+        this.assetSelectionPanel.rerenderTree();
+        this.assetService
+            .createAsset(promotedAsset)
+            .pipe(concatMap(() => this.assetService.updateAsset(this.asset)))
+            .subscribe(() => {
+                this.originalAsset = this.normalizeAssetForComparison(
+                    this.asset,
+                );
+                this.assetBrowserService.refreshBrowserAssetData();
+                this.router.navigate(['assets'], {
+                    state: { omitConfirm: true },
+                });
+            });
     }
 
     private openManageAssetDialog(saveAfterClose = false): void {
