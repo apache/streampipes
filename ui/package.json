@@ -44,7 +44,7 @@
     "@auth0/angular-jwt": "^5.2.0",
     "@bluehalo/ngx-leaflet": "^22.0.0",
     "@fortawesome/fontawesome-free": "^7.2.0",
-    "@gradle-tech/develocity-agent": "^2.0.2",
+    "@gradle-tech/develocity-agent": "^4.1.1",
     "@jsplumb/browser-ui": "^6.2.10",
     "@maplibre/maplibre-gl-leaflet": "^0.1.4",
     "@ngbracket/ngx-layout": "^22.0.1",
