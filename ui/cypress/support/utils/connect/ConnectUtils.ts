@@ -25,6 +25,8 @@ import { AdapterBuilder } from '../../builder/AdapterBuilder';
 import { UserUtils } from '../UserUtils';
 import { PipelineUtils } from '../pipeline/PipelineUtils';
 import { GeneralUtils } from '../GeneralUtils';
+import { SharedUtils } from '../shared/SharedUtils';
+import { SharedBtns } from '../shared/SharedBtns';
 
 export class ConnectUtils {
     private static readonly TRANSFORMATION_SCRIPT_PREFIX =
@@ -279,6 +281,23 @@ export class ConnectUtils {
     public static refreshEventSchema() {
         ConnectBtns.refreshSchemaBtn().click();
         ConnectBtns.configureFieldsNextBtn().should('not.be.disabled');
+    }
+
+    /**
+     * Confirms the 'Event Transformation Configuration has changed' dialog on
+     * the configure fields step and waits until the fields have been reloaded.
+     * The reload replaces every field row, so interacting with a row before it
+     * has finished detaches the element under the cursor.
+     */
+    public static confirmRefreshFieldsDialog() {
+        SharedUtils.confirmDialogVisible();
+        cy.intercept('POST', /\/connect\/master\/guess\/schema$/).as(
+            'guessSchema',
+        );
+        SharedBtns.confirmDialogConfirmBtn().click();
+        cy.wait('@guessSchema');
+        ConnectBtns.configureFieldsLoadingMessage().should('not.exist');
+        ConnectUtils.eventSchemaWithFieldsShouldBeVisible();
     }
 
     public static stopAdapterAndWaitForStateTransition() {
