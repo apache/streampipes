@@ -30,7 +30,7 @@ pipeline {
 
   tools {
         maven 'maven_3_latest'
-        jdk 'jdk_17_latest'
+        jdk 'jdk_25_latest'
     }
 
 
