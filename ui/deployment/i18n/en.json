@@ -1260,7 +1260,6 @@
   "Uploading CSV data": null,
   "Upper Limit": null,
   "Upper bound of the gauge value range.": null,
-  "Use broker settings from this instance": null,
   "Use existing dataset": null,
   "Use field key (runtime name) as header column": null,
   "Use field label as header column if available": null,

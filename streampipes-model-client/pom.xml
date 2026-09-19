@@ -87,8 +87,11 @@
                     <disableTaggedUnions>false</disableTaggedUnions>
                     <mapClasses>asClasses</mapClasses>
                     <sortDeclarations>true</sortDeclarations>
+                    <customTypeMappings>
+                        <mapping>org.apache.streampipes.model.shared.api.Storable:Storable</mapping>
+                    </customTypeMappings>
                     <importDeclarations>
-                        <import>import { Storable } from '@streampipes/platform-services'</import>
+                        <import>import { Storable } from './streampipes-model'</import>
                     </importDeclarations>
                     <extensions>
                         <extension>cz.habarta.typescript.generator.ext.JsonDeserializationExtension</extension>

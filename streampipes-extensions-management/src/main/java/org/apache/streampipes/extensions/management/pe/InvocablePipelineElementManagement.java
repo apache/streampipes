@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.extensions.management.pe;
 
-import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.pe.IStreamPipesPipelineElement;
@@ -63,11 +62,6 @@ public abstract class InvocablePipelineElementManagement<
   }
 
   public Response invokeRuntime(String appId, K graph) {
-    if (isDebug()) {
-      LOG.debug("SP_DEBUG env variable is set - overriding broker hostname and port for local development");
-      graph = createGroundingDebugInformation(graph);
-    }
-
     T declarer = getDeclarerById(appId).declareConfig().getSupplier().get();
 
     if (declarer != null) {
@@ -142,15 +136,10 @@ public abstract class InvocablePipelineElementManagement<
 
   protected abstract W getExtractor(K graph);
 
-  protected abstract K createGroundingDebugInformation(K graph);
-
   protected abstract V getRuntime();
 
   protected abstract Response invokeRuntime(String instanceId,
                                             T pipelineElement,
                                             K graph);
 
-  private boolean isDebug() {
-    return Environments.getEnvironment().getSpDebug().getValueOrDefault();
-  }
 }

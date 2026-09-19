@@ -103,24 +103,11 @@ class TestStreamPipesEndpoints(TestCase):
                 "internallyManaged": True,
                 "connectedTo": None,
                 "eventGrounding": {
-                    "transportProtocols": [
-                        {
-                            "@class": "org.apache.streampipes.model.grounding.NatsTransportProtocol",
-                            "elementId": "urn:streampipes.apache.org:spi:natstransportprotocol:VJkHmZ",
-                            "brokerHostname": "nats",
-                            "topicDefinition": {
-                                "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-                                "actualTopicName": "org.apache.streampipes.connect."
-                                "fc22b8f6-698a-4127-aa71-e11854dc57c5",
-                            },
-                            "port": 4222,
-                        }
-                    ],
-                    "transportFormats": [
-                        {
-                            "rdfType": ["http://sepa.event-processing.org/sepa#json"],
-                        }
-                    ],
+                    "topicDefinition": {
+                        "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
+                        "actualTopicName": "org.apache.streampipes.connect." "fc22b8f6-698a-4127-aa71-e11854dc57c5",
+                    },
+                    "options": {"groupId": "preserved-group"},
                 },
                 "eventSchema": {
                     "eventProperties": [

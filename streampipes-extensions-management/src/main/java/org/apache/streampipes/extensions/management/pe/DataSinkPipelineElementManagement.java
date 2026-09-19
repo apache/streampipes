@@ -23,7 +23,6 @@ import org.apache.streampipes.extensions.api.pe.IStreamPipesDataSink;
 import org.apache.streampipes.extensions.api.pe.config.IDataSinkConfiguration;
 import org.apache.streampipes.extensions.api.pe.runtime.IDataSinkRuntime;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
-import org.apache.streampipes.extensions.management.util.GroundingDebugUtils;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -50,15 +49,6 @@ public class DataSinkPipelineElementManagement extends InvocablePipelineElementM
   @Override
   protected DataSinkParameterExtractor getExtractor(DataSinkInvocation graph) {
     return new DataSinkParameterExtractor(graph);
-  }
-
-  @Override
-  protected DataSinkInvocation createGroundingDebugInformation(DataSinkInvocation graph) {
-    graph.getInputStreams().forEach(is -> {
-      GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
-    });
-
-    return graph;
   }
 
   @Override

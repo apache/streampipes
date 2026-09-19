@@ -32,7 +32,8 @@ jobs:
       - name: GoImports check
         working-directory: ./streampipes-client-go
         run: |
-          go install golang.org/x/tools/cmd/goimports@latest
+          # Keep the formatting tool compatible with the Go 1.21 test matrix.
+          go install golang.org/x/tools/cmd/goimports@v0.24.0
           goimports -l .
       - name: Run unit-tests
         working-directory: ./streampipes-client-go

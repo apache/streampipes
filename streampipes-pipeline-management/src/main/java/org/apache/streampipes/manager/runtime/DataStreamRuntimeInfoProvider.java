@@ -17,15 +17,12 @@
  */
 package org.apache.streampipes.manager.runtime;
 
-import org.apache.streampipes.commons.environment.Environment;
-import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
 import org.apache.streampipes.messaging.EventConsumer;
+import org.apache.streampipes.messaging.InternalBrokerProvider;
 import org.apache.streampipes.messaging.SpProtocolManager;
 import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +36,6 @@ public class DataStreamRuntimeInfoProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataStreamRuntimeInfoProvider.class);
 
-  private final Environment env;
   private final Map<String, SpDataStream> dataStreams;
   private final List<EventConsumer> consumers;
   private final Map<String, Map<String, Object>> latestEvents;
@@ -47,33 +43,16 @@ public class DataStreamRuntimeInfoProvider {
   public DataStreamRuntimeInfoProvider(Map<String, SpDataStream> dataStreams) {
     this.dataStreams = dataStreams;
     this.consumers = new ArrayList<>();
-    this.env = Environments.getEnvironment();
     this.latestEvents = new HashMap<>();
   }
 
   public void startConsuming() throws SpRuntimeException {
     dataStreams.forEach((id, dataStream) -> {
-      var protocol = dataStream.getEventGrounding().getTransportProtocol();
-      if (env.getSpDebug().getValueOrDefault()) {
-        protocol.setBrokerHostname("localhost");
-        if (protocol instanceof KafkaTransportProtocol) {
-          ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
-        }
-      }
-
-      if (protocol instanceof NatsTransportProtocol natsProtocol) {
-        var natsToken = env.getNatsToken().getValueOrDefault();
-        if ((natsProtocol.getToken() == null || natsProtocol.getToken().isBlank())
-            && natsToken != null
-            && !natsToken.isBlank()) {
-          natsProtocol.setToken(natsToken);
-        }
-      }
-
+      var protocol = InternalBrokerProvider.resolve(dataStream.getEventGrounding().getTransportProtocol());
       var converter = new SpDataFormatConverter(SpDataFormatManager.getFormatDefinition());
       var protocolDefinitionOpt = SpProtocolManager
           .INSTANCE
-          .findDefinition(dataStream.getEventGrounding().getTransportProtocol());
+          .findDefinition(protocol);
 
       if (protocolDefinitionOpt.isPresent()) {
         var consumer = protocolDefinitionOpt.get().getConsumer(protocol);

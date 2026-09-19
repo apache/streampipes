@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.MD5;
 import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.manager.execution.PipelineExecutionInfo;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.pipeline.Pipeline;
 
 public class UpdateGroupIdTask implements PipelineExecutionTask {
@@ -38,9 +37,7 @@ public class UpdateGroupIdTask implements PipelineExecutionTask {
                               String sanitizedPipelineName) {
     entity.getInputStreams()
         .stream()
-        .filter(is -> is.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol)
-        .map(is -> is.getEventGrounding().getTransportProtocol())
-        .map(KafkaTransportProtocol.class::cast)
-        .forEach(tp -> tp.setGroupId(sanitizedPipelineName + MD5.crypt(tp.getElementId())));
+        .forEach(stream -> stream.getEventGrounding().getOptions().putIfAbsent("groupId",
+            sanitizedPipelineName + MD5.crypt(entity.getElementId() + ":" + stream.getElementId())));
   }
 }

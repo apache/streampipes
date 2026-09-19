@@ -128,23 +128,10 @@
   },
   "running" : false,
   "eventGrounding" : {
-    "transportProtocols" : [ {
-      "@class" : "org.apache.streampipes.model.grounding.KafkaTransportProtocol",
-      "elementId" : "sp:transportprotocol:UjmJyQ",
-      "brokerHostname" : "localhost",
-      "topicDefinition" : {
-        "@class" : "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
-        "actualTopicName" : "org.apache.streampipes.connect.e1045bb8-6d1c-43be-a951-c74dce77083b"
-      },
-      "kafkaPort" : 9094,
-      "lingerMs" : null,
-      "messageMaxBytes" : null,
-      "maxRequestSize" : null,
-      "acks" : null,
-      "batchSize" : null,
-      "offset" : null,
-      "groupId" : null
-    } ]
+    "topicDefinition": {
+      "@class": "org.apache.streampipes.model.grounding.SimpleTopicDefinition",
+      "actualTopicName": "org.apache.streampipes.connect.e1045bb8-6d1c-43be-a951-c74dce77083b"
+    }
   },
   "icon" : null,
   "config" : [ {
