@@ -33,6 +33,7 @@ import {
     GenericStorageService,
     SpAsset,
     SpAssetModel,
+    FileMetadata,
 } from '@streampipes/platform-services';
 import { SpManageAssetLinksDialogComponent } from '../../../../../dialog/manage-asset-links/manage-asset-links-dialog.component';
 import {
@@ -120,6 +121,7 @@ export class AssetDetailsLinksComponent implements OnInit {
             if (assetLinks) {
                 this.asset.assetLinks = assetLinks;
                 this.assetLinkTable?.refreshData();
+                this.updateAssetEmitter.emit(this.asset);
                 this.assetBrowserService.refreshBrowserAssetData();
             }
         });
@@ -154,8 +156,48 @@ export class AssetDetailsLinksComponent implements OnInit {
                 this.asset.assetLinks.push(storedLink);
                 this.asset.assetLinks = [...this.asset.assetLinks];
                 this.assetLinkTable?.refreshData();
+                this.updateAssetEmitter.emit(this.asset);
                 this.assetBrowserService.refreshBrowserAssetData();
             }
         });
+    }
+    addUploadedFileLink(file: FileMetadata): void {
+        this.asset.assetLinks ??= [];
+
+        const alreadyLinked = this.asset.assetLinks.some(
+            link => link.linkType === 'file' && link.resourceId === file.fileId,
+        );
+
+        if (alreadyLinked) {
+            this.updateAssetEmitter.emit(this.asset);
+            return;
+        }
+
+        const assetLink: AssetLink = {
+            linkLabel: file.filename,
+            linkType: 'file',
+            editingDisabled: false,
+            queryHint: 'file',
+            navigationActive: false,
+            resourceId: file.fileId,
+        };
+
+        this.asset.assetLinks.push(assetLink);
+        this.asset.assetLinks = [...this.asset.assetLinks];
+        this.assetLinkTable?.refreshData();
+        this.updateAssetEmitter.emit(this.asset);
+        this.assetBrowserService.refreshBrowserAssetData();
+    }
+
+    removeFileLink(fileId: string): void {
+        this.asset.assetLinks = (this.asset.assetLinks ?? []).filter(
+            link => !(link.linkType === 'file' && link.resourceId === fileId),
+        );
+
+        this.assetLinkTable?.refreshData();
+
+        this.updateAssetEmitter.emit(this.asset);
+
+        this.assetBrowserService.refreshBrowserAssetData();
     }
 }
