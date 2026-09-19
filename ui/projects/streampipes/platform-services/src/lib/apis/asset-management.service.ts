@@ -62,4 +62,10 @@ export class AssetManagementService {
     private get assetBasePath() {
         return this.platformServicesCommons.apiBasePath + '/assets';
     }
+
+    deleteAssetFile(assetId: string, fileId: string): Observable<SpAssetModel> {
+        return this.http.delete<SpAssetModel>(
+            `${this.assetBasePath}/${assetId}/files/${fileId}`,
+        );
+    }
 }
