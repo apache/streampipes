@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.assets.AssetSummaryDto;
 import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
@@ -26,6 +27,8 @@ import org.apache.streampipes.resource.management.AssetResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,10 +53,16 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   private final AssetResourceManager assetResourceManager;
   private final SpResourceManager resourceManager;
+  private final FileManager fileManager;
 
-  public AssetManagementResource(SpResourceManager resourceManager) {
+  public AssetManagementResource(
+      SpResourceManager resourceManager,
+      ISpCoreConfigurationStorage coreConfigurationStorage,
+      IFileMetadataStorage fileMetadataStorage
+  ) {
     this.resourceManager = resourceManager;
     this.assetResourceManager = resourceManager.manageAssets();
+    this.fileManager = new FileManager(coreConfigurationStorage, fileMetadataStorage);
   }
 
   @GetMapping(path = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -98,6 +107,38 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN);
     }
   }
+
+  @DeleteMapping(
+      path = "/{id}/files/{fileId}",
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  @PreAuthorize(
+      AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE
+          + " and "
+          + AuthConstants.HAS_WRITE_FILE_PRIVILEGE
+          + " and hasPermission(#elementId, 'WRITE')"
+  )
+  public ResponseEntity<SpAssetModel> deleteLinkedFile(
+      @PathVariable("id") String elementId,
+      @PathVariable("fileId") String fileId
+  ) {
+    var asset = assetResourceManager.find(elementId);
+
+    if (asset == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+    fileManager.deleteFile(fileId);
+
+    var updatedAsset = assetResourceManager.find(elementId);
+
+    if (updatedAsset == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+    return ok(updatedAsset);
+  }
+
 
   @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE + " and hasPermission(#elementId, 'WRITE')")

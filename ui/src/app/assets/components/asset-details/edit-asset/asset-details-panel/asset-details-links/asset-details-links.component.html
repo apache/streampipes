@@ -50,6 +50,7 @@
             [assetModel]="assetModel"
             [editMode]="true"
             [loading]="!assetLinksLoaded"
+            (assetLinksChanged)="updateAssetEmitter.emit(asset)"
         ></sp-asset-link-table>
     </div>
 </sp-split-section>

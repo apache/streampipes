@@ -1,0 +1,182 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15" fxLayout="column">
+        @if (uploadError) {
+            <sp-alert-banner
+                type="error"
+                [title]="'Could not upload image' | translate"
+                [description]="uploadErrorMessage"
+            >
+            </sp-alert-banner>
+        }
+
+        @if (this.duplicateFileNames.length === 0) {
+            <div fxFlex="100">
+                <div fxFlex="100" style="margin: 5px; width: 100%">
+                    <mat-form-field
+                        style="width: 95%"
+                        (click)="fileInput.click()"
+                        color="accent"
+                    >
+                        <input
+                            matInput
+                            [placeholder]="'Image' | translate"
+                            disabled
+                            (value)="(fileNames)"
+                        />
+
+                        <input
+                            #fileInput
+                            type="file"
+                            accept="image/jpeg"
+                            style="display: none"
+                            (change)="handleFileInput($event.target.files)"
+                        />
+
+                        <div>
+                            @for (filename of fileNames; track filename) {
+                                <div fxLayout="column">
+                                    {{ filename }}
+                                </div>
+                            }
+
+                            @if (uploadStatus > 0) {
+                                <mat-progress-bar
+                                    mode="determinate"
+                                    value="{{ uploadStatus }}"
+                                    color="accent"
+                                ></mat-progress-bar>
+                            }
+                        </div>
+
+                        <button
+                            color="accent"
+                            matSuffix
+                            mat-button
+                            style="min-width: 0"
+                        >
+                            @if (uploadStatus < 99) {
+                                <mat-icon>image</mat-icon>
+                            }
+
+                            @if (uploadStatus === 100) {
+                                <mat-icon class="green-icon">
+                                    check_circle
+                                </mat-icon>
+                            }
+                        </button>
+
+                        @if (!hasInput) {
+                            <mat-error>
+                                {{ errorMessage }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+
+                    <button
+                        mat-button
+                        mat-flat-button
+                        class="mat-basic mt-10"
+                        (click)="removeFilesFromUpload()"
+                    >
+                        {{ 'Clear' | translate }}
+                    </button>
+                </div>
+            </div>
+        }
+
+        @if (this.duplicateFileNames.length !== 0) {
+            <div fxLayout="column" style="width: 100%">
+                <div fxFlex="100" fxLayoutAlign="center" fxLayout="column">
+                    <b>
+                        <h4>
+                            {{
+                                'The following image already exists. Please rename it.'
+                                    | translate
+                            }}
+                        </h4>
+                    </b>
+
+                    @for (
+                        name of this.duplicateFileNames;
+                        track name;
+                        let i = $index
+                    ) {
+                        <div>
+                            <div class="input-group">
+                                <span style="margin-right: 10px">
+                                    {{ name }}:
+                                </span>
+
+                                <mat-form-field>
+                                    <input
+                                        matInput
+                                        placeholder="e.g. {{ '_' + name }}"
+                                        [(ngModel)]="this.renamedFileNames[i]"
+                                    />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="sp-dialog-actions">
+        @if (this.duplicateFileNames.length === 0) {
+            <button
+                mat-button
+                mat-flat-button
+                color="accent"
+                (click)="store()"
+                [disabled]="fileNames.length === 0"
+                style="margin-right: 10px"
+            >
+                {{ 'Import image' | translate }}
+            </button>
+        }
+
+        @if (this.duplicateFileNames.length !== 0) {
+            <button
+                mat-button
+                mat-flat-button
+                color="accent"
+                (click)="renameDuplicateFiles()"
+                [disabled]="fileNames.length === 0"
+                style="margin-right: 10px"
+            >
+                {{ 'Rename image' | translate }}
+            </button>
+        }
+
+        <button
+            mat-button
+            mat-flat-button
+            class="mat-basic"
+            (click)="cancel()"
+            style="margin-right: 10px"
+        >
+            {{ 'Cancel' | translate }}
+        </button>
+    </div>
+</div>
