@@ -25,6 +25,7 @@ import org.apache.streampipes.model.configuration.SpCoreConfiguration;
 import org.simplejavamail.api.email.Email;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MailTester extends AbstractMailer {
 
@@ -40,7 +41,7 @@ public class MailTester extends AbstractMailer {
     return baseEmail(emailConfig)
         .withSubject("Hello from " + MailUtils.extractAppName(spCoreConfiguration))
         .appendTextHTML(new TestMailTemplate(spCoreConfiguration).generateTemplate())
-        .to(emailConfig.getTestRecipientAddress())
+        .withRecipients(toSimpleRecipientList(List.of(emailConfig.getTestRecipientAddress())))
         .buildEmail();
   }
 }

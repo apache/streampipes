@@ -28,6 +28,7 @@ import org.apache.streampipes.model.mail.SpEmail;
 import org.simplejavamail.api.email.Email;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MailSender extends AbstractMailer {
 
@@ -55,7 +56,7 @@ public class MailSender extends AbstractMailer {
         .withSubject(MailUtils.extractAppName(spCoreConfiguration) + " - Account Activation")
         .appendTextHTML(new AccountActiviationMailTemplate(activationCode, spCoreConfiguration)
             .generateTemplate())
-        .to(recipientAddress)
+        .withRecipients(toSimpleRecipientList(List.of(recipientAddress)))
         .buildEmail();
 
     deliverMail(email);
@@ -67,7 +68,7 @@ public class MailSender extends AbstractMailer {
         .withSubject(MailUtils.extractAppName(spCoreConfiguration) + " - Password Recovery")
         .appendTextHTML(new PasswordRecoveryMailTemplate(recoveryCode, spCoreConfiguration)
             .generateTemplate())
-        .to(recipientAddress)
+        .withRecipients(toSimpleRecipientList(List.of(recipientAddress)))
         .buildEmail();
 
     deliverMail(email);
@@ -79,7 +80,7 @@ public class MailSender extends AbstractMailer {
         .withSubject(MailUtils.extractAppName(spCoreConfiguration) + " - New Account")
         .appendTextHTML(new InitialPasswordMailTemplate(generatedProperty, spCoreConfiguration)
             .generateTemplate())
-        .to(recipientAddress)
+        .withRecipients(toSimpleRecipientList(List.of(recipientAddress)))
         .buildEmail();
 
     deliverMail(email);
