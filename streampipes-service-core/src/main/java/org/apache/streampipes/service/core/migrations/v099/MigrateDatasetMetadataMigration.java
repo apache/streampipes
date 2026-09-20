@@ -31,8 +31,8 @@ import java.io.IOException;
  */
 public class MigrateDatasetMetadataMigration implements Migration {
 
-  private static final String LEGACY_MODEL_PACKAGE = "org.apache.streampipes.model.datalake.";
-  private static final String DATASET_MODEL_PACKAGE = "org.apache.streampipes.model.dataset.";
+  private static final String LEGACY_MODEL_PACKAGE = "org.apache.streampipes.model.datalake.DataLakeMeasure";
+  private static final String DATASET_MODEL_PACKAGE = "org.apache.streampipes.model.dataset.DatasetMetadata";
 
   private final IDatasetMetadataStorage datasetMetadataStorage;
   private final IPermissionStorage permissionStorage;
