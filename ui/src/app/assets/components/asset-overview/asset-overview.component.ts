@@ -53,12 +53,14 @@ import {
     SpTableComponent,
 } from '@streampipes/shared-ui';
 import { copyAssetHierarchy } from '../../utils/copy-asset-hierarchy';
+import { moveAssetToParent } from '../../utils/move-asset';
 import { SpAssetRoutes } from '../../assets.breadcrumb';
 import { Router } from '@angular/router';
 import { IdGeneratorService } from '../../../core-services/id-generator/id-generator.service';
 import { UserPrivilege } from '../../../core/auth/user-privilege.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
@@ -70,6 +72,10 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
+import {
+    MoveAssetDialogComponent,
+    MoveAssetDialogResult,
+} from '../../dialog/move-asset-dialog.component';
 
 type ManageableAsset = SpAssetModel & {
     name: string;
@@ -289,6 +295,60 @@ export class SpAssetOverviewComponent implements OnInit, OnDestroy {
                     this.assetBrowserService.refreshBrowserAssetData();
                 });
             }
+        });
+    }
+
+    moveAsset(assetSummary: AssetSummaryDto): void {
+        this.assetService.getAsset(assetSummary.elementId).subscribe(asset => {
+            const dialogRef = this.dialogService.open(
+                MoveAssetDialogComponent,
+                {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translateService.instant('Move asset'),
+                    width: '42rem',
+                    data: {
+                        assetToMove: asset,
+                        availableAssets: this.existingAssets.filter(
+                            candidate =>
+                                candidate.elementId !== asset.elementId,
+                        ),
+                    },
+                },
+            );
+
+            dialogRef
+                .afterClosed()
+                .subscribe((result: MoveAssetDialogResult | undefined) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    if (result.destination !== 'parent') {
+                        return;
+                    }
+
+                    const assetWasMoved = moveAssetToParent(
+                        result.targetAsset,
+                        result.targetParentAssetId,
+                        asset,
+                        result.removeMovedAssetSite,
+                    );
+                    if (!assetWasMoved) {
+                        return;
+                    }
+
+                    this.assetService
+                        .updateAsset(result.targetAsset)
+                        .pipe(
+                            concatMap(() =>
+                                this.assetService.deleteAsset(asset.elementId),
+                            ),
+                        )
+                        .subscribe(() => {
+                            this.loadAssets();
+                            this.assetBrowserService.refreshBrowserAssetData();
+                        });
+                });
         });
     }
 

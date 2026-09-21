@@ -146,6 +146,10 @@
                                     @if (editMode) {
                                         <div class="node-actions">
                                             <button
+                                                [attr.data-cy]="
+                                                    'asset-tree-menu-' +
+                                                    node.assetName
+                                                "
                                                 mat-icon-button
                                                 type="button"
                                                 [matMenuTriggerFor]="assetMenu"
@@ -217,6 +221,26 @@
                                                         <span>{{
                                                             'Move asset down'
                                                                 | translate
+                                                        }}</span>
+                                                    </button>
+                                                    <button
+                                                        mat-menu-item
+                                                        [attr.data-cy]="
+                                                            'move-asset-' +
+                                                            node.assetName
+                                                        "
+                                                        (click)="
+                                                            requestMoveAsset(
+                                                                node
+                                                            );
+                                                            $event.stopPropagation()
+                                                        "
+                                                    >
+                                                        <mat-icon
+                                                            >drive_file_move</mat-icon
+                                                        >
+                                                        <span>{{
+                                                            'Move' | translate
                                                         }}</span>
                                                     </button>
                                                 }
@@ -366,6 +390,10 @@
                                         @if (editMode) {
                                             <div class="node-actions">
                                                 <button
+                                                    [attr.data-cy]="
+                                                        'asset-tree-menu-' +
+                                                        node.assetName
+                                                    "
                                                     mat-icon-button
                                                     type="button"
                                                     [matMenuTriggerFor]="
@@ -448,6 +476,27 @@
                                                             >
                                                             <span>{{
                                                                 'Move asset down'
+                                                                    | translate
+                                                            }}</span>
+                                                        </button>
+                                                        <button
+                                                            mat-menu-item
+                                                            [attr.data-cy]="
+                                                                'move-asset-' +
+                                                                node.assetName
+                                                            "
+                                                            (click)="
+                                                                requestMoveAsset(
+                                                                    node
+                                                                );
+                                                                $event.stopPropagation()
+                                                            "
+                                                        >
+                                                            <mat-icon
+                                                                >drive_file_move</mat-icon
+                                                            >
+                                                            <span>{{
+                                                                'Move'
                                                                     | translate
                                                             }}</span>
                                                         </button>

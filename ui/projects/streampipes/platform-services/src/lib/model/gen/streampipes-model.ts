@@ -4664,15 +4664,12 @@ export type ConfigurationScope =
 export type DataExplorerWidgetHealthStatus = 'OK' | 'REQUIRES_ATTENTION';
 
 export type DataLakeMeasureSchemaUpdateStrategy =
-    | 'UPDATE_SCHEMA'
-    | 'EXTEND_EXISTING_SCHEMA';
+    'UPDATE_SCHEMA' | 'EXTEND_EXISTING_SCHEMA';
 
 export type EdgeValidationStatusType = 'COMPLETE' | 'INCOMPLETE' | 'INVALID';
 
 export type EventPropertyUnion =
-    | EventPropertyList
-    | EventPropertyNested
-    | EventPropertyPrimitive;
+    EventPropertyList | EventPropertyNested | EventPropertyPrimitive;
 
 export type FieldStatus = 'GOOD' | 'BAD';
 
@@ -4703,16 +4700,10 @@ export type OutputStrategyUnion =
     | UserDefinedOutputStrategy;
 
 export type PipelineHealthStatus =
-    | 'OK'
-    | 'REQUIRES_ATTENTION'
-    | 'HANDLE_MEASUREMENT_UPDATE'
-    | 'FAILURE';
+    'OK' | 'REQUIRES_ATTENTION' | 'HANDLE_MEASUREMENT_UPDATE' | 'FAILURE';
 
 export type PropertyScope =
-    | 'HEADER_PROPERTY'
-    | 'DIMENSION_PROPERTY'
-    | 'MEASUREMENT_PROPERTY'
-    | 'NONE';
+    'HEADER_PROPERTY' | 'DIMENSION_PROPERTY' | 'MEASUREMENT_PROPERTY' | 'NONE';
 
 export type ProviderType = 'FOLDER' | 'S3';
 
@@ -4721,18 +4712,14 @@ export type RetentionAction = 'DELETE' | 'SAVE' | 'SAVEDELETE';
 export type RetentionInterval = 'DAILY' | 'MONTHLY' | 'WEEKLY';
 
 export type SelectionStaticPropertyUnion =
-    | AnyStaticProperty
-    | OneOfStaticProperty;
+    AnyStaticProperty | OneOfStaticProperty;
 
 export type SpLogLevel = 'INFO' | 'WARN' | 'ERROR';
 
 export type SpQueryStatus = 'OK' | 'TOO_MUCH_DATA';
 
 export type SpServiceStatus =
-    | 'REGISTERED'
-    | 'MIGRATING'
-    | 'HEALTHY'
-    | 'UNHEALTHY';
+    'REGISTERED' | 'MIGRATING' | 'HEALTHY' | 'UNHEALTHY';
 
 export type SpServiceTagPrefix =
     | 'SP_GROUP'
@@ -4790,8 +4777,7 @@ export type StreamTransformationRuleDescriptionUnion =
     | RemoveDuplicatesTransformationRuleDescription;
 
 export type TopicDefinitionUnion =
-    | SimpleTopicDefinition
-    | WildcardTopicDefinition;
+    SimpleTopicDefinition | WildcardTopicDefinition;
 
 export type TransformationRuleDescriptionUnion =
     | AddTimestampRuleDescription

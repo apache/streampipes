@@ -44,7 +44,7 @@
 
         <apache-sis-referencing.version>1.6</apache-sis-referencing.version>
         <antlr4.version>4.11.1</antlr4.version>
-        <bcprov-jdk18on.version>1.84</bcprov-jdk18on.version>
+        <bcprov-jdk18on.version>1.85</bcprov-jdk18on.version>
         <boofcv.version>1.1.0</boofcv.version>
         <classindex.version>3.9</classindex.version>
         <camel.version>4.22.0</camel.version>
@@ -93,9 +93,9 @@
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <s3.version>2.46.10</s3.version>
         <siddhi.version>5.1.27</siddhi.version>
-        <simple-java-mail.version>8.10.0</simple-java-mail.version>
+        <simple-java-mail.version>9.3.2</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
-        <springdoc.version>3.0.1</springdoc.version>
+        <springdoc.version>3.1.1</springdoc.version>
         <swagger.version>2.2.42</swagger.version>
         <tsfile.version>1.1.0</tsfile.version>
         <type-parser.version>0.8.1</type-parser.version>
@@ -136,11 +136,9 @@
         <!-- Maven settings & dependencies -->
         <apache-rat-plugin.version>0.16.1</apache-rat-plugin.version>
         <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
-        <checkstyle.version>10.17.0</checkstyle.version>
+        <checkstyle.version>14.1.0</checkstyle.version>
         <extra-enforcer-rules.version>1.8.0</extra-enforcer-rules.version>
         <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
 
@@ -154,6 +152,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.pulsar</groupId>
+                <artifactId>pulsar-bom</artifactId>
+                <version>4.2.4</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -1004,7 +1009,7 @@
                                     <additionalJOption>-Xdoclint:none</additionalJOption>
                                     <doclint>none</doclint>
                                     <additionalJOption>-Xdoclint:none</additionalJOption>
-                                    <source>17</source>
+                                    <release>25</release>
                                 </configuration>
                             </execution>
                         </executions>
@@ -1038,7 +1043,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
-                        <release>17</release>
+                        <release>25</release>
                         <encoding>UTF-8</encoding>
                         <parameters>true</parameters>
                     </configuration>
@@ -1148,7 +1153,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>1.25.0</version>
+                                    <version>[25,)</version>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
@@ -1190,14 +1195,14 @@
                             <additionalJOption>-Xdoclint:none</additionalJOption>
                             <doclint>none</doclint>
                             <additionalJOption>-Xdoclint:none</additionalJOption>
-                            <release>11</release>
+                            <release>25</release>
                         </configuration>
                     </execution>
                 </executions>
                 <configuration>
                     <failOnWarnings>false</failOnWarnings>
                     <failOnError>false</failOnError>
-                    <source>25</source>
+                    <release>25</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -1357,7 +1362,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <release>17</release>
+                    <release>25</release>
                     <encoding>UTF-8</encoding>
                     <parameters>true</parameters>
                 </configuration>

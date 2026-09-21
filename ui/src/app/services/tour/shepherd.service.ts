@@ -16,20 +16,18 @@
  *
  */
 
-import Shepherd from 'shepherd.js';
+import Shepherd, { type StepOptions, type Tour } from 'shepherd.js';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TourProviderService } from './tour-provider.service';
-import Step from 'shepherd.js/src/types/step';
 import { BehaviorSubject } from 'rxjs';
-import StepOptions = Step.StepOptions;
 
 @Injectable({ providedIn: 'root' })
 export class ShepherdService {
     private router = inject(Router);
     private tourProviderService = inject(TourProviderService);
 
-    currentTour: Shepherd.Tour;
+    currentTour: Tour;
     currentTourSettings: any;
     timeWaitMillis: number;
     tutorialActive = false;
