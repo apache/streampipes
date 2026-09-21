@@ -41,11 +41,13 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-asset-link-dialog-component',
     templateUrl: './edit-asset-link-dialog.component.html',
+    styleUrls: ['./edit-asset-link-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
@@ -58,6 +60,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
         MatInput,
         MatDivider,
         MatButton,
+        MatIcon,
         TranslatePipe,
         SearchSelectComponent,
     ],
@@ -90,8 +93,11 @@ export class EditAssetLinkDialogComponent
 
     selectedLinkType: AssetLinkType;
 
+    /** Stored link type that matches none of the available link types. */
+    unsupportedLinkType: string | undefined;
+
     get resourceSelectionLabel(): string | undefined {
-        switch (this.selectedLinkType.linkQueryHint) {
+        switch (this.selectedLinkType?.linkQueryHint) {
             case 'pipeline':
                 return this.translateService.instant('Pipelines');
             case 'data-stream':
@@ -114,7 +120,7 @@ export class EditAssetLinkDialogComponent
     get selectableResources(): any[] {
         let resources: any[];
 
-        switch (this.selectedLinkType.linkQueryHint) {
+        switch (this.selectedLinkType?.linkQueryHint) {
             case 'pipeline':
                 resources = this.pipelines ?? [];
                 break;
@@ -154,6 +160,10 @@ export class EditAssetLinkDialogComponent
         super.onInit();
         this.clonedAssetLink = { ...this.assetLink };
         this.selectedLinkType = this.getCurrAssetLinkType();
+        this.unsupportedLinkType =
+            !this.createMode && !this.selectedLinkType
+                ? this.clonedAssetLink.linkType
+                : undefined;
     }
 
     getCurrAssetLinkType(): AssetLinkType {
@@ -176,13 +186,18 @@ export class EditAssetLinkDialogComponent
         const linkType = this.assetLinkTypes.find(
             a => a.linkType === this.selectedLinkType.linkType,
         );
+        const previousResourceId = this.clonedAssetLink.resourceId;
         this.clonedAssetLink.editingDisabled = false;
         this.clonedAssetLink.linkType = linkType.linkType;
         this.clonedAssetLink.queryHint = linkType.linkQueryHint;
         this.clonedAssetLink.navigationActive = linkType.navigationActive;
-        this.clonedAssetLink.resourceId = '';
-        this.clonedAssetLink.linkLabel = '';
-        this.currentResource = undefined;
+        this.unsupportedLinkType = undefined;
+        // Keep the resource when it also exists for the new link type, e.g.
+        // when repairing a link whose stored type is no longer supported.
+        const existingResource = this.selectableResources.find(
+            resource => this.getResourceId(resource) === previousResourceId,
+        );
+        this.onResourceChanged(existingResource);
     }
 
     changeLabel(id: string, label: string, currentResource: any) {
@@ -199,13 +214,13 @@ export class EditAssetLinkDialogComponent
             return;
         }
 
-        if (this.selectedLinkType.linkQueryHint === 'file') {
+        if (this.selectedLinkType?.linkQueryHint === 'file') {
             this.changeLabel(
                 currentResource.fileId,
                 currentResource.filename,
                 currentResource,
             );
-        } else if (this.selectedLinkType.linkQueryHint === 'dataset') {
+        } else if (this.selectedLinkType?.linkQueryHint === 'dataset') {
             this.changeLabel(
                 currentResource.elementId,
                 currentResource.measureName,

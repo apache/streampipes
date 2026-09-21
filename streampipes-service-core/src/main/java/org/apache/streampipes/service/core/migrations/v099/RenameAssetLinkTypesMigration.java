@@ -61,10 +61,7 @@ public class RenameAssetLinkTypesMigration implements Migration {
     try {
       return genericStorage.findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE)
           .stream()
-          .anyMatch(this::isLegacyLinkType)
-          || genericStorage.findAll(GenericDocTypes.DOC_ASSET_MANAGEMENT)
-          .stream()
-          .anyMatch(this::containsLegacyAssetLink);
+          .anyMatch(this::isLegacyLinkType);
     } catch (IOException e) {
       return false;
     }
@@ -72,8 +69,8 @@ public class RenameAssetLinkTypesMigration implements Migration {
 
   @Override
   public void executeMigration() throws IOException {
-    migrateAssetLinkTypes();
     migrateAssetLinks();
+    migrateAssetLinkTypes();
   }
 
   private void migrateAssetLinkTypes() throws IOException {

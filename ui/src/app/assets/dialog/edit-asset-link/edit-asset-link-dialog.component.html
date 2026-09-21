@@ -20,6 +20,23 @@
     <div class="sp-dialog-content p-15 mt-10">
         @if (clonedAssetLink) {
             <div fxFlex="100" fxLayout="column">
+                @if (unsupportedLinkType) {
+                    <p
+                        class="link-type-warning"
+                        role="alert"
+                        data-cy="edit-asset-link-type-warning"
+                    >
+                        <mat-icon aria-hidden="true">warning</mat-icon>
+                        <span>
+                            <strong>{{ unsupportedLinkType }}</strong
+                            >:
+                            {{
+                                'This link type is not supported anymore. Select a link type to fix this link.'
+                                    | translate
+                            }}
+                        </span>
+                    </p>
+                }
                 <sp-form-field [level]="3" [label]="'Link Type' | translate">
                     <mat-form-field color="accent">
                         <mat-select
