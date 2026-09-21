@@ -312,9 +312,7 @@ export class DashboardPanelComponent
     }
 
     private get activeDashboardView():
-        | DashboardGridViewComponent
-        | DashboardSlideViewComponent
-        | undefined {
+        DashboardGridViewComponent | DashboardSlideViewComponent | undefined {
         return this.viewMode === 'grid'
             ? this.dashboardGrid
             : this.dashboardSlide;
