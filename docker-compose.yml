@@ -95,7 +95,7 @@ services:
       spnet:
 
   influxdb:
-    image: influxdb:2.6
+    image: influxdb:2.7
     environment:
       - INFLUXDB_DATA_ENGINE=tsm1
       - INFLUXDB_REPORTING_DISABLED=false
