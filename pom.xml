@@ -95,7 +95,7 @@
         <siddhi.version>5.1.27</siddhi.version>
         <simple-java-mail.version>9.3.2</simple-java-mail.version>
         <slack-api.version>1.4.0</slack-api.version>
-        <springdoc.version>3.0.1</springdoc.version>
+        <springdoc.version>3.1.1</springdoc.version>
         <swagger.version>2.2.42</swagger.version>
         <tsfile.version>1.1.0</tsfile.version>
         <type-parser.version>0.8.1</type-parser.version>

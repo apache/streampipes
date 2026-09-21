@@ -93,9 +93,7 @@ export class PipelineElementHelpComponent implements OnInit {
 
     @Input()
     pipelineElement:
-        | SpDataStream
-        | DataProcessorInvocation
-        | DataSinkInvocation;
+        SpDataStream | DataProcessorInvocation | DataSinkInvocation;
 
     isDataStream: boolean;
     assetContext?: SpTableResolvedAssetContext;
