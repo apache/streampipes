@@ -20,8 +20,7 @@ import { PanelDialogComponent } from '../panel-dialog/panel-dialog.component';
 import { StandardDialogComponent } from '../standard-dialog/standard-dialog.component';
 
 export type BaseDialogComponentUnion =
-    | PanelDialogComponent<unknown>
-    | StandardDialogComponent<unknown>;
+    PanelDialogComponent<unknown> | StandardDialogComponent<unknown>;
 
 export enum PanelType {
     STANDARD_PANEL,
