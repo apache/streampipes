@@ -80,7 +80,7 @@
     "roboto-fontface": "0.10.0",
     "rxjs": "^7.8.2",
     "shepherd.js": "13.0.3",
-    "supercluster": "^8.0.1",
+    "supercluster": "^9.1.0",
     "stream-browserify": "3.0.0",
     "swagger-ui-dist": "5.15.1",
     "tslib": "^2.6.2",
