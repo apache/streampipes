@@ -112,8 +112,8 @@ public class AvailableMigrations {
         new AddRefreshTokenViewsMigration(),
         new RemoveAssetUserRoleMigration(roleStorage, userGroupStorage, userStorage),
         new RemoveInternalNotificationSinkMigration(pipelineStorage),
-        new RenameAssetLinkTypesMigration(),
-        new ReplaceDefaultServiceSecretMigration(userStorage)
+        new ReplaceDefaultServiceSecretMigration(userStorage),
+        new RenameAssetLinkTypesMigration()
     );
   }
 }
