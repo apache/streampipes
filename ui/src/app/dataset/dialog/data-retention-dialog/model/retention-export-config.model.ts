@@ -17,9 +17,7 @@
  */
 
 export type FormatExportConfig =
-    | JsonFormatExportConfig
-    | CsvFormatExportConfig
-    | ExcelFormatConfig;
+    JsonFormatExportConfig | CsvFormatExportConfig | ExcelFormatConfig;
 
 export interface JsonFormatExportConfig {
     format: 'json';

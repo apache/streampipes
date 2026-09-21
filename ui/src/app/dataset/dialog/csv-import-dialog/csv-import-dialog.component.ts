@@ -557,8 +557,7 @@ export class CsvImportDialogComponent {
     }
 
     private buildSchemaValidationRequest():
-        | CsvImportSchemaValidationRequest
-        | undefined {
+        CsvImportSchemaValidationRequest | undefined {
         if (!this.currentTarget() || !this.selectedTimestampColumn()) {
             return undefined;
         }
@@ -818,8 +817,7 @@ export class CsvImportDialogComponent {
             },
             error: error => {
                 const result = error?.error as
-                    | CsvImportSchemaValidationResult
-                    | undefined;
+                    CsvImportSchemaValidationResult | undefined;
 
                 if (
                     result?.validationMessages?.length ||
