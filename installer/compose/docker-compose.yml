@@ -61,7 +61,7 @@ services:
       spnet:
 
   couchdb:
-    image: couchdb:3.3.1
+    image: couchdb:3.5.1
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=${SP_COUCHDB_PASSWORD:?Run the Compose configure helper first}
