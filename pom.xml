@@ -61,7 +61,7 @@
         <google-maps-services.version>2.2.0</google-maps-services.version>
         <graalvm.js.version>25.0.2</graalvm.js.version>
         <grpc.version>1.80.0</grpc.version>
-        <guava.version>33.5.0-jre</guava.version>
+        <guava.version>33.7.1-jre</guava.version>
         <hadoop.version>3.4.1</hadoop.version>
         <hadoop-mapreduce-client-core.version>3.4.1</hadoop-mapreduce-client-core.version>
         <jgrapht.version>1.5.1</jgrapht.version>
