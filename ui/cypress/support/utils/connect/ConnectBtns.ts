@@ -155,6 +155,12 @@ export class ConnectBtns {
         return cy.dataCy('connect-refresh-schema-button', { timeout: 10000 });
     }
 
+    public static configureFieldsLoadingMessage() {
+        return cy.dataCy('configure-fields-loading-message', {
+            timeout: 10000,
+        });
+    }
+
     public static connectAdapterAddedSuccessfully() {
         return cy.dataCy('sp-connect-adapter-success-added', {
             timeout: 60000,

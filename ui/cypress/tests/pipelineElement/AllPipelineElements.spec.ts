@@ -19,7 +19,7 @@
 import { ProcessorTest } from '../../support/model/ProcessorTest';
 import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
 
-const allTests = Cypress.env('processingElements');
+const allTests = Cypress.expose('processingElements');
 
 allTests.forEach(test => {
     describe('Test Processor ' + test['name'], () => {

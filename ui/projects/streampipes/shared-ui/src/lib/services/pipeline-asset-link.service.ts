@@ -122,7 +122,7 @@ export class PipelineAssetLinkService {
                 return include;
             })
             .map(measurement => ({
-                type: 'measurement',
+                type: 'dataset',
                 id: measurement.elementId,
                 name: measurement.measureName,
             }));

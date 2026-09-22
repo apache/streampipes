@@ -134,7 +134,7 @@ public class DataLakeSink implements IStreamPipesDataSink, SupportsRuntimeConfig
 
     this.timeSeriesStore = new TimeSeriesStore(
         new DataExplorerDispatcher().getDataExplorerManager()
-                                    .getTimeseriesStorage(measure, ignoreDuplicates),
+                                    .getTimeseriesStorage(measure, ignoreDuplicates, runtimeContext.getLogger()::warn),
         measure,
         Environments.getEnvironment(),
         true

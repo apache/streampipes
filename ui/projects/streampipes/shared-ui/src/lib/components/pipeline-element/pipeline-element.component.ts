@@ -45,9 +45,7 @@ export class PipelineElementComponent {
     iconText: any;
 
     pipelineElement_:
-        | SpDataStream
-        | DataProcessorInvocation
-        | DataSinkInvocation;
+        SpDataStream | DataProcessorInvocation | DataSinkInvocation;
 
     @Input()
     iconSize: any;
@@ -105,9 +103,7 @@ export class PipelineElementComponent {
     @Input()
     set pipelineElement(
         pipelineElement:
-            | SpDataStream
-            | DataProcessorInvocation
-            | DataSinkInvocation,
+            SpDataStream | DataProcessorInvocation | DataSinkInvocation,
     ) {
         this.pipelineElement_ = pipelineElement;
         this.iconText = this.pipelineElementIconTextService.getElementIconText(

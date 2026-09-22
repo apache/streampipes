@@ -771,8 +771,7 @@ export class SpTableComponent<T>
             this.dataSource.sortingDataAccessor?.bind(this.dataSource) ??
             ((data: T, sortHeaderId: string) =>
                 (data as Record<string, unknown>)?.[sortHeaderId] as
-                    | string
-                    | number);
+                    string | number);
 
         this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
             if (

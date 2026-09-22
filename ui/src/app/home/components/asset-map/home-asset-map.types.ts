@@ -17,12 +17,10 @@
  */
 
 import { AssetSiteDesc, SpAssetModel } from '@streampipes/platform-services';
-import Supercluster from 'supercluster';
+import type { ClusterFeature, PointFeature } from 'supercluster';
 
-export type AssetPointFeature = Supercluster.PointFeature<AssetPointProperties>;
-export type AssetClusterFeature = Supercluster.ClusterFeature<
-    Record<string, never>
->;
+export type AssetPointFeature = PointFeature<AssetPointProperties>;
+export type AssetClusterFeature = ClusterFeature<Record<string, never>>;
 
 export interface AssetPopupEntry {
     asset: SpAssetModel;
