@@ -95,7 +95,7 @@ export class DatasetFeatureCardComponent implements OnInit {
             ),
         ]).subscribe(res => {
             this.dataset = res[0];
-            this.assetLinkType = res[1].find(a => a.linkType === 'measurement');
+            this.assetLinkType = res[1].find(a => a.linkType === 'dataset');
             this.loadSampleData();
         });
     }
