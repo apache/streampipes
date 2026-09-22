@@ -36,7 +36,16 @@ import static org.mockito.Mockito.when;
 class MigrateDatasetMetadataMigrationTest {
 
   @Test
-  void migratesMetadataAndPermissionClassNames() throws IOException {
+  void migratesMetadataAndPermissionPackageNames() throws IOException {
+    assertMigratedPermissionClassName("DataExplorerWidgetModel", "DataExplorerWidgetModel");
+  }
+
+  @Test
+  void renamesDataLakeMeasurePermissionClass() throws IOException {
+    assertMigratedPermissionClassName("DataLakeMeasure", "DatasetMetadata");
+  }
+
+  private void assertMigratedPermissionClassName(String legacyClassName, String migratedClassName) throws IOException {
     var datasetMetadataStorage = mock(IDatasetMetadataStorage.class);
     var permissionStorage = mock(IPermissionStorage.class);
     var datasetMetadata = new DatasetMetadata();
@@ -44,7 +53,7 @@ class MigrateDatasetMetadataMigrationTest {
 
     when(datasetMetadataStorage.findAll()).thenReturn(List.of(datasetMetadata));
     when(permissionStorage.findAll()).thenReturn(List.of(permission));
-    when(permission.getObjectClassName()).thenReturn("org.apache.streampipes.model.datalake.DataExplorerWidgetModel");
+    when(permission.getObjectClassName()).thenReturn("org.apache.streampipes.model.datalake." + legacyClassName);
 
     var migration = new MigrateDatasetMetadataMigration(datasetMetadataStorage, permissionStorage);
 
@@ -52,7 +61,7 @@ class MigrateDatasetMetadataMigrationTest {
     migration.executeMigration();
 
     verify(datasetMetadataStorage).updateElement(datasetMetadata);
-    verify(permission).setObjectClassName("org.apache.streampipes.model.dataset.DataExplorerWidgetModel");
+    verify(permission).setObjectClassName("org.apache.streampipes.model.dataset." + migratedClassName);
     verify(permissionStorage).updateElement(permission);
   }
 }

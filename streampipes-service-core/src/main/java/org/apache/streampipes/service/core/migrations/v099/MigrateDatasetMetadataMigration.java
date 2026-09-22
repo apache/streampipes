@@ -19,6 +19,7 @@
 package org.apache.streampipes.service.core.migrations.v099;
 
 import org.apache.streampipes.model.client.user.Permission;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
@@ -31,8 +32,8 @@ import java.io.IOException;
  */
 public class MigrateDatasetMetadataMigration implements Migration {
 
-  private static final String LEGACY_MODEL_PACKAGE = "org.apache.streampipes.model.datalake.DataLakeMeasure";
-  private static final String DATASET_MODEL_PACKAGE = "org.apache.streampipes.model.dataset.DatasetMetadata";
+  private static final String LEGACY_MODEL_PACKAGE = "org.apache.streampipes.model.datalake";
+  private static final String DATASET_MODEL_PACKAGE = "org.apache.streampipes.model.dataset";
 
   private final IDatasetMetadataStorage datasetMetadataStorage;
   private final IPermissionStorage permissionStorage;
@@ -60,7 +61,10 @@ public class MigrateDatasetMetadataMigration implements Migration {
     permissionStorage.findAll().forEach(permission -> {
       var className = permission.getObjectClassName();
       if (className != null && className.startsWith(LEGACY_MODEL_PACKAGE)) {
-        permission.setObjectClassName(className.replace(LEGACY_MODEL_PACKAGE, DATASET_MODEL_PACKAGE));
+        var migratedClassName = className.equals(LEGACY_MODEL_PACKAGE + ".DataLakeMeasure")
+            ? DatasetMetadata.class.getName()
+            : className.replace(LEGACY_MODEL_PACKAGE, DATASET_MODEL_PACKAGE);
+        permission.setObjectClassName(migratedClassName);
         permissionStorage.updateElement(permission);
       }
     });
