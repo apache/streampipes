@@ -124,8 +124,14 @@ export class PipelineUtils {
         OutputStrategyUtils.input(processingElement.output);
     }
 
+    /**
+     * Saves the element configuration and waits until the customize dialog
+     * is removed from the DOM. The dialog slides out with an animation and
+     * would otherwise cover the pipeline save button for the next click.
+     */
     private static savePipelineElementConfiguration() {
         PipelineBtns.saveElementConfigBtn().click();
+        PipelineBtns.saveElementConfigBtn().should('not.exist');
     }
 
     private static configurePipeline(pipelineInput: PipelineInput) {
@@ -150,7 +156,7 @@ export class PipelineUtils {
         StaticPropertyUtils.input(pipelineInput.dataSink.config);
 
         // Save sink configuration
-        PipelineBtns.saveElementConfigBtn().click();
+        this.savePipelineElementConfiguration();
     }
 
     public static startPipeline(pipelineInput?: PipelineInput) {
