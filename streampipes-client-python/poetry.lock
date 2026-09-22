@@ -2075,20 +2075,21 @@ properdocs = ">=1.6.5"
 
 [[package]]
 name = "mkdocs-git-revision-date-localized-plugin"
-version = "1.5.1"
+version = "1.6.0"
 description = "Mkdocs plugin that enables displaying the localized date of the last git modification of a markdown file."
 optional = false
 python-versions = ">=3.10"
 groups = ["docs"]
 files = [
-    {file = "mkdocs_git_revision_date_localized_plugin-1.5.1-py3-none-any.whl", hash = "sha256:b00fd36ed0f9b2326b1488fd8fa31bf2ce64e68c4aa60a9ce857f10719571903"},
-    {file = "mkdocs_git_revision_date_localized_plugin-1.5.1.tar.gz", hash = "sha256:2b0239455cd84784dd87ac8dfc9253fe4b2dd35e102696f21b5d34e2175981c6"},
+    {file = "mkdocs_git_revision_date_localized_plugin-1.6.0-py3-none-any.whl", hash = "sha256:88b2d524d24c49a05cd6c9b1456f7dc0c8fa5e233b09ecf8a1dd12aebc127990"},
+    {file = "mkdocs_git_revision_date_localized_plugin-1.6.0.tar.gz", hash = "sha256:469af4b344a4d493a6402aa92eec87a6138e1dac444e9551c1af06991453954b"},
 ]
 
 [package.dependencies]
 babel = ">=2.7.0"
-gitpython = ">=3.1.44"
-mkdocs = ">=1.0"
+gitpython = ">=3.1.59"
+mkdocs = ">=1.4,<2"
+packaging = ">=20.0"
 tzdata = {version = ">=2023.3", markers = "sys_platform == \"win32\""}
 
 [[package]]
@@ -4155,7 +4156,7 @@ version = "2.9"
 description = "A modern CSS selector implementation for Beautiful Soup."
 optional = false
 python-versions = ">=3.10"
-groups = ["dev", "docs"]
+groups = ["docs"]
 files = [
     {file = "soupsieve-2.9-py3-none-any.whl", hash = "sha256:a2b2c76d67df2382d245409fd71e321a571717e58463efa32ace87dcadac2c12"},
     {file = "soupsieve-2.9.tar.gz", hash = "sha256:acee8417325c5653e1377dc31eccad59eb82cbc65942afe6174c53b3aaad63fc"},
@@ -4750,4 +4751,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10"
-content-hash = "e2620606bff28fa448ed3c5fe9bc863bfffaf0e5d6534e2afc9d8f513cfdb0c2"
+content-hash = "c4b991027d42928bba48bb494b9bbdd60f198eb08a6789084fc4d755e4e57ddc"
