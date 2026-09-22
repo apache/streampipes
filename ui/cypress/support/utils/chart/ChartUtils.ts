@@ -582,7 +582,7 @@ export class ChartUtils {
     }
 
     public static goBackToOverview() {
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
     }
 
     public static addNewChart() {
