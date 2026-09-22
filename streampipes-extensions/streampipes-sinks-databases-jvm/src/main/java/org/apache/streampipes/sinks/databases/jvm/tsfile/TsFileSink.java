@@ -45,6 +45,7 @@ import org.apache.tsfile.exception.write.WriteProcessException;
 import org.apache.tsfile.read.common.Path;
 import org.apache.tsfile.write.TsFileWriter;
 import org.apache.tsfile.write.record.Tablet;
+import org.apache.tsfile.write.schema.IMeasurementSchema;
 import org.apache.tsfile.write.schema.MeasurementSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +98,7 @@ public class TsFileSink implements IStreamPipesDataSink {
   //The timestamp of TsFile should be increased.This field is used to check.
   private long maxTime;
   private File newTsFile;
-  private List<MeasurementSchema> schemas;
+  private List<IMeasurementSchema> schemas;
   //The size of the tsfile written to disk.
   private long writeSize = 0;
   //The total size of the tsfile written to disk.
@@ -196,39 +197,39 @@ public class TsFileSink implements IStreamPipesDataSink {
      */
     int size = 0;
 
-    tablet.timestamps[0] = timestamp;
+    tablet.addTimestamp(0, timestamp);
     for (int i = 0; i < schemas.size(); i++) {
-      MeasurementSchema schema = tablet.getSchemas().get(i);
-      AbstractField fieldByRuntimeName = event.getFieldByRuntimeName(schema.getMeasurementId());
+      IMeasurementSchema schema = schemas.get(i);
+      AbstractField fieldByRuntimeName = event.getFieldByRuntimeName(schema.getMeasurementName());
       if (fieldByRuntimeName == null){
-        tablet.bitMaps[i].mark(0);
+        tablet.addValue(schema.getMeasurementName(), 0, null);
         continue;
       }
       switch (schema.getType()){
         case BOOLEAN:
           size += BOOLEAN_SIZE;
-          ((boolean[]) tablet.values[i])[0] = fieldByRuntimeName.getAsPrimitive().getAsBoolean();
+          tablet.addValue(schema.getMeasurementName(), 0, fieldByRuntimeName.getAsPrimitive().getAsBoolean());
           break;
         case INT32:
           size += INIEGER_SIZE;
-          ((int[]) tablet.values[i])[0] = fieldByRuntimeName.getAsPrimitive().getAsInt();
+          tablet.addValue(schema.getMeasurementName(), 0, fieldByRuntimeName.getAsPrimitive().getAsInt());
           break;
         case INT64:
           size += LONG_SIZE;
-          ((long[]) tablet.values[i])[0] = fieldByRuntimeName.getAsPrimitive().getAsLong();
+          tablet.addValue(schema.getMeasurementName(), 0, fieldByRuntimeName.getAsPrimitive().getAsLong());
           break;
         case FLOAT:
           size += FLOAT_SIZE;
-          ((float[]) tablet.values[i])[0] = fieldByRuntimeName.getAsPrimitive().getAsFloat();
+          tablet.addValue(schema.getMeasurementName(), 0, fieldByRuntimeName.getAsPrimitive().getAsFloat());
           break;
         case DOUBLE:
           size += DOUBLE_SIZE;
-          ((double[]) tablet.values[i])[0] = fieldByRuntimeName.getAsPrimitive().getAsDouble();
+          tablet.addValue(schema.getMeasurementName(), 0, fieldByRuntimeName.getAsPrimitive().getAsDouble());
           break;
         case STRING:
           String sValue = fieldByRuntimeName.getAsPrimitive().getAsString();
           size += sValue.length();
-          ((String[]) tablet.values[i])[0] = sValue;
+          tablet.addValue(schema.getMeasurementName(), 0, sValue);
           break;
         default:
           throw new UnsupportedOperationException("Unsupported data type: " + schema.getType());
@@ -247,7 +248,7 @@ public class TsFileSink implements IStreamPipesDataSink {
         if (aligned){
           tsFileWriter.writeAligned(tablet);
         } else {
-          tsFileWriter.write(tablet);
+          tsFileWriter.writeTree(tablet);
         }
         totalWriteSize += size;
         writeSize += size;
@@ -261,7 +262,7 @@ public class TsFileSink implements IStreamPipesDataSink {
         return;
       }
       if (writeSize >= maxFlushDiskSize) {
-        tsFileWriter.flushAllChunkGroups();
+        tsFileWriter.flush();
         writeSize = 0;
       }
     } catch (IOException e) {
@@ -270,7 +271,7 @@ public class TsFileSink implements IStreamPipesDataSink {
   }
 
   private void extractEventProperties(List<EventProperty> properties,
-                                      String preProperty, List<MeasurementSchema> schemas)
+                                      String preProperty, List<IMeasurementSchema> schemas)
         throws SpRuntimeException {
     for (EventProperty property : properties) {
       final String measurementId = preProperty + property.getRuntimeName();
@@ -281,7 +282,7 @@ public class TsFileSink implements IStreamPipesDataSink {
     }
   }
 
-  private void initMeasurement(final String measurementId , final String uri, List<MeasurementSchema> schemas) {
+  private void initMeasurement(final String measurementId , final String uri, List<IMeasurementSchema> schemas) {
     if (uri.equals(BOOLEAN)) {
       schemas.add(new MeasurementSchema(measurementId, TSDataType.BOOLEAN));
     } else if (uri.equals(INIEGER)) {

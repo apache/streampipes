@@ -24,7 +24,7 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
-import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
+import org.apache.tsfile.enums.TSDataType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
