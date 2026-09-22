@@ -27,6 +27,7 @@ import {
     DialogRef,
     FormFieldComponent,
     SearchSelectComponent,
+    SpAlertBannerComponent,
 } from '@streampipes/shared-ui';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { FormsModule, UntypedFormGroup } from '@angular/forms';
@@ -41,13 +42,11 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatDivider } from '@angular/material/divider';
 import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'sp-edit-asset-link-dialog-component',
     templateUrl: './edit-asset-link-dialog.component.html',
-    styleUrls: ['./edit-asset-link-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FlexDirective,
@@ -60,9 +59,9 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
         MatInput,
         MatDivider,
         MatButton,
-        MatIcon,
         TranslatePipe,
         SearchSelectComponent,
+        SpAlertBannerComponent,
     ],
 })
 export class EditAssetLinkDialogComponent
