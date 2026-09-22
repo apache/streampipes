@@ -56,8 +56,7 @@ export interface MoveAssetToTopLevelDialogResult {
 }
 
 export type MoveAssetDialogResult =
-    | MoveAssetToParentDialogResult
-    | MoveAssetToTopLevelDialogResult;
+    MoveAssetToParentDialogResult | MoveAssetToTopLevelDialogResult;
 
 @Component({
     selector: 'sp-move-asset-dialog',
