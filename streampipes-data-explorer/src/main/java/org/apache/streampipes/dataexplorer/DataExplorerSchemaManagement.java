@@ -27,6 +27,7 @@ import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,6 +111,10 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    */
   @Override
   public Optional<DataLakeMeasure> getExistingMeasureByName(String measureName) {
+    if (dataLakeStorage instanceof IDataLakeMeasureStorage measurementStorage) {
+      return Optional.ofNullable(measurementStorage.getByMeasureName(measureName));
+    }
+    // Preserve support for callers supplying a generic CRUDStorage implementation.
     return dataLakeStorage.findAll()
         .stream()
         .filter(m -> m.getMeasureName()
@@ -134,11 +139,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
 
   @Override
   public boolean deleteMeasurementByName(String measureName) {
-    var measureToDeleteOpt = dataLakeStorage.findAll()
-        .stream()
-        .filter(measurement -> measurement.getMeasureName()
-            .equals(measureName))
-        .findFirst();
+    var measureToDeleteOpt = getExistingMeasureByName(measureName);
 
     return measureToDeleteOpt.map(measure -> {
       dataLakeStorage.deleteElementById(measure.getElementId());
