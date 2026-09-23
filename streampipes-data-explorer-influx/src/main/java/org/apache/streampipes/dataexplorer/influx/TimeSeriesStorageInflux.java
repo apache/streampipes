@@ -143,11 +143,6 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
    */
   public void close() throws SpRuntimeException {
     influxDb.flush();
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e) {
-      throw new SpRuntimeException(e);
-    }
     influxDb.close();
   }
 
