@@ -20,6 +20,7 @@ package org.apache.streampipes.connect;
 
 import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
 import org.apache.streampipes.connect.adapters.iss.IssAdapter;
+import org.apache.streampipes.connect.adapters.livetennis.LiveTennisAdapter;
 import org.apache.streampipes.extensions.api.connect.StreamPipesAdapter;
 import org.apache.streampipes.extensions.api.declarer.IExtensionModuleExport;
 import org.apache.streampipes.extensions.api.migration.IModelMigrator;
@@ -34,7 +35,8 @@ public class GeneralAdaptersExtensionModuleExport implements IExtensionModuleExp
   public List<StreamPipesAdapter> adapters() {
     return List.of(
         new ImageStreamAdapter(),
-        new IssAdapter()
+        new IssAdapter(),
+        new LiveTennisAdapter()
     );
   }
 
