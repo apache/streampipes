@@ -26,87 +26,39 @@
     #tree
     class="sp-tree"
 >
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-        <div
-            class="tree-node-content"
-            fxLayout="row"
-            fxLayoutAlign="start center"
-            [attr.data-cy]="'tree-node-' + node.nodeName"
-        >
-            <i class="material-icons color-primary pr-5">wifi</i>
-            @if (isSelectable(node) && !isNodeSelected(node)) {
-                <i
-                    class="material-icons pr-5 icon-button"
-                    (click)="addNode(node)"
-                    [attr.data-cy]="'select-' + node.nodeName"
-                    [matTooltip]="'Add node' | translate"
-                    matTooltipPosition="above"
-                    >add_circle</i
-                >
-            }
-            @if (isSelectable(node) && isNodeSelected(node)) {
-                <i
-                    class="material-icons pr-5 icon-button"
-                    (click)="removeNode(node)"
-                    [matTooltip]="'Remove node' | translate"
-                    matTooltipPosition="above"
-                    >remove_circle</i
-                >
-            }
-            @if (selectedNodeId !== node.internalNodeName) {
-                <i
-                    class="material-icons pr-5 icon-button"
-                    [attr.data-cy]="'show-node-details-' + node.nodeName"
-                    (click)="showNodeDetails(node)"
-                    [matTooltip]="'Show details' | translate"
-                    matTooltipPosition="above"
-                    >visibility</i
-                >
-            }
-            @if (selectedNodeId === node.internalNodeName) {
-                <i
-                    class="material-icons pr-5 icon-button"
-                    [attr.data-cy]="'hide-node-details-' + node.nodeName"
-                    (click)="hideNodeDetails()"
-                    [matTooltip]="'Show details' | translate"
-                    matTooltipPosition="above"
-                    >visibility_off</i
-                >
-            }
-            <span
-                fxFlex
-                class="tree-node-label pr-5"
-                [matTooltip]="node.internalNodeName || node.nodeName"
-                >{{ node.nodeName }}</span
-            >
-        </div>
-    </mat-tree-node>
-    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+    <mat-nested-tree-node *matTreeNodeDef="let node">
         <div class="mat-tree-node">
-            <button
-                mat-icon-button
-                matTreeNodeToggle
-                [attr.data-cy]="'expand-' + node.nodeName"
-                [attr.aria-label]="'Toggle ' + node.nodeName"
-                (click)="loadChildren(node, tree.isExpanded(node))"
-            >
-                <mat-icon class="mat-icon-rtl-mirror">
-                    {{
-                        tree.isExpanded(node) ? 'expand_more' : 'chevron_right'
-                    }}
-                </mat-icon>
-            </button>
+            @if (isLeaf(node)) {
+                <span class="tree-node-toggle-spacer"></span>
+            } @else {
+                <button
+                    mat-icon-button
+                    [attr.data-cy]="'expand-' + node.nodeName"
+                    [attr.aria-label]="'Toggle ' + node.nodeName"
+                    (click)="toggleNode(node)"
+                >
+                    <mat-icon class="mat-icon-rtl-mirror">
+                        {{
+                            tree.isExpanded(node)
+                                ? 'expand_more'
+                                : 'chevron_right'
+                        }}
+                    </mat-icon>
+                </button>
+            }
             <div
                 class="tree-node-content"
                 fxFlex
                 fxLayout="row"
                 fxLayoutAlign="start center"
+                [attr.data-cy]="'tree-node-' + node.nodeName"
             >
-                @if (!tree.isExpanded(node)) {
-                    <i class="material-icons color-primary pr-5">folder</i>
-                }
-                @if (tree.isExpanded(node)) {
+                @if (node.dataNode) {
+                    <i class="material-icons color-primary pr-5">wifi</i>
+                } @else if (tree.isExpanded(node)) {
                     <i class="material-icons color-primary pr-5">folder_open</i>
+                } @else {
+                    <i class="material-icons color-primary pr-5">folder</i>
                 }
                 @if (
                     staticProperty.multiSelection &&
