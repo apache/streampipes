@@ -16,8 +16,8 @@
 #
 
 """
-Specific implementation of the StreamPipes API's data lake measure endpoints.
-This endpoint allows to consume data stored in StreamPipes' data lake.
+Specific implementation of the StreamPipes API's dataset endpoints.
+This endpoint allows to consume data stored in StreamPipes' datasets.
 """
 
 from datetime import datetime
@@ -39,7 +39,7 @@ from pydantic import (
 )
 
 from streampipes.endpoint.endpoint import APIEndpoint
-from streampipes.model.container import DataLakeMeasures
+from streampipes.model.container import Datasets
 from streampipes.model.container.resource_container import ResourceContainer
 from streampipes.model.query import (
     AggregationFunction,
@@ -50,7 +50,9 @@ from streampipes.model.query import (
 from streampipes.model.resource.query_result import QueryResult
 
 __all__ = [
-    "DataLakeMeasureEndpoint",
+    "DatasetEndpoint",
+    "MeasurementGetQueryConfig",
+    "StreamPipesQueryValidationError",
 ]
 
 
@@ -278,16 +280,16 @@ class MeasurementGetQueryConfig(BaseModel):
         return query_param_string
 
 
-class DataLakeMeasureEndpoint(APIEndpoint):
-    """Implementation of the DataLakeMeasure endpoint.
+class DatasetEndpoint(APIEndpoint):
+    """Implementation of the dataset endpoint.
 
-    This endpoint provides an interface to all data stored in the StreamPipes data lake.
+    This endpoint provides an interface to all datasets stored in StreamPipes.
 
-    Consequently, it allows querying metadata about available data sets (see `all()` method).
-    The metadata is returned as an instance of [`DataLakeMeasures`][streampipes.model.container.DataLakeMeasures].
+    Consequently, it allows querying metadata about available datasets (see `all()` method).
+    The metadata is returned as an instance of [`Datasets`][streampipes.model.container.Datasets].
 
-    In addition, the endpoint provides direct access to the data stored in the data lake by querying a
-    specific data lake measure using the `get()` method.
+    In addition, the endpoint provides direct access to the data stored in a dataset by querying a
+    specific dataset using the `get()` method.
 
     Examples
     --------
@@ -309,19 +311,19 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     ```
 
     ```
-    # get all existing data lake measures from StreamPipes
-    data_lake_measures = client.dataLakeMeasureApi.all()
+    # get the metadata of all existing datasets from StreamPipes
+    datasets = client.datasetApi.all()
 
     # let's take a look how many we got
-    len(data_lake_measures)
+    len(datasets)
     ```
     ```
     5
     ```
 
     ```python
-    # Retrieve a specific data lake measure as a pandas DataFrame
-    flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate").to_pandas()
+    # Retrieve a specific dataset as a pandas DataFrame
+    flow_rate_pd = client.datasetApi.get(identifier="flow-rate").to_pandas()
     flow_rate_pd
     ```
     ```
@@ -342,7 +344,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     As you can see, the returned amount of rows per default is `1000`.
     We can modify this behavior by passing the `limit` parameter.
     ```python
-    flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", limit=10).to_pandas()
+    flow_rate_pd = client.datasetApi.get(identifier="flow-rate", limit=10).to_pandas()
     len(flow_rate_pd)
     ```
     ```
@@ -352,7 +354,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     If we are only interested in the values for `density`,
     `columns` allows us to select the columns to be returned:
     ```python
-    flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", columns=['density'], limit=3).to_pandas()
+    flow_rate_pd = client.datasetApi.get(identifier="flow-rate", columns=['density'], limit=3).to_pandas()
     flow_rate_pd
     ```
     ```
@@ -364,7 +366,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
     Aggregate temperature into one-minute windows, grouped by sensor:
     ```python
-    averages = client.dataLakeMeasureApi.get(
+    averages = client.datasetApi.get(
         identifier="flow-rate",
         columns=["temperature"],
         aggregation_function="MEAN",
@@ -375,7 +377,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     ```
 
     This is only a subset of the available query parameters,
-    find them at [MeasurementGetQueryConfig][streampipes.endpoint.api.data_lake_measure.MeasurementGetQueryConfig].
+    find them at [MeasurementGetQueryConfig][streampipes.endpoint.api.dataset.MeasurementGetQueryConfig].
     """
 
     @staticmethod
@@ -383,7 +385,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         """Validates given query params.
 
         Validates the given query parameters via the
-        [MeasurementGetQueryConfig][streampipes.endpoint.api.data_lake_measure.MeasurementGetQueryConfig].
+        [MeasurementGetQueryConfig][streampipes.endpoint.api.dataset.MeasurementGetQueryConfig].
 
         Raises
         ------
@@ -430,42 +432,42 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
         Returns
         -------
-        [DataLakeMeasures][streampipes.model.container.DataLakeMeasures]
+        [Datasets][streampipes.model.container.Datasets]
         """
-        return DataLakeMeasures
+        return Datasets
 
     @property
     def _relative_api_path(self) -> tuple[str, ...]:
-        """Defines the relative api path to the DataLakeMeasurement endpoint.
+        """Defines the relative api path to the dataset endpoint.
         Each path within the URL is defined as an own string.
         """
 
         return "api", "v4", "datalake", "measurements"
 
     def get(self, identifier: str, **kwargs: Any) -> QueryResult:
-        """Queries the specified data lake measure from the API.
+        """Queries the specified dataset from the API.
 
         By default, the maximum number of returned records is 1000.
         This behavior can be influenced by passing the parameter `limit` with a different value
-        (see [MeasurementGetQueryConfig][streampipes.endpoint.api.data_lake_measure.MeasurementGetQueryConfig]).
+        (see [MeasurementGetQueryConfig][streampipes.endpoint.api.dataset.MeasurementGetQueryConfig]).
 
         Parameters
         ----------
         identifier: str
-            The identifier of the data lake measure to be queried.
+            The identifier of the dataset to be queried.
         **kwargs: Dict[str, Any]
             Keyword arguments can be used to provide additional query parameters.
             The available query parameters are defined by the
-            [MeasurementGetQueryConfig][streampipes.endpoint.api.data_lake_measure.MeasurementGetQueryConfig].
+            [MeasurementGetQueryConfig][streampipes.endpoint.api.dataset.MeasurementGetQueryConfig].
 
         Returns
         -------
         measurement: QueryResult
-            The specified data lake measure
+            The data of the specified dataset
 
         Examples
         --------
-        see directly at [DataLakeMeasureEndpoint][streampipes.endpoint.api.data_lake_measure.DataLakeMeasureEndpoint].
+        see directly at [DatasetEndpoint][streampipes.endpoint.api.dataset.DatasetEndpoint].
         """
 
         # build base URL for resource
@@ -481,17 +483,17 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     def storeDataToMeasurement(
         self, identifier: str, df: DataFrame, ignore_schema_mismatch=False, batch_size: int = 10000
     ) -> None:
-        """Stores data from a pandas DataFrame into the specified data lake measurement.
+        """Stores data from a pandas DataFrame into the specified dataset.
 
         The provided DataFrame will be split into chunks and converted into a
         `QueryResult` and then serialized to JSON before being sent to the
-        StreamPipes Data Lake. The data will be appended to the measurement
+        StreamPipes dataset. The data will be appended to the dataset
         identified by `identifier`.
 
         Parameters
         ----------
         identifier : str
-            The identifier of the data lake measurement into which the data will be stored.
+            The identifier of the dataset into which the data will be stored.
         df : pandas.DataFrame
             The data to be stored, provided as a pandas DataFrame. The first column
             must be `timestamp` and all timestamp values will be cast to integers.
@@ -513,7 +515,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
             "timestamp": [1672531200000, 1672531260000],
             "value": [42, 43],
         })
-        client.dataLakeMeasureApi.storeDataToMeasurement("my-measure-id", df)
+        client.datasetApi.storeDataToMeasurement("my-measure-id", df)
         ```
         """
 

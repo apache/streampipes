@@ -19,7 +19,7 @@ go test ./...
 ## Layout
 
 - `streampipes/` — the client package: `streampipes_client.go`, one `*_api.go` per resource
-  (`pipeline_api.go`, `adapter_api.go`, `data_lake_measure_api.go`, ...), `model/`,
+  (`pipeline_api.go`, `adapter_api.go`, `dataset_api.go`, ...), `model/`,
   `config/`, `internal/`, `utils/`.
 - `examples/` — runnable usage examples; keep them compiling when the API changes.
 - `docs/` — Hugo documentation site; `docs/content/en/docs/contribution-guidelines.md`.

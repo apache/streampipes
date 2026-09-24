@@ -121,7 +121,7 @@ Hi there!
 You are connected to a StreamPipes instance running at http://localhost:80.
 The following StreamPipes resources are available with this client:
 6x DataStreams
-1x DataLakeMeasures
+1x Datasets
 ```
 
 For more information about how to use the StreamPipes client visit our [introduction tutorial](https://streampipes.apache.org/docs/docs/python/latest/tutorials/1-introduction-to-streampipes-python-client/).
