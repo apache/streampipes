@@ -35,7 +35,7 @@ import {
 import {
     AssetConstants,
     AssetLinkType,
-    DataLakeMeasure,
+    DatasetMetadata,
     DatalakeRestService,
     EventPropertyUnion,
     GenericStorageService,
@@ -75,7 +75,7 @@ export class DatasetFeatureCardComponent implements OnInit {
     @Input()
     onClose?: () => void;
 
-    dataset: DataLakeMeasure;
+    dataset: DatasetMetadata;
     assetLinkType: AssetLinkType;
     dataPreview: SpQueryResult;
     lastEventTs: number | undefined;

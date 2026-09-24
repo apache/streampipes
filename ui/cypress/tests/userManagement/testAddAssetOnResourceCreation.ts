@@ -107,7 +107,7 @@ describe('Test that resources can be added to assets on creation', () => {
     it('Check Role Asset Admin in Charts', () => {
         UserUtils.switchUser(newUser);
 
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.createAndEditChart();
 
         ChartBtns.chartAssetCheckboxBtn().should('exist');
@@ -116,7 +116,7 @@ describe('Test that resources can be added to assets on creation', () => {
 
         UserUtils.switchUser(newUser);
 
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.createAndEditChart();
 
         ChartBtns.chartAssetCheckboxBtn().should('not.exist');

@@ -42,7 +42,7 @@ export class ProcessingElementTestUtils {
 
         FileManagementUtils.addFile(inputFile);
 
-        const dataLakeIndex = pipelineElementTest.name.toLowerCase();
+        const datasetIndex = pipelineElementTest.name.toLowerCase();
 
         const adapterName = pipelineElementTest.name.toLowerCase();
 
@@ -87,8 +87,8 @@ export class ProcessingElementTestUtils {
             .addSourceType('set')
             .addProcessingElement(pipelineElementTest.processor)
             .addSink(
-                PipelineElementBuilder.create('data_lake')
-                    .addInput('input', 'db_measurement', dataLakeIndex)
+                PipelineElementBuilder.create('dataset')
+                    .addInput('input', 'db_measurement', datasetIndex)
                     .build(),
             )
             .build();
@@ -100,7 +100,7 @@ export class ProcessingElementTestUtils {
         ConnectUtils.restartAdapter(adapterName);
 
         ChartUtils.checkResults(
-            dataLakeIndex,
+            datasetIndex,
             'cypress/fixtures/' + expectedResultFile,
             pipelineElementTest.processor.ignoreTimestamp,
         );

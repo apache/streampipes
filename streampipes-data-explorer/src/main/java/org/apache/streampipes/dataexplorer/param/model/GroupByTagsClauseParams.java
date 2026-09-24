@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.dataexplorer.param.model;
 
-import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
+import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class GroupByTagsClauseParams implements IQueryStatement {
   }
 
   @Override
-  public void buildStatement(IDataLakeQueryBuilder<?> builder) {
+  public void buildStatement(IDatasetQueryBuilder<?> builder) {
     groupingTags.forEach(builder::withGroupBy);
   }
 }

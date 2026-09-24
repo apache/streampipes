@@ -19,9 +19,9 @@
 package org.apache.streampipes.manager.pipeline.update;
 
 import org.apache.streampipes.model.connect.adapter.ChartSchemaUpdateInfo;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetHealthStatus;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetHealthStatus;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -172,22 +172,22 @@ public class ChartSchemaUpdateCoordinator {
     }
   }
 
-  private DataLakeMeasure parseMeasure(Object measure,
+  private DatasetMetadata parseMeasure(Object measure,
                                        String measureName) {
-    var dataLakeMeasure = objectMapper.convertValue(measure, DataLakeMeasure.class);
-    if (dataLakeMeasure == null) {
-      dataLakeMeasure = new DataLakeMeasure();
+    var datasetMetadata = objectMapper.convertValue(measure, DatasetMetadata.class);
+    if (datasetMetadata == null) {
+      datasetMetadata = new DatasetMetadata();
     }
-    if (dataLakeMeasure.getMeasureName() == null) {
-      dataLakeMeasure.setMeasureName(measureName);
+    if (datasetMetadata.getMeasureName() == null) {
+      datasetMetadata.setMeasureName(measureName);
     }
-    if (dataLakeMeasure.getSchemaVersion() == null) {
-      dataLakeMeasure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
+    if (datasetMetadata.getSchemaVersion() == null) {
+      datasetMetadata.setSchemaVersion("1.1");
     }
-    return dataLakeMeasure;
+    return datasetMetadata;
   }
 
-  private Map<String, Object> serializeMeasure(DataLakeMeasure measure) {
+  private Map<String, Object> serializeMeasure(DatasetMetadata measure) {
     return objectMapper.convertValue(measure, MAP_TYPE);
   }
 
