@@ -23,7 +23,7 @@ import random
 import string
 from uuid import uuid4
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, model_validator
 
 __all__ = [
     "BaseElement",
@@ -169,6 +169,18 @@ class EventGrounding(BasicModel):
     """
     Data model of an `EventGrounding` in compliance to with StreamPipes Backend.
     """
+
+    topic_definition: TopicDefinition | None = None
+    options: dict[StrictStr, StrictStr] = Field(default_factory=dict)
+
+    @model_validator(mode="before")
+    @classmethod
+    def read_channel_grounding(cls, value):
+        """Avoid inventing a legacy broker when reading a topic-only grounding."""
+        if isinstance(value, dict) and ("topicDefinition" in value or "topic_definition" in value):
+            value = dict(value)
+            value.setdefault("transportProtocols", [])
+        return value
 
     transport_protocols: list[TransportProtocol] = Field(default_factory=lambda: [TransportProtocol()])
     transport_formats: list[TransportFormat] = Field(default_factory=lambda: [TransportFormat()])

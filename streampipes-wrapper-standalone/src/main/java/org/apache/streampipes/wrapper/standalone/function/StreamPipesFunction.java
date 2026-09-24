@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.wrapper.standalone.function;
 
-import org.apache.streampipes.commons.environment.Environment;
-import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.declarer.IFunctionConfig;
 import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
@@ -27,8 +25,6 @@ import org.apache.streampipes.extensions.api.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.api.pe.routing.RawDataProcessor;
 import org.apache.streampipes.extensions.api.pe.routing.SpInputCollector;
 import org.apache.streampipes.extensions.api.pe.routing.SpOutputCollector;
-import org.apache.streampipes.extensions.management.util.GroundingDebugUtils;
-import org.apache.streampipes.messaging.ProtocolOverrides;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.function.FunctionId;
@@ -164,10 +160,6 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   private Map<String, SpOutputCollector> getOutputCollectors(FunctionId functionId) {
     this.getFunctionConfig().getOutputDataStreams().forEach((key, value) -> {
       var uniqueStreamId = getUniqueStreamId(functionId, value);
-      if (getEnvironment().getSpDebug().getValueOrDefault()) {
-        GroundingDebugUtils.modifyGrounding(value.getEventGrounding());
-      }
-      ProtocolOverrides.addNatsTokenIfConfigured(value.getEventGrounding().getTransportProtocol());
       this.outputCollectors.put(
           uniqueStreamId,
           ProtocolManager.makeOutputCollector(
@@ -181,12 +173,8 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   private Map<String, SpInputCollector> getInputCollectors(FunctionId functionId,
                                                            Collection<SpDataStream> streams) throws SpRuntimeException {
     Map<String, SpInputCollector> inputCollectors = new HashMap<>();
-    var env = getEnvironment();
     for (SpDataStream is : streams) {
       var uniqueStreamId = getUniqueStreamId(functionId, is);
-      if (env.getSpDebug().getValueOrDefault()) {
-        GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
-      }
       inputCollectors.put(uniqueStreamId, ProtocolManager.findInputCollector(is.getEventGrounding()
           .getTransportProtocol(), false));
     }
@@ -221,10 +209,6 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
 
   private SchemaInfo createSchemaInfo(EventSchema eventSchema) {
     return new SchemaInfo(eventSchema, new ArrayList<>());
-  }
-
-  private Environment getEnvironment() {
-    return Environments.getEnvironment();
   }
 
   public abstract IFunctionConfig getFunctionConfig();

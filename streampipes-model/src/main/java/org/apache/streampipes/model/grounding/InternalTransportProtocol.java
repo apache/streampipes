@@ -16,19 +16,25 @@
  *
  */
 
-package org.apache.streampipes.extensions.management.util;
+package org.apache.streampipes.model.grounding;
 
-import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.TransportProtocol;
+import java.util.Map;
 
-public class GroundingDebugUtils {
+/** In-process adapter from channel grounding to the existing messaging API. */
+public final class InternalTransportProtocol extends TransportProtocol {
+  private final Map<String, String> options;
 
-  public static void modifyGrounding(EventGrounding grounding) {
-    TransportProtocol protocol = grounding.getTransportProtocol();
-    protocol.setBrokerHostname("localhost");
-    if (protocol instanceof KafkaTransportProtocol) {
-      ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
-    }
+  public InternalTransportProtocol(TopicDefinition topic, Map<String, String> options) {
+    super(null, topic);
+    this.options = options;
+  }
+
+  @Override
+  public String protocolId() {
+    return "internal";
+  }
+
+  public Map<String, String> getOptions() {
+    return options;
   }
 }

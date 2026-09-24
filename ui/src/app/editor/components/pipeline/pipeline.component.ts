@@ -327,8 +327,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
         const streamDescription = pipelineElementConfig.payload as SpDataStream;
         if (
-            streamDescription.eventGrounding.transportProtocols[0]
-                .topicDefinition['@class'] ===
+            streamDescription.eventGrounding.topicDefinition['@class'] ===
             'org.apache.streampipes.model.grounding.WildcardTopicDefinition'
         ) {
             // this.EditorDialogManager.showCustomizeStreamDialog(streamDescription);

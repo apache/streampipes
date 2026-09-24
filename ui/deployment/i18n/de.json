@@ -1262,7 +1262,6 @@
   "Uploading CSV data": "CSV-Daten werden hochgeladen",
   "Upper Limit": "Obere Grenze",
   "Upper bound of the gauge value range.": "Obere Grenze des Wertebereichs des Tachos.",
-  "Use broker settings from this instance": "Broker-Einstellungen aus dieser Instanz verwenden",
   "Use existing dataset": "Vorhandenes Dataset verwenden",
   "Use field key (runtime name) as header column": "Laufzeitname als Spaltenname verwenden",
   "Use field label as header column if available": "Label als Spaltenname verwenden (falls vorhanden)",

@@ -31,6 +31,7 @@ services:
     depends_on:
       - couchdb
     environment:
+      - SP_PRIORITIZED_PROTOCOL=nats
       - SP_LOAD_MANAGER_ENABLE=true
       - SP_SELECTOR=WeightedRandomSelector
       - SP_MIGRATOR=ThresholdMigrator

@@ -19,8 +19,10 @@ package org.apache.streampipes.client.model;
 
 import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.api.config.IStreamPipesClientConfig;
+import org.apache.streampipes.messaging.InternalBrokerSettings;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.messaging.SpProtocolManager;
+import org.apache.streampipes.model.grounding.BrokerConfiguration;
 
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
@@ -30,12 +32,24 @@ import java.util.Set;
 
 public class StreamPipesClientConfig implements IStreamPipesClientConfig {
 
+  private InternalBrokerSettings internalBrokerSettings;
+
   private final ClientConnectionUrlResolver connectionConfig;
   private final Set<Header> customHeaders;
 
   public StreamPipesClientConfig(ClientConnectionUrlResolver connectionConfig) {
     this.connectionConfig = connectionConfig;
     this.customHeaders = new HashSet<>();
+  }
+
+  @Override
+  public void setInternalBrokerConfiguration(BrokerConfiguration configuration) {
+    this.internalBrokerSettings = new InternalBrokerSettings(
+        configuration.getProtocolId(), configuration.getUrl(), configuration.getToken());
+  }
+
+  public InternalBrokerSettings getInternalBrokerSettings() {
+    return internalBrokerSettings;
   }
 
   @Override

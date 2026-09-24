@@ -78,7 +78,9 @@ public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
   @Override
   public ISubscription subscribe(DataSinkInvocation sink,
                                  EventProcessor callback) {
-    return new SubscriptionManager(sink.getInputStreams().get(0).getEventGrounding(), callback).subscribe();
+    return new SubscriptionManager(sink.getInputStreams().get(0).getEventGrounding(), callback)
+        .withInternalBroker(clientConfig.getInternalBrokerSettings())
+        .subscribe();
   }
 
   /**
@@ -93,7 +95,9 @@ public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation>
                                  IBrokerConfigOverride brokerConfigOverride,
                                  EventProcessor callback) {
     return new SubscriptionManager(brokerConfigOverride,
-        sink.getInputStreams().get(0).getEventGrounding(), callback).subscribe();
+        sink.getInputStreams().get(0).getEventGrounding(), callback)
+        .withInternalBroker(clientConfig.getInternalBrokerSettings())
+        .subscribe();
   }
 
   @Override

@@ -69,3 +69,7 @@ jobs:
           cd ./streampipes-client-e2e/tool
           chmod +x ./start-streampipes-client-e2e.sh
           ./start-streampipes-client-e2e.sh -t go-client-e2e.sh
+
+      - name: Show StreamPipes logs on failure
+        if: failure()
+        run: docker compose -f ./streampipes-client-e2e/docker-compose.yml -p streampipes-client-e2e logs --no-color --tail=300 backend extensions-all-jvm

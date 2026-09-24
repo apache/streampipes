@@ -36,6 +36,7 @@ import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakeDataba
 import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakePersistPipelineTemplateMigration;
 import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakeSinkToDatasetMigration;
 import org.apache.streampipes.service.core.migrations.v099.MigrateDatasetMetadataMigration;
+import org.apache.streampipes.service.core.migrations.v099.ExtractBrokerConfigurationMigration;
 import org.apache.streampipes.service.core.migrations.v099.ModifyAssetLinkIconMigration;
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveAssetUserRoleMigration;
@@ -127,7 +128,8 @@ public class AvailableMigrations {
         new MigrateDatasetMetadataMigration(datasetStorage, permissionStorage),
         new MigrateDataLakePersistPipelineTemplateMigration(pipelineTemplateStorage),
         new ReplaceDefaultServiceSecretMigration(userStorage),
-        new RenameAssetLinkTypesMigration()
+        new RenameAssetLinkTypesMigration(),
+        new ExtractBrokerConfigurationMigration()
     );
   }
 }

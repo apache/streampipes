@@ -25,7 +25,7 @@ import org.apache.streampipes.client.credentials.StreamPipesApiKeyCredentials;
 import org.apache.streampipes.integration.utils.Utils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 
 import org.testcontainers.shaded.com.google.common.collect.Maps;
 
@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public abstract class ClientLiveDataTesterBase<T extends TransportProtocol> implements AutoCloseable {
+public abstract class ClientLiveDataTesterBase implements AutoCloseable {
 
   private List<Map<String, Object>> expectedEvents;
   private int counter;
@@ -86,7 +86,7 @@ public abstract class ClientLiveDataTesterBase<T extends TransportProtocol> impl
 
   private EventGrounding makeEventGrounding() {
     var grounding = new EventGrounding();
-    grounding.setTransportProtocol(makeProtocol());
+    grounding.setTopicDefinition(new SimpleTopicDefinition("test-topic"));
 
     return grounding;
   }
@@ -107,8 +107,6 @@ public abstract class ClientLiveDataTesterBase<T extends TransportProtocol> impl
   }
 
   public abstract void startContainer();
-
-  public abstract T makeProtocol();
 
   public abstract void prepareClient(IStreamPipesClient client);
 }
