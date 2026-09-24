@@ -142,7 +142,6 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
    * Shuts down the connection to the InfluxDB server
    */
   public void close() throws SpRuntimeException {
-    influxDb.flush();
     influxDb.close();
   }
 

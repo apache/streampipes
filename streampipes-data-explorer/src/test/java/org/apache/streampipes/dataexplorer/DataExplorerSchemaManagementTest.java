@@ -23,7 +23,7 @@ import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinat
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.storage.api.core.CRUDStorage;
+import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
 import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
@@ -50,13 +50,13 @@ public class DataExplorerSchemaManagementTest {
   public static final String NEW_PROPERTY = "newProperty";
   public static final String OLD_PROPERTY = "oldProperty";
 
-  private CRUDStorage<DataLakeMeasure> dataLakeStorageMock;
+  private IDataLakeMeasureStorage dataLakeStorageMock;
   private DataLakePermissionManager permissionManagerMock;
   private ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
   @BeforeEach
   public void setUp() {
-    dataLakeStorageMock = mock(CRUDStorage.class);
+    dataLakeStorageMock = mock(IDataLakeMeasureStorage.class);
     IPermissionStorage permissionStorageMock = mock(IPermissionStorage.class);
     this.permissionManagerMock = new DataLakePermissionManager(permissionStorageMock);
     this.chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
@@ -64,7 +64,6 @@ public class DataExplorerSchemaManagementTest {
 
   @Test
   public void createMeasurementThatNotExisted() {
-    when(dataLakeStorageMock.findAll()).thenReturn(List.of());
     var schemaManagement = new DataExplorerSchemaManagement(
         dataLakeStorageMock,
         permissionManagerMock,
@@ -93,7 +92,7 @@ public class DataExplorerSchemaManagementTest {
         )
     );
 
-    when(dataLakeStorageMock.findAll()).thenReturn(List.of(oldMeasure));
+    when(dataLakeStorageMock.getByMeasureName(oldMeasure.getMeasureName())).thenReturn(oldMeasure);
     when(dataLakeStorageMock.getElementById(any())).thenReturn(oldMeasure);
     var schemaManagement = new DataExplorerSchemaManagement(
         dataLakeStorageMock,
@@ -123,7 +122,7 @@ public class DataExplorerSchemaManagementTest {
             getEventProperty(OLD_PROPERTY, XSD.STRING)
         )
     );
-    when(dataLakeStorageMock.findAll()).thenReturn(List.of(oldMeasure));
+    when(dataLakeStorageMock.getByMeasureName(oldMeasure.getMeasureName())).thenReturn(oldMeasure);
     when(dataLakeStorageMock.getElementById(any())).thenReturn(oldMeasure);
     var schemaManagement = new DataExplorerSchemaManagement(
         dataLakeStorageMock,
@@ -151,7 +150,7 @@ public class DataExplorerSchemaManagementTest {
         )
     );
 
-    when(dataLakeStorageMock.findAll()).thenReturn(List.of(oldMeasure));
+    when(dataLakeStorageMock.getByMeasureName(oldMeasure.getMeasureName())).thenReturn(oldMeasure);
     when(dataLakeStorageMock.getElementById(any())).thenReturn(oldMeasure);
 
     var schemaManagement = new DataExplorerSchemaManagement(

@@ -26,7 +26,6 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeMeasureSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.storage.api.core.CRUDStorage;
 import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
 
 import java.util.ArrayList;
@@ -40,11 +39,11 @@ import java.util.stream.Stream;
 
 public class DataExplorerSchemaManagement implements IDataExplorerSchemaManagement {
 
-  CRUDStorage<DataLakeMeasure> dataLakeStorage;
+  private final IDataLakeMeasureStorage dataLakeStorage;
   private final DataLakePermissionManager permissionManager;
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
-  public DataExplorerSchemaManagement(CRUDStorage<DataLakeMeasure> dataLakeStorage,
+  public DataExplorerSchemaManagement(IDataLakeMeasureStorage dataLakeStorage,
                                DataLakePermissionManager permissionManager,
                                ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.dataLakeStorage = dataLakeStorage;
@@ -111,15 +110,7 @@ public class DataExplorerSchemaManagement implements IDataExplorerSchemaManageme
    */
   @Override
   public Optional<DataLakeMeasure> getExistingMeasureByName(String measureName) {
-    if (dataLakeStorage instanceof IDataLakeMeasureStorage measurementStorage) {
-      return Optional.ofNullable(measurementStorage.getByMeasureName(measureName));
-    }
-    // Preserve support for callers supplying a generic CRUDStorage implementation.
-    return dataLakeStorage.findAll()
-        .stream()
-        .filter(m -> m.getMeasureName()
-            .equals(measureName))
-        .findFirst();
+    return Optional.ofNullable(dataLakeStorage.getByMeasureName(measureName));
   }
 
   private static void setDefaultUpdateStrategyIfNoneProvided(DataLakeMeasure measure) {
