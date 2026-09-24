@@ -62,7 +62,7 @@
     "date-fns": "^3.6.0",
     "echarts": "^6.0.0",
     "echarts-simple-transform": "^1.0.0",
-    "gridstack": "^12.6.0",
+    "gridstack": "^13.2.0",
     "file-saver": "2.0.5",
     "jquery": "^3.7.0",
     "jquery-ui-dist": "1.13.2",
