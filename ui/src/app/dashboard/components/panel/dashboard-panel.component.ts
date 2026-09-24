@@ -41,7 +41,7 @@ import {
     DashboardService,
     ChartService,
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DatasetMetadata,
     LinkageData,
     PermissionsService,
     TimeSelectionConstants,
@@ -185,7 +185,7 @@ export class DashboardPanelComponent
 
     public items: Dashboard[];
 
-    dataLakeMeasure: DataLakeMeasure;
+    dataLakeMeasure: DatasetMetadata;
     auth$: Subscription;
     refresh$: Subscription;
     private shortcutReg: ShortcutRegistration;
@@ -312,9 +312,7 @@ export class DashboardPanelComponent
     }
 
     private get activeDashboardView():
-        | DashboardGridViewComponent
-        | DashboardSlideViewComponent
-        | undefined {
+        DashboardGridViewComponent | DashboardSlideViewComponent | undefined {
         return this.viewMode === 'grid'
             ? this.dashboardGrid
             : this.dashboardSlide;

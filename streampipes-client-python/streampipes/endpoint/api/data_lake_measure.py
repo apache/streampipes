@@ -19,17 +19,34 @@
 Specific implementation of the StreamPipes API's data lake measure endpoints.
 This endpoint allows to consume data stored in StreamPipes' data lake.
 """
+
 from datetime import datetime
 from json import dumps
 from math import ceil
+from re import fullmatch
 from typing import Any, Literal
+from urllib.parse import urlencode
 
 from pandas import DataFrame
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, ValidationError, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictInt,
+    ValidationError,
+    ValidationInfo,
+    field_validator,
+)
 
 from streampipes.endpoint.endpoint import APIEndpoint
 from streampipes.model.container import DataLakeMeasures
 from streampipes.model.container.resource_container import ResourceContainer
+from streampipes.model.query import (
+    AggregationFunction,
+    Column,
+    FilterCondition,
+    FilterGroup,
+)
 from streampipes.model.resource.query_result import QueryResult
 
 __all__ = [
@@ -53,8 +70,9 @@ class MeasurementGetQueryConfig(BaseModel):
 
     Attributes
     ----------
-    columns: Optional[List[str]]
-        A comma separated list of column names (e.g., `time,value`)<br>
+    columns: Optional[List[str | Column]]
+        A list of column names (e.g., `["time", "value"]`) or `Column` objects <br>
+        (e.g. `Column(name="temperature", aggregation=AggregationFunction.MEAN, alias="average")`).<br>
         If provided, the returned data only consists of the given columns.<br>
         Please be aware that the column `time` as an index is always included.
     end_date: Optional[datetime]
@@ -75,13 +93,37 @@ class MeasurementGetQueryConfig(BaseModel):
     start_date: Optional[datetime]
         Limits the queried data to only include data that is newer than the specified time.
         In other words, any data that occurred before the start_date will not be included in the query results.
+    aggregation_function: Optional[AggregationFunction | str]
+        Aggregation applied to all selected columns: MEAN, MEDIAN, MIN, MAX, COUNT,
+        FIRST, LAST, MODE, STDDEV, SUM or SPREAD.
+    group_by: Optional[List[str]]
+        Tag columns used to group results.
+    time_interval: Optional[str]
+        Aggregation window, e.g., `1m`. Supported units: ms, s, m, h, d, w.
+    fill: Optional[str]
+        Empty-window behavior: none, null, previous, linear, or a numeric string.
+    count_only: Optional[bool]
+        Return only the number of results.
+    auto_aggregate: Optional[bool]
+        Enable automatic aggregation. False is omitted from the query because the
+        server triggers automatic aggregation whenever the parameter is present.
+    filter: Optional[FilterCondition | str]
+        A typed condition or REST filter string, e.g., `[temperature;>;20]`.
+        Use `filter_expression` for values containing commas, semicolons, or brackets.
+    filter_expression: Optional[FilterCondition | FilterGroup | str]
+        A typed condition, nested group, or JSON-encoded REST filter expression.
+        Takes precedence over `filter`. A single condition is wrapped in an AND group.
+    missing_value_behaviour: Optional[str]
+        Handle missing values using `ignore` or `empty`.
+    maximum_amount_of_events: Optional[int]
+        Result-size threshold for the server's TOO_MUCH_DATA status; -1 disables it.
     """
 
     _regex_comma_separated_string = r"^[0-9a-zA-Z\_]+(,[0-9a-zA-Z\_]+)*$"
 
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
-    columns: str | None = Field(default=None, pattern=_regex_comma_separated_string)
+    columns: str | None = None
     end_date: StrictInt | None = Field(default=None, alias="endDate")
     limit: int | None = Field(ge=1, default=1000)
     offset: int | None = Field(default=None, ge=0)
@@ -89,9 +131,36 @@ class MeasurementGetQueryConfig(BaseModel):
     page_no: int | None = Field(default=None, alias="page", ge=1)
     start_date: StrictInt | None = Field(default=None, alias="startDate")
 
-    @field_validator("columns", mode="before")
+    aggregation_function: AggregationFunction | None = Field(default=None, alias="aggregationFunction")
+    group_by: str | None = Field(default=None, alias="groupBy", pattern=_regex_comma_separated_string)
+    time_interval: str | None = Field(default=None, alias="timeInterval", pattern=r"^[0-9]+(ms|s|m|h|d|w)$")
+    fill: str | None = Field(default=None, pattern=r"^(none|null|previous|linear|-?[0-9]+(\.[0-9]+)?)$")
+    count_only: bool | None = Field(default=None, alias="countOnly")
+    auto_aggregate: bool | None = Field(default=None, alias="autoAggregate")
+    filter: str | None = None
+    filter_expression: str | None = Field(default=None, alias="filterExpression")
+    missing_value_behaviour: Literal["ignore", "empty"] | None = Field(default=None, alias="missingValueBehaviour")
+    maximum_amount_of_events: int | None = Field(default=None, alias="maximumAmountOfEvents", ge=-1)
+
+    @field_validator("filter", mode="before")
     @classmethod
-    def _convert_to_comma_separated_string(cls, value: Any) -> str | None:
+    def _convert_filter(cls, value: Any) -> Any:
+        """Serialize a typed condition while preserving raw REST filter strings."""
+        return value.to_query_string() if isinstance(value, FilterCondition) else value
+
+    @field_validator("filter_expression", mode="before")
+    @classmethod
+    def _convert_filter_expression(cls, value: Any) -> Any:
+        """Serialize typed filters, preserving existing JSON string inputs."""
+        if isinstance(value, FilterCondition):
+            value = FilterGroup.all_of(value)
+        if isinstance(value, FilterGroup):
+            return value.to_query_string()
+        return value
+
+    @field_validator("columns", "group_by", mode="before")
+    @classmethod
+    def _convert_to_comma_separated_string(cls, value: Any, info: ValidationInfo) -> str | None:
         """Pydantic validator to convert a list to a comma separated string.
         This is necessary for the StreamPipes API.
 
@@ -100,10 +169,13 @@ class MeasurementGetQueryConfig(BaseModel):
         value: Any
             The value to be converted to a comma separated string
 
+        info: ValidationInfo
+            The field being validated
+
         Raises
         ------
         StreamPipesQueryValidationError
-            In case the provided value is not a list
+            In case the provided value is not a valid list
 
         Returns
         -------
@@ -114,16 +186,24 @@ class MeasurementGetQueryConfig(BaseModel):
             return value
         if not isinstance(value, list):
             raise StreamPipesQueryValidationError(
-                f"The provided value for either `columns`" f"is not a list: '{value}'."
+                f"The provided value for `{info.field_name}` " f"is not a list: '{value}'."
             )
         if len(value) == 0:
             raise StreamPipesQueryValidationError(
-                f"The provided value for either `columns`" f"is an empty list: '{value}'."
+                f"The provided value for `{info.field_name}` " f"is an empty list: '{value}'."
             )
+        if info.field_name == "columns":
+            value = [item.to_query_string() if isinstance(item, Column) else item for item in value]
         if not all(isinstance(item, str) for item in value):
             raise StreamPipesQueryValidationError(
-                f"The provided value for either `columns`" f"contains non-string values: '{value}'."
+                f"The provided value for `{info.field_name}` " f"contains non-string values: '{value}'."
             )
+        identifier = r"[0-9a-zA-Z_]+"
+        functions = "|".join(function.value for function in AggregationFunction)
+        column = rf"(?:{identifier}|\[{identifier};(?:{functions})(?:;{identifier})?\])"
+        pattern = column if info.field_name == "columns" else identifier
+        if not all(fullmatch(pattern, item) for item in value):
+            raise StreamPipesQueryValidationError(f"Invalid value for `{info.field_name}`: '{value}'.")
         return ",".join(value)
 
     @field_validator("end_date", "start_date", mode="before")
@@ -186,10 +266,14 @@ class MeasurementGetQueryConfig(BaseModel):
         # create dictionary representation of the config that meets the following expectations:
         # - query parameter should comply to the parameter names of the StreamPipes API (`by_alias`)
         # - query params should only be present if they are different from None (`exclude_none`)
-        query_param_dict = self.model_dump(by_alias=True, exclude_none=True)
+        query_param_dict = self.model_dump(mode="json", by_alias=True, exclude_none=True)
+
+        if query_param_dict.get("autoAggregate") is False:
+            del query_param_dict["autoAggregate"]
 
         # create query string that complies to HTTP syntax (?param1=value1&param2=value2&...)
-        query_param_string = f"?{'&'.join([f'{k}={v}' for k, v in query_param_dict.items()])}"
+        query_param_dict = {k: str(v).lower() if isinstance(v, bool) else v for k, v in query_param_dict.items()}
+        query_param_string = "?" + urlencode(query_param_dict, safe=",")
 
         return query_param_string
 
@@ -268,7 +352,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     If we are only interested in the values for `density`,
     `columns` allows us to select the columns to be returned:
     ```python
-    flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", columns='density', limit=3).to_pandas()
+    flow_rate_pd = client.dataLakeMeasureApi.get(identifier="flow-rate", columns=['density'], limit=3).to_pandas()
     flow_rate_pd
     ```
     ```
@@ -276,6 +360,18 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     0  2023-02-24T16:19:41.472Z  50.872730
     1  2023-02-24T16:19:41.482Z  47.186588
     2  2023-02-24T16:19:41.493Z  46.735321
+    ```
+
+    Aggregate temperature into one-minute windows, grouped by sensor:
+    ```python
+    averages = client.dataLakeMeasureApi.get(
+        identifier="flow-rate",
+        columns=["temperature"],
+        aggregation_function="MEAN",
+        group_by=["sensorId"],
+        time_interval="1m",
+        fill="none",
+    ).to_pandas()
     ```
 
     This is only a subset of the available query parameters,
@@ -346,7 +442,7 @@ class DataLakeMeasureEndpoint(APIEndpoint):
 
         return "api", "v4", "datalake", "measurements"
 
-    def get(self, identifier: str, **kwargs: dict[str, Any] | None) -> QueryResult:
+    def get(self, identifier: str, **kwargs: Any) -> QueryResult:
         """Queries the specified data lake measure from the API.
 
         By default, the maximum number of returned records is 1000.

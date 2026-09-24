@@ -27,7 +27,7 @@ describe('Test create dashboard from existing', () => {
         cy.initStreamPipesTest();
         ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
 
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
         ChartUtils.saveChartConfiguration(false, false, sourceChart);
 
@@ -52,7 +52,7 @@ describe('Test create dashboard from existing', () => {
         ChartUtils.checkDashboardListed(dashboardCopy);
 
         // Both dashboards use the same chart, no chart copy is created
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.checkRowsChartsTable(1);
         ChartUtils.checkChartListed(sourceChart);
     });
@@ -69,7 +69,7 @@ describe('Test create dashboard from existing', () => {
         ChartUtils.checkDashboardListed(dashboardCopy);
 
         // The chart of the dashboard is copied as well
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.checkRowsChartsTable(2);
         ChartUtils.checkChartListed(sourceChart);
     });

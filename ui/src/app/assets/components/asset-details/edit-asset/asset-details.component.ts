@@ -16,7 +16,12 @@
  *
  */
 
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    inject,
+    ChangeDetectionStrategy,
+    ViewChild,
+} from '@angular/core';
 import {
     ConfirmDialogAction,
     ConfirmDialogComponent,
@@ -49,8 +54,24 @@ import {
 } from '@streampipes/platform-services';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom, from, Observable, of } from 'rxjs';
-import { finalize, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import {
+    concatMap,
+    finalize,
+    map,
+    shareReplay,
+    switchMap,
+    tap,
+} from 'rxjs/operators';
 import { SupportsUnsavedChangeDialog } from '../../../../chart-shared/models/dataview-dashboard.model';
+import {
+    MoveAssetDialogComponent,
+    MoveAssetDialogResult,
+} from '../../../dialog/move-asset-dialog.component';
+import {
+    moveAssetToParent,
+    removeAssetFromParent,
+} from '../../../utils/move-asset';
+import { IdGeneratorService } from '../../../../core-services/id-generator/id-generator.service';
 
 type ManageableAsset = SpAssetModel & {
     name: string;
@@ -87,12 +108,15 @@ export class SpAssetDetailsComponent
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
     private permissionsService = inject(PermissionsService);
+    private idGeneratorService = inject(IdGeneratorService);
 
     private pendingManageAssetResult?: ObjectManageDialogResult<ManageableAsset>;
     private originalAsset: SpAssetModel;
     private initialGeneratedAssetId?: string;
     private initialGeneratedElementId?: string;
     private pendingConfirmLeaveDialog?: Observable<boolean>;
+    @ViewChild(SpAssetSelectionPanelComponent)
+    assetSelectionPanel: SpAssetSelectionPanelComponent;
 
     async saveAsset() {
         await this.saveAssetChanges();
@@ -143,6 +167,134 @@ export class SpAssetDetailsComponent
                     });
             }
         });
+    }
+
+    moveSubAsset(assetToMove: SpAsset): void {
+        this.assetService.getAssetSummary().subscribe(summary => {
+            const dialogRef = this.dialogService.open(
+                MoveAssetDialogComponent,
+                {
+                    panelType: PanelType.SLIDE_IN_PANEL,
+                    title: this.translateService.instant('Move asset'),
+                    width: '42rem',
+                    data: {
+                        assetToMove,
+                        allowTopLevelMove: true,
+                        availableAssets: summary.resources.filter(
+                            candidate =>
+                                candidate.elementId !== this.asset.elementId,
+                        ),
+                    },
+                },
+            );
+
+            dialogRef
+                .afterClosed()
+                .subscribe((result: MoveAssetDialogResult | undefined) => {
+                    if (!result) {
+                        return;
+                    }
+
+                    if (result.destination === 'top-level') {
+                        this.promoteSubAsset(assetToMove);
+                        return;
+                    }
+
+                    const assetWasMoved = moveAssetToParent(
+                        result.targetAsset,
+                        result.targetParentAssetId,
+                        assetToMove,
+                        result.removeMovedAssetSite,
+                    );
+                    if (
+                        !assetWasMoved ||
+                        !removeAssetFromParent(this.asset, assetToMove.assetId)
+                    ) {
+                        return;
+                    }
+
+                    this.applySelectedAsset({
+                        asset: this.asset,
+                        rootNode: true,
+                    });
+                    this.assetSelectionPanel.rerenderTree();
+                    this.assetService
+                        .updateAsset(result.targetAsset)
+                        .pipe(
+                            concatMap(() =>
+                                this.assetService.updateAsset(this.asset),
+                            ),
+                        )
+                        .subscribe(() => {
+                            this.originalAsset =
+                                this.normalizeAssetForComparison(this.asset);
+                            this.assetBrowserService.refreshBrowserAssetData();
+                            this.router.navigate(['assets'], {
+                                state: { omitConfirm: true },
+                            });
+                        });
+                });
+        });
+    }
+
+    promoteSubAsset(assetToPromote: SpAsset): void {
+        const formerParent = this.findParentAsset(
+            this.asset,
+            assetToPromote.assetId,
+        );
+        if (!formerParent) {
+            return;
+        }
+
+        const promotedAsset: SpAssetModel = {
+            ...assetToPromote,
+            assetType: formerParent.assetType,
+            assetSite: formerParent.assetSite,
+            elementId: this.idGeneratorService.generate(24),
+            appDocType: 'asset-management',
+            removable: true,
+            rev: undefined,
+        };
+
+        if (!removeAssetFromParent(this.asset, assetToPromote.assetId)) {
+            return;
+        }
+
+        this.applySelectedAsset({
+            asset: this.asset,
+            rootNode: true,
+        });
+        this.assetSelectionPanel.rerenderTree();
+        this.assetService
+            .createAsset(promotedAsset)
+            .pipe(concatMap(() => this.assetService.updateAsset(this.asset)))
+            .subscribe(() => {
+                this.originalAsset = this.normalizeAssetForComparison(
+                    this.asset,
+                );
+                this.assetBrowserService.refreshBrowserAssetData();
+                this.router.navigate(['assets'], {
+                    state: { omitConfirm: true },
+                });
+            });
+    }
+
+    private findParentAsset(
+        asset: SpAsset,
+        childAssetId: string,
+    ): SpAsset | undefined {
+        if (asset.assets?.some(child => child.assetId === childAssetId)) {
+            return asset;
+        }
+
+        for (const child of asset.assets ?? []) {
+            const parent = this.findParentAsset(child, childAssetId);
+            if (parent) {
+                return parent;
+            }
+        }
+
+        return undefined;
     }
 
     private openManageAssetDialog(saveAfterClose = false): void {

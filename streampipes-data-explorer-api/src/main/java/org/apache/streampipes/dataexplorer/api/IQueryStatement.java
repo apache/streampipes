@@ -20,5 +20,5 @@ package org.apache.streampipes.dataexplorer.api;
 
 public interface IQueryStatement {
 
-  void buildStatement(IDataLakeQueryBuilder<?> builder);
+  void buildStatement(IDatasetQueryBuilder<?> builder);
 }

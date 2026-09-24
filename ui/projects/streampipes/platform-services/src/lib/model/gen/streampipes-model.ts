@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 // @ts-nocheck
 /* tslint:disable */
 /* eslint-disable */
 // Generated using typescript-generator version 3.2.1263 on 2026-09-17 23:18:19.
+// Generated using typescript-generator version 3.2.1263 on 2026-09-18 15:38:44.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1392,46 +1392,6 @@ export class DataExplorerWidgetModel extends DashboardEntity {
     }
 }
 
-export class DataLakeMeasure implements Storable {
-    '@class': 'org.apache.streampipes.model.datalake.DataLakeMeasure';
-    'elementId': string;
-    'eventSchema': EventSchema;
-    'measureName': string;
-    'pipelineId': string;
-    'pipelineIsRunning': boolean;
-    'pipelineName': string;
-    'retentionTime': RetentionTimeConfig;
-    'rev': string;
-    'schemaUpdateStrategy': DataLakeMeasureSchemaUpdateStrategy;
-    'schemaVersion': string;
-    'timestampField': string;
-
-    static 'fromData'(
-        data: DataLakeMeasure,
-        target?: DataLakeMeasure,
-    ): DataLakeMeasure {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new DataLakeMeasure();
-        instance['@class'] = data['@class'];
-        instance.elementId = data.elementId;
-        instance.eventSchema = EventSchema.fromData(data.eventSchema);
-        instance.measureName = data.measureName;
-        instance.pipelineId = data.pipelineId;
-        instance.pipelineIsRunning = data.pipelineIsRunning;
-        instance.pipelineName = data.pipelineName;
-        instance.retentionTime = RetentionTimeConfig.fromData(
-            data.retentionTime,
-        );
-        instance.rev = data.rev;
-        instance.schemaUpdateStrategy = data.schemaUpdateStrategy;
-        instance.schemaVersion = data.schemaVersion;
-        instance.timestampField = data.timestampField;
-        return instance;
-    }
-}
-
 export class InvocableStreamPipesEntity
     extends VersionedNamedStreamPipesEntity
     implements EndpointSelectable
@@ -1604,6 +1564,44 @@ export class DataSinkType {
         instance.code = data.code;
         instance.description = data.description;
         instance.label = data.label;
+        return instance;
+    }
+}
+
+export class DatasetMetadata implements Storable {
+    '@class': 'org.apache.streampipes.model.dataset.DatasetMetadata';
+    'elementId': string;
+    'eventSchema': EventSchema;
+    'measureName': string;
+    'pipelineId': string;
+    'pipelineName': string;
+    'retentionTime': RetentionTimeConfig;
+    'rev': string;
+    'schemaUpdateStrategy': DatasetMetadataSchemaUpdateStrategy;
+    'schemaVersion': string;
+    'timestampField': string;
+
+    static 'fromData'(
+        data: DatasetMetadata,
+        target?: DatasetMetadata,
+    ): DatasetMetadata {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new DatasetMetadata();
+        instance['@class'] = data['@class'];
+        instance.elementId = data.elementId;
+        instance.eventSchema = EventSchema.fromData(data.eventSchema);
+        instance.measureName = data.measureName;
+        instance.pipelineId = data.pipelineId;
+        instance.pipelineName = data.pipelineName;
+        instance.retentionTime = RetentionTimeConfig.fromData(
+            data.retentionTime,
+        );
+        instance.rev = data.rev;
+        instance.schemaUpdateStrategy = data.schemaUpdateStrategy;
+        instance.schemaVersion = data.schemaVersion;
+        instance.timestampField = data.timestampField;
         return instance;
     }
 }
@@ -4483,16 +4481,13 @@ export type ConfigurationScope =
 
 export type DataExplorerWidgetHealthStatus = 'OK' | 'REQUIRES_ATTENTION';
 
-export type DataLakeMeasureSchemaUpdateStrategy =
-    | 'UPDATE_SCHEMA'
-    | 'EXTEND_EXISTING_SCHEMA';
+export type DatasetMetadataSchemaUpdateStrategy =
+    'UPDATE_SCHEMA' | 'EXTEND_EXISTING_SCHEMA';
 
 export type EdgeValidationStatusType = 'COMPLETE' | 'INCOMPLETE' | 'INVALID';
 
 export type EventPropertyUnion =
-    | EventPropertyList
-    | EventPropertyNested
-    | EventPropertyPrimitive;
+    EventPropertyList | EventPropertyNested | EventPropertyPrimitive;
 
 export type FieldStatus = 'GOOD' | 'BAD';
 
@@ -4523,16 +4518,10 @@ export type OutputStrategyUnion =
     | UserDefinedOutputStrategy;
 
 export type PipelineHealthStatus =
-    | 'OK'
-    | 'REQUIRES_ATTENTION'
-    | 'HANDLE_MEASUREMENT_UPDATE'
-    | 'FAILURE';
+    'OK' | 'REQUIRES_ATTENTION' | 'HANDLE_MEASUREMENT_UPDATE' | 'FAILURE';
 
 export type PropertyScope =
-    | 'HEADER_PROPERTY'
-    | 'DIMENSION_PROPERTY'
-    | 'MEASUREMENT_PROPERTY'
-    | 'NONE';
+    'HEADER_PROPERTY' | 'DIMENSION_PROPERTY' | 'MEASUREMENT_PROPERTY' | 'NONE';
 
 export type ProviderType = 'FOLDER' | 'S3';
 
@@ -4541,18 +4530,14 @@ export type RetentionAction = 'DELETE' | 'SAVE' | 'SAVEDELETE';
 export type RetentionInterval = 'DAILY' | 'MONTHLY' | 'WEEKLY';
 
 export type SelectionStaticPropertyUnion =
-    | AnyStaticProperty
-    | OneOfStaticProperty;
+    AnyStaticProperty | OneOfStaticProperty;
 
 export type SpLogLevel = 'INFO' | 'WARN' | 'ERROR';
 
 export type SpQueryStatus = 'OK' | 'TOO_MUCH_DATA';
 
 export type SpServiceStatus =
-    | 'REGISTERED'
-    | 'MIGRATING'
-    | 'HEALTHY'
-    | 'UNHEALTHY';
+    'REGISTERED' | 'MIGRATING' | 'HEALTHY' | 'UNHEALTHY';
 
 export type SpServiceTagPrefix =
     | 'SP_GROUP'
@@ -4610,8 +4595,7 @@ export type StreamTransformationRuleDescriptionUnion =
     | RemoveDuplicatesTransformationRuleDescription;
 
 export type TopicDefinitionUnion =
-    | SimpleTopicDefinition
-    | WildcardTopicDefinition;
+    SimpleTopicDefinition | WildcardTopicDefinition;
 
 export type TransformationRuleDescriptionUnion =
     | AddTimestampRuleDescription

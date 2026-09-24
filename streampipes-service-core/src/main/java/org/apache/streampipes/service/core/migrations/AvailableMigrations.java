@@ -20,7 +20,7 @@
 package org.apache.streampipes.service.core.migrations;
 
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.service.core.migrations.v0980.AddDataLakeMeasureViewMigration;
+import org.apache.streampipes.service.core.migrations.v0980.AddDatasetMetadataViewMigration;
 import org.apache.streampipes.service.core.migrations.v0980.AddDefaultExportProviderMigration;
 import org.apache.streampipes.service.core.migrations.v0980.FixImportedPermissionsMigration;
 import org.apache.streampipes.service.core.migrations.v0980.ModifyAssetLinkTypesMigration;
@@ -32,6 +32,10 @@ import org.apache.streampipes.service.core.migrations.v099.AddScriptTemplateView
 import org.apache.streampipes.service.core.migrations.v099.ComputeCertificateThumbprintMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateAssetPermissionMigration;
 import org.apache.streampipes.service.core.migrations.v099.CreateDatasetPermissionMigration;
+import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakeDatabaseToDatasetMigration;
+import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakePersistPipelineTemplateMigration;
+import org.apache.streampipes.service.core.migrations.v099.MigrateDataLakeSinkToDatasetMigration;
+import org.apache.streampipes.service.core.migrations.v099.MigrateDatasetMetadataMigration;
 import org.apache.streampipes.service.core.migrations.v099.ExtractBrokerConfigurationMigration;
 import org.apache.streampipes.service.core.migrations.v099.ModifyAssetLinkIconMigration;
 import org.apache.streampipes.service.core.migrations.v099.MoveAssetContentMigration;
@@ -39,6 +43,7 @@ import org.apache.streampipes.service.core.migrations.v099.RemoveAssetUserRoleMi
 import org.apache.streampipes.service.core.migrations.v099.RemoveDuplicatedAssetPermissions;
 import org.apache.streampipes.service.core.migrations.v099.RemoveInternalNotificationSinkMigration;
 import org.apache.streampipes.service.core.migrations.v099.RemoveObsoletePrivilegesMigration;
+import org.apache.streampipes.service.core.migrations.v099.RenameAssetLinkTypesMigration;
 import org.apache.streampipes.service.core.migrations.v099.ReplaceDefaultServiceSecretMigration;
 import org.apache.streampipes.service.core.migrations.v099.UniqueDashboardIdMigration;
 import org.apache.streampipes.service.core.migrations.v099.connect.MigrateAdaptersToUseScript;
@@ -46,7 +51,9 @@ import org.apache.streampipes.service.core.migrations.v099.connect.MigratePlc4xS
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
-import org.apache.streampipes.storage.api.explorer.IDataLakeMeasureStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
@@ -66,8 +73,10 @@ public class AvailableMigrations {
   private final IAdapterStorage adapterStorage;
   private final IDashboardStorage dashboardStorage;
   private final IAssetStorage assetStorage;
+  private final IDataSinkStorage dataSinkStorage;
+  private final ICompactPipelineTemplateStorage pipelineTemplateStorage;
   private final IPipelineStorage pipelineStorage;
-  private final IDataLakeMeasureStorage datasetStorage;
+  private final IDatasetMetadataStorage datasetStorage;
   private final ISpCoreConfigurationStorage coreConfigStorage;
   private final IRoleStorage roleStorage;
   private final IUserGroupStorage userGroupStorage;
@@ -80,6 +89,8 @@ public class AvailableMigrations {
     this.adapterStorage = resourceManager.manageAdapters().getDb();
     this.dashboardStorage = resourceManager.manageDashboards().getDb();
     this.assetStorage = resourceManager.manageAssets().getDb();
+    this.dataSinkStorage = resourceManager.manageDataSinks().getDb();
+    this.pipelineTemplateStorage = resourceManager.getPipelineTemplateStorage();
     this.pipelineStorage = resourceManager.managePipelines().getDb();
     this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
     this.coreConfigStorage = resourceManager.getCoreConfigurationStorage();
@@ -93,13 +104,15 @@ public class AvailableMigrations {
     return Arrays.asList(
         new ModifyAssetLinksMigration(),
         new ModifyAssetLinkTypesMigration(),
-        new AddDataLakeMeasureViewMigration(),
+        new AddDatasetMetadataViewMigration(),
         new AddDefaultExportProviderMigration(coreConfigStorage),
         new FixImportedPermissionsMigration(chartStorage, dashboardStorage, permissionStorage),
         new AddAssetManagementViewMigration(),
         new MoveAssetContentMigration(),
         new CreateAssetPermissionMigration(permissionStorage, assetStorage),
+        new MigrateDataLakeDatabaseToDatasetMigration(),
         new CreateDatasetPermissionMigration(permissionStorage, pipelineStorage, datasetStorage),
+        new MigrateDataLakeSinkToDatasetMigration(pipelineStorage, dataSinkStorage, permissionStorage),
         new RemoveObsoletePrivilegesMigration(privilegeStorage),
         new UniqueDashboardIdMigration(dashboardStorage),
         new AddScriptTemplateViewMigration(),
@@ -112,7 +125,10 @@ public class AvailableMigrations {
         new AddRefreshTokenViewsMigration(),
         new RemoveAssetUserRoleMigration(roleStorage, userGroupStorage, userStorage),
         new RemoveInternalNotificationSinkMigration(pipelineStorage),
+        new MigrateDatasetMetadataMigration(datasetStorage, permissionStorage),
+        new MigrateDataLakePersistPipelineTemplateMigration(pipelineTemplateStorage),
         new ReplaceDefaultServiceSecretMigration(userStorage),
+        new RenameAssetLinkTypesMigration(),
         new ExtractBrokerConfigurationMigration()
     );
   }

@@ -23,23 +23,34 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.TimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.influx.sanitize.InfluxNameSanitizer;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Point;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 
 public class TimeSeriesStorageInflux extends TimeSeriesStorage {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TimeSeriesStorageInflux.class);
 
   private final InfluxDB influxDb;
 
   private final PropertyHandler propertyHandler;
 
+  private final BiConsumer<String, String> warningReporter;
+
+  private final Set<String> reportedInvalidPrimitiveFields = ConcurrentHashMap.newKeySet();
+
   public TimeSeriesStorageInflux(
-      DataLakeMeasure measure,
+      DatasetMetadata measure,
       Environment environment,
       InfluxClientProvider influxClientProvider
   ) throws SpRuntimeException {
@@ -47,12 +58,24 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
   }
 
   public TimeSeriesStorageInflux(
-      DataLakeMeasure measure,
+      DatasetMetadata measure,
       boolean ignoreDuplicates,
       Environment environment,
       InfluxClientProvider influxClientProvider
   ) throws SpRuntimeException {
+    this(measure, ignoreDuplicates, environment, influxClientProvider,
+        (title, details) -> LOG.warn("{}: {}", title, details));
+  }
+
+  public TimeSeriesStorageInflux(
+      DatasetMetadata measure,
+      boolean ignoreDuplicates,
+      Environment environment,
+      InfluxClientProvider influxClientProvider,
+      BiConsumer<String, String> warningReporter
+  ) throws SpRuntimeException {
     super(measure);
+    this.warningReporter = warningReporter;
     this.influxDb = influxClientProvider.getSetUpInfluxDBClient(environment);
     propertyHandler = new PropertyHandler(new PropertyDuplicateFilter(ignoreDuplicates));
   }
@@ -60,7 +83,9 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
   protected void writeToTimeSeriesStorage(Event event) throws SpRuntimeException {
     var point = initializePointWithTimestamp(event);
     iterateOverallEventProperties(event, point);
-    influxDb.write(point.build());
+    if (point.hasFields()) {
+      influxDb.write(point.build());
+    }
   }
 
   private void iterateOverallEventProperties(
@@ -75,6 +100,11 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
 
       fieldOptional.ifPresent(field -> {
         if (ep instanceof EventPropertyPrimitive) {
+          if (!field.isPrimitive()) {
+            handleInvalidPrimitiveField(runtimeName, field.getClass().getSimpleName());
+            return;
+          }
+
           propertyHandler.handlePrimitiveProperty(
               point,
               (EventPropertyPrimitive) ep,
@@ -90,6 +120,22 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
         }
       });
     });
+  }
+
+  private void handleInvalidPrimitiveField(String runtimeName, String actualFieldType) {
+    if (reportedInvalidPrimitiveFields.add(runtimeName)) {
+      warningReporter.accept(
+          "Invalid field ignored",
+          "Event property '%s' is declared as primitive in the schema but received %s."
+              .formatted(runtimeName, actualFieldType)
+      );
+    } else {
+      LOG.debug(
+          "Ignoring event property '{}' because its schema declares a primitive value but received {}.",
+          runtimeName,
+          actualFieldType
+      );
+    }
   }
 
   /**

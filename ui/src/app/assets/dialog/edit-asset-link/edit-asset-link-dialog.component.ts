@@ -27,6 +27,7 @@ import {
     DialogRef,
     FormFieldComponent,
     SearchSelectComponent,
+    SpAlertBannerComponent,
 } from '@streampipes/shared-ui';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { FormsModule, UntypedFormGroup } from '@angular/forms';
@@ -60,6 +61,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
         MatButton,
         TranslatePipe,
         SearchSelectComponent,
+        SpAlertBannerComponent,
     ],
 })
 export class EditAssetLinkDialogComponent
@@ -90,11 +92,14 @@ export class EditAssetLinkDialogComponent
 
     selectedLinkType: AssetLinkType;
 
+    /** Stored link type that matches none of the available link types. */
+    unsupportedLinkType: string | undefined;
+
     get resourceSelectionLabel(): string | undefined {
-        switch (this.selectedLinkType.linkQueryHint) {
+        switch (this.selectedLinkType?.linkQueryHint) {
             case 'pipeline':
                 return this.translateService.instant('Pipelines');
-            case 'data-source':
+            case 'data-stream':
                 return this.translateService.instant('Data Stream');
             case 'dashboard':
                 return this.translateService.instant('Dashboard');
@@ -102,7 +107,7 @@ export class EditAssetLinkDialogComponent
                 return this.translateService.instant('Chart');
             case 'adapter':
                 return this.translateService.instant('Adapter');
-            case 'measurement':
+            case 'dataset':
                 return this.translateService.instant('Dataset');
             case 'file':
                 return this.translateService.instant('Files');
@@ -114,11 +119,11 @@ export class EditAssetLinkDialogComponent
     get selectableResources(): any[] {
         let resources: any[];
 
-        switch (this.selectedLinkType.linkQueryHint) {
+        switch (this.selectedLinkType?.linkQueryHint) {
             case 'pipeline':
                 resources = this.pipelines ?? [];
                 break;
-            case 'data-source':
+            case 'data-stream':
                 resources = this.dataSources ?? [];
                 break;
             case 'dashboard':
@@ -130,7 +135,7 @@ export class EditAssetLinkDialogComponent
             case 'adapter':
                 resources = this.adapters ?? [];
                 break;
-            case 'measurement':
+            case 'dataset':
                 resources = this.dataLakeMeasures ?? [];
                 break;
             case 'file':
@@ -154,6 +159,10 @@ export class EditAssetLinkDialogComponent
         super.onInit();
         this.clonedAssetLink = { ...this.assetLink };
         this.selectedLinkType = this.getCurrAssetLinkType();
+        this.unsupportedLinkType =
+            !this.createMode && !this.selectedLinkType
+                ? this.clonedAssetLink.linkType
+                : undefined;
     }
 
     getCurrAssetLinkType(): AssetLinkType {
@@ -176,13 +185,18 @@ export class EditAssetLinkDialogComponent
         const linkType = this.assetLinkTypes.find(
             a => a.linkType === this.selectedLinkType.linkType,
         );
+        const previousResourceId = this.clonedAssetLink.resourceId;
         this.clonedAssetLink.editingDisabled = false;
         this.clonedAssetLink.linkType = linkType.linkType;
         this.clonedAssetLink.queryHint = linkType.linkQueryHint;
         this.clonedAssetLink.navigationActive = linkType.navigationActive;
-        this.clonedAssetLink.resourceId = '';
-        this.clonedAssetLink.linkLabel = '';
-        this.currentResource = undefined;
+        this.unsupportedLinkType = undefined;
+        // Keep the resource when it also exists for the new link type, e.g.
+        // when repairing a link whose stored type is no longer supported.
+        const existingResource = this.selectableResources.find(
+            resource => this.getResourceId(resource) === previousResourceId,
+        );
+        this.onResourceChanged(existingResource);
     }
 
     changeLabel(id: string, label: string, currentResource: any) {
@@ -199,13 +213,13 @@ export class EditAssetLinkDialogComponent
             return;
         }
 
-        if (this.selectedLinkType.linkQueryHint === 'file') {
+        if (this.selectedLinkType?.linkQueryHint === 'file') {
             this.changeLabel(
                 currentResource.fileId,
                 currentResource.filename,
                 currentResource,
             );
-        } else if (this.selectedLinkType.linkQueryHint === 'measurement') {
+        } else if (this.selectedLinkType?.linkQueryHint === 'dataset') {
             this.changeLabel(
                 currentResource.elementId,
                 currentResource.measureName,

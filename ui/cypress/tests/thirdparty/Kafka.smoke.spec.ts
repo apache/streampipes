@@ -54,7 +54,7 @@ describe('Test Kafka Integration', () => {
                 'bootstrap-servers',
                 '{selectall}{backspace}' + bootstrapServers,
             )
-            .addProtocolInput('click', 'sp-reload', '')
+            .addProtocolInput('reload', 'sp-reload', '')
             .addProtocolInput('radio', topicName, '')
             .setFormat('json')
             .addFormatInput('radio', 'json_options-object', '')

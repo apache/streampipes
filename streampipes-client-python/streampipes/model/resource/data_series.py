@@ -101,7 +101,7 @@ class DataSeries(Resource):
     total: StrictInt
     headers: list[StrictStr]
     rows: list[list[Any]]
-    tags: str | None = None
+    tags: dict[str, str] | None = None
 
     def to_pandas(self) -> pd.DataFrame:
         """Returns the data lake series in representation of a Pandas Dataframe.

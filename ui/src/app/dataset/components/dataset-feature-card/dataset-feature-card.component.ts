@@ -35,7 +35,7 @@ import {
 import {
     AssetConstants,
     AssetLinkType,
-    DataLakeMeasure,
+    DatasetMetadata,
     DatalakeRestService,
     EventPropertyUnion,
     GenericStorageService,
@@ -75,7 +75,7 @@ export class DatasetFeatureCardComponent implements OnInit {
     @Input()
     onClose?: () => void;
 
-    dataset: DataLakeMeasure;
+    dataset: DatasetMetadata;
     assetLinkType: AssetLinkType;
     dataPreview: SpQueryResult;
     lastEventTs: number | undefined;
@@ -95,7 +95,7 @@ export class DatasetFeatureCardComponent implements OnInit {
             ),
         ]).subscribe(res => {
             this.dataset = res[0];
-            this.assetLinkType = res[1].find(a => a.linkType === 'measurement');
+            this.assetLinkType = res[1].find(a => a.linkType === 'dataset');
             this.loadSampleData();
         });
     }

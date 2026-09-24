@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { DataLakeMeasure } from '@streampipes/platform-services';
+import { DatasetMetadata } from '@streampipes/platform-services';
 import {
     SpBasicViewComponent,
     SpElementIdComponent,
@@ -44,7 +44,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class SpDatasetDetailsLayoutComponent {
     @Input()
-    dataset: DataLakeMeasure;
+    dataset: DatasetMetadata;
 
     @Input()
     datasetNotFound = false;
