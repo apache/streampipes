@@ -57,9 +57,16 @@ public class DatasetMetadata implements Storable {
   }
 
   public DatasetMetadata(DatasetMetadata other) {
+    this.elementId = other.getElementId();
+    this.rev = other.getRev();
     this.measureName = other.getMeasureName();
-    this.eventSchema = new EventSchema(other.getEventSchema());
-
+    this.timestampField = other.getTimestampField();
+    this.eventSchema = other.getEventSchema() != null ? new EventSchema(other.getEventSchema()) : null;
+    this.pipelineId = other.getPipelineId();
+    this.pipelineName = other.getPipelineName();
+    this.schemaVersion = other.getSchemaVersion();
+    this.schemaUpdateStrategy = other.getSchemaUpdateStrategy();
+    this.retentionTime = other.getRetentionTime();
   }
 
   public DatasetMetadata(String measureName, EventSchema eventSchema) {
