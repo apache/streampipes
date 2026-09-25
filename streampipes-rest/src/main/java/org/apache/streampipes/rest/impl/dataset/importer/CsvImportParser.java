@@ -375,7 +375,9 @@ class CsvImportParser {
 
     var trimmed = rawValue.trim();
     try {
-      if (Objects.equals(column.getRuntimeName(), timestampColumn)) {
+      if (Objects.equals(column.getRuntimeName(), timestampColumn)
+          || (column.isTimestampCandidate() && !isLong(trimmed, config))) {
+        // formatted timestamps of a candidate column (preview, before a timestamp column is selected)
         return parseTimestamp(trimmed, config);
       }
 

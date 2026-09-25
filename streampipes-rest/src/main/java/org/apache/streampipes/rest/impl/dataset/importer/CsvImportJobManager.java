@@ -25,6 +25,9 @@ import org.apache.streampipes.model.dataset.importer.CsvImportRequest;
 import org.apache.streampipes.model.dataset.importer.CsvImportResult;
 import org.apache.streampipes.model.dataset.importer.CsvImportValidationMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -37,6 +40,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 class CsvImportJobManager {
+
+  private static final Logger LOG = LoggerFactory.getLogger(CsvImportJobManager.class);
 
   private static final Duration DEFAULT_TTL = Duration.ofHours(12);
 
@@ -84,7 +89,9 @@ class CsvImportJobManager {
       job.succeeded(result);
     } catch (CsvImportValidationException e) {
       job.failed(e.getValidationMessages());
-    } catch (RuntimeException e) {
+    } catch (RuntimeException | Error e) {
+      // an Error (e.g. NoClassDefFoundError, OutOfMemoryError) must not leave the job RUNNING forever
+      LOG.error("CSV import job {} failed", job.jobId(), e);
       job.failed(List.of(new CsvImportValidationMessage("import", "CSV import failed.")));
     } finally {
       importService.cleanupUpload(request);
@@ -142,6 +149,10 @@ class CsvImportJobManager {
     synchronized void failed(List<CsvImportValidationMessage> validationMessages) {
       this.state = CsvImportJobState.FAILED;
       this.validationMessages = validationMessages;
+    }
+
+    String jobId() {
+      return jobId;
     }
 
     String ownerSid() {
