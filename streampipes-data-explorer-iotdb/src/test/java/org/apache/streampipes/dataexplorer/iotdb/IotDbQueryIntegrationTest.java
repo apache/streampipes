@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.RestQuerySpecMapper;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.SpQueryResult;
@@ -49,14 +48,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @EnabledIfSystemProperty(named = "iotdb.integration", matches = "true")
 class IotDbQueryIntegrationTest {
   private SessionPool pool;
-  private DataExplorerIotDbQueryExecutor executor;
+  private IotDbAdministrationBackend administration;
   private String dataset;
 
   @BeforeEach
   void prepare() throws Exception {
     pool = new SessionPool.Builder().host(System.getProperty("iotdb.host", "127.0.0.1"))
         .port(Integer.getInteger("iotdb.port", 16667)).user("root").password("root").maxSize(1).build();
-    executor = new DataExplorerIotDbQueryExecutor(pool);
+    administration = new IotDbAdministrationBackend(pool);
     dataset = "query_test_" + UUID.randomUUID().toString().replace("-", "");
     var path = IotDbQueryCompiler.datasetPath(dataset);
     pool.executeNonQueryStatement("INSERT INTO " + path + "(time,value,enabled,label) VALUES "
@@ -68,7 +67,7 @@ class IotDbQueryIntegrationTest {
     if (pool != null) {
       try {
         if (dataset != null) {
-          executor.executeNonQueryStatement("DELETE TIMESERIES " + IotDbQueryCompiler.datasetPath(dataset) + ".*");
+          administration.delete(metadata());
         }
       } finally {
         pool.close();
@@ -127,9 +126,15 @@ class IotDbQueryIntegrationTest {
 
   @Test
   void rangeDeletionUsesTheNonQueryApiAndPreservesBounds() {
-    executor.executeQuery(new DeleteQueryParams(dataset, 100L, 300L));
+    org.junit.jupiter.api.Assertions.assertTrue(administration.deleteRange(metadata(), 100L, 300L));
     var rows = query(Map.of(QP_COLUMNS, "value")).getAllDataSeries().getFirst().getRows();
     assertEquals(List.of(100L, 300L), rows.stream().map(List::getFirst).toList());
+  }
+
+  private DatasetMetadata metadata() {
+    var metadata = new DatasetMetadata();
+    metadata.setMeasureName(dataset);
+    return metadata;
   }
 
   private SpQueryResult query(Map<String, String> values) {

@@ -19,33 +19,59 @@
 package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.dataexplorer.api.query.DatasetAdministrationBackend;
-import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
-import org.apache.streampipes.model.dataset.SpQueryStatus;
 
+import org.apache.iotdb.rpc.IoTDBConnectionException;
+import org.apache.iotdb.rpc.StatementExecutionException;
+import org.apache.iotdb.session.pool.SessionPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public final class IotDbAdministrationBackend implements DatasetAdministrationBackend {
-  private final DataExplorerIotDbQueryExecutor executor;
+  private static final Logger LOG = LoggerFactory.getLogger(IotDbAdministrationBackend.class);
+  private final SessionPool sessions;
 
-  public IotDbAdministrationBackend(DataExplorerIotDbQueryExecutor executor) {
-    this.executor = executor;
+  public IotDbAdministrationBackend(SessionPool sessions) {
+    this.sessions = sessions;
   }
 
   @Override
   public boolean delete(DatasetMetadata dataset) {
-    return executor.deleteData(dataset);
+    return execute("DELETE TIMESERIES " + IotDbQueryCompiler.datasetPath(dataset.getMeasureName()) + ".*");
   }
 
   @Override
   public boolean deleteRange(DatasetMetadata dataset, Long startExclusive, Long endExclusive) {
-    return executor.executeQuery(new DeleteQueryParams(dataset.getMeasureName(), startExclusive, endExclusive))
-        .getSpQueryStatus() == SpQueryStatus.OK;
+    var conditions = new ArrayList<String>();
+    if (startExclusive != null) {
+      conditions.add("time > " + startExclusive);
+    }
+    if (endExclusive != null) {
+      conditions.add("time < " + endExclusive);
+    }
+    String sql = "DELETE FROM " + IotDbQueryCompiler.datasetPath(dataset.getMeasureName()) + ".*";
+    if (!conditions.isEmpty()) {
+      sql += " WHERE " + String.join(" AND ", conditions);
+    }
+    return execute(sql);
+  }
+
+  private boolean execute(String statement) {
+    try {
+      sessions.executeNonQueryStatement(statement);
+      return true;
+    } catch (StatementExecutionException | IoTDBConnectionException e) {
+      LOG.error("IoTDB administration failed: {}", e.getMessage());
+      return false;
+    }
   }
 
   @Override
   public Map<String, Object> dimensionValues(DatasetMetadata dataset, List<String> fields) {
-    return executor.getTagValues(dataset.getMeasureName(), String.join(",", fields));
+    throw new UnsupportedOperationException("IoTDB tree storage does not expose dimension values as tags");
   }
 }

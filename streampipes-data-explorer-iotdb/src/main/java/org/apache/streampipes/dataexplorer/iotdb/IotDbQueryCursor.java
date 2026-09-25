@@ -45,7 +45,7 @@ final class IotDbQueryCursor implements DatasetQueryCursor {
       columns.add("time");
       int start = !nativeColumns.isEmpty() && "Time".equalsIgnoreCase(nativeColumns.getFirst()) ? 1 : 0;
       for (int i = start; i < nativeColumns.size(); i++) {
-        columns.add(DataExplorerIotDbQueryExecutor.normalizeColumn(nativeColumns.get(i)));
+        columns.add(IotDbResultColumns.normalizeColumn(nativeColumns.get(i)));
       }
     } catch (RuntimeException e) {
       close();

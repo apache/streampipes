@@ -54,7 +54,8 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
 
   @Override
   public DatasetAdministrationBackend getAdministrationBackend() {
-    return new InfluxAdministrationBackend(new DataExplorerInfluxQueryExecutor());
+    return new InfluxAdministrationBackend(Environments.getEnvironment().getTsStorageBucket().getValueOrDefault(),
+        InfluxClientProvider::getInfluxDBClient);
   }
 
   @Override

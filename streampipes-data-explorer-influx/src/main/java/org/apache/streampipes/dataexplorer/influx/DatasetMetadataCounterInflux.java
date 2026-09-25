@@ -19,8 +19,11 @@
 package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.dataexplorer.api.query.QueryExecutionOptions;
 import org.apache.streampipes.dataexplorer.api.query.QuerySpec;
+import org.apache.streampipes.dataexplorer.influx.client.InfluxConnectionSettings;
 import org.apache.streampipes.dataexplorer.query.DatasetMetadataCounter;
+import org.apache.streampipes.dataexplorer.query.QueryResultCollector;
 import org.apache.streampipes.model.dataset.AggregationFunction;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 
@@ -71,11 +74,11 @@ public class DatasetMetadataCounterInflux extends DatasetMetadataCounter {
           List.of(new QuerySpec.Projection(firstColumn, Optional.of(AggregationFunction.COUNT), Optional.empty())),
           predicates, Optional.empty(), List.of(), Optional.empty(), OptionalInt.empty(), OptionalInt.empty(),
           Optional.empty());
-      var query = new InfluxQueryCompiler(Environments.getEnvironment().getTsStorageBucket().getValueOrDefault())
-          .compile(specification, measure.getMeasureName());
-      var queryResult = new DataExplorerInfluxQueryExecutor().executeQuery(query, Optional.empty(), true);
-
-      return queryResult.getTotal() > 0 ? extractResult(queryResult, COUNT_FIELD) : 0;
+      try (var backend = new InfluxQueryBackend(InfluxConnectionSettings.from(Environments.getEnvironment()));
+           var cursor = backend.open(measure, specification)) {
+        var result = QueryResultCollector.collect(cursor, QueryExecutionOptions.defaults().withIgnoreMissingValues(true));
+        return result.getTotal() > 0 ? extractResult(result, COUNT_FIELD) : 0;
+      }
     });
   }
 }

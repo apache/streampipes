@@ -24,6 +24,7 @@ import org.apache.streampipes.dataexplorer.api.query.DatasetQueryBackend;
 import org.apache.streampipes.dataexplorer.api.query.DatasetQueryCursor;
 import org.apache.streampipes.dataexplorer.api.query.QueryExecutionOptions;
 import org.apache.streampipes.dataexplorer.api.query.QuerySpec;
+import org.apache.streampipes.dataexplorer.query.DatasetQueryFields;
 import org.apache.streampipes.dataexplorer.query.QueryResultCollector;
 import org.apache.streampipes.model.dataset.DataLakeQueryOrdering;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
@@ -83,7 +84,7 @@ public final class DatasetQueryService implements AutoCloseable {
 
   public Map<String, Long> getLatestTimestamps(List<String> names) {
     Map<String, Long> timestamps = new LinkedHashMap<>();
-    var query = QuerySpec.builder().select("*").orderBy(DataLakeQueryOrdering.DESC).limit(1).build();
+    long now = System.currentTimeMillis();
     var datasets = new LinkedHashMap<String, DatasetMetadata>();
     names.forEach(name -> catalog.getExistingMeasureByName(name).ifPresent(dataset -> datasets.put(name, dataset)));
     var optimized = backend.latestTimestamps(List.copyOf(datasets.values()));
@@ -94,6 +95,16 @@ public final class DatasetQueryService implements AutoCloseable {
       } else if (optimized.containsKey(dataset.getElementId())) {
         timestamps.put(name, optimized.get(dataset.getElementId()));
       } else {
+        var field = DatasetQueryFields.firstCountableProperty(dataset);
+        if (field.isEmpty()) {
+          timestamps.put(name, 0L);
+          continue;
+        }
+        // A representative field is intentionally approximate when events omit that field.
+        var query = QuerySpec.builder().select(field.get())
+            .where(new QuerySpec.TimestampComparison(QuerySpec.Operator.GT, 0L))
+            .where(new QuerySpec.TimestampComparison(QuerySpec.Operator.LT, now))
+            .orderBy(DataLakeQueryOrdering.DESC).limit(1).build();
         var result = query(dataset, query, QueryExecutionOptions.defaults());
         long latest = result.getAllDataSeries().stream().flatMap(series -> series.getRows().stream()
             .map(row -> ((Number) row.get(series.getHeaders().indexOf("time"))).longValue()))

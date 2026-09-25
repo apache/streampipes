@@ -26,9 +26,8 @@ import org.apache.streampipes.dataexplorer.api.query.QueryExecutionOptions;
 import org.apache.streampipes.dataexplorer.api.query.QuerySpec;
 import org.apache.streampipes.dataexplorer.api.query.QueryTimestampFormat;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxConnectionSettings;
+import org.apache.streampipes.dataexplorer.query.DatasetQueryFields;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
@@ -36,7 +35,6 @@ import org.influxdb.dto.QueryResult;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -88,26 +86,21 @@ public final class InfluxQueryBackend implements DatasetQueryBackend {
   public Map<String, Long> latestTimestamps(List<DatasetMetadata> datasets) {
     var fields = new LinkedHashMap<String, String>();
     for (var dataset : datasets) {
-      if (dataset.getEventSchema() != null && dataset.getEventSchema().getEventProperties() != null) {
-        dataset.getEventSchema().getEventProperties().stream()
-            .filter(EventPropertyPrimitive.class::isInstance)
-            .map(EventProperty::getRuntimeName)
-            .filter(Objects::nonNull).findFirst()
-            .ifPresent(field -> fields.put(dataset.getMeasureName(), field));
-      }
+      DatasetQueryFields.firstCountableProperty(dataset)
+          .ifPresent(field -> fields.put(dataset.getMeasureName(), field));
     }
     if (fields.isEmpty()) {
       return Map.of();
     }
-    var nativeQueries = new DataExplorerInfluxQueryExecutor();
-    var statement = nativeQueries.makeLatestTimestampQuery(fields);
+    var nativeQueries = new InfluxLatestTimestampQuery();
+    var statement = nativeQueries.compile(fields, database);
     var query = new Query(statement.getCommand(), database);
     var result = execute(query);
     if (result.hasError() || result.getResults() != null
         && result.getResults().stream().anyMatch(QueryResult.Result::hasError)) {
       throw new QueryExecutionException("Latest timestamp query failed");
     }
-    var byName = nativeQueries.parseLatestTimestampResult(result);
+    var byName = nativeQueries.parse(result);
     var byId = new LinkedHashMap<String, Long>();
     datasets.forEach(dataset -> {
       if (byName.containsKey(dataset.getMeasureName())) {

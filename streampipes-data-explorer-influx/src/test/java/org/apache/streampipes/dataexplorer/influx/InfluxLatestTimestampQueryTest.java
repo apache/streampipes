@@ -16,13 +16,26 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.param;
+package org.apache.streampipes.dataexplorer.influx;
 
+import org.junit.jupiter.api.Test;
 
-public record DeleteQueryParams(String measurementName, Long startTime, Long endTime, boolean timeRestricted) {
+import java.util.LinkedHashMap;
 
-  public DeleteQueryParams(String measurementId, Long startTime, Long endTime) {
-    this(measurementId, startTime != null ? startTime : 0, endTime != null ? endTime : 99999999999999L, true);
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class InfluxLatestTimestampQueryTest {
+
+  @Test
+  public void makeLatestTimestampQueryGroupsMeasurementsByField() {
+    var measurementFields = new LinkedHashMap<String, String>();
+    measurementFields.put("measure-1", "value");
+    measurementFields.put("measure-2", "value");
+    measurementFields.put("measure-3", "temperature");
+
+    var query = new InfluxLatestTimestampQuery().compile(measurementFields, "db");
+
+    assertEquals("SELECT LAST(\"temperature\") FROM /^(measure-3)$/;"
+        + "SELECT LAST(\"value\") FROM /^(measure-1|measure-2)$/", query.getCommand());
   }
 }
-

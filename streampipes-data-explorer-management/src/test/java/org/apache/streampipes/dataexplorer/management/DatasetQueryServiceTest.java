@@ -34,6 +34,9 @@ import org.apache.streampipes.model.dataset.AggregationFunction;
 import org.apache.streampipes.model.dataset.DataLakeQueryOrdering;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.SpQueryStatus;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.schema.PropertyScope;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -195,9 +198,35 @@ class DatasetQueryServiceTest {
     when(backend.latestTimestamps(List.of(dataset))).thenReturn(Map.of("catalog-id", 123L));
     assertEquals(Map.of("physical", 123L), service.getLatestTimestamps(List.of("physical")));
     verify(backend, never()).open(any(), any());
+    var dimension = new EventPropertyPrimitive();
+    dimension.setRuntimeName("machine");
+    dimension.setPropertyScope(PropertyScope.DIMENSION_PROPERTY.name());
+    var value = new EventPropertyPrimitive();
+    value.setRuntimeName("value");
+    when(dataset.getEventSchema()).thenReturn(new EventSchema(List.of(dimension, value)));
     when(backend.latestTimestamps(List.of(dataset))).thenReturn(Map.of());
     when(backend.open(eq(dataset), any())).thenReturn(new Cursor(List.of(batch("a", 7), batch("b", 9))));
+    long before = System.currentTimeMillis();
     assertEquals(Map.of("physical", 9L), service.getLatestTimestamps(List.of("physical")));
+    long after = System.currentTimeMillis();
+    var captured = ArgumentCaptor.forClass(QuerySpec.class);
+    verify(backend).open(eq(dataset), captured.capture());
+    var spec = captured.getValue();
+    assertEquals(List.of(new QuerySpec.Projection("value", Optional.empty(), Optional.empty())), spec.projections());
+    assertEquals(new QuerySpec.TimestampComparison(QuerySpec.Operator.GT, 0L), spec.predicates().getFirst());
+    var upper = (QuerySpec.TimestampComparison) spec.predicates().get(1);
+    assertEquals(QuerySpec.Operator.LT, upper.operator());
+    assertTrue(upper.epochMillis() >= before && upper.epochMillis() <= after);
+    assertEquals(OptionalInt.of(1), spec.limit());
+    assertEquals(Optional.of(DataLakeQueryOrdering.DESC), spec.ordering());
+  }
+
+  @Test
+  void latestTimestampWithoutAStoredFieldDoesNotFallBackToWildcard() {
+    var service = service();
+    when(backend.latestTimestamps(List.of(dataset))).thenReturn(Map.of());
+    assertEquals(Map.of("physical", 0L), service.getLatestTimestamps(List.of("physical")));
+    verify(backend, never()).open(any(), any());
   }
 
   @Test

@@ -21,9 +21,6 @@ package org.apache.streampipes.dataexplorer.query;
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataCounter;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.SpQueryResult;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyPrimitive;
-import org.apache.streampipes.model.schema.PropertyScope;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,14 +113,7 @@ public abstract class DatasetMetadataCounter implements IDatasetMetadataCounter 
    * @return The runtime name of the first stored field, or null if no such property is found.
    */
   protected String getFirstCountableProperty(DatasetMetadata measure) {
-    var propertyRuntimeName = measure
-        .getEventSchema()
-        .getEventProperties()
-        .stream()
-        .filter(this::isStoredAsField)
-        .map(EventProperty::getRuntimeName)
-        .findFirst()
-        .orElse(null);
+    var propertyRuntimeName = DatasetQueryFields.firstCountableProperty(measure).orElse(null);
 
     if (propertyRuntimeName == null) {
       LOG.error("No countable property was found in the event schema for measure {}", measure.getMeasureName());
@@ -132,14 +122,9 @@ public abstract class DatasetMetadataCounter implements IDatasetMetadataCounter 
     return propertyRuntimeName;
   }
 
-  private boolean isStoredAsField(EventProperty eventProperty) {
-    return !(eventProperty instanceof EventPropertyPrimitive)
-        || !PropertyScope.DIMENSION_PROPERTY.name().equals(eventProperty.getPropertyScope());
-  }
-
   protected Integer extractResult(SpQueryResult queryResult, String fieldName) {
     return (
-        (Double) (
+        (Number) (
             queryResult.getAllDataSeries()
                        .get(0)
                        .getRows()

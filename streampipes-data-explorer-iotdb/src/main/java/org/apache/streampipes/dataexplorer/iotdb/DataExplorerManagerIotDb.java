@@ -46,7 +46,7 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
 
   @Override
   public DatasetAdministrationBackend getAdministrationBackend() {
-    return new IotDbAdministrationBackend(new DataExplorerIotDbQueryExecutor(IotDbSessionProvider.sharedQueryPool()));
+    return new IotDbAdministrationBackend(IotDbSessionProvider.sharedQueryPool());
   }
 
   @Override

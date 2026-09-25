@@ -39,6 +39,10 @@ public record QueryExecutionOptions(boolean ignoreMissingValues, OptionalInt max
     this(ignoreMissingValues, maximumRows, autoAggregate, autoAggregationFill, QueryTimestampFormat.EPOCH_MILLIS);
   }
 
+  public QueryExecutionOptions withIgnoreMissingValues(boolean ignoreMissing) {
+    return new QueryExecutionOptions(ignoreMissing, maximumRows, autoAggregate, autoAggregationFill, timestampFormat);
+  }
+
   public QueryExecutionOptions withTimestampFormat(QueryTimestampFormat format) {
     return new QueryExecutionOptions(ignoreMissingValues, maximumRows, autoAggregate, autoAggregationFill, format);
   }
