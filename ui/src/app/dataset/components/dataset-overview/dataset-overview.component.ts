@@ -42,7 +42,7 @@ import {
 } from '@angular/material/table';
 import { DatasetOverviewEntry } from './dataset-overview-entry';
 import {
-    DataLakeMeasure,
+    DatasetMetadata,
     DatalakeRestService,
     DatasetSummaryDto,
     ExportProviderService,
@@ -465,7 +465,7 @@ export class DatasetOverviewComponent
     showPermissionsDialog(element: DatasetOverviewEntry): void {
         this.datasetRestService.getMeasurement(element.elementId).subscribe({
             next: dataset => {
-                const resourceConfig: ObjectManageDialogResourceConfig<DataLakeMeasure> =
+                const resourceConfig: ObjectManageDialogResourceConfig<DatasetMetadata> =
                     {
                         resourceLabel: 'Dataset',
                         nameLabel: 'Dataset name',
@@ -556,7 +556,7 @@ export class DatasetOverviewComponent
         return entry;
     }
 
-    private openRetentionLogDialog(dataset: DataLakeMeasure): void {
+    private openRetentionLogDialog(dataset: DatasetMetadata): void {
         const dialogRef: DialogRef<DataRetentionLogDialogComponent> =
             this.dialogService.open(DataRetentionLogDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,

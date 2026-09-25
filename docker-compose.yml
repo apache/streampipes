@@ -91,11 +91,15 @@ services:
   nats:
     image: nats
     restart: unless-stopped
+    ports:
+      - "4222:4222"
     networks:
       spnet:
 
   influxdb:
     image: influxdb:2.6
+    ports:
+      - "8086:8086"
     environment:
       - INFLUXDB_DATA_ENGINE=tsm1
       - INFLUXDB_REPORTING_DISABLED=false

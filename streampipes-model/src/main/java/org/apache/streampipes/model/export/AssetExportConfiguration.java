@@ -99,7 +99,7 @@ public class AssetExportConfiguration {
     this.dataLakeMeasures = dataLakeMeasures;
   }
 
-  public void addDataLakeMeasure(ExportItem item) {
+  public void addDatasetMetadata(ExportItem item) {
     this.dataLakeMeasures.add(item);
   }
 

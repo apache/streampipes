@@ -16,9 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 // @ts-nocheck
-// Generated using typescript-generator version 3.2.1263 on 2026-05-18 14:42:00.
+// Generated using typescript-generator version 3.2.1263 on 2026-09-18 15:38:44.
 
 export class NamedStreamPipesEntity implements Storable {
     '@class':
@@ -1392,46 +1391,6 @@ export class DataExplorerWidgetModel extends DashboardEntity {
     }
 }
 
-export class DataLakeMeasure implements Storable {
-    '@class': 'org.apache.streampipes.model.datalake.DataLakeMeasure';
-    'elementId': string;
-    'eventSchema': EventSchema;
-    'measureName': string;
-    'pipelineId': string;
-    'pipelineIsRunning': boolean;
-    'pipelineName': string;
-    'retentionTime': RetentionTimeConfig;
-    'rev': string;
-    'schemaUpdateStrategy': DataLakeMeasureSchemaUpdateStrategy;
-    'schemaVersion': string;
-    'timestampField': string;
-
-    static 'fromData'(
-        data: DataLakeMeasure,
-        target?: DataLakeMeasure,
-    ): DataLakeMeasure {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new DataLakeMeasure();
-        instance['@class'] = data['@class'];
-        instance.elementId = data.elementId;
-        instance.eventSchema = EventSchema.fromData(data.eventSchema);
-        instance.measureName = data.measureName;
-        instance.pipelineId = data.pipelineId;
-        instance.pipelineIsRunning = data.pipelineIsRunning;
-        instance.pipelineName = data.pipelineName;
-        instance.retentionTime = RetentionTimeConfig.fromData(
-            data.retentionTime,
-        );
-        instance.rev = data.rev;
-        instance.schemaUpdateStrategy = data.schemaUpdateStrategy;
-        instance.schemaVersion = data.schemaVersion;
-        instance.timestampField = data.timestampField;
-        return instance;
-    }
-}
-
 export class InvocableStreamPipesEntity
     extends VersionedNamedStreamPipesEntity
     implements EndpointSelectable
@@ -1604,6 +1563,44 @@ export class DataSinkType {
         instance.code = data.code;
         instance.description = data.description;
         instance.label = data.label;
+        return instance;
+    }
+}
+
+export class DatasetMetadata implements Storable {
+    '@class': 'org.apache.streampipes.model.dataset.DatasetMetadata';
+    'elementId': string;
+    'eventSchema': EventSchema;
+    'measureName': string;
+    'pipelineId': string;
+    'pipelineName': string;
+    'retentionTime': RetentionTimeConfig;
+    'rev': string;
+    'schemaUpdateStrategy': DatasetMetadataSchemaUpdateStrategy;
+    'schemaVersion': string;
+    'timestampField': string;
+
+    static 'fromData'(
+        data: DatasetMetadata,
+        target?: DatasetMetadata,
+    ): DatasetMetadata {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new DatasetMetadata();
+        instance['@class'] = data['@class'];
+        instance.elementId = data.elementId;
+        instance.eventSchema = EventSchema.fromData(data.eventSchema);
+        instance.measureName = data.measureName;
+        instance.pipelineId = data.pipelineId;
+        instance.pipelineName = data.pipelineName;
+        instance.retentionTime = RetentionTimeConfig.fromData(
+            data.retentionTime,
+        );
+        instance.rev = data.rev;
+        instance.schemaUpdateStrategy = data.schemaUpdateStrategy;
+        instance.schemaVersion = data.schemaVersion;
+        instance.timestampField = data.timestampField;
         return instance;
     }
 }
@@ -2381,6 +2378,7 @@ export class KafkaTransportProtocol extends TransportProtocol {
     '@class': 'org.apache.streampipes.model.grounding.KafkaTransportProtocol';
     'acks': string;
     'batchSize': string;
+    'bootstrapServers': string;
     'groupId': string;
     'kafkaPort': number;
     'lingerMs': number;
@@ -2399,6 +2397,7 @@ export class KafkaTransportProtocol extends TransportProtocol {
         super.fromData(data, instance);
         instance.acks = data.acks;
         instance.batchSize = data.batchSize;
+        instance.bootstrapServers = data.bootstrapServers;
         instance.groupId = data.groupId;
         instance.kafkaPort = data.kafkaPort;
         instance.lingerMs = data.lingerMs;
@@ -2647,54 +2646,6 @@ export class MessageCounter {
         instance.counter = data.counter;
         instance.lastTimestamp = data.lastTimestamp;
         instance.size = data.size;
-        return instance;
-    }
-}
-
-export class MessagingSettings {
-    acks: number;
-    batchSize: number;
-    jmsHost: string;
-    jmsPort: number;
-    kafkaHost: string;
-    kafkaPort: number;
-    lingerMs: number;
-    messageMaxBytes: number;
-    mqttHost: string;
-    mqttPort: number;
-    natsHost: string;
-    natsPort: number;
-    prioritizedProtocols: SpProtocol[];
-    pulsarUrl: string;
-    supportedProtocols: string[];
-
-    static fromData(
-        data: MessagingSettings,
-        target?: MessagingSettings,
-    ): MessagingSettings {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new MessagingSettings();
-        instance.acks = data.acks;
-        instance.batchSize = data.batchSize;
-        instance.jmsHost = data.jmsHost;
-        instance.jmsPort = data.jmsPort;
-        instance.kafkaHost = data.kafkaHost;
-        instance.kafkaPort = data.kafkaPort;
-        instance.lingerMs = data.lingerMs;
-        instance.messageMaxBytes = data.messageMaxBytes;
-        instance.mqttHost = data.mqttHost;
-        instance.mqttPort = data.mqttPort;
-        instance.natsHost = data.natsHost;
-        instance.natsPort = data.natsPort;
-        instance.prioritizedProtocols = __getCopyArrayFn(
-            __identity<SpProtocol>(),
-        )(data.prioritizedProtocols);
-        instance.pulsarUrl = data.pulsarUrl;
-        instance.supportedProtocols = __getCopyArrayFn(__identity<string>())(
-            data.supportedProtocols,
-        );
         return instance;
     }
 }
@@ -4307,11 +4258,9 @@ export interface Storable {
 export class StreamPipesApplicationPackage {
     adapters: string[];
     assets: string[];
-    dashboardWidgets: string[];
     dashboards: string[];
     dataLakeMeasures: string[];
     dataSources: string[];
-    dataViewWidgets: string[];
     dataViews: string[];
     files: string[];
     genericStorageDocuments: string[];
@@ -4332,9 +4281,6 @@ export class StreamPipesApplicationPackage {
             data.adapters,
         );
         instance.assets = __getCopyArrayFn(__identity<string>())(data.assets);
-        instance.dashboardWidgets = __getCopyArrayFn(__identity<string>())(
-            data.dashboardWidgets,
-        );
         instance.dashboards = __getCopyArrayFn(__identity<string>())(
             data.dashboards,
         );
@@ -4343,9 +4289,6 @@ export class StreamPipesApplicationPackage {
         );
         instance.dataSources = __getCopyArrayFn(__identity<string>())(
             data.dataSources,
-        );
-        instance.dataViewWidgets = __getCopyArrayFn(__identity<string>())(
-            data.dataViewWidgets,
         );
         instance.dataViews = __getCopyArrayFn(__identity<string>())(
             data.dataViews,
@@ -4663,7 +4606,7 @@ export type ConfigurationScope =
 
 export type DataExplorerWidgetHealthStatus = 'OK' | 'REQUIRES_ATTENTION';
 
-export type DataLakeMeasureSchemaUpdateStrategy =
+export type DatasetMetadataSchemaUpdateStrategy =
     'UPDATE_SCHEMA' | 'EXTEND_EXISTING_SCHEMA';
 
 export type EdgeValidationStatusType = 'COMPLETE' | 'INCOMPLETE' | 'INVALID';

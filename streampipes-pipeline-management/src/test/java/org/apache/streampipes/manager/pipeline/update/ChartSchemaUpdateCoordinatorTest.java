@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.manager.pipeline.update;
 
-import org.apache.streampipes.model.datalake.DataExplorerWidgetHealthStatus;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetHealthStatus;
+import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -51,8 +51,8 @@ import static org.mockito.Mockito.when;
 
 class ChartSchemaUpdateCoordinatorTest {
 
-  private static final String DATA_LAKE_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.datalake";
-  private static final String DATA_LAKE_MEASUREMENT_FIELD = "db_measurement";
+  private static final String DATASET_SINK_APP_ID = "org.apache.streampipes.sinks.internal.jvm.dataset";
+  private static final String DATASET_MEASUREMENT_FIELD = "db_measurement";
   private static final String MEASURE_NAME = "measure";
   private static final ObjectMapper OBJECT_MAPPER = JacksonSerializer.getObjectMapper();
   private static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {
@@ -221,8 +221,8 @@ class ChartSchemaUpdateCoordinatorTest {
   }
 
   private Map<String, Object> makeMeasure(EventSchema eventSchema) {
-    var measure = new DataLakeMeasure(MEASURE_NAME, "s0::timestamp", eventSchema);
-    measure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
+    var measure = new DatasetMetadata(MEASURE_NAME, "s0::timestamp", eventSchema);
+    measure.setSchemaVersion("1.1");
     return OBJECT_MAPPER.convertValue(measure, MAP_TYPE);
   }
 
@@ -260,8 +260,8 @@ class ChartSchemaUpdateCoordinatorTest {
   private Pipeline makePipeline(String measureName) {
     var pipeline = new Pipeline();
     var sink = new DataSinkInvocation();
-    sink.setAppId(DATA_LAKE_SINK_APP_ID);
-    sink.setStaticProperties(List.of(FreeTextStaticProperty.of(DATA_LAKE_MEASUREMENT_FIELD, measureName)));
+    sink.setAppId(DATASET_SINK_APP_ID);
+    sink.setStaticProperties(List.of(FreeTextStaticProperty.of(DATASET_MEASUREMENT_FIELD, measureName)));
     pipeline.setActions(List.of(sink));
     return pipeline;
   }
