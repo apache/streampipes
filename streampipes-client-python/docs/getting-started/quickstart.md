@@ -38,11 +38,11 @@ config = StreamPipesClientConfig(
 
 client = StreamPipesClient(client_config=config)
 
-# get all available datat lake measures
-measures = client.dataLakeMeasureApi.all()
+# get the metadata of all available datasets
+datasets = client.datasetApi.all()
 
-# get amount of retrieved measures
-len(measures)
+# get amount of retrieved datasets
+len(datasets)
 ```
 Output:
 ```
@@ -57,8 +57,8 @@ measures.to_pandas()
 
 Output:
 ```
-measure_name timestamp_field ... pipeline_is_running num_event_properties
-0 test s0::timestamp ... False 2
+measure_name timestamp_field ... schema_update_strategy num_event_properties
+0 test s0::timestamp ... UPDATE_SCHEMA 2
 [1 rows x 6 columns]
 ```
 <br>

@@ -1,0 +1,67 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+from pydantic import StrictStr
+
+from streampipes.model.common import EventSchema
+from streampipes.model.resource.resource import Resource
+
+__all__ = [
+    "DatasetMetadata",
+]
+
+
+class DatasetMetadata(Resource):
+    """Implementation of a resource for dataset metadata.
+
+    A dataset is a reusable collection of data stored by StreamPipes.
+    This resource describes such a dataset (name, timestamp field, schema, producing pipeline)
+    and is returned by the `all()` method of the dataset endpoint.
+    It defines the data model used by the resource container (`model.container.Datasets`).
+    It inherits from Pydantic's BaseModel to get all its superpowers,
+    which are used to parse, validate the API response, and to easily switch between
+    the Python representation (both serialized and deserialized) and Java representation (serialized only).
+    """
+
+    def convert_to_pandas_representation(self):
+        """Returns the dictionary representation of a dataset's metadata
+        to be used when creating a pandas Dataframe.
+
+        It excludes the following fields: `element_id`, `event_schema`, `schema_version`.
+        Instead of the whole event schema the number of event properties contained
+        is returned with the column name `num_event_properties`.
+
+        Returns
+        -------
+        pandas_repr: Dict[str, Any]
+            Pandas representation of the resource as a dictionary, which is then used by the respource container
+            to create a data frame from a collection of resources.
+
+        """
+
+        return {
+            **self.model_dump(exclude={"element_id", "event_schema", "schema_version"}),
+            "num_event_properties": len(self.event_schema.event_properties) if self.event_schema else 0,
+        }
+
+    element_id: StrictStr | None = None
+    measure_name: StrictStr
+    timestamp_field: StrictStr
+    event_schema: EventSchema | None = None
+    pipeline_id: StrictStr | None = None
+    pipeline_name: StrictStr | None = None
+    schema_version: StrictStr | None = None
+    schema_update_strategy: StrictStr | None = None
