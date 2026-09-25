@@ -18,11 +18,13 @@
 
 import {
     Component,
+    EventEmitter,
     inject,
     Input,
     OnChanges,
     OnDestroy,
     OnInit,
+    Output,
     SimpleChanges,
     ViewChild,
     ChangeDetectionStrategy,
@@ -109,6 +111,9 @@ export class AssetLinkTableComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input()
     loading = false;
+
+    @Output()
+    assetLinksChanged = new EventEmitter<void>();
 
     @ViewChild(MatSort)
     set sort(sort: MatSort | undefined) {
@@ -213,6 +218,7 @@ export class AssetLinkTableComponent implements OnInit, OnChanges, OnDestroy {
         this.asset.assetLinks.splice(index, 1);
         this.asset.assetLinks = [...this.asset.assetLinks];
         this.refreshData();
+        this.assetLinksChanged.emit();
     }
 
     hasFeatureCard(linkType: string): boolean {

@@ -26,6 +26,7 @@ import {
     SimpleChanges,
     inject,
     ChangeDetectionStrategy,
+    ViewChild,
 } from '@angular/core';
 import {
     AssetSiteDesc,
@@ -33,6 +34,7 @@ import {
     Isa95TypeService,
     SpAsset,
     SpAssetModel,
+    FileMetadata,
 } from '@streampipes/platform-services';
 import { FlexDirective, LayoutDirective } from '@ngbracket/ngx-layout/flex';
 import {
@@ -47,6 +49,7 @@ import { AssetDetailsLabelsComponent } from './asset-details-labels/asset-detail
 import { AssetDetailsCustomFieldsComponent } from './asset-details-custom-fields/asset-details-custom-fields.component';
 import { AssetDetailsSiteComponent } from './asset-details-site/asset-details-site.component';
 import { AssetDetailsLinksComponent } from '../asset-details-links/asset-details-links.component';
+import { AssetImageComponent } from './asset-details-images/asset-image.component';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -67,6 +70,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         AssetDetailsCustomFieldsComponent,
         AssetDetailsSiteComponent,
         AssetDetailsLinksComponent,
+        AssetImageComponent,
         TranslatePipe,
     ],
 })
@@ -94,6 +98,12 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
     @Output()
     reloadSites: EventEmitter<void> = new EventEmitter();
 
+    @ViewChild(AssetDetailsLinksComponent)
+    assetDetailsLinks: AssetDetailsLinksComponent;
+
+    @Output()
+    imageFileDeletionRequested = new EventEmitter<string>();
+
     isa95Types: Isa95TypeDesc[] = [];
 
     ngOnInit() {
@@ -110,5 +120,17 @@ export class AssetDetailsBasicsComponent implements OnInit, OnChanges {
                 isa95AssetType: 'OTHER',
             };
         }
+    }
+
+    handleImageUploaded(file: FileMetadata): void {
+        this.assetDetailsLinks.addUploadedFileLink(file);
+    }
+
+    handleImageLinkRemoval(fileId: string): void {
+        this.assetDetailsLinks.removeFileLink(fileId);
+    }
+
+    handleImageFileDeletionRequested(fileId: string): void {
+        this.imageFileDeletionRequested.emit(fileId);
     }
 }

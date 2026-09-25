@@ -68,6 +68,14 @@
                     </dd>
                 </div>
             }
+            <div class="asset-overview__item">
+                <dt>{{ 'Images' | translate }}</dt>
+                <dd>
+                    <sp-view-asset-images
+                        [asset]="assetModel"
+                    ></sp-view-asset-images>
+                </dd>
+            </div>
         </dl>
 
         <div class="map-wrapper">
