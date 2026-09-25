@@ -29,6 +29,8 @@ import java.util.stream.Stream;
 
 public class RoleManager {
 
+  private static final String ROLE_AUTHORITY_PREFIX = "ROLE_";
+
   private final IRoleStorage storage;
 
   public RoleManager(IRoleStorage roleStorage) {
@@ -105,9 +107,14 @@ public class RoleManager {
       return List.of();
     } else {
       return Stream.concat(
-              role.getPrivilegeIds().stream(),
+              role.getPrivilegeIds().stream()
+                  .filter(privilegeId -> !isRoleAuthority(privilegeId)),
               Stream.of(roleId))
           .collect(Collectors.toList());
     }
+  }
+
+  private static boolean isRoleAuthority(String privilegeId) {
+    return privilegeId != null && privilegeId.startsWith(ROLE_AUTHORITY_PREFIX);
   }
 }
