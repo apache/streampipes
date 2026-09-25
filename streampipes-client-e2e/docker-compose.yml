@@ -30,7 +30,7 @@ services:
     environment:
       - SP_INITIAL_SERVICE_USER_SECRET=${SP_SERVICE_SECRET:?Generate and export SP_SERVICE_SECRET before starting}
       - SP_CLIENT_SECRET=${SP_SERVICE_SECRET:?Generate and export SP_SERVICE_SECRET before starting}
-      - SP_PRIORITIZED_PROTOCOL=kafka
+      - SP_PRIORITIZED_PROTOCOL=nats
     depends_on:
       - couchdb
     volumes:
@@ -55,31 +55,6 @@ services:
     logging: *default-logging
     volumes:
       - couchdb:/opt/couchdb/data
-    networks:
-      spnet:
-
-  kafka:
-    image: apache/kafka:4.3.1
-    hostname: kafka
-    environment:
-      - KAFKA_NODE_ID=0
-      - KAFKA_PROCESS_ROLES=controller,broker
-      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
-      - KAFKA_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
-      - KAFKA_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,OUTSIDE://:9094
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,OUTSIDE://localhost:9094
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT
-      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
-      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_MESSAGE_MAX_BYTES=5000012
-      - KAFKA_REPLICA_FETCH_MAX_BYTES=10000000
-      - KAFKA_FETCH_MESSAGE_MAX_BYTES=5000012
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS=1
-      - KAFKA_DEFAULT_REPLICATION_FACTOR=1
-    volumes:
-      - kafka3:/var/lib/kafka/data
-    logging: *default-logging
     networks:
       spnet:
 
@@ -128,7 +103,6 @@ services:
       spnet:
 
 volumes:
-  kafka3:
   couchdb:
   zookeeper:
   influxdb:
