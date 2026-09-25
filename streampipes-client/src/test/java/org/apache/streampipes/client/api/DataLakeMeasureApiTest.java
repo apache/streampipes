@@ -21,6 +21,7 @@ package org.apache.streampipes.client.api;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.client.api.config.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.credentials.StreamPipesApiKeyCredentials;
+import org.apache.streampipes.commons.exceptions.SpHttpErrorStatusCode;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
@@ -37,6 +38,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -61,6 +63,8 @@ class DataLakeMeasureApiTest {
     server.createContext(BASE_PATH + "/measure-id", exchange -> writeJson(exchange, 200, json));
     server.createContext(BASE_PATH + "/byName/temperature", exchange -> writeJson(exchange, 200, json));
     server.createContext(BASE_PATH + "/missing", exchange -> writeJson(exchange, 404, "{}"));
+    server.createContext(BASE_PATH + "/byName/forbidden", exchange -> writeJson(exchange, 403, "{}"));
+    server.createContext(BASE_PATH + "/byName/broken", exchange -> writeJson(exchange, 500, "{}"));
     server.start();
   }
 
@@ -90,6 +94,18 @@ class DataLakeMeasureApiTest {
   @Test
   void getReturnsEmptyOnNotFound() {
     assertTrue(client().dataLakeMeasureApi().get("missing").isEmpty());
+  }
+
+  @Test
+  void getByDatasetNameReturnsEmptyOnForbidden() {
+    assertTrue(client().dataLakeMeasureApi().getByDatasetName("forbidden").isEmpty());
+  }
+
+  @Test
+  void getByDatasetNamePropagatesUnexpectedErrorResponses() {
+    SpHttpErrorStatusCode exception = assertThrows(SpHttpErrorStatusCode.class,
+        () -> client().dataLakeMeasureApi().getByDatasetName("broken"));
+    assertEquals(500, exception.getHttpStatusCode());
   }
 
   private StreamPipesClient client() {
