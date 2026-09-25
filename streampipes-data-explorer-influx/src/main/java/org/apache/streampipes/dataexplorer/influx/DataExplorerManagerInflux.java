@@ -20,20 +20,16 @@ package org.apache.streampipes.dataexplorer.influx;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.dataexplorer.DatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataCounter;
-import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
+import org.apache.streampipes.dataexplorer.api.query.DatasetAdministrationBackend;
+import org.apache.streampipes.dataexplorer.api.query.DatasetQueryBackend;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
+import org.apache.streampipes.dataexplorer.influx.client.InfluxConnectionSettings;
 import org.apache.streampipes.dataexplorer.influx.sanitize.DatasetMetadataSanitizerInflux;
-import org.apache.streampipes.manager.permission.DatasetPermissionManager;
-import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
-import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,23 +53,14 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
   }
 
   @Override
-  public IDataExplorerQueryManagement getQueryManagement(
-      IDatasetMetadataManagement datasetMetadataManagement
-  ) {
-    return new DataExplorerQueryManagementInflux(datasetMetadataManagement);
+  public DatasetQueryBackend getQueryBackend() {
+    return new InfluxQueryBackend(InfluxConnectionSettings.from(Environments.getEnvironment()));
   }
 
   @Override
-  public IDatasetMetadataManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
-                                                           IPermissionStorage permissionStorage,
-                                                           IDatasetMetadataStorage datasetStorage) {
-    return new DatasetMetadataManagement(
-        datasetStorage,
-        new DatasetPermissionManager(
-            permissionStorage
-        ),
-        chartSchemaUpdateCoordinator
-    );
+  public DatasetAdministrationBackend getAdministrationBackend() {
+    return new InfluxAdministrationBackend(Environments.getEnvironment().getTsStorageBucket().getValueOrDefault(),
+        InfluxClientProvider::getInfluxDBClient);
   }
 
   @Override

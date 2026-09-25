@@ -19,6 +19,7 @@
 package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.commons.environment.Environment;
+import org.apache.streampipes.commons.environment.Environments;
 
 import org.apache.iotdb.session.pool.SessionPool;
 
@@ -44,5 +45,19 @@ public class IotDbSessionProvider {
         .user(environment.getIotDbUser().getValueOrDefault())
         .password(environment.getIotDbPassword().getValueOrDefault())
         .build();
+  }
+
+  public static SessionPool sharedQueryPool() {
+    return QueryPoolHolder.POOL;
+  }
+
+  private static final class QueryPoolHolder {
+    private static final SessionPool POOL = create();
+
+    private static SessionPool create() {
+      var pool = new IotDbSessionProvider().getSessionPool(Environments.getEnvironment());
+      Runtime.getRuntime().addShutdownHook(new Thread(pool::close, "iotdb-query-pool-shutdown"));
+      return pool;
+    }
   }
 }

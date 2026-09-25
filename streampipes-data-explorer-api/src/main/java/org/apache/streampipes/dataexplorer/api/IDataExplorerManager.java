@@ -19,10 +19,9 @@
 package org.apache.streampipes.dataexplorer.api;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
-import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
+import org.apache.streampipes.dataexplorer.api.query.DatasetAdministrationBackend;
+import org.apache.streampipes.dataexplorer.api.query.DatasetQueryBackend;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
-import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -43,11 +42,9 @@ public interface IDataExplorerManager {
       int daysBack
   );
 
-  IDataExplorerQueryManagement getQueryManagement(IDatasetMetadataManagement datasetMetadataManagement);
+  DatasetQueryBackend getQueryBackend();
 
-  IDatasetMetadataManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
-                                                    IPermissionStorage permissionStorage,
-                                                    IDatasetMetadataStorage datasetStorage);
+  DatasetAdministrationBackend getAdministrationBackend();
 
   default ITimeSeriesStorage getTimeseriesStorage(DatasetMetadata measure) {
     return getTimeseriesStorage(measure, false);

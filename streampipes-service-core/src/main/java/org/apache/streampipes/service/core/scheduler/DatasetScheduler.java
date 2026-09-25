@@ -20,6 +20,7 @@ package org.apache.streampipes.service.core.scheduler;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
+import org.apache.streampipes.dataexplorer.management.DatasetServices;
 import org.apache.streampipes.export.DatasetExportManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
@@ -44,18 +45,16 @@ public class DatasetScheduler implements SchedulingConfigurer {
   private final IDatasetMetadataManagement datasetMetadataManagement;
 
     public DatasetScheduler(IChartStorage chartStorage,
-                             SpResourceManager resourceManager) {
+                             SpResourceManager resourceManager, DatasetServices services) {
         var chartSchemaUpdateCoordinator = new ChartSchemaUpdateCoordinator(chartStorage);
         datasetMetadataManagement = new DataExplorerDispatcher()
-            .getDataExplorerManager()
             .getSchemaManagement(
                 chartSchemaUpdateCoordinator,
                 resourceManager.managePermissions().getDb(),
                 resourceManager.manageDataLakeMeasures().getDb());
         this.datasetExportManager = new DatasetExportManager(
             datasetMetadataManagement,
-            new DataExplorerDispatcher().getDataExplorerManager()
-                .getQueryManagement(datasetMetadataManagement),
+            services,
             resourceManager.getCoreConfigurationStorage(),
             resourceManager.getFileMetadataStorage());
     }
