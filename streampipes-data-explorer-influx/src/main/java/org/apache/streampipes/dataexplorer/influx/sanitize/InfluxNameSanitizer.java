@@ -20,14 +20,26 @@ package org.apache.streampipes.dataexplorer.influx.sanitize;
 
 import org.apache.streampipes.dataexplorer.InfluxDbReservedKeywords;
 
+import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public class InfluxNameSanitizer {
 
+  private static final Set<String> RESERVED_KEYWORDS = InfluxDbReservedKeywords.KEYWORD_LIST.stream()
+      .map(keyword -> keyword.toLowerCase(Locale.ROOT))
+      .collect(Collectors.toUnmodifiableSet());
+
   public static String renameReservedKeywords(String runtimeName) {
-    if (InfluxDbReservedKeywords.KEYWORD_LIST.stream().anyMatch(k -> k.equalsIgnoreCase(runtimeName))) {
+    if (isReservedKeyword(runtimeName)) {
       return runtimeName + "_";
     } else {
       return runtimeName;
     }
+  }
+
+  public static boolean isReservedKeyword(String runtimeName) {
+    return RESERVED_KEYWORDS.contains(runtimeName.toLowerCase(Locale.ROOT));
   }
 
 }

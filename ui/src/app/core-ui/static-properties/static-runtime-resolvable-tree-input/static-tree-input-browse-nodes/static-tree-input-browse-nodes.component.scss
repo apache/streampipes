@@ -37,6 +37,12 @@
     min-width: 0;
 }
 
+/* Keeps leaf nodes aligned with nodes that render an expand toggle. */
+.tree-node-toggle-spacer {
+    flex: 0 0 auto;
+    width: var(--mat-icon-button-state-layer-size, 40px);
+}
+
 .tree-node-label {
     min-width: 0;
     overflow: hidden;

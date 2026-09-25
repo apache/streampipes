@@ -28,6 +28,7 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +52,33 @@ public abstract class TimeSeriesStorage implements ITimeSeriesStorage {
 
   @Override
   public void onEvent(Event event) throws SpRuntimeException {
+    prepareEvent(event);
+    writeToTimeSeriesStorage(event);
+  }
+
+  @Override
+  public void onEvents(List<Event> events) throws SpRuntimeException {
+    var preparedEvents = new ArrayList<Event>(events.size());
+    for (var event : events) {
+      prepareEvent(event);
+      preparedEvents.add(event);
+    }
+    writeToTimeSeriesStorage(preparedEvents);
+  }
+
+  private void prepareEvent(Event event) {
     validateInputEventAndLogMissingFields(event);
     sanitizeRuntimeNamesInEvent(event);
-    writeToTimeSeriesStorage(event);
+  }
+
+  /**
+   * Writes a batch of already validated and sanitized events. Storages that support bulk writes override this
+   * method; the default writes the events one by one.
+   */
+  protected void writeToTimeSeriesStorage(List<Event> events) throws SpRuntimeException {
+    for (var event : events) {
+      writeToTimeSeriesStorage(event);
+    }
   }
 
   private void validateInputEventAndLogMissingFields(Event event) {

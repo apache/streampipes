@@ -35,10 +35,15 @@ import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.function.BiConsumer;
 
 public class DataExplorerManagerInflux implements IDataExplorerManager {
+
+  private static final Logger LOG = LoggerFactory.getLogger(DataExplorerManagerInflux.class);
 
   public DataExplorerManagerInflux() {
   }
@@ -91,6 +96,17 @@ public class DataExplorerManagerInflux implements IDataExplorerManager {
         Environments.getEnvironment(),
         new InfluxClientProvider(),
         warningReporter
+    );
+  }
+
+  @Override
+  public ITimeSeriesStorage getSharedTimeseriesStorage(DatasetMetadata measure) {
+    return new TimeSeriesStorageInflux(
+        measure,
+        false,
+        new InfluxClientProvider().getSharedSetUpInfluxDBClient(Environments.getEnvironment()),
+        false,
+        (title, details) -> LOG.warn("{}: {}", title, details)
     );
   }
 
