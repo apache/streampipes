@@ -16,24 +16,11 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.param.model;
+package org.apache.streampipes.dataexplorer.api.query;
 
-import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
-import org.apache.streampipes.dataexplorer.api.IQueryStatement;
-
-public class GroupByTimeClauseParams implements IQueryStatement {
-  private final String timeInterval;
-
-  public GroupByTimeClauseParams(String timeInterval) {
-    this.timeInterval = InfluxQueryParameterValidator.requireSafeTimeInterval(timeInterval);
-  }
-
-  public static GroupByTimeClauseParams from(String timeInterval) {
-    return new GroupByTimeClauseParams(timeInterval);
-  }
-
-  @Override
-  public void buildStatement(IDatasetQueryBuilder<?> builder) {
-    builder.withGroupByTime(timeInterval);
+/** A valid query requests semantics that the selected provider cannot implement. */
+public class UnsupportedQueryException extends IllegalArgumentException {
+  public UnsupportedQueryException(String message) {
+    super(message);
   }
 }

@@ -16,36 +16,16 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.param.model;
+package org.apache.streampipes.dataexplorer.api.query;
 
-import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
-import org.apache.streampipes.dataexplorer.api.IQueryStatement;
+import java.util.Objects;
 
-public class FillClauseParams implements IQueryStatement {
-  private final Object fill;
-
-  protected FillClauseParams() {
-    this.fill = "none";
-  }
-
-  public static FillClauseParams from() {
-    return new FillClauseParams();
-  }
-
-  protected FillClauseParams(String fill) {
-    this.fill = InfluxQueryParameterValidator.requireValidFill(fill);
-  }
-
-  public static FillClauseParams from(String fill) {
-    if (fill == null || fill.isBlank()) {
-      return from();
+/** Stable catalog identity (DatasetMetadata.elementId), never a physical measurement name. */
+public record DatasetId(String value) {
+  public DatasetId {
+    Objects.requireNonNull(value, "Dataset ID");
+    if (value.isBlank()) {
+      throw new IllegalArgumentException("Dataset ID must not be blank");
     }
-
-    return new FillClauseParams(fill);
-  }
-
-  @Override
-  public void buildStatement(IDatasetQueryBuilder<?> builder) {
-    builder.withFill(fill);
   }
 }

@@ -18,10 +18,9 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
-import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
+import org.apache.streampipes.dataexplorer.api.query.DatasetQueryCompiler;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
-import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
 import org.apache.streampipes.model.dataset.DataSeries;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
@@ -103,10 +102,6 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
     return result;
   }
 
-  private IDatasetQueryBuilder<Query> getQueryBuilder(String measurementId) {
-    return DatasetInfluxQueryBuilder.create(measurementId);
-  }
-
   @Override
   public QueryResult executeQuery(Query query) {
     try (final InfluxDB influxDB = InfluxClientProvider.getInfluxDBClient()) {
@@ -132,20 +127,14 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
   }
 
   @Override
-  protected Query makeSelectQuery(SelectQueryParams params) {
-    var builder = getQueryBuilder(params.getIndex());
-    return getQueryWithDatabaseName(params.toQuery(builder));
+  protected DatasetQueryCompiler<Query> queryCompiler() {
+    return new InfluxQueryCompiler(getDatabaseName());
   }
 
   private boolean hasResult(QueryResult queryResult) {
     return queryResult.getResults() != null
         && !queryResult.getResults().isEmpty()
         && queryResult.getResults().get(0).getSeries() != null;
-  }
-
-  private Query getQueryWithDatabaseName(Query query) {
-    var databaseName = getDatabaseName();
-    return new Query(query.getCommand(), databaseName);
   }
 
   private String getDatabaseName() {

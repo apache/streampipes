@@ -18,23 +18,23 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
+import org.apache.streampipes.dataexplorer.api.query.QuerySpec;
 import org.apache.streampipes.model.dataset.AggregationFunction;
 
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DatasetQueryBuilderTest {
+public class InfluxProjectionTest {
 
   private static final String MEASUREMENT = "measurement";
   @Test
   public void withSimpleColumnsTest() {
-    var result = DatasetInfluxQueryBuilder
-        .create(MEASUREMENT)
-        .withSimpleColumns(List.of("one", "two"))
-        .build();
+    var result = compile(List.of(raw("one"), raw("two")), List.of());
 
     var expected = String.format("SELECT one,two FROM \"%s\";", MEASUREMENT);
     assertEquals(expected , result.getCommand());
@@ -42,10 +42,8 @@ public class DatasetQueryBuilderTest {
 
   @Test
   public void withAggregatedColumnEscapesDottedFieldAndAliasTest() {
-    var result = DatasetInfluxQueryBuilder
-        .create(MEASUREMENT)
-        .withAggregatedColumn("temperature.a", AggregationFunction.MEAN, "temperature.a")
-        .build();
+    var result = compile(List.of(new QuerySpec.Projection("temperature.a",
+        Optional.of(AggregationFunction.MEAN), Optional.of("temperature.a"))), List.of());
 
     var expected = String.format("SELECT MEAN(\"temperature.a\") AS \"temperature.a\" FROM \"%s\";", MEASUREMENT);
     assertEquals(expected, result.getCommand());
@@ -53,13 +51,19 @@ public class DatasetQueryBuilderTest {
 
   @Test
   public void withGroupByEscapesDottedFieldTest() {
-    var result = DatasetInfluxQueryBuilder
-        .create(MEASUREMENT)
-        .withSimpleColumn("value")
-        .withGroupBy("temperature.a")
-        .build();
+    var result = compile(List.of(raw("value")), List.of("temperature.a"));
 
     var expected = String.format("SELECT value FROM \"%s\" GROUP BY \"temperature.a\";", MEASUREMENT);
     assertEquals(expected, result.getCommand());
   }
+  private QuerySpec.Projection raw(String field) {
+    return new QuerySpec.Projection(field, Optional.empty(), Optional.empty());
+  }
+
+  private org.influxdb.dto.Query compile(List<QuerySpec.Projection> projections, List<String> dimensions) {
+    var spec = new QuerySpec(projections, List.of(), Optional.empty(), dimensions, Optional.empty(),
+        OptionalInt.empty(), OptionalInt.empty(), Optional.empty());
+    return new InfluxQueryCompiler("database").compile(spec, MEASUREMENT);
+  }
+
 }

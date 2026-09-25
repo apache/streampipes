@@ -18,23 +18,21 @@
 
 package org.apache.streampipes.dataexplorer.iotdb;
 
+import org.apache.streampipes.dataexplorer.QueryResultProvider;
+import org.apache.streampipes.dataexplorer.StreamedQueryResultProvider;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
+import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.model.dataset.SpQueryResult;
 import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
 public class DataExplorerQueryManagementIotDb implements IDataExplorerQueryManagement {
-
-  private static final Logger LOG = LoggerFactory.getLogger(DataExplorerIotDbQueryExecutor.class);
 
   private final DataExplorerIotDbQueryExecutor queryExecutor;
   private final IDatasetMetadataManagement datasetMetadataManagement;
@@ -47,7 +45,8 @@ public class DataExplorerQueryManagementIotDb implements IDataExplorerQueryManag
 
   @Override
   public SpQueryResult getData(ProvidedRestQueryParams queryParams, boolean ignoreMissingData) throws IllegalArgumentException {
-    return null;
+    return new QueryResultProvider(queryParams, this, queryExecutor, datasetMetadataManagement,
+        ignoreMissingData).getData();
   }
 
   @Override
@@ -56,7 +55,8 @@ public class DataExplorerQueryManagementIotDb implements IDataExplorerQueryManag
                               ConfiguredOutputWriterFactory outputWriterFactory,
                               boolean ignoreMissingValues,
                               OutputStream outputStream) throws IOException {
-
+    new StreamedQueryResultProvider(params, format, outputWriterFactory, this, queryExecutor,
+        datasetMetadataManagement, ignoreMissingValues).getDataAsStream(outputStream);
   }
 
   @Override
@@ -71,8 +71,8 @@ public class DataExplorerQueryManagementIotDb implements IDataExplorerQueryManag
 
   @Override
   public boolean deleteData(String measurementName, Long startDate, Long endDate) {
-    var queryString = "DELETE FROM root.streampipes.%s.* WHERE time > %s AND time < %s".formatted(measurementName, startDate, endDate);
-    return queryExecutor.executeNonQueryStatement(queryString);
+    queryExecutor.executeQuery(new DeleteQueryParams(measurementName, startDate, endDate));
+    return true;
   }
 
   @Override
@@ -85,7 +85,6 @@ public class DataExplorerQueryManagementIotDb implements IDataExplorerQueryManag
 
   @Override
   public Map<String, Object> getTagValues(String measurementId, String fields) {
-    LOG.error("Retrieval of tag values is not supported with IoTDB as storage");
-    return Map.of();
+    return queryExecutor.getTagValues(measurementId, fields);
   }
 }

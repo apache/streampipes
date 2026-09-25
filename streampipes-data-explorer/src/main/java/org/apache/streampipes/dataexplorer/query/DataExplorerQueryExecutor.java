@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.dataexplorer.query;
 
+import org.apache.streampipes.dataexplorer.api.query.DatasetQuery;
+import org.apache.streampipes.dataexplorer.api.query.DatasetQueryCompiler;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
-import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
 import org.apache.streampipes.model.dataset.DataSeries;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.SpQueryResult;
@@ -34,23 +35,6 @@ import java.util.Optional;
 public abstract class DataExplorerQueryExecutor<X, W> {
 
   private static final Logger LOG = LoggerFactory.getLogger(DataExplorerQueryExecutor.class);
-
-  /**
-   * Execute the data explorer query and return the result or a warning message
-   * in case the maximum amount of events to return is defined
-   */
-  public SpQueryResult executeQuery(SelectQueryParams params,
-                                    int maximumAmountOfEvents,
-                                    Optional<String> forIdOpt,
-                                    boolean ignoreMissingValues) throws RuntimeException {
-    X query = makeSelectQuery(params);
-    var result = executeQuery(query, forIdOpt, ignoreMissingValues);
-    if (maximumAmountOfEvents != -1) {
-      return validateAndReturnQueryResult(result, params.getLimit(), maximumAmountOfEvents);
-    } else {
-      return result;
-    }
-  }
 
   private SpQueryResult validateAndReturnQueryResult(SpQueryResult queryResult,
                                                      int limit,
@@ -104,7 +88,22 @@ public abstract class DataExplorerQueryExecutor<X, W> {
 
   protected abstract X makeDeleteQuery(DeleteQueryParams params);
 
-  protected abstract X makeSelectQuery(SelectQueryParams params);
+  protected abstract DatasetQueryCompiler<X> queryCompiler();
+
+  public SpQueryResult executeQuery(DatasetQuery query,
+                                    DatasetMetadata dataset,
+                                    int maximumAmountOfEvents,
+                                    Optional<String> forId,
+                                    boolean ignoreMissingValues) {
+    if (!query.datasetId().value().equals(dataset.getElementId())) {
+      throw new IllegalArgumentException("Query dataset does not match resolved metadata");
+    }
+    var result = executeQuery(queryCompiler().compile(query.specification(), dataset.getMeasureName()),
+        forId, ignoreMissingValues);
+    return maximumAmountOfEvents == -1 ? result
+        : validateAndReturnQueryResult(result, query.specification().limit().orElse(Integer.MIN_VALUE),
+            maximumAmountOfEvents);
+  }
 
   public abstract Map<String, Object> getTagValues(String measurementId, String fields);
   public abstract boolean deleteData(DatasetMetadata measure);

@@ -19,7 +19,6 @@
 package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
-import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.DatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
@@ -49,7 +48,7 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
   public IDataExplorerQueryManagement getQueryManagement(IDatasetMetadataManagement datasetMetadataManagement) {
     return new DataExplorerQueryManagementIotDb(
         datasetMetadataManagement,
-        new DataExplorerIotDbQueryExecutor(new IotDbSessionProvider().getSessionPool(Environments.getEnvironment()))
+        new DataExplorerIotDbQueryExecutor(IotDbSessionProvider.sharedQueryPool())
     );
   }
 

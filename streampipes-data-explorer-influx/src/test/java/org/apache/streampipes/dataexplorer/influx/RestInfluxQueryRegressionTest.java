@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
+import org.apache.streampipes.dataexplorer.api.query.QuerySpec;
 import org.apache.streampipes.dataexplorer.influx.utils.ProvidedQueryParameterBuilder;
-import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
-import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
+import org.apache.streampipes.dataexplorer.param.RestQuerySpecMapper;
 import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParam
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class SelectQueryParamsTest {
+public class RestInfluxQueryRegressionTest {
 
   @Test
   public void testLatestEventTimestampQuery() {
@@ -52,9 +52,9 @@ public class SelectQueryParamsTest {
         )
     );
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT * FROM \"abc\" WHERE (time < 100000000 AND time > 0) ORDER BY time DESC LIMIT 1;", query);
   }
@@ -66,9 +66,9 @@ public class SelectQueryParamsTest {
         .withEndDate(2)
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT * FROM \"abc\" WHERE (time < 2000000 AND time > 1000000);", query);
   }
@@ -81,9 +81,9 @@ public class SelectQueryParamsTest {
         .withSimpleColumns(Arrays.asList("p1", "p2"))
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000);", query);
   }
@@ -97,9 +97,9 @@ public class SelectQueryParamsTest {
         .withFilter("[p1;=;true]")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 = true);", query);
   }
@@ -113,9 +113,9 @@ public class SelectQueryParamsTest {
         .withFilter("[p1;=;def]")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 = 'def');", query);
   }
@@ -129,9 +129,9 @@ public class SelectQueryParamsTest {
         .withFilter("[p1;=;1]")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 = 1.0);", query);
   }
@@ -145,9 +145,9 @@ public class SelectQueryParamsTest {
         .withFilter("[p1;>;1.0]")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 > 1.0);", query);
   }
@@ -161,9 +161,9 @@ public class SelectQueryParamsTest {
         .withFilter("[p1;>;1.0],[p2;<;2]")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000 AND p1 > 1.0 AND"
         + " p2 < 2.0);", query);
@@ -177,9 +177,9 @@ public class SelectQueryParamsTest {
         .withQueryColumns(List.of("[p1;MEAN;p1_mean]"))
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT MEAN(p1) AS p1_mean FROM \"abc\" WHERE (time < 2000000 AND time > 1000000);", query);
   }
@@ -192,9 +192,9 @@ public class SelectQueryParamsTest {
         .withQueryColumns(Arrays.asList("[p1;MEAN;p1_mean]", "[p2;COUNT;p2_count]"))
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
         + " time > 1000000);", query);
@@ -209,9 +209,9 @@ public class SelectQueryParamsTest {
         .withGroupBy(List.of("sensorId"))
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
         + " time > 1000000) GROUP BY \"sensorId\";", query);
@@ -226,9 +226,9 @@ public class SelectQueryParamsTest {
         .withGroupBy(Arrays.asList("sensorId", "sensorId2"))
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT MEAN(p1) AS p1_mean,COUNT(p2) AS p2_count FROM \"abc\" WHERE (time < 2000000 AND"
         + " time > 1000000) GROUP BY \"sensorId\",\"sensorId2\";", query);
@@ -241,9 +241,9 @@ public class SelectQueryParamsTest {
         .withTimeInterval("1h")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(none);", query);
   }
@@ -256,9 +256,9 @@ public class SelectQueryParamsTest {
         .withGroupBy(List.of("sensorId"))
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT value FROM \"abc\" GROUP BY time(1ms),\"sensorId\" fill(none);", query);
   }
@@ -271,9 +271,9 @@ public class SelectQueryParamsTest {
         .withFill("previous")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(previous);", query);
   }
@@ -286,9 +286,9 @@ public class SelectQueryParamsTest {
         .withFill("linear")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(linear);", query);
   }
@@ -301,9 +301,9 @@ public class SelectQueryParamsTest {
         .withFill("null")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(null);", query);
   }
@@ -316,9 +316,9 @@ public class SelectQueryParamsTest {
         .withFill("12.5")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT value FROM \"abc\" GROUP BY time(1h) fill(12.5);", query);
   }
@@ -331,7 +331,7 @@ public class SelectQueryParamsTest {
         .build();
 
     assertThrows(IllegalArgumentException.class,
-        () -> ProvidedRestQueryParamConverter.getSelectQueryParams(params));
+        () -> RestQuerySpecMapper.parse(params));
   }
 
   @Test
@@ -343,7 +343,7 @@ public class SelectQueryParamsTest {
         .build();
 
     assertThrows(IllegalArgumentException.class,
-        () -> ProvidedRestQueryParamConverter.getSelectQueryParams(params));
+        () -> RestQuerySpecMapper.parse(params));
   }
 
   @Test
@@ -354,7 +354,7 @@ public class SelectQueryParamsTest {
         .build();
 
     assertThrows(IllegalArgumentException.class,
-        () -> ProvidedRestQueryParamConverter.getSelectQueryParams(params));
+        () -> RestQuerySpecMapper.parse(params));
   }
 
   @Test
@@ -366,7 +366,7 @@ public class SelectQueryParamsTest {
         .build();
 
     assertThrows(IllegalArgumentException.class,
-        () -> ProvidedRestQueryParamConverter.getSelectQueryParams(params));
+        () -> RestQuerySpecMapper.parse(params));
   }
 
   @Test
@@ -382,9 +382,9 @@ public class SelectQueryParamsTest {
                 + "]}")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) "
         + "AND (p1 = 1 OR p2 = 2);", query);
@@ -404,9 +404,9 @@ public class SelectQueryParamsTest {
                 + "]}")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) "
         + "AND (p1 = 1 OR p2 = 2);", query);
@@ -424,9 +424,9 @@ public class SelectQueryParamsTest {
                 + "]}")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) "
         + "AND (p1 = true);", query);
@@ -444,12 +444,16 @@ public class SelectQueryParamsTest {
                 + "]}")
         .build();
 
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(params);
+    QuerySpec qp = RestQuerySpecMapper.parse(params);
 
-    String query = qp.toQuery(DatasetInfluxQueryBuilder.create("abc")).getCommand();
+    String query = compile(qp);
 
     assertEquals("SELECT p1,p2 FROM \"abc\" WHERE (time < 2000000 AND time > 1000000) "
         + "AND (p1 = 1.0);", query);
   }
 
+
+  private String compile(QuerySpec spec) {
+    return new InfluxQueryCompiler("database").compile(spec, "abc").getCommand();
+  }
 }

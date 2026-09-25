@@ -16,25 +16,14 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.param.model;
+package org.apache.streampipes.dataexplorer.api.query;
 
-import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
-import org.apache.streampipes.dataexplorer.api.IQueryStatement;
-import org.apache.streampipes.model.dataset.DataLakeQueryOrdering;
+/**
+ * Provider SPI for compiling a neutral specification against an already resolved storage name.
+ * Native statements stay within the provider/executor boundary; compilation performs no I/O.
+ */
+public interface DatasetQueryCompiler<T> {
+  QueryCapabilities capabilities();
 
-public class OrderByClauseParams implements IQueryStatement {
-  private final String ordering;
-
-  public OrderByClauseParams(String ordering) {
-    this.ordering = ordering;
-  }
-
-  public static OrderByClauseParams from(String ordering) {
-    return new OrderByClauseParams(ordering);
-  }
-
-  @Override
-  public void buildStatement(IDatasetQueryBuilder<?> builder) {
-    builder.withOrderBy(DataLakeQueryOrdering.valueOf(ordering));
-  }
+  T compile(QuerySpec query, String storageName);
 }

@@ -16,19 +16,14 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.param.model;
+package org.apache.streampipes.dataexplorer.api.query;
 
-import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
-import org.apache.streampipes.dataexplorer.api.IQueryStatement;
+import java.util.Objects;
 
-public record OffsetClauseParams(Integer offset) implements IQueryStatement {
-
-  public static OffsetClauseParams from(Integer offset) {
-    return new OffsetClauseParams(offset);
-  }
-
-  @Override
-  public void buildStatement(IDatasetQueryBuilder<?> builder) {
-    builder.withOffset(offset);
+/** An immutable query against a logical dataset. */
+public record DatasetQuery(DatasetId datasetId, QuerySpec specification) {
+  public DatasetQuery {
+    Objects.requireNonNull(datasetId);
+    Objects.requireNonNull(specification);
   }
 }

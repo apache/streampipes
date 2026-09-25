@@ -18,7 +18,8 @@
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.param.model.SelectColumn;
+import org.apache.streampipes.dataexplorer.api.query.QuerySpec;
+import org.apache.streampipes.dataexplorer.param.RestProjectionParser;
 import org.apache.streampipes.model.dataset.SpQueryResult;
 import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 import org.apache.streampipes.model.dataset.param.SupportedRestQueryParams;
@@ -125,10 +126,10 @@ public class AutoAggregationHandler {
     return fireQuery(sampleQuery).getTotal();
   }
 
-  private List<SelectColumn> getSelectedColumns() {
+  private List<QuerySpec.Projection> getSelectedColumns() {
     return Arrays.stream(queryParams.getAsString(SupportedRestQueryParams.QP_COLUMNS).split(COMMA))
                  .map(String::trim)
-                 .map(SelectColumn::fromApiQueryString)
+                 .map(RestProjectionParser::parseColumn)
                  .toList();
   }
 
@@ -137,7 +138,7 @@ public class AutoAggregationHandler {
       return true;
     }
 
-    return getSelectedColumns().stream().anyMatch(SelectColumn::isAggregated);
+    return getSelectedColumns().stream().anyMatch(column -> column.aggregation().isPresent());
   }
 
   private boolean hasColumns() {
@@ -161,8 +162,8 @@ public class AutoAggregationHandler {
   private String transformColumnsToRawSelection(String rawQuery) {
     return Arrays.stream(rawQuery.split(COMMA))
                  .map(String::trim)
-                 .map(SelectColumn::fromApiQueryString)
-                 .map(SelectColumn::getOriginalField)
+                 .map(RestProjectionParser::parseColumn)
+                 .map(QuerySpec.Projection::field)
                  .collect(Collectors.joining(COMMA));
   }
 

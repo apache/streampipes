@@ -20,8 +20,9 @@ package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
-import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
-import org.apache.streampipes.dataexplorer.param.SelectQueryParams;
+import org.apache.streampipes.dataexplorer.api.query.DatasetId;
+import org.apache.streampipes.dataexplorer.api.query.DatasetQuery;
+import org.apache.streampipes.dataexplorer.param.RestQuerySpecMapper;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
 import org.apache.streampipes.model.dataset.SpQueryResult;
 import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
@@ -57,20 +58,23 @@ public class QueryResultProvider {
                                                dataExplorerQueryManagement,
                                                ignoreMissingData).makeAutoAggregationQueryParams();
     }
-    SelectQueryParams qp = ProvidedRestQueryParamConverter.getSelectQueryParams(queryParams);
+    var specification = RestQuerySpecMapper.parse(queryParams);
+    var dataset = schemaManagement.getExistingMeasureByName(queryParams.getMeasurementId())
+        .orElseThrow(() -> new IllegalArgumentException("Unknown dataset: " + queryParams.getMeasurementId()));
+    var query = new DatasetQuery(new DatasetId(dataset.getElementId()), specification);
 
     if (queryParams.getProvidedParams().containsKey(SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS)) {
       int maximumAmountOfEvents = Integer.parseInt(queryParams.getProvidedParams()
                                                               .get(SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS)
       );
-      return queryExecutor.executeQuery(qp, maximumAmountOfEvents, Optional.empty(), ignoreMissingData);
+      return queryExecutor.executeQuery(query, dataset, maximumAmountOfEvents, Optional.empty(), ignoreMissingData);
     }
 
     if (queryParams.getProvidedParams().containsKey(FOR_ID_KEY)) {
       String forWidgetId = queryParams.getProvidedParams().get(FOR_ID_KEY);
-      return queryExecutor.executeQuery(qp, -1, Optional.of(forWidgetId), ignoreMissingData);
+      return queryExecutor.executeQuery(query, dataset, -1, Optional.of(forWidgetId), ignoreMissingData);
     } else {
-      return queryExecutor.executeQuery(qp, -1, Optional.empty(), ignoreMissingData);
+      return queryExecutor.executeQuery(query, dataset, -1, Optional.empty(), ignoreMissingData);
     }
   }
 }

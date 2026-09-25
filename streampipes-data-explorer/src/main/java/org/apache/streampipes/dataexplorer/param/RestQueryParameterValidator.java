@@ -16,27 +16,25 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.param.model;
+package org.apache.streampipes.dataexplorer.param;
 
 import org.apache.streampipes.dataexplorer.InfluxDbReservedKeywords;
+import org.apache.streampipes.dataexplorer.api.query.QuerySpec;
 
+import java.util.Locale;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
-final class InfluxQueryParameterValidator {
+/**
+ * Compatibility validation for the existing REST query syntax. Its historical Influx restrictions
+ * intentionally remain here; providers must not use this validator for typed SPI queries.
+ */
+final class RestQueryParameterValidator {
 
-  private static final Pattern SAFE_TIME_INTERVAL = Pattern.compile("^\\d+(ms|s|m|h|d|w)$");
   private static final Pattern SAFE_IDENTIFIER = Pattern.compile("^[^\\s,;()\"']+$");
   private static final Pattern NUMERIC_FILL = Pattern.compile("^-?\\d+(\\.\\d+)?$");
 
-  private InfluxQueryParameterValidator() {
-  }
-
-  static String requireSafeTimeInterval(String timeInterval) {
-    if (timeInterval == null || !SAFE_TIME_INTERVAL.matcher(timeInterval).matches()) {
-      throw new IllegalArgumentException("Invalid time interval format: " + timeInterval);
-    }
-
-    return timeInterval;
+  private RestQueryParameterValidator() {
   }
 
   static String requireSafeIdentifier(String identifier) {
@@ -49,22 +47,23 @@ final class InfluxQueryParameterValidator {
     return identifier;
   }
 
-  static Object requireValidFill(String fill) {
+  static QuerySpec.Fill parseFill(String fill) {
     if (fill == null || fill.isBlank()) {
-      return "none";
+      return new QuerySpec.Fill(QuerySpec.FillMode.NONE, Optional.empty());
     }
 
-    String normalized = fill.trim().toLowerCase();
+    String normalized = fill.trim().toLowerCase(Locale.ROOT);
 
     if (normalized.equals("none")
         || normalized.equals("null")
         || normalized.equals("previous")
         || normalized.equals("linear")) {
-      return normalized;
+      return new QuerySpec.Fill(QuerySpec.FillMode.valueOf(normalized.toUpperCase(Locale.ROOT)), Optional.empty());
     }
 
     if (NUMERIC_FILL.matcher(normalized).matches()) {
-      return Double.parseDouble(normalized);
+      return new QuerySpec.Fill(QuerySpec.FillMode.CONSTANT,
+          Optional.of(new QuerySpec.Literal(Double.parseDouble(normalized))));
     }
 
     throw new IllegalArgumentException("Invalid fill parameter: " + fill);

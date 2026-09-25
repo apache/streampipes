@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.dataexplorer.query.DatasetMetadataCounter;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 
@@ -48,7 +47,7 @@ public class DatasetMetadataCounterIotDb extends DatasetMetadataCounter {
    */
   @Override
   protected CompletableFuture<Integer> createQueryAsAsyncFuture(DatasetMetadata measure) {
-    var sessionPool = new IotDbSessionProvider().getSessionPool(Environments.getEnvironment());
+    var sessionPool = IotDbSessionProvider.sharedQueryPool();
     return CompletableFuture.supplyAsync(() -> {
 
       // We want to apply the count query to only one stored property of the measurement, as this is sufficient and
