@@ -23,7 +23,7 @@ import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinat
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.DatasetMetadataSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.storage.api.core.CRUDStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
 import org.apache.streampipes.test.generator.EventSchemaTestBuilder;
@@ -49,13 +49,13 @@ public class DatasetMetadataManagementTest {
   public static final String NEW_PROPERTY = "newProperty";
   public static final String OLD_PROPERTY = "oldProperty";
 
-  private CRUDStorage<DatasetMetadata> dataLakeStorageMock;
+  private IDatasetMetadataStorage dataLakeStorageMock;
   private DatasetPermissionManager permissionManagerMock;
   private ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
   @BeforeEach
   public void setUp() {
-    dataLakeStorageMock = mock(CRUDStorage.class);
+    dataLakeStorageMock = mock(IDatasetMetadataStorage.class);
     IPermissionStorage permissionStorageMock = mock(IPermissionStorage.class);
     this.permissionManagerMock = new DatasetPermissionManager(permissionStorageMock);
     this.chartSchemaUpdateCoordinator = mock(ChartSchemaUpdateCoordinator.class);
@@ -63,7 +63,6 @@ public class DatasetMetadataManagementTest {
 
   @Test
   public void createMeasurementThatNotExisted() {
-    when(dataLakeStorageMock.findAll()).thenReturn(List.of());
     var schemaManagement = new DatasetMetadataManagement(
         dataLakeStorageMock,
         permissionManagerMock,
@@ -92,7 +91,7 @@ public class DatasetMetadataManagementTest {
         )
     );
 
-    when(dataLakeStorageMock.findAll()).thenReturn(List.of(oldMeasure));
+    when(dataLakeStorageMock.getByMeasureName(oldMeasure.getMeasureName())).thenReturn(oldMeasure);
     when(dataLakeStorageMock.getElementById(any())).thenReturn(oldMeasure);
     var schemaManagement = new DatasetMetadataManagement(
         dataLakeStorageMock,
@@ -122,7 +121,7 @@ public class DatasetMetadataManagementTest {
             getEventProperty(OLD_PROPERTY, XSD.STRING)
         )
     );
-    when(dataLakeStorageMock.findAll()).thenReturn(List.of(oldMeasure));
+    when(dataLakeStorageMock.getByMeasureName(oldMeasure.getMeasureName())).thenReturn(oldMeasure);
     when(dataLakeStorageMock.getElementById(any())).thenReturn(oldMeasure);
     var schemaManagement = new DatasetMetadataManagement(
         dataLakeStorageMock,
@@ -150,7 +149,7 @@ public class DatasetMetadataManagementTest {
         )
     );
 
-    when(dataLakeStorageMock.findAll()).thenReturn(List.of(oldMeasure));
+    when(dataLakeStorageMock.getByMeasureName(oldMeasure.getMeasureName())).thenReturn(oldMeasure);
     when(dataLakeStorageMock.getElementById(any())).thenReturn(oldMeasure);
 
     var schemaManagement = new DatasetMetadataManagement(

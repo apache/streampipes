@@ -26,7 +26,7 @@ import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.DatasetMetadataSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.storage.api.core.CRUDStorage;
+import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +39,11 @@ import java.util.stream.Stream;
 
 public class DatasetMetadataManagement implements IDatasetMetadataManagement {
 
-  CRUDStorage<DatasetMetadata> dataLakeStorage;
+  private final IDatasetMetadataStorage dataLakeStorage;
   private final DatasetPermissionManager permissionManager;
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
-  public DatasetMetadataManagement(CRUDStorage<DatasetMetadata> dataLakeStorage,
+  public DatasetMetadataManagement(IDatasetMetadataStorage dataLakeStorage,
                                DatasetPermissionManager permissionManager,
                                ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.dataLakeStorage = dataLakeStorage;
@@ -110,11 +110,7 @@ public class DatasetMetadataManagement implements IDatasetMetadataManagement {
    */
   @Override
   public Optional<DatasetMetadata> getExistingMeasureByName(String measureName) {
-    return dataLakeStorage.findAll()
-        .stream()
-        .filter(m -> m.getMeasureName()
-            .equals(measureName))
-        .findFirst();
+    return Optional.ofNullable(dataLakeStorage.getByMeasureName(measureName));
   }
 
   private static void setDefaultUpdateStrategyIfNoneProvided(DatasetMetadata measure) {
@@ -134,11 +130,7 @@ public class DatasetMetadataManagement implements IDatasetMetadataManagement {
 
   @Override
   public boolean deleteMeasurementByName(String measureName) {
-    var measureToDeleteOpt = dataLakeStorage.findAll()
-        .stream()
-        .filter(measurement -> measurement.getMeasureName()
-            .equals(measureName))
-        .findFirst();
+    var measureToDeleteOpt = getExistingMeasureByName(measureName);
 
     return measureToDeleteOpt.map(measure -> {
       dataLakeStorage.deleteElementById(measure.getElementId());
