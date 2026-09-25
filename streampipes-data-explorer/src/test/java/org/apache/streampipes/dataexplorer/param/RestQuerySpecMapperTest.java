@@ -123,6 +123,17 @@ class RestQuerySpecMapperTest {
     assertThrows(IllegalArgumentException.class, () -> parse(Map.of(QP_FILTER, "[field;invalid;1]")));
   }
 
+  @Test
+  void automaticAggregationCarriesItsFillPreferenceOutsideTheUnplannedSpec() {
+    var params = new ProvidedRestQueryParams("physical", Map.of(
+        "columns", "[value;MEAN;average]", "autoAggregate", "true", "fill", "previous"));
+    var options = RestQuerySpecMapper.options(params, true);
+    assertTrue(options.autoAggregate());
+    assertTrue(options.ignoreMissingValues());
+    assertEquals(QuerySpec.FillMode.PREVIOUS, options.autoAggregationFill().orElseThrow().mode());
+    assertTrue(RestQuerySpecMapper.parse(params).timeBucket().isEmpty());
+  }
+
   private QuerySpec parse(Map<String, String> params) {
     return RestQuerySpecMapper.parse(new ProvidedRestQueryParams("physical", params));
   }

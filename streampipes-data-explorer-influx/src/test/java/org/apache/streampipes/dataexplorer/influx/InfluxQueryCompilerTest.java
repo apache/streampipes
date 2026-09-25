@@ -18,15 +18,11 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
-import org.apache.streampipes.dataexplorer.api.query.DatasetId;
-import org.apache.streampipes.dataexplorer.api.query.DatasetQuery;
 import org.apache.streampipes.dataexplorer.api.query.QuerySpec;
 import org.apache.streampipes.dataexplorer.param.RestQuerySpecMapper;
 import org.apache.streampipes.model.dataset.AggregationFunction;
-import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.param.ProvidedRestQueryParams;
 
-import org.influxdb.dto.Query;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -40,11 +36,6 @@ import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParam
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_GROUP_BY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.argThat;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 
 class InfluxQueryCompilerTest {
   /** Frozen from the legacy REST converter and builder before their removal. */
@@ -78,23 +69,6 @@ class InfluxQueryCompilerTest {
     assertThrows(UnsupportedOperationException.class, () -> spec.projections().clear());
     var compiler = new InfluxQueryCompiler("database");
     assertEquals(compiler.compile(spec, "physical").getCommand(), compiler.compile(spec, "physical").getCommand());
-  }
-
-  @Test
-  void logicalIdentityIsResolvedBeforeCompilation() {
-    var spec = RestQuerySpecMapper.parse(
-        new ProvidedRestQueryParams("physical", Map.of()));
-    var metadata = new DatasetMetadata();
-    metadata.setElementId("catalog-id");
-    metadata.setMeasureName("physical");
-    var executor = spy(new DataExplorerInfluxQueryExecutor());
-    doReturn(new org.influxdb.dto.QueryResult()).when(executor).executeQuery(any(Query.class));
-    var query = new DatasetQuery(new DatasetId("catalog-id"), spec);
-    executor.executeQuery(query, metadata, -1, Optional.empty(), false);
-    verify(executor).executeQuery(argThat((Query nativeQuery) ->
-        nativeQuery.getCommand().equals("SELECT * FROM \"physical\";")));
-    assertThrows(IllegalArgumentException.class, () -> executor.executeQuery(
-        new DatasetQuery(new DatasetId("other-id"), spec), metadata, -1, Optional.empty(), false));
   }
 
   @Test

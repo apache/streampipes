@@ -19,19 +19,14 @@
 package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.client.api.IStreamPipesClient;
-import org.apache.streampipes.dataexplorer.DatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.api.IDataExplorerManager;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataCounter;
-import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataSanitizer;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
+import org.apache.streampipes.dataexplorer.api.query.DatasetAdministrationBackend;
+import org.apache.streampipes.dataexplorer.api.query.DatasetQueryBackend;
 import org.apache.streampipes.dataexplorer.iotdb.sanitize.DatasetMetadataSanitizerIotDb;
-import org.apache.streampipes.manager.permission.DatasetPermissionManager;
-import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
-import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
-import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import java.util.List;
 
@@ -45,22 +40,13 @@ public class DataExplorerManagerIotDb implements IDataExplorerManager {
   }
 
   @Override
-  public IDataExplorerQueryManagement getQueryManagement(IDatasetMetadataManagement datasetMetadataManagement) {
-    return new DataExplorerQueryManagementIotDb(
-        datasetMetadataManagement,
-        new DataExplorerIotDbQueryExecutor(IotDbSessionProvider.sharedQueryPool())
-    );
+  public DatasetQueryBackend getQueryBackend() {
+    return new IotDbQueryBackend(IotDbSessionProvider.sharedQueryPool());
   }
 
   @Override
-  public IDatasetMetadataManagement getSchemaManagement(ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
-                                                           IPermissionStorage permissionStorage,
-                                                           IDatasetMetadataStorage datasetStorage) {
-    return new DatasetMetadataManagement(
-        datasetStorage,
-        new DatasetPermissionManager(permissionStorage),
-        chartSchemaUpdateCoordinator
-    );
+  public DatasetAdministrationBackend getAdministrationBackend() {
+    return new IotDbAdministrationBackend(new DataExplorerIotDbQueryExecutor(IotDbSessionProvider.sharedQueryPool()));
   }
 
   @Override

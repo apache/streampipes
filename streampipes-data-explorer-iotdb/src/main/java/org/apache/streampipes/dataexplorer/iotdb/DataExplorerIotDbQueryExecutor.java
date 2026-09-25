@@ -19,7 +19,6 @@
 package org.apache.streampipes.dataexplorer.iotdb;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.api.query.DatasetQueryCompiler;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
 import org.apache.streampipes.model.dataset.DataSeries;
@@ -130,12 +129,9 @@ public class DataExplorerIotDbQueryExecutor extends DataExplorerQueryExecutor<St
     return new SpQueryResult();
   }
 
-  @Override
-  protected DatasetQueryCompiler<String> queryCompiler() {
-    return new IotDbQueryCompiler();
-  }
 
-  private String normalizeColumn(String column) {
+
+  static String normalizeColumn(String column) {
     String prefix = "root.streampipes.";
     if (!column.startsWith(prefix)) {
       return column;

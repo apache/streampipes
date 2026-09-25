@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.streampipes.dataexplorer.api.query.DatasetId;
-import org.apache.streampipes.dataexplorer.api.query.DatasetQuery;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.param.RestQuerySpecMapper;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
@@ -35,7 +33,6 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_COLUMNS;
@@ -140,7 +137,16 @@ class IotDbQueryIntegrationTest {
     var metadata = new DatasetMetadata();
     metadata.setElementId("test-dataset-id");
     metadata.setMeasureName(dataset);
-    var query = new DatasetQuery(new DatasetId(metadata.getElementId()), params);
-    return executor.executeQuery(query, metadata, -1, Optional.empty(), false);
+    var result = new SpQueryResult();
+    try (var cursor = new IotDbQueryBackend(pool).open(metadata, params)) {
+      while (cursor.hasNext()) {
+        var batch = cursor.next();
+        result.setHeaders(batch.columns());
+        result.addDataResult(new org.apache.streampipes.model.dataset.DataSeries(batch.rows().size(),
+            batch.rows(), batch.columns(), batch.tags()));
+        result.setTotal(result.getTotal() + batch.rows().size());
+      }
+    }
+    return result;
   }
 }

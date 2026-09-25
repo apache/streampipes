@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.dataexplorer.influx;
 
-import org.apache.streampipes.dataexplorer.api.query.DatasetQueryCompiler;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.param.DeleteQueryParams;
 import org.apache.streampipes.dataexplorer.query.DataExplorerQueryExecutor;
@@ -126,10 +125,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
     return new Query(query, getDatabaseName());
   }
 
-  @Override
-  protected DatasetQueryCompiler<Query> queryCompiler() {
-    return new InfluxQueryCompiler(getDatabaseName());
-  }
+
 
   private boolean hasResult(QueryResult queryResult) {
     return queryResult.getResults() != null
@@ -209,7 +205,7 @@ public class DataExplorerInfluxQueryExecutor extends DataExplorerQueryExecutor<Q
     return measurement.replaceAll("([\\\\.\\[\\]{}()*+?^$|])", "\\\\$1");
   }
 
-  private Map<String, Long> parseLatestTimestampResult(QueryResult queryResult) {
+  Map<String, Long> parseLatestTimestampResult(QueryResult queryResult) {
     Map<String, Long> latestTimestamps = new HashMap<>();
     if (queryResult.getResults() != null) {
       queryResult.getResults().forEach(result -> {

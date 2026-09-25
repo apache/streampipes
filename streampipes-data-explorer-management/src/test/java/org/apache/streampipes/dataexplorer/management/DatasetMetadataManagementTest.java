@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer;
+package org.apache.streampipes.dataexplorer.management;
 
 import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
@@ -44,7 +44,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 
 public class DatasetMetadataManagementTest {
   public static final String NEW_PROPERTY = "newProperty";

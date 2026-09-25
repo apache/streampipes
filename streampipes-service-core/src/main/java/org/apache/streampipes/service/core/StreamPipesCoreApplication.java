@@ -93,7 +93,8 @@ import java.util.function.Supplier;
 @EnableScheduling
 @Import({OpenApiConfiguration.class, StreamPipesPasswordEncoder.class,
     StreamPipesPrometheusConfig.class, WebSecurityConfig.class, WelcomePageController.class,
-    StorageApiConfiguration.class, ExtensionServiceRequestConfiguration.class, SpPermissionEvaluator.class})
+    StorageApiConfiguration.class, ExtensionServiceRequestConfiguration.class, SpPermissionEvaluator.class,
+    DatasetQueryConfiguration.class})
 @ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.service.core.oauth2",
     "org.apache.streampipes.service.core.scheduler"})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {

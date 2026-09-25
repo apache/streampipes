@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.dataexplorer.param;
 
+import org.apache.streampipes.dataexplorer.api.query.QueryExecutionOptions;
 import org.apache.streampipes.dataexplorer.api.query.QuerySpec;
 import org.apache.streampipes.model.dataset.AggregationFunction;
 import org.apache.streampipes.model.dataset.DataLakeQueryOrdering;
@@ -28,6 +29,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_AGGREGATION_FUNCTION;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_AUTO_AGGREGATE;
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_COLUMNS;
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_COUNT_ONLY;
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_END_DATE;
@@ -36,6 +38,7 @@ import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParam
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_FILTER_EXPRESSION;
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_GROUP_BY;
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_LIMIT;
+import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_MAXIMUM_AMOUNT_OF_EVENTS;
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_OFFSET;
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_ORDER;
 import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParams.QP_PAGE;
@@ -78,6 +81,15 @@ public final class RestQuerySpecMapper {
         bucket, dimensions, ordering, limit, offset,
         bucket.isPresent() ? Optional.of(RestQueryParameterValidator.parseFill(params.getAsString(QP_FILL)))
             : Optional.empty());
+  }
+
+  public static QueryExecutionOptions options(ProvidedRestQueryParams params, boolean ignoreMissingValues) {
+    boolean autoAggregate = params.has(QP_AUTO_AGGREGATE) && params.getAsBoolean(QP_AUTO_AGGREGATE);
+    var fill = autoAggregate && params.has(QP_FILL)
+        ? Optional.of(RestQueryParameterValidator.parseFill(params.getAsString(QP_FILL)))
+        : Optional.<QuerySpec.Fill>empty();
+    return new QueryExecutionOptions(ignoreMissingValues, integer(params, QP_MAXIMUM_AMOUNT_OF_EVENTS),
+        autoAggregate, fill);
   }
 
   private static OptionalInt integer(ProvidedRestQueryParams params, String name) {

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer;
+package org.apache.streampipes.dataexplorer.management;
 
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
 import org.apache.streampipes.manager.matching.v2.pipeline.MeasurementChangeDetector;
