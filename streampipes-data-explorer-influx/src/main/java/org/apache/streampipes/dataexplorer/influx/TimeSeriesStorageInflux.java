@@ -28,10 +28,13 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 
 import org.influxdb.InfluxDB;
+import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -41,13 +44,25 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
 
   private static final Logger LOG = LoggerFactory.getLogger(TimeSeriesStorageInflux.class);
 
+  /**
+   * Maximum number of points sent to InfluxDB in a single write request when writing batches.
+   */
+  static final int MAX_POINTS_PER_WRITE = 10000;
+
   private final InfluxDB influxDb;
+
+  /**
+   * True if this storage created the client and closes it in {@link #close()}; false for a shared client that
+   * outlives this storage and is only flushed on close.
+   */
+  private final boolean ownsClient;
 
   private final PropertyHandler propertyHandler;
 
   private final BiConsumer<String, String> warningReporter;
 
   private final Set<String> reportedInvalidPrimitiveFields = ConcurrentHashMap.newKeySet();
+
 
   public TimeSeriesStorageInflux(
       DatasetMetadata measure,
@@ -74,18 +89,67 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
       InfluxClientProvider influxClientProvider,
       BiConsumer<String, String> warningReporter
   ) throws SpRuntimeException {
+    this(measure, ignoreDuplicates, influxClientProvider.getSetUpInfluxDBClient(environment), true, warningReporter);
+  }
+
+  /**
+   * Creates a storage on top of an existing client.
+   *
+   * @param influxDb   the client to write to
+   * @param ownsClient true if the storage should close the client in {@link #close()}, false if the client is
+   *                   shared and only flushed
+   */
+  public TimeSeriesStorageInflux(
+      DatasetMetadata measure,
+      boolean ignoreDuplicates,
+      InfluxDB influxDb,
+      boolean ownsClient,
+      BiConsumer<String, String> warningReporter
+  ) throws SpRuntimeException {
     super(measure);
     this.warningReporter = warningReporter;
-    this.influxDb = influxClientProvider.getSetUpInfluxDBClient(environment);
+    this.influxDb = influxDb;
+    this.ownsClient = ownsClient;
     propertyHandler = new PropertyHandler(new PropertyDuplicateFilter(ignoreDuplicates));
   }
 
   protected void writeToTimeSeriesStorage(Event event) throws SpRuntimeException {
-    var point = initializePointWithTimestamp(event);
-    iterateOverallEventProperties(event, point);
+    var point = buildPoint(event);
     if (point.hasFields()) {
       influxDb.write(point.build());
     }
+  }
+
+  /**
+   * Writes all events synchronously in as few requests as possible (at most {@link #MAX_POINTS_PER_WRITE} points
+   * per request), bypassing the asynchronous batch queue of the client. The events are durable when this method
+   * returns.
+   */
+  @Override
+  protected void writeToTimeSeriesStorage(List<Event> events) throws SpRuntimeException {
+    var batch = BatchPoints.builder();
+    var pointsInBatch = 0;
+    for (var event : events) {
+      var point = buildPoint(event);
+      if (point.hasFields()) {
+        batch.point(point.build());
+        pointsInBatch++;
+        if (pointsInBatch >= MAX_POINTS_PER_WRITE) {
+          influxDb.write(batch.build());
+          batch = BatchPoints.builder();
+          pointsInBatch = 0;
+        }
+      }
+    }
+    if (pointsInBatch > 0) {
+      influxDb.write(batch.build());
+    }
+  }
+
+  private Point.Builder buildPoint(Event event) {
+    var point = initializePointWithTimestamp(event);
+    iterateOverallEventProperties(event, point);
+    return point;
   }
 
   private void iterateOverallEventProperties(
@@ -139,9 +203,14 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
   }
 
   /**
-   * Shuts down the connection to the InfluxDB server
+   * Closes the connection to the InfluxDB server if this storage owns the client (closing flushes the batch
+   * queue); a shared client is only flushed.
    */
   public void close() throws SpRuntimeException {
+    if (!ownsClient) {
+      influxDb.flush();
+      return;
+    }
     influxDb.close();
   }
 
@@ -169,12 +238,15 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
   }
 
   /**
-   * Iterates over all properties of the event and renames the key if it is a reserved keywords in InfluxDB
+   * Renames the fields of the event whose runtime name is a reserved keyword in InfluxDB (the schema was
+   * registered with the sanitized names, the events still carry the raw ones). A set lookup per key; the
+   * rename itself only happens for the rare reserved names.
    */
   protected void sanitizeRuntimeNamesInEvent(Event event) {
-    // sanitize event
-    event.getRaw()
-         .keySet()
-         .forEach(key -> event.renameFieldByRuntimeName(key, InfluxNameSanitizer.renameReservedKeywords(key)));
+    for (var key : new ArrayList<>(event.getRaw().keySet())) {
+      if (InfluxNameSanitizer.isReservedKeyword(key)) {
+        event.renameFieldByRuntimeName(key, InfluxNameSanitizer.renameReservedKeywords(key));
+      }
+    }
   }
 }

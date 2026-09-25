@@ -65,5 +65,14 @@ public interface IDataExplorerManager {
     return getTimeseriesStorage(measure, ignoreDuplicates);
   }
 
+  /**
+   * Creates a storage that writes through a shared, long-lived connection of this process instead of opening and
+   * closing its own connection. Intended for request-scoped writers such as the REST bulk write; {@code close()}
+   * only flushes. Implementations without a shared connection fall back to a dedicated storage.
+   */
+  default ITimeSeriesStorage getSharedTimeseriesStorage(DatasetMetadata measure) {
+    return getTimeseriesStorage(measure);
+  }
+
   IDatasetMetadataSanitizer getMeasurementSanitizer(IStreamPipesClient client, DatasetMetadata measure);
 }
