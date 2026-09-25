@@ -15,7 +15,7 @@ file is the map.
   it at a local JDK 25.
 - **Maven** 3.8+. **Node** 22 with npm for `ui/`. **Docker + Compose** for the service stack.
 - **Python client:** Poetry — see `streampipes-client-python/AGENTS.md`.
-- **Go client:** Go 1.21 — see `streampipes-client-go/AGENTS.md`.
+- **Go client:** Go 1.25 in CI, module targets `go 1.21` — see `streampipes-client-go/AGENTS.md`.
 - **Main branch is `dev`.** Pull requests target `dev`.
 
 ## Build and validate
