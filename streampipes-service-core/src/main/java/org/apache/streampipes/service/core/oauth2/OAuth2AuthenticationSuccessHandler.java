@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.service.core.oauth2;
 
+import org.apache.streampipes.audit.events.AuthenticationAuditRecorder;
+import org.apache.streampipes.audit.events.AuthenticationMethod;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.model.client.user.Principal;
@@ -57,6 +59,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
   private static final long MIN_REFRESH_COOKIE_SECONDS = 1;
 
   private final JwtTokenProvider tokenProvider;
+  private final AuthenticationAuditRecorder audit;
   private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
   private final Environment env;
 
@@ -66,7 +69,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                      ISpCoreConfigurationStorage coreConfigurationStorage,
                                      IRoleStorage roleStorage,
                                      IUserGroupStorage userGroupStorage,
-                                     IUserStorage userStorage) {
+                                     IUserStorage userStorage,
+                                     AuthenticationAuditRecorder audit) {
+    this.audit = java.util.Objects.requireNonNull(audit);
     this.tokenProvider = new JwtTokenProvider(coreConfigurationStorage, userStorage, roleStorage, userGroupStorage);
     this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
     this.env = Environments.getEnvironment();
@@ -84,6 +89,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     clearAuthenticationAttributes(request, response);
     getRedirectStrategy().sendRedirect(request, response, targetUrl);
+    var principal = ((PrincipalUserDetails<?>) authentication.getPrincipal()).getDetails();
+    audit.loggedIn(principal.getPrincipalId(), AuthenticationMethod.OAUTH2);
   }
 
   @Override

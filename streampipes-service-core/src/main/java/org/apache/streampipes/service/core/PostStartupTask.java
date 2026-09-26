@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.service.core;
 
+import org.apache.streampipes.audit.events.AdapterAuditRecorder;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
@@ -89,7 +90,8 @@ public class PostStartupTask implements Runnable {
                     AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
                     workerRestClient,
                     StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
-                    extensionServiceRequestManager
+                    extensionServiceRequestManager,
+                    new AdapterAuditRecorder(resourceManager.getAuditService())
                 )
             ),
             StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),

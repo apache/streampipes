@@ -890,6 +890,10 @@
     </dependencyManagement>
 
     <modules>
+        <module>streampipes-audit-api</module>
+        <module>streampipes-audit-events</module>
+        <module>streampipes-audit-management</module>
+        <module>streampipes-audit-influx</module>
         <module>archetypes/streampipes-archetype-extensions-jvm</module>
         <module>streampipes-client</module>
         <module>streampipes-client-api</module>

@@ -278,4 +278,21 @@ public interface Environment {
   DoubleEnvironmentVariable getMemoryWarningThreshold();
   StringEnvironmentVariable getDatalakeSchedulerCron();
   IntEnvironmentVariable getDatalakeRetentionLogLength();
+
+  BooleanEnvironmentVariable getAuditEnabled();
+
+  StringEnvironmentVariable getAuditStorageProvider();
+
+  StringEnvironmentVariable getAuditInfluxUrl();
+
+  StringEnvironmentVariable getAuditInfluxDatabase();
+
+  StringEnvironmentVariable getAuditInfluxToken();
+
+  IntEnvironmentVariable getAuditQueueCapacity();
+
+  IntEnvironmentVariable getAuditShutdownTimeoutSeconds();
+
+  StringEnvironmentVariable getAuditInfluxOrg();
+
 }

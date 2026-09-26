@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.service.core.oauth2;
 
+import org.apache.streampipes.audit.events.AuthenticationAuditRecorder;
+import org.apache.streampipes.audit.events.AuthenticationMethod;
 import org.apache.streampipes.service.core.oauth2.util.CookieUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +40,21 @@ import static org.apache.streampipes.service.core.oauth2.HttpCookieOAuth2Authori
 @Component
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
+  private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+  private final AuthenticationAuditRecorder audit;
+
   @Autowired
-  HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+  public OAuth2AuthenticationFailureHandler(HttpCookieOAuth2AuthorizationRequestRepository repository,
+                                            AuthenticationAuditRecorder audit) {
+    this.httpCookieOAuth2AuthorizationRequestRepository = repository;
+    this.audit = java.util.Objects.requireNonNull(audit);
+  }
 
   @Override
   public void onAuthenticationFailure(HttpServletRequest request,
                                       HttpServletResponse response,
                                       AuthenticationException exception) throws IOException {
+    audit.loginDenied(AuthenticationMethod.OAUTH2);
     String targetUrl = CookieUtils
         .getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
         .map(Cookie::getValue)

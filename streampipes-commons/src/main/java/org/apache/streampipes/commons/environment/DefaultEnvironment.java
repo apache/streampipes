@@ -657,4 +657,45 @@ public class DefaultEnvironment implements Environment {
     return new StringEnvironmentVariable(Envs.SP_CERTIFICATE_EXPIRY_EMAIL_DAYS);
   }
 
+
+  @Override
+  public BooleanEnvironmentVariable getAuditEnabled() {
+    return new BooleanEnvironmentVariable(Envs.SP_AUDIT_ENABLED);
+  }
+
+  @Override
+  public StringEnvironmentVariable getAuditStorageProvider() {
+    return new StringEnvironmentVariable(Envs.SP_AUDIT_STORAGE_PROVIDER);
+  }
+
+  @Override
+  public StringEnvironmentVariable getAuditInfluxUrl() {
+    return new StringEnvironmentVariable(Envs.SP_AUDIT_INFLUX_URL);
+  }
+
+  @Override
+  public StringEnvironmentVariable getAuditInfluxDatabase() {
+    return new StringEnvironmentVariable(Envs.SP_AUDIT_INFLUX_DATABASE);
+  }
+
+  @Override
+  public StringEnvironmentVariable getAuditInfluxToken() {
+    return new StringEnvironmentVariable(Envs.SP_AUDIT_INFLUX_TOKEN);
+  }
+
+  @Override
+  public IntEnvironmentVariable getAuditQueueCapacity() {
+    return new IntEnvironmentVariable(Envs.SP_AUDIT_QUEUE_CAPACITY);
+  }
+
+  @Override
+  public IntEnvironmentVariable getAuditShutdownTimeoutSeconds() {
+    return new IntEnvironmentVariable(Envs.SP_AUDIT_SHUTDOWN_TIMEOUT_SECONDS);
+  }
+
+  @Override
+  public StringEnvironmentVariable getAuditInfluxOrg() {
+    return new StringEnvironmentVariable(Envs.SP_AUDIT_INFLUX_ORG);
+  }
+
 }

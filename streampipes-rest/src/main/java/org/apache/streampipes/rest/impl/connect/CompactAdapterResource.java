@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.connect;
 
+import org.apache.streampipes.audit.events.AdapterAuditRecorder;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.compact.AdapterGenerationSteps;
@@ -73,7 +74,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
         workerRestClient,
         StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
-        requestManager
+        requestManager,
+        new AdapterAuditRecorder(resourceManager.getAuditService())
     ));
     var guessManagement = new GuessManagement(
         new ExtensionsServiceEndpointGenerator(),

@@ -1,0 +1,320 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<sp-split-section
+    [title]="'Audit Log' | translate"
+    [subtitle]="'Review who changed what in your platform.' | translate"
+>
+    <button
+        section-actions
+        mat-icon-button
+        [attr.aria-label]="'Audit status' | translate"
+        [matTooltip]="'Audit status' | translate"
+        (click)="showStatus()"
+    >
+        <mat-icon>info_outline</mat-icon>
+    </button>
+    <button
+        section-actions
+        mat-icon-button
+        [attr.aria-label]="'Refresh' | translate"
+        [matTooltip]="'Refresh' | translate"
+        (click)="refresh()"
+        [disabled]="loading"
+    >
+        <mat-icon>refresh</mat-icon>
+    </button>
+    <div fxLayout="column" fxLayoutGap="var(--space-lg)">
+        @if (statusError) {
+            <sp-alert-banner
+                type="error"
+                role="alert"
+                [description]="
+                    'Audit status could not be loaded. Try refreshing.'
+                        | translate
+                "
+            ></sp-alert-banner>
+        }
+        @if (status; as state) {
+            @if (!state.enabled) {
+                <sp-alert-banner
+                    type="info"
+                    role="status"
+                    [description]="
+                        'Audit recording is disabled. Enable auditing in the Core deployment configuration.'
+                            | translate
+                    "
+                ></sp-alert-banner>
+            } @else {
+                <form
+                    (ngSubmit)="apply()"
+                    fxLayout="row wrap"
+                    fxLayoutGap="var(--space-md)"
+                    fxLayoutAlign="start center"
+                >
+                    <sp-form-field
+                        [level]="3"
+                        [label]="'Time range' | translate"
+                        margin="0"
+                    >
+                        <mat-form-field appearance="outline">
+                            <mat-select
+                                [attr.aria-label]="'Time range' | translate"
+                                name="days"
+                                [(ngModel)]="days"
+                            >
+                                <mat-option [value]="1"
+                                    >{{ 'Last 24 hours' | translate }}
+                                </mat-option>
+                                <mat-option [value]="7"
+                                    >{{ 'Last 7 days' | translate }}
+                                </mat-option>
+                                <mat-option [value]="30"
+                                    >{{ 'Last 30 days' | translate }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </sp-form-field>
+                    <sp-form-field
+                        [level]="3"
+                        [label]="'Event type' | translate"
+                        margin="0"
+                    >
+                        <mat-form-field appearance="outline">
+                            <input
+                                [attr.aria-label]="'Event type' | translate"
+                                matInput
+                                name="eventType"
+                                [(ngModel)]="eventType"
+                                maxlength="128"
+                                [matAutocomplete]="eventTypes"
+                            />
+                            <mat-autocomplete #eventTypes="matAutocomplete">
+                                @for (type of types; track type) {
+                                    <mat-option [value]="type"
+                                        >{{ type }}
+                                    </mat-option>
+                                }
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </sp-form-field>
+                    <sp-form-field
+                        [level]="3"
+                        [label]="'Actor ID' | translate"
+                        margin="0"
+                    >
+                        <mat-form-field appearance="outline">
+                            <input
+                                [attr.aria-label]="'Actor ID' | translate"
+                                matInput
+                                name="actor"
+                                [(ngModel)]="actor"
+                                maxlength="256"
+                        /></mat-form-field>
+                    </sp-form-field>
+                    <sp-form-field
+                        [level]="3"
+                        [label]="'Outcome' | translate"
+                        margin="0"
+                    >
+                        <mat-form-field appearance="outline">
+                            <mat-select
+                                [attr.aria-label]="'Outcome' | translate"
+                                name="outcome"
+                                [(ngModel)]="outcome"
+                            >
+                                <mat-option value=""
+                                    >{{ 'All outcomes' | translate }}
+                                </mat-option>
+                                <mat-option value="succeeded"
+                                    >{{ 'Succeeded' | translate }}
+                                </mat-option>
+                                <mat-option value="failed"
+                                    >{{ 'Failed' | translate }}
+                                </mat-option>
+                                <mat-option value="partial"
+                                    >{{ 'Partial' | translate }}
+                                </mat-option>
+                                <mat-option value="requested"
+                                    >{{ 'Requested' | translate }}
+                                </mat-option>
+                                <mat-option value="denied"
+                                    >{{ 'Denied' | translate }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </sp-form-field>
+                    <sp-form-field [level]="3" label="&nbsp;">
+                        <div>
+                            <button
+                                mat-flat-button
+                                type="submit"
+                                [disabled]="loading"
+                            >
+                                {{ 'Apply filters' | translate }}
+                            </button>
+                        </div>
+                    </sp-form-field>
+                </form>
+                @if (loading) {
+                    <mat-progress-bar
+                        mode="indeterminate"
+                        [attr.aria-label]="'Loading audit events' | translate"
+                    />
+                }
+                @if (failed) {
+                    <sp-alert-banner
+                        type="error"
+                        role="alert"
+                        [description]="
+                            'Audit events could not be loaded. Check the filters and storage availability, then retry.'
+                                | translate
+                        "
+                    >
+                        <div>
+                            <button mat-button (click)="retry()">
+                                {{ 'Retry' | translate }}
+                            </button>
+                        </div>
+                    </sp-alert-banner>
+                } @else if (!loading && !dataSource.data.length) {
+                    <sp-alert-banner
+                        type="info"
+                        role="status"
+                        [description]="
+                            'No audit events match these filters.' | translate
+                        "
+                    ></sp-alert-banner>
+                }
+                <div class="audit-table" [attr.aria-busy]="loading">
+                    <sp-table
+                        [rowsClickable]="true"
+                        (rowClicked)="showDetails($event)"
+                        [columns]="columns"
+                        [dataSource]="dataSource"
+                        [showPaginator]="false"
+                    >
+                        <ng-container matColumnDef="time">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'Stored at' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let event">
+                                <time [attr.datetime]="event.storedAt"
+                                    >{{ event.storedAt | date: 'medium' }}
+                                </time>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="eventType">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'Event type' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let event">
+                                {{ event.eventType }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="outcome">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'Outcome' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let event">
+                                <sp-label
+                                    size="small"
+                                    variant="soft"
+                                    [tone]="outcomeTone(event.outcome)"
+                                    [labelText]="
+                                        outcomeLabel(event.outcome) | translate
+                                    "
+                                />
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="actor">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'Actor ID' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let event">
+                                {{ event.actor }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="resource">
+                            <th mat-header-cell *matHeaderCellDef>
+                                {{ 'Resource' | translate }}
+                            </th>
+                            <td mat-cell *matCellDef="let event">
+                                {{ event.resourceId || '—' }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="preview">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <span class="cdk-visually-hidden">{{
+                                    'Preview' | translate
+                                }}</span>
+                            </th>
+                            <td mat-cell *matCellDef="let event">
+                                @if (resourcePreview(event)) {
+                                    <button
+                                        mat-icon-button
+                                        [matTooltip]="'Preview' | translate"
+                                        [attr.aria-label]="
+                                            ('Preview' | translate) +
+                                            ': ' +
+                                            event.resourceId
+                                        "
+                                        (click)="
+                                            openResourcePreview(event, $event)
+                                        "
+                                    >
+                                        <mat-icon>preview</mat-icon>
+                                    </button>
+                                }
+                            </td>
+                        </ng-container>
+                    </sp-table>
+                </div>
+                <nav
+                    fxLayout="row"
+                    fxLayoutGap="var(--space-md)"
+                    fxLayoutAlign="end center"
+                    [attr.aria-label]="'Audit pages' | translate"
+                >
+                    <button
+                        class="mat-basic"
+                        (click)="previous()"
+                        [disabled]="loading || page === 0"
+                    >
+                        {{ 'Previous' | translate }}
+                    </button>
+                    <span aria-live="polite"
+                        >{{ 'Page' | translate }} {{ page + 1 }}</span
+                    >
+                    <button
+                        class="mat-basic"
+                        (click)="next()"
+                        [disabled]="loading || !nextCursor"
+                    >
+                        {{ 'Next' | translate }}
+                    </button>
+                </nav>
+            }
+        } @else if (!statusError) {
+            <mat-progress-bar
+                mode="indeterminate"
+                [attr.aria-label]="'Loading audit status' | translate"
+            />
+        }
+    </div>
+</sp-split-section>

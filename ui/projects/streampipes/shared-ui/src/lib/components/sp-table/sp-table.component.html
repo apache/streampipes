@@ -376,7 +376,13 @@
         <tr
             mat-row
             *matRowDef="let row; columns: renderedColumns; when: isDataRow"
-            (click)="rowClicked.emit(row)"
+            (click)="
+                rowsClickable && $any($event.currentTarget).focus();
+                rowClicked.emit(row)
+            "
+            [attr.tabindex]="rowsClickable ? 0 : null"
+            (keydown.enter)="activateRow($event, row)"
+            (keydown.space)="activateRow($event, row)"
             [ngClass]="rowsClickable ? 'cursor-pointer' : ''"
         ></tr>
 
@@ -391,17 +397,19 @@
         </tr>
     </table>
 
-    <div fxFlex="100" fxLayoutAlign="end end" class="paginator-container">
-        <mat-paginator
-            #paginator
-            [pageSize]="pageSize()"
-            [pageSizeOptions]="[5, 10, 20, 50, 100, 500]"
-            [hidePageSize]="false"
-            [showFirstLastButtons]="true"
-            (page)="onPage($event)"
-        >
-        </mat-paginator>
-    </div>
+    @if (showPaginator) {
+        <div fxFlex="100" fxLayoutAlign="end end" class="paginator-container">
+            <mat-paginator
+                #paginator
+                [pageSize]="pageSize()"
+                [pageSizeOptions]="[5, 10, 20, 50, 100, 500]"
+                [hidePageSize]="false"
+                [showFirstLastButtons]="true"
+                (page)="onPage($event)"
+            >
+            </mat-paginator>
+        </div>
+    }
 </div>
 
 <ng-template #actionsCell let-element>
