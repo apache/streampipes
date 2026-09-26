@@ -31,20 +31,45 @@ p {
     min-width: 54rem;
 }
 mat-form-field {
-    width: 13rem;
-}
-@media (max-width: 600px) {
-    mat-form-field {
-        width: 100%;
-    }
+    width: 100%;
 }
 
-sp-form-field {
-    width: 13rem;
+.audit-filters {
+    margin-bottom: var(--space-lg);
 }
+
+.audit-filters sp-form-field {
+    flex: 1 1 12rem;
+    min-width: 0;
+}
+
+.audit-filters .audit-actor-filter {
+    flex: 2 1 18rem;
+}
+
+.audit-filters .audit-filter-action {
+    flex: 0 0 auto;
+}
+
+.audit-actor-option {
+    display: block;
+    padding-block: var(--space-xs);
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.4;
+}
+
+.audit-actor-id {
+    display: block;
+    color: var(--mat-sys-on-surface-variant);
+    font-size: var(--font-size-sm);
+}
+
 @media (max-width: 600px) {
-    sp-form-field {
-        width: 100%;
+    .audit-filters sp-form-field,
+    .audit-filters .audit-actor-filter,
+    .audit-filters .audit-filter-action {
+        flex: 1 1 100%;
     }
 }
 

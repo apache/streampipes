@@ -203,6 +203,8 @@ You can also define an optional tooltip which is shown above the label.
 
 Use `sp-search-select` when users need to select one or more items from a searchable list, such as datasets, labels, sites, asset types, users, roles or groups.
 
+For single-value filters that also accept typed values, provide `freeTextValue`, a function mapping text to the same item type as `items`. Typing updates the value immediately; clearing resets it. `searchTextFor` optionally returns searchable text for each item (for example username plus principal ID). Both hooks are optional; existing selection-only and multi-select behavior remains unchanged.
+
 Keep data loading, persistence and feature-specific actions outside the component. For example, actions such as `Manage Labels` or refresh buttons should remain in the parent view, usually in the surrounding `sp-form-field` actions.
 
 Single-select example:

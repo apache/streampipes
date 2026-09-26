@@ -62,17 +62,21 @@
                 ></sp-alert-banner>
             } @else {
                 <form
+                    class="audit-filters"
                     (ngSubmit)="apply()"
                     fxLayout="row wrap"
                     fxLayoutGap="var(--space-md)"
-                    fxLayoutAlign="start center"
+                    fxLayoutAlign="start end"
                 >
                     <sp-form-field
                         [level]="3"
                         [label]="'Time range' | translate"
                         margin="0"
                     >
-                        <mat-form-field appearance="outline">
+                        <mat-form-field
+                            appearance="outline"
+                            subscriptSizing="dynamic"
+                        >
                             <mat-select
                                 [attr.aria-label]="'Time range' | translate"
                                 name="days"
@@ -95,71 +99,58 @@
                         [label]="'Event type' | translate"
                         margin="0"
                     >
-                        <mat-form-field appearance="outline">
-                            <input
-                                [attr.aria-label]="'Event type' | translate"
-                                matInput
-                                name="eventType"
-                                [(ngModel)]="eventType"
-                                maxlength="128"
-                                [matAutocomplete]="eventTypes"
-                            />
-                            <mat-autocomplete #eventTypes="matAutocomplete">
-                                @for (type of types; track type) {
-                                    <mat-option [value]="type"
-                                        >{{ type }}
-                                    </mat-option>
-                                }
-                            </mat-autocomplete>
-                        </mat-form-field>
+                        <sp-search-select
+                            [items]="types"
+                            [value]="eventType || undefined"
+                            [freeTextValue]="eventTypeFromText"
+                            [placeholder]="'All event types' | translate"
+                            (valueChange)="onEventTypeChange($event)"
+                        />
                     </sp-form-field>
                     <sp-form-field
                         [level]="3"
-                        [label]="'Actor ID' | translate"
+                        [label]="'Actor username' | translate"
+                        class="audit-actor-filter"
                         margin="0"
                     >
-                        <mat-form-field appearance="outline">
-                            <input
-                                [attr.aria-label]="'Actor ID' | translate"
-                                matInput
-                                name="actor"
-                                [(ngModel)]="actor"
-                                maxlength="256"
-                        /></mat-form-field>
+                        <sp-search-select
+                            [items]="actorOptions"
+                            [value]="selectedActor"
+                            [freeTextValue]="actorFromText"
+                            [searchTextFor]="actorSearchText"
+                            [placeholder]="'Username or ID' | translate"
+                            (valueChange)="onActorChange($event)"
+                        >
+                            <ng-template spSearchSelectOption let-option>
+                                <span class="audit-actor-option">
+                                    <span>{{ option.label }}</span>
+                                    @if (option.username) {
+                                        <span class="audit-actor-id">{{
+                                            option.id
+                                        }}</span>
+                                    }
+                                </span>
+                            </ng-template>
+                        </sp-search-select>
                     </sp-form-field>
                     <sp-form-field
                         [level]="3"
                         [label]="'Outcome' | translate"
                         margin="0"
                     >
-                        <mat-form-field appearance="outline">
-                            <mat-select
-                                [attr.aria-label]="'Outcome' | translate"
-                                name="outcome"
-                                [(ngModel)]="outcome"
-                            >
-                                <mat-option value=""
-                                    >{{ 'All outcomes' | translate }}
-                                </mat-option>
-                                <mat-option value="succeeded"
-                                    >{{ 'Succeeded' | translate }}
-                                </mat-option>
-                                <mat-option value="failed"
-                                    >{{ 'Failed' | translate }}
-                                </mat-option>
-                                <mat-option value="partial"
-                                    >{{ 'Partial' | translate }}
-                                </mat-option>
-                                <mat-option value="requested"
-                                    >{{ 'Requested' | translate }}
-                                </mat-option>
-                                <mat-option value="denied"
-                                    >{{ 'Denied' | translate }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                        <sp-search-select
+                            [items]="outcomeOptions"
+                            [value]="selectedOutcome"
+                            [placeholder]="'All outcomes' | translate"
+                            (valueChange)="onOutcomeChange($event)"
+                        />
                     </sp-form-field>
-                    <sp-form-field [level]="3" label="&nbsp;">
+                    <sp-form-field
+                        class="audit-filter-action"
+                        [level]="3"
+                        label="&nbsp;"
+                        margin="0"
+                    >
                         <div>
                             <button
                                 mat-flat-button
@@ -244,10 +235,14 @@
                         </ng-container>
                         <ng-container matColumnDef="actor">
                             <th mat-header-cell *matHeaderCellDef>
-                                {{ 'Actor ID' | translate }}
+                                {{ 'Actor username' | translate }}
                             </th>
-                            <td mat-cell *matCellDef="let event">
-                                {{ event.actor }}
+                            <td
+                                mat-cell
+                                *matCellDef="let event"
+                                [matTooltip]="event.actor"
+                            >
+                                {{ usernames.get(event.actor) || event.actor }}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="resource">

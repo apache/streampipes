@@ -87,4 +87,13 @@ describe('AuditDialogComponent', () => {
         expect(api.getDetails).not.toHaveBeenCalled();
         expect(users.getUserById).not.toHaveBeenCalled();
     });
+    it('reuses a username provided by the audit table without another user request', () => {
+        const component =
+            TestBed.createComponent(AuditDialogComponent).componentInstance;
+        component.event = event;
+        component.username = 'operator';
+        component.ngOnInit();
+        expect(component.username).toBe('operator');
+        expect(users.getUserById).not.toHaveBeenCalled();
+    });
 });

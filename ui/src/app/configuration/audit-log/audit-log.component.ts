@@ -29,9 +29,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import {
@@ -45,6 +43,7 @@ import {
     AuditEntry,
     AuditQuery,
     AuditStatus,
+    UserService,
 } from '@streampipes/platform-services';
 import {
     FormFieldComponent,
@@ -56,6 +55,8 @@ import {
     DialogService,
     FeatureCardService,
     PanelType,
+    SearchSelectComponent,
+    SearchSelectOptionTemplateDirective,
 } from '@streampipes/shared-ui';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
@@ -63,6 +64,12 @@ import { AuditDialogComponent } from './audit-dialog.component';
 import { SpConfigurationRoutes } from '../configuration.breadcrumb';
 
 import { auditOutcomeTone } from './audit-outcome';
+
+interface AuditActorOption {
+    id: string;
+    label: string;
+    username?: string;
+}
 
 @Component({
     selector: 'sp-audit-log',
@@ -76,9 +83,7 @@ import { auditOutcomeTone } from './audit-outcome';
         MatIconModule,
         MatTooltipModule,
         MatFormFieldModule,
-        MatInputModule,
         MatSelectModule,
-        MatAutocompleteModule,
         MatProgressBarModule,
         MatTableModule,
         LayoutDirective,
@@ -90,11 +95,16 @@ import { auditOutcomeTone } from './audit-outcome';
         SpAlertBannerComponent,
         SpLabelComponent,
         SplitSectionComponent,
+        SearchSelectComponent,
+        SearchSelectOptionTemplateDirective,
     ],
 })
 export class AuditLogComponent implements OnInit {
     readonly outcomeTone = auditOutcomeTone;
     private api = inject(AuditService);
+    private users = inject(UserService);
+    private userRequest?: Subscription;
+    usernames = new Map<string, string>();
     private destroyRef = inject(DestroyRef);
     private breadcrumbs = inject(SpBreadcrumbService);
     private translate = inject(TranslateService);
@@ -107,7 +117,60 @@ export class AuditLogComponent implements OnInit {
     days = 1;
     eventType = '';
     actor = '';
+    actorOptions: AuditActorOption[] = [];
+    readonly actorSearchText = (option: AuditActorOption): string =>
+        `${option.label} ${option.id}`;
+    readonly actorFromText = (text: string): AuditActorOption => {
+        const value = text.trim();
+        const byId = this.actorOptions.find(option => option.id === value);
+        const byName = this.actorOptions.filter(
+            option => option.username?.toLowerCase() === value.toLowerCase(),
+        );
+        return (
+            byId ??
+            (byName.length === 1 ? byName[0] : { id: value, label: value })
+        );
+    };
+
+    get selectedActor(): AuditActorOption | undefined {
+        return this.actor ? this.actorFromText(this.actor) : undefined;
+    }
+
+    onActorChange(
+        value: AuditActorOption | AuditActorOption[] | undefined,
+    ): void {
+        this.actor = value && !Array.isArray(value) ? value.id : '';
+    }
+
     outcome = '';
+    readonly eventTypeFromText = (text: string): string => text.trim();
+    get outcomeOptions(): { id: string; label: string }[] {
+        return [
+            { id: 'succeeded', label: this.translate.instant('Succeeded') },
+            { id: 'failed', label: this.translate.instant('Failed') },
+            { id: 'partial', label: this.translate.instant('Partial') },
+            { id: 'requested', label: this.translate.instant('Requested') },
+            { id: 'denied', label: this.translate.instant('Denied') },
+        ];
+    }
+
+    get selectedOutcome(): { id: string; label: string } | undefined {
+        return this.outcomeOptions.find(option => option.id === this.outcome);
+    }
+
+    onEventTypeChange(value: string | string[] | undefined): void {
+        this.eventType = typeof value === 'string' ? value : '';
+    }
+
+    onOutcomeChange(
+        value:
+            | { id: string; label: string }
+            | { id: string; label: string }[]
+            | undefined,
+    ): void {
+        this.outcome = value && !Array.isArray(value) ? value.id : '';
+    }
+
     loading = false;
     failed = false;
     dataSource = new MatTableDataSource<AuditEntry>([]);
@@ -133,6 +196,32 @@ export class AuditLogComponent implements OnInit {
     }
 
     refresh(): void {
+        this.userRequest?.unsubscribe();
+        this.usernames = new Map();
+        this.actorOptions = [];
+        this.userRequest = this.users
+            .listUsers(true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: users => {
+                    this.actorOptions = users
+                        .map(user => ({
+                            id: user.principalId,
+                            username: user.email,
+                            label: user.email || user.principalId,
+                        }))
+                        .sort((left, right) =>
+                            left.label.localeCompare(right.label),
+                        );
+                    // The lightweight user endpoint exposes the username as `email`.
+                    this.usernames = new Map(
+                        users
+                            .filter(user => user.email)
+                            .map(user => [user.principalId, user.email]),
+                    );
+                },
+                error: () => (this.usernames = new Map()),
+            });
         this.statusError = false;
         this.api
             .getStatus()
@@ -154,7 +243,7 @@ export class AuditLogComponent implements OnInit {
             from: new Date(to.getTime() - this.days * 86400000).toISOString(),
             to: to.toISOString(),
             eventType: this.eventType.trim(),
-            actor: this.actor.trim(),
+            actor: this.actorFromText(this.actor).id,
             outcome: this.outcome,
             limit: 50,
         };
@@ -224,7 +313,7 @@ export class AuditLogComponent implements OnInit {
             panelType: PanelType.SLIDE_IN_PANEL,
             width: '42rem',
             title: this.translate.instant('Event details'),
-            data: { event },
+            data: { event, username: this.usernames.get(event.actor) },
         });
     }
 

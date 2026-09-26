@@ -77,7 +77,7 @@ export class AuditDialogComponent implements OnInit {
     @Input() event?: AuditEntry;
     status?: AuditStatus;
     details?: AuditEntryDetails;
-    username?: string;
+    @Input() username?: string;
     loading = false;
     failed = false;
     missing = false;
@@ -92,7 +92,7 @@ export class AuditDialogComponent implements OnInit {
             }
         });
         this.load();
-        if (this.event) {
+        if (this.event && !this.username) {
             this.users
                 .getUserById(encodeURIComponent(this.event.actor))
                 .pipe(takeUntilDestroyed(this.destroyRef))
