@@ -21,7 +21,7 @@ package org.apache.streampipes.service.core;
 import org.apache.streampipes.audit.api.AuditEventProvider;
 import org.apache.streampipes.audit.api.AuditEventStore;
 import org.apache.streampipes.audit.api.AuditService;
-import org.apache.streampipes.audit.events.AuthenticationAuditRecorder;
+import org.apache.streampipes.audit.events.authentication.AuthenticationAuditRecorder;
 import org.apache.streampipes.audit.events.StandardAuditEvents;
 import org.apache.streampipes.audit.influx.InfluxAuditEventStore;
 import org.apache.streampipes.audit.management.DefaultAuditService;

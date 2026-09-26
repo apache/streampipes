@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl.connect;
 
-import org.apache.streampipes.audit.events.AdapterAuditRecorder;
+import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.compact.AdapterGenerationSteps;
@@ -142,7 +142,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
         }
         if (compactAdapter.createOptions()
                           .start()) {
-          managementService.startAdapter(adapterId);
+          managementService.startAdapter(adapterId, getAuthenticatedUserSid());
         }
       }
       return ok(Notifications.success(adapterId));
@@ -176,7 +176,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
       );
 
       try {
-        adapterUpdateManagement.updateAdapter(adapterDescription);
+        adapterUpdateManagement.updateAdapter(adapterDescription, getAuthenticatedUserSid());
       } catch (AdapterException e) {
         LOG.error("Error while updating adapter with id {}", adapterDescription.getElementId(), e);
         return ok(Notifications.error(e.getMessage()));

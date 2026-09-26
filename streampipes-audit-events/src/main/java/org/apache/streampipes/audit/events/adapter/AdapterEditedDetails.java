@@ -16,10 +16,15 @@
  *
  */
 
-package org.apache.streampipes.audit.events;
+package org.apache.streampipes.audit.events.adapter;
 
 import org.apache.streampipes.audit.api.AuditDetails;
+import org.apache.streampipes.audit.events.AuditChange;
 
-/** Safe identifiers only: never include adapter configuration, credentials or exception messages. */
-public record AdapterCreatedDetails(String streamId, AdapterCreationReason reasonCode) implements AuditDetails {
+import java.util.List;
+
+public record AdapterEditedDetails(List<AuditChange> changes) implements AuditDetails {
+  public AdapterEditedDetails {
+    changes = List.copyOf(changes);
+  }
 }

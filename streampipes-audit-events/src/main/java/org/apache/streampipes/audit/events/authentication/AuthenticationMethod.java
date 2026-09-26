@@ -16,10 +16,9 @@
  *
  */
 
-package org.apache.streampipes.audit.events;
+package org.apache.streampipes.audit.events.authentication;
 
-import org.apache.streampipes.audit.api.AuditDetails;
-
-/** Authentication mechanism only; never credentials, tokens or attempted usernames. */
-public record AuthenticationDetails(AuthenticationMethod authMethod) implements AuditDetails {
+public enum AuthenticationMethod {
+  PASSWORD,
+  OAUTH2
 }

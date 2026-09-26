@@ -16,10 +16,11 @@
  *
  */
 
-package org.apache.streampipes.audit.events;
+package org.apache.streampipes.audit.events.authentication;
 
 import org.apache.streampipes.audit.api.AuditOutcome;
 import org.apache.streampipes.audit.api.AuditService;
+import org.apache.streampipes.audit.events.StandardAuditEvents;
 
 import java.util.Objects;
 

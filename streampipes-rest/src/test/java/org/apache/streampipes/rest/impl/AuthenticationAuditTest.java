@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.audit.events.AuthenticationAuditRecorder;
-import org.apache.streampipes.audit.events.AuthenticationMethod;
+import org.apache.streampipes.audit.events.authentication.AuthenticationAuditRecorder;
+import org.apache.streampipes.audit.events.authentication.AuthenticationMethod;
 import org.apache.streampipes.model.client.user.LoginRequest;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.resource.management.SpResourceManager;

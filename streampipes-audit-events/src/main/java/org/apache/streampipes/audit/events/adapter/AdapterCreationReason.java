@@ -16,24 +16,12 @@
  *
  */
 
-package org.apache.streampipes.audit.events;
+package org.apache.streampipes.audit.events.adapter;
 
-import org.apache.streampipes.audit.api.AuditOutcome;
-import org.apache.streampipes.audit.api.AuditService;
 
-import java.util.Objects;
-
-/** Adapter audit publication and safe payload construction; outcomes are decided by the operation. */
-public final class AdapterAuditRecorder {
-  private final AuditService auditService;
-
-  public AdapterAuditRecorder(AuditService auditService) {
-    this.auditService = Objects.requireNonNull(auditService);
-  }
-
-  public void created(String actor, String adapterId, String streamId,
-                      AuditOutcome outcome, AdapterCreationReason reason) {
-    auditService.record(StandardAuditEvents.ADAPTER_CREATE, outcome, actor, adapterId,
-        new AdapterCreatedDetails(streamId, reason));
-  }
+/** Stable safe reason codes; serialized names are part of the audit details contract. */
+public enum AdapterCreationReason {
+  ADAPTER_CREATION_FAILED,
+  STREAM_CREATION_FAILED,
+  STREAM_CREATION_REJECTED
 }

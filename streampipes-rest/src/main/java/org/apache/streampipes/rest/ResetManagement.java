@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest;
 
-import org.apache.streampipes.audit.events.AdapterAuditRecorder;
+import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;

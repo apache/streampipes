@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.service.core.oauth2;
 
-import org.apache.streampipes.audit.events.AuthenticationAuditRecorder;
-import org.apache.streampipes.audit.events.AuthenticationMethod;
+import org.apache.streampipes.audit.events.authentication.AuthenticationAuditRecorder;
+import org.apache.streampipes.audit.events.authentication.AuthenticationMethod;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;

@@ -20,9 +20,9 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.audit.api.AuditOutcome;
 import org.apache.streampipes.audit.api.AuditService;
-import org.apache.streampipes.audit.events.AdapterAuditRecorder;
-import org.apache.streampipes.audit.events.AdapterCreatedDetails;
-import org.apache.streampipes.audit.events.AdapterCreationReason;
+import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
+import org.apache.streampipes.audit.events.adapter.AdapterCreatedDetails;
+import org.apache.streampipes.audit.events.adapter.AdapterCreationReason;
 import org.apache.streampipes.audit.events.StandardAuditEvents;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;

@@ -24,10 +24,10 @@ import org.apache.streampipes.audit.api.AuditEventDefinition;
 import org.apache.streampipes.audit.api.AuditEventProvider;
 import org.apache.streampipes.audit.api.AuditEventStore;
 import org.apache.streampipes.audit.api.AuditOutcome;
-import org.apache.streampipes.audit.events.AdapterCreatedDetails;
-import org.apache.streampipes.audit.events.AdapterCreationReason;
-import org.apache.streampipes.audit.events.AuthenticationAuditRecorder;
-import org.apache.streampipes.audit.events.AuthenticationMethod;
+import org.apache.streampipes.audit.events.adapter.AdapterCreatedDetails;
+import org.apache.streampipes.audit.events.adapter.AdapterCreationReason;
+import org.apache.streampipes.audit.events.authentication.AuthenticationAuditRecorder;
+import org.apache.streampipes.audit.events.authentication.AuthenticationMethod;
 import org.apache.streampipes.audit.events.StandardAuditEvents;
 
 import org.junit.jupiter.api.Test;

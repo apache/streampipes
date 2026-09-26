@@ -19,7 +19,7 @@
 
 package org.apache.streampipes.export.resolver;
 
-import org.apache.streampipes.audit.events.AdapterAuditRecorder;
+import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.service.core;
 
-import org.apache.streampipes.audit.events.AdapterAuditRecorder;
+import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;

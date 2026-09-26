@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.service.core.oauth2;
 
-import org.apache.streampipes.audit.events.AuthenticationAuditRecorder;
-import org.apache.streampipes.audit.events.AuthenticationMethod;
+import org.apache.streampipes.audit.events.authentication.AuthenticationAuditRecorder;
+import org.apache.streampipes.audit.events.authentication.AuthenticationMethod;
 import org.apache.streampipes.service.core.oauth2.util.CookieUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;

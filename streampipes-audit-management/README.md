@@ -165,7 +165,7 @@ when changing storage providers. This is browsing, not snapshot-isolated export.
 
 `streampipes-audit-api` contains reusable contracts only. The new
 `streampipes-audit-events` module owns StreamPipes' `StandardAuditEvents`, typed
-payloads, reason codes and small domain recorders. It depends only on the audit API.
+payloads, reason codes and small domain recorders. It depends on the audit API and StreamPipes model.
 Management and REST/authentication operations use these recorders; Core registers
 the provider and wires the authentication recorder. Generic audit management and
 Influx production code do not depend on StreamPipes' event catalog.
@@ -173,6 +173,9 @@ Influx production code do not depend on StreamPipes' event catalog.
 | Event | Resource type | Captured outcomes |
 | --- | --- | --- |
 | `sp.adapter.create` | `adapter` | Success, failure, partial completion |
+| `sp.adapter.start` | `adapter` | Success, failure, partial completion |
+| `sp.adapter.stop` | `adapter` | Success, failure, partial completion |
+| `sp.adapter.edit` | `adapter` | Success, failure, partial completion when tracked fields changed |
 | `sp.auth.login` | None | Success or authentication rejection |
 | `sp.auth.logout` | None | Successful explicit logout with a resolved principal |
 
@@ -208,7 +211,7 @@ adapter and data-stream/permission work. Success, thrown failures and observed
 partial completion produce one outcome record. A rejected stream installation
 is recorded as partial without changing the existing REST behavior. Both regular
 and compact REST creation routes use this manager. Generic persistence updates,
-adapter start/stop and document saves do not emit additional audit events.
+document saves do not emit additional audit events.
 
 The recorder owns event selection and safe payload construction. The adapter
 operation owns outcome decisions, including whether a failure happened after
@@ -244,6 +247,52 @@ Each Core application explicitly imports `AuditConfiguration` in its bootstrap.
 and does not enable auditing itself. Legacy direct
 `SpResourceManager` constructors remain audit-disabled; production Spring wiring
 passes the configured service explicitly.
+
+## Adapter lifecycle and edits
+
+Start and stop emit events from `AdapterMasterManagement`; the REST and compact
+APIs pass the authenticated actor. Existing overloads without an actor remain
+supported and record `unknown`. Automatic restarts within edits carry the initiating
+actor and emit their actual start/stop events. A forced local stop following a
+worker failure is `PARTIAL`, with `details.forced = true`; it does not claim that
+the worker acknowledged the stop. Exceptions preserve the existing operation result.
+
+`AdapterUpdateManagement` compares the stored adapter against the submitted adapter
+before persistence. Only `name`, `description` and `config` participate. Running
+state, endpoint/service selection, revision and other document fields are excluded;
+saving unchanged tracked fields emits no edit event. The edit outcome is partial
+if adapter persistence succeeded but subsequent stream update or restart failed.
+
+Details use `{ "changes": [{ "path": "pollingIntervalMs", "before": "1000", "after": "5000" }] }`.
+The reusable `StaticPropertyAuditExtractor` lives in
+`streampipes-audit-events`, under `org.apache.streampipes.audit.events.extraction`.
+Adapter and future pipeline management can construct it with a secret-decryption
+function, for example `new StaticPropertyAuditExtractor(SecretEncryptionManager::decrypt)`.
+The events module has no user-management dependency. Extracted values are for
+comparison only: callers must redact every value marked `secret` before recording.
+Adapter-specific field selection and change detection remain in `AdapterEditChanges`.
+
+Configuration values are extracted by static-property type rather than compared as
+serialized property documents. One-of selections store the selected option's
+internal name (falling back to its display name); multi-selects store a sorted list
+of selected names. For example, a protocol change is one entry with
+`path: "protocol", before: "mqtt", after: "opcua"`, not two selected-flag changes.
+
+Text/code, colors and toggles expose their values; mappings and tree inputs expose
+selected properties/nodes, and file inputs expose the selected location. Groups
+qualify child internal names (`connection.pollingIntervalMs`); collections retain
+member positions (`topics[1]`). Alternative groups expose the selected alternative
+names and the active branch values. Templates, labels, generated IDs, available
+options and runtime resolution metadata are excluded. Reordering top-level
+properties or available options alone does not create an edit.
+
+Secret properties, including nested secrets and additions/removals, use
+`[REDACTED]` on both sides. Encrypted and plaintext secrets are compared by their
+effective values without modifying the original properties. Only fields explicitly
+modeled as secrets receive this redaction. Unsupported property types, duplicate
+names within the same scope and other extraction errors produce an event without
+details and a payload-free warning; they never fall back to serializing an entire
+property object. Existing audit size limits still apply.
 
 ## Validation
 

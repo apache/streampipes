@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.service.core.oauth2;
 
-import org.apache.streampipes.audit.events.AuthenticationAuditRecorder;
-import org.apache.streampipes.audit.events.AuthenticationMethod;
+import org.apache.streampipes.audit.events.authentication.AuthenticationAuditRecorder;
+import org.apache.streampipes.audit.events.authentication.AuthenticationMethod;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.model.client.user.Principal;

@@ -18,8 +18,8 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.audit.api.AuditOutcome;
-import org.apache.streampipes.audit.events.AdapterAuditRecorder;
-import org.apache.streampipes.audit.events.AdapterCreationReason;
+import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
+import org.apache.streampipes.audit.events.adapter.AdapterCreationReason;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
@@ -162,10 +162,20 @@ public class AdapterMasterManagement {
   }
 
   public void stopAdapter(String elementId, boolean forceStop) throws AdapterException {
-    stopAdapter(getAdapter(elementId), forceStop);
+    stopAdapter(elementId, forceStop, null);
+  }
+
+  public void stopAdapter(String elementId, boolean forceStop, String actor) throws AdapterException {
+    stopAdapter(getAdapter(elementId), forceStop, actor);
   }
 
   public void stopAdapter(AdapterDescription ad, boolean forceStop) throws AdapterException {
+    stopAdapter(ad, forceStop, null);
+  }
+
+  public void stopAdapter(AdapterDescription ad, boolean forceStop, String actor) throws AdapterException {
+    boolean forced = false;
+    boolean stopped = false;
     LoadManager.tryLockForAdapter();
     try {
       try {
@@ -179,13 +189,16 @@ public class AdapterMasterManagement {
             })
             .findFirst().orElseThrow(AdapterException::new);
         workerRestClient.stopAdapter(service, ad);
+        stopped = true;
       } catch (AdapterException e) {
         if (!forceStop) {
           throw new AdapterException("Could not stop adapter", e);
         } else {
+          forced = true;
           ad.setRunning(false);
           ad.setSelectedEndpointUrl(null);
           adapterResourceManager.getDb().updateElement(ad);
+          stopped = true;
         }
       }
       ExtensionsLogProvider.INSTANCE.reset(ad.getElementId());
@@ -197,16 +210,29 @@ public class AdapterMasterManagement {
       } catch (NoSuchElementException e) {
         LOG.error("Could not remove adapter metrics for adapter {}", ad.getName());
       }
+      adapterAudit.stopped(actor, ad.getElementId(), forced ? AuditOutcome.PARTIAL : AuditOutcome.SUCCEEDED, forced);
+    } catch (AdapterException | RuntimeException e) {
+      adapterAudit.stopped(actor, ad.getElementId(), stopped ? AuditOutcome.PARTIAL : AuditOutcome.FAILED, forced);
+      throw e;
     } finally {
       LoadManager.unLockForAdapter();
     }
   }
 
   public void startAdapter(String elementId) throws AdapterException {
-    startAdapter(getAdapter(elementId));
+    startAdapter(elementId, null);
+  }
+
+  public void startAdapter(String elementId, String actor) throws AdapterException {
+    startAdapter(getAdapter(elementId), actor);
   }
 
   public void startAdapter(AdapterDescription ad) throws AdapterException {
+    startAdapter(ad, null);
+  }
+
+  public void startAdapter(AdapterDescription ad, String actor) throws AdapterException {
+    boolean started = false;
     LoadManager.tryLockForAdapter();
     try {
       try {
@@ -222,6 +248,7 @@ public class AdapterMasterManagement {
 
         // Invoke adapter instance
         workerRestClient.invokeStreamAdapter(service, ad);
+        started = true;
 
         // register the adapter at the metrics manager so that the AdapterHealthCheck
         // can send metrics
@@ -232,6 +259,10 @@ public class AdapterMasterManagement {
         throw new AdapterException("Could not start adapter due to unavailable service endpoint",
             e);
       }
+      adapterAudit.started(actor, ad.getElementId(), AuditOutcome.SUCCEEDED);
+    } catch (AdapterException | RuntimeException e) {
+      adapterAudit.started(actor, ad.getElementId(), started ? AuditOutcome.PARTIAL : AuditOutcome.FAILED);
+      throw e;
     } finally {
       LoadManager.unLockForAdapter();
     }

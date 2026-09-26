@@ -16,12 +16,10 @@
  *
  */
 
-package org.apache.streampipes.audit.events;
+package org.apache.streampipes.audit.events.adapter;
 
+import org.apache.streampipes.audit.api.AuditDetails;
 
-/** Stable safe reason codes; serialized names are part of the audit details contract. */
-public enum AdapterCreationReason {
-  ADAPTER_CREATION_FAILED,
-  STREAM_CREATION_FAILED,
-  STREAM_CREATION_REJECTED
+/** Safe identifiers only: never include adapter configuration, credentials or exception messages. */
+public record AdapterCreatedDetails(String streamId, AdapterCreationReason reasonCode) implements AuditDetails {
 }

@@ -16,9 +16,9 @@
  *
  */
 
-package org.apache.streampipes.audit.events;
+package org.apache.streampipes.audit.events.adapter;
 
-public enum AuthenticationMethod {
-  PASSWORD,
-  OAUTH2
+import org.apache.streampipes.audit.api.AuditDetails;
+
+public record AdapterLifecycleDetails(boolean forced) implements AuditDetails {
 }
