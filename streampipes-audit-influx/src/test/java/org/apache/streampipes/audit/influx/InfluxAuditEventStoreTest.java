@@ -20,8 +20,8 @@ package org.apache.streampipes.audit.influx;
 
 import org.apache.streampipes.audit.api.AuditEvent;
 import org.apache.streampipes.audit.api.AuditOutcome;
-import org.apache.streampipes.audit.events.adapter.AdapterCreatedDetails;
 import org.apache.streampipes.audit.events.StandardAuditEvents;
+import org.apache.streampipes.audit.events.adapter.AdapterCreatedDetails;
 
 import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.Test;
