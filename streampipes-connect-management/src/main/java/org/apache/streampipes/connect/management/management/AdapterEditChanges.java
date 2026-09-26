@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.connect.management.management;
 
-import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.audit.events.AuditChange;
+import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.audit.events.extraction.StaticPropertyAuditExtractor;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;

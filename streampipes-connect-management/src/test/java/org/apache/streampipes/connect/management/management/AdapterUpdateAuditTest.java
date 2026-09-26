@@ -20,9 +20,9 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.audit.api.AuditOutcome;
 import org.apache.streampipes.audit.api.AuditService;
-import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.audit.events.AuditChange;
 import org.apache.streampipes.audit.events.StandardAuditEvents;
+import org.apache.streampipes.audit.events.adapter.AdapterEditedDetails;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.manager.pipeline.update.DataStreamUpdateManagement;
 import org.apache.streampipes.model.SpDataStream;
