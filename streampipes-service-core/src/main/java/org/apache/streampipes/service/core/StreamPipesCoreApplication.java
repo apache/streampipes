@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.service.core;
 
+import org.apache.streampipes.audit.events.AdapterAuditRecorder;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
@@ -94,7 +95,7 @@ import java.util.function.Supplier;
 @Import({OpenApiConfiguration.class, StreamPipesPasswordEncoder.class,
     StreamPipesPrometheusConfig.class, WebSecurityConfig.class, WelcomePageController.class,
     StorageApiConfiguration.class, ExtensionServiceRequestConfiguration.class, SpPermissionEvaluator.class,
-    DatasetQueryConfiguration.class})
+    DatasetQueryConfiguration.class, AuditConfiguration.class})
 @ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.service.core.oauth2",
     "org.apache.streampipes.service.core.scheduler"})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {
@@ -226,7 +227,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
                         workerRestClient,
                         extensionsServiceStorage,
-                        extensionServiceRequestManager
+                        extensionServiceRequestManager,
+                        new AdapterAuditRecorder(resourceManager.getAuditService())
                     )),
                 StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
                 extensionServiceRequestManager,

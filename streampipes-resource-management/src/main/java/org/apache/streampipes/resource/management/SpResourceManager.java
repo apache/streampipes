@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.resource.management;
 
+import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
@@ -33,8 +34,11 @@ import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.util.Objects;
+
 public class SpResourceManager {
 
+  private final AuditService auditService;
   private final IPermissionStorage permissionStorage;
   private final IChartStorage chartStorage;
   private final IAdapterStorage adapterStorage;
@@ -62,6 +66,26 @@ public class SpResourceManager {
                            IUserGroupStorage userGroupStorage,
                            IPrivilegeStorage privilegeStorage,
                            IUserStorage userStorage) {
+    this(permissionStorage, chartStorage, adapterStorage, assetStorage, dashboardStorage, pipelineStorage,
+        datasetStorage, coreConfigurationStorage, fileMetadataStorage, roleStorage, userGroupStorage,
+        privilegeStorage, userStorage, AuditService.disabled());
+  }
+
+  public SpResourceManager(IPermissionStorage permissionStorage,
+                           IChartStorage chartStorage,
+                           IAdapterStorage adapterStorage,
+                           IAssetStorage assetStorage,
+                           IDashboardStorage dashboardStorage,
+                           IPipelineStorage pipelineStorage,
+                           IDatasetMetadataStorage datasetStorage,
+                           ISpCoreConfigurationStorage coreConfigurationStorage,
+                           IFileMetadataStorage fileMetadataStorage,
+                           IRoleStorage roleStorage,
+                           IUserGroupStorage userGroupStorage,
+                           IPrivilegeStorage privilegeStorage,
+                           IUserStorage userStorage,
+                           AuditService auditService) {
+    this.auditService = Objects.requireNonNull(auditService);
     this.permissionStorage = permissionStorage;
     this.chartStorage = chartStorage;
     this.adapterStorage = adapterStorage;
@@ -75,6 +99,10 @@ public class SpResourceManager {
     this.userGroupStorage = userGroupStorage;
     this.privilegeStorage = privilegeStorage;
     this.userStorage = userStorage;
+  }
+
+  public AuditService getAuditService() {
+    return auditService;
   }
 
   public AdapterDescriptionResourceManager manageAdapterDescriptions() {

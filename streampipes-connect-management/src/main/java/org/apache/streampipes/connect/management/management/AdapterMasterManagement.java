@@ -17,6 +17,9 @@
  */
 package org.apache.streampipes.connect.management.management;
 
+import org.apache.streampipes.audit.api.AuditOutcome;
+import org.apache.streampipes.audit.events.AdapterAuditRecorder;
+import org.apache.streampipes.audit.events.AdapterCreationReason;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetrics;
@@ -40,6 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * This class is responsible for managing all the adapter instances which are executed on worker
@@ -56,12 +60,15 @@ public class AdapterMasterManagement {
   private final ExtensionServiceRequestManager requestManager;
   private final SpResourceManager resourceManager;
   private final AdapterResourceManager adapterResourceManager;
+  private final AdapterAuditRecorder adapterAudit;
 
   public AdapterMasterManagement(SpResourceManager resourceManager,
                                  AdapterMetrics adapterMetrics,
                                  WorkerRestClient workerRestClient,
                                  IExtensionsServiceStorage extensionsServiceStorage,
-                                 ExtensionServiceRequestManager requestManager) {
+                                 ExtensionServiceRequestManager requestManager,
+                                 AdapterAuditRecorder adapterAudit) {
+    this.adapterAudit = Objects.requireNonNull(adapterAudit);
     this.extensionsServiceStorage = extensionsServiceStorage;
     this.adapterMetrics = adapterMetrics;
     this.resourceManager = resourceManager;
@@ -75,31 +82,40 @@ public class AdapterMasterManagement {
                          String principalSid)
       throws AdapterException {
 
-    // Create elementId for datastream
-    var dataStreamElementId = ElementIdGenerator.makeElementId(SpDataStream.class);
-    adapterDescription.setElementId(adapterId);
-    adapterDescription.setCreatedAt(System.currentTimeMillis());
-    adapterDescription.setCorrespondingDataStreamElementId(dataStreamElementId);
+    boolean adapterPersisted = false;
+    String streamId = null;
+    boolean streamCreated;
+    try {
+      streamId = ElementIdGenerator.makeElementId(SpDataStream.class);
+      adapterDescription.setElementId(adapterId);
+      adapterDescription.setCreatedAt(System.currentTimeMillis());
+      adapterDescription.setCorrespondingDataStreamElementId(streamId);
+      adapterDescription.setEventGrounding(GroundingUtils.createEventGrounding());
+      AdapterTransformationConfigDefaults.applyTo(adapterDescription);
+      adapterResourceManager.encryptAndCreate(adapterDescription);
+      adapterPersisted = true;
 
-    // Add EventGrounding to AdapterDescription
-    var eventGrounding = GroundingUtils.createEventGrounding();
-    adapterDescription.setEventGrounding(eventGrounding);
-
-    AdapterTransformationConfigDefaults.applyTo(adapterDescription);
-    adapterResourceManager.encryptAndCreate(adapterDescription);
-
-    // Stream is only created if the adpater is successfully stored
-    createDataStreamForAdapter(adapterDescription, adapterId, dataStreamElementId, principalSid);
+      streamCreated = createDataStreamForAdapter(adapterDescription, adapterId, streamId, principalSid);
+    } catch (AdapterException | RuntimeException e) {
+      adapterAudit.created(principalSid, adapterId, streamId,
+          adapterPersisted ? AuditOutcome.PARTIAL : AuditOutcome.FAILED,
+          adapterPersisted ? AdapterCreationReason.STREAM_CREATION_FAILED : AdapterCreationReason.ADAPTER_CREATION_FAILED);
+      throw e;
+    }
+    adapterAudit.created(principalSid, adapterId, streamId,
+        streamCreated ? AuditOutcome.SUCCEEDED : AuditOutcome.PARTIAL,
+        streamCreated ? null : AdapterCreationReason.STREAM_CREATION_REJECTED);
   }
 
-  private void createDataStreamForAdapter(AdapterDescription adapterDescription, String adapterId,
+  boolean createDataStreamForAdapter(AdapterDescription adapterDescription, String adapterId,
                                           String streamId, String principalSid)
       throws AdapterException {
     var storedDescription =
         new SourcesManagement().createAdapterDataStream(adapterDescription, streamId);
     storedDescription.setCorrespondingAdapterId(adapterId);
-    installDataSource(storedDescription, principalSid);
+    boolean success = installDataSource(storedDescription, principalSid);
     LOG.info("Install source (source URL: {} in backend", adapterDescription.getElementId());
+    return success;
   }
 
   public AdapterDescription getAdapter(String elementId) throws AdapterException {
@@ -221,7 +237,7 @@ public class AdapterMasterManagement {
     }
   }
 
-  private void installDataSource(SpDataStream stream, String principalSid) throws AdapterException {
+  private boolean installDataSource(SpDataStream stream, String principalSid) throws AdapterException {
     var storageApi = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage();
     var verifier = new TypedElementVerifier<>(
         stream,
@@ -233,6 +249,6 @@ public class AdapterMasterManagement {
         requestManager,
         resourceManager
     );
-    verifier.verifyAndAdd(principalSid, false);
+    return verifier.verifyAndAdd(principalSid, false).isSuccess();
   }
 }

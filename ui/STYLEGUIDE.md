@@ -315,7 +315,7 @@ For compact inline loading states, use a smaller diameter and row layout:
 
 #### Tables
 
-For rendering tables, always use the `sp-table` component which comes with pre-defined features for paging, sorting and layout.
+For rendering tables, always use the `sp-table` component which comes with pre-defined features for paging, sorting and layout. For server-paged results, set `[showPaginator]="false"` and provide feature-specific pagination controls; this disables client-side pagination. Set `[rowsClickable]="true"` and handle `(rowClicked)` for row activation by click, Enter or Space; nested controls retain their own keyboard behavior.
 In most cases, table actions should be shown in a popup menu to ensure a clean UI.
 Check the examples to see how to add table actions.
 

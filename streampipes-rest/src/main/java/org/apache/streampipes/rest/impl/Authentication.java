@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.audit.events.AuthenticationAuditRecorder;
+import org.apache.streampipes.audit.events.AuthenticationMethod;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
@@ -45,6 +47,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,10 +77,13 @@ public class Authentication extends AbstractRestResource {
 
   AuthenticationManager authenticationManager;
   private final SpResourceManager resourceManager;
+  private final AuthenticationAuditRecorder audit;
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
 
   public Authentication(AuthenticationManager authenticationManager,
-                        SpResourceManager resourceManager) {
+                        SpResourceManager resourceManager,
+                        AuthenticationAuditRecorder audit) {
+    this.audit = java.util.Objects.requireNonNull(audit);
     this.authenticationManager = authenticationManager;
     this.resourceManager = resourceManager;
     this.coreConfigurationStorage = resourceManager.getCoreConfigurationStorage();
@@ -95,8 +101,12 @@ public class Authentication extends AbstractRestResource {
           new UsernamePasswordAuthenticationToken(login.username(), login.password()));
       SecurityContextHolder.getContext().setAuthentication(authentication);
       return processAuth(authentication, login.rememberMe(), request, response);
-    } catch (BadCredentialsException e) {
-      return unauthorized();
+    } catch (AuthenticationException e) {
+      audit.loginDenied(AuthenticationMethod.PASSWORD);
+      if (e instanceof BadCredentialsException) {
+        return unauthorized();
+      }
+      throw e;
     }
   }
 
@@ -146,8 +156,9 @@ public class Authentication extends AbstractRestResource {
     RefreshTokenService refreshTokenService = new RefreshTokenService();
     String existingToken = getRefreshTokenFromRequest(request);
 
+    String actor = null;
     if (existingToken != null) {
-      refreshTokenService.deleteAllRefreshTokensByRawToken(existingToken);
+      actor = refreshTokenService.deleteAllRefreshTokensAndGetPrincipalId(existingToken);
     } else {
       var authentication = SecurityContextHolder.getContext().getAuthentication();
       if (authentication != null && authentication.getPrincipal() instanceof PrincipalUserDetails<?> principal) {
@@ -155,8 +166,18 @@ public class Authentication extends AbstractRestResource {
       }
     }
 
+    if (actor == null) {
+      var authentication = SecurityContextHolder.getContext().getAuthentication();
+      if (authentication != null && authentication.isAuthenticated()
+          && authentication.getPrincipal() instanceof PrincipalUserDetails<?> principal) {
+        actor = principal.getDetails().getPrincipalId();
+      }
+    }
     clearRefreshCookie(request, response);
     SecurityContextHolder.clearContext();
+    if (actor != null) {
+      audit.loggedOut(actor);
+    }
 
     return ok();
   }
@@ -239,6 +260,7 @@ public class Authentication extends AbstractRestResource {
       }
       ((UserAccount) principal).setLastLoginAtMillis(System.currentTimeMillis());
       resourceManager.manageUsers().updateUser(principal);
+      audit.loggedIn(principal.getPrincipalId(), AuthenticationMethod.PASSWORD);
       return ok(tokenResp);
     } else {
       throw new BadCredentialsException("Could not create auth token");
