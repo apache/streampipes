@@ -32,8 +32,10 @@ public final class StandardAuditEvents implements AuditEventProvider {
   public static final AuditEventDefinition<AuthenticationDetails> AUTH_LOGOUT =
       new AuditEventDefinition<>("sp.auth.logout", AuthenticationDetails.class);
 
+  private static final List<AuditEventDefinition<?>> EVENT_TYPES = List.of(ADAPTER_CREATE, AUTH_LOGIN, AUTH_LOGOUT);
+
   @Override
   public List<AuditEventDefinition<?>> eventTypes() {
-    return List.of(ADAPTER_CREATE, AUTH_LOGIN, AUTH_LOGOUT);
+    return EVENT_TYPES;
   }
 }

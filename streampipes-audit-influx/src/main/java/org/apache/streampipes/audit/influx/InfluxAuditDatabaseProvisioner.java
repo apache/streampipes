@@ -34,6 +34,28 @@ import java.time.Duration;
 
 /** InfluxDB 2.x bucket and default InfluxQL mapping provisioning, without altering existing retention. */
 final class InfluxAuditDatabaseProvisioner implements AutoCloseable {
+  private static final String ORGANIZATIONS_PATH = "api/v2/orgs";
+  private static final String BUCKETS_PATH = "api/v2/buckets";
+  private static final String MAPPINGS_PATH = "api/v2/dbrps";
+  private static final String ORGANIZATION_QUERY = "org";
+  private static final String DATABASE_QUERY = "db";
+  private static final String ORGANIZATIONS = "orgs";
+  private static final String ORGANIZATION_ID = "orgID";
+  private static final String NAME = "name";
+  private static final String MAPPING_CONTENT = "content";
+  private static final String BUCKETS = "buckets";
+  private static final String DATABASE = "database";
+  private static final String DEFAULT_MAPPING = "default";
+  private static final String DEFAULT_RETENTION_POLICY = "autogen";
+  private static final String RETENTION_POLICY = "retention_policy";
+  private static final String BUCKET_ID = "bucketID";
+  private static final String RETENTION_RULES = "retentionRules";
+  private static final String ID = "id";
+  private static final String ERROR_CODE = "code";
+  private static final String NOT_FOUND_CODE = "not found";
+  private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json");
+  private static final int HTTP_NOT_FOUND = 404;
+
   private final OkHttpClient client;
   private final HttpUrl base;
   private final String database;
@@ -53,57 +75,58 @@ final class InfluxAuditDatabaseProvisioner implements AutoCloseable {
   }
 
   void ensureDatabase() {
-    var organizations = request(base.newBuilder().addPathSegments("api/v2/orgs")
-        .addQueryParameter("org", organization).build(), null).path("orgs");
+    var organizations = request(base.newBuilder().addPathSegments(ORGANIZATIONS_PATH)
+        .addQueryParameter(ORGANIZATION_QUERY, organization).build(), null).path(ORGANIZATIONS);
     String orgId = null;
     for (var org : organizations) {
-      if (organization.equals(org.path("name").asText())) {
+      if (organization.equals(org.path(NAME).asText())) {
         orgId = requiredId(org);
       }
     }
     if (orgId == null) {
       throw new IllegalStateException("Audit Influx organization not found");
     }
-    var mappingsUrl = base.newBuilder().addPathSegments("api/v2/dbrps")
-        .addQueryParameter("orgID", orgId).addQueryParameter("db", database).build();
-    var mappings = request(mappingsUrl, null).path("content");
+    var mappingsUrl = base.newBuilder().addPathSegments(MAPPINGS_PATH)
+        .addQueryParameter(ORGANIZATION_ID, orgId).addQueryParameter(DATABASE_QUERY, database).build();
+    var mappings = request(mappingsUrl, null).path(MAPPING_CONTENT);
     if (!mappings.isArray()) {
       throw new IllegalStateException("Invalid audit database mappings response");
     }
-    var bucketsUrl = base.newBuilder().addPathSegments("api/v2/buckets")
-        .addQueryParameter("orgID", orgId).addQueryParameter("name", database).build();
-    var buckets = request(bucketsUrl, null, true).path("buckets");
+    var bucketsUrl = base.newBuilder().addPathSegments(BUCKETS_PATH)
+        .addQueryParameter(ORGANIZATION_ID, orgId).addQueryParameter(NAME, database).build();
+    var buckets = request(bucketsUrl, null, true).path(BUCKETS);
     if (!buckets.isArray()) {
       throw new IllegalStateException("Invalid audit buckets response");
     }
     String bucketId = null;
     for (var bucket : buckets) {
-      if (database.equals(bucket.path("name").asText())) {
+      if (database.equals(bucket.path(NAME).asText())) {
         bucketId = requiredId(bucket);
       }
     }
     for (var mapping : mappings) {
-      if (database.equals(mapping.path("database").asText())
-          && (mapping.path("default").asBoolean() || "autogen".equals(mapping.path("retention_policy").asText()))) {
-        if (bucketId != null && bucketId.equals(mapping.path("bucketID").asText())
-            && mapping.path("default").asBoolean()) {
+      if (database.equals(mapping.path(DATABASE).asText())
+          && (mapping.path(DEFAULT_MAPPING).asBoolean()
+          || DEFAULT_RETENTION_POLICY.equals(mapping.path(RETENTION_POLICY).asText()))) {
+        if (bucketId != null && bucketId.equals(mapping.path(BUCKET_ID).asText())
+            && mapping.path(DEFAULT_MAPPING).asBoolean()) {
           return;
         }
         throw new IllegalStateException("Conflicting audit database mapping; manual configuration required");
       }
     }
     if (bucketId == null) {
-      var body = mapper.createObjectNode().put("orgID", orgId).put("name", database);
-      body.putArray("retentionRules");
-      bucketId = requiredId(request(base.newBuilder().addPathSegments("api/v2/buckets").build(), body));
+      var body = mapper.createObjectNode().put(ORGANIZATION_ID, orgId).put(NAME, database);
+      body.putArray(RETENTION_RULES);
+      bucketId = requiredId(request(base.newBuilder().addPathSegments(BUCKETS_PATH).build(), body));
     }
-    var mapping = mapper.createObjectNode().put("orgID", orgId).put("bucketID", bucketId)
-        .put("database", database).put("retention_policy", "autogen").put("default", true);
-    request(base.newBuilder().addPathSegments("api/v2/dbrps").build(), mapping);
+    var mapping = mapper.createObjectNode().put(ORGANIZATION_ID, orgId).put(BUCKET_ID, bucketId)
+        .put(DATABASE, database).put(RETENTION_POLICY, DEFAULT_RETENTION_POLICY).put(DEFAULT_MAPPING, true);
+    request(base.newBuilder().addPathSegments(MAPPINGS_PATH).build(), mapping);
   }
 
   private String requiredId(JsonNode node) {
-    var id = node.path("id").asText();
+    var id = node.path(ID).asText();
     if (id.isBlank()) {
       throw new IllegalStateException("Invalid audit provisioning response");
     }
@@ -117,15 +140,15 @@ final class InfluxAuditDatabaseProvisioner implements AutoCloseable {
   private JsonNode request(HttpUrl url, JsonNode body, boolean allowMissingBucket) {
     var request = new Request.Builder().url(url);
     if (body != null) {
-      request.post(RequestBody.create(MediaType.get("application/json"), body.toString()));
+      request.post(RequestBody.create(JSON_MEDIA_TYPE, body.toString()));
     }
     try (var response = client.newCall(request.build()).execute()) {
       // InfluxDB 2.6 returns 404 rather than an empty list for a missing named bucket.
       // Accept only that structured lookup response, never arbitrary endpoint or mutation failures.
-      if (allowMissingBucket && response.code() == 404 && response.body() != null) {
+      if (allowMissingBucket && response.code() == HTTP_NOT_FOUND && response.body() != null) {
         var error = mapper.readTree(response.body().byteStream());
-        if (error != null && "not found".equals(error.path("code").asText())) {
-          return mapper.createObjectNode().set("buckets", mapper.createArrayNode());
+        if (error != null && NOT_FOUND_CODE.equals(error.path(ERROR_CODE).asText())) {
+          return mapper.createObjectNode().set(BUCKETS, mapper.createArrayNode());
         }
       }
       if (!response.isSuccessful() || response.body() == null) {

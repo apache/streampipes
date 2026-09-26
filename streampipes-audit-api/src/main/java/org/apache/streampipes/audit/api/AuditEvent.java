@@ -31,13 +31,11 @@ public record AuditEvent<T extends AuditDetails>(UUID eventId, Instant recordedA
     Objects.requireNonNull(recordedAt);
     Objects.requireNonNull(definition);
     Objects.requireNonNull(outcome);
-    if (actor == null || actor.isBlank() || actor.length() > 256) {
+    if (actor == null || actor.isBlank() || actor.length() > AuditValidation.MAX_ACTOR_LENGTH) {
       throw new IllegalArgumentException("Invalid audit actor");
     }
-    if (resourceType != null && (resourceType.isBlank() || resourceType.length() > 128)) {
-      throw new IllegalArgumentException("Invalid audit resource type");
-    }
-    if (resourceId != null && (resourceId.isBlank() || resourceId.length() > 1024)) {
+    AuditValidation.validateResourceType(resourceType);
+    if (resourceId != null && (resourceId.isBlank() || resourceId.length() > AuditValidation.MAX_RESOURCE_ID_LENGTH)) {
       throw new IllegalArgumentException("Invalid audit resource ID");
     }
     if (details != null && !definition.detailsType().isInstance(details)) {

@@ -52,6 +52,10 @@ import java.util.concurrent.atomic.AtomicLong;
 /** Bounded best-effort recording. Only the worker performs storage I/O and owns storage shutdown. */
 public final class DefaultAuditService implements AuditService {
   private static final Logger LOG = LoggerFactory.getLogger(DefaultAuditService.class);
+  private static final int DEFAULT_QUEUE_CAPACITY = 1024;
+  private static final Duration DEFAULT_SHUTDOWN_TIMEOUT = Duration.ofSeconds(10);
+  private static final String WORKER_NAME = "audit-writer";
+  private static final String UNKNOWN_ACTOR = "unknown";
   private static final int MAX_DETAILS_BYTES = 16 * 1024;
   private final Map<String, AuditEventDefinition<?>> definitions;
   private final AuditEventStore store;
@@ -72,7 +76,7 @@ public final class DefaultAuditService implements AuditService {
   private volatile boolean available;
 
   public DefaultAuditService(List<AuditEventProvider> providers, AuditEventStore store, Clock clock) {
-    this(providers, store, clock, 1024, Duration.ofSeconds(10));
+    this(providers, store, clock, DEFAULT_QUEUE_CAPACITY, DEFAULT_SHUTDOWN_TIMEOUT);
   }
 
   public DefaultAuditService(List<AuditEventProvider> providers, AuditEventStore store, Clock clock,
@@ -80,6 +84,15 @@ public final class DefaultAuditService implements AuditService {
     if (capacity < 1 || shutdownTimeout.isNegative() || shutdownTimeout.isZero()) {
       throw new IllegalArgumentException("Invalid audit queue configuration");
     }
+    this.definitions = registerDefinitions(providers);
+    this.store = store;
+    this.clock = clock;
+    this.capacity = capacity;
+    this.shutdownTimeout = shutdownTimeout;
+    this.worker = Thread.ofPlatform().daemon().name(WORKER_NAME).start(this::run);
+  }
+
+  private static Map<String, AuditEventDefinition<?>> registerDefinitions(List<AuditEventProvider> providers) {
     var registered = new HashMap<String, AuditEventDefinition<?>>();
     for (var provider : providers) {
       for (var definition : provider.eventTypes()) {
@@ -88,47 +101,53 @@ public final class DefaultAuditService implements AuditService {
         }
       }
     }
-    this.definitions = Map.copyOf(registered);
-    this.store = store;
-    this.clock = clock;
-    this.capacity = capacity;
-    this.shutdownTimeout = shutdownTimeout;
-    this.worker = Thread.ofPlatform().daemon().name("audit-writer").start(this::run);
+    return Map.copyOf(registered);
   }
 
   @Override
   public <T extends AuditDetails> void record(AuditEventDefinition<T> definition, AuditOutcome outcome,
                                               String actor, String resourceId, T details) {
     try {
-      actor = actor == null || actor.isBlank() ? "unknown" : actor;
-      var recordedAt = clock.instant();
-      if (!definition.equals(definitions.get(definition.id()))) {
-        throw new IllegalArgumentException("Unregistered audit event type");
-      }
-      String resourceType = definition.resourceType();
-      if (resourceId != null && resourceType == null) {
-        throw new IllegalArgumentException("Resource ID supplied for an event without a resource type");
-      }
-      // Validate the envelope, but never retain a reference to the caller's mutable details.
-      var event = new AuditEvent<>(UUID.randomUUID(), recordedAt, definition, outcome, actor, resourceType, resourceId, details);
-      byte[] snapshot = mapper.writeValueAsBytes(details);
-      if (snapshot.length > MAX_DETAILS_BYTES) {
-        throw new IllegalArgumentException("Audit details exceed size limit");
-      }
-      var pending = new PendingEvent<>(event.eventId(), recordedAt, definition, outcome, actor, resourceType, resourceId, snapshot);
-      synchronized (monitor) {
-        if (!accepting || queue.size() >= capacity) {
-          dropped.incrementAndGet();
-          failures.incrementAndGet();
-          return;
-        }
-        queue.addLast(pending);
-        monitor.notifyAll();
-      }
+      enqueue(snapshot(definition, outcome, actor, resourceId, details));
     } catch (JsonProcessingException | RuntimeException e) {
       failures.incrementAndGet();
       dropped.incrementAndGet();
       LOG.warn("Audit event rejected ({})", e.getClass().getSimpleName());
+    }
+  }
+
+  private <T extends AuditDetails> PendingEvent<T> snapshot(AuditEventDefinition<T> definition, AuditOutcome outcome,
+                                                           String actor, String resourceId, T details)
+      throws JsonProcessingException {
+    actor = actor == null || actor.isBlank() ? UNKNOWN_ACTOR : actor;
+    var recordedAt = clock.instant();
+    if (!definition.equals(definitions.get(definition.id()))) {
+      throw new IllegalArgumentException("Unregistered audit event type");
+    }
+    String resourceType = definition.resourceType();
+    if (resourceId != null && resourceType == null) {
+      throw new IllegalArgumentException("Resource ID supplied for an event without a resource type");
+    }
+    // Validate the envelope, but never retain a reference to the caller's mutable details.
+    var event = new AuditEvent<>(UUID.randomUUID(), recordedAt, definition, outcome, actor, resourceType,
+        resourceId, details);
+    byte[] snapshot = mapper.writeValueAsBytes(details);
+    if (snapshot.length > MAX_DETAILS_BYTES) {
+      throw new IllegalArgumentException("Audit details exceed size limit");
+    }
+    return new PendingEvent<>(event.eventId(), recordedAt, definition, outcome, actor, resourceType,
+        resourceId, snapshot);
+  }
+
+  private void enqueue(PendingEvent<?> pending) {
+    synchronized (monitor) {
+      if (!accepting || queue.size() >= capacity) {
+        dropped.incrementAndGet();
+        failures.incrementAndGet();
+        return;
+      }
+      queue.addLast(pending);
+      monitor.notifyAll();
     }
   }
 

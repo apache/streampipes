@@ -48,7 +48,15 @@ import java.util.concurrent.TimeUnit;
 
 /** Single-writer append adapter with independent bounded reads. Retention is not implemented. */
 public final class InfluxAuditEventStore implements AuditEventStore, AuditEventReader {
-  private static final String MEASUREMENT = "audit_events";
+  private static final String DEFAULT_ORGANIZATION = "sp";
+  private static final String WATERMARK_QUERY = "SELECT LAST(\"%s\") FROM \"%s\""
+      .formatted(InfluxAuditSchema.EVENT_ID, InfluxAuditSchema.MEASUREMENT);
+  private static final int MAXIMUM_EVENT_BYTES = 32 * 1024;
+  private static final int MAXIMUM_WRITE_ATTEMPTS = 2;
+  private static final int HTTP_NO_CONTENT = 204;
+  private static final int HTTP_TOO_MANY_REQUESTS = 429;
+  private static final int HTTP_SERVER_ERROR_MINIMUM = 500;
+  private static final long CLOCK_SKEW_TOLERANCE_NANOS = TimeUnit.SECONDS.toNanos(1);
   private static final Duration TIMEOUT = Duration.ofSeconds(5);
   private final InfluxQueryTransport queries;
   private final InfluxWriteTransport writer;
@@ -61,7 +69,7 @@ public final class InfluxAuditEventStore implements AuditEventStore, AuditEventR
   private boolean closed;
 
   public InfluxAuditEventStore(String url, String database, String token) {
-    this(url, database, token, "sp");
+    this(url, database, token, DEFAULT_ORGANIZATION);
   }
 
   public InfluxAuditEventStore(String url, String database, String token, String organization) {
@@ -69,7 +77,7 @@ public final class InfluxAuditEventStore implements AuditEventStore, AuditEventR
   }
 
   InfluxAuditEventStore(String url, String database, String token, Clock clock) {
-    this(url, database, token, "sp", clock);
+    this(url, database, token, DEFAULT_ORGANIZATION, clock);
   }
 
   private InfluxAuditEventStore(String url, String database, String token, String organization, Clock clock) {
@@ -110,45 +118,46 @@ public final class InfluxAuditEventStore implements AuditEventStore, AuditEventR
       initializeWatermark();
     }
     long recordedAt = toNanos(event.recordedAt());
-    if (lastTimestamp > Math.addExact(toNanos(clock.instant()), TimeUnit.SECONDS.toNanos(1))) {
+    if (lastTimestamp > Math.addExact(toNanos(clock.instant()), CLOCK_SKEW_TOLERANCE_NANOS)) {
       throw new IllegalStateException("Audit timestamp watermark is ahead of the clock");
     }
     long timestamp = Math.max(recordedAt, Math.addExact(lastTimestamp, 1));
-    var point = Point.measurement(MEASUREMENT)
+    var point = Point.measurement(InfluxAuditSchema.MEASUREMENT)
         .time(timestamp, TimeUnit.NANOSECONDS)
-        .tag("event_type", event.definition().id())
-        .addField("event_id", event.eventId().toString())
-        .addField("outcome", event.outcome().name().toLowerCase(Locale.ROOT))
-        .addField("actor", event.actor());
+        .tag(InfluxAuditSchema.EVENT_TYPE, event.definition().id())
+        .addField(InfluxAuditSchema.EVENT_ID, event.eventId().toString())
+        .addField(InfluxAuditSchema.OUTCOME, event.outcome().name().toLowerCase(Locale.ROOT))
+        .addField(InfluxAuditSchema.ACTOR, event.actor());
     if (event.resourceType() != null) {
-      point.addField("resource_type", event.resourceType());
+      point.addField(InfluxAuditSchema.RESOURCE_TYPE, event.resourceType());
     }
     if (event.resourceId() != null) {
-      point.addField("resource_id", event.resourceId());
+      point.addField(InfluxAuditSchema.RESOURCE_ID, event.resourceId());
     }
     ObjectNode details = event.details() == null ? mapper.createObjectNode() : mapper.valueToTree(event.details());
     if (timestamp != recordedAt) {
-      if (details.has("recorded_at")) {
+      if (details.has(InfluxAuditSchema.RECORDED_AT)) {
         throw new IllegalArgumentException("Reserved audit details property");
       }
-      details.put("recorded_at", event.recordedAt().toString());
+      details.put(InfluxAuditSchema.RECORDED_AT, event.recordedAt().toString());
     }
     if (!details.isEmpty()) {
-      point.addField("details", details.toString());
+      point.addField(InfluxAuditSchema.DETAILS, details.toString());
     }
     String line = point.build().lineProtocol();
-    if (line.getBytes(StandardCharsets.UTF_8).length > 32 * 1024) {
+    if (line.getBytes(StandardCharsets.UTF_8).length > MAXIMUM_EVENT_BYTES) {
       throw new IllegalArgumentException("Audit event exceeds size limit");
     }
     // Reserve before I/O; even an uncertain write must not let a later event reuse the timestamp.
     lastTimestamp = timestamp;
-    for (int attempt = 0; attempt < 2; attempt++) {
+    for (int attempt = 0; attempt < MAXIMUM_WRITE_ATTEMPTS; attempt++) {
       try {
         int status = writer.write(line);
-        if (status == 204) {
+        if (status == HTTP_NO_CONTENT) {
           return;
         }
-        if (attempt == 0 && (status == 429 || status >= 500)) {
+        if (attempt < MAXIMUM_WRITE_ATTEMPTS - 1
+            && (status == HTTP_TOO_MANY_REQUESTS || status >= HTTP_SERVER_ERROR_MINIMUM)) {
           continue;
         }
         throw new IllegalStateException("Audit write failed with HTTP " + status);
@@ -156,7 +165,7 @@ public final class InfluxAuditEventStore implements AuditEventStore, AuditEventR
         if (Thread.currentThread().isInterrupted()) {
           throw new IllegalStateException("Audit write interrupted");
         }
-        if (attempt == 1) {
+        if (attempt == MAXIMUM_WRITE_ATTEMPTS - 1) {
           throw new IllegalStateException("Audit write unavailable");
         }
       }
@@ -176,11 +185,11 @@ public final class InfluxAuditEventStore implements AuditEventStore, AuditEventR
   private void initializeWatermark() {
     long maximum = 0;
     // No current-time upper bound: clock rollback must not conceal a stored future watermark.
-    try (var cursor = queries.open(new Query("SELECT LAST(\"event_id\") FROM \"audit_events\""),
+    try (var cursor = queries.open(new Query(WATERMARK_QUERY),
         QueryTimestampFormat.EPOCH_NANOS)) {
       while (cursor.hasNext()) {
         var batch = cursor.next();
-        int time = batch.columns().indexOf("time");
+        int time = batch.columns().indexOf(InfluxAuditSchema.TIME);
         if (time < 0 && !batch.rows().isEmpty()) {
           throw new IllegalStateException("Audit watermark response has no timestamp");
         }

@@ -16,20 +16,21 @@
  *
  */
 
-package org.apache.streampipes.audit.api;
+package org.apache.streampipes.audit.influx;
 
-import java.util.Objects;
+/** Shared storage names for audit writes and InfluxQL reads. */
+final class InfluxAuditSchema {
+  static final String MEASUREMENT = "audit_events";
+  static final String TIME = "time";
+  static final String EVENT_ID = "event_id";
+  static final String EVENT_TYPE = "event_type";
+  static final String OUTCOME = "outcome";
+  static final String ACTOR = "actor";
+  static final String RESOURCE_TYPE = "resource_type";
+  static final String RESOURCE_ID = "resource_id";
+  static final String DETAILS = "details";
+  static final String RECORDED_AT = "recorded_at";
 
-public record AuditEventDefinition<T extends AuditDetails>(String id, Class<T> detailsType, String resourceType) {
-  /** Defines an event without an associated resource, for example a login. */
-  public AuditEventDefinition(String id, Class<T> detailsType) {
-    this(id, detailsType, null);
-  }
-
-  public AuditEventDefinition {
-    Objects.requireNonNull(id);
-    Objects.requireNonNull(detailsType);
-    AuditValidation.validateResourceType(resourceType);
-    AuditValidation.validateEventType(id);
+  private InfluxAuditSchema() {
   }
 }

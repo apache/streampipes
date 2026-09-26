@@ -24,22 +24,29 @@ import java.util.Locale;
 
 public record AuditQuery(Instant from, Instant to, String eventType, String actor, String outcome,
                          int limit, String cursor) {
+  private static final Duration MAX_TIME_RANGE = Duration.ofDays(31);
+  // Keep timestamps within the nanosecond range supported by the initial storage adapter.
+  private static final Instant MAX_TIMESTAMP = Instant.parse("2262-01-01T00:00:00Z");
+  private static final int MAX_PAGE_SIZE = 200;
+  private static final int MAX_OUTCOME_LENGTH = 16;
+  private static final int MAX_CURSOR_LENGTH = 256;
+
   public AuditQuery {
     if (from == null || to == null || !from.isBefore(to) || from.isBefore(Instant.EPOCH)
-        || Duration.between(from, to).compareTo(Duration.ofDays(31)) > 0
-        || to.isAfter(Instant.parse("2262-01-01T00:00:00Z")) || limit < 1 || limit > 200) {
+        || Duration.between(from, to).compareTo(MAX_TIME_RANGE) > 0
+        || to.isAfter(MAX_TIMESTAMP) || limit < 1 || limit > MAX_PAGE_SIZE) {
       throw new IllegalArgumentException("Invalid audit time range or page size");
     }
-    eventType = normalize(eventType, 128);
-    actor = normalize(actor, 256);
-    outcome = normalize(outcome, 16);
-    if (eventType != null && !eventType.matches("[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*)+")) {
-      throw new IllegalArgumentException("Invalid audit event type");
+    eventType = normalize(eventType, AuditValidation.MAX_EVENT_TYPE_LENGTH);
+    actor = normalize(actor, AuditValidation.MAX_ACTOR_LENGTH);
+    outcome = normalize(outcome, MAX_OUTCOME_LENGTH);
+    if (eventType != null) {
+      AuditValidation.validateEventType(eventType);
     }
     if (outcome != null) {
       outcome = AuditOutcome.valueOf(outcome.toUpperCase(Locale.ROOT)).name().toLowerCase(Locale.ROOT);
     }
-    if (cursor != null && cursor.length() > 256) {
+    if (cursor != null && cursor.length() > MAX_CURSOR_LENGTH) {
       throw new IllegalArgumentException("Invalid audit cursor");
     }
   }
