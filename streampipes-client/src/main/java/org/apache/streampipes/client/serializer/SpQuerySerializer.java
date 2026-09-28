@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.client.serializer;
 
-import org.apache.streampipes.model.datalake.DataSeries;
-import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.dataset.DataSeries;
+import org.apache.streampipes.model.dataset.SpQueryResult;
 
 import java.io.IOException;
 import java.util.ArrayList;

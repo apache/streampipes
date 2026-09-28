@@ -36,7 +36,7 @@ import {
 import {
     ClientDashboardItem,
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DatasetMetadata,
     ExtendedTimeSettings,
     QuickTimeSelection,
     SpLogMessage,
@@ -135,7 +135,7 @@ export class ChartContainerComponent
     configuredWidget: DataExplorerWidgetModel;
 
     @Input()
-    dataLakeMeasure: DataLakeMeasure;
+    dataLakeMeasure: DatasetMetadata;
 
     @Input()
     editMode: boolean;

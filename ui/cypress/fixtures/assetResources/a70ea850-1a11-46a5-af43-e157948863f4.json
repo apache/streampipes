@@ -1,5 +1,5 @@
 {
-  "@class": "org.apache.streampipes.model.datalake.DataLakeMeasure",
+  "@class": "org.apache.streampipes.model.dataset.DatasetMetadata",
   "elementId": "a70ea850-1a11-46a5-af43-e157948863f4",
   "rev": null,
   "measureName": "adapter-2_2_asset-2_0.asset-2_2",

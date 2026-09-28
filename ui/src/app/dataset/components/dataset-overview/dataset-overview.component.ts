@@ -42,7 +42,7 @@ import {
 } from '@angular/material/table';
 import { DatasetOverviewEntry } from './dataset-overview-entry';
 import {
-    DataLakeMeasure,
+    DatasetMetadata,
     DatalakeRestService,
     DatasetSummaryDto,
     ExportProviderService,
@@ -156,14 +156,14 @@ export class DatasetOverviewComponent
     private router = inject(Router);
 
     readonly pageHeaderAssetLinkType$ =
-        this.assetFilterService.getAssetLinkType$('measurement');
+        this.assetFilterService.getAssetLinkType$('dataset');
     dataSource: MatTableDataSource<DatasetOverviewEntry> =
         new MatTableDataSource([]);
     availableDatasets: DatasetOverviewEntry[] = [];
     filteredDatasets: DatasetOverviewEntry[] = [];
     availableExportProvider: ExportProviderSettings[] = [];
     readonly assetContextConfig: SpTableAssetContextConfig = {
-        resourceLinkType: 'measurement',
+        resourceLinkType: 'dataset',
         resourceIdKey: 'elementId',
     };
 
@@ -211,7 +211,7 @@ export class DatasetOverviewComponent
     }
 
     ngOnInit(): void {
-        this.assetFilterService.applyAssetLinkType('measurement');
+        this.assetFilterService.applyAssetLinkType('dataset');
         this.assetFilter$ =
             this.assetFilterService.currentAssetFilter$.subscribe(filter => {
                 this.currentFilterIds = filter?.activeElementIds;
@@ -465,14 +465,14 @@ export class DatasetOverviewComponent
     showPermissionsDialog(element: DatasetOverviewEntry): void {
         this.datasetRestService.getMeasurement(element.elementId).subscribe({
             next: dataset => {
-                const resourceConfig: ObjectManageDialogResourceConfig<DataLakeMeasure> =
+                const resourceConfig: ObjectManageDialogResourceConfig<DatasetMetadata> =
                     {
                         resourceLabel: 'Dataset',
                         nameLabel: 'Dataset name',
                         nameProperty: 'measureName',
                         resourceNameReadonly: true,
                         showResourceDescription: false,
-                        assetLinkType: 'measurement',
+                        assetLinkType: 'dataset',
                     };
 
                 const dialogRef = this.dialogService.open(
@@ -556,7 +556,7 @@ export class DatasetOverviewComponent
         return entry;
     }
 
-    private openRetentionLogDialog(dataset: DataLakeMeasure): void {
+    private openRetentionLogDialog(dataset: DatasetMetadata): void {
         const dialogRef: DialogRef<DataRetentionLogDialogComponent> =
             this.dialogService.open(DataRetentionLogDialogComponent, {
                 panelType: PanelType.STANDARD_PANEL,

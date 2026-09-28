@@ -33,7 +33,8 @@ import org.lightcouch.CouchDbProperties;
 public class Utils {
 
   public static final String USER_DB_NAME = "users";
-  public static final String DATA_LAKE_DB_NAME = "data-lake";
+  public static final String LEGACY_DATA_LAKE_DB_NAME = "data-lake";
+  public static final String DATA_LAKE_DB_NAME = "dataset";
 
   public static CouchDbClient getCouchDbDataProcessorDescriptionClient() {
     return getCouchDbGsonClient("data-processor");

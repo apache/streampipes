@@ -16,9 +16,18 @@
   ~
   -->
 
-<div class="chip" [ngStyle]="{ color: accentColor }">
+<div
+    class="chip"
+    [ngStyle]="{ color: accentColor }"
+    [title]="
+        unsupported
+            ? ('Link type not supported. Edit the link to fix it.' | translate)
+            : ''
+    "
+    [attr.data-cy]="unsupported ? 'asset-link-type-unsupported' : null"
+>
     <mat-icon class="link-type-icon">{{
-        linkType?.linkIcon || 'link'
+        unsupported ? 'warning' : linkType?.linkIcon || 'link'
     }}</mat-icon>
     <span class="text-sm">{{ linkType?.linkLabel || 'Resource' }}</span>
 </div>

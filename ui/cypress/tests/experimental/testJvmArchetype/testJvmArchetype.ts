@@ -41,7 +41,7 @@ describe('Prepare StreamPipes for archetype test', () => {
                     .build(),
             )
             .addSink(
-                PipelineElementBuilder.create('data_lake')
+                PipelineElementBuilder.create('dataset')
                     .addInput('input', 'db_measurement', 'demo')
                     .build(),
             )

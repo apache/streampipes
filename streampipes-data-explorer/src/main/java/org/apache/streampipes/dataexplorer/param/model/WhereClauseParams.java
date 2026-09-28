@@ -17,13 +17,13 @@
  */
 package org.apache.streampipes.dataexplorer.param.model;
 
-import org.apache.streampipes.dataexplorer.api.IDataLakeQueryBuilder;
+import org.apache.streampipes.dataexplorer.api.IDatasetQueryBuilder;
 import org.apache.streampipes.dataexplorer.api.IQueryStatement;
 import org.apache.streampipes.dataexplorer.param.ProvidedRestQueryParamConverter;
-import org.apache.streampipes.model.datalake.FilterCondition;
-import org.apache.streampipes.model.datalake.FilterExpressionCondition;
-import org.apache.streampipes.model.datalake.FilterExpressionGroup;
-import org.apache.streampipes.model.datalake.FilterExpressionNode;
+import org.apache.streampipes.model.dataset.FilterCondition;
+import org.apache.streampipes.model.dataset.FilterExpressionCondition;
+import org.apache.streampipes.model.dataset.FilterExpressionGroup;
+import org.apache.streampipes.model.dataset.FilterExpressionNode;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -194,7 +194,7 @@ public class WhereClauseParams implements IQueryStatement {
   }
 
   @Override
-  public void buildStatement(IDataLakeQueryBuilder<?> builder) {
+  public void buildStatement(IDatasetQueryBuilder<?> builder) {
     if (!filterConditions.isEmpty()) {
       builder.withInclusiveFilter(filterConditions);
     }

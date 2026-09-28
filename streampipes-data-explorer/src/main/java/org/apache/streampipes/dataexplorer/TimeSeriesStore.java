@@ -21,13 +21,14 @@ package org.apache.streampipes.dataexplorer;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.api.ITimeSeriesStorage;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.runtime.Event;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 public class TimeSeriesStore {
 
@@ -38,7 +39,7 @@ public class TimeSeriesStore {
 
   public TimeSeriesStore(
       ITimeSeriesStorage timeSeriesStorage,
-      DataLakeMeasure measure,
+      DatasetMetadata measure,
       Environment environment,
       boolean enableImageStore
   ) {
@@ -59,6 +60,16 @@ public class TimeSeriesStore {
     this.timeSeriesStorage.onEvent(event);
 
     return true;
+  }
+
+  /**
+   * Stores a batch of events in a single write to the time series storage.
+   */
+  public void onEvents(List<Event> events) throws SpRuntimeException {
+    if (imageStore != null) {
+      events.forEach(this.imageStore::onEvent);
+    }
+    this.timeSeriesStorage.onEvents(events);
   }
 
   public void close() throws SpRuntimeException {

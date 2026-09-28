@@ -38,7 +38,7 @@ public class IotDbSessionProvider {
   public SessionPool getSessionPool(Environment environment) {
     return new SessionPool.Builder()
         .maxSize(environment.getIotDbSessionPoolSize().getValueOrDefault())
-        .enableCompression(environment.getIotDbSessionEnableCompression().getValueOrDefault())
+        .enableThriftRpcCompaction(environment.getIotDbSessionEnableCompression().getValueOrDefault())
         .host(environment.getTsStorageHost().getValueOrDefault())
         .port(environment.getTsStoragePort().getValueOrDefault())
         .user(environment.getIotDbUser().getValueOrDefault())

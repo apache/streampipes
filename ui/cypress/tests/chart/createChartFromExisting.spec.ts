@@ -26,7 +26,7 @@ describe('Test create chart from existing', () => {
         cy.initStreamPipesTest();
         ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
 
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.createTableChart(ChartUtils.ADAPTER_NAME);
         ChartUtils.saveChartConfiguration(false, false, sourceChart);
         ChartUtils.checkRowsChartsTable(1);

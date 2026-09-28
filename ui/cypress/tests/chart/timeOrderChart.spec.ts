@@ -23,7 +23,7 @@ describe('Test Time Order in Charts', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         ChartUtils.loadDataIntoDataLake('datalake/sample.csv');
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.createAndEditChart();
     });
 
@@ -74,7 +74,7 @@ describe('Test Time Order in Charts', () => {
         });
 
         // Check if dialog window is showing after applying changes to time settings
-        ChartUtils.goToDatalake(false);
+        ChartUtils.goToDataset(false);
         ChartUtils.checkIfConfirmationDialogIsShowing();
     });
 });

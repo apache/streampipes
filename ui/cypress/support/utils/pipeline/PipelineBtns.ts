@@ -68,6 +68,15 @@ export class PipelineBtns {
     }
 
     public static selectCompatibleElementBtn(elementName) {
+        if (elementName === 'dataset') {
+            return cy
+                .get(
+                    '[data-cy=sp-compatible-elements-dataset], [data-cy=sp-compatible-elements-data_lake]',
+                    { timeout: 10000 },
+                )
+                .first();
+        }
+
         return cy.dataCy('sp-compatible-elements-' + elementName);
     }
 

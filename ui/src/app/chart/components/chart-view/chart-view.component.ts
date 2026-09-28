@@ -28,7 +28,7 @@ import {
 import {
     ChartService,
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DatasetMetadata,
     EventPropertyUnion,
     FieldConfig,
     LinkageData,
@@ -134,7 +134,7 @@ export class ChartViewComponent
     editMode = true;
     dataView: DataExplorerWidgetModel;
     originalDataView: DataExplorerWidgetModel;
-    dataLakeMeasure: DataLakeMeasure;
+    dataLakeMeasure: DatasetMetadata;
     drawerWidth = 450;
 
     selectedAssets = [];
@@ -221,7 +221,7 @@ export class ChartViewComponent
         });
     }
 
-    onAddWidget(_event: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>) {
+    onAddWidget(_event: Tuple2<DatasetMetadata, DataExplorerWidgetModel>) {
         if (!this.originalDataView?.visualizationConfig) {
             this.setDefaultValuesOnOriginalDataViewForNewCharts();
         }

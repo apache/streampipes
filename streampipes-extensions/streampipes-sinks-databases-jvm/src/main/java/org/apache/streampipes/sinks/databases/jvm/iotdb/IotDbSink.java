@@ -38,7 +38,7 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
 import org.apache.iotdb.rpc.StatementExecutionException;
 import org.apache.iotdb.session.pool.SessionPool;
-import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
+import org.apache.tsfile.enums.TSDataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,7 +117,7 @@ public class IotDbSink implements IStreamPipesDataSink {
     // One connection is for current requests, and the other is a backup for fast-recovery when connection dies.
     sessionPool = new SessionPool.Builder()
         .maxSize(2)
-        .enableCompression(false)
+        .enableThriftRpcCompaction(false)
         .host(host)
         .port(port)
         .user(user)

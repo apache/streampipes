@@ -43,7 +43,7 @@ describe('Test Edit Adapter and Pipeline', () => {
                     .build(),
             )
             .addSink(
-                PipelineElementBuilder.create('data_lake')
+                PipelineElementBuilder.create('dataset')
                     .addInput('input', 'db_measurement', 'demo')
                     .build(),
             )
@@ -103,7 +103,7 @@ describe('Test Edit Adapter and Pipeline', () => {
 
         // Visit dashboard
         cy.wait(5000);
-        ChartUtils.goToDatalake();
+        ChartUtils.goToDataset();
         ChartUtils.createAndEditChart();
 
         cy.dataCy('data-explorer-field-selection-panel').should(

@@ -27,7 +27,7 @@ import { AbstractChartViewDirective } from '../abstract-chart-view.directive';
 import {
     ClientDashboardItem,
     DataExplorerWidgetModel,
-    DataLakeMeasure,
+    DatasetMetadata,
 } from '@streampipes/platform-services';
 import {
     FlexDirective,
@@ -58,7 +58,7 @@ export class DashboardSlideViewComponent
 {
     selectedWidgetIndex = 0;
     currentWidget: DataExplorerWidgetModel;
-    currentMeasure: DataLakeMeasure;
+    currentMeasure: DatasetMetadata;
     currentDashboardItem: ClientDashboardItem;
 
     displayWidget = false;
