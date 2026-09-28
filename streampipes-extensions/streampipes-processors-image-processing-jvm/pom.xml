@@ -45,6 +45,10 @@
             <groupId>org.boofcv</groupId>
             <artifactId>boofcv-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.boofcv</groupId>
+            <artifactId>boofcv-deepboof</artifactId>
+        </dependency>
     </dependencies>
 
 
