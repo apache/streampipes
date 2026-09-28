@@ -45,7 +45,7 @@
         <apache-sis-referencing.version>1.6</apache-sis-referencing.version>
         <antlr4.version>4.11.1</antlr4.version>
         <bcprov-jdk18on.version>1.86</bcprov-jdk18on.version>
-        <boofcv.version>1.1.0</boofcv.version>
+        <boofcv.version>1.5.0</boofcv.version>
         <classindex.version>3.9</classindex.version>
         <camel.version>4.22.0</camel.version>
         <commons-collections.version>3.2.2</commons-collections.version>
@@ -693,6 +693,21 @@
                 <groupId>org.boofcv</groupId>
                 <artifactId>boofcv-core</artifactId>
                 <version>${boofcv.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.boofcv</groupId>
+                <artifactId>boofcv-deepboof</artifactId>
+                <version>${boofcv.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.airlift</groupId>
+                        <artifactId>aircompressor</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.github.luben</groupId>
+                        <artifactId>zstd-jni</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
