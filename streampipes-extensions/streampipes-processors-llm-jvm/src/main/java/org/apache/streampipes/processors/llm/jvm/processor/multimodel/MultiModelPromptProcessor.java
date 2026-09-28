@@ -50,7 +50,7 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.ollama.OllamaChatModel;
@@ -93,7 +93,7 @@ public class MultiModelPromptProcessor implements IStreamPipesDataProcessor {
   private static final String PROVIDER_ANTHROPIC = "Anthropic";
   private static final String PROVIDER_OLLAMA = "Ollama";
   // Runtime state
-  private ChatLanguageModel chatModel;
+  private ChatModel chatModel;
   private ChatContext chatContext;
   private Set<String> inputFieldSelectors;
 
@@ -213,10 +213,10 @@ public class MultiModelPromptProcessor implements IStreamPipesDataProcessor {
   }
 
   /**
-   * Instantiates the correct {@link ChatLanguageModel} based on the selected
+   * Instantiates the correct {@link ChatModel} based on the selected
    * provider. Validation errors are surfaced as {@link SpRuntimeException}.
    */
-  private ChatLanguageModel buildChatModel(String provider,
+  private ChatModel buildChatModel(String provider,
                                            String modelName,
                                            String openApiKey,
                                            String anthropicKey,
