@@ -15,38 +15,26 @@
 # limitations under the License.
 #
 """
-DEPRECATED - the data lake measures container has been superseded by
-[Datasets][streampipes.model.container.Datasets].
+Implementation of a resource container for the dataset endpoint.
 """
 
-import warnings
-
-from streampipes.model.container.datasets import Datasets
-from streampipes.model.resource.data_lake_measure import DataLakeMeasure
+from streampipes.model.container.resource_container import ResourceContainer
+from streampipes.model.resource.dataset_metadata import DatasetMetadata
 from streampipes.model.resource.resource import Resource
 
 __all__ = [
-    "DataLakeMeasures",
+    "Datasets",
 ]
 
-DATA_LAKE_MEASURES_DEPRECATION_MESSAGE = (
-    "`DataLakeMeasures` is deprecated since 0.99.0 and will be removed in the release following 0.99.0; "
-    "please use `Datasets` instead."
-)
 
+class Datasets(ResourceContainer):
+    """Implementation of the resource container for the dataset endpoint.
 
-class DataLakeMeasures(Datasets):
-    """DEPRECATED - use [Datasets][streampipes.model.container.Datasets] instead.
+    This resource container is a collection of dataset metadata returned by the StreamPipes API.
+    It is capable of parsing the response content directly into a list of queried `DatasetMetadata`.
+    Furthermore, the resource container makes them accessible in a pythonic manner.
 
-    Deprecated since 0.99.0, scheduled for removal in the release following 0.99.0.
-
-    This container is kept for backwards compatibility only and bundles the deprecated
-    [DataLakeMeasure][streampipes.model.resource.DataLakeMeasure] resources.
     """
-
-    def __init__(self, resources: list[Resource]):
-        warnings.warn(DATA_LAKE_MEASURES_DEPRECATION_MESSAGE, DeprecationWarning, stacklevel=2)
-        super().__init__(resources=resources)
 
     @classmethod
     def _resource_cls(cls) -> type[Resource]:
@@ -54,7 +42,7 @@ class DataLakeMeasures(Datasets):
 
         Returns
         -------
-        type: DataLakeMeasure
+        type: DatasetMetadata
             class that describes an individual resource
         """
-        return DataLakeMeasure
+        return DatasetMetadata

@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.utils;
 
 import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 
 import java.util.List;
@@ -28,6 +29,8 @@ public class Utils {
   public static void removeCredentials(Principal principal) {
     if (principal instanceof UserAccount) {
       ((UserAccount) principal).setPassword("");
+    } else if (principal instanceof ServiceAccount) {
+      ((ServiceAccount) principal).setClientSecret("");
     }
   }
 

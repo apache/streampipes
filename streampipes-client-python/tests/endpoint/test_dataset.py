@@ -22,8 +22,8 @@ from urllib.parse import parse_qs
 
 from pydantic import ValidationError
 
-from streampipes.endpoint.api.data_lake_measure import (
-    DataLakeMeasureEndpoint,
+from streampipes.endpoint.api.dataset import (
+    DatasetEndpoint,
     StreamPipesQueryValidationError,
 )
 from streampipes.model.query import (
@@ -37,7 +37,7 @@ from streampipes.model.query import (
 class TestMeasurementGetQueryConfig(TestCase):
     def test_default(self):
         config_dict = {}
-        measurement_config = DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict)
+        measurement_config = DatasetEndpoint._validate_query_params(query_params=config_dict)
         result = measurement_config.build_query_string()
 
         self.assertEqual("?limit=1000", result)
@@ -45,7 +45,7 @@ class TestMeasurementGetQueryConfig(TestCase):
     def test_additional_param_given(self):
         config_dict = {"columns": ["time", "value_25"]}
 
-        measurement_config = DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict)
+        measurement_config = DatasetEndpoint._validate_query_params(query_params=config_dict)
         result = measurement_config.build_query_string()
 
         self.assertEqual("?columns=time,value_25&limit=1000", result)
@@ -54,12 +54,12 @@ class TestMeasurementGetQueryConfig(TestCase):
         config_dict = {"foo": "bar"}
 
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict)
+            DatasetEndpoint._validate_query_params(query_params=config_dict)
 
     def test_alias_as_query_param(self):
         config_dict = {"page_no": 5}
 
-        measurement_config = DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict)
+        measurement_config = DatasetEndpoint._validate_query_params(query_params=config_dict)
         result = measurement_config.build_query_string()
 
         self.assertEqual("?limit=1000&page=5", result)
@@ -68,7 +68,7 @@ class TestMeasurementGetQueryConfig(TestCase):
         now = datetime.now(timezone.utc)
 
         config_dict = {"start_date": now, "end_date": now}
-        measurement_config = DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict)
+        measurement_config = DatasetEndpoint._validate_query_params(query_params=config_dict)
         result = measurement_config.build_query_string()
 
         expected_ts = int(datetime.timestamp(now) * 1000)
@@ -80,7 +80,7 @@ class TestMeasurementGetQueryConfig(TestCase):
         config_dict = {"start_date": "test"}
 
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict)
+            DatasetEndpoint._validate_query_params(query_params=config_dict)
 
     def test_columns_validation(self):
         # Column parameter validation tests:
@@ -102,34 +102,32 @@ class TestMeasurementGetQueryConfig(TestCase):
 
         self.assertEqual(
             "?columns=col1&limit=1000",
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_one_col).build_query_string(),
+            DatasetEndpoint._validate_query_params(query_params=config_dict_one_col).build_query_string(),
         )
         self.assertEqual(
             "?columns=col1,col2,col3&limit=1000",
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_mul_col).build_query_string(),
+            DatasetEndpoint._validate_query_params(query_params=config_dict_mul_col).build_query_string(),
         )
         self.assertEqual(
             "?limit=1000",
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_default_value).build_query_string(),
+            DatasetEndpoint._validate_query_params(query_params=config_dict_default_value).build_query_string(),
         )
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_whitespace_ending)
+            DatasetEndpoint._validate_query_params(query_params=config_dict_whitespace_ending)
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_empty_list)
+            DatasetEndpoint._validate_query_params(query_params=config_dict_empty_list)
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_semicolon)
+            DatasetEndpoint._validate_query_params(query_params=config_dict_semicolon)
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_string)
+            DatasetEndpoint._validate_query_params(query_params=config_dict_string)
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_integer)
+            DatasetEndpoint._validate_query_params(query_params=config_dict_integer)
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_tuple)
+            DatasetEndpoint._validate_query_params(query_params=config_dict_tuple)
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_list_with_non_strings)
+            DatasetEndpoint._validate_query_params(query_params=config_dict_list_with_non_strings)
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(
-                query_params=config_dict_list_with_elems_containing_invalid_chars
-            )
+            DatasetEndpoint._validate_query_params(query_params=config_dict_list_with_elems_containing_invalid_chars)
 
     def test_minium_parameter_values(self):
         config_dict_happy_path = {"limit": 15, "page_no": 3}
@@ -138,25 +136,25 @@ class TestMeasurementGetQueryConfig(TestCase):
 
         config_dict_page_no_too_low = {"page_no": -2}
 
-        measurement_config_happy = DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_happy_path)
+        measurement_config_happy = DatasetEndpoint._validate_query_params(query_params=config_dict_happy_path)
         result_happy = measurement_config_happy.build_query_string()
 
         self.assertEqual("?limit=15&page=3", result_happy)
 
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_limit_too_low)
+            DatasetEndpoint._validate_query_params(query_params=config_dict_limit_too_low)
 
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_dict_page_no_too_low)
+            DatasetEndpoint._validate_query_params(query_params=config_dict_page_no_too_low)
 
     def test_literal_validation(self):
         config_invalid_order = {"order": "UP"}
 
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params(query_params=config_invalid_order)
+            DatasetEndpoint._validate_query_params(query_params=config_invalid_order)
 
     def test_aggregation_query(self):
-        config = DataLakeMeasureEndpoint._validate_query_params(
+        config = DatasetEndpoint._validate_query_params(
             {
                 "columns": ["temperature"],
                 "aggregation_function": "MEAN",
@@ -179,7 +177,7 @@ class TestMeasurementGetQueryConfig(TestCase):
 
     def test_per_column_aggregations(self):
         columns = ["[temperature;MEAN;average]", "[pressure;MAX]"]
-        config = DataLakeMeasureEndpoint._validate_query_params({"columns": columns})
+        config = DatasetEndpoint._validate_query_params({"columns": columns})
         self.assertEqual(parse_qs(config.build_query_string()[1:])["columns"], [",".join(columns)])
 
     def test_advanced_aliases(self):
@@ -193,7 +191,7 @@ class TestMeasurementGetQueryConfig(TestCase):
             "missingValueBehaviour": "ignore",
             "maximumAmountOfEvents": -1,
         }
-        config = DataLakeMeasureEndpoint._validate_query_params(params)
+        config = DatasetEndpoint._validate_query_params(params)
         result = parse_qs(config.build_query_string()[1:])
         self.assertEqual(
             result,
@@ -215,7 +213,7 @@ class TestMeasurementGetQueryConfig(TestCase):
             "filter": "[sensor;=;A&B + #ü%]",
             "filter_expression": '{"operator":"AND","children":[]}',
         }
-        config = DataLakeMeasureEndpoint._validate_query_params(params)
+        config = DatasetEndpoint._validate_query_params(params)
         self.assertEqual(
             parse_qs(config.build_query_string()[1:]),
             {
@@ -226,7 +224,7 @@ class TestMeasurementGetQueryConfig(TestCase):
         )
 
     def test_optional_advanced_params(self):
-        config = DataLakeMeasureEndpoint._validate_query_params(
+        config = DatasetEndpoint._validate_query_params(
             {
                 "group_by": None,
                 "aggregation_function": None,
@@ -259,7 +257,7 @@ class TestMeasurementGetQueryConfig(TestCase):
             {"columns": ["[temperature;MEAN;alias;extra]"]},
         ]:
             with self.subTest(params=params), self.assertRaises(StreamPipesQueryValidationError):
-                DataLakeMeasureEndpoint._validate_query_params(params)
+                DatasetEndpoint._validate_query_params(params)
 
     def test_typed_columns(self):
         columns = [
@@ -269,7 +267,7 @@ class TestMeasurementGetQueryConfig(TestCase):
             Column(name="temperature", aggregation=AggregationFunction.MEAN),
             "[mass_flow;SUM;total_flow]",
         ]
-        config = DataLakeMeasureEndpoint._validate_query_params({"columns": columns})
+        config = DatasetEndpoint._validate_query_params({"columns": columns})
         self.assertEqual(
             parse_qs(config.build_query_string()[1:])["columns"],
             ["sensorId,mass_flow,[temperature;MAX;peak_temperature],[temperature;MEAN],[mass_flow;SUM;total_flow]"],
@@ -279,7 +277,7 @@ class TestMeasurementGetQueryConfig(TestCase):
     def test_aggregation_enum(self):
         for function in AggregationFunction:
             with self.subTest(function=function):
-                config = DataLakeMeasureEndpoint._validate_query_params(
+                config = DatasetEndpoint._validate_query_params(
                     {
                         "columns": [Column(name="temperature")],
                         "aggregation_function": function,
@@ -303,7 +301,7 @@ class TestMeasurementGetQueryConfig(TestCase):
             with self.subTest(options=options), self.assertRaises(ValidationError):
                 Column.model_validate(options)
         with self.assertRaises(StreamPipesQueryValidationError):
-            DataLakeMeasureEndpoint._validate_query_params({"group_by": [Column(name="sensorId")]})
+            DatasetEndpoint._validate_query_params({"group_by": [Column(name="sensorId")]})
 
     def test_typed_column_string_function(self):
         column = Column.model_validate({"name": "temperature", "aggregation": "MAX", "alias": "peak"})
@@ -318,7 +316,7 @@ class TestMeasurementGetQueryConfig(TestCase):
                 FilterCondition(field="sensorId", operator="=", value="A&B + #ü%"),
             ),
         )
-        config = DataLakeMeasureEndpoint._validate_query_params({"filter_expression": expression})
+        config = DatasetEndpoint._validate_query_params({"filter_expression": expression})
         payload = loads(parse_qs(config.build_query_string()[1:])["filterExpression"][0])
         self.assertEqual(
             payload,
@@ -343,7 +341,7 @@ class TestMeasurementGetQueryConfig(TestCase):
         for value in [True, False, 123, 1.5, "123", "true", "'123'"]:
             with self.subTest(value=value):
                 condition = FilterCondition(field="value", operator="=", value=value)
-                config = DataLakeMeasureEndpoint._validate_query_params({"filterExpression": condition})
+                config = DatasetEndpoint._validate_query_params({"filterExpression": condition})
                 payload = loads(parse_qs(config.build_query_string()[1:])["filterExpression"][0])
                 self.assertEqual(payload["operator"], "AND")
                 actual = payload["children"][0]["condition"]
@@ -381,7 +379,7 @@ class TestMeasurementGetQueryConfig(TestCase):
             ("", "''"),
         ]:
             with self.subTest(value=value):
-                config = DataLakeMeasureEndpoint._validate_query_params(
+                config = DatasetEndpoint._validate_query_params(
                     {
                         "filter": FilterCondition(field="value", operator="=", value=value),
                     }
@@ -394,7 +392,7 @@ class TestMeasurementGetQueryConfig(TestCase):
                 condition = FilterCondition(field=field, operator="=", value=value)
                 with self.subTest(field=field, value=value):
                     with self.assertRaisesRegex(StreamPipesQueryValidationError, "require filter_expression"):
-                        DataLakeMeasureEndpoint._validate_query_params({"filter": condition})
-                    config = DataLakeMeasureEndpoint._validate_query_params({"filter_expression": condition})
+                        DatasetEndpoint._validate_query_params({"filter": condition})
+                    config = DatasetEndpoint._validate_query_params({"filter_expression": condition})
                     payload = loads(parse_qs(config.build_query_string()[1:])["filterExpression"][0])
                     self.assertEqual(payload["children"][0]["condition"], value)

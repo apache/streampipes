@@ -39,7 +39,7 @@ from streampipes.model.resource import DataStream
 class TestStreamPipesEndpoints(TestCase):
     def setUp(self) -> None:
         # set example responses from endpoints
-        self.data_lake_measure_all = [
+        self.dataset_metadata_all: list[dict] = [
             {
                 "elementId": "urn:streampipes.apache.org:spi:datalakemeasure:xLSfXZ",
                 "measureName": "test",
@@ -82,8 +82,8 @@ class TestStreamPipesEndpoints(TestCase):
                 },
                 "pipelineId": None,
                 "pipelineName": None,
-                "pipelineIsRunning": False,
                 "schemaVersion": "1.1",
+                "schemaUpdateStrategy": "UPDATE_SCHEMA",
             }
         ]
 
@@ -172,11 +172,11 @@ class TestStreamPipesEndpoints(TestCase):
         self.data_stream_all_json = json.dumps(self.data_stream_all)
         self.data_stream_get = self.data_stream_all[0]
 
-        self.data_lake_measure_all_json = json.dumps(self.data_lake_measure_all)
-        self.data_lake_measure_all_json_error = json.dumps(self.data_lake_measure_all[0])
-        self.dlm_all_manipulated = deepcopy(self.data_lake_measure_all)
+        self.dataset_metadata_all_json = json.dumps(self.dataset_metadata_all)
+        self.dataset_metadata_all_json_error = json.dumps(self.dataset_metadata_all[0])
+        self.dlm_all_manipulated = deepcopy(self.dataset_metadata_all)
         self.dlm_all_manipulated[0]["measureName"] = False
-        self.data_lake_measure_all_json_validation = json.dumps(self.dlm_all_manipulated)
+        self.dataset_metadata_all_json_validation = json.dumps(self.dlm_all_manipulated)
 
     @patch("streampipes.client.client.Session", autospec=True)
     @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
@@ -326,12 +326,12 @@ class TestStreamPipesEndpoints(TestCase):
 
     @patch("streampipes.client.client.Session", autospec=True)
     @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
-    def test_endpoint_data_lake_measure_happy_path(self, server_version: MagicMock, http_session: MagicMock):
+    def test_endpoint_dataset_happy_path(self, server_version: MagicMock, http_session: MagicMock):
 
         server_version.return_value = {"backendVersion": "0.x.y"}
 
         http_session_mock = MagicMock()
-        http_session_mock.get.return_value.text = self.data_lake_measure_all_json
+        http_session_mock.get.return_value.text = self.dataset_metadata_all_json
         http_session.return_value = http_session_mock
 
         client = StreamPipesClient(
@@ -341,7 +341,7 @@ class TestStreamPipesEndpoints(TestCase):
             )
         )
 
-        result = client.dataLakeMeasureApi.all()
+        result = client.datasetApi.all()
         result_pd = result.to_pandas()
 
         self.assertEqual(
@@ -353,11 +353,11 @@ class TestStreamPipesEndpoints(TestCase):
             result[0].measure_name,  # type: ignore
         )
         self.assertEqual(
-            self.data_lake_measure_all_json,
+            self.dataset_metadata_all_json,
             result.to_json(),
         )
         self.assertEqual(
-            self.data_lake_measure_all,
+            self.dataset_metadata_all,
             result.to_dicts(use_source_names=True),
         )
         self.assertEqual(
@@ -370,7 +370,7 @@ class TestStreamPipesEndpoints(TestCase):
                 "timestamp_field",
                 "pipeline_id",
                 "pipeline_name",
-                "pipeline_is_running",
+                "schema_update_strategy",
                 "num_event_properties",
             ],
             list(result_pd.columns),
@@ -379,7 +379,7 @@ class TestStreamPipesEndpoints(TestCase):
 
     @patch("streampipes.client.client.Session", autospec=True)
     @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
-    def test_endpoint_data_lake_measure_bad_return_code(self, server_version: MagicMock, http_session: MagicMock):
+    def test_endpoint_dataset_bad_return_code(self, server_version: MagicMock, http_session: MagicMock):
 
         server_version.return_value = {"backendVersion": "0.x.y"}
 
@@ -401,7 +401,7 @@ class TestStreamPipesEndpoints(TestCase):
         )
 
         with self.assertRaises(HTTPError) as http_error:
-            client.dataLakeMeasureApi.all()
+            client.datasetApi.all()
         self.assertMultiLineEqual(
             _error_code_to_message[405] + "url: localhost\nstatus code: 405",
             http_error.exception.args[0],
@@ -409,12 +409,12 @@ class TestStreamPipesEndpoints(TestCase):
 
     @patch("streampipes.client.client.Session", autospec=True)
     @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
-    def test_endpoint_data_lake_measure_json_error(self, server_version: MagicMock, http_session: MagicMock):
+    def test_endpoint_dataset_json_error(self, server_version: MagicMock, http_session: MagicMock):
 
         server_version.return_value = {"backendVersion": "0.x.y"}
 
         http_session_mock = MagicMock()
-        http_session_mock.get.return_value.text = self.data_lake_measure_all_json_error
+        http_session_mock.get.return_value.text = self.dataset_metadata_all_json_error
         http_session.return_value = http_session_mock
 
         client = StreamPipesClient(
@@ -425,16 +425,16 @@ class TestStreamPipesEndpoints(TestCase):
         )
 
         with self.assertRaises(StreamPipesResourceContainerJSONError):
-            client.dataLakeMeasureApi.all()
+            client.datasetApi.all()
 
     @patch("streampipes.client.client.Session", autospec=True)
     @patch("streampipes.client.client.StreamPipesClient._get_server_version", autospec=True)
-    def test_endpoint_data_lake_measure_validation_error(self, server_version: MagicMock, http_session: MagicMock):
+    def test_endpoint_dataset_validation_error(self, server_version: MagicMock, http_session: MagicMock):
 
         server_version.return_value = {"backendVersion": "0.x.y"}
 
         http_session_mock = MagicMock()
-        http_session_mock.get.return_value.text = self.data_lake_measure_all_json_validation
+        http_session_mock.get.return_value.text = self.dataset_metadata_all_json_validation
         http_session.return_value = http_session_mock
 
         client = StreamPipesClient(
@@ -445,7 +445,7 @@ class TestStreamPipesEndpoints(TestCase):
         )
 
         with self.assertRaises(StreamPipesDataModelError) as err:
-            client.dataLakeMeasureApi.all()
+            client.datasetApi.all()
 
         self.assertTrue(isinstance(err.exception.validation_error, ValidationError))
 
