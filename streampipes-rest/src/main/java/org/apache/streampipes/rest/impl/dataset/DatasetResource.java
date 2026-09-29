@@ -19,10 +19,13 @@
 package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
-import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
+import org.apache.streampipes.dataexplorer.management.DatasetAdministrationService;
+import org.apache.streampipes.dataexplorer.management.DatasetExportService;
+import org.apache.streampipes.dataexplorer.management.DatasetQueryService;
+import org.apache.streampipes.dataexplorer.management.DatasetServices;
+import org.apache.streampipes.dataexplorer.param.RestQuerySpecMapper;
 import org.apache.streampipes.export.DatasetExportManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
 import org.apache.streampipes.model.dataset.DataSeries;
@@ -97,24 +100,26 @@ import static org.apache.streampipes.model.dataset.param.SupportedRestQueryParam
 public class DatasetResource extends AbstractDatasetResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(DatasetResource.class);
-  private final IDataExplorerQueryManagement dataExplorerQueryManagement;
+  private final DatasetQueryService queryService;
   private final DatasetExportManager datasetExportManager;
+  private final DatasetAdministrationService administrationService;
+  private final DatasetExportService exportService;
   private final IDatasetMetadataStorage datasetStorage;
   private final ConfiguredOutputWriterFactory outputWriterFactory;
 
   public DatasetResource(IChartStorage chartStorage,
-                          SpResourceManager resourceManager) {
+                          SpResourceManager resourceManager, DatasetServices services) {
     super(new ChartSchemaUpdateCoordinator(chartStorage), resourceManager);
     this.datasetStorage = resourceManager.manageDataLakeMeasures().getDb();
-    this.dataExplorerQueryManagement = new DataExplorerDispatcher()
-        .getDataExplorerManager()
-        .getQueryManagement(this.datasetMetadataManagement);
+    this.queryService = services.queries();
+    this.administrationService = services.administration();
+    this.exportService = services.exports();
     this.outputWriterFactory = new ConfiguredOutputWriterFactory(
         resourceManager.getFileMetadataStorage(),
         resourceManager.getCoreConfigurationStorage());
     this.datasetExportManager = new DatasetExportManager(
         this.datasetMetadataManagement,
-        dataExplorerQueryManagement,
+        services,
         resourceManager.getCoreConfigurationStorage(),
         resourceManager.getFileMetadataStorage());
   }
@@ -130,7 +135,7 @@ public class DatasetResource extends AbstractDatasetResource {
       @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @RequestParam(value = "startDate", required = false) Long startDate,
       @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @RequestParam(value = "endDate", required = false) Long endDate) {
 
-    if (this.dataExplorerQueryManagement.deleteData(measurementName, startDate, endDate)) {
+    if (this.administrationService.deleteData(measurementName, startDate, endDate)) {
       return ok(Notifications
           .success("Successfully deleted measure " + measurementName + " between " + startDate + " and " + endDate));
     } else {
@@ -150,7 +155,7 @@ public class DatasetResource extends AbstractDatasetResource {
   public ResponseEntity<?> dropMeasurementSeries(
       @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathVariable("measurementID") String measurementID) {
 
-    boolean isSuccessDataLake = this.dataExplorerQueryManagement.deleteData(measurementID);
+    boolean isSuccessDataLake = this.administrationService.deleteData(measurementID);
 
     if (isSuccessDataLake) {
       boolean isSuccessEventProperty = this.datasetMetadataManagement.deleteMeasurementByName(measurementID);
@@ -182,7 +187,8 @@ public class DatasetResource extends AbstractDatasetResource {
    @PreAuthorize("this.hasReadAuthority() and this.checkPermissionByName(#measurementId, 'READ')")
   public ResponseEntity<Map<String, Object>> getTagValues(@PathVariable("measurementId") String measurementId,
       @RequestParam("fields") String fields) {
-    Map<String, Object> tagValues = dataExplorerQueryManagement.getTagValues(measurementId, fields);
+    Map<String, Object> tagValues = administrationService.dimensionValues(measurementId,
+        fields == null || fields.isBlank() ? List.of() : java.util.Arrays.asList(fields.split(",")));
     return ok(tagValues);
   }
 
@@ -218,7 +224,7 @@ public class DatasetResource extends AbstractDatasetResource {
     } else {
       ProvidedRestQueryParams sanitizedParams = populate(measurementID, queryParams);
       try {
-        SpQueryResult result = this.dataExplorerQueryManagement.getData(sanitizedParams,
+        SpQueryResult result = executeQuery(sanitizedParams,
             isIgnoreMissingValues(missingValueBehaviour));
         return ok(result);
       } catch (RuntimeException e) {
@@ -244,7 +250,7 @@ public class DatasetResource extends AbstractDatasetResource {
 
     var results = queryParams.stream()
         .map(params -> new ProvidedRestQueryParams(params.get("measureName"), params))
-        .map(params -> this.dataExplorerQueryManagement.getData(params, true))
+        .map(params -> executeQuery(params, true))
         .collect(Collectors.toList());
 
     return ok(results);
@@ -274,7 +280,7 @@ public class DatasetResource extends AbstractDatasetResource {
       );
     }
 
-    Map<String, Long> latestEvents = this.dataExplorerQueryManagement.getLatestTimestamps(distinctMeasurementNames);
+    Map<String, Long> latestEvents = this.queryService.getLatestTimestamps(distinctMeasurementNames);
 
     return ok(latestEvents);
   }
@@ -318,12 +324,12 @@ public class DatasetResource extends AbstractDatasetResource {
       }
 
       var outputFormat = OutputFormat.fromString(format);
-      StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
-          sanitizedParams,
-          outputFormat,
-          outputWriterFactory,
-          isIgnoreMissingValues(missingValueBehaviour),
-          output);
+      var specification = RestQuerySpecMapper.parse(sanitizedParams);
+      var options = RestQuerySpecMapper.options(sanitizedParams, isIgnoreMissingValues(missingValueBehaviour));
+      StreamingResponseBody streamingOutput = output -> exportService.exportByName(
+          sanitizedParams.getMeasurementId(), specification, options,
+          dataset -> outputWriterFactory.getConfiguredWriter(dataset, outputFormat, sanitizedParams,
+              options.ignoreMissingValues()), output);
 
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -361,7 +367,7 @@ public class DatasetResource extends AbstractDatasetResource {
   @Operation(summary = "Remove all stored measurement series from Data Lake", tags = { "Data Lake" }, responses = {
       @ApiResponse(responseCode = "200", description = "All measurement series successfully removed") })
   public ResponseEntity<?> removeAll() {
-    boolean isSuccess = this.dataExplorerQueryManagement.deleteAllData();
+    boolean isSuccess = this.administrationService.deleteAllData();
     return ResponseEntity.ok(isSuccess);
   }
 
@@ -423,6 +429,15 @@ public class DatasetResource extends AbstractDatasetResource {
       return serverError(SpLogMessage.from(e));
     }
 
+  }
+
+  private SpQueryResult executeQuery(ProvidedRestQueryParams params, boolean ignoreMissingValues) {
+    var result = queryService.queryByName(params.getMeasurementId(), RestQuerySpecMapper.parse(params),
+        RestQuerySpecMapper.options(params, ignoreMissingValues));
+    if (params.has("forId")) {
+      result.setForId(params.getAsString("forId"));
+    }
+    return result;
   }
 
   private ProvidedRestQueryParams populate(String measurementId, Map<String, String> rawParams) {

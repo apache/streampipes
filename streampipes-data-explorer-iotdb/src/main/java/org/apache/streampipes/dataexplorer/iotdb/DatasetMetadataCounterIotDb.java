@@ -18,21 +18,17 @@
 
 package org.apache.streampipes.dataexplorer.iotdb;
 
-import org.apache.streampipes.commons.environment.Environments;
+import org.apache.streampipes.dataexplorer.api.query.QueryExecutionOptions;
+import org.apache.streampipes.dataexplorer.api.query.QuerySpec;
 import org.apache.streampipes.dataexplorer.query.DatasetMetadataCounter;
+import org.apache.streampipes.dataexplorer.query.QueryResultCollector;
+import org.apache.streampipes.model.dataset.AggregationFunction;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
-
-import org.apache.iotdb.rpc.IoTDBConnectionException;
-import org.apache.iotdb.rpc.StatementExecutionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class DatasetMetadataCounterIotDb extends DatasetMetadataCounter {
-
-  private static final Logger LOG = LoggerFactory.getLogger(DatasetMetadataCounterIotDb.class);
 
   public DatasetMetadataCounterIotDb(List<DatasetMetadata> allMeasurements,
                                          List<String> measurementNames,
@@ -48,7 +44,7 @@ public class DatasetMetadataCounterIotDb extends DatasetMetadataCounter {
    */
   @Override
   protected CompletableFuture<Integer> createQueryAsAsyncFuture(DatasetMetadata measure) {
-    var sessionPool = new IotDbSessionProvider().getSessionPool(Environments.getEnvironment());
+    var sessionPool = IotDbSessionProvider.sharedQueryPool();
     return CompletableFuture.supplyAsync(() -> {
 
       // We want to apply the count query to only one stored property of the measurement, as this is sufficient and
@@ -56,18 +52,13 @@ public class DatasetMetadataCounterIotDb extends DatasetMetadataCounter {
       // So we can just take the first countable property.
       var propertyName = getFirstCountableProperty(measure);
 
-      try (var result = new DataExplorerIotDbQueryExecutor(sessionPool).executeQuery(
-          "Select count(%s) from root.streampipes.%s".formatted(propertyName, measure.getMeasureName())
-      )) {
-        var resultRecord = result.next();
-        if (resultRecord == null) {
-          LOG.error("Result of count query does not contain any row - empty result");
-          return 0;
-        }
-        return (int) resultRecord.getFields().get(0).getLongV();
-      } catch (IoTDBConnectionException | StatementExecutionException e) {
-        LOG.error("Error during count query execution: {}", e.getMessage());
+      if (propertyName == null) {
         return 0;
+      }
+      var query = QuerySpec.builder().aggregate(propertyName, AggregationFunction.COUNT, "count").build();
+      try (var cursor = new IotDbQueryBackend(sessionPool).open(measure, query)) {
+        var result = QueryResultCollector.collect(cursor, QueryExecutionOptions.defaults());
+        return result.getTotal() > 0 ? extractResult(result, "count") : 0;
       }
     });
   }
