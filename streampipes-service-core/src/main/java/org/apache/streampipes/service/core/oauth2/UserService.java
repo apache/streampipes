@@ -21,6 +21,7 @@ package org.apache.streampipes.service.core.oauth2;
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.commons.environment.model.OAuthConfiguration;
+import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.resource.management.SpResourceManager;
@@ -46,6 +47,12 @@ public class UserService {
 
   private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
+  /**
+   * Deliberately unspecific: the message must not tell whether an id or a username is in use.
+   * The reason is logged where the login is rejected.
+   */
+  private static final String LOGIN_REJECTED = "OAuth login rejected";
+
   private final IUserStorage userStorage;
   private final IRoleStorage roleStorage;
   private final IUserGroupStorage groupStorage;
@@ -53,12 +60,25 @@ public class UserService {
   private final IPermissionStorage permissionStorage;
 
   public UserService(SpResourceManager resourceManager) {
-    this.roleStorage = resourceManager.getRoleStorage();
-    this.groupStorage = resourceManager.getUserGroupStorage();
-    this.userStorage = resourceManager.manageUsers().getDb();
+    this(
+        resourceManager.manageUsers().getDb(),
+        resourceManager.getRoleStorage(),
+        resourceManager.getUserGroupStorage(),
+        resourceManager.managePermissions().getDb(),
+        Environments.getEnvironment()
+    );
+  }
 
-    this.env = Environments.getEnvironment();
-    this.permissionStorage = resourceManager.managePermissions().getDb();
+  UserService(IUserStorage userStorage,
+              IRoleStorage roleStorage,
+              IUserGroupStorage groupStorage,
+              IPermissionStorage permissionStorage,
+              Environment env) {
+    this.userStorage = userStorage;
+    this.roleStorage = roleStorage;
+    this.groupStorage = groupStorage;
+    this.permissionStorage = permissionStorage;
+    this.env = env;
   }
 
   public OidcUserAccountDetails processUserRegistration(String registrationId,
@@ -83,17 +103,15 @@ public class UserService {
         throw new OAuth2AuthenticationProcessingException("Email attribute key not found in attributes");
       }
       var email = attributes.get(oAuthConfig.getEmailAttributeName()).toString();
-      UserAccount user = (UserAccount) userStorage.getUserById(principalId);
-      if (user != null) {
-        if (!user.getProvider().equals(registrationId) && !user.getProvider().equals(UserAccount.LOCAL)) {
-          throw new OAuth2AuthenticationProcessingException(
-              String.format("Already signed up with another provider %s", user.getProvider())
-          );
-        }
+      Principal existingPrincipal = userStorage.getUserById(principalId);
+      UserAccount user;
+      if (existingPrincipal != null) {
+        user = requireAccountOfProvider(existingPrincipal, registrationId);
         applyRoles(user, oAuthConfig, attributes, false);
         user.setLastLoginAtMillis(System.currentTimeMillis());
         userStorage.updateUser(user);
       } else {
+        requireUsernameAvailable(email, registrationId);
         user = toUserAccount(registrationId, principalId, email, fullName);
         user.setLastLoginAtMillis(System.currentTimeMillis());
         applyRoles(user, oAuthConfig, attributes, true);
@@ -107,6 +125,41 @@ public class UserService {
       throw new OAuth2AuthenticationProcessingException(
           String.format("No config found for provider %s", registrationId)
       );
+    }
+  }
+
+  /**
+   * An external identity may only resolve to an account that was provisioned by the same provider.
+   * Accounts of other providers, local accounts and service accounts are never linked implicitly,
+   * because the user id claim is not a proof of ownership of an existing account.
+   */
+  private UserAccount requireAccountOfProvider(Principal existingPrincipal,
+                                               String registrationId) {
+    if (existingPrincipal instanceof UserAccount account
+        && registrationId.equals(account.getProvider())) {
+      return account;
+    }
+    LOG.warn(
+        "Rejected OAuth login for provider {}: user id claim matches existing principal {} "
+            + "which does not belong to this provider",
+        registrationId,
+        existingPrincipal.getPrincipalId()
+    );
+    throw new OAuth2AuthenticationProcessingException(LOGIN_REJECTED);
+  }
+
+  /**
+   * Usernames identify the principal of a session, so a new account must not reuse the username
+   * of an existing one.
+   */
+  private void requireUsernameAvailable(String username,
+                                        String registrationId) {
+    if (userStorage.checkUserExists(username)) {
+      LOG.warn(
+          "Rejected OAuth sign-up for provider {}: username is already used by another account",
+          registrationId
+      );
+      throw new OAuth2AuthenticationProcessingException(LOGIN_REJECTED);
     }
   }
 

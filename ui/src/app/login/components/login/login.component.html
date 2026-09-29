@@ -82,6 +82,17 @@
                         >
                         </sp-alert-banner>
                     }
+                    @if (oAuthLoginFailed) {
+                        <sp-alert-banner
+                            type="error"
+                            data-cy="oauth-login-failed"
+                            [title]="'Sign-in failed' | translate"
+                            [description]="
+                                'Please contact your administrator.' | translate
+                            "
+                        >
+                        </sp-alert-banner>
+                    }
                     <div fxLayout="row" class="mt-10">
                         @if (loginSettings.allowPasswordRecovery) {
                             <div>
