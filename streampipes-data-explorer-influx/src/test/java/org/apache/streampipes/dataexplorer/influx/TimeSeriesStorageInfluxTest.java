@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
@@ -537,6 +538,61 @@ public class TimeSeriesStorageInfluxTest {
 
     Mockito.verify(influxDBMock).flush();
     Mockito.verify(influxDBMock, Mockito.never()).close();
+  }
+
+  @Test
+  public void onEventNormalizesLegacySelectorsWithoutDuplicates() {
+    var schema = legacyEventSchema();
+    var event = legacyEvent();
+    var store = getInfluxStore(schema);
+
+    assertEquals(getPointBuilderWithTimestamp().addField(FIELD_NAME, 1).build(), executeOnEvent(store, event));
+    assertEquals(Set.of("s0::timestamp", "s0::" + FIELD_NAME), event.getFields().keySet());
+    store.onEvent(event);
+    assertEquals(2, event.getFields().size());
+  }
+
+  @Test
+  public void onEventsSupportsLegacyAndFactorySelectors() {
+    var schema = legacyEventSchema();
+    var legacy = legacyEvent();
+    var factory = getEvent(schema, Map.of(FIELD_NAME, 1));
+
+    getInfluxStore(schema).onEvents(List.of(legacy, factory));
+
+    var captor = ArgumentCaptor.forClass(BatchPoints.class);
+    Mockito.verify(influxDBMock).write(captor.capture());
+    var expected = getPointBuilderWithTimestamp().addField(FIELD_NAME, 1).build();
+    assertEquals(List.of(expected, expected), captor.getValue().getPoints());
+    assertEquals(factory.getFields().keySet(), legacy.getFields().keySet());
+  }
+
+  @Test
+  public void normalizationPreservesExistingSelectors() {
+    var schema = legacyEventSchema();
+    var event = getEvent(schema, Map.of(FIELD_NAME, 1));
+    event.addField(TIMESTAMP, 0L);
+
+    var actual = executeOnEvent(getInfluxStore(schema), event);
+
+    assertEquals(getPointBuilderWithTimestamp().addField(FIELD_NAME, 1).build(), actual);
+    assertEquals(2, event.getFields().size());
+  }
+
+  private Event legacyEvent() {
+    var event = new Event(new SourceInfo("test-topic", "s0"));
+    event.addField(TIMESTAMP, SAMPLE_TIMESTAMP);
+    event.addField(FIELD_NAME, 1);
+    return event;
+  }
+
+  private EventSchema legacyEventSchema() {
+    return getEventSchemaBuilderWithTimestamp()
+        .withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName(FIELD_NAME)
+            .withRuntimeType(XSD.INTEGER)
+            .build())
+        .build();
   }
 
   private Point.Builder getPointBuilderWithTimestamp() {

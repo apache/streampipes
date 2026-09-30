@@ -23,6 +23,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.TimeSeriesStorage;
 import org.apache.streampipes.dataexplorer.influx.client.InfluxClientProvider;
 import org.apache.streampipes.dataexplorer.influx.sanitize.InfluxNameSanitizer;
+import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
@@ -243,10 +244,31 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
    * rename itself only happens for the rare reserved names.
    */
   protected void sanitizeRuntimeNamesInEvent(Event event) {
+    normalizeFieldSelectors(event);
     for (var key : new ArrayList<>(event.getRaw().keySet())) {
       if (InfluxNameSanitizer.isReservedKeyword(key)) {
         event.renameFieldByRuntimeName(key, InfluxNameSanitizer.renameReservedKeywords(key));
       }
     }
   }
+
+  private void normalizeFieldSelectors(Event event) {
+    var sourceInfo = event.getSourceInfo();
+    if (sourceInfo == null || sourceInfo.getSelectorPrefix() == null) {
+      return;
+    }
+
+    // Primitive addField overloads use runtime names as keys. Historically, unconditional
+    // sanitization re-added these fields with their source prefix before writing.
+    var prefix = sourceInfo.getSelectorPrefix() + PropertySelectorConstants.PROPERTY_DELIMITER;
+    var fields = event.getFields();
+    for (var key : new ArrayList<>(fields.keySet())) {
+      var field = fields.get(key);
+      if (key.equals(field.getFieldNameIn())) {
+        fields.putIfAbsent(prefix + key, field);
+        fields.remove(key);
+      }
+    }
+  }
+
 }
