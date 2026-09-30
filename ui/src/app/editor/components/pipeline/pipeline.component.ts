@@ -20,7 +20,6 @@ import { PipelineValidationService } from '../../services/pipeline-validation.se
 import { JsplumbService } from '../../services/jsplumb.service';
 import { PipelineEditorService } from '../../services/pipeline-editor.service';
 import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     Component,
     EventEmitter,
@@ -105,7 +104,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     private objectProvider = inject(ObjectProvider);
     private editorService = inject(EditorService);
     private idGeneratorService = inject(IdGeneratorService);
-    private shepherdService = inject(ShepherdService);
     private pipelineStyleService = inject(PipelineStyleService);
     private pipelineValidationService = inject(PipelineValidationService);
     private dialogService = inject(DialogService);
@@ -301,11 +299,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
                                 false,
                             );
                         }, 10);
-                    }
-                    if (this.shepherdService.isTourActive()) {
-                        this.shepherdService.trigger(
-                            'drop-' + pipelineElementConfig.type,
-                        );
                     }
                 }
                 this.JsplumbBridge.repaintEverything();

@@ -25,13 +25,9 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 import { HomeService } from './home.service';
-import { Router } from '@angular/router';
-import { AppConstants } from '../services/app.constants';
 import {
     CurrentUserService,
-    DialogService,
     LocalStorageService,
-    PanelType,
     SpAlertBannerComponent,
     SpAssetBrowserService,
     SpBasicViewComponent,
@@ -39,9 +35,6 @@ import {
     SpSpinnerComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import { UserRole } from '../core/auth/user-role.enum';
-import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
-import { ShepherdService } from '../services/tour/shepherd.service';
 import {
     AssetConstants,
     AssetLinkType,
@@ -102,18 +95,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     sites: Record<string, AssetSiteDesc> = {};
     assetLinkTypes: Record<string, AssetLinkType> = {};
 
-    isTutorialOpen = false;
     currentUser: UserInfo;
     selectedView = signal<string>('table');
     contentLoaded = false;
 
     private homeService = inject(HomeService);
     private currentUserService = inject(CurrentUserService);
-    private router = inject(Router);
-    public appConstants = inject(AppConstants);
     private breadcrumbService = inject(SpBreadcrumbService);
-    private dialogService = inject(DialogService);
-    private shepherdService = inject(ShepherdService);
     private genericStorageService = inject(GenericStorageService);
     private locationService = inject(LocationConfigService);
     private assetService = inject(AssetManagementService);
@@ -142,7 +130,6 @@ export class HomeComponent implements OnInit, OnDestroy {
                     this.sortAssetLinks(this.filteredAssets);
                 }
             });
-        const isAdmin = this.hasRole(UserRole.ROLE_ADMIN);
         forkJoin([
             this.genericStorageService.getAllDocuments(
                 AssetConstants.ASSET_LINK_TYPES_DOC_NAME,
@@ -165,16 +152,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.contentLoaded = true;
             this.showStatus = true;
         });
-        console.log(isAdmin);
-        console.log(this.currentUser.showTutorial);
-        if (isAdmin && this.currentUser.showTutorial) {
-            this.checkForTutorial();
-        }
         this.breadcrumbService.updateBreadcrumb([]);
-    }
-
-    hasRole(role: UserRole): boolean {
-        return this.currentUser.roles.indexOf(role) > -1;
     }
 
     sortAssetLinks(assets: SpAssetModel[]) {
@@ -189,31 +167,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
                 return (a.linkLabel ?? '').localeCompare(b.linkLabel ?? '');
             });
-        });
-    }
-
-    checkForTutorial() {
-        this.isTutorialOpen = true;
-        const dialogRef = this.dialogService.open(WelcomeTourComponent, {
-            panelType: PanelType.STANDARD_PANEL,
-            title: 'Welcome to ' + this.appConstants.APP_NAME,
-            data: {
-                userInfo: this.currentUser,
-            },
-        });
-        dialogRef.afterClosed().subscribe(startTutorial => {
-            if (startTutorial) {
-                this.startTutorial();
-            } else {
-                this.isTutorialOpen = false;
-            }
-        });
-    }
-
-    startTutorial() {
-        this.router.navigate(['connect']).then(() => {
-            this.shepherdService.startAdapterTour();
-            this.isTutorialOpen = false;
         });
     }
 

@@ -43,18 +43,6 @@
             type="button"
             mat-icon-button
             color="accent"
-            (click)="startPipelineTour()"
-            [attr.aria-label]="'Tutorial' | translate"
-            [matTooltip]="'Tutorial' | translate"
-            [disabled]="tutorialActive"
-        >
-            <mat-icon aria-hidden="true">school</mat-icon>
-        </button>
-        <button
-            pageActions
-            type="button"
-            mat-icon-button
-            color="accent"
             data-cy="refresh-pipelines"
             [attr.aria-label]="'Refresh pipelines' | translate"
             [matTooltip]="'Refresh pipelines' | translate"

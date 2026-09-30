@@ -37,7 +37,6 @@ import {
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -69,7 +68,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class EventPropertyRowComponent implements OnInit {
     private dialogService = inject(DialogService);
-    private shepherdService = inject(ShepherdService);
 
     @Input() eventProperty: EventProperty;
 
@@ -197,7 +195,6 @@ export class EventPropertyRowComponent implements OnInit {
                 originalProperty: this.originalProperty,
             },
         });
-        this.shepherdService.trigger('adapter-edit-field-clicked');
 
         dialogRef.afterClosed().subscribe(_ => {
             this.timestampProperty = this.isTimestampProperty();

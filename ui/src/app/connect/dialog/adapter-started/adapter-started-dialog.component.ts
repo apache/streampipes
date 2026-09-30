@@ -25,7 +25,6 @@ import {
     Output,
     ChangeDetectionStrategy,
 } from '@angular/core';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     AdapterDescription,
     AdapterService,
@@ -83,7 +82,6 @@ export class AdapterStartedDialog implements OnInit {
     translateService = inject(TranslateService);
     public dialogRef = inject(DialogRef<AdapterStartedDialog>);
     private adapterService = inject(AdapterService);
-    private shepherdService = inject(ShepherdService);
     private pipelineTemplateService = inject(PipelineTemplateService);
     private compactPipelineService = inject(CompactPipelineService);
     private assetSaveService = inject(AssetSaveService);
@@ -377,7 +375,6 @@ export class AdapterStartedDialog implements OnInit {
 
     onCloseConfirm() {
         this.dialogRef.close('Confirm');
-        this.shepherdService.trigger('confirm_adapter_started_button');
     }
 
     onKeepEditing() {
