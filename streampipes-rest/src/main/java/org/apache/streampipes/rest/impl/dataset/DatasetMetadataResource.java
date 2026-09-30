@@ -29,7 +29,6 @@ import org.apache.streampipes.storage.api.explorer.IChartStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -110,23 +109,6 @@ public class DatasetMetadataResource extends AbstractDatasetResource {
             daysBack)
         .countMeasurementSizes()
         .getOrDefault(measure.getMeasureName(), 0));
-  }
-
-  @Operation(
-      summary = "Deprecated measurement count endpoint",
-      description = "Use /api/v4/datalake/measure/{id}/count instead.",
-      deprecated = true
-  )
-  @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("this.hasReadAuthority()")
-  @Deprecated(since = "0.99.0", forRemoval = true)
-  public ResponseEntity<?> getDeprecatedEntryCountOfMeasurement() {
-    return ResponseEntity
-        .status(HttpStatus.GONE)
-        .body(SpLogMessage.warn(
-            "Deprecated endpoint",
-            "Use /api/v4/datalake/measure/{id}/count instead."
-        ));
   }
 
   @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -1,0 +1,669 @@
+[
+  {
+    "params": {
+      "endDate": "20",
+      "filterExpression": "{\"type\":\"group\",\"operator\":\"OR\",\"children\":[\n  {\"type\":\"condition\",\"field\":\"label\",\"operator\":\"=\",\"condition\":\"O'Reilly\"},\n  {\"type\":\"group\",\"operator\":\"AND\",\"children\":[\n    {\"type\":\"condition\",\"field\":\"value\",\"operator\":\">=\",\"condition\":1.25},\n    {\"type\":\"condition\",\"field\":\"enabled\",\"operator\":\"!=\",\"condition\":false}\n  ]}\n]}\n",
+      "startDate": "10"
+    },
+    "command": "SELECT * FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) AND (label = 'O'Reilly' OR (value >= 1.25 AND enabled != false));"
+  },
+  {
+    "params": {
+      "filter": "[label;=;Größe],[value;<=;3],[enabled;!=;false]"
+    },
+    "command": "SELECT * FROM \"physical\" WHERE (label = 'Größe' AND value <= 3.0 AND enabled != false);"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "fill": "none",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(none) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "fill": "null",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(null) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "fill": "previous",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(previous) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "fill": "linear",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(linear) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "fill": "0",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(0.0) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "fill": "-2.5",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(-2.5) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "fill": "none",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(none) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "fill": "null",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(null) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "fill": "previous",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(previous) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "fill": "linear",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(linear) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "fill": "0",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(0.0) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "fill": "-2.5",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(-2.5) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "none",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000) GROUP BY time(01h),\"machine\",\"location\" fill(none) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "null",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000) GROUP BY time(01h),\"machine\",\"location\" fill(null) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "previous",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000) GROUP BY time(01h),\"machine\",\"location\" fill(previous) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "linear",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000) GROUP BY time(01h),\"machine\",\"location\" fill(linear) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "0",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000) GROUP BY time(01h),\"machine\",\"location\" fill(0.0) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "-2.5",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000) GROUP BY time(01h),\"machine\",\"location\" fill(-2.5) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "none",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000) GROUP BY time(01h),\"machine\",\"location\" fill(none) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "null",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000) GROUP BY time(01h),\"machine\",\"location\" fill(null) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "previous",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000) GROUP BY time(01h),\"machine\",\"location\" fill(previous) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "linear",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000) GROUP BY time(01h),\"machine\",\"location\" fill(linear) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "0",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000) GROUP BY time(01h),\"machine\",\"location\" fill(0.0) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "-2.5",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000) GROUP BY time(01h),\"machine\",\"location\" fill(-2.5) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "none",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(none) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "null",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(null) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "previous",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(previous) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "linear",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(linear) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "0",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(0.0) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "-2.5",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "ASC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(-2.5) LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "none",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(none) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "null",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(null) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "previous",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(previous) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "linear",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(linear) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "0",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(0.0) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "[value;MEAN;average]",
+      "endDate": "20",
+      "fill": "-2.5",
+      "groupBy": "machine,location",
+      "limit": "25",
+      "order": "DESC",
+      "page": "2",
+      "startDate": "10",
+      "timeInterval": "01h"
+    },
+    "command": "SELECT MEAN(value) AS average FROM \"physical\" WHERE (time < 20000000 AND time > 10000000) GROUP BY time(01h),\"machine\",\"location\" fill(-2.5) ORDER BY time DESC LIMIT 25 OFFSET 50;"
+  },
+  {
+    "params": {
+      "columns": "value",
+      "offset": "3"
+    },
+    "command": null
+  },
+  {
+    "params": {
+      "columns": "value",
+      "limit": "0"
+    },
+    "command": null
+  },
+  {
+    "params": {
+      "columns": "value",
+      "limit": "25",
+      "offset": "3",
+      "page": "2"
+    },
+    "command": "SELECT value FROM \"physical\" LIMIT 25 OFFSET 3;"
+  },
+  {
+    "params": {
+      "columns": "value,other",
+      "countOnly": "true"
+    },
+    "command": "SELECT COUNT(value) AS count_value,COUNT(other) AS count_other FROM \"physical\";"
+  },
+  {
+    "params": {
+      "columns": "[temperature.a;MEAN;result.a]"
+    },
+    "command": "SELECT MEAN(\"temperature.a\") AS \"result.a\" FROM \"physical\";"
+  },
+  {
+    "params": {
+      "aggregationFunction": "MEAN",
+      "columns": "temperature"
+    },
+    "command": "SELECT MEAN(temperature) AS mean_temperature FROM \"physical\";"
+  },
+  {
+    "params": {
+      "columns": "[temperature.a;MEDIAN;result.a]"
+    },
+    "command": "SELECT MEDIAN(\"temperature.a\") AS \"result.a\" FROM \"physical\";"
+  },
+  {
+    "params": {
+      "aggregationFunction": "MEDIAN",
+      "columns": "temperature"
+    },
+    "command": "SELECT MEDIAN(temperature) AS median_temperature FROM \"physical\";"
+  },
+  {
+    "params": {
+      "columns": "[temperature.a;MIN;result.a]"
+    },
+    "command": "SELECT MIN(\"temperature.a\") AS \"result.a\" FROM \"physical\";"
+  },
+  {
+    "params": {
+      "aggregationFunction": "MIN",
+      "columns": "temperature"
+    },
+    "command": "SELECT MIN(temperature) AS min_temperature FROM \"physical\";"
+  },
+  {
+    "params": {
+      "columns": "[temperature.a;MAX;result.a]"
+    },
+    "command": "SELECT MAX(\"temperature.a\") AS \"result.a\" FROM \"physical\";"
+  },
+  {
+    "params": {
+      "aggregationFunction": "MAX",
+      "columns": "temperature"
+    },
+    "command": "SELECT MAX(temperature) AS max_temperature FROM \"physical\";"
+  },
+  {
+    "params": {
+      "columns": "[temperature.a;COUNT;result.a]"
+    },
+    "command": "SELECT COUNT(\"temperature.a\") AS \"result.a\" FROM \"physical\";"
+  },
+  {
+    "params": {
+      "aggregationFunction": "COUNT",
+      "columns": "temperature"
+    },
+    "command": "SELECT COUNT(temperature) AS count_temperature FROM \"physical\";"
+  },
+  {
+    "params": {
+      "columns": "[temperature.a;FIRST;result.a]"
+    },
+    "command": "SELECT FIRST(\"temperature.a\") AS \"result.a\" FROM \"physical\";"
+  },
+  {
+    "params": {
+      "aggregationFunction": "FIRST",
+      "columns": "temperature"
+    },
+    "command": "SELECT FIRST(temperature) AS first_temperature FROM \"physical\";"
+  },
+  {
+    "params": {
+      "columns": "[temperature.a;LAST;result.a]"
+    },
+    "command": "SELECT LAST(\"temperature.a\") AS \"result.a\" FROM \"physical\";"
+  },
+  {
+    "params": {
+      "aggregationFunction": "LAST",
+      "columns": "temperature"
+    },
+    "command": "SELECT LAST(temperature) AS last_temperature FROM \"physical\";"
+  },
+  {
+    "params": {
+      "columns": "[temperature.a;MODE;result.a]"
+    },
+    "command": "SELECT MODE(\"temperature.a\") AS \"result.a\" FROM \"physical\";"
+  },
+  {
+    "params": {
+      "aggregationFunction": "MODE",
+      "columns": "temperature"
+    },
+    "command": "SELECT MODE(temperature) AS mode_temperature FROM \"physical\";"
+  },
+  {
+    "params": {
+      "columns": "[temperature.a;STDDEV;result.a]"
+    },
+    "command": "SELECT STDDEV(\"temperature.a\") AS \"result.a\" FROM \"physical\";"
+  },
+  {
+    "params": {
+      "aggregationFunction": "STDDEV",
+      "columns": "temperature"
+    },
+    "command": "SELECT STDDEV(temperature) AS stddev_temperature FROM \"physical\";"
+  },
+  {
+    "params": {
+      "columns": "[temperature.a;SUM;result.a]"
+    },
+    "command": "SELECT SUM(\"temperature.a\") AS \"result.a\" FROM \"physical\";"
+  },
+  {
+    "params": {
+      "aggregationFunction": "SUM",
+      "columns": "temperature"
+    },
+    "command": "SELECT SUM(temperature) AS sum_temperature FROM \"physical\";"
+  },
+  {
+    "params": {
+      "columns": "[temperature.a;SPREAD;result.a]"
+    },
+    "command": "SELECT SPREAD(\"temperature.a\") AS \"result.a\" FROM \"physical\";"
+  },
+  {
+    "params": {
+      "aggregationFunction": "SPREAD",
+      "columns": "temperature"
+    },
+    "command": "SELECT SPREAD(temperature) AS spread_temperature FROM \"physical\";"
+  }
+]

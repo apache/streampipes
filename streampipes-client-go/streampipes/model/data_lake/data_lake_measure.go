@@ -19,6 +19,10 @@ package data_lake
 
 import "github.com/apache/streampipes/streampipes-client-go/streampipes/model"
 
+// DataLakeMeasure is the legacy representation of a dataset.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use DatasetMetadata instead.
+// StreamPipes no longer returns the PipelineIsRunning field; it is kept here for compatibility and is always false.
 type DataLakeMeasure struct {
 	MeasureName          string            `json:"measureName"`
 	TimestampField       string            `json:"timestampField"`

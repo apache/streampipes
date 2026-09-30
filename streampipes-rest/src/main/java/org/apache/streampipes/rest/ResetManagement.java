@@ -157,14 +157,12 @@ public class ResetManagement {
 
   private void removeAllDataInDataLake() {
     var datasetMetadataManagement = new DataExplorerDispatcher()
-        .getDataExplorerManager()
         .getSchemaManagement(
             chartSchemaUpdateCoordinator,
             resourceManager.managePermissions().getDb(),
             resourceManager.manageDataLakeMeasures().getDb());
     var dataExplorerQueryManagement = new DataExplorerDispatcher()
-        .getDataExplorerManager()
-        .getQueryManagement(datasetMetadataManagement);
+        .getDatasetServices(datasetMetadataManagement).administration();
     List<DatasetMetadata> allMeasurements = datasetMetadataManagement.getAllMeasurements();
     allMeasurements.forEach(measurement -> {
       boolean isSuccessDataLake = dataExplorerQueryManagement.deleteData(measurement.getMeasureName());

@@ -19,12 +19,14 @@ package org.apache.streampipes.export;
 
 import org.apache.streampipes.commons.environment.Environment;
 import org.apache.streampipes.commons.environment.Environments;
-import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
 import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
+import org.apache.streampipes.dataexplorer.api.query.QueryExecutionOptions;
+import org.apache.streampipes.dataexplorer.api.query.QuerySpec;
 import org.apache.streampipes.dataexplorer.export.ConfiguredOutputWriterFactory;
 import org.apache.streampipes.dataexplorer.export.OutputFormat;
 import org.apache.streampipes.dataexplorer.export.objectstorage.ExportProviderFactory;
 import org.apache.streampipes.dataexplorer.export.objectstorage.IObjectStorage;
+import org.apache.streampipes.dataexplorer.management.DatasetServices;
 import org.apache.streampipes.model.configuration.ExportProviderSettings;
 import org.apache.streampipes.model.configuration.ProviderType;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
@@ -51,16 +53,16 @@ public class DatasetExportManager {
     private static final Environment env = Environments.getEnvironment();
 
     private final IDatasetMetadataManagement datasetMetadataManagement;
-    private final IDataExplorerQueryManagement dataExplorerQueryManagement;
+    private final DatasetServices datasetServices;
     private final ISpCoreConfigurationStorage coreConfigurationStorage;
     private final ConfiguredOutputWriterFactory outputWriterFactory;
 
     public DatasetExportManager(IDatasetMetadataManagement dataLakeSchemaManagement,
-                                 IDataExplorerQueryManagement dataLakeQueryManagement,
+                                 DatasetServices services,
                                  ISpCoreConfigurationStorage coreConfigurationStorage,
                                  IFileMetadataStorage fileMetadataStorage) {
         this.datasetMetadataManagement = dataLakeSchemaManagement;
-        this.dataExplorerQueryManagement = dataLakeQueryManagement;
+        this.datasetServices = services;
         this.coreConfigurationStorage = coreConfigurationStorage;
         this.outputWriterFactory = new ConfiguredOutputWriterFactory(fileMetadataStorage, coreConfigurationStorage);
     }
@@ -90,13 +92,14 @@ public class DatasetExportManager {
         params.put("endDate", Long.toString(endDate));
 
         ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(datasetMetadata.getMeasureName(), params);
-        StreamingResponseBody streamingOutput = output -> dataExplorerQueryManagement.getDataAsStream(
-                sanitizedParams,
-                outputFormat,
-                outputWriterFactory,
-                "ignore".equals(
-                        datasetMetadata.getRetentionTime().getRetentionExportConfig().getExportConfig()
-                                .missingValueBehaviour()),
+        boolean ignoreMissing = "ignore".equals(
+                datasetMetadata.getRetentionTime().getRetentionExportConfig().getExportConfig().missingValueBehaviour());
+        var specification = QuerySpec.builder().select("*")
+                .where(new QuerySpec.TimestampComparison(QuerySpec.Operator.LT, endDate)).build();
+        var options = new QueryExecutionOptions(ignoreMissing, java.util.OptionalInt.empty(), false);
+        StreamingResponseBody streamingOutput = output -> datasetServices.exports().exportByName(
+                datasetMetadata.getMeasureName(), specification, options,
+                dataset -> outputWriterFactory.getConfiguredWriter(dataset, outputFormat, sanitizedParams, ignoreMissing),
                 output);
 
         String exportProviderId = datasetMetadata.getRetentionTime().getRetentionExportConfig()
@@ -178,7 +181,7 @@ public class DatasetExportManager {
 
     private void deleteMeasurement(DatasetMetadata datasetMetadata, Instant now, long endDate) {
 
-        this.dataExplorerQueryManagement.deleteData(datasetMetadata.getMeasureName(), null, endDate);
+        this.datasetServices.administration().deleteData(datasetMetadata.getMeasureName(), null, endDate);
     }
 
     private Map<String, Object> getStartAndEndTime(int olderThanDays) {

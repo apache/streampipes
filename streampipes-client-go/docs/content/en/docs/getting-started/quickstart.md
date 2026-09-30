@@ -64,7 +64,7 @@ if err != nil {
 Request and print the data from a specific data measure.
 
 ```go
-dataSeries, err := streamPipesClient.DataLakeMeasures().GetSingleDataSeries("measureName")
+dataSeries, err := streamPipesClient.Datasets().GetSingleDataSeries("measureName")
 if err != nil {
     log.Fatal(err)
 }
@@ -116,7 +116,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	dataSeries, err := streamPipesClient.DataLakeMeasures().GetSingleDataSeries("measureName")
+	dataSeries, err := streamPipesClient.Datasets().GetSingleDataSeries("measureName")
 	if err != nil {
 		log.Fatal(err)
 	}
