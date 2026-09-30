@@ -264,7 +264,8 @@ public class TimeSeriesStorageInflux extends TimeSeriesStorage {
     var fields = event.getFields();
     for (var key : new ArrayList<>(fields.keySet())) {
       var field = fields.get(key);
-      if (key.equals(field.getFieldNameIn())) {
+      // Dataset imports can explicitly add a qualified selector with a different source prefix.
+      if (!key.contains(PropertySelectorConstants.PROPERTY_DELIMITER) && key.equals(field.getFieldNameIn())) {
         fields.putIfAbsent(prefix + key, field);
         fields.remove(key);
       }

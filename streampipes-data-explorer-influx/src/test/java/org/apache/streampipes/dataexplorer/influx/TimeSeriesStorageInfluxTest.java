@@ -579,6 +579,36 @@ public class TimeSeriesStorageInfluxTest {
     assertEquals(2, event.getFields().size());
   }
 
+  @Test
+  public void onEventPreservesExplicitDatasetTimestampSelector() {
+    var event = datasetImportEvent();
+    var actual = executeOnEvent(getInfluxStore(legacyEventSchema()), event);
+
+    assertEquals(getPointBuilderWithTimestamp().addField(FIELD_NAME, 1).build(), actual);
+    assertEquals(SAMPLE_TIMESTAMP, event.getFieldBySelector("s0::timestamp").getAsPrimitive().getAsLong());
+    assertFalse(event.getFields().containsKey("o::s0::timestamp"));
+  }
+
+  @Test
+  public void onEventsPreservesExplicitDatasetTimestampSelector() {
+    var event = datasetImportEvent();
+    var store = getInfluxStore(legacyEventSchema());
+    store.onEvents(List.of(event));
+
+    var captor = ArgumentCaptor.forClass(BatchPoints.class);
+    Mockito.verify(influxDBMock).write(captor.capture());
+    assertEquals(List.of(getPointBuilderWithTimestamp().addField(FIELD_NAME, 1).build()),
+        captor.getValue().getPoints());
+    assertEquals(Set.of("o::timestamp", "o::" + FIELD_NAME, "s0::timestamp"), event.getFields().keySet());
+  }
+
+  private Event datasetImportEvent() {
+    // Match DatasetWriter: default factory prefix "o", followed by an explicit dataset timestamp selector.
+    var event = EventFactory.fromMap(Map.of(TIMESTAMP, SAMPLE_TIMESTAMP, FIELD_NAME, 1));
+    event.addField("s0::timestamp", event.getFieldByRuntimeName(TIMESTAMP).getAsPrimitive().getAsLong());
+    return event;
+  }
+
   private Event legacyEvent() {
     var event = new Event(new SourceInfo("test-topic", "s0"));
     event.addField(TIMESTAMP, SAMPLE_TIMESTAMP);
