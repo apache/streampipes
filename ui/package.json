@@ -40,7 +40,7 @@
     "@angular/material": "^22.1.6",
     "@angular/platform-browser": "^22.1.6",
     "@angular/platform-browser-dynamic": "^22.1.6",
-    "@angular/router": "^22.1.6",
+    "@angular/router": "^22.2.0",
     "@auth0/angular-jwt": "^5.2.0",
     "@bluehalo/ngx-leaflet": "^22.0.0",
     "@fortawesome/fontawesome-free": "^7.2.0",
