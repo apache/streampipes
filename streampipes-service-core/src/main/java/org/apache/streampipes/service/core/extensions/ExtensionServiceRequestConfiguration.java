@@ -27,18 +27,24 @@ import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
+import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
+import org.apache.streampipes.user.management.service.RefreshTokenService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -99,6 +105,7 @@ public class ExtensionServiceRequestConfiguration {
   public SpResourceManager spResourceManager(IPermissionStorage permissionStorage,
                                              IChartStorage chartStorage,
                                              IAdapterStorage adapterStorage,
+                                             @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage,
                                              IDashboardStorage dashboardStorage,
                                              IAssetStorage assetStorage,
                                              IPipelineStorage pipelineStorage,
@@ -108,11 +115,15 @@ public class ExtensionServiceRequestConfiguration {
                                              IRoleStorage roleStorage,
                                              IUserGroupStorage userGroupStorage,
                                              IPrivilegeStorage privilegeStorage,
-                                             IUserStorage userStorage) {
+                                             IUserStorage userStorage,
+                                             IDataProcessorStorage dataProcessorStorage,
+                                             IUserActivationTokenStorage userActivationTokenStorage,
+                                             IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage) {
     return new SpResourceManager(
         permissionStorage,
         chartStorage,
         adapterStorage,
+        adapterDescriptionStorage,
         assetStorage,
         dashboardStorage,
         pipelineStorage,
@@ -122,8 +133,16 @@ public class ExtensionServiceRequestConfiguration {
         roleStorage,
         userGroupStorage,
         privilegeStorage,
-        userStorage
+        userStorage,
+        dataProcessorStorage,
+        userActivationTokenStorage,
+        passwordRecoveryTokenStorage
     );
+  }
+
+  @Bean
+  public RefreshTokenService refreshTokenService(IRefreshTokenStorage refreshTokenStorage) {
+    return new RefreshTokenService(refreshTokenStorage);
   }
 
   @Bean

@@ -29,10 +29,12 @@ import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpoi
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,8 +56,9 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
   private final IExtensionsServiceEndpointGenerator endpointGenerator;
 
   public DescriptionResource(WorkerRestClient workerRestClient,
-                             SpResourceManager resourceManager) {
-    super(() -> new DescriptionManagement(workerRestClient, resourceManager.manageAdapters()));
+                             SpResourceManager resourceManager,
+                             @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage) {
+    super(() -> new DescriptionManagement(workerRestClient, resourceManager.manageAdapters(), adapterDescriptionStorage));
     endpointGenerator = new ExtensionsServiceEndpointGenerator();
   }
 

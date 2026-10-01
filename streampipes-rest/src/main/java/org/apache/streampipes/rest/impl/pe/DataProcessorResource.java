@@ -27,6 +27,7 @@ import org.apache.streampipes.resource.management.DataProcessorResourceManager;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.http.MediaType;
@@ -47,8 +48,9 @@ public class DataProcessorResource extends AbstractAuthGuardedRestResource {
 
   private final DataProcessorResourceManager dataProcessorResourceManager;
 
-  public DataProcessorResource(IPermissionStorage permissionStorage) {
+  public DataProcessorResource(IPermissionStorage permissionStorage, IDataProcessorStorage dataProcessorStorage) {
     this.dataProcessorResourceManager = new DataProcessorResourceManager(
+        dataProcessorStorage,
         new PermissionResourceManager(permissionStorage)
     );
   }

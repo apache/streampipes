@@ -25,6 +25,7 @@ import org.apache.streampipes.model.monitoring.SpLogMessage;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +41,10 @@ public class ContainerProvidedOptions extends AbstractRestResource {
   private final ContainerProvidedOptionsHandler containerProvidedOptionsHandler;
 
   public ContainerProvidedOptions(ExtensionServiceRequestManager extensionServiceRequestManager,
-                                  SpResourceManager resourceManager) {
+                                  SpResourceManager resourceManager,
+                                  IPipelineElementDescriptionStorage descriptionStorage) {
     this.containerProvidedOptionsHandler = new ContainerProvidedOptionsHandler(
-        extensionServiceRequestManager, resourceManager
+        extensionServiceRequestManager, resourceManager, descriptionStorage
     );
   }
 

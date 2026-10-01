@@ -27,6 +27,7 @@ import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.io.IOException;
@@ -36,27 +37,30 @@ public class ExtensionItemInstaller {
   private final ExtensionServiceRequestManager requestManager;
   private final SpServiceRegistration service;
   private final SpResourceManager resourceManager;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
 
   public ExtensionItemInstaller(SpServiceRegistration service,
                                 ExtensionServiceRequestManager requestManager,
-                                SpResourceManager resourceManager) {
+                                SpResourceManager resourceManager,
+                                     IPipelineElementDescriptionStorage descriptionStorage) {
     this.requestManager = requestManager;
     this.service = service;
     this.resourceManager = resourceManager;
+    this.descriptionStorage = descriptionStorage;
   }
 
   public Message installExtension(ExtensionItemInstallationRequest req,
                                   String principalSid) throws IOException, SepaParseException {
     var requestTarget = getDescriptionRequestTarget(req);
     var description = fetchDescription(requestTarget);
-    return new TypeExtractor(description, requestManager,
+    return new TypeExtractor(description, descriptionStorage, requestManager,
         resourceManager).getTypeVerifier().verifyAndAdd(principalSid, req.publicElement());
   }
 
   public Message updateExtension(ExtensionItemInstallationRequest req) throws IOException, SepaParseException {
     var requestTarget = getDescriptionRequestTarget(req);
     var description = fetchDescription(requestTarget);
-    return new TypeExtractor(description, requestManager,
+    return new TypeExtractor(description, descriptionStorage, requestManager,
         resourceManager).getTypeVerifier().verifyAndUpdate();
   }
 

@@ -17,6 +17,13 @@
  */
 package org.apache.streampipes.service.core.storage;
 
+import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
+import org.apache.streampipes.manager.setup.InstallationConfiguration;
+import org.apache.streampipes.service.core.PipelineManagementConfiguration;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.core.INoSqlStorage;
+import org.apache.streampipes.storage.api.system.IImageStorage;
+import org.apache.streampipes.storage.couchdb.impl.connect.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.connect.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.explorer.ChartStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineStorageImpl;
@@ -24,11 +31,20 @@ import org.apache.streampipes.storage.couchdb.impl.system.CoreConfigurationStora
 import org.apache.streampipes.storage.couchdb.impl.user.PrivilegeStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.RoleStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mockStatic;
 
 class StorageApiConfigurationTest {
 
@@ -45,6 +61,39 @@ class StorageApiConfigurationTest {
       CachedUserStorage.CACHE_NAME,
       CachedSpCoreConfigurationStorage.CACHE_NAME
   );
+
+  @Test
+  void registersUncachedStoragesAndDistinguishesAdapterDescriptions() {
+    try (var clients = mockStatic(Utils.class);
+         var context = new AnnotationConfigApplicationContext()) {
+      context.registerBean(CacheManager.class, () -> cacheManager);
+      context.register(StorageApiConfiguration.class, PipelineManagementConfiguration.class, AdapterStorages.class);
+      context.refresh();
+
+      var adapters = context.getBean(AdapterStorages.class);
+      assertSame(context.getBean("adapterStorage"), adapters.instances());
+      assertSame(context.getBean("adapterDescriptionStorage"), adapters.descriptions());
+      assertInstanceOf(CachedAdapterStorage.class, adapters.instances());
+      assertInstanceOf(AdapterDescriptionStorageImpl.class, adapters.descriptions());
+
+      for (var method : INoSqlStorage.class.getDeclaredMethods()) {
+        var storageType = method.getReturnType();
+        if (storageType != IAdapterStorage.class && storageType != IImageStorage.class) {
+          var storage = context.getBean(storageType);
+          assertFalse(storage.getClass().getSimpleName().startsWith("Cached"), storageType.getSimpleName());
+        }
+      }
+      assertEquals(IImageStorage.class, context.getType("imageStorage"));
+      assertFalse(context.getBeanFactory().containsSingleton("imageStorage"));
+      assertNotNull(context.getBean(InstallationConfiguration.class));
+      assertNotNull(context.getBean(AvailableExtensionsProvider.class));
+      clients.verifyNoInteractions();
+    }
+  }
+
+  record AdapterStorages(IAdapterStorage instances,
+                         @Qualifier("adapterDescriptionStorage") IAdapterStorage descriptions) {
+  }
 
   @Test
   void enablesStorageCaches() {

@@ -33,6 +33,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.secret.SecretDecrypter;
 import org.apache.streampipes.resource.management.secret.SecretService;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.google.gson.JsonSyntaxException;
@@ -45,11 +46,14 @@ public class ContainerProvidedOptionsHandler {
 
   private final ExtensionServiceRequestManager extensionRequestManager;
   private final SpResourceManager resourceManager;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
 
   public ContainerProvidedOptionsHandler(ExtensionServiceRequestManager extensionRequestManager,
-                                         SpResourceManager resourceManager) {
+                                         SpResourceManager resourceManager,
+                                     IPipelineElementDescriptionStorage descriptionStorage) {
     this.extensionRequestManager = extensionRequestManager;
     this.resourceManager = resourceManager;
+    this.descriptionStorage = descriptionStorage;
   }
 
   public RuntimeOptionsResponse fetchRemoteOptions(RuntimeOptionsRequest request)
@@ -93,7 +97,7 @@ public class ContainerProvidedOptionsHandler {
 
   private ExtensionServiceRequestTarget getEndpointRequestTarget(String appId)
       throws NoServiceEndpointsAvailableException {
-    SpServiceUrlProvider provider = ExtensionsServiceEndpointUtils.getPipelineElementType(appId);
+    SpServiceUrlProvider provider = ExtensionsServiceEndpointUtils.getPipelineElementType(appId, descriptionStorage);
     var service = new ExtensionsServiceEndpointGenerator().selectService(appId, provider, Set.of());
     return ExtensionServiceRequestTargets.containerProvidedOptions(service, provider, appId);
   }

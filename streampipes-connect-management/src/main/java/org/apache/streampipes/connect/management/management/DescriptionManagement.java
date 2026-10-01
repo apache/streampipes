@@ -24,25 +24,26 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 import java.util.Optional;
 
 public class DescriptionManagement {
 
+  private final IAdapterStorage adapterDescriptionStorage;
   private final WorkerRestClient workerRestClient;
   private final AdapterResourceManager adapterResourceManager;
 
   public DescriptionManagement(WorkerRestClient workerRestClient,
-                               AdapterResourceManager adapterResourceManager) {
+                               AdapterResourceManager adapterResourceManager,
+                               IAdapterStorage adapterDescriptionStorage) {
+    this.adapterDescriptionStorage = adapterDescriptionStorage;
     this.workerRestClient = workerRestClient;
     this.adapterResourceManager = adapterResourceManager;
   }
 
   public List<AdapterDescription> getAdapters() {
-    IAdapterStorage adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
-    return adapterStorage.findAll();
+    return adapterDescriptionStorage.findAll();
   }
 
   public Optional<AdapterDescription> getAdapter(String id) {
@@ -52,10 +53,9 @@ public class DescriptionManagement {
   }
 
   public void deleteAdapterDescription(String id) throws SpRuntimeException {
-    var adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
-    var adapter = adapterStorage.getElementById(id);
+    var adapter = adapterDescriptionStorage.getElementById(id);
     if (!isAdapterUsed(adapter)) {
-      adapterStorage.deleteElementById(id);
+      adapterDescriptionStorage.deleteElementById(id);
     } else {
       throw new SpRuntimeException("This adapter is used by an existing instance and cannot be deleted");
     }
