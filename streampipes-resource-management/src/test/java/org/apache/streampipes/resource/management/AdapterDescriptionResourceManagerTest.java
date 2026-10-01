@@ -18,19 +18,33 @@
 
 package org.apache.streampipes.resource.management;
 
+import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 
-public class AdapterDescriptionResourceManager
-    extends AbstractPipelineElementResourceManager<IAdapterStorage, AdapterDescription, AdapterDescription> {
+import org.junit.jupiter.api.Test;
 
-  public AdapterDescriptionResourceManager(IAdapterStorage adapterDescriptionStorage,
-                                           PermissionResourceManager permissionResourceManager) {
-    super(adapterDescriptionStorage, permissionResourceManager);
-  }
+import java.util.List;
 
-  @Override
-  protected AdapterDescription toInvocation(AdapterDescription description) {
-    return description;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+class AdapterDescriptionResourceManagerTest {
+
+  @Test
+  void deletesInjectedDescriptionAndItsPermissions() {
+    var storage = mock(IAdapterStorage.class);
+    var permissions = mock(PermissionResourceManager.class);
+    var description = new AdapterDescription();
+    description.setElementId("description");
+    var permission = new Permission();
+    when(storage.getElementById("description")).thenReturn(description);
+    when(permissions.findForObjectId("description")).thenReturn(List.of(permission));
+
+    new AdapterDescriptionResourceManager(storage, permissions).delete("description");
+
+    verify(permissions).delete(permission);
+    verify(storage).deleteElement(description);
   }
 }

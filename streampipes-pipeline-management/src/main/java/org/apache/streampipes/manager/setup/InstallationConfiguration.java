@@ -19,21 +19,39 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.manager.extensions.AvailableExtensionsProvider;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InstallationConfiguration {
 
-  public static List<InstallationStep> getInstallationSteps(InitialSettings settings,
+  private final IGenericStorage genericStorage;
+  private final ICompactPipelineTemplateStorage pipelineTemplateStorage;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
+  private final AvailableExtensionsProvider availableExtensionsProvider;
+
+  public InstallationConfiguration(IGenericStorage genericStorage,
+                                   ICompactPipelineTemplateStorage pipelineTemplateStorage,
+                                   IPipelineElementDescriptionStorage descriptionStorage,
+                                   AvailableExtensionsProvider availableExtensionsProvider) {
+    this.genericStorage = genericStorage;
+    this.pipelineTemplateStorage = pipelineTemplateStorage;
+    this.descriptionStorage = descriptionStorage;
+    this.availableExtensionsProvider = availableExtensionsProvider;
+  }
+
+  public List<InstallationStep> getInstallationSteps(InitialSettings settings,
                                                             SpResourceManager resourceManager) {
     List<InstallationStep> steps = new ArrayList<>();
 
     steps.add(new SpCoreConfigurationStep(resourceManager.getCoreConfigurationStorage()));
-    steps.add(new CouchDbInstallationStep());
+    steps.add(new CouchDbInstallationStep(genericStorage, pipelineTemplateStorage));
     steps.add(new UserRegistrationInstallationStep(
         settings.getAdminEmail(),
         settings.getAdminPassword(),
@@ -45,13 +63,14 @@ public class InstallationConfiguration {
     return steps;
   }
 
-  public static List<Runnable> getBackgroundInstallationSteps(InitialSettings settings,
+  public List<Runnable> getBackgroundInstallationSteps(InitialSettings settings,
                                                               BackgroundTaskNotifier callback,
                                                               ExtensionServiceRequestManager extensionServiceRequestManager,
                                                               SpResourceManager resourceManager) {
     return List.of(new ExtensionsInstallationTask(
         settings,
-        StorageDispatcher.INSTANCE.getNoSqlStore(),
+        availableExtensionsProvider,
+        descriptionStorage,
         callback,
         extensionServiceRequestManager,
         resourceManager

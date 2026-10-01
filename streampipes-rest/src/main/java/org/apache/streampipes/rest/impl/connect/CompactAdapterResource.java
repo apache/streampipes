@@ -39,10 +39,12 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -68,7 +70,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
   public CompactAdapterResource(WorkerRestClient workerRestClient,
                                 ExtensionServiceRequestManager requestManager,
                                 ApplicationEventPublisher eventPublisher,
-                                SpResourceManager resourceManager) {
+                                SpResourceManager resourceManager,
+                                @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage) {
     super(() -> new AdapterMasterManagement(
         resourceManager,
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
@@ -83,7 +86,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     );
     this.requestManager = requestManager;
     this.compactAdapterManagement = new CompactAdapterManagement(
-        new AdapterGenerationSteps(guessManagement).getGenerators()
+        new AdapterGenerationSteps(guessManagement).getGenerators(), adapterDescriptionStorage
     );
     this.pipelineManager = new PipelineManager(
         resourceManager

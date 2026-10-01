@@ -17,57 +17,33 @@
  */
 package org.apache.streampipes.storage.couchdb;
 
-import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
-import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
-import org.apache.streampipes.storage.api.pipeline.IPipelineCanvasMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceConfigurationStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
-import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
-import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
-import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
-import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
-import org.apache.streampipes.storage.couchdb.impl.connect.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.CompactPipelineTemplateStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.pipeline.DataProcessorStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.DataSinkStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.DataStreamStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineCanvasMetadataStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementTemplateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.CertificateStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.GenericStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.system.ImageStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTemplateStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.user.PasswordRecoveryTokenStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.user.RefreshTokenStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.user.UserActivationTokenStorageImpl;
 
 public class CouchDbStorageManager implements INoSqlStorage {
 
   @Override
-  public IAdapterStorage getAdapterDescriptionStorage() {
-    return new AdapterDescriptionStorageImpl();
-  }
-
-  @Override
   public IGenericStorage getGenericStorage() {
     return new GenericStorageImpl();
-  }
-
-  @Override
-  public IImageStorage getImageStorage() {
-    return new ImageStorageImpl();
   }
 
   @Override
@@ -76,18 +52,8 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IPipelineCanvasMetadataStorage getPipelineCanvasMetadataStorage() {
-    return new PipelineCanvasMetadataStorageImpl();
-  }
-
-  @Override
   public IPipelineElementDescriptionStorage getPipelineElementDescriptionStorage() {
     return new PipelineElementDescriptionStorageImpl();
-  }
-
-  @Override
-  public IDataProcessorStorage getDataProcessorStorage() {
-    return new DataProcessorStorageImpl();
   }
 
   @Override
@@ -98,21 +64,6 @@ public class CouchDbStorageManager implements INoSqlStorage {
   @Override
   public IDataStreamStorage getDataStreamStorage() {
     return new DataStreamStorageImpl();
-  }
-
-  @Override
-  public IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage() {
-    return new PasswordRecoveryTokenStorageImpl();
-  }
-
-  @Override
-  public IUserActivationTokenStorage getUserActivationTokenStorage() {
-    return new UserActivationTokenStorageImpl();
-  }
-
-  @Override
-  public IRefreshTokenStorage getRefreshTokenStorage() {
-    return new RefreshTokenStorageImpl();
   }
 
   @Override

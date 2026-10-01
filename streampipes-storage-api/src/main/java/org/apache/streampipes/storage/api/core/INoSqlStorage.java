@@ -17,49 +17,28 @@
  */
 package org.apache.streampipes.storage.api.core;
 
-import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
-import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
-import org.apache.streampipes.storage.api.pipeline.IPipelineCanvasMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceConfigurationStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
-import org.apache.streampipes.storage.api.system.IImageStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
-import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
-import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
-import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 
 public interface INoSqlStorage {
 
   IGenericStorage getGenericStorage();
 
-  IAdapterStorage getAdapterDescriptionStorage();
-
-  IImageStorage getImageStorage();
-
   IPipelineElementTemplateStorage getPipelineElementTemplateStorage();
 
-  IPipelineCanvasMetadataStorage getPipelineCanvasMetadataStorage();
-
   IPipelineElementDescriptionStorage getPipelineElementDescriptionStorage();
-
-  IDataProcessorStorage getDataProcessorStorage();
 
   IDataSinkStorage getDataSinkStorage();
 
   IDataStreamStorage getDataStreamStorage();
-
-  IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage();
-
-  IUserActivationTokenStorage getUserActivationTokenStorage();
-
-  IRefreshTokenStorage getRefreshTokenStorage();
 
   IExtensionsServiceStorage getExtensionsServiceStorage();
 

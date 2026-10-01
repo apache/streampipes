@@ -25,7 +25,9 @@ import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
-import org.apache.streampipes.storage.api.core.INoSqlStorage;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +41,16 @@ import java.util.stream.Collectors;
  */
 public class AvailableExtensionsProvider {
 
-  private final INoSqlStorage storage;
+  private final IExtensionsServiceStorage extensionsServiceStorage;
+  private final IAdapterStorage adapterDescriptionStorage;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
 
-  public AvailableExtensionsProvider(INoSqlStorage storage) {
-    this.storage = storage;
+  public AvailableExtensionsProvider(IExtensionsServiceStorage extensionsServiceStorage,
+                                     IAdapterStorage adapterDescriptionStorage,
+                                     IPipelineElementDescriptionStorage descriptionStorage) {
+    this.extensionsServiceStorage = extensionsServiceStorage;
+    this.adapterDescriptionStorage = adapterDescriptionStorage;
+    this.descriptionStorage = descriptionStorage;
   }
 
   public List<ExtensionItemDescription> getExtensionItemDescriptions() {
@@ -66,7 +74,7 @@ public class AvailableExtensionsProvider {
    * @return Map of extension item descriptions keyed by their elementId
    */
   private Map<String, ExtensionItemDescription> getUniqueAvailableExtensions() {
-    return storage.getExtensionsServiceStorage().findAll()
+    return extensionsServiceStorage.findAll()
         .stream()
         .filter(service -> service.getStatus() == SpServiceStatus.HEALTHY)
         .flatMap(service -> service.getProvidedExtensions().stream())
@@ -107,22 +115,22 @@ public class AvailableExtensionsProvider {
   }
 
   private List<AdapterDescription> getAllAdapters() {
-    return storage.getAdapterDescriptionStorage().findAll();
+    return adapterDescriptionStorage.findAll();
   }
 
   private List<SpDataStream> getAllDataStreams() {
-    return storage.getDataStreamStorage().findAll()
+    return descriptionStorage.getAllDataStreams()
         .stream()
         .filter(stream -> !stream.isInternallyManaged())
         .toList();
   }
 
   private List<DataProcessorDescription> getAllDataProcessors() {
-    return storage.getDataProcessorStorage().findAll();
+    return descriptionStorage.getAllDataProcessors();
   }
 
   private List<DataSinkDescription> getAllDataSinks() {
-    return storage.getDataSinkStorage().findAll();
+    return descriptionStorage.getAllDataSinks();
   }
 
 }

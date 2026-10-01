@@ -34,7 +34,6 @@ import org.apache.streampipes.model.pipeline.PipelineModification;
 import org.apache.streampipes.resource.management.DataProcessorResourceManager;
 import org.apache.streampipes.resource.management.DataSinkResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +47,7 @@ public class ElementRecommender {
 
   private static final Logger LOG = LoggerFactory.getLogger(ElementRecommender.class);
 
+  private final IPipelineElementDescriptionStorage descriptionStorage;
   private final Pipeline pipeline;
   private final String baseRecDomId;
   private final PipelineElementRecommendationMessage recommendationMessage;
@@ -59,7 +59,9 @@ public class ElementRecommender {
                             String baseRecDomId,
                             ExtensionServiceRequestManager requestManager,
                             DataProcessorResourceManager dataProcessorResourceManager,
-                            DataSinkResourceManager dataSinkResourceManager) {
+                            DataSinkResourceManager dataSinkResourceManager,
+                            IPipelineElementDescriptionStorage descriptionStorage) {
+    this.descriptionStorage = descriptionStorage;
     this.pipeline = partialPipeline;
     this.baseRecDomId = baseRecDomId;
     this.requestManager = requestManager;
@@ -96,7 +98,7 @@ public class ElementRecommender {
 
   private List<ConsumableStreamPipesEntity> getAllDataProcessors() {
     List<String> userObjects = dataProcessorResourceManager.findAllIdsOnly();
-    return getNoSqlStore()
+    return descriptionStorage
         .getAllDataProcessors()
         .stream()
         .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getAppId())))
@@ -107,7 +109,7 @@ public class ElementRecommender {
 
   private List<ConsumableStreamPipesEntity> getAllDataSinks() {
     List<String> userObjects = dataSinkResourceManager.findAllIdsOnly();
-    return getNoSqlStore()
+    return descriptionStorage
         .getAllDataSinks()
         .stream()
         .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getAppId())))
@@ -120,10 +122,6 @@ public class ElementRecommender {
     allElements.addAll(getAllDataProcessors());
     allElements.addAll(getAllDataSinks());
     return allElements;
-  }
-
-  private IPipelineElementDescriptionStorage getNoSqlStore() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage();
   }
 
   private Optional<SpDataStream> getOutputStream(AllElementsProvider elementsProvider) {

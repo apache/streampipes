@@ -22,13 +22,16 @@ import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -38,6 +41,7 @@ public class SpResourceManager {
   private final IPermissionStorage permissionStorage;
   private final IChartStorage chartStorage;
   private final IAdapterStorage adapterStorage;
+  private final IAdapterStorage adapterDescriptionStorage;
   private final IAssetStorage assetStorage;
   private final IDashboardStorage dashboardStorage;
   private final IPipelineStorage pipelineStorage;
@@ -48,10 +52,14 @@ public class SpResourceManager {
   private final IUserGroupStorage userGroupStorage;
   private final IPrivilegeStorage privilegeStorage;
   private final IUserStorage userStorage;
+  private final IDataProcessorStorage dataProcessorStorage;
+  private final IUserActivationTokenStorage userActivationTokenStorage;
+  private final IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage;
 
   public SpResourceManager(IPermissionStorage permissionStorage,
                            IChartStorage chartStorage,
                            IAdapterStorage adapterStorage,
+                           IAdapterStorage adapterDescriptionStorage,
                            IAssetStorage assetStorage,
                            IDashboardStorage dashboardStorage,
                            IPipelineStorage pipelineStorage,
@@ -61,10 +69,14 @@ public class SpResourceManager {
                            IRoleStorage roleStorage,
                            IUserGroupStorage userGroupStorage,
                            IPrivilegeStorage privilegeStorage,
-                           IUserStorage userStorage) {
+                           IUserStorage userStorage,
+                           IDataProcessorStorage dataProcessorStorage,
+                           IUserActivationTokenStorage userActivationTokenStorage,
+                           IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage) {
     this.permissionStorage = permissionStorage;
     this.chartStorage = chartStorage;
     this.adapterStorage = adapterStorage;
+    this.adapterDescriptionStorage = adapterDescriptionStorage;
     this.assetStorage = assetStorage;
     this.dashboardStorage = dashboardStorage;
     this.pipelineStorage = pipelineStorage;
@@ -75,10 +87,13 @@ public class SpResourceManager {
     this.userGroupStorage = userGroupStorage;
     this.privilegeStorage = privilegeStorage;
     this.userStorage = userStorage;
+    this.dataProcessorStorage = dataProcessorStorage;
+    this.userActivationTokenStorage = userActivationTokenStorage;
+    this.passwordRecoveryTokenStorage = passwordRecoveryTokenStorage;
   }
 
   public AdapterDescriptionResourceManager manageAdapterDescriptions() {
-    return new AdapterDescriptionResourceManager(managePermissions());
+    return new AdapterDescriptionResourceManager(adapterDescriptionStorage, managePermissions());
   }
 
   public DataSinkResourceManager manageDataSinks() {
@@ -86,7 +101,7 @@ public class SpResourceManager {
   }
 
   public DataProcessorResourceManager manageDataProcessors() {
-    return new DataProcessorResourceManager(managePermissions());
+    return new DataProcessorResourceManager(dataProcessorStorage, managePermissions());
   }
 
   public DataStreamResourceManager manageDataStreams() {
@@ -148,6 +163,7 @@ public class SpResourceManager {
   }
 
   public UserResourceManager manageUsers() {
-    return new UserResourceManager(userStorage, coreConfigurationStorage);
+    return new UserResourceManager(
+        userStorage, coreConfigurationStorage, userActivationTokenStorage, passwordRecoveryTokenStorage);
   }
 }

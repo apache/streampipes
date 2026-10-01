@@ -19,7 +19,6 @@ package org.apache.streampipes.user.management.service;
 
 import org.apache.streampipes.model.client.user.RefreshToken;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.TokenUtil;
 
 import java.util.UUID;
@@ -32,10 +31,8 @@ public class RefreshTokenService {
 
   private final IRefreshTokenStorage refreshTokenStorage;
 
-  public RefreshTokenService() {
-    this.refreshTokenStorage = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getRefreshTokenStorage();
+  public RefreshTokenService(IRefreshTokenStorage refreshTokenStorage) {
+    this.refreshTokenStorage = refreshTokenStorage;
   }
 
   public IssuedRefreshToken issueRefreshToken(String principalId,

@@ -54,16 +54,19 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
 
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final AssetManager assetManager;
+  private final AvailableExtensionsProvider availableExtensionsProvider;
 
   public ExtensionsServiceEndpointResource(ExtensionServiceRequestManager extensionServiceRequestManager,
-                                           ISpCoreConfigurationStorage coreConfigurationStorage) {
+                                           ISpCoreConfigurationStorage coreConfigurationStorage,
+                                           AvailableExtensionsProvider availableExtensionsProvider) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.availableExtensionsProvider = availableExtensionsProvider;
     this.assetManager = new AssetManager(coreConfigurationStorage);
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<ExtensionItemDescription>> getExtensionItems() {
-    var allExtensions = new AvailableExtensionsProvider(getNoSqlStorage()).getExtensionItemDescriptions();
+    var allExtensions = availableExtensionsProvider.getExtensionItemDescriptions();
     return ok(allExtensions);
   }
 

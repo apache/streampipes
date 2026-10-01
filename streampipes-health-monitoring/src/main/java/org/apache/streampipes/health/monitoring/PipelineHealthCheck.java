@@ -227,7 +227,7 @@ public class PipelineHealthCheck implements HealthCheck {
     try {
       var service = new ExtensionsServiceEndpointGenerator().selectService(
           pipelineElement.getAppId(),
-          ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement.getAppId()),
+          ExtensionsServiceEndpointUtils.getPipelineElementType(pipelineElement),
           Collections.emptySet()
       );
       new SecretService(new SecretDecrypter()).apply(pipelineElement);
