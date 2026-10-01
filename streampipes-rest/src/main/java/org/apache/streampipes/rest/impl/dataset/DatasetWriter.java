@@ -79,25 +79,37 @@ public class DatasetWriter {
 
   private void getTimeSeriesStoreAndPersistQueryResult(DataSeries dataSeries,
                                                        DatasetMetadata measure){
-    var timeSeriesStore = getTimeSeriesStore(measure);
-    var runtimeNames = getRuntimeNames(measure);
+    var headers = dataSeries.getHeaders();
+    var runtimeNames = new HashSet<>(getRuntimeNames(measure));
+    // all rows share the headers, so the schema check runs once per request; only rows with null values
+    // (which are dropped from the event) need the per-event check below
+    checkRuntimeNames(runtimeNames, new HashSet<>(headers));
+
+    var events = new ArrayList<Event>(dataSeries.getRows().size());
     for (var row : dataSeries.getRows()) {
-      var event = rowToEvent(row, dataSeries.getHeaders());
+      var eventMap = toEventMap(row, headers);
+      var event = EventFactory.fromMap(eventMap);
       renameTimestampField(event, measure.getTimestampField());
-      checkRuntimeNames(runtimeNames, event);
-      try {
-        timeSeriesStore.onEvent(event);
-      } catch (IllegalArgumentException e) {
-        throw new SpRuntimeException("Fields don't match for event: " + event.getRaw());
+      if (eventMap.size() != headers.size()) {
+        checkRuntimeNames(runtimeNames, event);
       }
+      events.add(event);
     }
-    timeSeriesStore.close();
+
+    var timeSeriesStore = getTimeSeriesStore(measure);
+    try {
+      timeSeriesStore.onEvents(events);
+    } catch (IllegalArgumentException e) {
+      throw new SpRuntimeException("Fields don't match the schema of measure " + measure.getMeasureName(), e);
+    } finally {
+      timeSeriesStore.close();
+    }
   }
 
   private TimeSeriesStore getTimeSeriesStore(DatasetMetadata measure){
     return new TimeSeriesStore(
         new DataExplorerDispatcher().getDataExplorerManager()
-            .getTimeseriesStorage(measure, false),
+            .getSharedTimeseriesStorage(measure),
         measure,
         Environments.getEnvironment(),
         true
@@ -112,14 +124,17 @@ public class DatasetWriter {
     }
   }
 
-  private void checkRuntimeNames(List<String> runtimeNames, Event event) {
+  private void checkRuntimeNames(Set<String> runtimeNames, Event event) {
+    checkRuntimeNames(runtimeNames, event.getFields().keySet());
+  }
+
+  private void checkRuntimeNames(Set<String> runtimeNames, Set<String> eventKeys) {
     if (!ignoreSchemaMismatch) {
-      var strippedEventKeys = event.getFields().keySet().stream()
+      var strippedEventKeys = eventKeys.stream()
           .map(this::getSubstringAfterColons)
           .collect(Collectors.toSet());
-      var runtimeNameSet = new HashSet<>(runtimeNames);
 
-      if (!matchesRuntimeNames(runtimeNameSet, strippedEventKeys, allowMissingFields)) {
+      if (!matchesRuntimeNames(runtimeNames, strippedEventKeys, allowMissingFields)) {
         throw new SpRuntimeException("The fields of the event do not match. Use \"ignoreSchemaMismatch\" to "
             + "ignore this error. Fields of the event: " + strippedEventKeys);
       }
@@ -152,10 +167,6 @@ public class DatasetWriter {
       return input.substring(index + 2);
     }
     return input;
-  }
-
-  private Event rowToEvent(List<Object> row, List<String> headers){
-    return EventFactory.fromMap(toEventMap(row, headers));
   }
 
   static Map<String, Object> toEventMap(List<Object> row, List<String> headers) {

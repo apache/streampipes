@@ -157,7 +157,7 @@ export class AdapterSettingsComponent implements OnInit {
 
     loadTemplate(event: any) {
         if (!event.value) {
-            this.adapterDescription = { ...this.cachedAdapterDescription };
+            this.afterTemplateReceived({ ...this.cachedAdapterDescription });
             this.selectedTemplate = false;
         } else {
             this.selectedTemplate = event.value;

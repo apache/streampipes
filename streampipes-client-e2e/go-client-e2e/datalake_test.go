@@ -32,8 +32,8 @@ func TestGetDataLake(t *testing.T) {
 		t.Error(err)
 		os.Exit(1)
 	}
-	dataLake := streamPipesClient.DataLakeMeasures()
-	measures, err := dataLake.GetAllDataLakeMeasure()
+	datasets := streamPipesClient.Datasets()
+	measures, err := datasets.GetAllDatasetMetadata()
 	if err != nil {
 		t.Error(err)
 		os.Exit(1)

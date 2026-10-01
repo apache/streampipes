@@ -258,6 +258,11 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
         this.stateService.reset();
     }
 
+    updateAdapterDescription(adapter: AdapterDescription): void {
+        this.adapterDescription = adapter;
+        this.stateService.updateAdapter(adapter);
+    }
+
     nextAdapterSettings() {
         const adapter =
             this.stateService.state().adapterDescription ??

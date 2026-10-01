@@ -87,7 +87,7 @@ class TestDataLakeSeries(TestCase):
             )
         )
 
-        result = client.dataLakeMeasureApi.get(identifier="test")
+        result = client.datasetApi.get(identifier="test")
 
         http_session.assert_has_calls(
             [call().get(url="https://localhost:80/streampipes-backend/api/v4/datalake/measurements/test?limit=1000")],
@@ -253,7 +253,7 @@ class TestDataLakeSeries(TestCase):
                 host_address="localhost",
             )
         )
-        result = client.dataLakeMeasureApi.get(
+        result = client.datasetApi.get(
             identifier="Flowrate",
             columns=["temperature"],
             aggregation_function="MEAN",

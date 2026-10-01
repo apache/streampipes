@@ -37,6 +37,7 @@ import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
 import org.influxdb.InfluxDB;
+import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -474,6 +476,69 @@ public class TimeSeriesStorageInfluxTest {
   /**
    * Initialize a Point builder with a timestamp
    */
+  @Test
+  public void onEventsWritesAllPointsInOneBatch() {
+    var eventSchema = getEventSchemaBuilderWithTimestamp()
+        .withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName(FIELD_NAME)
+            .withRuntimeType(XSD.INTEGER)
+            .build())
+        .build();
+    var events = IntStream.range(0, 3)
+        .mapToObj(i -> getEvent(eventSchema, Map.of(FIELD_NAME, i)))
+        .toList();
+
+    getInfluxStore(eventSchema).onEvents(events);
+
+    var captor = ArgumentCaptor.forClass(BatchPoints.class);
+    Mockito.verify(influxDBMock).write(captor.capture());
+    Mockito.verify(influxDBMock, Mockito.never()).write(ArgumentMatchers.any(Point.class));
+    assertEquals(3, captor.getValue().getPoints().size());
+    assertEquals(getPointBuilderWithTimestamp().addField(FIELD_NAME, 2).build(),
+        captor.getValue().getPoints().get(2));
+  }
+
+  @Test
+  public void onEventsSplitsLargeBatches() {
+    var eventSchema = getEventSchemaBuilderWithTimestamp()
+        .withEventProperty(EventPropertyPrimitiveTestBuilder.create()
+            .withRuntimeName(FIELD_NAME)
+            .withRuntimeType(XSD.INTEGER)
+            .build())
+        .build();
+    var events = IntStream.range(0, TimeSeriesStorageInflux.MAX_POINTS_PER_WRITE + 1)
+        .mapToObj(i -> getEvent(eventSchema, Map.of(FIELD_NAME, i)))
+        .toList();
+
+    getInfluxStore(eventSchema).onEvents(events);
+
+    var captor = ArgumentCaptor.forClass(BatchPoints.class);
+    Mockito.verify(influxDBMock, Mockito.times(2)).write(captor.capture());
+    assertEquals(TimeSeriesStorageInflux.MAX_POINTS_PER_WRITE, captor.getAllValues().get(0).getPoints().size());
+    assertEquals(1, captor.getAllValues().get(1).getPoints().size());
+  }
+
+  @Test
+  public void onEventsSkipsEventsWithoutFields() {
+    var eventSchema = getEventSchemaBuilderWithTimestamp().build();
+    var events = List.of(getEvent(eventSchema, Map.of()));
+
+    getInfluxStore(eventSchema).onEvents(events);
+
+    Mockito.verify(influxDBMock, Mockito.never()).write(ArgumentMatchers.any(BatchPoints.class));
+  }
+
+  @Test
+  public void closeOnlyFlushesSharedClient() {
+    var measure = new DatasetMetadata(EXPECTED_MEASUREMENT, "s0::%s".formatted(TIMESTAMP),
+        getEventSchemaBuilderWithTimestamp().build());
+
+    new TimeSeriesStorageInflux(measure, false, influxDBMock, false, (title, details) -> { }).close();
+
+    Mockito.verify(influxDBMock).flush();
+    Mockito.verify(influxDBMock, Mockito.never()).close();
+  }
+
   private Point.Builder getPointBuilderWithTimestamp() {
     return Point.measurement(EXPECTED_MEASUREMENT)
                 .time(SAMPLE_TIMESTAMP, TimeUnit.MILLISECONDS);

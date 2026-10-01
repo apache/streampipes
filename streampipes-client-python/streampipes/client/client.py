@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import logging
 import sys
+import warnings
 
 from requests import Session
 
@@ -33,12 +34,18 @@ from streampipes.endpoint import APIEndpoint
 from streampipes.endpoint.api import (
     AdapterEndpoint,
     DataLakeMeasureEndpoint,
+    DatasetEndpoint,
     DataStreamEndpoint,
     PipelineEndpoint,
     VersionEndpoint,
 )
 
 logger = logging.getLogger(__name__)
+
+DATA_LAKE_MEASURE_API_DEPRECATION_MESSAGE = (
+    "`StreamPipesClient.dataLakeMeasureApi` is deprecated since 0.99.0 and will be removed in the release "
+    "following 0.99.0; please use `StreamPipesClient.datasetApi` instead."
+)
 
 
 class StreamPipesClient:
@@ -48,7 +55,7 @@ class StreamPipesClient:
     provides all the functionalities to interact with it.
 
     The client provides so-called "endpoints" each of which refers to
-    an endpoint of the StreamPipes API, e.g. `.dataLakeMeasureApi`.
+    an endpoint of the StreamPipes API, e.g. `.datasetApi`.
     An [endpoint][streampipes.endpoint.endpoint] provides the actual methods to interact with StreamPipes
     API.
 
@@ -61,14 +68,16 @@ class StreamPipesClient:
 
     Attributes
     ----------
-    dataLakeMeasureApi: DataLakeMeasureEndpoint
-        Instance of the data lake measure endpoint
+    datasetApi: DatasetEndpoint
+        Instance of the dataset endpoint
     dataStreamApi: DataStreamEndpoint
         Instance of the data stream endpoint
     adapterApi: AdapterEndpoint
         Instance of the adapter endpoint
     pipelineApi: PipelineEndpoint
         Instance of the pipeline endpoint
+    dataLakeMeasureApi: DataLakeMeasureEndpoint
+        DEPRECATED since 0.99.0, scheduled for removal in the release following 0.99.0 - use `datasetApi` instead
 
     Raises
     ------
@@ -108,15 +117,15 @@ class StreamPipesClient:
 
     To interact with an endpoint:
     ```python
-    data_lake_measures = client.dataLakeMeasureApi.all()
+    datasets = client.datasetApi.all()
     ```
 
     To inspect returned data as a pandas dataframe:
     ```python
-    data_lake_measures.to_pandas()
+    datasets.to_pandas()
     #
-    #     measure_name timestamp_field  ... pipeline_is_running num_event_properties
-    # 0           test   s0::timestamp  ...               False                    2
+    #     measure_name timestamp_field  ... schema_update_strategy num_event_properties
+    # 0           test   s0::timestamp  ...          UPDATE_SCHEMA                    2
     # [1 rows x 6 columns]
     ```
 
@@ -149,12 +158,33 @@ class StreamPipesClient:
         # provide all available endpoints here
         # name of the endpoint needs to be consistent with the Java client
         self.adapterApi = AdapterEndpoint(parent_client=self)
-        self.dataLakeMeasureApi = DataLakeMeasureEndpoint(parent_client=self)
+        self.datasetApi = DatasetEndpoint(parent_client=self)
         self.dataStreamApi = DataStreamEndpoint(parent_client=self)
         self.pipelineApi = PipelineEndpoint(parent_client=self)
         self.versionApi = VersionEndpoint(parent_client=self)
 
+        # the deprecated data lake measure endpoint is created lazily on first access
+        self._data_lake_measure_api: DataLakeMeasureEndpoint | None = None
+
         self.server_version = self._get_server_version()
+
+    @property
+    def dataLakeMeasureApi(self) -> DataLakeMeasureEndpoint:
+        """DEPRECATED - use `datasetApi` instead.
+
+        Deprecated since 0.99.0, scheduled for removal in the release following 0.99.0.
+
+        Returns
+        -------
+        endpoint: DataLakeMeasureEndpoint
+            The deprecated data lake measure endpoint, created on first access.
+        """
+        warnings.warn(DATA_LAKE_MEASURE_API_DEPRECATION_MESSAGE, DeprecationWarning, stacklevel=2)
+        if self._data_lake_measure_api is None:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", DeprecationWarning)
+                self._data_lake_measure_api = DataLakeMeasureEndpoint(parent_client=self)
+        return self._data_lake_measure_api
 
     def _get_server_version(self) -> str:
         """Connects to the StreamPipes server and retrieves its version.
@@ -286,22 +316,21 @@ class StreamPipesClient:
         You are connected to a StreamPipes instance running at http://localhost:80.
         The following StreamPipes resources are available with this client:
         6x DataStreams
-        1x DataLakeMeasures
+        1x Datasets
         ```
         """
 
+        # endpoints that are not suitable for the describe method:
+        # `versionApi` does not provide the `all()` method and
+        # `dataLakeMeasureApi` is deprecated and would only duplicate `datasetApi`
+        excluded_endpoints = {"versionApi", "dataLakeMeasureApi"}
+
         # get all endpoints of this client
         available_endpoints = {
-            attr_name for attr_name in dir(self) if isinstance(self.__getattribute__(attr_name), APIEndpoint)
+            attr_name
+            for attr_name in dir(self)
+            if attr_name not in excluded_endpoints and isinstance(self.__getattribute__(attr_name), APIEndpoint)
         }
-
-        # remove endpoints that are not suitable for the describe method
-        # this is mainly due to not providing the `all()` method
-        available_endpoints = available_endpoints.symmetric_difference(
-            {
-                "versionApi",
-            }
-        )
 
         # ensure deterministic order
         ordered_available_endpoints = sorted(available_endpoints)

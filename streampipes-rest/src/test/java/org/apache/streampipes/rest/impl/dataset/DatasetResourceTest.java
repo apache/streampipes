@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl.dataset;
 
-import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
+import org.apache.streampipes.dataexplorer.management.DatasetQueryService;
 import org.apache.streampipes.model.dataset.SpQueryResult;
 
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ class DataLakeResourceTest {
 
   @Test
   void getLatestEventsRequestsLatestTimestampsForDistinctMeasurements() throws Exception {
-    var queryManagement = mock(IDataExplorerQueryManagement.class);
+    var queryManagement = mock(DatasetQueryService.class);
     when(queryManagement.getLatestTimestamps(List.of("a", "bb", "broken")))
         .thenReturn(Map.of("a", 1L, "bb", 2L, "broken", 0L));
     var resource = datasetResource(queryManagement, true);
@@ -68,23 +68,23 @@ class DataLakeResourceTest {
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(Map.of("a", 1L, "bb", 2L, "broken", 0L), response.getBody());
     verify(queryManagement).getLatestTimestamps(List.of("a", "bb", "broken"));
-    verify(queryManagement, times(0)).getData(any(), eq(true));
+    verify(queryManagement, times(0)).queryByName(any(), any(), any());
   }
 
   @Test
   void getLatestEventsRejectsUnauthorizedMeasurementBeforeQuerying() throws Exception {
-    var queryManagement = mock(IDataExplorerQueryManagement.class);
+    var queryManagement = mock(DatasetQueryService.class);
     var resource = datasetResource(queryManagement, false);
 
     var response = resource.getLatestEvents(List.of("a"));
 
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("No read permission for measurement a", response.getBody());
-    verify(queryManagement, times(0)).getData(any(), eq(true));
+    verify(queryManagement, times(0)).queryByName(any(), any(), any());
     verify(queryManagement, times(0)).getLatestTimestamps(any());
   }
 
-  private static DatasetResource datasetResource(IDataExplorerQueryManagement queryManagement,
+  private static DatasetResource datasetResource(DatasetQueryService queryManagement,
                                                    boolean canRead) throws Exception {
     var resource = mock(DatasetResource.class, CALLS_REAL_METHODS);
     doReturn(canRead).when(resource).checkPermissionByName(any(), eq("READ"));
@@ -93,8 +93,8 @@ class DataLakeResourceTest {
   }
 
   private static void setQueryManagement(DatasetResource resource,
-                                         IDataExplorerQueryManagement queryManagement) throws Exception {
-    Field field = DatasetResource.class.getDeclaredField("dataExplorerQueryManagement");
+                                         DatasetQueryService queryManagement) throws Exception {
+    Field field = DatasetResource.class.getDeclaredField("queryService");
     field.setAccessible(true);
     field.set(resource, queryManagement);
   }

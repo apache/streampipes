@@ -28,7 +28,7 @@ import (
 
 // This is the central point of contact with StreamPipes and provides all the functionalities to interact with it.
 // The client provides so-called "API", each of which refers to the endpoint of the StreamPipes API.
-// e.g. `DataLakeMeasure` provides the actual methods to interact with StreamPipes API.
+// e.g. `Dataset` provides the actual methods to interact with StreamPipes API.
 
 type StreamPipesClient struct {
 	config config.StreamPipesClientConfig
@@ -63,6 +63,15 @@ func NewStreamPipesClient(c config.StreamPipesClientConfig) (*StreamPipesClient,
 
 }
 
+// Datasets returns the API to interact with datasets (metadata and stored data).
+func (s *StreamPipesClient) Datasets() *Dataset {
+
+	return NewDatasets(s.config)
+}
+
+// DataLakeMeasures returns the legacy data lake measure API.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use Datasets instead.
 func (s *StreamPipesClient) DataLakeMeasures() *DataLakeMeasure {
 
 	return NewDataLakeMeasures(s.config)

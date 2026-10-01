@@ -39,8 +39,14 @@ type Deserializer interface {
 	Unmarshal(body []byte) (interface{}, error)
 }
 
+// DataLakeMeasuresDeserializer unmarshals a list of legacy data lake measures.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use DatasetMetadataListDeserializer instead.
 type DataLakeMeasuresDeserializer struct{}
 
+// NewDataLakeMeasuresDeserializer returns a DataLakeMeasuresDeserializer.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use NewDatasetMetadataListDeserializer instead.
 func NewDataLakeMeasuresDeserializer() *DataLakeMeasuresDeserializer {
 	return &DataLakeMeasuresDeserializer{}
 }
@@ -56,8 +62,14 @@ func (d DataLakeMeasuresDeserializer) Unmarshal(data []byte) (interface{}, error
 	return dataLakeMeasures, nil
 }
 
+// DataLakeMeasureDeserializer unmarshals a single legacy data lake measure.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use DatasetMetadataDeserializer instead.
 type DataLakeMeasureDeserializer struct{}
 
+// NewDataLakeMeasureDeserializer returns a DataLakeMeasureDeserializer.
+//
+// Deprecated: since 0.99.0, scheduled for removal in the release following 0.99.0. Use NewDatasetMetadataDeserializer instead.
 func NewDataLakeMeasureDeserializer() *DataLakeMeasureDeserializer {
 	return &DataLakeMeasureDeserializer{}
 }
@@ -71,6 +83,40 @@ func (d DataLakeMeasureDeserializer) Unmarshal(data []byte) (interface{}, error)
 		return nil, err
 	}
 	return dataLakeMeasure, nil
+}
+
+type DatasetMetadataListDeserializer struct{}
+
+func NewDatasetMetadataListDeserializer() *DatasetMetadataListDeserializer {
+	return &DatasetMetadataListDeserializer{}
+}
+
+func (d DatasetMetadataListDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var datasets []data_lake.DatasetMetadata
+	dec := json.NewDecoder(strings.NewReader(string(data)))
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(&datasets); err != nil && !strings.Contains(err.Error(), "unknown field") {
+		log.Println(err)
+		return nil, err
+	}
+	return datasets, nil
+}
+
+type DatasetMetadataDeserializer struct{}
+
+func NewDatasetMetadataDeserializer() *DatasetMetadataDeserializer {
+	return &DatasetMetadataDeserializer{}
+}
+
+func (d DatasetMetadataDeserializer) Unmarshal(data []byte) (interface{}, error) {
+	var dataset data_lake.DatasetMetadata
+	dec := json.NewDecoder(strings.NewReader(string(data)))
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(&dataset); err != nil && !strings.Contains(err.Error(), "unknown field") {
+		log.Println(err)
+		return nil, err
+	}
+	return dataset, nil
 }
 
 type DataSeriesDeserializer struct{}

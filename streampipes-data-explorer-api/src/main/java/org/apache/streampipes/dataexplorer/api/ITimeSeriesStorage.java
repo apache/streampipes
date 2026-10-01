@@ -21,9 +21,21 @@ package org.apache.streampipes.dataexplorer.api;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
 
+import java.util.List;
+
 public interface ITimeSeriesStorage {
 
   void onEvent(Event event) throws SpRuntimeException;
+
+  /**
+   * Writes a batch of events. Implementations that support bulk writes should override this method and write all
+   * events in a single request to the storage; the default falls back to writing the events one by one.
+   */
+  default void onEvents(List<Event> events) throws SpRuntimeException {
+    for (var event : events) {
+      onEvent(event);
+    }
+  }
 
   void close() throws SpRuntimeException;
 }

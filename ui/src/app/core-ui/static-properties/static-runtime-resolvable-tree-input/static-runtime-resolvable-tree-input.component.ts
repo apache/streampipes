@@ -166,6 +166,9 @@ export class StaticRuntimeResolvableTreeInputComponent
             this.latestFetchedNodes = staticProperty.latestFetchedNodes;
             if (node) {
                 node.children = staticProperty.latestFetchedNodes;
+                this.staticTreeInputBrowseNodesComponent?.onChildrenLoaded(
+                    node,
+                );
             }
         } else {
             this.nodes = staticProperty.nodes;
