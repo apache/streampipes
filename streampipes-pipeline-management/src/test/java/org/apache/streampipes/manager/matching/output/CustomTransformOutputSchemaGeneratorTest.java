@@ -23,6 +23,7 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.output.CustomTransformOutputStrategy;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,7 @@ class CustomTransformOutputSchemaGeneratorTest {
     invocation.setStaticProperties(List.of(secretProperty));
 
     var generator = new CustomTransformOutputSchemaGenerator(
+        mock(ISpServiceDiscovery.class),
         new CustomTransformOutputStrategy(),
         invocation,
         mock(ExtensionServiceRequestManager.class)

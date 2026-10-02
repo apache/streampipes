@@ -44,7 +44,7 @@ public class AdapterResourceManagerTest {
   void setUp() {
     storage = mock(IAdapterStorage.class);
     PermissionResourceManager permissionResourceManager = mock(PermissionResourceManager.class);
-    adapterResourceManager = new AdapterResourceManager(storage, null, permissionResourceManager);
+    adapterResourceManager = new AdapterResourceManager(storage, null, permissionResourceManager, mock(ResourceDeletionManager.class));
   }
 
   @Test

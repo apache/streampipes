@@ -27,6 +27,7 @@ import org.apache.streampipes.resource.management.DataSinkResourceManager;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.http.MediaType;
@@ -47,8 +48,9 @@ public class DataSinkResource extends AbstractAuthGuardedRestResource {
 
   private final DataSinkResourceManager dataSinkResourceManager;
 
-  public DataSinkResource(IPermissionStorage permissionStorage) {
+  public DataSinkResource(IPermissionStorage permissionStorage, IDataSinkStorage dataSinkStorage) {
     this.dataSinkResourceManager = new DataSinkResourceManager(
+        dataSinkStorage,
         new PermissionResourceManager(permissionStorage)
     );
   }

@@ -21,14 +21,22 @@ package org.apache.streampipes.export.resolver;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
+import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class DataSourceResolver extends AbstractResolver<SpDataStream> {
 
+  private final IDataStreamStorage dataStreamStorage;
+
+  public DataSourceResolver(IDataStreamStorage dataStreamStorage) {
+    this.dataStreamStorage = dataStreamStorage;
+  }
+
   @Override
   public SpDataStream findDocument(String resourceId) {
-    return getNoSqlStore().getDataStreamStorage().getElementById(resourceId);
+    return dataStreamStorage.getElementById(resourceId);
   }
 
   @Override
@@ -56,7 +64,7 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
         overrideProtocol(dataStream.getEventGrounding());
       }
     }
-    getNoSqlStore().getDataStreamStorage().persist(dataStream);
+    dataStreamStorage.persist(dataStream);
   }
 
   @Override
@@ -65,9 +73,9 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
   }
 
   @Override
-  public void deleteDocument(String document) throws JsonProcessingException {
+  public void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager) throws JsonProcessingException {
     var dataSource = readDocument(document);
     var resourceId = dataSource.getElementId();
-    getNoSqlStore().getDataStreamStorage().deleteElementById(resourceId);
+    resourceDeletionManager.delete(dataStreamStorage, resourceId);
   }
 }

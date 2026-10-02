@@ -25,7 +25,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestTarg
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTagPrefix;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerOperations;
 import org.apache.streampipes.model.extensions.transport.ExtensionServiceBrokerTopics;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,15 +40,18 @@ public class TransportAwareExtensionServiceRequestManager implements ExtensionSe
   private final ExtensionServiceRequestManager httpRequestManager;
   private final NatsExtensionServiceRequestManager natsRequestManager;
   private final CoreExtensionTransportMode transportMode;
+  private final IExtensionsServiceStorage extensionsServiceStorage;
 
   public TransportAwareExtensionServiceRequestManager(
       ExtensionServiceRequestManager httpRequestManager,
       NatsExtensionServiceRequestManager natsRequestManager,
-      CoreExtensionTransportMode transportMode
+      CoreExtensionTransportMode transportMode,
+      IExtensionsServiceStorage extensionsServiceStorage
   ) {
     this.httpRequestManager = httpRequestManager;
     this.natsRequestManager = natsRequestManager;
     this.transportMode = transportMode;
+    this.extensionsServiceStorage = extensionsServiceStorage;
   }
 
   @Override
@@ -87,9 +90,7 @@ public class TransportAwareExtensionServiceRequestManager implements ExtensionSe
   }
 
   private boolean serviceSupportsNats(ExtensionServiceRequestTarget target) {
-    var service = StorageDispatcher.INSTANCE
-        .getNoSqlStore()
-        .getExtensionsServiceStorage()
+    var service = extensionsServiceStorage
         .getElementById(target.serviceId());
 
     if (service == null || service.getTags() == null) {

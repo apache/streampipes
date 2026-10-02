@@ -28,6 +28,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
@@ -46,6 +47,7 @@ public class WorkerAdministrationManagement {
   private final UserResourceManager userResourceManager;
   private final ExtensionServiceRequestManager requestManager;
   private final AssetManager assetManager;
+  private final ISpServiceDiscovery serviceDiscovery;
 
   public WorkerAdministrationManagement(
       IAdapterStorage adapterDescriptionStorage,
@@ -56,6 +58,7 @@ public class WorkerAdministrationManagement {
     this.permissionStorage = resourceManager.managePermissions().getDb();
     this.permissionResourceManager = resourceManager.managePermissions();
     this.requestManager = requestManager;
+    this.serviceDiscovery = resourceManager.getServiceDiscovery();
     this.assetManager = new AssetManager(resourceManager.getCoreConfigurationStorage());
   }
 
@@ -68,7 +71,7 @@ public class WorkerAdministrationManagement {
           if (!assetManager.existsAssetDir(adapter.getAppId())) {
             try {
               LOG.info("Updating assets for adapter {}", adapter.getAppId());
-              assetManager.storeAsset(SpServiceUrlProvider.ADAPTER, adapter.getAppId(), requestManager);
+              assetManager.storeAsset(SpServiceUrlProvider.ADAPTER, adapter.getAppId(), requestManager, serviceDiscovery);
             } catch (IOException | NoServiceEndpointsAvailableException e) {
               LOG.error(
                   "Could not fetch asset for adapter {}, please try to manually update this adapter.",

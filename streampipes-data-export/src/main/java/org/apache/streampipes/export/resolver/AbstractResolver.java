@@ -24,8 +24,6 @@ import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.core.INoSqlStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -68,10 +66,6 @@ public abstract class AbstractResolver<T> implements DocumentResolver<T> {
     } else {
       throw new ElementNotFoundException("Could not find element with resource id " + resourceId);
     }
-  }
-
-  protected INoSqlStorage getNoSqlStore() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore();
   }
 
   protected void overrideProtocol(EventGrounding grounding) {

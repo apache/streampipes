@@ -62,7 +62,7 @@ public class PipelinePreview {
     var elementIdMappings = new HashMap<String, String>();
     pipeline.setActions(new ArrayList<>());
     List<NamedStreamPipesEntity> pipelineElements = new ArrayList<>(
-        new PipelineVerificationHandlerV2(pipeline, requestManager)
+        new PipelineVerificationHandlerV2(resourceManager.getServiceDiscovery(), pipeline, requestManager)
             .verifyAndBuildGraphs(true)
             .modifiedPipelineElements()
     );
@@ -138,7 +138,7 @@ public class PipelinePreview {
   }
 
   private SpServiceRegistration findSelectedService(InvocableStreamPipesEntity g) throws NoServiceEndpointsAvailableException {
-    return new ExtensionsServiceEndpointGenerator()
+    return new ExtensionsServiceEndpointGenerator(resourceManager.getServiceDiscovery())
         .selectService(
             g.getAppId(),
             ExtensionsServiceEndpointUtils.getPipelineElementType(g),

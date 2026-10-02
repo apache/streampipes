@@ -19,6 +19,7 @@ package org.apache.streampipes.manager.file;
 
 import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
@@ -91,11 +92,11 @@ public class FileManager {
   }
 
 
-  public void deleteFile(String id) {
+  public void deleteFile(String id, ResourceDeletionManager resourceDeletionManager) {
     var fileMetadata = fileMetadataStorage.getElementById(id);
     if (fileMetadata != null) {
       fileHandler.deleteFile(fileMetadata.getFilename());
-      fileMetadataStorage.deleteElementById(id);
+      resourceDeletionManager.delete(fileMetadataStorage, id);
     }
   }
 

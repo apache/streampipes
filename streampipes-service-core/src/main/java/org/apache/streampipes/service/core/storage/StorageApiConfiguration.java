@@ -82,6 +82,7 @@ import org.apache.streampipes.storage.couchdb.impl.user.UserGroupStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -244,8 +245,13 @@ public class StorageApiConfiguration {
   }
 
   @Bean
-  public IPipelineElementDescriptionStorage pipelineElementDescriptionStorage() {
-    return new PipelineElementDescriptionStorageImpl();
+  public IPipelineElementDescriptionStorage pipelineElementDescriptionStorage(
+      IDataProcessorStorage dataProcessorStorage,
+      IDataStreamStorage dataStreamStorage,
+      IDataSinkStorage dataSinkStorage,
+      @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage) {
+    return new PipelineElementDescriptionStorageImpl(
+        dataProcessorStorage, dataStreamStorage, dataSinkStorage, adapterDescriptionStorage);
   }
 
   @Bean

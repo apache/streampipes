@@ -34,7 +34,8 @@ public class DatasetQueryConfiguration {
   public DatasetServices datasetServices(IChartStorage charts, SpResourceManager resources) {
     var dispatcher = new DataExplorerDispatcher();
     var catalog = dispatcher.getSchemaManagement(new ChartSchemaUpdateCoordinator(charts),
-        resources.managePermissions().getDb(), resources.manageDataLakeMeasures().getDb());
+        resources.managePermissions().getDb(), resources.manageDataLakeMeasures().getDb(),
+        resources.getResourceDeletionManager());
     return dispatcher.getDatasetServices(catalog);
   }
 }

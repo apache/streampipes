@@ -44,6 +44,16 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
     this.adapterStorage = new AdapterDescriptionStorageImpl();
   }
 
+  public PipelineElementDescriptionStorageImpl(IDataProcessorStorage dataProcessorStorage,
+                                               IDataStreamStorage dataStreamStorage,
+                                               IDataSinkStorage dataSinkStorage,
+                                               IAdapterStorage adapterStorage) {
+    this.dataProcessorStorage = dataProcessorStorage;
+    this.dataStreamStorage = dataStreamStorage;
+    this.dataSinkStorage = dataSinkStorage;
+    this.adapterStorage = adapterStorage;
+  }
+
   @Override
   public boolean storeDataStream(SpDataStream stream) {
     this.dataStreamStorage.persist(stream);

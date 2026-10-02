@@ -98,7 +98,7 @@ public class PipelineUpdateCoordinator {
       var updatedPipeline = updatePipeline(storedPipeline, affectedElementId, updatedStreamName, updatedEventSchema);
 
       try {
-        var verificationHandler = new PipelineVerificationHandlerV2(updatedPipeline, requestManager);
+        var verificationHandler = new PipelineVerificationHandlerV2(resourceManager.getServiceDiscovery(), updatedPipeline, requestManager);
         var modificationMessage = verificationHandler.verifyPipeline();
         var updateInfo = makeUpdateInfo(modificationMessage, updatedPipeline);
         var modifiedPipeline = verificationHandler.makeModifiedPipeline(modificationMessage).pipeline();
@@ -142,7 +142,7 @@ public class PipelineUpdateCoordinator {
     affectedPipelines.forEach(pipeline -> {
       var updatedPipeline = updatePipeline(pipeline, affectedElementId, updatedStreamName, updatedEventSchema);
       try {
-        var verificationHandler = new PipelineVerificationHandlerV2(updatedPipeline, requestManager);
+        var verificationHandler = new PipelineVerificationHandlerV2(resourceManager.getServiceDiscovery(), updatedPipeline, requestManager);
         var modificationMessage = verificationHandler.verifyPipeline();
         var updateInfo = makeUpdateInfo(modificationMessage, updatedPipeline);
         updateInfo.setChartSchemaUpdateInfos(

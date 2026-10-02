@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
@@ -57,10 +58,13 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class FileResource extends AbstractAuthGuardedRestResource {
 
   private final FileManager fileManager;
+  private final ResourceDeletionManager resourceDeletionManager;
 
   public FileResource(ISpCoreConfigurationStorage coreConfigurationStorage,
-                      IFileMetadataStorage fileMetadataStorage) {
+                      IFileMetadataStorage fileMetadataStorage,
+                       ResourceDeletionManager resourceDeletionManager) {
     this.fileManager = new FileManager(coreConfigurationStorage, fileMetadataStorage);
+    this.resourceDeletionManager = resourceDeletionManager;
   }
 
   @PostMapping(
@@ -91,7 +95,7 @@ public class FileResource extends AbstractAuthGuardedRestResource {
   @DeleteMapping(path = "{fileId}")
   @PreAuthorize(AuthConstants.HAS_WRITE_FILE_PRIVILEGE)
   public ResponseEntity<Void> deleteFile(@PathVariable("fileId") String fileId) {
-    fileManager.deleteFile(fileId);
+    fileManager.deleteFile(fileId, resourceDeletionManager);
     return ok();
   }
 

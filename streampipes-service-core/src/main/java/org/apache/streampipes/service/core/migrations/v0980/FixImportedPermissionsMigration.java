@@ -22,8 +22,8 @@ import org.apache.streampipes.model.shared.api.Storable;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +40,14 @@ public class FixImportedPermissionsMigration implements Migration {
   private final IChartStorage chartStorage;
   private final IPermissionStorage permissionStorage;
   private final IDashboardStorage dashboardStorage;
+  private final IDataStreamStorage dataStreamStorage;
 
   public FixImportedPermissionsMigration(IChartStorage chartStorage,
+                                         IDataStreamStorage dataStreamStorage,
                                          IDashboardStorage dashboardStorage,
                                          IPermissionStorage permissionStorage) {
     this.chartStorage = chartStorage;
+    this.dataStreamStorage = dataStreamStorage;
     this.dashboardStorage = dashboardStorage;
     this.permissionStorage = permissionStorage;
   }
@@ -79,9 +82,6 @@ public class FixImportedPermissionsMigration implements Migration {
 
   private void migrateDataStreamPermissions() {
     LOG.debug("Start migrate permissions for data streams");
-    var dataStreamStorage =
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getDataStreamStorage();
     var dataStreams = dataStreamStorage.findAll();
     migrateResourcePermissions(dataStreams);
     LOG.debug("Finished migrate permissions for data streams");

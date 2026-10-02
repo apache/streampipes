@@ -20,13 +20,13 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class DataSinkResourceManager
     extends AbstractPipelineElementResourceManager<IDataSinkStorage, DataSinkDescription, DataSinkInvocation> {
 
-  public DataSinkResourceManager(PermissionResourceManager permissionResourceManager) {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataSinkStorage(), permissionResourceManager);
+  public DataSinkResourceManager(IDataSinkStorage dataSinkStorage,
+                                 PermissionResourceManager permissionResourceManager) {
+    super(dataSinkStorage, permissionResourceManager);
   }
 
   @Override

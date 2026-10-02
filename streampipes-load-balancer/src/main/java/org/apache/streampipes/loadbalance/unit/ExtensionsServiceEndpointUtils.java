@@ -23,10 +23,7 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
-
-import java.util.NoSuchElementException;
 
 public class ExtensionsServiceEndpointUtils {
 
@@ -39,15 +36,6 @@ public class ExtensionsServiceEndpointUtils {
       return SpServiceUrlProvider.ADAPTER;
     } else {
       throw new RuntimeException("Could not find service url for entity " + entity.getClass().getCanonicalName());
-    }
-  }
-
-  public static SpServiceUrlProvider getPipelineElementType(String appId) {
-    try {
-      StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage().getDataProcessorByAppId(appId);
-      return SpServiceUrlProvider.DATA_PROCESSOR;
-    } catch (NoSuchElementException e) {
-      return SpServiceUrlProvider.DATA_SINK;
     }
   }
 

@@ -25,7 +25,6 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 
@@ -51,7 +50,7 @@ public class ExtensibleLoadManager implements LoadBalancer {
   }
 
   public void doLoadShedding() {
-    IExtensionsServiceStorage storage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
+    IExtensionsServiceStorage storage = resourceManager.getExtensionsServiceStorage();
     List<SpServiceRegistration> services = storage.findAll().stream().filter(s -> s.getStatus() == SpServiceStatus.HEALTHY)
             .toList();
 

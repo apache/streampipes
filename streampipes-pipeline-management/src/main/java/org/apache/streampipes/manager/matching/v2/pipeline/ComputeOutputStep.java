@@ -28,6 +28,7 @@ import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.helpers.Tuple2;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,9 +38,11 @@ import java.util.Set;
 
 public class ComputeOutputStep extends AbstractPipelineValidationStep {
 
+  private final ISpServiceDiscovery serviceDiscovery;
   private final ExtensionServiceRequestManager requestManager;
 
-  public ComputeOutputStep(ExtensionServiceRequestManager requestManager) {
+  public ComputeOutputStep(ISpServiceDiscovery serviceDiscovery, ExtensionServiceRequestManager requestManager) {
+    this.serviceDiscovery = serviceDiscovery;
     this.requestManager = requestManager;
   }
 
@@ -54,7 +57,7 @@ public class ComputeOutputStep extends AbstractPipelineValidationStep {
     if (target instanceof DataProcessorInvocation) {
       DataProcessorInvocation pe = (DataProcessorInvocation) target;
       Tuple2<EventSchema, ? extends OutputStrategy> outputSettings;
-      OutputSchemaGenerator<?> schemaGenerator = new OutputSchemaFactory(pe, requestManager)
+      OutputSchemaGenerator<?> schemaGenerator = new OutputSchemaFactory(serviceDiscovery, pe, requestManager)
           .getOuputSchemaGenerator();
 
       if (target.getInputStreams().size() == 1) {
