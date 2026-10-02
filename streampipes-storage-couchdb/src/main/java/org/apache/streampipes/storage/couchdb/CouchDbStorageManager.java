@@ -19,25 +19,15 @@ package org.apache.streampipes.storage.couchdb;
 
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
-import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
-import org.apache.streampipes.storage.api.system.ICertificateStorage;
-import org.apache.streampipes.storage.api.system.IExtensionsServiceConfigurationStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
-import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.CompactPipelineTemplateStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.pipeline.DataSinkStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.DataStreamStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementDescriptionStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.pipeline.PipelineElementTemplateStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.system.CertificateStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceConfigurationStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.ExtensionsServiceStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.system.GenericStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.system.TransformationScriptTemplateStorageImpl;
 
 public class CouchDbStorageManager implements INoSqlStorage {
 
@@ -47,18 +37,8 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IPipelineElementTemplateStorage getPipelineElementTemplateStorage() {
-    return new PipelineElementTemplateStorageImpl();
-  }
-
-  @Override
   public IPipelineElementDescriptionStorage getPipelineElementDescriptionStorage() {
     return new PipelineElementDescriptionStorageImpl();
-  }
-
-  @Override
-  public IDataSinkStorage getDataSinkStorage() {
-    return new DataSinkStorageImpl();
   }
 
   @Override
@@ -72,22 +52,7 @@ public class CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
-  public IExtensionsServiceConfigurationStorage getExtensionsServiceConfigurationStorage() {
-    return new ExtensionsServiceConfigurationStorageImpl();
-  }
-
-  @Override
   public ICompactPipelineTemplateStorage getPipelineTemplateStorage() {
     return new CompactPipelineTemplateStorageImpl();
-  }
-
-  @Override
-  public ICertificateStorage getCertificateStorage() {
-    return new CertificateStorageImpl();
-  }
-
-  @Override
-  public ITransformationScriptTemplateStorage getTransformationScriptTemplateStorage() {
-    return new TransformationScriptTemplateStorageImpl();
   }
 }

@@ -18,35 +18,20 @@
 package org.apache.streampipes.storage.api.core;
 
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
-import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
-import org.apache.streampipes.storage.api.system.ICertificateStorage;
-import org.apache.streampipes.storage.api.system.IExtensionsServiceConfigurationStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
-import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 
 public interface INoSqlStorage {
 
   IGenericStorage getGenericStorage();
 
-  IPipelineElementTemplateStorage getPipelineElementTemplateStorage();
-
   IPipelineElementDescriptionStorage getPipelineElementDescriptionStorage();
-
-  IDataSinkStorage getDataSinkStorage();
 
   IDataStreamStorage getDataStreamStorage();
 
   IExtensionsServiceStorage getExtensionsServiceStorage();
 
-  IExtensionsServiceConfigurationStorage getExtensionsServiceConfigurationStorage();
-
   ICompactPipelineTemplateStorage getPipelineTemplateStorage();
-
-  ICertificateStorage getCertificateStorage();
-
-  ITransformationScriptTemplateStorage getTransformationScriptTemplateStorage();
 }

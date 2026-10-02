@@ -27,6 +27,7 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -53,6 +54,12 @@ import java.util.List;
 @RequestMapping("/api/v2/pipeline-element-templates")
 public class PipelineElementTemplateResource extends AbstractAuthGuardedRestResource {
 
+  private final IPipelineElementTemplateStorage templateStorage;
+
+  public PipelineElementTemplateResource(IPipelineElementTemplateStorage templateStorage) {
+    this.templateStorage = templateStorage;
+  }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Get a list of all pipeline element templates",
              tags = {"Pipeline Element Templates"},
@@ -69,9 +76,9 @@ public class PipelineElementTemplateResource extends AbstractAuthGuardedRestReso
       @RequestParam("appId") String appId
   ) {
     if (appId == null) {
-      return ok(getPipelineElementTemplateStorage().findAll());
+      return ok(templateStorage.findAll());
     } else {
-      return ok(getPipelineElementTemplateStorage().getPipelineElementTemplatesforAppId(appId));
+      return ok(templateStorage.getPipelineElementTemplatesforAppId(appId));
     }
   }
 
@@ -92,7 +99,7 @@ public class PipelineElementTemplateResource extends AbstractAuthGuardedRestReso
       @PathVariable("id") String s
   ) {
     try {
-      return ok(getPipelineElementTemplateStorage().getElementById(s));
+      return ok(templateStorage.getElementById(s));
     } catch (RuntimeException e) {
       return badRequest();
     }
@@ -110,7 +117,7 @@ public class PipelineElementTemplateResource extends AbstractAuthGuardedRestReso
                    content = @Content(schema = @Schema(implementation = PipelineElementTemplate.class)))
       @org.springframework.web.bind.annotation.RequestBody PipelineElementTemplate entity
   ) {
-    getPipelineElementTemplateStorage().persist(entity);
+    templateStorage.persist(entity);
     return ok();
   }
 
@@ -133,7 +140,7 @@ public class PipelineElementTemplateResource extends AbstractAuthGuardedRestReso
   ) {
     try {
       if (id.equals(entity.getCouchDbId())) {
-        return ok(getPipelineElementTemplateStorage().updateElement(entity));
+        return ok(templateStorage.updateElement(entity));
       } else {
         return badRequest();
       }
@@ -153,8 +160,8 @@ public class PipelineElementTemplateResource extends AbstractAuthGuardedRestReso
       @Parameter(description = "The id of the pipeline element template", required = true)
       @PathVariable("id") String s
   ) {
-    PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(s);
-    getPipelineElementTemplateStorage().deleteElement(template);
+    PipelineElementTemplate template = templateStorage.getElementById(s);
+    templateStorage.deleteElement(template);
     return ok();
   }
 
@@ -185,7 +192,7 @@ public class PipelineElementTemplateResource extends AbstractAuthGuardedRestReso
                    content = @Content(schema = @Schema(implementation = DataSinkInvocation.class)))
       @org.springframework.web.bind.annotation.RequestBody DataSinkInvocation invocation
   ) {
-    PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
+    PipelineElementTemplate template = templateStorage.getElementById(id);
     return ok(new DataSinkTemplateHandler(template, invocation, Boolean.parseBoolean(overwriteNameAndDescription))
                   .applyTemplateOnPipelineElement());
   }
@@ -217,7 +224,7 @@ public class PipelineElementTemplateResource extends AbstractAuthGuardedRestReso
                    content = @Content(schema = @Schema(implementation = DataProcessorInvocation.class)))
       @org.springframework.web.bind.annotation.RequestBody DataProcessorInvocation invocation
   ) {
-    PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
+    PipelineElementTemplate template = templateStorage.getElementById(id);
     return ok(new DataProcessorTemplateHandler(template, invocation, Boolean.parseBoolean(overwriteNameAndDescription))
                   .applyTemplateOnPipelineElement());
   }
@@ -249,7 +256,7 @@ public class PipelineElementTemplateResource extends AbstractAuthGuardedRestReso
                    content = @Content(schema = @Schema(implementation = AdapterDescription.class)))
       @org.springframework.web.bind.annotation.RequestBody AdapterDescription adapterDescription
   ) {
-    PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
+    PipelineElementTemplate template = templateStorage.getElementById(id);
     var desc =
         new AdapterTemplateHandler(template, adapterDescription, Boolean.parseBoolean(overwriteNameAndDescription))
             .applyTemplateOnPipelineElement();

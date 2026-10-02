@@ -25,7 +25,6 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.ResponseEntity;
@@ -34,10 +33,6 @@ public class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected IPipelineElementDescriptionStorage getPipelineElementStorage() {
     return getNoSqlStorage().getPipelineElementDescriptionStorage();
-  }
-
-  protected IPipelineElementTemplateStorage getPipelineElementTemplateStorage() {
-    return getNoSqlStorage().getPipelineElementTemplateStorage();
   }
 
   protected INoSqlStorage getNoSqlStorage() {

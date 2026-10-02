@@ -36,6 +36,7 @@ import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -58,18 +59,21 @@ public class ResetManagement {
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
   private final PipelineManager pipelineManager;
   private final SpResourceManager resourceManager;
+  private final IPipelineElementTemplateStorage pipelineElementTemplateStorage;
 
   public ResetManagement(WorkerRestClient workerRestClient,
                          IExtensionsServiceStorage extensionsServiceStorage,
                          ExtensionServiceRequestManager requestManager,
                          PipelineManager pipelineManager,
                          SpResourceManager resourceManager,
+                         IPipelineElementTemplateStorage pipelineElementTemplateStorage,
                          ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.workerRestClient = workerRestClient;
     this.extensionsServiceStorage = extensionsServiceStorage;
     this.requestManager = requestManager;
     this.pipelineManager = pipelineManager;
     this.resourceManager = resourceManager;
+    this.pipelineElementTemplateStorage = pipelineElementTemplateStorage;
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
   }
 
@@ -200,11 +204,6 @@ public class ResetManagement {
   }
 
   private void removeAllPipelineTemplates() {
-    var pipelineElementTemplateStorage = StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getPipelineElementTemplateStorage();
-
     pipelineElementTemplateStorage
         .findAll()
         .forEach(pipelineElementTemplateStorage::deleteElement);

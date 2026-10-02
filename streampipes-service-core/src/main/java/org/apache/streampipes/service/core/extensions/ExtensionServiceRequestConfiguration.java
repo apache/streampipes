@@ -29,8 +29,10 @@ import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
@@ -118,8 +120,10 @@ public class ExtensionServiceRequestConfiguration {
                                              IPrivilegeStorage privilegeStorage,
                                              IUserStorage userStorage,
                                              IDataProcessorStorage dataProcessorStorage,
+                                             IDataSinkStorage dataSinkStorage,
                                              IUserActivationTokenStorage userActivationTokenStorage,
                                              IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage,
+                                             ICertificateStorage certificateStorage,
                                              AuditService auditService) {
     return new SpResourceManager(
         permissionStorage,
@@ -137,8 +141,10 @@ public class ExtensionServiceRequestConfiguration {
         privilegeStorage,
         userStorage,
         dataProcessorStorage,
+        dataSinkStorage,
         userActivationTokenStorage,
         passwordRecoveryTokenStorage,
+        certificateStorage,
         auditService
     );
   }

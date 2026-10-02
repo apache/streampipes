@@ -24,6 +24,7 @@ import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.mail.SpEmail;
 import org.apache.streampipes.model.opcua.Certificate;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 
@@ -50,11 +51,14 @@ public class CertificateExpiryEmailScheduler implements SchedulingConfigurer {
 
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
   private final IUserStorage userStorage;
+  private final ExpiringCertificateFinder certificateFinder;
 
   public CertificateExpiryEmailScheduler(ISpCoreConfigurationStorage coreConfigurationStorage,
-                                         IUserStorage userStorage) {
+                                         IUserStorage userStorage,
+                                         ICertificateStorage certificateStorage) {
     this.coreConfigurationStorage = coreConfigurationStorage;
     this.userStorage = userStorage;
+    this.certificateFinder = new ExpiringCertificateFinder(certificateStorage);
   }
 
   public void checkForExpiringCertificates() {
@@ -116,7 +120,7 @@ public class CertificateExpiryEmailScheduler implements SchedulingConfigurer {
    * Returns a map with one list entry of certificates per requested period (days).
    */
   private Map<Integer, List<Certificate>> getExpiringCertificates(List<Integer> expirePeriodsInDays) {
-    return new ExpiringCertificateFinder()
+    return certificateFinder
         .findCertificates(expirePeriodsInDays);
   }
 

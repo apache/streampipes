@@ -24,8 +24,10 @@ import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
@@ -57,8 +59,10 @@ public class SpResourceManager {
   private final IPrivilegeStorage privilegeStorage;
   private final IUserStorage userStorage;
   private final IDataProcessorStorage dataProcessorStorage;
+  private final IDataSinkStorage dataSinkStorage;
   private final IUserActivationTokenStorage userActivationTokenStorage;
   private final IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage;
+  private final ICertificateStorage certificateStorage;
 
   public SpResourceManager(IPermissionStorage permissionStorage,
                            IChartStorage chartStorage,
@@ -75,12 +79,15 @@ public class SpResourceManager {
                            IPrivilegeStorage privilegeStorage,
                            IUserStorage userStorage,
                            IDataProcessorStorage dataProcessorStorage,
+                           IDataSinkStorage dataSinkStorage,
                            IUserActivationTokenStorage userActivationTokenStorage,
-                           IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage) {
+                           IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage,
+                           ICertificateStorage certificateStorage) {
     this(permissionStorage, chartStorage, adapterStorage, adapterDescriptionStorage,
         assetStorage, dashboardStorage, pipelineStorage,
         datasetStorage, coreConfigurationStorage, fileMetadataStorage, roleStorage, userGroupStorage,
-        privilegeStorage, userStorage, dataProcessorStorage, userActivationTokenStorage, passwordRecoveryTokenStorage,
+        privilegeStorage, userStorage, dataProcessorStorage, dataSinkStorage, userActivationTokenStorage,
+        passwordRecoveryTokenStorage, certificateStorage,
         AuditService.disabled());
   }
 
@@ -99,8 +106,10 @@ public class SpResourceManager {
                            IPrivilegeStorage privilegeStorage,
                            IUserStorage userStorage,
                            IDataProcessorStorage dataProcessorStorage,
+                           IDataSinkStorage dataSinkStorage,
                            IUserActivationTokenStorage userActivationTokenStorage,
                            IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage,
+                           ICertificateStorage certificateStorage,
                            AuditService auditService) {
     this.auditService = Objects.requireNonNull(auditService);
     this.permissionStorage = permissionStorage;
@@ -118,8 +127,10 @@ public class SpResourceManager {
     this.privilegeStorage = privilegeStorage;
     this.userStorage = userStorage;
     this.dataProcessorStorage = dataProcessorStorage;
+    this.dataSinkStorage = dataSinkStorage;
     this.userActivationTokenStorage = userActivationTokenStorage;
     this.passwordRecoveryTokenStorage = passwordRecoveryTokenStorage;
+    this.certificateStorage = certificateStorage;
   }
 
   public AuditService getAuditService() {
@@ -131,7 +142,7 @@ public class SpResourceManager {
   }
 
   public DataSinkResourceManager manageDataSinks() {
-    return new DataSinkResourceManager(managePermissions());
+    return new DataSinkResourceManager(dataSinkStorage, managePermissions());
   }
 
   public DataProcessorResourceManager manageDataProcessors() {
@@ -147,7 +158,6 @@ public class SpResourceManager {
   }
 
   public AdapterResourceManager manageAdapters() {
-    var certificateStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getCertificateStorage();
     return new AdapterResourceManager(adapterStorage, certificateStorage, managePermissions());
   }
 

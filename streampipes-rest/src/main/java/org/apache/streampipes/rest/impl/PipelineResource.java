@@ -45,7 +45,6 @@ import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
 import org.apache.streampipes.model.resource.ResourceSummaryDto;
 import org.apache.streampipes.resource.management.DataProcessorResourceManager;
 import org.apache.streampipes.resource.management.DataSinkResourceManager;
-import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
@@ -115,10 +114,9 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
         resourceManager.managePipelines().getDb(),
         new ChartSchemaUpdateCoordinator(chartStorage)
     );
-    PermissionResourceManager permissionResourceManager = resourceManager.managePermissions();
     this.pipelineManager = new PipelineManager(resourceManager);
     this.dataProcessorResourceManager = resourceManager.manageDataProcessors();
-    this.dataSinkResourceManager = new DataSinkResourceManager(permissionResourceManager);
+    this.dataSinkResourceManager = resourceManager.manageDataSinks();
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

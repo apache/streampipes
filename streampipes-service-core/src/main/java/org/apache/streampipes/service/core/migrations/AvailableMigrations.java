@@ -55,6 +55,7 @@ import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStora
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
@@ -81,8 +82,10 @@ public class AvailableMigrations {
   private final IUserGroupStorage userGroupStorage;
   private final IPrivilegeStorage privilegeStorage;
   private final IUserStorage userStorage;
+  private final ICertificateStorage certificateStorage;
 
-  public AvailableMigrations(SpResourceManager resourceManager) {
+  public AvailableMigrations(SpResourceManager resourceManager, ICertificateStorage certificateStorage) {
+    this.certificateStorage = certificateStorage;
     this.chartStorage = resourceManager.manageCharts().getDb();
     this.permissionStorage = resourceManager.managePermissions().getDb();
     this.adapterStorage = resourceManager.manageAdapters().getDb();
@@ -115,7 +118,7 @@ public class AvailableMigrations {
         new RemoveObsoletePrivilegesMigration(privilegeStorage),
         new UniqueDashboardIdMigration(dashboardStorage),
         new AddScriptTemplateViewMigration(),
-        new ComputeCertificateThumbprintMigration(),
+        new ComputeCertificateThumbprintMigration(certificateStorage),
         new MigrateAdaptersToUseScript(adapterStorage),
         new MigratePlc4xS7AdaptersToGenericAdapter(adapterStorage),
         new ModifyAssetLinkIconMigration(),
@@ -123,7 +126,7 @@ public class AvailableMigrations {
         new AddFunctionStateViewMigration(),
         new AddRefreshTokenViewsMigration(),
         new RemoveAssetUserRoleMigration(roleStorage, userGroupStorage, userStorage),
-        new RemoveInternalNotificationSinkMigration(pipelineStorage),
+        new RemoveInternalNotificationSinkMigration(pipelineStorage, dataSinkStorage),
         new MigrateDatasetMetadataMigration(datasetStorage, permissionStorage),
         new MigrateDataLakePersistPipelineTemplateMigration(pipelineTemplateStorage),
         new ReplaceDefaultServiceSecretMigration(userStorage),
