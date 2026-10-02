@@ -59,6 +59,12 @@ public final class RestProjectionParser {
       aggregation = AggregationFunction.valueOf(globalAggregation);
       alias = defaultAlias(aggregation, field);
     }
+    if (!"*".equals(field)) {
+      RestQueryParameterValidator.requireSafeIdentifier(field);
+    }
+    if (alias != null) {
+      RestQueryParameterValidator.requireSafeIdentifier(alias);
+    }
     return new QuerySpec.Projection(field, Optional.ofNullable(aggregation), Optional.ofNullable(alias));
   }
 
