@@ -83,7 +83,8 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   }
 
   @DeleteMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE
+      + " and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<Message> delete(@PathVariable("elementId") String elementId) {
     dataStreamResourceManager.delete(elementId);
     publishEvent(new DataStreamDeletedEvent(elementId));
@@ -91,7 +92,8 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   }
 
   @GetMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE
+      + " and hasPermission(#elementId, 'READ')")
   public ResponseEntity<?> getElement(@PathVariable("elementId") String elementId) {
     try {
       return ok(dataStreamResourceManager.findAsInvocation(elementId));
@@ -101,7 +103,8 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
   }
 
   @PutMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE
+      + " and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<Message> update(@PathVariable("elementId") String elementId,
                                         @RequestBody SpDataStream updatedElement) throws HttpResponseException {
     if (!elementId.equals(updatedElement.getElementId())) {
@@ -119,7 +122,8 @@ public class DataStreamResource extends AbstractAuthGuardedRestResource {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE
   )
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE
+      + " and hasPermission(#updatedElement.elementId, 'WRITE')")
   public ResponseEntity<List<PipelineUpdateInfo>> performPipelineMigrationPreflight(
       @RequestBody SpDataStream updatedElement) {
     return ok(dataStreamUpdateManagement.checkPipelineMigrations(updatedElement));

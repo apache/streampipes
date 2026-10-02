@@ -44,7 +44,6 @@ import {
     FormFieldComponent,
     SplitSectionComponent,
 } from '@streampipes/shared-ui';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -82,7 +81,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class EditEventPropertyComponent implements OnInit {
     public dialogRef = inject(DialogRef<EditEventPropertyComponent>);
     private formBuilder = inject(UntypedFormBuilder);
-    private shepherdService = inject(ShepherdService);
 
     @Input() eventProperty: EventProperty;
 
@@ -184,7 +182,6 @@ export class EditEventPropertyComponent implements OnInit {
                 this.cachedProperty.additionalMetadata.originType;
         }
         this.dialogRef.close({ data: this.eventProperty });
-        this.shepherdService.trigger('adapter-field-changed');
     }
 
     handleDataTypeChange() {

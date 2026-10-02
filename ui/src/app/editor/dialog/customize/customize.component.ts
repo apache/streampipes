@@ -50,7 +50,6 @@ import {
     UntypedFormBuilder,
     UntypedFormGroup,
 } from '@angular/forms';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
 import { StaticPropertyUtilService } from '../../../core-ui/static-properties/static-property-util.service';
@@ -103,7 +102,6 @@ import { MatIcon } from '@angular/material/icon';
 export class CustomizeComponent implements OnInit, AfterViewInit {
     private dialogRef = inject<DialogRef<CustomizeComponent>>(DialogRef);
     private jsPlumbService = inject(JsplumbService);
-    private shepherdService = inject(ShepherdService);
     private fb = inject(UntypedFormBuilder);
     private changeDetectorRef = inject(ChangeDetectorRef);
     private pipelineElementTemplateService = inject(
@@ -165,11 +163,6 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
         this.parentForm.statusChanges.subscribe(_status => {
             this.formValid = this.viewInitialized && this.parentForm.valid;
         });
-        if (this.shepherdService.isTourActive()) {
-            this.shepherdService.trigger(
-                'customize-' + this.pipelineElement.type,
-            );
-        }
         this.loadPipelineElementTemplates();
     }
 
@@ -192,9 +185,6 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
             PipelineElementConfigurationStatus.OK,
         );
         this.pipelineElement.payload.configured = true;
-        if (this.shepherdService.isTourActive()) {
-            this.shepherdService.trigger('save-' + this.pipelineElement.type);
-        }
         this.dialogRef.close(this.pipelineElement);
     }
 
