@@ -89,6 +89,7 @@ final class RestFilterParser {
   }
 
   private static QuerySpec.Comparison comparison(String field, String operator, Object value) {
+    RestQueryParameterValidator.requireSafeIdentifier(field);
     Object scalar = value instanceof String text ? scalar(text) : value;
     return new QuerySpec.Comparison(field, QuerySpec.Operator.fromSymbol(operator), new QuerySpec.Literal(scalar));
   }
