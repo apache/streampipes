@@ -37,7 +37,6 @@ import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -103,7 +102,7 @@ public class ExportPackageGenerator {
 
       config.getDataSources().forEach(item -> addDoc(builder,
           item,
-          new DataSourceResolver(),
+          new DataSourceResolver(resourceManager.manageDataStreams().getDb()),
           manifest::addDataSource));
 
       config.getDataLakeMeasures().forEach(item -> addDoc(builder,
@@ -137,17 +136,17 @@ public class ExportPackageGenerator {
       config.getGenericStorageDocuments().forEach(item -> {
         addGenericStorageDocument(builder,
             item,
-            new GenericStorageDocumentResolver(),
+            new GenericStorageDocumentResolver(resourceManager.getGenericStorage()),
             manifest::addGenericStorageDocument,
             exportedGenericStorageDocumentIds);
       });
 
       config.getLabels().forEach(item -> {
-        addDoc(builder, item, new GenericStorageDocumentResolver(), manifest::addGenericStorageDocument);
+        addDoc(builder, item, new GenericStorageDocumentResolver(resourceManager.getGenericStorage()), manifest::addGenericStorageDocument);
       });
 
       config.getSites().forEach(item -> {
-        addDoc(builder, item, new GenericStorageDocumentResolver(), manifest::addGenericStorageDocument);
+        addDoc(builder, item, new GenericStorageDocumentResolver(resourceManager.getGenericStorage()), manifest::addGenericStorageDocument);
       });
 
       config.getFiles().forEach(item -> {
@@ -217,11 +216,10 @@ public class ExportPackageGenerator {
                                                 String appDocType,
                                                 Consumer<String> function,
                                                 Set<String> exportedGenericStorageDocumentIds) {
-    var resolver = new GenericStorageDocumentResolver();
+    var resolver = new GenericStorageDocumentResolver(resourceManager.getGenericStorage());
 
     try {
-      StorageDispatcher.INSTANCE.getNoSqlStore()
-          .getGenericStorage()
+      resourceManager.getGenericStorage()
           .findAll(appDocType)
           .forEach(document -> addGenericStorageDocument(builder,
               resolver.convert(document),
@@ -263,6 +261,6 @@ public class ExportPackageGenerator {
   }
 
   private Map<String, Object> getAsset(String assetId) throws IOException {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().findOne(assetId);
+    return resourceManager.getGenericStorage().findOne(assetId);
   }
 }

@@ -30,10 +30,14 @@ import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
@@ -43,6 +47,7 @@ import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.user.management.service.RefreshTokenService;
 
 import org.slf4j.Logger;
@@ -87,7 +92,8 @@ public class ExtensionServiceRequestConfiguration {
   @Bean
   @Primary
   public ExtensionServiceRequestManager extensionServiceRequestManager(
-      NatsExtensionServiceRequestManager natsExtensionServiceRequestManager
+      NatsExtensionServiceRequestManager natsExtensionServiceRequestManager,
+      IExtensionsServiceStorage extensionsServiceStorage
   ) {
     var env = Environments.getEnvironment();
 
@@ -100,7 +106,8 @@ public class ExtensionServiceRequestConfiguration {
     return new TransportAwareExtensionServiceRequestManager(
         new HttpExtensionServiceRequestManager(),
         natsExtensionServiceRequestManager,
-        transportMode
+        transportMode,
+        extensionsServiceStorage
     );
   }
 
@@ -121,9 +128,14 @@ public class ExtensionServiceRequestConfiguration {
                                              IUserStorage userStorage,
                                              IDataProcessorStorage dataProcessorStorage,
                                              IDataSinkStorage dataSinkStorage,
+                                             IDataStreamStorage dataStreamStorage,
+                                             IPipelineElementDescriptionStorage descriptionStorage,
+                                             IGenericStorage genericStorage,
                                              IUserActivationTokenStorage userActivationTokenStorage,
                                              IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage,
                                              ICertificateStorage certificateStorage,
+                                             IExtensionsServiceStorage extensionsServiceStorage,
+                                             ISpServiceDiscovery serviceDiscovery,
                                              AuditService auditService) {
     return new SpResourceManager(
         permissionStorage,
@@ -142,9 +154,14 @@ public class ExtensionServiceRequestConfiguration {
         userStorage,
         dataProcessorStorage,
         dataSinkStorage,
+        dataStreamStorage,
+        descriptionStorage,
+        genericStorage,
         userActivationTokenStorage,
         passwordRecoveryTokenStorage,
         certificateStorage,
+        extensionsServiceStorage,
+        serviceDiscovery,
         auditService
     );
   }

@@ -106,6 +106,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     this.resourceManager = resourceManager;
     this.descriptionStorage = descriptionStorage;
     this.compactPipelineManagement = new CompactPipelineManagement(
+        resourceManager.getServiceDiscovery(),
         descriptionStorage,
         requestManager
     );
@@ -246,6 +247,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
                                                         @PathVariable("recId") String baseRecElement) {
     try {
       return new ElementRecommender(
+          resourceManager.getServiceDiscovery(),
           pipeline, baseRecElement, requestManager, dataProcessorResourceManager, dataSinkResourceManager, descriptionStorage
       ).findRecommendedElements();
     } catch (JsonSyntaxException e) {
@@ -276,7 +278,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> validatePipeline(@RequestBody Pipeline pipeline) {
     try {
-      return ok(new PipelineVerificationHandlerV2(pipeline, requestManager).verifyPipeline());
+      return ok(new PipelineVerificationHandlerV2(resourceManager.getServiceDiscovery(), pipeline, requestManager).verifyPipeline());
     } catch (JsonSyntaxException e) {
       return badRequest(new Notification(NotificationType.UNKNOWN_ERROR, e.getMessage()));
     } catch (Exception e) {

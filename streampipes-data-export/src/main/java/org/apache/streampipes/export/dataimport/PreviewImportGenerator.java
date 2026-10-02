@@ -113,7 +113,7 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
 
   @Override
   protected void handleDataSource(String document, String dataSourceId) throws JsonProcessingException {
-    addExportItem(dataSourceId, new DataSourceResolver().readDocument(document).getName(), importConfig::addDataSource);
+    addExportItem(dataSourceId, new DataSourceResolver(resourceManager.manageDataStreams().getDb()).readDocument(document).getName(), importConfig::addDataSource);
   }
 
   @Override

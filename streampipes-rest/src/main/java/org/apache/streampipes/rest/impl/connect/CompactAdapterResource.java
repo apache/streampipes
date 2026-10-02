@@ -41,7 +41,10 @@ import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,26 +70,36 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
   private final AdapterUpdateManagement adapterUpdateManagement;
   private final ExtensionServiceRequestManager requestManager;
   private final PipelineManager pipelineManager;
+  private final ISpServiceDiscovery serviceDiscovery;
+  private final ICompactPipelineTemplateStorage pipelineTemplateStorage;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
 
   public CompactAdapterResource(WorkerRestClient workerRestClient,
                                 ExtensionServiceRequestManager requestManager,
                                 ApplicationEventPublisher eventPublisher,
                                 SpResourceManager resourceManager,
-                                @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage) {
+                                @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage,
+                                IExtensionsServiceStorage extensionsServiceStorage,
+                                ISpServiceDiscovery serviceDiscovery,
+                                ICompactPipelineTemplateStorage pipelineTemplateStorage,
+                                IPipelineElementDescriptionStorage descriptionStorage) {
     super(() -> new AdapterMasterManagement(
         resourceManager,
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
         workerRestClient,
-        StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
+        extensionsServiceStorage,
         requestManager,
         new AdapterAuditRecorder(resourceManager.getAuditService())
     ));
     var guessManagement = new GuessManagement(
-        new ExtensionsServiceEndpointGenerator(),
+        new ExtensionsServiceEndpointGenerator(serviceDiscovery),
         requestManager,
         resourceManager
     );
     this.requestManager = requestManager;
+    this.serviceDiscovery = serviceDiscovery;
+    this.pipelineTemplateStorage = pipelineTemplateStorage;
+    this.descriptionStorage = descriptionStorage;
     this.compactAdapterManagement = new CompactAdapterManagement(
         new AdapterGenerationSteps(guessManagement).getGenerators(), adapterDescriptionStorage
     );
@@ -143,9 +156,10 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
                           .persist()) {
           var storedAdapter = managementService.getAdapter(adapterId);
           new PersistPipelineHandler(
-              getNoSqlStorage().getPipelineTemplateStorage(),
+              pipelineTemplateStorage,
               new CompactPipelineManagement(
-                  getNoSqlStorage().getPipelineElementDescriptionStorage(),
+                  serviceDiscovery,
+                  descriptionStorage,
                   requestManager
               ),
               pipelineManager,

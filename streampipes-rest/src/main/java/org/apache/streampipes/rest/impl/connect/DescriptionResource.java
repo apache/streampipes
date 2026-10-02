@@ -59,7 +59,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
                              SpResourceManager resourceManager,
                              @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage) {
     super(() -> new DescriptionManagement(workerRestClient, resourceManager.manageAdapters(), adapterDescriptionStorage));
-    endpointGenerator = new ExtensionsServiceEndpointGenerator();
+    endpointGenerator = new ExtensionsServiceEndpointGenerator(resourceManager.getServiceDiscovery());
   }
 
   @GetMapping(path = "/adapters", produces = MediaType.APPLICATION_JSON_VALUE)

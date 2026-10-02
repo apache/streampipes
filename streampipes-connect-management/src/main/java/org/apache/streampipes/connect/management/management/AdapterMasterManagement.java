@@ -35,7 +35,6 @@ import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.slf4j.Logger;
@@ -237,7 +236,7 @@ public class AdapterMasterManagement {
     try {
       try {
         // Find endpoint to start adapter on
-        var service = new ExtensionsServiceEndpointGenerator()
+        var service = new ExtensionsServiceEndpointGenerator(resourceManager.getServiceDiscovery())
             .selectService(ad.getAppId(), SpServiceUrlProvider.ADAPTER,
                                 ad.getDeploymentConfiguration().getDesiredServiceTags());
 
@@ -269,7 +268,7 @@ public class AdapterMasterManagement {
   }
 
   private boolean installDataSource(SpDataStream stream, String principalSid) throws AdapterException {
-    var storageApi = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage();
+    var storageApi = resourceManager.getPipelineElementDescriptionStorage();
     var verifier = new TypedElementVerifier<>(
         stream,
         storageApi,

@@ -26,6 +26,7 @@ import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.DatasetMetadataSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import java.util.ArrayList;
@@ -40,13 +41,16 @@ import java.util.stream.Stream;
 public class DatasetMetadataManagement implements IDatasetMetadataManagement {
 
   private final IDatasetMetadataStorage dataLakeStorage;
+  private final ResourceDeletionManager resourceDeletionManager;
   private final DatasetPermissionManager permissionManager;
   private final ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator;
 
   public DatasetMetadataManagement(IDatasetMetadataStorage dataLakeStorage,
                                DatasetPermissionManager permissionManager,
-                               ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
+                               ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator,
+                               ResourceDeletionManager resourceDeletionManager) {
     this.dataLakeStorage = dataLakeStorage;
+    this.resourceDeletionManager = resourceDeletionManager;
     this.permissionManager = permissionManager;
     this.chartSchemaUpdateCoordinator = chartSchemaUpdateCoordinator;
   }
@@ -122,7 +126,7 @@ public class DatasetMetadataManagement implements IDatasetMetadataManagement {
   @Override
   public void deleteMeasurement(String elementId) {
     if (dataLakeStorage.getElementById(elementId) != null) {
-      dataLakeStorage.deleteElementById(elementId);
+      resourceDeletionManager.delete(dataLakeStorage, elementId);
     } else {
       throw new IllegalArgumentException("Could not find measure with this ID");
     }
@@ -133,7 +137,7 @@ public class DatasetMetadataManagement implements IDatasetMetadataManagement {
     var measureToDeleteOpt = getExistingMeasureByName(measureName);
 
     return measureToDeleteOpt.map(measure -> {
-      dataLakeStorage.deleteElementById(measure.getElementId());
+      resourceDeletionManager.delete(dataLakeStorage, measure.getElementId());
       return true;
     }).orElse(false);
   }

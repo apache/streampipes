@@ -21,7 +21,6 @@ package org.apache.streampipes.service.core.migrations.v099;
 import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -47,7 +46,7 @@ class RenameAssetLinkTypesMigrationTest {
   @BeforeEach
   void setUp() {
     genericStorage = mock(IGenericStorage.class);
-    migration = new RenameAssetLinkTypesMigration(genericStorage, new ObjectMapper());
+    migration = new RenameAssetLinkTypesMigration(genericStorage);
   }
 
   @Test

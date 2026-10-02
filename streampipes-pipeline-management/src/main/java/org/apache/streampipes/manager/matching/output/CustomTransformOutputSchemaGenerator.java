@@ -31,6 +31,7 @@ import org.apache.streampipes.resource.management.secret.SecretDecrypter;
 import org.apache.streampipes.resource.management.secret.SecretService;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.google.gson.JsonSyntaxException;
@@ -40,22 +41,27 @@ import java.util.Set;
 
 public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<CustomTransformOutputStrategy> {
 
+  private final ISpServiceDiscovery serviceDiscovery;
   private final DataProcessorInvocation dataProcessorInvocation;
   private final ExtensionServiceRequestManager requestManager;
 
-  public static CustomTransformOutputSchemaGenerator from(OutputStrategy strategy,
+  public static CustomTransformOutputSchemaGenerator from(ISpServiceDiscovery serviceDiscovery,
+                                                          OutputStrategy strategy,
                                                           DataProcessorInvocation invocation,
                                                           ExtensionServiceRequestManager requestManager) {
     return new CustomTransformOutputSchemaGenerator(
+        serviceDiscovery,
         (CustomTransformOutputStrategy) strategy,
         invocation,
         requestManager);
   }
 
-  public CustomTransformOutputSchemaGenerator(CustomTransformOutputStrategy strategy,
+  public CustomTransformOutputSchemaGenerator(ISpServiceDiscovery serviceDiscovery,
+                                              CustomTransformOutputStrategy strategy,
                                               DataProcessorInvocation invocation,
                                               ExtensionServiceRequestManager requestManager) {
     super(strategy);
+    this.serviceDiscovery = serviceDiscovery;
     this.dataProcessorInvocation = invocation;
     this.requestManager = requestManager;
   }
@@ -75,7 +81,7 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   private EventSchema makeRequest() {
     try {
       String httpRequestBody = makeRequestBody();
-      var service = new ExtensionsServiceEndpointGenerator().selectService(
+      var service = new ExtensionsServiceEndpointGenerator(serviceDiscovery).selectService(
           dataProcessorInvocation.getAppId(),
           SpServiceUrlProvider.DATA_PROCESSOR,
           Set.of()

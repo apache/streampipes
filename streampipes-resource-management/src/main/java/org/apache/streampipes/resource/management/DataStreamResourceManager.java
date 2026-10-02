@@ -19,18 +19,25 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class DataStreamResourceManager
     extends AbstractPipelineElementResourceManager<IDataStreamStorage, SpDataStream, SpDataStream> {
 
+  private final ResourceDeletionManager resourceDeletionManager;
+
   public DataStreamResourceManager(IDataStreamStorage db,
-                                   PermissionResourceManager permissionResourceManager) {
+                                   PermissionResourceManager permissionResourceManager,
+                                   ResourceDeletionManager resourceDeletionManager) {
     super(db, permissionResourceManager);
+    this.resourceDeletionManager = resourceDeletionManager;
   }
 
-  public DataStreamResourceManager(PermissionResourceManager permissionResourceManager) {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataStreamStorage(), permissionResourceManager);
+  @Override
+  public void delete(String elementId) {
+    if (find(elementId) != null) {
+      resourceDeletionManager.removeAssetLinks(elementId);
+      super.delete(elementId);
+    }
   }
 
   @Override

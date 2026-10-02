@@ -40,9 +40,8 @@ import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -55,7 +54,7 @@ import java.util.Set;
 public class PerformImportGenerator extends ImportGenerator<Void> {
 
   private final AssetExportConfiguration config;
-  private final INoSqlStorage storage;
+  private final IGenericStorage genericStorage;
   private final Set<PermissionInfo> permissionsToStore = new HashSet<>();
   private final String ownerSid;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
@@ -69,7 +68,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
                                 SpResourceManager resourceManager,
                                 PipelineManager pipelineManager) {
     this.config = config;
-    this.storage = StorageDispatcher.INSTANCE.getNoSqlStore();
+    this.genericStorage = resourceManager.getGenericStorage();
     this.ownerSid = ownerSid;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.resourceManager = resourceManager;
@@ -81,14 +80,14 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   protected void handleAsset(Map<String, byte[]> previewFiles, String assetId) throws IOException {
     var document = asString(previewFiles.get(assetId));
     try {
-      var existing = storage.getGenericStorage().findOne(assetId);
+      var existing = genericStorage.findOne(assetId);
       if (config.isOverwriteExistingDocuments()) {
-        storage.getGenericStorage().delete(assetId, existing.get("_rev").toString());
+        genericStorage.delete(assetId, existing.get("_rev").toString());
       }
     } catch (IOException e) {
       // Document not found, do nothing
     }
-    storage.getGenericStorage().create(document);
+    genericStorage.create(document);
     permissionsToStore.add(new PermissionInfo(assetId, SpAssetModel.class));
   }
 
@@ -123,8 +122,8 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleDataSource(String document, String dataSourceId) throws JsonProcessingException {
     if (shouldStore(dataSourceId, config.getDataSources())) {
-      writeDocument(document, new DataSourceResolver());
-      var dataStream = new DataSourceResolver().deserializeDocument(document);
+      writeDocument(document, new DataSourceResolver(resourceManager.manageDataStreams().getDb()));
+      var dataStream = new DataSourceResolver(resourceManager.manageDataStreams().getDb()).deserializeDocument(document);
       permissionsToStore.add(new PermissionInfo(dataStream.getElementId(), SpDataStream.class));
     }
   }
@@ -162,28 +161,28 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleLabel(String document, String labelId) throws JsonProcessingException {
     if (shouldStore(labelId, config.getLabels())) {
-      writeDocument(document, new GenericStorageDocumentResolver());
+      writeDocument(document, new GenericStorageDocumentResolver(genericStorage));
     }
   }
 
   @Override
   protected void handleSite(String document, String siteId) throws JsonProcessingException {
     if (shouldStore(siteId, config.getSites())) {
-      writeDocument(document, new GenericStorageDocumentResolver());
+      writeDocument(document, new GenericStorageDocumentResolver(genericStorage));
     }
   }
 
   @Override
   protected void handleGenericStorageDocument(String document, String documentId) throws JsonProcessingException {
     if (shouldStore(documentId, config.getGenericStorageDocuments())) {
-      writeDocument(document, new GenericStorageDocumentResolver());
+      writeDocument(document, new GenericStorageDocumentResolver(genericStorage));
     }
   }
 
   private void writeDocument(String document,
                              AbstractResolver<?> resolver) throws JsonProcessingException {
     if (config.isOverwriteExistingDocuments()) {
-      resolver.deleteDocument(document);
+      resolver.deleteDocument(document, resourceManager.getResourceDeletionManager());
     }
     resolver.writeDocument(document, config);
   }

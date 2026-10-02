@@ -32,13 +32,16 @@ import org.springframework.security.core.Authentication;
 public class AdapterResourceManager extends AbstractResourceManager<IAdapterStorage> {
 
   private final ICertificateStorage certificateStorage;
+  private final ResourceDeletionManager resourceDeletionManager;
   private final SpPermissionEvaluator permissionEvaluator;
 
   public AdapterResourceManager(IAdapterStorage adapterStorage,
                                 ICertificateStorage certificateStorage,
-                                PermissionResourceManager permissionResourceManager) {
+                                PermissionResourceManager permissionResourceManager,
+                                ResourceDeletionManager resourceDeletionManager) {
     super(adapterStorage);
     this.certificateStorage = certificateStorage;
+    this.resourceDeletionManager = resourceDeletionManager;
     this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
   }
 
@@ -105,7 +108,7 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
             });
 
     // Then delete the adapter
-    db.deleteElementById(elementId);
+    resourceDeletionManager.delete(db, elementId);
   }
 
   /**

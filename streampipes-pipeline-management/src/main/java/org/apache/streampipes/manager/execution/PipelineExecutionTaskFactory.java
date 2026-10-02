@@ -43,7 +43,7 @@ public class PipelineExecutionTaskFactory {
     return List.of(
         new UpdateGroupIdTask(),
         new SecretEncryptionTask(SecretProvider.getDecryptionService()),
-        new DiscoverEndpointsTask(),
+        new DiscoverEndpointsTask(resourceManager.getServiceDiscovery()),
         new SubmitRequestTask(new InvokePipelineElementSubmitter(pipeline, requestManager, resourceManager)),
         new SecretEncryptionTask(SecretProvider.getEncryptionService()),
         new AfterInvocationTask(PipelineStatusMessageType.PIPELINE_STARTED),

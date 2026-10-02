@@ -34,6 +34,7 @@ import org.apache.streampipes.model.pipeline.PipelineModification;
 import org.apache.streampipes.resource.management.DataProcessorResourceManager;
 import org.apache.streampipes.resource.management.DataSinkResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,7 @@ public class ElementRecommender {
 
   private static final Logger LOG = LoggerFactory.getLogger(ElementRecommender.class);
 
+  private final ISpServiceDiscovery serviceDiscovery;
   private final IPipelineElementDescriptionStorage descriptionStorage;
   private final Pipeline pipeline;
   private final String baseRecDomId;
@@ -55,12 +57,14 @@ public class ElementRecommender {
   private final DataProcessorResourceManager dataProcessorResourceManager;
   private final DataSinkResourceManager dataSinkResourceManager;
 
-  public ElementRecommender(Pipeline partialPipeline,
+  public ElementRecommender(ISpServiceDiscovery serviceDiscovery,
+                            Pipeline partialPipeline,
                             String baseRecDomId,
                             ExtensionServiceRequestManager requestManager,
                             DataProcessorResourceManager dataProcessorResourceManager,
                             DataSinkResourceManager dataSinkResourceManager,
                             IPipelineElementDescriptionStorage descriptionStorage) {
+    this.serviceDiscovery = serviceDiscovery;
     this.descriptionStorage = descriptionStorage;
     this.pipeline = partialPipeline;
     this.baseRecDomId = baseRecDomId;
@@ -133,7 +137,7 @@ public class ElementRecommender {
     } else {
       Pipeline partialPipeline =
           new PartialPipelineGenerator(this.baseRecDomId, elementsProvider).makePartialPipeline();
-      var modifications = new PipelineVerificationHandlerV2(partialPipeline, requestManager).verifyPipeline();
+      var modifications = new PipelineVerificationHandlerV2(serviceDiscovery, partialPipeline, requestManager).verifyPipeline();
       return modifications.getPipelineModifications()
           .stream()
           .filter(m -> m.getDomId().equals(this.baseRecDomId))

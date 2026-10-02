@@ -45,7 +45,8 @@ public class AbstractDatasetResource extends AbstractAuthGuardedRestResource {
     this.datasetMetadataManagement = new DataExplorerDispatcher().getSchemaManagement(
             chartSchemaUpdateCoordinator,
             resourceManager.managePermissions().getDb(),
-            resourceManager.manageDataLakeMeasures().getDb());
+            resourceManager.manageDataLakeMeasures().getDb(),
+            resourceManager.getResourceDeletionManager());
   }
 
   /**

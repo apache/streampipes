@@ -31,8 +31,8 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.context.annotation.Conditional;
@@ -59,8 +59,9 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
                        ExtensionServiceRequestManager requestManager,
                        SpResourceManager resourceManager,
                        ITransformationScriptTemplateStorage templateStorage,
-                       IPipelineElementTemplateStorage pipelineElementTemplateStorage) {
-    IExtensionsServiceStorage extensionsServiceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
+                       IPipelineElementTemplateStorage pipelineElementTemplateStorage,
+                       IExtensionsServiceStorage extensionsServiceStorage,
+                       IGenericStorage genericStorage) {
     this.resourceManager = resourceManager;
     this.templateStorage = templateStorage;
     var pipelineManager = new PipelineManager(
@@ -68,6 +69,7 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
     );
     this.resetManagement = new ResetManagement(
         workerRestClient,
+        genericStorage,
         extensionsServiceStorage,
         requestManager,
         pipelineManager,

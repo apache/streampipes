@@ -27,16 +27,20 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineModificationResult;
 import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import java.util.UUID;
 
 public class CompactPipelineManagement {
 
+  private final ISpServiceDiscovery serviceDiscovery;
   private final IPipelineElementDescriptionStorage storage;
   private final ExtensionServiceRequestManager requestManager;
 
-  public CompactPipelineManagement(IPipelineElementDescriptionStorage storage,
+  public CompactPipelineManagement(ISpServiceDiscovery serviceDiscovery,
+                                   IPipelineElementDescriptionStorage storage,
                                    ExtensionServiceRequestManager requestManager) {
+    this.serviceDiscovery = serviceDiscovery;
     this.storage = storage;
     this.requestManager = requestManager;
   }
@@ -47,7 +51,7 @@ public class CompactPipelineManagement {
 
     new PipelineElementConfigurationStep(storage).apply(pipeline, compactPipeline);
 
-    return new PipelineVerificationHandlerV2(pipeline, requestManager).makeModifiedPipeline();
+    return new PipelineVerificationHandlerV2(serviceDiscovery, pipeline, requestManager).makeModifiedPipeline();
   }
 
   public CompactPipeline convertPipeline(Pipeline pipeline) {

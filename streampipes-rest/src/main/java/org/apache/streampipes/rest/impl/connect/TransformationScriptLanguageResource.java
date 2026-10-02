@@ -25,7 +25,6 @@ import org.apache.streampipes.model.connect.ScriptMetadata;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
@@ -46,11 +45,7 @@ public class TransformationScriptLanguageResource {
 
   private final ISpServiceDiscovery serviceDiscovery;
 
-  public TransformationScriptLanguageResource() {
-    this(SpServiceDiscovery.getServiceDiscovery());
-  }
-
-  TransformationScriptLanguageResource(ISpServiceDiscovery serviceDiscovery) {
+  public TransformationScriptLanguageResource(ISpServiceDiscovery serviceDiscovery) {
     this.serviceDiscovery = serviceDiscovery;
   }
 

@@ -25,6 +25,7 @@ import org.apache.streampipes.dataexplorer.influx.DataExplorerManagerInflux;
 import org.apache.streampipes.dataexplorer.iotdb.DataExplorerManagerIotDb;
 import org.apache.streampipes.manager.permission.DatasetPermissionManager;
 import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
@@ -56,8 +57,10 @@ public class DataExplorerDispatcher {
 
   public IDatasetMetadataManagement getSchemaManagement(ChartSchemaUpdateCoordinator charts,
                                                         IPermissionStorage permissions,
-                                                        IDatasetMetadataStorage datasets) {
-    return new DatasetMetadataManagement(datasets, new DatasetPermissionManager(permissions), charts);
+                                                        IDatasetMetadataStorage datasets,
+                                                        ResourceDeletionManager resourceDeletionManager) {
+    return new DatasetMetadataManagement(datasets, new DatasetPermissionManager(permissions), charts,
+        resourceDeletionManager);
   }
 
   public DatasetServices getDatasetServices(

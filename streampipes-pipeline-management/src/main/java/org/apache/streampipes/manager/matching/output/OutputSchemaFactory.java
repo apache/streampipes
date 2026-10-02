@@ -29,15 +29,19 @@ import org.apache.streampipes.model.output.ListOutputStrategy;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.output.TransformOutputStrategy;
 import org.apache.streampipes.model.output.UserDefinedOutputStrategy;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 public class OutputSchemaFactory {
 
+  private final ISpServiceDiscovery serviceDiscovery;
   private final OutputStrategy outputStrategy;
   private final DataProcessorInvocation dataProcessorInvocation;
   private final ExtensionServiceRequestManager requestManager;
 
-  public OutputSchemaFactory(DataProcessorInvocation dataProcessorInvocation,
+  public OutputSchemaFactory(ISpServiceDiscovery serviceDiscovery,
+                             DataProcessorInvocation dataProcessorInvocation,
                              ExtensionServiceRequestManager requestManager) {
+    this.serviceDiscovery = serviceDiscovery;
     this.dataProcessorInvocation = dataProcessorInvocation;
     this.outputStrategy = dataProcessorInvocation.getOutputStrategies().get(0);
     this.requestManager = requestManager;
@@ -57,7 +61,7 @@ public class OutputSchemaFactory {
     } else if (outputStrategy instanceof TransformOutputStrategy) {
       return TransformOutputSchemaGenerator.from(outputStrategy, dataProcessorInvocation);
     } else if (outputStrategy instanceof CustomTransformOutputStrategy) {
-      return CustomTransformOutputSchemaGenerator.from(outputStrategy, dataProcessorInvocation, requestManager);
+      return CustomTransformOutputSchemaGenerator.from(serviceDiscovery, outputStrategy, dataProcessorInvocation, requestManager);
     } else if (outputStrategy instanceof UserDefinedOutputStrategy) {
       return UserDefinedOutputSchemaGenerator.from(outputStrategy);
     } else {

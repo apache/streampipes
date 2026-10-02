@@ -19,13 +19,15 @@
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class PipelineValidationSteps {
 
-  public List<IPipelineValidationStep> collect(ExtensionServiceRequestManager requestManager) {
+  public List<IPipelineValidationStep> collect(ExtensionServiceRequestManager requestManager,
+                                               ISpServiceDiscovery serviceDiscovery) {
     return Arrays.asList(
         new MeasurementChangeValidationStep(),
         new PrepareStep(),
@@ -33,7 +35,7 @@ public class PipelineValidationSteps {
         new SchemaValidationStep(),
         new UpdateStaticPropertiesStep(),
         new UpdateOutputStrategiesStep(),
-        new ComputeOutputStep(requestManager),
+        new ComputeOutputStep(serviceDiscovery, requestManager),
         new CheckCompletedStep()
     );
   }

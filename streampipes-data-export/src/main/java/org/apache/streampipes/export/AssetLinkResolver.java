@@ -33,7 +33,6 @@ import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -89,7 +88,7 @@ public class AssetLinkResolver {
           resourceManager.manageDashboards()
       ).resolve(getLinks(assetLinks, ResolvableAssetLinks.DASHBOARD)));
       exportConfig.setDataSources(
-          new DataSourceResolver().resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_STREAM)));
+          new DataSourceResolver(resourceManager.manageDataStreams().getDb()).resolve(getLinks(assetLinks, ResolvableAssetLinks.DATA_STREAM)));
       exportConfig.setPipelines(
           new PipelineResolver(extensionServiceRequestManager, pipelineManager, resourceManager.managePipelines())
           .resolve(getLinks(assetLinks, ResolvableAssetLinks.PIPELINE))
@@ -117,7 +116,7 @@ public class AssetLinkResolver {
   }
 
   private SpAssetModel getAsset() throws IOException {
-    return deserialize(StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().findOne(this.assetId));
+    return deserialize(resourceManager.getGenericStorage().findOne(this.assetId));
   }
 
   private SpAssetModel deserialize(Map<String, Object> asset) {

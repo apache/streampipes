@@ -24,6 +24,7 @@ import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.PipelineResourceManager;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -103,7 +104,7 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
   }
 
   @Override
-  public void deleteDocument(String document) throws JsonProcessingException {
+  public void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager) throws JsonProcessingException {
     var pipeline = readDocument(document);
     var resourceId = pipeline.getElementId();
     var storedPipeline = pipelineManager.getPipeline(resourceId);
@@ -111,7 +112,7 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
       if (storedPipeline.isRunning()) {
         pipelineManager.stopPipeline(resourceId, true, requestManager);
       }
-      resourceManager.getDb().deleteElementById(resourceId);
+      resourceDeletionManager.delete(resourceManager.getDb(), resourceId);
     }
   }
 }

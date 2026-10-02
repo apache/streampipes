@@ -22,7 +22,6 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +46,12 @@ import java.util.Map;
 @RequestMapping("/api/v2/storage-generic")
 public class GenericStorageResource extends AbstractAuthGuardedRestResource {
 
+  private final IGenericStorage genericStorage;
+
+  public GenericStorageResource(IGenericStorage genericStorage) {
+    this.genericStorage = genericStorage;
+  }
+
   public static final String APP_DOC_NAME = "appDocName";
 
   private static final Logger LOG = LoggerFactory.getLogger(GenericStorageResource.class);
@@ -55,7 +60,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_READ_GENERIC_STORAGE_PRIVILEGE)
   public ResponseEntity<List<Map<String, Object>>> getAll(@PathVariable(APP_DOC_NAME) String appDocName) {
     try {
-      List<Map<String, Object>> assets = getGenericStorage().findAll(appDocName);
+      List<Map<String, Object>> assets = genericStorage.findAll(appDocName);
       return ok(assets);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
@@ -71,7 +76,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<Map<String, Object>> create(@PathVariable(APP_DOC_NAME) String appDocName,
                                                     @RequestBody String document) {
     try {
-      Map<String, Object> obj = getGenericStorage().create(document);
+      Map<String, Object> obj = genericStorage.create(document);
       return ok(obj);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
@@ -87,7 +92,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<List<Map<String, Object>>> find(@PathVariable(APP_DOC_NAME) String appDocName,
                                                         @RequestBody Map<String, Object> query) {
     try {
-      var docs = getGenericStorage().find(appDocName, query);
+      var docs = genericStorage.find(appDocName, query);
       return ok(docs);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
@@ -100,7 +105,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
   public ResponseEntity<Map<String, Object>> getCategory(@PathVariable(APP_DOC_NAME) String appDocName,
                                                          @PathVariable("id") String documentId) {
     try {
-      Map<String, Object> obj = getGenericStorage().findOne(documentId);
+      Map<String, Object> obj = genericStorage.findOne(documentId);
       return ok(obj);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
@@ -117,7 +122,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
                                                     @PathVariable("id") String documentId,
                                                     @RequestBody String document) {
     try {
-      Map<String, Object> obj = getGenericStorage().update(documentId, document);
+      Map<String, Object> obj = genericStorage.update(documentId, document);
       return ok(obj);
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
@@ -131,7 +136,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
                                      @PathVariable("id") String documentId,
                                      @PathVariable("rev") String rev) {
     try {
-      getGenericStorage().delete(documentId, rev);
+      genericStorage.delete(documentId, rev);
       return ok();
     } catch (IOException e) {
       LOG.error("Could not connect to storage", e);
@@ -139,8 +144,6 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
     }
   }
 
-  private IGenericStorage getGenericStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage();
-  }
+
 
 }

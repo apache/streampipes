@@ -98,7 +98,7 @@ public class ContainerProvidedOptionsHandler {
   private ExtensionServiceRequestTarget getEndpointRequestTarget(String appId)
       throws NoServiceEndpointsAvailableException {
     SpServiceUrlProvider provider = ExtensionsServiceEndpointUtils.getPipelineElementType(appId, descriptionStorage);
-    var service = new ExtensionsServiceEndpointGenerator().selectService(appId, provider, Set.of());
+    var service = new ExtensionsServiceEndpointGenerator(resourceManager.getServiceDiscovery()).selectService(appId, provider, Set.of());
     return ExtensionServiceRequestTargets.containerProvidedOptions(service, provider, appId);
   }
 }

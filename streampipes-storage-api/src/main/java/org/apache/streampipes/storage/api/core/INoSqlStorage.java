@@ -17,21 +17,10 @@
  */
 package org.apache.streampipes.storage.api.core;
 
-import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
-import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
-import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 public interface INoSqlStorage {
 
   IGenericStorage getGenericStorage();
 
-  IPipelineElementDescriptionStorage getPipelineElementDescriptionStorage();
-
-  IDataStreamStorage getDataStreamStorage();
-
-  IExtensionsServiceStorage getExtensionsServiceStorage();
-
-  ICompactPipelineTemplateStorage getPipelineTemplateStorage();
 }

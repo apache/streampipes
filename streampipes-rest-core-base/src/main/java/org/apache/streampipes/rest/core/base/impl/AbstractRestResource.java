@@ -23,21 +23,10 @@ import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
-import org.apache.streampipes.storage.api.core.INoSqlStorage;
-import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.springframework.http.ResponseEntity;
 
 public class AbstractRestResource extends AbstractSharedRestInterface {
-
-  protected IPipelineElementDescriptionStorage getPipelineElementStorage() {
-    return getNoSqlStorage().getPipelineElementDescriptionStorage();
-  }
-
-  protected INoSqlStorage getNoSqlStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore();
-  }
 
   protected ResponseEntity<Message> constructSuccessMessage(Notification... notifications) {
     return statusMessage(new SuccessMessage(notifications));

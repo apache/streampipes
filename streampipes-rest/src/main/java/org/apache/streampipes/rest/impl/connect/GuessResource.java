@@ -50,7 +50,7 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
   public GuessResource(ExtensionServiceRequestManager extensionServiceRequestManager,
                        SpResourceManager resourceManager) {
     super(() -> new GuessManagement(
-        new ExtensionsServiceEndpointGenerator(),
+        new ExtensionsServiceEndpointGenerator(resourceManager.getServiceDiscovery()),
         extensionServiceRequestManager,
         resourceManager)
     );

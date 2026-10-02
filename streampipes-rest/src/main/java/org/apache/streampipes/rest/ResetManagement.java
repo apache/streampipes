@@ -39,7 +39,6 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +52,7 @@ public class ResetManagement {
   // dependency between this package and streampipes-pipeline-management
   // See in issue [STREAMPIPES-405]
 
+  private final IGenericStorage genericStorage;
   private final WorkerRestClient workerRestClient;
   private final IExtensionsServiceStorage extensionsServiceStorage;
   private final ExtensionServiceRequestManager requestManager;
@@ -62,6 +62,7 @@ public class ResetManagement {
   private final IPipelineElementTemplateStorage pipelineElementTemplateStorage;
 
   public ResetManagement(WorkerRestClient workerRestClient,
+                         IGenericStorage genericStorage,
                          IExtensionsServiceStorage extensionsServiceStorage,
                          ExtensionServiceRequestManager requestManager,
                          PipelineManager pipelineManager,
@@ -69,6 +70,7 @@ public class ResetManagement {
                          IPipelineElementTemplateStorage pipelineElementTemplateStorage,
                          ChartSchemaUpdateCoordinator chartSchemaUpdateCoordinator) {
     this.workerRestClient = workerRestClient;
+    this.genericStorage = genericStorage;
     this.extensionsServiceStorage = extensionsServiceStorage;
     this.requestManager = requestManager;
     this.pipelineManager = pipelineManager;
@@ -158,7 +160,7 @@ public class ResetManagement {
         resourceManager.getFileMetadataStorage()
     );
     List<FileMetadata> allFiles = fileManager.getAllFiles();
-    allFiles.forEach(fileMetadata -> fileManager.deleteFile(fileMetadata.getFileId()));
+    allFiles.forEach(fileMetadata -> fileManager.deleteFile(fileMetadata.getFileId(), resourceManager.getResourceDeletionManager()));
   }
 
   private void removeAllDataInDataLake() {
@@ -166,7 +168,8 @@ public class ResetManagement {
         .getSchemaManagement(
             chartSchemaUpdateCoordinator,
             resourceManager.managePermissions().getDb(),
-            resourceManager.manageDataLakeMeasures().getDb());
+            resourceManager.manageDataLakeMeasures().getDb(),
+            resourceManager.getResourceDeletionManager());
     var dataExplorerQueryManagement = new DataExplorerDispatcher()
         .getDatasetServices(datasetMetadataManagement).administration();
     List<DatasetMetadata> allMeasurements = datasetMetadataManagement.getAllMeasurements();
@@ -182,18 +185,16 @@ public class ResetManagement {
   private void removeAllDataViewWidgets() {
     resourceManager.manageCharts().findAll()
                  .forEach(widget ->
-                     resourceManager.manageCharts().getDb().deleteElementById(widget.getElementId()));
+                     resourceManager.manageCharts().delete(widget.getElementId()));
   }
 
   private void removeAllDataViews() {
     resourceManager.manageDashboards().findAll()
                             .forEach(dashboard ->
-                                resourceManager.manageDashboards().getDb().deleteElementById(dashboard.getElementId()));
+                                resourceManager.manageDashboards().delete(dashboard.getElementId()));
   }
 
   private void removeAllAssets(String username) {
-    IGenericStorage genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
-                                                               .getGenericStorage();
     try {
       for (Map<String, Object> asset : genericStorage.findAll("asset-management")) {
         genericStorage.delete((String) asset.get("_id"), (String) asset.get("_rev"));
@@ -216,8 +217,6 @@ public class ResetManagement {
         "asset-sites",
         "sp-labels"
     );
-    var genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore()
-                                                   .getGenericStorage();
 
     appDocTypesToDelete.forEach(docType -> {
       try {
