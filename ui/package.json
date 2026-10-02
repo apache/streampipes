@@ -64,7 +64,7 @@
     "echarts-simple-transform": "^1.0.0",
     "gridstack": "^12.6.0",
     "file-saver": "2.0.5",
-    "jquery": "^3.7.0",
+    "jquery": "^4.0.0",
     "jquery-ui-dist": "1.13.2",
     "leaflet": "1.9.3",
     "lodash.clonedeep": "^4.5.0",
