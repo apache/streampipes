@@ -56,7 +56,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-storage-couchdb</artifactId>
+            <artifactId>streampipes-storage-api</artifactId>
             <version>0.99.0-SNAPSHOT</version>
         </dependency>
 

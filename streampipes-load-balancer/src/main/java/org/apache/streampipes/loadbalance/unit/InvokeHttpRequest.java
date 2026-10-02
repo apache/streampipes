@@ -24,7 +24,7 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.couchdb.impl.user.PermissionStorageImpl;
+import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -108,7 +108,7 @@ public class InvokeHttpRequest{
       ).createToken(auth));
     } else {
       if (resourceId != null) {
-        String ownerSid = getOwnerSid(resourceId);
+        String ownerSid = getOwnerSid(resourceId, resourceManager.managePermissions().getDb());
         return getAuthTokenForUser(ownerSid, resourceManager);
       } else {
         throw new IllegalArgumentException("No authenticated user found to associate with request");
@@ -136,8 +136,8 @@ public class InvokeHttpRequest{
     return "Bearer " + token;
   }
 
-  private static String getOwnerSid(String resourceId) {
-    return new PermissionStorageImpl("users/permissions").getUserPermissionsForObject(resourceId)
+  private static String getOwnerSid(String resourceId, IPermissionStorage permissionStorage) {
+    return permissionStorage.getUserPermissionsForObject(resourceId)
             .stream()
             .findFirst()
             .map(Permission::getOwnerSid)

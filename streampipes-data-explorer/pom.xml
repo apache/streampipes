@@ -43,9 +43,8 @@
             <version>0.99.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-storage-management</artifactId>
-            <version>0.99.0-SNAPSHOT</version>
+            <groupId>org.lightcouch</groupId>
+            <artifactId>lightcouch</artifactId>
         </dependency>
 
         <!-- Test dependencies -->
