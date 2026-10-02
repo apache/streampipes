@@ -32,7 +32,7 @@ public class RefreshTokenService {
   private final IRefreshTokenStorage refreshTokenStorage;
 
   public RefreshTokenService(IRefreshTokenStorage refreshTokenStorage) {
-    this.refreshTokenStorage = refreshTokenStorage;
+    this.refreshTokenStorage = java.util.Objects.requireNonNull(refreshTokenStorage);
   }
 
   public IssuedRefreshToken issueRefreshToken(String principalId,
@@ -86,12 +86,20 @@ public class RefreshTokenService {
   }
 
   public void deleteAllRefreshTokensByRawToken(String rawToken) {
+    deleteAllRefreshTokensAndGetPrincipalId(rawToken);
+  }
+
+  /** Preserves logout revocation behavior; only a valid token supplies an authenticated audit actor. */
+  public String deleteAllRefreshTokensAndGetPrincipalId(String rawToken) {
     String hashedToken = TokenUtil.hashToken(rawToken);
     RefreshToken existingToken = refreshTokenStorage.findByHashedToken(hashedToken);
 
     if (existingToken != null && existingToken.getPrincipalId() != null) {
+      String actor = isValid(existingToken) ? existingToken.getPrincipalId() : null;
       deleteAllRefreshTokens(existingToken.getPrincipalId());
+      return actor;
     }
+    return null;
   }
 
   private long getTokenLifetime(boolean rememberMe) {

@@ -1,0 +1,12 @@
+{
+  "event_id": "f1ee7c4a-7829-4a9d-a2e8-92bf4d5f761a",
+  "recorded_at": "2026-09-25T12:00:00Z",
+  "event_type": "sp.adapter.create",
+  "outcome": "succeeded",
+  "actor": "user-42",
+  "resource_type": "adapter",
+  "resource_id": "machine-temperature",
+  "details": {
+    "streamId": "stream:machine-temperature"
+  }
+}

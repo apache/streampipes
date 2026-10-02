@@ -109,6 +109,9 @@ export class SearchSelectComponent<T = unknown> {
 
     readonly items = input<T[]>([]);
     readonly multiple = input(false);
+    /** Optional single-value free-text conversion; existing selection-only callers are unchanged. */
+    readonly freeTextValue = input<((text: string) => T) | undefined>();
+    readonly searchTextFor = input<((item: T) => string) | undefined>();
     readonly disabled = input(false, { transform: booleanAttribute });
     readonly placeholder = input<string | undefined>();
     readonly dataCy = input<string | undefined>();
@@ -166,7 +169,9 @@ export class SearchSelectComponent<T = unknown> {
         }
 
         return this.items().filter(item =>
-            this.displayValue(item).toLowerCase().includes(query),
+            (this.searchTextFor()?.(item) ?? this.displayValue(item))
+                .toLowerCase()
+                .includes(query),
         );
     });
 
@@ -175,11 +180,17 @@ export class SearchSelectComponent<T = unknown> {
 
     onInput(value: string): void {
         this.searchText.set(value);
+        const convert = this.freeTextValue();
+        if (convert && !this.multiple()) {
+            this.value.set(value.trim() ? convert(value) : undefined);
+        }
     }
 
     onOpened(): void {
         this.panelOpen.set(true);
-        this.searchText.set('');
+        if (!this.freeTextValue() || this.multiple()) {
+            this.searchText.set('');
+        }
     }
 
     onClosed(): void {

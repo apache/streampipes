@@ -30,6 +30,23 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-audit-events</artifactId>
+            <version>0.99.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-audit-management</artifactId>
+            <version>0.99.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-audit-influx</artifactId>
+            <version>0.99.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-properties-migrator</artifactId>
         </dependency>

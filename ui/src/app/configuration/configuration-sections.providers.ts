@@ -99,6 +99,17 @@ const CORE_CONFIGURATION_SECTIONS: SpConfigurationSection[] = [
         order: 700,
     },
     {
+        itemId: 'audit-log',
+        itemTitle: 'Audit Log',
+        itemIcon: 'history',
+        roles: ['ROLE_ADMIN'],
+        loadComponent: () =>
+            import('./audit-log/audit-log.component').then(
+                m => m.AuditLogComponent,
+            ),
+        order: 850,
+    },
+    {
         itemId: 'security',
         itemTitle: 'Security',
         itemIcon: 'security',

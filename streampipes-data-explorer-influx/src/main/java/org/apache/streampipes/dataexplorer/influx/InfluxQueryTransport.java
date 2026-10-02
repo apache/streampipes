@@ -36,6 +36,7 @@ import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -52,6 +53,10 @@ public final class InfluxQueryTransport implements AutoCloseable {
   private boolean closed;
 
   public InfluxQueryTransport(InfluxConnectionSettings settings) {
+    this(settings, Duration.ofSeconds(120));
+  }
+
+  public InfluxQueryTransport(InfluxConnectionSettings settings, Duration timeout) {
     database = settings.getDatabaseName();
     endpoint = HttpUrl.get(settings.getConnectionUrl()).newBuilder().addPathSegment("query").build();
     var dispatcher = new Dispatcher();
@@ -62,9 +67,9 @@ public final class InfluxQueryTransport implements AutoCloseable {
     client = new OkHttpClient.Builder()
         .dispatcher(dispatcher)
         .connectionPool(new ConnectionPool(10, 10, TimeUnit.MINUTES))
-        .connectTimeout(120, TimeUnit.SECONDS)
-        .readTimeout(120, TimeUnit.SECONDS)
-        .writeTimeout(120, TimeUnit.SECONDS)
+        .connectTimeout(timeout)
+        .readTimeout(timeout)
+        .writeTimeout(timeout)
         .addInterceptor(chain -> chain.proceed(chain.request().newBuilder()
             .header("Authorization", authorization).build()))
         .build();

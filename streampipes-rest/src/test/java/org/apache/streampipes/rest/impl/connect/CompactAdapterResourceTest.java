@@ -109,7 +109,7 @@ class CompactAdapterResourceTest {
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
     verify(adapterManagement).addAdapter(any(), eq(ADAPTER_ID), eq(USER_SID));
-    verify(adapterManagement).startAdapter(eq(ADAPTER_ID));
+    verify(adapterManagement).startAdapter(ADAPTER_ID, USER_SID);
     verifyNoInteractions(noSqlStorage);
   }
 
@@ -122,6 +122,7 @@ class CompactAdapterResourceTest {
     assertEquals(HttpStatus.OK, response.getStatusCode());
     verify(adapterManagement).addAdapter(any(), eq(ADAPTER_ID), eq(USER_SID));
     verify(adapterManagement, never()).startAdapter(any(String.class));
+    verify(adapterManagement, never()).startAdapter(any(String.class), any());
   }
 
   @Test

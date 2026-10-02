@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.service.core.extensions;
 
+import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
@@ -118,7 +119,8 @@ public class ExtensionServiceRequestConfiguration {
                                              IUserStorage userStorage,
                                              IDataProcessorStorage dataProcessorStorage,
                                              IUserActivationTokenStorage userActivationTokenStorage,
-                                             IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage) {
+                                             IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage,
+                                             AuditService auditService) {
     return new SpResourceManager(
         permissionStorage,
         chartStorage,
@@ -136,7 +138,8 @@ public class ExtensionServiceRequestConfiguration {
         userStorage,
         dataProcessorStorage,
         userActivationTokenStorage,
-        passwordRecoveryTokenStorage
+        passwordRecoveryTokenStorage,
+        auditService
     );
   }
 

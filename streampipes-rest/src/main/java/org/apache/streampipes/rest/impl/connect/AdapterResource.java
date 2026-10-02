@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl.connect;
 
+import org.apache.streampipes.audit.events.adapter.AdapterAuditRecorder;
 import org.apache.streampipes.commons.exceptions.connect.AdapterException;
 import org.apache.streampipes.commons.prometheus.adapter.AdapterMetricsManager;
 import org.apache.streampipes.connect.management.management.AdapterMasterManagement;
@@ -103,7 +104,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
         workerRestClient,
         StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
-        requestManager));
+        requestManager,
+        new AdapterAuditRecorder(resourceManager.getAuditService())));
     this.requestManager = requestManager;
     this.resourceManager = resourceManager;
     this.adapterDescriptionStorage = adapterDescriptionStorage;
@@ -155,7 +157,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#adapterDescription.correspondingDataStreamElementId, 'WRITE')")
   public ResponseEntity<? extends Message> updateAdapter(@RequestBody AdapterDescription adapterDescription) {
     try {
-      adapterUpdateManagement.updateAdapter(adapterDescription);
+      adapterUpdateManagement.updateAdapter(adapterDescription, getAuthenticatedUserSid());
     } catch (AdapterException e) {
       LOG.error("Error while updating adapter with id {}", adapterDescription.getElementId(), e);
       return ok(Notifications.error(e.getMessage(), ExceptionUtils.getStackTrace(e)));
@@ -226,7 +228,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     try {
       var adapter = getAdapterDescription(elementId);
       if (checkAdapterPermission(adapter, "WRITE")) {
-        managementService.stopAdapter(adapter, forceStop);
+        managementService.stopAdapter(adapter, forceStop, getAuthenticatedUserSid());
         return ok(Notifications.success("Adapter stopped"));
       } else {
         return unauthorized();
@@ -243,7 +245,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     try {
       var adapterDescription = getAdapterDescription(elementId);
       if (checkAdapterPermission(adapterDescription, "WRITE")) {
-        managementService.startAdapter(adapterDescription);
+        managementService.startAdapter(adapterDescription, getAuthenticatedUserSid());
         return ok(Notifications.success("Adapter started"));
       } else {
         return unauthorized();
