@@ -55,10 +55,10 @@ export class PipelinePositioningService {
         domId: string,
         pipelineCanvasMetadata: PipelineCanvasMetadata,
     ) {
-        const elementRef = $(`#${domId}`);
-        if (elementRef && elementRef.position()) {
-            const leftPos = elementRef.position().left;
-            const topPos = elementRef.position().top;
+        const elementRef = document.getElementById(domId);
+        if (elementRef) {
+            const leftPos = elementRef.offsetLeft;
+            const topPos = elementRef.offsetTop;
             if (!pipelineCanvasMetadata.pipelineElementMetadata) {
                 pipelineCanvasMetadata.pipelineElementMetadata = {};
             }
@@ -143,7 +143,9 @@ export class PipelinePositioningService {
         g.setDefaultEdgeLabel(() => {
             return {};
         });
-        const nodes = $(canvasId).find(nodeIdentifier).get();
+        const nodes = document.querySelectorAll(
+            `${canvasId} ${nodeIdentifier}`,
+        );
         nodes.forEach(n => {
             g.setNode(n.id, {
                 label: n.id,
@@ -159,9 +161,12 @@ export class PipelinePositioningService {
 
         dagre.layout(g);
         g.nodes().forEach(v => {
-            const elementRef = $(`#${v}`);
-            elementRef.css('left', g.node(v).x + 'px');
-            elementRef.css('top', g.node(v).y + 'px');
+            const elementRef = document.getElementById(v);
+            if (!elementRef) {
+                return;
+            }
+            elementRef.style.left = g.node(v).x + 'px';
+            elementRef.style.top = g.node(v).y + 'px';
         });
         jsPlumbBridge.repaintEverything();
     }
@@ -171,10 +176,10 @@ export class PipelinePositioningService {
     ) {
         Object.entries(pipelineCanvasMetadata.pipelineElementMetadata).forEach(
             ([key, value]) => {
-                const elementRef = $(`#${key}`);
+                const elementRef = document.getElementById(key);
                 if (elementRef) {
-                    elementRef.css('left', value.position.x + 'px');
-                    elementRef.css('top', value.position.y + 'px');
+                    elementRef.style.left = value.position.x + 'px';
+                    elementRef.style.top = value.position.y + 'px';
                 }
             },
         );

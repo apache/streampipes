@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
-    "types": ["node", "jquery"]
+    "types": ["node"]
   },
   "include": ["src/**/*.spec.ts", "src/**/*.d.ts", "src/test-setup.ts"],
   "angularCompilerOptions": {

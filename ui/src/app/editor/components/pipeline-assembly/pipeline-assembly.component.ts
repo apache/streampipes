@@ -28,6 +28,7 @@ import {
 } from '@angular/core';
 import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../services/pipeline-positioning.service';
+import { PipelineEditorService } from '../../services/pipeline-editor.service';
 import { PipelineValidationService } from '../../services/pipeline-validation.service';
 import {
     InvocablePipelineElementUnion,
@@ -107,6 +108,7 @@ export class PipelineAssemblyComponent implements AfterViewInit, OnDestroy {
     private pipelinePositioningService = inject(PipelinePositioningService);
     private objectProvider = inject(ObjectProvider);
     editorService = inject(EditorService);
+    protected pipelineEditorService = inject(PipelineEditorService);
     pipelineValidationService = inject(PipelineValidationService);
     private dialogService = inject(DialogService);
     private router = inject(Router);
