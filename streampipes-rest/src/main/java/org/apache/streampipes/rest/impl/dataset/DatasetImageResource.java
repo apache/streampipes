@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.dataset;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.IImageStorage;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.ResponseEntity;
@@ -34,9 +34,15 @@ import java.io.IOException;
 @RequestMapping("/api/v4/datalake/images")
 public class DatasetImageResource extends AbstractAuthGuardedRestResource {
 
+  private final IImageStorage imageStorage;
+
+  public DatasetImageResource(IImageStorage imageStorage) {
+    this.imageStorage = imageStorage;
+  }
+
   @GetMapping(path = "{imageId}", produces = "image/jpeg")
   public ResponseEntity<byte[]> getImage(@PathVariable("imageId") String imageId) throws IOException {
-    var image = StorageDispatcher.INSTANCE.getNoSqlStore().getImageStorage().getImageBytes(imageId);
+    var image = imageStorage.getImageBytes(imageId);
     return ok(IOUtils.toByteArray(image));
   }
 }

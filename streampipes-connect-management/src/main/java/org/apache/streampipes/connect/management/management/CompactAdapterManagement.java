@@ -23,16 +23,18 @@ import org.apache.streampipes.connect.management.compact.generator.CompactAdapte
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 
 public class CompactAdapterManagement {
 
   private final List<AdapterModelGenerator> generators;
+  private final IAdapterStorage adapterDescriptionStorage;
 
-  public CompactAdapterManagement(List<AdapterModelGenerator> generators) {
+  public CompactAdapterManagement(List<AdapterModelGenerator> generators,
+                                  IAdapterStorage adapterDescriptionStorage) {
     this.generators = generators;
+    this.adapterDescriptionStorage = adapterDescriptionStorage;
   }
 
   public AdapterDescription convertToAdapterDescription(CompactAdapter compactAdapter,
@@ -77,8 +79,7 @@ public class CompactAdapterManagement {
   }
 
   private AdapterDescription findAdapterDescription(String appId) {
-    IAdapterStorage adapterStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage();
-    return adapterStorage.findAll()
+    return adapterDescriptionStorage.findAll()
         .stream()
         .filter(desc -> desc.getAppId()
             .equals(appId))

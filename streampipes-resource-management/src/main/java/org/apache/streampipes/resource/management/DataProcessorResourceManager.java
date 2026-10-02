@@ -20,13 +20,13 @@ package org.apache.streampipes.resource.management;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class DataProcessorResourceManager extends
     AbstractPipelineElementResourceManager<IDataProcessorStorage, DataProcessorDescription, DataProcessorInvocation> {
 
-  public DataProcessorResourceManager(PermissionResourceManager permissionResourceManager) {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataProcessorStorage(), permissionResourceManager);
+  public DataProcessorResourceManager(IDataProcessorStorage dataProcessorStorage,
+                                      PermissionResourceManager permissionResourceManager) {
+    super(dataProcessorStorage, permissionResourceManager);
   }
 
   @Override

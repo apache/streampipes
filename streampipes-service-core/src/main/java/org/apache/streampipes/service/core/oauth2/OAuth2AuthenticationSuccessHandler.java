@@ -59,6 +59,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
   private static final long MIN_REFRESH_COOKIE_SECONDS = 1;
 
   private final JwtTokenProvider tokenProvider;
+  private final RefreshTokenService refreshTokenService;
   private final AuthenticationAuditRecorder audit;
   private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
   private final Environment env;
@@ -70,8 +71,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                      IRoleStorage roleStorage,
                                      IUserGroupStorage userGroupStorage,
                                      IUserStorage userStorage,
+                                     RefreshTokenService refreshTokenService,
                                      AuthenticationAuditRecorder audit) {
     this.audit = java.util.Objects.requireNonNull(audit);
+    this.refreshTokenService = refreshTokenService;
     this.tokenProvider = new JwtTokenProvider(coreConfigurationStorage, userStorage, roleStorage, userGroupStorage);
     this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
     this.env = Environments.getEnvironment();
@@ -115,7 +118,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         .orElse(false);
 
     Principal principal = ((PrincipalUserDetails<?>) authentication.getPrincipal()).getDetails();
-    var refreshToken = new RefreshTokenService().issueRefreshToken(principal.getPrincipalId(), rememberMe);
+    var refreshToken = refreshTokenService.issueRefreshToken(principal.getPrincipalId(), rememberMe);
     setRefreshCookie(request, response, refreshToken);
 
     String token = tokenProvider.createToken(authentication);

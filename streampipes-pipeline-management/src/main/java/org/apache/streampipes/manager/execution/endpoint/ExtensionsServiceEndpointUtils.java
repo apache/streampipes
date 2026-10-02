@@ -24,7 +24,7 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.util.List;
@@ -46,9 +46,10 @@ public class ExtensionsServiceEndpointUtils {
     }
   }
 
-  public static SpServiceUrlProvider getPipelineElementType(String appId) {
+  public static SpServiceUrlProvider getPipelineElementType(String appId,
+                                                             IPipelineElementDescriptionStorage descriptionStorage) {
     try {
-      StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage().getDataProcessorByAppId(appId);
+      descriptionStorage.getDataProcessorByAppId(appId);
       return SpServiceUrlProvider.DATA_PROCESSOR;
     } catch (NoSuchElementException e) {
       return SpServiceUrlProvider.DATA_SINK;

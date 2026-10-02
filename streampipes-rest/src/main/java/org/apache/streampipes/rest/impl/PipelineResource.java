@@ -51,7 +51,7 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.rest.shared.exception.SpNotificationException;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import com.google.gson.JsonSyntaxException;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -98,13 +98,16 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   private final DataProcessorResourceManager dataProcessorResourceManager;
   private final DataSinkResourceManager dataSinkResourceManager;
   private final SpResourceManager resourceManager;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
 
   public PipelineResource(ExtensionServiceRequestManager requestManager,
                           SpResourceManager resourceManager,
-                          IChartStorage chartStorage) {
+                          IChartStorage chartStorage,
+                          IPipelineElementDescriptionStorage descriptionStorage) {
     this.resourceManager = resourceManager;
+    this.descriptionStorage = descriptionStorage;
     this.compactPipelineManagement = new CompactPipelineManagement(
-        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage(),
+        descriptionStorage,
         requestManager
     );
     this.requestManager = requestManager;
@@ -114,7 +117,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     );
     PermissionResourceManager permissionResourceManager = resourceManager.managePermissions();
     this.pipelineManager = new PipelineManager(resourceManager);
-    this.dataProcessorResourceManager = new DataProcessorResourceManager(permissionResourceManager);
+    this.dataProcessorResourceManager = resourceManager.manageDataProcessors();
     this.dataSinkResourceManager = new DataSinkResourceManager(permissionResourceManager);
   }
 
@@ -245,7 +248,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
                                                         @PathVariable("recId") String baseRecElement) {
     try {
       return new ElementRecommender(
-          pipeline, baseRecElement, requestManager, dataProcessorResourceManager, dataSinkResourceManager
+          pipeline, baseRecElement, requestManager, dataProcessorResourceManager, dataSinkResourceManager, descriptionStorage
       ).findRecommendedElements();
     } catch (JsonSyntaxException e) {
       throw new SpNotificationException(

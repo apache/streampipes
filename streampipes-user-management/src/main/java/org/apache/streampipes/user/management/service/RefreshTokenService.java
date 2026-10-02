@@ -19,7 +19,6 @@ package org.apache.streampipes.user.management.service;
 
 import org.apache.streampipes.model.client.user.RefreshToken;
 import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.TokenUtil;
 
 import java.util.UUID;
@@ -31,10 +30,6 @@ public class RefreshTokenService {
   private static final long REMEMBER_ME_REFRESH_TOKEN_TTL_MILLIS = 30L * 24 * 60 * 60 * 1000;
 
   private final IRefreshTokenStorage refreshTokenStorage;
-
-  public RefreshTokenService() {
-    this(StorageDispatcher.INSTANCE.getNoSqlStore().getRefreshTokenStorage());
-  }
 
   public RefreshTokenService(IRefreshTokenStorage refreshTokenStorage) {
     this.refreshTokenStorage = java.util.Objects.requireNonNull(refreshTokenStorage);

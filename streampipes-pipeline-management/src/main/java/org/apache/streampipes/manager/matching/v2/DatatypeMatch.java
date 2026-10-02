@@ -18,15 +18,18 @@
 
 package org.apache.streampipes.manager.matching.v2;
 
-import org.apache.streampipes.manager.matching.v2.utils.MatchingUtils;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.client.matching.MatchingResultType;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
 import java.util.List;
+import java.util.Set;
 
 public class DatatypeMatch extends AbstractMatcher<String, String> {
+
+  private static final Set<String> NUMERIC_TYPES = Set.of(
+      XSD.INTEGER.toString(), XSD.LONG.toString(), XSD.DOUBLE.toString(), XSD.FLOAT.toString());
 
   public DatatypeMatch() {
     super(MatchingResultType.DATATYPE_MATCH);
@@ -35,29 +38,13 @@ public class DatatypeMatch extends AbstractMatcher<String, String> {
   @Override
   public boolean match(String offer, String requirement, List<MatchingResultMessage> errorLog) {
 
-    boolean match = MatchingUtils.nullCheckReqAllowed(offer, requirement)
+    boolean match = requirement == null
                     || requirement.equals(offer)
-                    || subClassOf(offer, requirement)
-                    || MatchingUtils.nullCheck(offer, requirement);
+                    || (SO.NUMBER.equals(requirement) && offer != null && NUMERIC_TYPES.contains(offer));
 
     if (!match) {
       buildErrorMessage(errorLog, requirement);
     }
     return match;
   }
-
-  private boolean subClassOf(String offer, String requirement) {
-    if (!requirement.equals(SO.NUMBER)) {
-      return false;
-    } else {
-      if (offer.equals(XSD.INTEGER.toString())
-          || offer.equals(XSD.LONG.toString())
-          || offer.equals(XSD.DOUBLE.toString())
-          || offer.equals(XSD.FLOAT.toString())) {
-        return true;
-      }
-    }
-    return false;
-  }
-
 }

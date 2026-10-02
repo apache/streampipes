@@ -26,6 +26,7 @@ import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
+import org.apache.streampipes.user.management.service.RefreshTokenService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -59,7 +60,7 @@ class OAuth2AuditTest {
   private OAuth2AuthenticationSuccessHandler successHandler() {
     var handler = spy(new OAuth2AuthenticationSuccessHandler(cookies,
         mock(ISpCoreConfigurationStorage.class), mock(IRoleStorage.class),
-        mock(IUserGroupStorage.class), mock(IUserStorage.class), audit));
+        mock(IUserGroupStorage.class), mock(IUserStorage.class), mock(RefreshTokenService.class), audit));
     doReturn("/").when(handler).determineTargetUrl(request, response, authentication);
     handler.setRedirectStrategy(redirects);
     var user = new UserAccount();

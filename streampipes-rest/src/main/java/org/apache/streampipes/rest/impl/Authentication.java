@@ -78,14 +78,17 @@ public class Authentication extends AbstractRestResource {
   AuthenticationManager authenticationManager;
   private final SpResourceManager resourceManager;
   private final AuthenticationAuditRecorder audit;
+  private final RefreshTokenService refreshTokenService;
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
 
   public Authentication(AuthenticationManager authenticationManager,
                         SpResourceManager resourceManager,
-                        AuthenticationAuditRecorder audit) {
+                        AuthenticationAuditRecorder audit,
+                        RefreshTokenService refreshTokenService) {
     this.audit = java.util.Objects.requireNonNull(audit);
     this.authenticationManager = authenticationManager;
     this.resourceManager = resourceManager;
+    this.refreshTokenService = refreshTokenService;
     this.coreConfigurationStorage = resourceManager.getCoreConfigurationStorage();
   }
 
@@ -122,7 +125,7 @@ public class Authentication extends AbstractRestResource {
       return unauthorized();
     }
 
-    var issuedRefreshToken = new RefreshTokenService().rotateRefreshToken(existingToken);
+    var issuedRefreshToken = refreshTokenService.rotateRefreshToken(existingToken);
 
     if (issuedRefreshToken == null) {
       clearRefreshCookie(request, response);
@@ -153,7 +156,6 @@ public class Authentication extends AbstractRestResource {
       produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> logout(HttpServletRequest request,
                                   HttpServletResponse response) {
-    RefreshTokenService refreshTokenService = new RefreshTokenService();
     String existingToken = getRefreshTokenFromRequest(request);
 
     String actor = null;
@@ -255,7 +257,7 @@ public class Authentication extends AbstractRestResource {
     if (principal instanceof UserAccount) {
       JwtAuthenticationResponse tokenResp = makeJwtResponse(auth);
       if (request != null && response != null) {
-        var issuedRefreshToken = new RefreshTokenService().issueRefreshToken(principal.getPrincipalId(), rememberMe);
+        var issuedRefreshToken = refreshTokenService.issueRefreshToken(principal.getPrincipalId(), rememberMe);
         setRefreshCookie(request, response, issuedRefreshToken);
       }
       ((UserAccount) principal).setLastLoginAtMillis(System.currentTimeMillis());

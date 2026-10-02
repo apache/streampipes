@@ -20,13 +20,13 @@ package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class AdapterDescriptionResourceManager
     extends AbstractPipelineElementResourceManager<IAdapterStorage, AdapterDescription, AdapterDescription> {
 
-  public AdapterDescriptionResourceManager(PermissionResourceManager permissionResourceManager) {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterDescriptionStorage(), permissionResourceManager);
+  public AdapterDescriptionResourceManager(IAdapterStorage adapterDescriptionStorage,
+                                           PermissionResourceManager permissionResourceManager) {
+    super(adapterDescriptionStorage, permissionResourceManager);
   }
 
   @Override

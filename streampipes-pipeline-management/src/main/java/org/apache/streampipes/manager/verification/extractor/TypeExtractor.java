@@ -30,7 +30,6 @@ import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,12 +50,6 @@ public class TypeExtractor {
   private final IPipelineElementDescriptionStorage storageApi;
   private final ExtensionServiceRequestManager requestManager;
   private final SpResourceManager resourceManager;
-
-  public TypeExtractor(String extensionElementDescription,
-                       ExtensionServiceRequestManager requestManager,
-                       SpResourceManager resourceManager) {
-    this(extensionElementDescription, defaultStorageApi(), requestManager, resourceManager);
-  }
 
   public TypeExtractor(
       String extensionElementDescription,
@@ -142,13 +135,6 @@ public class TypeExtractor {
         requestManager,
         resourceManager
     );
-  }
-
-  private static IPipelineElementDescriptionStorage defaultStorageApi() {
-    return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getPipelineElementDescriptionStorage();
   }
 
 }

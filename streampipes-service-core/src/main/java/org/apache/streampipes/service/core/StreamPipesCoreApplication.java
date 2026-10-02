@@ -40,6 +40,7 @@ import org.apache.streampipes.manager.health.CoreServiceStatusManager;
 import org.apache.streampipes.manager.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.setup.AutoInstallation;
+import org.apache.streampipes.manager.setup.InstallationConfiguration;
 import org.apache.streampipes.manager.setup.StreamPipesEnvChecker;
 import org.apache.streampipes.manager.setup.tasks.ApplyDefaultRolesAndPrivilegesTask;
 import org.apache.streampipes.messaging.SpProtocolManager;
@@ -60,6 +61,7 @@ import org.apache.streampipes.service.core.migrations.AvailableMigrations;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
@@ -67,11 +69,11 @@ import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.couchdb.impl.user.UserStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -95,7 +97,8 @@ import java.util.function.Supplier;
 @Import({OpenApiConfiguration.class, StreamPipesPasswordEncoder.class,
     StreamPipesPrometheusConfig.class, WebSecurityConfig.class, WelcomePageController.class,
     StorageApiConfiguration.class, ExtensionServiceRequestConfiguration.class, SpPermissionEvaluator.class,
-    DatasetQueryConfiguration.class, AuditConfiguration.class})
+    DatasetQueryConfiguration.class, PipelineManagementConfiguration.class,
+    AuditConfiguration.class})
 @ComponentScan({"org.apache.streampipes.rest.*", "org.apache.streampipes.service.core.oauth2",
     "org.apache.streampipes.service.core.scheduler"})
 public class StreamPipesCoreApplication extends StreamPipesServiceBase {
@@ -121,8 +124,15 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   @Autowired
   protected IPrivilegeStorage privilegeStorage;
 
-  private final IExtensionsServiceStorage extensionsServiceStorage =
-      StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
+  @Autowired
+  private IExtensionsServiceStorage extensionsServiceStorage;
+
+  @Autowired
+  private InstallationConfiguration installationConfiguration;
+
+  @Autowired
+  @Qualifier("adapterDescriptionStorage")
+  private IAdapterStorage adapterDescriptionStorage;
 
   public static void main(String[] args) {
     StreamPipesCoreApplication application = new StreamPipesCoreApplication();
@@ -205,6 +215,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
     executorService.schedule(new PostStartupTask(
             getPipelineStorage(),
+            adapterDescriptionStorage,
+            extensionsServiceStorage,
             extensionServiceRequestManager,
             workerRestClient,
             resourceManager,
@@ -230,7 +242,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
                         extensionServiceRequestManager,
                         new AdapterAuditRecorder(resourceManager.getAuditService())
                     )),
-                StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
+                extensionsServiceStorage,
                 extensionServiceRequestManager,
                 resourceManager,
                 getRegisteredExtensionHealthChecks(),
@@ -279,7 +291,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       LOG.info("Starting installation procedure");
       new AutoInstallation(
           extensionServiceRequestManager,
-          resourceManager
+          resourceManager,
+          installationConfiguration
       ).startAutoInstallation();
     } catch (InterruptedException e) {
       LOG.error("Ooops, something went wrong during the installation", e);
@@ -311,7 +324,8 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
       }
     });
 
-    new FunctionManager(extensionServiceRequestManager, resourceManager).stopAllFunctionsAndPersistState(functionStateStorage);
+    new FunctionManager(extensionServiceRequestManager, resourceManager, extensionsServiceStorage)
+        .stopAllFunctionsAndPersistState(functionStateStorage);
 
     LOG.info("Thanks for using Apache StreamPipes - see you next time!");
   }

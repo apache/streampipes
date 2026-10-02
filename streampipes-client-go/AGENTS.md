@@ -7,7 +7,7 @@ the Java/Maven build commands there do not apply here.
 
 ## Toolchain and gates
 
-- Module `github.com/apache/streampipes/streampipes-client-go`; CI uses **Go 1.21**
+- Module `github.com/apache/streampipes/streampipes-client-go` (`go 1.21` in `go.mod`); CI uses **Go 1.25**
   (`.github/workflows/go-client.yml`).
 - CI runs, from this directory:
 
@@ -19,7 +19,7 @@ go test ./...
 ## Layout
 
 - `streampipes/` — the client package: `streampipes_client.go`, one `*_api.go` per resource
-  (`pipeline_api.go`, `adapter_api.go`, `data_lake_measure_api.go`, ...), `model/`,
+  (`pipeline_api.go`, `adapter_api.go`, `dataset_api.go`, ...), `model/`,
   `config/`, `internal/`, `utils/`.
 - `examples/` — runnable usage examples; keep them compiling when the API changes.
 - `docs/` — Hugo documentation site; `docs/content/en/docs/contribution-guidelines.md`.

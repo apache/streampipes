@@ -44,6 +44,7 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.resource.management.permission.SpPermissionEvaluator;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -52,6 +53,7 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -82,18 +84,21 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   private final PipelineManager pipelineManager;
   private final AdapterUpdateManagement adapterUpdateManagement;
   private final SpResourceManager resourceManager;
+  private final IAdapterStorage adapterDescriptionStorage;
 
   public AdapterResource(WorkerRestClient workerRestClient,
                          ExtensionServiceRequestManager requestManager,
-                         SpResourceManager resourceManager) {
-    this(workerRestClient, requestManager, null, resourceManager);
+                         SpResourceManager resourceManager,
+                         @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage) {
+    this(workerRestClient, requestManager, null, resourceManager, adapterDescriptionStorage);
   }
 
   @Autowired
   public AdapterResource(WorkerRestClient workerRestClient,
                          ExtensionServiceRequestManager requestManager,
                          ApplicationEventPublisher eventPublisher,
-                         SpResourceManager resourceManager) {
+                         SpResourceManager resourceManager,
+                         @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage) {
     super(() -> new AdapterMasterManagement(
         resourceManager,
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
@@ -103,6 +108,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         new AdapterAuditRecorder(resourceManager.getAuditService())));
     this.requestManager = requestManager;
     this.resourceManager = resourceManager;
+    this.adapterDescriptionStorage = adapterDescriptionStorage;
     this.eventPublisher = eventPublisher;
     this.permissionResourceManager = resourceManager.managePermissions();
     this.pipelineManager = new PipelineManager(
@@ -144,7 +150,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   @PreAuthorize("this.hasWriteAuthority()")
   public ResponseEntity<?> convertToCompactAdapter(@RequestBody AdapterDescription adapterDescription)
       throws Exception {
-    return ok(new CompactAdapterManagement(List.of()).convertToCompactAdapter(adapterDescription));
+    return ok(new CompactAdapterManagement(List.of(), adapterDescriptionStorage).convertToCompactAdapter(adapterDescription));
   }
 
   @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -362,7 +368,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   }
 
   private CompactAdapter toCompactAdapterDescription(AdapterDescription adapterDescription) throws Exception {
-    return new CompactAdapterManagement(List.of()).convertToCompactAdapter(adapterDescription);
+    return new CompactAdapterManagement(List.of(), adapterDescriptionStorage).convertToCompactAdapter(adapterDescription);
   }
 
   private List<String> getPipelinesUsingAdapter(String adapterId) {

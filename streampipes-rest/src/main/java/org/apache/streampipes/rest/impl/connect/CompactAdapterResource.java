@@ -32,6 +32,7 @@ import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestMana
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
 import org.apache.streampipes.manager.pipeline.compact.CompactPipelineManagement;
+import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.message.Notifications;
@@ -39,10 +40,12 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
+import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -68,7 +71,8 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
   public CompactAdapterResource(WorkerRestClient workerRestClient,
                                 ExtensionServiceRequestManager requestManager,
                                 ApplicationEventPublisher eventPublisher,
-                                SpResourceManager resourceManager) {
+                                SpResourceManager resourceManager,
+                                @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage) {
     super(() -> new AdapterMasterManagement(
         resourceManager,
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
@@ -84,7 +88,7 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     );
     this.requestManager = requestManager;
     this.compactAdapterManagement = new CompactAdapterManagement(
-        new AdapterGenerationSteps(guessManagement).getGenerators()
+        new AdapterGenerationSteps(guessManagement).getGenerators(), adapterDescriptionStorage
     );
     this.pipelineManager = new PipelineManager(
         resourceManager
@@ -108,6 +112,14 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
   public ResponseEntity<?> addAdapterCompact(
       @RequestBody CompactAdapter compactAdapter
   ) throws Exception {
+
+    if (isPersistRequested(compactAdapter) && !hasPipelineWriteAuthority()) {
+      LOG.warn(
+          "Rejected compact adapter creation for user {}: persist option requires privilege {}",
+          getAuthenticatedUsername(), DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE
+      );
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
 
     var principalSid = getAuthenticatedUserSid();
     var adapterDescription = convertToAdapterDescription(compactAdapter, principalSid);
@@ -186,6 +198,15 @@ public class CompactAdapterResource extends AbstractAdapterResource<AdapterMaste
     } else {
       throw new BadRequestException(String.format("Adapter with id %s not found", elementId));
     }
+  }
+
+  private boolean isPersistRequested(CompactAdapter compactAdapter) {
+    return compactAdapter.createOptions() != null
+        && Boolean.TRUE.equals(compactAdapter.createOptions().persist());
+  }
+
+  private boolean hasPipelineWriteAuthority() {
+    return isAdminOrHasAnyAuthority(DefaultPrivilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE);
   }
 
   private AdapterDescription convertToAdapterDescription(

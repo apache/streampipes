@@ -44,8 +44,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
@@ -58,7 +56,8 @@ class AuthenticationAuditTest {
   private final AuthenticationAuditRecorder audit = mock(AuthenticationAuditRecorder.class);
   private final AuthenticationManager manager = mock(AuthenticationManager.class);
   private final SpResourceManager resources = mock(SpResourceManager.class);
-  private final Authentication controller = new Authentication(manager, resources, audit);
+  private final RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
+  private final Authentication controller = new Authentication(manager, resources, audit, refreshTokenService);
   private final HttpServletRequest request = mock(HttpServletRequest.class);
   private final HttpServletResponse response = mock(HttpServletResponse.class);
 
@@ -81,13 +80,12 @@ class AuthenticationAuditTest {
     when(resources.manageUsers()).thenReturn(users);
     var authentication = authenticated();
     when(manager.authenticate(any())).thenReturn(authentication);
-    try (var jwt = mockConstruction(JwtTokenProvider.class);
-         var tokens = mockConstruction(RefreshTokenService.class, (service, context) ->
-             when(service.issueRefreshToken(anyString(), anyBoolean())).thenReturn(
-                 new RefreshTokenService.IssuedRefreshToken("id", "user-1", "secret", Long.MAX_VALUE, false)))) {
+    when(refreshTokenService.issueRefreshToken("user-1", false)).thenReturn(
+        new RefreshTokenService.IssuedRefreshToken("id", "user-1", "secret", Long.MAX_VALUE, false));
+    try (var jwt = mockConstruction(JwtTokenProvider.class)) {
       assertEquals(200, controller.doLogin(new LoginRequest("submitted", "password", false), request, response)
           .getStatusCode().value());
-      verify(tokens.constructed().getFirst()).issueRefreshToken("user-1", false);
+      verify(refreshTokenService).issueRefreshToken("user-1", false);
       verify(audit).loggedIn("user-1", AuthenticationMethod.PASSWORD);
       verifyNoMoreInteractions(audit);
     }
@@ -105,33 +103,28 @@ class AuthenticationAuditTest {
   @Test
   void cookieOnlyLogoutCapturesPrincipalBeforeRevocation() {
     when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("sp-refresh-token", "cookie-token")});
-    try (var tokens = mockConstruction(RefreshTokenService.class, (service, context) ->
-        when(service.deleteAllRefreshTokensAndGetPrincipalId("cookie-token")).thenReturn("user-1"))) {
-      assertEquals(200, controller.logout(request, response).getStatusCode().value());
-      verify(audit).loggedOut("user-1");
-      verifyNoMoreInteractions(audit);
-    }
+    when(refreshTokenService.deleteAllRefreshTokensAndGetPrincipalId("cookie-token")).thenReturn("user-1");
+    assertEquals(200, controller.logout(request, response).getStatusCode().value());
+    verify(refreshTokenService).deleteAllRefreshTokensAndGetPrincipalId("cookie-token");
+    verify(audit).loggedOut("user-1");
+    verifyNoMoreInteractions(audit);
   }
 
   @Test
   void authenticatedLogoutWithoutCookieIsRecorded() {
     SecurityContextHolder.getContext().setAuthentication(authenticated());
-    try (var tokens = mockConstruction(RefreshTokenService.class)) {
-      controller.logout(request, response);
-      verify(tokens.constructed().getFirst()).deleteAllRefreshTokens("user-1");
-      verify(audit).loggedOut("user-1");
-    }
+    controller.logout(request, response);
+    verify(refreshTokenService).deleteAllRefreshTokens("user-1");
+    verify(audit).loggedOut("user-1");
   }
 
   @Test
   void invalidCookieUsesAuthenticatedContextForLogoutActor() {
     SecurityContextHolder.getContext().setAuthentication(authenticated());
     when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("sp-refresh-token", "invalid")});
-    try (var tokens = mockConstruction(RefreshTokenService.class)) {
-      controller.logout(request, response);
-      verify(audit).loggedOut("user-1");
-      verifyNoMoreInteractions(audit);
-    }
+    controller.logout(request, response);
+    verify(audit).loggedOut("user-1");
+    verifyNoMoreInteractions(audit);
   }
 
   @Test
@@ -144,10 +137,9 @@ class AuthenticationAuditTest {
     user.setPrincipalId("user-1");
     when(storage.getUserById("user-1")).thenReturn(user);
     when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("sp-refresh-token", "cookie-token")});
-    try (var jwt = mockConstruction(JwtTokenProvider.class);
-         var tokens = mockConstruction(RefreshTokenService.class, (service, context) ->
-             when(service.rotateRefreshToken("cookie-token")).thenReturn(
-                 new RefreshTokenService.IssuedRefreshToken("id", "user-1", "secret", Long.MAX_VALUE, false)))) {
+    when(refreshTokenService.rotateRefreshToken("cookie-token")).thenReturn(
+        new RefreshTokenService.IssuedRefreshToken("id", "user-1", "secret", Long.MAX_VALUE, false));
+    try (var jwt = mockConstruction(JwtTokenProvider.class)) {
       assertEquals(200, controller.refreshToken(request, response).getStatusCode().value());
       verifyNoInteractions(audit);
     }
@@ -155,10 +147,8 @@ class AuthenticationAuditTest {
 
   @Test
   void anonymousLogoutAndFailedRefreshDoNotInventSessionEvents() {
-    try (var tokens = mockConstruction(RefreshTokenService.class)) {
-      controller.logout(request, response);
-      controller.refreshToken(request, response);
-      verifyNoInteractions(audit);
-    }
+    controller.logout(request, response);
+    controller.refreshToken(request, response);
+    verifyNoInteractions(audit);
   }
 }
