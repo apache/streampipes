@@ -56,6 +56,13 @@
                 featureCardId="measurement"
                 [dataSource]="dataSource"
                 [columns]="displayedColumns"
+                resourceIdKey="elementId"
+                [showSelectionCheckboxes]="writeAccess"
+                [showMultiActionsExecuteButton]="true"
+                [multiActionOptions]="
+                    writeAccess ? bulkDatasetActionOptions : []
+                "
+                (multiActionsExecute)="executeSelectedDatasetAction($event)"
                 [nameSearchConfig]="{
                     enabled: true,
                     placeholder: 'Search datasets',

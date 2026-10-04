@@ -20,6 +20,34 @@
     <div class="sp-dialog-content p-15">
         @if (!isInProgress) {
             <div fxLayout="column">
+                @if (failedDatasetNames.length) {
+                    <p role="alert">
+                        {{
+                            'Some datasets could not be processed. Retry the failed datasets below.'
+                                | translate
+                        }}
+                    </p>
+                }
+                @if (!datasetName) {
+                    <ul>
+                        @for (name of datasetNames; track name) {
+                            <li>{{ name }}</li>
+                        }
+                    </ul>
+                }
+                @if (skippedDatasetNames.length) {
+                    <p>
+                        {{
+                            'Datasets linked to pipelines cannot be deleted and will be skipped:'
+                                | translate
+                        }}
+                    </p>
+                    <ul>
+                        @for (name of skippedDatasetNames; track name) {
+                            <li>{{ name }}</li>
+                        }
+                    </ul>
+                }
                 <div
                     fxFlex="100"
                     fxLayoutAlign="center center"
@@ -56,6 +84,7 @@
                             mat-flat-button
                             color="accent"
                             data-cy="confirm-truncate-data-btn"
+                            [disabled]="!datasetNames.length"
                             (click)="truncateData()"
                         >
                             {{ 'Truncate Data' | translate }}
@@ -67,6 +96,7 @@
                             mat-flat-button
                             color="accent"
                             data-cy="confirm-delete-data-btn"
+                            [disabled]="!datasetNames.length"
                             (click)="deleteData()"
                         >
                             {{ 'Delete Data' | translate }}
@@ -94,6 +124,7 @@
             mat-button
             mat-flat-button
             class="mat-basic"
+            [disabled]="isInProgress"
             (click)="close(false)"
         >
             {{ 'Close' | translate }}

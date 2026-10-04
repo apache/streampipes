@@ -32,6 +32,7 @@ import {
     LayoutDirective,
 } from '@ngbracket/ngx-layout/flex';
 import { MatButton } from '@angular/material/button';
+import { catchError, from, map, mergeMap, of, toArray } from 'rxjs';
 import { MatDivider } from '@angular/material/divider';
 
 @Component({
@@ -55,6 +56,14 @@ export class DeleteDatasetDialogComponent implements OnInit {
     @Input()
     deleteDialog: boolean;
 
+    @Input()
+    datasetNames: string[];
+
+    @Input()
+    skippedDatasetNames: string[] = [];
+
+    failedDatasetNames: string[] = [];
+    hasChanges = false;
     isInProgress = false;
     currentStatus: any;
 
@@ -66,40 +75,70 @@ export class DeleteDatasetDialogComponent implements OnInit {
     confirmTruncateMessage = '';
 
     ngOnInit() {
+        this.datasetNames ??= [this.datasetName];
         this.confirmDeleteMessage = this.translateService.instant(
-            'Do you really want to delete the dataset {{index}}?',
+            this.datasetName
+                ? 'Do you really want to delete the dataset {{index}}?'
+                : 'Delete the selected datasets?',
             { index: this.datasetName },
         );
         this.confirmTruncateMessage = this.translateService.instant(
-            'Do you really want to truncate the data in {{index}}?',
+            this.datasetName
+                ? 'Do you really want to truncate the data in {{index}}?'
+                : 'Truncate all data in the selected datasets?',
             { index: this.datasetName },
         );
     }
 
     close(refreshDataLakeIndex: boolean) {
-        this.dialogRef.close(refreshDataLakeIndex);
+        this.dialogRef.close(refreshDataLakeIndex || this.hasChanges);
     }
 
     truncateData() {
-        this.isInProgress = true;
-        this.currentStatus =
-            this.translateService.instant('Truncating data...');
-        this.datalakeRestService
-            .removeData(this.datasetName)
-            .subscribe(_data => {
-                this.close(true);
-            });
+        this.execute(false);
     }
 
     deleteData() {
-        this.isInProgress = true;
-        this.currentStatus = this.translateService.instant('Deleting data...');
+        this.execute(true);
+    }
 
-        // this.datalakeRestService.dropSingleMeasurementSeries(measurmentIndex);
-        this.datalakeRestService
-            .dropSingleMeasurementSeries(this.datasetName)
-            .subscribe(_data => {
-                this.close(true);
+    private execute(deleteDatasets: boolean): void {
+        if (this.isInProgress || !this.datasetNames.length) {
+            return;
+        }
+        this.isInProgress = true;
+        this.failedDatasetNames = [];
+        this.currentStatus = this.translateService.instant(
+            deleteDatasets ? 'Deleting data...' : 'Truncating data...',
+        );
+        from(this.datasetNames)
+            .pipe(
+                mergeMap(
+                    name =>
+                        (deleteDatasets
+                            ? this.datalakeRestService.dropSingleMeasurementSeries(
+                                  name,
+                              )
+                            : this.datalakeRestService.removeData(name)
+                        ).pipe(
+                            map(() => ({ name, success: true })),
+                            catchError(() => of({ name, success: false })),
+                        ),
+                    4,
+                ),
+                toArray(),
+            )
+            .subscribe(results => {
+                this.isInProgress = false;
+                this.hasChanges ||= results.some(result => result.success);
+                this.failedDatasetNames = results
+                    .filter(result => !result.success)
+                    .map(result => result.name);
+                if (!this.failedDatasetNames.length) {
+                    this.close(true);
+                } else {
+                    this.datasetNames = [...this.failedDatasetNames];
+                }
             });
     }
 }
