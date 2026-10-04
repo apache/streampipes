@@ -115,7 +115,10 @@ export class JsplumbService {
         pipelineElement: InvocablePipelineElementUnion,
         sourceElementDomId: string,
     ) {
-        const sourceElement = $('#' + sourceElementDomId);
+        const sourceElement = document.getElementById(sourceElementDomId);
+        if (!sourceElement) {
+            return;
+        }
 
         const pipelineElementConfig =
             this.createNewPipelineElementConfigWithFixedCoordinates(
@@ -173,15 +176,14 @@ export class JsplumbService {
     }
 
     connectNodes(
-        sourceElementSelector,
+        sourceElement: HTMLElement,
         targetElementId,
         previewConfig: boolean,
         openCustomize = false,
     ) {
-        const sourceElement = sourceElementSelector.get()[0];
         const jsplumbBridge = this.getBridge(previewConfig);
         const jsplumbConfig = this.jsplumbEndpointService.getJsplumbConfig();
-        const options = sourceElementSelector.hasClass('stream')
+        const options = sourceElement.classList.contains('stream')
             ? jsplumbConfig.streamEndpointOptions
             : jsplumbConfig.sepaEndpointOptions;
         const selectedEndpoints = jsplumbBridge.selectEndpoints({
@@ -193,8 +195,8 @@ export class JsplumbService {
                     ? jsplumbBridge
                           .selectEndpoints({ source: sourceElement })
                           .get(0)
-                    : jsplumbBridge.addEndpoint(sourceElement, options)
-                : jsplumbBridge.addEndpoint(sourceElement, options);
+                    : jsplumbBridge.addEndpoint(sourceElement.id, options)
+                : jsplumbBridge.addEndpoint(sourceElement.id, options);
 
         const targetElement = document.getElementById(targetElementId);
         const targetEndPoint = jsplumbBridge
@@ -213,12 +215,12 @@ export class JsplumbService {
     }
 
     createNewPipelineElementConfigWithFixedCoordinates(
-        sourceElement,
+        sourceElement: HTMLElement,
         pipelineElement: InvocablePipelineElementUnion,
         isPreview,
     ): PipelineElementConfig {
-        const x = sourceElement.position().left;
-        const y = sourceElement.position().top;
+        const x = sourceElement.offsetLeft;
+        const y = sourceElement.offsetTop;
         return this.createNewPipelineElementConfigAtPosition(
             x,
             y,

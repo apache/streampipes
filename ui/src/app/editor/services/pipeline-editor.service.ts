@@ -16,42 +16,33 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
+import { Subject } from 'rxjs';
+import { PipelineElementUnion } from '../model/editor.model';
 
 @Injectable({ providedIn: 'root' })
 export class PipelineEditorService {
-    constructor() {}
+    readonly dragging = signal(false);
+    readonly paletteDrop$ = new Subject<{
+        element: PipelineElementUnion;
+        bounds: DOMRect;
+    }>();
 
-    getCoordinates(ui, currentZoomLevel) {
-        const newLeft = this.getDropPositionX(ui.helper, currentZoomLevel);
-        const newTop = this.getDropPositionY(ui.helper, currentZoomLevel);
+    getCoordinates(bounds: DOMRect, canvas: HTMLElement) {
+        const canvasBounds = canvas.getBoundingClientRect();
+        const zoom = canvasBounds.width / canvas.offsetWidth;
         return {
-            x: newLeft,
-            y: newTop,
+            x: (bounds.left - canvasBounds.left) / zoom,
+            y: (bounds.top - canvasBounds.top) / zoom,
         };
     }
 
-    getDropPositionY(helper, currentZoomLevel) {
-        const helperPos = helper.offset();
-        const divPos = this.getDivPos();
+    fitsInside(bounds: DOMRect, target: DOMRect): boolean {
         return (
-            helperPos.top -
-            divPos.top +
-            (1 - currentZoomLevel) * ((helperPos.top - divPos.top) * 2)
+            bounds.left >= target.left &&
+            bounds.top >= target.top &&
+            bounds.right <= target.right &&
+            bounds.bottom <= target.bottom
         );
-    }
-
-    getDropPositionX(helper, currentZoomLevel) {
-        const helperPos = helper.offset();
-        const divPos = this.getDivPos();
-        return (
-            helperPos.left -
-            divPos.left +
-            (1 - currentZoomLevel) * ((helperPos.left - divPos.left) * 2)
-        );
-    }
-
-    getDivPos() {
-        return $('#assembly').offset();
     }
 }
