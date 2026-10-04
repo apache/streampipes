@@ -73,7 +73,7 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
 
   @Override
   public DataProcessorDescription getDataProcessorById(String rdfId) {
-    return new DataProcessorStorageImpl().getElementById(rdfId);
+    return dataProcessorStorage.getElementById(rdfId);
   }
 
   @Override
