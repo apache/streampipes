@@ -30,7 +30,6 @@ import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +65,7 @@ public class ResourceUnitStatsScanner {
 
     // Generate stats for pipeline elements (sinks and processors)
     List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> pipelineUnits =
-        ResourceUnitScanner.findResourceUnitsForService(service, resourceManager.managePipelines().getDb());
+        ResourceUnitScanner.findResourceUnitsForService(service, resourceManager.managePipelines().getDb(), resourceManager.getServiceDiscovery());
 
     for (LoadBalanceResourceUnit<InvocableStreamPipesEntity> unit : pipelineUnits) {
       LoadBalanceResourceUnitStats<InvocableStreamPipesEntity> stats =
@@ -247,7 +246,7 @@ public class ResourceUnitStatsScanner {
 
       // Get all services
       List<SpServiceRegistration> services =
-          SpServiceDiscovery.getServiceDiscovery().getService(true);
+          resourceManager.getServiceDiscovery().getService(true);
       if (services.isEmpty()) {
         logger.debug("No services found for metrics collection");
         return;

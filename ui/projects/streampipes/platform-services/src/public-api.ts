@@ -90,3 +90,6 @@ export * from './lib/model/types/alert-type';
 export * from './lib/services/isa95-type.service';
 export * from './lib/services/live-preview.service';
 export * from './lib/services/pipeline-element-icon-text.service';
+
+export * from './lib/model/audit/audit.model';
+export * from './lib/apis/audit.service';

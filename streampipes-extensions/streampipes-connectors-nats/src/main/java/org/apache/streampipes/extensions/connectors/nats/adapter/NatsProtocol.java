@@ -165,27 +165,34 @@ public class NatsProtocol implements StreamPipesAdapter {
   ) throws AdapterException {
     this.applyConfiguration(extractor.getStaticPropertyExtractor());
     List<byte[]> elements = new ArrayList<>();
-    this.natsConsumer = new NatsConsumer(natsConfig);
+    var sampleConsumer = new NatsConsumer(natsConfig);
     final boolean[] completed = {false};
     InternalEventProcessor<byte[]> processor = event -> {
-      elements.add(event);
-      completed[0] = true;
+      if (!completed[0]) {
+        elements.add(event);
+        completed[0] = true;
+      }
     };
 
     try {
-      this.natsConsumer.connect(processor);
+      sampleConsumer.connect(processor);
     } catch (SpRuntimeException e) {
       throw new ParseException("Could not connect to Nats broker", e);
     }
 
-    int totalTimeout = 0;
-    while (!completed[0] && totalTimeout < MAX_TIMEOUT) {
-      try {
-        TimeUnit.MILLISECONDS.sleep(TIMEOUT);
-        totalTimeout += TIMEOUT;
-      } catch (InterruptedException e) {
-        e.printStackTrace();
+    try {
+      int totalTimeout = 0;
+      while (!completed[0] && totalTimeout < MAX_TIMEOUT) {
+        try {
+          TimeUnit.MILLISECONDS.sleep(TIMEOUT);
+          totalTimeout += TIMEOUT;
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
       }
+    } finally {
+      // The sample connection is only needed for the first event
+      sampleConsumer.disconnect();
     }
     if (elements.size() > 0) {
       return extractor.selectedParser()

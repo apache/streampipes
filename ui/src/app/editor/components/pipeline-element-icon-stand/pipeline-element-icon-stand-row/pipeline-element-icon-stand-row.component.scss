@@ -39,6 +39,7 @@
 }
 
 .draggable-icon-drag {
+    box-shadow: var(--shadow-overlay);
     cursor: pointer;
     vertical-align: top;
     background: var(--color-pe);
@@ -51,7 +52,6 @@
     line-height: 1;
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-sm);
-    box-shadow: none;
     text-align: center;
     z-index: 100;
     transition:

@@ -26,16 +26,24 @@ import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistratio
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class DiscoverEndpointsTask implements PipelineExecutionTask {
+
+  private final ISpServiceDiscovery serviceDiscovery;
+
+  public DiscoverEndpointsTask(ISpServiceDiscovery serviceDiscovery) {
+    this.serviceDiscovery = serviceDiscovery;
+  }
+
   @Override
   public void executeTask(Pipeline pipeline,
                           PipelineExecutionInfo executionInfo) {
-    for (PipelineElementPartitioner.ResourceUnitWithServices unit : PipelineElementPartitioner.partitionPipeline(pipeline).getResourceUnits()){
+    for (PipelineElementPartitioner.ResourceUnitWithServices unit : PipelineElementPartitioner.partitionPipeline(pipeline, serviceDiscovery).getResourceUnits()){
       SpServiceRegistration service = LoadManager.allocation(unit.getCompatibleServices(), pipeline.getLabels());
       if (Objects.nonNull(service)) {
         unit.getResourceUnit().getElements().forEach(el -> {

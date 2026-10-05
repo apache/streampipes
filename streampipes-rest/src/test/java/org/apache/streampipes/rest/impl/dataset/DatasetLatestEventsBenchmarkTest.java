@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl.dataset;
 
-import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
+import org.apache.streampipes.dataexplorer.management.DatasetQueryService;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -65,7 +65,7 @@ class DatasetLatestEventsBenchmarkTest {
   }
 
   private static long runLatestEvents(int measurementCount) throws Exception {
-    var queryManagement = mock(IDataExplorerQueryManagement.class);
+    var queryManagement = mock(DatasetQueryService.class);
     var measurementNames = measurementNames(measurementCount);
     when(queryManagement.getLatestTimestamps(measurementNames)).thenReturn(latestTimestamps(measurementNames));
     var resource = datasetResource(queryManagement);
@@ -92,7 +92,7 @@ class DatasetLatestEventsBenchmarkTest {
     return latestTimestamps;
   }
 
-  private static DatasetResource datasetResource(IDataExplorerQueryManagement queryManagement) throws Exception {
+  private static DatasetResource datasetResource(DatasetQueryService queryManagement) throws Exception {
     var resource = mock(DatasetResource.class, CALLS_REAL_METHODS);
     doReturn(true).when(resource).checkPermissionByName(any(), eq("READ"));
     setQueryManagement(resource, queryManagement);
@@ -100,8 +100,8 @@ class DatasetLatestEventsBenchmarkTest {
   }
 
   private static void setQueryManagement(DatasetResource resource,
-                                         IDataExplorerQueryManagement queryManagement) throws Exception {
-    Field field = DatasetResource.class.getDeclaredField("dataExplorerQueryManagement");
+                                         DatasetQueryService queryManagement) throws Exception {
+    Field field = DatasetResource.class.getDeclaredField("queryService");
     field.setAccessible(true);
     field.set(resource, queryManagement);
   }

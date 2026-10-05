@@ -27,7 +27,7 @@ import org.apache.streampipes.model.function.FunctionsShutdownResponse;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,15 +40,18 @@ public class FunctionManager {
 
   private final ExtensionServiceRequestManager requestManager;
   private final SpResourceManager resourceManager;
+  private final IExtensionsServiceStorage extensionsServiceStorage;
 
   public FunctionManager(ExtensionServiceRequestManager requestManager,
-                         SpResourceManager resourceManager) {
+                         SpResourceManager resourceManager,
+                         IExtensionsServiceStorage extensionsServiceStorage) {
     this.requestManager = requestManager;
     this.resourceManager = resourceManager;
+    this.extensionsServiceStorage = extensionsServiceStorage;
   }
 
   public void stopAllFunctionsAndPersistState(IFunctionStateStorage functionStateStorage) {
-    var extensions = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage().findAll();
+    var extensions = extensionsServiceStorage.findAll();
 
     LOG.info("Triggering function stop at {} extension services...", extensions.size());
     extensions.forEach(service -> {

@@ -39,6 +39,38 @@ public class InfluxClientProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(InfluxClientProvider.class);
 
+  private static InfluxDB sharedClient;
+  private static String sharedClientKey;
+
+  /**
+   * Returns a process-wide shared, set up client for the given environment. The client is created on first use
+   * (ping, database check, batching enabled) and reused afterwards. Callers must not close it; it lives as long
+   * as the process. Intended for services that write on behalf of many requests, such as the REST bulk write.
+   *
+   * @param environment Environment
+   * @return InfluxDB shared client
+   */
+  public synchronized InfluxDB getSharedSetUpInfluxDBClient(Environment environment) {
+    var settings = InfluxConnectionSettings.from(environment);
+    var key = settings.getConnectionUrl() + "/" + settings.getDatabaseName();
+    if (sharedClient == null || !key.equals(sharedClientKey)) {
+      if (sharedClient != null) {
+        closeQuietly(sharedClient);
+      }
+      sharedClient = getSetUpInfluxDBClient(settings);
+      sharedClientKey = key;
+    }
+    return sharedClient;
+  }
+
+  private static void closeQuietly(InfluxDB influxDb) {
+    try {
+      influxDb.close();
+    } catch (RuntimeException e) {
+      LOG.warn("Could not close previous shared InfluxDB client", e);
+    }
+  }
+
   /**
    * Create a new InfluxDB client from Environment and ensures database is available
    * @param environment Environment

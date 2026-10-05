@@ -33,10 +33,8 @@ import {
     MatNestedTreeNode,
     MatTree,
     MatTreeNestedDataSource,
-    MatTreeNode,
     MatTreeNodeDef,
     MatTreeNodeOutlet,
-    MatTreeNodeToggle,
 } from '@angular/material/tree';
 import { StaticTreeInputServiceService } from '../static-tree-input-service.service';
 import {
@@ -65,8 +63,6 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatIcon,
         MatTree,
         MatTreeNodeDef,
-        MatTreeNode,
-        MatTreeNodeToggle,
         MatTooltip,
         MatNestedTreeNode,
         MatTreeNodeOutlet,
@@ -100,7 +96,12 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
 
     selectedNodeId: string;
 
-    hasChild = (_: number, node: TreeInputNode) => !node.dataNode;
+    /**
+     * Nodes are fetched lazily and any node, including a data node, can have
+     * children. A node is rendered without an expand toggle only after its
+     * children were requested and came back empty.
+     */
+    private leafNodeIds = new Set<string>();
 
     ngOnInit(): void {
         this.dataSource = new MatTreeNestedDataSource<TreeInputNode>();
@@ -108,7 +109,21 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
     }
 
     updateNodes(nodes: TreeInputNode[]) {
+        this.leafNodeIds.clear();
         this.dataSource.data = nodes || [];
+    }
+
+    onChildrenLoaded(node: TreeInputNode) {
+        if (node.children?.length > 0) {
+            this.leafNodeIds.delete(node.internalNodeName);
+            this.tree?.expand(node);
+        } else {
+            this.leafNodeIds.add(node.internalNodeName);
+        }
+    }
+
+    isLeaf(node: TreeInputNode): boolean {
+        return this.leafNodeIds.has(node.internalNodeName);
     }
 
     refreshTree() {
@@ -117,11 +132,17 @@ export class StaticTreeInputBrowseNodesComponent implements OnInit {
         this.dataSource.data = [...data];
     }
 
-    loadChildren(node: TreeInputNode, expanded: boolean): void {
-        this.staticProperty.nextBaseNodeToResolve = node.internalNodeName;
-        if (expanded) {
-            this.loadOptionsFromRestApiEmitter.emit(node);
+    /**
+     * A collapsed node is expanded in onChildrenLoaded once its children
+     * arrived, so that no empty group is shown while the request is pending.
+     */
+    toggleNode(node: TreeInputNode): void {
+        if (this.tree?.isExpanded(node)) {
+            this.tree.collapse(node);
+            return;
         }
+        this.staticProperty.nextBaseNodeToResolve = node.internalNodeName;
+        this.loadOptionsFromRestApiEmitter.emit(node);
     }
 
     addNode(node: TreeInputNode) {

@@ -21,7 +21,6 @@ import org.apache.streampipes.commons.media.ImageMimeTypeDetector;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,9 +66,9 @@ public class PipelineElementAsset extends AbstractRestResource {
       //it indicates usage by the asset-overview view where the data stream ID is supplied.
       //In such cases, the appId of the adapter description needs retrieval for successful documentation loading.
       if (appId.contains("sp:spdatastream")) {
-        var dataStream = StorageDispatcher.INSTANCE
-            .getNoSqlStore()
-            .getDataStreamStorage()
+        var dataStream = resourceManager
+            .manageDataStreams()
+            .getDb()
             .getDataStreamByAppId(appId);
         var adapterDescription = resourceManager
             .manageAdapters()

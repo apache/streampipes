@@ -35,6 +35,7 @@ import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
@@ -45,6 +46,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,14 +65,14 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrationResource.class);
 
-  private final IExtensionsServiceStorage extensionsServiceStorage =
-      getNoSqlStorage().getExtensionsServiceStorage();
-  private final IAdapterStorage adapterDescriptionStorage = getNoSqlStorage().getAdapterDescriptionStorage();
+  private final IExtensionsServiceStorage extensionsServiceStorage;
+  private final IAdapterStorage adapterDescriptionStorage;
   private final IAdapterStorage adapterStorage;
 
-  private final IDataProcessorStorage dataProcessorStorage = getNoSqlStorage().getDataProcessorStorage();
+  private final IDataProcessorStorage dataProcessorStorage;
 
-  private final IDataSinkStorage dataSinkStorage = getNoSqlStorage().getDataSinkStorage();
+  private final IDataSinkStorage dataSinkStorage;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
   private final IPipelineStorage pipelineStorage;
 
   private final CoreServiceStatusManager coreServiceStatusManager;
@@ -80,7 +82,17 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
 
   public MigrationResource(ExtensionServiceRequestManager extensionServiceRequestManager,
                            WorkerRestClient workerRestClient,
-                           SpResourceManager resourceManager) {
+                           SpResourceManager resourceManager,
+                           IExtensionsServiceStorage extensionsServiceStorage,
+                           @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage,
+                           IDataProcessorStorage dataProcessorStorage,
+                           IDataSinkStorage dataSinkStorage,
+                           IPipelineElementDescriptionStorage descriptionStorage) {
+    this.extensionsServiceStorage = extensionsServiceStorage;
+    this.adapterDescriptionStorage = adapterDescriptionStorage;
+    this.dataProcessorStorage = dataProcessorStorage;
+    this.dataSinkStorage = dataSinkStorage;
+    this.descriptionStorage = descriptionStorage;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.workerRestClient = workerRestClient;
     this.resourceManager = resourceManager;
@@ -141,14 +153,16 @@ public class MigrationResource extends AbstractAuthGuardedRestResource {
                 adapterDescriptionStorage,
                 workerRestClient,
                 extensionServiceRequestManager,
-                resourceManager)
+                resourceManager,
+                descriptionStorage)
               .handleMigrations(extensionsServiceConfig, adapterMigrations);
             new PipelineElementMigrationManager(
                 pipelineStorage,
                 dataProcessorStorage,
                 dataSinkStorage,
                 extensionServiceRequestManager,
-                resourceManager)
+                resourceManager,
+                descriptionStorage)
                 .handleMigrations(extensionsServiceConfig, pipelineElementMigrations);
           }
         }

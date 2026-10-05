@@ -25,6 +25,7 @@ import org.apache.streampipes.manager.extensions.ExtensionItemInstaller;
 import org.apache.streampipes.model.extensions.ExtensionItemDescription;
 import org.apache.streampipes.model.extensions.ExtensionItemInstallationRequest;
 import org.apache.streampipes.resource.management.SpResourceManager;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.io.IOException;
@@ -36,28 +37,31 @@ public class PipelineElementInstallationStep extends InstallationStep {
   private final String principalSid;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final SpResourceManager resourceManager;
+  private final IPipelineElementDescriptionStorage descriptionStorage;
 
 
   public PipelineElementInstallationStep(ExtensionItemDescription extensionItem,
                                          String principalSid,
                                          ExtensionServiceRequestManager extensionServiceRequestManager,
-                                         SpResourceManager resourceManager) {
+                                         SpResourceManager resourceManager,
+                                     IPipelineElementDescriptionStorage descriptionStorage) {
     this.extensionItem = extensionItem;
     this.principalSid = principalSid;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.resourceManager = resourceManager;
+    this.descriptionStorage = descriptionStorage;
   }
 
   @Override
   public void install() {
     var installationReq = ExtensionItemInstallationRequest.fromDescription(extensionItem, true);
     try {
-      var service = new ExtensionsServiceEndpointGenerator().selectService(
+      var service = new ExtensionsServiceEndpointGenerator(resourceManager.getServiceDiscovery()).selectService(
           installationReq.appId(),
           SpServiceUrlProvider.valueOf(installationReq.serviceTagPrefix().name()),
           Set.of()
       );
-      new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager)
+      new ExtensionItemInstaller(service, extensionServiceRequestManager, resourceManager, descriptionStorage)
           .installExtension(installationReq, principalSid);
       logSuccess(getTitle());
     } catch (SepaParseException | IOException | NoServiceEndpointsAvailableException e) {

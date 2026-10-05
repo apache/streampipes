@@ -22,7 +22,6 @@ import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +38,7 @@ public class MoveAssetContentMigration implements Migration {
 
   private static final Logger LOG = LoggerFactory.getLogger(MoveAssetContentMigration.class);
 
-  private IGenericStorage genericStorage;
+  private final IGenericStorage genericStorage;
   private final ObjectMapper mapper = JacksonSerializer.getObjectMapper(Map.of(
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true
     ));
@@ -60,8 +59,8 @@ public class MoveAssetContentMigration implements Migration {
       "appDocType"
   );
 
-  public MoveAssetContentMigration() {
-    this.genericStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage();
+  public MoveAssetContentMigration(IGenericStorage genericStorage) {
+    this.genericStorage = genericStorage;
   }
 
   @Override

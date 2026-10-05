@@ -24,48 +24,60 @@ import org.apache.streampipes.vocabulary.XSD;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class TestDatatypeMatch {
 
-  @Test
-  public void testPositiveDatatypeMatch() {
-
-    String offer = XSD.INTEGER.toString();
-    String requirement = XSD.INTEGER.toString();
-
+  @ParameterizedTest
+  @MethodSource("datatypeMatches")
+  public void testDatatypeMatch(String offer, String requirement, boolean expected) {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
 
-    boolean matches = new DatatypeMatch().match(offer, requirement, errorLog);
-    Assertions.assertTrue(matches);
+    Assertions.assertEquals(expected, new DatatypeMatch().match(offer, requirement, errorLog));
+    Assertions.assertEquals(expected ? 0 : 1, errorLog.size());
+    if (!expected) {
+      Assertions.assertEquals(requirement, errorLog.getFirst().getRequirementSubject());
+      Assertions.assertFalse(errorLog.getFirst().isMatchingSuccessful());
+    }
+  }
+
+  private static Stream<Arguments> datatypeMatches() {
+    return Stream.of(
+        Arguments.of(XSD.INTEGER.toString(), XSD.INTEGER.toString(), true),
+        Arguments.of(XSD.STRING.toString(), XSD.STRING.toString(), true),
+        Arguments.of("custom:type", "custom:type", true),
+        Arguments.of(SO.NUMBER, SO.NUMBER, true),
+        Arguments.of(XSD.INTEGER.toString(), SO.NUMBER, true),
+        Arguments.of(XSD.LONG.toString(), SO.NUMBER, true),
+        Arguments.of(XSD.DOUBLE.toString(), SO.NUMBER, true),
+        Arguments.of(XSD.FLOAT.toString(), SO.NUMBER, true),
+        Arguments.of(XSD.INTEGER.toString(), XSD.STRING.toString(), false),
+        Arguments.of(XSD.STRING.toString(), SO.NUMBER, false),
+        Arguments.of("custom:type", SO.NUMBER, false),
+        Arguments.of(SO.NUMBER, XSD.INTEGER.toString(), false),
+        Arguments.of(XSD.INTEGER.toString(), XSD.LONG.toString(), false),
+        Arguments.of(null, null, true),
+        Arguments.of(XSD.INTEGER.toString(), null, true),
+        Arguments.of(null, XSD.STRING.toString(), false),
+        Arguments.of(null, SO.NUMBER, false)
+    );
   }
 
   @Test
-  public void testNegativeDatatypeMatch() {
-
-    String offer = XSD.INTEGER.toString();
-    String requirement = XSD.STRING.toString();
-
+  public void testRepeatedMismatchDoesNotDuplicateError() {
     List<MatchingResultMessage> errorLog = new ArrayList<>();
+    var matcher = new DatatypeMatch();
 
-    boolean matches = new DatatypeMatch().match(offer, requirement, errorLog);
-    Assertions.assertFalse(matches);
+    Assertions.assertFalse(matcher.match(XSD.STRING.toString(), SO.NUMBER, errorLog));
+    Assertions.assertFalse(matcher.match(null, SO.NUMBER, errorLog));
+
+    Assertions.assertEquals(1, errorLog.size());
+    Assertions.assertEquals(SO.NUMBER, errorLog.getFirst().getRequirementSubject());
   }
-
-  @Test
-  public void testSubPropertyMatch() {
-
-    String offer = XSD.INTEGER.toString();
-    String requirement = SO.NUMBER;
-
-    List<MatchingResultMessage> errorLog = new ArrayList<>();
-
-    boolean matches = new DatatypeMatch().match(offer, requirement, errorLog);
-    Assertions.assertTrue(matches);
-  }
-
-
 }
-

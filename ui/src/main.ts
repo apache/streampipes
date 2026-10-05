@@ -46,8 +46,6 @@ echarts.registerTransform(RoundValuesTransform);
 echarts.registerTransform(MapTransform);
 echarts.registerTransform(PieAggregateTransform);
 
-import 'jquery';
-
 bootstrapApplication(AppComponent, {
     ...appConfig,
     providers: [provideZoneChangeDetection(), ...appConfig.providers],

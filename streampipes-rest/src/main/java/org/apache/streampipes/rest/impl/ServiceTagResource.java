@@ -20,7 +20,6 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.springframework.http.MediaType;
@@ -34,7 +33,11 @@ import java.util.Set;
 @RequestMapping("/api/v2/service-tags")
 public class ServiceTagResource extends AbstractAuthGuardedRestResource {
 
-  private final ISpServiceDiscovery serviceDiscovery = SpServiceDiscovery.getServiceDiscovery();
+  private final ISpServiceDiscovery serviceDiscovery;
+
+  public ServiceTagResource(ISpServiceDiscovery serviceDiscovery) {
+    this.serviceDiscovery = serviceDiscovery;
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public Set<SpServiceTag> getCustomServiceTags() {

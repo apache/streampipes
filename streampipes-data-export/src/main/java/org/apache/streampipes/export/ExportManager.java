@@ -25,7 +25,7 @@ import org.apache.streampipes.model.assets.SpAssetModel;
 import org.apache.streampipes.model.export.ExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.resource.management.SpResourceManager;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,7 +44,7 @@ public class ExportManager {
             assetId, extensionServiceRequestManager, resourceManager, pipelineManager)
             .resolveResources())
         .collect(Collectors.toList());
-    var genericStorageAppDocTypes = getGenericStorageAppDocTypes();
+    var genericStorageAppDocTypes = getGenericStorageAppDocTypes(resourceManager.getGenericStorage());
 
     exportConfig.setAssetExportConfiguration(assetExportConfigurations);
     exportConfig.setGenericStorageAppDocTypes(genericStorageAppDocTypes);
@@ -61,10 +61,9 @@ public class ExportManager {
         .generateExportPackage();
   }
 
-  private static List<ExportItem> getGenericStorageAppDocTypes() {
+  private static List<ExportItem> getGenericStorageAppDocTypes(IGenericStorage genericStorage) {
     try {
-      return StorageDispatcher.INSTANCE.getNoSqlStore()
-          .getGenericStorage()
+      return genericStorage
           .getAllAppDocTypes()
           .stream()
           .filter(appDocType -> !SpAssetModel.APP_DOC_TYPE.equals(appDocType))

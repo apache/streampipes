@@ -1,0 +1,53 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+:host {
+    display: block;
+    height: 100%;
+}
+.sp-dialog-content {
+    padding: var(--space-lg);
+}
+dl {
+    margin: 0;
+}
+dt {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-lg);
+}
+dt:first-child {
+    margin-top: 0;
+}
+dd {
+    margin: var(--space-xs) 0 0;
+    overflow-wrap: anywhere;
+}
+.secondary {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: var(--font-size-sm);
+}
+pre {
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    background: var(--color-bg-1);
+    padding: var(--space-md);
+    margin: 0;
+}

@@ -37,6 +37,7 @@ public abstract class PrincipalUserDetails<T extends Principal> implements UserD
   protected T details;
   private Set<String> allAuthorities;
   private Set<String> allObjectPermissions;
+  private final transient GrantedPermissionsBuilder permissionsBuilder;
 
   public PrincipalUserDetails(T details,
                               IPermissionStorage permissionStorage,
@@ -44,7 +45,7 @@ public abstract class PrincipalUserDetails<T extends Principal> implements UserD
                               IUserGroupStorage userGroupStorage) {
     this.details = details;
     this.allAuthorities = new GrantedAuthoritiesBuilder(details, roleStorage, userGroupStorage).buildAllAuthorities();
-    this.allObjectPermissions = new GrantedPermissionsBuilder(details, permissionStorage).buildAllPermissions();
+    this.permissionsBuilder = new GrantedPermissionsBuilder(details, permissionStorage);
   }
 
   public T getDetails() {
@@ -87,7 +88,12 @@ public abstract class PrincipalUserDetails<T extends Principal> implements UserD
   }
 
   @JsonIgnore
-  public Set<String> getAllObjectPermissions() {
+  public synchronized Set<String> getAllObjectPermissions() {
+    // Role-only requests and admin access never need the full object-permission query.
+    // Resolve once per authenticated principal; do not cache permissions across requests.
+    if (allObjectPermissions == null) {
+      allObjectPermissions = permissionsBuilder.buildAllPermissions();
+    }
     return allObjectPermissions;
   }
 }

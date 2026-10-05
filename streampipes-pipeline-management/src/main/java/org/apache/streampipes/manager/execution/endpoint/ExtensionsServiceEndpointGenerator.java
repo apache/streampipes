@@ -24,7 +24,7 @@ import org.apache.streampipes.loadbalance.LoadManager;
 import org.apache.streampipes.manager.api.extensions.IExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceRegistration;
 import org.apache.streampipes.model.extensions.svcdiscovery.SpServiceTag;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
@@ -41,7 +41,11 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
   private static final Logger LOG =
       LoggerFactory.getLogger(ExtensionsServiceEndpointGenerator.class);
 
-  public ExtensionsServiceEndpointGenerator() {}
+  private final ISpServiceDiscovery serviceDiscovery;
+
+  public ExtensionsServiceEndpointGenerator(ISpServiceDiscovery serviceDiscovery) {
+    this.serviceDiscovery = serviceDiscovery;
+  }
 
   public SpServiceRegistration selectService(String appId,
                                SpServiceUrlProvider spServiceUrlProvider,
@@ -74,7 +78,7 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
   private List<SpServiceRegistration> getServiceEndpoints(String appId,
                                            SpServiceUrlProvider spServiceUrlProvider,
                                            Set<SpServiceTag> customServiceTags) {
-    return SpServiceDiscovery.getServiceDiscovery()
+    return serviceDiscovery
         .getService(DefaultSpServiceTypes.EXT, true,
                              ExtensionsServiceEndpointUtils.getDesiredServiceTags(appId, spServiceUrlProvider, customServiceTags));
   }
@@ -82,7 +86,7 @@ public class ExtensionsServiceEndpointGenerator implements IExtensionsServiceEnd
   private SpServiceRegistration getServiceURL(String appId, SpServiceUrlProvider spServiceUrlProvider,
                                Set<SpServiceTag> customServiceTags) {
     List<SpServiceRegistration> services =
-        SpServiceDiscovery.getServiceDiscovery().getService(true).stream()
+        serviceDiscovery.getService(true).stream()
             .filter(s -> filtersSupported(s, spServiceUrlProvider.getServiceTag(appId).asString()))
             .toList();
     if (services.isEmpty()) {

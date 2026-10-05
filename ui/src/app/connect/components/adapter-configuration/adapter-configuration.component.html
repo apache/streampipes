@@ -80,7 +80,7 @@
                                 adapterConfigurationState.adapterDescription
                             "
                             (updateAdapterDescriptionEmitter)="
-                                adapterDescription = $event
+                                updateAdapterDescription($event)
                             "
                             (nextEmitter)="nextAdapterSettings()"
                             (cancelEmitter)="navigateToAdapterCatalog()"

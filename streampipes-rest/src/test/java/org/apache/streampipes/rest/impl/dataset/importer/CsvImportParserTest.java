@@ -184,6 +184,75 @@ class CsvImportParserTest {
     assertTrue(exception.getValidationMessages().get(0).getMessage().contains("booleanValue"));
   }
 
+  @Test
+  void shouldConvertFormattedTimestampsWithZone() {
+    var config = makeConfig(",", ".", true);
+    config.setTimestampFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    var request = new CsvImportRequest();
+    request.setCsvConfig(config);
+    request.setTimestampColumn("timestamp");
+    request.setColumns(List.of(makeColumn("timestamp", "timestamp", "LONG"), makeColumn("value", "value", "FLOAT")));
+    request.setRows(List.of(
+        List.of("2026-01-01T00:00:00.000Z", "1.5"),
+        List.of("2026-01-01T00:00:01.500Z", "2.5"),
+        List.of("1767225602000", "3.5")
+    ));
+
+    var rows = parser.toImportRows(request);
+
+    assertEquals(1767225600000L, rows.get(0).get(0));
+    assertEquals(1767225601500L, rows.get(1).get(0));
+    assertEquals(1767225602000L, rows.get(2).get(0));
+    assertEquals(1.5f, rows.get(0).get(1));
+  }
+
+  @Test
+  void shouldBuildPreviewSchemaForFormattedTimestampCandidates() {
+    var config = makeConfig(",", ".", true);
+    config.setTimestampFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    var headers = List.of("timestamp", "value");
+    var rows = List.of(List.of("2026-01-01T00:00:00.000Z", "1.5"), List.of("2026-01-01T00:00:01.000Z", "2.5"));
+    var columns = parser.inferColumns(headers, rows, config);
+    assertTrue(columns.get(0).isTimestampCandidate());
+
+    // no timestamp column is selected yet during the preview
+    var schema = parser.buildEventSchema(columns, rows, config, null);
+
+    var timestamp = (EventPropertyPrimitive) schema.getEventProperties().get(0);
+    assertEquals(XSD.LONG.toString(), timestamp.getRuntimeType());
+  }
+
+  @Test
+  void shouldReadCrlfRowsAndQuotedLineBreaks() throws Exception {
+    var path = tempDir.resolve("crlf.csv");
+    Files.writeString(path, "timestamp;note\r\n1710000000000;\"first\r\nline\"\r\n\r\n1710000060000;\"a \"\"quoted\"\" b\"\r\n");
+
+    var sample = parser.readCsvSample(path, makeConfig(";", ".", true), 10);
+
+    assertEquals(List.of("timestamp", "note"), sample.headers());
+    assertEquals(2, sample.totalRows());
+    assertEquals("first\r\nline", sample.rows().get(0).get(1));
+    assertEquals("a \"quoted\" b", sample.rows().get(1).get(1));
+  }
+
+  @Test
+  void shouldConvertNumbersWithCommaDecimalSeparator() {
+    var request = new CsvImportRequest();
+    request.setCsvConfig(makeConfig(";", ",", true));
+    request.setTimestampColumn("timestamp");
+    request.setColumns(List.of(
+        makeColumn("timestamp", "timestamp", "LONG"),
+        makeColumn("value", "value", "DOUBLE"),
+        makeColumn("count", "count", "INTEGER")));
+    request.setRows(List.of(List.of("1710000000000", "1.234,5", "1.000")));
+
+    var row = parser.toImportRows(request).get(0);
+
+    assertEquals(1710000000000L, row.get(0));
+    assertEquals(1234.5, row.get(1));
+    assertEquals(1000, row.get(2));
+  }
+
   private CsvImportConfiguration makeConfig(String delimiter, String decimalSeparator, boolean hasHeader) {
     var config = new CsvImportConfiguration();
     config.setDelimiter(delimiter);

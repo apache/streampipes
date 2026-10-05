@@ -48,7 +48,6 @@ import { SelectAdapterTransformationTemplateDialogComponent } from '../../../dia
 import { Mode } from '../adapter-event-preview/adapter-event-preview.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadSampleEventDialogComponent } from '../../../dialog/upload-sample-event-dialog/upload-sample-event-dialog.component';
-import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import {
     FlexDirective,
     LayoutAlignDirective,
@@ -93,7 +92,6 @@ export class ConfigureSchemaComponent implements OnInit {
     private dialog = inject(MatDialog);
     private dialogService = inject(DialogService);
     private translateService = inject(TranslateService);
-    private shepherdService = inject(ShepherdService);
 
     @Input()
     adapterDescription: AdapterDescription;
@@ -279,7 +277,6 @@ export class ConfigureSchemaComponent implements OnInit {
             this.stateService.state().adapterDescription ??
                 this.adapterDescription,
         );
-        this.shepherdService.trigger('configure-schema-script-run');
     }
 
     openAdapterConfigurationChangedDialog(): void {
@@ -379,7 +376,6 @@ export class ConfigureSchemaComponent implements OnInit {
             adapterDescription.transformationConfig.scriptActive = true;
             this.stateService.updateAdapter(adapterDescription);
             this.stateService.runScript(adapterDescription);
-            this.shepherdService.trigger('configure-schema-script-enabled');
         }
     }
 
@@ -396,7 +392,6 @@ export class ConfigureSchemaComponent implements OnInit {
             transformationConfigurationChanged:
                 transformationConfigurationChanged,
         });
-        this.shepherdService.trigger('configure-schema-next-button');
         this.nextEmitter.emit();
     }
 

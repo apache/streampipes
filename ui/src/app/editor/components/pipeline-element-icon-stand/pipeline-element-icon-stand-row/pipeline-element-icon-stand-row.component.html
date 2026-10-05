@@ -16,6 +16,9 @@
 ~
 -->
 <div
+    cdkDrag
+    (cdkDragStarted)="pipelineEditorService.dragging.set(true)"
+    (cdkDragReleased)="releaseDrag()"
     class="draggable-pipeline-element"
     id="{{ element.appId || element.name.toLowerCase().replaceAll(' ', '_') }}"
     [attr.data-pe]="element.elementId"
@@ -23,6 +26,18 @@
     (mouseleave)="updateMouseOver('')"
     data-cy="pipeline-element-icon-stand-row"
 >
+    <ng-template cdkDragPreview>
+        <div
+            class="draggable-icon-drag pipeline-element-drag-preview"
+            [ngClass]="activeCssClass"
+        >
+            <span class="pe-container-drag">
+                <sp-pipeline-element
+                    [pipelineElement]="element"
+                ></sp-pipeline-element>
+            </span>
+        </div>
+    </ng-template>
     <div
         matTooltip="{{ element.name }}"
         [matTooltipPosition]="'above'"
@@ -76,6 +91,8 @@
             [matTooltip]="'Help'"
             [matTooltipPosition]="'above'"
             (click)="openHelpDialog(element)"
+            (mousedown)="$event.stopPropagation()"
+            (touchstart)="$event.stopPropagation()"
         >
             <mat-icon>help</mat-icon>
         </button>

@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.service.core.extensions;
 
+import org.apache.streampipes.audit.api.AuditService;
 import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.connect.management.management.WorkerRestClient;
 import org.apache.streampipes.manager.api.extensions.ExtensionServiceRequestManager;
@@ -27,18 +28,31 @@ import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.explorer.IChartStorage;
 import org.apache.streampipes.storage.api.explorer.IDashboardStorage;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataSinkStorage;
+import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 import org.apache.streampipes.storage.api.system.IAssetStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
+import org.apache.streampipes.storage.api.user.IRefreshTokenStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
+import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
+import org.apache.streampipes.user.management.service.RefreshTokenService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -78,7 +92,8 @@ public class ExtensionServiceRequestConfiguration {
   @Bean
   @Primary
   public ExtensionServiceRequestManager extensionServiceRequestManager(
-      NatsExtensionServiceRequestManager natsExtensionServiceRequestManager
+      NatsExtensionServiceRequestManager natsExtensionServiceRequestManager,
+      IExtensionsServiceStorage extensionsServiceStorage
   ) {
     var env = Environments.getEnvironment();
 
@@ -91,7 +106,8 @@ public class ExtensionServiceRequestConfiguration {
     return new TransportAwareExtensionServiceRequestManager(
         new HttpExtensionServiceRequestManager(),
         natsExtensionServiceRequestManager,
-        transportMode
+        transportMode,
+        extensionsServiceStorage
     );
   }
 
@@ -99,6 +115,7 @@ public class ExtensionServiceRequestConfiguration {
   public SpResourceManager spResourceManager(IPermissionStorage permissionStorage,
                                              IChartStorage chartStorage,
                                              IAdapterStorage adapterStorage,
+                                             @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage,
                                              IDashboardStorage dashboardStorage,
                                              IAssetStorage assetStorage,
                                              IPipelineStorage pipelineStorage,
@@ -108,11 +125,23 @@ public class ExtensionServiceRequestConfiguration {
                                              IRoleStorage roleStorage,
                                              IUserGroupStorage userGroupStorage,
                                              IPrivilegeStorage privilegeStorage,
-                                             IUserStorage userStorage) {
+                                             IUserStorage userStorage,
+                                             IDataProcessorStorage dataProcessorStorage,
+                                             IDataSinkStorage dataSinkStorage,
+                                             IDataStreamStorage dataStreamStorage,
+                                             IPipelineElementDescriptionStorage descriptionStorage,
+                                             IGenericStorage genericStorage,
+                                             IUserActivationTokenStorage userActivationTokenStorage,
+                                             IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage,
+                                             ICertificateStorage certificateStorage,
+                                             IExtensionsServiceStorage extensionsServiceStorage,
+                                             ISpServiceDiscovery serviceDiscovery,
+                                             AuditService auditService) {
     return new SpResourceManager(
         permissionStorage,
         chartStorage,
         adapterStorage,
+        adapterDescriptionStorage,
         assetStorage,
         dashboardStorage,
         pipelineStorage,
@@ -122,8 +151,24 @@ public class ExtensionServiceRequestConfiguration {
         roleStorage,
         userGroupStorage,
         privilegeStorage,
-        userStorage
+        userStorage,
+        dataProcessorStorage,
+        dataSinkStorage,
+        dataStreamStorage,
+        descriptionStorage,
+        genericStorage,
+        userActivationTokenStorage,
+        passwordRecoveryTokenStorage,
+        certificateStorage,
+        extensionsServiceStorage,
+        serviceDiscovery,
+        auditService
     );
+  }
+
+  @Bean
+  public RefreshTokenService refreshTokenService(IRefreshTokenStorage refreshTokenStorage) {
+    return new RefreshTokenService(refreshTokenStorage);
   }
 
   @Bean

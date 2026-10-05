@@ -52,15 +52,16 @@ import java.util.List;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ServiceRegistrationResource extends AbstractAuthGuardedRestResource {
 
-  private final IExtensionsServiceStorage extensionsServiceStorage =
-      getNoSqlStorage().getExtensionsServiceStorage();
+  private final IExtensionsServiceStorage extensionsServiceStorage;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final SpResourceManager resourceManager;
 
   public ServiceRegistrationResource(ExtensionServiceRequestManager extensionServiceRequestManager,
-                                     SpResourceManager resourceManager) {
+                                     SpResourceManager resourceManager,
+                                     IExtensionsServiceStorage extensionsServiceStorage) {
     this.extensionServiceRequestManager = extensionServiceRequestManager;
     this.resourceManager = resourceManager;
+    this.extensionsServiceStorage = extensionsServiceStorage;
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

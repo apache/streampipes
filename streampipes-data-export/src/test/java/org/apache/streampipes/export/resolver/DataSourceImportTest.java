@@ -23,7 +23,6 @@ import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.api.pipeline.IDataStreamStorage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,20 +35,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 class DataSourceImportTest {
   @Test
   void importPreservesTopicAndChannelOptionsEvenWithLegacyOverrideFlag() throws Exception {
-    var storage = mock(INoSqlStorage.class);
     var streams = mock(IDataStreamStorage.class);
-    when(storage.getDataStreamStorage()).thenReturn(streams);
-    var resolver = new DataSourceResolver() {
-      @Override
-      protected INoSqlStorage getNoSqlStore() {
-        return storage;
-      }
-    };
+    var resolver = new DataSourceResolver(streams);
     var grounding = new EventGrounding();
     grounding.setTopicDefinition(new SimpleTopicDefinition("original.topic"));
     grounding.setOptions(Map.of("groupId", "original-group", "offset", "earliest", "lingerMs", "3"));

@@ -31,7 +31,6 @@ import {
     PipelineElementAssetService,
     SpAssetTreeNode,
 } from '@streampipes/platform-services';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AdapterConfigurationStateService } from './adapter-configuration-state-service/adapter-configuration-state.service';
@@ -85,7 +84,6 @@ import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog
     ],
 })
 export class AdapterConfigurationComponent implements OnInit, OnDestroy {
-    private shepherdService = inject(ShepherdService);
     private router = inject(Router);
     private translate = inject(TranslateService);
     private stateService = inject(AdapterConfigurationStateService);
@@ -258,12 +256,16 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
         this.stateService.reset();
     }
 
+    updateAdapterDescription(adapter: AdapterDescription): void {
+        this.adapterDescription = adapter;
+        this.stateService.updateAdapter(adapter);
+    }
+
     nextAdapterSettings() {
         const adapter =
             this.stateService.state().adapterDescription ??
             this.adapterDescription;
 
-        this.shepherdService.trigger('specific-settings-next-button');
         this.goForward();
         this.stateService.updateAdapter(adapter);
 
@@ -290,7 +292,6 @@ export class AdapterConfigurationComponent implements OnInit, OnDestroy {
     }
 
     nextConfigureFields() {
-        this.shepherdService.trigger('event-schema-next-button');
         this.goForward();
     }
 

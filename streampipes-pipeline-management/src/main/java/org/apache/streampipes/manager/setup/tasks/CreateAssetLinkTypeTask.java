@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.model.assets.AssetLinkType;
 import org.apache.streampipes.storage.api.system.IGenericStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -60,9 +59,14 @@ public class CreateAssetLinkTypeTask implements InstallationTask {
       new AssetLinkType("file", "File", "var(--color-file)", "folder", "file", List.of(), false)
   );
 
+  private final IGenericStorage genericStorage;
+
+  public CreateAssetLinkTypeTask(IGenericStorage genericStorage) {
+    this.genericStorage = genericStorage;
+  }
+
   @Override
   public void execute() {
-    var genericStorage = getGenericStorage();
 
     this.defaultLinkTypes.forEach(link -> {
       try {
@@ -75,7 +79,4 @@ public class CreateAssetLinkTypeTask implements InstallationTask {
     });
   }
 
-  private IGenericStorage getGenericStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage();
-  }
 }

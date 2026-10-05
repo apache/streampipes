@@ -31,6 +31,7 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.exception.SpMessageException;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import org.springframework.http.HttpStatus;
@@ -52,18 +53,24 @@ import java.util.Set;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestResource {
 
+  private final ISpServiceDiscovery serviceDiscovery;
   private final ExtensionServiceRequestManager extensionServiceRequestManager;
   private final AssetManager assetManager;
+  private final AvailableExtensionsProvider availableExtensionsProvider;
 
-  public ExtensionsServiceEndpointResource(ExtensionServiceRequestManager extensionServiceRequestManager,
-                                           ISpCoreConfigurationStorage coreConfigurationStorage) {
+  public ExtensionsServiceEndpointResource(ISpServiceDiscovery serviceDiscovery,
+                                           ExtensionServiceRequestManager extensionServiceRequestManager,
+                                           ISpCoreConfigurationStorage coreConfigurationStorage,
+                                           AvailableExtensionsProvider availableExtensionsProvider) {
+    this.serviceDiscovery = serviceDiscovery;
     this.extensionServiceRequestManager = extensionServiceRequestManager;
+    this.availableExtensionsProvider = availableExtensionsProvider;
     this.assetManager = new AssetManager(coreConfigurationStorage);
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<ExtensionItemDescription>> getExtensionItems() {
-    var allExtensions = new AvailableExtensionsProvider(getNoSqlStorage()).getExtensionItemDescriptions();
+    var allExtensions = availableExtensionsProvider.getExtensionItemDescriptions();
     return ok(allExtensions);
   }
 
@@ -90,7 +97,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
 
     try {
       var urlProvider = SpServiceUrlProvider.valueOf(extensionItemDescription.getServiceTagPrefix().name());
-      var service = new ExtensionsServiceEndpointGenerator().selectService(
+      var service = new ExtensionsServiceEndpointGenerator(serviceDiscovery).selectService(
           extensionItemDescription.getAppId(),
           urlProvider,
           Set.of()

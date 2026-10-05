@@ -40,12 +40,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v2/pipeline-canvas-metadata")
 public class PipelineCanvasMetadataResource extends AbstractAuthGuardedRestResource {
 
+  private final IPipelineCanvasMetadataStorage pipelineCanvasMetadataStorage;
+
+  public PipelineCanvasMetadataResource(IPipelineCanvasMetadataStorage pipelineCanvasMetadataStorage) {
+    this.pipelineCanvasMetadataStorage = pipelineCanvasMetadataStorage;
+  }
+
   @GetMapping(path = "/pipeline/{pipelineId}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("this.hasReadAuthority() and hasPermission(#pipelineId, 'READ')")
   public ResponseEntity<PipelineCanvasMetadata> getPipelineCanvasMetadataForPipeline(
       @PathVariable("pipelineId") String pipelineId) {
     try {
-      return ok(getPipelineCanvasMetadataStorage()
+      return ok(pipelineCanvasMetadataStorage
           .getPipelineCanvasMetadataForPipeline(pipelineId));
     } catch (IllegalArgumentException e) {
       throw new SpMessageException(HttpStatus.BAD_REQUEST, Notifications.error(e.getMessage()));
@@ -58,9 +64,9 @@ public class PipelineCanvasMetadataResource extends AbstractAuthGuardedRestResou
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public ResponseEntity<Void> deletePipelineCanvasMetadataForPipeline(@PathVariable("pipelineId") String pipelineId) {
     PipelineCanvasMetadata metadata =
-        getPipelineCanvasMetadataStorage().getPipelineCanvasMetadataForPipeline(pipelineId);
+        pipelineCanvasMetadataStorage.getPipelineCanvasMetadataForPipeline(pipelineId);
     if (metadata != null) {
-      getPipelineCanvasMetadataStorage().deleteElement(metadata);
+      pipelineCanvasMetadataStorage.deleteElement(metadata);
     }
     return ok();
   }
@@ -72,22 +78,18 @@ public class PipelineCanvasMetadataResource extends AbstractAuthGuardedRestResou
   @PreAuthorize("this.hasWriteAuthority() and hasPermission(#pipelineId, 'WRITE')")
   public ResponseEntity<Void> updatePipelineCanvasMetadata(@PathVariable("pipelineId") String pipelineId,
                                                            @RequestBody PipelineCanvasMetadata pipelineCanvasMetadata) {
-    var existing = getPipelineCanvasMetadataStorage().getPipelineCanvasMetadataForPipeline(pipelineId);
+    var existing = pipelineCanvasMetadataStorage.getPipelineCanvasMetadataForPipeline(pipelineId);
     pipelineCanvasMetadata.setPipelineId(pipelineId);
     if (existing != null) {
       pipelineCanvasMetadata.setId(existing.getId());
       pipelineCanvasMetadata.setRev(existing.getRev());
-      getPipelineCanvasMetadataStorage().updateElement(pipelineCanvasMetadata);
+      pipelineCanvasMetadataStorage.updateElement(pipelineCanvasMetadata);
     } else {
       pipelineCanvasMetadata.setId(null);
       pipelineCanvasMetadata.setRev(null);
-      getPipelineCanvasMetadataStorage().persist(pipelineCanvasMetadata);
+      pipelineCanvasMetadataStorage.persist(pipelineCanvasMetadata);
     }
     return ok();
-  }
-
-  private IPipelineCanvasMetadataStorage getPipelineCanvasMetadataStorage() {
-    return getNoSqlStorage().getPipelineCanvasMetadataStorage();
   }
 
   public boolean hasWriteAuthority() {

@@ -116,7 +116,11 @@
             <div class="pipeline-assembly__palette" fxLayout="column">
                 <ng-content select="[editorPalette]"></ng-content>
             </div>
-            <div id="outerAssemblyArea" class="outerAssembly">
+            <div
+                id="outerAssemblyArea"
+                class="outerAssembly"
+                [class.palette-drag-active]="pipelineEditorService.dragging()"
+            >
                 @if (rawPipelineModel) {
                     <sp-pipeline-assembly-drawing-area
                         #drawingAreaComponent

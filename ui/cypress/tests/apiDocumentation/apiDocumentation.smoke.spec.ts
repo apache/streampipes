@@ -22,7 +22,10 @@ describe('Open API Documentation from Login Page', () => {
     it('Perform Test', () => {
         UserUtils.goToLogin();
         cy.dataCy('view-api-docs-link').click();
-        cy.get('h2').contains('Apache StreamPipes API');
+        cy.get('.swagger-ui .info .title').should(
+            'contain',
+            'Apache StreamPipes API',
+        );
         cy.get('.servers')
             .find('select')
             .find(':selected')

@@ -46,7 +46,6 @@ import { AuthService } from '../services/auth.service';
 import { UserPrivilege } from '../core/auth/user-privilege.enum';
 import { SpPipelineRoutes } from './pipelines.breadcrumb';
 import { UserRole } from '../core/auth/user-role.enum';
-import { ShepherdService } from '../services/tour/shepherd.service';
 import { Subscription } from 'rxjs';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -91,8 +90,6 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     functionsReady = false;
     isAdminRole = false;
 
-    tutorialActive = false;
-    tutorial$: Subscription;
     user$: Subscription;
     assetFilter$: Subscription;
     currentFilters: Set<string> = new Set<string>();
@@ -104,7 +101,6 @@ export class PipelinesComponent implements OnInit, OnDestroy {
     private router = inject(Router);
     private functionsService = inject(FunctionsService);
     private breadcrumbService = inject(SpBreadcrumbService);
-    private shepherdService = inject(ShepherdService);
     private assetFilterService = inject(SpAssetBrowserService);
 
     readonly pageHeaderAssetLinkType$ =
@@ -126,16 +122,8 @@ export class PipelinesComponent implements OnInit, OnDestroy {
             );
             this.isAdminRole = this.authService.hasRole(UserRole.ROLE_ADMIN);
         });
-        if (this.shepherdService.isTourActive()) {
-            this.shepherdService.trigger('pipeline-started');
-        }
         this.getPipelines();
         this.getFunctions();
-        this.tutorial$ = this.shepherdService.tutorialActive$.subscribe(
-            tutorialActive => {
-                this.tutorialActive = tutorialActive;
-            },
-        );
     }
 
     getFunctions() {
@@ -199,21 +187,12 @@ export class PipelinesComponent implements OnInit, OnDestroy {
         });
     }
 
-    startPipelineTour(): void {
-        this.shepherdService.startPipelineTour();
-    }
-
     navigateToPipelineEditor() {
-        this.router
-            .navigate(['pipelines', 'create'])
-            .then(() =>
-                this.shepherdService.trigger('pipeline-new-button-clicked'),
-            );
+        this.router.navigate(['pipelines', 'create']);
     }
 
     ngOnDestroy() {
         this.user$?.unsubscribe();
-        this.tutorial$?.unsubscribe();
         this.assetFilter$?.unsubscribe();
     }
 }

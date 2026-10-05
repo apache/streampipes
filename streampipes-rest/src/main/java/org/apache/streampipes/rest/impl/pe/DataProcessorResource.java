@@ -27,6 +27,7 @@ import org.apache.streampipes.resource.management.DataProcessorResourceManager;
 import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.pipeline.IDataProcessorStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 
 import org.springframework.http.MediaType;
@@ -47,8 +48,9 @@ public class DataProcessorResource extends AbstractAuthGuardedRestResource {
 
   private final DataProcessorResourceManager dataProcessorResourceManager;
 
-  public DataProcessorResource(IPermissionStorage permissionStorage) {
+  public DataProcessorResource(IPermissionStorage permissionStorage, IDataProcessorStorage dataProcessorStorage) {
     this.dataProcessorResourceManager = new DataProcessorResourceManager(
+        dataProcessorStorage,
         new PermissionResourceManager(permissionStorage)
     );
   }
@@ -68,14 +70,16 @@ public class DataProcessorResource extends AbstractAuthGuardedRestResource {
   }
 
   @DeleteMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_ELEMENT_PRIVILEGE
+      + " and hasPermission(#elementId, 'WRITE')")
   public ResponseEntity<Message> removeOwn(@PathVariable("elementId") String elementId) {
     dataProcessorResourceManager.delete(elementId);
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
 
   @GetMapping(path = "/{elementId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE
+      + " and hasPermission(#elementId, 'READ')")
   public ResponseEntity<?> getElement(@PathVariable("elementId") String elementId) {
     try {
       return ok(dataProcessorResourceManager.findAsInvocation(elementId));

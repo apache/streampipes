@@ -18,10 +18,9 @@
 
 package org.apache.streampipes.rest.impl.dataset;
 
-import org.apache.streampipes.dataexplorer.api.IDataExplorerQueryManagement;
-import org.apache.streampipes.dataexplorer.api.IDatasetMetadataManagement;
-import org.apache.streampipes.dataexplorer.management.DataExplorerDispatcher;
-import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinator;
+import org.apache.streampipes.dataexplorer.management.DatasetQueryService;
+import org.apache.streampipes.dataexplorer.management.DatasetServices;
+import org.apache.streampipes.dataexplorer.param.RestQuerySpecMapper;
 import org.apache.streampipes.model.client.user.DefaultPrivilege;
 import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
 import org.apache.streampipes.model.dataset.SpQueryResult;
@@ -49,24 +48,15 @@ import java.util.Map;
 @RequestMapping("/api/v3/datalake/dashboard/kiosk")
 public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResource {
 
-  private final IDataExplorerQueryManagement dataExplorerQueryManagement;
+  private final DatasetQueryService queryService;
   private final IDashboardStorage dashboardStorage;
   private final IChartStorage dataExplorerWidgetStorage;
   private final IPermissionStorage permissionStorage;
 
   public KioskDashboardDataLakeResource(IChartStorage dataExplorerWidgetStorage,
-                                        SpResourceManager resourceManager) {
-    IDatasetMetadataManagement datasetMetadataManagement = new DataExplorerDispatcher()
-        .getDataExplorerManager()
-        .getSchemaManagement(
-            new ChartSchemaUpdateCoordinator(dataExplorerWidgetStorage),
-            resourceManager.managePermissions().getDb(),
-            resourceManager.manageDataLakeMeasures().getDb()
-        );
+                                        SpResourceManager resourceManager, DatasetServices services) {
     this.dashboardStorage = resourceManager.manageDashboards().getDb();
-    this.dataExplorerQueryManagement = new DataExplorerDispatcher()
-        .getDataExplorerManager()
-        .getQueryManagement(datasetMetadataManagement);
+    this.queryService = services.queries();
     this.dataExplorerWidgetStorage = dataExplorerWidgetStorage;
     this.permissionStorage = resourceManager.managePermissions().getDb();
   }
@@ -106,7 +96,12 @@ public class KioskDashboardDataLakeResource extends AbstractAuthGuardedRestResou
       throw new IllegalArgumentException("Measure name not found in widget configuration");
     } else {
       ProvidedRestQueryParams sanitizedParams = new ProvidedRestQueryParams(measureName, queryParams);
-      return this.dataExplorerQueryManagement.getData(sanitizedParams, true);
+      var result = queryService.queryByName(measureName, RestQuerySpecMapper.parse(sanitizedParams),
+          RestQuerySpecMapper.options(sanitizedParams, true));
+      if (sanitizedParams.has("forId")) {
+        result.setForId(sanitizedParams.getAsString("forId"));
+      }
+      return result;
     }
   }
 

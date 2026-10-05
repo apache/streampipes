@@ -29,8 +29,10 @@ import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.ResetManagement;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementTemplateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
+import org.apache.streampipes.storage.api.system.ITransformationScriptTemplateStorage;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.context.annotation.Conditional;
@@ -51,21 +53,28 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
 
   private final ResetManagement resetManagement;
   private final SpResourceManager resourceManager;
+  private final ITransformationScriptTemplateStorage templateStorage;
 
   public ResetResource(WorkerRestClient workerRestClient,
                        ExtensionServiceRequestManager requestManager,
-                       SpResourceManager resourceManager) {
-    IExtensionsServiceStorage extensionsServiceStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage();
+                       SpResourceManager resourceManager,
+                       ITransformationScriptTemplateStorage templateStorage,
+                       IPipelineElementTemplateStorage pipelineElementTemplateStorage,
+                       IExtensionsServiceStorage extensionsServiceStorage,
+                       IGenericStorage genericStorage) {
     this.resourceManager = resourceManager;
+    this.templateStorage = templateStorage;
     var pipelineManager = new PipelineManager(
         resourceManager
     );
     this.resetManagement = new ResetManagement(
         workerRestClient,
+        genericStorage,
         extensionsServiceStorage,
         requestManager,
         pipelineManager,
         resourceManager,
+        pipelineElementTemplateStorage,
         new ChartSchemaUpdateCoordinator(resourceManager.manageCharts().getDb())
     );
   }
@@ -94,9 +103,9 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
     }
 
     // Delete all connect script templates
-    var allScriptTemplates = getNoSqlStorage().getTransformationScriptTemplateStorage().findAll();
+    var allScriptTemplates = templateStorage.findAll();
     for (var template : allScriptTemplates) {
-      getNoSqlStorage().getTransformationScriptTemplateStorage().deleteElementById(template.getElementId());
+      templateStorage.deleteElementById(template.getElementId());
     }
 
     var message = Notifications.success("Reset of system successfully performed");

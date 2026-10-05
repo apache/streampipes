@@ -53,7 +53,6 @@ import {
     SpSplitButtonAction,
     SpSplitButtonComponent,
 } from '@streampipes/shared-ui';
-import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { ValidateName } from '../../../../core-ui/static-properties/input.validator';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -107,7 +106,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     ];
 
     private dialogService = inject(DialogService);
-    private shepherdService = inject(ShepherdService);
     private formBuilder = inject(UntypedFormBuilder);
     private timestampPipe = inject(TimestampPipe);
     private translateService = inject(TranslateService);
@@ -232,7 +230,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
 
     public startAdapter(startAdapterNow: boolean) {
-        this.shepherdService.trigger('adapter-settings-adapter-started');
         const dialogRef = this.dialogService.open(AdapterStartedDialog, {
             panelType: PanelType.STANDARD_PANEL,
             title: this.translateService.instant('Adapter generation'),
@@ -317,16 +314,5 @@ export class StartAdapterConfigurationComponent implements OnInit {
     handlePersistOption(selected: boolean) {
         this.saveInDataLake = selected;
         this.findDefaultTimestamp(selected);
-        this.checkAndTriggerTutorial('adapter-persist-selected');
-    }
-
-    triggerTutorialAdapterNameAssigned() {
-        this.checkAndTriggerTutorial('adapter-name-assigned');
-    }
-
-    checkAndTriggerTutorial(actionId: string) {
-        if (this.adapterDescription.name === 'Tutorial') {
-            this.shepherdService.trigger(actionId);
-        }
     }
 }

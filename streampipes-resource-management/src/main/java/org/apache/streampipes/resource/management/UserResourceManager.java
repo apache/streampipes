@@ -34,7 +34,6 @@ import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.user.IUserStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 import org.apache.streampipes.user.management.util.TokenUtil;
 
@@ -53,11 +52,17 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   private static final Logger LOG = LoggerFactory.getLogger(UserResourceManager.class);
 
   private final ISpCoreConfigurationStorage coreConfigurationStorage;
+  private final IUserActivationTokenStorage userActivationTokenStorage;
+  private final IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage;
 
   public UserResourceManager(IUserStorage userStorage,
-                             ISpCoreConfigurationStorage coreConfigurationStorage) {
+                             ISpCoreConfigurationStorage coreConfigurationStorage,
+                             IUserActivationTokenStorage userActivationTokenStorage,
+                             IPasswordRecoveryTokenStorage passwordRecoveryTokenStorage) {
     super(userStorage);
     this.coreConfigurationStorage = coreConfigurationStorage;
+    this.userActivationTokenStorage = userActivationTokenStorage;
+    this.passwordRecoveryTokenStorage = passwordRecoveryTokenStorage;
   }
 
   public void setHideTutorial(String username, boolean hideTutorial) {
@@ -120,13 +125,13 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
   public void activateAccount(String activationCode) throws UserNotFoundException {
-    UserActivationToken token = getUserActivationTokenStorage().getElementById(activationCode);
+    UserActivationToken token = userActivationTokenStorage.getElementById(activationCode);
     if (token != null) {
       Principal user = db.getUser(token.getUsername());
       if (user instanceof UserAccount) {
         user.setAccountEnabled(true);
         db.updateUser(user);
-        getUserActivationTokenStorage().deleteElement(token);
+        userActivationTokenStorage.deleteElement(token);
       }
     } else {
       throw new UserNotFoundException("User or token not found");
@@ -145,7 +150,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   private void storeActivationCode(String username,
                                    String activationCode) throws IOException {
     UserActivationToken token = UserActivationToken.create(activationCode, username);
-    getUserActivationTokenStorage().persist(token);
+    userActivationTokenStorage.persist(token);
     new MailSender(coreConfigurationStorage.get()).sendAccountActivationMail(username, activationCode);
   }
 
@@ -159,7 +164,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   }
 
   public void checkPasswordRecoveryCode(String recoveryCode) {
-    var tokenStorage = getPasswordRecoveryTokenStorage();
+    var tokenStorage = passwordRecoveryTokenStorage;
     PasswordRecoveryToken token = tokenStorage.getElementById(recoveryCode);
     if (token == null) {
       throw new IllegalArgumentException("Invalid recovery code");
@@ -169,27 +174,19 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   public void changePassword(String recoveryCode,
                              UserRegistrationData data) throws NoSuchAlgorithmException, InvalidKeySpecException {
     checkPasswordRecoveryCode(recoveryCode);
-    PasswordRecoveryToken token = getPasswordRecoveryTokenStorage().getElementById(recoveryCode);
+    PasswordRecoveryToken token = passwordRecoveryTokenStorage.getElementById(recoveryCode);
     Principal user = db.getUser(token.getUsername());
     if (user instanceof UserAccount) {
       String encryptedPassword = PasswordUtil.encryptPassword(data.getPassword());
       ((UserAccount) user).setPassword(encryptedPassword);
       db.updateUser(user);
-      getPasswordRecoveryTokenStorage().deleteElement(token);
+      passwordRecoveryTokenStorage.deleteElement(token);
     }
   }
 
   private void storeRecoveryCode(String username,
                                  String recoveryCode) {
-    getPasswordRecoveryTokenStorage().persist(PasswordRecoveryToken.create(recoveryCode, username));
-  }
-
-  private IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getPasswordRecoveryTokenStorage();
-  }
-
-  private IUserActivationTokenStorage getUserActivationTokenStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getUserActivationTokenStorage();
+    passwordRecoveryTokenStorage.persist(PasswordRecoveryToken.create(recoveryCode, username));
   }
 
   private Environment getEnvironment() {
