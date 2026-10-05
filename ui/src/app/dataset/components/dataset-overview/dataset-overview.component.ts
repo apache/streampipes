@@ -68,6 +68,8 @@ import {
     SpTableActionsDirective,
     SpTableAssetContextConfig,
     SpTableComponent,
+    SpTableMultiActionExecuteEvent,
+    SpTableMultiActionOption,
 } from '@streampipes/shared-ui';
 import { DeleteDatasetDialogComponent } from '../../dialog/delete-dataset/delete-dataset-dialog.component';
 import { SpConfigurationRoutes } from '../../../configuration/configuration.breadcrumb';
@@ -169,6 +171,59 @@ export class DatasetOverviewComponent
 
     dataSourceExport: MatTableDataSource<ExportProviderSettings> =
         new MatTableDataSource([]);
+
+    readonly bulkDatasetActionOptions: SpTableMultiActionOption[] = [
+        {
+            value: 'truncate',
+            label: this.translateService.instant('Truncate selected'),
+            icon: 'local_fire_department',
+        },
+        {
+            value: 'delete',
+            label: this.translateService.instant('Delete selected'),
+            icon: 'delete',
+        },
+    ];
+
+    executeSelectedDatasetAction(
+        event: SpTableMultiActionExecuteEvent<DatasetOverviewEntry>,
+    ): void {
+        if (
+            !this.writeAccess ||
+            !event.selectedRows.length ||
+            (event.action !== 'delete' && event.action !== 'truncate')
+        ) {
+            return;
+        }
+        const deleteDialog = event.action === 'delete';
+        const datasets = event.selectedRows.filter(
+            dataset => !deleteDialog || dataset.remove,
+        );
+        const dialogRef = this.dialogService.open(
+            DeleteDatasetDialogComponent,
+            {
+                panelType: PanelType.STANDARD_PANEL,
+                disableClose: true,
+                title: this.translateService.instant(
+                    deleteDialog ? 'Delete data' : 'Truncate data',
+                ),
+                width: '70vw',
+                data: {
+                    datasetNames: datasets.map(dataset => dataset.name),
+                    skippedDatasetNames: event.selectedRows
+                        .filter(dataset => deleteDialog && !dataset.remove)
+                        .map(dataset => dataset.name),
+                    deleteDialog,
+                },
+            },
+        );
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh || dialogRef.componentInstance?.instance?.hasChanges) {
+                this.spTable.clearSelection();
+                this.loadAvailableDatasets();
+            }
+        });
+    }
 
     displayedColumns: string[] = [
         'name',
