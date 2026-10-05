@@ -23,6 +23,7 @@ import org.apache.streampipes.manager.pipeline.update.ChartSchemaUpdateCoordinat
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.dataset.DatasetMetadataSchemaUpdateStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 import org.apache.streampipes.storage.api.user.IPermissionStorage;
 import org.apache.streampipes.test.generator.EventPropertyPrimitiveTestBuilder;
@@ -62,11 +63,38 @@ public class DatasetMetadataManagementTest {
   }
 
   @Test
+  void deletionByIdUsesResourceDeletionManager() {
+    var deletionManager = mock(ResourceDeletionManager.class);
+    var management = new DatasetMetadataManagement(
+        dataLakeStorageMock, permissionManagerMock, chartSchemaUpdateCoordinator, deletionManager);
+    when(dataLakeStorageMock.getElementById("dataset-1")).thenReturn(new DatasetMetadata());
+
+    management.deleteMeasurement("dataset-1");
+
+    verify(deletionManager).delete(dataLakeStorageMock, "dataset-1");
+  }
+
+  @Test
+  void deletionByNameUsesResourceIdForAssetLinkCleanup() {
+    var deletionManager = mock(ResourceDeletionManager.class);
+    var management = new DatasetMetadataManagement(
+        dataLakeStorageMock, permissionManagerMock, chartSchemaUpdateCoordinator, deletionManager);
+    var dataset = new DatasetMetadata();
+    dataset.setElementId("dataset-1");
+    when(dataLakeStorageMock.getByMeasureName("temperature")).thenReturn(dataset);
+
+    assertTrue(management.deleteMeasurementByName("temperature"));
+
+    verify(deletionManager).delete(dataLakeStorageMock, "dataset-1");
+  }
+
+  @Test
   public void createMeasurementThatNotExisted() {
     var schemaManagement = new DatasetMetadataManagement(
         dataLakeStorageMock,
         permissionManagerMock,
-        chartSchemaUpdateCoordinator
+        chartSchemaUpdateCoordinator,
+        mock(ResourceDeletionManager.class)
     );
 
     var oldMeasure = getSampleMeasure(
@@ -96,7 +124,8 @@ public class DatasetMetadataManagementTest {
     var schemaManagement = new DatasetMetadataManagement(
         dataLakeStorageMock,
         permissionManagerMock,
-        chartSchemaUpdateCoordinator
+        chartSchemaUpdateCoordinator,
+        mock(ResourceDeletionManager.class)
     );
 
     var newMeasure = getNewMeasure(DatasetMetadataSchemaUpdateStrategy.UPDATE_SCHEMA);
@@ -126,7 +155,8 @@ public class DatasetMetadataManagementTest {
     var schemaManagement = new DatasetMetadataManagement(
         dataLakeStorageMock,
         permissionManagerMock,
-        chartSchemaUpdateCoordinator
+        chartSchemaUpdateCoordinator,
+        mock(ResourceDeletionManager.class)
     );
     var newMeasure = getNewMeasure(DatasetMetadataSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);
 
@@ -155,7 +185,8 @@ public class DatasetMetadataManagementTest {
     var schemaManagement = new DatasetMetadataManagement(
         dataLakeStorageMock,
         permissionManagerMock,
-        chartSchemaUpdateCoordinator
+        chartSchemaUpdateCoordinator,
+        mock(ResourceDeletionManager.class)
     );
 
     var newMeasure = getNewMeasure(DatasetMetadataSchemaUpdateStrategy.EXTEND_EXISTING_SCHEMA);

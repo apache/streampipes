@@ -21,6 +21,7 @@ package org.apache.streampipes.export.resolver;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -65,9 +66,9 @@ public class FileResolver extends AbstractResolver<FileMetadata> {
   }
 
   @Override
-  public void deleteDocument(String document) throws JsonProcessingException {
+  public void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager) throws JsonProcessingException {
     var fileMetadata = readDocument(document);
     var resourceId = fileMetadata.getElementId();
-    fileMetadataStorage.deleteElementById(resourceId);
+    resourceDeletionManager.delete(fileMetadataStorage, resourceId);
   }
 }

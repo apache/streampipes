@@ -63,7 +63,9 @@ import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.service.core.storage.StorageApiConfiguration;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.function.IFunctionStateStorage;
+import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
+import org.apache.streampipes.storage.api.system.ICertificateStorage;
 import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 import org.apache.streampipes.storage.api.user.IPrivilegeStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
@@ -108,6 +110,12 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
 
   @Autowired
   private IFunctionStateStorage functionStateStorage;
+
+  @Autowired
+  protected ICertificateStorage certificateStorage;
+
+  @Autowired
+  private ICompactPipelineTemplateStorage pipelineTemplateStorage;
 
   @Autowired
   protected ExtensionServiceRequestManager extensionServiceRequestManager;
@@ -270,7 +278,7 @@ public class StreamPipesCoreApplication extends StreamPipesServiceBase {
   }
 
   protected List<Migration> getMigrations() {
-    return new AvailableMigrations(resourceManager).getAvailableMigrations();
+    return new AvailableMigrations(resourceManager, certificateStorage, pipelineTemplateStorage).getAvailableMigrations();
   }
 
   protected List<HealthCheck> getRegisteredExtensionHealthChecks() {

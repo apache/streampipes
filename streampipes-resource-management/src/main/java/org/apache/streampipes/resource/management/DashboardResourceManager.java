@@ -39,8 +39,9 @@ public class DashboardResourceManager extends CrudResourceManager<DashboardModel
   public DashboardResourceManager(IDashboardStorage dashboardStorage,
                                    IChartStorage widgetStorage,
                                    IDatasetMetadataStorage datasetMetadataStorage,
-                                   PermissionResourceManager permissionResourceManager) {
-    super(dashboardStorage, DashboardModel.class, permissionResourceManager);
+                                   PermissionResourceManager permissionResourceManager,
+                              ResourceDeletionManager resourceDeletionManager) {
+    super(dashboardStorage, DashboardModel.class, permissionResourceManager, resourceDeletionManager);
     this.widgetStorage = widgetStorage;
     this.datasetMetadataStorage = datasetMetadataStorage;
   }

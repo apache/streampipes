@@ -29,6 +29,7 @@ import org.apache.streampipes.model.pipeline.compact.CompactPipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,9 +50,11 @@ public class CompactPipelineResource extends AbstractAuthGuardedRestResource {
   private final PipelineManager pipelineManager;
 
   public CompactPipelineResource(ExtensionServiceRequestManager requestManager,
-                                 SpResourceManager resourceManager) {
+                                 SpResourceManager resourceManager,
+                                 IPipelineElementDescriptionStorage descriptionStorage) {
     this.compactPipelineManagement = new CompactPipelineManagement(
-        getPipelineElementStorage(),
+        resourceManager.getServiceDiscovery(),
+        descriptionStorage,
         requestManager
     );
     this.requestManager = requestManager;

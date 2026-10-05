@@ -46,7 +46,7 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.constants.SpMediaType;
 import org.apache.streampipes.storage.api.connect.IAdapterStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.system.IExtensionsServiceStorage;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpStatus;
@@ -89,8 +89,9 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
   public AdapterResource(WorkerRestClient workerRestClient,
                          ExtensionServiceRequestManager requestManager,
                          SpResourceManager resourceManager,
-                         @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage) {
-    this(workerRestClient, requestManager, null, resourceManager, adapterDescriptionStorage);
+                         @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage,
+                         IExtensionsServiceStorage extensionsServiceStorage) {
+    this(workerRestClient, requestManager, null, resourceManager, adapterDescriptionStorage, extensionsServiceStorage);
   }
 
   @Autowired
@@ -98,12 +99,13 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
                          ExtensionServiceRequestManager requestManager,
                          ApplicationEventPublisher eventPublisher,
                          SpResourceManager resourceManager,
-                         @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage) {
+                         @Qualifier("adapterDescriptionStorage") IAdapterStorage adapterDescriptionStorage,
+                         IExtensionsServiceStorage extensionsServiceStorage) {
     super(() -> new AdapterMasterManagement(
         resourceManager,
         AdapterMetricsManager.INSTANCE.getAdapterMetrics(),
         workerRestClient,
-        StorageDispatcher.INSTANCE.getNoSqlStore().getExtensionsServiceStorage(),
+        extensionsServiceStorage,
         requestManager,
         new AdapterAuditRecorder(resourceManager.getAuditService())));
     this.requestManager = requestManager;

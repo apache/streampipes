@@ -33,7 +33,6 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTypes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -170,7 +169,7 @@ public class ExtensionsServiceLogExecutor implements Runnable {
   }
 
   private List<SpServiceRegistration> getActiveExtensionsEndpoints() {
-    return SpServiceDiscovery.getServiceDiscovery().getService(DefaultSpServiceTypes.EXT, true, List.of());
+    return resourceManager.getServiceDiscovery().getService(DefaultSpServiceTypes.EXT, true, List.of());
   }
 
   private SpEndpointMonitoringInfo parseLogResponse(String response)

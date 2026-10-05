@@ -21,6 +21,7 @@ package org.apache.streampipes.export.resolver;
 import org.apache.streampipes.model.dataset.DatasetMetadata;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.storage.api.explorer.IDatasetMetadataStorage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -65,9 +66,9 @@ public class MeasurementResolver extends AbstractResolver<DatasetMetadata> {
   }
 
   @Override
-  public void deleteDocument(String document) throws JsonProcessingException {
+  public void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager) throws JsonProcessingException {
     var measurement = readDocument(document);
     var resourceId = measurement.getElementId();
-    datasetStorage.deleteElementById(resourceId);
+    resourceDeletionManager.delete(datasetStorage, resourceId);
   }
 }

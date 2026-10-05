@@ -55,7 +55,7 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<Void> {
   public RuntimeResolvableResource(WorkerRestClient workerRestClient,
                                    SpResourceManager resourceManager) {
     super();
-    this.endpointGenerator = new ExtensionsServiceEndpointGenerator();
+    this.endpointGenerator = new ExtensionsServiceEndpointGenerator(resourceManager.getServiceDiscovery());
     this.workerRestClient = workerRestClient;
     this.resourceManager = resourceManager;
   }

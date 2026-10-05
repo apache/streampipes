@@ -19,7 +19,9 @@ package org.apache.streampipes.manager.file;
 
 import org.apache.streampipes.commons.file.FileHasher;
 import org.apache.streampipes.model.file.FileMetadata;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.storage.api.system.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.system.IGenericStorage;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -199,10 +201,10 @@ public class TestFileManager {
 
     when(fileMetadataStorage.getElementById(id)).thenReturn(fileMetadata);
 
-    fileManager.deleteFile(id);
+    fileManager.deleteFile(id, new ResourceDeletionManager(mock(IGenericStorage.class)));
 
     verify(fileHandler, times(1)).deleteFile(fileMetadata.getFilename());
-    verify(fileMetadataStorage, times(1)).deleteElementById(id);
+    verify(fileMetadataStorage, times(1)).deleteElement(fileMetadata);
   }
 
   @Test
@@ -211,7 +213,7 @@ public class TestFileManager {
 
     when(fileMetadataStorage.getElementById(id)).thenReturn(null);
 
-    fileManager.deleteFile(id);
+    fileManager.deleteFile(id, new ResourceDeletionManager(mock(IGenericStorage.class)));
 
     verify(fileHandler, times(0)).deleteFile(anyString());
     verify(fileMetadataStorage, times(0)).deleteElementById(id);

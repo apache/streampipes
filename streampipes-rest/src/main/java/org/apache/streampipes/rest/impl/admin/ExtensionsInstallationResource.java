@@ -136,7 +136,7 @@ public class ExtensionsInstallationResource extends AbstractAuthGuardedRestResou
   }
 
   private SpServiceRegistration findSupportedService(ExtensionItemInstallationRequest installationReq) throws NoServiceEndpointsAvailableException {
-    return new ExtensionsServiceEndpointGenerator().selectService(
+    return new ExtensionsServiceEndpointGenerator(resourceManager.getServiceDiscovery()).selectService(
         installationReq.appId(),
         SpServiceUrlProvider.valueOf(installationReq.serviceTagPrefix().name()),
         Set.of()

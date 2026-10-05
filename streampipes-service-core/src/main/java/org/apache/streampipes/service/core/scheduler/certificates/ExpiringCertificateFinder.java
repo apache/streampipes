@@ -20,7 +20,6 @@ package org.apache.streampipes.service.core.scheduler.certificates;
 
 import org.apache.streampipes.model.opcua.Certificate;
 import org.apache.streampipes.storage.api.system.ICertificateStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,12 +52,8 @@ public class ExpiringCertificateFinder {
     this.clock = clock;
   }
 
-  public ExpiringCertificateFinder() {
-    this(
-        StorageDispatcher.INSTANCE.getNoSqlStore()
-                                  .getCertificateStorage(),
-        Clock.systemUTC()
-    );
+  public ExpiringCertificateFinder(ICertificateStorage certificateStorage) {
+    this(certificateStorage, Clock.systemUTC());
   }
 
 

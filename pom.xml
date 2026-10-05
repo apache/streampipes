@@ -958,7 +958,6 @@
         <module>streampipes-service-extensions</module>
         <module>streampipes-storage-api</module>
         <module>streampipes-storage-couchdb</module>
-        <module>streampipes-storage-management</module>
         <module>streampipes-test-utils</module>
         <module>streampipes-test-utils-executors</module>
         <module>streampipes-user-management</module>

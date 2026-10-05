@@ -56,7 +56,7 @@ public class PipelineElementInstallationStep extends InstallationStep {
   public void install() {
     var installationReq = ExtensionItemInstallationRequest.fromDescription(extensionItem, true);
     try {
-      var service = new ExtensionsServiceEndpointGenerator().selectService(
+      var service = new ExtensionsServiceEndpointGenerator(resourceManager.getServiceDiscovery()).selectService(
           installationReq.appId(),
           SpServiceUrlProvider.valueOf(installationReq.serviceTagPrefix().name()),
           Set.of()

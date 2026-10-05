@@ -33,6 +33,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineModification;
 import org.apache.streampipes.model.pipeline.PipelineModificationResult;
 import org.apache.streampipes.model.pipeline.PipelineVerificationResult;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,18 +42,21 @@ import java.util.Optional;
 
 public class PipelineVerificationHandlerV2 {
 
+  private final ISpServiceDiscovery serviceDiscovery;
   private final Pipeline pipeline;
   private final ExtensionServiceRequestManager requestManager;
 
-  public PipelineVerificationHandlerV2(Pipeline pipeline,
+  public PipelineVerificationHandlerV2(ISpServiceDiscovery serviceDiscovery,
+                                       Pipeline pipeline,
                                        ExtensionServiceRequestManager requestManager) {
+    this.serviceDiscovery = serviceDiscovery;
     this.pipeline = pipeline;
     this.requestManager = requestManager;
   }
 
   public PipelineModificationMessage verifyPipeline() {
     PipelineGraph graph = new PipelineGraphBuilder(pipeline).buildGraph();
-    var steps = new PipelineValidationSteps().collect(requestManager);
+    var steps = new PipelineValidationSteps().collect(requestManager, serviceDiscovery);
     return new PipelineModificationGenerator(graph, steps).buildPipelineModificationMessage();
   }
 
