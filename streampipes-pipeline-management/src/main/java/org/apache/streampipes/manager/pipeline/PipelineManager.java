@@ -28,7 +28,6 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.resource.management.CrudResourceManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
 
@@ -129,9 +128,7 @@ public class PipelineManager {
    * @param pipelineId of pipeline to be deleted
    */
   public void deletePipeline(String pipelineId) {
-    var pipelineCrudResourceManager = new CrudResourceManager<>(
-        pipelineStorage, Pipeline.class, resourceManager.managePermissions()
-    );
+    var pipelineCrudResourceManager = resourceManager.managePipelines();
 
     var pipeline = getPipeline(pipelineId);
     if (Objects.nonNull(pipeline)) {

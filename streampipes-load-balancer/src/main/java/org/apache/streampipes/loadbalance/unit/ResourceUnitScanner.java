@@ -26,6 +26,7 @@ import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.pipeline.IPipelineStorage;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +88,7 @@ public class ResourceUnitScanner {
 
     // Scan and partition pipeline elements
     List<PipelineElementPartitioner.PartitionResult> pipelineUnits =
-        scanAndPartitionPipeline(service, resourceManager.managePipelines().getDb());
+        scanAndPartitionPipeline(service, resourceManager.managePipelines().getDb(), resourceManager.getServiceDiscovery());
 
     // Scan and create adapter units
     List<PipelineElementPartitioner.AdapterResourceUnitWithServices> adapterUnits =
@@ -107,7 +108,8 @@ public class ResourceUnitScanner {
    */
   private static List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> scanAndPartitionPipelineElements(
       SpServiceRegistration service,
-      IPipelineStorage pipelineStorage) {
+      IPipelineStorage pipelineStorage,
+      ISpServiceDiscovery serviceDiscovery) {
 
     String serviceUrl = service.getServiceUrl();
     List<Pipeline> allPipelines = pipelineStorage.findAll();
@@ -134,7 +136,7 @@ public class ResourceUnitScanner {
 
       // Use PipelineElementPartitioner to partition these elements
       PipelineElementPartitioner.PartitionResult partitionResult = PipelineElementPartitioner
-          .partitionElements(serviceSinks, serviceProcessors, pipeline.getLabels());
+          .partitionElements(serviceSinks, serviceProcessors, pipeline.getLabels(), serviceDiscovery);
 
       // Add partitioned units with service ID set
       for (PipelineElementPartitioner.ResourceUnitWithServices unitWithServices : partitionResult
@@ -158,7 +160,8 @@ public class ResourceUnitScanner {
    */
   private static List<PipelineElementPartitioner.PartitionResult> scanAndPartitionPipeline(
       SpServiceRegistration service,
-      IPipelineStorage pipelineStorage) {
+      IPipelineStorage pipelineStorage,
+      ISpServiceDiscovery serviceDiscovery) {
 
     String serviceUrl = service.getServiceUrl();
     List<Pipeline> allPipelines = pipelineStorage.findAll();
@@ -185,7 +188,7 @@ public class ResourceUnitScanner {
 
       // Use PipelineElementPartitioner to partition these elements
       PipelineElementPartitioner.PartitionResult partitionResult = PipelineElementPartitioner
-          .partitionElements(serviceSinks, serviceProcessors, pipeline.getLabels());
+          .partitionElements(serviceSinks, serviceProcessors, pipeline.getLabels(), serviceDiscovery);
 
       resourceUnits.add(partitionResult);
     }
@@ -257,7 +260,7 @@ public class ResourceUnitScanner {
     List<PipelineElementPartitioner.AdapterResourceUnitWithServices> adapterUnits =
         new ArrayList<>();
     for (AdapterDescription adapter : serviceAdapters) {
-      adapterUnits.add(PipelineElementPartitioner.createAdapterResourceUnit(adapter));
+      adapterUnits.add(PipelineElementPartitioner.createAdapterResourceUnit(adapter, resourceManager.getServiceDiscovery()));
     }
 
     return adapterUnits;
@@ -305,8 +308,9 @@ public class ResourceUnitScanner {
    */
   public static List<LoadBalanceResourceUnit<InvocableStreamPipesEntity>> findResourceUnitsForService(
       SpServiceRegistration service,
-      IPipelineStorage pipelineStorage) {
-    return scanAndPartitionPipelineElements(service, pipelineStorage);
+      IPipelineStorage pipelineStorage,
+      ISpServiceDiscovery serviceDiscovery) {
+    return scanAndPartitionPipelineElements(service, pipelineStorage, serviceDiscovery);
   }
 
   /**
@@ -334,7 +338,7 @@ public class ResourceUnitScanner {
     var pipelineStorage = resourceManager.managePipelines().getDb();
     return sourceServices.stream().collect(Collectors
         .toMap(SpServiceRegistration::getSvcId, svcreg ->
-            ResourceUnitScanner.findResourceUnitsForService(svcreg, pipelineStorage)));
+            ResourceUnitScanner.findResourceUnitsForService(svcreg, pipelineStorage, resourceManager.getServiceDiscovery())));
   }
 
   /**

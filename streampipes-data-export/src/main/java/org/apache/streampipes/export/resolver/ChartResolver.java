@@ -21,6 +21,7 @@ package org.apache.streampipes.export.resolver;
 import org.apache.streampipes.model.dataset.DataExplorerWidgetModel;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.core.CRUDStorage;
@@ -75,10 +76,10 @@ public class ChartResolver extends AbstractResolver<DataExplorerWidgetModel> {
   }
 
   @Override
-  public void deleteDocument(String document) throws JsonProcessingException {
+  public void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager) throws JsonProcessingException {
     var chart = readDocument(document);
     var resourceId = chart.getElementId();
-    chartStorage.deleteElementById(resourceId);
+    resourceDeletionManager.delete(chartStorage, resourceId);
   }
 
 }

@@ -28,6 +28,7 @@ import org.apache.streampipes.model.template.CompactPipelineTemplate;
 import org.apache.streampipes.model.template.PipelineTemplateGenerationRequest;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
 import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
 import java.util.List;
 import java.util.Map;
@@ -39,13 +40,16 @@ import static org.apache.streampipes.manager.pipeline.compact.generation.Invocab
 
 public class CompactPipelineTemplateManagement {
 
+  private final ISpServiceDiscovery serviceDiscovery;
   private final IPipelineElementDescriptionStorage storage;
   private final ICompactPipelineTemplateStorage templateStorage;
   private final ExtensionServiceRequestManager requestManager;
 
-  public CompactPipelineTemplateManagement(ICompactPipelineTemplateStorage templateStorage,
+  public CompactPipelineTemplateManagement(ISpServiceDiscovery serviceDiscovery,
+                                           ICompactPipelineTemplateStorage templateStorage,
                                            IPipelineElementDescriptionStorage descriptionStorage,
                                            ExtensionServiceRequestManager requestManager) {
+    this.serviceDiscovery = serviceDiscovery;
     this.templateStorage = templateStorage;
     this.storage = descriptionStorage;
     this.requestManager = requestManager;
@@ -68,7 +72,7 @@ public class CompactPipelineTemplateManagement {
     }
     var pipeline = makePipeline(template);
 
-    return new PipelineVerificationHandlerV2(pipeline, requestManager).makeModifiedPipeline();
+    return new PipelineVerificationHandlerV2(serviceDiscovery, pipeline, requestManager).makeModifiedPipeline();
   }
 
   private Pipeline makePipeline(CompactPipelineTemplate template) throws Exception {

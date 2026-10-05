@@ -20,6 +20,7 @@ package org.apache.streampipes.export.resolver;
 
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.resource.management.ResourceDeletionManager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.lightcouch.DocumentConflictException;
@@ -39,5 +40,5 @@ public interface DocumentResolver<T> {
 
   T deserializeDocument(String document) throws JsonProcessingException;
 
-  void deleteDocument(String document) throws JsonProcessingException;
+  void deleteDocument(String document, ResourceDeletionManager resourceDeletionManager) throws JsonProcessingException;
 }

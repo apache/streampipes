@@ -25,8 +25,8 @@ import org.apache.streampipes.model.client.user.DefaultRole;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.compact.CompactAdapter;
 import org.apache.streampipes.model.connect.adapter.compact.CreateOptions;
-import org.apache.streampipes.storage.api.core.INoSqlStorage;
 import org.apache.streampipes.storage.api.pipeline.ICompactPipelineTemplateStorage;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,14 +56,14 @@ class CompactAdapterResourceTest {
 
   private AdapterMasterManagement adapterManagement;
   private CompactAdapterManagement compactAdapterManagement;
-  private INoSqlStorage noSqlStorage;
+  private IPipelineElementDescriptionStorage descriptionStorage;
   private CompactAdapterResource resource;
 
   @BeforeEach
   void setUp() throws Exception {
     adapterManagement = mock(AdapterMasterManagement.class);
     compactAdapterManagement = mock(CompactAdapterManagement.class);
-    noSqlStorage = mock(INoSqlStorage.class);
+    descriptionStorage = mock(IPipelineElementDescriptionStorage.class);
 
     var adapterDescription = new AdapterDescription();
     adapterDescription.setElementId(ADAPTER_ID);
@@ -71,18 +71,18 @@ class CompactAdapterResourceTest {
     when(compactAdapterManagement.convertToAdapterDescription(any(), eq(USER_SID)))
         .thenReturn(adapterDescription);
     when(adapterManagement.getAdapter(ADAPTER_ID)).thenReturn(adapterDescription);
-    // no persist pipeline template stored, so the persist step ends with an exception
-    when(noSqlStorage.getPipelineTemplateStorage()).thenReturn(mock(ICompactPipelineTemplateStorage.class));
 
     // the protected base class methods cannot be stubbed from this package
     resource = mock(CompactAdapterResource.class, withSettings().defaultAnswer(invocation ->
         switch (invocation.getMethod().getName()) {
           case "getAuthenticatedUserSid" -> USER_SID;
-          case "getNoSqlStorage" -> noSqlStorage;
           default -> invocation.callRealMethod();
         }));
     resource.managementService = adapterManagement;
     setField(resource, "compactAdapterManagement", compactAdapterManagement);
+    setField(resource, "descriptionStorage", descriptionStorage);
+    // No persist pipeline template is stored, so the persist step ends with an exception.
+    setField(resource, "pipelineTemplateStorage", mock(ICompactPipelineTemplateStorage.class));
   }
 
   @AfterEach
@@ -98,7 +98,7 @@ class CompactAdapterResourceTest {
 
     assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     assertNull(response.getBody());
-    verifyNoInteractions(compactAdapterManagement, adapterManagement, noSqlStorage);
+    verifyNoInteractions(compactAdapterManagement, adapterManagement, descriptionStorage);
   }
 
   @Test
@@ -110,7 +110,7 @@ class CompactAdapterResourceTest {
     assertEquals(HttpStatus.OK, response.getStatusCode());
     verify(adapterManagement).addAdapter(any(), eq(ADAPTER_ID), eq(USER_SID));
     verify(adapterManagement).startAdapter(ADAPTER_ID, USER_SID);
-    verifyNoInteractions(noSqlStorage);
+    verifyNoInteractions(descriptionStorage);
   }
 
   @Test

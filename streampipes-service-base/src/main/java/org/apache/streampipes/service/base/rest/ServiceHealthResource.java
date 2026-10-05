@@ -20,7 +20,6 @@ package org.apache.streampipes.service.base.rest;
 
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 
-import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +34,7 @@ public class ServiceHealthResource {
     if (serviceId.equals(StreamPipesServiceBase.AUTO_GENERATED_SERVICE_ID)) {
       return ResponseEntity.ok().build();
     } else {
-      return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).build();
+      return ResponseEntity.notFound().build();
     }
   }
 }

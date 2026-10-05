@@ -29,14 +29,17 @@ public class CrudResourceManager<T extends Storable, SeT extends CRUDStorage<T>>
     extends AbstractResourceManager<SeT> {
 
   private final Class<T> elementClass;
+  private final ResourceDeletionManager resourceDeletionManager;
   protected final SpPermissionEvaluator permissionEvaluator;
   protected final PermissionResourceManager permissionResourceManager;
 
   public CrudResourceManager(SeT db,
                              Class<T> elementClass,
-                             PermissionResourceManager permissionResourceManager) {
+                             PermissionResourceManager permissionResourceManager,
+                             ResourceDeletionManager resourceDeletionManager) {
     super(db);
     this.elementClass = elementClass;
+    this.resourceDeletionManager = resourceDeletionManager;
     this.permissionEvaluator = new SpPermissionEvaluator(permissionResourceManager.getDb());
     this.permissionResourceManager = permissionResourceManager;
   }
@@ -50,7 +53,7 @@ public class CrudResourceManager<T extends Storable, SeT extends CRUDStorage<T>>
   }
 
   public void delete(String elementId) {
-    db.deleteElementById(elementId);
+    resourceDeletionManager.delete(db, elementId);
     deletePermissions(elementId);
   }
 

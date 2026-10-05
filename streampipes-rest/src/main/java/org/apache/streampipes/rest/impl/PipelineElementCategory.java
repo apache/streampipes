@@ -23,7 +23,7 @@ import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.Category;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.storage.api.pipeline.IPipelineElementDescriptionStorage;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,11 +38,15 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v2/categories")
 public class PipelineElementCategory extends AbstractAuthGuardedRestResource {
 
+  private final IPipelineElementDescriptionStorage descriptionStorage;
+
+  public PipelineElementCategory(IPipelineElementDescriptionStorage descriptionStorage) {
+    this.descriptionStorage = descriptionStorage;
+  }
+
   @GetMapping(path = "/ep", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Category>> getEps() {
-    return ok(makeCategories(StorageDispatcher.INSTANCE.getNoSqlStore()
-                                                       .getPipelineElementDescriptionStorage()
-                                                       .getAllDataStreams()));
+    return ok(makeCategories(descriptionStorage.getAllDataStreams()));
   }
 
   @GetMapping(path = "/epa", produces = MediaType.APPLICATION_JSON_VALUE)

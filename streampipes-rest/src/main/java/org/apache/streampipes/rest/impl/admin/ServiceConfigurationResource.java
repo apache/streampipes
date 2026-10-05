@@ -44,9 +44,11 @@ import java.util.List;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ServiceConfigurationResource extends AbstractAuthGuardedRestResource {
 
-  private final IExtensionsServiceConfigurationStorage extensionsServicesConfigStorage =
-      getNoSqlStorage().getExtensionsServiceConfigurationStorage();
+  private final IExtensionsServiceConfigurationStorage extensionsServicesConfigStorage;
 
+  public ServiceConfigurationResource(IExtensionsServiceConfigurationStorage extensionsServicesConfigStorage) {
+    this.extensionsServicesConfigStorage = extensionsServicesConfigStorage;
+  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<SpServiceConfiguration>> getAllServiceConfigurations() {

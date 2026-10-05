@@ -36,8 +36,9 @@ public class ChartResourceManager
 
   public ChartResourceManager(DashboardResourceManager dashboardManager,
                               IChartStorage db,
-                              PermissionResourceManager permissionResourceManager) {
-    super(db, DataExplorerWidgetModel.class, permissionResourceManager);
+                              PermissionResourceManager permissionResourceManager,
+                              ResourceDeletionManager resourceDeletionManager) {
+    super(db, DataExplorerWidgetModel.class, permissionResourceManager, resourceDeletionManager);
     this.dashboardManager = dashboardManager;
   }
 

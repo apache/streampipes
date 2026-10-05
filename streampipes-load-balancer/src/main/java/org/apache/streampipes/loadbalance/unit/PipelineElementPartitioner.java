@@ -25,7 +25,7 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.loadbalancer.LoadBalanceResourceUnit;
 import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.util.ArrayList;
@@ -125,7 +125,7 @@ public class PipelineElementPartitioner {
    * @param pipeline Pipeline to partition
    * @return Partition result containing resource units and their compatible services
    */
-  public static PartitionResult partitionPipeline(Pipeline pipeline) {
+  public static PartitionResult partitionPipeline(Pipeline pipeline, ISpServiceDiscovery serviceDiscovery) {
     if (pipeline == null) {
       throw new IllegalArgumentException("Pipeline cannot be null");
     }
@@ -133,7 +133,7 @@ public class PipelineElementPartitioner {
     List<DataSinkInvocation> sinks = pipeline.getActions();
     List<DataProcessorInvocation> processors = pipeline.getSepas();
 
-    PartitionResult result = partitionElements(sinks, processors, pipeline.getLabels());
+    PartitionResult result = partitionElements(sinks, processors, pipeline.getLabels(), serviceDiscovery);
 
     return result;
   }
@@ -148,13 +148,14 @@ public class PipelineElementPartitioner {
   public static PartitionResult partitionElements(
       List<DataSinkInvocation> sinks,
       List<DataProcessorInvocation> processors,
-      List<String> labels) {
+      List<String> labels,
+      ISpServiceDiscovery serviceDiscovery) {
 
     if ((sinks == null || sinks.isEmpty()) && (processors == null || processors.isEmpty())) {
       return new PartitionResult(new ArrayList<>());
     }
 
-    List<SpServiceRegistration> allServices = SpServiceDiscovery.getServiceDiscovery().findAll();
+    List<SpServiceRegistration> allServices = serviceDiscovery.findAll();
     
     // Initialize data structures
     Map<String, InvocableStreamPipesEntity> elementMap = new HashMap<>();
@@ -180,7 +181,8 @@ public class PipelineElementPartitioner {
    * @param adapter Adapter description
    * @return Adapter resource unit with compatible services
    */
-  public static AdapterResourceUnitWithServices createAdapterResourceUnit(AdapterDescription adapter) {
+  public static AdapterResourceUnitWithServices createAdapterResourceUnit(AdapterDescription adapter,
+                                                                       ISpServiceDiscovery serviceDiscovery) {
     if (adapter == null) {
       throw new IllegalArgumentException("Adapter cannot be null");
     }
@@ -189,7 +191,7 @@ public class PipelineElementPartitioner {
     resourceUnit.addElement(adapter);
     resourceUnit.setLabels(Collections.EMPTY_LIST);
 
-    List<SpServiceRegistration> allServices = SpServiceDiscovery.getServiceDiscovery().findAll();
+    List<SpServiceRegistration> allServices = serviceDiscovery.findAll();
     List<SpServiceRegistration> compatibleServices = findCompatibleServices(
         SpServiceUrlProvider.ADAPTER.getServiceTag(adapter.getAppId()).asString(),
         allServices);

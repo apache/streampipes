@@ -81,7 +81,7 @@ class PipelineUpdateCoordinatorTest {
 
     try (MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
-               verifiedPipelines.add((Pipeline) context.arguments().get(0));
+               verifiedPipelines.add((Pipeline) context.arguments().get(1));
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
                when(mock.makeModifiedPipeline(modificationMessage))
                    .thenReturn(new PipelineModificationResult(modifiedPipeline, List.of()));
@@ -122,7 +122,7 @@ class PipelineUpdateCoordinatorTest {
 
     try (MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
-               verifiedPipelines.add((Pipeline) context.arguments().get(0));
+               verifiedPipelines.add((Pipeline) context.arguments().get(1));
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
                when(mock.makeModifiedPipeline(modificationMessage))
                    .thenReturn(new PipelineModificationResult(modifiedPipeline, List.of()));
@@ -203,10 +203,10 @@ class PipelineUpdateCoordinatorTest {
 
     try (MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
-               verifiedPipelines.add((Pipeline) context.arguments().get(0));
+               verifiedPipelines.add((Pipeline) context.arguments().get(1));
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
                when(mock.makeModifiedPipeline(modificationMessage))
-                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(0), List.of()));
+                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(1), List.of()));
              })) {
 
       var result = coordinator.checkPipelineMigrations(dataStream);
@@ -240,10 +240,10 @@ class PipelineUpdateCoordinatorTest {
 
     try (MockedConstruction<PipelineVerificationHandlerV2> verificationHandlerConstruction =
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
-               verifiedPipelines.add((Pipeline) context.arguments().get(0));
+               verifiedPipelines.add((Pipeline) context.arguments().get(1));
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
                when(mock.makeModifiedPipeline(modificationMessage))
-                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(0), List.of()));
+                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(1), List.of()));
              })) {
 
       var result = coordinator.checkPipelineMigrations(dataStream);
@@ -283,7 +283,7 @@ class PipelineUpdateCoordinatorTest {
              mockConstruction(PipelineVerificationHandlerV2.class, (mock, context) -> {
                when(mock.verifyPipeline()).thenReturn(modificationMessage);
                when(mock.makeModifiedPipeline(modificationMessage))
-                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(0), List.of()));
+                   .thenReturn(new PipelineModificationResult((Pipeline) context.arguments().get(1), List.of()));
              })) {
 
       var result = coordinator.checkPipelineMigrations(dataStream);
