@@ -41,7 +41,7 @@ final class RestQueryParameterValidator {
     if (identifier == null
         || !SAFE_IDENTIFIER.matcher(identifier).matches()
         || InfluxDbReservedKeywords.KEYWORD_LIST.stream().anyMatch(k -> k.equalsIgnoreCase(identifier))) {
-      throw new IllegalArgumentException("Invalid group by identifier: " + identifier);
+      throw new IllegalArgumentException("Invalid query identifier");
     }
 
     return identifier;
