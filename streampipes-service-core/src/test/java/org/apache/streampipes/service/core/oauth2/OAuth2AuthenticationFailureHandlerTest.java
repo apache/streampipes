@@ -18,9 +18,22 @@
 
 package org.apache.streampipes.service.core.oauth2;
 
+import org.apache.streampipes.audit.events.authentication.AuthenticationAuditRecorder;
+
 import org.junit.jupiter.api.Test;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.web.RedirectStrategy;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class OAuth2AuthenticationFailureHandlerTest {
 
@@ -52,6 +65,33 @@ class OAuth2AuthenticationFailureHandlerTest {
   void errorCodeIsAppendedToUrlWithoutHashRoute() {
     assertEquals("/?error=oauth_login_failed", OAuth2AuthenticationFailureHandler.appendErrorCode("/"));
     assertEquals("/?a=b&error=oauth_login_failed", OAuth2AuthenticationFailureHandler.appendErrorCode("/?a=b"));
+  }
+
+  @Test
+  void redirectsToConfiguredOriginOnly() {
+    var authorized = "https://sp.example.org";
+
+    assertEquals("https://sp.example.org/#/login",
+        OAuth2AuthenticationFailureHandler.targetUrl("https://sp.example.org/#/login", authorized));
+    assertEquals("/", OAuth2AuthenticationFailureHandler.targetUrl("https://evil.example/landing", authorized));
+    assertEquals("/", OAuth2AuthenticationFailureHandler.targetUrl("//evil.example/landing", authorized));
+    assertEquals("/", OAuth2AuthenticationFailureHandler.targetUrl(null, authorized));
+    assertEquals("/", OAuth2AuthenticationFailureHandler.targetUrl("https://sp.example.org/#/login", null));
+  }
+
+  @Test
+  void doesNotRedirectToForeignOriginFromCookie() throws IOException {
+    var request = mock(HttpServletRequest.class);
+    when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("redirect_uri", "https://evil.example/landing")});
+    var redirects = mock(RedirectStrategy.class);
+    var handler = new OAuth2AuthenticationFailureHandler(
+        mock(HttpCookieOAuth2AuthorizationRequestRepository.class), mock(AuthenticationAuditRecorder.class));
+    handler.setRedirectStrategy(redirects);
+    var response = mock(HttpServletResponse.class);
+
+    handler.onAuthenticationFailure(request, response, new BadCredentialsException("rejected"));
+
+    verify(redirects).sendRedirect(request, response, "/?error=oauth_login_failed");
   }
 
   @Test
