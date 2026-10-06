@@ -250,7 +250,7 @@ public class DatasetResource extends AbstractDatasetResource {
 
     var results = queryParams.stream()
         .map(params -> new ProvidedRestQueryParams(params.get("measureName"), params))
-        .map(params -> executeQuery(params, true))
+        .map(params -> executeQuery(params, isIgnoreMissingValues(params.getAsString(QP_MISSING_VALUE_BEHAVIOUR))))
         .collect(Collectors.toList());
 
     return ok(results);
