@@ -25,6 +25,7 @@ import org.apache.streampipes.commons.environment.Environments;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.rest.shared.exception.BadRequestException;
 import org.apache.streampipes.service.core.oauth2.util.CookieUtils;
+import org.apache.streampipes.service.core.oauth2.util.RedirectUriValidator;
 import org.apache.streampipes.storage.api.system.ISpCoreConfigurationStorage;
 import org.apache.streampipes.storage.api.user.IRoleStorage;
 import org.apache.streampipes.storage.api.user.IUserGroupStorage;
@@ -45,7 +46,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
@@ -139,7 +139,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie
         .from(REFRESH_TOKEN_COOKIE, encodeCookieTokenValue(issuedRefreshToken.rawToken()))
         .httpOnly(true)
-        .secure(isSecureRequest(request))
+        .secure(CookieUtils.isSecureRequest(request))
         .path(refreshCookiePath(request))
         .sameSite("Lax");
 
@@ -155,11 +155,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     return (contextPath == null ? "" : contextPath) + "/api/v2/auth";
   }
 
-  private boolean isSecureRequest(HttpServletRequest request) {
-    String forwardedProto = request.getHeader("X-Forwarded-Proto");
-    return request.isSecure() || "https".equalsIgnoreCase(forwardedProto);
-  }
-
   private String encodeCookieTokenValue(String rawToken) {
     return ENCODED_REFRESH_TOKEN_PREFIX + Base64.getUrlEncoder()
         .withoutPadding()
@@ -173,14 +168,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
   }
 
   private boolean isAuthorizedRedirectUri(String uri) {
-    URI clientRedirectUri = URI.create(uri);
     var authorizedRedirectUri = env.getOAuthRedirectUri();
-    if (authorizedRedirectUri.exists()) {
-      URI authorizedURI = URI.create(authorizedRedirectUri.getValue());
-      return authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-          && authorizedURI.getPort() == clientRedirectUri.getPort();
-    } else {
-      return false;
-    }
+    return authorizedRedirectUri.exists()
+        && RedirectUriValidator.isAuthorized(uri, authorizedRedirectUri.getValue());
   }
 }
