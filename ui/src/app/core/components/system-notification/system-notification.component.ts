@@ -16,7 +16,13 @@
  *
  */
 
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    OnInit,
+    inject,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     SystemNotificationConfig,
@@ -49,6 +55,7 @@ const MAX_TIMER_DELAY_MS = 2 ** 31 - 1;
     selector: 'sp-system-notification',
     templateUrl: './system-notification.component.html',
     styleUrls: ['./system-notification.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SpLabelComponent, MatTooltip],
 })
 export class SpSystemNotificationComponent implements OnInit {

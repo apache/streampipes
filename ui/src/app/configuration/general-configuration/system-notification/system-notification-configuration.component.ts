@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
     DateInputComponent,
@@ -36,6 +36,7 @@ import { isValid } from 'date-fns';
 @Component({
     selector: 'sp-system-notification-configuration',
     templateUrl: './system-notification-configuration.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         SplitSectionComponent,
         ReactiveFormsModule,
